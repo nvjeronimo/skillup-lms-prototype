@@ -19,6 +19,8 @@ export interface CoursePlayerTopbarProps {
   showBookmark?: boolean;
   showNotifications?: boolean;
   showTheme?: boolean;
+  /** Unread count — surfaced in the Notifications button aria-label. */
+  notificationsCount?: number;
   onMenu?: () => void;
   onAi?: () => void;
   onBookmark?: () => void;
@@ -60,6 +62,7 @@ export function CoursePlayerTopbar({
   showBookmark = true,
   showNotifications = true,
   showTheme = true,
+  notificationsCount = 0,
   onMenu,
   onAi,
   onBookmark,
@@ -111,18 +114,31 @@ export function CoursePlayerTopbar({
 
       <div className="flex flex-1 items-center justify-end gap-1">
         {!isMobile && showAi ? (
-          <UtilityButton label="AI assistant" onClick={onAi}>
+          <UtilityButton label="AI Assistant" onClick={onAi}>
             <Icon icon={Sparkles} size={20} />
           </UtilityButton>
         ) : null}
         {showBookmark ? (
-          <UtilityButton label="Saved" onClick={onBookmark}>
+          <UtilityButton label="Saved items" onClick={onBookmark}>
             <Icon icon={Bookmark} size={20} />
           </UtilityButton>
         ) : null}
         {!isMobile && showNotifications ? (
-          <UtilityButton label="Notifications" onClick={onNotifications}>
-            <Icon icon={Bell} size={20} />
+          <UtilityButton
+            label={
+              notificationsCount > 0 ? `Notifications, ${notificationsCount} unread` : "Notifications"
+            }
+            onClick={onNotifications}
+          >
+            <span className="relative">
+              <Icon icon={Bell} size={20} />
+              {notificationsCount > 0 ? (
+                <span
+                  className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-lms-fg-brand-primary"
+                  aria-hidden
+                />
+              ) : null}
+            </span>
           </UtilityButton>
         ) : null}
         {!isMobile && showTheme ? (
@@ -133,7 +149,7 @@ export function CoursePlayerTopbar({
         <button type="button" aria-label="Account" className="ml-1">
           <Avatar name={userName} src={userAvatarUrl} size="sm" />
         </button>
-        <UtilityButton label="Exit player" onClick={onClose}>
+        <UtilityButton label="Exit course player" onClick={onClose}>
           <Icon icon={X} size={20} />
         </UtilityButton>
       </div>

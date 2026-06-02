@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Pause, Play } from "lucide-react";
+import { AlertCircle, Loader2, Pause, Play, RotateCcw } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn, secondsToTs } from "@/lib/utils";
+import type { VideoState } from "@/lib/types";
 
 export interface VideoPlayerProps {
   src?: string;
@@ -12,6 +13,10 @@ export interface VideoPlayerProps {
   /** Controlled current time. */
   currentTime?: number;
   onSeek?: (seconds: number) => void;
+  /** Lifecycle state for edge-case rendering: ready · loading · error · ended. */
+  state?: VideoState;
+  onRetry?: () => void;
+  onReplay?: () => void;
   className?: string;
 }
 
@@ -24,11 +29,15 @@ const mix = (token: string, pct: number) =>
 /**
  * Lightweight video player. Branded gradient placeholder (no real asset needed).
  * Controls: play/pause, scrubber, speed, captions, fullscreen — all bound to tokens.
+ * Edge states (loading / error / ended) render a centered overlay.
  */
 export function VideoPlayer({
   durationSeconds = 200,
   currentTime = 0,
   onSeek,
+  state = "ready",
+  onRetry,
+  onReplay,
   className,
 }: VideoPlayerProps) {
   const [playing, setPlaying] = React.useState(false);
@@ -69,21 +78,64 @@ export function VideoPlayer({
         aria-hidden
       />
 
-      <button
-        type="button"
-        onClick={() => setPlaying((p) => !p)}
-        aria-label={playing ? "Pause" : "Play"}
-        className="absolute inset-0 z-10 flex items-center justify-center"
-      >
-        <span
-          className="inline-flex h-16 w-16 items-center justify-center rounded-full text-lms-text-brand-secondary shadow-lg"
-          style={{ background: mix("--lms-bg-primary", 90) }}
+      {state === "ready" ? (
+        <button
+          type="button"
+          onClick={() => setPlaying((p) => !p)}
+          aria-label={playing ? "Pause" : "Play"}
+          className="absolute inset-0 z-10 flex items-center justify-center"
         >
-          <Icon icon={playing ? Pause : Play} size={28} />
-        </span>
-      </button>
+          <span
+            className="inline-flex h-16 w-16 items-center justify-center rounded-full text-lms-text-brand-secondary shadow-lg"
+            style={{ background: mix("--lms-bg-primary", 90) }}
+          >
+            <Icon icon={playing ? Pause : Play} size={28} />
+          </span>
+        </button>
+      ) : (
+        <div
+          role="status"
+          aria-live="polite"
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 text-center"
+          style={{ background: mix("--lms-text-primary", 40) }}
+        >
+          {state === "loading" ? (
+            <>
+              <Loader2 size={36} strokeWidth={2} className="animate-spin text-lms-fg-white" />
+              <span className="lms-text-sm-medium text-lms-fg-white">Loading video…</span>
+            </>
+          ) : null}
+          {state === "error" ? (
+            <>
+              <Icon icon={AlertCircle} size={36} className="text-lms-fg-white" />
+              <span className="lms-text-sm-medium text-lms-fg-white">
+                Couldn’t load this video.
+              </span>
+              <button
+                type="button"
+                onClick={onRetry}
+                className="lms-text-sm-semibold rounded-md bg-lms-fg-white px-3 py-1.5 text-lms-text-brand-secondary"
+              >
+                Retry
+              </button>
+            </>
+          ) : null}
+          {state === "ended" ? (
+            <>
+              <span className="lms-text-md-semibold text-lms-fg-white">You’ve finished this video</span>
+              <button
+                type="button"
+                onClick={onReplay}
+                className="lms-text-sm-semibold inline-flex items-center gap-1.5 rounded-md bg-lms-fg-white px-3 py-1.5 text-lms-text-brand-secondary"
+              >
+                <Icon icon={RotateCcw} size={16} /> Replay
+              </button>
+            </>
+          ) : null}
+        </div>
+      )}
 
-      {captions ? (
+      {captions && state === "ready" ? (
         <div
           className="absolute bottom-20 left-1/2 z-10 max-w-[80%] -translate-x-1/2 rounded px-3 py-1 text-center"
           style={{ background: mix("--lms-text-primary", 70) }}
