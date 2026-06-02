@@ -10,8 +10,9 @@ export interface CompletionStatusProps {
 }
 
 /**
- * 20×20 status circle. Pending = empty ring · In Progress = half ring ·
- * Done = filled green check · Locked = gray lock.
+ * 20×20 status circle (matches DS `LMS / Completion Status`):
+ * Pending = empty ring · In Progress = half ring · Done = solid green circle +
+ * white check · Locked = filled gray circle + gray lock.
  */
 export function CompletionStatus({ state, size = 20, className }: CompletionStatusProps) {
   const stroke = iconStroke(size);
@@ -23,10 +24,10 @@ export function CompletionStatus({ state, size = 20, className }: CompletionStat
       <span
         role="img"
         aria-label="Completed"
-        className={cn(base, "bg-lms-bg-success-primary text-lms-text-success-primary", className)}
+        className={cn(base, "bg-lms-text-success-primary text-lms-fg-white", className)}
         style={dims}
       >
-        <Check size={size * 0.6} strokeWidth={stroke} />
+        <Check size={size * 0.62} strokeWidth={size >= 24 ? 2.5 : 2} />
       </span>
     );
   }
@@ -36,7 +37,7 @@ export function CompletionStatus({ state, size = 20, className }: CompletionStat
       <span
         role="img"
         aria-label="Locked"
-        className={cn(base, "border border-lms-border-primary text-lms-fg-quaternary", className)}
+        className={cn(base, "bg-lms-bg-tertiary text-lms-text-tertiary", className)}
         style={dims}
       >
         <Lock size={size * 0.5} strokeWidth={stroke} />
