@@ -21,9 +21,9 @@ export const downloads: DownloadFile[] = model.downloads;
 export const user: User = model.user;
 
 /** A module's topics whether stored flat or grouped under lessons. */
-export function moduleTopics(module: Module): Topic[] {
-  if (module.topics) return module.topics;
-  if (module.lessons) return module.lessons.flatMap((l) => l.topics);
+export function moduleTopics(mod: Module): Topic[] {
+  if (mod.topics) return mod.topics;
+  if (mod.lessons) return mod.lessons.flatMap((l) => l.topics);
   return [];
 }
 
@@ -31,27 +31,27 @@ export function moduleTopics(module: Module): Topic[] {
 export function flatTopics(c: Course = course): FlatTopic[] {
   const out: FlatTopic[] = [];
   let index = 0;
-  for (const module of c.modules) {
-    if (module.lessons) {
-      for (const lesson of module.lessons) {
+  for (const mod of c.modules) {
+    if (mod.lessons) {
+      for (const lesson of mod.lessons) {
         for (const topic of lesson.topics) {
           out.push({
             ...topic,
-            moduleId: module.id,
-            moduleLabel: module.label,
-            moduleTitle: module.title,
+            moduleId: mod.id,
+            moduleLabel: mod.label,
+            moduleTitle: mod.title,
             lessonLabel: lesson.label,
             index: index++,
           });
         }
       }
-    } else if (module.topics) {
-      for (const topic of module.topics) {
+    } else if (mod.topics) {
+      for (const topic of mod.topics) {
         out.push({
           ...topic,
-          moduleId: module.id,
-          moduleLabel: module.label,
-          moduleTitle: module.title,
+          moduleId: mod.id,
+          moduleLabel: mod.label,
+          moduleTitle: mod.title,
           index: index++,
         });
       }
