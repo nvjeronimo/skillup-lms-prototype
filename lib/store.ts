@@ -2,10 +2,18 @@
 
 import { create } from "zustand";
 import { notesSeed, course, getTopic } from "./data";
+import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
 
 export type TabSlug = "transcript" | "notes" | "downloads";
 export type OverlayPanel = null | "notifications" | "saved";
+
+/** Toast payload — supports an optional inline action (e.g. Undo). */
+export interface ToastModel {
+  message: string;
+  actionLabel?: string;
+  onAction?: () => void;
+}
 
 interface LmsState {
   sidebarExpanded: boolean;
@@ -22,8 +30,8 @@ interface LmsState {
   openPanel: OverlayPanel;
   /** Locally collapsed module groups in the sidebar. */
   collapsedModules: Set<string>;
-  /** Ephemeral toast for out-of-scope actions (AI, theme, etc). */
-  toast: string | null;
+  /** Ephemeral toast (bookmark feedback, out-of-scope actions). */
+  toast: ToastModel | null;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -36,12 +44,12 @@ interface LmsState {
   closeNoteEditor: () => void;
   saveNote: (note: NotePayload) => void;
   deleteNote: (id: string) => void;
-  toggleBookmark: (topicId: string) => void;
+  toggleBookmark: (topicId: string, opts?: { silent?: boolean }) => void;
   toggleModule: (moduleId: string) => void;
   openOverlayPanel: (which: "notifications" | "saved") => void;
   closeOverlayPanel: () => void;
   markAllNotificationsRead: (ids: string[]) => void;
-  showToast: (msg: string) => void;
+  showToast: (message: string, opts?: { actionLabel?: string; onAction?: () => void }) => void;
   clearToast: () => void;
 }
 
@@ -73,7 +81,11 @@ export const useLmsStore = create<LmsState>((set, get) => ({
   toast: null,
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
-  toggleSidebar: () => set((s) => ({ sidebarExpanded: !s.sidebarExpanded })),
+  toggleSidebar: () =>
+    set((s) => {
+      track("sidebar_collapse", { from: s.sidebarExpanded ? "expanded" : "collapsed" });
+      return { sidebarExpanded: !s.sidebarExpanded };
+    }),
   setMobileDrawerOpen: (v) => set({ mobileDrawerOpen: v }),
   setCurrentTopic: (id) => set({ currentTopicId: id, mobileDrawerOpen: false }),
   setCurrentTab: (slug) => set({ currentTabSlug: slug }),
@@ -86,6 +98,7 @@ export const useLmsStore = create<LmsState>((set, get) => ({
 
   saveNote: ({ noteId, lineId, text, tags }) =>
     set((state) => {
+      track(noteId ? "note_edit" : "note_add", { noteId, lineId, hasTags: tags.length > 0 });
       if (noteId) {
         return {
           notes: state.notes.map((n) =>
@@ -115,25 +128,47 @@ export const useLmsStore = create<LmsState>((set, get) => ({
       return { noteEditor: { open: false } };
     }),
 
-  deleteNote: (id) => set((state) => ({ notes: state.notes.filter((n) => n.id !== id) })),
+  deleteNote: (id) =>
+    set((state) => {
+      track("note_delete", { noteId: id });
+      return { notes: state.notes.filter((n) => n.id !== id) };
+    }),
 
-  toggleBookmark: (topicId) =>
+  toggleBookmark: (topicId, opts) =>
     set((state) => {
       const next = new Set(state.bookmarks);
-      if (next.has(topicId)) next.delete(topicId);
-      else next.add(topicId);
-      return { bookmarks: next };
+      const willAdd = !next.has(topicId);
+      if (willAdd) next.add(topicId);
+      else next.delete(topicId);
+      track(willAdd ? "bookmark_add" : "bookmark_remove", { topicId });
+
+      const update: Partial<LmsState> = { bookmarks: next };
+      // Toast feedback with Undo (phase1-readiness §1). Skip on silent (undo) toggles.
+      if (!opts?.silent) {
+        const title = getTopic(topicId)?.title ?? "topic";
+        update.toast = {
+          message: willAdd ? `Bookmarked · ${title}` : "Bookmark removed",
+          actionLabel: "Undo",
+          onAction: () => get().toggleBookmark(topicId, { silent: true }),
+        };
+      }
+      return update;
     }),
 
   toggleModule: (moduleId) =>
     set((state) => {
       const next = new Set(state.collapsedModules);
-      if (next.has(moduleId)) next.delete(moduleId);
-      else next.add(moduleId);
+      const willCollapse = !next.has(moduleId);
+      if (willCollapse) next.add(moduleId);
+      else next.delete(moduleId);
+      track(willCollapse ? "module_collapse" : "module_expand", { moduleId });
       return { collapsedModules: next };
     }),
 
-  openOverlayPanel: (which) => set({ openPanel: which }),
+  openOverlayPanel: (which) => {
+    track("panel_open", { panel: which });
+    set({ openPanel: which });
+  },
   closeOverlayPanel: () => set({ openPanel: null }),
 
   markAllNotificationsRead: (ids) =>
@@ -143,7 +178,7 @@ export const useLmsStore = create<LmsState>((set, get) => ({
       return { notificationsRead: next };
     }),
 
-  showToast: (msg) => set({ toast: msg }),
+  showToast: (message, opts) => set({ toast: { message, ...opts } }),
   clearToast: () => set({ toast: null }),
 }));
 

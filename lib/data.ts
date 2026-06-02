@@ -95,6 +95,21 @@ export function topicPath(topicId: string, c: Course = course): string {
 export const DEFAULT_TOPIC_ID = "m3-t1";
 export const DEFAULT_COURSE_SLUG = course.slug;
 
+/** Map a notification type to its hybrid-tab activity category. */
+export function notificationCategory(
+  type: NotificationModel["type"],
+): "discussions" | "grading" | "updates" {
+  switch (type) {
+    case "discussion-reply":
+      return "discussions";
+    case "assignment-due":
+    case "peer-review-received":
+      return "grading";
+    default:
+      return "updates";
+  }
+}
+
 /* ---- Mock notifications for the Notifications panel ---- */
 export const notifications: NotificationModel[] = [
   {

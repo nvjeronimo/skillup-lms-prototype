@@ -125,6 +125,12 @@ export type NotificationType =
   | "peer-review-received"
   | "syllabus-change";
 
+/** Hybrid Notifications panel tabs (activity category). */
+export type NotificationCategory = "all" | "discussions" | "grading" | "updates";
+
+/** Video player lifecycle state for edge-case rendering. */
+export type VideoState = "ready" | "loading" | "error" | "ended";
+
 export interface NotificationModel {
   id: string;
   type: NotificationType;
