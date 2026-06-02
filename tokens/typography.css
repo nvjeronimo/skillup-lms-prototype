@@ -16,9 +16,12 @@
    ============================================================================ */
 
 :root {
-  /* SKO Design System uses Montserrat as `font-family-body` for the whole UI. */
-  --lms-font-body: var(--font-montserrat), "Montserrat", system-ui, sans-serif;
-  --lms-font-display: var(--font-montserrat), "Montserrat", system-ui, sans-serif;
+  /* SKO Design System uses Montserrat as `font-family-body` for the whole UI.
+     The inline `var(..., "Montserrat")` fallback keeps the family valid even when
+     `--font-montserrat` (injected by next/font) is absent — e.g. in Storybook,
+     where "Montserrat" is loaded via a Google Fonts <link>. */
+  --lms-font-body: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
+  --lms-font-display: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
 }
 
 /* ---- Display ramp (Montserrat) ---- */

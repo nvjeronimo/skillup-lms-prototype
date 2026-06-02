@@ -1,8 +1,10 @@
 import type { Preview } from "@storybook/react";
 import React from "react";
 import { Inter, Montserrat } from "next/font/google";
-import "../tokens/colors.css";
-import "../tokens/typography.css";
+// Import the Tailwind-built global stylesheet so every `bg-lms-*` / `text-lms-*` /
+// layout utility is available in Storybook exactly as in the app. globals.css also
+// @imports the color + typography token stylesheets.
+import "../app/globals.css";
 import "./storybook.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -35,7 +37,10 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <div className={`${inter.variable} ${montserrat.variable}`} style={{ fontFamily: "var(--lms-font-body)" }}>
+      <div
+        className={`${inter.variable} ${montserrat.variable}`}
+        style={{ fontFamily: "var(--lms-font-body)" }}
+      >
         <Story />
       </div>
     ),
