@@ -18,8 +18,6 @@ export interface CaptionLanguage {
 
 export interface VideoChromeFooterProps {
   license?: VideoLicense;
-  captionsEnabled?: boolean;
-  onToggleCaptions?: (next: boolean) => void;
   currentLanguage?: string;
   availableLanguages?: CaptionLanguage[];
   onLanguageChange?: (code: string) => void;
@@ -34,13 +32,11 @@ const DEFAULT_LANGS: CaptionLanguage[] = [
 ];
 
 /**
- * Inline row below the Video Player: License (left) · CC toggle · Language
- * picker · Download transcript (right). edX parity additions (§10.8/10.10/10.12/10.14).
+ * Inline row at the top of the transcript tab: license (left) · Language picker ·
+ * Download transcript (right). Matches the Final Screen chrome footer.
  */
 export function VideoChromeFooter({
   license = { holder: "SkillUp 2026", type: "CC BY-SA 4.0", url: "#" },
-  captionsEnabled = true,
-  onToggleCaptions,
   currentLanguage = "EN",
   availableLanguages = DEFAULT_LANGS,
   onLanguageChange,
@@ -71,27 +67,12 @@ export function VideoChromeFooter({
       )}
     >
       <p className="lms-text-sm-regular text-lms-text-tertiary">
-        © {license.holder} ·{" "}
         <a href={license.url} className="text-lms-text-brand-secondary hover:underline">
           {license.type}
         </a>
       </p>
 
       <div className="flex items-center gap-4">
-        <button
-          type="button"
-          aria-pressed={captionsEnabled}
-          onClick={() => onToggleCaptions?.(!captionsEnabled)}
-          className={cn(
-            "lms-text-xs-semibold rounded-full px-2.5 py-1 transition-colors",
-            captionsEnabled
-              ? "bg-lms-bg-brand-section text-lms-text-brand-secondary"
-              : "bg-lms-bg-secondary text-lms-text-secondary hover:bg-lms-bg-tertiary",
-          )}
-        >
-          CC
-        </button>
-
         <div className="relative">
           <button
             type="button"

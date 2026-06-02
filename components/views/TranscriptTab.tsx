@@ -66,7 +66,6 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     <div className="relative" onWheel={pauseFollow} onTouchMove={pauseFollow}>
       {/* Video chrome footer sits at the top of the transcript tab (per Final Screens). */}
       <VideoChromeFooter
-        onToggleCaptions={(next) => track("video_cc_toggle", { enabled: next })}
         onLanguageChange={(code) => track("video_language_change", { language: code })}
         onDownloadTranscript={(format) => {
           track("download_transcript", { format });

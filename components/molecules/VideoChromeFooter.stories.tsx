@@ -8,7 +8,6 @@ const meta: Meta<typeof VideoChromeFooter> = {
   parameters: { layout: "padded" },
   args: {
     license: { holder: "SkillUp 2026", type: "CC BY-SA 4.0", url: "#" },
-    captionsEnabled: true,
     currentLanguage: "EN",
   },
   decorators: [
@@ -24,5 +23,4 @@ export default meta;
 type Story = StoryObj<typeof VideoChromeFooter>;
 
 export const Default: Story = {};
-export const CaptionsOff: Story = { args: { captionsEnabled: false } };
 export const SpanishSelected: Story = { args: { currentLanguage: "ES" } };
