@@ -17,8 +17,8 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
       <div className="py-3">
         <EmptyState
           icon={FileText}
-          title="No downloads"
-          description="This topic has no attached files."
+          title="No downloads for this lesson"
+          description="Your instructor hasn't attached any files. Check back later or message your mentor."
         />
       </div>
     );

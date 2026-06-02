@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MessageCircle } from "lucide-react";
+import { ArrowUp, MessageCircle } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { cn } from "@/lib/utils";
@@ -10,17 +10,19 @@ export interface ThreadItemProps {
   timestamp: string;
   content: string;
   replies: number;
+  upvotes?: number;
   onClick?: () => void;
   className?: string;
 }
 
-/** Discussion thread item: avatar + content + replies count. */
+/** Discussion thread item: avatar + content + upvotes + replies count. */
 export function ThreadItem({
   author,
   avatarUrl,
   timestamp,
   content,
   replies,
+  upvotes = 12,
   onClick,
   className,
 }: ThreadItemProps) {
@@ -40,9 +42,15 @@ export function ThreadItem({
           <span className="lms-text-xs-regular text-lms-text-tertiary">{timestamp}</span>
         </div>
         <p className="lms-text-sm-regular mt-1 text-lms-text-secondary">{content}</p>
-        <span className="lms-text-xs-medium mt-2 inline-flex items-center gap-1 text-lms-text-brand-secondary">
-          <Icon icon={MessageCircle} size={14} />
-          {replies} {replies === 1 ? "reply" : "replies"}
+        <span className="mt-2 flex items-center gap-4">
+          <span className="lms-text-xs-medium inline-flex items-center gap-1 text-lms-text-tertiary">
+            <Icon icon={ArrowUp} size={14} />
+            {upvotes}
+          </span>
+          <span className="lms-text-xs-medium inline-flex items-center gap-1 text-lms-text-brand-secondary">
+            <Icon icon={MessageCircle} size={14} />
+            {replies} {replies === 1 ? "reply" : "replies"}
+          </span>
         </span>
       </div>
     </button>

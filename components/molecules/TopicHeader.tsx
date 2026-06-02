@@ -33,10 +33,10 @@ export function TopicHeader({
 
   return (
     <header className={cn("flex flex-col gap-2", className)}>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-1.5">
         <TopicTypeBadge type={type} />
         {showDuration ? (
-          <span className="lms-text-xs-regular text-lms-text-tertiary">{durationLabel}</span>
+          <span className="lms-text-xs-regular text-lms-text-tertiary">· {durationLabel}</span>
         ) : null}
       </div>
       <h1 className="lms-text-display-xs-semibold text-lms-text-primary">{title}</h1>

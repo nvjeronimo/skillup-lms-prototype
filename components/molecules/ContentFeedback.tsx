@@ -20,35 +20,34 @@ export function ContentFeedback({
   className,
 }: ContentFeedbackProps) {
   const btn =
-    "inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-lms-bg-secondary";
+    "lms-text-sm-medium inline-flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-lms-bg-secondary";
   return (
-    <div className={cn("flex items-center gap-1", className)}>
-      <span className="lms-text-sm-regular mr-1 text-lms-text-tertiary">Was this helpful?</span>
+    <div className={cn("flex items-center gap-4", className)}>
       <button
         type="button"
         onClick={onLike}
         aria-pressed={value === "like"}
-        aria-label="Like"
         className={cn(btn, value === "like" ? "text-lms-text-success-primary" : "text-lms-text-tertiary")}
       >
         <Icon icon={ThumbsUp} size={18} />
+        Like
       </button>
       <button
         type="button"
         onClick={onDislike}
         aria-pressed={value === "dislike"}
-        aria-label="Dislike"
         className={cn(btn, value === "dislike" ? "text-lms-text-error-primary" : "text-lms-text-tertiary")}
       >
         <Icon icon={ThumbsDown} size={18} />
+        Dislike
       </button>
       <button
         type="button"
         onClick={onReport}
-        aria-label="Report"
         className={cn(btn, "text-lms-text-tertiary hover:text-lms-text-warning-primary")}
       >
         <Icon icon={AlertTriangle} size={18} />
+        Report an issue
       </button>
     </div>
   );

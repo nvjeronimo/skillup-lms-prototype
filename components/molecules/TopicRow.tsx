@@ -1,8 +1,7 @@
 import * as React from "react";
 import { CompletionStatus } from "@/components/atoms/CompletionStatus";
 import { BookmarkButton } from "@/components/atoms/Bookmark";
-import { Icon, topicTypeIcon } from "@/lib/icons";
-import { topicTypeShortLabel } from "@/lib/utils";
+import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { cn } from "@/lib/utils";
 import type { CompletionState, TopicType } from "@/lib/types";
 
@@ -85,12 +84,13 @@ export function TopicRow({
           >
             {title}
           </span>
-          {/* Inline type icon + label + · duration (no pill — matches Final Screens). */}
-          <span className="mt-1 flex flex-wrap items-center gap-1 text-lms-text-tertiary">
-            <Icon icon={topicTypeIcon(type)} size={14} />
-            <span className="lms-text-xs-regular">{topicTypeShortLabel(type)}</span>
-            <span className="lms-text-xs-regular">· {duration}</span>
-            {optional ? <span className="lms-text-2xs-medium">· Optional</span> : null}
+          {/* Brand type badge (icon + label) + gray duration — matches DS Topic Row. */}
+          <span className="mt-1 flex flex-wrap items-center gap-1.5">
+            <TopicTypeBadge type={type} />
+            <span className="lms-text-xs-regular text-lms-text-tertiary">· {duration}</span>
+            {optional ? (
+              <span className="lms-text-2xs-medium text-lms-text-tertiary">· Optional</span>
+            ) : null}
           </span>
         </span>
       </button>

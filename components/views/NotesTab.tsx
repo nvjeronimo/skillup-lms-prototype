@@ -38,14 +38,14 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
     router.push(`/course/${courseSlug}/topic/${topicId}`);
   }
 
-  // No notes at all for this topic → dedicated empty state.
+  // No notes at all for this topic → dedicated empty state (matches DS copy).
   if (notes.length === 0) {
     return (
       <div className="py-3">
         <EmptyState
           icon={StickyNote}
-          title="No notes yet"
-          description="Create notes from the Transcript tab — click + Note on any line."
+          title="No notes yet for this lesson"
+          description="Press the + button below as you watch to capture timestamped notes."
         />
       </div>
     );
