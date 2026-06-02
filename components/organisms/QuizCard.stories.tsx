@@ -8,7 +8,7 @@ const meta: Meta<typeof QuizCard> = {
   parameters: { layout: "padded" },
   args: { state: "Question", selectedId: "a" },
   argTypes: {
-    state: { control: "select", options: ["Question", "Revealed", "Results", "Not Passed"] },
+    state: { control: "select", options: ["Start", "Question", "Revealed", "Results", "Not Passed"] },
   },
   decorators: [
     (Story) => (
@@ -22,6 +22,7 @@ export default meta;
 
 type Story = StoryObj<typeof QuizCard>;
 
+export const Start: Story = { args: { state: "Start" } };
 export const Question: Story = { args: { state: "Question" } };
 export const Revealed: Story = { args: { state: "Revealed" } };
 export const Results: Story = { args: { state: "Results" } };

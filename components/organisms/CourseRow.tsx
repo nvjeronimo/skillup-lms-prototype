@@ -1,47 +1,86 @@
 import * as React from "react";
-import { ChevronRight } from "lucide-react";
+import { Lock } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { DifficultyBadge, type Difficulty } from "@/components/atoms/MetaBadges";
+import { Button } from "@/components/atoms/Button";
+import { DeliveryModeBadge, type DeliveryMode } from "@/components/atoms/MetaBadges";
 import { cn } from "@/lib/utils";
+
+export type CourseRowState = "Active" | "Locked" | "Available";
 
 export interface CourseRowProps {
   title: string;
-  difficulty: Difficulty;
-  progressPct: number;
-  initials: string;
+  deliveryMode?: DeliveryMode;
+  state?: CourseRowState;
+  /** Progress % (Active state). */
+  progressPct?: number;
+  /** Unlock label (Locked state), e.g. "UNLOCKS MAY 18". */
+  unlockLabel?: string;
   onClick?: () => void;
   className?: string;
 }
 
-/** Compact course row used in program detail / lists. */
+/** Course row in program lists — Active / Locked / Available states (matches DS). */
 export function CourseRow({
   title,
-  difficulty,
-  progressPct,
-  initials,
+  deliveryMode = "Live Sessions",
+  state = "Active",
+  progressPct = 0,
+  unlockLabel = "UNLOCKS MAY 18",
   onClick,
   className,
 }: CourseRowProps) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <div
       className={cn(
-        "flex w-full items-center gap-3 rounded-lg border border-lms-border-secondary p-3 text-left transition-colors hover:border-lms-border-primary",
+        "flex items-center gap-4 rounded-xl border bg-lms-bg-primary px-5 py-3",
+        state === "Active" ? "border-lms-border-brand" : "border-lms-border-secondary",
         className,
       )}
     >
-      <span className="lms-text-sm-semibold inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-lms-bg-brand-section text-lms-text-brand-secondary">
-        {initials}
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="lms-text-sm-semibold truncate text-lms-text-primary">{title}</p>
-        <div className="mt-1 flex items-center gap-2">
-          <DifficultyBadge value={difficulty} />
-          <span className="lms-text-xs-regular text-lms-text-tertiary">{progressPct}% complete</span>
-        </div>
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <span
+          className={cn(
+            "lms-text-md-semibold truncate",
+            state === "Locked" ? "text-lms-text-tertiary" : "text-lms-text-primary",
+          )}
+        >
+          {title}
+        </span>
+        <DeliveryModeBadge value={deliveryMode} />
       </div>
-      <Icon icon={ChevronRight} size={18} className="text-lms-fg-quaternary" />
-    </button>
+
+      {state === "Active" ? (
+        <div className="flex items-center gap-3">
+          <div className="h-2 w-40 overflow-hidden rounded-full bg-lms-bg-tertiary">
+            <div className="h-full rounded-full bg-lms-fg-progress" style={{ width: `${progressPct}%` }} />
+          </div>
+          <span className="lms-text-sm-regular text-lms-text-tertiary">{progressPct}%</span>
+          <Button variant="primary" size="md" onClick={onClick}>
+            Resume
+          </Button>
+        </div>
+      ) : null}
+
+      {state === "Locked" ? (
+        <div className="flex items-center gap-3">
+          <span className="lms-text-xs-semibold inline-flex items-center gap-1 text-lms-text-warning-primary">
+            <Icon icon={Lock} size={14} />
+            {unlockLabel}
+          </span>
+          <Button variant="secondary" size="md" onClick={onClick}>
+            Details
+          </Button>
+        </div>
+      ) : null}
+
+      {state === "Available" ? (
+        <div className="flex items-center gap-3">
+          <span className="lms-text-xs-semibold text-lms-text-success-primary">AVAILABLE NOW</span>
+          <Button variant="primary" size="md" onClick={onClick}>
+            Start
+          </Button>
+        </div>
+      ) : null}
+    </div>
   );
 }

@@ -14,21 +14,37 @@ export interface AIPanelProps {
   className?: string;
 }
 
-const MODES: AIMode[] = ["Key Takeaways", "Ask", "Chat", "Related"];
+const MODES: { value: AIMode; label: string }[] = [
+  { value: "Key Takeaways", label: "Takeaways" },
+  { value: "Ask", label: "Ask" },
+  { value: "Chat", label: "Chat" },
+  { value: "Related", label: "Related" },
+];
 
 const TAKEAWAYS = [
-  "The product lifecycle starts with deep customer understanding, before any code.",
-  "AI compresses the research phase — synthesis at scale, not replacement.",
-  "An MVP is the smallest experiment to test the riskiest assumption.",
+  { ts: "0:38", text: "Lifecycle starts with customer understanding — before any code" },
+  { ts: "1:14", text: "AI compresses research phase via synthesis at scale" },
+  { ts: "2:14", text: "MVP = test riskiest assumption first" },
+];
+
+const SUGGESTIONS = [
+  "Summarize this lesson in 3 bullets",
+  "Why is MVP testing the riskiest assumption first?",
+  "Give me a quiz on this topic",
 ];
 
 const RELATED = [
-  "The define phase",
-  "DMAIC vs DMADV",
-  "Lean principles overview",
+  { title: "What AI can do for PMs", meta: "Module 1 · Video · 3m 36s" },
+  { title: "Limitations of ChatGPT", meta: "Module 1 · Video · 2m 1s" },
+  { title: "Ideation with ChatGPT", meta: "Module 2 · Video · 4m 46s" },
+  { title: "User segmentation", meta: "Module 2 · Video · 1m 28s" },
 ];
 
-/** Right-side AI assistant panel. Mode = Key Takeaways · Ask · Chat · Related. */
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return <p className="lms-text-2xs-medium mb-3 text-lms-text-tertiary">{children}</p>;
+}
+
+/** Right-side AI assistant panel. Mode = Takeaways · Ask · Chat · Related. */
 export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, className }: AIPanelProps) {
   return (
     <aside
@@ -41,7 +57,7 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
       <header className="flex items-center justify-between border-b border-lms-border-secondary px-4 py-4">
         <span className="lms-text-md-semibold inline-flex items-center gap-2 text-lms-text-primary">
           <Icon icon={Sparkles} size={20} className="text-lms-text-brand-secondary" />
-          AI assistant
+          AI Assistant
         </span>
         <button
           type="button"
@@ -53,64 +69,105 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
         </button>
       </header>
 
-      <div role="tablist" className="flex gap-1 border-b border-lms-border-secondary px-3 py-2">
+      <div role="tablist" className="flex items-center gap-4 border-b border-lms-border-secondary px-4">
         {MODES.map((m) => (
           <button
-            key={m}
+            key={m.value}
             role="tab"
-            aria-selected={m === mode}
-            onClick={() => onModeChange?.(m)}
+            aria-selected={m.value === mode}
+            onClick={() => onModeChange?.(m.value)}
             className={cn(
-              "lms-text-xs-semibold rounded-full px-2.5 py-1 transition-colors",
-              m === mode
-                ? "bg-lms-bg-brand-section text-lms-text-brand-secondary"
-                : "text-lms-text-secondary hover:bg-lms-bg-secondary",
+              "lms-text-sm-semibold -mb-px border-b-2 py-3 transition-colors",
+              m.value === mode
+                ? "border-lms-border-brand text-lms-text-brand-secondary"
+                : "border-transparent text-lms-text-secondary hover:text-lms-text-primary",
             )}
           >
-            {m}
+            {m.label}
           </button>
         ))}
       </div>
 
       <div className="lms-scroll flex-1 overflow-y-auto px-4 py-4">
         {mode === "Key Takeaways" ? (
-          <ul className="flex flex-col gap-3">
-            {TAKEAWAYS.map((t, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="lms-text-xs-semibold mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-lms-bg-brand-section text-lms-text-brand-secondary">
-                  {i + 1}
+          <>
+            <Eyebrow>Key takeaways · {TAKEAWAYS.length}</Eyebrow>
+            <ul className="flex flex-col gap-3">
+              {TAKEAWAYS.map((t) => (
+                <li
+                  key={t.ts}
+                  className="rounded-lg border border-lms-border-secondary px-3 py-2.5"
+                >
+                  <span className="lms-text-xs-semibold block text-lms-text-brand-secondary">{t.ts}</span>
+                  <span className="lms-text-sm-regular mt-1 block text-lms-text-primary">{t.text}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+
+        {mode === "Ask" ? (
+          <>
+            <Eyebrow>Ask anything</Eyebrow>
+            <input
+              placeholder="Ask about this topic…"
+              className="lms-text-sm-regular w-full rounded-lg border border-lms-border-primary bg-lms-bg-secondary px-3 py-2.5 text-lms-text-primary outline-none focus:border-lms-border-brand"
+            />
+            <div className="mt-3 flex flex-col items-start gap-2">
+              {SUGGESTIONS.map((s) => (
+                <button
+                  key={s}
+                  className="lms-text-sm-medium rounded-full bg-lms-bg-brand-section px-3 py-1.5 text-left text-lms-text-brand-secondary"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : null}
+
+        {mode === "Chat" ? (
+          <>
+            <Eyebrow>Conversation · 2 messages</Eyebrow>
+            <div className="flex flex-col gap-3">
+              <div className="rounded-lg bg-lms-bg-brand-section px-3 py-2.5">
+                <span className="lms-text-2xs-medium block text-lms-text-brand-secondary">You</span>
+                <span className="lms-text-sm-regular mt-1 block text-lms-text-primary">
+                  What’s the difference between MVP and prototype?
                 </span>
-                <span className="lms-text-sm-regular text-lms-text-secondary">{t}</span>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <div className="rounded-lg bg-lms-bg-secondary px-3 py-2.5">
+                <span className="lms-text-2xs-medium block text-lms-text-tertiary">AI Assistant</span>
+                <span className="lms-text-sm-regular mt-1 block text-lms-text-secondary">
+                  An MVP tests assumptions in real conditions; a prototype tests interactions. Use
+                  MVP for risk, prototype for design.
+                </span>
+              </div>
+            </div>
+          </>
         ) : null}
 
         {mode === "Related" ? (
-          <ul className="flex flex-col gap-2">
-            {RELATED.map((r) => (
-              <li key={r}>
-                <button className="lms-text-sm-medium w-full rounded-lg border border-lms-border-secondary px-3 py-2 text-left text-lms-text-primary hover:border-lms-border-primary">
-                  {r}
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-
-        {mode === "Ask" || mode === "Chat" ? (
-          <div className="lms-text-sm-regular rounded-lg bg-lms-bg-secondary px-3 py-3 text-lms-text-secondary">
-            {mode === "Ask"
-              ? "Ask anything about this lesson — I’ll answer from the transcript."
-              : "Hi! I can help you review this topic. What would you like to explore?"}
-          </div>
+          <>
+            <Eyebrow>Related units · {RELATED.length}</Eyebrow>
+            <ul className="flex flex-col gap-2">
+              {RELATED.map((r) => (
+                <li key={r.title}>
+                  <button className="w-full rounded-lg border border-lms-border-secondary px-3 py-2.5 text-left hover:border-lms-border-primary">
+                    <span className="lms-text-sm-semibold block text-lms-text-primary">{r.title}</span>
+                    <span className="lms-text-xs-regular mt-0.5 block text-lms-text-tertiary">{r.meta}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
         ) : null}
       </div>
 
       {mode === "Ask" || mode === "Chat" ? (
         <div className="flex items-center gap-2 border-t border-lms-border-secondary px-3 py-3">
           <input
-            placeholder="Type a question…"
+            placeholder="Type a message…"
             className="lms-text-sm-regular flex-1 rounded-lg border border-lms-border-primary bg-lms-bg-primary px-3 py-2 text-lms-text-primary outline-none focus:border-lms-border-brand"
           />
           <button

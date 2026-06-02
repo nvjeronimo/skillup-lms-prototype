@@ -13,9 +13,9 @@ const meta: Meta<typeof CourseCard> = {
     difficulty: "Intermediate",
     deliveryMode: "Flexible + Live",
     progressPct: 67,
-    estimation: "3 h left",
-    initials: "SS",
-    upNext: { type: "Video", title: "Introduction to the DMAIC methodology" },
+    estimation: "May 24",
+    initials: "AI",
+    upNext: { type: "Video", title: "The lifecycle begins long before any code…" },
   },
   decorators: [
     (Story) => (
@@ -31,7 +31,7 @@ type Story = StoryObj<typeof CourseCard>;
 
 export const Default: Story = {};
 export const Microsoft: Story = {
-  args: { provider: "Microsoft", courseType: "Course", difficulty: "Advanced", deliveryMode: "Cohort" },
+  args: { provider: "Microsoft", courseType: "Course", difficulty: "Advanced", deliveryMode: "Live Sessions" },
 };
 export const Beginner: Story = {
   args: { difficulty: "Beginner", deliveryMode: "Flexible Learning", progressPct: 12 },

@@ -6,7 +6,7 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 
-export type QuizState = "Question" | "Revealed" | "Results" | "Not Passed";
+export type QuizState = "Start" | "Question" | "Revealed" | "Results" | "Not Passed";
 
 export interface QuizOption {
   id: string;
@@ -42,6 +42,30 @@ export function QuizCard({
   className,
 }: QuizCardProps) {
   const revealed = state === "Revealed" || state === "Results" || state === "Not Passed";
+
+  // Start state — quiz intro with meta + a single "Start quiz" CTA.
+  if (state === "Start") {
+    return (
+      <div
+        className={cn(
+          "flex flex-col gap-3 rounded-xl border border-lms-border-secondary bg-lms-bg-primary p-5",
+          className,
+        )}
+      >
+        <span className="lms-text-2xs-medium text-lms-text-brand-secondary">Practice quiz</span>
+        <h3 className="lms-text-md-semibold text-lms-text-primary">Define and measure</h3>
+        <p className="lms-text-sm-regular text-lms-text-secondary">
+          Check your understanding before moving on. You can retake this as many times as you like.
+        </p>
+        <p className="lms-text-xs-regular text-lms-text-tertiary">Module 3 · 5 questions · approx. 4 min</p>
+        <div>
+          <Button variant="primary" size="md" onClick={onSubmit}>
+            Start quiz
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
