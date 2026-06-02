@@ -1,0 +1,87 @@
+@import "../tokens/colors.css";
+@import "../tokens/typography.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--lms-bg-primary);
+  color: var(--lms-text-primary);
+  font-family: var(--lms-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Focus visibility for keyboard users — bound to brand border token. */
+:focus-visible {
+  outline: 2px solid var(--lms-border-brand);
+  outline-offset: 2px;
+}
+
+/* Thin custom scrollbar used by scroll regions (atoms/VerticalScroll mirrors this). */
+.lms-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--lms-border-primary) transparent;
+}
+.lms-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.lms-scroll::-webkit-scrollbar-thumb {
+  background: var(--lms-border-primary);
+  border-radius: 999px;
+}
+.lms-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Slide-in keyframes for overlay panels + mobile drawer. */
+@keyframes lms-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes lms-slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes lms-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.lms-animate-slide-right {
+  animation: lms-slide-in-right 200ms ease-out;
+}
+.lms-animate-slide-left {
+  animation: lms-slide-in-left 200ms ease-out;
+}
+.lms-animate-fade {
+  animation: lms-fade-in 200ms ease-out;
+}

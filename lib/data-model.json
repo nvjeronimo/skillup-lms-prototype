@@ -1,0 +1,127 @@
+{
+  "_comment": "Mock course content for the prototype. Anchor data: Six Sigma course with one Video topic featured. Engineer can extend.",
+
+  "course": {
+    "id": "six-sigma",
+    "slug": "six-sigma",
+    "title": "Six Sigma for Process Improvement",
+    "provider": "SkillUp",
+    "courseType": "Program",
+    "difficulty": "Intermediate",
+    "deliveryMode": "Flexible + Live",
+    "overallProgressPct": 67,
+    "modulesCompleted": 2,
+    "modulesTotal": 3,
+    "modules": [
+      {
+        "id": "m1",
+        "label": "MODULE 01",
+        "title": "Introduction to ASQ-Certified Six Sigma Black Belt",
+        "topicsCompleted": 3,
+        "topicsTotal": 3,
+        "isCompleted": true,
+        "topics": [
+          { "id": "m1-t1", "type": "Reading", "title": "What is Six Sigma?", "duration": "approx. 8 min read", "completed": true },
+          { "id": "m1-t2", "type": "Video", "title": "History and origins", "duration": "5 min", "completed": true },
+          { "id": "m1-t3", "type": "Practice Assignment", "title": "Quick check", "duration": "approx. 8 min", "completed": true }
+        ]
+      },
+      {
+        "id": "m2",
+        "label": "MODULE 02",
+        "title": "Six Sigma and Lean principles in the organization",
+        "topicsCompleted": 3,
+        "topicsTotal": 3,
+        "isCompleted": true,
+        "topics": [
+          { "id": "m2-t1", "type": "Video", "title": "Lean principles overview", "duration": "12 min", "completed": true },
+          { "id": "m2-t2", "type": "Reading", "title": "DMAIC vs DMADV", "duration": "approx. 10 min read", "completed": true },
+          { "id": "m2-t3", "type": "Activity", "title": "Match the principles", "duration": "approx. 10 min", "completed": true }
+        ]
+      },
+      {
+        "id": "m3",
+        "label": "MODULE 03",
+        "title": "DMAIC for process improvement",
+        "topicsCompleted": 2,
+        "topicsTotal": 9,
+        "isCompleted": false,
+        "lessons": [
+          {
+            "id": "m3-l1",
+            "label": "Define and measure",
+            "topics": [
+              {
+                "id": "m3-t1",
+                "type": "Video",
+                "title": "Introduction to the DMAIC methodology",
+                "duration": "3m 20s",
+                "completed": false,
+                "active": true,
+                "videoSrc": "/videos/dmaic-intro.mp4",
+                "transcript": [
+                  { "id": "ln-1", "ts": "0:00", "text": "Welcome back. In this unit we look at the product development lifecycle through the lens of AI-augmented workflows." },
+                  { "id": "ln-2", "ts": "0:18", "text": "Understanding this lifecycle is critical — it's the backbone of everything a product manager does, from discovery to launch." },
+                  { "id": "ln-3", "ts": "0:38", "text": "The lifecycle begins long before any code is written — with deep understanding of customer needs and unmet pain points.", "hasNote": true },
+                  { "id": "ln-4", "ts": "0:58", "text": "Traditionally, this research phase was time-consuming — hours of interviews, synthesis workshops, affinity mapping." },
+                  { "id": "ln-5", "ts": "1:14", "text": "This is exactly where AI tools can dramatically compress the research phase — turning 50 interviews into structured themes in minutes.", "hasNote": true },
+                  { "id": "ln-6", "ts": "1:34", "text": "As we move into the ideation phase, AI can assist in generating innovative concepts based on the identified themes, fostering creativity and efficiency." },
+                  { "id": "ln-7", "ts": "2:00", "text": "An MVP is not a smaller product. It's the smallest experiment you can run to test the riskiest assumption." }
+                ]
+              },
+              { "id": "m3-t2", "type": "Video", "title": "The define phase", "duration": "5 min", "completed": false },
+              { "id": "m3-t3", "type": "Reading", "title": "The measure phase", "duration": "approx. 8 min read", "completed": false, "bookmarked": true },
+              { "id": "m3-t4", "type": "Practice Assignment", "title": "Practice Quiz: Define and measure", "duration": "approx. 6 min", "completed": false }
+            ]
+          },
+          {
+            "id": "m3-l2",
+            "label": "Analyze, improve, and control",
+            "topics": [
+              { "id": "m3-t5", "type": "Video", "title": "The analyze phase", "duration": "6 min", "completed": false, "locked": true },
+              { "id": "m3-t6", "type": "Activity", "title": "The improve phase", "duration": "approx. 10 min", "completed": false, "locked": true },
+              { "id": "m3-t7", "type": "Graded Assignment", "title": "The control phase", "duration": "approx. 20 min", "completed": false, "locked": true }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "notes": [
+    {
+      "id": "note-1",
+      "topicId": "m3-t1",
+      "transcriptLineId": "ln-3",
+      "ts": "0:38",
+      "anchorQuote": "The lifecycle begins long before any code is written — with deep understanding of customer needs.",
+      "text": "Lifecycle starts with customer understanding — before any code",
+      "tags": ["discovery", "lifecycle"],
+      "createdAt": "2026-05-30T10:14:00Z",
+      "updatedAt": "2026-05-30T10:14:00Z"
+    },
+    {
+      "id": "note-2",
+      "topicId": "m3-t1",
+      "transcriptLineId": "ln-5",
+      "ts": "1:14",
+      "anchorQuote": "This is exactly where AI tools can dramatically compress the research phase — turning 50 interviews into structured themes in minutes.",
+      "text": "AI compresses research phase via synthesis at scale, not a replacement",
+      "tags": ["ai", "research"],
+      "createdAt": "2026-05-30T10:21:00Z",
+      "updatedAt": "2026-05-30T10:21:00Z"
+    }
+  ],
+
+  "downloads": [
+    { "id": "d1", "topicId": "m3-t1", "type": "PDF", "name": "DMAIC-overview.pdf", "size": "145 KB", "addedAt": "2026-05-15T00:00:00Z" },
+    { "id": "d2", "topicId": "m3-t1", "type": "DOCX", "name": "Discovery-template.docx", "size": "62 KB", "addedAt": "2026-05-15T00:00:00Z" },
+    { "id": "d3", "topicId": "m3-t1", "type": "XLSX", "name": "Six-Sigma-data-pack.xlsx", "size": "210 KB", "addedAt": "2026-05-15T00:00:00Z" }
+  ],
+
+  "user": {
+    "id": "u1",
+    "name": "Olivia Rhye",
+    "avatarUrl": "/avatars/olivia.png"
+  }
+}

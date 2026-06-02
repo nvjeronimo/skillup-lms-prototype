@@ -1,0 +1,114 @@
+/* ============================================================================
+   LMS Color Tokens — exported from UUI library (c7EUDrQwP8si08aPipDSIV)
+   Mode: SKO Light (the only active mode in production for now)
+
+   Naming follows the Figma variable names verbatim, with `/` replaced by `-`.
+   Use these as the SOLE source of color truth in the prototype.
+   Never hardcode hex.
+   ============================================================================ */
+
+:root {
+  /* ---- Backgrounds ---- */
+  --lms-bg-primary: #ffffff;
+  --lms-bg-secondary: #f3f5fa;
+  --lms-bg-secondary-subtle: #f8f9fa;
+  --lms-bg-tertiary: #e1e7ec;
+  --lms-bg-brand-primary: #ebf8ff;     /* alias of bg-brand-section */
+  --lms-bg-brand-section: #ebf8ff;     /* subtle brand-tinted surface */
+  --lms-bg-brand-solid: #26708e;       /* primary brand surface (P03 teal) */
+  --lms-bg-brand-hover: #f9c654;       /* yellow — Primary button hover only */
+  --lms-bg-success-primary: #e4fced;
+  --lms-bg-warning-primary: #fff9eb;
+  --lms-bg-error-primary: #fce8e8;
+
+  /* ---- Borders ---- */
+  --lms-border-primary: #b9c4ce;
+  --lms-border-secondary: #e1e7ec;
+  --lms-border-brand: #26708e;
+
+  /* ---- Foreground (icons, decorative) ---- */
+  --lms-fg-white: #ffffff;
+  --lms-fg-quaternary: #b9c4ce;
+  --lms-fg-brand: #26708e;
+  --lms-fg-brand-primary: #26708e;
+  --lms-fg-progress: #0086c9;          /* progress bars + rings only */
+
+  /* ---- Text ---- */
+  --lms-text-primary: #13282f;
+  --lms-text-secondary: #606b7a;
+  --lms-text-tertiary: #677482;
+  --lms-text-primary-on-brand: #ffffff;
+  --lms-text-brand: #26708e;
+  --lms-text-brand-primary: #044150;   /* dark teal — for text on yellow */
+  --lms-text-brand-secondary: #26708e;
+  --lms-text-success-primary: #1f7643;
+  --lms-text-warning-primary: #85580e;
+  --lms-text-error-primary: #da3336;
+}
+
+/* ============================================================================
+   Optional Tailwind v4 @theme block — uncomment if using Tailwind v4
+   ============================================================================ */
+
+/*
+@theme {
+  --color-lms-bg-primary: var(--lms-bg-primary);
+  --color-lms-bg-secondary: var(--lms-bg-secondary);
+  --color-lms-bg-brand-solid: var(--lms-bg-brand-solid);
+  --color-lms-bg-brand-section: var(--lms-bg-brand-section);
+  --color-lms-bg-brand-hover: var(--lms-bg-brand-hover);
+  --color-lms-border-primary: var(--lms-border-primary);
+  --color-lms-border-secondary: var(--lms-border-secondary);
+  --color-lms-border-brand: var(--lms-border-brand);
+  --color-lms-fg-brand: var(--lms-fg-brand);
+  --color-lms-fg-progress: var(--lms-fg-progress);
+  --color-lms-text-primary: var(--lms-text-primary);
+  --color-lms-text-secondary: var(--lms-text-secondary);
+  --color-lms-text-tertiary: var(--lms-text-tertiary);
+  --color-lms-text-brand: var(--lms-text-brand);
+  --color-lms-text-brand-primary: var(--lms-text-brand-primary);
+  --color-lms-text-brand-secondary: var(--lms-text-brand-secondary);
+  --color-lms-text-success-primary: var(--lms-text-success-primary);
+  --color-lms-text-warning-primary: var(--lms-text-warning-primary);
+  --color-lms-text-error-primary: var(--lms-text-error-primary);
+  --color-lms-text-primary-on-brand: var(--lms-text-primary-on-brand);
+}
+*/
+
+/* ============================================================================
+   Tailwind v3 fallback — add to tailwind.config.ts `theme.extend.colors`:
+
+   colors: {
+     lms: {
+       bg: {
+         primary: 'var(--lms-bg-primary)',
+         secondary: 'var(--lms-bg-secondary)',
+         'brand-solid': 'var(--lms-bg-brand-solid)',
+         'brand-section': 'var(--lms-bg-brand-section)',
+         'brand-hover': 'var(--lms-bg-brand-hover)',
+       },
+       border: {
+         primary: 'var(--lms-border-primary)',
+         secondary: 'var(--lms-border-secondary)',
+         brand: 'var(--lms-border-brand)',
+       },
+       fg: {
+         brand: 'var(--lms-fg-brand)',
+         progress: 'var(--lms-fg-progress)',
+         quaternary: 'var(--lms-fg-quaternary)',
+       },
+       text: {
+         primary: 'var(--lms-text-primary)',
+         secondary: 'var(--lms-text-secondary)',
+         tertiary: 'var(--lms-text-tertiary)',
+         brand: 'var(--lms-text-brand)',
+         'brand-primary': 'var(--lms-text-brand-primary)',
+         'brand-secondary': 'var(--lms-text-brand-secondary)',
+         'success-primary': 'var(--lms-text-success-primary)',
+         'warning-primary': 'var(--lms-text-warning-primary)',
+         'error-primary': 'var(--lms-text-error-primary)',
+         'primary-on-brand': 'var(--lms-text-primary-on-brand)',
+       },
+     },
+   }
+   ============================================================================ */

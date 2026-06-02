@@ -1,0 +1,9 @@
+/* Storybook canvas baseline — keeps stories visually consistent with the app. */
+body {
+  font-family: var(--lms-font-body);
+  color: var(--lms-text-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
