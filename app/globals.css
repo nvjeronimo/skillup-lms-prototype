@@ -104,3 +104,17 @@ button {
     display: none !important;
   }
 }
+
+/* Overlay backdrop — SKO DS uses a light dim + background blur (alpha-black + blur),
+   token-bound via color-mix (never a raw rgba/hex). */
+.lms-backdrop {
+  background: color-mix(in srgb, var(--lms-text-primary) 30%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lms-backdrop {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

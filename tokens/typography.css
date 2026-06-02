@@ -16,8 +16,9 @@
    ============================================================================ */
 
 :root {
-  --lms-font-body: var(--font-inter), "Inter", system-ui, sans-serif;
-  --lms-font-display: var(--font-montserrat), "Montserrat", "Inter", system-ui, sans-serif;
+  /* SKO Design System uses Montserrat as `font-family-body` for the whole UI. */
+  --lms-font-body: var(--font-montserrat), "Montserrat", system-ui, sans-serif;
+  --lms-font-display: var(--font-montserrat), "Montserrat", system-ui, sans-serif;
 }
 
 /* ---- Display ramp (Montserrat) ---- */
@@ -25,9 +26,9 @@
 .lms-text-display-sm-semibold  { font-family: var(--lms-font-display); font-weight: 600; font-size: 30px; line-height: 38px; }
 .lms-text-display-md-bold      { font-family: var(--lms-font-display); font-weight: 700; font-size: 36px; line-height: 44px; }
 
-/* ---- Text ramp (Inter) ---- */
-.lms-text-lg-medium    { font-family: var(--lms-font-body); font-weight: 500; font-size: 18px; line-height: 28px; }
-.lms-text-lg-semibold  { font-family: var(--lms-font-body); font-weight: 600; font-size: 18px; line-height: 28px; }
+/* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ---- */
+.lms-text-lg-medium    { font-family: var(--lms-font-body); font-weight: 500; font-size: 18px; line-height: 24px; }
+.lms-text-lg-semibold  { font-family: var(--lms-font-body); font-weight: 600; font-size: 18px; line-height: 24px; }
 
 .lms-text-md-regular   { font-family: var(--lms-font-body); font-weight: 400; font-size: 16px; line-height: 24px; }
 .lms-text-md-medium    { font-family: var(--lms-font-body); font-weight: 500; font-size: 16px; line-height: 24px; }

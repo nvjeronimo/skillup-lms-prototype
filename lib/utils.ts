@@ -46,3 +46,16 @@ const ESTIMATED_TYPES = new Set([
 export function isEstimatedDuration(type: string): boolean {
   return ESTIMATED_TYPES.has(type);
 }
+
+/** Short type label shown inline in Topic Rows + Saved items (matches Figma). */
+const SHORT_LABELS: Record<string, string> = {
+  "VILT-Live Session": "Live Session",
+  "VILT-Recording": "Recording",
+  "Practice Assignment": "Practice",
+  "Graded Assignment": "Graded",
+  "Discussion Prompt": "Discussion",
+};
+
+export function topicTypeShortLabel(type: string): string {
+  return SHORT_LABELS[type] ?? type;
+}
