@@ -7,6 +7,7 @@ import { Icon } from "@/lib/icons";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
+import { VideoChromeFooter } from "@/components/molecules/VideoChromeFooter";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
@@ -16,6 +17,7 @@ import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
 import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
+import { track } from "@/lib/analytics";
 import {
   course,
   getTopic,
@@ -72,9 +74,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
 
-  // Keep currentTopicId in sync with the route.
+  // Keep currentTopicId in sync with the route + emit topic_enter.
   React.useEffect(() => {
     setCurrentTopic(topicId);
+    track("topic_enter", { topicId });
   }, [topicId, setCurrentTopic]);
 
   // Derive active tab from the URL.
@@ -129,7 +132,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         size={topbarSize}
         breadcrumb={[course.title, topic.moduleTitle, topic.title]}
         showNotifications
-        onMenu={() => setMobileDrawerOpen(true)}
+        notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
+        onMenu={() => {
+          track("mobile_drawer_open");
+          setMobileDrawerOpen(true);
+        }}
         onAi={() => showToast("AI assistant is out of scope for this prototype.")}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
@@ -158,7 +165,19 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
               <VideoPlayer
                 durationSeconds={durationSeconds}
                 currentTime={currentVideoTimestamp}
-                onSeek={(s) => seekVideoTo(s)}
+                onSeek={(s) => {
+                  seekVideoTo(s);
+                  track("video_seek", { to: s });
+                }}
+              />
+
+              <VideoChromeFooter
+                onToggleCaptions={(next) => track("video_cc_toggle", { enabled: next })}
+                onLanguageChange={(code) => track("video_language_change", { language: code })}
+                onDownloadTranscript={(format) => {
+                  track("download_transcript", { format });
+                  showToast(`Downloading transcript (.${format})…`);
+                }}
               />
 
               <div className="mt-5">
@@ -238,6 +257,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onMarkAllRead={() => markAllNotificationsRead(notifications.map((n) => n.id))}
         onSelect={(n) => {
           closeOverlayPanel();
+          track("notification_click", { notifId: n.id, type: n.type });
           router.push(n.href);
         }}
       />
@@ -272,7 +292,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onSave={saveNote}
       />
 
-      <Toast message={toast} onDone={clearToast} />
+      <Toast toast={toast} onDone={clearToast} />
     </div>
   );
 }

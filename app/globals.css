@@ -85,3 +85,22 @@ button {
 .lms-animate-fade {
   animation: lms-fade-in 200ms ease-out;
 }
+
+/* Respect reduced-motion: disable panel/drawer/toast animations + smooth scroll. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print: hide app chrome, show only the certificate. */
+@media print {
+  .lms-no-print {
+    display: none !important;
+  }
+}

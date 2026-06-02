@@ -95,7 +95,12 @@ export function TopicRow({
       </button>
       {showBookmark || active ? (
         <span className={cn(active ? "opacity-100" : "opacity-0 group-hover:opacity-100")}>
-          <BookmarkButton bookmarked={bookmarked} onToggle={onToggleBookmark} size={16} />
+          <BookmarkButton
+            bookmarked={bookmarked}
+            onToggle={onToggleBookmark}
+            itemLabel={title}
+            size={16}
+          />
         </span>
       ) : null}
     </div>

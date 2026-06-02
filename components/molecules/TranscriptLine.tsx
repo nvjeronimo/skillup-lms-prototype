@@ -75,6 +75,7 @@ export function TranscriptLine({
             <button
               type="button"
               onClick={onEditNote}
+              aria-label={`Edit note at ${ts}`}
               className="lms-text-xs-semibold inline-flex items-center gap-1 rounded-full bg-lms-bg-primary px-2.5 py-1 text-lms-text-brand-secondary"
             >
               <Icon icon={Edit3} size={14} />
@@ -84,6 +85,7 @@ export function TranscriptLine({
             <button
               type="button"
               onClick={onAddNote}
+              aria-label={`Add note at ${ts}`}
               className="lms-text-xs-semibold inline-flex items-center gap-1 rounded-full bg-lms-bg-primary px-2.5 py-1 text-lms-text-brand-secondary"
             >
               <Icon icon={Plus} size={14} />

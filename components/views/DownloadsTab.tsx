@@ -1,9 +1,12 @@
 "use client";
 
 import * as React from "react";
+import { FileText } from "lucide-react";
 import { FileItem } from "@/components/molecules/FileItem";
+import { EmptyState } from "@/components/atoms/EmptyState";
 import { topicDownloads } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
+import { track } from "@/lib/analytics";
 
 export function DownloadsTab({ topicId }: { topicId: string }) {
   const files = topicDownloads(topicId);
@@ -11,9 +14,13 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
 
   if (!files.length) {
     return (
-      <p className="lms-text-sm-regular px-1 py-8 text-center text-lms-text-tertiary">
-        No downloads for this topic.
-      </p>
+      <div className="py-3">
+        <EmptyState
+          icon={FileText}
+          title="No downloads"
+          description="This topic has no attached files."
+        />
+      </div>
     );
   }
 
@@ -26,7 +33,10 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
           name={f.name}
           size={f.size}
           addedLabel="Added 2 weeks ago"
-          onDownload={() => showToast(`Downloading ${f.name}…`)}
+          onDownload={() => {
+            track("download_file", { fileId: f.id, type: f.type });
+            showToast(`Downloading ${f.name}…`);
+          }}
         />
       ))}
     </div>

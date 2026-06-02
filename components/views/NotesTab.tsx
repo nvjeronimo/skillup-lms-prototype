@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Info, Search } from "lucide-react";
+import { Info, Search, StickyNote } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { NoteItem } from "@/components/molecules/NoteItem";
 import { FilterChip } from "@/components/atoms/FilterChip";
+import { EmptyState } from "@/components/atoms/EmptyState";
 import { useLmsStore } from "@/lib/store";
 import { tsToSeconds } from "@/lib/utils";
 
@@ -35,6 +36,19 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
     seekVideoTo(tsToSeconds(ts), lineId);
     setCurrentTab("transcript");
     router.push(`/course/${courseSlug}/topic/${topicId}`);
+  }
+
+  // No notes at all for this topic → dedicated empty state.
+  if (notes.length === 0) {
+    return (
+      <div className="py-3">
+        <EmptyState
+          icon={StickyNote}
+          title="No notes yet"
+          description="Create notes from the Transcript tab — click + Note on any line."
+        />
+      </div>
+    );
   }
 
   return (

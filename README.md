@@ -65,9 +65,10 @@ components/
   organisms/                 # Sidebar, Topbar, FooterNav, VideoPlayer, OverlayPanel, panels, …
   views/                     # PlayerShell + the three tab bodies
 lib/
-  types.ts                   # Topic / Note / Course / panel models
+  types.ts                   # Topic / Note / Course / panel / notification-category / video-state
   data.ts                    # loads data-model.json + derived selectors + mock panel data
-  store.ts                   # Zustand client state
+  store.ts                   # Zustand client state (+ toast model with Undo action)
+  analytics.ts               # track(event, props) shim (Do-Not-Track aware) — ~30 Phase 1 events
   icons.tsx                  # <Icon> wrapper that enforces the stroke-weight rule
   useBreakpoint.ts           # mobile / tablet / desktop hook
 tokens/
@@ -99,6 +100,27 @@ transcript seek + line highlight, **note editor** anchored to transcript lines
 (Esc cancels · ⌘/Ctrl+Enter saves), Notes tab search + tag filter + delete, Downloads
 (mock), tab routing, Notifications + Saved overlay panels, mobile drawer, and the
 out-of-scope topbar actions (AI / Theme / Exit) surface a toast.
+
+## edX-parity additions (handoff v1.2 → v1.5)
+
+- **Video Chrome Footer** below the player — license/copyright, CC toggle, multi-language
+  caption picker, and download-transcript (.srt / .txt).
+- **Notifications hybrid tabs** — All · Discussions · Grading · Updates category tabs with
+  date sections inside each (arrow-key navigable, 2px brand underline on the active tab).
+- **Certificate footer** — Back · Share · Download PDF · **Print** (`window.print()` with a
+  `.lms-no-print` scope). Share opens a channel menu (LinkedIn / X / Facebook / Copy / Email).
+- **Video edge states** — Loading / Error / Ended overlays on the player.
+- **Tab empty states** — dedicated Notes-empty and Downloads-empty blocks.
+- **Bookmark toast feedback** — "Bookmarked · {title}" with an **Undo** action, 4 s
+  auto-dismiss paused on hover, announced via an `aria-live` region.
+- **Transcript auto-scroll** — follows the active line; pauses 8 s on manual scroll and shows
+  a "Following · Resume" pill.
+- **File Upload Zone** + **Share Menu** + **Empty State** components (documented in Storybook).
+- **Accessibility** — contextual `aria-label`s ("Notifications, 3 unread", "Bookmark {title}",
+  "Add note at 0:38"), focus traps, and `prefers-reduced-motion` honored (animations + smooth
+  scroll disabled).
+- **Analytics** — `lib/analytics.ts` `track()` wired to key events (bookmark, note, panel,
+  transcript, video, download, sidebar, drawer).
 
 ## Responsive
 
