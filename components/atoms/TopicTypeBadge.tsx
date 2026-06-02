@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Badge } from "./Badge";
-import { topicTypeIcon } from "@/lib/icons";
+import { Icon, topicTypeIcon } from "@/lib/icons";
+import { cn, topicTypeShortLabel } from "@/lib/utils";
 import type { TopicType } from "@/lib/types";
 
 export interface TopicTypeBadgeProps {
@@ -26,11 +26,20 @@ export const ALL_TOPIC_TYPES: TopicType[] = [
   "Discussion Prompt",
 ];
 
-/** Identifies a topic's type. Nested in Topic Header, Topic Row, Course Card. */
+/**
+ * Identifies a topic's type — icon + short label in brand color, no pill
+ * background (matches the SKO `LMS / Topic-Types Badge` component).
+ */
 export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBadgeProps) {
   return (
-    <Badge tone="brand" leftIcon={showIcon ? topicTypeIcon(type) : undefined} className={className}>
-      {type}
-    </Badge>
+    <span
+      className={cn(
+        "lms-text-xs-medium inline-flex items-center gap-1 text-lms-text-brand-secondary",
+        className,
+      )}
+    >
+      {showIcon ? <Icon icon={topicTypeIcon(type)} size={14} /> : null}
+      {topicTypeShortLabel(type)}
+    </span>
   );
 }

@@ -17,7 +17,19 @@ export default meta;
 
 type Story = StoryObj<typeof InlineAlert>;
 
-export const Info: Story = { args: { tone: "info" } };
-export const Success: Story = { args: { tone: "success", title: "Saved", description: "Your note was saved." } };
-export const Warning: Story = { args: { tone: "warning", title: "Due soon", description: "Quiz is due in 2 days." } };
-export const Error: Story = { args: { tone: "error", title: "Something went wrong", description: "Please try again." } };
+export const Saving: Story = { args: { tone: "info", title: "Saving note…", description: undefined } };
+export const Saved: Story = { args: { tone: "success", title: "Note saved", description: undefined } };
+export const Error: Story = {
+  args: {
+    tone: "error",
+    title: "Couldn’t save your note",
+    description: "We’ll keep retrying. Don’t lose what you typed.",
+  },
+};
+export const AIOffline: Story = {
+  args: {
+    tone: "warning",
+    title: "AI Assistant is offline",
+    description: "The rest of the lesson still works. We’ll bring it back as soon as we can.",
+  },
+};

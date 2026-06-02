@@ -37,21 +37,22 @@ export const Difficulty: Story = {
 export const DeliveryMode: Story = {
   render: () => (
     <div className="flex gap-2">
-      <DeliveryModeBadge value="Flexible Learning" />
+      <DeliveryModeBadge value="Live Sessions" />
       <DeliveryModeBadge value="Flexible + Live" />
-      <DeliveryModeBadge value="Cohort" />
+      <DeliveryModeBadge value="Flexible Learning" />
     </div>
   ),
 };
 
 export const ProviderList: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-3">
       <ProviderBadge value="SkillUp" />
       <ProviderBadge value="Microsoft" />
       <ProviderBadge value="IBM" />
       <ProviderBadge value="Google Cloud" />
-      <ProviderBadge value="Stanford" />
+      <ProviderBadge value="FutureSkills" />
+      <ProviderBadge value="Pacific Lutheran University" />
     </div>
   ),
 };

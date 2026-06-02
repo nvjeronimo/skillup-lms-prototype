@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AlertTriangle, Check, Info, X } from "lucide-react";
+import { AlertCircle, AlertTriangle, Check, RotateCw, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -14,45 +14,46 @@ export interface InlineAlertProps {
   className?: string;
 }
 
-const TONE: Record<AlertTone, { wrap: string; icon: LucideIcon; iconColor: string }> = {
+const TONE: Record<AlertTone, { box: string; circle: string; icon: LucideIcon }> = {
   info: {
-    wrap: "bg-lms-bg-brand-section border-lms-border-brand text-lms-text-brand-secondary",
-    icon: Info,
-    iconColor: "text-lms-text-brand-secondary",
+    box: "bg-lms-bg-brand-section border-lms-border-brand",
+    circle: "bg-lms-fg-progress",
+    icon: RotateCw,
   },
   success: {
-    wrap: "bg-lms-bg-success-primary border-lms-text-success-primary text-lms-text-success-primary",
+    box: "bg-lms-bg-success-primary border-lms-text-success-primary",
+    circle: "bg-lms-text-success-primary",
     icon: Check,
-    iconColor: "text-lms-text-success-primary",
   },
   warning: {
-    wrap: "bg-lms-bg-warning-primary border-lms-text-warning-primary text-lms-text-warning-primary",
+    box: "bg-lms-bg-warning-primary border-lms-text-warning-primary",
+    circle: "bg-lms-text-warning-primary",
     icon: AlertTriangle,
-    iconColor: "text-lms-text-warning-primary",
   },
   error: {
-    wrap: "bg-lms-bg-error-primary border-lms-text-error-primary text-lms-text-error-primary",
-    icon: AlertTriangle,
-    iconColor: "text-lms-text-error-primary",
+    box: "bg-lms-bg-error-primary border-lms-text-error-primary",
+    circle: "bg-lms-text-error-primary",
+    icon: AlertCircle,
   },
 };
 
-/** Inline notification — info / success / warning / error. */
+/** Inline notification — filled circle icon + title (+ description). Matches DS. */
 export function InlineAlert({ tone = "info", title, description, onDismiss, className }: InlineAlertProps) {
   const t = TONE[tone];
   return (
     <div
       role="status"
-      className={cn(
-        "flex items-start gap-3 rounded-lg border px-4 py-3",
-        t.wrap,
-        className,
-      )}
+      className={cn("flex items-start gap-3 rounded-lg border px-4 py-3", t.box, className)}
     >
-      <span className={cn("mt-0.5 shrink-0", t.iconColor)}>
-        <Icon icon={t.icon} size={18} />
+      <span
+        className={cn(
+          "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-lms-fg-white",
+          t.circle,
+        )}
+      >
+        <Icon icon={t.icon} size={16} />
       </span>
-      <div className="flex-1">
+      <div className="flex-1 pt-0.5">
         <p className="lms-text-sm-semibold text-lms-text-primary">{title}</p>
         {description ? (
           <p className="lms-text-sm-regular mt-0.5 text-lms-text-secondary">{description}</p>
@@ -63,7 +64,7 @@ export function InlineAlert({ tone = "info", title, description, onDismiss, clas
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss"
-          className="shrink-0 text-lms-text-tertiary hover:text-lms-text-primary"
+          className="shrink-0 pt-0.5 text-lms-text-tertiary hover:text-lms-text-primary"
         >
           <Icon icon={X} size={18} />
         </button>

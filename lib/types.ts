@@ -65,7 +65,7 @@ export interface Course {
   provider: string;
   courseType: "Program" | "Course";
   difficulty: "Beginner" | "Intermediate" | "Advanced";
-  deliveryMode: "Flexible Learning" | "Flexible + Live" | "Cohort";
+  deliveryMode: "Flexible Learning" | "Flexible + Live" | "Live Sessions";
   overallProgressPct: number;
   modulesCompleted: number;
   modulesTotal: number;
