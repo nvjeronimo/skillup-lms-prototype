@@ -49,12 +49,10 @@ export function OverallProgress({
   }
 
   return (
-    <div className={cn("w-full px-3 py-3", className)}>
+    <div className={cn("w-full", className)}>
       <div className="flex items-center justify-between">
-        <span className="lms-text-xs-semibold text-lms-text-primary">{clamped}% complete</span>
-        <span className="lms-text-xs-regular text-lms-text-tertiary">
-          Module {moduleCurrent} of {moduleTotal}
-        </span>
+        <span className="lms-text-2xs-medium text-lms-text-tertiary">Overall progress</span>
+        <span className="lms-text-xs-semibold text-lms-text-primary">{clamped}%</span>
       </div>
       <div
         className="mt-2 h-2 w-full overflow-hidden rounded-full bg-lms-bg-tertiary"
@@ -62,6 +60,7 @@ export function OverallProgress({
         aria-valuenow={clamped}
         aria-valuemin={0}
         aria-valuemax={100}
+        aria-label={`Overall progress, ${clamped}%, module ${moduleCurrent} of ${moduleTotal}`}
       >
         <div className="h-full rounded-full bg-lms-fg-progress" style={{ width: `${clamped}%` }} />
       </div>

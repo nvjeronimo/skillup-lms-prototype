@@ -11,7 +11,6 @@ export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
 export interface CoursePlayerTopbarProps {
   size?: TopbarSize;
   theme?: "Light" | "Dark";
-  brand?: string;
   breadcrumb?: string[];
   userName?: string;
   userAvatarUrl?: string;
@@ -19,7 +18,7 @@ export interface CoursePlayerTopbarProps {
   showBookmark?: boolean;
   showNotifications?: boolean;
   showTheme?: boolean;
-  /** Unread count — surfaced in the Notifications button aria-label. */
+  /** Unread count — surfaced in the Notifications button aria-label + dot. */
   notificationsCount?: number;
   onMenu?: () => void;
   onAi?: () => void;
@@ -44,24 +43,27 @@ function UtilityButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-md text-lms-text-secondary transition-colors hover:bg-lms-bg-secondary"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-lms-text-tertiary transition-colors hover:bg-lms-bg-secondary"
     >
       {children}
     </button>
   );
 }
 
-/** Top chrome of the course player. Breadcrumb shows on Desktop only. */
+/**
+ * Course player top chrome. Matches the SKO Final Screen: SkillUp logo (left),
+ * spacer, then Notifications · Saved · Avatar+name · Close (right). Breadcrumb,
+ * AI and Theme are optional (off by default) and used in Storybook variants.
+ */
 export function CoursePlayerTopbar({
   size = "Desktop",
-  brand = "SkillUp LMS",
   breadcrumb = [],
   userName = "Olivia Rhye",
   userAvatarUrl,
-  showAi = true,
+  showAi = false,
   showBookmark = true,
   showNotifications = true,
-  showTheme = true,
+  showTheme = false,
   notificationsCount = 0,
   onMenu,
   onAi,
@@ -88,9 +90,14 @@ export function CoursePlayerTopbar({
         </UtilityButton>
       ) : null}
 
-      <div className={cn("flex items-center gap-2", isMobile && "flex-1 justify-center")}>
-        <span className="lms-text-md-semibold font-display text-lms-text-brand-secondary">{brand}</span>
-      </div>
+      <a
+        href="#"
+        aria-label="SkillUp home"
+        className={cn("flex items-center", isMobile && "flex-1 justify-center")}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/skillup-logo.svg" alt="SkillUp" className="h-7 w-auto" />
+      </a>
 
       {isDesktop && breadcrumb.length ? (
         <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1">
@@ -113,16 +120,6 @@ export function CoursePlayerTopbar({
       ) : null}
 
       <div className="flex flex-1 items-center justify-end gap-1">
-        {!isMobile && showAi ? (
-          <UtilityButton label="AI Assistant" onClick={onAi}>
-            <Icon icon={Sparkles} size={20} />
-          </UtilityButton>
-        ) : null}
-        {showBookmark ? (
-          <UtilityButton label="Saved items" onClick={onBookmark}>
-            <Icon icon={Bookmark} size={20} />
-          </UtilityButton>
-        ) : null}
         {!isMobile && showNotifications ? (
           <UtilityButton
             label={
@@ -141,14 +138,33 @@ export function CoursePlayerTopbar({
             </span>
           </UtilityButton>
         ) : null}
+        {showBookmark ? (
+          <UtilityButton label="Saved items" onClick={onBookmark}>
+            <Icon icon={Bookmark} size={20} />
+          </UtilityButton>
+        ) : null}
+        {!isMobile && showAi ? (
+          <UtilityButton label="AI Assistant" onClick={onAi}>
+            <Icon icon={Sparkles} size={20} />
+          </UtilityButton>
+        ) : null}
         {!isMobile && showTheme ? (
           <UtilityButton label="Toggle theme" onClick={onTheme}>
             <Icon icon={Sun} size={20} />
           </UtilityButton>
         ) : null}
-        <button type="button" aria-label="Account" className="ml-1">
+
+        <button
+          type="button"
+          aria-label="Account"
+          className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-lms-bg-secondary"
+        >
           <Avatar name={userName} src={userAvatarUrl} size="sm" />
+          {!isMobile ? (
+            <span className="lms-text-sm-medium pr-1 text-lms-text-primary">{userName}</span>
+          ) : null}
         </button>
+
         <UtilityButton label="Exit course player" onClick={onClose}>
           <Icon icon={X} size={20} />
         </UtilityButton>

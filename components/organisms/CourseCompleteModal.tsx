@@ -23,12 +23,7 @@ export function CourseCompleteModal({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div
-        className="lms-animate-fade absolute inset-0"
-        style={{ background: "color-mix(in srgb, var(--lms-text-primary) 60%, transparent)" }}
-        onClick={onClose}
-        aria-hidden
-      />
+      <div className="lms-backdrop lms-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
       <div
         role="dialog"
         aria-modal="true"

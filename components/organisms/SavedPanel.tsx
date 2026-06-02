@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { OverlayPanel, PanelSectionLabel } from "./OverlayPanel";
+import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { SavedTopicItem } from "@/components/molecules/SavedTopicItem";
 import { SavedNoteItem } from "@/components/molecules/SavedNoteItem";
 import type { SavedNoteModel, SavedTopicModel } from "@/lib/types";
@@ -19,7 +20,7 @@ export interface SavedPanelProps {
   onSelectNote?: (n: SavedNoteModel) => void;
 }
 
-/** Saved panel: filter chips + bookmarked topics + saved notes. */
+/** Saved panel: category tabs + bookmarked topics + saved notes. */
 export function SavedPanel({
   open,
   onClose,
@@ -33,23 +34,23 @@ export function SavedPanel({
   const showTopics = filter === "all" || filter === "topics";
   const showNotes = filter === "all" || filter === "notes";
 
-  const filters = [
-    { label: "All", value: "all", count: savedTopics.length + savedNotes.length, active: filter === "all" },
-    { label: "Topics", value: "topics", count: savedTopics.length, active: filter === "topics" },
-    { label: "Notes", value: "notes", count: savedNotes.length, active: filter === "notes" },
+  const tabs = [
+    { value: "all", label: "All", count: savedTopics.length + savedNotes.length },
+    { value: "topics", label: "Topics", count: savedTopics.length },
+    { value: "notes", label: "Notes", count: savedNotes.length },
   ];
 
   return (
-    <OverlayPanel
-      open={open}
-      onClose={onClose}
-      title="Saved"
-      filters={filters}
-      onFilterChange={(v) => onFilterChange?.(v as SavedFilter)}
-      footer={{ label: "View all saved items", href: "#" }}
-    >
+    <OverlayPanel open={open} onClose={onClose} title="Saved" footer={{ label: "View all saved items", href: "#" }}>
+      <PanelTabs
+        tabs={tabs}
+        active={filter}
+        onChange={(v) => onFilterChange?.(v as SavedFilter)}
+        ariaLabel="Saved filters"
+      />
+
       {showTopics && savedTopics.length ? (
-        <section className="mb-2">
+        <section>
           <PanelSectionLabel>Bookmarked topics</PanelSectionLabel>
           <div className="divide-y divide-lms-border-secondary">
             {savedTopics.map((t) => (
@@ -68,7 +69,7 @@ export function SavedPanel({
       ) : null}
 
       {showNotes && savedNotes.length ? (
-        <section className="mb-2">
+        <section>
           <PanelSectionLabel>Saved notes</PanelSectionLabel>
           <div className="divide-y divide-lms-border-secondary">
             {savedNotes.map((n) => (

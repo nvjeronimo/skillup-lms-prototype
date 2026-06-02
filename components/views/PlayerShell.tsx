@@ -7,8 +7,6 @@ import { Icon } from "@/lib/icons";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
-import { VideoChromeFooter } from "@/components/molecules/VideoChromeFooter";
-import { TopicHeader } from "@/components/molecules/TopicHeader";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
@@ -18,6 +16,7 @@ import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
+import { cn } from "@/lib/utils";
 import {
   course,
   getTopic,
@@ -34,9 +33,6 @@ export interface PlayerShellProps {
   topicId: string;
   children: React.ReactNode;
 }
-
-const DESC =
-  "In this lesson we walk through the DMAIC methodology end-to-end and how each phase builds on the last.";
 
 export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps) {
   const router = useRouter();
@@ -127,24 +123,22 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const durationSeconds = 200;
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-lms-bg-secondary-subtle">
+    <div className="flex h-[100dvh] flex-col bg-lms-bg-secondary">
       <CoursePlayerTopbar
         size={topbarSize}
-        breadcrumb={[course.title, topic.moduleTitle, topic.title]}
         showNotifications
         notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
         onMenu={() => {
           track("mobile_drawer_open");
           setMobileDrawerOpen(true);
         }}
-        onAi={() => showToast("AI assistant is out of scope for this prototype.")}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
-        onTheme={() => showToast("Single light theme in this prototype.")}
         onClose={() => showToast("Exit player → Course Hub (out of scope).")}
       />
 
-      <div className="flex min-h-0 flex-1">
+      {/* Body — floating white cards on a secondary-tint surface (16px gutter). */}
+      <div className={cn("flex min-h-0 flex-1", showInlineSidebar && "gap-4 p-4")}>
         {showInlineSidebar ? (
           <Sidebar
             course={course}
@@ -159,9 +153,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           />
         ) : null}
 
-        <main className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <main
+          className={cn(
+            "flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-lms-bg-primary",
+            showInlineSidebar && "rounded-xl border border-lms-border-secondary",
+          )}
+        >
           <div className="lms-scroll flex-1 overflow-y-auto">
-            <div className="mx-auto w-full max-w-4xl px-4 py-4 md:px-6 md:py-6">
+            <div className="w-full p-4">
               <VideoPlayer
                 durationSeconds={durationSeconds}
                 currentTime={currentVideoTimestamp}
@@ -171,25 +170,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 }}
               />
 
-              <VideoChromeFooter
-                onToggleCaptions={(next) => track("video_cc_toggle", { enabled: next })}
-                onLanguageChange={(code) => track("video_language_change", { language: code })}
-                onDownloadTranscript={(format) => {
-                  track("download_transcript", { format });
-                  showToast(`Downloading transcript (.${format})…`);
-                }}
-              />
-
-              <div className="mt-5">
-                <TopicHeader
-                  type={topic.type}
-                  title={topic.title}
-                  duration={topic.duration}
-                  description={DESC}
-                />
-              </div>
-
-              <div className="mt-5">
+              <div className="mt-4">
                 <ContentTabs tabs={tabs} active={activeTab} />
                 {children}
               </div>
@@ -213,8 +194,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       {bp === "mobile" && mobileDrawerOpen ? (
         <div className="fixed inset-0 z-40">
           <div
-            className="lms-animate-fade absolute inset-0"
-            style={{ background: "color-mix(in srgb, var(--lms-text-primary) 50%, transparent)" }}
+            className="lms-backdrop lms-animate-fade absolute inset-0"
             onClick={() => setMobileDrawerOpen(false)}
             aria-hidden
           />

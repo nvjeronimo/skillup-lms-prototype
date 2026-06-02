@@ -4,6 +4,7 @@ import * as React from "react";
 import { ArrowDown } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
+import { VideoChromeFooter } from "@/components/molecules/VideoChromeFooter";
 import { useLmsStore } from "@/lib/store";
 import { getTopic } from "@/lib/data";
 import { tsToSeconds } from "@/lib/utils";
@@ -22,6 +23,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const notes = useLmsStore((s) => s.notes);
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
   const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
+  const showToast = useLmsStore((s) => s.showToast);
 
   // Auto-follow the active line; pause when the user scrolls manually.
   const [following, setFollowing] = React.useState(true);
@@ -62,6 +64,16 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   return (
     <div className="relative" onWheel={pauseFollow} onTouchMove={pauseFollow}>
+      {/* Video chrome footer sits at the top of the transcript tab (per Final Screens). */}
+      <VideoChromeFooter
+        onToggleCaptions={(next) => track("video_cc_toggle", { enabled: next })}
+        onLanguageChange={(code) => track("video_language_change", { language: code })}
+        onDownloadTranscript={(format) => {
+          track("download_transcript", { format });
+          showToast(`Downloading transcript (.${format})…`);
+        }}
+      />
+
       {!following ? (
         <button
           type="button"

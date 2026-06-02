@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BookOpen, Calendar, MessageCircle, Plus, Stars } from "lucide-react";
+import { BookOpen, Calendar, MessageCircle, Plus, Stars, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,10 @@ export interface NotificationItemProps {
   className?: string;
 }
 
-const ICON_MAP: Partial<Record<NotificationType, LucideIcon>> = {
+// Concrete UUI icon mapping from the Final Screens (live = video-recorder).
+const ICON_MAP: Record<NotificationType, LucideIcon> = {
+  "live-now": Video,
+  "live-soon": Video,
   "course-update": Plus,
   "assignment-due": Calendar,
   "discussion-reply": MessageCircle,
@@ -24,7 +27,7 @@ const ICON_MAP: Partial<Record<NotificationType, LucideIcon>> = {
   "syllabus-change": BookOpen,
 };
 
-/** Single notification row: unread dot + type icon avatar + content + timestamp. */
+/** Single notification row: type icon avatar + content + (right) unread dot. */
 export function NotificationItem({
   type,
   title,
@@ -35,29 +38,12 @@ export function NotificationItem({
   onClick,
   className,
 }: NotificationItemProps) {
-  const isLive = type === "live-now" || type === "live-soon";
   const IconCmp = ICON_MAP[type];
 
   const inner = (
     <>
-      {/* Unread dot gutter */}
-      <span className="flex w-2 shrink-0 justify-center pt-3.5">
-        {unread ? (
-          <span
-            className="h-2 w-2 rounded-full bg-lms-fg-brand-primary"
-            aria-label="Unread"
-            role="img"
-          />
-        ) : null}
-      </span>
-
-      {/* Icon avatar */}
       <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-lms-bg-brand-section text-lms-text-brand-secondary">
-        {isLive ? (
-          <span className="h-3.5 w-3.5 rounded-full bg-lms-text-error-primary" aria-hidden />
-        ) : IconCmp ? (
-          <Icon icon={IconCmp} size={18} />
-        ) : null}
+        <Icon icon={IconCmp} size={18} />
       </span>
 
       <span className="min-w-0 flex-1">
@@ -67,11 +53,22 @@ export function NotificationItem({
         ) : null}
         <span className="lms-text-xs-regular mt-1 block text-lms-text-tertiary">{timestamp}</span>
       </span>
+
+      {/* Unread dot — right side (matches Final Screens). */}
+      <span className="flex w-2 shrink-0 justify-center pt-1.5">
+        {unread ? (
+          <span
+            className="h-2 w-2 rounded-full bg-lms-fg-brand-primary"
+            aria-label="Unread"
+            role="img"
+          />
+        ) : null}
+      </span>
     </>
   );
 
   const classes = cn(
-    "flex w-full gap-2 px-2 py-3 text-left transition-colors hover:bg-lms-bg-secondary",
+    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-lms-bg-secondary",
     className,
   );
 

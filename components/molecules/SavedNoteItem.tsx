@@ -53,7 +53,7 @@ export function SavedNoteItem({
   );
 
   const classes = cn(
-    "block w-full px-2 py-3 text-left transition-colors hover:bg-lms-bg-secondary",
+    "block w-full px-4 py-4 text-left transition-colors hover:bg-lms-bg-secondary",
     className,
   );
 

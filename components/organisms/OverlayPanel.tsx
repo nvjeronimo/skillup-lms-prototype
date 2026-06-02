@@ -86,13 +86,8 @@ export function OverlayPanel({
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop — teal-tinted via color-mix on the text-primary token. */}
-      <div
-        className="lms-animate-fade absolute inset-0"
-        style={{ background: "color-mix(in srgb, var(--lms-text-primary) 50%, transparent)" }}
-        onClick={onClose}
-        aria-hidden
-      />
+      {/* Backdrop — SKO DS light dim + blur (token-bound via .lms-backdrop). */}
+      <div className="lms-backdrop lms-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
 
       <aside
         ref={panelRef}
@@ -141,7 +136,7 @@ export function OverlayPanel({
           </div>
         ) : null}
 
-        <div className="lms-scroll flex-1 overflow-y-auto px-4 py-2">{children}</div>
+        <div className="lms-scroll flex-1 overflow-y-auto">{children}</div>
 
         {footer ? (
           <footer className="border-t border-lms-border-secondary px-6 py-4 text-center">
@@ -158,7 +153,7 @@ export function OverlayPanel({
 /** Sticky section label inside a panel body (semantic heading, eyebrow style). */
 export function PanelSectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="lms-text-2xs-medium sticky top-0 z-10 bg-lms-bg-secondary px-2 py-1.5 text-lms-text-tertiary">
+    <h3 className="lms-text-2xs-medium bg-lms-bg-secondary px-4 py-2.5 text-lms-text-tertiary">
       {children}
     </h3>
   );

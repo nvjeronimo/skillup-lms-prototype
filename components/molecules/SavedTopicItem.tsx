@@ -45,7 +45,7 @@ export function SavedTopicItem({
   );
 
   const classes = cn(
-    "flex w-full gap-3 px-2 py-3 text-left transition-colors hover:bg-lms-bg-secondary",
+    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-lms-bg-secondary",
     className,
   );
 

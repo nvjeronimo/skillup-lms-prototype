@@ -3,8 +3,8 @@
 import * as React from "react";
 import { OverlayPanel, PanelSectionLabel } from "./OverlayPanel";
 import { NotificationItem } from "@/components/molecules/NotificationItem";
+import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { notificationCategory } from "@/lib/data";
-import { cn } from "@/lib/utils";
 import type { NotificationCategory, NotificationModel } from "@/lib/types";
 
 export interface NotificationsPanelProps {
@@ -26,7 +26,7 @@ const GROUP_LABEL: Record<NotificationModel["group"], string> = {
 
 const GROUP_ORDER: NotificationModel["group"][] = ["today", "yesterday", "this-week", "older"];
 
-const TABS: { value: NotificationCategory; label: string }[] = [
+const TAB_DEFS: { value: NotificationCategory; label: string }[] = [
   { value: "all", label: "All" },
   { value: "discussions", label: "Discussions" },
   { value: "grading", label: "Grading" },
@@ -46,7 +46,6 @@ export function NotificationsPanel({
   onSelect,
 }: NotificationsPanelProps) {
   const [tab, setTab] = React.useState<NotificationCategory>("all");
-  const tabRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
 
   // Reset to "All" whenever the panel re-opens.
   React.useEffect(() => {
@@ -57,16 +56,13 @@ export function NotificationsPanel({
     (n) => tab === "all" || notificationCategory(n.type) === tab,
   );
 
-  function onTabKeyDown(e: React.KeyboardEvent, index: number) {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    e.preventDefault();
-    const dir = e.key === "ArrowRight" ? 1 : -1;
-    const nextIndex = (index + dir + TABS.length) % TABS.length;
-    setTab(TABS[nextIndex].value);
-    tabRefs.current[nextIndex]?.focus();
-  }
-
-  const unreadCount = notifications.filter((n) => n.unread && !readIds.has(n.id)).length;
+  const tabs = TAB_DEFS.map((t) => ({
+    ...t,
+    count:
+      t.value === "all"
+        ? notifications.length
+        : notifications.filter((n) => notificationCategory(n.type) === t.value).length,
+  }));
 
   return (
     <OverlayPanel
@@ -76,42 +72,15 @@ export function NotificationsPanel({
       headerAction={onMarkAllRead ? { label: "Mark all read", onClick: onMarkAllRead } : undefined}
       footer={{ label: "View all notifications", href: "#" }}
     >
-      <div
-        role="tablist"
-        aria-label="Notification categories"
-        className="sticky top-0 z-20 -mx-2 mb-1 flex items-center gap-1 border-b border-lms-border-secondary bg-lms-bg-primary px-2"
-      >
-        {TABS.map((t, i) => {
-          const active = t.value === tab;
-          return (
-            <button
-              key={t.value}
-              ref={(el) => {
-                tabRefs.current[i] = el;
-              }}
-              role="tab"
-              aria-selected={active}
-              tabIndex={active ? 0 : -1}
-              onClick={() => setTab(t.value)}
-              onKeyDown={(e) => onTabKeyDown(e, i)}
-              className={cn(
-                "lms-text-sm-semibold -mb-px border-b-2 px-3 py-2.5 transition-colors",
-                active
-                  ? "border-lms-border-brand text-lms-text-brand-secondary"
-                  : "border-transparent text-lms-text-secondary hover:text-lms-text-primary",
-              )}
-            >
-              {t.label}
-              {t.value === "all" && unreadCount > 0 ? (
-                <span className="lms-text-xs-semibold ml-1 text-lms-text-tertiary">{unreadCount}</span>
-              ) : null}
-            </button>
-          );
-        })}
-      </div>
+      <PanelTabs
+        tabs={tabs}
+        active={tab}
+        onChange={(v) => setTab(v as NotificationCategory)}
+        ariaLabel="Notification categories"
+      />
 
       {visible.length === 0 ? (
-        <p className="lms-text-sm-regular px-2 py-8 text-center text-lms-text-tertiary">
+        <p className="lms-text-sm-regular px-4 py-8 text-center text-lms-text-tertiary">
           Nothing here yet.
         </p>
       ) : (

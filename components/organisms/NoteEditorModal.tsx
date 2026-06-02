@@ -78,17 +78,12 @@ export function NoteEditorModal({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onKeyDown={handleKeyDown}>
-      <div
-        className="lms-animate-fade absolute inset-0"
-        style={{ background: "color-mix(in srgb, var(--lms-text-primary) 60%, transparent)" }}
-        onClick={onCancel}
-        aria-hidden
-      />
+      <div className="lms-backdrop lms-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-lg overflow-hidden rounded-xl border border-lms-border-secondary bg-lms-bg-primary shadow-xl"
+        className="relative w-full max-w-[560px] overflow-hidden rounded-xl border border-lms-border-secondary bg-lms-bg-primary shadow-xl"
       >
         <header className="flex items-center justify-between border-b border-lms-border-secondary px-5 py-4">
           <h2 id={titleId} className="lms-text-md-semibold text-lms-text-primary">
@@ -104,18 +99,21 @@ export function NoteEditorModal({
           </button>
         </header>
 
-        <div className="flex flex-col gap-4 px-5 py-4">
+        <div className="flex flex-col gap-5 px-6 py-5">
           {anchorQuote ? (
             <div>
-              <p className="lms-text-2xs-medium mb-1 text-lms-text-tertiary">Anchored to {anchorTs}</p>
-              <p className="lms-text-sm-italic border-l-[3px] border-lms-border-brand pl-3 text-lms-text-tertiary">
+              <p className="lms-text-2xs-medium mb-2 text-lms-text-tertiary">
+                Anchored to{" "}
+                <span className="text-lms-text-brand-secondary">{anchorTs}</span>
+              </p>
+              <p className="lms-text-sm-italic rounded-lg bg-lms-bg-secondary border-l-[3px] border-lms-border-brand px-4 py-3 text-lms-text-tertiary">
                 {anchorQuote}
               </p>
             </div>
           ) : null}
 
           <label className="block">
-            <span className="lms-text-sm-medium mb-1 block text-lms-text-secondary">Note</span>
+            <span className="lms-text-sm-medium mb-1.5 block text-lms-text-secondary">Your note</span>
             <textarea
               ref={textRef}
               value={text}
@@ -127,7 +125,9 @@ export function NoteEditorModal({
           </label>
 
           <div>
-            <span className="lms-text-sm-medium mb-1 block text-lms-text-secondary">Tags</span>
+            <span className="lms-text-sm-medium mb-1.5 block text-lms-text-secondary">
+              Tags (optional)
+            </span>
             <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-lms-border-primary px-2 py-1.5">
               {tags.map((t) => (
                 <span

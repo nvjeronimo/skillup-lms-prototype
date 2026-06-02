@@ -32,7 +32,7 @@ export function CourseHeader({
       {!compact ? (
         <div className="min-w-0 flex-1">
           <p className="lms-text-2xs-medium text-lms-text-tertiary">{eyebrow}</p>
-          <p className="lms-text-lg-medium mt-0.5 truncate text-lms-text-primary">{title}</p>
+          <p className="lms-text-lg-semibold mt-1 text-lms-text-primary">{title}</p>
         </div>
       ) : null}
       <SidebarToggle expanded={expanded} onToggle={onToggle} />

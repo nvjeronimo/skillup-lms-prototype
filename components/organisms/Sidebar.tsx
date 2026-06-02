@@ -27,7 +27,7 @@ export interface SidebarProps {
 function topicStatus(topic: Topic): CompletionState {
   if (topic.locked) return "Locked";
   if (topic.completed) return "Done";
-  if (topic.active) return "In Progress";
+  // Active/current topics show an empty ring; the brand highlight marks "current".
   return "Pending";
 }
 
@@ -60,7 +60,9 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "flex h-full flex-col border-r border-lms-border-secondary bg-lms-bg-primary",
+        "flex h-full flex-col overflow-hidden bg-lms-bg-primary",
+        // Floating card on desktop/tablet; Mobile drawer fills its container.
+        isMobile ? "" : "rounded-xl border border-lms-border-secondary",
         WIDTH[variant],
         className,
       )}
@@ -68,18 +70,20 @@ export function Sidebar({
     >
       <CourseHeader
         title={course.title}
-        eyebrow={course.provider}
+        eyebrow="Course"
         expanded={!collapsed}
         compact={collapsed}
         onToggle={onToggleSidebar}
       />
 
       {!collapsed ? (
-        <OverallProgress
-          pct={course.overallProgressPct}
-          moduleCurrent={course.modulesCompleted + 1}
-          moduleTotal={course.modulesTotal}
-        />
+        <div className="border-b border-lms-border-secondary px-4 py-3">
+          <OverallProgress
+            pct={course.overallProgressPct}
+            moduleCurrent={course.modulesCompleted + 1}
+            moduleTotal={course.modulesTotal}
+          />
+        </div>
       ) : null}
 
       <div className="lms-scroll flex-1 overflow-y-auto pb-4">
