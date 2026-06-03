@@ -64,9 +64,32 @@ Create a **second** Vercel project from the **same repo** with a Storybook build
 - **Env vars:** none required — all data is mock (`lib/data-model.json`).
 - **Custom domains** can be added per project in Vercel → Settings → Domains.
 
-## Share with the team
+## Live links (deployed)
 
 | Link | What |
 |------|------|
-| `https://skillup-lms-prototype.vercel.app` | The interactive Video lesson prototype |
-| `https://skillup-lms-storybook.vercel.app` | The component library / design-system docs |
+| **https://lms-prototype-mu.vercel.app** | The interactive Video lesson prototype |
+| **https://storybook-static-roan-psi.vercel.app** | The component library / design-system docs (159 stories) |
+
+Both are **public** (no login needed) and live on Vercel.
+
+## Notes on the Vercel build
+
+- `vercel.json` sets `installCommand: "pnpm install --ignore-scripts"`. Vercel's pnpm
+  treats un-approved dependency build scripts (esbuild, sharp, …) as a hard error in CI;
+  those native builds aren't needed for `next build`, so we skip them. This is the
+  reliable cross-environment fix.
+
+## Redeploying
+
+```bash
+# prototype (from repo root)
+vercel --prod --yes
+
+# storybook (build locally, deploy the static output)
+pnpm build-storybook
+cd storybook-static && vercel --prod --yes
+```
+
+To get **auto-deploy on every `git push`**, connect the GitHub repo in each Vercel
+project → Settings → Git (optional; the CLI deploys above are immediate either way).
