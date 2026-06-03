@@ -4,12 +4,14 @@ import * as React from "react";
 import { FileText } from "lucide-react";
 import { FileItem } from "@/components/molecules/FileItem";
 import { EmptyState } from "@/components/atoms/EmptyState";
-import { topicDownloads } from "@/lib/data";
+import { getTopic } from "@/lib/data";
+import { getDownloads } from "@/lib/content";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
 
 export function DownloadsTab({ topicId }: { topicId: string }) {
-  const files = topicDownloads(topicId);
+  const topic = getTopic(topicId);
+  const files = topic ? getDownloads(topic) : [];
   const showToast = useLmsStore((s) => s.showToast);
 
   if (!files.length) {

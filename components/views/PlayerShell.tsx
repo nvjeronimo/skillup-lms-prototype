@@ -8,6 +8,7 @@ import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/Cour
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
+import { TopicHeader } from "@/components/molecules/TopicHeader";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { SavedPanel, type SavedFilter } from "@/components/organisms/SavedPanel";
@@ -17,6 +18,7 @@ import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { topicFamily, topicDescription, getDownloads } from "@/lib/content";
 import {
   course,
   getTopic,
@@ -25,7 +27,6 @@ import {
   savedNotes,
   savedTopics,
   topicNotes,
-  topicDownloads,
 } from "@/lib/data";
 
 export interface PlayerShellProps {
@@ -97,14 +98,36 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     bp === "tablet" ? "Collapsed" : sidebarExpanded ? "Expanded" : "Collapsed";
   const showInlineSidebar = bp !== "mobile";
 
-  const notesCount = topicNotes(topicId, allNotes).length;
-  const downloadsCount = topicDownloads(topicId).length;
+  const family = topicFamily(topic.type);
+  const isVideo = family === "video";
+  const isLocked = Boolean(topic.locked);
 
-  const tabs = [
-    { slug: "transcript" as TabSlug, label: "Transcript", href: `/course/${courseSlug}/topic/${topicId}` },
-    { slug: "notes" as TabSlug, label: "Notes", count: notesCount, href: `/course/${courseSlug}/topic/${topicId}/notes` },
-    { slug: "downloads" as TabSlug, label: "Downloads", count: downloadsCount, href: `/course/${courseSlug}/topic/${topicId}/downloads` },
-  ];
+  const notesCount = topicNotes(topicId, allNotes).length;
+  const downloadsCount = getDownloads(topic).length;
+
+  const base = `/course/${courseSlug}/topic/${topicId}`;
+  const transcriptTab = { slug: "transcript" as TabSlug, href: base };
+  const notesTab = { slug: "notes" as TabSlug, label: "Notes", count: notesCount, href: `${base}/notes` };
+  const downloadsTab = {
+    slug: "downloads" as TabSlug,
+    label: "Downloads",
+    count: downloadsCount,
+    href: `${base}/downloads`,
+  };
+
+  const PRIMARY_LABEL: Record<string, string> = {
+    video: "Transcript",
+    reading: "Article",
+    assessment: "Quiz",
+    graded: "Assignment",
+    activity: "Activity",
+    discussion: "Discussion",
+    vilt: topic.type === "VILT-Recording" ? "Recording" : "Session",
+  };
+
+  const tabs = isVideo
+    ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
+    : [{ ...transcriptTab, label: PRIMARY_LABEL[family] }, downloadsTab];
 
   function navigateTopic(id: string) {
     setCurrentTopic(id);
@@ -161,19 +184,37 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         >
           <div className="lms-scroll flex-1 overflow-y-auto">
             <div className="w-full p-4">
-              <VideoPlayer
-                durationSeconds={durationSeconds}
-                currentTime={currentVideoTimestamp}
-                onSeek={(s) => {
-                  seekVideoTo(s);
-                  track("video_seek", { to: s });
-                }}
-              />
-
-              <div className="mt-4">
-                <ContentTabs tabs={tabs} active={activeTab} />
-                {children}
-              </div>
+              {isLocked ? (
+                children
+              ) : isVideo ? (
+                <>
+                  <VideoPlayer
+                    durationSeconds={durationSeconds}
+                    currentTime={currentVideoTimestamp}
+                    onSeek={(s) => {
+                      seekVideoTo(s);
+                      track("video_seek", { to: s });
+                    }}
+                  />
+                  <div className="mt-4">
+                    <ContentTabs tabs={tabs} active={activeTab} />
+                    {children}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <TopicHeader
+                    type={topic.type}
+                    title={topic.title}
+                    duration={topic.duration}
+                    description={topicDescription(topic)}
+                  />
+                  <div className="mt-5">
+                    <ContentTabs tabs={tabs} active={activeTab} />
+                    {children}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

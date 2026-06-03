@@ -1,9 +1,9 @@
-import { TranscriptTab } from "@/components/views/TranscriptTab";
+import { TopicBody } from "@/components/views/TopicBody";
 
-export default function TranscriptPage({
+export default function TopicPage({
   params,
 }: {
   params: { courseSlug: string; topicId: string };
 }) {
-  return <TranscriptTab topicId={params.topicId} courseSlug={params.courseSlug} />;
+  return <TopicBody topicId={params.topicId} courseSlug={params.courseSlug} />;
 }
