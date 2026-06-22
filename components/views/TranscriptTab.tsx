@@ -1,16 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ChevronDown, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
-import { TranscriptControls } from "@/components/molecules/TranscriptControls";
 import { useLmsStore } from "@/lib/store";
 import { getTopic } from "@/lib/data";
 import { tsToSeconds } from "@/lib/utils";
 import { track } from "@/lib/analytics";
-import { useBreakpoint } from "@/lib/useBreakpoint";
 
 const PAUSE_MS = 8000;
 
@@ -26,7 +24,6 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
   const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
   const showToast = useLmsStore((s) => s.showToast);
-  const bp = useBreakpoint();
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
 
   // Auto-follow the active line; pause when the user scrolls manually.
@@ -68,20 +65,37 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   return (
     <div className="relative" onWheel={pauseFollow} onTouchMove={pauseFollow}>
-      {/* Mobile shows the language + download controls as their own row (the tab
-          row is a dropdown on mobile, so the controls move here). */}
-      {bp === "mobile" ? (
-        <div className="border-b border-lms-border-secondary py-2">
-          <TranscriptControls
-            showAddNote={false}
-            onLanguageChange={(code) => track("video_language_change", { language: code })}
-            onDownload={() => {
-              track("download_transcript", { format: "txt" });
-              showToast("Downloading transcript…");
-            }}
-          />
-        </div>
-      ) : null}
+      {/* Controls row below the tabs: Language (left) · Add Note (right).
+          Transcript download lives in the Downloads tab as a resource. */}
+      <div className="flex flex-wrap items-center justify-between gap-3 py-2">
+        <label className="lms-text-sm-medium flex items-center gap-1.5 text-lms-text-secondary">
+          Language:
+          <span className="relative">
+            <select
+              aria-label="Caption language"
+              onChange={(e) => track("video_language_change", { language: e.target.value })}
+              className="lms-text-sm-medium appearance-none bg-transparent pr-5 text-lms-text-primary outline-none"
+            >
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+            </select>
+            <ChevronDown
+              size={14}
+              strokeWidth={1.5}
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-lms-text-tertiary"
+            />
+          </span>
+        </label>
+        <button
+          type="button"
+          onClick={() => openNoteEditor({ lineId: activeLineId ?? topic.transcript?.[0]?.id })}
+          className="lms-text-sm-semibold inline-flex items-center gap-1 text-lms-text-brand-secondary hover:underline"
+        >
+          <Icon icon={Plus} size={16} />
+          Add Note
+        </button>
+      </div>
 
       {!following ? (
         <button

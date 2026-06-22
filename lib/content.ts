@@ -202,10 +202,6 @@ export function getDiscussionThreads(topic: FlatTopic): DiscussionThread[] {
 
 /** Per-topic downloads. Uses the seeded files when present, else type-appropriate dummies. */
 export function getDownloads(topic: FlatTopic): DownloadFile[] {
-  const seeded = seedDownloads(topic.id);
-  if (seeded.length) return seeded;
-
-  const fam = topicFamily(topic.type);
   const base = topic.id;
   const make = (type: DownloadFile["type"], name: string, size: string): DownloadFile => ({
     id: `${base}-${name}`,
@@ -216,23 +212,39 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
     addedAt: "2026-05-15T00:00:00Z",
   });
 
+  const fam = topicFamily(topic.type);
+
+  // Video topics expose their transcript as a downloadable resource here
+  // (rather than a separate "download transcript" control on the player).
+  const transcriptFile: DownloadFile[] =
+    fam === "video" ? [make("TXT", "Transcript (English).txt", "14 KB")] : [];
+
+  const seeded = seedDownloads(topic.id);
+  if (seeded.length) return [...seeded, ...transcriptFile];
+
+  let files: DownloadFile[];
   switch (fam) {
     case "reading":
-      return [
+      files = [
         make("PDF", "reading-notes.pdf", "120 KB"),
         make("PDF", "further-reading.pdf", "88 KB"),
       ];
+      break;
     case "assessment":
     case "graded":
-      return [
+      files = [
         make("PDF", "assignment-brief.pdf", "96 KB"),
         make("DOCX", "submission-template.docx", "54 KB"),
       ];
+      break;
     case "activity":
-      return [make("XLSX", "activity-worksheet.xlsx", "32 KB")];
+      files = [make("XLSX", "activity-worksheet.xlsx", "32 KB")];
+      break;
     case "discussion":
-      return [make("PDF", "discussion-guidelines.pdf", "40 KB")];
+      files = [make("PDF", "discussion-guidelines.pdf", "40 KB")];
+      break;
     default:
-      return [make("PDF", "resources.pdf", "110 KB")];
+      files = [make("PDF", "resources.pdf", "110 KB")];
   }
+  return [...files, ...transcriptFile];
 }

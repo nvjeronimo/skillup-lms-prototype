@@ -87,7 +87,7 @@ export interface Note {
 export interface DownloadFile {
   id: string;
   topicId: string;
-  type: "PDF" | "DOCX" | "XLSX" | "PPTX" | "ZIP";
+  type: "PDF" | "DOCX" | "XLSX" | "PPTX" | "ZIP" | "TXT" | "SRT";
   name: string;
   size: string;
   addedAt: string;

@@ -9,7 +9,6 @@ import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
-import { TranscriptControls } from "@/components/molecules/TranscriptControls";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { SavedPanel, type SavedFilter } from "@/components/organisms/SavedPanel";
@@ -211,22 +210,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       tabs={tabs}
                       active={activeTab}
                       variant={bp === "mobile" ? "select" : "tabs"}
-                      rightSlot={
-                        activeTab === "transcript" ? (
-                          <TranscriptControls
-                            showLanguage={bp !== "mobile"}
-                            showDownload={bp !== "mobile"}
-                            onLanguageChange={(c) => track("video_language_change", { language: c })}
-                            onDownload={() => {
-                              track("download_transcript", { format: "txt" });
-                              showToast("Downloading transcript…");
-                            }}
-                            onAddNote={() =>
-                              openNoteEditor({ lineId: activeLineId ?? topic.transcript?.[0]?.id })
-                            }
-                          />
-                        ) : undefined
-                      }
                     />
                     {children}
                   </div>
