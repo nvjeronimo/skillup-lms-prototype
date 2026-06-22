@@ -77,8 +77,9 @@ export function TopicRow({
         <span className="min-w-0 flex-1">
           <span
             className={cn(
+              // DS Topic Row: title text-secondary inactive, brand on active, tertiary when locked.
               "lms-text-sm-medium block",
-              active ? "text-lms-text-brand-secondary" : "text-lms-text-primary",
+              active ? "text-lms-text-brand-secondary" : "text-lms-text-secondary",
               status === "Locked" && "text-lms-text-tertiary",
             )}
           >
@@ -94,15 +95,15 @@ export function TopicRow({
           </span>
         </span>
       </button>
+      {/* Trailing bookmark — hidden by default, shown when Show bookmark=true
+          (the active row sets it on; see Sidebar). */}
       {showBookmark || active ? (
-        <span className={cn(active ? "opacity-100" : "opacity-0 group-hover:opacity-100")}>
-          <BookmarkButton
-            bookmarked={bookmarked}
-            onToggle={onToggleBookmark}
-            itemLabel={title}
-            size={16}
-          />
-        </span>
+        <BookmarkButton
+          bookmarked={bookmarked}
+          onToggle={onToggleBookmark}
+          itemLabel={title}
+          size={16}
+        />
       ) : null}
     </div>
   );

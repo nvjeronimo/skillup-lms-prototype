@@ -134,7 +134,7 @@ export function Sidebar({
                               duration={topic.duration}
                               status={topicStatus(topic)}
                               active={topic.id === currentTopicId}
-                              showBookmark
+                              showBookmark={bookmarks.has(topic.id)}
                               bookmarked={bookmarks.has(topic.id)}
                               onClick={() => onSelectTopic?.(topic.id)}
                               onToggleBookmark={() => onToggleBookmark?.(topic.id)}
@@ -150,7 +150,7 @@ export function Sidebar({
                           duration={topic.duration}
                           status={topicStatus(topic)}
                           active={topic.id === currentTopicId}
-                          showBookmark
+                          showBookmark={bookmarks.has(topic.id)}
                           bookmarked={bookmarks.has(topic.id)}
                           onClick={() => onSelectTopic?.(topic.id)}
                           onToggleBookmark={() => onToggleBookmark?.(topic.id)}
