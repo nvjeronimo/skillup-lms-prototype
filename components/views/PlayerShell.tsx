@@ -14,6 +14,7 @@ import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { SavedPanel, type SavedFilter } from "@/components/organisms/SavedPanel";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
+import { CourseCompleteModal } from "@/components/organisms/CourseCompleteModal";
 import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
@@ -73,6 +74,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const clearToast = useLmsStore((s) => s.clearToast);
 
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
+  const [completeOpen, setCompleteOpen] = React.useState(false);
 
   // Keep currentTopicId in sync with the route + emit topic_enter.
   React.useEffect(() => {
@@ -250,11 +252,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             position={position}
             total={total}
             title={topic.title}
+            milestone={next ? "Topic" : "Course"}
             previousDisabled={!previous}
-            nextDisabled={!next}
+            nextDisabled={false}
             compact={bp === "mobile"}
             onPrevious={() => previous && navigateTopic(previous.id)}
-            onNext={() => next && navigateTopic(next.id)}
+            onNext={() => (next ? navigateTopic(next.id) : setCompleteOpen(true))}
           />
         </main>
       </div>
@@ -335,6 +338,22 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         initialTags={editorNote?.tags ?? []}
         onCancel={closeNoteEditor}
         onSave={saveNote}
+      />
+
+      <CourseCompleteModal
+        open={completeOpen}
+        courseTitle={course.title}
+        onClose={() => setCompleteOpen(false)}
+        onNextCourse={() => {
+          setCompleteOpen(false);
+          showToast("Next course → Course Hub (out of scope).");
+        }}
+        onViewCertificate={() => {
+          setCompleteOpen(false);
+          track("certificate_view", { from: "complete_modal" });
+          router.push(`/course/${courseSlug}/certificate`);
+        }}
+        onBackToCourse={() => setCompleteOpen(false)}
       />
 
       <Toast toast={toast} onDone={clearToast} />

@@ -95,6 +95,21 @@ export function topicPath(topicId: string, c: Course = course): string {
 export const DEFAULT_TOPIC_ID = "m3-t1";
 export const DEFAULT_COURSE_SLUG = course.slug;
 
+/* ---- Certificate (Section 07) ---- */
+export const certificate = {
+  learnerName: user.name,
+  courseTitle: course.title,
+  provider: course.provider,
+  dateLabel: "June 22, 2026",
+  certificateId: "ID-SKL-SIXSIGMA-0622",
+  stats: {
+    modules: course.modulesTotal,
+    topics: flatTopics().length,
+    time: "4h 22m",
+    avgQuiz: "96%",
+  },
+};
+
 /** Map a notification type to its hybrid-tab activity category. */
 export function notificationCategory(
   type: NotificationModel["type"],
