@@ -109,7 +109,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
         </button>
       ) : null}
 
-      <div className="flex flex-col gap-1 py-2">
+      <div className="flex flex-col py-2">
         {topic.transcript.map((line) => {
           const note = notes.find((n) => n.transcriptLineId === line.id && n.topicId === topicId);
           const hasNote = Boolean(note);

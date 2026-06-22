@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export interface TranscriptLineProps {
   ts: string;
   text: string;
-  /** Active = currently-playing line (brand tint + pill affordances). */
+  /** Active = currently-playing line (brand tint + 3px brand left border + pill). */
   active?: boolean;
   hasNote?: boolean;
   showDuration?: boolean;
@@ -18,8 +18,10 @@ export interface TranscriptLineProps {
 }
 
 /**
- * A transcript line. Active lines reveal a "+ Note" pill (when no note) or an
- * "✎ Edit" pill (when Has note=true). A note dot marks lines that have notes.
+ * A transcript line (DS: LMS / Transcript Line).
+ * - Active line: bg-brand-section + 3px brand left border, timestamp in brand-primary,
+ *   and a pill on the right — "✎ Edit" when Has note, else "+ Note".
+ * - Note lines show a progress dot inline before the timestamp (Timecode group).
  */
 export function TranscriptLine({
   ts,
@@ -36,32 +38,34 @@ export function TranscriptLine({
   return (
     <div
       className={cn(
-        "group flex gap-3 rounded-lg px-3 py-2.5 transition-colors",
-        active ? "bg-lms-bg-brand-section" : "hover:bg-lms-bg-secondary",
+        // Transparent 3px border by default keeps text from shifting when a line becomes active.
+        "group flex items-start gap-3 border-l-[3px] px-4 py-3 transition-colors",
+        active
+          ? "border-lms-border-brand bg-lms-bg-brand-section"
+          : "border-transparent hover:bg-lms-bg-secondary",
         className,
       )}
     >
-      {/* Note indicator dot — fixed gutter so text stays aligned. */}
-      <span className="flex w-2 shrink-0 justify-center pt-2">
-        {hasNote ? (
+      <button type="button" onClick={onSeek} className="flex min-w-0 flex-1 items-start gap-3 text-left">
+        {/* Timecode: dot (only when the line has a note) + timestamp, grouped. */}
+        <span className="flex shrink-0 items-center gap-3">
+          {hasNote ? (
+            <span
+              className="size-2 shrink-0 rounded-full bg-lms-fg-progress"
+              aria-label="Has note"
+              role="img"
+            />
+          ) : null}
           <span
-            className="h-2 w-2 rounded-full bg-lms-fg-progress"
-            aria-label="Has note"
-            role="img"
-          />
-        ) : null}
-      </span>
-
-      <button type="button" onClick={onSeek} className="flex flex-1 items-start gap-3 text-left">
-        <span
-          className={cn(
-            "lms-text-sm-semibold w-10 shrink-0 pt-0.5",
-            active ? "text-lms-text-brand-secondary" : "text-lms-text-tertiary",
-          )}
-        >
-          {ts}
+            className={cn(
+              "lms-text-xs-medium whitespace-nowrap",
+              active ? "text-lms-text-brand-primary" : "text-lms-text-tertiary",
+            )}
+          >
+            {ts}
+          </span>
         </span>
-        <span className="lms-text-sm-regular flex-1 text-lms-text-primary">
+        <span className="lms-text-sm-regular min-w-0 flex-1 text-lms-text-primary">
           {text}
           {showDuration && duration ? (
             <span className="lms-text-xs-regular ml-2 text-lms-text-tertiary">{duration}</span>
@@ -70,29 +74,15 @@ export function TranscriptLine({
       </button>
 
       {active ? (
-        <div className="flex shrink-0 items-start pt-0.5">
-          {hasNote ? (
-            <button
-              type="button"
-              onClick={onEditNote}
-              aria-label={`Edit note at ${ts}`}
-              className="lms-text-xs-semibold inline-flex items-center gap-1 rounded-full bg-lms-bg-primary px-2.5 py-1 text-lms-text-brand-secondary"
-            >
-              <Icon icon={Edit3} size={14} />
-              Edit
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={onAddNote}
-              aria-label={`Add note at ${ts}`}
-              className="lms-text-xs-semibold inline-flex items-center gap-1 rounded-full bg-lms-bg-primary px-2.5 py-1 text-lms-text-brand-secondary"
-            >
-              <Icon icon={Plus} size={14} />
-              Note
-            </button>
-          )}
-        </div>
+        <button
+          type="button"
+          onClick={hasNote ? onEditNote : onAddNote}
+          aria-label={`${hasNote ? "Edit" : "Add"} note at ${ts}`}
+          className="lms-text-xs-semibold flex shrink-0 items-center gap-1 self-stretch rounded-full bg-lms-bg-brand-section py-1 pl-2 pr-3 text-lms-text-brand-secondary"
+        >
+          <Icon icon={hasNote ? Edit3 : Plus} size={14} />
+          {hasNote ? "Edit" : "Note"}
+        </button>
       ) : null}
     </div>
   );
