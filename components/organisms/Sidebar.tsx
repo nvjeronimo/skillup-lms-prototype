@@ -73,6 +73,7 @@ export function Sidebar({
         eyebrow="Course"
         expanded={!collapsed}
         compact={collapsed}
+        showToggle={!isMobile}
         onToggle={onToggleSidebar}
       />
 

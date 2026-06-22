@@ -9,6 +9,8 @@ export interface CourseHeaderProps {
   onToggle?: () => void;
   /** Hide the title/eyebrow (collapsed sidebar shows just the toggle). */
   compact?: boolean;
+  /** Hide the collapse toggle (mobile drawer uses its own close X). */
+  showToggle?: boolean;
   className?: string;
 }
 
@@ -19,6 +21,7 @@ export function CourseHeader({
   expanded = true,
   onToggle,
   compact = false,
+  showToggle = true,
   className,
 }: CourseHeaderProps) {
   return (
@@ -35,7 +38,7 @@ export function CourseHeader({
           <p className="lms-text-lg-semibold mt-1 text-lms-text-primary">{title}</p>
         </div>
       ) : null}
-      <SidebarToggle expanded={expanded} onToggle={onToggle} />
+      {showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null}
     </div>
   );
 }

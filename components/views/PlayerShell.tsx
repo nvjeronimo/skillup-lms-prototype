@@ -97,8 +97,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   const topbarSize: TopbarSize =
     bp === "mobile" ? "Mobile" : bp === "tablet" ? "Tablet" : "Desktop";
-  const sidebarVariant: SidebarVariant =
-    bp === "tablet" ? "Collapsed" : sidebarExpanded ? "Expanded" : "Collapsed";
+  // Tablet now uses the expanded sidebar by default (ICP Phase 1 decision), same
+  // as desktop — the user can still collapse it.
+  const sidebarVariant: SidebarVariant = sidebarExpanded ? "Expanded" : "Collapsed";
   const showInlineSidebar = bp !== "mobile";
 
   const family = topicFamily(topic.type);
@@ -267,30 +268,26 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             aria-hidden
           />
           <div className="lms-animate-slide-left absolute left-0 top-0 h-full">
-            <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-lms-border-secondary bg-lms-bg-primary px-4 py-3">
-                <span className="lms-text-md-semibold text-lms-text-primary">Course menu</span>
-                <button
-                  type="button"
-                  onClick={() => setMobileDrawerOpen(false)}
-                  aria-label="Close menu"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-md text-lms-text-tertiary hover:bg-lms-bg-secondary"
-                >
-                  <Icon icon={X} size={20} />
-                </button>
-              </div>
-              <div className="min-h-0 flex-1">
-                <Sidebar
-                  course={course}
-                  currentTopicId={topicId}
-                  variant="Mobile"
-                  collapsedModules={collapsedModules}
-                  bookmarks={bookmarks}
-                  onToggleModule={toggleModule}
-                  onSelectTopic={navigateTopic}
-                  onToggleBookmark={toggleBookmark}
-                />
-              </div>
+            {/* Drawer goes straight to the course header; a floating X closes it. */}
+            <div className="relative h-full">
+              <button
+                type="button"
+                onClick={() => setMobileDrawerOpen(false)}
+                aria-label="Close menu"
+                className="absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-md text-lms-text-tertiary hover:bg-lms-bg-secondary"
+              >
+                <Icon icon={X} size={20} />
+              </button>
+              <Sidebar
+                course={course}
+                currentTopicId={topicId}
+                variant="Mobile"
+                collapsedModules={collapsedModules}
+                bookmarks={bookmarks}
+                onToggleModule={toggleModule}
+                onSelectTopic={navigateTopic}
+                onToggleBookmark={toggleBookmark}
+              />
             </div>
           </div>
         </div>
