@@ -9,6 +9,7 @@ import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
+import { TranscriptControls } from "@/components/molecules/TranscriptControls";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { SavedPanel, type SavedFilter } from "@/components/organisms/SavedPanel";
@@ -52,6 +53,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const setCurrentTab = useLmsStore((s) => s.setCurrentTab);
   const currentVideoTimestamp = useLmsStore((s) => s.currentVideoTimestamp);
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
+  const activeLineId = useLmsStore((s) => s.activeLineId);
   const collapsedModules = useLmsStore((s) => s.collapsedModules);
   const toggleModule = useLmsStore((s) => s.toggleModule);
   const bookmarks = useLmsStore((s) => s.bookmarks);
@@ -62,6 +64,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const notificationsRead = useLmsStore((s) => s.notificationsRead);
   const markAllNotificationsRead = useLmsStore((s) => s.markAllNotificationsRead);
   const noteEditor = useLmsStore((s) => s.noteEditor);
+  const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
   const closeNoteEditor = useLmsStore((s) => s.closeNoteEditor);
   const saveNote = useLmsStore((s) => s.saveNote);
   const allNotes = useLmsStore((s) => s.notes);
@@ -196,8 +199,32 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       track("video_seek", { to: s });
                     }}
                   />
+                  {/* Topic title below the player (ICP Phase 1 canonical layout). */}
+                  <h1 className="lms-text-display-xs-semibold mt-5 text-lms-text-primary">
+                    {topic.title}
+                  </h1>
                   <div className="mt-4">
-                    <ContentTabs tabs={tabs} active={activeTab} />
+                    <ContentTabs
+                      tabs={tabs}
+                      active={activeTab}
+                      variant={bp === "mobile" ? "select" : "tabs"}
+                      rightSlot={
+                        activeTab === "transcript" ? (
+                          <TranscriptControls
+                            showLanguage={bp !== "mobile"}
+                            showDownload={bp !== "mobile"}
+                            onLanguageChange={(c) => track("video_language_change", { language: c })}
+                            onDownload={() => {
+                              track("download_transcript", { format: "txt" });
+                              showToast("Downloading transcript…");
+                            }}
+                            onAddNote={() =>
+                              openNoteEditor({ lineId: activeLineId ?? topic.transcript?.[0]?.id })
+                            }
+                          />
+                        ) : undefined
+                      }
+                    />
                     {children}
                   </div>
                 </>

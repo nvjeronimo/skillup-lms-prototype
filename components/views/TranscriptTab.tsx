@@ -4,11 +4,13 @@ import * as React from "react";
 import { ArrowDown } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
-import { VideoChromeFooter } from "@/components/molecules/VideoChromeFooter";
+import { ContentFeedback } from "@/components/molecules/ContentFeedback";
+import { TranscriptControls } from "@/components/molecules/TranscriptControls";
 import { useLmsStore } from "@/lib/store";
 import { getTopic } from "@/lib/data";
 import { tsToSeconds } from "@/lib/utils";
 import { track } from "@/lib/analytics";
+import { useBreakpoint } from "@/lib/useBreakpoint";
 
 const PAUSE_MS = 8000;
 
@@ -24,6 +26,8 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
   const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
   const showToast = useLmsStore((s) => s.showToast);
+  const bp = useBreakpoint();
+  const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
 
   // Auto-follow the active line; pause when the user scrolls manually.
   const [following, setFollowing] = React.useState(true);
@@ -64,14 +68,20 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   return (
     <div className="relative" onWheel={pauseFollow} onTouchMove={pauseFollow}>
-      {/* Video chrome footer sits at the top of the transcript tab (per Final Screens). */}
-      <VideoChromeFooter
-        onLanguageChange={(code) => track("video_language_change", { language: code })}
-        onDownloadTranscript={(format) => {
-          track("download_transcript", { format });
-          showToast(`Downloading transcript (.${format})…`);
-        }}
-      />
+      {/* Mobile shows the language + download controls as their own row (the tab
+          row is a dropdown on mobile, so the controls move here). */}
+      {bp === "mobile" ? (
+        <div className="border-b border-lms-border-secondary py-2">
+          <TranscriptControls
+            showAddNote={false}
+            onLanguageChange={(code) => track("video_language_change", { language: code })}
+            onDownload={() => {
+              track("download_transcript", { format: "txt" });
+              showToast("Downloading transcript…");
+            }}
+          />
+        </div>
+      ) : null}
 
       {!following ? (
         <button
@@ -112,6 +122,19 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             </div>
           );
         })}
+      </div>
+
+      {/* Feedback + license footer (ICP Phase 1). */}
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-lms-border-secondary pt-3">
+        <ContentFeedback
+          value={feedback}
+          onLike={() => setFeedback(feedback === "like" ? null : "like")}
+          onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
+          onReport={() => showToast("Thanks — we'll take a look.")}
+        />
+        <a href="#" className="lms-text-xs-regular text-lms-text-tertiary hover:text-lms-text-brand-secondary">
+          CC BY-SA 4.0
+        </a>
       </div>
     </div>
   );
