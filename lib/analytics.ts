@@ -12,6 +12,7 @@ export type AnalyticsEvent =
   | "course_enter"
   | "topic_enter"
   | "topic_complete"
+  | "topic_submit"
   | "module_complete"
   | "course_complete"
   | "video_play"

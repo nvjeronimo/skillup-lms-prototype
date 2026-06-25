@@ -1,8 +1,8 @@
 import * as React from "react";
-import { ChevronRight } from "lucide-react";
-import { Button, type ButtonSize } from "@/components/atoms/Button";
+import { ArrowRight } from "lucide-react";
+import { Button, type ButtonSize, type ButtonVariant } from "@/components/atoms/Button";
 
-export type Milestone = "Topic" | "Reading Complete" | "Module" | "Course";
+export type Milestone = "Topic" | "Module" | "Course";
 
 export interface CourseProgressionButtonProps {
   milestone?: Milestone;
@@ -11,23 +11,34 @@ export interface CourseProgressionButtonProps {
   onClick?: () => void;
 }
 
-const LABEL: Record<Milestone, string> = {
-  Topic: "Next topic",
-  "Reading Complete": "Mark complete",
-  Module: "Next module",
-  Course: "Finish course",
+/**
+ * Footer progression CTA (Option A). Navigation only — never the topic's action.
+ * - Topic  → outline "Next" (skipping is always allowed)
+ * - Module → filled "Go to next Module" at the last topic of a module
+ * - Course → filled "Go to next Course" at the last topic of the course
+ */
+const CONFIG: Record<Milestone, { label: string; variant: ButtonVariant }> = {
+  Topic: { label: "Next", variant: "secondary" },
+  Module: { label: "Go to next Module", variant: "primary" },
+  Course: { label: "Go to next Course", variant: "primary" },
 };
 
-/** The progression CTA at the right of the Footer Nav. Label varies by milestone. */
 export function CourseProgressionButton({
   milestone = "Topic",
   disabled = false,
   size = "md",
   onClick,
 }: CourseProgressionButtonProps) {
+  const cfg = CONFIG[milestone];
   return (
-    <Button variant="primary" size={size} rightIcon={ChevronRight} disabled={disabled} onClick={onClick}>
-      {LABEL[milestone]}
+    <Button
+      variant={cfg.variant}
+      size={size}
+      rightIcon={ArrowRight}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {cfg.label}
     </Button>
   );
 }

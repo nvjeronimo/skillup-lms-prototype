@@ -15,7 +15,7 @@ const meta: Meta<typeof TopicFooterNav> = {
     nextDisabled: false,
   },
   argTypes: {
-    milestone: { control: "select", options: ["Topic", "Reading Complete", "Module", "Course"] },
+    milestone: { control: "select", options: ["Topic", "Module", "Course"] },
   },
 };
 export default meta;
@@ -25,5 +25,6 @@ type Story = StoryObj<typeof TopicFooterNav>;
 export const Default: Story = {};
 export const NextDisabled: Story = { args: { nextDisabled: true } };
 export const PreviousDisabled: Story = { args: { previousDisabled: true, position: 1 } };
-export const ModuleMilestone: Story = { args: { milestone: "Module" } };
+export const LastOfModule: Story = { args: { milestone: "Module", position: 9, total: 9 } };
+export const LastOfCourse: Story = { args: { milestone: "Course", position: 9, total: 9 } };
 export const Compact: Story = { args: { compact: true } };

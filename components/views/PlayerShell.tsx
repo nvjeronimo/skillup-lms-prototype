@@ -9,7 +9,9 @@ import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
+import { TopicActionBar, type TopicActionState } from "@/components/molecules/TopicActionBar";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
+import type { Milestone } from "@/components/organisms/CourseProgressionButton";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { SavedPanel, type SavedFilter } from "@/components/organisms/SavedPanel";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
@@ -58,6 +60,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const toggleModule = useLmsStore((s) => s.toggleModule);
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
+  const completedTopics = useLmsStore((s) => s.completedTopics);
+  const submittedTopics = useLmsStore((s) => s.submittedTopics);
+  const markComplete = useLmsStore((s) => s.markComplete);
+  const submitForReview = useLmsStore((s) => s.submitForReview);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
   const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
@@ -106,6 +112,34 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const family = topicFamily(topic.type);
   const isVideo = family === "video";
   const isLocked = Boolean(topic.locked);
+
+  // Option A — Nav in footer · action in content.
+  // The topic's primary action lives in the content area; the footer only navigates.
+  const isActionType = family === "assessment" || family === "graded";
+  const isCompleted = completedTopics.has(topicId);
+  const isUnderReview = submittedTopics.has(topicId);
+  const actionState: TopicActionState = isCompleted
+    ? "completed"
+    : isUnderReview
+      ? "review"
+      : isActionType
+        ? "action"
+        : "incomplete";
+  const actionBar = isLocked ? null : (
+    <TopicActionBar
+      state={actionState}
+      onComplete={() => markComplete(topicId)}
+      onSubmit={() => (family === "graded" ? submitForReview(topicId) : markComplete(topicId))}
+    />
+  );
+
+  // Footer progression: Next normally, but "Go to next Module" at a module boundary
+  // and "Go to next Course" at the final topic.
+  const milestone: Milestone = !next
+    ? "Course"
+    : next.moduleId !== topic.moduleId
+      ? "Module"
+      : "Topic";
 
   const notesCount = topicNotes(topicId, allNotes).length;
   const downloadsCount = getDownloads(topic).length;
@@ -201,10 +235,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       track("video_seek", { to: s });
                     }}
                   />
-                  {/* Topic title below the player (ICP Phase 1 canonical layout). */}
-                  <h1 className="sk-text-display-xs-semibold mt-5 text-sk-text-primary">
-                    {topic.title}
-                  </h1>
+                  {/* Topic title below the player (ICP Phase 1 canonical layout).
+                      Primary action sits at the top-right of the content (Option A). */}
+                  <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <h1 className="sk-text-display-xs-semibold min-w-0 text-sk-text-primary">
+                      {topic.title}
+                    </h1>
+                    {actionBar ? <div className="shrink-0">{actionBar}</div> : null}
+                  </div>
                   <div className="mt-4">
                     <ContentTabs
                       tabs={tabs}
@@ -216,12 +254,17 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 </>
               ) : (
                 <>
-                  <TopicHeader
-                    type={topic.type}
-                    title={topic.title}
-                    duration={topic.duration}
-                    description={topicDescription(topic)}
-                  />
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
+                      <TopicHeader
+                        type={topic.type}
+                        title={topic.title}
+                        duration={topic.duration}
+                        description={topicDescription(topic)}
+                      />
+                    </div>
+                    {actionBar ? <div className="shrink-0">{actionBar}</div> : null}
+                  </div>
                   <div className="mt-5">
                     <ContentTabs tabs={tabs} active={activeTab} />
                     {children}
@@ -235,7 +278,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             position={position}
             total={total}
             title={topic.title}
-            milestone={next ? "Topic" : "Course"}
+            milestone={milestone}
             previousDisabled={!previous}
             nextDisabled={false}
             compact={bp === "mobile"}

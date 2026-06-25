@@ -26,6 +26,10 @@ interface LmsState {
   notes: Note[];
   noteEditor: { open: boolean; lineId?: string; noteId?: string };
   bookmarks: Set<string>;
+  /** Topics the learner has explicitly completed (Option A: action in content). */
+  completedTopics: Set<string>;
+  /** Graded topics submitted and awaiting a grade (shows "Under Review"). */
+  submittedTopics: Set<string>;
   notificationsRead: Set<string>;
   openPanel: OverlayPanel;
   /** Locally collapsed module groups in the sidebar. */
@@ -45,6 +49,8 @@ interface LmsState {
   saveNote: (note: NotePayload) => void;
   deleteNote: (id: string) => void;
   toggleBookmark: (topicId: string, opts?: { silent?: boolean }) => void;
+  markComplete: (topicId: string) => void;
+  submitForReview: (topicId: string) => void;
   toggleModule: (moduleId: string) => void;
   openOverlayPanel: (which: "notifications" | "saved") => void;
   closeOverlayPanel: () => void;
@@ -63,6 +69,16 @@ function seedBookmarks(): Set<string> {
   return set;
 }
 
+/** Seed completed topics from the course data (topics flagged completed). */
+function seedCompleted(): Set<string> {
+  const set = new Set<string>();
+  for (const m of course.modules) {
+    const topics = m.topics ?? m.lessons?.flatMap((l) => l.topics) ?? [];
+    for (const t of topics) if (t.completed) set.add(t.id);
+  }
+  return set;
+}
+
 let noteCounter = notesSeed.length;
 
 export const useLmsStore = create<LmsState>((set, get) => ({
@@ -75,6 +91,8 @@ export const useLmsStore = create<LmsState>((set, get) => ({
   notes: notesSeed,
   noteEditor: { open: false },
   bookmarks: seedBookmarks(),
+  completedTopics: seedCompleted(),
+  submittedTopics: new Set<string>(),
   notificationsRead: new Set<string>(),
   openPanel: null,
   collapsedModules: new Set<string>(),
@@ -153,6 +171,25 @@ export const useLmsStore = create<LmsState>((set, get) => ({
         };
       }
       return update;
+    }),
+
+  markComplete: (topicId) =>
+    set((state) => {
+      if (state.completedTopics.has(topicId)) return state;
+      const next = new Set(state.completedTopics);
+      next.add(topicId);
+      track("topic_complete", { topicId });
+      const title = getTopic(topicId)?.title ?? "topic";
+      return { completedTopics: next, toast: { message: `Marked as complete · ${title}` } };
+    }),
+
+  submitForReview: (topicId) =>
+    set((state) => {
+      if (state.submittedTopics.has(topicId)) return state;
+      const next = new Set(state.submittedTopics);
+      next.add(topicId);
+      track("topic_submit", { topicId });
+      return { submittedTopics: next, toast: { message: "Submitted — under review" } };
     }),
 
   toggleModule: (moduleId) =>
