@@ -20,10 +20,10 @@ export function FilterChip({ label, count, active = false, onClick, className }:
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "lms-text-sm-medium inline-flex items-center gap-1.5 rounded-full px-3 py-1 transition-colors duration-200",
+        "sk-text-sm-medium inline-flex items-center gap-1.5 rounded-full px-3 py-1 transition-colors duration-200",
         active
-          ? "bg-lms-bg-brand-section text-lms-text-brand-secondary"
-          : "bg-lms-bg-secondary text-lms-text-secondary hover:bg-lms-bg-tertiary",
+          ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
+          : "bg-sk-bg-secondary text-sk-text-secondary hover:bg-sk-bg-tertiary",
         className,
       )}
     >
@@ -31,8 +31,8 @@ export function FilterChip({ label, count, active = false, onClick, className }:
       {typeof count === "number" ? (
         <span
           className={cn(
-            "lms-text-xs-semibold",
-            active ? "text-lms-text-brand-secondary" : "text-lms-text-tertiary",
+            "sk-text-xs-semibold",
+            active ? "text-sk-text-brand-secondary" : "text-sk-text-tertiary",
           )}
         >
           {count}

@@ -30,20 +30,20 @@ export function OverallProgress({
         aria-label={`${clamped}% complete`}
       >
         <svg className="h-[46px] w-[46px] -rotate-90" viewBox="0 0 46 46">
-          <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--lms-bg-tertiary)" strokeWidth="4" />
+          <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--sk-bg-tertiary)" strokeWidth="4" />
           <circle
             cx="23"
             cy="23"
             r={radius}
             fill="none"
-            stroke="var(--lms-fg-progress)"
+            stroke="var(--sk-fg-progress)"
             strokeWidth="4"
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
           />
         </svg>
-        <span className="lms-text-2xs-semibold absolute text-lms-text-primary">{clamped}%</span>
+        <span className="sk-text-2xs-semibold absolute text-sk-text-primary">{clamped}%</span>
       </div>
     );
   }
@@ -51,18 +51,18 @@ export function OverallProgress({
   return (
     <div className={cn("w-full", className)}>
       <div className="flex items-center justify-between">
-        <span className="lms-text-2xs-medium text-lms-text-tertiary">Overall progress</span>
-        <span className="lms-text-xs-semibold text-lms-text-primary">{clamped}%</span>
+        <span className="sk-text-2xs-medium text-sk-text-tertiary">Overall progress</span>
+        <span className="sk-text-xs-semibold text-sk-text-primary">{clamped}%</span>
       </div>
       <div
-        className="mt-2 h-2 w-full overflow-hidden rounded-full bg-lms-bg-tertiary"
+        className="mt-2 h-2 w-full overflow-hidden rounded-full bg-sk-bg-tertiary"
         role="progressbar"
         aria-valuenow={clamped}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={`Overall progress, ${clamped}%, module ${moduleCurrent} of ${moduleTotal}`}
       >
-        <div className="h-full rounded-full bg-lms-fg-progress" style={{ width: `${clamped}%` }} />
+        <div className="h-full rounded-full bg-sk-fg-progress" style={{ width: `${clamped}%` }} />
       </div>
     </div>
   );

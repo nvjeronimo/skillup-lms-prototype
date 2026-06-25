@@ -16,7 +16,7 @@ const meta: Meta<typeof ModuleHeader> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[280px] border border-lms-border-secondary bg-lms-bg-primary">
+      <div className="w-[280px] border border-sk-border-secondary bg-sk-bg-primary">
         <Story />
       </div>
     ),

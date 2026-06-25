@@ -12,15 +12,15 @@ export interface LiveAttendanceProps {
 export function LiveAttendance({ live, total, recording = false, className }: LiveAttendanceProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-lms-bg-error-primary px-2 py-0.5">
-        <span className="h-2 w-2 rounded-full bg-lms-text-error-primary" aria-hidden />
-        <span className="lms-text-xs-semibold text-lms-text-error-primary">LIVE</span>
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-sk-bg-error-primary px-2 py-0.5">
+        <span className="h-2 w-2 rounded-full bg-sk-text-error-primary" aria-hidden />
+        <span className="sk-text-xs-semibold text-sk-text-error-primary">LIVE</span>
       </span>
-      <span className="lms-text-xs-regular text-lms-text-secondary">
+      <span className="sk-text-xs-regular text-sk-text-secondary">
         {live} of {total} participants
       </span>
       {recording ? (
-        <span className="lms-text-2xs-medium rounded bg-lms-bg-secondary px-1.5 py-0.5 text-lms-text-tertiary">
+        <span className="sk-text-2xs-medium rounded bg-sk-bg-secondary px-1.5 py-0.5 text-sk-text-tertiary">
           Recording
         </span>
       ) : null}

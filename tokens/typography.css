@@ -1,18 +1,19 @@
 /* ============================================================================
-   Typography Tokens — UUI text style ramp
-   Font family: Inter (UUI default). Montserrat for Display only on SKO mode.
+   Typography Tokens — SkillUp DS text style ramp
+   Font family: Montserrat for the whole UI (body + display). v2.0 retired the
+   old Inter primary — Inter is no longer used anywhere.
 
-   Each class corresponds to a UUI text style applied in Figma:
+   Each class corresponds to a DS text style applied in Figma:
    - Display sizes for hero titles
    - Text lg → 2xs ramp for body/eyebrow
 
-   Naming: .lms-text-{size}-{weight}  (matches Figma style names).
+   Naming: .sk-text-{size}-{weight}  (matches Figma style names).
    Apply via className. Do NOT inline font-size/font-weight.
 
-   NOTE: Inter + Montserrat are loaded via `next/font/google` in app/layout.tsx,
-   which injects the `--font-inter` / `--font-montserrat` CSS variables. The
-   font-family tokens below reference those so we avoid bundling raw woff2 and
-   avoid 404s in dev. Storybook loads the same families via .storybook/preview.
+   NOTE: Montserrat is loaded via `next/font/google` in app/layout.tsx, which
+   injects the `--font-montserrat` CSS variable. The font-family tokens below
+   reference it so we avoid bundling raw woff2 and avoid 404s in dev. Storybook
+   loads Montserrat via .storybook/preview-head.html.
    ============================================================================ */
 
 :root {
@@ -20,35 +21,35 @@
      The inline `var(..., "Montserrat")` fallback keeps the family valid even when
      `--font-montserrat` (injected by next/font) is absent — e.g. in Storybook,
      where "Montserrat" is loaded via a Google Fonts <link>. */
-  --lms-font-body: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
-  --lms-font-display: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
+  --sk-font-body: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
+  --sk-font-display: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
 }
 
 /* ---- Display ramp (Montserrat) ---- */
-.lms-text-display-xs-semibold  { font-family: var(--lms-font-display); font-weight: 600; font-size: 24px; line-height: 32px; }
-.lms-text-display-sm-semibold  { font-family: var(--lms-font-display); font-weight: 600; font-size: 30px; line-height: 38px; }
-.lms-text-display-md-bold      { font-family: var(--lms-font-display); font-weight: 700; font-size: 36px; line-height: 44px; }
+.sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: 24px; line-height: 32px; }
+.sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: 30px; line-height: 38px; }
+.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: 36px; line-height: 44px; }
 
 /* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ---- */
-.lms-text-lg-medium    { font-family: var(--lms-font-body); font-weight: 500; font-size: 18px; line-height: 24px; }
-.lms-text-lg-semibold  { font-family: var(--lms-font-body); font-weight: 600; font-size: 18px; line-height: 24px; }
+.sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 18px; line-height: 24px; }
+.sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 18px; line-height: 24px; }
 
-.lms-text-md-regular   { font-family: var(--lms-font-body); font-weight: 400; font-size: 16px; line-height: 24px; }
-.lms-text-md-medium    { font-family: var(--lms-font-body); font-weight: 500; font-size: 16px; line-height: 24px; }
-.lms-text-md-semibold  { font-family: var(--lms-font-body); font-weight: 600; font-size: 16px; line-height: 24px; }
+.sk-text-md-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: 16px; line-height: 24px; }
+.sk-text-md-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 16px; line-height: 24px; }
+.sk-text-md-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 16px; line-height: 24px; }
 
-.lms-text-sm-regular   { font-family: var(--lms-font-body); font-weight: 400; font-size: 14px; line-height: 20px; }
-.lms-text-sm-medium    { font-family: var(--lms-font-body); font-weight: 500; font-size: 14px; line-height: 20px; }
-.lms-text-sm-semibold  { font-family: var(--lms-font-body); font-weight: 600; font-size: 14px; line-height: 20px; }
+.sk-text-sm-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: 14px; line-height: 20px; }
+.sk-text-sm-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 14px; line-height: 20px; }
+.sk-text-sm-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 14px; line-height: 20px; }
 
-.lms-text-xs-regular   { font-family: var(--lms-font-body); font-weight: 400; font-size: 12px; line-height: 18px; }
-.lms-text-xs-medium    { font-family: var(--lms-font-body); font-weight: 500; font-size: 12px; line-height: 18px; }
-.lms-text-xs-semibold  { font-family: var(--lms-font-body); font-weight: 600; font-size: 12px; line-height: 18px; }
+.sk-text-xs-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: 12px; line-height: 18px; }
+.sk-text-xs-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 12px; line-height: 18px; }
+.sk-text-xs-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 12px; line-height: 18px; }
 
 /* ---- 2xs — uppercase eyebrows (10px, +4% letter-spacing, UPPER-cased) ---- */
-.lms-text-2xs-regular  { font-family: var(--lms-font-body); font-weight: 400; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
-.lms-text-2xs-medium   { font-family: var(--lms-font-body); font-weight: 500; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
-.lms-text-2xs-semibold { font-family: var(--lms-font-body); font-weight: 600; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* Italic helper for note anchor quotes (uses body font) */
-.lms-text-sm-italic    { font-family: var(--lms-font-body); font-weight: 400; font-size: 14px; line-height: 20px; font-style: italic; }
+.sk-text-sm-italic    { font-family: var(--sk-font-body); font-weight: 400; font-size: 14px; line-height: 20px; font-style: italic; }

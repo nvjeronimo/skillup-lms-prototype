@@ -32,16 +32,16 @@ export function CourseRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-4 rounded-xl border bg-lms-bg-primary px-5 py-3",
-        state === "Active" ? "border-lms-border-brand" : "border-lms-border-secondary",
+        "flex items-center gap-4 rounded-xl border bg-sk-bg-primary px-5 py-3",
+        state === "Active" ? "border-sk-border-brand" : "border-sk-border-secondary",
         className,
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span
           className={cn(
-            "lms-text-md-semibold truncate",
-            state === "Locked" ? "text-lms-text-tertiary" : "text-lms-text-primary",
+            "sk-text-md-semibold truncate",
+            state === "Locked" ? "text-sk-text-tertiary" : "text-sk-text-primary",
           )}
         >
           {title}
@@ -51,10 +51,10 @@ export function CourseRow({
 
       {state === "Active" ? (
         <div className="flex items-center gap-3">
-          <div className="h-2 w-40 overflow-hidden rounded-full bg-lms-bg-tertiary">
-            <div className="h-full rounded-full bg-lms-fg-progress" style={{ width: `${progressPct}%` }} />
+          <div className="h-2 w-40 overflow-hidden rounded-full bg-sk-bg-tertiary">
+            <div className="h-full rounded-full bg-sk-fg-progress" style={{ width: `${progressPct}%` }} />
           </div>
-          <span className="lms-text-sm-regular text-lms-text-tertiary">{progressPct}%</span>
+          <span className="sk-text-sm-regular text-sk-text-tertiary">{progressPct}%</span>
           <Button variant="primary" size="md" onClick={onClick}>
             Resume
           </Button>
@@ -63,7 +63,7 @@ export function CourseRow({
 
       {state === "Locked" ? (
         <div className="flex items-center gap-3">
-          <span className="lms-text-xs-semibold inline-flex items-center gap-1 text-lms-text-warning-primary">
+          <span className="sk-text-xs-semibold inline-flex items-center gap-1 text-sk-text-warning-primary">
             <Icon icon={Lock} size={14} />
             {unlockLabel}
           </span>
@@ -75,7 +75,7 @@ export function CourseRow({
 
       {state === "Available" ? (
         <div className="flex items-center gap-3">
-          <span className="lms-text-xs-semibold text-lms-text-success-primary">AVAILABLE NOW</span>
+          <span className="sk-text-xs-semibold text-sk-text-success-primary">AVAILABLE NOW</span>
           <Button variant="primary" size="md" onClick={onClick}>
             Start
           </Button>

@@ -35,8 +35,8 @@ function ControlButton({
       className={cn(
         "inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors",
         active
-          ? "bg-lms-bg-error-primary text-lms-text-error-primary"
-          : "bg-lms-bg-secondary text-lms-text-secondary hover:bg-lms-bg-tertiary",
+          ? "bg-sk-bg-error-primary text-sk-text-error-primary"
+          : "bg-sk-bg-secondary text-sk-text-secondary hover:bg-sk-bg-tertiary",
       )}
     >
       <Icon icon={icon} size={20} />
@@ -59,16 +59,16 @@ export function LiveControlBar({
     return (
       <div
         className={cn(
-          "flex items-center justify-between gap-4 rounded-xl border border-lms-border-secondary bg-lms-bg-brand-section px-5 py-3",
+          "flex items-center justify-between gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-brand-section px-5 py-3",
           className,
         )}
       >
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-lms-bg-error-primary px-2 py-0.5">
-            <span className="h-2 w-2 rounded-full bg-lms-text-error-primary" aria-hidden />
-            <span className="lms-text-xs-semibold text-lms-text-error-primary">LIVE</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-sk-bg-error-primary px-2 py-0.5">
+            <span className="h-2 w-2 rounded-full bg-sk-text-error-primary" aria-hidden />
+            <span className="sk-text-xs-semibold text-sk-text-error-primary">LIVE</span>
           </span>
-          <span className="lms-text-sm-medium text-lms-text-primary">Office hours with Sarah</span>
+          <span className="sk-text-sm-medium text-sk-text-primary">Office hours with Sarah</span>
         </div>
         <Button variant="primary" size="md" onClick={onJoin}>
           Join live
@@ -80,7 +80,7 @@ export function LiveControlBar({
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-3 rounded-xl border border-lms-border-secondary bg-lms-bg-primary px-5 py-3",
+        "flex items-center justify-center gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary px-5 py-3",
         className,
       )}
     >

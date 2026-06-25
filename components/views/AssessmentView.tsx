@@ -66,7 +66,7 @@ function Quiz({ topicId }: { topicId: string }) {
 
   return (
     <div className="flex flex-col gap-3 py-4">
-      <p className="lms-text-2xs-medium text-lms-text-tertiary">
+      <p className="sk-text-2xs-medium text-sk-text-tertiary">
         Question {qIndex + 1} of {questions.length}
       </p>
       <QuizCard
@@ -109,14 +109,14 @@ function GradedSubmission({ topicId }: { topicId: string }) {
   const [submitted, setSubmitted] = React.useState(false);
   return (
     <div className="flex flex-col gap-5 py-4">
-      <section className="rounded-xl border border-lms-border-secondary bg-lms-bg-primary p-5">
-        <p className="lms-text-2xs-medium mb-2 text-lms-text-brand-secondary">Assignment brief</p>
-        <p className="lms-text-md-regular text-lms-text-secondary">
+      <section className="rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+        <p className="sk-text-2xs-medium mb-2 text-sk-text-brand-secondary">Assignment brief</p>
+        <p className="sk-text-md-regular text-sk-text-secondary">
           Define a control plan for a process of your choice. Identify the critical-to-quality
           characteristics, the metrics you&rsquo;ll monitor, the control limits, and the response
           plan when a measurement falls out of range. Submit your plan as a PDF or DOCX.
         </p>
-        <ul className="lms-text-sm-regular mt-3 list-disc pl-5 text-lms-text-secondary">
+        <ul className="sk-text-sm-regular mt-3 list-disc pl-5 text-sk-text-secondary">
           <li>1–2 pages</li>
           <li>Include at least one control chart sketch</li>
           <li>Counts toward your final grade</li>

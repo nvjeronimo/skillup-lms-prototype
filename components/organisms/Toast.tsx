@@ -36,13 +36,13 @@ export function Toast({ toast, onDone, duration = 4000, className }: ToastProps)
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       className={cn(
-        "lms-animate-fade fixed bottom-6 left-1/2 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 items-center gap-3 rounded-lg bg-lms-text-primary px-5 py-3 shadow-lg",
+        "sk-animate-fade fixed bottom-6 left-1/2 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 items-center gap-3 rounded-lg bg-sk-text-primary px-5 py-3 shadow-lg",
         className,
       )}
-      style={{ boxShadow: "0 8px 24px color-mix(in srgb, var(--lms-text-primary) 16%, transparent)" }}
+      style={{ boxShadow: "0 8px 24px color-mix(in srgb, var(--sk-text-primary) 16%, transparent)" }}
     >
-      <Icon icon={Check} size={16} className="shrink-0 text-lms-fg-white" />
-      <span className="lms-text-sm-medium flex-1 text-lms-fg-white">{toast.message}</span>
+      <Icon icon={Check} size={16} className="shrink-0 text-sk-fg-white" />
+      <span className="sk-text-sm-medium flex-1 text-sk-fg-white">{toast.message}</span>
       {toast.actionLabel ? (
         <button
           type="button"
@@ -50,7 +50,7 @@ export function Toast({ toast, onDone, duration = 4000, className }: ToastProps)
             toast.onAction?.();
             onDone?.();
           }}
-          className="lms-text-sm-semibold shrink-0 text-lms-fg-white underline underline-offset-2"
+          className="sk-text-sm-semibold shrink-0 text-sk-fg-white underline underline-offset-2"
         >
           {toast.actionLabel}
         </button>

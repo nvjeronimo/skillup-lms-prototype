@@ -21,13 +21,13 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const content = (
     <>
-      <span className="lms-text-xs-semibold text-lms-text-secondary">{label}</span>
+      <span className="sk-text-xs-semibold text-sk-text-secondary">{label}</span>
       {collapsible ? (
         <ChevronDown
           size={16}
           strokeWidth={iconStroke(16)}
           className={cn(
-            "text-lms-text-tertiary transition-transform duration-200",
+            "text-sk-text-tertiary transition-transform duration-200",
             collapsed && "-rotate-90",
           )}
         />

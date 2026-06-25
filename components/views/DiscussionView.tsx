@@ -22,7 +22,7 @@ export function DiscussionView({ topicId }: { topicId: string }) {
       />
 
       <section className="flex flex-col gap-2">
-        <p className="lms-text-2xs-medium text-lms-text-tertiary">
+        <p className="sk-text-2xs-medium text-sk-text-tertiary">
           {threads.length} responses from your cohort
         </p>
         {threads.map((t, i) => (

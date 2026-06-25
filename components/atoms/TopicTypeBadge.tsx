@@ -34,7 +34,7 @@ export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBa
   return (
     <span
       className={cn(
-        "lms-text-xs-medium inline-flex items-center gap-1 text-lms-text-brand-secondary",
+        "sk-text-xs-medium inline-flex items-center gap-1 text-sk-text-brand-secondary",
         className,
       )}
     >

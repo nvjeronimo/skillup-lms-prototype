@@ -57,7 +57,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   if (!topic?.transcript) {
     return (
-      <p className="lms-text-sm-regular px-1 py-8 text-center text-lms-text-tertiary">
+      <p className="sk-text-sm-regular px-1 py-8 text-center text-sk-text-tertiary">
         No transcript available for this topic.
       </p>
     );
@@ -68,13 +68,13 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
       <div className="flex flex-wrap items-center justify-between gap-3 py-2">
-        <label className="lms-text-sm-medium flex items-center gap-1.5 text-lms-text-secondary">
+        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sk-text-secondary">
           Language:
           <span className="relative">
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="lms-text-sm-medium appearance-none bg-transparent pr-5 text-lms-text-primary outline-none"
+              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sk-text-primary outline-none"
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -83,14 +83,14 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             <ChevronDown
               size={14}
               strokeWidth={1.5}
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-lms-text-tertiary"
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sk-text-tertiary"
             />
           </span>
         </label>
         <button
           type="button"
           onClick={() => openNoteEditor({ lineId: activeLineId ?? topic.transcript?.[0]?.id })}
-          className="lms-text-sm-semibold inline-flex items-center gap-1 text-lms-text-brand-secondary hover:underline"
+          className="sk-text-sm-semibold inline-flex items-center gap-1 text-sk-text-brand-secondary hover:underline"
         >
           <Icon icon={Plus} size={16} />
           Add Note
@@ -101,11 +101,11 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
         <button
           type="button"
           onClick={resumeFollow}
-          className="lms-text-xs-semibold sticky top-2 z-10 ml-auto flex items-center gap-1.5 rounded-full bg-lms-bg-brand-section px-3 py-1.5 text-lms-text-brand-secondary shadow-sm"
+          className="sk-text-xs-semibold sticky top-2 z-10 ml-auto flex items-center gap-1.5 rounded-full bg-sk-bg-brand-section px-3 py-1.5 text-sk-text-brand-secondary shadow-sm"
         >
           Following
           <Icon icon={ArrowDown} size={14} />
-          <span className="text-lms-text-brand">· Resume</span>
+          <span className="text-sk-text-brand">· Resume</span>
         </button>
       ) : null}
 
@@ -139,14 +139,14 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       </div>
 
       {/* Feedback + license footer (ICP Phase 1). */}
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-lms-border-secondary pt-3">
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-3">
         <ContentFeedback
           value={feedback}
           onLike={() => setFeedback(feedback === "like" ? null : "like")}
           onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
           onReport={() => showToast("Thanks — we'll take a look.")}
         />
-        <a href="#" className="lms-text-xs-regular text-lms-text-tertiary hover:text-lms-text-brand-secondary">
+        <a href="#" className="sk-text-xs-regular text-sk-text-tertiary hover:text-sk-text-brand-secondary">
           CC BY-SA 4.0
         </a>
       </div>

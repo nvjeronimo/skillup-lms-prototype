@@ -53,13 +53,13 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
 
   return (
     <div className="flex flex-col gap-3 py-3">
-      <div className="flex items-center gap-2 rounded-lg border border-lms-border-primary px-3 py-2">
-        <Icon icon={Search} size={18} className="text-lms-text-tertiary" />
+      <div className="flex items-center gap-2 rounded-lg border border-sk-border-primary px-3 py-2">
+        <Icon icon={Search} size={18} className="text-sk-text-tertiary" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search notes…"
-          className="lms-text-sm-regular flex-1 bg-transparent text-lms-text-primary outline-none"
+          className="sk-text-sm-regular flex-1 bg-transparent text-sk-text-primary outline-none"
           aria-label="Search notes"
         />
       </div>
@@ -96,15 +96,15 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
           />
         ))
       ) : (
-        <p className="lms-text-sm-regular py-6 text-center text-lms-text-tertiary">
+        <p className="sk-text-sm-regular py-6 text-center text-sk-text-tertiary">
           No notes match your filter.
         </p>
       )}
 
-      <div className="mt-2 flex items-start gap-2 rounded-lg bg-lms-bg-secondary px-3 py-2.5">
-        <Icon icon={Info} size={16} className="mt-0.5 text-lms-text-tertiary" />
-        <p className="lms-text-sm-regular text-lms-text-secondary">
-          Create notes from the Transcript tab — click <span className="lms-text-sm-semibold">+ Note</span> on any line.
+      <div className="mt-2 flex items-start gap-2 rounded-lg bg-sk-bg-secondary px-3 py-2.5">
+        <Icon icon={Info} size={16} className="mt-0.5 text-sk-text-tertiary" />
+        <p className="sk-text-sm-regular text-sk-text-secondary">
+          Create notes from the Transcript tab — click <span className="sk-text-sm-semibold">+ Note</span> on any line.
         </p>
       </div>
     </div>

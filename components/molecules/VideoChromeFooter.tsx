@@ -62,12 +62,12 @@ export function VideoChromeFooter({
     <div
       ref={wrapRef}
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 border-b border-lms-border-secondary px-4 py-2.5",
+        "flex flex-wrap items-center justify-between gap-3 border-b border-sk-border-secondary px-4 py-2.5",
         className,
       )}
     >
-      <p className="lms-text-sm-regular text-lms-text-tertiary">
-        <a href={license.url} className="text-lms-text-brand-secondary hover:underline">
+      <p className="sk-text-sm-regular text-sk-text-tertiary">
+        <a href={license.url} className="text-sk-text-brand-secondary hover:underline">
           {license.type}
         </a>
       </p>
@@ -82,7 +82,7 @@ export function VideoChromeFooter({
               setLangOpen((o) => !o);
               setDlOpen(false);
             }}
-            className="lms-text-sm-semibold inline-flex items-center gap-1 text-lms-text-secondary hover:text-lms-text-primary"
+            className="sk-text-sm-semibold inline-flex items-center gap-1 text-sk-text-secondary hover:text-sk-text-primary"
           >
             {currentLanguage}
             <Icon icon={ChevronDown} size={14} />
@@ -90,7 +90,7 @@ export function VideoChromeFooter({
           {langOpen ? (
             <ul
               role="listbox"
-              className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-lg border border-lms-border-secondary bg-lms-bg-primary py-1 shadow-lg"
+              className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-lg border border-sk-border-secondary bg-sk-bg-primary py-1 shadow-lg"
             >
               {availableLanguages.map((l) => (
                 <li key={l.code} role="option" aria-selected={l.code === currentLanguage}>
@@ -101,14 +101,14 @@ export function VideoChromeFooter({
                       setLangOpen(false);
                     }}
                     className={cn(
-                      "lms-text-sm-medium flex w-full items-center justify-between px-3 py-2 text-left hover:bg-lms-bg-secondary",
+                      "sk-text-sm-medium flex w-full items-center justify-between px-3 py-2 text-left hover:bg-sk-bg-secondary",
                       l.code === currentLanguage
-                        ? "text-lms-text-brand-secondary"
-                        : "text-lms-text-primary",
+                        ? "text-sk-text-brand-secondary"
+                        : "text-sk-text-primary",
                     )}
                   >
                     {l.label}
-                    <span className="lms-text-xs-regular text-lms-text-tertiary">{l.code}</span>
+                    <span className="sk-text-xs-regular text-sk-text-tertiary">{l.code}</span>
                   </button>
                 </li>
               ))}
@@ -125,7 +125,7 @@ export function VideoChromeFooter({
               setDlOpen((o) => !o);
               setLangOpen(false);
             }}
-            className="lms-text-sm-medium inline-flex items-center gap-1.5 text-lms-text-brand-secondary hover:underline"
+            className="sk-text-sm-medium inline-flex items-center gap-1.5 text-sk-text-brand-secondary hover:underline"
           >
             <Icon icon={Download} size={16} />
             Download transcript
@@ -133,7 +133,7 @@ export function VideoChromeFooter({
           {dlOpen ? (
             <ul
               role="menu"
-              className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-lg border border-lms-border-secondary bg-lms-bg-primary py-1 shadow-lg"
+              className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-lg border border-sk-border-secondary bg-sk-bg-primary py-1 shadow-lg"
             >
               {(["srt", "txt"] as const).map((fmt) => (
                 <li key={fmt} role="none">
@@ -144,7 +144,7 @@ export function VideoChromeFooter({
                       onDownloadTranscript?.(fmt);
                       setDlOpen(false);
                     }}
-                    className="lms-text-sm-medium block w-full px-3 py-2 text-left text-lms-text-primary hover:bg-lms-bg-secondary"
+                    className="sk-text-sm-medium block w-full px-3 py-2 text-left text-sk-text-primary hover:bg-sk-bg-secondary"
                   >
                     .{fmt}
                   </button>

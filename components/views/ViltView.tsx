@@ -17,10 +17,10 @@ export function ViltView({ topicId }: { topicId: string }) {
       <div
         className="relative flex aspect-video max-h-[42vh] w-full items-center justify-center overflow-hidden rounded-xl"
         style={{
-          background: "linear-gradient(135deg, var(--lms-bg-brand-solid), var(--lms-text-brand-primary))",
+          background: "linear-gradient(135deg, var(--sk-bg-brand-solid), var(--sk-text-brand-primary))",
         }}
       >
-        <span className="lms-text-md-semibold text-lms-text-primary-on-brand">
+        <span className="sk-text-md-semibold text-sk-text-primary-on-brand">
           {isRecording ? "Session recording" : "Live session stage"}
         </span>
       </div>

@@ -1,13 +1,12 @@
 import type { Preview } from "@storybook/react";
 import React from "react";
-import { Inter, Montserrat } from "next/font/google";
-// Import the Tailwind-built global stylesheet so every `bg-lms-*` / `text-lms-*` /
+import { Montserrat } from "next/font/google";
+// Import the Tailwind-built global stylesheet so every `bg-sk-*` / `text-sk-*` /
 // layout utility is available in Storybook exactly as in the app. globals.css also
 // @imports the color + typography token stylesheets.
 import "../app/globals.css";
 import "./storybook.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
@@ -23,11 +22,11 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: "lms-primary",
+      default: "sk-primary",
       values: [
-        { name: "lms-primary", value: "#ffffff" },
-        { name: "lms-secondary", value: "#f3f5fa" },
-        { name: "lms-brand-section", value: "#ebf8ff" },
+        { name: "sk-primary", value: "#ffffff" },
+        { name: "sk-secondary", value: "#f3f5fa" },
+        { name: "sk-brand-section", value: "#ebf8ff" },
       ],
     },
     a11y: {
@@ -37,10 +36,7 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <div
-        className={`${inter.variable} ${montserrat.variable}`}
-        style={{ fontFamily: "var(--lms-font-body)" }}
-      >
+      <div className={montserrat.variable} style={{ fontFamily: "var(--sk-font-body)" }}>
         <Story />
       </div>
     ),

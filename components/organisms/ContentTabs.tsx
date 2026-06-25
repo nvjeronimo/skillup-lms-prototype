@@ -43,7 +43,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               const next = tabs.find((t) => t.slug === e.target.value);
               if (next) router.push(next.href);
             }}
-            className="lms-text-sm-semibold w-full appearance-none rounded-lg border border-lms-border-primary bg-lms-bg-primary py-2.5 pl-3 pr-9 text-lms-text-primary outline-none focus:border-lms-border-brand"
+            className="sk-text-sm-semibold w-full appearance-none rounded-lg border border-sk-border-primary bg-sk-bg-primary py-2.5 pl-3 pr-9 text-sk-text-primary outline-none focus:border-sk-border-brand"
           >
             {tabs.map((t) => (
               <option key={t.slug} value={t.slug}>
@@ -55,7 +55,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
           <ChevronDown
             size={16}
             strokeWidth={1.5}
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-lms-text-tertiary"
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sk-text-tertiary"
           />
         </div>
         {rightSlot}
@@ -66,7 +66,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-3 border-b border-lms-border-secondary",
+        "flex items-center justify-between gap-3 border-b border-sk-border-secondary",
         className,
       )}
     >
@@ -80,20 +80,20 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               role="tab"
               aria-selected={isActive}
               className={cn(
-                "lms-text-sm-semibold -mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-4 py-2.5 transition-colors",
+                "sk-text-sm-semibold -mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-4 py-2.5 transition-colors",
                 isActive
-                  ? "border-lms-border-brand text-lms-text-brand-secondary"
-                  : "border-transparent text-lms-text-secondary hover:text-lms-text-primary",
+                  ? "border-sk-border-brand text-sk-text-brand-secondary"
+                  : "border-transparent text-sk-text-secondary hover:text-sk-text-primary",
               )}
             >
               {tab.label}
               {typeof tab.count === "number" ? (
                 <span
                   className={cn(
-                    "lms-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
+                    "sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
                     isActive
-                      ? "bg-lms-bg-brand-section text-lms-text-brand-secondary"
-                      : "bg-lms-bg-secondary text-lms-text-tertiary",
+                      ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
+                      : "bg-sk-bg-secondary text-sk-text-tertiary",
                   )}
                 >
                   {tab.count}

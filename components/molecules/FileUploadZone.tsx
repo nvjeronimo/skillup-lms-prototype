@@ -47,7 +47,7 @@ export function FileUploadZone({
 
   return (
     <div className={cn("flex flex-col gap-4", className)}>
-      <p className="lms-text-md-semibold text-lms-text-primary">Upload files</p>
+      <p className="sk-text-md-semibold text-sk-text-primary">Upload files</p>
 
       <div
         role="button"
@@ -73,18 +73,18 @@ export function FileUploadZone({
         className={cn(
           "flex flex-col items-center gap-3 rounded-xl border-2 border-dashed px-8 py-6 text-center transition-colors",
           dragOver
-            ? "border-lms-border-brand bg-lms-bg-brand-primary"
-            : "border-lms-border-brand bg-lms-bg-brand-section",
+            ? "border-sk-border-brand bg-sk-bg-brand-primary"
+            : "border-sk-border-brand bg-sk-bg-brand-section",
         )}
       >
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-lms-border-secondary bg-lms-bg-primary text-lms-text-brand-secondary">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-sk-border-secondary bg-sk-bg-primary text-sk-text-brand-secondary">
           <Icon icon={UploadCloud} size={22} />
         </span>
-        <p className="lms-text-sm-medium text-lms-text-secondary">
+        <p className="sk-text-sm-medium text-sk-text-secondary">
           Drop files here, or{" "}
-          <span className="lms-text-sm-semibold text-lms-text-brand-secondary">browse files</span>
+          <span className="sk-text-sm-semibold text-sk-text-brand-secondary">browse files</span>
         </p>
-        <p className="lms-text-xs-regular text-lms-text-tertiary">
+        <p className="sk-text-xs-regular text-sk-text-tertiary">
           {acceptedTypes.join(", ")} · {maxSizeMB} MB max per file
         </p>
         <input
@@ -97,9 +97,9 @@ export function FileUploadZone({
       </div>
 
       <div aria-live="polite">
-        <p className="lms-text-sm-regular mb-2 text-lms-text-secondary">
+        <p className="sk-text-sm-regular mb-2 text-sk-text-secondary">
           Uploaded files{" "}
-          <span className="lms-text-sm-semibold text-lms-text-primary">
+          <span className="sk-text-sm-semibold text-sk-text-primary">
             {doneCount} of {requiredCount} required
           </span>
         </p>
@@ -107,29 +107,29 @@ export function FileUploadZone({
           {uploadedFiles.map((f) => (
             <div
               key={f.id}
-              className="flex items-center gap-3 rounded-lg border border-lms-border-secondary p-3"
+              className="flex items-center gap-3 rounded-lg border border-sk-border-secondary p-3"
             >
-              <span className="lms-text-2xs-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded bg-lms-bg-brand-section text-lms-text-brand-secondary">
+              <span className="sk-text-2xs-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded bg-sk-bg-brand-section text-sk-text-brand-secondary">
                 {f.type}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="lms-text-sm-semibold truncate text-lms-text-primary">{f.name}</p>
-                <p className="lms-text-xs-regular text-lms-text-tertiary">{f.size}</p>
+                <p className="sk-text-sm-semibold truncate text-sk-text-primary">{f.name}</p>
+                <p className="sk-text-xs-regular text-sk-text-tertiary">{f.size}</p>
               </div>
               {f.status === "done" ? (
-                <span className="lms-text-xs-medium inline-flex items-center gap-1 text-lms-text-success-primary">
+                <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sk-text-success-primary">
                   <Icon icon={Check} size={14} /> Uploaded
                 </span>
               ) : f.status === "uploading" ? (
-                <span className="lms-text-xs-medium text-lms-text-tertiary">Uploading…</span>
+                <span className="sk-text-xs-medium text-sk-text-tertiary">Uploading…</span>
               ) : (
-                <span className="lms-text-xs-medium text-lms-text-error-primary">Failed</span>
+                <span className="sk-text-xs-medium text-sk-text-error-primary">Failed</span>
               )}
               <button
                 type="button"
                 onClick={() => onRemove?.(f.id)}
                 aria-label={`Remove ${f.name}`}
-                className="text-lms-text-tertiary hover:text-lms-text-error-primary"
+                className="text-sk-text-tertiary hover:text-sk-text-error-primary"
               >
                 <Icon icon={X} size={16} />
               </button>

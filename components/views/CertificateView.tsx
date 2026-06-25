@@ -25,12 +25,12 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
   }, []);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-lms-bg-secondary">
+    <div className="flex min-h-[100dvh] flex-col bg-sk-bg-secondary">
       <CoursePlayerTopbar size={topbarSize} showBookmark showNotifications onClose={backToCourse} />
 
       {/* Dark teal stage */}
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-lms-text-brand-primary px-4 py-12">
-        <p className="lms-text-2xs-medium text-lms-fg-white">Certificate of Completion</p>
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-sk-text-brand-primary px-4 py-12">
+        <p className="sk-text-2xs-medium text-sk-fg-white">Certificate of Completion</p>
         <CourseCertificate
           learnerName={certificate.learnerName}
           courseTitle={certificate.courseTitle}

@@ -20,14 +20,14 @@ export function ContentFeedback({
   className,
 }: ContentFeedbackProps) {
   const btn =
-    "lms-text-sm-medium inline-flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-lms-bg-secondary";
+    "sk-text-sm-medium inline-flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-sk-bg-secondary";
   return (
     <div className={cn("flex items-center gap-4", className)}>
       <button
         type="button"
         onClick={onLike}
         aria-pressed={value === "like"}
-        className={cn(btn, value === "like" ? "text-lms-text-success-primary" : "text-lms-text-tertiary")}
+        className={cn(btn, value === "like" ? "text-sk-text-success-primary" : "text-sk-text-tertiary")}
       >
         <Icon icon={ThumbsUp} size={18} />
         Like
@@ -36,7 +36,7 @@ export function ContentFeedback({
         type="button"
         onClick={onDislike}
         aria-pressed={value === "dislike"}
-        className={cn(btn, value === "dislike" ? "text-lms-text-error-primary" : "text-lms-text-tertiary")}
+        className={cn(btn, value === "dislike" ? "text-sk-text-error-primary" : "text-sk-text-tertiary")}
       >
         <Icon icon={ThumbsDown} size={18} />
         Dislike
@@ -44,7 +44,7 @@ export function ContentFeedback({
       <button
         type="button"
         onClick={onReport}
-        className={cn(btn, "text-lms-text-tertiary hover:text-lms-text-warning-primary")}
+        className={cn(btn, "text-sk-text-tertiary hover:text-sk-text-warning-primary")}
       >
         <Icon icon={AlertTriangle} size={18} />
         Report an issue

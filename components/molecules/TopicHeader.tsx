@@ -36,12 +36,12 @@ export function TopicHeader({
       <div className="flex flex-wrap items-center gap-1.5">
         <TopicTypeBadge type={type} />
         {showDuration ? (
-          <span className="lms-text-xs-regular text-lms-text-tertiary">· {durationLabel}</span>
+          <span className="sk-text-xs-regular text-sk-text-tertiary">· {durationLabel}</span>
         ) : null}
       </div>
-      <h1 className="lms-text-display-xs-semibold text-lms-text-primary">{title}</h1>
+      <h1 className="sk-text-display-xs-semibold text-sk-text-primary">{title}</h1>
       {showDescription && description ? (
-        <p className="lms-text-md-medium text-lms-text-secondary">{description}</p>
+        <p className="sk-text-md-medium text-sk-text-secondary">{description}</p>
       ) : null}
     </header>
   );

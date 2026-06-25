@@ -46,7 +46,7 @@ export function TopicRow({
         aria-label={title}
         className={cn(
           "flex h-10 w-full items-center justify-center border-l-4",
-          active ? "border-lms-border-brand bg-lms-bg-brand-section" : "border-transparent",
+          active ? "border-sk-border-brand bg-sk-bg-brand-section" : "border-transparent",
           className,
         )}
       >
@@ -60,8 +60,8 @@ export function TopicRow({
       className={cn(
         "group flex items-start gap-2.5 border-l-4 px-3 py-2.5 transition-colors",
         active
-          ? "border-lms-border-brand bg-lms-bg-brand-section"
-          : "border-transparent hover:bg-lms-bg-secondary",
+          ? "border-sk-border-brand bg-sk-bg-brand-section"
+          : "border-transparent hover:bg-sk-bg-secondary",
         className,
       )}
     >
@@ -78,9 +78,9 @@ export function TopicRow({
           <span
             className={cn(
               // DS Topic Row: title text-secondary inactive, brand on active, tertiary when locked.
-              "lms-text-sm-medium block",
-              active ? "text-lms-text-brand-secondary" : "text-lms-text-secondary",
-              status === "Locked" && "text-lms-text-tertiary",
+              "sk-text-sm-medium block",
+              active ? "text-sk-text-brand-secondary" : "text-sk-text-secondary",
+              status === "Locked" && "text-sk-text-tertiary",
             )}
           >
             {title}
@@ -88,9 +88,9 @@ export function TopicRow({
           {/* Brand type badge (icon + label) + gray duration — matches DS Topic Row. */}
           <span className="mt-1 flex flex-wrap items-center gap-1.5">
             <TopicTypeBadge type={type} />
-            <span className="lms-text-xs-regular text-lms-text-tertiary">· {duration}</span>
+            <span className="sk-text-xs-regular text-sk-text-tertiary">· {duration}</span>
             {optional ? (
-              <span className="lms-text-2xs-medium text-lms-text-tertiary">· Optional</span>
+              <span className="sk-text-2xs-medium text-sk-text-tertiary">· Optional</span>
             ) : null}
           </span>
         </span>

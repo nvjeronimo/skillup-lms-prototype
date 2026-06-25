@@ -43,7 +43,7 @@ function UtilityButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-lms-text-tertiary transition-colors hover:bg-lms-bg-secondary"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-sk-text-tertiary transition-colors hover:bg-sk-bg-secondary"
     >
       {children}
     </button>
@@ -79,7 +79,7 @@ export function CoursePlayerTopbar({
   return (
     <header
       className={cn(
-        "flex items-center gap-3 border-b border-lms-border-secondary bg-lms-bg-primary px-4",
+        "flex items-center gap-3 border-b border-sk-border-secondary bg-sk-bg-primary px-4",
         isMobile ? "h-14" : "h-[60px] md:px-6",
         className,
       )}
@@ -104,12 +104,12 @@ export function CoursePlayerTopbar({
           {breadcrumb.map((seg, i) => (
             <React.Fragment key={seg}>
               {i > 0 ? (
-                <Icon icon={ChevronRight} size={14} className="text-lms-fg-quaternary" />
+                <Icon icon={ChevronRight} size={14} className="text-sk-fg-quaternary" />
               ) : null}
               <span
                 className={cn(
-                  "lms-text-sm-medium truncate",
-                  i === breadcrumb.length - 1 ? "text-lms-text-primary" : "text-lms-text-tertiary",
+                  "sk-text-sm-medium truncate",
+                  i === breadcrumb.length - 1 ? "text-sk-text-primary" : "text-sk-text-tertiary",
                 )}
               >
                 {seg}
@@ -131,7 +131,7 @@ export function CoursePlayerTopbar({
               <Icon icon={Bell} size={20} />
               {notificationsCount > 0 ? (
                 <span
-                  className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-lms-fg-brand-primary"
+                  className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-sk-fg-brand-primary"
                   aria-hidden
                 />
               ) : null}
@@ -157,11 +157,11 @@ export function CoursePlayerTopbar({
         <button
           type="button"
           aria-label="Account"
-          className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-lms-bg-secondary"
+          className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sk-bg-secondary"
         >
           <Avatar name={userName} src={userAvatarUrl} size="sm" />
           {!isMobile ? (
-            <span className="lms-text-sm-medium pr-1 text-lms-text-primary">{userName}</span>
+            <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
           ) : null}
         </button>
 

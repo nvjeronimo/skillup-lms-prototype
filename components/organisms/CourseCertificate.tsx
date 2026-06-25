@@ -74,55 +74,55 @@ export function CourseCertificate({
   return (
     <div
       className={cn(
-        "lms-certificate mx-auto w-full max-w-[640px] overflow-hidden rounded-xl border border-lms-border-secondary bg-lms-bg-primary shadow-lg",
+        "sk-certificate mx-auto w-full max-w-[640px] overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-lg",
         className,
       )}
     >
       {/* Green header band + check */}
-      <div className="flex h-24 items-center justify-center bg-lms-text-success-primary">
-        <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-lms-bg-primary text-lms-text-success-primary">
+      <div className="flex h-24 items-center justify-center bg-sk-text-success-primary">
+        <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-sk-bg-primary text-sk-text-success-primary">
           <Icon icon={Check} size={28} strokeWidth={2.5} />
         </span>
       </div>
 
       {/* Body */}
       <div className="flex flex-col items-center gap-2 px-8 py-8 text-center">
-        <p className="lms-text-2xs-medium text-lms-text-tertiary">This certifies that</p>
-        <p className="lms-text-display-sm-semibold text-lms-text-primary">{learnerName}</p>
-        <p className="lms-text-sm-regular text-lms-text-secondary">has successfully completed</p>
-        <p className="lms-text-lg-semibold text-lms-text-primary">{courseTitle}</p>
+        <p className="sk-text-2xs-medium text-sk-text-tertiary">This certifies that</p>
+        <p className="sk-text-display-sm-semibold text-sk-text-primary">{learnerName}</p>
+        <p className="sk-text-sm-regular text-sk-text-secondary">has successfully completed</p>
+        <p className="sk-text-lg-semibold text-sk-text-primary">{courseTitle}</p>
 
         <div className="mt-4 flex flex-wrap items-start justify-center gap-x-10 gap-y-3">
           {STAT.map((s) => (
             <div key={s.label} className="text-center">
               <p
                 className={cn(
-                  "lms-text-md-semibold",
-                  s.accent ? "text-lms-text-success-primary" : "text-lms-text-primary",
+                  "sk-text-md-semibold",
+                  s.accent ? "text-sk-text-success-primary" : "text-sk-text-primary",
                 )}
               >
                 {s.value}
               </p>
-              <p className="lms-text-xs-regular text-lms-text-tertiary">{s.label}</p>
+              <p className="sk-text-xs-regular text-sk-text-tertiary">{s.label}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Meta row */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-lms-border-secondary px-6 py-3">
-        <span className="lms-text-xs-regular text-lms-text-tertiary">Issued by {provider}</span>
-        <span className="lms-text-xs-regular text-lms-text-tertiary">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-sk-border-secondary px-6 py-3">
+        <span className="sk-text-xs-regular text-sk-text-tertiary">Issued by {provider}</span>
+        <span className="sk-text-xs-regular text-sk-text-tertiary">
           {dateLabel} · {certificateId}
         </span>
       </div>
 
       {/* Actions */}
-      <div className="lms-no-print flex flex-wrap items-center justify-between gap-2 border-t border-lms-border-secondary px-6 py-4">
+      <div className="sk-no-print flex flex-wrap items-center justify-between gap-2 border-t border-sk-border-secondary px-6 py-4">
         <button
           type="button"
           onClick={onBack}
-          className="lms-text-sm-medium text-lms-text-secondary hover:text-lms-text-primary"
+          className="sk-text-sm-medium text-sk-text-secondary hover:text-sk-text-primary"
         >
           ← Back to course page
         </button>

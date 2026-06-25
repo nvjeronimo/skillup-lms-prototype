@@ -37,34 +37,34 @@ export function CourseCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-lms-border-secondary bg-lms-bg-primary p-4 md:flex-row md:items-center",
+        "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-4 md:flex-row md:items-center",
         className,
       )}
     >
       <div className="flex min-w-0 flex-1 gap-4">
-        <span className="lms-text-display-xs-semibold inline-flex h-[100px] w-[100px] shrink-0 items-center justify-center rounded-lg bg-lms-bg-brand-solid text-lms-text-primary-on-brand">
+        <span className="sk-text-display-xs-semibold inline-flex h-[100px] w-[100px] shrink-0 items-center justify-center rounded-lg bg-sk-bg-brand-solid text-sk-text-primary-on-brand">
           {initials}
         </span>
         <div className="min-w-0 flex-1">
           <CourseTypeBadge value={courseType} />
           <div className="mt-1.5 flex flex-wrap items-center gap-2">
-            <h3 className="lms-text-md-semibold text-lms-text-primary">{title}</h3>
+            <h3 className="sk-text-md-semibold text-sk-text-primary">{title}</h3>
             <ProviderBadge value={provider} />
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-4">
             <DifficultyBadge value={difficulty} />
             <DeliveryModeBadge value={deliveryMode} />
           </div>
-          <p className="lms-text-sm-regular mt-2 text-lms-text-tertiary">
+          <p className="sk-text-sm-regular mt-2 text-sk-text-tertiary">
             {progressPct}% complete · Estimated completion: {estimation}
           </p>
         </div>
       </div>
 
       {upNext ? (
-        <div className="flex flex-col gap-2 rounded-lg bg-lms-bg-secondary p-4 md:w-72">
-          <span className="lms-text-2xs-medium text-lms-text-brand-secondary">Up next</span>
-          <span className="lms-text-sm-medium text-lms-text-primary">{upNext.title}</span>
+        <div className="flex flex-col gap-2 rounded-lg bg-sk-bg-secondary p-4 md:w-72">
+          <span className="sk-text-2xs-medium text-sk-text-brand-secondary">Up next</span>
+          <span className="sk-text-sm-medium text-sk-text-primary">{upNext.title}</span>
           <TopicTypeBadge type={upNext.type} />
           <Button variant="primary" size="sm" onClick={onResume} className="mt-1 self-start">
             Resume

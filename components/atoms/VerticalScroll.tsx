@@ -13,7 +13,7 @@ export interface VerticalScrollProps {
 
 /**
  * Custom scrollbar visualisation atom (decorative; real scrolling uses the
- * `.lms-scroll` native styling). Useful for documenting the rail in Storybook.
+ * `.sk-scroll` native styling). Useful for documenting the rail in Storybook.
  */
 export function VerticalScroll({
   position = 0,
@@ -27,14 +27,14 @@ export function VerticalScroll({
   const top = (position / 100) * travel;
   return (
     <div
-      className={cn("relative w-2 rounded-full bg-lms-bg-secondary", className)}
+      className={cn("relative w-2 rounded-full bg-sk-bg-secondary", className)}
       style={{ height }}
       role="presentation"
     >
       <div
         className={cn(
           "absolute left-0 w-2 rounded-full transition-colors",
-          dragging ? "bg-lms-fg-brand" : "bg-lms-border-primary",
+          dragging ? "bg-sk-fg-brand" : "bg-sk-border-primary",
         )}
         style={{ height: thumbHeight, top }}
       />

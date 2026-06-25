@@ -9,41 +9,41 @@
 
 :root {
   /* ---- Backgrounds ---- */
-  --lms-bg-primary: #ffffff;
-  --lms-bg-secondary: #f3f5fa;
-  --lms-bg-secondary-subtle: #f8f9fa;
-  --lms-bg-tertiary: #e1e7ec;
-  --lms-bg-brand-primary: #ebf8ff;     /* alias of bg-brand-section */
-  --lms-bg-brand-section: #ebf8ff;     /* subtle brand-tinted surface */
-  --lms-bg-brand-solid: #26708e;       /* primary brand surface (P03 teal) */
-  --lms-bg-brand-hover: #f9c654;       /* yellow — Primary button hover only */
-  --lms-bg-success-primary: #e4fced;
-  --lms-bg-warning-primary: #fff9eb;
-  --lms-bg-error-primary: #fce8e8;
+  --sk-bg-primary: #ffffff;
+  --sk-bg-secondary: #f3f5fa;
+  --sk-bg-secondary-subtle: #f8f9fa;
+  --sk-bg-tertiary: #e1e7ec;
+  --sk-bg-brand-primary: #ebf8ff;     /* alias of bg-brand-section */
+  --sk-bg-brand-section: #ebf8ff;     /* subtle brand-tinted surface */
+  --sk-bg-brand-solid: #26708e;       /* primary brand surface (P03 teal) */
+  --sk-bg-brand-hover: #f9c654;       /* yellow — Primary button hover only */
+  --sk-bg-success-primary: #e4fced;
+  --sk-bg-warning-primary: #fff9eb;
+  --sk-bg-error-primary: #fce8e8;
 
   /* ---- Borders ---- */
-  --lms-border-primary: #8995a6; /* ICP Phase 1 update (was #b9c4ce) */
-  --lms-border-secondary: #e1e7ec;
-  --lms-border-brand: #26708e;
+  --sk-border-primary: #8995a6; /* ICP Phase 1 update (was #b9c4ce) */
+  --sk-border-secondary: #e1e7ec;
+  --sk-border-brand: #26708e;
 
   /* ---- Foreground (icons, decorative) ---- */
-  --lms-fg-white: #ffffff;
-  --lms-fg-quaternary: #b9c4ce;
-  --lms-fg-brand: #26708e;
-  --lms-fg-brand-primary: #26708e;
-  --lms-fg-progress: #0086c9;          /* progress bars + rings only */
+  --sk-fg-white: #ffffff;
+  --sk-fg-quaternary: #b9c4ce;
+  --sk-fg-brand: #26708e;
+  --sk-fg-brand-primary: #26708e;
+  --sk-fg-progress: #0086c9;          /* progress bars + rings only */
 
   /* ---- Text ---- */
-  --lms-text-primary: #13282f;
-  --lms-text-secondary: #606b7a;
-  --lms-text-tertiary: #677482;
-  --lms-text-primary-on-brand: #ffffff;
-  --lms-text-brand: #26708e;
-  --lms-text-brand-primary: #044150;   /* dark teal — for text on yellow */
-  --lms-text-brand-secondary: #26708e;
-  --lms-text-success-primary: #1f7643;
-  --lms-text-warning-primary: #85580e;
-  --lms-text-error-primary: #da3336;
+  --sk-text-primary: #13282f;
+  --sk-text-secondary: #606b7a;
+  --sk-text-tertiary: #677482;
+  --sk-text-primary-on-brand: #ffffff;
+  --sk-text-brand: #26708e;
+  --sk-text-brand-primary: #044150;   /* dark teal — for text on yellow */
+  --sk-text-brand-secondary: #26708e;
+  --sk-text-success-primary: #1f7643;
+  --sk-text-warning-primary: #85580e;
+  --sk-text-error-primary: #da3336;
 }
 
 /* ============================================================================
@@ -52,26 +52,26 @@
 
 /*
 @theme {
-  --color-lms-bg-primary: var(--lms-bg-primary);
-  --color-lms-bg-secondary: var(--lms-bg-secondary);
-  --color-lms-bg-brand-solid: var(--lms-bg-brand-solid);
-  --color-lms-bg-brand-section: var(--lms-bg-brand-section);
-  --color-lms-bg-brand-hover: var(--lms-bg-brand-hover);
-  --color-lms-border-primary: var(--lms-border-primary);
-  --color-lms-border-secondary: var(--lms-border-secondary);
-  --color-lms-border-brand: var(--lms-border-brand);
-  --color-lms-fg-brand: var(--lms-fg-brand);
-  --color-lms-fg-progress: var(--lms-fg-progress);
-  --color-lms-text-primary: var(--lms-text-primary);
-  --color-lms-text-secondary: var(--lms-text-secondary);
-  --color-lms-text-tertiary: var(--lms-text-tertiary);
-  --color-lms-text-brand: var(--lms-text-brand);
-  --color-lms-text-brand-primary: var(--lms-text-brand-primary);
-  --color-lms-text-brand-secondary: var(--lms-text-brand-secondary);
-  --color-lms-text-success-primary: var(--lms-text-success-primary);
-  --color-lms-text-warning-primary: var(--lms-text-warning-primary);
-  --color-lms-text-error-primary: var(--lms-text-error-primary);
-  --color-lms-text-primary-on-brand: var(--lms-text-primary-on-brand);
+  --color-sk-bg-primary: var(--sk-bg-primary);
+  --color-sk-bg-secondary: var(--sk-bg-secondary);
+  --color-sk-bg-brand-solid: var(--sk-bg-brand-solid);
+  --color-sk-bg-brand-section: var(--sk-bg-brand-section);
+  --color-sk-bg-brand-hover: var(--sk-bg-brand-hover);
+  --color-sk-border-primary: var(--sk-border-primary);
+  --color-sk-border-secondary: var(--sk-border-secondary);
+  --color-sk-border-brand: var(--sk-border-brand);
+  --color-sk-fg-brand: var(--sk-fg-brand);
+  --color-sk-fg-progress: var(--sk-fg-progress);
+  --color-sk-text-primary: var(--sk-text-primary);
+  --color-sk-text-secondary: var(--sk-text-secondary);
+  --color-sk-text-tertiary: var(--sk-text-tertiary);
+  --color-sk-text-brand: var(--sk-text-brand);
+  --color-sk-text-brand-primary: var(--sk-text-brand-primary);
+  --color-sk-text-brand-secondary: var(--sk-text-brand-secondary);
+  --color-sk-text-success-primary: var(--sk-text-success-primary);
+  --color-sk-text-warning-primary: var(--sk-text-warning-primary);
+  --color-sk-text-error-primary: var(--sk-text-error-primary);
+  --color-sk-text-primary-on-brand: var(--sk-text-primary-on-brand);
 }
 */
 
@@ -79,35 +79,35 @@
    Tailwind v3 fallback — add to tailwind.config.ts `theme.extend.colors`:
 
    colors: {
-     lms: {
+     sk: {
        bg: {
-         primary: 'var(--lms-bg-primary)',
-         secondary: 'var(--lms-bg-secondary)',
-         'brand-solid': 'var(--lms-bg-brand-solid)',
-         'brand-section': 'var(--lms-bg-brand-section)',
-         'brand-hover': 'var(--lms-bg-brand-hover)',
+         primary: 'var(--sk-bg-primary)',
+         secondary: 'var(--sk-bg-secondary)',
+         'brand-solid': 'var(--sk-bg-brand-solid)',
+         'brand-section': 'var(--sk-bg-brand-section)',
+         'brand-hover': 'var(--sk-bg-brand-hover)',
        },
        border: {
-         primary: 'var(--lms-border-primary)',
-         secondary: 'var(--lms-border-secondary)',
-         brand: 'var(--lms-border-brand)',
+         primary: 'var(--sk-border-primary)',
+         secondary: 'var(--sk-border-secondary)',
+         brand: 'var(--sk-border-brand)',
        },
        fg: {
-         brand: 'var(--lms-fg-brand)',
-         progress: 'var(--lms-fg-progress)',
-         quaternary: 'var(--lms-fg-quaternary)',
+         brand: 'var(--sk-fg-brand)',
+         progress: 'var(--sk-fg-progress)',
+         quaternary: 'var(--sk-fg-quaternary)',
        },
        text: {
-         primary: 'var(--lms-text-primary)',
-         secondary: 'var(--lms-text-secondary)',
-         tertiary: 'var(--lms-text-tertiary)',
-         brand: 'var(--lms-text-brand)',
-         'brand-primary': 'var(--lms-text-brand-primary)',
-         'brand-secondary': 'var(--lms-text-brand-secondary)',
-         'success-primary': 'var(--lms-text-success-primary)',
-         'warning-primary': 'var(--lms-text-warning-primary)',
-         'error-primary': 'var(--lms-text-error-primary)',
-         'primary-on-brand': 'var(--lms-text-primary-on-brand)',
+         primary: 'var(--sk-text-primary)',
+         secondary: 'var(--sk-text-secondary)',
+         tertiary: 'var(--sk-text-tertiary)',
+         brand: 'var(--sk-text-brand)',
+         'brand-primary': 'var(--sk-text-brand-primary)',
+         'brand-secondary': 'var(--sk-text-brand-secondary)',
+         'success-primary': 'var(--sk-text-success-primary)',
+         'warning-primary': 'var(--sk-text-warning-primary)',
+         'error-primary': 'var(--sk-text-error-primary)',
+         'primary-on-brand': 'var(--sk-text-primary-on-brand)',
        },
      },
    }

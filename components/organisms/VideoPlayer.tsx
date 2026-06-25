@@ -58,7 +58,7 @@ export function VideoPlayer({
     else el.requestFullscreen?.();
   }
 
-  const controlBg = { background: mix("--lms-fg-white", 20) };
+  const controlBg = { background: mix("--sk-fg-white", 20) };
 
   return (
     <div
@@ -66,7 +66,7 @@ export function VideoPlayer({
       className={cn(
         // 16:9 on narrow widths, but capped so it never dominates the screen
         // height on desktop (matches the Final Screen's short player band).
-        "relative aspect-video max-h-[42vh] w-full overflow-hidden rounded-xl bg-lms-bg-brand-solid",
+        "relative aspect-video max-h-[42vh] w-full overflow-hidden rounded-xl bg-sk-bg-brand-solid",
         className,
       )}
     >
@@ -75,7 +75,7 @@ export function VideoPlayer({
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(135deg, var(--lms-bg-brand-solid), var(--lms-text-brand-primary))",
+            "linear-gradient(135deg, var(--sk-bg-brand-solid), var(--sk-text-brand-primary))",
         }}
         aria-hidden
       />
@@ -88,8 +88,8 @@ export function VideoPlayer({
           className="absolute inset-0 z-10 flex items-center justify-center"
         >
           <span
-            className="inline-flex h-16 w-16 items-center justify-center rounded-full text-lms-text-brand-secondary shadow-lg"
-            style={{ background: mix("--lms-bg-primary", 90) }}
+            className="inline-flex h-16 w-16 items-center justify-center rounded-full text-sk-text-brand-secondary shadow-lg"
+            style={{ background: mix("--sk-bg-primary", 90) }}
           >
             <Icon icon={playing ? Pause : Play} size={28} />
           </span>
@@ -99,24 +99,24 @@ export function VideoPlayer({
           role="status"
           aria-live="polite"
           className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 text-center"
-          style={{ background: mix("--lms-text-primary", 40) }}
+          style={{ background: mix("--sk-text-primary", 40) }}
         >
           {state === "loading" ? (
             <>
-              <Loader2 size={36} strokeWidth={2} className="animate-spin text-lms-fg-white" />
-              <span className="lms-text-sm-medium text-lms-fg-white">Loading video…</span>
+              <Loader2 size={36} strokeWidth={2} className="animate-spin text-sk-fg-white" />
+              <span className="sk-text-sm-medium text-sk-fg-white">Loading video…</span>
             </>
           ) : null}
           {state === "error" ? (
             <>
-              <Icon icon={AlertCircle} size={36} className="text-lms-fg-white" />
-              <span className="lms-text-sm-medium text-lms-fg-white">
+              <Icon icon={AlertCircle} size={36} className="text-sk-fg-white" />
+              <span className="sk-text-sm-medium text-sk-fg-white">
                 Couldn’t load this video.
               </span>
               <button
                 type="button"
                 onClick={onRetry}
-                className="lms-text-sm-semibold rounded-md bg-lms-fg-white px-3 py-1.5 text-lms-text-brand-secondary"
+                className="sk-text-sm-semibold rounded-md bg-sk-fg-white px-3 py-1.5 text-sk-text-brand-secondary"
               >
                 Retry
               </button>
@@ -124,11 +124,11 @@ export function VideoPlayer({
           ) : null}
           {state === "ended" ? (
             <>
-              <span className="lms-text-md-semibold text-lms-fg-white">You’ve finished this video</span>
+              <span className="sk-text-md-semibold text-sk-fg-white">You’ve finished this video</span>
               <button
                 type="button"
                 onClick={onReplay}
-                className="lms-text-sm-semibold inline-flex items-center gap-1.5 rounded-md bg-lms-fg-white px-3 py-1.5 text-lms-text-brand-secondary"
+                className="sk-text-sm-semibold inline-flex items-center gap-1.5 rounded-md bg-sk-fg-white px-3 py-1.5 text-sk-text-brand-secondary"
               >
                 <Icon icon={RotateCcw} size={16} /> Replay
               </button>
@@ -140,9 +140,9 @@ export function VideoPlayer({
       {captions && state === "ready" ? (
         <div
           className="absolute bottom-20 left-1/2 z-10 max-w-[80%] -translate-x-1/2 rounded px-3 py-1 text-center"
-          style={{ background: mix("--lms-text-primary", 70) }}
+          style={{ background: mix("--sk-text-primary", 70) }}
         >
-          <span className="lms-text-sm-medium text-lms-text-primary-on-brand">
+          <span className="sk-text-sm-medium text-sk-text-primary-on-brand">
             Welcome back. In this unit we look at the product development lifecycle…
           </span>
         </div>
@@ -152,7 +152,7 @@ export function VideoPlayer({
       <div
         className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-2 px-4 pb-3 pt-8"
         style={{
-          background: `linear-gradient(to top, ${mix("--lms-text-primary", 70)}, transparent)`,
+          background: `linear-gradient(to top, ${mix("--sk-text-primary", 70)}, transparent)`,
         }}
       >
         <input
@@ -164,7 +164,7 @@ export function VideoPlayer({
           aria-label="Seek"
           className="h-1 w-full cursor-pointer appearance-none rounded-full"
           style={{
-            background: `linear-gradient(to right, var(--lms-fg-progress) ${pct}%, var(--lms-bg-tertiary) ${pct}%)`,
+            background: `linear-gradient(to right, var(--sk-fg-progress) ${pct}%, var(--sk-bg-tertiary) ${pct}%)`,
           }}
         />
         <div className="flex items-center justify-between">
@@ -173,11 +173,11 @@ export function VideoPlayer({
               type="button"
               onClick={() => setPlaying((p) => !p)}
               aria-label={playing ? "Pause" : "Play"}
-              className="text-lms-fg-white"
+              className="text-sk-fg-white"
             >
               <Icon icon={playing ? Pause : Play} size={20} />
             </button>
-            <span className="lms-text-xs-medium text-lms-fg-white">
+            <span className="sk-text-xs-medium text-sk-fg-white">
               {secondsToTs(currentTime)} / {secondsToTs(durationSeconds)}
             </span>
           </div>
@@ -185,7 +185,7 @@ export function VideoPlayer({
             <button
               type="button"
               onClick={() => setSpeedIdx((i) => (i + 1) % SPEEDS.length)}
-              className="lms-text-xs-semibold rounded px-2 py-1 text-lms-fg-white"
+              className="sk-text-xs-semibold rounded px-2 py-1 text-sk-fg-white"
               style={controlBg}
               aria-label="Playback speed"
             >
@@ -197,8 +197,8 @@ export function VideoPlayer({
               aria-pressed={captions}
               aria-label="Toggle captions"
               className={cn(
-                "lms-text-xs-semibold rounded px-2 py-1",
-                captions ? "bg-lms-fg-white text-lms-text-brand-secondary" : "text-lms-fg-white",
+                "sk-text-xs-semibold rounded px-2 py-1",
+                captions ? "bg-sk-fg-white text-sk-text-brand-secondary" : "text-sk-fg-white",
               )}
               style={captions ? undefined : controlBg}
             >
@@ -208,7 +208,7 @@ export function VideoPlayer({
               type="button"
               onClick={toggleFullscreen}
               aria-label="Fullscreen"
-              className="lms-text-xs-semibold rounded px-2 py-1 text-lms-fg-white"
+              className="sk-text-xs-semibold rounded px-2 py-1 text-sk-fg-white"
               style={controlBg}
             >
               ⤢

@@ -23,7 +23,7 @@ export const Empty: Story = {
   args: {
     children: (
       <div className="px-2 py-6">
-        <p className="lms-text-sm-regular text-lms-text-tertiary">Body content goes here.</p>
+        <p className="sk-text-sm-regular text-sk-text-tertiary">Body content goes here.</p>
       </div>
     ),
   },
@@ -41,7 +41,7 @@ export const WithFilters: Story = {
       <>
         <PanelSectionLabel>Section A</PanelSectionLabel>
         <div className="px-2 py-3">
-          <p className="lms-text-sm-regular text-lms-text-secondary">An item in section A.</p>
+          <p className="sk-text-sm-regular text-sk-text-secondary">An item in section A.</p>
         </div>
       </>
     ),
@@ -53,7 +53,7 @@ export const WithFooter: Story = {
     footer: { label: "View all items", href: "#" },
     children: (
       <div className="px-2 py-3">
-        <p className="lms-text-sm-regular text-lms-text-secondary">Scrollable body with a footer link below.</p>
+        <p className="sk-text-sm-regular text-sk-text-secondary">Scrollable body with a footer link below.</p>
       </div>
     ),
   },

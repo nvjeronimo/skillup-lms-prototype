@@ -41,8 +41,8 @@ export function TranscriptLine({
         // Transparent 3px border by default keeps text from shifting when a line becomes active.
         "group flex items-start gap-3 border-l-[3px] px-4 py-3 transition-colors",
         active
-          ? "border-lms-border-brand bg-lms-bg-brand-section"
-          : "border-transparent hover:bg-lms-bg-secondary",
+          ? "border-sk-border-brand bg-sk-bg-brand-section"
+          : "border-transparent hover:bg-sk-bg-secondary",
         className,
       )}
     >
@@ -51,24 +51,24 @@ export function TranscriptLine({
         <span className="flex shrink-0 items-center gap-3">
           {hasNote ? (
             <span
-              className="size-2 shrink-0 rounded-full bg-lms-fg-progress"
+              className="size-2 shrink-0 rounded-full bg-sk-fg-progress"
               aria-label="Has note"
               role="img"
             />
           ) : null}
           <span
             className={cn(
-              "lms-text-xs-medium whitespace-nowrap",
-              active ? "text-lms-text-brand-primary" : "text-lms-text-tertiary",
+              "sk-text-xs-medium whitespace-nowrap",
+              active ? "text-sk-text-brand-primary" : "text-sk-text-tertiary",
             )}
           >
             {ts}
           </span>
         </span>
-        <span className="lms-text-sm-regular min-w-0 flex-1 text-lms-text-primary">
+        <span className="sk-text-sm-regular min-w-0 flex-1 text-sk-text-primary">
           {text}
           {showDuration && duration ? (
-            <span className="lms-text-xs-regular ml-2 text-lms-text-tertiary">{duration}</span>
+            <span className="sk-text-xs-regular ml-2 text-sk-text-tertiary">{duration}</span>
           ) : null}
         </span>
       </button>
@@ -78,7 +78,7 @@ export function TranscriptLine({
           type="button"
           onClick={hasNote ? onEditNote : onAddNote}
           aria-label={`${hasNote ? "Edit" : "Add"} note at ${ts}`}
-          className="lms-text-xs-semibold flex shrink-0 items-center gap-1 self-stretch rounded-full bg-lms-bg-brand-section py-1 pl-2 pr-3 text-lms-text-brand-secondary"
+          className="sk-text-xs-semibold flex shrink-0 items-center gap-1 self-stretch rounded-full bg-sk-bg-brand-section py-1 pl-2 pr-3 text-sk-text-brand-secondary"
         >
           <Icon icon={hasNote ? Edit3 : Plus} size={14} />
           {hasNote ? "Edit" : "Note"}

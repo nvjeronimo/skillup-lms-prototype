@@ -52,7 +52,7 @@ export function SavedPanel({
       {showTopics && savedTopics.length ? (
         <section>
           <PanelSectionLabel>Bookmarked topics</PanelSectionLabel>
-          <div className="divide-y divide-lms-border-secondary">
+          <div className="divide-y divide-sk-border-secondary">
             {savedTopics.map((t) => (
               <SavedTopicItem
                 key={t.id}
@@ -71,7 +71,7 @@ export function SavedPanel({
       {showNotes && savedNotes.length ? (
         <section>
           <PanelSectionLabel>Saved notes</PanelSectionLabel>
-          <div className="divide-y divide-lms-border-secondary">
+          <div className="divide-y divide-sk-border-secondary">
             {savedNotes.map((n) => (
               <SavedNoteItem
                 key={n.id}

@@ -13,12 +13,12 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const TONE: Record<BadgeTone, string> = {
-  brand: "bg-lms-bg-brand-section text-lms-text-brand-secondary",
-  neutral: "bg-lms-bg-secondary text-lms-text-secondary",
-  success: "bg-lms-bg-success-primary text-lms-text-success-primary",
-  warning: "bg-lms-bg-warning-primary text-lms-text-warning-primary",
-  error: "bg-lms-bg-error-primary text-lms-text-error-primary",
-  outline: "bg-lms-bg-primary text-lms-text-secondary border border-lms-border-primary",
+  brand: "bg-sk-bg-brand-section text-sk-text-brand-secondary",
+  neutral: "bg-sk-bg-secondary text-sk-text-secondary",
+  success: "bg-sk-bg-success-primary text-sk-text-success-primary",
+  warning: "bg-sk-bg-warning-primary text-sk-text-warning-primary",
+  error: "bg-sk-bg-error-primary text-sk-text-error-primary",
+  outline: "bg-sk-bg-primary text-sk-text-secondary border border-sk-border-primary",
 };
 
 /** Generic pill. The typed badge families below compose this. */
@@ -31,7 +31,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
       ref={ref}
       className={cn(
         "inline-flex items-center gap-1 rounded-md px-2 py-0.5",
-        eyebrow ? "lms-text-2xs-semibold" : "lms-text-xs-medium",
+        eyebrow ? "sk-text-2xs-semibold" : "sk-text-xs-medium",
         TONE[tone],
         className,
       )}

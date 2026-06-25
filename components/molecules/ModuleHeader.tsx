@@ -17,7 +17,7 @@ export interface ModuleHeaderProps {
 
 /**
  * Module group header. When `isCompleted`, shows a green check at the start of
- * the eyebrow and binds the eyebrow text to `--lms-text-success-primary`.
+ * the eyebrow and binds the eyebrow text to `--sk-text-success-primary`.
  */
 export function ModuleHeader({
   label,
@@ -43,27 +43,27 @@ export function ModuleHeader({
             <Check
               size={14}
               strokeWidth={iconStroke(14)}
-              className="text-lms-text-success-primary"
+              className="text-sk-text-success-primary"
               aria-hidden
             />
           ) : null}
           <span
             className={cn(
-              "lms-text-2xs-semibold",
-              isCompleted ? "text-lms-text-success-primary" : "text-lms-text-tertiary",
+              "sk-text-2xs-semibold",
+              isCompleted ? "text-sk-text-success-primary" : "text-sk-text-tertiary",
             )}
           >
             {label}
             {showTopicProgress ? ` · ${topicsCompleted}/${topicsTotal}` : ""}
           </span>
         </span>
-        <span className="lms-text-sm-semibold mt-0.5 block text-lms-text-primary">{title}</span>
+        <span className="sk-text-sm-semibold mt-0.5 block text-sk-text-primary">{title}</span>
       </span>
       <ChevronDown
         size={18}
         strokeWidth={iconStroke(18)}
         className={cn(
-          "mt-0.5 shrink-0 text-lms-text-tertiary transition-transform duration-200",
+          "mt-0.5 shrink-0 text-sk-text-tertiary transition-transform duration-200",
           collapsed && "-rotate-90",
         )}
         aria-hidden

@@ -32,7 +32,7 @@ export function NoteItem({
   return (
     <div
       className={cn(
-        "group rounded-lg border border-lms-border-secondary p-4 transition-colors hover:border-lms-border-primary",
+        "group rounded-lg border border-sk-border-secondary p-4 transition-colors hover:border-sk-border-primary",
         className,
       )}
     >
@@ -40,19 +40,19 @@ export function NoteItem({
         <button
           type="button"
           onClick={onClick}
-          className="lms-text-sm-semibold text-lms-text-brand-secondary"
+          className="sk-text-sm-semibold text-sk-text-brand-secondary"
         >
           {ts}
         </button>
         <div className="flex items-center gap-2">
           {editedLabel ? (
-            <span className="lms-text-xs-regular text-lms-text-tertiary">{editedLabel}</span>
+            <span className="sk-text-xs-regular text-sk-text-tertiary">{editedLabel}</span>
           ) : null}
           <button
             type="button"
             onClick={onEdit}
             aria-label="Edit note"
-            className="text-lms-text-tertiary opacity-0 transition-opacity hover:text-lms-text-primary group-hover:opacity-100"
+            className="text-sk-text-tertiary opacity-0 transition-opacity hover:text-sk-text-primary group-hover:opacity-100"
           >
             <Icon icon={Edit3} size={16} />
           </button>
@@ -60,7 +60,7 @@ export function NoteItem({
             type="button"
             onClick={onDelete}
             aria-label="Delete note"
-            className="text-lms-text-tertiary opacity-0 transition-opacity hover:text-lms-text-error-primary group-hover:opacity-100"
+            className="text-sk-text-tertiary opacity-0 transition-opacity hover:text-sk-text-error-primary group-hover:opacity-100"
           >
             <Icon icon={Trash2} size={16} />
           </button>
@@ -68,10 +68,10 @@ export function NoteItem({
       </div>
 
       <button type="button" onClick={onClick} className="mt-2 block w-full text-left">
-        <p className="lms-text-sm-italic border-l-[3px] border-lms-border-brand pl-3 text-lms-text-tertiary">
+        <p className="sk-text-sm-italic border-l-[3px] border-sk-border-brand pl-3 text-sk-text-tertiary">
           {anchorQuote}
         </p>
-        <p className="lms-text-sm-regular mt-2 text-lms-text-primary">{text}</p>
+        <p className="sk-text-sm-regular mt-2 text-sk-text-primary">{text}</p>
       </button>
 
       {tags.length ? (
@@ -81,7 +81,7 @@ export function NoteItem({
               key={tag}
               type="button"
               onClick={() => onTagClick?.(tag)}
-              className="lms-text-xs-medium rounded bg-lms-bg-secondary px-2 py-0.5 text-lms-text-tertiary hover:text-lms-text-brand-secondary"
+              className="sk-text-xs-medium rounded bg-sk-bg-secondary px-2 py-0.5 text-sk-text-tertiary hover:text-sk-text-brand-secondary"
             >
               #{tag}
             </button>

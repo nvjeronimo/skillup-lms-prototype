@@ -41,7 +41,7 @@ const RELATED = [
 ];
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="lms-text-2xs-medium mb-3 text-lms-text-tertiary">{children}</p>;
+  return <p className="sk-text-2xs-medium mb-3 text-sk-text-tertiary">{children}</p>;
 }
 
 /** Right-side AI assistant panel. Mode = Takeaways · Ask · Chat · Related. */
@@ -49,27 +49,27 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
   return (
     <aside
       className={cn(
-        "flex h-full w-[360px] flex-col border-l border-lms-border-secondary bg-lms-bg-primary",
+        "flex h-full w-[360px] flex-col border-l border-sk-border-secondary bg-sk-bg-primary",
         className,
       )}
       aria-label="AI assistant"
     >
-      <header className="flex items-center justify-between border-b border-lms-border-secondary px-4 py-4">
-        <span className="lms-text-md-semibold inline-flex items-center gap-2 text-lms-text-primary">
-          <Icon icon={Sparkles} size={20} className="text-lms-text-brand-secondary" />
+      <header className="flex items-center justify-between border-b border-sk-border-secondary px-4 py-4">
+        <span className="sk-text-md-semibold inline-flex items-center gap-2 text-sk-text-primary">
+          <Icon icon={Sparkles} size={20} className="text-sk-text-brand-secondary" />
           AI Assistant
         </span>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close AI panel"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-lms-text-tertiary hover:bg-lms-bg-secondary"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
         >
           <Icon icon={X} size={18} />
         </button>
       </header>
 
-      <div role="tablist" className="flex items-center gap-4 border-b border-lms-border-secondary px-4">
+      <div role="tablist" className="flex items-center gap-4 border-b border-sk-border-secondary px-4">
         {MODES.map((m) => (
           <button
             key={m.value}
@@ -77,10 +77,10 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
             aria-selected={m.value === mode}
             onClick={() => onModeChange?.(m.value)}
             className={cn(
-              "lms-text-sm-semibold -mb-px border-b-2 py-3 transition-colors",
+              "sk-text-sm-semibold -mb-px border-b-2 py-3 transition-colors",
               m.value === mode
-                ? "border-lms-border-brand text-lms-text-brand-secondary"
-                : "border-transparent text-lms-text-secondary hover:text-lms-text-primary",
+                ? "border-sk-border-brand text-sk-text-brand-secondary"
+                : "border-transparent text-sk-text-secondary hover:text-sk-text-primary",
             )}
           >
             {m.label}
@@ -88,7 +88,7 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
         ))}
       </div>
 
-      <div className="lms-scroll flex-1 overflow-y-auto px-4 py-4">
+      <div className="sk-scroll flex-1 overflow-y-auto px-4 py-4">
         {mode === "Key Takeaways" ? (
           <>
             <Eyebrow>Key takeaways · {TAKEAWAYS.length}</Eyebrow>
@@ -96,10 +96,10 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
               {TAKEAWAYS.map((t) => (
                 <li
                   key={t.ts}
-                  className="rounded-lg border border-lms-border-secondary px-3 py-2.5"
+                  className="rounded-lg border border-sk-border-secondary px-3 py-2.5"
                 >
-                  <span className="lms-text-xs-semibold block text-lms-text-brand-secondary">{t.ts}</span>
-                  <span className="lms-text-sm-regular mt-1 block text-lms-text-primary">{t.text}</span>
+                  <span className="sk-text-xs-semibold block text-sk-text-brand-secondary">{t.ts}</span>
+                  <span className="sk-text-sm-regular mt-1 block text-sk-text-primary">{t.text}</span>
                 </li>
               ))}
             </ul>
@@ -111,13 +111,13 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
             <Eyebrow>Ask anything</Eyebrow>
             <input
               placeholder="Ask about this topic…"
-              className="lms-text-sm-regular w-full rounded-lg border border-lms-border-primary bg-lms-bg-secondary px-3 py-2.5 text-lms-text-primary outline-none focus:border-lms-border-brand"
+              className="sk-text-sm-regular w-full rounded-lg border border-sk-border-primary bg-sk-bg-secondary px-3 py-2.5 text-sk-text-primary outline-none focus:border-sk-border-brand"
             />
             <div className="mt-3 flex flex-col items-start gap-2">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
-                  className="lms-text-sm-medium rounded-full bg-lms-bg-brand-section px-3 py-1.5 text-left text-lms-text-brand-secondary"
+                  className="sk-text-sm-medium rounded-full bg-sk-bg-brand-section px-3 py-1.5 text-left text-sk-text-brand-secondary"
                 >
                   {s}
                 </button>
@@ -130,15 +130,15 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
           <>
             <Eyebrow>Conversation · 2 messages</Eyebrow>
             <div className="flex flex-col gap-3">
-              <div className="rounded-lg bg-lms-bg-brand-section px-3 py-2.5">
-                <span className="lms-text-2xs-medium block text-lms-text-brand-secondary">You</span>
-                <span className="lms-text-sm-regular mt-1 block text-lms-text-primary">
+              <div className="rounded-lg bg-sk-bg-brand-section px-3 py-2.5">
+                <span className="sk-text-2xs-medium block text-sk-text-brand-secondary">You</span>
+                <span className="sk-text-sm-regular mt-1 block text-sk-text-primary">
                   What’s the difference between MVP and prototype?
                 </span>
               </div>
-              <div className="rounded-lg bg-lms-bg-secondary px-3 py-2.5">
-                <span className="lms-text-2xs-medium block text-lms-text-tertiary">AI Assistant</span>
-                <span className="lms-text-sm-regular mt-1 block text-lms-text-secondary">
+              <div className="rounded-lg bg-sk-bg-secondary px-3 py-2.5">
+                <span className="sk-text-2xs-medium block text-sk-text-tertiary">AI Assistant</span>
+                <span className="sk-text-sm-regular mt-1 block text-sk-text-secondary">
                   An MVP tests assumptions in real conditions; a prototype tests interactions. Use
                   MVP for risk, prototype for design.
                 </span>
@@ -153,9 +153,9 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
             <ul className="flex flex-col gap-2">
               {RELATED.map((r) => (
                 <li key={r.title}>
-                  <button className="w-full rounded-lg border border-lms-border-secondary px-3 py-2.5 text-left hover:border-lms-border-primary">
-                    <span className="lms-text-sm-semibold block text-lms-text-primary">{r.title}</span>
-                    <span className="lms-text-xs-regular mt-0.5 block text-lms-text-tertiary">{r.meta}</span>
+                  <button className="w-full rounded-lg border border-sk-border-secondary px-3 py-2.5 text-left hover:border-sk-border-primary">
+                    <span className="sk-text-sm-semibold block text-sk-text-primary">{r.title}</span>
+                    <span className="sk-text-xs-regular mt-0.5 block text-sk-text-tertiary">{r.meta}</span>
                   </button>
                 </li>
               ))}
@@ -165,15 +165,15 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
       </div>
 
       {mode === "Ask" || mode === "Chat" ? (
-        <div className="flex items-center gap-2 border-t border-lms-border-secondary px-3 py-3">
+        <div className="flex items-center gap-2 border-t border-sk-border-secondary px-3 py-3">
           <input
             placeholder="Type a message…"
-            className="lms-text-sm-regular flex-1 rounded-lg border border-lms-border-primary bg-lms-bg-primary px-3 py-2 text-lms-text-primary outline-none focus:border-lms-border-brand"
+            className="sk-text-sm-regular flex-1 rounded-lg border border-sk-border-primary bg-sk-bg-primary px-3 py-2 text-sk-text-primary outline-none focus:border-sk-border-brand"
           />
           <button
             type="button"
             aria-label="Send"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-lms-bg-brand-solid text-lms-text-primary-on-brand"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
           >
             <Icon icon={Send} size={18} />
           </button>

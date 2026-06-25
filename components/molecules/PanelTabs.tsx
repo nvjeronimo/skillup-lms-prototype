@@ -38,7 +38,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
       role="tablist"
       aria-label={ariaLabel}
       className={cn(
-        "sticky top-0 z-20 flex items-center gap-4 border-b border-lms-border-secondary bg-lms-bg-primary px-4",
+        "sticky top-0 z-20 flex items-center gap-4 border-b border-sk-border-secondary bg-sk-bg-primary px-4",
         className,
       )}
     >
@@ -56,20 +56,20 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
             onClick={() => onChange(t.value)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              "lms-text-sm-semibold -mb-px flex items-center gap-1.5 border-b-2 py-3 transition-colors",
+              "sk-text-sm-semibold -mb-px flex items-center gap-1.5 border-b-2 py-3 transition-colors",
               isActive
-                ? "border-lms-border-brand text-lms-text-brand-secondary"
-                : "border-transparent text-lms-text-secondary hover:text-lms-text-primary",
+                ? "border-sk-border-brand text-sk-text-brand-secondary"
+                : "border-transparent text-sk-text-secondary hover:text-sk-text-primary",
             )}
           >
             {t.label}
             {typeof t.count === "number" ? (
               <span
                 className={cn(
-                  "lms-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5",
+                  "sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5",
                   isActive
-                    ? "bg-lms-bg-brand-section text-lms-text-brand-secondary"
-                    : "bg-lms-bg-secondary text-lms-text-tertiary",
+                    ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
+                    : "bg-sk-bg-secondary text-sk-text-tertiary",
                 )}
               >
                 {t.count}

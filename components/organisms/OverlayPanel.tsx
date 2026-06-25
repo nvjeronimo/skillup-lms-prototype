@@ -86,18 +86,18 @@ export function OverlayPanel({
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop — SKO DS light dim + blur (token-bound via .lms-backdrop). */}
-      <div className="lms-backdrop lms-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
+      {/* Backdrop — SKO DS light dim + blur (token-bound via .sk-backdrop). */}
+      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
 
       <aside
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="lms-animate-slide-right absolute right-0 top-0 flex h-full w-full flex-col border-l border-lms-border-secondary bg-lms-bg-primary md:w-[480px]"
+        className="sk-animate-slide-right absolute right-0 top-0 flex h-full w-full flex-col border-l border-sk-border-secondary bg-sk-bg-primary md:w-[480px]"
       >
-        <header className="flex items-center justify-between gap-2 border-b border-lms-border-secondary px-6 py-5">
-          <h2 id={titleId} className="lms-text-lg-semibold text-lms-text-primary">
+        <header className="flex items-center justify-between gap-2 border-b border-sk-border-secondary px-6 py-5">
+          <h2 id={titleId} className="sk-text-lg-semibold text-sk-text-primary">
             {title}
           </h2>
           <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ export function OverlayPanel({
               <button
                 type="button"
                 onClick={headerAction.onClick}
-                className="lms-text-sm-medium text-lms-text-brand-secondary"
+                className="sk-text-sm-medium text-sk-text-brand-secondary"
               >
                 {headerAction.label}
               </button>
@@ -115,7 +115,7 @@ export function OverlayPanel({
               type="button"
               onClick={onClose}
               aria-label="Close panel"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-lms-text-tertiary hover:bg-lms-bg-secondary"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
             >
               <Icon icon={X} size={20} />
             </button>
@@ -123,7 +123,7 @@ export function OverlayPanel({
         </header>
 
         {filters && filters.length ? (
-          <div className="flex items-center gap-2 border-b border-lms-border-secondary px-6 py-3">
+          <div className="flex items-center gap-2 border-b border-sk-border-secondary px-6 py-3">
             {filters.map((f) => (
               <FilterChip
                 key={f.value}
@@ -136,11 +136,11 @@ export function OverlayPanel({
           </div>
         ) : null}
 
-        <div className="lms-scroll flex-1 overflow-y-auto">{children}</div>
+        <div className="sk-scroll flex-1 overflow-y-auto">{children}</div>
 
         {footer ? (
-          <footer className="border-t border-lms-border-secondary px-6 py-4 text-center">
-            <a href={footer.href} className="lms-text-sm-medium text-lms-text-brand-secondary">
+          <footer className="border-t border-sk-border-secondary px-6 py-4 text-center">
+            <a href={footer.href} className="sk-text-sm-medium text-sk-text-brand-secondary">
               {footer.label}
             </a>
           </footer>
@@ -153,7 +153,7 @@ export function OverlayPanel({
 /** Sticky section label inside a panel body (semantic heading, eyebrow style). */
 export function PanelSectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="lms-text-2xs-medium bg-lms-bg-secondary px-4 py-2.5 text-lms-text-tertiary">
+    <h3 className="sk-text-2xs-medium bg-sk-bg-secondary px-4 py-2.5 text-sk-text-tertiary">
       {children}
     </h3>
   );

@@ -25,7 +25,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <p className="lms-text-md-regular text-lms-text-secondary">{activity.intro}</p>
+      <p className="sk-text-md-regular text-sk-text-secondary">{activity.intro}</p>
 
       <ol className="flex flex-col gap-2">
         {activity.steps.map((s, i) => {
@@ -39,23 +39,23 @@ export function ActivityView({ topicId }: { topicId: string }) {
                 className={cn(
                   "flex w-full items-start gap-3 rounded-lg border p-4 text-left transition-colors",
                   isDone
-                    ? "border-lms-text-success-primary bg-lms-bg-success-primary"
-                    : "border-lms-border-secondary hover:border-lms-border-primary",
+                    ? "border-sk-text-success-primary bg-sk-bg-success-primary"
+                    : "border-sk-border-secondary hover:border-sk-border-primary",
                 )}
               >
                 <span
                   className={cn(
                     "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
                     isDone
-                      ? "bg-lms-text-success-primary text-lms-fg-white"
-                      : "border-2 border-lms-border-primary",
+                      ? "bg-sk-text-success-primary text-sk-fg-white"
+                      : "border-2 border-sk-border-primary",
                   )}
                 >
                   {isDone ? <Icon icon={Check} size={12} /> : null}
                 </span>
                 <span>
-                  <span className="lms-text-sm-semibold block text-lms-text-primary">{s.title}</span>
-                  <span className="lms-text-sm-regular mt-0.5 block text-lms-text-secondary">
+                  <span className="sk-text-sm-semibold block text-sk-text-primary">{s.title}</span>
+                  <span className="sk-text-sm-regular mt-0.5 block text-sk-text-secondary">
                     {s.detail}
                   </span>
                 </span>
@@ -68,7 +68,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
       {allDone ? (
         <InlineAlert tone="success" title="Activity complete" description="Nice work — every step is done." />
       ) : (
-        <p className="lms-text-sm-regular text-lms-text-tertiary">
+        <p className="sk-text-sm-regular text-sk-text-tertiary">
           {done.size} of {activity.steps.length} steps complete
         </p>
       )}

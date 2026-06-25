@@ -27,15 +27,15 @@ export function CourseHeader({
   return (
     <div
       className={cn(
-        "flex items-start gap-2 border-b border-lms-border-secondary px-3 py-4",
+        "flex items-start gap-2 border-b border-sk-border-secondary px-3 py-4",
         compact && "justify-center",
         className,
       )}
     >
       {!compact ? (
         <div className="min-w-0 flex-1">
-          <p className="lms-text-2xs-medium text-lms-text-tertiary">{eyebrow}</p>
-          <p className="lms-text-lg-semibold mt-1 text-lms-text-primary">{title}</p>
+          <p className="sk-text-2xs-medium text-sk-text-tertiary">{eyebrow}</p>
+          <p className="sk-text-lg-semibold mt-1 text-sk-text-primary">{title}</p>
         </div>
       ) : null}
       {showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null}

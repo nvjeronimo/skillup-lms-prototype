@@ -38,7 +38,7 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "flex h-16 items-center justify-between gap-4 border-t border-lms-border-secondary bg-lms-bg-primary px-4 md:px-6",
+        "flex h-16 items-center justify-between gap-4 border-t border-sk-border-secondary bg-sk-bg-primary px-4 md:px-6",
         className,
       )}
     >
@@ -54,10 +54,10 @@ export function TopicFooterNav({
 
       {!compact ? (
         <div className="min-w-0 flex-1 text-center">
-          <p className="lms-text-2xs-medium text-lms-text-tertiary">
+          <p className="sk-text-2xs-medium text-sk-text-tertiary">
             {position} of {total}
           </p>
-          <p className="lms-text-sm-semibold truncate text-lms-text-primary">{title}</p>
+          <p className="sk-text-sm-semibold truncate text-sk-text-primary">{title}</p>
         </div>
       ) : null}
 

@@ -49,7 +49,7 @@ export interface IconProps extends Omit<LucideProps, "ref"> {
 /**
  * Single source of truth for SVG icons. Enforces the stroke-weight rule so
  * every icon in the app respects 1.5px (<24) / 2px (>=24) automatically.
- * Color is left to `currentColor` so callers bind via text-lms-* tokens.
+ * Color is left to `currentColor` so callers bind via text-sk-* tokens.
  */
 export function Icon({ icon: IconCmp, size = 20, strokeWidth, ...rest }: IconProps) {
   return <IconCmp size={size} strokeWidth={strokeWidth ?? iconStroke(size)} {...rest} />;

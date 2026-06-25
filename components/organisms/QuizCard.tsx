@@ -48,16 +48,16 @@ export function QuizCard({
     return (
       <div
         className={cn(
-          "flex flex-col gap-3 rounded-xl border border-lms-border-secondary bg-lms-bg-primary p-5",
+          "flex flex-col gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5",
           className,
         )}
       >
-        <span className="lms-text-2xs-medium text-lms-text-brand-secondary">Practice quiz</span>
-        <h3 className="lms-text-md-semibold text-lms-text-primary">Define and measure</h3>
-        <p className="lms-text-sm-regular text-lms-text-secondary">
+        <span className="sk-text-2xs-medium text-sk-text-brand-secondary">Practice quiz</span>
+        <h3 className="sk-text-md-semibold text-sk-text-primary">Define and measure</h3>
+        <p className="sk-text-sm-regular text-sk-text-secondary">
           Check your understanding before moving on. You can retake this as many times as you like.
         </p>
-        <p className="lms-text-xs-regular text-lms-text-tertiary">Module 3 · 5 questions · approx. 4 min</p>
+        <p className="sk-text-xs-regular text-sk-text-tertiary">Module 3 · 5 questions · approx. 4 min</p>
         <div>
           <Button variant="primary" size="md" onClick={onSubmit}>
             Start quiz
@@ -70,7 +70,7 @@ export function QuizCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-lms-border-secondary bg-lms-bg-primary p-5",
+        "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5",
         className,
       )}
     >
@@ -78,20 +78,20 @@ export function QuizCard({
         <div
           className={cn(
             "flex items-center gap-2 rounded-lg px-3 py-2",
-            state === "Results" ? "bg-lms-bg-success-primary" : "bg-lms-bg-error-primary",
+            state === "Results" ? "bg-sk-bg-success-primary" : "bg-sk-bg-error-primary",
           )}
         >
           <Icon
             icon={state === "Results" ? Check : X}
             size={18}
             className={
-              state === "Results" ? "text-lms-text-success-primary" : "text-lms-text-error-primary"
+              state === "Results" ? "text-sk-text-success-primary" : "text-sk-text-error-primary"
             }
           />
           <span
             className={cn(
-              "lms-text-sm-semibold",
-              state === "Results" ? "text-lms-text-success-primary" : "text-lms-text-error-primary",
+              "sk-text-sm-semibold",
+              state === "Results" ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
             )}
           >
             {state === "Results" ? "Passed — 4 / 4 correct" : "Not passed — 2 / 4 correct"}
@@ -99,7 +99,7 @@ export function QuizCard({
         </div>
       ) : null}
 
-      <h3 className="lms-text-md-semibold text-lms-text-primary">{question}</h3>
+      <h3 className="sk-text-md-semibold text-sk-text-primary">{question}</h3>
 
       <ul className="flex flex-col gap-2">
         {options.map((opt) => {
@@ -113,14 +113,14 @@ export function QuizCard({
                 onClick={() => onSelect?.(opt.id)}
                 aria-pressed={isSelected}
                 className={cn(
-                  "lms-text-sm-medium flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
+                  "sk-text-sm-medium flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
                   showCorrect
-                    ? "border-lms-text-success-primary bg-lms-bg-success-primary text-lms-text-success-primary"
+                    ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
                     : showWrong
-                      ? "border-lms-text-error-primary bg-lms-bg-error-primary text-lms-text-error-primary"
+                      ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
                       : isSelected
-                        ? "border-lms-border-brand bg-lms-bg-brand-section text-lms-text-brand-secondary"
-                        : "border-lms-border-primary text-lms-text-primary hover:bg-lms-bg-secondary",
+                        ? "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary"
+                        : "border-sk-border-primary text-sk-text-primary hover:bg-sk-bg-secondary",
                 )}
               >
                 <span>{opt.label}</span>

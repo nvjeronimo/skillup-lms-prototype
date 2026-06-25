@@ -40,14 +40,14 @@ export function CardOverflowMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="More actions"
-        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-lms-text-tertiary hover:bg-lms-bg-secondary"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
       >
         <Icon icon={MoreHorizontal} size={20} />
       </button>
       {open ? (
         <ul
           role="menu"
-          className="absolute right-0 z-10 mt-1 w-44 overflow-hidden rounded-lg border border-lms-border-secondary bg-lms-bg-primary py-1 shadow-lg"
+          className="absolute right-0 z-10 mt-1 w-44 overflow-hidden rounded-lg border border-sk-border-secondary bg-sk-bg-primary py-1 shadow-lg"
         >
           {items.map((item) => (
             <li key={item.label} role="none">
@@ -59,8 +59,8 @@ export function CardOverflowMenu({
                   setOpen(false);
                 }}
                 className={cn(
-                  "lms-text-sm-medium block w-full px-3 py-2 text-left hover:bg-lms-bg-secondary",
-                  item.destructive ? "text-lms-text-error-primary" : "text-lms-text-primary",
+                  "sk-text-sm-medium block w-full px-3 py-2 text-left hover:bg-sk-bg-secondary",
+                  item.destructive ? "text-sk-text-error-primary" : "text-sk-text-primary",
                 )}
               >
                 {item.label}

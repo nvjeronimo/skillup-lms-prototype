@@ -80,7 +80,7 @@ export function NotificationsPanel({
       />
 
       {visible.length === 0 ? (
-        <p className="lms-text-sm-regular px-4 py-8 text-center text-lms-text-tertiary">
+        <p className="sk-text-sm-regular px-4 py-8 text-center text-sk-text-tertiary">
           Nothing here yet.
         </p>
       ) : (
@@ -90,7 +90,7 @@ export function NotificationsPanel({
           return (
             <section key={group} className="mb-2">
               <PanelSectionLabel>{GROUP_LABEL[group]}</PanelSectionLabel>
-              <div className="divide-y divide-lms-border-secondary">
+              <div className="divide-y divide-sk-border-secondary">
                 {items.map((n) => (
                   <NotificationItem
                     key={n.id}

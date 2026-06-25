@@ -151,7 +151,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const durationSeconds = 200;
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-lms-bg-secondary">
+    <div className="flex h-[100dvh] flex-col bg-sk-bg-secondary">
       <CoursePlayerTopbar
         size={topbarSize}
         showNotifications
@@ -183,11 +183,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
         <main
           className={cn(
-            "flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-lms-bg-primary",
-            showInlineSidebar && "rounded-xl border border-lms-border-secondary",
+            "flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-sk-bg-primary",
+            showInlineSidebar && "rounded-xl border border-sk-border-secondary",
           )}
         >
-          <div className="lms-scroll flex-1 overflow-y-auto">
+          <div className="sk-scroll flex-1 overflow-y-auto">
             <div className="w-full p-4">
               {isLocked ? (
                 children
@@ -202,7 +202,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     }}
                   />
                   {/* Topic title below the player (ICP Phase 1 canonical layout). */}
-                  <h1 className="lms-text-display-xs-semibold mt-5 text-lms-text-primary">
+                  <h1 className="sk-text-display-xs-semibold mt-5 text-sk-text-primary">
                     {topic.title}
                   </h1>
                   <div className="mt-4">
@@ -249,18 +249,18 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       {bp === "mobile" && mobileDrawerOpen ? (
         <div className="fixed inset-0 z-40">
           <div
-            className="lms-backdrop lms-animate-fade absolute inset-0"
+            className="sk-backdrop sk-animate-fade absolute inset-0"
             onClick={() => setMobileDrawerOpen(false)}
             aria-hidden
           />
-          <div className="lms-animate-slide-left absolute left-0 top-0 h-full">
+          <div className="sk-animate-slide-left absolute left-0 top-0 h-full">
             {/* Drawer goes straight to the course header; a floating X closes it. */}
             <div className="relative h-full">
               <button
                 type="button"
                 onClick={() => setMobileDrawerOpen(false)}
                 aria-label="Close menu"
-                className="absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-md text-lms-text-tertiary hover:bg-lms-bg-secondary"
+                className="absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
               >
                 <Icon icon={X} size={20} />
               </button>

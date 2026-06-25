@@ -16,23 +16,23 @@ export interface InlineAlertProps {
 
 const TONE: Record<AlertTone, { box: string; circle: string; icon: LucideIcon }> = {
   info: {
-    box: "bg-lms-bg-brand-section border-lms-border-brand",
-    circle: "bg-lms-fg-progress",
+    box: "bg-sk-bg-brand-section border-sk-border-brand",
+    circle: "bg-sk-fg-progress",
     icon: RotateCw,
   },
   success: {
-    box: "bg-lms-bg-success-primary border-lms-text-success-primary",
-    circle: "bg-lms-text-success-primary",
+    box: "bg-sk-bg-success-primary border-sk-text-success-primary",
+    circle: "bg-sk-text-success-primary",
     icon: Check,
   },
   warning: {
-    box: "bg-lms-bg-warning-primary border-lms-text-warning-primary",
-    circle: "bg-lms-text-warning-primary",
+    box: "bg-sk-bg-warning-primary border-sk-text-warning-primary",
+    circle: "bg-sk-text-warning-primary",
     icon: AlertTriangle,
   },
   error: {
-    box: "bg-lms-bg-error-primary border-lms-text-error-primary",
-    circle: "bg-lms-text-error-primary",
+    box: "bg-sk-bg-error-primary border-sk-text-error-primary",
+    circle: "bg-sk-text-error-primary",
     icon: AlertCircle,
   },
 };
@@ -47,16 +47,16 @@ export function InlineAlert({ tone = "info", title, description, onDismiss, clas
     >
       <span
         className={cn(
-          "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-lms-fg-white",
+          "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sk-fg-white",
           t.circle,
         )}
       >
         <Icon icon={t.icon} size={16} />
       </span>
       <div className="flex-1 pt-0.5">
-        <p className="lms-text-sm-semibold text-lms-text-primary">{title}</p>
+        <p className="sk-text-sm-semibold text-sk-text-primary">{title}</p>
         {description ? (
-          <p className="lms-text-sm-regular mt-0.5 text-lms-text-secondary">{description}</p>
+          <p className="sk-text-sm-regular mt-0.5 text-sk-text-secondary">{description}</p>
         ) : null}
       </div>
       {onDismiss ? (
@@ -64,7 +64,7 @@ export function InlineAlert({ tone = "info", title, description, onDismiss, clas
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss"
-          className="shrink-0 pt-0.5 text-lms-text-tertiary hover:text-lms-text-primary"
+          className="shrink-0 pt-0.5 text-sk-text-tertiary hover:text-sk-text-primary"
         >
           <Icon icon={X} size={18} />
         </button>

@@ -16,7 +16,7 @@ const meta: Meta<typeof CourseCertificate> = {
   },
   decorators: [
     (Story) => (
-      <div className="bg-lms-text-brand-primary p-8">
+      <div className="bg-sk-text-brand-primary p-8">
         <Story />
       </div>
     ),

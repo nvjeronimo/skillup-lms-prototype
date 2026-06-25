@@ -9,9 +9,9 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--lms-bg-primary);
-  color: var(--lms-text-primary);
-  font-family: var(--lms-font-body);
+  background: var(--sk-bg-primary);
+  color: var(--sk-text-primary);
+  font-family: var(--sk-font-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -30,29 +30,29 @@ button {
 
 /* Focus visibility for keyboard users — bound to brand border token. */
 :focus-visible {
-  outline: 2px solid var(--lms-border-brand);
+  outline: 2px solid var(--sk-border-brand);
   outline-offset: 2px;
 }
 
 /* Thin custom scrollbar used by scroll regions (atoms/VerticalScroll mirrors this). */
-.lms-scroll {
+.sk-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--lms-border-primary) transparent;
+  scrollbar-color: var(--sk-border-primary) transparent;
 }
-.lms-scroll::-webkit-scrollbar {
+.sk-scroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
-.lms-scroll::-webkit-scrollbar-thumb {
-  background: var(--lms-border-primary);
+.sk-scroll::-webkit-scrollbar-thumb {
+  background: var(--sk-border-primary);
   border-radius: 999px;
 }
-.lms-scroll::-webkit-scrollbar-track {
+.sk-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
 /* Slide-in keyframes for overlay panels + mobile drawer. */
-@keyframes lms-slide-in-right {
+@keyframes sk-slide-in-right {
   from {
     transform: translateX(100%);
   }
@@ -60,7 +60,7 @@ button {
     transform: translateX(0);
   }
 }
-@keyframes lms-slide-in-left {
+@keyframes sk-slide-in-left {
   from {
     transform: translateX(-100%);
   }
@@ -68,7 +68,7 @@ button {
     transform: translateX(0);
   }
 }
-@keyframes lms-fade-in {
+@keyframes sk-fade-in {
   from {
     opacity: 0;
   }
@@ -76,14 +76,14 @@ button {
     opacity: 1;
   }
 }
-.lms-animate-slide-right {
-  animation: lms-slide-in-right 200ms ease-out;
+.sk-animate-slide-right {
+  animation: sk-slide-in-right 200ms ease-out;
 }
-.lms-animate-slide-left {
-  animation: lms-slide-in-left 200ms ease-out;
+.sk-animate-slide-left {
+  animation: sk-slide-in-left 200ms ease-out;
 }
-.lms-animate-fade {
-  animation: lms-fade-in 200ms ease-out;
+.sk-animate-fade {
+  animation: sk-fade-in 200ms ease-out;
 }
 
 /* Respect reduced-motion: disable panel/drawer/toast animations + smooth scroll. */
@@ -100,20 +100,20 @@ button {
 
 /* Print: hide app chrome, show only the certificate. */
 @media print {
-  .lms-no-print {
+  .sk-no-print {
     display: none !important;
   }
 }
 
 /* Overlay backdrop — SKO DS uses a light dim + background blur (alpha-black + blur),
    token-bound via color-mix (never a raw rgba/hex). */
-.lms-backdrop {
-  background: color-mix(in srgb, var(--lms-text-primary) 30%, transparent);
+.sk-backdrop {
+  background: color-mix(in srgb, var(--sk-text-primary) 30%, transparent);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 @media (prefers-reduced-motion: reduce) {
-  .lms-backdrop {
+  .sk-backdrop {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }

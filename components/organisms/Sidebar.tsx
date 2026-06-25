@@ -60,9 +60,9 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "flex h-full flex-col overflow-hidden bg-lms-bg-primary",
+        "flex h-full flex-col overflow-hidden bg-sk-bg-primary",
         // Floating card on desktop/tablet; Mobile drawer fills its container.
-        isMobile ? "" : "rounded-xl border border-lms-border-secondary",
+        isMobile ? "" : "rounded-xl border border-sk-border-secondary",
         WIDTH[variant],
         className,
       )}
@@ -78,7 +78,7 @@ export function Sidebar({
       />
 
       {!collapsed ? (
-        <div className="border-b border-lms-border-secondary px-4 py-3">
+        <div className="border-b border-sk-border-secondary px-4 py-3">
           <OverallProgress
             pct={course.overallProgressPct}
             moduleCurrent={course.modulesCompleted + 1}
@@ -87,13 +87,13 @@ export function Sidebar({
         </div>
       ) : null}
 
-      <div className="lms-scroll flex-1 overflow-y-auto pb-4">
+      <div className="sk-scroll flex-1 overflow-y-auto pb-4">
         {course.modules.map((module) => {
           const moduleCollapsed = collapsedModules.has(module.id);
           if (collapsed) {
             // Collapsed rail: just status dots for each topic.
             return (
-              <div key={module.id} className="border-b border-lms-border-secondary py-2">
+              <div key={module.id} className="border-b border-sk-border-secondary py-2">
                 {moduleTopics(module).map((topic) => (
                   <TopicRow
                     key={topic.id}
@@ -110,7 +110,7 @@ export function Sidebar({
             );
           }
           return (
-            <div key={module.id} className="border-b border-lms-border-secondary">
+            <div key={module.id} className="border-b border-sk-border-secondary">
               <ModuleHeader
                 label={module.label}
                 title={module.title}
@@ -165,7 +165,7 @@ export function Sidebar({
 
       {/* Mobile shows a compact progress ring pinned at the bottom. */}
       {isMobile ? (
-        <div className="flex items-center gap-3 border-t border-lms-border-secondary px-4 py-3">
+        <div className="flex items-center gap-3 border-t border-sk-border-secondary px-4 py-3">
           <OverallProgress
             device="Mobile"
             pct={course.overallProgressPct}
@@ -173,8 +173,8 @@ export function Sidebar({
             moduleTotal={course.modulesTotal}
           />
           <div>
-            <p className="lms-text-sm-semibold text-lms-text-primary">{course.overallProgressPct}% complete</p>
-            <p className="lms-text-xs-regular text-lms-text-tertiary">
+            <p className="sk-text-sm-semibold text-sk-text-primary">{course.overallProgressPct}% complete</p>
+            <p className="sk-text-xs-regular text-sk-text-tertiary">
               Module {course.modulesCompleted + 1} of {course.modulesTotal}
             </p>
           </div>

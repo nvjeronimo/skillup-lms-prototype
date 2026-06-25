@@ -27,17 +27,17 @@ export function SavedTopicItem({
 }: SavedTopicItemProps) {
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-lms-bg-brand-section text-lms-text-brand-secondary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sk-bg-brand-section text-sk-text-brand-secondary">
         <Icon icon={topicTypeIcon(topicType)} size={18} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1.5">
-          <span className="lms-text-xs-semibold text-lms-text-brand-secondary">{topicType}</span>
-          <span className="lms-text-xs-regular text-lms-text-tertiary">· {duration}</span>
+          <span className="sk-text-xs-semibold text-sk-text-brand-secondary">{topicType}</span>
+          <span className="sk-text-xs-regular text-sk-text-tertiary">· {duration}</span>
         </span>
-        <span className="lms-text-sm-semibold mt-0.5 block text-lms-text-primary">{title}</span>
-        <span className="lms-text-xs-regular mt-0.5 block text-lms-text-tertiary">{path}</span>
-        <span className="lms-text-xs-regular mt-1 block text-lms-text-tertiary">
+        <span className="sk-text-sm-semibold mt-0.5 block text-sk-text-primary">{title}</span>
+        <span className="sk-text-xs-regular mt-0.5 block text-sk-text-tertiary">{path}</span>
+        <span className="sk-text-xs-regular mt-1 block text-sk-text-tertiary">
           Saved {savedAt}
         </span>
       </span>
@@ -45,7 +45,7 @@ export function SavedTopicItem({
   );
 
   const classes = cn(
-    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-lms-bg-secondary",
+    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-sk-bg-secondary",
     className,
   );
 

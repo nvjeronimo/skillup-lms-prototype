@@ -18,23 +18,23 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const VARIANT: Record<ButtonVariant, string> = {
   // Brand teal → yellow hover, dark-teal text on hover (handoff brand-aware rule).
   primary:
-    "bg-lms-bg-brand-solid text-lms-text-primary-on-brand hover:bg-lms-bg-brand-hover hover:text-lms-text-brand-primary",
+    "bg-sk-bg-brand-solid text-sk-text-primary-on-brand hover:bg-sk-bg-brand-hover hover:text-sk-text-brand-primary",
   // Outline teal.
   secondary:
-    "bg-transparent border border-lms-border-brand text-lms-text-brand hover:bg-lms-bg-brand-section",
+    "bg-transparent border border-sk-border-brand text-sk-text-brand hover:bg-sk-bg-brand-section",
   // Ghost teal.
-  tertiary: "bg-transparent text-lms-text-brand hover:bg-lms-bg-brand-section",
+  tertiary: "bg-transparent text-sk-text-brand hover:bg-sk-bg-brand-section",
   // Utility / close-X stay UUI gray-neutral by design.
   destructive:
-    "bg-transparent border border-lms-border-primary text-lms-text-error-primary hover:bg-lms-bg-error-primary",
-  utility: "bg-lms-bg-secondary text-lms-text-secondary hover:bg-lms-bg-tertiary",
+    "bg-transparent border border-sk-border-primary text-sk-text-error-primary hover:bg-sk-bg-error-primary",
+  utility: "bg-sk-bg-secondary text-sk-text-secondary hover:bg-sk-bg-tertiary",
 };
 
 const SIZE: Record<ButtonSize, { pad: string; text: string; icon: number; square: string }> = {
-  sm: { pad: "h-8 px-3 gap-1.5", text: "lms-text-sm-medium", icon: 16, square: "h-8 w-8" },
-  md: { pad: "h-10 px-4 gap-2", text: "lms-text-sm-semibold", icon: 18, square: "h-10 w-10" },
-  lg: { pad: "h-11 px-5 gap-2", text: "lms-text-md-semibold", icon: 20, square: "h-11 w-11" },
-  xl: { pad: "h-12 px-6 gap-2", text: "lms-text-md-semibold", icon: 20, square: "h-12 w-12" },
+  sm: { pad: "h-8 px-3 gap-1.5", text: "sk-text-sm-medium", icon: 16, square: "h-8 w-8" },
+  md: { pad: "h-10 px-4 gap-2", text: "sk-text-sm-semibold", icon: 18, square: "h-10 w-10" },
+  lg: { pad: "h-11 px-5 gap-2", text: "sk-text-md-semibold", icon: 20, square: "h-11 w-11" },
+  xl: { pad: "h-12 px-6 gap-2", text: "sk-text-md-semibold", icon: 20, square: "h-12 w-12" },
 };
 
 /**

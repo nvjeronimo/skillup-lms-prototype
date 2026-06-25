@@ -38,7 +38,7 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
     <ul
       role="menu"
       className={cn(
-        "w-48 overflow-hidden rounded-lg border border-lms-border-secondary bg-lms-bg-primary py-1 shadow-lg",
+        "w-48 overflow-hidden rounded-lg border border-sk-border-secondary bg-sk-bg-primary py-1 shadow-lg",
         className,
       )}
     >
@@ -48,9 +48,9 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
             role="menuitem"
             type="button"
             onClick={() => onSelect?.(item.channel)}
-            className="lms-text-sm-medium flex w-full items-center gap-2.5 px-4 py-3 text-left text-lms-text-primary hover:bg-lms-bg-secondary"
+            className="sk-text-sm-medium flex w-full items-center gap-2.5 px-4 py-3 text-left text-sk-text-primary hover:bg-sk-bg-secondary"
           >
-            <Icon icon={item.icon} size={16} className="text-lms-text-tertiary" />
+            <Icon icon={item.icon} size={16} className="text-sk-text-tertiary" />
             {item.label}
           </button>
         </li>

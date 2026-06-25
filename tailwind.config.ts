@@ -1,9 +1,10 @@
 import type { Config } from "tailwindcss";
 
 /**
- * The `lms` color scale references the CSS custom properties defined in
- * `tokens/colors.css`. Tailwind utilities (bg-lms-*, text-lms-*, border-lms-*)
- * resolve to `var(--lms-*)` so color is never hardcoded as hex in components.
+ * The `sk` color scale (SkillUp Design System — one namespace for all brands)
+ * references the CSS custom properties defined in `tokens/colors.css`. Tailwind
+ * utilities (bg-sk-*, text-sk-*, border-sk-*) resolve to `var(--sk-*)` so color
+ * is never hardcoded as hex in components.
  */
 const config: Config = {
   content: [
@@ -15,49 +16,49 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        lms: {
+        sk: {
           bg: {
-            primary: "var(--lms-bg-primary)",
-            secondary: "var(--lms-bg-secondary)",
-            "secondary-subtle": "var(--lms-bg-secondary-subtle)",
-            tertiary: "var(--lms-bg-tertiary)",
-            "brand-primary": "var(--lms-bg-brand-primary)",
-            "brand-section": "var(--lms-bg-brand-section)",
-            "brand-solid": "var(--lms-bg-brand-solid)",
-            "brand-hover": "var(--lms-bg-brand-hover)",
-            "success-primary": "var(--lms-bg-success-primary)",
-            "warning-primary": "var(--lms-bg-warning-primary)",
-            "error-primary": "var(--lms-bg-error-primary)",
+            primary: "var(--sk-bg-primary)",
+            secondary: "var(--sk-bg-secondary)",
+            "secondary-subtle": "var(--sk-bg-secondary-subtle)",
+            tertiary: "var(--sk-bg-tertiary)",
+            "brand-primary": "var(--sk-bg-brand-primary)",
+            "brand-section": "var(--sk-bg-brand-section)",
+            "brand-solid": "var(--sk-bg-brand-solid)",
+            "brand-hover": "var(--sk-bg-brand-hover)",
+            "success-primary": "var(--sk-bg-success-primary)",
+            "warning-primary": "var(--sk-bg-warning-primary)",
+            "error-primary": "var(--sk-bg-error-primary)",
           },
           border: {
-            primary: "var(--lms-border-primary)",
-            secondary: "var(--lms-border-secondary)",
-            brand: "var(--lms-border-brand)",
+            primary: "var(--sk-border-primary)",
+            secondary: "var(--sk-border-secondary)",
+            brand: "var(--sk-border-brand)",
           },
           fg: {
-            white: "var(--lms-fg-white)",
-            quaternary: "var(--lms-fg-quaternary)",
-            brand: "var(--lms-fg-brand)",
-            "brand-primary": "var(--lms-fg-brand-primary)",
-            progress: "var(--lms-fg-progress)",
+            white: "var(--sk-fg-white)",
+            quaternary: "var(--sk-fg-quaternary)",
+            brand: "var(--sk-fg-brand)",
+            "brand-primary": "var(--sk-fg-brand-primary)",
+            progress: "var(--sk-fg-progress)",
           },
           text: {
-            primary: "var(--lms-text-primary)",
-            secondary: "var(--lms-text-secondary)",
-            tertiary: "var(--lms-text-tertiary)",
-            "primary-on-brand": "var(--lms-text-primary-on-brand)",
-            brand: "var(--lms-text-brand)",
-            "brand-primary": "var(--lms-text-brand-primary)",
-            "brand-secondary": "var(--lms-text-brand-secondary)",
-            "success-primary": "var(--lms-text-success-primary)",
-            "warning-primary": "var(--lms-text-warning-primary)",
-            "error-primary": "var(--lms-text-error-primary)",
+            primary: "var(--sk-text-primary)",
+            secondary: "var(--sk-text-secondary)",
+            tertiary: "var(--sk-text-tertiary)",
+            "primary-on-brand": "var(--sk-text-primary-on-brand)",
+            brand: "var(--sk-text-brand)",
+            "brand-primary": "var(--sk-text-brand-primary)",
+            "brand-secondary": "var(--sk-text-brand-secondary)",
+            "success-primary": "var(--sk-text-success-primary)",
+            "warning-primary": "var(--sk-text-warning-primary)",
+            "error-primary": "var(--sk-text-error-primary)",
           },
         },
       },
       fontFamily: {
-        body: "var(--lms-font-body)",
-        display: "var(--lms-font-display)",
+        body: "var(--sk-font-body)",
+        display: "var(--sk-font-display)",
       },
       transitionDuration: {
         "200": "200ms",

@@ -14,10 +14,10 @@ export interface AvatarProps {
 }
 
 const SIZE: Record<AvatarSize, { box: string; text: string; dot: string }> = {
-  xs: { box: "h-6 w-6", text: "lms-text-2xs-semibold", dot: "h-1.5 w-1.5" },
-  sm: { box: "h-8 w-8", text: "lms-text-xs-semibold", dot: "h-2 w-2" },
-  md: { box: "h-10 w-10", text: "lms-text-sm-semibold", dot: "h-2.5 w-2.5" },
-  lg: { box: "h-12 w-12", text: "lms-text-md-semibold", dot: "h-3 w-3" },
+  xs: { box: "h-6 w-6", text: "sk-text-2xs-semibold", dot: "h-1.5 w-1.5" },
+  sm: { box: "h-8 w-8", text: "sk-text-xs-semibold", dot: "h-2 w-2" },
+  md: { box: "h-10 w-10", text: "sk-text-sm-semibold", dot: "h-2.5 w-2.5" },
+  lg: { box: "h-12 w-12", text: "sk-text-md-semibold", dot: "h-3 w-3" },
 };
 
 function initials(name: string): string {
@@ -36,7 +36,7 @@ export function Avatar({ name, src, size = "md", status = "none", className }: A
     <span className={cn("relative inline-flex shrink-0", className)}>
       <span
         className={cn(
-          "inline-flex items-center justify-center overflow-hidden rounded-full bg-lms-bg-brand-section text-lms-text-brand-secondary",
+          "inline-flex items-center justify-center overflow-hidden rounded-full bg-sk-bg-brand-section text-sk-text-brand-secondary",
           s.box,
           s.text,
         )}
@@ -52,9 +52,9 @@ export function Avatar({ name, src, size = "md", status = "none", className }: A
         <span
           aria-label={status === "online" ? "Online" : "Offline"}
           className={cn(
-            "absolute bottom-0 right-0 rounded-full border-2 border-lms-bg-primary",
+            "absolute bottom-0 right-0 rounded-full border-2 border-sk-bg-primary",
             s.dot,
-            status === "online" ? "bg-lms-text-success-primary" : "bg-lms-fg-quaternary",
+            status === "online" ? "bg-sk-text-success-primary" : "bg-sk-fg-quaternary",
           )}
         />
       ) : null}

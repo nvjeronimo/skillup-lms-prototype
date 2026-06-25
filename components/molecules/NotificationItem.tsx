@@ -42,23 +42,23 @@ export function NotificationItem({
 
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-lms-bg-brand-section text-lms-text-brand-secondary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sk-bg-brand-section text-sk-text-brand-secondary">
         <Icon icon={IconCmp} size={18} />
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="lms-text-sm-semibold block text-lms-text-primary">{title}</span>
+        <span className="sk-text-sm-semibold block text-sk-text-primary">{title}</span>
         {body ? (
-          <span className="lms-text-sm-regular mt-0.5 block text-lms-text-secondary">{body}</span>
+          <span className="sk-text-sm-regular mt-0.5 block text-sk-text-secondary">{body}</span>
         ) : null}
-        <span className="lms-text-xs-regular mt-1 block text-lms-text-tertiary">{timestamp}</span>
+        <span className="sk-text-xs-regular mt-1 block text-sk-text-tertiary">{timestamp}</span>
       </span>
 
       {/* Unread dot — right side (matches Final Screens). */}
       <span className="flex w-2 shrink-0 justify-center pt-1.5">
         {unread ? (
           <span
-            className="h-2 w-2 rounded-full bg-lms-fg-brand-primary"
+            className="h-2 w-2 rounded-full bg-sk-fg-brand-primary"
             aria-label="Unread"
             role="img"
           />
@@ -68,7 +68,7 @@ export function NotificationItem({
   );
 
   const classes = cn(
-    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-lms-bg-secondary",
+    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-sk-bg-secondary",
     className,
   );
 
