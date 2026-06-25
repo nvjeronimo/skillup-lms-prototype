@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { notesSeed, course, getTopic } from "./data";
+import { getTranscript } from "./content";
 import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
 
@@ -127,7 +128,7 @@ export const useLmsStore = create<LmsState>((set, get) => ({
       }
       if (lineId) {
         const topic = getTopic(state.currentTopicId);
-        const line = topic?.transcript?.find((l) => l.id === lineId);
+        const line = topic ? getTranscript(topic).find((l) => l.id === lineId) : undefined;
         const now = new Date().toISOString();
         noteCounter += 1;
         const newNote: Note = {

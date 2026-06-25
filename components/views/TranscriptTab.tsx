@@ -7,6 +7,7 @@ import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { useLmsStore } from "@/lib/store";
 import { getTopic } from "@/lib/data";
+import { getTranscript } from "@/lib/content";
 import { tsToSeconds } from "@/lib/utils";
 import { track } from "@/lib/analytics";
 
@@ -19,6 +20,7 @@ function prefersReducedMotion(): boolean {
 
 export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
+  const transcript = topic ? getTranscript(topic) : [];
   const activeLineId = useLmsStore((s) => s.activeLineId);
   const notes = useLmsStore((s) => s.notes);
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
@@ -55,7 +57,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     scrollToActive();
   }
 
-  if (!topic?.transcript) {
+  if (!topic || !transcript.length) {
     return (
       <p className="sk-text-sm-regular px-1 py-8 text-center text-sk-text-tertiary">
         No transcript available for this topic.
@@ -89,7 +91,13 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
         </label>
         <button
           type="button"
-          onClick={() => openNoteEditor({ lineId: activeLineId ?? topic.transcript?.[0]?.id })}
+          onClick={() =>
+            openNoteEditor({
+              lineId: transcript.some((l) => l.id === activeLineId)
+                ? activeLineId ?? undefined
+                : transcript[0]?.id,
+            })
+          }
           className="sk-text-sm-semibold inline-flex items-center gap-1 text-sk-text-brand-secondary hover:underline"
         >
           <Icon icon={Plus} size={16} />
@@ -110,7 +118,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       ) : null}
 
       <div className="flex flex-col py-2">
-        {topic.transcript.map((line) => {
+        {transcript.map((line) => {
           const note = notes.find((n) => n.transcriptLineId === line.id && n.topicId === topicId);
           const hasNote = Boolean(note);
           return (

@@ -21,7 +21,7 @@ import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
-import { topicFamily, topicDescription, getDownloads } from "@/lib/content";
+import { topicFamily, topicDescription, getDownloads, getTranscript } from "@/lib/content";
 import {
   course,
   getTopic,
@@ -177,10 +177,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const editorNote = noteEditor.noteId
     ? allNotes.find((n) => n.id === noteEditor.noteId)
     : undefined;
-  const editorLine =
-    noteEditor.lineId && topic.transcript
-      ? topic.transcript.find((l) => l.id === noteEditor.lineId)
-      : undefined;
+  const editorLine = noteEditor.lineId
+    ? getTranscript(topic).find((l) => l.id === noteEditor.lineId)
+    : undefined;
 
   const durationSeconds = 200;
 

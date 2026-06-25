@@ -1,5 +1,5 @@
 import { topicDownloads as seedDownloads } from "./data";
-import type { DownloadFile, FlatTopic, TopicType } from "./types";
+import type { DownloadFile, FlatTopic, TopicType, TranscriptLine } from "./types";
 
 /**
  * Dummy content for every topic type so the prototype feels complete when you
@@ -88,6 +88,30 @@ export function topicDescription(topic: FlatTopic): string {
     default:
       return topic.title;
   }
+}
+
+/**
+ * Transcript for a video topic. Returns the real seeded transcript when present
+ * (m3-t1), otherwise a deterministic dummy so every video topic has captions to
+ * read + anchor notes to. Non-video topics return [] (no transcript tab body).
+ */
+export function getTranscript(topic: FlatTopic): TranscriptLine[] {
+  if (topic.transcript && topic.transcript.length) return topic.transcript;
+  if (topicFamily(topic.type) !== "video") return [];
+
+  const subject = topic.title.replace(/[.\s]+$/, "");
+  const mod = topic.moduleTitle;
+  const lines = [
+    `Welcome back. In this lesson we work through ${subject} and where it fits within ${mod}.`,
+    `Let's start with the why — getting ${subject} right is what keeps the rest of the workflow from drifting.`,
+    `Here's the core idea: keep it concrete, measurable, and tied to what the customer actually cares about.`,
+    `A common pitfall is jumping straight to a fix before the problem is properly defined — we'll avoid that.`,
+    `Notice how each step feeds the next: define the problem, measure the baseline, then act on what the data says.`,
+    `Let's walk through a quick example so the concept sticks before you try it yourself in the activity.`,
+    `That's the essence of ${subject}. In the next topic we build on it — jot down anything you want to revisit.`,
+  ];
+  const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  return lines.map((text, i) => ({ id: `${topic.id}-l${i + 1}`, ts: fmt(i * 18), text }));
 }
 
 export function getArticle(topic: FlatTopic): ArticleContent {
