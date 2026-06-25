@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
@@ -9,6 +11,13 @@ import { moduleTopics } from "@/lib/data";
 import type { Course, CompletionState, Topic } from "@/lib/types";
 
 export type SidebarVariant = "Expanded" | "Collapsed" | "Mobile";
+
+// Persisted across the per-topic remount of the player layout (module scope
+// survives component unmount). Keeps the desktop/tablet sidebar scroll in place.
+let savedScrollTop = 0;
+
+// useLayoutEffect on the client (no scroll flicker), useEffect on the server (no SSR warning).
+const useIsoLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 export interface SidebarProps {
   course: Course;
@@ -57,6 +66,36 @@ export function Sidebar({
   const collapsed = variant === "Collapsed";
   const isMobile = variant === "Mobile";
 
+  // The player lives in [topicId]/layout, so navigating between topics REMOUNTS
+  // this sidebar and resets its scroll. We persist the scroll position across the
+  // remount (module-level, survives unmount) and restore it before paint, so the
+  // topic the user just clicked stays exactly where it was. We only auto-scroll
+  // when the active row would otherwise be off-screen (e.g. a deep link).
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  useIsoLayoutEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    if (!isMobile) container.scrollTop = savedScrollTop; // restore persisted position
+
+    const active = container.querySelector<HTMLElement>('[aria-current="true"]');
+    if (active) {
+      const c = container.getBoundingClientRect();
+      const a = active.getBoundingClientRect();
+      const margin = 8;
+      if (a.top < c.top + margin) {
+        container.scrollTop -= c.top + margin - a.top;
+      } else if (a.bottom > c.bottom - margin) {
+        container.scrollTop += a.bottom - (c.bottom - margin);
+      }
+    }
+    if (!isMobile) savedScrollTop = container.scrollTop;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTopicId]);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
+  };
+
   return (
     <aside
       className={cn(
@@ -87,7 +126,11 @@ export function Sidebar({
         </div>
       ) : null}
 
-      <div className="sk-scroll flex-1 overflow-y-auto pb-4">
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="sk-scroll flex-1 overflow-y-auto pb-4"
+      >
         {course.modules.map((module) => {
           const moduleCollapsed = collapsedModules.has(module.id);
           if (collapsed) {
