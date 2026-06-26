@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
+import { GripVertical, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { useLmsStore, type DeviceMode } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -24,12 +24,44 @@ const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
 /**
  * Wraps the whole app. Mirrors the selected responsive mode by forcing the
  * breakpoint (via the store, read in useBreakpoint) AND constraining the width
- * for tablet/mobile, with a floating switcher to flip between modes.
+ * for tablet/mobile, with a draggable switcher to flip between modes + reposition.
  */
 export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const width = FRAME_WIDTH[mode];
+
+  // Draggable position. null = default anchor (bottom-center).
+  const [pos, setPos] = React.useState<{ x: number; y: number } | null>(null);
+  const barRef = React.useRef<HTMLDivElement>(null);
+  const drag = React.useRef<{ dx: number; dy: number } | null>(null);
+
+  function onPointerDown(e: React.PointerEvent) {
+    const rect = barRef.current!.getBoundingClientRect();
+    drag.current = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
+    setPos({ x: rect.left, y: rect.top });
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* ignore — capture is best-effort */
+    }
+  }
+  function onPointerMove(e: React.PointerEvent) {
+    if (!drag.current || !barRef.current) return;
+    const w = barRef.current.offsetWidth;
+    const h = barRef.current.offsetHeight;
+    const x = Math.max(8, Math.min(window.innerWidth - w - 8, e.clientX - drag.current.dx));
+    const y = Math.max(8, Math.min(window.innerHeight - h - 8, e.clientY - drag.current.dy));
+    setPos({ x, y });
+  }
+  function onPointerUp(e: React.PointerEvent) {
+    drag.current = null;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+  }
 
   return (
     <>
@@ -46,31 +78,47 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
         children
       )}
 
-      {/* Floating responsive-mode switcher (demo tool). */}
-      <div className="fixed bottom-4 left-1/2 z-[80] -translate-x-1/2">
-        <div className="flex items-center gap-0.5 rounded-full border border-sk-border-secondary bg-sk-bg-primary p-1 shadow-lg">
-          {MODES.map((m) => {
-            const active = mode === m.mode;
-            return (
-              <button
-                key={m.mode}
-                type="button"
-                onClick={() => setMode(m.mode)}
-                aria-pressed={active}
-                aria-label={m.label}
-                title={m.label}
-                className={cn(
-                  "inline-flex h-8 w-9 items-center justify-center rounded-full transition-colors",
-                  active
-                    ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
-                    : "text-sk-text-tertiary hover:bg-sk-bg-secondary hover:text-sk-text-primary",
-                )}
-              >
-                <Icon icon={m.icon} size={16} />
-              </button>
-            );
-          })}
-        </div>
+      {/* Draggable responsive-mode switcher (demo tool). */}
+      <div
+        ref={barRef}
+        className={cn(
+          "fixed z-[80] flex items-center gap-0.5 rounded-full border border-sk-border-secondary bg-sk-bg-primary p-1 shadow-lg",
+          !pos && "bottom-4 left-1/2 -translate-x-1/2",
+        )}
+        style={pos ? { left: pos.x, top: pos.y } : undefined}
+      >
+        <button
+          type="button"
+          aria-label="Drag to move"
+          title="Drag to move"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          className="inline-flex h-8 w-5 cursor-grab touch-none items-center justify-center text-sk-text-tertiary hover:text-sk-text-primary active:cursor-grabbing"
+        >
+          <Icon icon={GripVertical} size={16} />
+        </button>
+        {MODES.map((m) => {
+          const active = mode === m.mode;
+          return (
+            <button
+              key={m.mode}
+              type="button"
+              onClick={() => setMode(m.mode)}
+              aria-pressed={active}
+              aria-label={m.label}
+              title={m.label}
+              className={cn(
+                "inline-flex h-8 w-9 items-center justify-center rounded-full transition-colors",
+                active
+                  ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
+                  : "text-sk-text-tertiary hover:bg-sk-bg-secondary hover:text-sk-text-primary",
+              )}
+            >
+              <Icon icon={m.icon} size={16} />
+            </button>
+          );
+        })}
       </div>
     </>
   );

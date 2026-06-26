@@ -45,7 +45,8 @@ export function TopicRow({
         aria-current={active ? "true" : undefined}
         aria-label={title}
         className={cn(
-          "flex h-10 w-full items-center justify-center border-l-4",
+          // DS collapsed Topic Row: items-start + 8px padding, 4px active left border.
+          "flex w-full items-start justify-center border-l-4 p-2",
           active ? "border-sk-border-brand bg-sk-bg-brand-section" : "border-transparent",
           className,
         )}

@@ -4,6 +4,7 @@ import * as React from "react";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
 import { LessonHeader } from "@/components/atoms/LessonHeader";
+import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
@@ -124,6 +125,84 @@ export function Sidebar({
     if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
   };
 
+  // ── Collapsed rail (DS: LMS / Sidebar v2 · State=Collapsed) ──────────────────
+  // 72px rail: toggle + progress ring, then per-module groups separated by 40px
+  // dividers — module number (green when complete), lesson labels (L1/L2, brand on
+  // the active lesson) and status dots, with the active topic highlighted.
+  if (collapsed) {
+    const Divider = () => <div className="my-1 h-px w-10 bg-sk-border-primary" />;
+    const Dot = (topic: Topic) => (
+      <TopicRow
+        key={topic.id}
+        collapsed
+        type={topic.type}
+        title={topic.title}
+        duration={topic.duration}
+        status={topicStatus(topic, completed)}
+        active={topic.id === currentTopicId}
+        onClick={() => onSelectTopic?.(topic.id)}
+      />
+    );
+    return (
+      <aside
+        className={cn(
+          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary py-4",
+          className,
+        )}
+        aria-label="Course navigation"
+      >
+        <div className="flex flex-col items-center gap-2 pb-3">
+          <SidebarToggle expanded={false} onToggle={onToggleSidebar} />
+          <OverallProgress
+            device="Mobile"
+            pct={overallPct}
+            moduleCurrent={modulesDone + 1}
+            moduleTotal={course.modulesTotal}
+          />
+        </div>
+
+        <div ref={scrollRef} onScroll={handleScroll} className="sk-scroll w-full flex-1 overflow-y-auto">
+          {course.modules.map((module, i) => {
+            const moduleDone = moduleStats(module).isCompleted;
+            return (
+              <React.Fragment key={module.id}>
+                <Divider />
+                <div className="flex w-full flex-col items-center gap-1.5 py-2">
+                  <p
+                    className={cn(
+                      "sk-text-xs-semibold",
+                      moduleDone ? "text-sk-text-success-primary" : "text-sk-text-tertiary",
+                    )}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+                  {module.lessons
+                    ? module.lessons.map((lesson, j) => {
+                        const lessonActive = lesson.topics.some((t) => t.id === currentTopicId);
+                        return (
+                          <React.Fragment key={lesson.id}>
+                            <p
+                              className={cn(
+                                "sk-text-xs-semibold",
+                                lessonActive ? "text-sk-text-brand-primary" : "text-sk-text-tertiary",
+                              )}
+                            >
+                              {`L${j + 1}`}
+                            </p>
+                            {lesson.topics.map(Dot)}
+                          </React.Fragment>
+                        );
+                      })
+                    : moduleTopics(module).map(Dot)}
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <aside
       className={cn(
@@ -161,25 +240,6 @@ export function Sidebar({
       >
         {course.modules.map((module) => {
           const moduleCollapsed = collapsedModules.has(module.id);
-          if (collapsed) {
-            // Collapsed rail: just status dots for each topic.
-            return (
-              <div key={module.id} className="border-b border-sk-border-secondary py-2">
-                {moduleTopics(module).map((topic) => (
-                  <TopicRow
-                    key={topic.id}
-                    collapsed
-                    type={topic.type}
-                    title={topic.title}
-                    duration={topic.duration}
-                    status={topicStatus(topic, completed)}
-                    active={topic.id === currentTopicId}
-                    onClick={() => onSelectTopic?.(topic.id)}
-                  />
-                ))}
-              </div>
-            );
-          }
           return (
             <div key={module.id} className="border-b border-sk-border-secondary">
               <ModuleHeader
