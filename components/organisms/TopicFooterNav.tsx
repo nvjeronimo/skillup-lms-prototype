@@ -1,5 +1,4 @@
 import * as React from "react";
-import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { CourseProgressionButton, type Milestone } from "./CourseProgressionButton";
 import { cn } from "@/lib/utils";
@@ -45,7 +44,6 @@ export function TopicFooterNav({
       <Button
         variant="secondary"
         size={compact ? "sm" : "md"}
-        leftIcon={ChevronLeft}
         disabled={previousDisabled}
         onClick={onPrevious}
       >
