@@ -168,14 +168,17 @@ export function Sidebar({
               <React.Fragment key={module.id}>
                 <Divider />
                 <div className="flex w-full flex-col items-center gap-1.5 py-2">
-                  <p
-                    className={cn(
-                      "sk-text-xs-semibold",
-                      moduleDone ? "text-sk-text-success-primary" : "text-sk-text-tertiary",
-                    )}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
+                  {/* 3-level (implicit module) has no module number. */}
+                  {module.implicit ? null : (
+                    <p
+                      className={cn(
+                        "sk-text-xs-semibold",
+                        moduleDone ? "text-sk-text-success-primary" : "text-sk-text-tertiary",
+                      )}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </p>
+                  )}
                   {module.lessons
                     ? module.lessons.map((lesson, j) => {
                         const lessonActive = lesson.topics.some((t) => t.id === currentTopicId);
@@ -240,6 +243,30 @@ export function Sidebar({
       >
         {course.modules.map((module) => {
           const moduleCollapsed = collapsedModules.has(module.id);
+          const renderTopic = (topic: Topic) => (
+            <TopicRow
+              key={topic.id}
+              type={topic.type}
+              title={topic.title}
+              duration={topic.duration}
+              status={topicStatus(topic, completed)}
+              active={topic.id === currentTopicId}
+              showBookmark={bookmarks.has(topic.id)}
+              bookmarked={bookmarks.has(topic.id)}
+              onClick={() => onSelectTopic?.(topic.id)}
+              onToggleBookmark={() => onToggleBookmark?.(topic.id)}
+            />
+          );
+
+          // 3-level (implicit module): topic rows directly under the Course Header.
+          if (module.implicit) {
+            return (
+              <div key={module.id} className="border-b border-sk-border-secondary py-2">
+                {moduleTopics(module).map(renderTopic)}
+              </div>
+            );
+          }
+
           return (
             <div key={module.id} className="border-b border-sk-border-secondary">
               <ModuleHeader
@@ -255,36 +282,10 @@ export function Sidebar({
                     ? module.lessons.map((lesson) => (
                         <div key={lesson.id}>
                           <LessonHeader label={lesson.label} />
-                          {lesson.topics.map((topic) => (
-                            <TopicRow
-                              key={topic.id}
-                              type={topic.type}
-                              title={topic.title}
-                              duration={topic.duration}
-                              status={topicStatus(topic, completed)}
-                              active={topic.id === currentTopicId}
-                              showBookmark={bookmarks.has(topic.id)}
-                              bookmarked={bookmarks.has(topic.id)}
-                              onClick={() => onSelectTopic?.(topic.id)}
-                              onToggleBookmark={() => onToggleBookmark?.(topic.id)}
-                            />
-                          ))}
+                          {lesson.topics.map(renderTopic)}
                         </div>
                       ))
-                    : moduleTopics(module).map((topic) => (
-                        <TopicRow
-                          key={topic.id}
-                          type={topic.type}
-                          title={topic.title}
-                          duration={topic.duration}
-                          status={topicStatus(topic, completed)}
-                          active={topic.id === currentTopicId}
-                          showBookmark={bookmarks.has(topic.id)}
-                          bookmarked={bookmarks.has(topic.id)}
-                          onClick={() => onSelectTopic?.(topic.id)}
-                          onToggleBookmark={() => onToggleBookmark?.(topic.id)}
-                        />
-                      ))}
+                    : moduleTopics(module).map(renderTopic)}
                 </div>
               ) : null}
             </div>

@@ -56,6 +56,11 @@ export interface Module {
   /** Modules either hold topics directly, or group them under lessons (4-level). */
   topics?: Topic[];
   lessons?: Lesson[];
+  /**
+   * 3-level shape: an implicit module renders its topics directly under the
+   * Course Header with NO Module Header / number (Course → Direct Topic Rows).
+   */
+  implicit?: boolean;
 }
 
 export interface Course {
