@@ -64,9 +64,9 @@ export function VideoPlayer({
     <div
       ref={wrapRef}
       className={cn(
-        // 16:9 on narrow widths, but capped so it never dominates the screen
-        // height on desktop (matches the Final Screen's short player band).
-        "relative aspect-video max-h-[42vh] w-full overflow-hidden rounded-xl bg-sk-bg-brand-solid",
+        // 16:9 on narrow widths, but capped (shorter) so the sticky player band
+        // stays compact and never dominates the viewport height.
+        "relative aspect-video max-h-[34vh] w-full overflow-hidden rounded-xl bg-sk-bg-brand-solid",
         className,
       )}
     >

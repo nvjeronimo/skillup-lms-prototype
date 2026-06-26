@@ -222,11 +222,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           )}
         >
           <div className="sk-scroll flex-1 overflow-y-auto">
-            <div className="w-full p-4">
-              {isLocked ? (
-                children
-              ) : isVideo ? (
-                <>
+            {isLocked ? (
+              <div className="w-full p-4">{children}</div>
+            ) : isVideo ? (
+              <>
+                {/* Sticky player band — the video stays visible at the top while
+                    the title, tabs and content below scroll under it. */}
+                <div className="sticky top-0 z-20 bg-sk-bg-primary px-4 pb-3 pt-4">
                   <VideoPlayer
                     durationSeconds={durationSeconds}
                     currentTime={currentVideoTimestamp}
@@ -235,9 +237,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       track("video_seek", { to: s });
                     }}
                   />
+                </div>
+                <div className="px-4 pb-4">
                   {/* Topic title below the player (ICP Phase 1 canonical layout).
                       Primary action sits at the top-right of the content (Option A). */}
-                  <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <h1 className="sk-text-display-xs-semibold min-w-0 text-sk-text-primary">
                       {topic.title}
                     </h1>
@@ -252,28 +256,28 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     {children}
                   </div>
                   {bottomAction}
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0 flex-1">
-                      <TopicHeader
-                        type={topic.type}
-                        title={topic.title}
-                        duration={topic.duration}
-                        description={topicDescription(topic)}
-                      />
-                    </div>
-                    {showAction ? <div className="shrink-0">{renderAction()}</div> : null}
+                </div>
+              </>
+            ) : (
+              <div className="w-full p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <TopicHeader
+                      type={topic.type}
+                      title={topic.title}
+                      duration={topic.duration}
+                      description={topicDescription(topic)}
+                    />
                   </div>
-                  <div className="mt-5">
-                    <ContentTabs tabs={tabs} active={activeTab} />
-                    {children}
-                  </div>
-                  {bottomAction}
-                </>
-              )}
-            </div>
+                  {showAction ? <div className="shrink-0">{renderAction()}</div> : null}
+                </div>
+                <div className="mt-5">
+                  <ContentTabs tabs={tabs} active={activeTab} />
+                  {children}
+                </div>
+                {bottomAction}
+              </div>
+            )}
           </div>
 
           <TopicFooterNav
