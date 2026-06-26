@@ -70,7 +70,11 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
         className,
       )}
     >
-      <div role="tablist" aria-label="Content" className="flex items-center gap-1 overflow-x-auto">
+      <div
+        role="tablist"
+        aria-label="Content"
+        className="flex items-center gap-1 overflow-x-auto overflow-y-hidden"
+      >
         {tabs.map((tab) => {
           const isActive = tab.slug === active;
           return (
