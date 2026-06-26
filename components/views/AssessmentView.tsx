@@ -49,7 +49,8 @@ function Quiz({ topicId }: { topicId: string }) {
     return <QuizSummary topic={topic} result={result} onRetake={startAttempt} />;
   }
 
-  if (phase === "intro") {
+  // Intro is the fallback — covers "intro" and a reset that cleared the result.
+  if (phase !== "quiz") {
     return (
       <div className="py-4">
         <QuizCard

@@ -62,6 +62,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
   const completedTopics = useLmsStore((s) => s.completedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
+  const resetDemo = useLmsStore((s) => s.resetDemo);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
   const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
@@ -192,6 +193,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         }}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
+        onResetDemo={resetDemo}
         onClose={() => showToast("Exit player → Course Hub (out of scope).")}
       />
 
@@ -204,6 +206,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             variant={sidebarVariant}
             collapsedModules={collapsedModules}
             bookmarks={bookmarks}
+
+            completed={completedTopics}
             onToggleSidebar={toggleSidebar}
             onToggleModule={toggleModule}
             onSelectTopic={navigateTopic}
@@ -311,6 +315,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 variant="Mobile"
                 collapsedModules={collapsedModules}
                 bookmarks={bookmarks}
+
+                completed={completedTopics}
                 onToggleModule={toggleModule}
                 onSelectTopic={navigateTopic}
                 onToggleBookmark={toggleBookmark}

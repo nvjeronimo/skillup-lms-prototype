@@ -26,6 +26,9 @@ export interface SidebarProps {
   /** Module IDs that are collapsed. */
   collapsedModules?: Set<string>;
   bookmarks?: Set<string>;
+  /** Runtime completion (store). When provided, drives the row checks + progress
+   *  live; when omitted (e.g. Storybook), the static `topic.completed` is used. */
+  completed?: Set<string>;
   onToggleSidebar?: () => void;
   onToggleModule?: (moduleId: string) => void;
   onSelectTopic?: (topicId: string) => void;
@@ -33,9 +36,10 @@ export interface SidebarProps {
   className?: string;
 }
 
-function topicStatus(topic: Topic): CompletionState {
+function topicStatus(topic: Topic, completed?: Set<string>): CompletionState {
   if (topic.locked) return "Locked";
-  if (topic.completed) return "Done";
+  const done = completed ? completed.has(topic.id) : topic.completed;
+  if (done) return "Done";
   // Active/current topics show an empty ring; the brand highlight marks "current".
   return "Pending";
 }
@@ -57,6 +61,7 @@ export function Sidebar({
   variant = "Expanded",
   collapsedModules = new Set(),
   bookmarks = new Set(),
+  completed,
   onToggleSidebar,
   onToggleModule,
   onSelectTopic,
@@ -65,6 +70,29 @@ export function Sidebar({
 }: SidebarProps) {
   const collapsed = variant === "Collapsed";
   const isMobile = variant === "Mobile";
+
+  // When the store drives completion, recompute per-module + overall progress live
+  // so the checks, "x / y" counts and progress ring all move as topics complete.
+  const moduleStats = (module: Course["modules"][number]) => {
+    if (!completed) {
+      return {
+        topicsCompleted: module.topicsCompleted,
+        topicsTotal: module.topicsTotal,
+        isCompleted: module.isCompleted,
+      };
+    }
+    const tops = moduleTopics(module);
+    const done = tops.filter((t) => completed.has(t.id)).length;
+    return { topicsCompleted: done, topicsTotal: tops.length, isCompleted: tops.length > 0 && done === tops.length };
+  };
+
+  const allTopics = course.modules.flatMap(moduleTopics);
+  const overallPct = completed
+    ? Math.round((allTopics.filter((t) => completed.has(t.id)).length / Math.max(allTopics.length, 1)) * 100)
+    : course.overallProgressPct;
+  const modulesDone = completed
+    ? course.modules.filter((m) => moduleStats(m).isCompleted).length
+    : course.modulesCompleted;
 
   // The player lives in [topicId]/layout, so navigating between topics REMOUNTS
   // this sidebar and resets its scroll. We persist the scroll position across the
@@ -119,8 +147,8 @@ export function Sidebar({
       {!collapsed ? (
         <div className="border-b border-sk-border-secondary px-4 py-3">
           <OverallProgress
-            pct={course.overallProgressPct}
-            moduleCurrent={course.modulesCompleted + 1}
+            pct={overallPct}
+            moduleCurrent={modulesDone + 1}
             moduleTotal={course.modulesTotal}
           />
         </div>
@@ -144,7 +172,7 @@ export function Sidebar({
                     type={topic.type}
                     title={topic.title}
                     duration={topic.duration}
-                    status={topicStatus(topic)}
+                    status={topicStatus(topic, completed)}
                     active={topic.id === currentTopicId}
                     onClick={() => onSelectTopic?.(topic.id)}
                   />
@@ -157,9 +185,7 @@ export function Sidebar({
               <ModuleHeader
                 label={module.label}
                 title={module.title}
-                topicsCompleted={module.topicsCompleted}
-                topicsTotal={module.topicsTotal}
-                isCompleted={module.isCompleted}
+                {...moduleStats(module)}
                 collapsed={moduleCollapsed}
                 onToggle={() => onToggleModule?.(module.id)}
               />
@@ -175,7 +201,7 @@ export function Sidebar({
                               type={topic.type}
                               title={topic.title}
                               duration={topic.duration}
-                              status={topicStatus(topic)}
+                              status={topicStatus(topic, completed)}
                               active={topic.id === currentTopicId}
                               showBookmark={bookmarks.has(topic.id)}
                               bookmarked={bookmarks.has(topic.id)}
@@ -191,7 +217,7 @@ export function Sidebar({
                           type={topic.type}
                           title={topic.title}
                           duration={topic.duration}
-                          status={topicStatus(topic)}
+                          status={topicStatus(topic, completed)}
                           active={topic.id === currentTopicId}
                           showBookmark={bookmarks.has(topic.id)}
                           bookmarked={bookmarks.has(topic.id)}
@@ -211,14 +237,14 @@ export function Sidebar({
         <div className="flex items-center gap-3 border-t border-sk-border-secondary px-4 py-3">
           <OverallProgress
             device="Mobile"
-            pct={course.overallProgressPct}
-            moduleCurrent={course.modulesCompleted + 1}
+            pct={overallPct}
+            moduleCurrent={modulesDone + 1}
             moduleTotal={course.modulesTotal}
           />
           <div>
-            <p className="sk-text-sm-semibold text-sk-text-primary">{course.overallProgressPct}% complete</p>
+            <p className="sk-text-sm-semibold text-sk-text-primary">{overallPct}% complete</p>
             <p className="sk-text-xs-regular text-sk-text-tertiary">
-              Module {course.modulesCompleted + 1} of {course.modulesTotal}
+              Module {modulesDone + 1} of {course.modulesTotal}
             </p>
           </div>
         </div>

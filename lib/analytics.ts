@@ -41,7 +41,8 @@ export type AnalyticsEvent =
   | "mobile_drawer_open"
   | "mobile_drawer_close"
   | "ai_panel_open"
-  | "ai_query_submit";
+  | "ai_query_submit"
+  | "demo_reset";
 
 type Props = Record<string, unknown>;
 

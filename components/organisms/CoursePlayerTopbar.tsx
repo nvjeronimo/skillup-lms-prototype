@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bell, Bookmark, ChevronRight, Menu, Sparkles, Sun, X } from "lucide-react";
+import { Bell, Bookmark, ChevronRight, Menu, RotateCcw, Sparkles, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { cn } from "@/lib/utils";
@@ -25,6 +25,8 @@ export interface CoursePlayerTopbarProps {
   onBookmark?: () => void;
   onNotifications?: () => void;
   onTheme?: () => void;
+  /** Demo-only: restore the original seeded state. Renders a "Reset demo" control. */
+  onResetDemo?: () => void;
   onClose?: () => void;
   className?: string;
 }
@@ -70,6 +72,7 @@ export function CoursePlayerTopbar({
   onBookmark,
   onNotifications,
   onTheme,
+  onResetDemo,
   onClose,
   className,
 }: CoursePlayerTopbarProps) {
@@ -120,6 +123,18 @@ export function CoursePlayerTopbar({
       ) : null}
 
       <div className="flex flex-1 items-center justify-end gap-1">
+        {onResetDemo ? (
+          <button
+            type="button"
+            onClick={onResetDemo}
+            aria-label="Reset demo to its initial state"
+            title="Reset demo to its initial state"
+            className="mr-1 inline-flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-sk-text-tertiary transition-colors hover:bg-sk-bg-secondary hover:text-sk-text-primary"
+          >
+            <Icon icon={RotateCcw} size={isMobile ? 20 : 18} />
+            {!isMobile ? <span className="sk-text-sm-medium">Reset demo</span> : null}
+          </button>
+        ) : null}
         {!isMobile && showNotifications ? (
           <UtilityButton
             label={

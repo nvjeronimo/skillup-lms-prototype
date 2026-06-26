@@ -62,6 +62,8 @@ interface LmsState {
   markAllNotificationsRead: (ids: string[]) => void;
   showToast: (message: string, opts?: { actionLabel?: string; onAction?: () => void }) => void;
   clearToast: () => void;
+  /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
+  resetDemo: () => void;
 }
 
 /** Seed bookmarks from the course data (topics flagged bookmarked) + first note topic. */
@@ -235,6 +237,24 @@ export const useLmsStore = create<LmsState>((set, get) => ({
 
   showToast: (message, opts) => set({ toast: { message, ...opts } }),
   clearToast: () => set({ toast: null }),
+
+  resetDemo: () => {
+    noteCounter = notesSeed.length;
+    track("demo_reset");
+    set({
+      completedTopics: seedCompleted(),
+      submittedTopics: new Set<string>(),
+      quizResults: {},
+      bookmarks: seedBookmarks(),
+      notes: notesSeed,
+      notificationsRead: new Set<string>(),
+      collapsedModules: new Set<string>(),
+      noteEditor: { open: false },
+      currentVideoTimestamp: 0,
+      activeLineId: "ln-3",
+      toast: { message: "Demo reset to its initial state" },
+    });
+  },
 }));
 
 /** Derived helper: does this topic currently have any notes? */
