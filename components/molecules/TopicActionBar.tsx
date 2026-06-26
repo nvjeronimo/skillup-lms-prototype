@@ -37,13 +37,13 @@ export function TopicActionBar({ state, onComplete, onSubmit, className }: Topic
   }
   if (state === "action") {
     return (
-      <Button variant="primary" onClick={onSubmit} className={className}>
+      <Button variant="secondary" onClick={onSubmit} className={className}>
         Submit answers
       </Button>
     );
   }
   return (
-    <Button variant="primary" onClick={onComplete} className={className}>
+    <Button variant="secondary" onClick={onComplete} className={className}>
       Mark as Complete
     </Button>
   );

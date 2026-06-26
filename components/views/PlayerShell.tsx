@@ -125,13 +125,22 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       : isActionType
         ? "action"
         : "incomplete";
-  const actionBar = isLocked ? null : (
+  const renderAction = () => (
     <TopicActionBar
       state={actionState}
       onComplete={() => markComplete(topicId)}
       onSubmit={() => (family === "graded" ? submitForReview(topicId) : markComplete(topicId))}
     />
   );
+  // The action is available at the top AND bottom of the content. Quiz/assessment
+  // topics show it only inside the content (bottom), never in the header.
+  const showTopAction = !isLocked && !isActionType;
+  const showBottomAction = !isLocked;
+  const bottomAction = showBottomAction ? (
+    <div className="mt-6 flex justify-end border-t border-sk-border-secondary pt-5">
+      {renderAction()}
+    </div>
+  ) : null;
 
   // Footer progression: Next normally, but "Go to next Module" at a module boundary
   // and "Go to next Course" at the final topic.
@@ -240,7 +249,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     <h1 className="sk-text-display-xs-semibold min-w-0 text-sk-text-primary">
                       {topic.title}
                     </h1>
-                    {actionBar ? <div className="shrink-0">{actionBar}</div> : null}
+                    {showTopAction ? <div className="shrink-0">{renderAction()}</div> : null}
                   </div>
                   <div className="mt-4">
                     <ContentTabs
@@ -250,6 +259,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     />
                     {children}
                   </div>
+                  {bottomAction}
                 </>
               ) : (
                 <>
@@ -262,12 +272,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                         description={topicDescription(topic)}
                       />
                     </div>
-                    {actionBar ? <div className="shrink-0">{actionBar}</div> : null}
+                    {showTopAction ? <div className="shrink-0">{renderAction()}</div> : null}
                   </div>
                   <div className="mt-5">
                     <ContentTabs tabs={tabs} active={activeTab} />
                     {children}
                   </div>
+                  {bottomAction}
                 </>
               )}
             </div>
