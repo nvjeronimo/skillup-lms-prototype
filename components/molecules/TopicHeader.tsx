@@ -10,6 +10,8 @@ export interface TopicHeaderProps {
   description?: string;
   showDescription?: boolean;
   showDuration?: boolean;
+  /** Right-aligned content on the meta row (e.g. the completion action/badge). */
+  rightSlot?: React.ReactNode;
   className?: string;
 }
 
@@ -25,6 +27,7 @@ export function TopicHeader({
   description,
   showDescription = true,
   showDuration = true,
+  rightSlot,
   className,
 }: TopicHeaderProps) {
   // If source data already carries "approx.", trust it; otherwise derive.
@@ -38,6 +41,7 @@ export function TopicHeader({
         {showDuration ? (
           <span className="sk-text-xs-regular text-sk-text-tertiary">· {durationLabel}</span>
         ) : null}
+        {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
       </div>
       <h1 className="sk-text-display-xs-semibold text-sk-text-primary">{title}</h1>
       {showDescription && description ? (

@@ -17,6 +17,10 @@ export interface VideoPlayerProps {
   state?: VideoState;
   onRetry?: () => void;
   onReplay?: () => void;
+  /** Explicit pixel height (sticky docking). Animates between full + docked heights. */
+  heightPx?: number;
+  /** Docked (scrolled) treatment: drop shadow + bottom-only corners. */
+  docked?: boolean;
   className?: string;
 }
 
@@ -38,6 +42,8 @@ export function VideoPlayer({
   state = "ready",
   onRetry,
   onReplay,
+  heightPx,
+  docked = false,
   className,
 }: VideoPlayerProps) {
   const [playing, setPlaying] = React.useState(false);
@@ -64,11 +70,20 @@ export function VideoPlayer({
     <div
       ref={wrapRef}
       className={cn(
-        // 16:9 on narrow widths, but capped (shorter) so the sticky player band
-        // stays compact and never dominates the viewport height.
-        "relative aspect-video max-h-[34vh] w-full overflow-hidden rounded-xl bg-sk-bg-brand-solid",
+        "relative w-full overflow-hidden bg-sk-bg-brand-solid transition-[height,border-radius,box-shadow] duration-200 ease-out",
+        // Explicit pixel height drives the sticky full→docked shrink; otherwise
+        // fall back to a capped 16:9 band (Storybook / non-sticky usage).
+        heightPx ? "" : "aspect-video max-h-[34vh]",
+        // Docked treatment: square top, rounded bottom (it's flush to the top).
+        docked ? "rounded-b-xl rounded-t-none" : "rounded-xl",
         className,
       )}
+      style={{
+        height: heightPx,
+        boxShadow: docked
+          ? "0 4px 16px color-mix(in srgb, var(--sk-text-primary) 18%, transparent)"
+          : undefined,
+      }}
     >
       {/* Placeholder visual — branded gradient so no real asset is required. */}
       <div

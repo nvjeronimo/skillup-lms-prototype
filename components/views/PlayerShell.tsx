@@ -79,6 +79,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
   const [completeOpen, setCompleteOpen] = React.useState(false);
+  // Sticky video: docks (shrinks) once the content scrolls past the top.
+  const [videoDocked, setVideoDocked] = React.useState(false);
 
   // Keep currentTopicId in sync with the route + emit topic_enter.
   React.useEffect(() => {
@@ -111,6 +113,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const family = topicFamily(topic.type);
   const isVideo = family === "video";
   const isLocked = Boolean(topic.locked);
+
+  // Sticky video heights per viewport (DS Phase-1 §0): full hero → docked band.
+  const VIDEO_FULL = { mobile: 211, tablet: 315, desktop: 405 } as const;
+  const VIDEO_DOCK = { mobile: 160, tablet: 180, desktop: 240 } as const;
+  const videoHeight = videoDocked ? VIDEO_DOCK[bp] : VIDEO_FULL[bp];
 
   // Option A — Nav in footer · action in content.
   // Quiz / Practice / Activity carry their OWN action inside the content frame
@@ -221,17 +228,30 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             showInlineSidebar && "rounded-xl border border-sk-border-secondary",
           )}
         >
-          <div className="sk-scroll flex-1 overflow-y-auto">
+          <div
+            className="sk-scroll flex-1 overflow-y-auto"
+            onScroll={(e) => {
+              const next = e.currentTarget.scrollTop > 8;
+              setVideoDocked((prev) => (prev === next ? prev : next));
+            }}
+          >
             {isLocked ? (
               <div className="w-full p-4">{children}</div>
             ) : isVideo ? (
               <>
-                {/* Sticky player band — the video stays visible at the top while
-                    the title, tabs and content below scroll under it. */}
-                <div className="sticky top-0 z-20 bg-sk-bg-primary px-4 pb-3 pt-4">
+                {/* Sticky player band — the video stays visible at the top and
+                    docks (shrinks) once the content scrolls past the top. */}
+                <div
+                  className={cn(
+                    "sticky top-0 z-20 bg-sk-bg-primary transition-[padding] duration-200 ease-out",
+                    videoDocked ? "px-0 pb-2 pt-0" : "px-4 pb-3 pt-4",
+                  )}
+                >
                   <VideoPlayer
                     durationSeconds={durationSeconds}
                     currentTime={currentVideoTimestamp}
+                    heightPx={videoHeight}
+                    docked={videoDocked}
                     onSeek={(s) => {
                       seekVideoTo(s);
                       track("video_seek", { to: s });
@@ -260,17 +280,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
               </>
             ) : (
               <div className="w-full p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="min-w-0 flex-1">
-                    <TopicHeader
-                      type={topic.type}
-                      title={topic.title}
-                      duration={topic.duration}
-                      description={topicDescription(topic)}
-                    />
-                  </div>
-                  {showAction ? <div className="shrink-0">{renderAction()}</div> : null}
-                </div>
+                {/* Completion action lives on the meta row (right-aligned), so the
+                    title keeps the full content width. */}
+                <TopicHeader
+                  type={topic.type}
+                  title={topic.title}
+                  duration={topic.duration}
+                  description={topicDescription(topic)}
+                  rightSlot={showAction ? renderAction() : undefined}
+                />
                 <div className="mt-5">
                   <ContentTabs tabs={tabs} active={activeTab} />
                   {children}
