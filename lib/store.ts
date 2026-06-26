@@ -8,6 +8,8 @@ import type { Note, NotePayload } from "./types";
 
 export type TabSlug = "transcript" | "notes" | "downloads";
 export type OverlayPanel = null | "notifications" | "saved";
+/** Preview device mode — "auto" follows the window; the rest force a breakpoint + frame. */
+export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
 
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
@@ -39,6 +41,8 @@ interface LmsState {
   collapsedModules: Set<string>;
   /** Ephemeral toast (bookmark feedback, out-of-scope actions). */
   toast: ToastModel | null;
+  /** Preview device mode (responsive-mode switcher). */
+  deviceMode: DeviceMode;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -62,6 +66,7 @@ interface LmsState {
   markAllNotificationsRead: (ids: string[]) => void;
   showToast: (message: string, opts?: { actionLabel?: string; onAction?: () => void }) => void;
   clearToast: () => void;
+  setDeviceMode: (mode: DeviceMode) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -105,6 +110,7 @@ export const useLmsStore = create<LmsState>((set, get) => ({
   openPanel: null,
   collapsedModules: new Set<string>(),
   toast: null,
+  deviceMode: "auto",
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -237,6 +243,10 @@ export const useLmsStore = create<LmsState>((set, get) => ({
 
   showToast: (message, opts) => set({ toast: { message, ...opts } }),
   clearToast: () => set({ toast: null }),
+  setDeviceMode: (mode) => {
+    track("device_mode_change", { mode });
+    set({ deviceMode: mode });
+  },
 
   resetDemo: () => {
     noteCounter = notesSeed.length;

@@ -6,14 +6,30 @@ import { Icon } from "@/lib/icons";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { getActivity } from "@/lib/content";
 import { getTopic } from "@/lib/data";
+import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export function ActivityView({ topicId }: { topicId: string }) {
+  const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
+  const markComplete = useLmsStore((s) => s.markComplete);
+
   const topic = getTopic(topicId);
-  const [done, setDone] = React.useState<Set<number>>(new Set());
-  if (!topic) return null;
-  const activity = getActivity(topic);
-  const allDone = done.size === activity.steps.length;
+  const activity = topic ? getActivity(topic) : null;
+  const stepCount = activity?.steps.length ?? 0;
+
+  // A completed topic opens with every step already ticked (shows the result).
+  const [done, setDone] = React.useState<Set<number>>(() =>
+    isCompleted ? new Set(Array.from({ length: stepCount }, (_, i) => i)) : new Set(),
+  );
+
+  const allDone = stepCount > 0 && done.size === stepCount;
+
+  // Ticking the last step completes the topic (drives the sidebar check live).
+  React.useEffect(() => {
+    if (allDone && !isCompleted) markComplete(topicId);
+  }, [allDone, isCompleted, markComplete, topicId]);
+
+  if (!topic || !activity) return null;
 
   function toggle(i: number) {
     setDone((prev) => {

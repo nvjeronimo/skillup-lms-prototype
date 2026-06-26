@@ -25,8 +25,14 @@ function Quiz({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId)!;
   const questions = React.useMemo(() => getQuiz(topic), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const result = useLmsStore((s) => s.quizResults[topicId]);
+  const stored = useLmsStore((s) => s.quizResults[topicId]);
+  const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const recordQuizResult = useLmsStore((s) => s.recordQuizResult);
+
+  // A completed quiz always shows its results. If it was completed without a
+  // recorded attempt (e.g. seeded complete), synthesise a passing result.
+  const total = questions.length;
+  const result = stored ?? (isCompleted ? { score: total, total, attempts: 1 } : undefined);
 
   // Show the completed summary when a result exists and we're not mid-retake.
   const [phase, setPhase] = React.useState<"intro" | "quiz" | "completed">(

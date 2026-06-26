@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useLmsStore } from "./store";
 
 export type Breakpoint = "mobile" | "tablet" | "desktop";
 
@@ -9,8 +10,12 @@ export type Breakpoint = "mobile" | "tablet" | "desktop";
  *   mobile:  ≤ 768
  *   tablet:  769–1024
  *   desktop: ≥ 1025
+ *
+ * The responsive-mode switcher can force a breakpoint via `deviceMode`; when set
+ * to anything other than "auto" the forced value wins (window size is ignored).
  */
 export function useBreakpoint(): Breakpoint {
+  const deviceMode = useLmsStore((s) => s.deviceMode);
   const [bp, setBp] = React.useState<Breakpoint>("desktop");
 
   React.useEffect(() => {
@@ -25,5 +30,5 @@ export function useBreakpoint(): Breakpoint {
     return () => window.removeEventListener("resize", compute);
   }, []);
 
-  return bp;
+  return deviceMode === "auto" ? bp : deviceMode;
 }
