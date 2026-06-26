@@ -61,9 +61,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
   const completedTopics = useLmsStore((s) => s.completedTopics);
-  const submittedTopics = useLmsStore((s) => s.submittedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
-  const submitForReview = useLmsStore((s) => s.submitForReview);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
   const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
@@ -114,29 +112,19 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const isLocked = Boolean(topic.locked);
 
   // Option A — Nav in footer · action in content.
-  // The topic's primary action lives in the content area; the footer only navigates.
-  const isActionType = family === "assessment" || family === "graded";
+  // Quiz / Practice / Activity carry their OWN action inside the content frame
+  // (start/submit a quiz, upload an assignment, tick activity steps), so they get
+  // no Mark-as-Complete bar. Passive content (video/reading/discussion/VILT) gets
+  // the completion action at the top AND bottom of the content.
+  const hasInFrameAction =
+    family === "assessment" || family === "graded" || family === "activity";
   const isCompleted = completedTopics.has(topicId);
-  const isUnderReview = submittedTopics.has(topicId);
-  const actionState: TopicActionState = isCompleted
-    ? "completed"
-    : isUnderReview
-      ? "review"
-      : isActionType
-        ? "action"
-        : "incomplete";
+  const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (
-    <TopicActionBar
-      state={actionState}
-      onComplete={() => markComplete(topicId)}
-      onSubmit={() => (family === "graded" ? submitForReview(topicId) : markComplete(topicId))}
-    />
+    <TopicActionBar state={actionState} onComplete={() => markComplete(topicId)} />
   );
-  // The action is available at the top AND bottom of the content. Quiz/assessment
-  // topics show it only inside the content (bottom), never in the header.
-  const showTopAction = !isLocked && !isActionType;
-  const showBottomAction = !isLocked;
-  const bottomAction = showBottomAction ? (
+  const showAction = !isLocked && !hasInFrameAction;
+  const bottomAction = showAction ? (
     <div className="mt-6 flex justify-end border-t border-sk-border-secondary pt-5">
       {renderAction()}
     </div>
@@ -249,7 +237,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     <h1 className="sk-text-display-xs-semibold min-w-0 text-sk-text-primary">
                       {topic.title}
                     </h1>
-                    {showTopAction ? <div className="shrink-0">{renderAction()}</div> : null}
+                    {showAction ? <div className="shrink-0">{renderAction()}</div> : null}
                   </div>
                   <div className="mt-4">
                     <ContentTabs
@@ -272,7 +260,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                         description={topicDescription(topic)}
                       />
                     </div>
-                    {showTopAction ? <div className="shrink-0">{renderAction()}</div> : null}
+                    {showAction ? <div className="shrink-0">{renderAction()}</div> : null}
                   </div>
                   <div className="mt-5">
                     <ContentTabs tabs={tabs} active={activeTab} />
