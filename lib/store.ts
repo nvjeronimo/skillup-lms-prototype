@@ -31,6 +31,8 @@ interface LmsState {
   completedTopics: Set<string>;
   /** Graded topics submitted and awaiting a grade (shows "Under Review"). */
   submittedTopics: Set<string>;
+  /** Latest quiz result per topic — score, total + how many attempts taken. */
+  quizResults: Record<string, { score: number; total: number; attempts: number }>;
   notificationsRead: Set<string>;
   openPanel: OverlayPanel;
   /** Locally collapsed module groups in the sidebar. */
@@ -52,6 +54,8 @@ interface LmsState {
   toggleBookmark: (topicId: string, opts?: { silent?: boolean }) => void;
   markComplete: (topicId: string) => void;
   submitForReview: (topicId: string) => void;
+  /** Record a finished quiz attempt — stores the score, bumps the attempt count, completes the topic. */
+  recordQuizResult: (topicId: string, score: number, total: number) => void;
   toggleModule: (moduleId: string) => void;
   openOverlayPanel: (which: "notifications" | "saved") => void;
   closeOverlayPanel: () => void;
@@ -94,6 +98,7 @@ export const useLmsStore = create<LmsState>((set, get) => ({
   bookmarks: seedBookmarks(),
   completedTopics: seedCompleted(),
   submittedTopics: new Set<string>(),
+  quizResults: {},
   notificationsRead: new Set<string>(),
   openPanel: null,
   collapsedModules: new Set<string>(),
@@ -191,6 +196,18 @@ export const useLmsStore = create<LmsState>((set, get) => ({
       next.add(topicId);
       track("topic_submit", { topicId });
       return { submittedTopics: next, toast: { message: "Submitted — under review" } };
+    }),
+
+  recordQuizResult: (topicId, score, total) =>
+    set((state) => {
+      const attempts = (state.quizResults[topicId]?.attempts ?? 0) + 1;
+      const completed = new Set(state.completedTopics);
+      completed.add(topicId);
+      track("topic_complete", { topicId, kind: "quiz", score, total, attempts });
+      return {
+        quizResults: { ...state.quizResults, [topicId]: { score, total, attempts } },
+        completedTopics: completed,
+      };
     }),
 
   toggleModule: (moduleId) =>

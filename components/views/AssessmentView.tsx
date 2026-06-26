@@ -1,13 +1,17 @@
 "use client";
 
 import * as React from "react";
+import { Check, RotateCcw } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { getQuiz, topicFamily } from "@/lib/content";
 import { getTopic } from "@/lib/data";
+import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
+import { cn } from "@/lib/utils";
 
 export function AssessmentView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
@@ -16,54 +20,50 @@ export function AssessmentView({ topicId }: { topicId: string }) {
   return graded ? <GradedSubmission topicId={topicId} /> : <Quiz topicId={topicId} />;
 }
 
-/* ---- Practice / Quiz: interactive multi-question flow ---- */
+/* ---- Practice / Quiz: interactive multi-question flow + persistent result ---- */
 function Quiz({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId)!;
   const questions = React.useMemo(() => getQuiz(topic), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [phase, setPhase] = React.useState<"start" | "quiz" | "results">("start");
+  const result = useLmsStore((s) => s.quizResults[topicId]);
+  const recordQuizResult = useLmsStore((s) => s.recordQuizResult);
+
+  // Show the completed summary when a result exists and we're not mid-retake.
+  const [phase, setPhase] = React.useState<"intro" | "quiz" | "completed">(
+    result ? "completed" : "intro",
+  );
   const [qIndex, setQIndex] = React.useState(0);
   const [selected, setSelected] = React.useState<string | undefined>(undefined);
   const [revealed, setRevealed] = React.useState(false);
   const [correct, setCorrect] = React.useState(0);
 
-  const q = questions[qIndex];
-  const passed = correct >= Math.ceil(questions.length * 0.6);
+  function startAttempt() {
+    setQIndex(0);
+    setSelected(undefined);
+    setRevealed(false);
+    setCorrect(0);
+    setPhase("quiz");
+  }
 
-  if (phase === "start") {
+  if (phase === "completed" && result) {
+    return <QuizSummary topic={topic} result={result} onRetake={startAttempt} />;
+  }
+
+  if (phase === "intro") {
     return (
       <div className="py-4">
         <QuizCard
           state="Start"
           onSubmit={() => {
             track("topic_enter", { topicId, kind: "quiz_start" });
-            setPhase("quiz");
+            startAttempt();
           }}
         />
       </div>
     );
   }
 
-  if (phase === "results") {
-    return (
-      <div className="flex flex-col gap-4 py-4">
-        <QuizCard
-          state={passed ? "Results" : "Not Passed"}
-          question={`You scored ${correct} / ${questions.length}`}
-          options={q.options}
-          selectedId={selected}
-          onSubmit={() => {
-            setPhase("start");
-            setQIndex(0);
-            setSelected(undefined);
-            setRevealed(false);
-            setCorrect(0);
-          }}
-        />
-      </div>
-    );
-  }
-
+  const q = questions[qIndex];
   return (
     <div className="flex flex-col gap-3 py-4">
       <p className="sk-text-2xs-medium text-sk-text-tertiary">
@@ -79,7 +79,6 @@ function Quiz({ topicId }: { topicId: string }) {
           if (!selected) return;
           setRevealed(true);
           if (q.options.find((o) => o.id === selected)?.correct) setCorrect((c) => c + 1);
-          track("topic_complete", { topicId, kind: "quiz_answer" });
         }}
       />
       {revealed ? (
@@ -92,7 +91,8 @@ function Quiz({ topicId }: { topicId: string }) {
                 setSelected(undefined);
                 setRevealed(false);
               } else {
-                setPhase("results");
+                recordQuizResult(topicId, correct, questions.length);
+                setPhase("completed");
               }
             }}
           >
@@ -100,6 +100,63 @@ function Quiz({ topicId }: { topicId: string }) {
           </Button>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+/* ---- Completed quiz: score summary + retake with attempt counter ---- */
+function QuizSummary({
+  topic,
+  result,
+  onRetake,
+}: {
+  topic: { title: string };
+  result: { score: number; total: number; attempts: number };
+  onRetake: () => void;
+}) {
+  const pct = Math.round((result.score / result.total) * 100);
+  const passed = result.score >= Math.ceil(result.total * 0.6);
+  return (
+    <div className="flex flex-col gap-4 py-4">
+      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="sk-text-2xs-medium text-sk-text-brand-secondary">Practice quiz</p>
+            <h3 className="sk-text-md-semibold mt-1 text-sk-text-primary">{topic.title}</h3>
+          </div>
+          <Badge tone={passed ? "success" : "warning"} leftIcon={passed ? Check : undefined}>
+            {passed ? "Passed" : "Not passed"}
+          </Badge>
+        </div>
+
+        {/* Score */}
+        <div
+          className={cn(
+            "flex items-center gap-4 rounded-lg p-4",
+            passed ? "bg-sk-bg-success-primary" : "bg-sk-bg-warning-primary",
+          )}
+        >
+          <span className="sk-text-display-sm-semibold text-sk-text-primary">{pct}%</span>
+          <div>
+            <p className="sk-text-sm-semibold text-sk-text-primary">
+              You scored {result.score} / {result.total}
+            </p>
+            <p className="sk-text-xs-regular text-sk-text-secondary">
+              Pass mark 60% · {passed ? "Well done!" : "Give it another go to pass."}
+            </p>
+          </div>
+        </div>
+
+        {/* Retake + attempt counter */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-4">
+          <p className="sk-text-xs-regular text-sk-text-tertiary">
+            {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"} · Unlimited retakes
+          </p>
+          <Button variant="secondary" leftIcon={RotateCcw} onClick={onRetake}>
+            Retake quiz
+          </Button>
+        </div>
+      </section>
     </div>
   );
 }
