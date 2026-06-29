@@ -50,14 +50,16 @@ export function TopicFooterNav({
         Previous
       </Button>
 
-      {!compact ? (
-        <div className="min-w-0 flex-1 text-center">
-          <p className="sk-text-2xs-medium text-sk-text-tertiary">
-            {position} of {total}
-          </p>
-          <p className="sk-text-sm-semibold truncate text-sk-text-primary">{title}</p>
-        </div>
-      ) : null}
+      {/* Center: paginator (the stronger element) + the topic title underneath.
+          The paginator shows on every breakpoint; the title is hidden on mobile. */}
+      <div className="min-w-0 flex-1 text-center">
+        <p className="sk-text-sm-semibold text-sk-text-primary">
+          {position} of {total}
+        </p>
+        {!compact ? (
+          <p className="sk-text-xs-regular truncate text-sk-text-tertiary">{title}</p>
+        ) : null}
+      </div>
 
       <CourseProgressionButton
         milestone={milestone}
