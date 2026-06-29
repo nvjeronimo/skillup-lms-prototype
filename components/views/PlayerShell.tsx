@@ -211,8 +211,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onClose={() => router.push("/")}
       />
 
-      {/* Body — floating white cards on a secondary-tint surface (16px gutter). */}
-      <div className={cn("flex min-h-0 flex-1", showInlineSidebar && "gap-4 p-4")}>
+      {/* Body — floating white card(s) on a secondary-tint surface. Desktop/tablet
+          add the sidebar + a 16px gutter; mobile keeps a smaller gutter so the
+          tinted body shows around the single content card. */}
+      <div className={cn("flex min-h-0 flex-1", showInlineSidebar ? "gap-4 p-4" : "p-3")}>
         {showInlineSidebar ? (
           <Sidebar
             course={activeCourse}
@@ -228,12 +230,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           />
         ) : null}
 
-        <main
-          className={cn(
-            "flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-sk-bg-primary",
-            showInlineSidebar && "rounded-xl border border-sk-border-secondary",
-          )}
-        >
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary">
           <div
             className="sk-scroll flex-1 overflow-y-auto"
             onScroll={(e) => {
