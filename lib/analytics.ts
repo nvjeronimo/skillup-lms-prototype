@@ -44,7 +44,8 @@ export type AnalyticsEvent =
   | "ai_query_submit"
   | "demo_reset"
   | "device_mode_change"
-  | "sidebar_shape_change";
+  | "sidebar_shape_change"
+  | "theme_change";
 
 type Props = Record<string, unknown>;
 

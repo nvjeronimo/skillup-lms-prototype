@@ -1,6 +1,7 @@
 "use client";
 
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { notesSeed, allCourses, getTopic } from "./data";
 import { getTranscript } from "./content";
 import { track } from "./analytics";
@@ -10,6 +11,7 @@ export type TabSlug = "transcript" | "notes" | "downloads";
 export type OverlayPanel = null | "notifications" | "saved";
 /** Preview device mode — "auto" follows the window; the rest force a breakpoint + frame. */
 export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
+export type Theme = "light" | "dark";
 
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
@@ -43,6 +45,8 @@ interface LmsState {
   toast: ToastModel | null;
   /** Preview device mode (responsive-mode switcher). */
   deviceMode: DeviceMode;
+  /** Colour theme (light / dark). */
+  theme: Theme;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -67,9 +71,26 @@ interface LmsState {
   showToast: (message: string, opts?: { actionLabel?: string; onAction?: () => void }) => void;
   clearToast: () => void;
   setDeviceMode: (mode: DeviceMode) => void;
+  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
+
+/** localStorage JSON storage that round-trips Set values. */
+const noop = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
+const skStorage = createJSONStorage<Partial<LmsState>>(
+  () => (typeof window !== "undefined" ? window.localStorage : (noop as unknown as Storage)),
+  {
+    replacer: (_k, v) => (v instanceof Set ? { __set: Array.from(v) } : v),
+    reviver: (_k, v) => {
+      if (v && typeof v === "object" && Array.isArray((v as { __set?: unknown }).__set)) {
+        return new Set((v as { __set: unknown[] }).__set);
+      }
+      return v;
+    },
+  },
+);
 
 /** All topics across every course (so completion/bookmarks seed for the demo courses too). */
 const everyTopic = allCourses.flatMap((c) =>
@@ -88,7 +109,9 @@ function seedCompleted(): Set<string> {
 
 let noteCounter = notesSeed.length;
 
-export const useLmsStore = create<LmsState>((set, get) => ({
+export const useLmsStore = create<LmsState>()(
+  persist(
+    (set, get) => ({
   sidebarExpanded: true,
   mobileDrawerOpen: false,
   currentTopicId: "m3-t1",
@@ -106,6 +129,7 @@ export const useLmsStore = create<LmsState>((set, get) => ({
   collapsedModules: new Set<string>(),
   toast: null,
   deviceMode: "auto",
+  theme: "light",
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -242,6 +266,13 @@ export const useLmsStore = create<LmsState>((set, get) => ({
     track("device_mode_change", { mode });
     set({ deviceMode: mode });
   },
+  setTheme: (theme) => set({ theme }),
+  toggleTheme: () =>
+    set((s) => {
+      const theme = s.theme === "dark" ? "light" : "dark";
+      track("theme_change", { theme });
+      return { theme };
+    }),
 
   resetDemo: () => {
     noteCounter = notesSeed.length;
@@ -260,7 +291,26 @@ export const useLmsStore = create<LmsState>((set, get) => ({
       toast: { message: "Demo reset to its initial state" },
     });
   },
-}));
+    }),
+    {
+      name: "sk-lms-demo",
+      version: 1,
+      storage: skStorage,
+      // Persist demo progress + UI prefs only — not transient/session UI.
+      partialize: (s) => ({
+        completedTopics: s.completedTopics,
+        submittedTopics: s.submittedTopics,
+        quizResults: s.quizResults,
+        bookmarks: s.bookmarks,
+        notes: s.notes,
+        notificationsRead: s.notificationsRead,
+        collapsedModules: s.collapsedModules,
+        sidebarExpanded: s.sidebarExpanded,
+        theme: s.theme,
+      }),
+    },
+  ),
+);
 
 /** Derived helper: does this topic currently have any notes? */
 export function useTopicHasNote(lineId: string): boolean {

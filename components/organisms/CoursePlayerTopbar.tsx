@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bell, Bookmark, ChevronRight, Menu, RotateCcw, Sparkles, Sun, X } from "lucide-react";
+import { Bell, Bookmark, ChevronRight, Menu, Moon, RotateCcw, Sparkles, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { cn } from "@/lib/utils";
@@ -66,6 +66,7 @@ export function CoursePlayerTopbar({
   showBookmark = true,
   showNotifications = true,
   showTheme = false,
+  theme = "Light",
   notificationsCount = 0,
   onMenu,
   onAi,
@@ -164,8 +165,11 @@ export function CoursePlayerTopbar({
           </UtilityButton>
         ) : null}
         {!isMobile && showTheme ? (
-          <UtilityButton label="Toggle theme" onClick={onTheme}>
-            <Icon icon={Sun} size={20} />
+          <UtilityButton
+            label={theme === "Dark" ? "Switch to light theme" : "Switch to dark theme"}
+            onClick={onTheme}
+          >
+            <Icon icon={theme === "Dark" ? Sun : Moon} size={20} />
           </UtilityButton>
         ) : null}
 

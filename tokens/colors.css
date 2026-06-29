@@ -47,6 +47,50 @@
 }
 
 /* ============================================================================
+   Dark SKO — toggled via <html data-theme="dark">. Same token names; only the
+   values change, so every `--sk-*` consumer flips automatically. Tuned for
+   WCAG AA on dark surfaces (lighter brand/teal, dark text on the solid button).
+   ============================================================================ */
+[data-theme="dark"] {
+  /* ---- Backgrounds (no intermediate dark neutral → secondary ≈ primary) ---- */
+  --sk-bg-primary: #0e1a1f;
+  --sk-bg-secondary: #122228;
+  --sk-bg-secondary-subtle: #16282f;
+  --sk-bg-tertiary: #25383f;
+  --sk-bg-brand-primary: #0f2c38;
+  --sk-bg-brand-section: #0f2c38;
+  --sk-bg-brand-solid: #3d9bc1;       /* lighter teal so it reads on dark */
+  --sk-bg-brand-hover: #2a7d9c;
+  --sk-bg-success-primary: #102b1d;
+  --sk-bg-warning-primary: #2e2410;
+  --sk-bg-error-primary: #34191b;
+
+  /* ---- Borders ---- */
+  --sk-border-primary: #5b6b78;
+  --sk-border-secondary: #25383f;
+  --sk-border-brand: #4aa3c7;
+
+  /* ---- Foreground ---- */
+  --sk-fg-white: #ffffff;
+  --sk-fg-quaternary: #5b6b78;
+  --sk-fg-brand: #4aa3c7;
+  --sk-fg-brand-primary: #4aa3c7;
+  --sk-fg-progress: #38a8e6;
+
+  /* ---- Text ---- */
+  --sk-text-primary: #eaf1f4;
+  --sk-text-secondary: #b3c0c7;
+  --sk-text-tertiary: #93a3ab;
+  --sk-text-primary-on-brand: #0e1a1f; /* dark text on the lighter solid teal */
+  --sk-text-brand: #6cc0e0;
+  --sk-text-brand-primary: #cdeaf6;
+  --sk-text-brand-secondary: #6cc0e0;
+  --sk-text-success-primary: #5fcf8a;
+  --sk-text-warning-primary: #e0b251;
+  --sk-text-error-primary: #e8797b;
+}
+
+/* ============================================================================
    Optional Tailwind v4 @theme block — uncomment if using Tailwind v4
    ============================================================================ */
 

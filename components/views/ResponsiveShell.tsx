@@ -38,10 +38,18 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
+  const theme = useLmsStore((s) => s.theme);
   const width = FRAME_WIDTH[mode];
   const router = useRouter();
   const pathname = usePathname();
   const activeSlug = pathname?.match(/^\/course\/([^/]+)/)?.[1];
+
+  // Keep <html data-theme> in sync so every --sk-* token flips.
+  React.useEffect(() => {
+    const el = document.documentElement;
+    if (theme === "dark") el.setAttribute("data-theme", "dark");
+    else el.removeAttribute("data-theme");
+  }, [theme]);
 
   // Draggable position. null = default anchor (bottom-center).
   const [pos, setPos] = React.useState<{ x: number; y: number } | null>(null);

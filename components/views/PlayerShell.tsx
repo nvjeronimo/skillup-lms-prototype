@@ -63,6 +63,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const completedTopics = useLmsStore((s) => s.completedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
   const resetDemo = useLmsStore((s) => s.resetDemo);
+  const theme = useLmsStore((s) => s.theme);
+  const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const activeCourse = getCourseBySlug(courseSlug);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
@@ -202,8 +204,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         }}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
+        showTheme
+        theme={theme === "dark" ? "Dark" : "Light"}
+        onTheme={toggleTheme}
         onResetDemo={resetDemo}
-        onClose={() => showToast("Exit player → Course Hub (out of scope).")}
+        onClose={() => router.push("/")}
       />
 
       {/* Body — floating white cards on a secondary-tint surface (16px gutter). */}
@@ -398,7 +403,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onClose={() => setCompleteOpen(false)}
         onNextCourse={() => {
           setCompleteOpen(false);
-          showToast("Next course → Course Hub (out of scope).");
+          router.push("/");
         }}
         onViewCertificate={() => {
           setCompleteOpen(false);

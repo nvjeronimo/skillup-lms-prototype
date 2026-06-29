@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
-import { DEFAULT_COURSE_SLUG, DEFAULT_TOPIC_ID } from "@/lib/data";
+import { CourseHub } from "@/components/views/CourseHub";
 
 export default function Home() {
-  redirect(`/course/${DEFAULT_COURSE_SLUG}/topic/${DEFAULT_TOPIC_ID}`);
+  return <CourseHub />;
 }
