@@ -263,12 +263,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 </div>
                 <div className="px-4 pb-4">
                   {/* Topic title below the player (ICP Phase 1 canonical layout).
-                      Primary action sits at the top-right of the content (Option A). */}
+                      The top-right action is hidden on mobile — it lives only at
+                      the end of the content there. */}
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <h1 className="sk-text-display-xs-semibold min-w-0 text-sk-text-primary">
                       {topic.title}
                     </h1>
-                    {showAction ? <div className="shrink-0">{renderAction()}</div> : null}
+                    {showAction && bp !== "mobile" ? (
+                      <div className="shrink-0">{renderAction()}</div>
+                    ) : null}
                   </div>
                   <div className="mt-4">
                     <ContentTabs
