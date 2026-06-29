@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { notesSeed, course, getTopic } from "./data";
+import { notesSeed, allCourses, getTopic } from "./data";
 import { getTranscript } from "./content";
 import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
@@ -10,8 +10,6 @@ export type TabSlug = "transcript" | "notes" | "downloads";
 export type OverlayPanel = null | "notifications" | "saved";
 /** Preview device mode — "auto" follows the window; the rest force a breakpoint + frame. */
 export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
-/** Sidebar content-shape preview: 5-level (real), 4-level (no lesson), 3-level (no module). */
-export type SidebarShape = "5" | "4" | "3";
 
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
@@ -45,8 +43,6 @@ interface LmsState {
   toast: ToastModel | null;
   /** Preview device mode (responsive-mode switcher). */
   deviceMode: DeviceMode;
-  /** Sidebar content-shape preview (5/4/3-level). */
-  sidebarShape: SidebarShape;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -71,29 +67,23 @@ interface LmsState {
   showToast: (message: string, opts?: { actionLabel?: string; onAction?: () => void }) => void;
   clearToast: () => void;
   setDeviceMode: (mode: DeviceMode) => void;
-  setSidebarShape: (shape: SidebarShape) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
 
-/** Seed bookmarks from the course data (topics flagged bookmarked) + first note topic. */
+/** All topics across every course (so completion/bookmarks seed for the demo courses too). */
+const everyTopic = allCourses.flatMap((c) =>
+  c.modules.flatMap((m) => m.topics ?? m.lessons?.flatMap((l) => l.topics) ?? []),
+);
+
+/** Seed bookmarks from the course data (topics flagged bookmarked). */
 function seedBookmarks(): Set<string> {
-  const set = new Set<string>();
-  for (const m of course.modules) {
-    const topics = m.topics ?? m.lessons?.flatMap((l) => l.topics) ?? [];
-    for (const t of topics) if (t.bookmarked) set.add(t.id);
-  }
-  return set;
+  return new Set(everyTopic.filter((t) => t.bookmarked).map((t) => t.id));
 }
 
 /** Seed completed topics from the course data (topics flagged completed). */
 function seedCompleted(): Set<string> {
-  const set = new Set<string>();
-  for (const m of course.modules) {
-    const topics = m.topics ?? m.lessons?.flatMap((l) => l.topics) ?? [];
-    for (const t of topics) if (t.completed) set.add(t.id);
-  }
-  return set;
+  return new Set(everyTopic.filter((t) => t.completed).map((t) => t.id));
 }
 
 let noteCounter = notesSeed.length;
@@ -116,7 +106,6 @@ export const useLmsStore = create<LmsState>((set, get) => ({
   collapsedModules: new Set<string>(),
   toast: null,
   deviceMode: "auto",
-  sidebarShape: "5",
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -252,10 +241,6 @@ export const useLmsStore = create<LmsState>((set, get) => ({
   setDeviceMode: (mode) => {
     track("device_mode_change", { mode });
     set({ deviceMode: mode });
-  },
-  setSidebarShape: (shape) => {
-    track("sidebar_shape_change", { shape });
-    set({ sidebarShape: shape });
   },
 
   resetDemo: () => {

@@ -1,9 +1,11 @@
 "use client";
 
 import * as React from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { GripVertical, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { useLmsStore, type DeviceMode, type SidebarShape } from "@/lib/store";
+import { useLmsStore, type DeviceMode } from "@/lib/store";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
@@ -21,10 +23,11 @@ const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
   { mode: "mobile", label: "Mobile", icon: Smartphone },
 ];
 
-const SHAPES: { shape: SidebarShape; label: string; title: string }[] = [
-  { shape: "5", label: "5L", title: "Sidebar: 5-level (Course → Module → Lesson → Topics)" },
-  { shape: "4", label: "4L", title: "Sidebar: 4-level (Course → Module → Topics, no Lesson)" },
-  { shape: "3", label: "3L", title: "Sidebar: 3-level (Course → Topics, no Module)" },
+// Each shape is a real, navigable course (slug + its active topic to land on).
+const SHAPES: { id: string; slug: string; topicId: string; label: string; title: string }[] = [
+  { id: "5", slug: "six-sigma", topicId: "m3-t1", label: "5L", title: "5-level course (Course → Module → Lesson → Topics)" },
+  { id: "4", slug: "capstone", topicId: "cap-t5", label: "4L", title: "4-level course (Course → Module → Topics, no Lesson)" },
+  { id: "3", slug: "quick-start", topicId: "qs-t2", label: "3L", title: "3-level course (Course → Topics, no Module)" },
 ];
 
 /**
@@ -35,9 +38,10 @@ const SHAPES: { shape: SidebarShape; label: string; title: string }[] = [
 export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
-  const shape = useLmsStore((s) => s.sidebarShape);
-  const setShape = useLmsStore((s) => s.setSidebarShape);
   const width = FRAME_WIDTH[mode];
+  const router = useRouter();
+  const pathname = usePathname();
+  const activeSlug = pathname?.match(/^\/course\/([^/]+)/)?.[1];
 
   // Draggable position. null = default anchor (bottom-center).
   const [pos, setPos] = React.useState<{ x: number; y: number } | null>(null);
@@ -130,14 +134,17 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
 
         <span className="mx-1 h-5 w-px bg-sk-border-secondary" aria-hidden />
 
-        {/* Sidebar content-shape preview (5/4/3-level). */}
+        {/* Sidebar content-shape — navigates to a real course of each shape (5/4/3-level). */}
         {SHAPES.map((s) => {
-          const active = shape === s.shape;
+          const active = activeSlug === s.slug;
           return (
             <button
-              key={s.shape}
+              key={s.id}
               type="button"
-              onClick={() => setShape(s.shape)}
+              onClick={() => {
+                track("sidebar_shape_change", { shape: s.id });
+                router.push(`/course/${s.slug}/topic/${s.topicId}`);
+              }}
               aria-pressed={active}
               aria-label={s.title}
               title={s.title}

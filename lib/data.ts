@@ -149,12 +149,28 @@ export function flatTopics(c: Course = course): FlatTopic[] {
   return out;
 }
 
-export function getTopic(topicId: string, c: Course = course): FlatTopic | undefined {
-  return flatTopics(c).find((t) => t.id === topicId);
+/** Every course the app can render, addressable by slug. */
+export const allCourses: Course[] = [course, fourLevelCourse, threeLevelCourse];
+export const coursesBySlug: Record<string, Course> = Object.fromEntries(
+  allCourses.map((c) => [c.slug, c]),
+);
+export function getCourseBySlug(slug: string): Course {
+  return coursesBySlug[slug] ?? course;
+}
+export function getCourseForTopic(topicId: string): Course {
+  return allCourses.find((c) => flatTopics(c).some((t) => t.id === topicId)) ?? course;
 }
 
-export function getAdjacentTopics(topicId: string, c: Course = course) {
-  const all = flatTopics(c);
+export function getTopic(topicId: string, c?: Course): FlatTopic | undefined {
+  for (const courseToSearch of c ? [c] : allCourses) {
+    const found = flatTopics(courseToSearch).find((t) => t.id === topicId);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+export function getAdjacentTopics(topicId: string, c?: Course) {
+  const all = flatTopics(c ?? getCourseForTopic(topicId));
   const i = all.findIndex((t) => t.id === topicId);
   return {
     current: all[i],
