@@ -33,10 +33,11 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 // Brand skins — recombinations within the SkillUp palette. `swatch` is the
 // light-mode brand colour shown on the picker.
 const SKINS: { skin: SkinId; label: string; swatch: string }[] = [
-  { skin: "teal", label: "Teal (default)", swatch: "#26708e" },
-  { skin: "ink", label: "Ink — deep teal", swatch: "#044150" },
-  { skin: "sky", label: "Sky — bright blue", swatch: "#0086c9" },
-  { skin: "forest", label: "Forest — green", swatch: "#1f7643" },
+  { skin: "teal", label: "Teal — default (P03)", swatch: "#26708e" },
+  { skin: "ink", label: "Brand Blue (P01)", swatch: "#04313d" },
+  { skin: "ocean", label: "Deep Blue (P02)", swatch: "#215477" },
+  { skin: "sky", label: "Link Blue (P04)", swatch: "#3685c6" },
+  { skin: "aqua", label: "Aqua — blue-green (AA03)", swatch: "#309187" },
 ];
 
 /**
