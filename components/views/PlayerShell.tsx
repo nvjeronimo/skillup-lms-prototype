@@ -24,6 +24,9 @@ import { cn } from "@/lib/utils";
 import { topicFamily, topicDescription, getDownloads, getTranscript } from "@/lib/content";
 import {
   course,
+  fourLevelCourse,
+  threeLevelCourse,
+  flatTopics,
   getTopic,
   getAdjacentTopics,
   notifications,
@@ -31,6 +34,8 @@ import {
   savedTopics,
   topicNotes,
 } from "@/lib/data";
+
+const NO_BOOKMARKS = new Set<string>();
 
 export interface PlayerShellProps {
   courseSlug: string;
@@ -63,6 +68,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const completedTopics = useLmsStore((s) => s.completedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
   const resetDemo = useLmsStore((s) => s.resetDemo);
+  const sidebarShape = useLmsStore((s) => s.sidebarShape);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
   const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
@@ -81,6 +87,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const [completeOpen, setCompleteOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
   const [videoDocked, setVideoDocked] = React.useState(false);
+  // Sidebar content-shape preview (5/4/3-level). Topic clicks in a preview shape
+  // only move the highlight (the real player content is unchanged).
+  const [previewTopicId, setPreviewTopicId] = React.useState<string | null>(null);
+  React.useEffect(() => setPreviewTopicId(null), [sidebarShape]);
 
   // Keep currentTopicId in sync with the route + emit topic_enter.
   React.useEffect(() => {
@@ -113,6 +123,17 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const family = topicFamily(topic.type);
   const isVideo = family === "video";
   const isLocked = Boolean(topic.locked);
+
+  // Sidebar shape preview: pick the demo course + a highlight that doesn't navigate.
+  const previewingShape = sidebarShape !== "5";
+  const sidebarCourse =
+    sidebarShape === "4" ? fourLevelCourse : sidebarShape === "3" ? threeLevelCourse : course;
+  const sidebarActiveId = previewingShape
+    ? previewTopicId ??
+      flatTopics(sidebarCourse).find((t) => t.active)?.id ??
+      flatTopics(sidebarCourse)[0]?.id ??
+      ""
+    : topicId;
 
   // Sticky video heights per viewport (DS Phase-1 §0): full hero → docked band.
   const VIDEO_FULL = { mobile: 211, tablet: 315, desktop: 405 } as const;
@@ -208,17 +229,16 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       <div className={cn("flex min-h-0 flex-1", showInlineSidebar && "gap-4 p-4")}>
         {showInlineSidebar ? (
           <Sidebar
-            course={course}
-            currentTopicId={topicId}
+            course={sidebarCourse}
+            currentTopicId={sidebarActiveId}
             variant={sidebarVariant}
             collapsedModules={collapsedModules}
-            bookmarks={bookmarks}
-
-            completed={completedTopics}
+            bookmarks={previewingShape ? NO_BOOKMARKS : bookmarks}
+            completed={previewingShape ? undefined : completedTopics}
             onToggleSidebar={toggleSidebar}
             onToggleModule={toggleModule}
-            onSelectTopic={navigateTopic}
-            onToggleBookmark={toggleBookmark}
+            onSelectTopic={previewingShape ? setPreviewTopicId : navigateTopic}
+            onToggleBookmark={previewingShape ? undefined : toggleBookmark}
           />
         ) : null}
 
@@ -332,16 +352,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 <Icon icon={X} size={20} />
               </button>
               <Sidebar
-                course={course}
-                currentTopicId={topicId}
+                course={sidebarCourse}
+                currentTopicId={sidebarActiveId}
                 variant="Mobile"
                 collapsedModules={collapsedModules}
-                bookmarks={bookmarks}
-
-                completed={completedTopics}
+                bookmarks={previewingShape ? NO_BOOKMARKS : bookmarks}
+                completed={previewingShape ? undefined : completedTopics}
                 onToggleModule={toggleModule}
-                onSelectTopic={navigateTopic}
-                onToggleBookmark={toggleBookmark}
+                onSelectTopic={previewingShape ? setPreviewTopicId : navigateTopic}
+                onToggleBookmark={previewingShape ? undefined : toggleBookmark}
               />
             </div>
           </div>

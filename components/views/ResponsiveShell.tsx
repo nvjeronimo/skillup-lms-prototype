@@ -3,7 +3,7 @@
 import * as React from "react";
 import { GripVertical, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { useLmsStore, type DeviceMode } from "@/lib/store";
+import { useLmsStore, type DeviceMode, type SidebarShape } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
@@ -21,6 +21,12 @@ const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
   { mode: "mobile", label: "Mobile", icon: Smartphone },
 ];
 
+const SHAPES: { shape: SidebarShape; label: string; title: string }[] = [
+  { shape: "5", label: "5L", title: "Sidebar: 5-level (Course → Module → Lesson → Topics)" },
+  { shape: "4", label: "4L", title: "Sidebar: 4-level (Course → Module → Topics, no Lesson)" },
+  { shape: "3", label: "3L", title: "Sidebar: 3-level (Course → Topics, no Module)" },
+];
+
 /**
  * Wraps the whole app. Mirrors the selected responsive mode by forcing the
  * breakpoint (via the store, read in useBreakpoint) AND constraining the width
@@ -29,6 +35,8 @@ const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
 export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
+  const shape = useLmsStore((s) => s.sidebarShape);
+  const setShape = useLmsStore((s) => s.setSidebarShape);
   const width = FRAME_WIDTH[mode];
 
   // Draggable position. null = default anchor (bottom-center).
@@ -116,6 +124,31 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <Icon icon={m.icon} size={16} />
+            </button>
+          );
+        })}
+
+        <span className="mx-1 h-5 w-px bg-sk-border-secondary" aria-hidden />
+
+        {/* Sidebar content-shape preview (5/4/3-level). */}
+        {SHAPES.map((s) => {
+          const active = shape === s.shape;
+          return (
+            <button
+              key={s.shape}
+              type="button"
+              onClick={() => setShape(s.shape)}
+              aria-pressed={active}
+              aria-label={s.title}
+              title={s.title}
+              className={cn(
+                "sk-text-xs-semibold inline-flex h-8 w-9 items-center justify-center rounded-full transition-colors",
+                active
+                  ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
+                  : "text-sk-text-tertiary hover:bg-sk-bg-secondary hover:text-sk-text-primary",
+              )}
+            >
+              {s.label}
             </button>
           );
         })}

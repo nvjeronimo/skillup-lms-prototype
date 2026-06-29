@@ -20,6 +20,95 @@ export const notesSeed: Note[] = model.notes;
 export const downloads: DownloadFile[] = model.downloads;
 export const user: User = model.user;
 
+/* ----------------------------------------------------------------------------
+ * Demo courses for the Sidebar content-shape preview (Showcases & Diagrams).
+ * `course` above is the 5-level shape (Course → Module → Lesson → Topics).
+ * ---------------------------------------------------------------------------- */
+
+/** 4-level: Course → Module → Topics (no Lesson layer). */
+export const fourLevelCourse: Course = {
+  id: "cap",
+  slug: "capstone",
+  title: "Capstone Project Workshop",
+  provider: "SkillUp",
+  courseType: "Course",
+  difficulty: "Intermediate",
+  deliveryMode: "Flexible Learning",
+  overallProgressPct: 67,
+  modulesCompleted: 2,
+  modulesTotal: 3,
+  modules: [
+    {
+      id: "cap-m1",
+      label: "Module 01",
+      title: "Scoping your project",
+      topicsCompleted: 2,
+      topicsTotal: 2,
+      isCompleted: true,
+      topics: [
+        { id: "cap-t1", type: "Video", title: "Framing the brief", duration: "3m 20s", completed: true },
+        { id: "cap-t2", type: "Reading", title: "Choosing a measurable goal", duration: "8 min", completed: true },
+      ],
+    },
+    {
+      id: "cap-m2",
+      label: "Module 02",
+      title: "Building the deliverable",
+      topicsCompleted: 2,
+      topicsTotal: 2,
+      isCompleted: true,
+      topics: [
+        { id: "cap-t3", type: "Video", title: "From outline to draft", duration: "3m 20s", completed: true },
+        { id: "cap-t4", type: "Activity", title: "Draft your one-pager", duration: "10 min", completed: true },
+      ],
+    },
+    {
+      id: "cap-m3",
+      label: "Module 03",
+      title: "Peer review assignment",
+      topicsCompleted: 0,
+      topicsTotal: 3,
+      isCompleted: false,
+      topics: [
+        { id: "cap-t5", type: "Video", title: "Submit your work", duration: "3m 20s", completed: false, active: true },
+        { id: "cap-t6", type: "Peer Review", title: "Review 2 peer submissions", duration: "3m 20s", completed: false },
+        { id: "cap-t7", type: "Graded Assignment", title: "Reflection essay (300 words)", duration: "3m 20s", completed: false, locked: true },
+      ],
+    },
+  ],
+};
+
+/** 3-level: Course → Topics (no Module, no Lesson — implicit module). */
+export const threeLevelCourse: Course = {
+  id: "qs",
+  slug: "quick-start",
+  title: "Quick-start onboarding",
+  provider: "SkillUp",
+  courseType: "Course",
+  difficulty: "Beginner",
+  deliveryMode: "Flexible Learning",
+  overallProgressPct: 25,
+  modulesCompleted: 0,
+  modulesTotal: 1,
+  modules: [
+    {
+      id: "qs-m",
+      label: "",
+      title: "",
+      implicit: true,
+      topicsCompleted: 1,
+      topicsTotal: 4,
+      isCompleted: false,
+      topics: [
+        { id: "qs-t1", type: "Video", title: "Introduction to the DMAIC methodology", duration: "3m 20s", completed: true },
+        { id: "qs-t2", type: "Quiz", title: "Practice Quiz: Define and Measure", duration: "3m 20s", completed: false, active: true },
+        { id: "qs-t3", type: "Reading", title: "Reading: Hierarchy in mockups", duration: "3m 20s", completed: false },
+        { id: "qs-t4", type: "Video", title: "Capstone reflection", duration: "3m 20s", completed: false, locked: true },
+      ],
+    },
+  ],
+};
+
 /** A module's topics whether stored flat or grouped under lessons. */
 export function moduleTopics(mod: Module): Topic[] {
   if (mod.topics) return mod.topics;
