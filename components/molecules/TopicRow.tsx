@@ -76,16 +76,9 @@ export function TopicRow({
           <CompletionStatus state={status} size={20} />
         </span>
         <span className="min-w-0 flex-1">
-          <span
-            className={cn(
-              // DS Topic Row: title text-secondary inactive, brand on active, tertiary when locked.
-              "sk-text-sm-medium block",
-              active ? "text-sk-text-brand-secondary" : "text-sk-text-secondary",
-              status === "Locked" && "text-sk-text-tertiary",
-            )}
-          >
-            {title}
-          </span>
+          {/* DS Sidebar v2: the topic title is text-primary in every state — it
+              does not change colour when active or locked. */}
+          <span className="sk-text-sm-medium block text-sk-text-primary">{title}</span>
           {/* Brand type badge (icon + label) + gray duration — matches DS Topic Row. */}
           <span className="mt-1 flex flex-wrap items-center gap-1.5">
             <TopicTypeBadge type={type} />
