@@ -13,7 +13,7 @@ export type OverlayPanel = null | "notifications" | "saved";
 export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
 export type Theme = "light" | "dark";
 /** Brand skin — recombinations within the SkillUp palette. */
-export type Skin = "teal" | "ink" | "sky" | "violet" | "rose";
+export type Skin = "teal" | "ink" | "sky" | "violet" | "gold" | "red";
 
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {

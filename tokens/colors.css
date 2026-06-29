@@ -99,7 +99,8 @@
 [data-skin="ink"],
 [data-skin="sky"],
 [data-skin="violet"],
-[data-skin="rose"] {
+[data-skin="gold"],
+[data-skin="red"] {
   --sk-border-brand: var(--sk-bg-brand-solid);
   --sk-fg-brand: var(--sk-bg-brand-solid);
   --sk-fg-brand-primary: var(--sk-bg-brand-solid);
@@ -109,8 +110,8 @@
   --sk-bg-brand-section: color-mix(in srgb, var(--sk-bg-brand-solid) 12%, var(--sk-bg-primary));
   --sk-bg-brand-primary: var(--sk-bg-brand-section);
 }
-/* Blues from the SkillUp Primary ramp; Violet + Rose are non-blue/green hues
-   kept clear of the semantic success/error/warning colours. */
+/* Blues from the SkillUp Primary ramp + Violet (Gold AD2 / Red AC3 sit near the
+   warning/error ramps — intentional brand options). */
 [data-skin="ink"] {
   --sk-bg-brand-solid: #04313d;
 } /* P01 — Brand Blue */
@@ -120,15 +121,19 @@
 [data-skin="violet"] {
   --sk-bg-brand-solid: #6d28d9;
 } /* Violet */
-[data-skin="rose"] {
-  --sk-bg-brand-solid: #be185d;
-} /* Rose */
+[data-skin="gold"] {
+  --sk-bg-brand-solid: #ac7720;
+} /* AD2 — Yellow 2 */
+[data-skin="red"] {
+  --sk-bg-brand-solid: #b62226;
+} /* AC3 — Red 3 */
 
 /* Dark mode: lighter brand so it reads on dark + a light accent-text. */
 [data-theme="dark"][data-skin="ink"],
 [data-theme="dark"][data-skin="sky"],
 [data-theme="dark"][data-skin="violet"],
-[data-theme="dark"][data-skin="rose"] {
+[data-theme="dark"][data-skin="gold"],
+[data-theme="dark"][data-skin="red"] {
   --sk-text-brand-primary: color-mix(in srgb, var(--sk-bg-brand-solid) 35%, #ffffff);
 }
 [data-theme="dark"][data-skin="ink"] {
@@ -140,9 +145,12 @@
 [data-theme="dark"][data-skin="violet"] {
   --sk-bg-brand-solid: #a78bfa;
 }
-[data-theme="dark"][data-skin="rose"] {
-  --sk-bg-brand-solid: #f472b6;
-}
+[data-theme="dark"][data-skin="gold"] {
+  --sk-bg-brand-solid: #f9c654;
+} /* AD4 */
+[data-theme="dark"][data-skin="red"] {
+  --sk-bg-brand-solid: #e8797b;
+} /* AC5b */
 
 /* ============================================================================
    Optional Tailwind v4 @theme block — uncomment if using Tailwind v4
