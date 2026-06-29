@@ -45,7 +45,8 @@ export type AnalyticsEvent =
   | "demo_reset"
   | "device_mode_change"
   | "sidebar_shape_change"
-  | "theme_change";
+  | "theme_change"
+  | "skin_change";
 
 type Props = Record<string, unknown>;
 

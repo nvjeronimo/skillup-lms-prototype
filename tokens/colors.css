@@ -91,6 +91,50 @@
 }
 
 /* ============================================================================
+   Custom skins — recombinations within the SkillUp palette. A skin only swaps
+   the brand colour (`--sk-bg-brand-solid`); the tinted surfaces + accent text
+   derive from it via color-mix, so both light and dark adapt automatically.
+   Toggled via <html data-skin="…">. Default (no attribute) = Teal #26708e.
+   ============================================================================ */
+[data-skin="ink"],
+[data-skin="sky"],
+[data-skin="forest"] {
+  --sk-border-brand: var(--sk-bg-brand-solid);
+  --sk-fg-brand: var(--sk-bg-brand-solid);
+  --sk-fg-brand-primary: var(--sk-bg-brand-solid);
+  --sk-text-brand: var(--sk-bg-brand-solid);
+  --sk-text-brand-secondary: var(--sk-bg-brand-solid);
+  --sk-text-brand-primary: color-mix(in srgb, var(--sk-bg-brand-solid) 62%, #000000);
+  --sk-bg-brand-section: color-mix(in srgb, var(--sk-bg-brand-solid) 12%, var(--sk-bg-primary));
+  --sk-bg-brand-primary: var(--sk-bg-brand-section);
+}
+[data-skin="ink"] {
+  --sk-bg-brand-solid: #044150;
+} /* Ink — deep teal */
+[data-skin="sky"] {
+  --sk-bg-brand-solid: #0086c9;
+} /* Sky — bright blue */
+[data-skin="forest"] {
+  --sk-bg-brand-solid: #1f7643;
+} /* Forest — green */
+
+/* Dark mode: lighter brand so it reads on dark + a light accent-text. */
+[data-theme="dark"][data-skin="ink"],
+[data-theme="dark"][data-skin="sky"],
+[data-theme="dark"][data-skin="forest"] {
+  --sk-text-brand-primary: color-mix(in srgb, var(--sk-bg-brand-solid) 35%, #ffffff);
+}
+[data-theme="dark"][data-skin="ink"] {
+  --sk-bg-brand-solid: #4aa3c7;
+}
+[data-theme="dark"][data-skin="sky"] {
+  --sk-bg-brand-solid: #38a8e6;
+}
+[data-theme="dark"][data-skin="forest"] {
+  --sk-bg-brand-solid: #5fcf8a;
+}
+
+/* ============================================================================
    Optional Tailwind v4 @theme block — uncomment if using Tailwind v4
    ============================================================================ */
 

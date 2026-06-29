@@ -4,7 +4,7 @@ import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { GripVertical, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { useLmsStore, type DeviceMode } from "@/lib/store";
+import { useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +30,15 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
   { id: "3", slug: "quick-start", topicId: "qs-t2", label: "3L", title: "3-level course (Course → Topics, no Module)" },
 ];
 
+// Brand skins — recombinations within the SkillUp palette. `swatch` is the
+// light-mode brand colour shown on the picker.
+const SKINS: { skin: SkinId; label: string; swatch: string }[] = [
+  { skin: "teal", label: "Teal (default)", swatch: "#26708e" },
+  { skin: "ink", label: "Ink — deep teal", swatch: "#044150" },
+  { skin: "sky", label: "Sky — bright blue", swatch: "#0086c9" },
+  { skin: "forest", label: "Forest — green", swatch: "#1f7643" },
+];
+
 /**
  * Wraps the whole app. Mirrors the selected responsive mode by forcing the
  * breakpoint (via the store, read in useBreakpoint) AND constraining the width
@@ -39,17 +48,24 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const theme = useLmsStore((s) => s.theme);
+  const skin = useLmsStore((s) => s.skin);
+  const setSkin = useLmsStore((s) => s.setSkin);
   const width = FRAME_WIDTH[mode];
   const router = useRouter();
   const pathname = usePathname();
   const activeSlug = pathname?.match(/^\/course\/([^/]+)/)?.[1];
 
-  // Keep <html data-theme> in sync so every --sk-* token flips.
+  // Keep <html data-theme> + data-skin in sync so every --sk-* token flips.
   React.useEffect(() => {
     const el = document.documentElement;
     if (theme === "dark") el.setAttribute("data-theme", "dark");
     else el.removeAttribute("data-theme");
   }, [theme]);
+  React.useEffect(() => {
+    const el = document.documentElement;
+    if (skin === "teal") el.removeAttribute("data-skin");
+    else el.setAttribute("data-skin", skin);
+  }, [skin]);
 
   // Draggable position. null = default anchor (bottom-center).
   const [pos, setPos] = React.useState<{ x: number; y: number } | null>(null);
@@ -164,6 +180,32 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
               )}
             >
               {s.label}
+            </button>
+          );
+        })}
+
+        <span className="mx-1 h-5 w-px bg-sk-border-secondary" aria-hidden />
+
+        {/* Brand skins — swatch picker (SkillUp palette recombinations). */}
+        {SKINS.map((s) => {
+          const active = skin === s.skin;
+          return (
+            <button
+              key={s.skin}
+              type="button"
+              onClick={() => setSkin(s.skin)}
+              aria-pressed={active}
+              aria-label={`Skin: ${s.label}`}
+              title={`Skin: ${s.label}`}
+              className="inline-flex h-8 w-7 items-center justify-center rounded-full"
+            >
+              <span
+                className={cn(
+                  "size-4 rounded-full ring-offset-1 ring-offset-sk-bg-primary transition-all",
+                  active ? "ring-2 ring-sk-text-primary" : "ring-1 ring-sk-border-secondary",
+                )}
+                style={{ backgroundColor: s.swatch }}
+              />
             </button>
           );
         })}

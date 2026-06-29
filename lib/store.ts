@@ -12,6 +12,8 @@ export type OverlayPanel = null | "notifications" | "saved";
 /** Preview device mode — "auto" follows the window; the rest force a breakpoint + frame. */
 export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
 export type Theme = "light" | "dark";
+/** Brand skin — recombinations within the SkillUp palette. */
+export type Skin = "teal" | "ink" | "sky" | "forest";
 
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
@@ -47,6 +49,8 @@ interface LmsState {
   deviceMode: DeviceMode;
   /** Colour theme (light / dark). */
   theme: Theme;
+  /** Brand skin (palette recombination). */
+  skin: Skin;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -73,6 +77,7 @@ interface LmsState {
   setDeviceMode: (mode: DeviceMode) => void;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
+  setSkin: (skin: Skin) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -130,6 +135,7 @@ export const useLmsStore = create<LmsState>()(
   toast: null,
   deviceMode: "auto",
   theme: "light",
+  skin: "teal",
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -273,6 +279,10 @@ export const useLmsStore = create<LmsState>()(
       track("theme_change", { theme });
       return { theme };
     }),
+  setSkin: (skin) => {
+    track("skin_change", { skin });
+    set({ skin });
+  },
 
   resetDemo: () => {
     noteCounter = notesSeed.length;
@@ -307,6 +317,7 @@ export const useLmsStore = create<LmsState>()(
         collapsedModules: s.collapsedModules,
         sidebarExpanded: s.sidebarExpanded,
         theme: s.theme,
+        skin: s.skin,
       }),
     },
   ),
