@@ -130,7 +130,7 @@ export function Sidebar({
   // dividers — module number (green when complete), lesson labels (L1/L2, brand on
   // the active lesson) and status dots, with the active topic highlighted.
   if (collapsed) {
-    const Divider = () => <div className="my-1 h-px w-10 bg-sk-border-primary" />;
+    const Divider = () => <div className="my-1 h-px w-full bg-sk-border-secondary" />;
     const Dot = (topic: Topic) => (
       <TopicRow
         key={topic.id}
