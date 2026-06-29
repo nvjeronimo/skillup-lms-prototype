@@ -35,9 +35,9 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 const SKINS: { skin: SkinId; label: string; swatch: string }[] = [
   { skin: "teal", label: "Teal — default (P03)", swatch: "#26708e" },
   { skin: "ink", label: "Brand Blue (P01)", swatch: "#04313d" },
-  { skin: "ocean", label: "Deep Blue (P02)", swatch: "#215477" },
   { skin: "sky", label: "Link Blue (P04)", swatch: "#3685c6" },
-  { skin: "aqua", label: "Aqua — blue-green (AA03)", swatch: "#309187" },
+  { skin: "violet", label: "Violet", swatch: "#6d28d9" },
+  { skin: "rose", label: "Rose", swatch: "#be185d" },
 ];
 
 /**

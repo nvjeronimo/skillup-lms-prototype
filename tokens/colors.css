@@ -97,9 +97,9 @@
    Toggled via <html data-skin="…">. Default (no attribute) = Teal #26708e.
    ============================================================================ */
 [data-skin="ink"],
-[data-skin="ocean"],
 [data-skin="sky"],
-[data-skin="aqua"] {
+[data-skin="violet"],
+[data-skin="rose"] {
   --sk-border-brand: var(--sk-bg-brand-solid);
   --sk-fg-brand: var(--sk-bg-brand-solid);
   --sk-fg-brand-primary: var(--sk-bg-brand-solid);
@@ -109,40 +109,40 @@
   --sk-bg-brand-section: color-mix(in srgb, var(--sk-bg-brand-solid) 12%, var(--sk-bg-primary));
   --sk-bg-brand-primary: var(--sk-bg-brand-section);
 }
-/* All values are SkillUp palette colours (Primary + Blue-Green accents) — no
-   green/red/yellow so a skin never clashes with the semantic success/error/warn. */
+/* Blues from the SkillUp Primary ramp; Violet + Rose are non-blue/green hues
+   kept clear of the semantic success/error/warning colours. */
 [data-skin="ink"] {
   --sk-bg-brand-solid: #04313d;
 } /* P01 — Brand Blue */
-[data-skin="ocean"] {
-  --sk-bg-brand-solid: #215477;
-} /* P02 — Deep Blue */
 [data-skin="sky"] {
   --sk-bg-brand-solid: #3685c6;
 } /* P04 — Blue Links */
-[data-skin="aqua"] {
-  --sk-bg-brand-solid: #309187;
-} /* AA03 — Blue-Green */
+[data-skin="violet"] {
+  --sk-bg-brand-solid: #6d28d9;
+} /* Violet */
+[data-skin="rose"] {
+  --sk-bg-brand-solid: #be185d;
+} /* Rose */
 
 /* Dark mode: lighter brand so it reads on dark + a light accent-text. */
 [data-theme="dark"][data-skin="ink"],
-[data-theme="dark"][data-skin="ocean"],
 [data-theme="dark"][data-skin="sky"],
-[data-theme="dark"][data-skin="aqua"] {
+[data-theme="dark"][data-skin="violet"],
+[data-theme="dark"][data-skin="rose"] {
   --sk-text-brand-primary: color-mix(in srgb, var(--sk-bg-brand-solid) 35%, #ffffff);
 }
 [data-theme="dark"][data-skin="ink"] {
   --sk-bg-brand-solid: #4a93a5;
 }
-[data-theme="dark"][data-skin="ocean"] {
-  --sk-bg-brand-solid: #5a96c9;
-}
 [data-theme="dark"][data-skin="sky"] {
   --sk-bg-brand-solid: #6ba8e0;
 }
-[data-theme="dark"][data-skin="aqua"] {
-  --sk-bg-brand-solid: #42aea3;
-} /* AA04 */
+[data-theme="dark"][data-skin="violet"] {
+  --sk-bg-brand-solid: #a78bfa;
+}
+[data-theme="dark"][data-skin="rose"] {
+  --sk-bg-brand-solid: #f472b6;
+}
 
 /* ============================================================================
    Optional Tailwind v4 @theme block — uncomment if using Tailwind v4
