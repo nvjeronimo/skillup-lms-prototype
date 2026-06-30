@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +34,9 @@ function initials(name: string): string {
 /** Avatar with image or initials fallback + optional status dot. */
 export function Avatar({ name, src, size = "md", status = "none", className }: AvatarProps) {
   const s = SIZE[size];
+  // Fall back to initials if no src OR the image fails to load (e.g. 404).
+  const [failed, setFailed] = React.useState(false);
+  const showImg = src && !failed;
   return (
     <span className={cn("relative inline-flex shrink-0", className)}>
       <span
@@ -41,9 +46,14 @@ export function Avatar({ name, src, size = "md", status = "none", className }: A
           s.text,
         )}
       >
-        {src ? (
+        {showImg ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt={name} className="h-full w-full object-cover" />
+          <img
+            src={src}
+            alt={name}
+            className="h-full w-full object-cover"
+            onError={() => setFailed(true)}
+          />
         ) : (
           initials(name)
         )}

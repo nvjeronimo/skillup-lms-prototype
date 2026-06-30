@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
+import { Check, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
@@ -18,9 +18,9 @@ const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
 
 // Each shape is a real, navigable course (slug + the active topic to land on).
 const SHAPES: { id: string; slug: string; topicId: string; label: string; title: string }[] = [
-  { id: "5", slug: "six-sigma", topicId: "m3-t1", label: "5L", title: "5-level course (Course → Module → Lesson → Topics)" },
-  { id: "4", slug: "capstone", topicId: "cap-t5", label: "4L", title: "4-level course (Course → Module → Topics, no Lesson)" },
-  { id: "3", slug: "quick-start", topicId: "qs-t2", label: "3L", title: "3-level course (Course → Topics, no Module)" },
+  { id: "5", slug: "six-sigma", topicId: "m3-t1", label: "5-level", title: "5-level course (Course → Module → Lesson → Topics)" },
+  { id: "4", slug: "capstone", topicId: "cap-t5", label: "4-level · no Lesson", title: "4-level course (Course → Module → Topics, no Lesson)" },
+  { id: "3", slug: "quick-start", topicId: "qs-t2", label: "3-level · no Module, no Lesson", title: "3-level course (Course → Topics, no Module, no Lesson)" },
 ];
 
 // Brand skins — recombinations within the SkillUp palette.
@@ -143,8 +143,8 @@ export function DemoControlsMenu({
             </div>
           </Section>
 
-          <Section title="Content shape">
-            <div className="flex gap-1">
+          <Section title="Content Shape Levels">
+            <div className="flex flex-col gap-1">
               {SHAPES.map((s) => {
                 const active = activeSlug === s.slug;
                 return (
@@ -158,9 +158,15 @@ export function DemoControlsMenu({
                     }}
                     aria-pressed={active}
                     title={s.title}
-                    className={cn(pill, active ? pillOn : pillOff)}
+                    className={cn(
+                      "sk-text-sm-medium flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left transition-colors",
+                      active
+                        ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
+                        : "text-sk-text-secondary hover:bg-sk-bg-secondary",
+                    )}
                   >
                     {s.label}
+                    {active ? <Icon icon={Check} size={16} className="shrink-0" /> : null}
                   </button>
                 );
               })}
