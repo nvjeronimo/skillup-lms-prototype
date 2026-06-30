@@ -24,39 +24,104 @@ export interface ContentTabsProps {
   className?: string;
 }
 
+/** Count pill — bg-brand-section + text-brand-secondary, per DS (all tab states). */
+function CountBadge({ n }: { n: number }) {
+  return (
+    <span className="sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sk-bg-brand-section px-1 text-sk-text-brand-secondary">
+      {n}
+    </span>
+  );
+}
+
 /**
  * Content switcher: Transcript | Notes (n) | Downloads (n) + an optional control
- * cluster on the right. On mobile it renders as a dropdown select (DS: Mobile Tab Select).
+ * cluster on the right. On mobile it renders as a dropdown select that mirrors the
+ * DS "LMS / Mobile Tab Select": grey→brand border, count badge in the trigger, and
+ * a styled panel with the selected row on bg-brand-section.
  */
 export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", className }: ContentTabsProps) {
   const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const selectRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    function onDoc(e: MouseEvent) {
+      if (selectRef.current && !selectRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   if (variant === "select") {
     const current = tabs.find((t) => t.slug === active) ?? tabs[0];
     return (
       <div className={cn("flex items-center justify-between gap-3", className)}>
-        <div className="relative flex-1">
-          <select
+        <div ref={selectRef} className="relative flex-1">
+          <button
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={open}
             aria-label="Content"
-            value={current.slug}
-            onChange={(e) => {
-              const next = tabs.find((t) => t.slug === e.target.value);
-              if (next) router.push(next.href);
-            }}
-            className="sk-text-sm-semibold w-full appearance-none rounded-lg border border-sk-border-primary bg-sk-bg-primary py-2.5 pl-3 pr-9 text-sk-text-primary outline-none focus:border-sk-border-brand"
+            onClick={() => setOpen((o) => !o)}
+            className={cn(
+              "sk-text-sm-semibold flex w-full items-center justify-between gap-2 rounded-lg border bg-sk-bg-primary px-3 py-2.5 transition-colors",
+              open
+                ? "border-sk-border-brand text-sk-text-brand-secondary"
+                : "border-sk-border-primary text-sk-text-primary",
+            )}
           >
-            {tabs.map((t) => (
-              <option key={t.slug} value={t.slug}>
-                {t.label}
-                {typeof t.count === "number" ? ` (${t.count})` : ""}
-              </option>
-            ))}
-          </select>
-          <ChevronDown
-            size={16}
-            strokeWidth={1.5}
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sk-text-tertiary"
-          />
+            <span className="flex min-w-0 items-center gap-2">
+              <span className="truncate">{current.label}</span>
+              {typeof current.count === "number" ? <CountBadge n={current.count} /> : null}
+            </span>
+            <ChevronDown
+              size={16}
+              strokeWidth={1.5}
+              className={cn(
+                "shrink-0 transition-transform",
+                open ? "rotate-180 text-sk-text-brand-secondary" : "text-sk-text-tertiary",
+              )}
+            />
+          </button>
+
+          {open ? (
+            <ul
+              role="listbox"
+              className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-lg border border-sk-border-brand bg-sk-bg-primary shadow-lg"
+            >
+              {tabs.map((t) => {
+                const selected = t.slug === active;
+                return (
+                  <li key={t.slug} role="option" aria-selected={selected}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpen(false);
+                        if (!selected) router.push(t.href);
+                      }}
+                      className={cn(
+                        "sk-text-sm-semibold flex w-full items-center gap-2 px-3 py-2.5 text-left transition-colors",
+                        selected
+                          ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
+                          : "text-sk-text-brand-primary hover:bg-sk-bg-secondary",
+                      )}
+                    >
+                      <span className="truncate">{t.label}</span>
+                      {typeof t.count === "number" ? <CountBadge n={t.count} /> : null}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
         </div>
         {rightSlot}
       </div>
@@ -87,7 +152,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                 "sk-text-sm-semibold -mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-4 py-2.5 transition-colors",
                 isActive
                   ? "border-sk-border-brand text-sk-text-brand-secondary"
-                  : "border-transparent text-sk-text-secondary hover:text-sk-text-primary",
+                  : "border-transparent text-sk-text-tertiary hover:text-sk-text-primary",
               )}
             >
               {tab.label}
@@ -97,7 +162,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                     "sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
                     isActive
                       ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                      : "bg-sk-bg-secondary text-sk-text-tertiary",
+                      : "bg-sk-bg-secondary text-sk-text-secondary",
                   )}
                 >
                   {tab.count}
