@@ -5,9 +5,11 @@ import { Avatar } from "@/components/atoms/Avatar";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { getArticle } from "@/lib/content";
 import { getTopic } from "@/lib/data";
+import { useLmsStore } from "@/lib/store";
 
 export function ReadingView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
+  const showToast = useLmsStore((s) => s.showToast);
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
   if (!topic) return null;
   const article = getArticle(topic);
@@ -70,6 +72,7 @@ export function ReadingView({ topicId }: { topicId: string }) {
         value={feedback}
         onLike={() => setFeedback(feedback === "like" ? null : "like")}
         onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
+        onReport={() => showToast("Thanks — we'll take a look.")}
       />
     </article>
   );

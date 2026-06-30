@@ -32,6 +32,7 @@
   --sk-fg-brand: #26708e;
   --sk-fg-brand-primary: #26708e;
   --sk-fg-progress: #0086c9;          /* progress bars + rings only */
+  --sk-fg-like: #0086c9;              /* sky blue — active "like" feedback */
 
   /* ---- Text ---- */
   --sk-text-primary: #13282f;
@@ -76,6 +77,7 @@
   --sk-fg-brand: #4aa3c7;
   --sk-fg-brand-primary: #4aa3c7;
   --sk-fg-progress: #38a8e6;
+  --sk-fg-like: #38a8e6;
 
   /* ---- Text ---- */
   --sk-text-primary: #eaf1f4;

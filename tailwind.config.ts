@@ -41,6 +41,7 @@ const config: Config = {
             brand: "var(--sk-fg-brand)",
             "brand-primary": "var(--sk-fg-brand-primary)",
             progress: "var(--sk-fg-progress)",
+            like: "var(--sk-fg-like)",
           },
           text: {
             primary: "var(--sk-text-primary)",
