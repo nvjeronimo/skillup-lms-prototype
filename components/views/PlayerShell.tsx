@@ -64,7 +64,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
   const completedTopics = useLmsStore((s) => s.completedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
-  const resetDemo = useLmsStore((s) => s.resetDemo);
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const activeCourse = getCourseBySlug(courseSlug);
@@ -209,7 +208,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         showTheme
         theme={theme === "dark" ? "Dark" : "Light"}
         onTheme={toggleTheme}
-        onResetDemo={resetDemo}
         onClose={() => router.push("/")}
         accountMenu={
           <DemoControlsMenu

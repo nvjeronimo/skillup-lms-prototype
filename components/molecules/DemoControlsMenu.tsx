@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
+import { Check, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
@@ -64,6 +64,7 @@ export function DemoControlsMenu({
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const skin = useLmsStore((s) => s.skin);
   const setSkin = useLmsStore((s) => s.setSkin);
+  const resetDemo = useLmsStore((s) => s.resetDemo);
   const router = useRouter();
   const pathname = usePathname();
   const activeSlug = pathname?.match(/^\/course\/([^/]+)/)?.[1];
@@ -201,6 +202,20 @@ export function DemoControlsMenu({
               })}
             </div>
           </Section>
+
+          <div className="border-t border-sk-border-secondary p-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                resetDemo();
+                setOpen(false);
+              }}
+              className="sk-text-sm-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sk-text-secondary transition-colors hover:bg-sk-bg-secondary hover:text-sk-text-primary"
+            >
+              <Icon icon={RotateCcw} size={16} />
+              Reset demo
+            </button>
+          </div>
         </div>
       ) : null}
     </div>
