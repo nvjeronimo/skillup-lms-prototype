@@ -1,10 +1,13 @@
 "use client";
 
 import * as React from "react";
+import { Bookmark } from "lucide-react";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
 import { LessonHeader } from "@/components/atoms/LessonHeader";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
+import { BookmarkButton } from "@/components/atoms/Bookmark";
+import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
@@ -125,6 +128,25 @@ export function Sidebar({
     if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
   };
 
+  // Collapsed rail: a hover flyout surfaces the topic title + bookmark toggle
+  // (there's no room for them on the 72px rail itself).
+  const [flyout, setFlyout] = React.useState<{ topic: Topic; top: number; left: number } | null>(
+    null,
+  );
+  const flyoutTimer = React.useRef<number | null>(null);
+  const openFlyout = (topic: Topic, el: HTMLElement) => {
+    if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
+    const r = el.getBoundingClientRect();
+    setFlyout({ topic, top: r.top, left: r.right });
+  };
+  const scheduleClose = () => {
+    if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
+    flyoutTimer.current = window.setTimeout(() => setFlyout(null), 140);
+  };
+  const keepOpen = () => {
+    if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
+  };
+
   // ── Collapsed rail (DS: LMS / Sidebar v2 · State=Collapsed) ──────────────────
   // 72px rail: toggle + progress ring, then per-module groups separated by 40px
   // dividers — module number (green when complete), lesson labels (L1/L2, brand on
@@ -132,18 +154,31 @@ export function Sidebar({
   if (collapsed) {
     const Divider = () => <div className="my-1 h-px w-full bg-sk-border-secondary" />;
     const Dot = (topic: Topic) => (
-      <TopicRow
+      <div
         key={topic.id}
-        collapsed
-        type={topic.type}
-        title={topic.title}
-        duration={topic.duration}
-        status={topicStatus(topic, completed)}
-        active={topic.id === currentTopicId}
-        onClick={() => onSelectTopic?.(topic.id)}
-      />
+        className="relative w-full"
+        onMouseEnter={(e) => openFlyout(topic, e.currentTarget)}
+        onMouseLeave={scheduleClose}
+      >
+        <TopicRow
+          collapsed
+          type={topic.type}
+          title={topic.title}
+          duration={topic.duration}
+          status={topicStatus(topic, completed)}
+          active={topic.id === currentTopicId}
+          onClick={() => onSelectTopic?.(topic.id)}
+        />
+        {/* Saved topics carry a small bookmark mark on the rail. */}
+        {bookmarks.has(topic.id) ? (
+          <span className="pointer-events-none absolute right-1.5 top-1 text-sk-text-brand-secondary">
+            <Bookmark size={11} fill="currentColor" strokeWidth={1} />
+          </span>
+        ) : null}
+      </div>
     );
     return (
+      <>
       <aside
         className={cn(
           "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary py-4",
@@ -203,6 +238,39 @@ export function Sidebar({
           })}
         </div>
       </aside>
+
+      {/* Hover flyout — title + bookmark toggle for the rail's icon-only rows. */}
+      {flyout ? (
+        <div
+          className="fixed z-[70]"
+          style={{ top: flyout.top, left: flyout.left + 6 }}
+          onMouseEnter={keepOpen}
+          onMouseLeave={scheduleClose}
+        >
+          <div className="flex items-center gap-2 rounded-lg border border-sk-border-secondary bg-sk-bg-primary py-1.5 pl-3 pr-1.5 shadow-lg">
+            <button
+              type="button"
+              onClick={() => {
+                onSelectTopic?.(flyout.topic.id);
+                setFlyout(null);
+              }}
+              className="flex min-w-0 flex-col items-start text-left"
+            >
+              <span className="sk-text-sm-medium whitespace-nowrap text-sk-text-primary">
+                {flyout.topic.title}
+              </span>
+              <TopicTypeBadge type={flyout.topic.type} />
+            </button>
+            <BookmarkButton
+              bookmarked={bookmarks.has(flyout.topic.id)}
+              onToggle={() => onToggleBookmark?.(flyout.topic.id)}
+              itemLabel={flyout.topic.title}
+              size={16}
+            />
+          </div>
+        </div>
+      ) : null}
+      </>
     );
   }
 
