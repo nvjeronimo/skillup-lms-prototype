@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { Avatar } from "@/components/atoms/Avatar";
+import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { CourseCard } from "@/components/organisms/CourseCard";
 import { Toast } from "@/components/organisms/Toast";
 import { type Provider } from "@/components/atoms/MetaBadges";
@@ -53,10 +53,7 @@ export function CourseHub() {
           >
             <Icon icon={theme === "dark" ? Sun : Moon} size={20} />
           </button>
-          <span className="ml-1 flex items-center gap-2 rounded-lg p-1">
-            <Avatar name={user.name} src={user.avatarUrl} size="sm" />
-            <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{user.name}</span>
-          </span>
+          <DemoControlsMenu userName={user.name} userAvatarUrl={user.avatarUrl} />
         </div>
       </header>
 

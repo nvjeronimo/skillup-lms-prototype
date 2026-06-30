@@ -30,7 +30,9 @@ import {
   savedNotes,
   savedTopics,
   topicNotes,
+  user,
 } from "@/lib/data";
+import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 
 export interface PlayerShellProps {
   courseSlug: string;
@@ -209,6 +211,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onTheme={toggleTheme}
         onResetDemo={resetDemo}
         onClose={() => router.push("/")}
+        accountMenu={
+          <DemoControlsMenu
+            userName={user.name}
+            userAvatarUrl={user.avatarUrl}
+            compact={topbarSize === "Mobile"}
+          />
+        }
       />
 
       {/* Body — floating white card(s) on a secondary-tint surface. Desktop/tablet

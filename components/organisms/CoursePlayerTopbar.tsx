@@ -28,6 +28,8 @@ export interface CoursePlayerTopbarProps {
   /** Demo-only: restore the original seeded state. Renders a "Reset demo" control. */
   onResetDemo?: () => void;
   onClose?: () => void;
+  /** Replaces the default (inert) account button — e.g. the demo-settings menu. */
+  accountMenu?: React.ReactNode;
   className?: string;
 }
 
@@ -75,6 +77,7 @@ export function CoursePlayerTopbar({
   onTheme,
   onResetDemo,
   onClose,
+  accountMenu,
   className,
 }: CoursePlayerTopbarProps) {
   const isMobile = size === "Mobile";
@@ -173,16 +176,18 @@ export function CoursePlayerTopbar({
           </UtilityButton>
         ) : null}
 
-        <button
-          type="button"
-          aria-label="Account"
-          className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sk-bg-secondary"
-        >
-          <Avatar name={userName} src={userAvatarUrl} size="sm" />
-          {!isMobile ? (
-            <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
-          ) : null}
-        </button>
+        {accountMenu ?? (
+          <button
+            type="button"
+            aria-label="Account"
+            className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sk-bg-secondary"
+          >
+            <Avatar name={userName} src={userAvatarUrl} size="sm" />
+            {!isMobile ? (
+              <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
+            ) : null}
+          </button>
+        )}
 
         <UtilityButton label="Exit course player" onClick={onClose}>
           <Icon icon={X} size={20} />
