@@ -36,7 +36,7 @@ const SKINS: { skin: SkinId; label: string; swatch: string }[] = [
   { skin: "teal", label: "Teal — default (P03)", swatch: "#26708e" },
   { skin: "ink", label: "Brand Blue (P01)", swatch: "#04313d" },
   { skin: "sky", label: "Link Blue (P04)", swatch: "#3685c6" },
-  { skin: "violet", label: "Violet", swatch: "#6d28d9" },
+  { skin: "violet", label: "Violet", swatch: "#4d1b9a" },
   { skin: "gold", label: "Gold (AD2)", swatch: "#ac7720" },
   { skin: "red", label: "Red (AC3)", swatch: "#b62226" },
 ];
