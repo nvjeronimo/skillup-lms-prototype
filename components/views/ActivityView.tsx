@@ -63,7 +63,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
                   className={cn(
                     "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
                     isDone
-                      ? "bg-sk-text-success-primary text-sk-fg-white"
+                      ? "bg-sk-bg-success-solid text-sk-fg-white"
                       : "border-2 border-sk-border-primary",
                   )}
                 >

@@ -28,8 +28,8 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
     <div className="flex min-h-[100dvh] flex-col bg-sk-bg-secondary">
       <CoursePlayerTopbar size={topbarSize} showBookmark showNotifications onClose={backToCourse} />
 
-      {/* Dark teal stage */}
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-sk-text-brand-primary px-4 py-12">
+      {/* Deep brand stage (theme- + skin-stable; never inverts) */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-sk-bg-brand-stage px-4 py-12">
         <p className="sk-text-2xs-medium text-sk-fg-white">Certificate of Completion</p>
         <CourseCertificate
           learnerName={certificate.learnerName}

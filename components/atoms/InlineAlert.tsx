@@ -17,22 +17,22 @@ export interface InlineAlertProps {
 const TONE: Record<AlertTone, { box: string; circle: string; icon: LucideIcon }> = {
   info: {
     box: "bg-sk-bg-brand-section border-sk-border-brand",
-    circle: "bg-sk-fg-progress",
+    circle: "bg-sk-bg-brand-solid",
     icon: RotateCw,
   },
   success: {
     box: "bg-sk-bg-success-primary border-sk-text-success-primary",
-    circle: "bg-sk-text-success-primary",
+    circle: "bg-sk-bg-success-solid",
     icon: Check,
   },
   warning: {
     box: "bg-sk-bg-warning-primary border-sk-text-warning-primary",
-    circle: "bg-sk-text-warning-primary",
+    circle: "bg-sk-bg-warning-solid",
     icon: AlertTriangle,
   },
   error: {
     box: "bg-sk-bg-error-primary border-sk-text-error-primary",
-    circle: "bg-sk-text-error-primary",
+    circle: "bg-sk-bg-error-solid",
     icon: AlertCircle,
   },
 };

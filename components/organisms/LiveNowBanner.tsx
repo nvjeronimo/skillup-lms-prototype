@@ -39,7 +39,7 @@ export function LiveNowBanner({
         <span
           className={cn(
             "sk-text-2xs-semibold inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-sk-fg-white",
-            isLive ? "bg-sk-text-error-primary" : "bg-sk-text-warning-primary",
+            isLive ? "bg-sk-bg-error-solid" : "bg-sk-bg-warning-solid",
           )}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-sk-fg-white" aria-hidden />

@@ -79,7 +79,7 @@ export function CourseCertificate({
       )}
     >
       {/* Green header band + check */}
-      <div className="flex h-24 items-center justify-center bg-sk-text-success-primary">
+      <div className="flex h-24 items-center justify-center bg-sk-bg-success-solid">
         <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-sk-bg-primary text-sk-text-success-primary">
           <Icon icon={Check} size={28} strokeWidth={2.5} />
         </span>

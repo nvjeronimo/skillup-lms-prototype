@@ -53,7 +53,7 @@ export function CourseCompleteModal({
           <Icon icon={X} size={20} />
         </button>
 
-        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-sk-text-success-primary text-sk-fg-white">
+        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-sk-bg-success-solid text-sk-fg-white">
           <Icon icon={Check} size={28} strokeWidth={2.5} />
         </span>
         <h2 id={titleId} className="sk-text-display-xs-semibold mt-4 text-sk-text-primary">

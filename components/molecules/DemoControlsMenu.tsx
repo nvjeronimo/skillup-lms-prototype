@@ -24,19 +24,19 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 ];
 
 // Brand skins — recombinations within the SkillUp palette.
-const SKINS: { skin: SkinId; label: string; swatch: string }[] = [
-  { skin: "teal", label: "Teal — default (P03)", swatch: "#26708e" },
-  { skin: "ink", label: "Brand Blue (P01)", swatch: "#04313d" },
-  { skin: "sky", label: "Link Blue (P04)", swatch: "#3685c6" },
-  { skin: "violet", label: "Violet", swatch: "#4d1b9a" },
-  { skin: "gold", label: "Gold (AD2)", swatch: "#ac7720" },
-  { skin: "red", label: "Red (AC3)", swatch: "#b62226" },
+const SKINS: { skin: SkinId; label: string }[] = [
+  { skin: "teal", label: "Teal — default (P03)" },
+  { skin: "ink", label: "Brand Blue (P01)" },
+  { skin: "sky", label: "Link Blue (P04)" },
+  { skin: "violet", label: "Violet" },
+  { skin: "gold", label: "Gold (AD2)" },
+  { skin: "red", label: "Red (AC3)" },
 ];
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-t border-sk-border-secondary px-4 py-3">
-      <p className="sk-text-2xs-medium mb-2 uppercase tracking-wide text-sk-text-tertiary">{title}</p>
+      <p className="sk-text-2xs-medium mb-2 text-sk-text-tertiary">{title}</p>
       {children}
     </div>
   );
@@ -187,12 +187,14 @@ export function DemoControlsMenu({
                     title={`Skin: ${s.label}`}
                     className="inline-flex h-7 w-7 items-center justify-center rounded-full"
                   >
+                    {/* Swatch reads the live brand-solid token for this skin (no hardcoded hex):
+                        data-skin re-resolves --sk-bg-brand-solid to the skin's value. */}
                     <span
+                      data-skin={s.skin === "teal" ? undefined : s.skin}
                       className={cn(
-                        "size-5 rounded-full ring-offset-2 ring-offset-sk-bg-primary transition-all",
+                        "size-5 rounded-full bg-sk-bg-brand-solid ring-offset-2 ring-offset-sk-bg-primary transition-all",
                         active ? "ring-2 ring-sk-text-primary" : "ring-1 ring-sk-border-secondary",
                       )}
-                      style={{ backgroundColor: s.swatch }}
                     />
                   </button>
                 );

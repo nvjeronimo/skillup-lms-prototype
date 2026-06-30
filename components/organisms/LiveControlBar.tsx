@@ -65,7 +65,7 @@ export function LiveControlBar({
       >
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-sk-bg-error-primary px-2 py-0.5">
-            <span className="h-2 w-2 rounded-full bg-sk-text-error-primary" aria-hidden />
+            <span className="h-2 w-2 rounded-full bg-sk-bg-error-solid" aria-hidden />
             <span className="sk-text-xs-semibold text-sk-text-error-primary">LIVE</span>
           </span>
           <span className="sk-text-sm-medium text-sk-text-primary">Office hours with Sarah</span>

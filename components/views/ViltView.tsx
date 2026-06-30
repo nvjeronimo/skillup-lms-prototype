@@ -17,7 +17,7 @@ export function ViltView({ topicId }: { topicId: string }) {
       <div
         className="relative flex aspect-video max-h-[42vh] w-full items-center justify-center overflow-hidden rounded-xl"
         style={{
-          background: "linear-gradient(135deg, var(--sk-bg-brand-solid), var(--sk-text-brand-primary))",
+          background: "linear-gradient(135deg, var(--sk-bg-brand-solid), var(--sk-bg-brand-stage))",
         }}
       >
         <span className="sk-text-md-semibold text-sk-text-primary-on-brand">

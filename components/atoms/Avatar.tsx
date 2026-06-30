@@ -64,7 +64,7 @@ export function Avatar({ name, src, size = "md", status = "none", className }: A
           className={cn(
             "absolute bottom-0 right-0 rounded-full border-2 border-sk-bg-primary",
             s.dot,
-            status === "online" ? "bg-sk-text-success-primary" : "bg-sk-fg-quaternary",
+            status === "online" ? "bg-sk-bg-success-solid" : "bg-sk-fg-quaternary",
           )}
         />
       ) : null}

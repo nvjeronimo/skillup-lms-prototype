@@ -24,7 +24,7 @@ export function CompletionStatus({ state, size = 20, className }: CompletionStat
       <span
         role="img"
         aria-label="Completed"
-        className={cn(base, "bg-sk-text-success-primary text-sk-fg-white", className)}
+        className={cn(base, "bg-sk-bg-success-solid text-sk-fg-white", className)}
         style={dims}
       >
         <Check size={size * 0.62} strokeWidth={size >= 24 ? 2.5 : 2} />

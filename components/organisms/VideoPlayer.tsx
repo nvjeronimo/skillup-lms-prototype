@@ -114,7 +114,7 @@ export function VideoPlayer({
           role="status"
           aria-live="polite"
           className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 text-center"
-          style={{ background: mix("--sk-text-primary", 40) }}
+          style={{ background: mix("--sk-bg-overlay", 55) }}
         >
           {state === "loading" ? (
             <>
@@ -155,9 +155,9 @@ export function VideoPlayer({
       {captions && state === "ready" ? (
         <div
           className="absolute bottom-20 left-1/2 z-10 max-w-[80%] -translate-x-1/2 rounded px-3 py-1 text-center"
-          style={{ background: mix("--sk-text-primary", 70) }}
+          style={{ background: mix("--sk-bg-overlay", 75) }}
         >
-          <span className="sk-text-sm-medium text-sk-text-primary-on-brand">
+          <span className="sk-text-sm-medium text-sk-fg-white">
             Welcome back. In this unit we look at the product development lifecycle…
           </span>
         </div>
@@ -167,7 +167,7 @@ export function VideoPlayer({
       <div
         className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-2 px-4 pb-3 pt-8"
         style={{
-          background: `linear-gradient(to top, ${mix("--sk-text-primary", 70)}, transparent)`,
+          background: `linear-gradient(to top, ${mix("--sk-bg-overlay", 75)}, transparent)`,
         }}
       >
         <input
