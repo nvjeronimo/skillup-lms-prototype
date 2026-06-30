@@ -155,3 +155,15 @@ Atoms: Avatar, Badge, CompletionStatus (apart from the noted P2), EmptyState, Le
 - *Full 6 theme modes (not recommended):* + pixel-exact per-skin Figma. − 6× token explosion, 6× drift surface, heavy maintenance, contradicts the "one value per skin" design intent.
 
 **Net:** runtime-only stays the source of truth; add the lightweight aliased 6-mode collection so skin-proofing is reviewable in design before it reaches code, and wire the §5 token-role + dark-mode contrast checks to catch the rest.
+
+---
+
+## 7. Remediation Log (2026-06-30)
+
+**Prototype (P0–P3) — done, deployed.** R1/R5 add `--sk-bg-brand-stage` (deep brand, derives per skin+theme) for CertificateView + ViltView. R2/R3/R4 add theme-stable `--sk-bg-overlay` for the VideoPlayer scrims/captions (were `--sk-text-primary`, inverted in dark). R6 derives `--sk-bg-brand-hover` per skin (default SKO keeps yellow). R7 InlineAlert info circle → brand-solid. R11 adds `--sk-bg-{success,warning,error}-solid` + swaps status text-token fills. R12 swatches read live `--sk-bg-brand-solid` via `data-skin` (no hardcoded hex). R16 redundant `uppercase` dropped. R8 kept (matches DS Mobile Tab Select). R13/R14/R15/R17 resolved keep-with-rationale.
+
+**Guardrails — done.** `scripts/check-tokens.mjs` (`npm run lint:tokens`): no raw colours, no text-token-as-fill (inversion class), no raw Tailwind typography. It immediately caught a bug the manual audit missed — **Toast** used `bg-sk-text-primary` (inverts light in dark) under fixed white text → fixed to `--sk-bg-overlay`.
+
+**DS rebind (R9) — done (unpublished).** 308 paints rebound/tokenized to `LMS/*`: 222 systematic (white + neutrals + brand-section, zero value shift) + 21 success/quaternary + 65 raw (white→fg-white/bg-primary, black→text-primary, brand→text-brand-primary). DS drift 201→50, raw 36→3. **Remaining (by decision/flag):** ~30 utility ramps KEPT as a documented data-viz palette; 18 foreign `background/*` namespace in Topbar (needs origin investigation — likely an embedded component); 2 destructive-button tokens (need an LMS error-solid token in the DS first); 3 stray raw (`#ff0000` placeholder ×2, `#667380` ×1). Needs a **library publish** to reach consumers.
+
+**Playground boards (R10) — pending.** Build VILT / Assessments / Course End / Discovery boards (Light+Dark) so all product families have a visual parity reference. Large design-authoring task; in progress.
