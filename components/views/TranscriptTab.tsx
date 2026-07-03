@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { ArrowDown, ChevronDown, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { Button } from "@/components/atoms/Button";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { useLmsStore } from "@/lib/store";
@@ -30,8 +31,12 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   // Auto-follow the active line; pause when the user scrolls manually.
   const [following, setFollowing] = React.useState(true);
+  // Direction the user scrolled away in — the "sync" icon points the opposite
+  // way (the direction scrollToActive will actually move the viewport).
+  const [scrollDirection, setScrollDirection] = React.useState<"up" | "down">("down");
   const lineRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
   const pauseTimer = React.useRef<number | null>(null);
+  const lastTouchY = React.useRef<number | null>(null);
 
   const scrollToActive = React.useCallback(() => {
     const el = activeLineId ? lineRefs.current[activeLineId] : null;
@@ -45,16 +50,35 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     if (following) scrollToActive();
   }, [activeLineId, following, scrollToActive]);
 
-  function pauseFollow() {
+  function pauseFollow(direction: "up" | "down") {
+    setScrollDirection(direction);
     setFollowing(false);
     if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
     pauseTimer.current = window.setTimeout(() => setFollowing(true), PAUSE_MS);
+  }
+
+  function handleWheel(e: React.WheelEvent) {
+    pauseFollow(e.deltaY > 0 ? "down" : "up");
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    const y = e.touches[0]?.clientY;
+    if (y == null) return;
+    if (lastTouchY.current != null) {
+      // Touch drag down (finger moves down) scrolls content up, and vice versa.
+      pauseFollow(y < lastTouchY.current ? "down" : "up");
+    }
+    lastTouchY.current = y;
   }
 
   function resumeFollow() {
     if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
     setFollowing(true);
     scrollToActive();
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    lastTouchY.current = e.touches[0]?.clientY ?? null;
   }
 
   if (!topic || !transcript.length) {
@@ -66,7 +90,12 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   }
 
   return (
-    <div className="relative" onWheel={pauseFollow} onTouchMove={pauseFollow}>
+    <div
+      className="relative"
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+    >
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
       <div className="flex flex-wrap items-center justify-between gap-3 py-2">
@@ -106,15 +135,16 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       </div>
 
       {!following ? (
-        <button
-          type="button"
-          onClick={resumeFollow}
-          className="sk-text-xs-semibold sticky top-2 z-10 ml-auto flex items-center gap-1.5 rounded-full bg-sk-bg-brand-section px-3 py-1.5 text-sk-text-brand-secondary shadow-sm"
-        >
-          Following
-          <Icon icon={ArrowDown} size={14} />
-          <span className="text-sk-text-brand">· Resume</span>
-        </button>
+        <div className="sticky bottom-4 z-10 flex justify-center">
+          <Button
+            variant="primary"
+            size="sm"
+            rightIcon={scrollDirection === "down" ? ChevronUp : ChevronDown}
+            onClick={resumeFollow}
+          >
+            Sync to Video
+          </Button>
+        </div>
       ) : null}
 
       <div className="flex flex-col py-2">
