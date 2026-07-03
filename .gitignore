@@ -35,3 +35,6 @@ yarn-error.log*
 .playwright-mcp/
 *.png
 .vercel
+
+# local tooling
+.claude/

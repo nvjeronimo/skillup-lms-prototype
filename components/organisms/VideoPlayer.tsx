@@ -213,9 +213,9 @@ export function VideoPlayer({
               aria-label="Toggle captions"
               className={cn(
                 "sk-text-xs-semibold rounded px-2 py-1",
-                captions ? "bg-sk-fg-white text-sk-text-brand-secondary" : "text-sk-fg-white",
+                captions ? "text-sk-text-brand-secondary" : "text-sk-fg-white",
               )}
-              style={captions ? undefined : controlBg}
+              style={captions ? { background: mix("--sk-fg-white", 90) } : controlBg}
             >
               CC
             </button>
