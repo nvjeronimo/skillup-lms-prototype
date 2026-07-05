@@ -134,20 +134,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
         </button>
       </div>
 
-      {!following ? (
-        <div className="sticky bottom-4 z-10 flex justify-center">
-          <Button
-            variant="primary"
-            size="sm"
-            rightIcon={scrollDirection === "down" ? ChevronUp : ChevronDown}
-            onClick={resumeFollow}
-          >
-            Sync to Video
-          </Button>
-        </div>
-      ) : null}
-
-      <div className="flex flex-col py-2">
+      <div className="relative flex flex-col py-2">
         {transcript.map((line) => {
           const note = notes.find((n) => n.transcriptLineId === line.id && n.topicId === topicId);
           const hasNote = Boolean(note);
@@ -174,6 +161,19 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             </div>
           );
         })}
+
+        {!following ? (
+          <div className="absolute inset-x-0 bottom-4 z-10 flex justify-center">
+            <Button
+              variant="primary"
+              size="sm"
+              rightIcon={scrollDirection === "down" ? ChevronUp : ChevronDown}
+              onClick={resumeFollow}
+            >
+              Sync to Video
+            </Button>
+          </div>
+        ) : null}
       </div>
 
       {/* Feedback + license footer (ICP Phase 1). */}
