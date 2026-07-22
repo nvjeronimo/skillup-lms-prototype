@@ -73,6 +73,30 @@ export interface DiscussionThread {
   upvotes: number;
 }
 
+/**
+ * ADDING A NEW TOPIC CONTENT TYPE — READ THIS FIRST
+ *
+ * A type is not one definition; it is an entry in every list that describes
+ * topics. Miss one and the type still renders, so nothing looks broken — it
+ * just behaves differently from every other type, and the defect only shows up
+ * when two types are compared side by side. Every item below was found broken
+ * in this codebase after adding a type:
+ *
+ *   1. TopicType union .................. lib/types.ts
+ *   2. TopicFamily union ................ below
+ *   3. topicFamily() .................... below            (else: falls back to Reading)
+ *   4. topicDescription() ............... below            (else: echoes the topic title)
+ *   5. getDownloads() ................... below            (else: shows a generic file)
+ *   6. PRIMARY_LABEL .................... PlayerShell.tsx  (else: unlabelled first tab)
+ *   7. hasInFrameAction ................. PlayerShell.tsx  (else: two Mark-as-Complete)
+ *   8. the view switch .................. TopicBody.tsx
+ *   9. topicTypeIcon() .................. lib/icons.tsx
+ *  10. SHORT_LABELS ..................... lib/utils.ts     (else: truncates in sidebar)
+ *  11. ALL_TOPIC_TYPES .................. TopicTypeBadge.tsx
+ *
+ * Worth converting into a test that fails on an unregistered family rather
+ * than relying on memory. See LMS-HANDOFF/topic-types-inventory.md section 6.
+ */
 /** High-level family used to pick the right player view. */
 export type TopicFamily =
   | "video"
