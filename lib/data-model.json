@@ -75,7 +75,8 @@
               { "id": "m3-t4b", "type": "VILT-Live Session", "title": "Live clinic: applying DMAIC to your own process", "duration": "Thu 24 Jul · 15:00", "completed": false },
               { "id": "m3-t4c", "type": "VILT-Recording", "title": "Recording: Measurement systems analysis Q&A", "duration": "58 min", "completed": false },
               { "id": "m3-t4d", "type": "Podcast", "title": "In practice: what changes on the shop floor", "duration": "19m 04s", "completed": false },
-              { "id": "m3-t4e", "type": "Lab", "title": "Lab: Process capability in Python", "duration": "approx. 45 min", "completed": false }
+              { "id": "m3-t4e", "type": "Lab", "title": "Lab: Process capability in Python", "duration": "approx. 45 min", "completed": false },
+              { "id": "m3-t4f", "type": "Peer-graded", "title": "Peer-Review: Design a control plan", "duration": "approx. 60 min", "completed": false }
             ]
           },
           {

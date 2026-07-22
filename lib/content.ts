@@ -72,6 +72,7 @@ export type TopicFamily =
   | "graded"
   | "activity"
   | "lab"
+  | "ora"
   | "podcast"
   | "discussion"
   | "vilt";
@@ -84,9 +85,12 @@ export function topicFamily(type: TopicType): TopicFamily {
       return "reading";
     case "Quiz":
     case "Practice Assignment":
+      return "assessment";
     case "Peer-graded":
     case "Peer Review":
-      return "assessment";
+    case "Project":
+      // Open Response Assessment — submit, review a peer, receive a grade.
+      return "ora";
     case "Graded Assignment":
       return "graded";
     case "Activity":
@@ -119,6 +123,8 @@ export function topicDescription(topic: FlatTopic): string {
       return `Apply what you've learned and submit your work. This assignment counts toward your final grade.`;
     case "activity":
       return `An interactive exercise to practise the concepts from ${topic.moduleTitle}.`;
+    case "ora":
+      return `A peer-reviewed project. You'll submit your work, review a peer, and receive a grade.`;
     case "lab":
       return `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`;
     case "podcast":
@@ -518,4 +524,94 @@ export function getPodcast(topic: FlatTopic): PodcastContent {
       { ts: "18:05", label: "What good sponsorship looks like" },
     ],
   };
+}
+
+/* ----------------------------------------------------------------- ORA --- */
+
+/**
+ * Open Response Assessment. Our courses enable 3 of the 6 edX steps —
+ * Response → Peer → Grade (no Learner Training, no Self Assessment) — which is
+ * 12 learner-facing states. This is the only topic type where the learner
+ * returns over days or weeks, so waiting and empty states matter as much as
+ * the forms.
+ */
+export type OraStep = "response" | "peer" | "grade";
+
+export interface OraCriterion {
+  id: string;
+  label: string;
+  maxPoints: number;
+  options: { points: number; label: string }[];
+}
+
+export interface OraContent {
+  brief: string;
+  deliverable: string;
+  dueLabel: string;
+  requiredReviews: number;
+  acceptedTypes: string[];
+  criteria: OraCriterion[];
+  /** Prompt shown on the peer-review form. */
+  overallCommentPrompt: string;
+}
+
+export function getOra(topic: FlatTopic): OraContent {
+  return {
+    brief:
+      "Define a control plan for a process of your choice. Identify the critical-to-quality characteristics, the metrics you'll monitor, the control limits, and the response plan when a measurement falls out of range.",
+    deliverable:
+      "Submit your plan as a PDF or DOCX — 1–2 pages, including at least one control chart sketch.",
+    dueLabel: "Due 1 Sep 2026",
+    requiredReviews: 1,
+    acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
+    overallCommentPrompt: "What did you like most about your peer's submission?",
+    criteria: [
+      {
+        id: "c1",
+        label: "Task 1 · Identify the CTQ characteristics",
+        maxPoints: 3,
+        options: [
+          { points: 3, label: "All CTQs identified and traced to a customer need" },
+          { points: 2, label: "Most CTQs identified, tracing is partial" },
+          { points: 0, label: "Not attempted or incorrect" },
+        ],
+      },
+      {
+        id: "c2",
+        label: "Task 2 · Define the metrics and control limits",
+        maxPoints: 6,
+        options: [
+          { points: 6, label: "Metrics and limits are specific, measurable and justified" },
+          { points: 4, label: "Metrics defined, limits weakly justified" },
+          { points: 2, label: "Metrics present but no limits" },
+          { points: 0, label: "Not attempted" },
+        ],
+      },
+      {
+        id: "c3",
+        label: "Task 3 · Include a control chart",
+        maxPoints: 5,
+        options: [
+          { points: 5, label: "Correct chart type with limits drawn and labelled" },
+          { points: 3, label: "Chart present but limits missing or mislabelled" },
+          { points: 0, label: "No chart" },
+        ],
+      },
+      {
+        id: "c4",
+        label: "Task 4 · Define the response plan",
+        maxPoints: 6,
+        options: [
+          { points: 6, label: "Clear owner, trigger and action for each out-of-range case" },
+          { points: 4, label: "Actions defined but ownership unclear" },
+          { points: 2, label: "Vague or generic response plan" },
+          { points: 0, label: "Not attempted" },
+        ],
+      },
+    ],
+  };
+}
+
+export function oraMaxPoints(content: OraContent): number {
+  return content.criteria.reduce((sum, c) => sum + c.maxPoints, 0);
 }

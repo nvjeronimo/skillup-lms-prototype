@@ -30,6 +30,23 @@ interface LmsState {
   currentVideoTimestamp: number;
   /** Last playback position per video topic, so the learner can resume. */
   resumePositions: Record<string, number>;
+  /**
+   * ORA progress per topic. The learner returns over days or weeks, so this is
+   * persisted: submitted → reviews given → grade released.
+   */
+  oraState: Record<
+    string,
+    {
+      submitted: boolean;
+      fileName?: string;
+      reviewsGiven: number;
+      /** Peers who have reviewed the learner's own work. */
+      reviewsReceived: number;
+      /** Populated once the grade is released. */
+      score?: number;
+      staffOverride?: boolean;
+    }
+  >;
   /** Transcript line currently highlighted as Active (independent of playback). */
   activeLineId: string | null;
   notes: Note[];
@@ -65,6 +82,12 @@ interface LmsState {
   saveResumePosition: (topicId: string, seconds: number) => void;
   /** Forget a stored position — used when the learner restarts from the top. */
   clearResumePosition: (topicId: string) => void;
+  /** Submit the learner's own ORA response. */
+  oraSubmit: (topicId: string, fileName: string) => void;
+  /** Record one completed peer review; releases the grade once the quota is met. */
+  oraGivePeerReview: (topicId: string) => void;
+  /** Demo affordance: simulate a peer reviewing the learner's submission. */
+  oraReceivePeerReview: (topicId: string, score: number, staffOverride?: boolean) => void;
   openNoteEditor: (params: { lineId?: string; noteId?: string }) => void;
   closeNoteEditor: () => void;
   saveNote: (note: NotePayload) => void;
@@ -129,6 +152,7 @@ export const useLmsStore = create<LmsState>()(
   currentTabSlug: "transcript",
   currentVideoTimestamp: 0,
   resumePositions: {},
+  oraState: {},
   activeLineId: "ln-3",
   notes: notesSeed,
   noteEditor: { open: false },
@@ -164,6 +188,39 @@ export const useLmsStore = create<LmsState>()(
         ? s
         : { resumePositions: { ...s.resumePositions, [topicId]: Math.round(seconds) } },
     ),
+  oraSubmit: (topicId, fileName) =>
+    set((s) => ({
+      oraState: {
+        ...s.oraState,
+        [topicId]: {
+          ...(s.oraState[topicId] ?? { reviewsGiven: 0, reviewsReceived: 0 }),
+          submitted: true,
+          fileName,
+        },
+      },
+    })),
+  oraGivePeerReview: (topicId) =>
+    set((s) => {
+      const cur = s.oraState[topicId] ?? { submitted: false, reviewsGiven: 0, reviewsReceived: 0 };
+      return {
+        oraState: { ...s.oraState, [topicId]: { ...cur, reviewsGiven: cur.reviewsGiven + 1 } },
+      };
+    }),
+  oraReceivePeerReview: (topicId, score, staffOverride) =>
+    set((s) => {
+      const cur = s.oraState[topicId] ?? { submitted: false, reviewsGiven: 0, reviewsReceived: 0 };
+      return {
+        oraState: {
+          ...s.oraState,
+          [topicId]: {
+            ...cur,
+            reviewsReceived: cur.reviewsReceived + 1,
+            score,
+            staffOverride,
+          },
+        },
+      };
+    }),
   clearResumePosition: (topicId) =>
     set((s) => {
       const next = { ...s.resumePositions };
@@ -319,6 +376,7 @@ export const useLmsStore = create<LmsState>()(
       noteEditor: { open: false },
       currentVideoTimestamp: 0,
       resumePositions: {},
+      oraState: {},
       activeLineId: "ln-3",
       toast: { message: "Demo reset to its initial state" },
     });
@@ -334,6 +392,7 @@ export const useLmsStore = create<LmsState>()(
         submittedTopics: s.submittedTopics,
         quizResults: s.quizResults,
         resumePositions: s.resumePositions,
+        oraState: s.oraState,
         bookmarks: s.bookmarks,
         notes: s.notes,
         notificationsRead: s.notificationsRead,
