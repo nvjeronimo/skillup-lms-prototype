@@ -374,3 +374,71 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
   }
   return [...files, ...transcriptFile];
 }
+
+/* ---------------------------------------------------------------- VILT --- */
+
+/**
+ * VILT is one Topic Content Type whose underlying asset changes over time:
+ * pre-live has no asset at all (only scheduling metadata), live is an external
+ * stream, and the recording is a Video asset. The player therefore renders one
+ * row that changes stage, not three separate types.
+ */
+export type ViltStage = "pre-live" | "live" | "recording";
+
+export interface ViltSession {
+  stage: ViltStage;
+  title: string;
+  /** Human date/time as the learner sees it. */
+  whenLabel: string;
+  durationLabel: string;
+  host: string;
+  platform: "Zoom" | "Teams";
+  /** Minutes until start — drives the countdown and the Join unlock. */
+  minutesUntilStart: number;
+  /** Join unlocks this many minutes before the session. */
+  joinUnlocksMinutesBefore: number;
+  agenda: string[];
+  attendees: { live: number; total: number };
+  /** Completion rule differs per stage — attendance vs watched. */
+  completionRule: string;
+}
+
+export function getViltSession(topic: FlatTopic): ViltSession {
+  const isRecording = topic.type === "VILT-Recording";
+  if (isRecording) {
+    return {
+      stage: "recording",
+      title: topic.title,
+      whenLabel: "Recorded Tue 15 Jul · 15:00 WEST",
+      durationLabel: topic.duration,
+      host: "Dr. Marta Silva",
+      platform: "Zoom",
+      minutesUntilStart: 0,
+      joinUnlocksMinutesBefore: 15,
+      agenda: [
+        "Gauge R&R walkthrough",
+        "Common measurement pitfalls",
+        "Open Q&A from the cohort",
+      ],
+      attendees: { live: 0, total: 30 },
+      completionRule: "Completes automatically once you have watched 90%.",
+    };
+  }
+  return {
+    stage: "pre-live",
+    title: topic.title,
+    whenLabel: "Thu 24 Jul · 15:00–16:00 WEST",
+    durationLabel: "60 min",
+    host: "Dr. Marta Silva",
+    platform: "Zoom",
+    minutesUntilStart: 12,
+    joinUnlocksMinutesBefore: 15,
+    agenda: [
+      "Bring one process from your own work",
+      "Live DMAIC framing in breakout groups",
+      "Feedback round with the cohort",
+    ],
+    attendees: { live: 24, total: 30 },
+    completionRule: "Attend live (join + at least 50% of the session) or watch the recording to 90%.",
+  };
+}
