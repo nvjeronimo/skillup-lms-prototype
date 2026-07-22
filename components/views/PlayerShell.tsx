@@ -150,7 +150,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     <TopicActionBar state={actionState} onComplete={() => markComplete(topicId)} />
   );
   const showAction = !isLocked && !hasInFrameAction;
-  const bottomAction = showAction ? (
+  // The end-of-content action only belongs at the end of the CONTENT. The
+  // Downloads and Notes tabs are short lists, so a second button there sits
+  // in the same viewport as the header one and just reads as duplication.
+  const bottomAction = showAction && activeTab === "transcript" ? (
     <div className="mt-6 flex justify-end border-t border-sk-border-secondary pt-5">
       {renderAction()}
     </div>
