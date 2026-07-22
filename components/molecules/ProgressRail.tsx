@@ -5,10 +5,10 @@ import { Check, X, Flag } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
-export type QuizQuestionState = "unanswered" | "current" | "correct" | "incorrect" | "flagged";
+export type RailItemState = "pending" | "current" | "done" | "error" | "flagged";
 
-export interface QuizProgressRailProps {
-  states: QuizQuestionState[];
+export interface ProgressRailProps {
+  states: RailItemState[];
   currentIndex: number;
   /** Single position label, e.g. "Question 1 of 3 · Practice quiz". */
   label: string;
@@ -17,17 +17,20 @@ export interface QuizProgressRailProps {
 }
 
 /**
- * In-quiz progress map. Open edX has no quiz-level concept — the rail is
- * computed client-side from the per-question states, which is exactly why it
- * has to live in our shell rather than in the problem renderer.
+ * Position + progress for any multi-item topic (quiz questions, activity
+ * steps). One line: the label carries the position, the dots carry per-item
+ * state — so neither has to be repeated in prose elsewhere on the screen.
+ *
+ * Open edX has no quiz-level concept, so for quizzes this is computed
+ * client-side in our shell rather than by the problem renderer.
  */
-export function QuizProgressRail({
+export function ProgressRail({
   states,
   currentIndex,
   label,
   onJump,
   className,
-}: QuizProgressRailProps) {
+}: ProgressRailProps) {
 
   return (
     <div
@@ -52,21 +55,21 @@ export function QuizProgressRail({
                 className={cn(
                   "flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
-                  s === "correct"
+                  s === "done"
                     ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
-                    : s === "incorrect"
+                    : s === "error"
                       ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
                       : s === "flagged"
                         ? "border-sk-text-warning-primary bg-sk-bg-warning-primary text-sk-text-warning-primary"
                         : isCurrent
                           ? "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary"
                           : "border-sk-border-primary text-sk-text-tertiary hover:bg-sk-bg-secondary",
-                  isCurrent && s !== "unanswered" ? "ring-2 ring-sk-border-brand ring-offset-1" : "",
+                  isCurrent && s !== "pending" ? "ring-2 ring-sk-border-brand ring-offset-1" : "",
                 )}
               >
-                {s === "correct" ? (
+                {s === "done" ? (
                   <Icon icon={Check} size={13} />
-                ) : s === "incorrect" ? (
+                ) : s === "error" ? (
                   <Icon icon={X} size={13} />
                 ) : s === "flagged" ? (
                   <Icon icon={Flag} size={12} />

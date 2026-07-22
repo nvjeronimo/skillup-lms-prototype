@@ -320,7 +320,10 @@ function PeerStep({
     <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-brand-secondary">
-          Review {reviewsGiven + 1} of {ora.requiredReviews}
+          {/* "Review 1 of 1" is noise — only show the count when there are several. */}
+          {ora.requiredReviews > 1
+            ? `Review ${reviewsGiven + 1} of ${ora.requiredReviews}`
+            : "Review a peer's submission"}
         </span>
         <span className="sk-text-xs-regular text-sk-text-tertiary">Anonymous peer</span>
       </div>

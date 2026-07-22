@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
-import { QuizProgressRail, type QuizQuestionState } from "@/components/molecules/QuizProgressRail";
+import { ProgressRail, type RailItemState } from "@/components/molecules/ProgressRail";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Badge } from "@/components/atoms/Badge";
@@ -103,13 +103,13 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const posInSequence = sequence.indexOf(qIndex);
   const isLastInSequence = posInSequence === sequence.length - 1;
 
-  const railStates: QuizQuestionState[] = outcomes.map((o, i) =>
-    i === qIndex && o === null ? "current" : o === null ? "unanswered" : o ? "correct" : "incorrect",
+  const railStates: RailItemState[] = outcomes.map((o, i) =>
+    i === qIndex && o === null ? "current" : o === null ? "pending" : o ? "done" : "error",
   );
 
   return (
     <div className="flex flex-col gap-3 py-4">
-      <QuizProgressRail
+      <ProgressRail
         states={railStates}
         currentIndex={qIndex}
         label={`Question ${posInSequence + 1} of ${sequence.length}${

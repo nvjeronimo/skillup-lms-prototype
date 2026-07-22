@@ -4,6 +4,7 @@ import * as React from "react";
 import { Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { ProgressRail, type RailItemState } from "@/components/molecules/ProgressRail";
 import { getActivity } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
@@ -39,8 +40,25 @@ export function ActivityView({ topicId }: { topicId: string }) {
     });
   }
 
+  // First step still to do — the one the learner is "on".
+  const currentIdx = activity.steps.findIndex((_, i) => !done.has(i));
+  const railStates: RailItemState[] = activity.steps.map((_, i) =>
+    done.has(i) ? "done" : i === currentIdx ? "current" : "pending",
+  );
+
   return (
     <div className="flex flex-col gap-4 py-4">
+      <ProgressRail
+        states={railStates}
+        currentIndex={currentIdx}
+        label={
+          allDone
+            ? `All ${stepCount} steps complete`
+            : `Step ${currentIdx + 1} of ${stepCount}`
+        }
+        onJump={(i) => toggle(i)}
+      />
+
       <p className="sk-text-md-regular text-sk-text-secondary">{activity.intro}</p>
 
       <ol className="flex flex-col gap-2">
@@ -83,11 +101,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
 
       {allDone ? (
         <InlineAlert tone="success" title="Activity complete" description="Nice work — every step is done." />
-      ) : (
-        <p className="sk-text-sm-regular text-sk-text-tertiary">
-          {done.size} of {activity.steps.length} steps complete
-        </p>
-      )}
+      ) : null}
     </div>
   );
 }
