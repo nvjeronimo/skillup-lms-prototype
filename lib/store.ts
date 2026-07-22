@@ -28,6 +28,8 @@ interface LmsState {
   currentTopicId: string;
   currentTabSlug: TabSlug;
   currentVideoTimestamp: number;
+  /** Last playback position per video topic, so the learner can resume. */
+  resumePositions: Record<string, number>;
   /** Transcript line currently highlighted as Active (independent of playback). */
   activeLineId: string | null;
   notes: Note[];
@@ -59,6 +61,10 @@ interface LmsState {
   setCurrentTab: (slug: TabSlug) => void;
   seekVideoTo: (ts: number, lineId?: string) => void;
   setActiveLine: (lineId: string | null) => void;
+  /** Remember where playback stopped for a topic (ignored below 15s). */
+  saveResumePosition: (topicId: string, seconds: number) => void;
+  /** Forget a stored position — used when the learner restarts from the top. */
+  clearResumePosition: (topicId: string) => void;
   openNoteEditor: (params: { lineId?: string; noteId?: string }) => void;
   closeNoteEditor: () => void;
   saveNote: (note: NotePayload) => void;
@@ -122,6 +128,7 @@ export const useLmsStore = create<LmsState>()(
   currentTopicId: "m3-t1",
   currentTabSlug: "transcript",
   currentVideoTimestamp: 0,
+  resumePositions: {},
   activeLineId: "ln-3",
   notes: notesSeed,
   noteEditor: { open: false },
@@ -149,6 +156,20 @@ export const useLmsStore = create<LmsState>()(
   seekVideoTo: (ts, lineId) =>
     set((s) => ({ currentVideoTimestamp: ts, activeLineId: lineId ?? s.activeLineId })),
   setActiveLine: (lineId) => set({ activeLineId: lineId }),
+
+  saveResumePosition: (topicId, seconds) =>
+    set((s) =>
+      // Below 15s there is nothing meaningful to resume to.
+      seconds < 15
+        ? s
+        : { resumePositions: { ...s.resumePositions, [topicId]: Math.round(seconds) } },
+    ),
+  clearResumePosition: (topicId) =>
+    set((s) => {
+      const next = { ...s.resumePositions };
+      delete next[topicId];
+      return { resumePositions: next };
+    }),
 
   openNoteEditor: ({ lineId, noteId }) => set({ noteEditor: { open: true, lineId, noteId } }),
   closeNoteEditor: () => set({ noteEditor: { open: false } }),
@@ -297,6 +318,7 @@ export const useLmsStore = create<LmsState>()(
       collapsedModules: new Set<string>(),
       noteEditor: { open: false },
       currentVideoTimestamp: 0,
+      resumePositions: {},
       activeLineId: "ln-3",
       toast: { message: "Demo reset to its initial state" },
     });
@@ -311,6 +333,7 @@ export const useLmsStore = create<LmsState>()(
         completedTopics: s.completedTopics,
         submittedTopics: s.submittedTopics,
         quizResults: s.quizResults,
+        resumePositions: s.resumePositions,
         bookmarks: s.bookmarks,
         notes: s.notes,
         notificationsRead: s.notificationsRead,

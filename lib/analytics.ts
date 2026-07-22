@@ -18,6 +18,8 @@ export type AnalyticsEvent =
   | "video_play"
   | "video_pause"
   | "video_seek"
+  | "video_resume"
+  | "video_restart"
   | "video_speed_change"
   | "video_cc_toggle"
   | "video_language_change"

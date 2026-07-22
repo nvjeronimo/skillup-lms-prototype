@@ -7,6 +7,7 @@ import { Icon } from "@/lib/icons";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
+import { ResumeBanner } from "@/components/molecules/ResumeBanner";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
 import { TopicActionBar, type TopicActionState } from "@/components/molecules/TopicActionBar";
@@ -56,6 +57,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const setCurrentTopic = useLmsStore((s) => s.setCurrentTopic);
   const setCurrentTab = useLmsStore((s) => s.setCurrentTab);
   const currentVideoTimestamp = useLmsStore((s) => s.currentVideoTimestamp);
+  const resumePositions = useLmsStore((s) => s.resumePositions);
+  const saveResumePosition = useLmsStore((s) => s.saveResumePosition);
+  const clearResumePosition = useLmsStore((s) => s.clearResumePosition);
+  /** Dismissed for this visit once the learner resumes or restarts. */
+  const [resumeHandled, setResumeHandled] = React.useState(false);
+  const storedResume = resumePositions[topicId];
+  const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
   const activeLineId = useLmsStore((s) => s.activeLineId);
   const collapsedModules = useLmsStore((s) => s.collapsedModules);
@@ -264,10 +272,29 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     docked={videoDocked}
                     onSeek={(s) => {
                       seekVideoTo(s);
+                      saveResumePosition(topicId, s);
                       track("video_seek", { to: s });
                     }}
                   />
                 </div>
+                {showResume ? (
+                  <div className="px-4 pb-1 pt-1">
+                    <ResumeBanner
+                      seconds={storedResume}
+                      onResume={() => {
+                        seekVideoTo(storedResume);
+                        track("video_resume", { topicId, from: storedResume });
+                        setResumeHandled(true);
+                      }}
+                      onStartOver={() => {
+                        seekVideoTo(0);
+                        clearResumePosition(topicId);
+                        track("video_restart", { topicId });
+                        setResumeHandled(true);
+                      }}
+                    />
+                  </div>
+                ) : null}
                 <div className="px-4 pb-4">
                   {/* Topic title below the player (ICP Phase 1 canonical layout).
                       The top-right action is hidden on mobile — it lives only at
