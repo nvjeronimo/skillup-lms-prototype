@@ -1,5 +1,5 @@
 import type { LucideIcon, LucideProps } from "lucide-react";
-import { TerminalSquare, Headphones,
+import { Layers, TerminalSquare, Headphones,
   AlertTriangle,
   Award,
   BookOpen,
@@ -68,6 +68,8 @@ export function topicTypeIcon(type: TopicType): LucideIcon {
       return TerminalSquare;
     case "Podcast":
       return Headphones;
+    case "Lesson Page":
+      return Layers;
     case "VILT-Live Session":
     case "VILT-Recording":
       return VideoIcon;

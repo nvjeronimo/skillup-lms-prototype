@@ -7,6 +7,7 @@ import { AssessmentView } from "./AssessmentView";
 import { ActivityView } from "./ActivityView";
 import { LabView } from "./LabView";
 import { OraView } from "./OraView";
+import { LessonPageView } from "./LessonPageView";
 import { PodcastView } from "./PodcastView";
 import { DiscussionView } from "./DiscussionView";
 import { ViltView } from "./ViltView";
@@ -34,6 +35,8 @@ export function TopicBody({ topicId, courseSlug }: { topicId: string; courseSlug
       return <LabView topicId={topicId} />;
     case "ora":
       return <OraView topicId={topicId} />;
+    case "lessonPage":
+      return <LessonPageView topicId={topicId} />;
     case "podcast":
       return <PodcastView topicId={topicId} />;
     case "discussion":

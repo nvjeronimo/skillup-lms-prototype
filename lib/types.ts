@@ -6,6 +6,7 @@
 export type TopicType =
   | "Video"
   | "Reading"
+  | "Lesson Page"
   | "Podcast"
   | "Quiz"
   | "Lab"

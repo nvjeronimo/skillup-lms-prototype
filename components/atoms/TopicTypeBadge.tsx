@@ -13,6 +13,7 @@ export interface TopicTypeBadgeProps {
 export const ALL_TOPIC_TYPES: TopicType[] = [
   "Video",
   "Reading",
+  "Lesson Page",
   "Podcast",
   "Quiz",
   "Lab",

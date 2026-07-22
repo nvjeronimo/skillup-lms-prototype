@@ -82,6 +82,7 @@ export type TopicFamily =
   | "activity"
   | "lab"
   | "ora"
+  | "lessonPage"
   | "podcast"
   | "discussion"
   | "vilt";
@@ -92,6 +93,8 @@ export function topicFamily(type: TopicType): TopicFamily {
       return "video";
     case "Reading":
       return "reading";
+    case "Lesson Page":
+      return "lessonPage";
     case "Quiz":
     case "Practice Assignment":
       return "assessment";
@@ -136,6 +139,8 @@ export function topicDescription(topic: FlatTopic): string {
       return `An interactive exercise to practise the concepts from ${topic.moduleTitle}.`;
     case "ora":
       return `A peer-reviewed project. You'll submit your work, review a peer, and receive a grade.`;
+    case "lessonPage":
+      return `A guided page that brings together everything on this topic — video, notes, diagrams and downloads.`;
     case "lab":
       return `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`;
     case "podcast":
@@ -630,4 +635,97 @@ export function getOra(topic: FlatTopic): OraContent {
 
 export function oraMaxPoints(content: OraContent): number {
   return content.criteria.reduce((sum, c) => sum + c.maxPoints, 0);
+}
+
+/* --------------------------------------------------------- Lesson Page --- */
+
+/**
+ * A Lesson Page is a topic composed of several assets stacked vertically —
+ * exactly how an Open edX unit already works ("A unit can contain one or more
+ * components"). Two things follow:
+ *
+ *  1. ANY topic can carry extra blocks: a Video topic often has an intro and a
+ *     recap around the player. The renderer must handle that regardless of type.
+ *  2. When there is no dominant asset, the topic is authored as a Lesson Page
+ *     so it isn't mislabelled as "Video" in the outline.
+ */
+export type LessonBlock =
+  | { kind: "text"; heading?: string; paragraphs: string[] }
+  | { kind: "video"; title: string; durationLabel: string }
+  | { kind: "image"; caption: string; alt: string }
+  | { kind: "file"; name: string; fileKind: "pdf" | "doc" | "data"; size: string }
+  | { kind: "callout"; tone: "info" | "warning"; title: string; body: string }
+  | { kind: "knowledge-check"; question: string; options: QuizOption[] };
+
+export interface LessonPageContent {
+  intro?: string;
+  blocks: LessonBlock[];
+}
+
+export function getLessonPage(topic: FlatTopic): LessonPageContent {
+  return {
+    intro:
+      "This page pulls together everything you need on control charts — the theory, a worked example, the template you'll use, and a quick check before you move on.",
+    blocks: [
+      {
+        kind: "text",
+        heading: "Why control charts matter",
+        paragraphs: [
+          "A control chart separates the variation that is inherent to a process from the variation that signals something has changed. Without that distinction, teams react to noise and make the process worse.",
+          "The chart itself is simple: a centre line at the process mean, and control limits three standard deviations either side. What takes practice is reading it.",
+        ],
+      },
+      {
+        kind: "video",
+        title: "Reading a control chart in 4 minutes",
+        durationLabel: "4m 12s",
+      },
+      {
+        kind: "image",
+        caption: "An in-control process (left) versus one showing a shift in the mean (right).",
+        alt: "Two control charts side by side, the second showing seven consecutive points above the centre line",
+      },
+      {
+        kind: "callout",
+        tone: "warning",
+        title: "The most common mistake",
+        body: "Control limits are not specification limits. Limits come from the process itself; specs come from the customer. Plotting specs on a control chart hides real signals.",
+      },
+      {
+        kind: "text",
+        heading: "The rules you'll actually use",
+        paragraphs: [
+          "Most teams need only three: a single point beyond the limits, seven consecutive points on one side of the centre line, and a run of seven rising or falling. Each points to a different kind of cause.",
+        ],
+      },
+      {
+        kind: "file",
+        name: "Control_chart_template.xlsx",
+        fileKind: "data",
+        size: "48 KB",
+      },
+      {
+        kind: "knowledge-check",
+        question: "Seven consecutive points above the centre line most likely indicates…",
+        options: [
+          {
+            id: "a",
+            label: "Normal random variation",
+            feedback: "A run that long is very unlikely by chance — it is a signal, not noise.",
+          },
+          {
+            id: "b",
+            label: "A shift in the process mean",
+            correct: true,
+            feedback: "Correct — a sustained run on one side points to a shift with an assignable cause.",
+          },
+          {
+            id: "c",
+            label: "That the control limits are too wide",
+            feedback: "Wide limits would make signals harder to see, not create a sustained run.",
+          },
+        ],
+      },
+    ],
+  };
 }

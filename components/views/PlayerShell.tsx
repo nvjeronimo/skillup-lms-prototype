@@ -185,6 +185,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     activity: "Activity",
     lab: "Lab",
     ora: "Project",
+    lessonPage: "Lesson",
     podcast: "Episode",
     discussion: "Discussion",
     vilt: topic.type === "VILT-Recording" ? "Recording" : "Session",
