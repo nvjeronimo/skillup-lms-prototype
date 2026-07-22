@@ -27,6 +27,9 @@ export interface QuizCardProps {
   maxAttempts?: number;
   /** Warn before the last graded attempt is spent. */
   isLastAttempt?: boolean;
+  /** Advance action, shown right-aligned in the same row once submitted. */
+  onNext?: () => void;
+  nextLabel?: string;
   className?: string;
 }
 
@@ -58,6 +61,8 @@ export function QuizCard({
   attemptsUsed,
   maxAttempts,
   isLastAttempt,
+  onNext,
+  nextLabel = "Next question",
   className,
 }: QuizCardProps) {
   const revealed = state === "Revealed";
@@ -215,16 +220,23 @@ export function QuizCard({
           ) : null}
         </div>
 
-        <div className="flex flex-col items-end gap-0.5">
-          {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
-            <span className="sk-text-xs-regular text-sk-text-tertiary">
-              You have used {attemptsUsed} of {maxAttempts} attempts
-            </span>
-          ) : null}
-          {draftSaved && !revealed ? (
-            <span className="sk-text-xs-regular text-sk-text-brand-secondary">
-              Draft saved — not submitted yet
-            </span>
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <div className="flex flex-col items-end gap-0.5">
+            {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
+              <span className="sk-text-xs-regular text-sk-text-tertiary">
+                You have used {attemptsUsed} of {maxAttempts} attempts
+              </span>
+            ) : null}
+            {draftSaved && !revealed ? (
+              <span className="sk-text-xs-regular text-sk-text-brand-secondary">
+                Draft saved — not submitted yet
+              </span>
+            ) : null}
+          </div>
+          {revealed && onNext ? (
+            <Button variant="primary" rightIcon={ArrowRight} onClick={onNext}>
+              {nextLabel}
+            </Button>
           ) : null}
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Check, RotateCcw, AlertTriangle, ArrowRight } from "lucide-react";
+import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
 import { QuizProgressRail, type QuizQuestionState } from "@/components/molecules/QuizProgressRail";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
@@ -160,30 +160,21 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           setOutcomes((prev) => prev.map((o, i) => (i === qIndex ? correct : o)));
           setRevealed(true);
         }}
+        nextLabel={isLastInSequence ? "See results" : "Next question"}
+        onNext={() => {
+          if (!isLastInSequence) {
+            setQIndex(sequence[posInSequence + 1]);
+            setSelected(undefined);
+            setRevealed(false);
+            setDraftSaved(false);
+            return;
+          }
+          const score = outcomes.filter(Boolean).length;
+          recordQuizResult(topicId, score, total);
+          setPhase("completed");
+        }}
       />
 
-      {revealed ? (
-        <div className="flex justify-end">
-          <Button
-            variant="primary"
-            rightIcon={ArrowRight}
-            onClick={() => {
-              if (!isLastInSequence) {
-                setQIndex(sequence[posInSequence + 1]);
-                setSelected(undefined);
-                setRevealed(false);
-                setDraftSaved(false);
-                return;
-              }
-              const score = outcomes.filter(Boolean).length;
-              recordQuizResult(topicId, score, total);
-              setPhase("completed");
-            }}
-          >
-            {isLastInSequence ? "See results" : "Next question"}
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 }
