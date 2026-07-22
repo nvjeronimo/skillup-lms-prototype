@@ -134,11 +134,16 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   // Option A — Nav in footer · action in content.
   // Quiz / Practice / Activity carry their OWN action inside the content frame
-  // (start/submit a quiz, upload an assignment, tick activity steps), so they get
-  // no Mark-as-Complete bar. Passive content (video/reading/discussion/VILT) gets
-  // the completion action at the top AND bottom of the content.
+  // (start/submit a quiz, upload an assignment, tick activity steps, download a
+  // lab, finish the ORA journey), so they get no Mark-as-Complete bar — it would
+  // duplicate the action they already own. Passive content (video / reading /
+  // podcast / discussion / VILT) gets the completion action at top AND bottom.
   const hasInFrameAction =
-    family === "assessment" || family === "graded" || family === "activity";
+    family === "assessment" ||
+    family === "graded" ||
+    family === "activity" ||
+    family === "lab" ||
+    family === "ora";
   const isCompleted = completedTopics.has(topicId);
   const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (

@@ -223,7 +223,7 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
         <button
           type="button"
           onClick={() => setFile("Control_plan_NJ.pdf")}
-          className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-sk-border-primary bg-sk-bg-secondary px-5 py-7 transition-colors hover:border-sk-border-brand"
+          className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-sk-border-primary bg-sk-bg-secondary px-5 py-7 transition-colors hover:border-sk-border-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand"
         >
           <Icon icon={Upload} size={20} className="text-sk-text-brand-secondary" />
           <span className="sk-text-sm-semibold text-sk-text-brand-secondary">
@@ -363,6 +363,7 @@ function PeerStep({
                   onClick={() => setScores((s) => ({ ...s, [c.id]: o.points }))}
                   className={cn(
                     "flex items-center gap-2.5 rounded-md border px-3 py-2 text-left transition-colors",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
                     selected
                       ? "border-sk-text-success-primary bg-sk-bg-success-primary"
                       : "border-sk-border-primary hover:bg-sk-bg-secondary",

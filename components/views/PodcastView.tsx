@@ -5,6 +5,7 @@ import { Play, Pause, SkipBack, SkipForward, Headphones, Download } from "lucide
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
+import { ResumeBanner } from "@/components/molecules/ResumeBanner";
 import { getPodcast } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
@@ -23,11 +24,17 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const showToast = useLmsStore((s) => s.showToast);
   const resumePositions = useLmsStore((s) => s.resumePositions);
   const saveResumePosition = useLmsStore((s) => s.saveResumePosition);
+  const clearResumePosition = useLmsStore((s) => s.clearResumePosition);
 
   const durationSeconds = 1144; // 19:04
   const [playing, setPlaying] = React.useState(false);
   const [speedIdx, setSpeedIdx] = React.useState(1);
-  const [t, setT] = React.useState(() => resumePositions[topicId] ?? 0);
+  // Start at zero and OFFER the stored position, rather than silently jumping —
+  // matching how Video behaves. Same family, same expectation.
+  const [t, setT] = React.useState(0);
+  const [resumeHandled, setResumeHandled] = React.useState(false);
+  const storedResume = resumePositions[topicId];
+  const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
 
   if (!topic || !podcast) return null;
   const pct = Math.min(100, (t / durationSeconds) * 100);
@@ -137,6 +144,21 @@ export function PodcastView({ topicId }: { topicId: string }) {
           </div>
         </div>
       </section>
+
+      {showResume ? (
+        <ResumeBanner
+          seconds={storedResume}
+          onResume={() => {
+            setT(storedResume);
+            setResumeHandled(true);
+          }}
+          onStartOver={() => {
+            setT(0);
+            clearResumePosition(topicId);
+            setResumeHandled(true);
+          }}
+        />
+      ) : null}
 
       <div className="flex flex-col gap-1">
         <span className="sk-text-sm-medium text-sk-text-secondary">

@@ -86,6 +86,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
                 aria-pressed={isDone}
                 className={cn(
                   "flex w-full items-start gap-3 rounded-lg border p-4 text-left transition-colors",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
                   isDone
                     ? "border-sk-text-success-primary bg-sk-bg-success-primary"
                     : "border-sk-border-secondary hover:border-sk-border-primary",

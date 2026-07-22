@@ -124,6 +124,8 @@ export function topicFamily(type: TopicType): TopicFamily {
 export function topicDescription(topic: FlatTopic): string {
   const fam = topicFamily(topic.type);
   switch (fam) {
+    case "video":
+      return `A short video lesson, with a synced transcript you can search and take notes from.`;
     case "reading":
       return `A short read on “${topic.title}”, with the key ideas you need before moving on.`;
     case "assessment":
