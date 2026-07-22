@@ -10,6 +10,8 @@ export type QuizQuestionState = "unanswered" | "current" | "correct" | "incorrec
 export interface QuizProgressRailProps {
   states: QuizQuestionState[];
   currentIndex: number;
+  /** Single position label, e.g. "Question 1 of 3 · Practice quiz". */
+  label: string;
   onJump?: (index: number) => void;
   className?: string;
 }
@@ -22,23 +24,21 @@ export interface QuizProgressRailProps {
 export function QuizProgressRail({
   states,
   currentIndex,
+  label,
   onJump,
   className,
 }: QuizProgressRailProps) {
-  const answered = states.filter((s) => s === "correct" || s === "incorrect").length;
 
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 rounded-xl border border-sk-border-secondary bg-sk-bg-primary px-4 py-3",
+        "flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary px-4 py-3",
         className,
       )}
       role="group"
       aria-label="Quiz progress"
     >
-      <span className="sk-text-xs-medium text-sk-text-secondary">
-        {answered} of {states.length} answered
-      </span>
+      <span className="sk-text-sm-medium text-sk-text-primary">{label}</span>
       <ol className="flex flex-wrap items-center gap-1.5">
         {states.map((s, i) => {
           const isCurrent = i === currentIndex;

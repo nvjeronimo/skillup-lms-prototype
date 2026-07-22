@@ -112,6 +112,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
       <QuizProgressRail
         states={railStates}
         currentIndex={qIndex}
+        label={`Question ${posInSequence + 1} of ${sequence.length}${
+          config.weightPct ? ` · ${config.label}` : ""
+        }`}
         onJump={(i) => {
           // Only already-answered questions can be revisited mid-attempt.
           if (outcomes[i] === null) return;
@@ -120,11 +123,6 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           setRevealed(true);
         }}
       />
-
-      <p className="sk-text-2xs-medium text-sk-text-tertiary">
-        Question {posInSequence + 1} of {sequence.length}
-        {config.weightPct ? ` · ${config.label}` : ""}
-      </p>
 
       <QuizCard
         state={revealed ? "Revealed" : "Question"}
