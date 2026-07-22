@@ -24,7 +24,7 @@ export function TopicBody({ topicId, courseSlug }: { topicId: string; courseSlug
       return <ReadingView topicId={topicId} />;
     case "assessment":
     case "graded":
-      return <AssessmentView topicId={topicId} />;
+      return <AssessmentView topicId={topicId} courseSlug={courseSlug} />;
     case "activity":
       return <ActivityView topicId={topicId} />;
     case "discussion":

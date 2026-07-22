@@ -15,9 +15,40 @@ export interface ArticleContent {
   takeaways: string[];
 }
 
+export interface QuizOption {
+  id: string;
+  label: string;
+  correct?: boolean;
+  /** Answer-specific feedback, shown after submit for the chosen option. */
+  feedback?: string;
+}
+
 export interface QuizQuestion {
   question: string;
-  options: { id: string; label: string; correct?: boolean }[];
+  options: QuizOption[];
+  /** Revealed by "Show answer" — the platform's <solution> block. */
+  explanation?: string;
+  /** Topic this question draws on, for the "review lesson" link after a wrong answer. */
+  reviewTopicId?: string;
+  reviewTopicTitle?: string;
+}
+
+/**
+ * Quiz configuration. On Open edX this is NOT part of the problem — graded /
+ * attempts / weight live on the subsection, and the same problem blocks are
+ * reused across Practice, Graded and Final Exam. We mirror that here.
+ */
+export interface QuizConfig {
+  variant: "practice" | "graded" | "final";
+  label: string;
+  /** undefined = unlimited */
+  maxAttempts?: number;
+  /** % of the final grade; undefined for practice */
+  weightPct?: number;
+  passThresholdPct: number;
+  estMinutes: number;
+  /** Graded quizzes warn that a submitted answer cannot be changed. */
+  submitIsFinal: boolean;
 }
 
 export interface ActivityContent {
@@ -151,32 +182,103 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
   return [
     {
       question: "What is the primary goal of Six Sigma?",
+      explanation:
+        "Six Sigma is a data-driven methodology for reducing variation. Fewer defects follow from a more predictable process — speed and headcount are outcomes, never the goal.",
+      reviewTopicId: "m3-t1",
+      reviewTopicTitle: "Introduction to the DMAIC methodology",
       options: [
-        { id: "a", label: "Reduce process variation and defects", correct: true },
-        { id: "b", label: "Increase production speed at any cost" },
-        { id: "c", label: "Eliminate all documentation" },
-        { id: "d", label: "Replace staff with automation" },
+        {
+          id: "a",
+          label: "Reduce process variation and defects",
+          correct: true,
+          feedback: "Correct — controlling variation is what makes a process predictable and defect-free.",
+        },
+        {
+          id: "b",
+          label: "Increase production speed at any cost",
+          feedback: "Speed gained by ignoring quality creates rework, which raises variation rather than lowering it.",
+        },
+        {
+          id: "c",
+          label: "Eliminate all documentation",
+          feedback: "The opposite — Six Sigma depends on documented baselines and control plans to prove improvement.",
+        },
+        {
+          id: "d",
+          label: "Replace staff with automation",
+          feedback: "Automation may be an improvement you choose, but it is not the objective of the methodology.",
+        },
       ],
     },
     {
       question: "In DMAIC, which phase establishes the baseline performance?",
+      explanation:
+        "Measure comes second precisely so you can quantify the current state before changing anything. Without a baseline there is nothing to compare an improvement against.",
+      reviewTopicId: "m3-t2",
+      reviewTopicTitle: "The define phase",
       options: [
-        { id: "a", label: "Define" },
-        { id: "b", label: "Measure", correct: true },
-        { id: "c", label: "Improve" },
-        { id: "d", label: "Control" },
+        { id: "a", label: "Define", feedback: "Define frames the problem and the customer requirements — it does not yet quantify performance." },
+        { id: "b", label: "Measure", correct: true, feedback: "Correct — Measure captures the baseline you will improve against." },
+        { id: "c", label: "Improve", feedback: "Improve comes after you already know the baseline and the root causes." },
+        { id: "d", label: "Control", feedback: "Control locks in the gain at the end; the baseline is set much earlier." },
       ],
     },
     {
-      question: "“Critical to Quality” characteristics are derived from…",
+      question: "\u201cCritical to Quality\u201d characteristics are derived from\u2026",
+      explanation:
+        "CTQs translate the voice of the customer into measurable requirements. If a characteristic cannot be traced back to a customer need, it is not a CTQ.",
+      reviewTopicId: "m3-t3",
+      reviewTopicTitle: "The measure phase",
       options: [
-        { id: "a", label: "The customer's requirements", correct: true },
-        { id: "b", label: "The finance department" },
-        { id: "c", label: "Competitor pricing" },
-        { id: "d", label: "Random sampling" },
+        { id: "a", label: "The customer's requirements", correct: true, feedback: "Correct — CTQs always start from the voice of the customer." },
+        { id: "b", label: "The finance department", feedback: "Budget shapes what you can do, but it does not define quality for the customer." },
+        { id: "c", label: "Competitor pricing", feedback: "Useful market context, but pricing is not a quality characteristic." },
+        { id: "d", label: "Random sampling", feedback: "Sampling is how you measure a CTQ — it is not where the CTQ comes from." },
       ],
     },
   ];
+}
+
+/**
+ * Quiz configuration for a topic. Mirrors Open edX: these values come from the
+ * SUBSECTION (grading policy + assignment type), not from the problem blocks.
+ */
+export function getQuizConfig(topic: FlatTopic): QuizConfig {
+  const title = topic.title.toLowerCase();
+  const isFinal = title.includes("final") || title.includes("exam");
+  const isGraded = isFinal || topic.type === "Graded Assignment" || title.includes("graded");
+
+  if (isFinal) {
+    return {
+      variant: "final",
+      label: "Final exam",
+      maxAttempts: 1,
+      weightPct: 40,
+      passThresholdPct: 70,
+      estMinutes: 20,
+      submitIsFinal: true,
+    };
+  }
+  if (isGraded) {
+    return {
+      variant: "graded",
+      label: "Graded quiz",
+      maxAttempts: 2,
+      weightPct: 20,
+      passThresholdPct: 70,
+      estMinutes: 10,
+      submitIsFinal: true,
+    };
+  }
+  return {
+    variant: "practice",
+    label: "Practice quiz",
+    maxAttempts: undefined,
+    weightPct: undefined,
+    passThresholdPct: 60,
+    estMinutes: 4,
+    submitIsFinal: false,
+  };
 }
 
 export function getActivity(topic: FlatTopic): ActivityContent {

@@ -1,26 +1,32 @@
 "use client";
 
 import * as React from "react";
-import { Check, X } from "lucide-react";
+import { Check, X, Lightbulb, ArrowRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import type { QuizOption } from "@/lib/content";
 
-export type QuizState = "Start" | "Question" | "Revealed" | "Results" | "Not Passed";
-
-export interface QuizOption {
-  id: string;
-  label: string;
-  correct?: boolean;
-}
+export type QuizState = "Question" | "Revealed";
 
 export interface QuizCardProps {
   state?: QuizState;
   question?: string;
   options?: QuizOption[];
+  explanation?: string;
+  reviewTopicTitle?: string;
+  onReviewTopic?: () => void;
   selectedId?: string;
   onSelect?: (id: string) => void;
   onSubmit?: () => void;
+  /** Graded quizzes expose a Save-draft affordance and an attempts counter. */
+  showSaveDraft?: boolean;
+  onSaveDraft?: () => void;
+  draftSaved?: boolean;
+  attemptsUsed?: number;
+  maxAttempts?: number;
+  /** Warn before the last graded attempt is spent. */
+  isLastAttempt?: boolean;
   className?: string;
 }
 
@@ -31,41 +37,41 @@ const DEFAULT_OPTIONS: QuizOption[] = [
   { id: "d", label: "Replace all staff with automation" },
 ];
 
-/** Quiz question with state-specific feedback: Question / Revealed / Results / Not Passed. */
+/**
+ * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
+ * question submits and scores independently, with answer-specific feedback and
+ * an optional Show-answer/explanation reveal.
+ */
 export function QuizCard({
   state = "Question",
   question = "What is the primary goal of Six Sigma?",
   options = DEFAULT_OPTIONS,
+  explanation,
+  reviewTopicTitle,
+  onReviewTopic,
   selectedId,
   onSelect,
   onSubmit,
+  showSaveDraft,
+  onSaveDraft,
+  draftSaved,
+  attemptsUsed,
+  maxAttempts,
+  isLastAttempt,
   className,
 }: QuizCardProps) {
-  const revealed = state === "Revealed" || state === "Results" || state === "Not Passed";
+  const revealed = state === "Revealed";
+  const [showAnswer, setShowAnswer] = React.useState(false);
+  const [confirming, setConfirming] = React.useState(false);
 
-  // Start state — quiz intro with meta + a single "Start quiz" CTA.
-  if (state === "Start") {
-    return (
-      <div
-        className={cn(
-          "flex flex-col gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5",
-          className,
-        )}
-      >
-        <span className="sk-text-2xs-medium text-sk-text-brand-secondary">Practice quiz</span>
-        <h3 className="sk-text-md-semibold text-sk-text-primary">Define and measure</h3>
-        <p className="sk-text-sm-regular text-sk-text-secondary">
-          Check your understanding before moving on. You can retake this as many times as you like.
-        </p>
-        <p className="sk-text-xs-regular text-sk-text-tertiary">Module 3 · 5 questions · approx. 4 min</p>
-        <div>
-          <Button variant="primary" size="md" onClick={onSubmit}>
-            Start quiz
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // A new question resets the per-question affordances.
+  React.useEffect(() => {
+    setShowAnswer(false);
+    setConfirming(false);
+  }, [question]);
+
+  const chosen = options.find((o) => o.id === selectedId);
+  const isCorrect = Boolean(chosen?.correct);
 
   return (
     <div
@@ -74,57 +80,39 @@ export function QuizCard({
         className,
       )}
     >
-      {state === "Results" || state === "Not Passed" ? (
-        <div
-          className={cn(
-            "flex items-center gap-2 rounded-lg px-3 py-2",
-            state === "Results" ? "bg-sk-bg-success-primary" : "bg-sk-bg-error-primary",
-          )}
-        >
-          <Icon
-            icon={state === "Results" ? Check : X}
-            size={18}
-            className={
-              state === "Results" ? "text-sk-text-success-primary" : "text-sk-text-error-primary"
-            }
-          />
-          <span
-            className={cn(
-              "sk-text-sm-semibold",
-              state === "Results" ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
-            )}
-          >
-            {state === "Results" ? "Passed — 4 / 4 correct" : "Not passed — 2 / 4 correct"}
-          </span>
-        </div>
-      ) : null}
-
       <h3 className="sk-text-md-semibold text-sk-text-primary">{question}</h3>
 
       <ul className="flex flex-col gap-2">
         {options.map((opt) => {
           const isSelected = opt.id === selectedId;
-          const showCorrect = revealed && opt.correct;
+          // After submitting, only reveal the correct answer once the learner
+          // asked for it — otherwise a wrong answer would give the game away.
+          const revealCorrect = revealed && opt.correct && (isCorrect || showAnswer);
           const showWrong = revealed && isSelected && !opt.correct;
           return (
             <li key={opt.id}>
               <button
                 type="button"
-                onClick={() => onSelect?.(opt.id)}
+                onClick={() => !revealed && onSelect?.(opt.id)}
+                disabled={revealed}
                 aria-pressed={isSelected}
                 className={cn(
                   "sk-text-sm-medium flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
-                  showCorrect
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
+                  revealCorrect
                     ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
                     : showWrong
                       ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
                       : isSelected
                         ? "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                        : "border-sk-border-primary text-sk-text-primary hover:bg-sk-bg-secondary",
+                        : cn(
+                            "border-sk-border-primary text-sk-text-primary",
+                            revealed ? "opacity-60" : "hover:bg-sk-bg-secondary",
+                          ),
                 )}
               >
                 <span>{opt.label}</span>
-                {showCorrect ? <Icon icon={Check} size={16} /> : null}
+                {revealCorrect ? <Icon icon={Check} size={16} /> : null}
                 {showWrong ? <Icon icon={X} size={16} /> : null}
               </button>
             </li>
@@ -132,20 +120,114 @@ export function QuizCard({
         })}
       </ul>
 
-      {state === "Question" ? (
-        <div className="flex justify-end">
-          <Button variant="primary" onClick={onSubmit} disabled={!selectedId}>
-            Submit answer
-          </Button>
+      {/* Answer-specific feedback for the option the learner actually chose. */}
+      {revealed && chosen?.feedback ? (
+        <div
+          className={cn(
+            "flex flex-col gap-1 rounded-lg px-3 py-2.5",
+            isCorrect ? "bg-sk-bg-success-primary" : "bg-sk-bg-error-primary",
+          )}
+        >
+          <span
+            className={cn(
+              "sk-text-2xs-medium uppercase tracking-wide",
+              isCorrect ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
+            )}
+          >
+            {isCorrect ? "Correct" : "Not quite"}
+          </span>
+          <p
+            className={cn(
+              "sk-text-sm-regular",
+              isCorrect ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
+            )}
+          >
+            {chosen.feedback}
+          </p>
         </div>
       ) : null}
-      {state === "Not Passed" ? (
-        <div className="flex justify-end">
-          <Button variant="secondary" onClick={onSubmit}>
-            Try again
-          </Button>
+
+      {/* Explanation, revealed on demand. */}
+      {revealed && showAnswer && explanation ? (
+        <div className="flex flex-col gap-1 rounded-lg bg-sk-bg-secondary px-3 py-2.5">
+          <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
+            Explanation
+          </span>
+          <p className="sk-text-sm-regular text-sk-text-secondary">{explanation}</p>
         </div>
       ) : null}
+
+      {/* Last-attempt confirmation gate (graded only). */}
+      {confirming ? (
+        <div className="flex flex-col gap-2 rounded-lg bg-sk-bg-warning-primary px-3 py-2.5">
+          <span className="sk-text-sm-semibold text-sk-text-warning-primary">
+            This is your last attempt
+          </span>
+          <p className="sk-text-xs-regular text-sk-text-warning-primary">
+            After submitting, this answer is final and the score is locked.
+          </p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => {
+                setConfirming(false);
+                onSubmit?.();
+              }}
+            >
+              Submit final answer
+            </Button>
+            <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
+              Keep editing
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          {!revealed && !confirming ? (
+            <Button
+              variant="primary"
+              onClick={() => (isLastAttempt ? setConfirming(true) : onSubmit?.())}
+              disabled={!selectedId}
+            >
+              Submit answer
+            </Button>
+          ) : null}
+
+          {!revealed && showSaveDraft ? (
+            <Button variant="secondary" onClick={onSaveDraft} disabled={!selectedId}>
+              Save draft
+            </Button>
+          ) : null}
+
+          {revealed && explanation && !showAnswer ? (
+            <Button variant="secondary" leftIcon={Lightbulb} onClick={() => setShowAnswer(true)}>
+              Show answer
+            </Button>
+          ) : null}
+
+          {revealed && !isCorrect && reviewTopicTitle ? (
+            <Button variant="secondary" rightIcon={ArrowRight} onClick={onReviewTopic}>
+              Review lesson
+            </Button>
+          ) : null}
+        </div>
+
+        <div className="flex flex-col items-end gap-0.5">
+          {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
+            <span className="sk-text-xs-regular text-sk-text-tertiary">
+              You have used {attemptsUsed} of {maxAttempts} attempts
+            </span>
+          ) : null}
+          {draftSaved && !revealed ? (
+            <span className="sk-text-xs-regular text-sk-text-brand-secondary">
+              Draft saved — not submitted yet
+            </span>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }
