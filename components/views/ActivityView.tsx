@@ -4,7 +4,9 @@ import * as React from "react";
 import { Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { Button } from "@/components/atoms/Button";
 import { ProgressRail, type RailItemState } from "@/components/molecules/ProgressRail";
+import { ScormContainer, type ScormState } from "@/components/molecules/ScormContainer";
 import { getActivity } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
@@ -31,6 +33,18 @@ export function ActivityView({ topicId }: { topicId: string }) {
   }, [allDone, isCompleted, markComplete, topicId]);
 
   if (!topic || !activity) return null;
+
+  if (activity.kind === "scorm") {
+    return (
+      <ScormActivity
+        title={topic.title}
+        packageLabel={activity.packageLabel}
+        packageSizeLabel={activity.packageSizeLabel}
+        isCompleted={isCompleted}
+        onComplete={() => markComplete(topicId)}
+      />
+    );
+  }
 
   function toggle(i: number) {
     setDone((prev) => {
@@ -101,6 +115,64 @@ export function ActivityView({ topicId }: { topicId: string }) {
 
       {allDone ? (
         <InlineAlert tone="success" title="Activity complete" description="Nice work — every step is done." />
+      ) : null}
+    </div>
+  );
+}
+
+/* ---- SCORM-backed activity: the package runs in the platform's iframe ---- */
+function ScormActivity({
+  title,
+  packageLabel,
+  packageSizeLabel,
+  isCompleted,
+  onComplete,
+}: {
+  title: string;
+  packageLabel?: string;
+  packageSizeLabel?: string;
+  isCompleted: boolean;
+  onComplete: () => void;
+}) {
+  const [state, setState] = React.useState<ScormState>("idle");
+  const showToast = useLmsStore((s) => s.showToast);
+
+  function launch() {
+    setState("loading");
+    // Stand-in for the iframe handshake; the real package reports back itself.
+    window.setTimeout(() => setState("ready"), 900);
+  }
+
+  return (
+    <div className="flex flex-col gap-4 py-4">
+      <ScormContainer
+        title={title}
+        packageLabel={packageLabel}
+        packageSizeLabel={packageSizeLabel}
+        state={state}
+        onLaunch={launch}
+        onRetry={launch}
+        onSkip={() => showToast("Skipped — this activity doesn't affect your grade.")}
+        onFullscreen={() => showToast("Opening the activity fullscreen…")}
+      />
+
+      {/* Demo affordance: the error state is the one worth showing people. */}
+      {state !== "error" ? (
+        <div>
+          <Button variant="secondary" size="sm" onClick={() => setState("error")}>
+            Simulate load failure
+          </Button>
+        </div>
+      ) : null}
+
+      {isCompleted ? (
+        <InlineAlert tone="success" title="Activity complete" description="Nice work." />
+      ) : state === "ready" ? (
+        <div>
+          <Button variant="primary" onClick={onComplete}>
+            Mark as complete
+          </Button>
+        </div>
       ) : null}
     </div>
   );

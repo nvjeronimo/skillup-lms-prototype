@@ -52,8 +52,17 @@ export interface QuizConfig {
 }
 
 export interface ActivityContent {
+  /**
+   * How the activity is delivered. In our production courses these are SCORM
+   * packages (Articulate) rendered in an iframe; the checklist is the fallback
+   * for activities authored as plain HTML.
+   */
+  kind: "scorm" | "checklist";
   intro: string;
   steps: { title: string; detail: string }[];
+  /** SCORM only — shown so the learner knows what they are about to open. */
+  packageLabel?: string;
+  packageSizeLabel?: string;
 }
 
 export interface DiscussionThread {
@@ -299,7 +308,12 @@ export function getQuizConfig(topic: FlatTopic): QuizConfig {
 }
 
 export function getActivity(topic: FlatTopic): ActivityContent {
+  // Branching / scenario activities are authored as SCORM packages.
+  const isScorm = /scenario|match|connect|simulat/i.test(topic.title);
   return {
+    kind: isScorm ? "scorm" : "checklist",
+    packageLabel: "Articulate Storyline package",
+    packageSizeLabel: "8.4 MB",
     intro: `Work through the steps below. Tick each one as you go — your progress is saved automatically. This activity should take about ${topic.duration.replace(/^approx\.\s*/, "")}.`,
     steps: [
       {
