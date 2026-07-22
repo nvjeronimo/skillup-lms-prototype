@@ -94,7 +94,7 @@ export interface Note {
 export interface DownloadFile {
   id: string;
   topicId: string;
-  type: "PDF" | "DOCX" | "XLSX" | "PPTX" | "ZIP" | "TXT" | "SRT";
+  type: "PDF" | "DOCX" | "XLSX" | "CSV" | "PPTX" | "ZIP" | "TXT" | "SRT" | "IPYNB" | "MP3";
   name: string;
   size: string;
   addedAt: string;

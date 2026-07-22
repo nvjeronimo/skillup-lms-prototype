@@ -365,6 +365,27 @@ export function getDiscussionThreads(topic: FlatTopic): DiscussionThread[] {
 }
 
 /** Per-topic downloads. Uses the seeded files when present, else type-appropriate dummies. */
+/** File-type chip derived from the extension — one source of truth per file. */
+function extType(name: string): DownloadFile["type"] {
+  const ext = name.split(".").pop()?.toLowerCase() ?? "";
+  const map: Record<string, DownloadFile["type"]> = {
+    pdf: "PDF",
+    doc: "DOCX",
+    docx: "DOCX",
+    xls: "XLSX",
+    xlsx: "XLSX",
+    csv: "CSV",
+    ppt: "PPTX",
+    pptx: "PPTX",
+    zip: "ZIP",
+    txt: "TXT",
+    srt: "SRT",
+    ipynb: "IPYNB",
+    mp3: "MP3",
+  };
+  return map[ext] ?? "TXT";
+}
+
 export function getDownloads(topic: FlatTopic): DownloadFile[] {
   const base = topic.id;
   const make = (type: DownloadFile["type"], name: string, size: string): DownloadFile => ({
@@ -406,6 +427,30 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
       break;
     case "discussion":
       files = [make("PDF", "discussion-guidelines.pdf", "40 KB")];
+      break;
+    case "lessonPage": {
+      // Derive from the page's own file blocks, so the Downloads tab and the
+      // content agree instead of advertising a file that isn't on the page.
+      files = getLessonPage(topic)
+        .blocks.filter((b): b is Extract<LessonBlock, { kind: "file" }> => b.kind === "file")
+        .map((b) => make(extType(b.name), b.name, b.size));
+      break;
+    }
+    case "lab":
+      // Same principle: the lab's own assets are what the learner needs.
+      files = getLab(topic).files.map((f) => make(extType(f.name), f.name, f.size));
+      break;
+    case "ora":
+      files = [
+        make("PDF", "project-brief.pdf", "180 KB"),
+        make("DOCX", "submission-template.docx", "62 KB"),
+      ];
+      break;
+    case "podcast":
+      files = [make(extType("episode-audio.mp3"), "episode-audio.mp3", "18 MB")];
+      break;
+    case "vilt":
+      files = [make("PDF", "session-slides.pdf", "2.1 MB")];
       break;
     default:
       files = [make("PDF", "resources.pdf", "110 KB")];
