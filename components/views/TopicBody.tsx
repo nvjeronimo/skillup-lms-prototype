@@ -5,6 +5,8 @@ import { TranscriptTab } from "./TranscriptTab";
 import { ReadingView } from "./ReadingView";
 import { AssessmentView } from "./AssessmentView";
 import { ActivityView } from "./ActivityView";
+import { LabView } from "./LabView";
+import { PodcastView } from "./PodcastView";
 import { DiscussionView } from "./DiscussionView";
 import { ViltView } from "./ViltView";
 import { LockedView } from "./LockedView";
@@ -27,6 +29,10 @@ export function TopicBody({ topicId, courseSlug }: { topicId: string; courseSlug
       return <AssessmentView topicId={topicId} courseSlug={courseSlug} />;
     case "activity":
       return <ActivityView topicId={topicId} />;
+    case "lab":
+      return <LabView topicId={topicId} />;
+    case "podcast":
+      return <PodcastView topicId={topicId} />;
     case "discussion":
       return <DiscussionView topicId={topicId} />;
     case "vilt":

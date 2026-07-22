@@ -178,6 +178,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     assessment: "Quiz",
     graded: "Assignment",
     activity: "Activity",
+    lab: "Lab",
+    podcast: "Episode",
     discussion: "Discussion",
     vilt: topic.type === "VILT-Recording" ? "Recording" : "Session",
   };

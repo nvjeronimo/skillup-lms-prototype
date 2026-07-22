@@ -71,6 +71,8 @@ export type TopicFamily =
   | "assessment"
   | "graded"
   | "activity"
+  | "lab"
+  | "podcast"
   | "discussion"
   | "vilt";
 
@@ -88,8 +90,13 @@ export function topicFamily(type: TopicType): TopicFamily {
     case "Graded Assignment":
       return "graded";
     case "Activity":
-    case "Lab":
       return "activity";
+    case "Lab":
+      // A Lab is not an Activity: SCORM runs interactively in an iframe,
+      // whereas a Lab is a notebook you download and run offline.
+      return "lab";
+    case "Podcast":
+      return "podcast";
     case "Discussion Prompt":
       return "discussion";
     case "VILT-Live Session":
@@ -112,6 +119,10 @@ export function topicDescription(topic: FlatTopic): string {
       return `Apply what you've learned and submit your work. This assignment counts toward your final grade.`;
     case "activity":
       return `An interactive exercise to practise the concepts from ${topic.moduleTitle}.`;
+    case "lab":
+      return `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`;
+    case "podcast":
+      return `A conversation you can listen to on the move — transcript and chapters included.`;
     case "discussion":
       return `Share your perspective and learn from your cohort.`;
     case "vilt":
@@ -440,5 +451,71 @@ export function getViltSession(topic: FlatTopic): ViltSession {
     ],
     attendees: { live: 24, total: 30 },
     completionRule: "Attend live (join + at least 50% of the session) or watch the recording to 90%.",
+  };
+}
+
+/* ----------------------------------------------------------------- Lab --- */
+
+export interface LabContent {
+  intro: string;
+  /** What the learner needs before starting. */
+  prerequisites: string[];
+  steps: string[];
+  files: { name: string; kind: "notebook" | "pdf" | "data"; size: string }[];
+  estimatedMinutes: number;
+}
+
+/**
+ * A Lab is authored as an HTML block plus downloadable assets — the learner
+ * runs it offline in their own Jupyter install, so there is no grading and
+ * completion is manual. That is why it is not an Activity (SCORM).
+ */
+export function getLab(topic: FlatTopic): LabContent {
+  return {
+    intro:
+      "In this lab you'll run pre-written Python against a sample process dataset to calculate capability indices and spot the drivers of variation. Everything runs locally — nothing is submitted.",
+    prerequisites: [
+      "Python 3.10+ with Jupyter Notebook installed",
+      "pandas and matplotlib available in your environment",
+    ],
+    steps: [
+      "Download the notebook and the dataset below.",
+      "Place both files in the same folder and open the notebook in Jupyter.",
+      "Run each cell in order — the comments explain what to expect.",
+      "Compare your Cp / Cpk output against the worked example in the PDF.",
+    ],
+    files: [
+      { name: "process_capability_lab.ipynb", kind: "notebook", size: "24 KB" },
+      { name: "sample_process_data.csv", kind: "data", size: "112 KB" },
+      { name: "Lab_instructions.pdf", kind: "pdf", size: "1.2 MB" },
+    ],
+    estimatedMinutes: 45,
+  };
+}
+
+/* ------------------------------------------------------------- Podcast --- */
+
+export interface PodcastContent {
+  host: string;
+  guest?: string;
+  episodeLabel: string;
+  summary: string;
+  chapters: { ts: string; label: string }[];
+}
+
+/** Podcast uses an audio asset — same player chrome as Video, audio surface. */
+export function getPodcast(topic: FlatTopic): PodcastContent {
+  return {
+    host: "Dr. Marta Silva",
+    guest: "Ana Ferreira, Head of Quality at Northwind",
+    episodeLabel: "Episode 4",
+    summary:
+      "A conversation about what actually changes on the shop floor when a Six Sigma programme lands — and the three mistakes that stall most rollouts in the first ninety days.",
+    chapters: [
+      { ts: "0:00", label: "Why most programmes stall early" },
+      { ts: "4:12", label: "Getting operators to trust the data" },
+      { ts: "11:40", label: "Choosing the first project" },
+      { ts: "18:05", label: "What good sponsorship looks like" },
+    ],
   };
 }

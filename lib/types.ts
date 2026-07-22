@@ -6,6 +6,7 @@
 export type TopicType =
   | "Video"
   | "Reading"
+  | "Podcast"
   | "Quiz"
   | "Lab"
   | "VILT-Live Session"
