@@ -191,9 +191,12 @@ export function DemoControlsMenu({
                     className="inline-flex h-7 w-7 items-center justify-center rounded-full"
                   >
                     {/* Swatch reads the live brand-solid token for this skin (no hardcoded hex):
-                        data-skin re-resolves --sk-bg-brand-solid to the skin's value. */}
+                        data-skin re-resolves --sk-bg-brand-solid to the skin's value.
+                        Always set data-skin — including "teal" — so the swatch shows its
+                        own skin regardless of the document's active skin. Without this,
+                        the teal swatch (no attribute) inherited the active skin's colour. */}
                     <span
-                      data-skin={s.skin === "teal" ? undefined : s.skin}
+                      data-skin={s.skin}
                       className={cn(
                         "size-5 rounded-full bg-sk-bg-brand-solid ring-offset-2 ring-offset-sk-bg-primary transition-all",
                         active ? "ring-2 ring-sk-text-primary" : "ring-1 ring-sk-border-secondary",
