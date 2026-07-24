@@ -18,7 +18,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const VARIANT: Record<ButtonVariant, string> = {
   // Brand teal → yellow hover, dark-teal text on hover (handoff brand-aware rule).
   primary:
-    "bg-sk-bg-brand-solid text-sk-text-primary-on-brand hover:bg-sk-bg-brand-hover hover:text-sk-text-brand-primary",
+    "bg-sk-bg-brand-solid text-sk-text-primary-on-brand hover:bg-sk-bg-brand-hover hover:text-sk-text-primary-on-brand-hover",
   // Outline teal.
   secondary:
     "bg-transparent border border-sk-border-brand text-sk-text-brand hover:bg-sk-bg-brand-section",
