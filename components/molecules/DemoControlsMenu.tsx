@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from "lucide-react";
+import { Check, Eye, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
@@ -66,6 +66,8 @@ export function DemoControlsMenu({
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const skin = useLmsStore((s) => s.skin);
   const setSkin = useLmsStore((s) => s.setSkin);
+  const vision = useLmsStore((s) => s.vision);
+  const setVision = useLmsStore((s) => s.setVision);
   const resetDemo = useLmsStore((s) => s.resetDemo);
   const router = useRouter();
   const pathname = usePathname();
@@ -206,6 +208,37 @@ export function DemoControlsMenu({
                 );
               })}
             </div>
+          </Section>
+
+          <Section title="Accessibility">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={vision === "cvd"}
+              onClick={() => setVision(vision === "cvd" ? "default" : "cvd")}
+              className="sk-text-sm-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sk-text-secondary transition-colors hover:bg-sk-bg-secondary hover:text-sk-text-primary"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
+                  vision === "cvd"
+                    ? "border-sk-border-brand bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
+                    : "border-sk-border-primary text-transparent",
+                )}
+              >
+                <Icon icon={Check} size={12} />
+              </span>
+              <span className="flex flex-col">
+                <span className="flex items-center gap-1.5">
+                  <Icon icon={Eye} size={14} />
+                  Colourblind-safe states
+                </span>
+                <span className="sk-text-xs-regular text-sk-text-tertiary">
+                  Red–green safe (deuter + protan)
+                </span>
+              </span>
+            </button>
           </Section>
 
           <div className="border-t border-sk-border-secondary p-1.5">

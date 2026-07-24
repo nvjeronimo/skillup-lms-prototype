@@ -15,6 +15,9 @@ export type Theme = "light" | "dark";
 /** Brand skin — recombinations within the SkillUp palette. */
 export type Skin = "teal" | "ink" | "sky" | "violet" | "gold" | "red";
 
+/** Vision mode — "cvd" = red-green colourblind-safe state colours (deuter + protan). */
+export type Vision = "default" | "cvd";
+
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
   message: string;
@@ -70,6 +73,8 @@ interface LmsState {
   theme: Theme;
   /** Brand skin (palette recombination). */
   skin: Skin;
+  /** Vision mode (accessibility): colourblind-safe state colours. */
+  vision: Vision;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -107,6 +112,7 @@ interface LmsState {
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   setSkin: (skin: Skin) => void;
+  setVision: (vision: Vision) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -167,6 +173,7 @@ export const useLmsStore = create<LmsState>()(
   deviceMode: "auto",
   theme: "light",
   skin: "teal",
+  vision: "default",
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -357,6 +364,10 @@ export const useLmsStore = create<LmsState>()(
       track("theme_change", { theme });
       return { theme };
     }),
+  setVision: (vision) => {
+    track("vision_change", { vision });
+    set({ vision });
+  },
   setSkin: (skin) => {
     track("skin_change", { skin });
     set({ skin });
@@ -400,6 +411,7 @@ export const useLmsStore = create<LmsState>()(
         sidebarExpanded: s.sidebarExpanded,
         theme: s.theme,
         skin: s.skin,
+        vision: s.vision,
       }),
     },
   ),

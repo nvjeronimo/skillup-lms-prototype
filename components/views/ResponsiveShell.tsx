@@ -21,6 +21,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const mode = useLmsStore((s) => s.deviceMode);
   const theme = useLmsStore((s) => s.theme);
   const skin = useLmsStore((s) => s.skin);
+  const vision = useLmsStore((s) => s.vision);
   const width = FRAME_WIDTH[mode];
 
   React.useEffect(() => {
@@ -33,6 +34,11 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     if (skin === "teal") el.removeAttribute("data-skin");
     else el.setAttribute("data-skin", skin);
   }, [skin]);
+  React.useEffect(() => {
+    const el = document.documentElement;
+    if (vision === "cvd") el.setAttribute("data-vision", "cvd");
+    else el.removeAttribute("data-vision");
+  }, [vision]);
 
   if (!width) return <>{children}</>;
 

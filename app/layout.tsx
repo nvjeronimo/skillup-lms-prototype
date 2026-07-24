@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 // only flips them post-hydration — a visible flash of light-themed chrome
 // (white CC/Edit pills, white progress circles) on every load of a dark-mode
 // session. Mirrors ResponsiveShell's attribute logic; must stay in sync with it.
-const THEME_INIT_SCRIPT = `(function(){try{var raw=localStorage.getItem('sk-lms-demo');if(!raw)return;var s=JSON.parse(raw).state;if(!s)return;if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);}catch(e){}})();`;
+const THEME_INIT_SCRIPT = `(function(){try{var raw=localStorage.getItem('sk-lms-demo');if(!raw)return;var s=JSON.parse(raw).state;if(!s)return;if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
