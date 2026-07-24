@@ -22,7 +22,17 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const theme = useLmsStore((s) => s.theme);
   const skin = useLmsStore((s) => s.skin);
   const vision = useLmsStore((s) => s.vision);
+  const textSize = useLmsStore((s) => s.textSize);
+  const reduceMotion = useLmsStore((s) => s.reduceMotion);
+  const underlineLinks = useLmsStore((s) => s.underlineLinks);
+  const largeTargets = useLmsStore((s) => s.largeTargets);
   const width = FRAME_WIDTH[mode];
+
+  const flag = (attr: string, on: boolean) => {
+    const el = document.documentElement;
+    if (on) el.setAttribute(attr, "");
+    else el.removeAttribute(attr);
+  };
 
   React.useEffect(() => {
     const el = document.documentElement;
@@ -39,6 +49,14 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     if (vision === "cvd") el.setAttribute("data-vision", "cvd");
     else el.removeAttribute("data-vision");
   }, [vision]);
+  React.useEffect(() => {
+    const el = document.documentElement;
+    if (textSize === "md") el.removeAttribute("data-text-size");
+    else el.setAttribute("data-text-size", textSize);
+  }, [textSize]);
+  React.useEffect(() => flag("data-reduce-motion", reduceMotion), [reduceMotion]);
+  React.useEffect(() => flag("data-underline-links", underlineLinks), [underlineLinks]);
+  React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
 
   if (!width) return <>{children}</>;
 

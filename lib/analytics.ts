@@ -49,7 +49,8 @@ export type AnalyticsEvent =
   | "sidebar_shape_change"
   | "theme_change"
   | "skin_change"
-  | "vision_change";
+  | "vision_change"
+  | "a11y_change";
 
 type Props = Record<string, unknown>;
 
