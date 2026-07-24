@@ -1,15 +1,9 @@
 /* ============================================================================
-   SkillUp DS Color Tokens (--sk-) — SINCRONIZADO com o DS handoff v3.1
-   Fonte: LMS-HANDOFF/tokens/colors.css (gerado do Figma c7EUDrQwP8si08aPipDSIV)
+   SkillUp DS Color Tokens (--sk-) — SINCRONIZADO com o DS handoff (Figma
+   c7EUDrQwP8si08aPipDSIV). NÃO EDITAR À MÃO — re-exportar do DS quando mudar.
 
-   Substituiu a versão anterior que derivava as cores de marca com color-mix()
-   a partir de uma âncora. Essa abordagem reintroduzia o bug do hover-que-
-   escurece em dark: uma fórmula não sabe que em dark o hover deve clarear; um
-   passo de rampa validado sabe. Agora os valores são explícitos por skin.
-
-   NÃO EDITAR À MÃO. Re-exportar do DS quando o Figma mudar.
-
-   v3.1 — 2026-07-22 — gerado a partir do estado actual do Figma
+   v3.2 — 2026-07-24 — border-secondary suavizado (Neutral/150 #d5dce2) +
+   alias [data-skin="teal"] para forçar SKO em swatches de preview.
 
    ── ATRIBUTO: data-skin (era data-brand até v3.0) ──────────────────────────
    Alinhado com o protótipo em produção. O selector [data-brand] DEIXOU de
@@ -68,7 +62,7 @@
 
   /* Borders */
   --sk-border-primary: #8995a6;         /* Neutral/400_N03 — 3.33:1 */
-  --sk-border-secondary: #b9c4ce;       /* Neutral/200_N04 — decorativo */
+  --sk-border-secondary: #d5dce2;       /* Neutral/150 — decorativo, suave (isento de 3:1) */
   --sk-border-brand: #26708e;           /* Primary/600_P03 */
   --sk-border-focus-ring: #26708e;      /* WCAG 2.4.7 Focus Visible */
 
@@ -78,7 +72,7 @@
   --sk-fg-brand: #26708e;               /* Primary/600_P03 */
   --sk-fg-brand-primary: #26708e;
   --sk-fg-progress: #0086c9;            /* Primary/500_P08 */
-  --sk-fg-like: var(--sk-fg-progress);  /* "like" activo = fg-progress (era token próprio; é o mesmo valor) */
+  --sk-fg-like: var(--sk-fg-progress);  /* "like" activo = fg-progress */
   --sk-fg-error-on-solid: #ffffff;      /* sobre bg-error-solid */
   --sk-fg-success-on-solid: #ffffff;    /* sobre bg-success-solid — 5.63:1 */
   --sk-fg-warning-on-solid: #13282f;    /* sobre bg-warning-solid — 9.64:1 */
@@ -100,6 +94,27 @@
 /* ---------------------------------------------------------------------------
    LIGHT — skins alternativos (só tokens de marca)
    --------------------------------------------------------------------------- */
+
+/* [data-skin="teal"] — alias explícito do SKO. O default do SKO é :root (sem
+   atributo), mas um elemento aninhado sem data-skin HERDA o skin do ancestral.
+   Isto força SKO independentemente do contexto — necessário para swatches de
+   preview que têm de mostrar o teal mesmo com o documento noutro skin.
+   Re-declara os mesmos valores de marca do :root. */
+[data-skin="teal"] {
+  --sk-bg-brand-primary: #ebf8ff;
+  --sk-bg-brand-section: #ebf8ff;
+  --sk-bg-brand-solid: #26708e;
+  --sk-bg-brand-hover: #f9c654;
+  --sk-bg-brand-stage: #044150;
+  --sk-border-brand: #26708e;
+  --sk-border-focus-ring: #26708e;
+  --sk-fg-brand: #26708e;
+  --sk-fg-brand-primary: #26708e;
+  --sk-text-brand: #215477;
+  --sk-text-brand-primary: #044150;
+  --sk-text-brand-secondary: #215477;
+}
+
 [data-skin="gold"] {
   --sk-bg-brand-primary: #f5efe4;
   --sk-bg-brand-section: #f5efe4;
