@@ -44,6 +44,45 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+/** A labelled on/off row rendered as an accessible switch. */
+function ToggleRow({
+  label,
+  hint,
+  checked,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className="flex w-full items-center gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sk-bg-secondary"
+    >
+      <span
+        aria-hidden
+        className={cn(
+          "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
+          checked
+            ? "border-sk-border-brand bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
+            : "border-sk-border-primary text-transparent",
+        )}
+      >
+        <Icon icon={Check} size={12} />
+      </span>
+      <span className="flex flex-col">
+        <span className="sk-text-sm-medium text-sk-text-secondary">{label}</span>
+        {hint ? <span className="sk-text-xs-regular text-sk-text-tertiary">{hint}</span> : null}
+      </span>
+    </button>
+  );
+}
+
 export interface DemoControlsMenuProps {
   userName?: string;
   userAvatarUrl?: string;
@@ -66,6 +105,16 @@ export function DemoControlsMenu({
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const skin = useLmsStore((s) => s.skin);
   const setSkin = useLmsStore((s) => s.setSkin);
+  const vision = useLmsStore((s) => s.vision);
+  const setVision = useLmsStore((s) => s.setVision);
+  const textSize = useLmsStore((s) => s.textSize);
+  const setTextSize = useLmsStore((s) => s.setTextSize);
+  const reduceMotion = useLmsStore((s) => s.reduceMotion);
+  const setReduceMotion = useLmsStore((s) => s.setReduceMotion);
+  const underlineLinks = useLmsStore((s) => s.underlineLinks);
+  const setUnderlineLinks = useLmsStore((s) => s.setUnderlineLinks);
+  const largeTargets = useLmsStore((s) => s.largeTargets);
+  const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
   const resetDemo = useLmsStore((s) => s.resetDemo);
   const router = useRouter();
   const pathname = usePathname();
@@ -205,6 +254,60 @@ export function DemoControlsMenu({
                   </button>
                 );
               })}
+            </div>
+          </Section>
+
+          <Section title="Accessibility Standards">
+            <div className="flex flex-col gap-0.5">
+              {/* Text size — segmented A / A+ / A++ */}
+              <div className="mb-1 flex items-center gap-2 px-1">
+                <span className="sk-text-sm-medium flex-1 text-sk-text-secondary">Text size</span>
+                <div className="flex overflow-hidden rounded-md border border-sk-border-secondary">
+                  {(["md", "lg", "xl"] as const).map((sz, i) => (
+                    <button
+                      key={sz}
+                      type="button"
+                      aria-pressed={textSize === sz}
+                      aria-label={`Text size ${["normal", "large", "extra large"][i]}`}
+                      onClick={() => setTextSize(sz)}
+                      className={cn(
+                        "px-2.5 py-1 transition-colors",
+                        ["sk-text-xs-semibold", "sk-text-sm-semibold", "sk-text-md-semibold"][i],
+                        textSize === sz
+                          ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
+                          : "text-sk-text-secondary hover:bg-sk-bg-secondary",
+                      )}
+                    >
+                      A
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <ToggleRow
+                label="Colourblind-safe states"
+                hint="Red–green safe (deuter + protan)"
+                checked={vision === "cvd"}
+                onChange={(v) => setVision(v ? "cvd" : "default")}
+              />
+              <ToggleRow
+                label="Reduce motion"
+                hint="Turn off animations and transitions"
+                checked={reduceMotion}
+                onChange={setReduceMotion}
+              />
+              <ToggleRow
+                label="Underline links"
+                hint="Don’t rely on colour alone"
+                checked={underlineLinks}
+                onChange={setUnderlineLinks}
+              />
+              <ToggleRow
+                label="Larger touch targets"
+                hint="Minimum 44×44 px controls"
+                checked={largeTargets}
+                onChange={setLargeTargets}
+              />
             </div>
           </Section>
 

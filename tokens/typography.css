@@ -26,30 +26,30 @@
 }
 
 /* ---- Display ramp (Montserrat) ---- */
-.sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: 24px; line-height: 32px; }
-.sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: 30px; line-height: 38px; }
-.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: 36px; line-height: 44px; }
+.sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(24px * var(--sk-font-scale, 1)); line-height: calc(32px * var(--sk-font-scale, 1)); }
+.sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(30px * var(--sk-font-scale, 1)); line-height: calc(38px * var(--sk-font-scale, 1)); }
+.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(36px * var(--sk-font-scale, 1)); line-height: calc(44px * var(--sk-font-scale, 1)); }
 
 /* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ---- */
-.sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 18px; line-height: 24px; }
-.sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 18px; line-height: 24px; }
+.sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 
-.sk-text-md-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: 16px; line-height: 24px; }
-.sk-text-md-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 16px; line-height: 24px; }
-.sk-text-md-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 16px; line-height: 24px; }
+.sk-text-md-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-md-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-md-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 
-.sk-text-sm-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: 14px; line-height: 20px; }
-.sk-text-sm-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 14px; line-height: 20px; }
-.sk-text-sm-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 14px; line-height: 20px; }
+.sk-text-sm-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
+.sk-text-sm-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
+.sk-text-sm-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
 
-.sk-text-xs-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: 12px; line-height: 18px; }
-.sk-text-xs-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: 12px; line-height: 18px; }
-.sk-text-xs-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: 12px; line-height: 18px; }
+.sk-text-xs-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
+.sk-text-xs-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
+.sk-text-xs-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
 
 /* ---- 2xs — uppercase eyebrows (10px, +4% letter-spacing, UPPER-cased) ---- */
-.sk-text-2xs-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
-.sk-text-2xs-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
-.sk-text-2xs-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: 10px; line-height: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* Italic helper for note anchor quotes (uses body font) */
-.sk-text-sm-italic    { font-family: var(--sk-font-body); font-weight: 400; font-size: 14px; line-height: 20px; font-style: italic; }
+.sk-text-sm-italic    { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); font-style: italic; }

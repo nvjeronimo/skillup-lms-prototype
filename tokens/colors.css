@@ -327,3 +327,50 @@
      <html data-skin="violet">                  → Light Violet
      <html data-skin="ink" data-theme="dark">   → Dark Ink
    ============================================================================ */
+
+/* ============================================================================
+   VISION — modo acessível para daltonismo vermelho-verde (deuter + protan, ~99%)
+   Eixo ortogonal ao skin e ao tema: <html data-vision="cvd">.
+
+   Re-tuna APENAS as cores de estado (success/warning/error). O problema real do
+   daltonismo não é a cor de marca — é os estados colapsarem: no atual, para um
+   deuteranope, warning ≈ error (ΔE 3.9). Aqui a distinção deixa o eixo
+   vermelho-verde (perdido) e passa ao azul-amarelo + luminosidade (preservados).
+
+   Paleta baseada em Okabe-Ito. Separação mínima entre estados sob deuter/protan:
+   ΔE ≥ 18 (era 3.9). Todos os tiers passam WCAG AA. Success vira AZUL — foge à
+   convenção verde=sucesso, mas é opt-in e é o que o torna seguro; o ícone ✓ mantém
+   o significado (encoding redundante).
+
+   Ordem: este bloco vem depois de :root/skins/dark. O bloco dark-vision tem
+   especificidade (0,2,0) e vence em dark. NÃO reordenar.
+   ============================================================================ */
+[data-vision="cvd"] {
+  --sk-text-success-primary: #00618f;   /* azul — 6.76:1 branco, 5.42 pior */
+  --sk-text-warning-primary: #8a5a00;   /* âmbar escuro — 5.93:1 branco */
+  --sk-text-error-primary: #9e2a2b;     /* vermelho escuro — 7.45:1 branco */
+  --sk-bg-success-solid: #0072b2;       /* azul vivo — label branco 5.19 */
+  --sk-bg-warning-solid: #e69f00;       /* âmbar vivo — label escuro 6.79 */
+  --sk-bg-error-solid: #c0392b;         /* vermelho — label branco 5.44 */
+  --sk-fg-success-on-solid: #ffffff;
+  --sk-fg-warning-on-solid: #13282f;
+  --sk-fg-error-on-solid: #ffffff;
+  --sk-bg-success-primary: #e0eff8;     /* superfície azul clara */
+  --sk-bg-warning-primary: #fdf1d6;     /* superfície âmbar clara */
+  --sk-bg-error-primary: #f7e3e1;       /* superfície vermelha clara */
+}
+
+[data-vision="cvd"][data-theme="dark"] {
+  --sk-text-success-primary: #56b4e9;   /* azul claro — 5.30:1 pior superfície */
+  --sk-text-warning-primary: #e6b54d;   /* âmbar claro — 6.46:1 */
+  --sk-text-error-primary: #e8898a;     /* vermelho claro — 4.88:1 */
+  --sk-bg-success-solid: #56b4e9;       /* label escuro 7.67 */
+  --sk-bg-warning-solid: #e6b54d;       /* label escuro 8.08 */
+  --sk-bg-error-solid: #e8898a;         /* label escuro 7.06 */
+  --sk-fg-success-on-solid: #0e1a1f;
+  --sk-fg-warning-on-solid: #13282f;
+  --sk-fg-error-on-solid: #0e1a1f;
+  --sk-bg-success-primary: #0f2a3d;     /* superfície azul escura */
+  --sk-bg-warning-primary: #2e2812;     /* superfície âmbar escura */
+  --sk-bg-error-primary: #331a19;       /* superfície vermelha escura */
+}

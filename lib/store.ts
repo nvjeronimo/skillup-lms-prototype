@@ -15,6 +15,12 @@ export type Theme = "light" | "dark";
 /** Brand skin — recombinations within the SkillUp palette. */
 export type Skin = "teal" | "ink" | "sky" | "violet" | "gold" | "red";
 
+/** Vision mode — "cvd" = red-green colourblind-safe state colours (deuter + protan). */
+export type Vision = "default" | "cvd";
+
+/** Text scale — md = 100%, lg = 115%, xl = 130% (WCAG 1.4.4 resize text). */
+export type TextSize = "md" | "lg" | "xl";
+
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
   message: string;
@@ -70,6 +76,13 @@ interface LmsState {
   theme: Theme;
   /** Brand skin (palette recombination). */
   skin: Skin;
+  /** Vision mode (accessibility): colourblind-safe state colours. */
+  vision: Vision;
+  /** Accessibility Standards. */
+  textSize: TextSize;
+  reduceMotion: boolean;
+  underlineLinks: boolean;
+  largeTargets: boolean;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -107,6 +120,11 @@ interface LmsState {
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   setSkin: (skin: Skin) => void;
+  setVision: (vision: Vision) => void;
+  setTextSize: (size: TextSize) => void;
+  setReduceMotion: (v: boolean) => void;
+  setUnderlineLinks: (v: boolean) => void;
+  setLargeTargets: (v: boolean) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -167,6 +185,11 @@ export const useLmsStore = create<LmsState>()(
   deviceMode: "auto",
   theme: "light",
   skin: "teal",
+  vision: "default",
+  textSize: "md",
+  reduceMotion: false,
+  underlineLinks: false,
+  largeTargets: false,
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -357,6 +380,26 @@ export const useLmsStore = create<LmsState>()(
       track("theme_change", { theme });
       return { theme };
     }),
+  setVision: (vision) => {
+    track("vision_change", { vision });
+    set({ vision });
+  },
+  setTextSize: (textSize) => {
+    track("a11y_change", { setting: "textSize", value: textSize });
+    set({ textSize });
+  },
+  setReduceMotion: (reduceMotion) => {
+    track("a11y_change", { setting: "reduceMotion", value: String(reduceMotion) });
+    set({ reduceMotion });
+  },
+  setUnderlineLinks: (underlineLinks) => {
+    track("a11y_change", { setting: "underlineLinks", value: String(underlineLinks) });
+    set({ underlineLinks });
+  },
+  setLargeTargets: (largeTargets) => {
+    track("a11y_change", { setting: "largeTargets", value: String(largeTargets) });
+    set({ largeTargets });
+  },
   setSkin: (skin) => {
     track("skin_change", { skin });
     set({ skin });
@@ -400,6 +443,11 @@ export const useLmsStore = create<LmsState>()(
         sidebarExpanded: s.sidebarExpanded,
         theme: s.theme,
         skin: s.skin,
+        vision: s.vision,
+        textSize: s.textSize,
+        reduceMotion: s.reduceMotion,
+        underlineLinks: s.underlineLinks,
+        largeTargets: s.largeTargets,
       }),
     },
   ),

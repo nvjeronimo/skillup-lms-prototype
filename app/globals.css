@@ -131,3 +131,38 @@ button {
 [data-theme="dark"] .sk-logo-dark {
   display: block;
 }
+
+/* ============================================================================
+   Accessibility Standards — controlados pelo painel (data-attributes em <html>).
+   Todos opt-in; nenhum altera o layout até serem ligados.
+   ============================================================================ */
+
+/* Tamanho de texto — escala a rampa .sk-text-* (font-size + line-height via calc). */
+[data-text-size="lg"] { --sk-font-scale: 1.15; }
+[data-text-size="xl"] { --sk-font-scale: 1.30; }
+
+/* Reduzir movimento — força-o em todo o lado (WCAG 2.3.3). */
+[data-reduce-motion] *,
+[data-reduce-motion] *::before,
+[data-reduce-motion] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Sublinhar sempre os links — não depender da cor para os distinguir. */
+[data-underline-links] a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Alvos de toque maiores — mín. 44×44 em controlos (WCAG 2.5.8). Não aplica a
+   <a> inline para não partir o fluxo de texto. */
+[data-large-targets] button,
+[data-large-targets] [role="button"],
+[data-large-targets] [role="radio"],
+[data-large-targets] [role="switch"] {
+  min-height: 44px;
+  min-width: 44px;
+}
