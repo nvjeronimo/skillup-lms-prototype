@@ -39,6 +39,7 @@ const config: Config = {
             primary: "var(--sk-border-primary)",
             secondary: "var(--sk-border-secondary)",
             brand: "var(--sk-border-brand)",
+            "focus-ring": "var(--sk-border-focus-ring)",
           },
           fg: {
             white: "var(--sk-fg-white)",
@@ -47,6 +48,9 @@ const config: Config = {
             "brand-primary": "var(--sk-fg-brand-primary)",
             progress: "var(--sk-fg-progress)",
             like: "var(--sk-fg-like)",
+            "error-on-solid": "var(--sk-fg-error-on-solid)",
+            "success-on-solid": "var(--sk-fg-success-on-solid)",
+            "warning-on-solid": "var(--sk-fg-warning-on-solid)",
           },
           text: {
             primary: "var(--sk-text-primary)",
@@ -59,6 +63,7 @@ const config: Config = {
             "success-primary": "var(--sk-text-success-primary)",
             "warning-primary": "var(--sk-text-warning-primary)",
             "error-primary": "var(--sk-text-error-primary)",
+            "primary-on-brand-hover": "var(--sk-text-primary-on-brand-hover)",
           },
         },
       },
