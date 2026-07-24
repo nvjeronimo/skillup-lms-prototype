@@ -12,6 +12,12 @@ export interface AvatarProps {
   size?: AvatarSize;
   /** Online status dot. */
   status?: "online" | "offline" | "none";
+  /**
+   * Corner shape. "circle" (default) for people (thread authors, bylines);
+   * "square" for the profile avatar, to match the rounded-lg of the topbar
+   * icon buttons and CTAs.
+   */
+  shape?: "circle" | "square";
   className?: string;
 }
 
@@ -32,7 +38,14 @@ function initials(name: string): string {
 }
 
 /** Avatar with image or initials fallback + optional status dot. */
-export function Avatar({ name, src, size = "md", status = "none", className }: AvatarProps) {
+export function Avatar({
+  name,
+  src,
+  size = "md",
+  status = "none",
+  shape = "circle",
+  className,
+}: AvatarProps) {
   const s = SIZE[size];
   // Fall back to initials if no src OR the image fails to load (e.g. 404).
   const [failed, setFailed] = React.useState(false);
@@ -41,7 +54,8 @@ export function Avatar({ name, src, size = "md", status = "none", className }: A
     <span className={cn("relative inline-flex shrink-0", className)}>
       <span
         className={cn(
-          "inline-flex items-center justify-center overflow-hidden rounded-full bg-sk-bg-brand-section text-sk-text-brand-secondary",
+          "inline-flex items-center justify-center overflow-hidden bg-sk-bg-brand-section text-sk-text-brand-secondary",
+          shape === "square" ? "rounded-lg" : "rounded-full",
           s.box,
           s.text,
         )}

@@ -167,7 +167,7 @@ export function CoursePlayerTopbar({
             aria-label="Account"
             className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sk-bg-secondary"
           >
-            <Avatar name={userName} src={userAvatarUrl} size="sm" />
+            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             {!isMobile ? (
               <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
             ) : null}

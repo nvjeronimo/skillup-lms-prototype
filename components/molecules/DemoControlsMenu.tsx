@@ -152,7 +152,7 @@ export function DemoControlsMenu({
         onClick={() => setOpen((o) => !o)}
         className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sk-bg-secondary"
       >
-        <Avatar name={userName} src={userAvatarUrl} size="sm" />
+        <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
         {!compact ? (
           <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
         ) : null}
@@ -164,7 +164,7 @@ export function DemoControlsMenu({
           className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-xl"
         >
           <div className="flex items-center gap-2.5 px-4 py-3">
-            <Avatar name={userName} src={userAvatarUrl} size="sm" />
+            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <div className="min-w-0">
               <p className="sk-text-sm-semibold truncate text-sk-text-primary">{userName}</p>
               <p className="sk-text-xs-regular text-sk-text-tertiary">Demo preview settings</p>
