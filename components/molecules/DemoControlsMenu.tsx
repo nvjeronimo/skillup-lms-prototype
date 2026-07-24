@@ -23,14 +23,16 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
   { id: "3", slug: "quick-start", topicId: "qs-t2", label: "3-level · no Module, no Lesson", title: "3-level course (Course → Topics, no Module, no Lesson)" },
 ];
 
-// Brand skins — recombinations within the SkillUp palette.
+// Brand skins — one per skin in the DS "2. Skins" variable collection.
+// Label code = each skin's brand anchor (bg-brand-solid, light) in the DS ramp.
+// Only SKO carries a legacy brand code (P03); the rest are their own ramps.
 const SKINS: { skin: SkinId; label: string }[] = [
   { skin: "teal", label: "Teal — default (P03)" },
-  { skin: "ink", label: "Brand Blue (P01)" },
-  { skin: "sky", label: "Link Blue (P04)" },
-  { skin: "violet", label: "Violet" },
-  { skin: "gold", label: "Gold (AD2)" },
-  { skin: "red", label: "Red (AC3)" },
+  { skin: "ink", label: "Ink (Ink/900)" },
+  { skin: "sky", label: "Sky (Sky/600)" },
+  { skin: "violet", label: "Violet (Violet/600)" },
+  { skin: "gold", label: "Gold (Gold/600)" },
+  { skin: "red", label: "Red (Red/600)" },
 ];
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
