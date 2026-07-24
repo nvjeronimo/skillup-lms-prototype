@@ -4,6 +4,7 @@ import * as React from "react";
 import { Bell, Bookmark, ChevronRight, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
+import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { cn } from "@/lib/utils";
 
 export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
@@ -99,8 +100,7 @@ export function CoursePlayerTopbar({
         aria-label="SkillUp home"
         className={cn("flex items-center", isMobile && "flex-1 justify-center")}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/skillup-logo.svg" alt="SkillUp" className="h-7 w-auto" />
+        <SkillUpLogo className="h-7" />
       </a>
 
       {isDesktop && breadcrumb.length ? (
