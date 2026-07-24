@@ -60,3 +60,17 @@ const SHORT_LABELS: Record<string, string> = {
 export function topicTypeShortLabel(type: string): string {
   return SHORT_LABELS[type] ?? type;
 }
+
+/**
+ * Parse a human duration label ("58 min", "19m 04s", "1h 05m", "approx. 45 min")
+ * into seconds, for feeding the VideoPlayer scrubber. Falls back to 200s.
+ */
+export function durationToSeconds(label: string | undefined): number {
+  if (!label) return 200;
+  const h = /(\d+)\s*h/.exec(label);
+  const m = /(\d+)\s*m/.exec(label);
+  const s = /(\d+)\s*s/.exec(label);
+  const total =
+    (h ? +h[1] * 3600 : 0) + (m ? +m[1] * 60 : 0) + (s ? +s[1] : 0);
+  return total || 200;
+}

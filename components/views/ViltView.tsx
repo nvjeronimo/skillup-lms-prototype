@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { CalendarPlus, Lock, Play, Users, Video as VideoIcon } from "lucide-react";
+import { CalendarPlus, Lock, Users, Video as VideoIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { VideoPlayer } from "@/components/organisms/VideoPlayer";
+import { durationToSeconds } from "@/lib/utils";
 import { LiveControlBar } from "@/components/organisms/LiveControlBar";
 import { LiveAttendance } from "@/components/molecules/LiveAttendance";
 import { getViltSession, type ViltSession, type ViltStage } from "@/lib/content";
@@ -241,19 +243,13 @@ function RecordingStage({ session }: { session: ViltSession }) {
         <span className="sk-text-xs-regular text-sk-text-tertiary">{session.whenLabel}</span>
       </div>
 
-      <div className="relative flex aspect-video max-h-[42vh] w-full items-center justify-center overflow-hidden rounded-xl bg-sk-bg-tertiary">
-        <div className="flex flex-col items-center gap-2">
-          <Icon icon={Play} size={30} className="text-sk-text-secondary" />
-          <span className="sk-text-sm-medium text-sk-text-secondary">
-            Session recording · {session.durationLabel}
-          </span>
-        </div>
-      </div>
+      {/* The recording IS a Video asset — same player as any Video topic. */}
+      <VideoPlayer durationSeconds={durationToSeconds(session.durationLabel)} />
 
       <InlineAlert
         tone="info"
         title="This is a Video asset"
-        description="The recording reuses the standard video player — transcript, speed, captions and downloads all behave the same as any Video topic."
+        description="Transcript, speed, captions and downloads behave the same as any Video topic."
       />
 
       <Agenda items={session.agenda} />

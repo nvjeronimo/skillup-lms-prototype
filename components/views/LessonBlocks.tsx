@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Play, ImageIcon, FileText, Table2, Download, Check, X } from "lucide-react";
+import { ImageIcon, FileText, Table2, Download, Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { useLmsStore } from "@/lib/store";
-import { cn } from "@/lib/utils";
+import { cn, durationToSeconds } from "@/lib/utils";
 import type { LessonBlock, QuizOption } from "@/lib/content";
 
 const FILE_ICON = { pdf: FileText, doc: FileText, data: Table2 } as const;
@@ -47,16 +48,8 @@ function Block({ block }: { block: LessonBlock }) {
     case "video":
       return (
         <figure className="flex flex-col gap-2">
-          <div
-            className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-xl"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--sk-bg-brand-solid), var(--sk-bg-brand-stage))",
-            }}
-          >
-            <Icon icon={Play} size={26} className="text-sk-text-primary-on-brand" />
-            <span className="sk-text-sm-medium text-sk-text-primary-on-brand">{block.title}</span>
-          </div>
+          {/* Video unit/asset — same player component as any Video topic. */}
+          <VideoPlayer durationSeconds={durationToSeconds(block.durationLabel)} />
           <figcaption className="sk-text-xs-regular text-sk-text-tertiary">
             Video · {block.durationLabel} · transcript available
           </figcaption>
