@@ -118,3 +118,16 @@ button {
     backdrop-filter: none;
   }
 }
+
+/* SkillUp logo — swap the light/dark asset by theme. The dark asset recolours
+   the brand-ink ("Skill" + icon marks) to white, unreadable-in-dark otherwise.
+   data-theme is set pre-paint (see layout.tsx), so there is no flash. */
+.sk-logo-dark {
+  display: none;
+}
+[data-theme="dark"] .sk-logo-light {
+  display: none;
+}
+[data-theme="dark"] .sk-logo-dark {
+  display: block;
+}

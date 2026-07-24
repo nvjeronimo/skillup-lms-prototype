@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { CourseCard } from "@/components/organisms/CourseCard";
 import { Toast } from "@/components/organisms/Toast";
@@ -42,8 +43,7 @@ export function CourseHub() {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-sk-bg-secondary">
       <header className="flex h-[60px] items-center gap-3 border-b border-sk-border-secondary bg-sk-bg-primary px-4 md:px-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/skillup-logo.svg" alt="SkillUp" className="h-7 w-auto" />
+        <SkillUpLogo className="h-7" />
         <div className="flex flex-1 items-center justify-end gap-1">
           <button
             type="button"
