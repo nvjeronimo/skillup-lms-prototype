@@ -137,19 +137,26 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // (start/submit a quiz, upload an assignment, tick activity steps, download a
   // lab, finish the ORA journey), so they get no Mark-as-Complete bar — it would
   // duplicate the action they already own. Passive content (video / reading /
-  // podcast / discussion / VILT) gets the completion action at top AND bottom.
+  // podcast / discussion) gets the completion action at top AND bottom.
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
     family === "activity" ||
     family === "lab" ||
     family === "ora";
+  // VILT never exposes a manual "Mark as complete". Completion comes from one of
+  // two paths, whichever happens first: attendance on the live (join + ≥50%,
+  // automatic) or watching the recording (Video ≥90%). A manual button would
+  // imply the live is optional homework and would double-count against the
+  // recording's ≥90% rule — the completion note lives inside the VILT lane
+  // instead. See topic-types-inventory.md §3.
+  const isVilt = family === "vilt";
   const isCompleted = completedTopics.has(topicId);
   const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (
     <TopicActionBar state={actionState} onComplete={() => markComplete(topicId)} />
   );
-  const showAction = !isLocked && !hasInFrameAction;
+  const showAction = !isLocked && !hasInFrameAction && !isVilt;
   // The end-of-content action only belongs at the end of the CONTENT. The
   // Downloads and Notes tabs are short lists, so a second button there sits
   // in the same viewport as the header one and just reads as duplication.

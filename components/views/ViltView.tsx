@@ -55,7 +55,14 @@ export function ViltView({ topicId }: { topicId: string }) {
         <RecordingStage session={session} />
       )}
 
-      <p className="sk-text-xs-regular text-sk-text-tertiary">{session.completionRule}</p>
+      {/* Lane-level completion note — VILT never has a manual "Mark as complete".
+          Full-width amber note: completion is one of two paths, whichever first
+          (live attendance, or watching the recording). See topic-types-inventory §3. */}
+      <InlineAlert
+        tone="warning"
+        title="Completion is automatic — there's nothing to mark"
+        description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
+      />
     </div>
   );
 }
