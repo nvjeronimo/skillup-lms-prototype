@@ -1,8 +1,10 @@
 import type { LucideIcon, LucideProps } from "lucide-react";
-import { Layers, TerminalSquare, Headphones,
+import {
   AlertTriangle,
+  Atom,
   Award,
   BookOpen,
+  Briefcase,
   Calendar,
   Check,
   CheckSquare,
@@ -13,14 +15,20 @@ import { Layers, TerminalSquare, Headphones,
   Download,
   Edit2,
   Edit3,
+  Eye,
   FileText,
+  HelpCircle,
   Info,
+  Layers,
+  Lightbulb,
   Lock,
   MessageCircle,
   MoreHorizontal,
+  Music,
   PanelLeftClose,
   PanelLeftOpen,
   Pause,
+  Pencil,
   Play,
   Plus,
   Puzzle,
@@ -34,6 +42,7 @@ import { Layers, TerminalSquare, Headphones,
   Users,
   Video,
   VideoIcon,
+  VideoOff,
   X,
 } from "lucide-react";
 import { iconStroke } from "./utils";
@@ -55,36 +64,44 @@ export function Icon({ icon: IconCmp, size = 20, strokeWidth, ...rest }: IconPro
   return <IconCmp size={size} strokeWidth={strokeWidth ?? iconStroke(size)} {...rest} />;
 }
 
-/** Map a topic type to its representative icon (used in Saved panel + badges). */
+/**
+ * Map a topic type to its icon (used in Saved panel + Topic-Types badges).
+ * These mirror the SKO DS `LMS / Topic-Types Badge` component 1:1 — the
+ * comment on each case is the Untitled UI icon name used in Figma, and the
+ * lucide glyph returned is its direct equivalent.
+ */
 export function topicTypeIcon(type: TopicType): LucideIcon {
   switch (type) {
     case "Video":
-      return Play;
+      return Play; // play
     case "Reading":
-      return BookOpen;
+      return BookOpen; // book-open-01
     case "Quiz":
-      return CheckSquare;
+      return HelpCircle; // help-circle
     case "Lab":
-      return TerminalSquare;
+      return Atom; // atom-01
     case "Podcast":
-      return Headphones;
+      return Music; // music-note-01
     case "Lesson Page":
-      return Layers;
+      return Layers; // no DS badge variant — kept as-is
     case "VILT-Live Session":
+      return Video; // video-recorder
     case "VILT-Recording":
-      return VideoIcon;
+      return VideoOff; // video-recorder-off
     case "Activity":
-      return Puzzle;
+      return Lightbulb; // lightbulb-02
     case "Project":
-      return Award;
+      return Briefcase; // briefcase-01
     case "Practice Assignment":
+      return Pencil; // edit-02
     case "Graded Assignment":
-      return Edit2;
+      return Award; // award-01
     case "Peer-graded":
+      return Users; // users-01
     case "Peer Review":
-      return Users;
+      return Eye; // eye
     case "Discussion Prompt":
-      return MessageCircle;
+      return MessageCircle; // message-circle-01
     default:
       return BookOpen;
   }
