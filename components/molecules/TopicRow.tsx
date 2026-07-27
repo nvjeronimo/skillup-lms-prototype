@@ -51,7 +51,7 @@ export function TopicRow({
           className,
         )}
       >
-        <CompletionStatus state={status} size={20} />
+        <CompletionStatus state={status} size={18} />
       </button>
     );
   }
@@ -73,7 +73,7 @@ export function TopicRow({
         className="flex flex-1 items-start gap-2.5 text-left"
       >
         <span className="mt-0.5">
-          <CompletionStatus state={status} size={20} />
+          <CompletionStatus state={status} size={18} />
         </span>
         <span className="min-w-0 flex-1">
           {/* DS Sidebar v2: the topic title is text-primary in every state — it

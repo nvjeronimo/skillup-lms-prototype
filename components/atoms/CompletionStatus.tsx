@@ -10,11 +10,11 @@ export interface CompletionStatusProps {
 }
 
 /**
- * 20×20 status circle (matches DS `LMS / Completion Status`):
+ * 18×18 status circle (matches DS `LMS / Completion Status`):
  * Pending = empty ring · In Progress = half ring · Done = solid green circle +
  * white check · Locked = filled gray circle + gray lock.
  */
-export function CompletionStatus({ state, size = 20, className }: CompletionStatusProps) {
+export function CompletionStatus({ state, size = 18, className }: CompletionStatusProps) {
   const stroke = iconStroke(size);
   const base = "inline-flex items-center justify-center rounded-full shrink-0";
   const dims = { width: size, height: size };
