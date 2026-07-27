@@ -26,6 +26,12 @@ export interface QuizOption {
 export interface QuizQuestion {
   question: string;
   options: QuizOption[];
+  /**
+   * Answer cardinality (CAPA). false/undefined = single-select
+   * (`multiplechoiceresponse` → radio); true = multi-select
+   * (`choiceresponse` → checkbox). Drives the option marker (BR-3).
+   */
+  multiSelect?: boolean;
   /** Revealed by "Show answer" — the platform's <solution> block. */
   explanation?: string;
   /** Topic this question draws on, for the "review lesson" link after a wrong answer. */
