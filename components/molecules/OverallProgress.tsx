@@ -9,11 +9,16 @@ export interface OverallProgressProps {
   className?: string;
 }
 
-/** 46×46 progress ring with the percentage in its centre. */
+/**
+ * 46×46 progress ring with the percentage in its centre. The arc is blue while
+ * in progress and turns green once complete (DS `LMS / Progress Circle` ·
+ * Completed). Its ends are square (butt), matching the DS ring.
+ */
 function ProgressRing({ pct, className }: { pct: number; className?: string }) {
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (pct / 100) * circumference;
+  const complete = pct >= 100;
   return (
     <div
       className={cn(
@@ -30,9 +35,9 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
           cy="23"
           r={radius}
           fill="none"
-          stroke="var(--sk-fg-progress)"
+          stroke={complete ? "var(--sk-fg-progress-complete)" : "var(--sk-fg-progress)"}
           strokeWidth="4"
-          strokeLinecap="round"
+          strokeLinecap="butt"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
         />

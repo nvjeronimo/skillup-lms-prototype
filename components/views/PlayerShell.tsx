@@ -2,8 +2,6 @@
 
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { X } from "lucide-react";
-import { Icon } from "@/lib/icons";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
@@ -380,16 +378,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             aria-hidden
           />
           <div className="sk-animate-slide-left absolute left-0 top-0 h-full">
-            {/* Drawer goes straight to the course header; a floating X closes it. */}
+            {/* The drawer's close sits in the course header (next to the progress
+                ring), matching DS Sidebar v2 · Mobile. */}
             <div className="relative h-full">
-              <button
-                type="button"
-                onClick={() => setMobileDrawerOpen(false)}
-                aria-label="Close menu"
-                className="absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
-              >
-                <Icon icon={X} size={20} />
-              </button>
               <Sidebar
                 course={activeCourse}
                 currentTopicId={topicId}
@@ -400,6 +391,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 onToggleModule={toggleModule}
                 onSelectTopic={navigateTopic}
                 onToggleBookmark={toggleBookmark}
+                onCloseMobile={() => setMobileDrawerOpen(false)}
               />
             </div>
           </div>

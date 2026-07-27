@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bookmark } from "lucide-react";
+import { Bookmark, X } from "lucide-react";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
 import { LessonHeader } from "@/components/atoms/LessonHeader";
@@ -37,6 +37,8 @@ export interface SidebarProps {
   onToggleModule?: (moduleId: string) => void;
   onSelectTopic?: (topicId: string) => void;
   onToggleBookmark?: (topicId: string) => void;
+  /** Mobile drawer close — rendered in the course-header trailing slot. */
+  onCloseMobile?: () => void;
   className?: string;
 }
 
@@ -70,6 +72,7 @@ export function Sidebar({
   onToggleModule,
   onSelectTopic,
   onToggleBookmark,
+  onCloseMobile,
   className,
 }: SidebarProps) {
   const collapsed = variant === "Collapsed";
@@ -285,22 +288,50 @@ export function Sidebar({
       )}
       aria-label="Course navigation"
     >
-      <CourseHeader
-        title={course.title}
-        eyebrow="Course"
-        expanded={!collapsed}
-        compact={collapsed}
-        showToggle={!isMobile}
-        onToggle={onToggleSidebar}
-      />
-
-      {!collapsed ? (
-        <OverallProgress
-          pct={overallPct}
-          moduleCurrent={modulesDone + 1}
-          moduleTotal={course.modulesTotal}
+      {isMobile ? (
+        /* Mobile (DS Sidebar v2 · Mobile): the progress ring sits in the course
+           header's trailing slot — no full-width progress block, no footer. */
+        <CourseHeader
+          title={course.title}
+          eyebrow="Course"
+          showToggle={false}
+          rightSlot={
+            <div className="flex items-center gap-2">
+              {onCloseMobile ? (
+                <button
+                  type="button"
+                  onClick={onCloseMobile}
+                  aria-label="Close menu"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
+                >
+                  <X size={20} />
+                </button>
+              ) : null}
+              <OverallProgress
+                device="Mobile"
+                pct={overallPct}
+                moduleCurrent={modulesDone + 1}
+                moduleTotal={course.modulesTotal}
+              />
+            </div>
+          }
         />
-      ) : null}
+      ) : (
+        <>
+          <CourseHeader
+            title={course.title}
+            eyebrow="Course"
+            expanded
+            showToggle
+            onToggle={onToggleSidebar}
+          />
+          <OverallProgress
+            pct={overallPct}
+            moduleCurrent={modulesDone + 1}
+            moduleTotal={course.modulesTotal}
+          />
+        </>
+      )}
 
       <div
         ref={scrollRef}
@@ -358,24 +389,6 @@ export function Sidebar({
           );
         })}
       </div>
-
-      {/* Mobile shows a compact progress ring pinned at the bottom. */}
-      {isMobile ? (
-        <div className="flex items-center gap-3 border-t border-sk-border-secondary px-4 py-3">
-          <OverallProgress
-            device="Mobile"
-            pct={overallPct}
-            moduleCurrent={modulesDone + 1}
-            moduleTotal={course.modulesTotal}
-          />
-          <div>
-            <p className="sk-text-sm-semibold text-sk-text-primary">{overallPct}% complete</p>
-            <p className="sk-text-xs-regular text-sk-text-tertiary">
-              Module {modulesDone + 1} of {course.modulesTotal}
-            </p>
-          </div>
-        </div>
-      ) : null}
     </aside>
   );
 }
