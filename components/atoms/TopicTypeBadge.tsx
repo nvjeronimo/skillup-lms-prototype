@@ -29,8 +29,9 @@ export const ALL_TOPIC_TYPES: TopicType[] = [
 ];
 
 /**
- * Identifies a topic's type — icon + short label in text-secondary, no pill
- * background (matches the SKO `LMS / Topic-Types Badge` component).
+ * Identifies a topic's type — brand-blue icon + short label in text-secondary,
+ * no pill background (matches the SKO `LMS / Topic-Types Badge` component, where
+ * the type icon carries the brand colour and the label stays neutral).
  */
 export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBadgeProps) {
   return (
@@ -40,7 +41,9 @@ export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBa
         className,
       )}
     >
-      {showIcon ? <Icon icon={topicTypeIcon(type)} size={14} /> : null}
+      {showIcon ? (
+        <Icon icon={topicTypeIcon(type)} size={14} className="text-sk-text-brand-secondary" />
+      ) : null}
       {topicTypeShortLabel(type)}
     </span>
   );
