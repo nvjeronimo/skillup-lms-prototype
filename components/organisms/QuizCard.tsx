@@ -13,11 +13,14 @@ export interface QuizCardProps {
   state?: QuizState;
   question?: string;
   options?: QuizOption[];
+  /** Answer cardinality — single-select shows radios, multi-select checkboxes (BR-3). */
+  multiSelect?: boolean;
   explanation?: string;
   reviewTopicTitle?: string;
   onReviewTopic?: () => void;
-  selectedId?: string;
-  onSelect?: (id: string) => void;
+  /** Chosen option ids. Single-select carries at most one. */
+  selectedIds?: string[];
+  onToggleOption?: (id: string) => void;
   onSubmit?: () => void;
   /** Graded quizzes expose a Save-draft affordance and an attempts counter. */
   showSaveDraft?: boolean;
@@ -27,9 +30,6 @@ export interface QuizCardProps {
   maxAttempts?: number;
   /** Warn before the last graded attempt is spent. */
   isLastAttempt?: boolean;
-  /** Advance action, shown right-aligned in the same row once submitted. */
-  onNext?: () => void;
-  nextLabel?: string;
   className?: string;
 }
 
@@ -40,20 +40,72 @@ const DEFAULT_OPTIONS: QuizOption[] = [
   { id: "d", label: "Replace all staff with automation" },
 ];
 
+/** The answer marker — DS Checkbox `Type=Radio` (circle) / `Type=Checkbox` (square). */
+function OptionMarker({
+  multiSelect,
+  checked,
+  tone,
+}: {
+  multiSelect?: boolean;
+  checked: boolean;
+  tone: "default" | "brand" | "success" | "error";
+}) {
+  const shape = multiSelect ? "rounded-[6px]" : "rounded-full";
+  const border =
+    tone === "success"
+      ? "border-sk-text-success-primary"
+      : tone === "error"
+        ? "border-sk-text-error-primary"
+        : checked
+          ? "border-sk-border-brand"
+          : "border-sk-border-primary";
+  const fill =
+    checked && tone === "success"
+      ? "bg-sk-bg-success-solid"
+      : checked && tone === "error"
+        ? "bg-sk-bg-error-solid"
+        : checked && tone === "brand"
+          ? "bg-sk-bg-brand-solid"
+          : "bg-transparent";
+
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-colors",
+        shape,
+        border,
+        fill,
+      )}
+    >
+      {checked ? (
+        multiSelect ? (
+          <Icon icon={Check} size={13} className="text-sk-fg-white" />
+        ) : (
+          // Radio dot
+          <span className="h-2 w-2 rounded-full bg-sk-fg-white" />
+        )
+      ) : null}
+    </span>
+  );
+}
+
 /**
  * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
  * question submits and scores independently, with answer-specific feedback and
- * an optional Show-answer/explanation reveal.
+ * an optional Show-answer/explanation reveal. Position ("Question n of m") is
+ * owned by the Progress Rail — this card never repeats it.
  */
 export function QuizCard({
   state = "Question",
   question = "What is the primary goal of Six Sigma?",
   options = DEFAULT_OPTIONS,
+  multiSelect = false,
   explanation,
   reviewTopicTitle,
   onReviewTopic,
-  selectedId,
-  onSelect,
+  selectedIds = [],
+  onToggleOption,
   onSubmit,
   showSaveDraft,
   onSaveDraft,
@@ -61,8 +113,6 @@ export function QuizCard({
   attemptsUsed,
   maxAttempts,
   isLastAttempt,
-  onNext,
-  nextLabel = "Next question",
   className,
 }: QuizCardProps) {
   const revealed = state === "Revealed";
@@ -75,8 +125,13 @@ export function QuizCard({
     setConfirming(false);
   }, [question]);
 
-  const chosen = options.find((o) => o.id === selectedId);
-  const isCorrect = Boolean(chosen?.correct);
+  const chosen = options.filter((o) => selectedIds.includes(o.id));
+  // Single: the chosen option is correct. Multi: every correct option is
+  // selected and no incorrect one is.
+  const isCorrect = multiSelect
+    ? options.every((o) => Boolean(o.correct) === selectedIds.includes(o.id)) && selectedIds.length > 0
+    : Boolean(chosen[0]?.correct);
+  const hasSelection = selectedIds.length > 0;
 
   return (
     <div
@@ -87,22 +142,36 @@ export function QuizCard({
     >
       <h3 className="sk-text-md-semibold text-sk-text-primary">{question}</h3>
 
+      {multiSelect ? (
+        <span className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sk-text-tertiary">
+          Select all that apply
+        </span>
+      ) : null}
+
       <ul className="flex flex-col gap-2">
         {options.map((opt) => {
-          const isSelected = opt.id === selectedId;
+          const isSelected = selectedIds.includes(opt.id);
           // After submitting, only reveal the correct answer once the learner
           // asked for it — otherwise a wrong answer would give the game away.
-          const revealCorrect = revealed && opt.correct && (isCorrect || showAnswer);
+          const revealCorrect = revealed && Boolean(opt.correct) && (isCorrect || showAnswer);
           const showWrong = revealed && isSelected && !opt.correct;
+          const tone: "default" | "brand" | "success" | "error" = revealCorrect
+            ? "success"
+            : showWrong
+              ? "error"
+              : isSelected
+                ? "brand"
+                : "default";
           return (
             <li key={opt.id}>
               <button
                 type="button"
-                onClick={() => !revealed && onSelect?.(opt.id)}
+                onClick={() => !revealed && onToggleOption?.(opt.id)}
                 disabled={revealed}
-                aria-pressed={isSelected}
+                role={multiSelect ? "checkbox" : "radio"}
+                aria-checked={isSelected}
                 className={cn(
-                  "sk-text-sm-medium flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
+                  "sk-text-sm-medium flex w-full items-start gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
                   revealCorrect
                     ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
@@ -116,17 +185,18 @@ export function QuizCard({
                           ),
                 )}
               >
-                <span>{opt.label}</span>
-                {revealCorrect ? <Icon icon={Check} size={16} /> : null}
-                {showWrong ? <Icon icon={X} size={16} /> : null}
+                <OptionMarker multiSelect={multiSelect} checked={isSelected || revealCorrect} tone={tone} />
+                <span className="flex-1">{opt.label}</span>
+                {revealCorrect ? <Icon icon={Check} size={16} className="mt-0.5" /> : null}
+                {showWrong ? <Icon icon={X} size={16} className="mt-0.5" /> : null}
               </button>
             </li>
           );
         })}
       </ul>
 
-      {/* Answer-specific feedback for the option the learner actually chose. */}
-      {revealed && chosen?.feedback ? (
+      {/* Answer-specific feedback for the option(s) the learner actually chose. */}
+      {revealed && chosen.some((o) => o.feedback) ? (
         <div
           className={cn(
             "flex flex-col gap-1 rounded-lg px-3 py-2.5",
@@ -141,14 +211,19 @@ export function QuizCard({
           >
             {isCorrect ? "Correct" : "Not quite"}
           </span>
-          <p
-            className={cn(
-              "sk-text-sm-regular",
-              isCorrect ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
-            )}
-          >
-            {chosen.feedback}
-          </p>
+          {chosen
+            .filter((o) => o.feedback)
+            .map((o) => (
+              <p
+                key={o.id}
+                className={cn(
+                  "sk-text-sm-regular",
+                  isCorrect ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
+                )}
+              >
+                {o.feedback}
+              </p>
+            ))}
         </div>
       ) : null}
 
@@ -195,14 +270,14 @@ export function QuizCard({
             <Button
               variant="primary"
               onClick={() => (isLastAttempt ? setConfirming(true) : onSubmit?.())}
-              disabled={!selectedId}
+              disabled={!hasSelection}
             >
               Submit answer
             </Button>
           ) : null}
 
           {!revealed && showSaveDraft ? (
-            <Button variant="secondary" onClick={onSaveDraft} disabled={!selectedId}>
+            <Button variant="secondary" onClick={onSaveDraft} disabled={!hasSelection}>
               Save draft
             </Button>
           ) : null}
@@ -220,23 +295,16 @@ export function QuizCard({
           ) : null}
         </div>
 
-        <div className="flex flex-wrap items-center justify-end gap-3">
-          <div className="flex flex-col items-end gap-0.5">
-            {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
-              <span className="sk-text-xs-regular text-sk-text-tertiary">
-                You have used {attemptsUsed} of {maxAttempts} attempts
-              </span>
-            ) : null}
-            {draftSaved && !revealed ? (
-              <span className="sk-text-xs-regular text-sk-text-brand-secondary">
-                Draft saved — not submitted yet
-              </span>
-            ) : null}
-          </div>
-          {revealed && onNext ? (
-            <Button variant="primary" rightIcon={ArrowRight} onClick={onNext}>
-              {nextLabel}
-            </Button>
+        <div className="flex flex-col items-end gap-0.5">
+          {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
+            <span className="sk-text-xs-regular text-sk-text-tertiary">
+              You have used {attemptsUsed} of {maxAttempts} attempts
+            </span>
+          ) : null}
+          {draftSaved && !revealed ? (
+            <span className="sk-text-xs-regular text-sk-text-brand-secondary">
+              Draft saved — not submitted yet
+            </span>
           ) : null}
         </div>
       </div>

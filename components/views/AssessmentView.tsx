@@ -24,7 +24,13 @@ export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId:
   return isSubmission ? <GradedSubmission topicId={topicId} /> : <Quiz topicId={topicId} courseSlug={courseSlug} />;
 }
 
-/* ---- Quiz: entry → per-question flow → summary. Config drives the shell. ---- */
+/* ---- Quiz: entry → all questions stacked on one scroll → summary. ----
+   Mirrors Open edX: a unit stacks N `problem` blocks with no quiz-level submit,
+   so every question is on one page and submits independently. The sticky
+   Progress Rail owns position (jump-to-scroll); the cards never repeat it. */
+type Answer = { selected: string[]; revealed: boolean; draftSaved: boolean };
+const freshAnswer = (): Answer => ({ selected: [], revealed: false, draftSaved: false });
+
 function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) {
   const topic = getTopic(topicId)!;
   const router = useRouter();
@@ -42,29 +48,52 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const [phase, setPhase] = React.useState<"intro" | "quiz" | "completed">(
     result ? "completed" : "intro",
   );
-  const [qIndex, setQIndex] = React.useState(0);
-  const [selected, setSelected] = React.useState<string | undefined>(undefined);
-  const [revealed, setRevealed] = React.useState(false);
-  const [draftSaved, setDraftSaved] = React.useState(false);
-  /** Per-question outcome, drives the progress rail and the results map. */
-  const [outcomes, setOutcomes] = React.useState<(boolean | null)[]>(() =>
-    Array(total).fill(null),
+  const [answers, setAnswers] = React.useState<Answer[]>(() => questions.map(freshAnswer));
+  const recordedRef = React.useRef(false);
+
+  const isQuestionCorrect = React.useCallback(
+    (i: number): boolean => {
+      const q = questions[i];
+      const sel = answers[i].selected;
+      return q.multiSelect
+        ? sel.length > 0 && q.options.every((o) => Boolean(o.correct) === sel.includes(o.id))
+        : Boolean(q.options.find((o) => o.id === sel[0])?.correct);
+    },
+    [answers, questions],
   );
-  /** Only these are replayed when the learner retries just the wrong ones. */
-  const [retryOnly, setRetryOnly] = React.useState<number[] | null>(null);
+
+  const outcomes: (boolean | null)[] = answers.map((a, i) => (a.revealed ? isQuestionCorrect(i) : null));
+  const answeredCount = answers.filter((a) => a.revealed).length;
+  const allAnswered = total > 0 && answeredCount === total;
+  const score = outcomes.filter(Boolean).length;
 
   const attemptsUsed = result?.attempts ?? 0;
   const attemptsExhausted =
     typeof config.maxAttempts === "number" && attemptsUsed >= config.maxAttempts;
 
+  // No quiz-level submit on the platform — we record the aggregate once every
+  // question has a submitted state.
+  React.useEffect(() => {
+    if (phase === "quiz" && allAnswered && !recordedRef.current) {
+      recordedRef.current = true;
+      recordQuizResult(topicId, score, total);
+    }
+  }, [phase, allAnswered, score, total, topicId, recordQuizResult]);
+
   function startAttempt(indices?: number[]) {
-    setRetryOnly(indices ?? null);
-    setQIndex(indices?.[0] ?? 0);
-    setSelected(undefined);
-    setRevealed(false);
-    setDraftSaved(false);
-    setOutcomes(indices ? outcomes.map((o, i) => (indices.includes(i) ? null : o)) : Array(total).fill(null));
+    recordedRef.current = false;
+    setAnswers((prev) =>
+      questions.map((_, i) => (indices && !indices.includes(i) ? prev[i] : freshAnswer())),
+    );
     setPhase("quiz");
+    scrollToQuestion(indices?.[0] ?? 0);
+  }
+
+  function scrollToQuestion(i: number) {
+    if (typeof document === "undefined") return;
+    window.requestAnimationFrame(() =>
+      document.getElementById(`quiz-q-${i}`)?.scrollIntoView({ behavior: "smooth", block: "start" }),
+    );
   }
 
   if (phase === "completed" && result) {
@@ -98,81 +127,83 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     );
   }
 
-  const q = questions[qIndex];
-  const sequence = retryOnly ?? questions.map((_, i) => i);
-  const posInSequence = sequence.indexOf(qIndex);
-  const isLastInSequence = posInSequence === sequence.length - 1;
-
-  const railStates: RailItemState[] = outcomes.map((o, i) =>
-    i === qIndex && o === null ? "current" : o === null ? "pending" : o ? "done" : "error",
+  const currentIndex = answers.findIndex((a) => !a.revealed);
+  const railStates: RailItemState[] = answers.map((a, i) =>
+    !a.revealed ? (i === currentIndex ? "current" : "pending") : outcomes[i] ? "done" : "error",
   );
+  const liveResult = { score, total, attempts: attemptsUsed + 1 };
 
   return (
-    <div className="flex flex-col gap-3 py-4">
+    <div className="flex flex-col gap-4 py-4">
+      {/* The rail owns position; it sticks to the top of the scroll as the
+          learner works down the stacked questions. */}
       <ProgressRail
+        className="sticky top-2 z-10 shadow-sm"
         states={railStates}
-        currentIndex={qIndex}
-        label={`Question ${posInSequence + 1} of ${sequence.length}${
-          config.weightPct ? ` · ${config.label}` : ""
-        }`}
-        onJump={(i) => {
-          // Only already-answered questions can be revisited mid-attempt.
-          if (outcomes[i] === null) return;
-          setQIndex(i);
-          setSelected(undefined);
-          setRevealed(true);
-        }}
+        currentIndex={currentIndex}
+        label={`${answeredCount} of ${total} answered${config.weightPct ? ` · ${config.label}` : ""}`}
+        onJump={(i) => scrollToQuestion(i)}
       />
 
-      <QuizCard
-        state={revealed ? "Revealed" : "Question"}
-        question={q.question}
-        options={q.options}
-        explanation={q.explanation}
-        reviewTopicTitle={q.reviewTopicTitle}
-        onReviewTopic={() => {
-          if (q.reviewTopicId) router.push(`/course/${courseSlug}/topic/${q.reviewTopicId}`);
-        }}
-        selectedId={selected}
-        onSelect={(id) => {
-          if (revealed) return;
-          setSelected(id);
-          setDraftSaved(false);
-        }}
-        showSaveDraft={config.submitIsFinal}
-        draftSaved={draftSaved}
-        onSaveDraft={() => {
-          setDraftSaved(true);
-          showToast("Draft saved — not submitted yet.");
-        }}
-        attemptsUsed={config.maxAttempts ? attemptsUsed : undefined}
-        maxAttempts={config.maxAttempts}
-        isLastAttempt={
-          config.submitIsFinal &&
-          typeof config.maxAttempts === "number" &&
-          attemptsUsed === config.maxAttempts - 1
-        }
-        onSubmit={() => {
-          if (!selected) return;
-          const correct = Boolean(q.options.find((o) => o.id === selected)?.correct);
-          setOutcomes((prev) => prev.map((o, i) => (i === qIndex ? correct : o)));
-          setRevealed(true);
-        }}
-        nextLabel={isLastInSequence ? "See results" : "Next question"}
-        onNext={() => {
-          if (!isLastInSequence) {
-            setQIndex(sequence[posInSequence + 1]);
-            setSelected(undefined);
-            setRevealed(false);
-            setDraftSaved(false);
-            return;
-          }
-          const score = outcomes.filter(Boolean).length;
-          recordQuizResult(topicId, score, total);
-          setPhase("completed");
-        }}
-      />
+      {questions.map((q, i) => (
+        <div key={i} id={`quiz-q-${i}`} className="scroll-mt-20">
+          <QuizCard
+            state={answers[i].revealed ? "Revealed" : "Question"}
+            question={q.question}
+            options={q.options}
+            multiSelect={q.multiSelect}
+            explanation={q.explanation}
+            reviewTopicTitle={q.reviewTopicTitle}
+            onReviewTopic={() => {
+              if (q.reviewTopicId) router.push(`/course/${courseSlug}/topic/${q.reviewTopicId}`);
+            }}
+            selectedIds={answers[i].selected}
+            onToggleOption={(id) =>
+              setAnswers((prev) =>
+                prev.map((a, j) => {
+                  if (j !== i || a.revealed) return a;
+                  const has = a.selected.includes(id);
+                  const selected = q.multiSelect
+                    ? has
+                      ? a.selected.filter((x) => x !== id)
+                      : [...a.selected, id]
+                    : [id];
+                  return { ...a, selected, draftSaved: false };
+                }),
+              )
+            }
+            showSaveDraft={config.submitIsFinal}
+            draftSaved={answers[i].draftSaved}
+            onSaveDraft={() => {
+              setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, draftSaved: true } : a)));
+              showToast("Draft saved — not submitted yet.");
+            }}
+            attemptsUsed={config.maxAttempts ? attemptsUsed : undefined}
+            maxAttempts={config.maxAttempts}
+            isLastAttempt={
+              config.submitIsFinal &&
+              typeof config.maxAttempts === "number" &&
+              attemptsUsed === config.maxAttempts - 1
+            }
+            onSubmit={() =>
+              setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, revealed: true } : a)))
+            }
+          />
+        </div>
+      ))}
 
+      {/* Results appear at the end once every question has been answered. */}
+      {allAnswered ? (
+        <QuizSummary
+          topic={topic}
+          config={config}
+          result={liveResult}
+          outcomes={outcomes}
+          attemptsExhausted={attemptsExhausted}
+          onRetake={() => startAttempt()}
+          onRetryIncorrect={(idx) => startAttempt(idx)}
+        />
+      ) : null}
     </div>
   );
 }

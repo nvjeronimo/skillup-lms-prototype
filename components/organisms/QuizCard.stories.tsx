@@ -25,7 +25,7 @@ const meta: Meta<typeof QuizCard> = {
   component: QuizCard,
   tags: ["autodocs"],
   parameters: { layout: "padded" },
-  args: { state: "Question", selectedId: "a", options: OPTIONS, explanation: EXPLANATION },
+  args: { state: "Question", selectedIds: ["a"], options: OPTIONS, explanation: EXPLANATION },
   argTypes: {
     state: { control: "inline-radio", options: ["Question", "Revealed"] },
   },
@@ -41,14 +41,14 @@ export default meta;
 
 type Story = StoryObj<typeof QuizCard>;
 
-/** Nothing selected yet — Submit is disabled. */
-export const Unanswered: Story = { args: { selectedId: undefined } };
+/** Nothing selected yet — Submit is disabled. Single-select shows radios. */
+export const Unanswered: Story = { args: { selectedIds: [] } };
 
 /** An option is chosen but not yet submitted. */
-export const Selected: Story = { args: { selectedId: "a" } };
+export const Selected: Story = { args: { selectedIds: ["a"] } };
 
 /** Submitted and correct — answer-specific feedback, correct option marked. */
-export const Correct: Story = { args: { state: "Revealed", selectedId: "a" } };
+export const Correct: Story = { args: { state: "Revealed", selectedIds: ["a"] } };
 
 /**
  * Submitted and wrong. The correct answer stays hidden until "Show answer" is
@@ -57,25 +57,40 @@ export const Correct: Story = { args: { state: "Revealed", selectedId: "a" } };
 export const Incorrect: Story = {
   args: {
     state: "Revealed",
-    selectedId: "b",
+    selectedIds: ["b"],
     reviewTopicTitle: "Introduction to the DMAIC methodology",
+  },
+};
+
+/** Multi-select (CAPA `choiceresponse`) — the marker becomes a checkbox. */
+export const MultiSelect: Story = {
+  args: {
+    multiSelect: true,
+    question: "Which of these are Six Sigma goals? (select all that apply)",
+    selectedIds: ["a", "c"],
+    options: [
+      { id: "a", label: "Reduce process variation", correct: true },
+      { id: "b", label: "Increase speed at any cost" },
+      { id: "c", label: "Lower the defect rate", correct: true },
+      { id: "d", label: "Remove all documentation" },
+    ],
   },
 };
 
 /** Graded variant — Save draft plus the attempts counter. */
 export const GradedWithAttempts: Story = {
-  args: { selectedId: "a", showSaveDraft: true, attemptsUsed: 0, maxAttempts: 2 },
+  args: { selectedIds: ["a"], showSaveDraft: true, attemptsUsed: 0, maxAttempts: 2 },
 };
 
 /** Draft stored but not submitted — the distinction has to be loud. */
 export const DraftSaved: Story = {
-  args: { selectedId: "a", showSaveDraft: true, draftSaved: true, attemptsUsed: 0, maxAttempts: 2 },
+  args: { selectedIds: ["a"], showSaveDraft: true, draftSaved: true, attemptsUsed: 0, maxAttempts: 2 },
 };
 
 /** Last graded attempt — Submit routes through a confirmation gate first. */
 export const LastAttempt: Story = {
   args: {
-    selectedId: "a",
+    selectedIds: ["a"],
     showSaveDraft: true,
     attemptsUsed: 1,
     maxAttempts: 2,
