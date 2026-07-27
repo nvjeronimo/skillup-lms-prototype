@@ -11,6 +11,8 @@ export interface CourseHeaderProps {
   compact?: boolean;
   /** Hide the collapse toggle (mobile drawer uses its own close X). */
   showToggle?: boolean;
+  /** Overrides the trailing slot — e.g. the mobile progress ring instead of the toggle. */
+  rightSlot?: React.ReactNode;
   className?: string;
 }
 
@@ -22,6 +24,7 @@ export function CourseHeader({
   onToggle,
   compact = false,
   showToggle = true,
+  rightSlot,
   className,
 }: CourseHeaderProps) {
   return (
@@ -38,7 +41,7 @@ export function CourseHeader({
           <p className="sk-text-lg-semibold mt-1 text-sk-text-primary">{title}</p>
         </div>
       ) : null}
-      {showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null}
+      {rightSlot ?? (showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null)}
     </div>
   );
 }
