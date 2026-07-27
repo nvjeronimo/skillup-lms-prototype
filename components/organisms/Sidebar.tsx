@@ -295,13 +295,11 @@ export function Sidebar({
       />
 
       {!collapsed ? (
-        <div className="border-b border-sk-border-secondary px-4 py-3">
-          <OverallProgress
-            pct={overallPct}
-            moduleCurrent={modulesDone + 1}
-            moduleTotal={course.modulesTotal}
-          />
-        </div>
+        <OverallProgress
+          pct={overallPct}
+          moduleCurrent={modulesDone + 1}
+          moduleTotal={course.modulesTotal}
+        />
       ) : null}
 
       <div
