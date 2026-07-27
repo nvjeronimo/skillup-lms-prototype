@@ -9,7 +9,45 @@ export interface OverallProgressProps {
   className?: string;
 }
 
-/** Course progress. Desktop = bar + label; Mobile = compact ring with center %. */
+/** 46×46 progress ring with the percentage in its centre. */
+function ProgressRing({ pct, className }: { pct: number; className?: string }) {
+  const radius = 18;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (pct / 100) * circumference;
+  return (
+    <div
+      className={cn(
+        "relative inline-flex h-[46px] w-[46px] shrink-0 items-center justify-center",
+        className,
+      )}
+      role="img"
+      aria-label={`${pct}% complete`}
+    >
+      <svg className="h-[46px] w-[46px] -rotate-90" viewBox="0 0 46 46">
+        <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--sk-bg-tertiary)" strokeWidth="4" />
+        <circle
+          cx="23"
+          cy="23"
+          r={radius}
+          fill="none"
+          stroke="var(--sk-fg-progress)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+        />
+      </svg>
+      <span className="sk-text-xs-semibold absolute text-sk-text-primary">{pct}%</span>
+    </div>
+  );
+}
+
+/**
+ * Course progress. Mobile = the compact ring alone. Desktop (V2) = an eyebrow
+ * plus a "Module X of Y" subline on the left and the ring with its centre %
+ * on the right, framed by top/bottom hairlines. Matches the DS
+ * `LMS / Overall Progress` component (Device=Desktop-V2).
+ */
 export function OverallProgress({
   pct,
   moduleCurrent,
@@ -20,50 +58,23 @@ export function OverallProgress({
   const clamped = Math.max(0, Math.min(100, pct));
 
   if (device === "Mobile") {
-    const radius = 18;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (clamped / 100) * circumference;
-    return (
-      <div
-        className={cn("relative inline-flex h-[46px] w-[46px] items-center justify-center", className)}
-        role="img"
-        aria-label={`${clamped}% complete`}
-      >
-        <svg className="h-[46px] w-[46px] -rotate-90" viewBox="0 0 46 46">
-          <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--sk-bg-tertiary)" strokeWidth="4" />
-          <circle
-            cx="23"
-            cy="23"
-            r={radius}
-            fill="none"
-            stroke="var(--sk-fg-progress)"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-          />
-        </svg>
-        <span className="sk-text-2xs-semibold absolute text-sk-text-primary">{clamped}%</span>
-      </div>
-    );
+    return <ProgressRing pct={clamped} className={className} />;
   }
 
   return (
-    <div className={cn("w-full", className)}>
-      <div className="flex items-center justify-between">
-        <span className="sk-text-2xs-medium text-sk-text-tertiary">Overall progress</span>
-        <span className="sk-text-xs-semibold text-sk-text-primary">{clamped}%</span>
+    <div
+      className={cn(
+        "flex items-center gap-1 border-y border-sk-border-secondary px-4 py-2",
+        className,
+      )}
+    >
+      <div className="flex min-w-0 flex-1 flex-col justify-center">
+        <span className="sk-text-xs-medium uppercase text-sk-text-tertiary">Overall progress</span>
+        <span className="sk-text-xs-medium truncate text-sk-text-primary">
+          Module {moduleCurrent} of {moduleTotal}
+        </span>
       </div>
-      <div
-        className="mt-2 h-2 w-full overflow-hidden rounded-full bg-sk-bg-tertiary"
-        role="progressbar"
-        aria-valuenow={clamped}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`Overall progress, ${clamped}%, module ${moduleCurrent} of ${moduleTotal}`}
-      >
-        <div className="h-full rounded-full bg-sk-fg-progress" style={{ width: `${clamped}%` }} />
-      </div>
+      <ProgressRing pct={clamped} />
     </div>
   );
 }
