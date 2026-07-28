@@ -35,7 +35,7 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
           cy="23"
           r={radius}
           fill="none"
-          stroke={complete ? "var(--sk-fg-progress-complete)" : "var(--sk-fg-progress)"}
+          stroke={complete ? "var(--sk-fg-success-secondary)" : "var(--sk-fg-progress)"}
           strokeWidth="4"
           strokeLinecap="butt"
           strokeDasharray={circumference}
