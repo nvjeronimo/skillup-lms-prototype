@@ -13,6 +13,9 @@ export interface CourseHeaderProps {
   showToggle?: boolean;
   /** Overrides the trailing slot — e.g. the mobile progress ring instead of the toggle. */
   rightSlot?: React.ReactNode;
+  /** Bottom hairline. Off when an element below (e.g. Overall Progress) already
+   *  carries a top border, to avoid a doubled divider. */
+  showDivider?: boolean;
   className?: string;
 }
 
@@ -25,12 +28,14 @@ export function CourseHeader({
   compact = false,
   showToggle = true,
   rightSlot,
+  showDivider = true,
   className,
 }: CourseHeaderProps) {
   return (
     <div
       className={cn(
-        "flex items-start gap-2 border-b border-sk-border-secondary px-3 py-4",
+        "flex items-start gap-2 px-3 py-4",
+        showDivider && "border-b border-sk-border-secondary",
         compact && "justify-center",
         className,
       )}

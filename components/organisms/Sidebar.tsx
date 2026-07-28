@@ -324,6 +324,7 @@ export function Sidebar({
             expanded
             showToggle
             onToggle={onToggleSidebar}
+            showDivider={false}
           />
           <OverallProgress
             pct={overallPct}
