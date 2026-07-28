@@ -149,10 +149,10 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               role="tab"
               aria-selected={isActive}
               className={cn(
-                "sk-text-sm-semibold -mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-4 py-2.5 transition-colors",
+                "sk-text-sm-semibold relative flex shrink-0 items-center gap-1.5 px-4 py-2.5 transition-colors",
                 isActive
-                  ? "border-sk-border-brand text-sk-text-brand-secondary"
-                  : "border-transparent text-sk-text-tertiary hover:text-sk-text-primary",
+                  ? "text-sk-text-brand-secondary"
+                  : "text-sk-text-tertiary hover:text-sk-text-primary",
               )}
             >
               {tab.label}
@@ -167,6 +167,14 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                 >
                   {tab.count}
                 </span>
+              ) : null}
+              {/* DS `tab-selected`: a 2px brand bar with rounded top corners,
+                  sitting on the tab-row baseline. */}
+              {isActive ? (
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 -bottom-px h-0.5 rounded-t-[2px] bg-sk-border-brand"
+                />
               ) : null}
             </Link>
           );

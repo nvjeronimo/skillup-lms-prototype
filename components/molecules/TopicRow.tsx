@@ -79,12 +79,15 @@ export function TopicRow({
           {/* DS Sidebar v2: the topic title is text-primary in every state — it
               does not change colour when active or locked. */}
           <span className="sk-text-sm-medium block text-sk-text-primary">{title}</span>
-          {/* Brand type badge (icon + label) + gray duration — matches DS Topic Row. */}
-          <span className="mt-1 flex flex-wrap items-center gap-1.5">
-            <TopicTypeBadge type={type} />
-            <span className="sk-text-xs-regular text-sk-text-tertiary">· {duration}</span>
+          {/* Brand type badge (icon + label) + gray duration — matches DS Topic Row.
+              Stays on one line; the trailing duration truncates with an ellipsis. */}
+          <span className="mt-1 flex min-w-0 items-center gap-1.5">
+            <TopicTypeBadge type={type} className="shrink-0" />
+            <span className="sk-text-xs-regular min-w-0 truncate text-sk-text-tertiary">
+              · {duration}
+            </span>
             {optional ? (
-              <span className="sk-text-2xs-medium text-sk-text-tertiary">· Optional</span>
+              <span className="sk-text-2xs-medium shrink-0 text-sk-text-tertiary">· Optional</span>
             ) : null}
           </span>
         </span>
