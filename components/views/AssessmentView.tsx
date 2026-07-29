@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Check, RotateCcw, AlertTriangle, ArrowLeft, ArrowRight } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
-import { ProgressRail, type RailItemState } from "@/components/molecules/ProgressRail";
+import { QuizProgressBar } from "@/components/molecules/QuizProgressBar";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Badge } from "@/components/atoms/Badge";
@@ -28,10 +28,10 @@ export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId:
    Mirrors Open edX's native sequence navigation. The *subsection* is the quiz
    container; authoring one `problem` per unit makes the platform render exactly
    this stepper (unit navigator + Previous/Next) with no custom code. Submit
-   stays per problem block — Open edX has no quiz-level submit-all, so each
-   question still grades on its own. The Progress Rail is the unit navigator: it
-   owns position and allows free backtracking. The end-of-quiz summary is ours —
-   the platform ships no results screen. */
+   stays per problem block: Open edX has no quiz-level submit-all, so each
+   question still grades on its own. Position and progress come from the DS
+   `Quiz · Progress Bar`; stepping is carried by the Previous/Next controls.
+   The end-of-quiz summary is ours, the platform ships no results screen. */
 type Answer = { selected: string[]; revealed: boolean; draftSaved: boolean };
 const freshAnswer = (): Answer => ({ selected: [], revealed: false, draftSaved: false });
 
@@ -139,22 +139,20 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     );
   }
 
-  const railStates: RailItemState[] = answers.map((a, i) =>
-    !a.revealed ? (i === index ? "current" : "pending") : outcomes[i] ? "done" : "error",
-  );
   const q = questions[index];
   const isLast = index === total - 1;
 
   return (
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
-      {/* The rail is the unit navigator: it owns position and jumps freely,
-          mirroring the platform's per-unit tabs. Backtracking is allowed, so
-          the navigator stays visible (hide it entirely if that ever changes). */}
-      <ProgressRail
-        states={railStates}
-        currentIndex={index}
-        label={`Question ${index + 1} of ${total}${config.weightPct ? ` · ${config.label}` : ""}`}
-        onJump={setIndex}
+      {/* Position + progress, per the DS `Quiz · Progress Bar` variant. The dot
+          rail it replaces doubled as a jump-to-question navigator, so stepping
+          is now carried entirely by the Previous/Next controls below — which is
+          also the platform's own default since the unit tab bar moved behind a
+          plugin slot. */}
+      <QuizProgressBar
+        current={index + 1}
+        total={total}
+        pct={(answeredCount / total) * 100}
       />
 
       <QuizCard
@@ -186,7 +184,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         draftSaved={answers[index].draftSaved}
         onSaveDraft={() => {
           setAnswers((prev) => prev.map((a, j) => (j === index ? { ...a, draftSaved: true } : a)));
-          showToast("Draft saved — not submitted yet.");
+          showToast("Draft saved, not submitted yet.");
         }}
         attemptsUsed={config.maxAttempts ? attemptsUsed : undefined}
         maxAttempts={config.maxAttempts}

@@ -165,24 +165,32 @@ export function topicDescription(topic: FlatTopic): string {
       return `A short video lesson, with a synced transcript you can search and take notes from.`;
     case "reading":
       return `A short read on “${topic.title}”, with the key ideas you need before moving on.`;
-    case "assessment":
-      return `Check your understanding of ${topic.lessonLabel ?? topic.moduleTitle}. You can retake this as many times as you like.`;
+    case "assessment": {
+      // A 3-level course has an implicit module with no title, so there may be
+      // no lesson or module name to refer to.
+      const context = topic.lessonLabel || topic.moduleTitle;
+      return context
+        ? `Check your understanding of ${context}. You can retake this as many times as you like.`
+        : `Check your understanding before moving on. You can retake this as many times as you like.`;
+    }
     case "graded":
       return `Apply what you've learned and submit your work. This assignment counts toward your final grade.`;
     case "activity":
-      return `An interactive exercise to practise the concepts from ${topic.moduleTitle}.`;
+      return topic.moduleTitle
+        ? `An interactive exercise to practise the concepts from ${topic.moduleTitle}.`
+        : `An interactive exercise to practise the concepts from this course.`;
     case "ora":
       return `A peer-reviewed project. You'll submit your work, review a peer, and receive a grade.`;
     case "lessonPage":
-      return `A guided page that brings together everything on this topic — video, notes, diagrams and downloads.`;
+      return `A guided page that brings together everything on this topic: video, notes, diagrams and downloads.`;
     case "lab":
       return `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`;
     case "podcast":
-      return `A conversation you can listen to on the move — transcript and chapters included.`;
+      return `A conversation you can listen to on the move, with transcript and chapters included.`;
     case "vilt":
       return `A live, instructor-led session with your cohort.`;
     case "blocked":
-      return `This content type isn't available on the platform yet — it needs a build-or-buy decision first.`;
+      return `This content type isn't available on the platform yet. It needs a build-or-buy decision first.`;
     default:
       return topic.title;
   }
@@ -319,7 +327,7 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
     {
       question: "What is the primary goal of Six Sigma?",
       explanation:
-        "Six Sigma is a data-driven methodology for reducing variation. Fewer defects follow from a more predictable process — speed and headcount are outcomes, never the goal.",
+        "Six Sigma is a data-driven methodology for reducing variation. Fewer defects follow from a more predictable process; speed and headcount are outcomes, never the goal.",
       reviewTopicId: "m3-t1",
       reviewTopicTitle: "Introduction to the DMAIC methodology",
       options: [
@@ -327,7 +335,7 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
           id: "a",
           label: "Reduce process variation and defects",
           correct: true,
-          feedback: "Correct — controlling variation is what makes a process predictable and defect-free.",
+          feedback: "Correct. Controlling variation is what makes a process predictable and defect-free.",
         },
         {
           id: "b",
@@ -337,7 +345,7 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
         {
           id: "c",
           label: "Eliminate all documentation",
-          feedback: "The opposite — Six Sigma depends on documented baselines and control plans to prove improvement.",
+          feedback: "The opposite. Six Sigma depends on documented baselines and control plans to prove improvement.",
         },
         {
           id: "d",
@@ -353,8 +361,8 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
       reviewTopicId: "m3-t2",
       reviewTopicTitle: "The define phase",
       options: [
-        { id: "a", label: "Define", feedback: "Define frames the problem and the customer requirements — it does not yet quantify performance." },
-        { id: "b", label: "Measure", correct: true, feedback: "Correct — Measure captures the baseline you will improve against." },
+        { id: "a", label: "Define", feedback: "Define frames the problem and the customer requirements. It does not yet quantify performance." },
+        { id: "b", label: "Measure", correct: true, feedback: "Correct. Measure captures the baseline you will improve against." },
         { id: "c", label: "Improve", feedback: "Improve comes after you already know the baseline and the root causes." },
         { id: "d", label: "Control", feedback: "Control locks in the gain at the end; the baseline is set much earlier." },
       ],
@@ -366,10 +374,10 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
       reviewTopicId: "m3-t3",
       reviewTopicTitle: "The measure phase",
       options: [
-        { id: "a", label: "The customer's requirements", correct: true, feedback: "Correct — CTQs always start from the voice of the customer." },
+        { id: "a", label: "The customer's requirements", correct: true, feedback: "Correct. CTQs always start from the voice of the customer." },
         { id: "b", label: "The finance department", feedback: "Budget shapes what you can do, but it does not define quality for the customer." },
         { id: "c", label: "Competitor pricing", feedback: "Useful market context, but pricing is not a quality characteristic." },
-        { id: "d", label: "Random sampling", feedback: "Sampling is how you measure a CTQ — it is not where the CTQ comes from." },
+        { id: "d", label: "Random sampling", feedback: "Sampling is how you measure a CTQ. It is not where the CTQ comes from." },
       ],
     },
   ];
@@ -859,13 +867,13 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
           {
             id: "a",
             label: "Normal random variation",
-            feedback: "A run that long is very unlikely by chance — it is a signal, not noise.",
+            feedback: "A run that long is very unlikely by chance. It is a signal, not noise.",
           },
           {
             id: "b",
             label: "A shift in the process mean",
             correct: true,
-            feedback: "Correct — a sustained run on one side points to a shift with an assignable cause.",
+            feedback: "Correct. A sustained run on one side points to a shift with an assignable cause.",
           },
           {
             id: "c",

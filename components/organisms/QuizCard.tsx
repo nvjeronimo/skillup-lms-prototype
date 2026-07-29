@@ -303,7 +303,7 @@ export function QuizCard({
           ) : null}
           {draftSaved && !revealed ? (
             <span className="sk-text-xs-regular text-sk-text-brand-secondary">
-              Draft saved — not submitted yet
+              Draft saved, not submitted yet
             </span>
           ) : null}
         </div>
