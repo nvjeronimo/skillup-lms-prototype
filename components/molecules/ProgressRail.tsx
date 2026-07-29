@@ -10,25 +10,28 @@ export type RailItemState = "pending" | "current" | "done" | "error" | "flagged"
 export interface ProgressRailProps {
   states: RailItemState[];
   currentIndex: number;
-  /** Single position label, e.g. "Question 1 of 3 · Practice quiz". */
+  /** Single position label, e.g. "Step 1 of 3". */
   label: string;
+  /** Noun for each dot in assistive text — must match the visible label. */
+  itemLabel?: string;
   onJump?: (index: number) => void;
   className?: string;
 }
 
 /**
- * Position + progress for any multi-item topic (quiz questions, activity
- * steps). One line: the label carries the position, the dots carry per-item
- * state — so neither has to be repeated in prose elsewhere on the screen.
+ * Position + progress for a multi-step topic. One line: the label carries the
+ * position, the dots carry per-item state — so neither has to be repeated in
+ * prose elsewhere on the screen.
  *
- * For quizzes this is the unit navigator: Open edX groups a quiz's questions in
- * a subsection and renders one tab per unit, but exposes no per-question
- * counter, so the label is computed client-side in our shell.
+ * Quizzes no longer use this: the DS replaced their dot rail with the
+ * `Quiz · Progress Bar` variant (see QuizProgressBar), because a dot per
+ * question reads as noise on a long quiz.
  */
 export function ProgressRail({
   states,
   currentIndex,
   label,
+  itemLabel = "Step",
   onJump,
   className,
 }: ProgressRailProps) {
@@ -40,7 +43,7 @@ export function ProgressRail({
         className,
       )}
       role="group"
-      aria-label="Quiz progress"
+      aria-label={label}
     >
       <span className="sk-text-sm-medium text-sk-text-primary">{label}</span>
       <ol className="flex flex-wrap items-center gap-1.5">
@@ -51,7 +54,7 @@ export function ProgressRail({
               <button
                 type="button"
                 onClick={() => onJump?.(i)}
-                aria-label={`Question ${i + 1} — ${s}`}
+                aria-label={`${itemLabel} ${i + 1}: ${s}`}
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
                   "flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium transition-colors",

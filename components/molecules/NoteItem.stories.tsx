@@ -9,8 +9,8 @@ const meta: Meta<typeof NoteItem> = {
   args: {
     ts: "0:38",
     anchorQuote:
-      "The lifecycle begins long before any code is written — with deep understanding of customer needs.",
-    text: "Lifecycle starts with customer understanding — before any code",
+      "The lifecycle begins long before any code is written, with deep understanding of customer needs.",
+    text: "Lifecycle starts with customer understanding, before any code",
     tags: ["discovery", "lifecycle"],
     editedLabel: "Edited 2m ago",
   },

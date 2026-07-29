@@ -60,7 +60,7 @@ export function CourseHub() {
       <main className="mx-auto w-full max-w-4xl flex-1 p-4 md:p-8">
         <h1 className="sk-text-display-sm-semibold text-sk-text-primary">My Learning</h1>
         <p className="sk-text-md-regular mt-1 text-sk-text-secondary">
-          Pick up where you left off — {cards.length} courses enrolled.
+          Pick up where you left off. {cards.length} courses enrolled.
         </p>
 
         <div className="mt-6 flex flex-col gap-4">

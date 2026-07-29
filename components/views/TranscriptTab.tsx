@@ -182,7 +182,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
           value={feedback}
           onLike={() => setFeedback(feedback === "like" ? null : "like")}
           onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
-          onReport={() => showToast("Thanks — we'll take a look.")}
+          onReport={() => showToast("Thanks, we'll take a look.")}
         />
         <a href="#" className="sk-text-xs-regular text-sk-text-tertiary hover:text-sk-text-brand-secondary">
           CC BY-SA 4.0

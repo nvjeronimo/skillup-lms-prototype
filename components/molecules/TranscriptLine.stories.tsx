@@ -8,7 +8,7 @@ const meta: Meta<typeof TranscriptLine> = {
   parameters: { layout: "padded" },
   args: {
     ts: "0:38",
-    text: "The lifecycle begins long before any code is written — with deep understanding of customer needs.",
+    text: "The lifecycle begins long before any code is written, with deep understanding of customer needs.",
     active: false,
     hasNote: false,
   },

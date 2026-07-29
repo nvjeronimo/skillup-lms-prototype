@@ -78,7 +78,7 @@ export function ScormContainer({
               This activity couldn&rsquo;t load
             </span>
             <span className="sk-text-sm-regular max-w-md text-sk-text-error-primary">
-              Our activity server didn&rsquo;t respond. Your progress elsewhere is safe — this
+              Our activity server didn&rsquo;t respond. Your progress elsewhere is safe. This
               activity doesn&rsquo;t affect your grade.
             </span>
             <div className="flex flex-wrap justify-center gap-2 pt-1">
@@ -94,7 +94,7 @@ export function ScormContainer({
           <>
             <Icon icon={Play} size={26} className="text-sk-text-brand-secondary" />
             <span className="sk-text-sm-medium text-sk-text-secondary">
-              Activity running — interact in the frame above
+              Activity running. Interact in the frame above
             </span>
             <span className="sk-text-xs-regular text-sk-text-tertiary">
               Your progress and score are saved automatically and resume next time.
@@ -121,7 +121,7 @@ export function ScormContainer({
         <InlineAlert
           tone="info"
           title="Best viewed on a larger screen"
-          description="Interactive activities aren't supported in the mobile app — open this one on desktop or the web."
+          description="Interactive activities aren't supported in the mobile app. Open this one on desktop or the web."
         />
       ) : null}
     </section>

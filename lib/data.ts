@@ -246,7 +246,7 @@ export const notifications: NotificationModel[] = [
     id: "n2",
     type: "discussion-reply",
     title: "Carlos M. replied to your discussion",
-    body: "“Great point on measurement systems analysis — but what about gauge R&R?”",
+    body: "“Great point on measurement systems analysis, but what about gauge R&R?”",
     timestamp: "25 min ago",
     unread: true,
     href: "/course/six-sigma/topic/m3-t1",

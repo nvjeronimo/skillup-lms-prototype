@@ -61,10 +61,10 @@
                 "videoSrc": "/videos/dmaic-intro.mp4",
                 "transcript": [
                   { "id": "ln-1", "ts": "0:00", "text": "Welcome back. In this unit we look at the product development lifecycle through the lens of AI-augmented workflows." },
-                  { "id": "ln-2", "ts": "0:18", "text": "Understanding this lifecycle is critical — it's the backbone of everything a product manager does, from discovery to launch." },
-                  { "id": "ln-3", "ts": "0:38", "text": "The lifecycle begins long before any code is written — with deep understanding of customer needs and unmet pain points.", "hasNote": true },
-                  { "id": "ln-4", "ts": "0:58", "text": "Traditionally, this research phase was time-consuming — hours of interviews, synthesis workshops, affinity mapping." },
-                  { "id": "ln-5", "ts": "1:14", "text": "This is exactly where AI tools can dramatically compress the research phase — turning 50 interviews into structured themes in minutes.", "hasNote": true },
+                  { "id": "ln-2", "ts": "0:18", "text": "Understanding this lifecycle is critical; it's the backbone of everything a product manager does, from discovery to launch." },
+                  { "id": "ln-3", "ts": "0:38", "text": "The lifecycle begins long before any code is written, with deep understanding of customer needs and unmet pain points.", "hasNote": true },
+                  { "id": "ln-4", "ts": "0:58", "text": "Traditionally, this research phase was time-consuming: hours of interviews, synthesis workshops, affinity mapping." },
+                  { "id": "ln-5", "ts": "1:14", "text": "This is exactly where AI tools can dramatically compress the research phase: turning 50 interviews into structured themes in minutes.", "hasNote": true },
                   { "id": "ln-6", "ts": "1:34", "text": "As we move into the ideation phase, AI can assist in generating innovative concepts based on the identified themes, fostering creativity and efficiency." },
                   { "id": "ln-7", "ts": "2:00", "text": "An MVP is not a smaller product. It's the smallest experiment you can run to test the riskiest assumption." }
                 ]
@@ -88,9 +88,9 @@
               { "id": "m3-t5", "type": "Video", "title": "The analyze phase", "duration": "6 min", "completed": false, "locked": true },
               { "id": "m3-t6", "type": "Activity", "title": "The improve phase", "duration": "approx. 10 min", "completed": false, "locked": true },
               { "id": "m3-t7", "type": "Graded Assignment", "title": "The control phase", "duration": "approx. 20 min", "completed": false, "locked": true },
-              { "id": "m3-t8", "type": "Programming Assignment", "title": "Programming Assignment: automate the control chart", "duration": "—", "completed": false },
-              { "id": "m3-t9", "type": "Role Play", "title": "Role Play: coach a resistant stakeholder", "duration": "—", "completed": false },
-              { "id": "m3-t10", "type": "Dialogue", "title": "Dialogue: practise explaining variation", "duration": "—", "completed": false }
+              { "id": "m3-t8", "type": "Programming Assignment", "title": "Programming Assignment: automate the control chart", "duration": "", "completed": false },
+              { "id": "m3-t9", "type": "Role Play", "title": "Role Play: coach a resistant stakeholder", "duration": "", "completed": false },
+              { "id": "m3-t10", "type": "Dialogue", "title": "Dialogue: practise explaining variation", "duration": "", "completed": false }
             ]
           }
         ]
@@ -104,8 +104,8 @@
       "topicId": "m3-t1",
       "transcriptLineId": "ln-3",
       "ts": "0:38",
-      "anchorQuote": "The lifecycle begins long before any code is written — with deep understanding of customer needs.",
-      "text": "Lifecycle starts with customer understanding — before any code",
+      "anchorQuote": "The lifecycle begins long before any code is written, with deep understanding of customer needs.",
+      "text": "Lifecycle starts with customer understanding, before any code",
       "tags": ["discovery", "lifecycle"],
       "createdAt": "2026-05-30T10:14:00Z",
       "updatedAt": "2026-05-30T10:14:00Z"
@@ -115,7 +115,7 @@
       "topicId": "m3-t1",
       "transcriptLineId": "ln-5",
       "ts": "1:14",
-      "anchorQuote": "This is exactly where AI tools can dramatically compress the research phase — turning 50 interviews into structured themes in minutes.",
+      "anchorQuote": "This is exactly where AI tools can dramatically compress the research phase: turning 50 interviews into structured themes in minutes.",
       "text": "AI compresses research phase via synthesis at scale, not a replacement",
       "tags": ["ai", "research"],
       "createdAt": "2026-05-30T10:21:00Z",

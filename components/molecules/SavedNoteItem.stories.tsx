@@ -10,7 +10,7 @@ const meta: Meta<typeof SavedNoteItem> = {
     ts: "0:38",
     topicTitle: "Introduction to the DMAIC methodology",
     anchorQuote: "The lifecycle begins long before any code is written.",
-    text: "Lifecycle starts with customer understanding — before any code",
+    text: "Lifecycle starts with customer understanding, before any code",
     tags: ["discovery", "lifecycle"],
     savedAt: "3 days ago",
   },
@@ -30,7 +30,7 @@ export const Default: Story = {};
 export const LongAnchorQuote: Story = {
   args: {
     anchorQuote:
-      "This is exactly where AI tools can dramatically compress the research phase — turning 50 interviews into structured themes in minutes, freeing the team to focus on judgement.",
+      "This is exactly where AI tools can dramatically compress the research phase: turning 50 interviews into structured themes in minutes, freeing the team to focus on judgement.",
   },
 };
 export const ManyTags: Story = {

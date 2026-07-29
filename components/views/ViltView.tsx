@@ -57,7 +57,7 @@ export function ViltView({ topicId }: { topicId: string }) {
           (live attendance, or watching the recording). See topic-types-inventory §3. */}
       <InlineAlert
         tone="warning"
-        title="Completion is automatic — there's nothing to mark"
+        title="Completion is automatic, there's nothing to mark"
         description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
       />
     </div>

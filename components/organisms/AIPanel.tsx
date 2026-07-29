@@ -22,7 +22,7 @@ const MODES: { value: AIMode; label: string }[] = [
 ];
 
 const TAKEAWAYS = [
-  { ts: "0:38", text: "Lifecycle starts with customer understanding — before any code" },
+  { ts: "0:38", text: "Lifecycle starts with customer understanding, before any code" },
   { ts: "1:14", text: "AI compresses research phase via synthesis at scale" },
   { ts: "2:14", text: "MVP = test riskiest assumption first" },
 ];

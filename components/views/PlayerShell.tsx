@@ -214,7 +214,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     !isLocked && !isBlocked && family !== "video" && activeTab === "transcript" ? (
       <TopicFooterMeta
         byline={FOOTER_AUTHOR_FAMILIES.includes(family) ? getByline(topic) : undefined}
-        onReport={() => showToast("Thanks — we'll take a look.")}
+        onReport={() => showToast("Thanks, we'll take a look.")}
       />
     ) : null;
 

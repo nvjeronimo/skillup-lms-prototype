@@ -104,7 +104,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
       <div className="mt-2 flex items-start gap-2 rounded-lg bg-sk-bg-secondary px-3 py-2.5">
         <Icon icon={Info} size={16} className="mt-0.5 text-sk-text-tertiary" />
         <p className="sk-text-sm-regular text-sk-text-secondary">
-          Create notes from the Transcript tab — click <span className="sk-text-sm-semibold">+ Note</span> on any line.
+          Create notes from the Transcript tab: click <span className="sk-text-sm-semibold">+ Note</span> on any line.
         </p>
       </div>
     </div>
