@@ -104,33 +104,36 @@ function Stepper({
   ];
 
   return (
-    <ol className="flex flex-col overflow-hidden rounded-xl border border-sk-border-secondary">
+    // DS ORA stepper (node 4852-13999): a single horizontal segmented pill —
+    // three equal-width segments split by vertical dividers, each tinted by its
+    // state. Completed = green, current = brand, upcoming = outlined grey.
+    <ol className="flex overflow-hidden rounded-xl border border-sk-border-secondary">
       {steps.map((s, i) => {
         const isCurrent = s.id === step;
         return (
           <li
             key={s.id}
             className={cn(
-              "flex items-center gap-3 px-4 py-3",
-              i > 0 && "border-t border-sk-border-secondary",
-              isCurrent ? "bg-sk-bg-brand-section" : s.done ? "bg-sk-bg-success-primary" : "",
+              "flex flex-1 min-w-0 items-center gap-2 px-3 py-2.5",
+              i > 0 && "border-l border-sk-border-secondary",
+              isCurrent ? "bg-sk-bg-brand-section" : s.done ? "bg-sk-bg-success-primary" : "bg-sk-bg-primary",
             )}
           >
             <span
               className={cn(
-                "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full",
+                "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
                 s.done
                   ? "bg-sk-bg-success-solid text-sk-fg-white"
                   : isCurrent
                     ? "bg-sk-bg-brand-solid text-sk-fg-white"
-                    : "bg-sk-bg-secondary text-sk-text-tertiary",
+                    : "border border-sk-border-secondary text-sk-text-tertiary",
               )}
             >
-              {s.done ? <Icon icon={Check} size={13} /> : <span className="text-[11px]">{i + 1}</span>}
+              {s.done ? <Icon icon={Check} size={12} /> : <span className="text-[11px]">{i + 1}</span>}
             </span>
             <span
               className={cn(
-                "sk-text-sm-semibold",
+                "sk-text-sm-semibold truncate",
                 s.done
                   ? "text-sk-text-success-primary"
                   : isCurrent
@@ -140,11 +143,6 @@ function Stepper({
             >
               {s.label}
             </span>
-            {isCurrent ? (
-              <span className="sk-text-2xs-medium ml-auto uppercase tracking-wide text-sk-text-brand-secondary">
-                You are here
-              </span>
-            ) : null}
           </li>
         );
       })}
