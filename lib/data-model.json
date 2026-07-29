@@ -77,7 +77,9 @@
               { "id": "m3-t4d", "type": "Podcast", "title": "In practice: what changes on the shop floor", "duration": "19m 04s", "completed": false },
               { "id": "m3-t4e", "type": "Lab", "title": "Lab: Process capability in Python", "duration": "approx. 45 min", "completed": false },
               { "id": "m3-t4f", "type": "Peer-graded", "title": "Peer-Review: Design a control plan", "duration": "approx. 60 min", "completed": false },
-              { "id": "m3-t4g", "type": "Lesson Page", "title": "Control charts end to end", "duration": "approx. 15 min", "completed": false }
+              { "id": "m3-t4g", "type": "Lesson Page", "title": "Control charts end to end", "duration": "approx. 15 min", "completed": false },
+              { "id": "m3-t4h", "type": "Discussion Prompt", "title": "Spotting hidden variation", "duration": "approx. 10 min", "completed": false },
+              { "id": "m3-t4i", "type": "Project", "title": "Final Project: build your DMAIC control plan", "duration": "approx. 3 h", "completed": false }
             ]
           },
           {
