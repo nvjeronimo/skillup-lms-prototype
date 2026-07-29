@@ -9,7 +9,6 @@ import { LabView } from "./LabView";
 import { OraView } from "./OraView";
 import { LessonPageView } from "./LessonPageView";
 import { PodcastView } from "./PodcastView";
-import { DiscussionView } from "./DiscussionView";
 import { ViltView } from "./ViltView";
 import { BlockedView } from "./BlockedView";
 import { LockedView } from "./LockedView";
@@ -40,8 +39,6 @@ export function TopicBody({ topicId, courseSlug }: { topicId: string; courseSlug
       return <LessonPageView topicId={topicId} />;
     case "podcast":
       return <PodcastView topicId={topicId} />;
-    case "discussion":
-      return <DiscussionView topicId={topicId} />;
     case "vilt":
       return <ViltView topicId={topicId} />;
     case "blocked":

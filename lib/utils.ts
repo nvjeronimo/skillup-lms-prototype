@@ -53,7 +53,6 @@ const SHORT_LABELS: Record<string, string> = {
   "VILT-Recording": "Recording",
   "Practice Assignment": "Practice",
   "Graded Assignment": "Graded",
-  "Discussion Prompt": "Discussion",
   "Lesson Page": "Lesson",
   "Programming Assignment": "Programming",
 };

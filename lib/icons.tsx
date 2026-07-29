@@ -103,8 +103,6 @@ export function topicTypeIcon(type: TopicType): LucideIcon {
       return Users; // users-01
     case "Peer Review":
       return Eye; // eye
-    case "Discussion Prompt":
-      return MessageCircle; // message-circle-01
     case "Programming Assignment":
       return Code2; // blocked — auto-graded in-browser notebook
     case "Role Play":

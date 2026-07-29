@@ -18,7 +18,9 @@ export type TopicType =
   | "Graded Assignment"
   | "Peer-graded"
   | "Peer Review"
-  | "Discussion Prompt"
+  // Discussion Prompt was deprecated as a topic type (Jul 29, 2026) — Discussion
+  // is now course-level chrome (a Discussions panel + an optional per-topic
+  // footer), not a stacked type. See topic-types-inventory.md.
   // Blocked types — Coursera-native, no Open edX equivalent yet (build-or-buy).
   | "Programming Assignment"
   | "Role Play"

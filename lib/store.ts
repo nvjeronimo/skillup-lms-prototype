@@ -8,7 +8,7 @@ import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
 
 export type TabSlug = "transcript" | "notes" | "downloads";
-export type OverlayPanel = null | "notifications" | "saved";
+export type OverlayPanel = null | "notifications" | "saved" | "discussions";
 /** Preview device mode — "auto" follows the window; the rest force a breakpoint + frame. */
 export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
 export type Theme = "light" | "dark";
@@ -111,7 +111,7 @@ interface LmsState {
   /** Record a finished quiz attempt — stores the score, bumps the attempt count, completes the topic. */
   recordQuizResult: (topicId: string, score: number, total: number) => void;
   toggleModule: (moduleId: string) => void;
-  openOverlayPanel: (which: "notifications" | "saved") => void;
+  openOverlayPanel: (which: "notifications" | "saved" | "discussions") => void;
   closeOverlayPanel: () => void;
   markAllNotificationsRead: (ids: string[]) => void;
   showToast: (message: string, opts?: { actionLabel?: string; onAction?: () => void }) => void;

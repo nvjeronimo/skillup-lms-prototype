@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bell, Bookmark, ChevronRight, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
+import { Bell, Bookmark, ChevronRight, Menu, MessagesSquare, Moon, Sparkles, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
@@ -18,11 +18,13 @@ export interface CoursePlayerTopbarProps {
   showAi?: boolean;
   showBookmark?: boolean;
   showNotifications?: boolean;
+  showDiscussions?: boolean;
   showTheme?: boolean;
   /** Unread count — surfaced in the Notifications button aria-label + dot. */
   notificationsCount?: number;
   onMenu?: () => void;
   onAi?: () => void;
+  onDiscussions?: () => void;
   onBookmark?: () => void;
   onNotifications?: () => void;
   onTheme?: () => void;
@@ -66,11 +68,13 @@ export function CoursePlayerTopbar({
   showAi = false,
   showBookmark = true,
   showNotifications = true,
+  showDiscussions = false,
   showTheme = false,
   theme = "Light",
   notificationsCount = 0,
   onMenu,
   onAi,
+  onDiscussions,
   onBookmark,
   onNotifications,
   onTheme,
@@ -145,6 +149,11 @@ export function CoursePlayerTopbar({
         {showBookmark ? (
           <UtilityButton label="Saved items" onClick={onBookmark}>
             <Icon icon={Bookmark} size={20} />
+          </UtilityButton>
+        ) : null}
+        {!isMobile && showDiscussions ? (
+          <UtilityButton label="Discussions" onClick={onDiscussions}>
+            <Icon icon={MessagesSquare} size={20} />
           </UtilityButton>
         ) : null}
         {!isMobile && showAi ? (
