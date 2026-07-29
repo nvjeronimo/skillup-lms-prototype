@@ -135,7 +135,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // (start/submit a quiz, upload an assignment, tick activity steps, download a
   // lab, finish the ORA journey), so they get no Mark-as-Complete bar — it would
   // duplicate the action they already own. Passive content (video / reading /
-  // podcast / discussion) gets the completion action at top AND bottom.
+  // podcast / discussion) gets the completion action in the FOOTER only.
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
@@ -155,6 +155,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     <TopicActionBar state={actionState} onComplete={() => markComplete(topicId)} />
   );
   const showAction = !isLocked && !hasInFrameAction && !isVilt;
+  // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
+  // in the footer, never in the header — a header CTA invites premature
+  // completion. The header's top-right slot carries the ✓ "Marked as Completed"
+  // STATUS badge, and only once the topic is complete (any type).
+  const headerStatus = isCompleted ? renderAction() : null;
   // The end-of-content action only belongs at the end of the CONTENT. The
   // Downloads and Notes tabs are short lists, so a second button there sits
   // in the same viewport as the header one and just reads as duplication.
@@ -320,8 +325,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     <h1 className="sk-text-display-xs-semibold min-w-0 text-sk-text-primary">
                       {topic.title}
                     </h1>
-                    {showAction && bp !== "mobile" ? (
-                      <div className="shrink-0">{renderAction()}</div>
+                    {headerStatus && bp !== "mobile" ? (
+                      <div className="shrink-0">{headerStatus}</div>
                     ) : null}
                   </div>
                   <div className="mt-4">
@@ -344,7 +349,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   title={topic.title}
                   duration={topic.duration}
                   description={topicDescription(topic)}
-                  rightSlot={showAction ? renderAction() : undefined}
+                  rightSlot={headerStatus ?? undefined}
                 />
                 <div className="mt-5">
                   <ContentTabs tabs={tabs} active={activeTab} />
