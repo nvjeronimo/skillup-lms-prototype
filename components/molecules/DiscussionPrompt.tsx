@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
+import { Icon, MessageCircle } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 
@@ -32,8 +32,9 @@ export function DiscussionPrompt({
         className,
       )}
     >
-      <div className="flex items-center gap-1.5">
-        <TopicTypeBadge type="Discussion Prompt" />
+      <div className="sk-text-xs-medium flex items-center gap-1.5 text-sk-text-secondary">
+        <Icon icon={MessageCircle} size={14} className="text-sk-text-brand-secondary" />
+        Discussion
         <span className="sk-text-xs-regular text-sk-text-tertiary">· {duration}</span>
       </div>
 

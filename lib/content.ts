@@ -114,7 +114,6 @@ export type TopicFamily =
   | "ora"
   | "lessonPage"
   | "podcast"
-  | "discussion"
   | "vilt"
   | "blocked";
 
@@ -144,8 +143,6 @@ export function topicFamily(type: TopicType): TopicFamily {
       return "lab";
     case "Podcast":
       return "podcast";
-    case "Discussion Prompt":
-      return "discussion";
     case "VILT-Live Session":
     case "VILT-Recording":
       return "vilt";
@@ -182,8 +179,6 @@ export function topicDescription(topic: FlatTopic): string {
       return `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`;
     case "podcast":
       return `A conversation you can listen to on the move — transcript and chapters included.`;
-    case "discussion":
-      return `Share your perspective and learn from your cohort.`;
     case "vilt":
       return `A live, instructor-led session with your cohort.`;
     case "blocked":
@@ -511,9 +506,6 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
       break;
     case "activity":
       files = [make("XLSX", "activity-worksheet.xlsx", "32 KB")];
-      break;
-    case "discussion":
-      files = [make("PDF", "discussion-guidelines.pdf", "40 KB")];
       break;
     case "lessonPage": {
       // Derive from the page's own file blocks, so the Downloads tab and the

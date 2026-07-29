@@ -13,6 +13,10 @@ import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import type { Milestone } from "@/components/organisms/CourseProgressionButton";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { SavedPanel, type SavedFilter } from "@/components/organisms/SavedPanel";
+import { DiscussionsPanel } from "@/components/organisms/DiscussionsPanel";
+import { Button } from "@/components/atoms/Button";
+import { Icon } from "@/lib/icons";
+import { MessagesSquare } from "lucide-react";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
 import { CourseCompleteModal } from "@/components/organisms/CourseCompleteModal";
 import { Toast } from "@/components/organisms/Toast";
@@ -20,7 +24,13 @@ import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
-import { topicFamily, topicDescription, getDownloads, getTranscript } from "@/lib/content";
+import {
+  topicFamily,
+  topicDescription,
+  getDownloads,
+  getTranscript,
+  getDiscussionThreads,
+} from "@/lib/content";
 import {
   getCourseBySlug,
   getTopic,
@@ -171,6 +181,28 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     </div>
   ) : null;
 
+  // Optional in-context discussion footer (Jul 29 decision): Discussion is no
+  // longer a topic type — instead, a "Discuss this topic" region deep-links into
+  // the course-level Discussions panel on this topic's thread. Off for locked and
+  // blocked topics, and only on the primary tab.
+  const discussFooter =
+    !isLocked && !isBlocked && activeTab === "transcript" ? (
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-secondary px-4 py-3">
+        <div className="flex items-center gap-2.5">
+          <Icon icon={MessagesSquare} size={18} className="text-sk-text-brand-secondary" />
+          <div className="flex flex-col">
+            <span className="sk-text-sm-semibold text-sk-text-primary">Discuss this topic</span>
+            <span className="sk-text-xs-regular text-sk-text-tertiary">
+              Join the conversation with your cohort.
+            </span>
+          </div>
+        </div>
+        <Button variant="secondary" size="sm" onClick={() => openOverlayPanel("discussions")}>
+          Open discussion
+        </Button>
+      </div>
+    ) : null;
+
   // Footer progression: Next normally, but "Go to next Module" at a module boundary
   // and "Go to next Course" at the final topic.
   const milestone: Milestone = !next
@@ -202,7 +234,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     ora: "Project",
     lessonPage: "Lesson",
     podcast: "Episode",
-    discussion: "Discussion",
     vilt: topic.type === "VILT-Recording" ? "Recording" : "Session",
     blocked: "About",
   };
@@ -238,6 +269,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         }}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
+        showDiscussions
+        onDiscussions={() => openOverlayPanel("discussions")}
         showTheme
         theme={theme === "dark" ? "Dark" : "Light"}
         onTheme={toggleTheme}
@@ -341,6 +374,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     {children}
                   </div>
                   {bottomAction}
+                  {discussFooter}
                 </div>
               </>
             ) : (
@@ -359,6 +393,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   {children}
                 </div>
                 {bottomAction}
+                {discussFooter}
               </div>
             )}
           </div>
@@ -436,6 +471,16 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           setCurrentTab("notes");
           router.push(`/course/${courseSlug}/topic/${n.topicId}/notes`);
         }}
+      />
+
+      <DiscussionsPanel
+        open={openPanel === "discussions"}
+        onClose={closeOverlayPanel}
+        topicTitle={topic.title}
+        topicDuration={topic.duration}
+        threads={getDiscussionThreads(topic)}
+        onPost={() => showToast("Reply posted to the discussion.")}
+        onOpenThread={() => showToast("Opening thread…")}
       />
 
       <NoteEditorModal
