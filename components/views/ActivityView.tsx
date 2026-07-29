@@ -115,7 +115,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
       </ol>
 
       {allDone ? (
-        <InlineAlert tone="success" title="Activity complete" description="Nice work — every step is done." />
+        <InlineAlert tone="success" title="Activity complete" description="Nice work. Every step is done." />
       ) : null}
     </div>
   );
@@ -153,7 +153,7 @@ function ScormActivity({
         state={state}
         onLaunch={launch}
         onRetry={launch}
-        onSkip={() => showToast("Skipped — this activity doesn't affect your grade.")}
+        onSkip={() => showToast("Skipped. This activity doesn't affect your grade.")}
         onFullscreen={() => showToast("Opening the activity fullscreen…")}
       />
 

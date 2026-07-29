@@ -27,7 +27,7 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 // Label code = each skin's brand anchor (bg-brand-solid, light) in the DS ramp.
 // Only SKO carries a legacy brand code (P03); the rest are their own ramps.
 const SKINS: { skin: SkinId; label: string }[] = [
-  { skin: "teal", label: "Teal — default (P03)" },
+  { skin: "teal", label: "Teal · default (P03)" },
   { skin: "ink", label: "Ink (Ink/900)" },
   { skin: "sky", label: "Sky (Sky/600)" },
   { skin: "violet", label: "Violet (Violet/600)" },
@@ -317,7 +317,7 @@ export function DemoControlsMenu({
             <div className="flex flex-col gap-1">
               <ToggleRow
                 label="Discuss this topic"
-                hint="In discussion — hidden by default"
+                hint="In discussion, hidden by default"
                 checked={discussionsPreview}
                 onChange={setDiscussionsPreview}
               />

@@ -54,7 +54,7 @@ export function ProgressRail({
               <button
                 type="button"
                 onClick={() => onJump?.(i)}
-                aria-label={`${itemLabel} ${i + 1} — ${s}`}
+                aria-label={`${itemLabel} ${i + 1}: ${s}`}
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
                   "flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium transition-colors",

@@ -333,7 +333,7 @@ export const useLmsStore = create<LmsState>()(
       const next = new Set(state.submittedTopics);
       next.add(topicId);
       track("topic_submit", { topicId });
-      return { submittedTopics: next, toast: { message: "Submitted — under review" } };
+      return { submittedTopics: next, toast: { message: "Submitted, under review" } };
     }),
 
   recordQuizResult: (topicId, score, total) =>

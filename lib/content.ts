@@ -235,7 +235,7 @@ export function getBlockedInfo(topic: FlatTopic): BlockedInfo {
     case "Programming Assignment":
       return {
         badge: "Needs infrastructure",
-        what: "An in-browser, auto-graded coding notebook — the learner writes and runs code and it's graded on the spot, across languages.",
+        what: "An in-browser, auto-graded coding notebook. The learner writes and runs code and it's graded on the spot, across languages.",
         whyBlocked: "Open edX has no stock in-browser auto-grader; the grading happens off-platform.",
         possiblePath: "External Grader via XQueue (provisional), or an LTI bridge to JupyterHub.",
         note: "Not a duplicate of Lab: a Lab is downloaded and run offline, ungraded; this runs and grades in the browser. If Labs migrate here, 24 topics are affected.",
@@ -243,15 +243,15 @@ export function getBlockedInfo(topic: FlatTopic): BlockedInfo {
     case "Role Play":
       return {
         badge: "No edX equivalent",
-        what: "An AI-driven scenario where the learner holds a conversation in a role — rehearsing a negotiation, an interview, a difficult conversation.",
+        what: "An AI-driven scenario where the learner holds a conversation in a role: rehearsing a negotiation, an interview, a difficult conversation.",
         whyBlocked: "There is no Open edX component for a live LLM conversation.",
         possiblePath: "A custom XBlock with LLM integration, or an LTI launch to an external AI tool.",
-        note: "Same engine as Dialogue in a different mode — one build-or-buy decision covers both.",
+        note: "Same engine as Dialogue in a different mode, so one build-or-buy decision covers both.",
       };
     case "Dialogue":
       return {
         badge: "No edX equivalent",
-        what: "Free-form AI conversational practice — a back-and-forth with an AI partner to rehearse a skill until it sticks.",
+        what: "Free-form AI conversational practice: a back-and-forth with an AI partner to rehearse a skill until it sticks.",
         whyBlocked: "Like Role Play, it needs an LLM in the loop, which Open edX doesn't provide.",
         possiblePath: "Most likely the same component as Role Play, in a different mode.",
       };
@@ -278,12 +278,12 @@ export function getTranscript(topic: FlatTopic): TranscriptLine[] {
   const mod = topic.moduleTitle;
   const lines = [
     `Welcome back. In this lesson we work through ${subject} and where it fits within ${mod}.`,
-    `Let's start with the why — getting ${subject} right is what keeps the rest of the workflow from drifting.`,
+    `Let's start with the why. Getting ${subject} right is what keeps the rest of the workflow from drifting.`,
     `Here's the core idea: keep it concrete, measurable, and tied to what the customer actually cares about.`,
-    `A common pitfall is jumping straight to a fix before the problem is properly defined — we'll avoid that.`,
+    `A common pitfall is jumping straight to a fix before the problem is properly defined, and we'll avoid that.`,
     `Notice how each step feeds the next: define the problem, measure the baseline, then act on what the data says.`,
     `Let's walk through a quick example so the concept sticks before you try it yourself in the activity.`,
-    `That's the essence of ${subject}. In the next topic we build on it — jot down anything you want to revisit.`,
+    `That's the essence of ${subject}. In the next topic we build on it, so jot down anything you want to revisit.`,
   ];
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   return lines.map((text, i) => ({ id: `${topic.id}-l${i + 1}`, ts: fmt(i * 18), text }));
@@ -297,8 +297,8 @@ export function getArticle(topic: FlatTopic): ArticleContent {
       {
         heading: "Why it matters",
         paragraphs: [
-          "In process improvement, clarity beats cleverness. Before optimising anything, you need a shared, measurable definition of the problem — otherwise teams optimise different things and progress stalls.",
-          "Six Sigma gives us a disciplined way to define, measure and reduce variation. The goal is not perfection; it is predictability — outcomes you can rely on, batch after batch.",
+          "In process improvement, clarity beats cleverness. Before optimising anything, you need a shared, measurable definition of the problem, otherwise teams optimise different things and progress stalls.",
+          "Six Sigma gives us a disciplined way to define, measure and reduce variation. The goal is not perfection; it is predictability: outcomes you can rely on, batch after batch.",
         ],
       },
       {
@@ -310,7 +310,7 @@ export function getArticle(topic: FlatTopic): ArticleContent {
       },
     ],
     pullQuote: {
-      text: "You can't improve what you can't measure — and you can't measure what you haven't defined.",
+      text: "You can't improve what you can't measure, and you can't measure what you haven't defined.",
       attribution: "Six Sigma Black Belt handbook",
     },
     takeaways: [
@@ -432,7 +432,7 @@ export function getActivity(topic: FlatTopic): ActivityContent {
     kind: isScorm ? "scorm" : "checklist",
     packageLabel: "Articulate Storyline package",
     packageSizeLabel: "8.4 MB",
-    intro: `Work through the steps below. Tick each one as you go — your progress is saved automatically. This activity should take about ${topic.duration.replace(/^approx\.\s*/, "")}.`,
+    intro: `Work through the steps below. Tick each one as you go and your progress is saved automatically. This activity should take about ${topic.duration.replace(/^approx\.\s*/, "")}.`,
     steps: [
       {
         title: "Map the process",
@@ -460,7 +460,7 @@ export function getDiscussionThreads(topic: FlatTopic): DiscussionThread[] {
       author: "Carlos M.",
       timestamp: "2 hours ago",
       content:
-        "Great prompt. In my team the hardest part was agreeing what counted as a defect — once we nailed that, the metrics fell into place.",
+        "Great prompt. In my team the hardest part was agreeing what counted as a defect. Once we nailed that, the metrics fell into place.",
       replies: 3,
       upvotes: 12,
     },
@@ -468,7 +468,7 @@ export function getDiscussionThreads(topic: FlatTopic): DiscussionThread[] {
       author: "Aisha R.",
       timestamp: "Yesterday",
       content:
-        "We baselined before changing anything and it saved us — turns out the “obvious” fix would have made variation worse.",
+        "We baselined before changing anything and it saved us. Turns out the “obvious” fix would have made variation worse.",
       replies: 1,
       upvotes: 8,
     },
@@ -656,7 +656,7 @@ export interface LabContent {
 export function getLab(topic: FlatTopic): LabContent {
   return {
     intro:
-      "In this lab you'll run pre-written Python against a sample process dataset to calculate capability indices and spot the drivers of variation. Everything runs locally — nothing is submitted.",
+      "In this lab you'll run pre-written Python against a sample process dataset to calculate capability indices and spot the drivers of variation. Everything runs locally and nothing is submitted.",
     prerequisites: [
       "Python 3.10+ with Jupyter Notebook installed",
       "pandas and matplotlib available in your environment",
@@ -664,7 +664,7 @@ export function getLab(topic: FlatTopic): LabContent {
     steps: [
       "Download the notebook and the dataset below.",
       "Place both files in the same folder and open the notebook in Jupyter.",
-      "Run each cell in order — the comments explain what to expect.",
+      "Run each cell in order; the comments explain what to expect.",
       "Compare your Cp / Cpk output against the worked example in the PDF.",
     ],
     files: [
@@ -693,7 +693,7 @@ export function getPodcast(topic: FlatTopic): PodcastContent {
     guest: "Ana Ferreira, Head of Quality at Northwind",
     episodeLabel: "Episode 4",
     summary:
-      "A conversation about what actually changes on the shop floor when a Six Sigma programme lands — and the three mistakes that stall most rollouts in the first ninety days.",
+      "A conversation about what actually changes on the shop floor when a Six Sigma programme lands, and the three mistakes that stall most rollouts in the first ninety days.",
     chapters: [
       { ts: "0:00", label: "Why most programmes stall early" },
       { ts: "4:12", label: "Getting operators to trust the data" },
@@ -737,7 +737,7 @@ export function getOra(topic: FlatTopic): OraContent {
     brief:
       "Define a control plan for a process of your choice. Identify the critical-to-quality characteristics, the metrics you'll monitor, the control limits, and the response plan when a measurement falls out of range.",
     deliverable:
-      "Submit your plan as a PDF or DOCX — 1–2 pages, including at least one control chart sketch.",
+      "Submit your plan as a PDF or DOCX, 1–2 pages, including at least one control chart sketch.",
     dueLabel: "Due 1 Sep 2026",
     requiredReviews: 1,
     acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
@@ -821,7 +821,7 @@ export interface LessonPageContent {
 export function getLessonPage(topic: FlatTopic): LessonPageContent {
   return {
     intro:
-      "This page pulls together everything you need on control charts — the theory, a worked example, the template you'll use, and a quick check before you move on.",
+      "This page pulls together everything you need on control charts: the theory, a worked example, the template you'll use, and a quick check before you move on.",
     blocks: [
       {
         kind: "text",

@@ -39,7 +39,7 @@ export function BlockedView({ topicId }: { topicId: string }) {
       <InlineAlert
         tone="warning"
         title="Needs a build-or-buy decision"
-        description="This type is native to Coursera but has no stock Open edX equivalent. It stays blocked in the ICP until a platform path is chosen — so there is nothing to complete here yet."
+        description="This type is native to Coursera but has no stock Open edX equivalent. It stays blocked in the ICP until a platform path is chosen, so there is nothing to complete here yet."
       />
     </div>
   );

@@ -54,7 +54,7 @@ export function OraView({ topicId }: { topicId: string }) {
           ora={ora}
           onSubmit={(name) => {
             oraSubmit(topicId, name);
-            showToast("Response submitted — now review a peer.");
+            showToast("Response submitted. Now review a peer.");
           }}
         />
       ) : step === "peer" ? (
@@ -63,7 +63,7 @@ export function OraView({ topicId }: { topicId: string }) {
           reviewsGiven={reviewsGiven}
           onSubmitReview={() => {
             oraGivePeerReview(topicId);
-            showToast("Review submitted. Thanks — that unlocks your own grade.");
+            showToast("Review submitted. Thanks, that unlocks your own grade.");
           }}
         />
       ) : graded ? (
@@ -154,7 +154,7 @@ function Rubric({ ora }: { ora: OraContent }) {
   return (
     <div className="flex flex-col gap-2">
       <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
-        Rubric — {oraMaxPoints(ora)} points
+        Rubric · {oraMaxPoints(ora)} points
       </span>
       <ul className="flex flex-col gap-1">
         {ora.criteria.map((c) => (
@@ -207,7 +207,7 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
           </div>
           <label className="flex flex-col gap-1.5">
             <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
-              Description — required for each file
+              Description (required for each file)
             </span>
             <input
               value={description}
@@ -228,7 +228,7 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
             Drag &amp; drop or browse files
           </span>
           <span className="sk-text-xs-regular text-sk-text-tertiary">
-            {ora.acceptedTypes.join(" ")} — max 500 MB total
+            {ora.acceptedTypes.join(" ")} · max 500 MB total
           </span>
         </button>
       )}
@@ -295,7 +295,7 @@ function PeerStep({
           </span>
           <p className="sk-text-sm-regular max-w-md text-sk-text-secondary">
             Nobody in your cohort has submitted work that needs reviewing right now. Check back
-            later — we&rsquo;ll email you when one is available.
+            later. We&rsquo;ll email you when one is available.
           </p>
         </div>
 
@@ -444,7 +444,7 @@ function WaitingStep({
       />
 
       <p className="sk-text-xs-regular text-sk-text-tertiary">
-        If peers are slow, the requirement relaxes automatically after 7 days — your grade is never
+        If peers are slow, the requirement relaxes automatically after 7 days, so your grade is never
         blocked indefinitely.
       </p>
 
@@ -502,7 +502,7 @@ function GradeStep({
 
       <div className="flex flex-col gap-2">
         <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
-          Breakdown — median score per criterion
+          Breakdown · median score per criterion
         </span>
         <ul className="flex flex-col gap-1.5">
           {breakdown.map((b) => (
@@ -530,7 +530,7 @@ function GradeStep({
         </span>
         <p className="sk-text-sm-regular text-sk-text-brand-secondary">
           {staffOverride
-            ? "“Your response plan was stronger than the peer score reflected — ownership was clearly assigned. Score adjusted.”"
+            ? "“Your response plan was stronger than the peer score reflected. Ownership was clearly assigned. Score adjusted.”"
             : "“Clear chart and well-structured limits. The response plan could name an owner for each trigger.”"}
         </p>
       </div>

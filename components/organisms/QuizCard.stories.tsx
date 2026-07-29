@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { QuizCard } from "./QuizCard";
 
 const EXPLANATION =
-  "Six Sigma is a data-driven methodology for reducing variation. Fewer defects follow from a more predictable process — speed and headcount are outcomes, never the goal.";
+  "Six Sigma is a data-driven methodology for reducing variation. Fewer defects follow from a more predictable process; speed and headcount are outcomes, never the goal.";
 
 const OPTIONS = [
   {
     id: "a",
     label: "Reduce process variation and defects",
     correct: true,
-    feedback: "Correct — controlling variation is what makes a process predictable and defect-free.",
+    feedback: "Correct. Controlling variation is what makes a process predictable and defect-free.",
   },
   {
     id: "b",

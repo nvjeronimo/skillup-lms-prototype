@@ -9,7 +9,7 @@ const meta: Meta<typeof ThreadItem> = {
   args: {
     author: "Carlos M.",
     timestamp: "2 hours ago",
-    content: "Great point on measurement systems analysis — but what about gauge R&R?",
+    content: "Great point on measurement systems analysis, but what about gauge R&R?",
     replies: 3,
   },
   decorators: [

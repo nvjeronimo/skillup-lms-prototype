@@ -27,7 +27,7 @@ export function ReadingView({ topicId }: { topicId: string }) {
       <blockquote className="border-l-[3px] border-sk-border-brand bg-sk-bg-brand-section px-5 py-4">
         <p className="sk-text-lg-medium italic text-sk-text-primary">“{article.pullQuote.text}”</p>
         <footer className="sk-text-sm-regular mt-2 text-sk-text-tertiary">
-          — {article.pullQuote.attribution}
+          {article.pullQuote.attribution}
         </footer>
       </blockquote>
 

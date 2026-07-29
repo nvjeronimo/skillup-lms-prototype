@@ -17,7 +17,7 @@ export const NotesEmpty: Story = {
   args: {
     icon: StickyNote,
     title: "No notes yet",
-    description: "Create notes from the Transcript tab — click + Note on any line.",
+    description: "Create notes from the Transcript tab: click + Note on any line.",
   },
 };
 

@@ -38,7 +38,9 @@ export function TopicHeader({
     <header className={cn("flex flex-col gap-2", className)}>
       <div className="flex flex-wrap items-center gap-1.5">
         <TopicTypeBadge type={type} />
-        {showDuration ? (
+        {/* Duration is optional; with none, render nothing rather than a stray
+            "approx." or a dash placeholder. */}
+        {showDuration && duration ? (
           <span className="sk-text-xs-regular text-sk-text-tertiary">· {durationLabel}</span>
         ) : null}
         {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}

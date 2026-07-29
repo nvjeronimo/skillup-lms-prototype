@@ -83,9 +83,12 @@ export function TopicRow({
               Stays on one line; the trailing duration truncates with an ellipsis. */}
           <span className="mt-1 flex min-w-0 items-center gap-1.5">
             <TopicTypeBadge type={type} className="shrink-0" />
-            <span className="sk-text-xs-regular min-w-0 truncate text-sk-text-tertiary">
-              · {duration}
-            </span>
+            {/* Duration is optional: render nothing rather than a dash placeholder. */}
+            {duration ? (
+              <span className="sk-text-xs-regular min-w-0 truncate text-sk-text-tertiary">
+                · {duration}
+              </span>
+            ) : null}
             {optional ? (
               <span className="sk-text-2xs-medium shrink-0 text-sk-text-tertiary">· Optional</span>
             ) : null}

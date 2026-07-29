@@ -12,7 +12,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "SkillUp LMS — Video Lesson",
+  title: "SkillUp LMS · Video Lesson",
   description: "Prototype of the SkillUp LMS video lesson flow.",
 };
 
