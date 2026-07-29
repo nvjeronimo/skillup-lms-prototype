@@ -8,6 +8,7 @@ import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
+import { TopicFooterMeta } from "@/components/molecules/TopicFooterMeta";
 import { TopicActionBar, type TopicActionState } from "@/components/molecules/TopicActionBar";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import type { Milestone } from "@/components/organisms/CourseProgressionButton";
@@ -30,6 +31,8 @@ import {
   getDownloads,
   getTranscript,
   getDiscussionThreads,
+  getByline,
+  FOOTER_AUTHOR_FAMILIES,
 } from "@/lib/content";
 import {
   getCourseBySlug,
@@ -201,6 +204,17 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           Open discussion
         </Button>
       </div>
+    ) : null;
+
+  // Shared footer-meta contract (§175): the feedback row (Like/Dislike/Report)
+  // renders on every content type; the Author & Updated row only on authored
+  // types. Video is excluded — it carries its own chrome footer (license etc.).
+  const footerMeta =
+    !isLocked && !isBlocked && family !== "video" && activeTab === "transcript" ? (
+      <TopicFooterMeta
+        byline={FOOTER_AUTHOR_FAMILIES.includes(family) ? getByline(topic) : undefined}
+        onReport={() => showToast("Thanks — we'll take a look.")}
+      />
     ) : null;
 
   // Footer progression: Next normally, but "Go to next Module" at a module boundary
@@ -392,6 +406,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   <ContentTabs tabs={tabs} active={activeTab} />
                   {children}
                 </div>
+                {footerMeta}
                 {bottomAction}
                 {discussFooter}
               </div>

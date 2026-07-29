@@ -188,6 +188,30 @@ export function topicDescription(topic: FlatTopic): string {
   }
 }
 
+/**
+ * Footer-meta contract (topic-types-inventory §175). The Author & Updated Date
+ * row is kept only on authored content that changes over time and dropped on
+ * assessment / interactive / live types (no single author, no meaningful
+ * "updated"). Video is excluded here because it carries its own chrome footer.
+ * The feedback row (Like/Dislike/Report) stays on every type — handled in the shell.
+ */
+export const FOOTER_AUTHOR_FAMILIES: TopicFamily[] = ["reading", "lessonPage", "lab", "podcast"];
+
+export interface TopicByline {
+  author: string;
+  role: string;
+  /** "Updated {updated}" — e.g. "May 2026". */
+  updated: string;
+}
+
+export function getByline(_topic: FlatTopic): TopicByline {
+  return {
+    author: "Dr. Sarah Chen",
+    role: "Lead instructor · ASQ-Certified Six Sigma Black Belt",
+    updated: "May 2026",
+  };
+}
+
 export interface BlockedInfo {
   /** Short badge label, e.g. "No edX equivalent". */
   badge: string;
