@@ -10,7 +10,7 @@ import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { getQuiz, getQuizConfig, topicFamily, type QuizConfig } from "@/lib/content";
-import { getTopic } from "@/lib/data";
+import { getCourseBySlug, getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -142,6 +142,15 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const q = questions[index];
   const isLast = index === total - 1;
 
+  // "Review lesson" only appears when the question is actually linked to a
+  // lesson *in this course*. A course-final quiz has no such link, and a quiz
+  // reused across courses must not deep-link into a topic that isn't there
+  // (workshop, 00:30:31). Resolving against the course also keeps the label
+  // truthful if the topic is later renamed.
+  const reviewTopic = q.reviewTopicId
+    ? getTopic(q.reviewTopicId, getCourseBySlug(courseSlug))
+    : undefined;
+
   return (
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
       {/* Position + progress, per the DS `Quiz · Progress Bar` variant. The dot
@@ -161,9 +170,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         options={q.options}
         multiSelect={q.multiSelect}
         explanation={q.explanation}
-        reviewTopicTitle={q.reviewTopicTitle}
+        reviewTopicTitle={reviewTopic?.title}
         onReviewTopic={() => {
-          if (q.reviewTopicId) router.push(`/course/${courseSlug}/topic/${q.reviewTopicId}`);
+          if (reviewTopic) router.push(`/course/${courseSlug}/topic/${reviewTopic.id}`);
         }}
         selectedIds={answers[index].selected}
         onToggleOption={(id) =>
