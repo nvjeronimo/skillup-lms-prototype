@@ -39,10 +39,12 @@ export function DiscussionsPanel({
       footer={{ label: "View all course discussions", href: "#" }}
     >
       <PanelSectionLabel>On this topic</PanelSectionLabel>
-      <DiscussionPrompt prompt={`${topicTitle}: what's your take?`} duration={topicDuration} onSubmit={onPost} />
+      <div className="px-4 py-4">
+        <DiscussionPrompt prompt={`${topicTitle}: what's your take?`} duration={topicDuration} onSubmit={onPost} />
+      </div>
 
       <PanelSectionLabel>{threads.length} responses from your cohort</PanelSectionLabel>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 px-4 py-4">
         {threads.map((t, i) => (
           <ThreadItem
             key={i}
