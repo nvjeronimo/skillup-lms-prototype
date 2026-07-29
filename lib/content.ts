@@ -115,7 +115,8 @@ export type TopicFamily =
   | "lessonPage"
   | "podcast"
   | "discussion"
-  | "vilt";
+  | "vilt"
+  | "blocked";
 
 export function topicFamily(type: TopicType): TopicFamily {
   switch (type) {
@@ -148,6 +149,12 @@ export function topicFamily(type: TopicType): TopicFamily {
     case "VILT-Live Session":
     case "VILT-Recording":
       return "vilt";
+    case "Programming Assignment":
+    case "Role Play":
+    case "Dialogue":
+      // Coursera-native types with no stock Open edX path — represented as a
+      // "needs a platform decision" state rather than a working topic.
+      return "blocked";
     default:
       return "reading";
   }
@@ -179,8 +186,55 @@ export function topicDescription(topic: FlatTopic): string {
       return `Share your perspective and learn from your cohort.`;
     case "vilt":
       return `A live, instructor-led session with your cohort.`;
+    case "blocked":
+      return `This content type isn't available on the platform yet — it needs a build-or-buy decision first.`;
     default:
       return topic.title;
+  }
+}
+
+export interface BlockedInfo {
+  /** Short badge label, e.g. "No edX equivalent". */
+  badge: string;
+  what: string;
+  whyBlocked: string;
+  possiblePath: string;
+  note?: string;
+}
+
+/** Per-type detail for the blocked content types (Coursera-native, no stock edX path). */
+export function getBlockedInfo(topic: FlatTopic): BlockedInfo {
+  switch (topic.type) {
+    case "Programming Assignment":
+      return {
+        badge: "Needs infrastructure",
+        what: "An in-browser, auto-graded coding notebook — the learner writes and runs code and it's graded on the spot, across languages.",
+        whyBlocked: "Open edX has no stock in-browser auto-grader; the grading happens off-platform.",
+        possiblePath: "External Grader via XQueue (provisional), or an LTI bridge to JupyterHub.",
+        note: "Not a duplicate of Lab: a Lab is downloaded and run offline, ungraded; this runs and grades in the browser. If Labs migrate here, 24 topics are affected.",
+      };
+    case "Role Play":
+      return {
+        badge: "No edX equivalent",
+        what: "An AI-driven scenario where the learner holds a conversation in a role — rehearsing a negotiation, an interview, a difficult conversation.",
+        whyBlocked: "There is no Open edX component for a live LLM conversation.",
+        possiblePath: "A custom XBlock with LLM integration, or an LTI launch to an external AI tool.",
+        note: "Same engine as Dialogue in a different mode — one build-or-buy decision covers both.",
+      };
+    case "Dialogue":
+      return {
+        badge: "No edX equivalent",
+        what: "Free-form AI conversational practice — a back-and-forth with an AI partner to rehearse a skill until it sticks.",
+        whyBlocked: "Like Role Play, it needs an LLM in the loop, which Open edX doesn't provide.",
+        possiblePath: "Most likely the same component as Role Play, in a different mode.",
+      };
+    default:
+      return {
+        badge: "Not available yet",
+        what: "This content type isn't available on the platform yet.",
+        whyBlocked: "No stock Open edX path.",
+        possiblePath: "To be decided.",
+      };
   }
 }
 
@@ -428,6 +482,9 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
   });
 
   const fam = topicFamily(topic.type);
+
+  // Blocked types aren't real topics — no files.
+  if (fam === "blocked") return [];
 
   // Video topics expose their transcript as a downloadable resource here
   // (rather than a separate "download transcript" control on the player).

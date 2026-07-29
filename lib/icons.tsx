@@ -12,7 +12,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Circle,
+  Code2,
   Download,
+  Drama,
   Edit2,
   Edit3,
   Eye,
@@ -23,6 +25,7 @@ import {
   Lightbulb,
   Lock,
   MessageCircle,
+  MessagesSquare,
   MoreHorizontal,
   Music,
   PanelLeftClose,
@@ -102,6 +105,12 @@ export function topicTypeIcon(type: TopicType): LucideIcon {
       return Eye; // eye
     case "Discussion Prompt":
       return MessageCircle; // message-circle-01
+    case "Programming Assignment":
+      return Code2; // blocked — auto-graded in-browser notebook
+    case "Role Play":
+      return Drama; // blocked — AI role-play scenario
+    case "Dialogue":
+      return MessagesSquare; // blocked — AI conversational practice
     default:
       return BookOpen;
   }

@@ -88,7 +88,10 @@
             "topics": [
               { "id": "m3-t5", "type": "Video", "title": "The analyze phase", "duration": "6 min", "completed": false, "locked": true },
               { "id": "m3-t6", "type": "Activity", "title": "The improve phase", "duration": "approx. 10 min", "completed": false, "locked": true },
-              { "id": "m3-t7", "type": "Graded Assignment", "title": "The control phase", "duration": "approx. 20 min", "completed": false, "locked": true }
+              { "id": "m3-t7", "type": "Graded Assignment", "title": "The control phase", "duration": "approx. 20 min", "completed": false, "locked": true },
+              { "id": "m3-t8", "type": "Programming Assignment", "title": "Programming Assignment: automate the control chart", "duration": "—", "completed": false },
+              { "id": "m3-t9", "type": "Role Play", "title": "Role Play: coach a resistant stakeholder", "duration": "—", "completed": false },
+              { "id": "m3-t10", "type": "Dialogue", "title": "Dialogue: practise explaining variation", "duration": "—", "completed": false }
             ]
           }
         ]

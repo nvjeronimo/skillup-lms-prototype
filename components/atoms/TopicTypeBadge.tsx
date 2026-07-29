@@ -26,6 +26,9 @@ export const ALL_TOPIC_TYPES: TopicType[] = [
   "Peer-graded",
   "Peer Review",
   "Discussion Prompt",
+  "Programming Assignment",
+  "Role Play",
+  "Dialogue",
 ];
 
 /**
