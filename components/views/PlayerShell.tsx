@@ -85,6 +85,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const markComplete = useLmsStore((s) => s.markComplete);
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
+  const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
   const activeCourse = getCourseBySlug(courseSlug);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
@@ -189,7 +190,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // the course-level Discussions panel on this topic's thread. Off for locked and
   // blocked topics, and only on the primary tab.
   const discussFooter =
-    !isLocked && !isBlocked && activeTab === "transcript" ? (
+    discussionsPreview && !isLocked && !isBlocked && activeTab === "transcript" ? (
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-secondary px-4 py-3">
         <div className="flex items-center gap-2.5">
           <Icon icon={MessagesSquare} size={18} className="text-sk-text-brand-secondary" />
@@ -283,7 +284,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         }}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
-        showDiscussions
+        showDiscussions={discussionsPreview}
         onDiscussions={() => openOverlayPanel("discussions")}
         showTheme
         theme={theme === "dark" ? "Dark" : "Light"}

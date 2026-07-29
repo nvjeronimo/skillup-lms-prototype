@@ -50,7 +50,8 @@ export type AnalyticsEvent =
   | "theme_change"
   | "skin_change"
   | "vision_change"
-  | "a11y_change";
+  | "a11y_change"
+  | "preview_toggle";
 
 type Props = Record<string, unknown>;
 

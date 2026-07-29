@@ -83,6 +83,8 @@ interface LmsState {
   reduceMotion: boolean;
   underlineLinks: boolean;
   largeTargets: boolean;
+  /** Preview flag: the WIP "Discuss this topic" surface. Off by default. */
+  discussionsPreview: boolean;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -125,6 +127,7 @@ interface LmsState {
   setReduceMotion: (v: boolean) => void;
   setUnderlineLinks: (v: boolean) => void;
   setLargeTargets: (v: boolean) => void;
+  setDiscussionsPreview: (v: boolean) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -190,6 +193,7 @@ export const useLmsStore = create<LmsState>()(
   reduceMotion: false,
   underlineLinks: false,
   largeTargets: false,
+  discussionsPreview: false,
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -400,6 +404,10 @@ export const useLmsStore = create<LmsState>()(
     track("a11y_change", { setting: "largeTargets", value: String(largeTargets) });
     set({ largeTargets });
   },
+  setDiscussionsPreview: (discussionsPreview) => {
+    track("preview_toggle", { feature: "discussions", value: String(discussionsPreview) });
+    set({ discussionsPreview });
+  },
   setSkin: (skin) => {
     track("skin_change", { skin });
     set({ skin });
@@ -448,6 +456,7 @@ export const useLmsStore = create<LmsState>()(
         reduceMotion: s.reduceMotion,
         underlineLinks: s.underlineLinks,
         largeTargets: s.largeTargets,
+        discussionsPreview: s.discussionsPreview,
       }),
     },
   ),
