@@ -115,6 +115,8 @@ export function DemoControlsMenu({
   const setUnderlineLinks = useLmsStore((s) => s.setUnderlineLinks);
   const largeTargets = useLmsStore((s) => s.largeTargets);
   const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
+  const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
+  const setDiscussionsPreview = useLmsStore((s) => s.setDiscussionsPreview);
   const resetDemo = useLmsStore((s) => s.resetDemo);
   const router = useRouter();
   const pathname = usePathname();
@@ -307,6 +309,17 @@ export function DemoControlsMenu({
                 hint="Minimum 44×44 px controls"
                 checked={largeTargets}
                 onChange={setLargeTargets}
+              />
+            </div>
+          </Section>
+
+          <Section title="Preview features">
+            <div className="flex flex-col gap-1">
+              <ToggleRow
+                label="Discuss this topic"
+                hint="In discussion — hidden by default"
+                checked={discussionsPreview}
+                onChange={setDiscussionsPreview}
               />
             </div>
           </Section>

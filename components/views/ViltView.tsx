@@ -13,7 +13,6 @@ import { LiveAttendance } from "@/components/molecules/LiveAttendance";
 import { getViltSession, type ViltSession, type ViltStage } from "@/lib/content";
 import { useLmsStore } from "@/lib/store";
 import { getTopic } from "@/lib/data";
-import { cn } from "@/lib/utils";
 
 /**
  * VILT — one Topic Content Type, three stages. The underlying asset changes as
@@ -34,8 +33,6 @@ export function ViltView({ topicId }: { topicId: string }) {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <StageStepper current={current} />
-
       {current === "pre-live" ? (
         <PreLive
           session={session}
@@ -64,48 +61,6 @@ export function ViltView({ topicId }: { topicId: string }) {
         description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
       />
     </div>
-  );
-}
-
-/* ---- Stage indicator: makes the three-stage model visible to the learner --- */
-function StageStepper({ current }: { current: ViltStage }) {
-  const stages: { id: ViltStage; label: string }[] = [
-    { id: "pre-live", label: "Scheduled" },
-    { id: "live", label: "Live" },
-    { id: "recording", label: "Recording" },
-  ];
-  const activeIndex = stages.findIndex((s) => s.id === current);
-
-  return (
-    <ol className="flex flex-wrap items-center gap-2" aria-label="Session stage">
-      {stages.map((s, i) => {
-        const isCurrent = i === activeIndex;
-        const isPast = i < activeIndex;
-        return (
-          <li key={s.id} className="flex items-center gap-2">
-            <span
-              className={cn(
-                "sk-text-xs-medium rounded-full border px-2.5 py-1",
-                isCurrent
-                  ? s.id === "live"
-                    ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
-                    : "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                  : isPast
-                    ? "border-sk-border-secondary bg-sk-bg-secondary text-sk-text-tertiary"
-                    : "border-sk-border-primary text-sk-text-tertiary",
-              )}
-            >
-              {s.label}
-            </span>
-            {i < stages.length - 1 ? (
-              <span aria-hidden className="sk-text-xs-regular text-sk-text-tertiary">
-                →
-              </span>
-            ) : null}
-          </li>
-        );
-      })}
-    </ol>
   );
 }
 
