@@ -11,6 +11,7 @@ import { LessonPageView } from "./LessonPageView";
 import { PodcastView } from "./PodcastView";
 import { DiscussionView } from "./DiscussionView";
 import { ViltView } from "./ViltView";
+import { BlockedView } from "./BlockedView";
 import { LockedView } from "./LockedView";
 import { topicFamily } from "@/lib/content";
 import { getTopic } from "@/lib/data";
@@ -43,6 +44,8 @@ export function TopicBody({ topicId, courseSlug }: { topicId: string; courseSlug
       return <DiscussionView topicId={topicId} />;
     case "vilt":
       return <ViltView topicId={topicId} />;
+    case "blocked":
+      return <BlockedView topicId={topicId} />;
     default:
       return <ReadingView topicId={topicId} />;
   }

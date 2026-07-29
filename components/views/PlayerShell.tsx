@@ -149,12 +149,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // recording's ≥90% rule — the completion note lives inside the VILT lane
   // instead. See topic-types-inventory.md §3.
   const isVilt = family === "vilt";
+  // Blocked types can't be completed — no manual action, ever.
+  const isBlocked = family === "blocked";
   const isCompleted = completedTopics.has(topicId);
   const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (
     <TopicActionBar state={actionState} onComplete={() => markComplete(topicId)} />
   );
-  const showAction = !isLocked && !hasInFrameAction && !isVilt;
+  const showAction = !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
   // in the footer, never in the header — a header CTA invites premature
   // completion. The header's top-right slot carries the ✓ "Marked as Completed"
@@ -202,6 +204,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     podcast: "Episode",
     discussion: "Discussion",
     vilt: topic.type === "VILT-Recording" ? "Recording" : "Session",
+    blocked: "About",
   };
 
   const tabs = isVideo

@@ -55,6 +55,7 @@ const SHORT_LABELS: Record<string, string> = {
   "Graded Assignment": "Graded",
   "Discussion Prompt": "Discussion",
   "Lesson Page": "Lesson",
+  "Programming Assignment": "Programming",
 };
 
 export function topicTypeShortLabel(type: string): string {

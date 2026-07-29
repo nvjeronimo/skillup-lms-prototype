@@ -18,7 +18,11 @@ export type TopicType =
   | "Graded Assignment"
   | "Peer-graded"
   | "Peer Review"
-  | "Discussion Prompt";
+  | "Discussion Prompt"
+  // Blocked types — Coursera-native, no Open edX equivalent yet (build-or-buy).
+  | "Programming Assignment"
+  | "Role Play"
+  | "Dialogue";
 
 export type CompletionState = "Pending" | "In Progress" | "Done" | "Locked";
 
