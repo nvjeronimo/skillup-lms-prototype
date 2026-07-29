@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Check, RotateCcw, AlertTriangle } from "lucide-react";
+import { Check, RotateCcw, AlertTriangle, ArrowLeft, ArrowRight } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
 import { ProgressRail, type RailItemState } from "@/components/molecules/ProgressRail";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
@@ -24,10 +24,14 @@ export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId:
   return isSubmission ? <GradedSubmission topicId={topicId} /> : <Quiz topicId={topicId} courseSlug={courseSlug} />;
 }
 
-/* ---- Quiz: entry → all questions stacked on one scroll → summary. ----
-   Mirrors Open edX: a unit stacks N `problem` blocks with no quiz-level submit,
-   so every question is on one page and submits independently. The sticky
-   Progress Rail owns position (jump-to-scroll); the cards never repeat it. */
+/* ---- Quiz: entry → one question per step → summary. ----
+   Mirrors Open edX's native sequence navigation. The *subsection* is the quiz
+   container; authoring one `problem` per unit makes the platform render exactly
+   this stepper (unit navigator + Previous/Next) with no custom code. Submit
+   stays per problem block — Open edX has no quiz-level submit-all, so each
+   question still grades on its own. The Progress Rail is the unit navigator: it
+   owns position and allows free backtracking. The end-of-quiz summary is ours —
+   the platform ships no results screen. */
 type Answer = { selected: string[]; revealed: boolean; draftSaved: boolean };
 const freshAnswer = (): Answer => ({ selected: [], revealed: false, draftSaved: false });
 
@@ -49,7 +53,12 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     result ? "completed" : "intro",
   );
   const [answers, setAnswers] = React.useState<Answer[]>(() => questions.map(freshAnswer));
+  // The step the learner is on — the equivalent of the sequence `position` the
+  // platform persists per subsection.
+  const [index, setIndex] = React.useState(0);
   const recordedRef = React.useRef(false);
+  const stepRef = React.useRef<HTMLDivElement>(null);
+  const mountedRef = React.useRef(false);
 
   const isQuestionCorrect = React.useCallback(
     (i: number): boolean => {
@@ -80,20 +89,23 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     }
   }, [phase, allAnswered, score, total, topicId, recordQuizResult]);
 
+  // Stepping to another question re-anchors the view, the way navigating to
+  // another unit resets the page. Skipped on first render.
+  React.useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    stepRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [index]);
+
   function startAttempt(indices?: number[]) {
     recordedRef.current = false;
     setAnswers((prev) =>
       questions.map((_, i) => (indices && !indices.includes(i) ? prev[i] : freshAnswer())),
     );
+    setIndex(indices?.[0] ?? 0);
     setPhase("quiz");
-    scrollToQuestion(indices?.[0] ?? 0);
-  }
-
-  function scrollToQuestion(i: number) {
-    if (typeof document === "undefined") return;
-    window.requestAnimationFrame(() =>
-      document.getElementById(`quiz-q-${i}`)?.scrollIntoView({ behavior: "smooth", block: "start" }),
-    );
   }
 
   if (phase === "completed" && result) {
@@ -127,82 +139,104 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     );
   }
 
-  const currentIndex = answers.findIndex((a) => !a.revealed);
   const railStates: RailItemState[] = answers.map((a, i) =>
-    !a.revealed ? (i === currentIndex ? "current" : "pending") : outcomes[i] ? "done" : "error",
+    !a.revealed ? (i === index ? "current" : "pending") : outcomes[i] ? "done" : "error",
   );
-  const liveResult = { score, total, attempts: attemptsUsed + 1 };
+  const q = questions[index];
+  const isLast = index === total - 1;
 
   return (
-    <div className="flex flex-col gap-4 py-4">
-      {/* The rail owns position; it sticks to the top of the scroll as the
-          learner works down the stacked questions. */}
+    <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
+      {/* The rail is the unit navigator: it owns position and jumps freely,
+          mirroring the platform's per-unit tabs. Backtracking is allowed, so
+          the navigator stays visible (hide it entirely if that ever changes). */}
       <ProgressRail
-        className="sticky top-2 z-10 shadow-sm"
         states={railStates}
-        currentIndex={currentIndex}
-        label={`${answeredCount} of ${total} answered${config.weightPct ? ` · ${config.label}` : ""}`}
-        onJump={(i) => scrollToQuestion(i)}
+        currentIndex={index}
+        label={`Question ${index + 1} of ${total}${config.weightPct ? ` · ${config.label}` : ""}`}
+        onJump={setIndex}
       />
 
-      {questions.map((q, i) => (
-        <div key={i} id={`quiz-q-${i}`} className="scroll-mt-20">
-          <QuizCard
-            state={answers[i].revealed ? "Revealed" : "Question"}
-            question={q.question}
-            options={q.options}
-            multiSelect={q.multiSelect}
-            explanation={q.explanation}
-            reviewTopicTitle={q.reviewTopicTitle}
-            onReviewTopic={() => {
-              if (q.reviewTopicId) router.push(`/course/${courseSlug}/topic/${q.reviewTopicId}`);
-            }}
-            selectedIds={answers[i].selected}
-            onToggleOption={(id) =>
-              setAnswers((prev) =>
-                prev.map((a, j) => {
-                  if (j !== i || a.revealed) return a;
-                  const has = a.selected.includes(id);
-                  const selected = q.multiSelect
-                    ? has
-                      ? a.selected.filter((x) => x !== id)
-                      : [...a.selected, id]
-                    : [id];
-                  return { ...a, selected, draftSaved: false };
-                }),
-              )
-            }
-            showSaveDraft={config.submitIsFinal}
-            draftSaved={answers[i].draftSaved}
-            onSaveDraft={() => {
-              setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, draftSaved: true } : a)));
-              showToast("Draft saved — not submitted yet.");
-            }}
-            attemptsUsed={config.maxAttempts ? attemptsUsed : undefined}
-            maxAttempts={config.maxAttempts}
-            isLastAttempt={
-              config.submitIsFinal &&
-              typeof config.maxAttempts === "number" &&
-              attemptsUsed === config.maxAttempts - 1
-            }
-            onSubmit={() =>
-              setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, revealed: true } : a)))
-            }
-          />
-        </div>
-      ))}
+      <QuizCard
+        state={answers[index].revealed ? "Revealed" : "Question"}
+        question={q.question}
+        options={q.options}
+        multiSelect={q.multiSelect}
+        explanation={q.explanation}
+        reviewTopicTitle={q.reviewTopicTitle}
+        onReviewTopic={() => {
+          if (q.reviewTopicId) router.push(`/course/${courseSlug}/topic/${q.reviewTopicId}`);
+        }}
+        selectedIds={answers[index].selected}
+        onToggleOption={(id) =>
+          setAnswers((prev) =>
+            prev.map((a, j) => {
+              if (j !== index || a.revealed) return a;
+              const has = a.selected.includes(id);
+              const selected = q.multiSelect
+                ? has
+                  ? a.selected.filter((x) => x !== id)
+                  : [...a.selected, id]
+                : [id];
+              return { ...a, selected, draftSaved: false };
+            }),
+          )
+        }
+        showSaveDraft={config.submitIsFinal}
+        draftSaved={answers[index].draftSaved}
+        onSaveDraft={() => {
+          setAnswers((prev) => prev.map((a, j) => (j === index ? { ...a, draftSaved: true } : a)));
+          showToast("Draft saved — not submitted yet.");
+        }}
+        attemptsUsed={config.maxAttempts ? attemptsUsed : undefined}
+        maxAttempts={config.maxAttempts}
+        isLastAttempt={
+          config.submitIsFinal &&
+          typeof config.maxAttempts === "number" &&
+          attemptsUsed === config.maxAttempts - 1
+        }
+        onSubmit={() =>
+          setAnswers((prev) => prev.map((a, j) => (j === index ? { ...a, revealed: true } : a)))
+        }
+      />
 
-      {/* Results appear at the end once every question has been answered. */}
-      {allAnswered ? (
-        <QuizSummary
-          topic={topic}
-          config={config}
-          result={liveResult}
-          outcomes={outcomes}
-          attemptsExhausted={attemptsExhausted}
-          onRetake={() => startAttempt()}
-          onRetryIncorrect={(idx) => startAttempt(idx)}
-        />
+      {/* Step controls — the platform renders Previous/Next around every unit.
+          Both say "question" so they never read as the player's topic nav,
+          which sits directly below them. */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Button
+          variant="secondary"
+          leftIcon={ArrowLeft}
+          disabled={index === 0}
+          onClick={() => setIndex((i) => Math.max(0, i - 1))}
+        >
+          Previous question
+        </Button>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {!isLast ? (
+            <Button
+              variant={allAnswered ? "secondary" : "primary"}
+              rightIcon={ArrowRight}
+              onClick={() => setIndex((i) => Math.min(total - 1, i + 1))}
+            >
+              Next question
+            </Button>
+          ) : null}
+          {allAnswered ? (
+            <Button variant="primary" onClick={() => setPhase("completed")}>
+              See results
+            </Button>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Until every question is answered, name what is still outstanding —
+          the platform gives learners no such cue. */}
+      {!allAnswered ? (
+        <p className="sk-text-xs-regular text-center text-sk-text-tertiary">
+          {total - answeredCount} of {total} still unanswered
+        </p>
       ) : null}
     </div>
   );

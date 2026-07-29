@@ -21,8 +21,9 @@ export interface ProgressRailProps {
  * steps). One line: the label carries the position, the dots carry per-item
  * state — so neither has to be repeated in prose elsewhere on the screen.
  *
- * Open edX has no quiz-level concept, so for quizzes this is computed
- * client-side in our shell rather than by the problem renderer.
+ * For quizzes this is the unit navigator: Open edX groups a quiz's questions in
+ * a subsection and renders one tab per unit, but exposes no per-question
+ * counter, so the label is computed client-side in our shell.
  */
 export function ProgressRail({
   states,
