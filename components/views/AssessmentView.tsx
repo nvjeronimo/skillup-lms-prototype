@@ -153,18 +153,54 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
 
   return (
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
-      {/* Position + progress, per the DS `Quiz · Progress Bar` variant. The dot
-          rail it replaces doubled as a jump-to-question navigator, so stepping
-          is now carried entirely by the Previous/Next controls below — which is
-          also the platform's own default since the unit tab bar moved behind a
-          plugin slot. */}
-      <QuizProgressBar
-        current={index + 1}
-        total={total}
-        pct={(answeredCount / total) * 100}
-      />
-
       <QuizCard
+        /* Progress and step controls live inside the card. Outside it they read
+           as page furniture and collided with the player's own Previous/Next
+           at the foot of the screen. */
+        progress={
+          <QuizProgressBar
+            current={index + 1}
+            total={total}
+            pct={(answeredCount / total) * 100}
+          />
+        }
+        navigation={
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={ArrowLeft}
+              disabled={index === 0}
+              onClick={() => setIndex((i) => Math.max(0, i - 1))}
+            >
+              Previous
+            </Button>
+
+            {!allAnswered ? (
+              <span className="sk-text-xs-regular text-sk-text-tertiary">
+                {total - answeredCount} of {total} still unanswered
+              </span>
+            ) : null}
+
+            <div className="flex flex-wrap items-center gap-2">
+              {!isLast ? (
+                <Button
+                  variant={allAnswered ? "secondary" : "primary"}
+                  size="sm"
+                  rightIcon={ArrowRight}
+                  onClick={() => setIndex((i) => Math.min(total - 1, i + 1))}
+                >
+                  Next
+                </Button>
+              ) : null}
+              {allAnswered ? (
+                <Button variant="primary" size="sm" onClick={() => setPhase("completed")}>
+                  See results
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        }
         state={answers[index].revealed ? "Revealed" : "Question"}
         question={q.question}
         options={q.options}
@@ -206,45 +242,6 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           setAnswers((prev) => prev.map((a, j) => (j === index ? { ...a, revealed: true } : a)))
         }
       />
-
-      {/* Step controls — the platform renders Previous/Next around every unit.
-          Both say "question" so they never read as the player's topic nav,
-          which sits directly below them. */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Button
-          variant="secondary"
-          leftIcon={ArrowLeft}
-          disabled={index === 0}
-          onClick={() => setIndex((i) => Math.max(0, i - 1))}
-        >
-          Previous question
-        </Button>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {!isLast ? (
-            <Button
-              variant={allAnswered ? "secondary" : "primary"}
-              rightIcon={ArrowRight}
-              onClick={() => setIndex((i) => Math.min(total - 1, i + 1))}
-            >
-              Next question
-            </Button>
-          ) : null}
-          {allAnswered ? (
-            <Button variant="primary" onClick={() => setPhase("completed")}>
-              See results
-            </Button>
-          ) : null}
-        </div>
-      </div>
-
-      {/* Until every question is answered, name what is still outstanding —
-          the platform gives learners no such cue. */}
-      {!allAnswered ? (
-        <p className="sk-text-xs-regular text-center text-sk-text-tertiary">
-          {total - answeredCount} of {total} still unanswered
-        </p>
-      ) : null}
     </div>
   );
 }
