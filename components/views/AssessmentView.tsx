@@ -2,15 +2,22 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Check, RotateCcw, AlertTriangle, ArrowLeft, ArrowRight } from "lucide-react";
+import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
 import { QuizProgressBar } from "@/components/molecules/QuizProgressBar";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
-import { getQuiz, getQuizConfig, topicFamily, type QuizConfig } from "@/lib/content";
-import { getCourseBySlug, getTopic } from "@/lib/data";
+import {
+  ATTEMPTS_DISPLAY_CEILING,
+  getQuiz,
+  getQuizConfig,
+  topicFamily,
+  type QuizConfig,
+} from "@/lib/content";
+import { flatTopics, getCourseBySlug, getTopic } from "@/lib/data";
+import type { Course, FlatTopic } from "@/lib/types";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -134,13 +141,32 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             track("topic_enter", { topicId, kind: "quiz_start" });
             startAttempt();
           }}
+          /* Shell-owned, resolved from course structure — never authored into
+             the quiz. A lesson wins over a module because it is the nearer
+             parent; with neither, the quiz spans the course and the action is
+             suppressed. */
+          reviewParent={topic.lessonLabel ? "lesson" : topic.moduleTitle ? "module" : undefined}
+          onReviewParent={() => {
+            const first = firstTopicOfParent(topic, getCourseBySlug(courseSlug));
+            if (first) router.push(`/course/${courseSlug}/topic/${first}`);
+          }}
         />
       </div>
     );
   }
 
   const q = questions[index];
-  const isLast = index === total - 1;
+
+  /**
+   * Next question still awaiting an answer, wrapping past the end. Skipping is
+   * allowed, so "forward" cannot mean index+1 — that would strand the learner
+   * on the last question with earlier ones still open.
+   */
+  function nextUnanswered(from: number): number {
+    for (let k = from + 1; k < total; k++) if (!answers[k].revealed) return k;
+    for (let k = 0; k <= from; k++) if (!answers[k].revealed) return k;
+    return -1;
+  }
 
   // "Review lesson" only appears when the question is actually linked to a
   // lesson *in this course*. A course-final quiz has no such link, and a quiz
@@ -154,9 +180,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   return (
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
       <QuizCard
-        /* Progress and step controls live inside the card. Outside it they read
-           as page furniture and collided with the player's own Previous/Next
-           at the foot of the screen. */
+        /* The card owns position and the forward action. A second bar of step
+           controls collided with the player's own Previous/Next at the foot of
+           the screen; the DS puts Skip and Next in the action row instead. */
         progress={
           <QuizProgressBar
             current={index + 1}
@@ -164,43 +190,15 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             pct={(answeredCount / total) * 100}
           />
         }
-        navigation={
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={ArrowLeft}
-              disabled={index === 0}
-              onClick={() => setIndex((i) => Math.max(0, i - 1))}
-            >
-              Previous
-            </Button>
-
-            {!allAnswered ? (
-              <span className="sk-text-xs-regular text-sk-text-tertiary">
-                {total - answeredCount} of {total} still unanswered
-              </span>
-            ) : null}
-
-            <div className="flex flex-wrap items-center gap-2">
-              {!isLast ? (
-                <Button
-                  variant={allAnswered ? "secondary" : "primary"}
-                  size="sm"
-                  rightIcon={ArrowRight}
-                  onClick={() => setIndex((i) => Math.min(total - 1, i + 1))}
-                >
-                  Next
-                </Button>
-              ) : null}
-              {allAnswered ? (
-                <Button variant="primary" size="sm" onClick={() => setPhase("completed")}>
-                  See results
-                </Button>
-              ) : null}
-            </div>
-          </div>
+        onSkip={
+          allAnswered || nextUnanswered(index) < 0
+            ? undefined
+            : () => setIndex(nextUnanswered(index))
         }
+        onNext={
+          allAnswered ? () => setPhase("completed") : () => setIndex(nextUnanswered(index))
+        }
+        nextLabel={allAnswered ? "See results" : "Next question"}
         state={answers[index].revealed ? "Revealed" : "Question"}
         question={q.question}
         options={q.options}
@@ -231,8 +229,18 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           setAnswers((prev) => prev.map((a, j) => (j === index ? { ...a, draftSaved: true } : a)));
           showToast("Draft saved, not submitted yet.");
         }}
-        attemptsUsed={config.maxAttempts ? attemptsUsed : undefined}
-        maxAttempts={config.maxAttempts}
+        attemptsUsed={
+          typeof config.maxAttempts === "number" &&
+          config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
+            ? attemptsUsed
+            : undefined
+        }
+        maxAttempts={
+          typeof config.maxAttempts === "number" &&
+          config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
+            ? config.maxAttempts
+            : undefined
+        }
         isLastAttempt={
           config.submitIsFinal &&
           typeof config.maxAttempts === "number" &&
@@ -246,6 +254,20 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   );
 }
 
+/**
+ * First topic of the quiz's nearest parent (its lesson, else its module), so
+ * "Review lesson first" lands at the start of the material rather than on the
+ * quiz's neighbour. Returns undefined when the quiz has no parent, which is
+ * also what suppresses the action.
+ */
+function firstTopicOfParent(quiz: FlatTopic, course: Course): string | undefined {
+  const siblings = flatTopics(course).filter((t) =>
+    quiz.lessonLabel ? t.lessonLabel === quiz.lessonLabel : t.moduleId === quiz.moduleId,
+  );
+  const first = siblings.find((t) => t.id !== quiz.id);
+  return first?.id;
+}
+
 /* ---- Entry header: everything the learner needs before starting (M1) ---- */
 function QuizEntryHeader({
   topic,
@@ -253,17 +275,28 @@ function QuizEntryHeader({
   questionCount,
   resumed,
   onStart,
+  reviewParent,
+  onReviewParent,
 }: {
   topic: { title: string };
   config: QuizConfig;
   questionCount: number;
   resumed: boolean;
+  /** "lesson" / "module" — omitted when the quiz has no parent to review. */
+  reviewParent?: string;
+  onReviewParent?: () => void;
   onStart: () => void;
 }) {
+  // The platform has no "unlimited" attempts setting, so we never promise it.
+  // A high ceiling is how authors express "as often as you like"; above it the
+  // number is noise, so the fact is dropped rather than restated as a word the
+  // backend cannot return.
+  const showAttempts =
+    typeof config.maxAttempts === "number" && config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING;
   const facts = [
     `${questionCount} questions`,
     `~${config.estMinutes} min`,
-    config.maxAttempts ? `${config.maxAttempts} attempts per question` : "Unlimited attempts",
+    ...(showAttempts ? [`${config.maxAttempts} attempts per question`] : []),
     `Pass ≥ ${config.passThresholdPct}%`,
   ];
 
@@ -303,10 +336,20 @@ function QuizEntryHeader({
         </p>
       )}
 
-      <div>
+      <div className="flex flex-wrap items-center gap-2">
         <Button variant="primary" size="lg" onClick={onStart}>
           {resumed ? "Resume quiz" : `Start ${config.variant === "practice" ? "practice" : "quiz"}`}
         </Button>
+
+        {/* Secondary action only when there is somewhere to send the learner
+            back to. A course-final quiz belongs to the whole course, so it has
+            no parent to review — and what decides this is the link, not the
+            quiz variant: a module-level final exam does have one. */}
+        {reviewParent ? (
+          <Button variant="secondary" size="lg" onClick={onReviewParent}>
+            Review {reviewParent} first
+          </Button>
+        ) : null}
       </div>
     </section>
   );
@@ -367,37 +410,18 @@ function QuizSummary({
           </div>
         </div>
 
-        {/* Per-question map — jump back to any answer. */}
-        {outcomes.some((o) => o !== null) ? (
-          <div className="flex flex-col gap-2">
-            <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
-              Your answers
-            </span>
-            <ol className="flex flex-wrap gap-1.5">
-              {outcomes.map((o, i) => (
-                <li
-                  key={i}
-                  className={cn(
-                    "flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium",
-                    o === true
-                      ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
-                      : o === false
-                        ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
-                        : "border-sk-border-primary text-sk-text-tertiary",
-                  )}
-                  aria-label={`Question ${i + 1} ${o === true ? "correct" : o === false ? "incorrect" : "unanswered"}`}
-                >
-                  {i + 1}
-                </li>
-              ))}
-            </ol>
-          </div>
-        ) : null}
+        {/* No per-question circle map. The ruling that removed the dots from
+            the progress indicator covers the results screen too: "Retry
+            incorrect" already names how many were wrong and takes the learner
+            straight to them, so a row of circles adds nothing on a long quiz. */}
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-4">
           <p className="sk-text-xs-regular text-sk-text-tertiary">
-            {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"} ·{" "}
-            {config.maxAttempts ? `${config.maxAttempts} allowed` : "Unlimited retakes"}
+            {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"}
+            {typeof config.maxAttempts === "number" &&
+            config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
+              ? ` · ${config.maxAttempts - result.attempts} left`
+              : ""}
           </p>
           <div className="flex flex-wrap gap-2">
             {incorrectIdx.length && !attemptsExhausted ? (

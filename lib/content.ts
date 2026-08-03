@@ -417,13 +417,25 @@ export function getQuizConfig(topic: FlatTopic): QuizConfig {
   return {
     variant: "practice",
     label: "Practice quiz",
-    maxAttempts: undefined,
+    // Open edX has no "unlimited" setting: an attempts number is always
+    // required, and authors fake unlimited with a high one. Verified with
+    // Simran Jindal (Studio owner), 30 Jul 2026. A high number is therefore
+    // the honest model — the UI suppresses the count instead of promising
+    // something the backend will never return.
+    maxAttempts: 100,
     weightPct: undefined,
     passThresholdPct: 60,
     estMinutes: 4,
     submitIsFinal: false,
   };
 }
+
+/**
+ * Above this, an attempts count is noise rather than information: the author
+ * meant "as often as you like". Suppress it rather than inventing the word
+ * "unlimited", which the platform cannot express.
+ */
+export const ATTEMPTS_DISPLAY_CEILING = 20;
 
 export function getActivity(topic: FlatTopic): ActivityContent {
   // Branching / scenario activities are authored as SCORM packages.

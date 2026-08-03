@@ -31,11 +31,16 @@ export interface QuizCardProps {
   /** Warn before the last graded attempt is spent. */
   isLastAttempt?: boolean;
   /**
-   * Banded slots rendered inside the card, so position and step controls read
-   * as part of the quiz rather than competing with the player's topic nav.
+   * Progress band rendered inside the card, so position reads as part of the
+   * quiz rather than competing with the player's topic nav.
    */
   progress?: React.ReactNode;
-  navigation?: React.ReactNode;
+  /** Move on without answering. Absent = the question cannot be skipped. */
+  onSkip?: () => void;
+  /** Advance after answering. Absent on the last question. */
+  onNext?: () => void;
+  /** Label for the forward action once answered, e.g. "See results" at the end. */
+  nextLabel?: string;
   className?: string;
 }
 
@@ -121,7 +126,9 @@ export function QuizCard({
   maxAttempts,
   isLastAttempt,
   progress,
-  navigation,
+  onSkip,
+  onNext,
+  nextLabel = "Next question",
   className,
 }: QuizCardProps) {
   const revealed = state === "Revealed";
@@ -281,15 +288,34 @@ export function QuizCard({
         </div>
       ) : null}
 
+      {/* Attempts and draft state sit above the controls: they qualify Submit
+          rather than being actions themselves. */}
+      {(typeof maxAttempts === "number" && typeof attemptsUsed === "number") ||
+      (draftSaved && !revealed) ? (
+        <div className="flex flex-col gap-0.5">
+          {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
+            <span className="sk-text-xs-regular text-sk-text-tertiary">
+              You have used {attemptsUsed} of {maxAttempts} attempts
+            </span>
+          ) : null}
+          {draftSaved && !revealed ? (
+            <span className="sk-text-xs-regular text-sk-text-brand-secondary">
+              Draft saved, not submitted yet
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
+      {/* Action row, per the DS Question Card states. Before answering the left
+          slot offers Skip and the right slot Submit; after answering the left
+          slot explains and the right slot moves on. The forward action lives
+          here rather than in a separate bar, so the quiz has one set of
+          controls and they never compete with the player's topic nav. */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          {!revealed && !confirming ? (
-            <Button
-              variant="primary"
-              onClick={() => (isLastAttempt ? setConfirming(true) : onSubmit?.())}
-              disabled={!hasSelection}
-            >
-              Submit answer
+          {!revealed && !confirming && onSkip ? (
+            <Button variant="tertiary" onClick={onSkip}>
+              Skip question
             </Button>
           ) : null}
 
@@ -306,33 +332,31 @@ export function QuizCard({
           ) : null}
 
           {revealed && !isCorrect && reviewTopicTitle ? (
-            <Button variant="secondary" rightIcon={ArrowRight} onClick={onReviewTopic}>
+            <Button variant="tertiary" onClick={onReviewTopic}>
               Review lesson
             </Button>
           ) : null}
         </div>
 
-        <div className="flex flex-col items-end gap-0.5">
-          {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
-            <span className="sk-text-xs-regular text-sk-text-tertiary">
-              You have used {attemptsUsed} of {maxAttempts} attempts
-            </span>
+        <div className="flex flex-wrap items-center gap-2">
+          {!revealed && !confirming ? (
+            <Button
+              variant="primary"
+              onClick={() => (isLastAttempt ? setConfirming(true) : onSubmit?.())}
+              disabled={!hasSelection}
+            >
+              Submit
+            </Button>
           ) : null}
-          {draftSaved && !revealed ? (
-            <span className="sk-text-xs-regular text-sk-text-brand-secondary">
-              Draft saved, not submitted yet
-            </span>
-          ) : null}
-        </div>
-      </div>
 
-      {/* Step controls — inside the card for the same reason as the progress
-          band: they move through the quiz, not through the course. */}
-      {navigation ? (
-        <div className="-mx-5 -mb-5 border-t border-sk-border-secondary px-5 py-3">
-          {navigation}
+          {revealed && onNext ? (
+            <Button variant="primary" rightIcon={ArrowRight} onClick={onNext}>
+              {nextLabel}
+            </Button>
+          ) : null}
         </div>
-      ) : null}
+
+      </div>
     </div>
   );
 }
