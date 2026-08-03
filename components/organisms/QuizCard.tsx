@@ -30,6 +30,12 @@ export interface QuizCardProps {
   maxAttempts?: number;
   /** Warn before the last graded attempt is spent. */
   isLastAttempt?: boolean;
+  /**
+   * Banded slots rendered inside the card, so position and step controls read
+   * as part of the quiz rather than competing with the player's topic nav.
+   */
+  progress?: React.ReactNode;
+  navigation?: React.ReactNode;
   className?: string;
 }
 
@@ -93,8 +99,9 @@ function OptionMarker({
 /**
  * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
  * question submits and scores independently, with answer-specific feedback and
- * an optional Show-answer/explanation reveal. Position ("Question n of m") is
- * owned by the Progress Rail — this card never repeats it.
+ * an optional Show-answer/explanation reveal. Position and step controls are
+ * passed in as the `progress` and `navigation` bands so the whole step reads as
+ * one box; the card never states the position itself.
  */
 export function QuizCard({
   state = "Question",
@@ -113,6 +120,8 @@ export function QuizCard({
   attemptsUsed,
   maxAttempts,
   isLastAttempt,
+  progress,
+  navigation,
   className,
 }: QuizCardProps) {
   const revealed = state === "Revealed";
@@ -140,6 +149,14 @@ export function QuizCard({
         className,
       )}
     >
+      {/* Progress band — full-bleed inside the card so it plainly belongs to
+          the quiz, like the action buttons below. */}
+      {progress ? (
+        <div className="-mx-5 -mt-5 border-b border-sk-border-secondary px-5 py-3">
+          {progress}
+        </div>
+      ) : null}
+
       <h3 className="sk-text-md-semibold text-sk-text-primary">{question}</h3>
 
       {multiSelect ? (
@@ -308,6 +325,14 @@ export function QuizCard({
           ) : null}
         </div>
       </div>
+
+      {/* Step controls — inside the card for the same reason as the progress
+          band: they move through the quiz, not through the course. */}
+      {navigation ? (
+        <div className="-mx-5 -mb-5 border-t border-sk-border-secondary px-5 py-3">
+          {navigation}
+        </div>
+      ) : null}
     </div>
   );
 }
