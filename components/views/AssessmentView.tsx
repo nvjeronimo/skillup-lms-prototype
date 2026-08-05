@@ -53,10 +53,13 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const params = useSearchParams();
   const questions = React.useMemo(() => getQuiz(topic), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Mode is visible to the tester, not to the learner being tested: it rides on
-  // the URL, never on the page.
-  const override = params?.get("mode")?.toUpperCase();
-  const modeOverride = override === "A" || override === "B" ? (override as QuizMode) : undefined;
+  // Mode is visible to the tester, not to the learner being tested: it comes
+  // from the URL or the demo menu, never from anything on the page. An explicit
+  // URL wins, so a shared link always lands on the mode it names.
+  const menuMode = useLmsStore((s) => s.quizMode);
+  const urlMode = params?.get("mode")?.toUpperCase();
+  const modeOverride: QuizMode | undefined =
+    urlMode === "A" || urlMode === "B" ? urlMode : (menuMode ?? undefined);
   const config = React.useMemo(
     () => getQuizConfig(topic, modeOverride),
     [topicId, modeOverride], // eslint-disable-line react-hooks/exhaustive-deps
@@ -84,6 +87,19 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const recordedRef = React.useRef(false);
   const stepRef = React.useRef<HTMLDivElement>(null);
   const mountedRef = React.useRef(false);
+  const modeRef = React.useRef(config.mode);
+
+  // Switching mode starts the quiz over. The two experiences are different
+  // runs, not two skins on one — carrying answers across would leave the
+  // learner mid-stepper in a layout that has no stepper.
+  React.useEffect(() => {
+    if (modeRef.current === config.mode) return;
+    modeRef.current = config.mode;
+    recordedRef.current = false;
+    setAnswers(questions.map(freshAnswer));
+    setIndex(0);
+    setPhase(config.mode === "A" ? "quiz" : "intro");
+  }, [config.mode, questions]);
 
   const isQuestionCorrect = React.useCallback(
     (i: number): boolean => {
