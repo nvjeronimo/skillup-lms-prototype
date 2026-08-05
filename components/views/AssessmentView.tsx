@@ -1,16 +1,25 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
-import { Check, RotateCcw, AlertTriangle, ArrowLeft, ArrowRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
-import { QuizProgressBar } from "@/components/molecules/QuizProgressBar";
+import { QuizNavStacked, QuizNavStepper } from "@/components/molecules/QuizNav";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
-import { getQuiz, getQuizConfig, topicFamily, type QuizConfig } from "@/lib/content";
-import { getCourseBySlug, getTopic } from "@/lib/data";
+import {
+  ATTEMPTS_DISPLAY_CEILING,
+  attemptsLabel,
+  getQuiz,
+  getQuizConfig,
+  topicFamily,
+  type QuizConfig,
+  type QuizMode,
+} from "@/lib/content";
+import { flatTopics, getAdjacentTopics, getCourseBySlug, getTopic } from "@/lib/data";
+import type { Course, FlatTopic } from "@/lib/types";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -24,22 +33,38 @@ export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId:
   return isSubmission ? <GradedSubmission topicId={topicId} /> : <Quiz topicId={topicId} courseSlug={courseSlug} />;
 }
 
-/* ---- Quiz: entry → one question per step → summary. ----
-   Mirrors Open edX's native sequence navigation. The *subsection* is the quiz
-   container; authoring one `problem` per unit makes the platform render exactly
-   this stepper (unit navigator + Previous/Next) with no custom code. Submit
-   stays per problem block: Open edX has no quiz-level submit-all, so each
-   question still grades on its own. Position and progress come from the DS
-   `Quiz · Progress Bar`; stepping is carried by the Previous/Next controls.
-   The end-of-quiz summary is ours, the platform ships no results screen. */
-type Answer = { selected: string[]; revealed: boolean; draftSaved: boolean };
-const freshAnswer = (): Answer => ({ selected: [], revealed: false, draftSaved: false });
+/* ---- Quiz: two modes, A and B (quizzes/08-two-modes.md) ----
+   A is how the platform behaves today: one scrolling page with every question
+   on it, no entry screen, no results, no explanations, and Previous/Next at the
+   foot that move between units and therefore LEAVE the quiz.
+   B is the proposal: an entry screen, a stepper with the nav as a top bar,
+   explanations, and a results surface rendered in place below the last question.
+
+   Both respect the same platform rules: every question submits on its own,
+   Submit is the only action that spends an attempt, Reset never returns one and
+   wipes the score already earned, a saved answer is worth zero, and a closed
+   problem disables Submit and removes Reset and Save. Only B explains why. */
+type Answer = { selected: string[]; revealed: boolean; saved: boolean };
+const freshAnswer = (): Answer => ({ selected: [], revealed: false, saved: false });
 
 function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) {
   const topic = getTopic(topicId)!;
   const router = useRouter();
+  const params = useSearchParams();
   const questions = React.useMemo(() => getQuiz(topic), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
-  const config = React.useMemo(() => getQuizConfig(topic), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Mode is visible to the tester, not to the learner being tested: it comes
+  // from the URL or the demo menu, never from anything on the page. An explicit
+  // URL wins, so a shared link always lands on the mode it names.
+  const menuMode = useLmsStore((s) => s.quizMode);
+  const urlMode = params?.get("mode")?.toUpperCase();
+  const modeOverride: QuizMode | undefined =
+    urlMode === "A" || urlMode === "B" ? urlMode : (menuMode ?? undefined);
+  const config = React.useMemo(
+    () => getQuizConfig(topic, modeOverride),
+    [topicId, modeOverride], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const isModeA = config.mode === "A";
 
   const stored = useLmsStore((s) => s.quizResults[topicId]);
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
@@ -49,9 +74,12 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const total = questions.length;
   const result = stored ?? (isCompleted ? { score: total, total, attempts: 1 } : undefined);
 
-  const [phase, setPhase] = React.useState<"intro" | "quiz" | "completed">(
-    result ? "completed" : "intro",
-  );
+  // Mode A has no entry screen — the learner clicks the quiz and is already
+  // answering it — and no results, so it never leaves the "quiz" phase.
+  const [phase, setPhase] = React.useState<"intro" | "quiz" | "completed">(() => {
+    if (isModeA) return "quiz";
+    return result ? "completed" : "intro";
+  });
   const [answers, setAnswers] = React.useState<Answer[]>(() => questions.map(freshAnswer));
   // The step the learner is on — the equivalent of the sequence `position` the
   // platform persists per subsection.
@@ -59,6 +87,19 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const recordedRef = React.useRef(false);
   const stepRef = React.useRef<HTMLDivElement>(null);
   const mountedRef = React.useRef(false);
+  const modeRef = React.useRef(config.mode);
+
+  // Switching mode starts the quiz over. The two experiences are different
+  // runs, not two skins on one — carrying answers across would leave the
+  // learner mid-stepper in a layout that has no stepper.
+  React.useEffect(() => {
+    if (modeRef.current === config.mode) return;
+    modeRef.current = config.mode;
+    recordedRef.current = false;
+    setAnswers(questions.map(freshAnswer));
+    setIndex(0);
+    setPhase(config.mode === "A" ? "quiz" : "intro");
+  }, [config.mode, questions]);
 
   const isQuestionCorrect = React.useCallback(
     (i: number): boolean => {
@@ -134,13 +175,32 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             track("topic_enter", { topicId, kind: "quiz_start" });
             startAttempt();
           }}
+          /* Shell-owned, resolved from course structure — never authored into
+             the quiz. A lesson wins over a module because it is the nearer
+             parent; with neither, the quiz spans the course and the action is
+             suppressed. */
+          reviewParent={topic.lessonLabel ? "lesson" : topic.moduleTitle ? "module" : undefined}
+          onReviewParent={() => {
+            const first = firstTopicOfParent(topic, getCourseBySlug(courseSlug));
+            if (first) router.push(`/course/${courseSlug}/topic/${first}`);
+          }}
         />
       </div>
     );
   }
 
   const q = questions[index];
-  const isLast = index === total - 1;
+
+  /**
+   * Next question still awaiting an answer, wrapping past the end. Skipping is
+   * allowed, so "forward" cannot mean index+1 — that would strand the learner
+   * on the last question with earlier ones still open.
+   */
+  function nextUnanswered(from: number): number {
+    for (let k = from + 1; k < total; k++) if (!answers[k].revealed) return k;
+    for (let k = 0; k <= from; k++) if (!answers[k].revealed) return k;
+    return -1;
+  }
 
   // "Review lesson" only appears when the question is actually linked to a
   // lesson *in this course*. A course-final quiz has no such link, and a quiz
@@ -151,99 +211,149 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     ? getTopic(q.reviewTopicId, getCourseBySlug(courseSlug))
     : undefined;
 
+  /** Everything that does not depend on which question is on screen. */
+  function cardPropsFor(i: number) {
+    const question = questions[i];
+    const linked = question.reviewTopicId
+      ? getTopic(question.reviewTopicId, getCourseBySlug(courseSlug))
+      : undefined;
+    const attemptsShown =
+      typeof config.maxAttempts === "number" &&
+      config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING;
+
+    return {
+      state: (answers[i].revealed ? "Revealed" : "Question") as "Revealed" | "Question",
+      question: question.question,
+      options: question.options,
+      multiSelect: question.multiSelect,
+      explanation: question.explanation,
+      reviewTopicTitle: isModeA ? undefined : linked?.title,
+      onReviewTopic: () => {
+        if (linked) router.push(`/course/${courseSlug}/topic/${linked.id}`);
+      },
+      selectedIds: answers[i].selected,
+      onToggleOption: (id: string) =>
+        setAnswers((prev) =>
+          prev.map((a, j) => {
+            if (j !== i || a.revealed) return a;
+            const has = a.selected.includes(id);
+            const selected = question.multiSelect
+              ? has
+                ? a.selected.filter((x) => x !== id)
+                : [...a.selected, id]
+              : [id];
+            return { ...a, selected, saved: false };
+          }),
+        ),
+      onSubmit: () =>
+        setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, revealed: true } : a))),
+
+      // Mode A shows the platform's own chrome; B replaces it.
+      showPlatformPrompt: isModeA,
+      showExplanation: !isModeA,
+      // Save is the platform's affordance, and it is the most dangerous one in
+      // the quiz: it stores the answer without grading it. A shows it as the
+      // platform does; B saves silently and spends its words on what counts.
+      showSave: isModeA && config.submitIsFinal,
+      saved: answers[i].saved,
+      onSave: () => {
+        setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, saved: true } : a)));
+        showToast("Your answers have been saved but not graded.");
+      },
+      showAttempts: attemptsShown,
+      attemptsUsed: attemptsShown ? attemptsUsed : undefined,
+      maxAttempts: attemptsShown ? config.maxAttempts : undefined,
+      isLastAttempt:
+        config.submitIsFinal &&
+        typeof config.maxAttempts === "number" &&
+        attemptsUsed === config.maxAttempts - 1,
+      // Reset never returns the attempt and wipes the score already earned, so
+      // it is offered only on a wrong answer with attempts left, and never on a
+      // correct one — the platform hides it there, protectively.
+      onRetry: attemptsExhausted
+        ? undefined
+        : () => {
+            setAnswers((prev) => prev.map((a, j) => (j === i ? freshAnswer() : a)));
+            showToast(
+              config.rerandomize
+                ? "Answer cleared, and the question reshuffled. Answer again, then submit."
+                : "Answer cleared, and the score it earned. Answer again, then submit.",
+            );
+          },
+    };
+  }
+
+  /* ---- Mode A: one scrolling page, exactly as the platform renders it ---- */
+  if (isModeA) {
+    return (
+      <div className="flex flex-col gap-4 py-4">
+        {questions.map((_, i) => (
+          <QuizCard key={i} {...cardPropsFor(i)} />
+        ))}
+
+        {/* At the foot, where the platform puts it. These move between UNITS,
+            and the whole quiz is one unit, so they leave the quiz. Deliberately
+            not relabelled to imply question stepping. */}
+        <QuizNavStacked
+          onPrevious={() => {
+            const prev = getAdjacentTopics(topicId, getCourseBySlug(courseSlug)).previous;
+            if (prev) router.push(`/course/${courseSlug}/topic/${prev.id}`);
+          }}
+          onNext={() => {
+            const next = getAdjacentTopics(topicId, getCourseBySlug(courseSlug)).next;
+            if (next) router.push(`/course/${courseSlug}/topic/${next.id}`);
+          }}
+        />
+      </div>
+    );
+  }
+
+  /* ---- Mode B: a stepper, nav at the top, results in place at the end ---- */
   return (
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
-      <QuizCard
-        /* Progress and step controls live inside the card. Outside it they read
-           as page furniture and collided with the player's own Previous/Next
-           at the foot of the screen. */
-        progress={
-          <QuizProgressBar
-            current={index + 1}
-            total={total}
-            pct={(answeredCount / total) * 100}
-          />
-        }
-        navigation={
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={ArrowLeft}
-              disabled={index === 0}
-              onClick={() => setIndex((i) => Math.max(0, i - 1))}
-            >
-              Previous
-            </Button>
-
-            {!allAnswered ? (
-              <span className="sk-text-xs-regular text-sk-text-tertiary">
-                {total - answeredCount} of {total} still unanswered
-              </span>
-            ) : null}
-
-            <div className="flex flex-wrap items-center gap-2">
-              {!isLast ? (
-                <Button
-                  variant={allAnswered ? "secondary" : "primary"}
-                  size="sm"
-                  rightIcon={ArrowRight}
-                  onClick={() => setIndex((i) => Math.min(total - 1, i + 1))}
-                >
-                  Next
-                </Button>
-              ) : null}
-              {allAnswered ? (
-                <Button variant="primary" size="sm" onClick={() => setPhase("completed")}>
-                  See results
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        }
-        state={answers[index].revealed ? "Revealed" : "Question"}
-        question={q.question}
-        options={q.options}
-        multiSelect={q.multiSelect}
-        explanation={q.explanation}
-        reviewTopicTitle={reviewTopic?.title}
-        onReviewTopic={() => {
-          if (reviewTopic) router.push(`/course/${courseSlug}/topic/${reviewTopic.id}`);
-        }}
-        selectedIds={answers[index].selected}
-        onToggleOption={(id) =>
-          setAnswers((prev) =>
-            prev.map((a, j) => {
-              if (j !== index || a.revealed) return a;
-              const has = a.selected.includes(id);
-              const selected = q.multiSelect
-                ? has
-                  ? a.selected.filter((x) => x !== id)
-                  : [...a.selected, id]
-                : [id];
-              return { ...a, selected, draftSaved: false };
-            }),
-          )
-        }
-        showSaveDraft={config.submitIsFinal}
-        draftSaved={answers[index].draftSaved}
-        onSaveDraft={() => {
-          setAnswers((prev) => prev.map((a, j) => (j === index ? { ...a, draftSaved: true } : a)));
-          showToast("Draft saved, not submitted yet.");
-        }}
-        attemptsUsed={config.maxAttempts ? attemptsUsed : undefined}
-        maxAttempts={config.maxAttempts}
-        isLastAttempt={
-          config.submitIsFinal &&
-          typeof config.maxAttempts === "number" &&
-          attemptsUsed === config.maxAttempts - 1
-        }
-        onSubmit={() =>
-          setAnswers((prev) => prev.map((a, j) => (j === index ? { ...a, revealed: true } : a)))
-        }
+      <QuizNavStepper
+        current={index + 1}
+        total={total}
+        pct={(answeredCount / total) * 100}
+        onBack={index > 0 ? () => setIndex((i) => Math.max(0, i - 1)) : undefined}
       />
+
+      <QuizCard
+        {...cardPropsFor(index)}
+        onNext={
+          answers[index].revealed
+            ? allAnswered
+              ? () => setPhase("completed")
+              : () => setIndex(nextUnanswered(index))
+            : undefined
+        }
+        nextLabel={allAnswered ? "See results" : "Next question"}
+      />
+
+      {/* Until every question is submitted, name what is outstanding — in terms
+          of grading, because a saved answer looks like progress and scores
+          nothing. The count comes from submitted answers only. */}
+      {!allAnswered ? (
+        <p className="sk-text-xs-regular text-center text-sk-text-tertiary">
+          {total - answeredCount} of {total} not submitted yet. Nothing counts until you submit.
+        </p>
+      ) : null}
     </div>
   );
+}
+
+/**
+ * First topic of the quiz's nearest parent (its lesson, else its module), so
+ * "Review lesson first" lands at the start of the material rather than on the
+ * quiz's neighbour. Returns undefined when the quiz has no parent, which is
+ * also what suppresses the action.
+ */
+function firstTopicOfParent(quiz: FlatTopic, course: Course): string | undefined {
+  const siblings = flatTopics(course).filter((t) =>
+    quiz.lessonLabel ? t.lessonLabel === quiz.lessonLabel : t.moduleId === quiz.moduleId,
+  );
+  const first = siblings.find((t) => t.id !== quiz.id);
+  return first?.id;
 }
 
 /* ---- Entry header: everything the learner needs before starting (M1) ---- */
@@ -253,17 +363,26 @@ function QuizEntryHeader({
   questionCount,
   resumed,
   onStart,
+  reviewParent,
+  onReviewParent,
 }: {
   topic: { title: string };
   config: QuizConfig;
   questionCount: number;
   resumed: boolean;
+  /** "lesson" / "module" — omitted when the quiz has no parent to review. */
+  reviewParent?: string;
+  onReviewParent?: () => void;
   onStart: () => void;
 }) {
+  // Blank Maximum Attempts means unlimited on an ordinary problem and one on a
+  // timed exam, so the label is derived rather than guessed. An attempt is one
+  // run through the whole quiz, never a retry per question (spec §9.3/§9.4).
+  const attempts = attemptsLabel(config);
   const facts = [
     `${questionCount} questions`,
     `~${config.estMinutes} min`,
-    config.maxAttempts ? `${config.maxAttempts} attempts per question` : "Unlimited attempts",
+    ...(attempts ? [attempts] : []),
     `Pass ≥ ${config.passThresholdPct}%`,
   ];
 
@@ -303,10 +422,20 @@ function QuizEntryHeader({
         </p>
       )}
 
-      <div>
+      <div className="flex flex-wrap items-center gap-2">
         <Button variant="primary" size="lg" onClick={onStart}>
           {resumed ? "Resume quiz" : `Start ${config.variant === "practice" ? "practice" : "quiz"}`}
         </Button>
+
+        {/* Secondary action only when there is somewhere to send the learner
+            back to. A course-final quiz belongs to the whole course, so it has
+            no parent to review — and what decides this is the link, not the
+            quiz variant: a module-level final exam does have one. */}
+        {reviewParent ? (
+          <Button variant="secondary" size="lg" onClick={onReviewParent}>
+            Review {reviewParent} first
+          </Button>
+        ) : null}
       </div>
     </section>
   );
@@ -367,37 +496,18 @@ function QuizSummary({
           </div>
         </div>
 
-        {/* Per-question map — jump back to any answer. */}
-        {outcomes.some((o) => o !== null) ? (
-          <div className="flex flex-col gap-2">
-            <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
-              Your answers
-            </span>
-            <ol className="flex flex-wrap gap-1.5">
-              {outcomes.map((o, i) => (
-                <li
-                  key={i}
-                  className={cn(
-                    "flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium",
-                    o === true
-                      ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
-                      : o === false
-                        ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
-                        : "border-sk-border-primary text-sk-text-tertiary",
-                  )}
-                  aria-label={`Question ${i + 1} ${o === true ? "correct" : o === false ? "incorrect" : "unanswered"}`}
-                >
-                  {i + 1}
-                </li>
-              ))}
-            </ol>
-          </div>
-        ) : null}
+        {/* No per-question circle map. The ruling that removed the dots from
+            the progress indicator covers the results screen too: "Retry
+            incorrect" already names how many were wrong and takes the learner
+            straight to them, so a row of circles adds nothing on a long quiz. */}
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-4">
           <p className="sk-text-xs-regular text-sk-text-tertiary">
-            {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"} ·{" "}
-            {config.maxAttempts ? `${config.maxAttempts} allowed` : "Unlimited retakes"}
+            {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"}
+            {typeof config.maxAttempts === "number" &&
+            config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
+              ? ` · ${config.maxAttempts - result.attempts} left`
+              : ""}
           </p>
           <div className="flex flex-wrap gap-2">
             {incorrectIdx.length && !attemptsExhausted ? (

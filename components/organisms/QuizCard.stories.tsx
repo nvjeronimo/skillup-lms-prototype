@@ -77,21 +77,21 @@ export const MultiSelect: Story = {
   },
 };
 
-/** Graded variant — Save draft plus the attempts counter. */
+/** Mode A on a graded quiz — the platform's Save, plus the attempts counter. */
 export const GradedWithAttempts: Story = {
-  args: { selectedIds: ["a"], showSaveDraft: true, attemptsUsed: 0, maxAttempts: 2 },
+  args: { selectedIds: ["a"], showSave: true, attemptsUsed: 0, maxAttempts: 2 },
 };
 
-/** Draft stored but not submitted — the distinction has to be loud. */
+/** Saved but not submitted. It scores nothing, and the wording must say so. */
 export const DraftSaved: Story = {
-  args: { selectedIds: ["a"], showSaveDraft: true, draftSaved: true, attemptsUsed: 0, maxAttempts: 2 },
+  args: { selectedIds: ["a"], showSave: true, saved: true, attemptsUsed: 0, maxAttempts: 2 },
 };
 
 /** Last graded attempt — Submit routes through a confirmation gate first. */
 export const LastAttempt: Story = {
   args: {
     selectedIds: ["a"],
-    showSaveDraft: true,
+    showSave: true,
     attemptsUsed: 1,
     maxAttempts: 2,
     isLastAttempt: true,

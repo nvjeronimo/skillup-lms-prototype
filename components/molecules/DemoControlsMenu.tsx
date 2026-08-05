@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Check, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
+import { getTopic } from "@/lib/data";
+import { topicFamily } from "@/lib/content";
 import { useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -117,10 +119,19 @@ export function DemoControlsMenu({
   const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
   const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
   const setDiscussionsPreview = useLmsStore((s) => s.setDiscussionsPreview);
+  const quizMode = useLmsStore((s) => s.quizMode);
+  const setQuizMode = useLmsStore((s) => s.setQuizMode);
   const resetDemo = useLmsStore((s) => s.resetDemo);
   const router = useRouter();
   const pathname = usePathname();
   const activeSlug = pathname?.match(/^\/course\/([^/]+)/)?.[1];
+
+  // The A/B switch is quiz-only, so it appears only when the topic on screen
+  // is one. Assessment covers Quiz and Practice Assignment; the graded family
+  // is a file submission, which has no modes.
+  const activeTopicId = pathname?.match(/^\/course\/[^/]+\/topic\/([^/]+)/)?.[1];
+  const activeTopic = activeTopicId ? getTopic(activeTopicId) : undefined;
+  const onQuiz = activeTopic ? topicFamily(activeTopic.type) === "assessment" : false;
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -312,6 +323,49 @@ export function DemoControlsMenu({
               />
             </div>
           </Section>
+
+          {/* Only on a quiz, and only in here. The mode must be visible to
+              whoever runs a session and invisible to whoever is being tested,
+              so it never appears on the page itself. */}
+          {onQuiz ? (
+            <Section title="Quiz mode">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2 px-1">
+                  <span className="sk-text-sm-medium flex-1 text-sk-text-secondary">
+                    Experience
+                  </span>
+                  <div className="flex overflow-hidden rounded-md border border-sk-border-secondary">
+                    {(
+                      [
+                        { value: null, label: "Default" },
+                        { value: "A" as const, label: "A" },
+                        { value: "B" as const, label: "B" },
+                      ] as const
+                    ).map((opt) => (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        aria-pressed={quizMode === opt.value}
+                        onClick={() => setQuizMode(opt.value)}
+                        className={cn(
+                          "sk-text-xs-semibold px-2.5 py-1 transition-colors",
+                          quizMode === opt.value
+                            ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
+                            : "text-sk-text-secondary hover:bg-sk-bg-secondary",
+                        )}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <p className="sk-text-xs-regular px-1 text-sk-text-tertiary">
+                  A is how the platform behaves today. B is the proposal.
+                  Default follows whatever each quiz is set to.
+                </p>
+              </div>
+            </Section>
+          ) : null}
 
           <Section title="Preview features">
             <div className="flex flex-col gap-1">

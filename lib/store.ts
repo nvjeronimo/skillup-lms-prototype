@@ -85,6 +85,13 @@ interface LmsState {
   largeTargets: boolean;
   /** Preview flag: the WIP "Discuss this topic" surface. Off by default. */
   discussionsPreview: boolean;
+  /**
+   * Tester-only override of the quiz A/B mode. `null` uses each quiz's own
+   * default. Lives in the demo menu, never on the page: the mode must be
+   * visible to whoever is running a session and invisible to whoever is being
+   * tested (quizzes/08-two-modes.md §7).
+   */
+  quizMode: "A" | "B" | null;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -128,6 +135,7 @@ interface LmsState {
   setUnderlineLinks: (v: boolean) => void;
   setLargeTargets: (v: boolean) => void;
   setDiscussionsPreview: (v: boolean) => void;
+  setQuizMode: (v: "A" | "B" | null) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -194,6 +202,7 @@ export const useLmsStore = create<LmsState>()(
   underlineLinks: false,
   largeTargets: false,
   discussionsPreview: false,
+  quizMode: null,
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -404,6 +413,10 @@ export const useLmsStore = create<LmsState>()(
     track("a11y_change", { setting: "largeTargets", value: String(largeTargets) });
     set({ largeTargets });
   },
+  setQuizMode: (quizMode) => {
+    track("preview_toggle", { feature: "quiz_mode", value: String(quizMode ?? "default") });
+    set({ quizMode });
+  },
   setDiscussionsPreview: (discussionsPreview) => {
     track("preview_toggle", { feature: "discussions", value: String(discussionsPreview) });
     set({ discussionsPreview });
@@ -457,6 +470,7 @@ export const useLmsStore = create<LmsState>()(
         underlineLinks: s.underlineLinks,
         largeTargets: s.largeTargets,
         discussionsPreview: s.discussionsPreview,
+        quizMode: s.quizMode,
       }),
     },
   ),
