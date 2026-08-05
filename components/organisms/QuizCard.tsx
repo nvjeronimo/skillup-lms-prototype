@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Check, X, Lightbulb, ArrowRight } from "lucide-react";
+import { Check, X, Lightbulb, ArrowRight, RotateCcw } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { cn } from "@/lib/utils";
 import type { QuizOption } from "@/lib/content";
 
@@ -22,24 +23,46 @@ export interface QuizCardProps {
   selectedIds?: string[];
   onToggleOption?: (id: string) => void;
   onSubmit?: () => void;
-  /** Graded quizzes expose a Save-draft affordance and an attempts counter. */
-  showSaveDraft?: boolean;
-  onSaveDraft?: () => void;
-  draftSaved?: boolean;
+
+  /* ---- Mode switches (quizzes/08-two-modes.md §9). Defaults are mode B. ---- */
+
+  /** B: per-question counter + bar. A: no per-question position exists today. */
+  progress?: React.ReactNode;
+  /** B: why the answer is right or wrong. A: 213 of 215 audited questions have none. */
+  showExplanation?: boolean;
+  /** A: the repeated "Choose the correct option(s)" and the points line. */
+  showPlatformPrompt?: boolean;
+  /** Points the platform prints beside its prompt. */
+  points?: number;
+  /** A: the platform shows Save on graded questions. B saves silently. */
+  showSave?: boolean;
+  onSave?: () => void;
+  saved?: boolean;
+  /** Both modes: the platform shows this too. */
+  showAttempts?: boolean;
   attemptsUsed?: number;
   maxAttempts?: number;
-  /** Warn before the last graded attempt is spent. */
+  /** Warn before the last attempt of the quiz is spent. */
   isLastAttempt?: boolean;
+
   /**
-   * Progress band rendered inside the card, so position reads as part of the
-   * quiz rather than competing with the player's topic nav.
+   * Retry after a wrong answer while attempts remain. Reset wipes the score
+   * already earned and never returns the attempt, so this must sit beside the
+   * attempts count and never imply a free second go. With a shuffled question
+   * the platform refuses a second submit without a Reset first, so this control
+   * owns both steps.
    */
-  progress?: React.ReactNode;
-  /** Move on without answering. Absent = the question cannot be skipped. */
-  onSkip?: () => void;
-  /** Advance after answering. Absent on the last question. */
+  onRetry?: () => void;
+
+  /**
+   * Attempts spent, past due, or past the course end date. Disables Submit and
+   * removes Reset and Save. The platform never says why; only mode B explains.
+   */
+  closed?: boolean;
+  closedReason?: string;
+
+  /** B only: the bottom of the screen carries the one forward action. */
   onNext?: () => void;
-  /** Label for the forward action once answered, e.g. "See results" at the end. */
   nextLabel?: string;
   className?: string;
 }
@@ -119,14 +142,20 @@ export function QuizCard({
   selectedIds = [],
   onToggleOption,
   onSubmit,
-  showSaveDraft,
-  onSaveDraft,
-  draftSaved,
+  progress,
+  showExplanation = true,
+  showPlatformPrompt = false,
+  points = 1,
+  showSave = false,
+  onSave,
+  saved,
+  showAttempts = true,
   attemptsUsed,
   maxAttempts,
   isLastAttempt,
-  progress,
-  onSkip,
+  onRetry,
+  closed = false,
+  closedReason,
   onNext,
   nextLabel = "Next question",
   className,
@@ -164,7 +193,29 @@ export function QuizCard({
         </div>
       ) : null}
 
-      <h3 className="sk-text-md-semibold text-sk-text-primary">{question}</h3>
+      {/* Mode A reproduces what the platform prints above every question: the
+          same generic prompt repeated, with a plural that is wrong for
+          single-select, and a points line. Its blandness is the finding. */}
+      {showPlatformPrompt ? (
+        <div className="flex flex-col gap-0.5">
+          <span className="sk-text-md-semibold text-sk-text-primary">
+            Choose the correct option(s)
+          </span>
+          <span className="sk-text-xs-regular text-sk-text-tertiary">
+            {points} point{points === 1 ? "" : "s"} possible (graded)
+          </span>
+        </div>
+      ) : null}
+
+      <h3
+        className={cn(
+          showPlatformPrompt
+            ? "sk-text-md-regular text-sk-text-secondary"
+            : "sk-text-md-semibold text-sk-text-primary",
+        )}
+      >
+        {question}
+      </h3>
 
       {multiSelect ? (
         <span className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sk-text-tertiary">
@@ -219,8 +270,10 @@ export function QuizCard({
         })}
       </ul>
 
-      {/* Answer-specific feedback for the option(s) the learner actually chose. */}
-      {revealed && chosen.some((o) => o.feedback) ? (
+      {/* The verdict shows in both modes — the platform does tell the learner
+          correct or incorrect. What mode A withholds is everything after that:
+          no per-choice feedback, no explanation. */}
+      {revealed ? (
         <div
           className={cn(
             "flex flex-col gap-1 rounded-lg px-3 py-2.5",
@@ -235,7 +288,11 @@ export function QuizCard({
           >
             {isCorrect ? "Correct" : "Not quite"}
           </span>
-          {chosen
+          {/* Mode A stops at the verdict. The learner is told correct or
+              incorrect and nothing else, because 213 of 215 audited questions
+              carry no feedback — and that absence is the finding, so it must
+              not be filled with placeholder prose. */}
+          {(showExplanation ? chosen : [])
             .filter((o) => o.feedback)
             .map((o) => (
               <p
@@ -288,52 +345,54 @@ export function QuizCard({
         </div>
       ) : null}
 
-      {/* Attempts and draft state sit above the controls: they qualify Submit
-          rather than being actions themselves. */}
-      {(typeof maxAttempts === "number" && typeof attemptsUsed === "number") ||
-      (draftSaved && !revealed) ? (
-        <div className="flex flex-col gap-0.5">
-          {typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
-            <span className="sk-text-xs-regular text-sk-text-tertiary">
-              You have used {attemptsUsed} of {maxAttempts} attempts
-            </span>
-          ) : null}
-          {draftSaved && !revealed ? (
-            <span className="sk-text-xs-regular text-sk-text-brand-secondary">
-              Draft saved, not submitted yet
-            </span>
-          ) : null}
-        </div>
+      {/* A saved answer is worth zero until submitted, and the platform's own
+          word for it — "saved" — is the misleading one. Say it in terms of
+          grading, not storage (spec §8.2a). */}
+      {saved && !revealed ? (
+        <span className="sk-text-xs-regular text-sk-text-warning-primary">
+          Saved, but not submitted. It scores nothing until you submit.
+        </span>
       ) : null}
 
-      {/* Action row, per the DS Question Card states. Before answering the left
-          slot offers Skip and the right slot Submit; after answering the left
-          slot explains and the right slot moves on. The forward action lives
-          here rather than in a separate bar, so the quiz has one set of
-          controls and they never compete with the player's topic nav. */}
+      {/* Attempts qualify Submit rather than being an action. An attempt is one
+          run through the whole quiz, so this is quiz-level information repeated
+          here for orientation, never a count of tries at this question. */}
+      {showAttempts && typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
+        <span className="sk-text-xs-regular text-sk-text-tertiary">
+          Attempt {Math.min(attemptsUsed + 1, maxAttempts)} of {maxAttempts} at this quiz
+        </span>
+      ) : null}
+
+      {/* Closed: attempts spent, past due, or past the course end date. The
+          platform greys Submit and removes Reset and Save without a word. Both
+          modes reach this state; only B is allowed to explain it. */}
+      {closed && closedReason ? (
+        <InlineAlert tone="warning" title="This quiz is closed" description={closedReason} />
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          {!revealed && !confirming && onSkip ? (
-            <Button variant="tertiary" onClick={onSkip}>
-              Skip question
+          {/* Save is the platform's, shown only in mode A. B saves silently and
+              spends its words on what decides the grade. */}
+          {!revealed && showSave && !closed ? (
+            <Button variant="secondary" onClick={onSave} disabled={!hasSelection}>
+              Save
             </Button>
           ) : null}
 
-          {!revealed && showSaveDraft ? (
-            <Button variant="secondary" onClick={onSaveDraft} disabled={!hasSelection}>
-              Save draft
-            </Button>
-          ) : null}
-
-          {revealed && explanation && !showAnswer ? (
+          {revealed && showExplanation && explanation && !showAnswer ? (
             <Button variant="secondary" leftIcon={Lightbulb} onClick={() => setShowAnswer(true)}>
               Show answer
             </Button>
           ) : null}
 
-          {revealed && !isCorrect && reviewTopicTitle ? (
-            <Button variant="tertiary" onClick={onReviewTopic}>
-              Review lesson
+          {/* Retry lives on the card, not in the nav: if the primary becomes
+              Next question, a learner who got it wrong with attempts left has
+              nowhere to click. Reset never returns the attempt, so the label
+              must sit beside the attempts count and never imply a free go. */}
+          {revealed && !isCorrect && !closed && onRetry ? (
+            <Button variant="secondary" leftIcon={RotateCcw} onClick={onRetry}>
+              Try again
             </Button>
           ) : null}
         </div>
@@ -343,7 +402,7 @@ export function QuizCard({
             <Button
               variant="primary"
               onClick={() => (isLastAttempt ? setConfirming(true) : onSubmit?.())}
-              disabled={!hasSelection}
+              disabled={!hasSelection || closed}
             >
               Submit
             </Button>

@@ -44,17 +44,40 @@ export interface QuizQuestion {
  * attempts / weight live on the subsection, and the same problem blocks are
  * reused across Practice, Graded and Final Exam. We mirror that here.
  */
+/**
+ * Which of the two experiences a quiz runs (quizzes/08-two-modes.md).
+ *
+ * A — how the platform behaves today: one scrolling page, no entry screen, no
+ *     results, no explanations, and Previous/Next that leave the quiz.
+ * B — the proposal: a stepper with an entry screen, explanations and a results
+ *     surface rendered in place.
+ *
+ * The mode belongs to the quiz, not the question and not the course. The
+ * prototype defaults to A so an unconfigured quiz behaves as production does;
+ * the design system defaults the other way because it is a design tool.
+ */
+export type QuizMode = "A" | "B";
+
 export interface QuizConfig {
   variant: "practice" | "graded" | "final";
   label: string;
-  /** undefined = unlimited */
+  mode: QuizMode;
+  /**
+   * Maximum Attempts as the platform stores it, per problem.
+   * `undefined` = blank, which means **unlimited on an ordinary problem** and
+   * **one on a timed exam** — never render "unlimited" when `isTimed`.
+   */
   maxAttempts?: number;
+  /** A timed exam reads a blank attempts field as one attempt, not unlimited. */
+  isTimed?: boolean;
   /** % of the final grade; undefined for practice */
   weightPct?: number;
   passThresholdPct: number;
   estMinutes: number;
   /** Graded quizzes warn that a submitted answer cannot be changed. */
   submitIsFinal: boolean;
+  /** Shuffled questions need Reset before a second submit — the retry owns both steps. */
+  rerandomize?: boolean;
 }
 
 export interface ActivityContent {
@@ -387,42 +410,52 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
  * Quiz configuration for a topic. Mirrors Open edX: these values come from the
  * SUBSECTION (grading policy + assignment type), not from the problem blocks.
  */
-export function getQuizConfig(topic: FlatTopic): QuizConfig {
+export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   const title = topic.title.toLowerCase();
   const isFinal = title.includes("final") || title.includes("exam");
   const isGraded = isFinal || topic.type === "Graded Assignment" || title.includes("graded");
+
+  // Mode is a per-quiz property. The prototype needs at least one quiz in each
+  // mode for the comparison to be usable, so the default is seeded per topic
+  // and can be overridden (see resolveQuizMode).
+  const resolved: QuizMode = mode ?? DEFAULT_QUIZ_MODE[topic.id] ?? "A";
 
   if (isFinal) {
     return {
       variant: "final",
       label: "Final exam",
+      mode: resolved,
       maxAttempts: 1,
       weightPct: 40,
       passThresholdPct: 70,
       estMinutes: 20,
       submitIsFinal: true,
+      rerandomize: true,
     };
   }
   if (isGraded) {
     return {
       variant: "graded",
       label: "Graded quiz",
+      mode: resolved,
       maxAttempts: 2,
       weightPct: 20,
       passThresholdPct: 70,
       estMinutes: 10,
       submitIsFinal: true,
+      rerandomize: true,
     };
   }
   return {
     variant: "practice",
     label: "Practice quiz",
-    // Open edX has no "unlimited" setting: an attempts number is always
-    // required, and authors fake unlimited with a high one. Verified with
-    // Simran Jindal (Studio owner), 30 Jul 2026. A high number is therefore
-    // the honest model — the UI suppresses the count instead of promising
-    // something the backend will never return.
-    maxAttempts: 100,
+    mode: resolved,
+    // Blank Maximum Attempts. On an ordinary problem that means unlimited, and
+    // the catalogue audit confirms it is what practice quizzes actually carry:
+    // 31 questions at 2 attempts (graded/final), the rest with no limit. An
+    // earlier note here claimed the platform cannot express unlimited — that
+    // came from over-reading one vendor sentence and is retracted (spec §9.4).
+    maxAttempts: undefined,
     weightPct: undefined,
     passThresholdPct: 60,
     estMinutes: 4,
@@ -431,11 +464,41 @@ export function getQuizConfig(topic: FlatTopic): QuizConfig {
 }
 
 /**
- * Above this, an attempts count is noise rather than information: the author
- * meant "as often as you like". Suppress it rather than inventing the word
- * "unlimited", which the platform cannot express.
+ * Seeded so the prototype carries both experiences at once and a reviewer can
+ * meet either. Anything not listed falls back to A, which is production.
  */
-export const ATTEMPTS_DISPLAY_CEILING = 20;
+const DEFAULT_QUIZ_MODE: Record<string, QuizMode> = {
+  "m3-t4": "B", // Practice Quiz: Define and measure — the B reference
+  "qs-t2": "B", // Quick-start practice quiz — B on a second piece of content
+  "m1-t3": "A", // Quick check — stays A
+};
+
+/**
+ * Above this an attempts count stops being a meaningful constraint, so the
+ * pill is hidden rather than printing noise like "100 attempts". Never
+ * substitute the word "unlimited" for a high number: say the number, or
+ * nothing (spec §9.4).
+ */
+export const ATTEMPTS_DISPLAY_CEILING = 10;
+
+/**
+ * How the attempts allowance should read, or undefined to render nothing.
+ *
+ * An attempt is one run through the WHOLE quiz, not a retry of one question
+ * (spec §9.3) — so this is quiz-level information, and the copy must never
+ * scope it to the question in front of the learner.
+ */
+export function attemptsLabel(config: QuizConfig): string | undefined {
+  if (typeof config.maxAttempts === "number") {
+    return config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
+      ? `${config.maxAttempts} ${config.maxAttempts === 1 ? "attempt" : "attempts"}`
+      : undefined;
+  }
+  // Blank means one attempt on a timed exam and unlimited elsewhere. Telling a
+  // learner they have unlimited tries at a one-shot exam is the dangerous
+  // direction of this mistake, so the timed case never says "unlimited".
+  return config.isTimed ? "1 attempt" : "Unlimited attempts";
+}
 
 export function getActivity(topic: FlatTopic): ActivityContent {
   // Branching / scenario activities are authored as SCORM packages.
