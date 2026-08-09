@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Check, X, Lightbulb } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { InlineAlert, type AlertTone } from "@/components/atoms/InlineAlert";
 import { cn } from "@/lib/utils";
 import type { QuizOption } from "@/lib/content";
 import {
@@ -49,6 +50,8 @@ export interface QuizCardProps {
   onNextHint?: () => void;
   /** Per-choice feedback authored as `<choicehint>`. */
   showExplanation?: boolean;
+  /** The authored `<solution>`, revealed only when Show answer is pressed. */
+  solution?: string;
   /** The block's `display_name`, printed above the question. Authored text. */
   showPlatformPrompt?: boolean;
   platformPrompt?: string;
@@ -126,27 +129,29 @@ function OptionMarker({
   );
 }
 
-/** Alert tone follows the state. Copy is per-question feedback, never generic. */
-const ALERT: Partial<Record<QuizQuestionState, { tone: string; title: string; bg: string; fg: string }>> = {
-  Correct: {
-    tone: "success",
-    title: "Correct",
-    bg: "bg-sk-bg-success-primary border-t-2 border-sk-text-success-primary",
-    fg: "text-sk-text-success-primary",
-  },
-  "Partially correct": {
-    tone: "warning",
-    title: "Partially correct",
-    bg: "bg-sk-bg-warning-primary border-t-2 border-sk-text-warning-primary",
-    fg: "text-sk-text-warning-primary",
-  },
-  Incorrect: {
-    tone: "error",
-    title: "Incorrect",
-    bg: "bg-sk-bg-error-primary border-t-2 border-sk-text-error-primary",
-    fg: "text-sk-text-error-primary",
-  },
-};
+/**
+ * Alert tone follows the state, and the title carries the score — the DS shows
+ * "Correct · 1 / 1 point" and "Partially correct · 1 / 2 points", not a bare
+ * verdict. Answer revealed uses the Answer tone; Results withheld shows none,
+ * because correctness is exactly what is being masked.
+ */
+function verdictAlert(
+  state: QuizQuestionState,
+  earned: number,
+  possible: number,
+): { tone: AlertTone; title: string } | null {
+  const score = `${earned} / ${possible} point${possible === 1 ? "" : "s"}`;
+  switch (state) {
+    case "Correct":
+      return { tone: "success", title: `Correct · ${score}` };
+    case "Partially correct":
+      return { tone: "warning", title: `Partially correct · ${score}` };
+    case "Incorrect":
+      return { tone: "error", title: `Incorrect · ${score}` };
+    default:
+      return null;
+  }
+}
 
 /**
  * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
@@ -169,6 +174,7 @@ export function QuizCard({
   hintIndex = 0,
   onNextHint,
   showExplanation = true,
+  solution,
   showPlatformPrompt = false,
   platformPrompt = "Choose the correct option",
   showPoints = false,
@@ -184,7 +190,8 @@ export function QuizCard({
 }: QuizCardProps) {
   const revealed = RESULT_STATES.includes(state);
   const marks = MARKS_CORRECTNESS.includes(state);
-  const alert = ALERT[state];
+  const earned = state === "Correct" ? points : state === "Partially correct" ? Math.max(1, points - 1) : 0;
+  const alert = verdictAlert(state, earned, points);
   const chosen = options.filter((o) => selectedIds.includes(o.id));
 
   return (
@@ -278,54 +285,52 @@ export function QuizCard({
         })}
       </ul>
 
-      {/* Tone maps to state. The copy is the authored per-choice feedback. */}
       {alert ? (
-        <div className={cn("flex flex-col gap-1 rounded-lg px-3 py-2.5", alert.bg)}>
-          <span className={cn("sk-text-sm-semibold", alert.fg)}>{alert.title}</span>
-          {showExplanation
-            ? chosen
-                .filter((o) => o.feedback)
-                .map((o) => (
-                  <p key={o.id} className="sk-text-sm-regular text-sk-text-secondary">
-                    {o.feedback}
-                  </p>
-                ))
-            : null}
-        </div>
+        <InlineAlert
+          tone={alert.tone}
+          title={alert.title}
+          description={
+            showExplanation
+              ? chosen.filter((o) => o.feedback).map((o) => o.feedback).join(" ")
+              : undefined
+          }
+        />
       ) : null}
 
-      {/* The hint list accumulates: hint 1 stays when hint 3 arrives. The
-          forward control goes disabled, not hidden, at the last one. */}
-      {showHint && hints.length ? (
-        <div className="flex flex-col gap-1 rounded-lg bg-sk-bg-secondary px-3 py-2.5">
-          <ol className="flex flex-col gap-1">
-            {hints.slice(0, hintIndex + 1).map((h, i) => (
-              <li key={i} className="sk-text-sm-regular flex gap-2 text-sk-text-secondary">
-                <Icon icon={Lightbulb} size={16} className="mt-0.5 shrink-0 text-sk-text-tertiary" />
-                <span>
-                  <strong className="sk-text-sm-semibold">
-                    Hint ({i + 1} of {hints.length}):{" "}
-                  </strong>
-                  {h}
-                </span>
-              </li>
-            ))}
-          </ol>
-          <button
-            type="button"
-            onClick={onNextHint}
-            disabled={hintIndex + 1 >= hints.length}
-            className={cn(
-              "sk-text-sm-semibold w-fit underline",
-              hintIndex + 1 >= hints.length
-                ? "cursor-not-allowed text-sk-fg-quaternary"
-                : "text-sk-text-brand",
-            )}
-          >
-            Next Hint
-          </button>
-        </div>
+      {/* The <solution>, revealed only when Show answer is pressed. */}
+      {state === "Answer revealed" && solution ? (
+        <InlineAlert tone="answer" title="Answer" description={solution} />
       ) : null}
+
+      {/* The list accumulates: hint 1 stays on screen when hint 3 arrives. The
+          forward control goes disabled, not hidden, at the last one. */}
+      {showHint && hints.length && hintIndex >= 0
+        ? hints.slice(0, hintIndex + 1).map((h, i) => (
+            <InlineAlert
+              key={i}
+              tone="hint"
+              title={`Hint (${i + 1} of ${hints.length}):`}
+              description={h}
+              action={
+                i === hintIndex ? (
+                  <button
+                    type="button"
+                    onClick={onNextHint}
+                    disabled={hintIndex + 1 >= hints.length}
+                    className={cn(
+                      "sk-text-sm-semibold underline",
+                      hintIndex + 1 >= hints.length
+                        ? "cursor-not-allowed text-sk-fg-quaternary"
+                        : "text-sk-text-brand",
+                    )}
+                  >
+                    Next Hint
+                  </button>
+                ) : undefined
+              }
+            />
+          ))
+        : null}
 
       {showFooterQuestions && footer ? <QuizFooterActions {...footer} /> : null}
     </div>

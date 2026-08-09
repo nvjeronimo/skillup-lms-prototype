@@ -285,6 +285,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
       question: question.question,
       options: question.options,
       multiSelect: question.multiSelect,
+      solution: question.explanation,
       selectedIds: answers[i].selected,
       onToggleOption: (id: string) =>
         setAnswers((prev) =>
