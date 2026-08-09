@@ -1,69 +1,72 @@
 "use client";
 
 import * as React from "react";
-import { Check, X, Lightbulb, ArrowRight, RotateCcw } from "lucide-react";
+import { Check, X, Lightbulb } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { Button } from "@/components/atoms/Button";
-import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { cn } from "@/lib/utils";
 import type { QuizOption } from "@/lib/content";
+import {
+  QuizFooterActions,
+  type QuizFooterActionsProps,
+  type QuizQuestionState,
+} from "@/components/molecules/QuizFooterActions";
 
-export type QuizState = "Question" | "Revealed";
+export type { QuizQuestionState };
+
+/** States that carry a submitted result. */
+const RESULT_STATES: QuizQuestionState[] = [
+  "Correct",
+  "Incorrect",
+  "Partially correct",
+  "Answer revealed",
+  "Results withheld",
+];
+
+/** States where the platform marks which options were right. */
+const MARKS_CORRECTNESS: QuizQuestionState[] = [
+  "Correct",
+  "Incorrect",
+  "Partially correct",
+  "Answer revealed",
+];
 
 export interface QuizCardProps {
-  state?: QuizState;
+  /** One of the nine platform states. No others exist. */
+  state?: QuizQuestionState;
   question?: string;
   options?: QuizOption[];
-  /** Answer cardinality — single-select shows radios, multi-select checkboxes (BR-3). */
   multiSelect?: boolean;
-  explanation?: string;
-  reviewTopicTitle?: string;
-  onReviewTopic?: () => void;
-  /** Chosen option ids. Single-select carries at most one. */
+
+  /* ---- The card's own six properties ---- */
+
+  /** Mode B chrome: a per-question counter. No platform equivalent. */
+  showProgress?: boolean;
+  progress?: React.ReactNode;
+  /** The revealed hint list — an authored `<demandhint>`. Not the Hint button. */
+  showHint?: boolean;
+  hints?: string[];
+  hintIndex?: number;
+  onNextHint?: () => void;
+  /** Per-choice feedback authored as `<choicehint>`. */
+  showExplanation?: boolean;
+  /** The block's `display_name`, printed above the question. Authored text. */
+  showPlatformPrompt?: boolean;
+  platformPrompt?: string;
+  /** The `.problem-progress` points line. Empty in every course we can read. */
+  showPoints?: boolean;
+  points?: number;
+  pointsEarned?: number;
+  graded?: boolean;
+  /** Off in the bucket model: the questions carry no action row at all. */
+  showFooterQuestions?: boolean;
+
+  /* ---- Passed through to the nested Footer Actions instance ---- */
+  footer?: Omit<QuizFooterActionsProps, "className">;
+
   selectedIds?: string[];
   onToggleOption?: (id: string) => void;
-  onSubmit?: () => void;
-
-  /* ---- Mode switches (quizzes/08-two-modes.md §9). Defaults are mode B. ---- */
-
-  /** B: per-question counter + bar. A: no per-question position exists today. */
-  progress?: React.ReactNode;
-  /** B: why the answer is right or wrong. A: 213 of 215 audited questions have none. */
-  showExplanation?: boolean;
-  /** A: the repeated "Choose the correct option(s)" and the points line. */
-  showPlatformPrompt?: boolean;
-  /** Points the platform prints beside its prompt. */
-  points?: number;
-  /** A: the platform shows Save on graded questions. B saves silently. */
-  showSave?: boolean;
-  onSave?: () => void;
-  saved?: boolean;
-  /** Both modes: the platform shows this too. */
-  showAttempts?: boolean;
-  attemptsUsed?: number;
-  maxAttempts?: number;
-  /** Warn before the last attempt of the quiz is spent. */
-  isLastAttempt?: boolean;
-
-  /**
-   * Retry after a wrong answer while attempts remain. Reset wipes the score
-   * already earned and never returns the attempt, so this must sit beside the
-   * attempts count and never imply a free second go. With a shuffled question
-   * the platform refuses a second submit without a Reset first, so this control
-   * owns both steps.
-   */
-  onRetry?: () => void;
-
-  /**
-   * Attempts spent, past due, or past the course end date. Disables Submit and
-   * removes Reset and Save. The platform never says why; only mode B explains.
-   */
-  closed?: boolean;
-  closedReason?: string;
-
-  /** B only: the bottom of the screen carries the one forward action. */
-  onNext?: () => void;
-  nextLabel?: string;
+  /** Anchor the platform's Review control returns focus to. */
+  id?: string;
   className?: string;
 }
 
@@ -116,7 +119,6 @@ function OptionMarker({
         multiSelect ? (
           <Icon icon={Check} size={13} className="text-sk-fg-white" />
         ) : (
-          // Radio dot
           <span className="h-2 w-2 rounded-full bg-sk-fg-white" />
         )
       ) : null}
@@ -124,87 +126,91 @@ function OptionMarker({
   );
 }
 
+/** Alert tone follows the state. Copy is per-question feedback, never generic. */
+const ALERT: Partial<Record<QuizQuestionState, { tone: string; title: string; bg: string; fg: string }>> = {
+  Correct: {
+    tone: "success",
+    title: "Correct",
+    bg: "bg-sk-bg-success-primary border-t-2 border-sk-text-success-primary",
+    fg: "text-sk-text-success-primary",
+  },
+  "Partially correct": {
+    tone: "warning",
+    title: "Partially correct",
+    bg: "bg-sk-bg-warning-primary border-t-2 border-sk-text-warning-primary",
+    fg: "text-sk-text-warning-primary",
+  },
+  Incorrect: {
+    tone: "error",
+    title: "Incorrect",
+    bg: "bg-sk-bg-error-primary border-t-2 border-sk-text-error-primary",
+    fg: "text-sk-text-error-primary",
+  },
+};
+
 /**
  * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
- * question submits and scores independently, with answer-specific feedback and
- * an optional Show-answer/explanation reveal. Position and step controls are
- * passed in as the `progress` and `navigation` bands so the whole step reads as
- * one box; the card never states the position itself.
+ * question submits and scores independently.
+ *
+ * The footer is a nested instance of `LMS / Quiz · Footer Actions` — the card
+ * does not own its CTAs. In the bucket model (mode A-2) the card carries no
+ * footer at all and one Footer Actions sits under the last question, because
+ * that is where the problem boundary is.
  */
 export function QuizCard({
-  state = "Question",
+  state = "Unanswered",
   question = "What is the primary goal of Six Sigma?",
   options = DEFAULT_OPTIONS,
   multiSelect = false,
-  explanation,
-  reviewTopicTitle,
-  onReviewTopic,
-  selectedIds = [],
-  onToggleOption,
-  onSubmit,
+  showProgress = false,
   progress,
+  showHint = false,
+  hints = [],
+  hintIndex = 0,
+  onNextHint,
   showExplanation = true,
   showPlatformPrompt = false,
+  platformPrompt = "Choose the correct option",
+  showPoints = false,
   points = 1,
-  showSave = false,
-  onSave,
-  saved,
-  showAttempts = true,
-  attemptsUsed,
-  maxAttempts,
-  isLastAttempt,
-  onRetry,
-  closed = false,
-  closedReason,
-  onNext,
-  nextLabel = "Next question",
+  pointsEarned,
+  graded = true,
+  showFooterQuestions = true,
+  footer,
+  selectedIds = [],
+  onToggleOption,
+  id,
   className,
 }: QuizCardProps) {
-  const revealed = state === "Revealed";
-  const [showAnswer, setShowAnswer] = React.useState(false);
-  const [confirming, setConfirming] = React.useState(false);
-
-  // A new question resets the per-question affordances.
-  React.useEffect(() => {
-    setShowAnswer(false);
-    setConfirming(false);
-  }, [question]);
-
+  const revealed = RESULT_STATES.includes(state);
+  const marks = MARKS_CORRECTNESS.includes(state);
+  const alert = ALERT[state];
   const chosen = options.filter((o) => selectedIds.includes(o.id));
-  // Single: the chosen option is correct. Multi: every correct option is
-  // selected and no incorrect one is.
-  const isCorrect = multiSelect
-    ? options.every((o) => Boolean(o.correct) === selectedIds.includes(o.id)) && selectedIds.length > 0
-    : Boolean(chosen[0]?.correct);
-  const hasSelection = selectedIds.length > 0;
 
   return (
     <div
+      id={id}
       className={cn(
         "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5",
         className,
       )}
     >
-      {/* Progress band — full-bleed inside the card so it plainly belongs to
-          the quiz, like the action buttons below. */}
-      {progress ? (
-        <div className="-mx-5 -mt-5 border-b border-sk-border-secondary px-5 py-3">
-          {progress}
-        </div>
+      {showProgress ? progress : null}
+
+      {/* The block's display_name. Authored text — it differs per course, and
+          in ours it is the same generic line above every question. */}
+      {showPlatformPrompt ? (
+        <span className="sk-text-md-semibold text-sk-text-primary">{platformPrompt}</span>
       ) : null}
 
-      {/* Mode A reproduces what the platform prints above every question: the
-          same generic prompt repeated, with a plural that is wrong for
-          single-select, and a points line. Its blandness is the finding. */}
-      {showPlatformPrompt ? (
-        <div className="flex flex-col gap-0.5">
-          <span className="sk-text-md-semibold text-sk-text-primary">
-            Choose the correct option(s)
-          </span>
-          <span className="sk-text-xs-regular text-sk-text-tertiary">
-            {points} point{points === 1 ? "" : "s"} possible (graded)
-          </span>
-        </div>
+      {/* `.problem-progress`. Empty in every course we can read, so off in A-1.
+          In the bucket it carries the score for the whole set. */}
+      {showPoints ? (
+        <span className="sk-text-xs-regular text-sk-text-tertiary">
+          {typeof pointsEarned === "number"
+            ? `${pointsEarned}/${points} points (${graded ? "graded" : "ungraded"})`
+            : `${points} point${points === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
+        </span>
       ) : null}
 
       <h3
@@ -226,10 +232,8 @@ export function QuizCard({
       <ul className="flex flex-col gap-2">
         {options.map((opt) => {
           const isSelected = selectedIds.includes(opt.id);
-          // After submitting, only reveal the correct answer once the learner
-          // asked for it — otherwise a wrong answer would give the game away.
-          const revealCorrect = revealed && Boolean(opt.correct) && (isCorrect || showAnswer);
-          const showWrong = revealed && isSelected && !opt.correct;
+          const revealCorrect = marks && Boolean(opt.correct);
+          const showWrong = marks && isSelected && !opt.correct;
           const tone: "default" | "brand" | "success" | "error" = revealCorrect
             ? "success"
             : showWrong
@@ -260,7 +264,11 @@ export function QuizCard({
                           ),
                 )}
               >
-                <OptionMarker multiSelect={multiSelect} checked={isSelected || revealCorrect} tone={tone} />
+                <OptionMarker
+                  multiSelect={multiSelect}
+                  checked={isSelected || revealCorrect}
+                  tone={tone}
+                />
                 <span className="flex-1">{opt.label}</span>
                 {revealCorrect ? <Icon icon={Check} size={16} className="mt-0.5" /> : null}
                 {showWrong ? <Icon icon={X} size={16} className="mt-0.5" /> : null}
@@ -270,152 +278,56 @@ export function QuizCard({
         })}
       </ul>
 
-      {/* The verdict shows in both modes — the platform does tell the learner
-          correct or incorrect. What mode A withholds is everything after that:
-          no per-choice feedback, no explanation. */}
-      {revealed ? (
-        <div
-          className={cn(
-            "flex flex-col gap-1 rounded-lg px-3 py-2.5",
-            isCorrect ? "bg-sk-bg-success-primary" : "bg-sk-bg-error-primary",
-          )}
-        >
-          <span
+      {/* Tone maps to state. The copy is the authored per-choice feedback. */}
+      {alert ? (
+        <div className={cn("flex flex-col gap-1 rounded-lg px-3 py-2.5", alert.bg)}>
+          <span className={cn("sk-text-sm-semibold", alert.fg)}>{alert.title}</span>
+          {showExplanation
+            ? chosen
+                .filter((o) => o.feedback)
+                .map((o) => (
+                  <p key={o.id} className="sk-text-sm-regular text-sk-text-secondary">
+                    {o.feedback}
+                  </p>
+                ))
+            : null}
+        </div>
+      ) : null}
+
+      {/* The hint list accumulates: hint 1 stays when hint 3 arrives. The
+          forward control goes disabled, not hidden, at the last one. */}
+      {showHint && hints.length ? (
+        <div className="flex flex-col gap-1 rounded-lg bg-sk-bg-secondary px-3 py-2.5">
+          <ol className="flex flex-col gap-1">
+            {hints.slice(0, hintIndex + 1).map((h, i) => (
+              <li key={i} className="sk-text-sm-regular flex gap-2 text-sk-text-secondary">
+                <Icon icon={Lightbulb} size={16} className="mt-0.5 shrink-0 text-sk-text-tertiary" />
+                <span>
+                  <strong className="sk-text-sm-semibold">
+                    Hint ({i + 1} of {hints.length}):{" "}
+                  </strong>
+                  {h}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <button
+            type="button"
+            onClick={onNextHint}
+            disabled={hintIndex + 1 >= hints.length}
             className={cn(
-              "sk-text-2xs-medium uppercase tracking-wide",
-              isCorrect ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
+              "sk-text-sm-semibold w-fit underline",
+              hintIndex + 1 >= hints.length
+                ? "cursor-not-allowed text-sk-fg-quaternary"
+                : "text-sk-text-brand",
             )}
           >
-            {isCorrect ? "Correct" : "Not quite"}
-          </span>
-          {/* Mode A stops at the verdict. The learner is told correct or
-              incorrect and nothing else, because 213 of 215 audited questions
-              carry no feedback — and that absence is the finding, so it must
-              not be filled with placeholder prose. */}
-          {(showExplanation ? chosen : [])
-            .filter((o) => o.feedback)
-            .map((o) => (
-              <p
-                key={o.id}
-                className={cn(
-                  "sk-text-sm-regular",
-                  isCorrect ? "text-sk-text-success-primary" : "text-sk-text-error-primary",
-                )}
-              >
-                {o.feedback}
-              </p>
-            ))}
+            Next Hint
+          </button>
         </div>
       ) : null}
 
-      {/* Explanation, revealed on demand. */}
-      {revealed && showAnswer && explanation ? (
-        <div className="flex flex-col gap-1 rounded-lg bg-sk-bg-secondary px-3 py-2.5">
-          <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
-            Explanation
-          </span>
-          <p className="sk-text-sm-regular text-sk-text-secondary">{explanation}</p>
-        </div>
-      ) : null}
-
-      {/* Last-attempt confirmation gate (graded only). */}
-      {confirming ? (
-        <div className="flex flex-col gap-2 rounded-lg bg-sk-bg-warning-primary px-3 py-2.5">
-          <span className="sk-text-sm-semibold text-sk-text-warning-primary">
-            This is your last attempt
-          </span>
-          <p className="sk-text-xs-regular text-sk-text-warning-primary">
-            After submitting, this answer is final and the score is locked.
-          </p>
-          <div className="flex flex-wrap gap-2 pt-1">
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => {
-                setConfirming(false);
-                onSubmit?.();
-              }}
-            >
-              Submit final answer
-            </Button>
-            <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
-              Keep editing
-            </Button>
-          </div>
-        </div>
-      ) : null}
-
-      {/* A saved answer is worth zero until submitted, and the platform's own
-          word for it — "saved" — is the misleading one. Say it in terms of
-          grading, not storage (spec §8.2a). */}
-      {saved && !revealed ? (
-        <span className="sk-text-xs-regular text-sk-text-warning-primary">
-          Saved, but not submitted. It scores nothing until you submit.
-        </span>
-      ) : null}
-
-      {/* Attempts qualify Submit rather than being an action. An attempt is one
-          run through the whole quiz, so this is quiz-level information repeated
-          here for orientation, never a count of tries at this question. */}
-      {showAttempts && typeof maxAttempts === "number" && typeof attemptsUsed === "number" ? (
-        <span className="sk-text-xs-regular text-sk-text-tertiary">
-          Attempt {Math.min(attemptsUsed + 1, maxAttempts)} of {maxAttempts} at this quiz
-        </span>
-      ) : null}
-
-      {/* Closed: attempts spent, past due, or past the course end date. The
-          platform greys Submit and removes Reset and Save without a word. Both
-          modes reach this state; only B is allowed to explain it. */}
-      {closed && closedReason ? (
-        <InlineAlert tone="warning" title="This quiz is closed" description={closedReason} />
-      ) : null}
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Save is the platform's, shown only in mode A. B saves silently and
-              spends its words on what decides the grade. */}
-          {!revealed && showSave && !closed ? (
-            <Button variant="secondary" onClick={onSave} disabled={!hasSelection}>
-              Save
-            </Button>
-          ) : null}
-
-          {revealed && showExplanation && explanation && !showAnswer ? (
-            <Button variant="secondary" leftIcon={Lightbulb} onClick={() => setShowAnswer(true)}>
-              Show answer
-            </Button>
-          ) : null}
-
-          {/* Retry lives on the card, not in the nav: if the primary becomes
-              Next question, a learner who got it wrong with attempts left has
-              nowhere to click. Reset never returns the attempt, so the label
-              must sit beside the attempts count and never imply a free go. */}
-          {revealed && !isCorrect && !closed && onRetry ? (
-            <Button variant="secondary" leftIcon={RotateCcw} onClick={onRetry}>
-              Try again
-            </Button>
-          ) : null}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {!revealed && !confirming ? (
-            <Button
-              variant="primary"
-              onClick={() => (isLastAttempt ? setConfirming(true) : onSubmit?.())}
-              disabled={!hasSelection || closed}
-            >
-              Submit
-            </Button>
-          ) : null}
-
-          {revealed && onNext ? (
-            <Button variant="primary" rightIcon={ArrowRight} onClick={onNext}>
-              {nextLabel}
-            </Button>
-          ) : null}
-        </div>
-
-      </div>
+      {showFooterQuestions && footer ? <QuizFooterActions {...footer} /> : null}
     </div>
   );
 }

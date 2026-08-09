@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
+import { ctaFlags, type QuizQuestionState } from "@/components/molecules/QuizFooterActions";
 import { QuizNavStacked, QuizNavStepper } from "@/components/molecules/QuizNav";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
@@ -44,8 +45,21 @@ export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId:
    Submit is the only action that spends an attempt, Reset never returns one and
    wipes the score already earned, a saved answer is worth zero, and a closed
    problem disables Submit and removes Reset and Save. Only B explains why. */
-type Answer = { selected: string[]; revealed: boolean; saved: boolean };
-const freshAnswer = (): Answer => ({ selected: [], revealed: false, saved: false });
+type Answer = {
+  selected: string[];
+  revealed: boolean;
+  saved: boolean;
+  /** -1 = no hint requested yet. The list accumulates from 0 upward. */
+  hintIndex: number;
+  answerRevealed: boolean;
+};
+const freshAnswer = (): Answer => ({
+  selected: [],
+  revealed: false,
+  saved: false,
+  hintIndex: -1,
+  answerRevealed: false,
+});
 
 function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) {
   const topic = getTopic(topicId)!;
@@ -211,26 +225,66 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     ? getTopic(q.reviewTopicId, getCourseBySlug(courseSlug))
     : undefined;
 
+  /**
+   * Which of the nine platform states a question is in. There are no others,
+   * and the CTA matrix is read off this — never off ad-hoc conditions.
+   */
+  function stateFor(i: number): QuizQuestionState {
+    const a = answers[i];
+    if (a.answerRevealed) return "Answer revealed";
+    if (a.revealed) {
+      if (config.resultsWithheld) return "Results withheld";
+      const q = questions[i];
+      if (isQuestionCorrect(i)) return "Correct";
+      // Partial credit only exists on multi-select: some right, none wrong.
+      if (q.multiSelect) {
+        const picked = a.selected;
+        const right = q.options.filter((o) => o.correct).map((o) => o.id);
+        const someRight = picked.some((id) => right.includes(id));
+        const noneWrong = picked.every((id) => right.includes(id));
+        if (someRight && noneWrong) return "Partially correct";
+      }
+      return "Incorrect";
+    }
+    if (a.saved) return "Saved";
+    if (
+      config.submitIsFinal &&
+      typeof config.maxAttempts === "number" &&
+      attemptsUsed === config.maxAttempts - 1
+    ) {
+      return "Last attempt";
+    }
+    return a.selected.length ? "Selected" : "Unanswered";
+  }
+
+  // What the platform offers on this quiz at all, before the state narrows it.
+  const ctaCtx = {
+    mode: config.mode,
+    resetAvailable: true,
+    answerAvailable: true,
+    // Save is hidden when attempts are unlimited: submitting costs nothing, so
+    // the platform judges a save button pointless. Verified on dev.
+    saveAvailable: typeof config.maxAttempts === "number",
+    hintAvailable: true,
+    closed:
+      typeof config.maxAttempts === "number" && attemptsUsed >= config.maxAttempts,
+  };
+
   /** Everything that does not depend on which question is on screen. */
   function cardPropsFor(i: number) {
     const question = questions[i];
-    const linked = question.reviewTopicId
-      ? getTopic(question.reviewTopicId, getCourseBySlug(courseSlug))
-      : undefined;
-    const attemptsShown =
-      typeof config.maxAttempts === "number" &&
-      config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING;
+    const state = stateFor(i);
+    const flags = ctaFlags(state, ctaCtx);
+    const anchor = `quiz-q-${i}`;
+    // Unlimited attempts print no line at all.
+    const attemptsShown = typeof config.maxAttempts === "number";
 
     return {
-      state: (answers[i].revealed ? "Revealed" : "Question") as "Revealed" | "Question",
+      id: anchor,
+      state,
       question: question.question,
       options: question.options,
       multiSelect: question.multiSelect,
-      explanation: question.explanation,
-      reviewTopicTitle: isModeA ? undefined : linked?.title,
-      onReviewTopic: () => {
-        if (linked) router.push(`/course/${courseSlug}/topic/${linked.id}`);
-      },
       selectedIds: answers[i].selected,
       onToggleOption: (id: string) =>
         setAnswers((prev) =>
@@ -245,41 +299,50 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             return { ...a, selected, saved: false };
           }),
         ),
-      onSubmit: () =>
-        setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, revealed: true } : a))),
 
-      // Mode A shows the platform's own chrome; B replaces it.
+      // The card's own six. Progress and points stay off in mode A: there is no
+      // per-question position on the platform, and `.problem-progress` renders
+      // empty in every course we can read.
+      showProgress: false,
       showPlatformPrompt: isModeA,
+      platformPrompt: question.platformPrompt,
+      showPoints: false,
       showExplanation: !isModeA,
-      // Save is the platform's affordance, and it is the most dangerous one in
-      // the quiz: it stores the answer without grading it. A shows it as the
-      // platform does; B saves silently and spends its words on what counts.
-      showSave: isModeA && config.submitIsFinal,
-      saved: answers[i].saved,
-      onSave: () => {
-        setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, saved: true } : a)));
-        showToast("Your answers have been saved but not graded.");
+      showHint: Boolean(answers[i].hintIndex >= 0 && question.hints?.length),
+      hints: question.hints,
+      hintIndex: answers[i].hintIndex,
+      onNextHint: () =>
+        setAnswers((prev) =>
+          prev.map((a, j) => (j === i ? { ...a, hintIndex: a.hintIndex + 1 } : a)),
+        ),
+      showFooterQuestions: true,
+
+      footer: {
+        ...flags,
+        showAttempts: attemptsShown,
+        attemptsUsed: attemptsShown ? attemptsUsed : undefined,
+        maxAttempts: attemptsShown ? config.maxAttempts : undefined,
+        reviewTargetId: anchor,
+        onSubmit: () =>
+          setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, revealed: true } : a))),
+        onSave: () => {
+          setAnswers((prev) => prev.map((a, j) => (j === i ? { ...a, saved: true } : a)));
+          showToast("Your answers have been saved but not graded.");
+        },
+        onShowAnswer: () =>
+          setAnswers((prev) =>
+            prev.map((a, j) => (j === i ? { ...a, revealed: true, answerRevealed: true } : a)),
+          ),
+        onNextHint: undefined,
+        onHint: () =>
+          setAnswers((prev) =>
+            prev.map((a, j) => (j === i ? { ...a, hintIndex: Math.max(a.hintIndex, 0) } : a)),
+          ),
+        // Reset deletes the answer and publishes a zero without refunding the
+        // attempt. Do not relabel it.
+        onReset: () =>
+          setAnswers((prev) => prev.map((a, j) => (j === i ? freshAnswer() : a))),
       },
-      showAttempts: attemptsShown,
-      attemptsUsed: attemptsShown ? attemptsUsed : undefined,
-      maxAttempts: attemptsShown ? config.maxAttempts : undefined,
-      isLastAttempt:
-        config.submitIsFinal &&
-        typeof config.maxAttempts === "number" &&
-        attemptsUsed === config.maxAttempts - 1,
-      // Reset never returns the attempt and wipes the score already earned, so
-      // it is offered only on a wrong answer with attempts left, and never on a
-      // correct one — the platform hides it there, protectively.
-      onRetry: attemptsExhausted
-        ? undefined
-        : () => {
-            setAnswers((prev) => prev.map((a, j) => (j === i ? freshAnswer() : a)));
-            showToast(
-              config.rerandomize
-                ? "Answer cleared, and the question reshuffled. Answer again, then submit."
-                : "Answer cleared, and the score it earned. Answer again, then submit.",
-            );
-          },
     };
   }
 
@@ -318,17 +381,23 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         onBack={index > 0 ? () => setIndex((i) => Math.max(0, i - 1)) : undefined}
       />
 
-      <QuizCard
-        {...cardPropsFor(index)}
-        onNext={
-          answers[index].revealed
-            ? allAnswered
-              ? () => setPhase("completed")
-              : () => setIndex(nextUnanswered(index))
-            : undefined
-        }
-        nextLabel={allAnswered ? "See results" : "Next question"}
-      />
+      <QuizCard {...cardPropsFor(index)} />
+
+      {/* Mode B's forward action. It is not a card property: the card's footer
+          is the problem's, and `Show next` is mode B chrome that ships off. */}
+      {answers[index].revealed ? (
+        <div className="flex justify-end">
+          <Button
+            variant="primary"
+            size="md"
+            onClick={
+              allAnswered ? () => setPhase("completed") : () => setIndex(nextUnanswered(index))
+            }
+          >
+            {allAnswered ? "See results" : "Next question"}
+          </Button>
+        </div>
+      ) : null}
 
       {/* Until every question is submitted, name what is outstanding — in terms
           of grading, because a saved answer looks like progress and scores
