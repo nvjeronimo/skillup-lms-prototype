@@ -4,8 +4,12 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
-import { ctaFlags, type QuizQuestionState } from "@/components/molecules/QuizFooterActions";
-import { QuizNavStacked, QuizNavStepper } from "@/components/molecules/QuizNav";
+import {
+  QuizFooterActions,
+  ctaFlags,
+  type QuizQuestionState,
+} from "@/components/molecules/QuizFooterActions";
+import { QuizNavStepper } from "@/components/molecules/QuizNav";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Badge } from "@/components/atoms/Badge";
@@ -285,6 +289,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
       question: question.question,
       options: question.options,
       multiSelect: question.multiSelect,
+      solution: question.explanation,
       selectedIds: answers[i].selected,
       onToggleOption: (id: string) =>
         setAnswers((prev) =>
@@ -346,7 +351,69 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     };
   }
 
-  /* ---- Mode A: one scrolling page, exactly as the platform renders it ---- */
+  /* ---- Mode A-2: the bucket. One CAPA problem holds every question, so the
+     platform gives one Submit, one pooled attempt count and one score. ---- */
+  if (isModeA && config.bucket) {
+    const submitted = answers.some((a) => a.revealed);
+    const earned = outcomes.filter(Boolean).length;
+    // Not all-or-nothing: the block marks each question and awards a point for
+    // each correct one, so the single score carries partial credit.
+    const bucketState: QuizQuestionState = !submitted
+      ? answers.some((a) => a.selected.length)
+        ? "Selected"
+        : "Unanswered"
+      : earned === total
+        ? "Correct"
+        : earned === 0
+          ? "Incorrect"
+          : "Partially correct";
+    const flags = ctaFlags(bucketState, ctaCtx);
+    const attemptsShown = typeof config.maxAttempts === "number";
+    const graded = config.variant !== "practice";
+
+    return (
+      <div className="flex flex-col gap-4 py-4">
+        {/* The problem's own header, printed once for the whole set. The points
+            line carries the score after submitting. */}
+        <div className="flex flex-col gap-0.5">
+          <span className="sk-text-md-semibold text-sk-text-primary">
+            {config.bucketPrompt}
+          </span>
+          <span className="sk-text-xs-regular text-sk-text-tertiary">
+            {submitted
+              ? `${earned}/${total} points (${graded ? "graded" : "ungraded"})`
+              : `${total} point${total === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
+          </span>
+        </div>
+
+        {questions.map((_, i) => (
+          <QuizCard
+            key={i}
+            {...cardPropsFor(i)}
+            // The questions carry no action row at all: the footer belongs to
+            // the problem, and the problem is the whole quiz.
+            showFooterQuestions={false}
+            showPlatformPrompt={false}
+          />
+        ))}
+
+        {/* One Footer Actions, under the last question — the problem's footer. */}
+        <QuizFooterActions
+          {...flags}
+          showAttempts={attemptsShown}
+          attemptsUsed={attemptsShown ? attemptsUsed : undefined}
+          maxAttempts={attemptsShown ? config.maxAttempts : undefined}
+          onSubmit={() => setAnswers((prev) => prev.map((a) => ({ ...a, revealed: true })))}
+          onReset={() => setAnswers(questions.map(freshAnswer))}
+          onShowAnswer={() =>
+            setAnswers((prev) => prev.map((a) => ({ ...a, revealed: true, answerRevealed: true })))
+          }
+        />
+      </div>
+    );
+  }
+
+  /* ---- Mode A-1: one problem per question, one Submit each ---- */
   if (isModeA) {
     return (
       <div className="flex flex-col gap-4 py-4">
@@ -354,19 +421,10 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           <QuizCard key={i} {...cardPropsFor(i)} />
         ))}
 
-        {/* At the foot, where the platform puts it. These move between UNITS,
-            and the whole quiz is one unit, so they leave the quiz. Deliberately
-            not relabelled to imply question stepping. */}
-        <QuizNavStacked
-          onPrevious={() => {
-            const prev = getAdjacentTopics(topicId, getCourseBySlug(courseSlug)).previous;
-            if (prev) router.push(`/course/${courseSlug}/topic/${prev.id}`);
-          }}
-          onNext={() => {
-            const next = getAdjacentTopics(topicId, getCourseBySlug(courseSlug)).next;
-            if (next) router.push(`/course/${courseSlug}/topic/${next.id}`);
-          }}
-        />
+        {/* No navigation of any kind here. Mode A has no question navigator,
+            and Previous/Next move between units — which is topic level, and is
+            already the player's fixed bottom nav. Rendering a second pair
+            inside the content duplicated it. */}
       </div>
     );
   }

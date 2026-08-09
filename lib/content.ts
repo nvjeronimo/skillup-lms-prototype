@@ -84,6 +84,15 @@ export interface QuizConfig {
   rerandomize?: boolean;
   /** `show_correctness: never` — submitted, but the result is masked. */
   resultsWithheld?: boolean;
+  /**
+   * Authoring model (spec §11). `false` = one `problem` per question, which is
+   * what mode A-1 renders. `true` = the bucket: every question lives in ONE
+   * CAPA problem, so the platform gives one Submit, one pooled attempt count
+   * and one score, with partial credit per correct question.
+   */
+  bucket?: boolean;
+  /** The bucket's own `display_name`, printed once above the whole set. */
+  bucketPrompt?: string;
 }
 
 export interface ActivityContent {
@@ -434,10 +443,14 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   // mode for the comparison to be usable, so the default is seeded per topic
   // and can be overridden (see resolveQuizMode).
   const resolved: QuizMode = mode ?? DEFAULT_QUIZ_MODE[topic.id] ?? "A";
+  // The authoring model is a property of the quiz, not of the mode: a bucket
+  // quiz stays a bucket in either. Seeded per topic because it is authoring.
+  const bucket = BUCKET_QUIZZES[topic.id];
 
   if (isFinal) {
     return {
       variant: "final",
+      ...(bucket ? { bucket: true, bucketPrompt: bucket } : {}),
       label: "Final exam",
       mode: resolved,
       maxAttempts: 1,
@@ -451,6 +464,7 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   if (isGraded) {
     return {
       variant: "graded",
+      ...(bucket ? { bucket: true, bucketPrompt: bucket } : {}),
       label: "Graded quiz",
       mode: resolved,
       maxAttempts: 2,
@@ -463,6 +477,7 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   }
   return {
     variant: "practice",
+      ...(bucket ? { bucket: true, bucketPrompt: bucket } : {}),
     label: "Practice quiz",
     mode: resolved,
     // Blank Maximum Attempts. On an ordinary problem that means unlimited, and
@@ -482,6 +497,11 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
  * Seeded so the prototype carries both experiences at once and a reviewer can
  * meet either. Anything not listed falls back to A, which is production.
  */
+/** Quizzes authored as one CAPA problem holding every question. */
+const BUCKET_QUIZZES: Record<string, string> = {
+  "m1-t3": "Knowledge check",
+};
+
 const DEFAULT_QUIZ_MODE: Record<string, QuizMode> = {
   "m3-t4": "B", // Practice Quiz: Define and measure — the B reference
   "qs-t2": "B", // Quick-start practice quiz — B on a second piece of content
