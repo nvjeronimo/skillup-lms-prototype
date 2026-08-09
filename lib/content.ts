@@ -34,6 +34,10 @@ export interface QuizQuestion {
   multiSelect?: boolean;
   /** Revealed by "Show answer" — the platform's <solution> block. */
   explanation?: string;
+  /** Authored `<demandhint>` list. The platform accumulates them, 1..N. */
+  hints?: string[];
+  /** The block's `display_name`, printed above the question in mode A. */
+  platformPrompt?: string;
   /** Topic this question draws on, for the "review lesson" link after a wrong answer. */
   reviewTopicId?: string;
   reviewTopicTitle?: string;
@@ -78,6 +82,8 @@ export interface QuizConfig {
   submitIsFinal: boolean;
   /** Shuffled questions need Reset before a second submit — the retry owns both steps. */
   rerandomize?: boolean;
+  /** `show_correctness: never` — submitted, but the result is masked. */
+  resultsWithheld?: boolean;
 }
 
 export interface ActivityContent {
@@ -349,6 +355,14 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
   return [
     {
       question: "What is the primary goal of Six Sigma?",
+      // The block display_name the platform prints above every question. The
+      // same generic line repeats down the page — that repetition is the point.
+      platformPrompt: "Choose the correct option",
+      hints: [
+        "Think about what varies between two units coming off the same line.",
+        "Speed and headcount are outcomes of a stable process, not the target.",
+        "The goal is predictability: the same result, batch after batch.",
+      ],
       explanation:
         "Six Sigma is a data-driven methodology for reducing variation. Fewer defects follow from a more predictable process; speed and headcount are outcomes, never the goal.",
       reviewTopicId: "m3-t1",
@@ -379,6 +393,7 @@ export function getQuiz(topic: FlatTopic): QuizQuestion[] {
     },
     {
       question: "In DMAIC, which phase establishes the baseline performance?",
+      platformPrompt: "Choose the correct option",
       explanation:
         "Measure comes second precisely so you can quantify the current state before changing anything. Without a baseline there is nothing to compare an improvement against.",
       reviewTopicId: "m3-t2",

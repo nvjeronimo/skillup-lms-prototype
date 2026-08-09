@@ -396,10 +396,16 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
               <div className="w-full p-4">
                 {/* Completion action lives on the meta row (right-aligned), so the
                     title keeps the full content width. */}
+                {/* Phase 1 quiz handoff §7: on a quiz the header carries title,
+                    type and duration only. The description is off, and the
+                    author row is off because assessment types have no single
+                    author — a shared-shell rule, not a preference. The status
+                    badge turns on by completion state. */}
                 <TopicHeader
                   type={topic.type}
                   title={topic.title}
                   duration={topic.duration}
+                  showDescription={family !== "assessment"}
                   description={topicDescription(topic)}
                   rightSlot={headerStatus ?? undefined}
                 />

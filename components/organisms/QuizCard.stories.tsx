@@ -20,15 +20,18 @@ const OPTIONS = [
   { id: "d", label: "Replace all staff with automation" },
 ];
 
+const STATES = [
+  "Unanswered","Selected","Saved","Last attempt","Incorrect",
+  "Partially correct","Correct","Answer revealed","Results withheld",
+] as const;
+
 const meta: Meta<typeof QuizCard> = {
   title: "Organisms/Quiz Card",
   component: QuizCard,
   tags: ["autodocs"],
   parameters: { layout: "padded" },
-  args: { state: "Question", selectedIds: ["a"], options: OPTIONS, explanation: EXPLANATION },
-  argTypes: {
-    state: { control: "inline-radio", options: ["Question", "Revealed"] },
-  },
+  args: { state: "Unanswered", selectedIds: ["a"], options: OPTIONS },
+  argTypes: { state: { control: "select", options: STATES } },
   decorators: [
     (Story) => (
       <div className="max-w-xl">
@@ -41,59 +44,78 @@ export default meta;
 
 type Story = StoryObj<typeof QuizCard>;
 
-/** Nothing selected yet — Submit is disabled. Single-select shows radios. */
-export const Unanswered: Story = { args: { selectedIds: [] } };
+/** Nothing selected — Submit disabled. Hint, Save and Show answer are offered. */
+export const Unanswered: Story = {
+  args: { selectedIds: [], footer: { submitEnabled: false, showHint: true, showSave: true, showAnswer: true } },
+};
 
-/** An option is chosen but not yet submitted. */
-export const Selected: Story = { args: { selectedIds: ["a"] } };
+/** An option is chosen. Submit becomes enabled; the label never changes. */
+export const Selected: Story = {
+  args: { state: "Selected", footer: { submitEnabled: true, showHint: true, showSave: true, showAnswer: true } },
+};
 
-/** Submitted and correct — answer-specific feedback, correct option marked. */
-export const Correct: Story = { args: { state: "Revealed", selectedIds: ["a"] } };
-
-/**
- * Submitted and wrong. The correct answer stays hidden until "Show answer" is
- * pressed, and a review-lesson link is offered.
- */
-export const Incorrect: Story = {
+/** Stored without grading. "Draft saved" is a disabled confirmation, not an action. */
+export const Saved: Story = {
   args: {
-    state: "Revealed",
-    selectedIds: ["b"],
-    reviewTopicTitle: "Introduction to the DMAIC methodology",
+    state: "Saved",
+    footer: { submitEnabled: true, showHint: true, showSave: true, saved: true, showAnswer: true, showReset: true, showReview: true, showAttempts: true, attemptsUsed: 0, maxAttempts: 2 },
   },
 };
 
-/** Multi-select (CAPA `choiceresponse`) — the marker becomes a checkbox. */
-export const MultiSelect: Story = {
+/** Submitted and correct — Submit disabled, and Reset is never offered here. */
+export const Correct: Story = {
+  args: { state: "Correct", footer: { showAnswer: true, showReview: true } },
+};
+
+/** Submitted and wrong. Reset appears; it publishes a zero and refunds nothing. */
+export const Incorrect: Story = {
   args: {
+    state: "Incorrect",
+    selectedIds: ["b"],
+    footer: { showHint: true, showAnswer: true, showReset: true, showReview: true },
+  },
+};
+
+/** Multi-select only: some right, none wrong. */
+export const PartiallyCorrect: Story = {
+  args: {
+    state: "Partially correct",
     multiSelect: true,
-    question: "Which of these are Six Sigma goals? (select all that apply)",
-    selectedIds: ["a", "c"],
+    selectedIds: ["a"],
     options: [
       { id: "a", label: "Reduce process variation", correct: true },
       { id: "b", label: "Increase speed at any cost" },
       { id: "c", label: "Lower the defect rate", correct: true },
-      { id: "d", label: "Remove all documentation" },
     ],
+    footer: { showAnswer: true, showReset: true, showReview: true },
   },
 };
 
-/** Mode A on a graded quiz — the platform's Save, plus the attempts counter. */
-export const GradedWithAttempts: Story = {
-  args: { selectedIds: ["a"], showSave: true, attemptsUsed: 0, maxAttempts: 2 },
+/** The learner pressed Show answer — nothing else remains but Review. */
+export const AnswerRevealed: Story = {
+  args: { state: "Answer revealed", footer: { showReview: true } },
 };
 
-/** Saved but not submitted. It scores nothing, and the wording must say so. */
-export const DraftSaved: Story = {
-  args: { selectedIds: ["a"], showSave: true, saved: true, attemptsUsed: 0, maxAttempts: 2 },
+/** `show_correctness: never` — submitted, and the result is masked. */
+export const ResultsWithheld: Story = {
+  args: { state: "Results withheld", footer: { showReview: true } },
 };
 
-/** Last graded attempt — Submit routes through a confirmation gate first. */
-export const LastAttempt: Story = {
+/** Attempts spent: the counter reads N of N, Submit is dead and Reset is gone. */
+export const AttemptsSpent: Story = {
   args: {
-    selectedIds: ["a"],
-    showSave: true,
-    attemptsUsed: 1,
-    maxAttempts: 2,
-    isLastAttempt: true,
+    state: "Incorrect",
+    selectedIds: ["b"],
+    footer: { showAnswer: true, showReview: true, showAttempts: true, attemptsUsed: 2, maxAttempts: 2 },
   },
+};
+
+/** Mode A chrome: the block display_name above the question. */
+export const PlatformPrompt: Story = {
+  args: { showPlatformPrompt: true, footer: { submitEnabled: true, showHint: true, showAnswer: true } },
+};
+
+/** The bucket (mode A-2): the card carries no action row at all. */
+export const BucketQuestion: Story = {
+  args: { showFooterQuestions: false, state: "Selected" },
 };
