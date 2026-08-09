@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
 import { ctaFlags, type QuizQuestionState } from "@/components/molecules/QuizFooterActions";
-import { QuizNavStacked, QuizNavStepper } from "@/components/molecules/QuizNav";
+import { QuizNavStepper } from "@/components/molecules/QuizNav";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Badge } from "@/components/atoms/Badge";
@@ -354,19 +354,10 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           <QuizCard key={i} {...cardPropsFor(i)} />
         ))}
 
-        {/* At the foot, where the platform puts it. These move between UNITS,
-            and the whole quiz is one unit, so they leave the quiz. Deliberately
-            not relabelled to imply question stepping. */}
-        <QuizNavStacked
-          onPrevious={() => {
-            const prev = getAdjacentTopics(topicId, getCourseBySlug(courseSlug)).previous;
-            if (prev) router.push(`/course/${courseSlug}/topic/${prev.id}`);
-          }}
-          onNext={() => {
-            const next = getAdjacentTopics(topicId, getCourseBySlug(courseSlug)).next;
-            if (next) router.push(`/course/${courseSlug}/topic/${next.id}`);
-          }}
-        />
+        {/* No navigation of any kind here. Mode A has no question navigator,
+            and Previous/Next move between units — which is topic level, and is
+            already the player's fixed bottom nav. Rendering a second pair
+            inside the content duplicated it. */}
       </div>
     );
   }
