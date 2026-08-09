@@ -500,6 +500,7 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
 /** Quizzes authored as one CAPA problem holding every question. */
 const BUCKET_QUIZZES: Record<string, string> = {
   "m1-t3": "Knowledge check",
+  "m3-t4k": "Final assessment",
 };
 
 const DEFAULT_QUIZ_MODE: Record<string, QuizMode> = {
