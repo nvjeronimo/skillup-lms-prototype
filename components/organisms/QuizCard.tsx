@@ -302,35 +302,47 @@ export function QuizCard({
         <InlineAlert tone="answer" title="Answer" description={solution} />
       ) : null}
 
-      {/* The list accumulates: hint 1 stays on screen when hint 3 arrives. The
-          forward control goes disabled, not hidden, at the last one. */}
-      {showHint && hints.length && hintIndex >= 0
-        ? hints.slice(0, hintIndex + 1).map((h, i) => (
-            <InlineAlert
-              key={i}
-              tone="hint"
-              title={`Hint (${i + 1} of ${hints.length}):`}
-              description={h}
-              action={
-                i === hintIndex ? (
-                  <button
-                    type="button"
-                    onClick={onNextHint}
-                    disabled={hintIndex + 1 >= hints.length}
-                    className={cn(
-                      "sk-text-sm-semibold underline",
-                      hintIndex + 1 >= hints.length
-                        ? "cursor-not-allowed text-sk-fg-quaternary"
-                        : "text-sk-text-brand",
-                    )}
-                  >
-                    Next Hint
-                  </button>
-                ) : undefined
-              }
-            />
-          ))
-        : null}
+      {/* One alert that grows, not one per hint: `get_demand_hint` re-renders
+          every hint from the first to the current one into a single list, so
+          hint 1 is still on screen when hint 3 arrives. There is no Previous —
+          nothing has been taken away to go back to.
+
+          Two controls in two places: `Hint` stays in the action row, and
+          `Next Hint` lives in here once the first hint shows. It disables on
+          exhaustion, never on first use — with three hints authored it stays
+          live after the first press. */}
+      {showHint && hints.length > 0 && hintIndex >= 0 ? (
+        <InlineAlert
+          tone="hint"
+          title=""
+          action={
+            <button
+              type="button"
+              onClick={onNextHint}
+              disabled={hintIndex + 1 >= hints.length}
+              className={cn(
+                "sk-text-sm-semibold underline",
+                hintIndex + 1 >= hints.length
+                  ? "cursor-not-allowed text-sk-fg-quaternary"
+                  : "text-sk-text-brand",
+              )}
+            >
+              Next Hint
+            </button>
+          }
+        >
+          <ol className="flex flex-col gap-1">
+            {hints.slice(0, hintIndex + 1).map((h, i) => (
+              <li key={i} className="sk-text-sm-regular text-sk-text-secondary">
+                <span className="sk-text-sm-semibold text-sk-text-primary">
+                  Hint ({i + 1} of {hints.length}):{" "}
+                </span>
+                {h}
+              </li>
+            ))}
+          </ol>
+        </InlineAlert>
+      ) : null}
 
       {showFooterQuestions && footer ? <QuizFooterActions {...footer} /> : null}
     </div>

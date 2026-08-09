@@ -30,6 +30,11 @@ export interface InlineAlertProps {
   description?: string;
   /** Hint's "Next Hint" control, rendered under the text. */
   action?: React.ReactNode;
+  /**
+   * Replaces the title/description body. The hint tone uses it to hold the
+   * accumulating list, which is one alert that grows rather than one per hint.
+   */
+  children?: React.ReactNode;
   onDismiss?: () => void;
   className?: string;
 }
@@ -72,6 +77,7 @@ export function InlineAlert({
   title,
   description,
   action,
+  children,
   onDismiss,
   className,
 }: InlineAlertProps) {
@@ -84,7 +90,7 @@ export function InlineAlert({
       <Icon icon={t.icon} size={18} className={cn("mt-0.5 shrink-0", t.fg)} />
 
       <div className="min-w-0 flex-1">
-        {inlineTitle ? (
+        {children ?? (inlineTitle ? (
           <p className="sk-text-sm-regular text-sk-text-secondary">
             <span className="sk-text-sm-semibold text-sk-text-primary">{title} </span>
             {description}
@@ -96,7 +102,7 @@ export function InlineAlert({
               <p className="sk-text-sm-regular mt-0.5 text-sk-text-secondary">{description}</p>
             ) : null}
           </>
-        )}
+        ))}
         {action ? <div className="mt-2">{action}</div> : null}
       </div>
 
