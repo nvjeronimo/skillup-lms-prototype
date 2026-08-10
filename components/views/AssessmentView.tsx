@@ -76,8 +76,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   // URL wins, so a shared link always lands on the mode it names.
   const menuMode = useLmsStore((s) => s.quizMode);
   const urlMode = params?.get("mode")?.toUpperCase();
-  const modeOverride: QuizMode | undefined =
-    urlMode === "A" || urlMode === "B" ? urlMode : (menuMode ?? undefined);
+  const modeOverride: QuizMode =
+    urlMode === "A" || urlMode === "B" ? urlMode : menuMode;
   const config = React.useMemo(
     () => getQuizConfig(topic, modeOverride),
     [topicId, modeOverride], // eslint-disable-line react-hooks/exhaustive-deps

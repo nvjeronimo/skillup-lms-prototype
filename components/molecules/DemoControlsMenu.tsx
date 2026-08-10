@@ -335,33 +335,27 @@ export function DemoControlsMenu({
                     Experience
                   </span>
                   <div className="flex overflow-hidden rounded-md border border-sk-border-secondary">
-                    {(
-                      [
-                        { value: null, label: "Default" },
-                        { value: "A" as const, label: "A" },
-                        { value: "B" as const, label: "B" },
-                      ] as const
-                    ).map((opt) => (
+                    {(["A", "B"] as const).map((value) => (
                       <button
-                        key={opt.label}
+                        key={value}
                         type="button"
-                        aria-pressed={quizMode === opt.value}
-                        onClick={() => setQuizMode(opt.value)}
+                        aria-pressed={quizMode === value}
+                        onClick={() => setQuizMode(value)}
                         className={cn(
                           "sk-text-xs-semibold px-2.5 py-1 transition-colors",
-                          quizMode === opt.value
+                          quizMode === value
                             ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
                             : "text-sk-text-secondary hover:bg-sk-bg-secondary",
                         )}
                       >
-                        {opt.label}
+                        {value}
                       </button>
                     ))}
                   </div>
                 </div>
                 <p className="sk-text-xs-regular px-1 text-sk-text-tertiary">
-                  A is how the platform behaves today. B is the proposal.
-                  Default follows whatever each quiz is set to.
+                  A is how the platform behaves today, and where every quiz
+                  starts. B is the proposal.
                 </p>
               </div>
             </Section>

@@ -80,42 +80,27 @@ const DEFAULT_OPTIONS: QuizOption[] = [
   { id: "d", label: "Replace all staff with automation" },
 ];
 
-/** The answer marker — DS Checkbox `Type=Radio` (circle) / `Type=Checkbox` (square). */
-function OptionMarker({
-  multiSelect,
-  checked,
-  tone,
-}: {
-  multiSelect?: boolean;
-  checked: boolean;
-  tone: "default" | "brand" | "success" | "error";
-}) {
-  const shape = multiSelect ? "rounded-[6px]" : "rounded-full";
-  const border =
-    tone === "success"
-      ? "border-sk-text-success-primary"
-      : tone === "error"
-        ? "border-sk-text-error-primary"
-        : checked
-          ? "border-sk-border-brand"
-          : "border-sk-border-primary";
-  const fill =
-    checked && tone === "success"
-      ? "bg-sk-bg-success-solid"
-      : checked && tone === "error"
-        ? "bg-sk-bg-error-solid"
-        : checked && tone === "brand"
-          ? "bg-sk-bg-brand-solid"
-          : "bg-transparent";
-
+/**
+ * The answer marker — DS Checkbox `Type=Radio` (circle) / `Type=Checkbox` (square).
+ *
+ * The marker reports **what the learner picked**, and nothing else. It keeps the
+ * brand fill after submitting: on the DS screens the checked radio is the same
+ * navy in a green Correct row as in a pink Incorrect row. Correctness is carried
+ * by the row tint, the label colour and the trailing icon — three signals, so
+ * the marker does not need to be a fourth.
+ *
+ * It follows that an option the learner never chose stays empty even when the
+ * row is revealed as correct: `Missed` is an unchecked box on a green row. On a
+ * radio `Missed` has no meaning at all (board 04, Option Row).
+ */
+function OptionMarker({ multiSelect, checked }: { multiSelect?: boolean; checked: boolean }) {
   return (
     <span
       aria-hidden
       className={cn(
         "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-colors",
-        shape,
-        border,
-        fill,
+        multiSelect ? "rounded-[6px]" : "rounded-full",
+        checked ? "border-sk-border-brand bg-sk-bg-brand-solid" : "border-sk-border-primary bg-transparent",
       )}
     >
       {checked ? (
@@ -241,13 +226,6 @@ export function QuizCard({
           const isSelected = selectedIds.includes(opt.id);
           const revealCorrect = marks && Boolean(opt.correct);
           const showWrong = marks && isSelected && !opt.correct;
-          const tone: "default" | "brand" | "success" | "error" = revealCorrect
-            ? "success"
-            : showWrong
-              ? "error"
-              : isSelected
-                ? "brand"
-                : "default";
           return (
             <li key={opt.id}>
               <button
@@ -271,11 +249,7 @@ export function QuizCard({
                           ),
                 )}
               >
-                <OptionMarker
-                  multiSelect={multiSelect}
-                  checked={isSelected || revealCorrect}
-                  tone={tone}
-                />
+                <OptionMarker multiSelect={multiSelect} checked={isSelected} />
                 <span className="flex-1">{opt.label}</span>
                 {revealCorrect ? <Icon icon={Check} size={16} className="mt-0.5" /> : null}
                 {showWrong ? <Icon icon={X} size={16} className="mt-0.5" /> : null}
