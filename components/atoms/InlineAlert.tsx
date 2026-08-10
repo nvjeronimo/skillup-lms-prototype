@@ -12,10 +12,11 @@ import { cn } from "@/lib/utils";
  * Answer is the `<solution>` revealed when Show answer is pressed. Info is the
  * only one that is ours — shell messaging.
  *
- * Success, Warning, Error and Info are a **rule and text**, not a filled card:
- * a 2px top border in the tone colour, no fill and no rounding. Only the icon
- * carries the tone; the title stays `text-primary` so the copy reads first.
- * Hint and Answer are boxes, because they are content rather than a verdict.
+ * Success, Warning, Error and Info are a rule over a plain surface: a 2px top
+ * border in the tone colour, `bg-secondary`, 12px all round and square corners
+ * (`Radius/fixed-none`). Only the icon carries the tone; the title stays
+ * `text-primary` so the copy reads first. Hint and Answer round their corners
+ * instead, because they are content rather than a verdict.
  */
 export type AlertTone = "info" | "success" | "warning" | "error" | "hint" | "answer";
 
@@ -41,22 +42,22 @@ export interface InlineAlertProps {
 
 const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
   info: {
-    box: "border-t-2 border-sk-border-brand pt-3",
+    box: "border-t-2 border-sk-border-brand bg-sk-bg-secondary p-3",
     icon: AlertCircle,
     fg: "text-sk-text-brand-secondary",
   },
   success: {
-    box: "border-t-2 border-sk-text-success-primary pt-3",
+    box: "border-t-2 border-sk-text-success-primary bg-sk-bg-secondary p-3",
     icon: CheckCircle2,
     fg: "text-sk-text-success-primary",
   },
   warning: {
-    box: "border-t-2 border-sk-text-warning-primary pt-3",
+    box: "border-t-2 border-sk-text-warning-primary bg-sk-bg-secondary p-3",
     icon: AlertCircle,
     fg: "text-sk-text-warning-primary",
   },
   error: {
-    box: "border-t-2 border-sk-text-error-primary pt-3",
+    box: "border-t-2 border-sk-text-error-primary bg-sk-bg-secondary p-3",
     icon: XCircle,
     fg: "text-sk-text-error-primary",
   },

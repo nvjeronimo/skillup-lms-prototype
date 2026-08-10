@@ -224,7 +224,17 @@ export function QuizCard({
       <ul className="flex flex-col gap-2">
         {options.map((opt) => {
           const isSelected = selectedIds.includes(opt.id);
-          const revealCorrect = marks && Boolean(opt.correct);
+          // `Missed` — a correct option left unselected — only means something
+          // on a checkbox, where the learner had to find several. A radio marks
+          // the one choice that was made and nothing else, so getting it wrong
+          // does not hand over the right answer (board 04, Option Row).
+          //
+          // Show answer is the exception, and says so: the Answer alert reads
+          // "The correct options are marked above".
+          const revealCorrect =
+            marks &&
+            Boolean(opt.correct) &&
+            (isSelected || multiSelect || state === "Answer revealed");
           const showWrong = marks && isSelected && !opt.correct;
           return (
             <li key={opt.id}>
