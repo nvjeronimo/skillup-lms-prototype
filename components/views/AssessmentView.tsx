@@ -76,8 +76,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   // URL wins, so a shared link always lands on the mode it names.
   const menuMode = useLmsStore((s) => s.quizMode);
   const urlMode = params?.get("mode")?.toUpperCase();
-  const modeOverride: QuizMode | undefined =
-    urlMode === "A" || urlMode === "B" ? urlMode : (menuMode ?? undefined);
+  const modeOverride: QuizMode =
+    urlMode === "A" || urlMode === "B" ? urlMode : menuMode;
   const config = React.useMemo(
     () => getQuizConfig(topic, modeOverride),
     [topicId, modeOverride], // eslint-disable-line react-hooks/exhaustive-deps
@@ -106,6 +106,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const stepRef = React.useRef<HTMLDivElement>(null);
   const mountedRef = React.useRef(false);
   const modeRef = React.useRef(config.mode);
+  // The bucket's demand hints belong to the problem, so the counter is
+  // quiz-level rather than one per card. -1 = none requested yet.
+  const [bucketHintIndex, setBucketHintIndex] = React.useState(-1);
 
   // Switching mode starts the quiz over. The two experiences are different
   // runs, not two skins on one — carrying answers across would leave the
@@ -370,6 +373,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     const flags = ctaFlags(bucketState, ctaCtx);
     const attemptsShown = typeof config.maxAttempts === "number";
     const graded = config.variant !== "practice";
+    const bucketHints = questions.find((q) => q.hints?.length)?.hints ?? [];
 
     return (
       <div className="flex flex-col gap-4 py-4">
@@ -394,17 +398,60 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             // the problem, and the problem is the whole quiz.
             showFooterQuestions={false}
             showPlatformPrompt={false}
+            showHint={false}
           />
         ))}
 
-        {/* One Footer Actions, under the last question — the problem's footer. */}
+        {/* One hint for the whole set, not one per question: in the bucket the
+            demand hints belong to the problem, and the problem is the quiz. */}
+        {bucketHintIndex >= 0 && bucketHints.length ? (
+          <InlineAlert
+            tone="hint"
+            title=""
+            action={
+              <button
+                type="button"
+                onClick={() => setBucketHintIndex((i) => Math.min(bucketHints.length - 1, i + 1))}
+                disabled={bucketHintIndex + 1 >= bucketHints.length}
+                className={cn(
+                  "sk-text-sm-semibold underline",
+                  bucketHintIndex + 1 >= bucketHints.length
+                    ? "cursor-not-allowed text-sk-fg-quaternary"
+                    : "text-sk-text-brand",
+                )}
+              >
+                Next Hint
+              </button>
+            }
+          >
+            <ol className="flex flex-col gap-1">
+              {bucketHints.slice(0, bucketHintIndex + 1).map((h, i) => (
+                <li key={i} className="sk-text-sm-regular text-sk-text-secondary">
+                  <span className="sk-text-sm-semibold text-sk-text-primary">
+                    Hint ({i + 1} of {bucketHints.length}):{" "}
+                  </span>
+                  {h}
+                </li>
+              ))}
+            </ol>
+          </InlineAlert>
+        ) : null}
+
+        {/* One Footer Actions, under the last question — the problem's footer.
+            Submit, Reset, the attempt counter and Hint all belong to the
+            problem here, not to any one question. */}
         <QuizFooterActions
           {...flags}
+          showHint={flags.showHint && bucketHints.length > 0}
           showAttempts={attemptsShown}
           attemptsUsed={attemptsShown ? attemptsUsed : undefined}
           maxAttempts={attemptsShown ? config.maxAttempts : undefined}
           onSubmit={() => setAnswers((prev) => prev.map((a) => ({ ...a, revealed: true })))}
-          onReset={() => setAnswers(questions.map(freshAnswer))}
+          onHint={() => setBucketHintIndex((i) => Math.max(i, 0))}
+          onReset={() => {
+            setAnswers(questions.map(freshAnswer));
+            setBucketHintIndex(-1);
+          }}
           onShowAnswer={() =>
             setAnswers((prev) => prev.map((a) => ({ ...a, revealed: true, answerRevealed: true })))
           }

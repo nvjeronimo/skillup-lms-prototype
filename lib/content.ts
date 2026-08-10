@@ -439,10 +439,10 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   const isFinal = title.includes("final") || title.includes("exam");
   const isGraded = isFinal || topic.type === "Graded Assignment" || title.includes("graded");
 
-  // Mode is a per-quiz property. The prototype needs at least one quiz in each
-  // mode for the comparison to be usable, so the default is seeded per topic
-  // and can be overridden (see resolveQuizMode).
-  const resolved: QuizMode = mode ?? DEFAULT_QUIZ_MODE[topic.id] ?? "A";
+  // A is what the platform does today, so every quiz opens in A. B is reached
+  // only by asking for it in the demo menu — a reviewer should have to choose
+  // the proposal, never wander into it.
+  const resolved: QuizMode = mode ?? "A";
   // The authoring model is a property of the quiz, not of the mode: a bucket
   // quiz stays a bucket in either. Seeded per topic because it is authoring.
   const bucket = BUCKET_QUIZZES[topic.id];
@@ -493,19 +493,10 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   };
 }
 
-/**
- * Seeded so the prototype carries both experiences at once and a reviewer can
- * meet either. Anything not listed falls back to A, which is production.
- */
 /** Quizzes authored as one CAPA problem holding every question. */
 const BUCKET_QUIZZES: Record<string, string> = {
   "m1-t3": "Knowledge check",
-};
-
-const DEFAULT_QUIZ_MODE: Record<string, QuizMode> = {
-  "m3-t4": "B", // Practice Quiz: Define and measure — the B reference
-  "qs-t2": "B", // Quick-start practice quiz — B on a second piece of content
-  "m1-t3": "A", // Quick check — stays A
+  "m3-t4k": "Final assessment",
 };
 
 /**

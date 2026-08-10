@@ -86,12 +86,12 @@ interface LmsState {
   /** Preview flag: the WIP "Discuss this topic" surface. Off by default. */
   discussionsPreview: boolean;
   /**
-   * Tester-only override of the quiz A/B mode. `null` uses each quiz's own
-   * default. Lives in the demo menu, never on the page: the mode must be
-   * visible to whoever is running a session and invisible to whoever is being
-   * tested (quizzes/08-two-modes.md §7).
+   * The quiz A/B mode. Every quiz opens in A, which is the platform today; B
+   * is the proposal and has to be asked for. Lives in the demo menu, never on
+   * the page: the mode must be visible to whoever is running a session and
+   * invisible to whoever is being tested (quizzes/08-two-modes.md §7).
    */
-  quizMode: "A" | "B" | null;
+  quizMode: "A" | "B";
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -135,7 +135,7 @@ interface LmsState {
   setUnderlineLinks: (v: boolean) => void;
   setLargeTargets: (v: boolean) => void;
   setDiscussionsPreview: (v: boolean) => void;
-  setQuizMode: (v: "A" | "B" | null) => void;
+  setQuizMode: (v: "A" | "B") => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -202,7 +202,7 @@ export const useLmsStore = create<LmsState>()(
   underlineLinks: false,
   largeTargets: false,
   discussionsPreview: false,
-  quizMode: null,
+  quizMode: "A",
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -414,7 +414,7 @@ export const useLmsStore = create<LmsState>()(
     set({ largeTargets });
   },
   setQuizMode: (quizMode) => {
-    track("preview_toggle", { feature: "quiz_mode", value: String(quizMode ?? "default") });
+    track("preview_toggle", { feature: "quiz_mode", value: quizMode });
     set({ quizMode });
   },
   setDiscussionsPreview: (discussionsPreview) => {
@@ -448,8 +448,14 @@ export const useLmsStore = create<LmsState>()(
     }),
     {
       name: "sk-lms-demo",
-      version: 1,
+      version: 2,
       storage: skStorage,
+      // v2 dropped the third "Default" quiz mode. Anyone carrying the stored
+      // `null` from v1 lands on A, which is what Default resolved to anyway.
+      migrate: (state, from) => {
+        const s = (state ?? {}) as Partial<LmsState>;
+        return from < 2 && !s.quizMode ? { ...s, quizMode: "A" as const } : s;
+      },
       // Persist demo progress + UI prefs only — not transient/session UI.
       partialize: (s) => ({
         completedTopics: s.completedTopics,
