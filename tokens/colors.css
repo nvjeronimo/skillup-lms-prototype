@@ -72,7 +72,7 @@
   --sk-fg-brand: #26708e;               /* Primary/600_P03 */
   --sk-fg-brand-primary: #26708e;
   --sk-fg-progress: #0086c9;            /* Primary/500_P08 */
-  --sk-fg-success-secondary: #17b26a;   /* Success/500 — DS fg-success-secondary; anel de progresso a 100% (Progress Circle · Completed) */
+  --sk-fg-success-secondary: #33a864;   /* Green/500 — LMS/Foreground/fg-success-secondary; anel de progresso a 100% (Progress Circle · Completed) */
   --sk-fg-like: var(--sk-fg-progress);  /* "like" activo = fg-progress */
   --sk-fg-error-on-solid: #ffffff;      /* sobre bg-error-solid */
   --sk-fg-success-on-solid: #ffffff;    /* sobre bg-success-solid — 5.63:1 */
@@ -223,7 +223,7 @@
   --sk-fg-brand: #4aa3c7;
   --sk-fg-brand-primary: #4aa3c7;
   --sk-fg-progress: #66a3d6;            /* Primary/300_P05 — 4.53:1 (o mais fino em dark) */
-  --sk-fg-success-secondary: #47cd89;   /* Success/400 — DS fg-success-secondary (dark); anel a 100% */
+  --sk-fg-success-secondary: #40c075;   /* Green/300_AB04 — LMS/Foreground/fg-success-secondary (dark); anel a 100% */
   --sk-fg-like: var(--sk-fg-progress);  /* segue fg-progress */
   --sk-fg-error-on-solid: #0e1a1f;      /* Dark-Neutral/950 — 5.30:1 sobre #e26567 */
   --sk-fg-success-on-solid: #0e1a1f;    /* sobre #2d9c5b — 5.07:1 */
