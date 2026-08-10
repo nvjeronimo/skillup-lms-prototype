@@ -12,11 +12,17 @@ import { cn } from "@/lib/utils";
  * Answer is the `<solution>` revealed when Show answer is pressed. Info is the
  * only one that is ours — shell messaging.
  *
- * Success, Warning, Error and Info are a rule over a plain surface: a 2px top
- * border in the tone colour, `bg-secondary_subtle`, 12px all round and square
- * corners (`Radius/fixed-none`). Only the icon carries the tone; the title stays
- * `text-primary` so the copy reads first. Hint and Answer round their corners
- * instead, because they are content rather than a verdict.
+ * Every tone is the same object: a 2px top rule over a filled surface, 12px all
+ * round. What varies is the rule colour and the corners.
+ *
+ * Success, Warning, Error and Info take the tone colour on `bg-secondary_subtle`
+ * with square corners (`Radius/fixed-none`) — they are a verdict on the answer.
+ * Hint and Answer round to 8px because they are content: Hint sits on
+ * `bg-brand-section` with **no rule at all**, since it decides nothing, and
+ * Answer takes a neutral `border-primary` rule on `bg-secondary`.
+ *
+ * Only the icon carries the tone; the title stays `text-primary` so the copy
+ * reads first.
  */
 export type AlertTone = "info" | "success" | "warning" | "error" | "hint" | "answer";
 
@@ -67,7 +73,7 @@ const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
     fg: "text-sk-text-brand-secondary",
   },
   answer: {
-    box: "rounded-lg border border-sk-border-secondary bg-sk-bg-secondary p-3",
+    box: "rounded-lg border-t-2 border-sk-border-primary bg-sk-bg-secondary p-3",
     icon: KeyRound,
     fg: "text-sk-text-secondary",
   },
