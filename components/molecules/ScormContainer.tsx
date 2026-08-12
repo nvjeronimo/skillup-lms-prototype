@@ -121,7 +121,7 @@ export function ScormContainer({
         <InlineAlert
           tone="info"
           title="Best viewed on a larger screen"
-          description="Interactive activities aren't supported in the mobile app. Open this one on desktop or the web."
+          description="Interactive activities work best on a larger screen and may not be fully supported in the mobile app. Open this one on desktop or the web."
         />
       ) : null}
     </section>
