@@ -79,7 +79,7 @@ export function ScormContainer({
             </span>
             <span className="sk-text-sm-regular max-w-md text-sk-text-error-primary">
               Our activity server didn&rsquo;t respond. Your progress elsewhere is safe. This
-              activity doesn&rsquo;t affect your grade.
+              activity is ungraded.
             </span>
             <div className="flex flex-wrap justify-center gap-2 pt-1">
               <Button variant="primary" size="sm" leftIcon={RotateCcw} onClick={onRetry}>

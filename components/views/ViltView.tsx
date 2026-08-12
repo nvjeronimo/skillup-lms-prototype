@@ -57,7 +57,7 @@ export function ViltView({ topicId }: { topicId: string }) {
           (live attendance, or watching the recording). See topic-types-inventory §3. */}
       <InlineAlert
         tone="warning"
-        title="Completion is automatic — attending is enough"
+        title="Completion is automatic once you attend"
         description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
       />
     </div>
@@ -127,8 +127,8 @@ function PreLive({
             the host, and the sentence should carry them to the join rather than
             report an absence. */}
         <span className="sk-text-xs-regular text-sk-text-brand-secondary">
-          Once your instructor opens the session, you&rsquo;ll be able to join — the button unlocks{" "}
-          {session.joinUnlocksMinutesBefore} minutes before the start.
+          Once your instructor opens the session, you&rsquo;ll be able to join. The button
+          unlocks {session.joinUnlocksMinutesBefore} minutes before the start.
         </span>
       </div>
 
