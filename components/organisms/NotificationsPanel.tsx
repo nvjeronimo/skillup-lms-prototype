@@ -81,7 +81,7 @@ export function NotificationsPanel({
 
       {visible.length === 0 ? (
         <p className="sk-text-sm-regular px-4 py-8 text-center text-sk-text-tertiary">
-          Nothing here yet.
+          You are all caught up.
         </p>
       ) : (
         GROUP_ORDER.map((group) => {

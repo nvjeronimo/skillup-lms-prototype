@@ -153,7 +153,7 @@ function ScormActivity({
         state={state}
         onLaunch={launch}
         onRetry={launch}
-        onSkip={() => showToast("Skipped. This activity doesn't affect your grade.")}
+        onSkip={() => showToast("Skipped. This activity is ungraded.")}
         onFullscreen={() => showToast("Opening the activity fullscreen…")}
       />
 

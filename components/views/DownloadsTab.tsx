@@ -21,7 +21,7 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
         <EmptyState
           icon={FileText}
           title="No downloads for this lesson"
-          description="Your instructor hasn't attached any files. Check back later or message your mentor."
+          description="Files will appear here as your instructor adds them. Your mentor can help in the meantime."
         />
       </div>
     );
