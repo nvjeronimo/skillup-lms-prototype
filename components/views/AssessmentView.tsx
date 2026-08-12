@@ -506,10 +506,11 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
 
       {/* Until every question is submitted, name what is outstanding — in terms
           of grading, because a saved answer looks like progress and scores
-          nothing. The count comes from submitted answers only. */}
+          nothing. The count comes from submitted answers only. Framed as what
+          is still to come rather than what is missing. */}
       {!allAnswered ? (
         <p className="sk-text-xs-regular text-center text-sk-text-tertiary">
-          {total - answeredCount} of {total} not submitted yet. Nothing counts until you submit.
+          {total - answeredCount} of {total} still to submit. Each answer counts once you submit it.
         </p>
       ) : null}
     </div>
@@ -588,7 +589,7 @@ function QuizEntryHeader({
         <InlineAlert
           tone="warning"
           title="Submit is final per question"
-          description="Once you submit an answer you can't change it within that attempt."
+          description="Each answer is locked in for that attempt once you submit it."
         />
       ) : (
         <p className="sk-text-sm-regular text-sk-text-secondary">

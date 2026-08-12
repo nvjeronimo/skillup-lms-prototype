@@ -57,7 +57,7 @@ export function ViltView({ topicId }: { topicId: string }) {
           (live attendance, or watching the recording). See topic-types-inventory §3. */}
       <InlineAlert
         tone="warning"
-        title="Completion is automatic, there's nothing to mark"
+        title="Completion is automatic — attending is enough"
         description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
       />
     </div>
@@ -121,10 +121,14 @@ function PreLive({
       {/* Countdown — the learner's primary orientation before the session. */}
       <div className="flex flex-col items-center gap-1 rounded-lg bg-sk-bg-brand-section px-4 py-6">
         <span className="sk-text-display-xs-semibold text-sk-text-brand-secondary">
-          Starts in {session.minutesUntilStart} minutes
+          Your class starts in {session.minutesUntilStart} minutes
         </span>
+        {/* Say what happens next, not what is missing: the learner is waiting on
+            the host, and the sentence should carry them to the join rather than
+            report an absence. */}
         <span className="sk-text-xs-regular text-sk-text-brand-secondary">
-          The Join button unlocks {session.joinUnlocksMinutesBefore} minutes before the session
+          Once your instructor opens the session, you&rsquo;ll be able to join — the button unlocks{" "}
+          {session.joinUnlocksMinutesBefore} minutes before the start.
         </span>
       </div>
 
@@ -142,8 +146,8 @@ function PreLive({
 
       {locked ? (
         <p className="sk-text-xs-regular text-sk-text-tertiary">
-          Can&rsquo;t make it live? A recording is published here afterwards and also counts for
-          completion.
+          Prefer to catch up later? A recording is published here afterwards and counts for
+          completion just the same.
         </p>
       ) : null}
     </section>

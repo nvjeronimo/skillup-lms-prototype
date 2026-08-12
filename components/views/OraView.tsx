@@ -302,7 +302,7 @@ function PeerStep({
         <InlineAlert
           tone="success"
           title="Your submission is safe"
-          description="Your own response was submitted successfully. This step is simply waiting on your peers."
+          description="Your response is in. Next, your peers review it."
         />
 
         <div className="flex flex-wrap gap-2">

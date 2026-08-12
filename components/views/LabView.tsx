@@ -136,8 +136,8 @@ export function LabView({ topicId }: { topicId: string }) {
 
       <InlineAlert
         tone="info"
-        title="Nothing is submitted"
-        description="This lab runs entirely on your own machine and isn't graded. Mark it complete once you've worked through the notebook."
+        title="Everything stays on your machine"
+        description="This lab is yours to explore, and it is ungraded. Mark it complete once you've worked through the notebook."
       />
 
       {isCompleted ? (
