@@ -115,28 +115,89 @@ function OptionMarker({ multiSelect, checked }: { multiSelect?: boolean; checked
 }
 
 /**
- * Alert tone follows the state, and the title carries the score — the DS shows
- * "Correct · 1 / 1 point" and "Partially correct · 1 / 2 points", not a bare
- * verdict. Answer revealed uses the Answer tone; Results withheld shows none,
- * because correctness is exactly what is being masked.
+ * Alert tone follows the state. Whether the title carries a score depends on
+ * where the problem boundary is, and the platform docs are explicit that the
+ * feedback shows the problem score.
+ *
+ * In A-1 the card **is** the problem, so it prints "Correct (1/1 point)". In
+ * A-2 one bucket returns a single score for the whole set, so the per-question
+ * alerts stay bare and the score lives on the problem header — a per-question
+ * number there would be one the API never returned.
+ *
+ * Answer revealed uses the Answer tone; Results withheld shows none, because
+ * correctness is exactly what is being withheld.
  */
 function verdictAlert(
   state: QuizQuestionState,
   earned: number,
   possible: number,
+  withScore: boolean,
 ): { tone: AlertTone; title: string } | null {
-  const score = `${earned} / ${possible} point${possible === 1 ? "" : "s"}`;
+  const score = withScore ? ` (${earned}/${possible} point${possible === 1 ? "" : "s"})` : "";
   switch (state) {
     case "Correct":
-      return { tone: "success", title: `Correct · ${score}` };
+      return { tone: "success", title: `Correct${score}` };
     case "Partially correct":
-      return { tone: "warning", title: `Partially correct · ${score}` };
+      return { tone: "warning", title: `Partially correct${score}` };
     case "Incorrect":
-      return { tone: "error", title: `Incorrect · ${score}` };
+      return { tone: "error", title: `Incorrect${score}` };
     default:
       return null;
   }
 }
+
+/** The seven states `LMS / Quiz · Option Row` can be in. */
+type OptionState =
+  | "Unanswered"
+  | "Selected"
+  | "Correct"
+  | "Incorrect"
+  | "Missed"
+  | "Correctly unselected";
+
+/**
+ * A tick reads as praise, so it belongs only to something the learner earned.
+ * The right answer they did not pick is `Missed`: green, to show where the
+ * answer was, but no tick and a text marker instead.
+ *
+ * `Correctly unselected` is gated on multi-select. Leaving a wrong option
+ * unchecked is only part of an answer when there were several to weigh; on a
+ * radio the untouched options stay plain. ⚑ The screens do carry one radio
+ * example that uses it — see the note in the handoff.
+ */
+function optionState(
+  marks: boolean,
+  isSelected: boolean,
+  correct: boolean,
+  multiSelect: boolean,
+): OptionState {
+  if (!marks) return isSelected ? "Selected" : "Unanswered";
+  if (correct) return isSelected ? "Correct" : "Missed";
+  if (isSelected) return "Incorrect";
+  return multiSelect ? "Correctly unselected" : "Unanswered";
+}
+
+/** Row chrome per state — fill, text, and the trailing marker. */
+const OPTION_ROW: Record<OptionState, { box: string; marker?: "tick" | "cross"; note?: string }> = {
+  Unanswered: { box: "border-sk-border-primary text-sk-text-primary" },
+  Selected: { box: "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary" },
+  Correct: {
+    box: "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary",
+    marker: "tick",
+  },
+  Incorrect: {
+    box: "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary",
+    marker: "cross",
+  },
+  Missed: {
+    box: "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary",
+    note: "This should be selected",
+  },
+  "Correctly unselected": {
+    box: "border-sk-border-primary text-sk-text-primary",
+    note: "Un-selected is correct",
+  },
+};
 
 /**
  * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
@@ -176,7 +237,10 @@ export function QuizCard({
   const revealed = RESULT_STATES.includes(state);
   const marks = MARKS_CORRECTNESS.includes(state);
   const earned = state === "Correct" ? points : state === "Partially correct" ? Math.max(1, points - 1) : 0;
-  const alert = verdictAlert(state, earned, points);
+  // The card owns a footer only when it is the problem — that is exactly the
+  // A-1/A-2 split, so it also decides whether the verdict carries a score. No
+  // new property: the contract has six and this is derived from one of them.
+  const alert = verdictAlert(state, earned, points, showFooterQuestions);
   const chosen = options.filter((o) => selectedIds.includes(o.id));
 
   return (
@@ -224,18 +288,9 @@ export function QuizCard({
       <ul className="flex flex-col gap-2">
         {options.map((opt) => {
           const isSelected = selectedIds.includes(opt.id);
-          // `Missed` — a correct option left unselected — only means something
-          // on a checkbox, where the learner had to find several. A radio marks
-          // the one choice that was made and nothing else, so getting it wrong
-          // does not hand over the right answer (board 04, Option Row).
-          //
-          // Show answer is the exception, and says so: the Answer alert reads
-          // "The correct options are marked above".
-          const revealCorrect =
-            marks &&
-            Boolean(opt.correct) &&
-            (isSelected || multiSelect || state === "Answer revealed");
-          const showWrong = marks && isSelected && !opt.correct;
+          const rowState = optionState(marks, isSelected, Boolean(opt.correct), multiSelect);
+          const row = OPTION_ROW[rowState];
+          const plain = rowState === "Unanswered";
           return (
             <li key={opt.id}>
               <button
@@ -244,25 +299,21 @@ export function QuizCard({
                 disabled={revealed}
                 role={multiSelect ? "checkbox" : "radio"}
                 aria-checked={isSelected}
+                data-option-state={rowState}
                 className={cn(
                   "sk-text-sm-medium flex w-full items-start gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
-                  revealCorrect
-                    ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
-                    : showWrong
-                      ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
-                      : isSelected
-                        ? "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                        : cn(
-                            "border-sk-border-primary text-sk-text-primary",
-                            revealed ? "opacity-60" : "hover:bg-sk-bg-secondary",
-                          ),
+                  row.box,
+                  plain && revealed ? "opacity-60" : null,
+                  plain && !revealed ? "hover:bg-sk-bg-secondary" : null,
                 )}
               >
                 <OptionMarker multiSelect={multiSelect} checked={isSelected} />
                 <span className="flex-1">{opt.label}</span>
-                {revealCorrect ? <Icon icon={Check} size={16} className="mt-0.5" /> : null}
-                {showWrong ? <Icon icon={X} size={16} className="mt-0.5" /> : null}
+                {/* A text marker where a tick would mislead. */}
+                {row.note ? <span className="sk-text-sm-semibold mt-0.5 shrink-0">{row.note}</span> : null}
+                {row.marker === "tick" ? <Icon icon={Check} size={16} className="mt-0.5" /> : null}
+                {row.marker === "cross" ? <Icon icon={X} size={16} className="mt-0.5" /> : null}
               </button>
             </li>
           );
