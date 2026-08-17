@@ -178,7 +178,7 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
   const ready = Boolean(file) && description.trim().length > 0;
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone="brand">Peer-reviewed project</Badge>
         <Badge tone="neutral">{ora.dueLabel}</Badge>
@@ -287,7 +287,7 @@ function PeerStep({
 
   if (!hasPeer) {
     return (
-      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
         <div className="flex flex-col items-center gap-2 rounded-lg bg-sk-bg-secondary px-5 py-8 text-center">
           <Icon icon={Clock} size={22} className="text-sk-text-tertiary" />
           <span className="sk-text-md-semibold text-sk-text-primary">
@@ -315,7 +315,7 @@ function PeerStep({
   }
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-brand-secondary">
           {/* "Review 1 of 1" is noise — only show the count when there are several. */}
@@ -426,7 +426,7 @@ function WaitingStep({
   onSimulate: (staff: boolean) => void;
 }) {
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
       <div className="flex flex-col items-center gap-2 rounded-lg bg-sk-bg-brand-section px-5 py-7 text-center">
         <Icon icon={Users} size={22} className="text-sk-text-brand-secondary" />
         <span className="sk-text-md-semibold text-sk-text-brand-secondary">
@@ -482,7 +482,7 @@ function GradeStep({
   }));
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
       <div className="flex flex-col items-center gap-1 rounded-lg bg-sk-bg-success-primary px-5 py-6">
         <span className="sk-text-display-sm-semibold text-sk-text-success-primary">
           {score} / {max}

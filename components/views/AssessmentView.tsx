@@ -562,7 +562,7 @@ function QuizEntryHeader({
   ];
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone={config.variant === "practice" ? "success" : "brand"}>{config.label}</Badge>
         <Badge tone="neutral">
@@ -642,7 +642,7 @@ function QuizSummary({
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="sk-text-2xs-medium text-sk-text-brand-secondary">{config.label}</p>
@@ -710,7 +710,7 @@ function GradedSubmission({ topicId }: { topicId: string }) {
   const [submitted, setSubmitted] = React.useState(false);
   return (
     <div className="flex flex-col gap-5 py-4">
-      <section className="rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+      <section className="rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
         <p className="sk-text-2xs-medium mb-2 text-sk-text-brand-secondary">Assignment brief</p>
         <p className="sk-text-md-regular text-sk-text-secondary">
           Define a control plan for a process of your choice. Identify the critical-to-quality

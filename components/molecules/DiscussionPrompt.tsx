@@ -28,7 +28,7 @@ export function DiscussionPrompt({
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5",
+        "flex flex-col gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5",
         className,
       )}
     >

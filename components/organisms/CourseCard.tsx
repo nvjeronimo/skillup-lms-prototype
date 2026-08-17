@@ -37,7 +37,7 @@ export function CourseCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-4 md:flex-row md:items-center",
+        "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-4 md:flex-row md:items-center",
         className,
       )}
     >

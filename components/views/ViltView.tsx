@@ -110,7 +110,7 @@ function PreLive({
   const locked = session.minutesUntilStart > session.joinUnlocksMinutesBefore;
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone="brand">Live session</Badge>
         <Badge tone="neutral">Scheduled</Badge>

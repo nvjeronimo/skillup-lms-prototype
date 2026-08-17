@@ -90,6 +90,12 @@
   --sk-text-brand: #215477;             /* Primary/700_P02 — 6.48:1 pior */
   --sk-text-brand-primary: #044150;     /* Primary/900_P01 — 11.19:1 */
   --sk-text-brand-secondary: #215477;   /* Primary/700_P02 */
+
+  /* Elevation — DS `Shadows/shadow-card`. One value across every mode, light
+     and dark alike, by decision — so it is declared once here and inherited.
+     On a dark surface 5% ink reads as almost
+     nothing; the card is separated by its border there, not by lift. */
+  --sk-shadow-card: 0 2px 6px -4px rgba(31, 35, 62, 0.05);
 }
 
 /* ---------------------------------------------------------------------------

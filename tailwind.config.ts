@@ -15,6 +15,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        "sk-card": "var(--sk-shadow-card)",
+      },
       colors: {
         sk: {
           bg: {

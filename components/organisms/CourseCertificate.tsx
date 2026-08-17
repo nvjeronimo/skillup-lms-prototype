@@ -74,7 +74,7 @@ export function CourseCertificate({
   return (
     <div
       className={cn(
-        "sk-certificate mx-auto w-full max-w-[640px] overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-lg",
+        "sk-certificate mx-auto w-full max-w-[640px] overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card shadow-lg",
         className,
       )}
     >

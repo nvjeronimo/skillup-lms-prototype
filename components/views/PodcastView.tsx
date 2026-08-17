@@ -55,7 +55,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
       </div>
 
       {/* Audio surface — a waveform stands in for the video frame. */}
-      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5">
+      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
         <div
           className="flex h-24 items-end gap-[3px] overflow-hidden rounded-lg px-4 py-3"
           style={{
