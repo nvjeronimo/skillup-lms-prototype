@@ -18,6 +18,10 @@ export interface ModuleHeaderProps {
 /**
  * Module group header. When `isCompleted`, shows a green check at the start of
  * the eyebrow and binds the eyebrow text to `--sk-text-success-primary`.
+ *
+ * The row carries `bg-secondary-subtle` so the module band reads as chrome
+ * against the white topic list, and the chevron points down when the group is
+ * closed and up when it is open — the arrow shows the way out, not the way in.
  */
 export function ModuleHeader({
   label,
@@ -35,7 +39,10 @@ export function ModuleHeader({
       type="button"
       onClick={onToggle}
       aria-expanded={!collapsed}
-      className={cn("flex w-full items-start gap-2 px-3 py-2.5 text-left", className)}
+      className={cn(
+        "flex w-full items-start gap-2 bg-sk-bg-secondary-subtle px-3 py-2.5 text-left",
+        className,
+      )}
     >
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1">
@@ -54,7 +61,7 @@ export function ModuleHeader({
             )}
           >
             {label}
-            {showTopicProgress ? ` · ${topicsCompleted}/${topicsTotal}` : ""}
+            {showTopicProgress ? ` · ${topicsCompleted} of ${topicsTotal}` : ""}
           </span>
         </span>
         <span className="sk-text-sm-semibold mt-0.5 block text-sk-text-primary">{title}</span>
@@ -64,7 +71,7 @@ export function ModuleHeader({
         strokeWidth={iconStroke(18)}
         className={cn(
           "mt-0.5 shrink-0 text-sk-text-tertiary transition-transform duration-200",
-          collapsed && "-rotate-90",
+          !collapsed && "rotate-180",
         )}
         aria-hidden
       />
