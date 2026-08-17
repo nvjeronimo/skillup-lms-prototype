@@ -247,7 +247,7 @@ export function QuizCard({
     <div
       id={id}
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-5",
+        "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5",
         className,
       )}
     >
