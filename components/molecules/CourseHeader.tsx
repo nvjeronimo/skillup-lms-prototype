@@ -1,5 +1,4 @@
 import * as React from "react";
-import { PartnerLogo } from "@/components/atoms/PartnerLogo";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { cn } from "@/lib/utils";
 import type { Partner } from "@/lib/types";
@@ -7,8 +6,8 @@ import type { Partner } from "@/lib/types";
 export interface CourseHeaderProps {
   eyebrow?: string;
   title: string;
-  /** DS `Partner logos` row under the course name: one to n partners, 24px
-   *  logos, 8px apart, wrapping when they run out of width. */
+  /** DS `Partner: Name` line under the course name — one or more partner names,
+   *  Caption/Medium in text-primary, joined with a middle dot. */
   partners?: Partner[];
   /** Legacy single-name form; equivalent to `partners=[{ name }]`. */
   partner?: string;
@@ -32,9 +31,9 @@ export interface CourseHeaderProps {
  * DS `LMS / Sidebar / Course Header`, 122px on a two-line name: 16/16/8/16
  * padding, 4px between rows. Row one is the COURSE eyebrow (Caption/Medium,
  * tertiary) with the 24px expand/collapse toggle at its end; then the course
- * name (Body/Lead/Semibold) and the partner logos (24px, DS `Show partner
- * logos` · `Show partner 2` · `Show partner 3`). On Mobile the toggle is hidden
- * and the progress ring sits top-right beside the rows.
+ * name (Body/Lead/Semibold) and the partner name line (Caption/Medium, DS
+ * `Show Partner: Name`). On Mobile the toggle is hidden and the progress ring
+ * sits top-right beside the rows.
  */
 export function CourseHeader({
   eyebrow = "Course",
@@ -74,11 +73,9 @@ export function CourseHeader({
         </div>
         <p className="sk-text-lg-semibold text-sk-text-primary">{title}</p>
         {partnerList.length ? (
-          <div className="flex flex-wrap items-center gap-2" aria-label="Course partners">
-            {partnerList.map((p) => (
-              <PartnerLogo key={p.name} partner={p} />
-            ))}
-          </div>
+          <p className="sk-text-xs-medium text-sk-text-primary">
+            {partnerList.map((p) => p.name).join(" · ")}
+          </p>
         ) : null}
       </div>
       {trailing}
