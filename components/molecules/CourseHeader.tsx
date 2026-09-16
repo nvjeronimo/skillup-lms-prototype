@@ -15,6 +15,9 @@ export interface CourseHeaderProps {
   showToggle?: boolean;
   /** Overrides the trailing slot on the eyebrow row — e.g. the mobile drawer's close. */
   rightSlot?: React.ReactNode;
+  /** A trailing column beside all three rows, top-aligned — the Mobile variant
+   *  parks the 46px progress ring here, level with the COURSE eyebrow. */
+  trailing?: React.ReactNode;
   /** Bottom hairline (DS: the header carries its own 1px `border-secondary`). */
   showDivider?: boolean;
   className?: string;
@@ -24,7 +27,8 @@ export interface CourseHeaderProps {
  * DS `LMS / Sidebar / Course Header`, 122px on a two-line name: 16/16/8/16
  * padding, 4px between rows. Row one is the COURSE eyebrow (Caption/Medium,
  * tertiary) with the 24px expand/collapse toggle at its end; then the course
- * name (Body/Lead/Semibold) and the partner name (Caption/Medium).
+ * name (Body/Lead/Semibold) and the partner name (Caption/Medium). On Mobile
+ * the toggle is hidden and the progress ring sits top-right beside the rows.
  */
 export function CourseHeader({
   eyebrow = "Course",
@@ -35,31 +39,35 @@ export function CourseHeader({
   compact = false,
   showToggle = true,
   rightSlot,
+  trailing,
   showDivider = true,
   className,
 }: CourseHeaderProps) {
-  const trailing = rightSlot ?? (showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null);
+  const rowTrailing = rightSlot ?? (showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null);
 
   if (compact) {
     return (
-      <div className={cn("flex justify-center px-2 pb-2 pt-4", className)}>{trailing}</div>
+      <div className={cn("flex justify-center px-2 pb-2 pt-4", className)}>{rowTrailing}</div>
     );
   }
 
   return (
     <div
       className={cn(
-        "flex flex-col gap-1 px-4 pb-2 pt-4",
+        "flex items-start gap-2 px-4 pb-2 pt-4",
         showDivider && "border-b border-sk-border-secondary",
         className,
       )}
     >
-      <div className="flex items-center gap-1">
-        <p className="sk-text-xs-medium min-w-0 flex-1 uppercase text-sk-text-tertiary">{eyebrow}</p>
-        {trailing}
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-1">
+          <p className="sk-text-xs-medium min-w-0 flex-1 uppercase text-sk-text-tertiary">{eyebrow}</p>
+          {rowTrailing}
+        </div>
+        <p className="sk-text-lg-semibold text-sk-text-primary">{title}</p>
+        {partner ? <p className="sk-text-xs-medium text-sk-text-primary">{partner}</p> : null}
       </div>
-      <p className="sk-text-lg-semibold text-sk-text-primary">{title}</p>
-      {partner ? <p className="sk-text-xs-medium text-sk-text-primary">{partner}</p> : null}
+      {trailing}
     </div>
   );
 }

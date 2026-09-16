@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bookmark, X } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
 import { LessonHeader } from "@/components/atoms/LessonHeader";
@@ -37,7 +37,8 @@ export interface SidebarProps {
   onToggleModule?: (moduleId: string) => void;
   onSelectTopic?: (topicId: string) => void;
   onToggleBookmark?: (topicId: string) => void;
-  /** Mobile drawer close — rendered in the course-header trailing slot. */
+  /** Mobile drawer close — the DS Mobile variant has no close control, so this
+   *  is wired to the Escape key (the shell's backdrop handles the tap). */
   onCloseMobile?: () => void;
   className?: string;
 }
@@ -126,6 +127,15 @@ export function Sidebar({
     if (!isMobile) savedScrollTop = container.scrollTop;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopicId]);
+
+  React.useEffect(() => {
+    if (!isMobile || !onCloseMobile) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCloseMobile();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isMobile, onCloseMobile]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
@@ -291,24 +301,21 @@ export function Sidebar({
       {isMobile ? (
         /* Mobile (DS Sidebar-ICP · Mobile): the course header keeps its own
            hairline, the toggle is hidden and there is no Overall Progress block —
-           the ring closes the list instead. The drawer's close X takes the
-           toggle's 24px slot (the DS "Mobile header" is hidden in the file). */
+           the 46px ring sits top-right of the header, level with the eyebrow.
+           The DS "Mobile header" (title + close) is hidden, so the drawer has no
+           close control of its own: the backdrop and Escape close it. */
         <CourseHeader
           title={course.title}
           eyebrow="Course"
           partner={course.provider}
           showToggle={false}
-          rightSlot={
-            onCloseMobile ? (
-              <button
-                type="button"
-                onClick={onCloseMobile}
-                aria-label="Close menu"
-                className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-sk-border-primary hover:bg-sk-bg-secondary"
-              >
-                <X size={20} />
-              </button>
-            ) : null
+          trailing={
+            <OverallProgress
+              device="Mobile"
+              pct={overallPct}
+              moduleCurrent={modulesDone + 1}
+              moduleTotal={course.modulesTotal}
+            />
           }
         />
       ) : (
@@ -384,16 +391,6 @@ export function Sidebar({
             </div>
           );
         })}
-        {isMobile ? (
-          <div className="px-4 py-3">
-            <OverallProgress
-              device="Mobile"
-              pct={overallPct}
-              moduleCurrent={modulesDone + 1}
-              moduleTotal={course.modulesTotal}
-            />
-          </div>
-        ) : null}
       </div>
     </aside>
   );
