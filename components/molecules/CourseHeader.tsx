@@ -1,11 +1,16 @@
 import * as React from "react";
+import { PartnerLogo } from "@/components/atoms/PartnerLogo";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { cn } from "@/lib/utils";
+import type { Partner } from "@/lib/types";
 
 export interface CourseHeaderProps {
   eyebrow?: string;
   title: string;
-  /** DS `Show Partner: Name` — the provider line under the course name. */
+  /** DS `Partner logos` row under the course name: one to n partners, 24px
+   *  logos, 8px apart, wrapping when they run out of width. */
+  partners?: Partner[];
+  /** Legacy single-name form; equivalent to `partners=[{ name }]`. */
   partner?: string;
   expanded?: boolean;
   onToggle?: () => void;
@@ -27,12 +32,14 @@ export interface CourseHeaderProps {
  * DS `LMS / Sidebar / Course Header`, 122px on a two-line name: 16/16/8/16
  * padding, 4px between rows. Row one is the COURSE eyebrow (Caption/Medium,
  * tertiary) with the 24px expand/collapse toggle at its end; then the course
- * name (Body/Lead/Semibold) and the partner name (Caption/Medium). On Mobile
- * the toggle is hidden and the progress ring sits top-right beside the rows.
+ * name (Body/Lead/Semibold) and the partner logos (24px, DS `Show partner
+ * logos` · `Show partner 2` · `Show partner 3`). On Mobile the toggle is hidden
+ * and the progress ring sits top-right beside the rows.
  */
 export function CourseHeader({
   eyebrow = "Course",
   title,
+  partners,
   partner,
   expanded = true,
   onToggle,
@@ -44,6 +51,7 @@ export function CourseHeader({
   className,
 }: CourseHeaderProps) {
   const rowTrailing = rightSlot ?? (showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null);
+  const partnerList = partners ?? (partner ? [{ name: partner }] : []);
 
   if (compact) {
     return (
@@ -65,7 +73,13 @@ export function CourseHeader({
           {rowTrailing}
         </div>
         <p className="sk-text-lg-semibold text-sk-text-primary">{title}</p>
-        {partner ? <p className="sk-text-xs-medium text-sk-text-primary">{partner}</p> : null}
+        {partnerList.length ? (
+          <div className="flex flex-wrap items-center gap-2" aria-label="Course partners">
+            {partnerList.map((p) => (
+              <PartnerLogo key={p.name} partner={p} />
+            ))}
+          </div>
+        ) : null}
       </div>
       {trailing}
     </div>

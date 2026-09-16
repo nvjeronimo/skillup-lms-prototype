@@ -9,7 +9,7 @@ const meta: Meta<typeof CourseHeader> = {
   args: {
     eyebrow: "Course",
     title: "Six Sigma for Process Improvement",
-    partner: "SkillUp",
+    partners: [{ name: "SkillUp" }],
     expanded: true,
     compact: false,
   },
@@ -26,6 +26,10 @@ export default meta;
 type Story = StoryObj<typeof CourseHeader>;
 
 export const Expanded: Story = {};
+export const TwoPartners: Story = {
+  name: "Two partners",
+  args: { partners: [{ name: "SkillUp" }, { name: "Microsoft" }] },
+};
 export const Collapsed: Story = {
   args: { compact: true, expanded: false },
   decorators: [
