@@ -59,6 +59,7 @@ const config: Config = {
             primary: "var(--sk-text-primary)",
             secondary: "var(--sk-text-secondary)",
             tertiary: "var(--sk-text-tertiary)",
+            disabled: "var(--sk-text-disabled)",
             "primary-on-brand": "var(--sk-text-primary-on-brand)",
             brand: "var(--sk-text-brand)",
             "brand-primary": "var(--sk-text-brand-primary)",

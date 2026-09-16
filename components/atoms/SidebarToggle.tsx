@@ -8,7 +8,7 @@ export interface SidebarToggleProps {
   className?: string;
 }
 
-/** Sidebar expand/collapse toggle — Expanded · Collapsed. */
+/** Sidebar expand/collapse toggle — Expanded · Collapsed. DS: 24×24, glyph strokes in `border-primary`. */
 export function SidebarToggle({ expanded, onToggle, className }: SidebarToggleProps) {
   const size = 20;
   const IconCmp = expanded ? PanelLeftClose : PanelLeftOpen;
@@ -19,7 +19,7 @@ export function SidebarToggle({ expanded, onToggle, className }: SidebarTogglePr
       aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
       aria-expanded={expanded}
       className={cn(
-        "inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-secondary transition-colors duration-200 hover:bg-sk-bg-secondary",
+        "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-sk-border-primary transition-colors duration-200 hover:bg-sk-bg-secondary",
         className,
       )}
     >

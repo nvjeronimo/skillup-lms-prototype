@@ -10,7 +10,7 @@ export interface TopicRowProps {
   title: string;
   duration: string;
   status: CompletionState;
-  /** Active (currently playing) topic — brand-section bg + 4px brand left border. */
+  /** Active (currently playing) topic — brand-section bg + 4px brand left rule. */
   active?: boolean;
   showBookmark?: boolean;
   bookmarked?: boolean;
@@ -22,7 +22,20 @@ export interface TopicRowProps {
   className?: string;
 }
 
-/** A single navigable topic in the sidebar. */
+/**
+ * The Open row's 4px brand rule. In the DS it is an inside stroke, so it sits
+ * over the padding instead of pushing the content — an absolutely positioned
+ * bar reproduces that exactly (12px content inset in both states).
+ */
+function ActiveRule() {
+  return <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-sk-fg-brand-primary" />;
+}
+
+/**
+ * DS `LMS / Topic Row` (Topic Status × Tab Status). 68px on a one-line title:
+ * 12/8/12/12 padding, 8px gap, an 18px Completion Status, then a state column
+ * (title Body/Small/Medium, 4px, then badge · duration on one 20px line).
+ */
 export function TopicRow({
   type,
   title,
@@ -45,12 +58,13 @@ export function TopicRow({
         aria-current={active ? "true" : undefined}
         aria-label={title}
         className={cn(
-          // DS collapsed Topic Row: items-start + 8px padding, 4px active left border.
-          "flex w-full items-start justify-center border-l-4 p-2",
-          active ? "border-sk-border-brand bg-sk-bg-brand-section" : "border-transparent",
+          // DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred.
+          "relative flex w-full items-start justify-center px-2 py-3",
+          active ? "bg-sk-bg-brand-section" : "hover:bg-sk-bg-secondary",
           className,
         )}
       >
+        {active ? <ActiveRule /> : null}
         <CompletionStatus state={status} size={18} />
       </button>
     );
@@ -59,38 +73,43 @@ export function TopicRow({
   return (
     <div
       className={cn(
-        "group flex items-start gap-2.5 border-l-4 px-3 py-2.5 transition-colors",
-        active
-          ? "border-sk-border-brand bg-sk-bg-brand-section"
-          : "border-transparent hover:bg-sk-bg-secondary",
+        "group relative flex items-start gap-2 py-3 pl-3 pr-2 transition-colors",
+        active ? "bg-sk-bg-brand-section" : "hover:bg-sk-bg-secondary",
         className,
       )}
     >
+      {active ? <ActiveRule /> : null}
       <button
         type="button"
         onClick={onClick}
         aria-current={active ? "true" : undefined}
-        className="flex flex-1 items-start gap-2.5 text-left"
+        className="flex min-w-0 flex-1 items-start gap-2 text-left"
       >
-        <span className="mt-0.5">
+        {/* 18px dot against a 20px title line: 1px down keeps it optically centred. */}
+        <span className="mt-px">
           <CompletionStatus state={status} size={18} />
         </span>
-        <span className="min-w-0 flex-1">
-          {/* DS Sidebar v2: the topic title is text-primary in every state — it
-              does not change colour when active or locked. */}
+        <span className="flex min-w-0 flex-1 flex-col gap-1">
+          {/* The topic title is text-primary in every state — it does not change
+              colour when active or locked. */}
           <span className="sk-text-sm-medium block text-sk-text-primary">{title}</span>
-          {/* Brand type badge (icon + label) + gray duration — matches DS Topic Row.
-              Stays on one line; the trailing duration truncates with an ellipsis. */}
-          <span className="mt-1 flex min-w-0 items-center gap-1.5">
+          {/* state-row: brand type badge · gray duration (Caption/Medium), 6px apart,
+              on one line; the trailing duration truncates with an ellipsis. */}
+          <span className="flex min-w-0 items-center gap-1.5">
             <TopicTypeBadge type={type} className="shrink-0" />
             {/* Duration is optional: render nothing rather than a dash placeholder. */}
             {duration ? (
-              <span className="sk-text-xs-regular min-w-0 truncate text-sk-text-tertiary">
-                · {duration}
-              </span>
+              <>
+                <span className="sk-text-sm-medium shrink-0 text-sk-text-tertiary" aria-hidden>
+                  ·
+                </span>
+                <span className="sk-text-xs-medium min-w-0 truncate text-sk-text-tertiary">
+                  {duration}
+                </span>
+              </>
             ) : null}
             {optional ? (
-              <span className="sk-text-2xs-medium shrink-0 text-sk-text-tertiary">· Optional</span>
+              <span className="sk-text-xs-medium shrink-0 text-sk-fg-quaternary">Optional</span>
             ) : null}
           </span>
         </span>

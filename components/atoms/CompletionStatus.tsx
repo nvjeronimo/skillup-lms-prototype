@@ -27,7 +27,7 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
         className={cn(base, "bg-sk-bg-success-solid text-sk-fg-white", className)}
         style={dims}
       >
-        <Check size={size * 0.62} strokeWidth={size >= 24 ? 2.5 : 2} />
+        <Check size={Math.round(size * (14 / 18))} strokeWidth={size >= 24 ? 2.5 : 2} />
       </span>
     );
   }
@@ -40,7 +40,7 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
         className={cn(base, "bg-sk-bg-tertiary text-sk-text-tertiary", className)}
         style={dims}
       >
-        <Lock size={size * 0.5} strokeWidth={stroke} />
+        <Lock size={Math.round(size * (13 / 18))} strokeWidth={stroke} />
       </span>
     );
   }

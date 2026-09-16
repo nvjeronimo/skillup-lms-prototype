@@ -6,10 +6,10 @@ export interface LessonHeaderProps {
   className?: string;
 }
 
-/** Lesson label between a Module Header and its Topic Rows. Eyebrow style. */
+/** DS `LMS / Lesson Header`: Caption/Medium in text-secondary, 16px padding all round (50px). */
 export function LessonHeader({ label, className }: LessonHeaderProps) {
   return (
-    <p className={cn("sk-text-2xs-medium px-3 py-1.5 text-sk-text-tertiary", className)}>
+    <p className={cn("sk-text-xs-medium p-4 text-sk-text-secondary", className)}>
       {label}
     </p>
   );

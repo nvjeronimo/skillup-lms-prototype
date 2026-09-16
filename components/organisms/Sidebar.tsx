@@ -57,7 +57,7 @@ const WIDTH: Record<SidebarVariant, string> = {
 };
 
 /**
- * Course navigation sidebar. Five logical states: Expanded · Collapsed · Mobile
+ * Course navigation sidebar (DS `LMS / Sidebar-ICP`). Five logical states: Expanded · Collapsed · Mobile
  * (+ the two `noLesson` variants are simply courses whose modules have no lesson
  * sub-grouping — handled automatically by the data shape).
  */
@@ -150,12 +150,12 @@ export function Sidebar({
     if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
   };
 
-  // ── Collapsed rail (DS: LMS / Sidebar v2 · State=Collapsed) ──────────────────
+  // ── Collapsed rail (DS: LMS / Sidebar-ICP · State=Collapsed) ─────────────────
   // 72px rail: toggle + progress ring, then per-module groups separated by 40px
   // dividers — module number (green when complete), lesson labels (L1/L2, brand on
   // the active lesson) and status dots, with the active topic highlighted.
   if (collapsed) {
-    const Divider = () => <div className="my-1 h-px w-full bg-sk-border-secondary" />;
+    const Divider = () => <div className="h-px w-10 bg-sk-border-secondary" />;
     const Dot = (topic: Topic) => (
       <div
         key={topic.id}
@@ -289,31 +289,26 @@ export function Sidebar({
       aria-label="Course navigation"
     >
       {isMobile ? (
-        /* Mobile (DS Sidebar v2 · Mobile): the progress ring sits in the course
-           header's trailing slot — no full-width progress block, no footer. */
+        /* Mobile (DS Sidebar-ICP · Mobile): the course header keeps its own
+           hairline, the toggle is hidden and there is no Overall Progress block —
+           the ring closes the list instead. The drawer's close X takes the
+           toggle's 24px slot (the DS "Mobile header" is hidden in the file). */
         <CourseHeader
           title={course.title}
           eyebrow="Course"
+          partner={course.provider}
           showToggle={false}
           rightSlot={
-            <div className="flex items-center gap-2">
-              {onCloseMobile ? (
-                <button
-                  type="button"
-                  onClick={onCloseMobile}
-                  aria-label="Close menu"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
-                >
-                  <X size={20} />
-                </button>
-              ) : null}
-              <OverallProgress
-                device="Mobile"
-                pct={overallPct}
-                moduleCurrent={modulesDone + 1}
-                moduleTotal={course.modulesTotal}
-              />
-            </div>
+            onCloseMobile ? (
+              <button
+                type="button"
+                onClick={onCloseMobile}
+                aria-label="Close menu"
+                className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-sk-border-primary hover:bg-sk-bg-secondary"
+              >
+                <X size={20} />
+              </button>
+            ) : null
           }
         />
       ) : (
@@ -321,10 +316,10 @@ export function Sidebar({
           <CourseHeader
             title={course.title}
             eyebrow="Course"
+            partner={course.provider}
             expanded
             showToggle
             onToggle={onToggleSidebar}
-            showDivider={false}
           />
           <OverallProgress
             pct={overallPct}
@@ -366,7 +361,7 @@ export function Sidebar({
           }
 
           return (
-            <div key={module.id} className="border-b border-sk-border-secondary">
+            <div key={module.id}>
               <ModuleHeader
                 label={module.label}
                 title={module.title}
@@ -375,7 +370,7 @@ export function Sidebar({
                 onToggle={() => onToggleModule?.(module.id)}
               />
               {!moduleCollapsed ? (
-                <div className="pb-2">
+                <div>
                   {module.lessons
                     ? module.lessons.map((lesson) => (
                         <div key={lesson.id}>
@@ -389,6 +384,16 @@ export function Sidebar({
             </div>
           );
         })}
+        {isMobile ? (
+          <div className="px-4 py-3">
+            <OverallProgress
+              device="Mobile"
+              pct={overallPct}
+              moduleCurrent={modulesDone + 1}
+              moduleTotal={course.modulesTotal}
+            />
+          </div>
+        ) : null}
       </div>
     </aside>
   );
