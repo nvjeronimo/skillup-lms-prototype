@@ -7,8 +7,9 @@ const meta: Meta<typeof CourseHeader> = {
   tags: ["autodocs"],
   parameters: { layout: "padded" },
   args: {
-    eyebrow: "SkillUp",
+    eyebrow: "Course",
     title: "Six Sigma for Process Improvement",
+    partner: "SkillUp",
     expanded: true,
     compact: false,
   },

@@ -82,6 +82,7 @@
   --sk-text-primary: #13282f;           /* Primary/950_N00 — 15.30:1 */
   --sk-text-secondary: #39414c;         /* Neutral/800 — 10.32:1 branco, 8.28 pior */
   --sk-text-tertiary: #4f5b69;          /* Neutral/700 — 6.92:1 branco, 5.55 pior */
+  --sk-text-disabled: #8995a6;          /* Neutral/400_N03 — DS SKO/Colors/Text/text-disabled; separadores e texto inerte */
   --sk-text-success-primary: #1f7643;   /* Green/800 — 5.63:1 */
   --sk-text-warning-primary: #85580e;   /* Yellow/950 — 6.18:1 */
   --sk-text-error-primary: #b62226;     /* Red/600 — 6.47 branco, 5.19 pior */
@@ -238,6 +239,7 @@
   --sk-text-primary: #eaf1f4;           /* Dark-Neutral/50 — 15.50:1 */
   --sk-text-secondary: #b3c0c7;         /* Dark-Neutral/200 — 9.51:1 */
   --sk-text-tertiary: #93a3ab;          /* Dark-Neutral/300 — 6.80:1 */
+  --sk-text-disabled: #53666e;          /* Dark-Neutral/500 — DS SKO/Colors/Text/text-disabled (dark) */
   --sk-text-success-primary: #72d99a;   /* Green/200 — 7.06:1 */
   --sk-text-warning-primary: #fab929;   /* Yellow/400 — 7.01:1 */
   --sk-text-error-primary: #f3afb0;     /* Red/50 — 6.74:1 */

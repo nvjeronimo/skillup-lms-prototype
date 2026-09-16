@@ -50,8 +50,8 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
 /**
  * Course progress. Mobile = the compact ring alone. Desktop (V2) = an eyebrow
  * plus a "Module X of Y" subline on the left and the ring with its centre %
- * on the right, framed by top/bottom hairlines. Matches the DS
- * `LMS / Overall Progress` component (Device=Desktop-V2).
+ * on the right, 0/16/8/16 padding under the Course Header and a bottom
+ * hairline. Matches the DS `LMS / Overall Progress` component (Device=Desktop).
  */
 export function OverallProgress({
   pct,
@@ -69,7 +69,7 @@ export function OverallProgress({
   return (
     <div
       className={cn(
-        "flex items-center gap-1 border-y border-sk-border-secondary px-4 py-2",
+        "flex items-center gap-1 border-b border-sk-border-secondary px-4 pb-2 pt-0",
         className,
       )}
     >
