@@ -163,9 +163,17 @@ export function DemoControlsMenu({
         aria-expanded={open}
         aria-label="Account and demo settings"
         onClick={() => setOpen((o) => !o)}
-        className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sk-bg-secondary"
+        className={cn(
+          "flex items-center hover:bg-sk-bg-secondary",
+          // DS topbar Mobile: a bare 24px round avatar; Desktop keeps avatar + name.
+          compact ? "rounded-full" : "ml-1 gap-2 rounded-lg p-1",
+        )}
       >
-        <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
+        {compact ? (
+          <Avatar name={userName} src={userAvatarUrl} size="xs" />
+        ) : (
+          <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
+        )}
         {!compact ? (
           <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
         ) : null}
