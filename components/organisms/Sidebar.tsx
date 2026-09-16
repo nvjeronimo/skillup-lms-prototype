@@ -320,6 +320,8 @@ export function Sidebar({
         />
       ) : (
         <>
+          {/* Desktop: no hairline between the header and Overall Progress — the
+              progress block carries the single divider below both. */}
           <CourseHeader
             title={course.title}
             eyebrow="Course"
@@ -327,6 +329,7 @@ export function Sidebar({
             expanded
             showToggle
             onToggle={onToggleSidebar}
+            showDivider={false}
           />
           <OverallProgress
             pct={overallPct}
