@@ -71,13 +71,9 @@ export interface Module {
   implicit?: boolean;
 }
 
-/** A course partner shown in the Sidebar Course Header (DS `Partner logos`, 1..n). */
+/** A course partner named in the Sidebar Course Header (DS `Partner: Name`, 1..n). */
 export interface Partner {
   name: string;
-  /** Path under /public. When absent the name renders as Caption/Medium text. */
-  logo?: string;
-  /** Dark-mode asset, when the light one would vanish on a dark surface. */
-  logoDark?: string;
 }
 
 export interface Course {
