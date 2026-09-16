@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,9 +10,9 @@ import { cn } from "@/lib/utils";
  * No flash: data-theme is set pre-paint by the theme init script in layout.tsx.
  * (An external <img> SVG can't recolour via CSS, so we swap the asset instead.)
  */
-export function SkillUpLogo({ className }: { className?: string }) {
+export function SkillUpLogo({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <span className={cn("inline-block", className)}>
+    <span className={cn("inline-block", className)} style={style}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/skillup-logo.svg" alt="SkillUp" className="sk-logo-light block h-full w-auto" />
       {/* eslint-disable-next-line @next/next/no-img-element */}

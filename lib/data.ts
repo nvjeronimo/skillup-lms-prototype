@@ -7,6 +7,7 @@ import type {
   Module,
   Note,
   NotificationModel,
+  Partner,
   SavedNoteModel,
   SavedTopicModel,
   Topic,
@@ -31,6 +32,8 @@ export const fourLevelCourse: Course = {
   slug: "capstone",
   title: "Capstone Project Workshop",
   provider: "SkillUp",
+  // Co-delivered course: the Course Header shows every partner, in order.
+  partners: [{ name: "SkillUp" }, { name: "Microsoft" }],
   courseType: "Course",
   difficulty: "Intermediate",
   deliveryMode: "Flexible Learning",
@@ -110,6 +113,11 @@ export const threeLevelCourse: Course = {
 };
 
 /** A module's topics whether stored flat or grouped under lessons. */
+/** Partners for the Course Header: the explicit list, else the provider alone. */
+export function coursePartners(c: Course): Partner[] {
+  return c.partners ?? [{ name: c.provider }];
+}
+
 export function moduleTopics(mod: Module): Topic[] {
   if (mod.topics) return mod.topics;
   if (mod.lessons) return mod.lessons.flatMap((l) => l.topics);

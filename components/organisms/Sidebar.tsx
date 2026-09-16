@@ -11,7 +11,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
-import { moduleTopics } from "@/lib/data";
+import { coursePartners, moduleTopics } from "@/lib/data";
 import type { Course, CompletionState, Topic } from "@/lib/types";
 
 export type SidebarVariant = "Expanded" | "Collapsed" | "Mobile";
@@ -307,7 +307,7 @@ export function Sidebar({
         <CourseHeader
           title={course.title}
           eyebrow="Course"
-          partner={course.provider}
+          partners={coursePartners(course)}
           showToggle={false}
           trailing={
             <OverallProgress
@@ -325,7 +325,7 @@ export function Sidebar({
           <CourseHeader
             title={course.title}
             eyebrow="Course"
-            partner={course.provider}
+            partners={coursePartners(course)}
             expanded
             showToggle
             onToggle={onToggleSidebar}
