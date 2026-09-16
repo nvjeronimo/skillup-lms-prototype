@@ -10,6 +10,7 @@ const meta: Meta<typeof TopicFooterNav> = {
     position: 7,
     total: 15,
     title: "Introduction to the DMAIC methodology",
+    nextTitle: "The define phase",
     milestone: "Topic",
     previousDisabled: false,
     nextDisabled: false,
@@ -27,4 +28,8 @@ export const NextDisabled: Story = { args: { nextDisabled: true } };
 export const PreviousDisabled: Story = { args: { previousDisabled: true, position: 1 } };
 export const LastOfModule: Story = { args: { milestone: "Module", position: 9, total: 9 } };
 export const LastOfCourse: Story = { args: { milestone: "Course", position: 9, total: 9 } };
-export const Compact: Story = { args: { compact: true } };
+export const Compact: Story = { name: "Mobile (compact)", args: { compact: true } };
+export const CompactLastOfModule: Story = {
+  name: "Mobile · last of module",
+  args: { compact: true, milestone: "Module", position: 9, total: 9 },
+};

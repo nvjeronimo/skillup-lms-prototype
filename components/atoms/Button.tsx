@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
-export type ButtonVariant = "primary" | "secondary" | "tertiary" | "destructive" | "utility";
+export type ButtonVariant = "primary" | "secondary" | "tertiary" | "neutral" | "destructive" | "utility";
 export type ButtonSize = "sm" | "md" | "lg" | "xl";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -24,6 +24,8 @@ const VARIANT: Record<ButtonVariant, string> = {
     "bg-transparent border border-sk-border-brand text-sk-text-brand hover:bg-sk-bg-brand-section",
   // Ghost teal.
   tertiary: "bg-transparent text-sk-text-brand hover:bg-sk-bg-brand-section",
+  // Neutral outline (DS Tertiary + border-primary stroke, text-tertiary) — e.g. footer "Previous".
+  neutral: "bg-transparent border border-sk-border-primary text-sk-text-tertiary hover:bg-sk-bg-secondary",
   // Utility / close-X stay UUI gray-neutral by design.
   destructive:
     "bg-transparent border border-sk-border-primary text-sk-text-error-primary hover:bg-sk-bg-error-primary",
@@ -31,7 +33,8 @@ const VARIANT: Record<ButtonVariant, string> = {
 };
 
 const SIZE: Record<ButtonSize, { pad: string; text: string; icon: number; square: string }> = {
-  sm: { pad: "h-8 px-3 gap-1.5", text: "sk-text-sm-medium", icon: 16, square: "h-8 w-8" },
+  // DS Buttons/Button Size=sm: 36px (8/12 padding), Body/Small/Semibold, 4px gap, 20px icon.
+  sm: { pad: "h-9 px-3 gap-1", text: "sk-text-sm-semibold", icon: 20, square: "h-9 w-9" },
   md: { pad: "h-10 px-4 gap-2", text: "sk-text-sm-semibold", icon: 18, square: "h-10 w-10" },
   lg: { pad: "h-11 px-5 gap-2", text: "sk-text-md-semibold", icon: 20, square: "h-11 w-11" },
   xl: { pad: "h-12 px-6 gap-2", text: "sk-text-md-semibold", icon: 20, square: "h-12 w-12" },

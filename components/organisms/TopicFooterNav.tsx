@@ -7,24 +7,36 @@ export interface TopicFooterNavProps {
   position: number;
   total: number;
   title: string;
+  /** Title of the next topic — shown inside the Next button on desktop/tablet. */
+  nextTitle?: string;
   milestone?: Milestone;
   previousDisabled?: boolean;
   nextDisabled?: boolean;
   onPrevious?: () => void;
   onNext?: () => void;
-  /** Compact mobile layout: just Previous / Next, no center info. */
+  /** Mobile (≤768): title hidden, Next drops the topic name, captions hidden. */
   compact?: boolean;
   className?: string;
 }
 
 /**
- * Sacred footer: Previous · Unit Info / Title · Next topic. No middle action chip.
- * Previous is always present + navigable; Next is always present (may be disabled).
+ * DS `LMS / Topic Footer Nav` (Default V1): 12/16 padding, 16px gap, 1px top
+ * hairline, three equal columns — Previous (neutral outline) · Unit info
+ * ("n of N" Body/Small/Semibold over the title, Caption/Regular, both
+ * text-tertiary) · Next (`LMS / Course Progression Button`, right-aligned).
+ *
+ * Responsive rules (also annotated on the Figma component):
+ * - Desktop ≥1025 and Tablet 769–1024: the full row above; the Next label
+ *   carries the next topic's name and truncates at 186px.
+ * - Mobile ≤768: same padding and 36px buttons; the topic title is hidden (the
+ *   paginator stays), Next reads just "Next", milestone captions are hidden.
+ * Previous is disabled on the first topic, never hidden; Next is never hidden.
  */
 export function TopicFooterNav({
   position,
   total,
   title,
+  nextTitle,
   milestone = "Topic",
   previousDisabled = false,
   nextDisabled = false,
@@ -37,23 +49,20 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "flex h-16 items-center justify-between gap-4 border-t border-sk-border-secondary bg-sk-bg-primary px-4 md:px-6",
+        "flex items-center gap-4 border-t border-sk-border-secondary bg-sk-bg-primary px-4 py-3",
         className,
       )}
     >
-      <Button
-        variant="secondary"
-        size={compact ? "sm" : "md"}
-        disabled={previousDisabled}
-        onClick={onPrevious}
-      >
-        Previous
-      </Button>
+      <div className="flex flex-1 items-center">
+        <Button variant="neutral" size="sm" disabled={previousDisabled} onClick={onPrevious}>
+          Previous
+        </Button>
+      </div>
 
-      {/* Center: paginator (the stronger element) + the topic title underneath.
-          The paginator shows on every breakpoint; the title is hidden on mobile. */}
+      {/* Unit info: the paginator is the stronger element; the title sits under it
+          on tablet/desktop and is dropped on mobile. */}
       <div className="min-w-0 flex-1 text-center">
-        <p className="sk-text-sm-semibold text-sk-text-primary">
+        <p className="sk-text-sm-semibold text-sk-text-tertiary">
           {position} of {total}
         </p>
         {!compact ? (
@@ -61,12 +70,16 @@ export function TopicFooterNav({
         ) : null}
       </div>
 
-      <CourseProgressionButton
-        milestone={milestone}
-        size={compact ? "sm" : "md"}
-        disabled={nextDisabled}
-        onClick={onNext}
-      />
+      <div className="flex min-w-0 flex-1 items-center justify-end">
+        <CourseProgressionButton
+          milestone={milestone}
+          nextTitle={nextTitle}
+          size="sm"
+          compact={compact}
+          disabled={nextDisabled}
+          onClick={onNext}
+        />
+      </div>
     </nav>
   );
 }

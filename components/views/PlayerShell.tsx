@@ -424,6 +424,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             position={position}
             total={total}
             title={topic.title}
+            nextTitle={next?.title}
             milestone={milestone}
             previousDisabled={!previous}
             nextDisabled={false}
