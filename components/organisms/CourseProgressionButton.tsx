@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button, type ButtonSize } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 
@@ -7,11 +7,9 @@ export type Milestone = "Topic" | "Module" | "Course";
 
 export interface CourseProgressionButtonProps {
   milestone?: Milestone;
-  /** Title of the topic the button leads to — "Next: {topic name}" (Topic milestone). */
-  nextTitle?: string;
   disabled?: boolean;
   size?: ButtonSize;
-  /** Mobile: the label drops the topic name and the milestone caption is hidden. */
+  /** Mobile: the milestone caption is hidden. */
   compact?: boolean;
   onClick?: () => void;
   className?: string;
@@ -20,13 +18,13 @@ export interface CourseProgressionButtonProps {
 /**
  * DS `LMS / Course Progression Button` — the footer's forward step. Navigation
  * only, never the topic's action.
- * - Topic  → Secondary outline "Next: {topic name}" + chevron, 186px max, ellipsis.
+ * - Topic  → Secondary outline "Next" + arrow. Naming the next topic inside the button
+ *            was tried and parked (TBD, Sep 2026): for now the label is always just "Next".
  * - Module → "MODULE COMPLETE" caption (fg-brand-primary) + Primary "Go to next Module" + arrow.
  * - Course → "COURSE COMPLETE" caption (text-success-primary) + Primary "Go to next Course" + arrow.
  */
 export function CourseProgressionButton({
   milestone = "Topic",
-  nextTitle,
   disabled = false,
   size = "sm",
   compact = false,
@@ -34,18 +32,16 @@ export function CourseProgressionButton({
   className,
 }: CourseProgressionButtonProps) {
   if (milestone === "Topic") {
-    const label = !compact && nextTitle ? `Next: ${nextTitle}` : "Next";
     return (
       <Button
         variant="secondary"
         size={size}
-        rightIcon={ChevronRight}
+        rightIcon={ArrowRight}
         disabled={disabled}
         onClick={onClick}
-        title={nextTitle ? `Next: ${nextTitle}` : undefined}
-        className={cn("max-w-[186px]", className)}
+        className={className}
       >
-        <span className="min-w-0 truncate">{label}</span>
+        Next
       </Button>
     );
   }

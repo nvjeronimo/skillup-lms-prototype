@@ -10,7 +10,6 @@ const meta: Meta<typeof TopicFooterNav> = {
     position: 7,
     total: 15,
     title: "Introduction to the DMAIC methodology",
-    nextTitle: "The define phase",
     milestone: "Topic",
     previousDisabled: false,
     nextDisabled: false,

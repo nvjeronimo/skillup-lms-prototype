@@ -7,14 +7,12 @@ export interface TopicFooterNavProps {
   position: number;
   total: number;
   title: string;
-  /** Title of the next topic — shown inside the Next button on desktop/tablet. */
-  nextTitle?: string;
   milestone?: Milestone;
   previousDisabled?: boolean;
   nextDisabled?: boolean;
   onPrevious?: () => void;
   onNext?: () => void;
-  /** Mobile (≤768): title hidden, Next drops the topic name, captions hidden. */
+  /** Mobile (≤768): title hidden, milestone captions hidden. */
   compact?: boolean;
   className?: string;
 }
@@ -26,17 +24,16 @@ export interface TopicFooterNavProps {
  * text-tertiary) · Next (`LMS / Course Progression Button`, right-aligned).
  *
  * Responsive rules (also annotated on the Figma component):
- * - Desktop ≥1025 and Tablet 769–1024: the full row above; the Next label
- *   carries the next topic's name and truncates at 186px.
+ * - Desktop ≥1025 and Tablet 769–1024: the full row above.
  * - Mobile ≤768: same padding and 36px buttons; the topic title is hidden (the
- *   paginator stays), Next reads just "Next", milestone captions are hidden.
+ *   paginator stays) and milestone captions are hidden.
+ * Next always reads "Next" + arrow; naming the next topic in the button is TBD.
  * Previous is disabled on the first topic, never hidden; Next is never hidden.
  */
 export function TopicFooterNav({
   position,
   total,
   title,
-  nextTitle,
   milestone = "Topic",
   previousDisabled = false,
   nextDisabled = false,
@@ -73,7 +70,6 @@ export function TopicFooterNav({
       <div className="flex min-w-0 flex-1 items-center justify-end">
         <CourseProgressionButton
           milestone={milestone}
-          nextTitle={nextTitle}
           size="sm"
           compact={compact}
           disabled={nextDisabled}
