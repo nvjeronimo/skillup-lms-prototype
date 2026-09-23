@@ -26,9 +26,7 @@ export interface VideoPlayerProps {
 
 const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
 
-/** Translucent surfaces use color-mix on tokens (never hex, never raw rgba). */
-const mix = (token: string, pct: number) =>
-  `color-mix(in srgb, var(${token}) ${pct}%, transparent)`;
+/** Translucent surfaces are tokens that carry their own alpha (bg/overlay-soft, bg/on-media-soft, bg/overlay): no color-mix, no layer opacity. */
 
 /**
  * Lightweight video player. Branded gradient placeholder (no real asset needed).
@@ -64,7 +62,7 @@ export function VideoPlayer({
     else el.requestFullscreen?.();
   }
 
-  const controlBg = { background: mix("--sk-fg-white", 20) };
+  const controlBg = "bg-sko-bg-overlay-soft text-sko-text-on-media";
 
   return (
     <div
@@ -103,8 +101,7 @@ export function VideoPlayer({
           className="absolute inset-0 z-10 flex items-center justify-center"
         >
           <span
-            className="inline-flex h-16 w-16 items-center justify-center rounded-full text-sk-text-brand-secondary shadow-lg"
-            style={{ background: mix("--sk-bg-primary", 90) }}
+            className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-overlay text-sko-icon-on-media shadow-lg"
           >
             <Icon icon={playing ? Pause : Play} size={28} />
           </span>
@@ -113,8 +110,7 @@ export function VideoPlayer({
         <div
           role="status"
           aria-live="polite"
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 text-center"
-          style={{ background: mix("--sk-bg-overlay", 55) }}
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-sko-bg-overlay text-center"
         >
           {state === "loading" ? (
             <>
@@ -154,8 +150,7 @@ export function VideoPlayer({
 
       {captions && state === "ready" ? (
         <div
-          className="absolute bottom-20 left-1/2 z-10 max-w-[80%] -translate-x-1/2 rounded px-3 py-1 text-center"
-          style={{ background: mix("--sk-bg-overlay", 75) }}
+          className="absolute bottom-20 left-1/2 z-10 max-w-[80%] -translate-x-1/2 rounded bg-sko-bg-overlay px-3 py-1 text-center"
         >
           <span className="sk-text-sm-medium text-sk-fg-white">
             Welcome back. In this unit we look at the product development lifecycle…
@@ -167,7 +162,7 @@ export function VideoPlayer({
       <div
         className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-2 px-4 pb-3 pt-8"
         style={{
-          background: `linear-gradient(to top, ${mix("--sk-bg-overlay", 75)}, transparent)`,
+          background: "linear-gradient(to top, var(--color-bg-overlay), transparent)",
         }}
       >
         <input
@@ -200,8 +195,7 @@ export function VideoPlayer({
             <button
               type="button"
               onClick={() => setSpeedIdx((i) => (i + 1) % SPEEDS.length)}
-              className="sk-text-xs-semibold rounded px-2 py-1 text-sk-fg-white"
-              style={controlBg}
+              className={cn("sk-text-xs-semibold rounded px-2 py-1", controlBg)}
               aria-label="Playback speed"
             >
               {SPEEDS[speedIdx]}×
@@ -213,9 +207,8 @@ export function VideoPlayer({
               aria-label="Toggle captions"
               className={cn(
                 "sk-text-xs-semibold rounded px-2 py-1",
-                captions ? "text-sk-text-brand-secondary" : "text-sk-fg-white",
+                captions ? "bg-sko-bg-on-media text-sko-text-on-fixed" : controlBg,
               )}
-              style={captions ? { background: mix("--sk-fg-white", 90) } : controlBg}
             >
               CC
             </button>
@@ -223,8 +216,7 @@ export function VideoPlayer({
               type="button"
               onClick={toggleFullscreen}
               aria-label="Fullscreen"
-              className="sk-text-xs-semibold rounded px-2 py-1 text-sk-fg-white"
-              style={controlBg}
+              className={cn("sk-text-xs-semibold rounded px-2 py-1", controlBg)}
             >
               ⤢
             </button>
