@@ -75,6 +75,7 @@ const config: Config = {
           "bg-fixed": "var(--color-bg-fixed)",
           "bg-fixed-subtle": "var(--color-bg-fixed-subtle)",
           "text-on-fixed": "var(--color-text-on-fixed)",
+          "text-on-inverse": "var(--color-text-on-inverse)",
           "border-focus-gap": "var(--color-border-focus-gap)",
           "bg-inverse": "var(--color-bg-inverse)",
           "bg-on-media": "var(--color-bg-on-media)",

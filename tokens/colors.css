@@ -1,6 +1,6 @@
 /* ============================================================================
    SkillUp DS colour tokens — v4.0 — 2026-09-23
-   SOURCE: Figma "❖ SKO Design System", collection 🎨 SKO-Semantics (86 tokens × 6 modes).
+   SOURCE: Figma "❖ SKO Design System", collection 🎨 SKO-Semantics (87 tokens × 6 modes).
    GENERATED from the library export — do not edit by hand; re-export when the DS changes.
 
    NAMES ARE ELEMENT-FIRST: the first word says where the token goes.
@@ -63,6 +63,7 @@
   --color-text-placeholder: #677482;
   --color-text-disabled: #8995a6;
   --color-text-on-fixed: #13282f;
+  --color-text-on-inverse: #ffffff;
   --color-text-on-media: #ffffff;
   --color-text-primary: #215477;
   --color-text-on-primary: #ffffff;
@@ -193,6 +194,7 @@
   --color-text-placeholder: #73848c;
   --color-text-disabled: #53666e;
   --color-text-on-fixed: #13282f;
+  --color-text-on-inverse: #0e1a1f;
   --color-text-on-media: #ffffff;
   --color-text-primary: #6cc0e0;
   --color-text-on-primary: #0e1a1f;
@@ -207,8 +209,8 @@
   --color-text-accent-teal: #aaeeeb;
   --color-text-on-accent-teal: #13282f;
   --color-text-accent-green: #aaedc2;
-  --color-text-on-accent-green: #13282f;
-  --color-text-accent-red: #e26567;
+  --color-text-on-accent-green: #0e1a1f;
+  --color-text-accent-red: #e8797b;
   --color-text-on-accent-red: #13282f;
   --color-text-accent-yellow: #ffebbd;
   --color-text-on-accent-yellow: #13282f;
