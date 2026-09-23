@@ -100,14 +100,14 @@ function OptionMarker({ multiSelect, checked }: { multiSelect?: boolean; checked
       className={cn(
         "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-colors",
         multiSelect ? "rounded-[6px]" : "rounded-full",
-        checked ? "border-sk-border-brand bg-sk-bg-brand-solid" : "border-sk-border-primary bg-transparent",
+        checked ? "border-sko-border-primary bg-sko-bg-primary" : "border-sko-border-default bg-transparent",
       )}
     >
       {checked ? (
         multiSelect ? (
-          <Icon icon={Check} size={13} className="text-sk-fg-white" />
+          <Icon icon={Check} size={13} className="text-sko-text-on-media" />
         ) : (
-          <span className="h-2 w-2 rounded-full bg-sk-fg-white" />
+          <span className="h-2 w-2 rounded-full bg-sko-bg-fixed" />
         )
       ) : null}
     </span>
@@ -179,22 +179,22 @@ function optionState(
 
 /** Row chrome per state — fill, text, and the trailing marker. */
 const OPTION_ROW: Record<OptionState, { box: string; marker?: "tick" | "cross"; note?: string }> = {
-  Unanswered: { box: "border-sk-border-primary text-sk-text-primary" },
-  Selected: { box: "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary" },
+  Unanswered: { box: "border-sko-border-default text-sko-text-default" },
+  Selected: { box: "border-sko-border-primary bg-sko-bg-primary-soft text-sko-text-primary" },
   Correct: {
-    box: "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary",
+    box: "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success",
     marker: "tick",
   },
   Incorrect: {
-    box: "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary",
+    box: "border-sko-border-error bg-sko-bg-error-soft text-sko-text-error",
     marker: "cross",
   },
   Missed: {
-    box: "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary",
+    box: "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success",
     note: "This should be selected",
   },
   "Correctly unselected": {
-    box: "border-sk-border-primary text-sk-text-primary",
+    box: "border-sko-border-default text-sko-text-default",
     note: "Un-selected is correct",
   },
 };
@@ -247,7 +247,7 @@ export function QuizCard({
     <div
       id={id}
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5",
+        "flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5",
         className,
       )}
     >
@@ -256,13 +256,13 @@ export function QuizCard({
       {/* The block's display_name. Authored text — it differs per course, and
           in ours it is the same generic line above every question. */}
       {showPlatformPrompt ? (
-        <span className="sk-text-md-semibold text-sk-text-primary">{platformPrompt}</span>
+        <span className="sk-text-md-semibold text-sko-text-default">{platformPrompt}</span>
       ) : null}
 
       {/* `.problem-progress`. Empty in every course we can read, so off in A-1.
           In the bucket it carries the score for the whole set. */}
       {showPoints ? (
-        <span className="sk-text-xs-regular text-sk-text-tertiary">
+        <span className="sk-text-xs-regular text-sko-text-subtle">
           {typeof pointsEarned === "number"
             ? `${pointsEarned}/${points} points (${graded ? "graded" : "ungraded"})`
             : `${points} point${points === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -272,15 +272,15 @@ export function QuizCard({
       <h3
         className={cn(
           showPlatformPrompt
-            ? "sk-text-md-regular text-sk-text-secondary"
-            : "sk-text-md-semibold text-sk-text-primary",
+            ? "sk-text-md-regular text-sko-text-muted"
+            : "sk-text-md-semibold text-sko-text-default",
         )}
       >
         {question}
       </h3>
 
       {multiSelect ? (
-        <span className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sk-text-tertiary">
+        <span className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sko-text-subtle">
           Select all that apply
         </span>
       ) : null}
@@ -302,10 +302,10 @@ export function QuizCard({
                 data-option-state={rowState}
                 className={cn(
                   "sk-text-sm-medium flex w-full items-start gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   row.box,
                   plain && revealed ? "opacity-60" : null,
-                  plain && !revealed ? "hover:bg-sk-bg-secondary" : null,
+                  plain && !revealed ? "hover:bg-sko-bg-subtle" : null,
                 )}
               >
                 <OptionMarker multiSelect={multiSelect} checked={isSelected} />
@@ -358,8 +358,8 @@ export function QuizCard({
               className={cn(
                 "sk-text-sm-semibold underline",
                 hintIndex + 1 >= hints.length
-                  ? "cursor-not-allowed text-sk-fg-quaternary"
-                  : "text-sk-text-brand",
+                  ? "cursor-not-allowed text-sko-icon-faint"
+                  : "text-sko-text-primary",
               )}
             >
               Next Hint
@@ -368,8 +368,8 @@ export function QuizCard({
         >
           <ol className="flex flex-col gap-1">
             {hints.slice(0, hintIndex + 1).map((h, i) => (
-              <li key={i} className="sk-text-sm-regular text-sk-text-secondary">
-                <span className="sk-text-sm-semibold text-sk-text-primary">
+              <li key={i} className="sk-text-sm-regular text-sko-text-muted">
+                <span className="sk-text-sm-semibold text-sko-text-default">
                   Hint ({i + 1} of {hints.length}):{" "}
                 </span>
                 {h}

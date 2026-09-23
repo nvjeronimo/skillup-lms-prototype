@@ -28,7 +28,7 @@ export function ModuleInfo({
   isCompleted = false,
   className,
 }: ModuleInfoProps) {
-  const tone = isCompleted ? "text-sk-text-success-primary" : "text-sk-text-tertiary";
+  const tone = isCompleted ? "text-sko-text-success" : "text-sko-text-subtle";
   return (
     // 14px row (DS): the Caption separator is taller than the Overline text, so
     // the row is pinned to the Overline height and the dot centres inside it.
@@ -39,7 +39,7 @@ export function ModuleInfo({
           <span
             className={cn(
               "sk-text-xs-medium",
-              isCompleted ? "text-sk-text-success-primary" : "text-sk-text-disabled",
+              isCompleted ? "text-sko-text-success" : "text-sko-text-disabled",
             )}
             aria-hidden
           >
@@ -50,7 +50,7 @@ export function ModuleInfo({
               {topicsCompleted} of {topicsTotal}
             </span>
             {isCompleted ? (
-              <Check size={14} strokeWidth={2} className="text-sk-text-success-primary" aria-hidden />
+              <Check size={14} strokeWidth={2} className="text-sko-text-success" aria-hidden />
             ) : null}
           </span>
         </>

@@ -39,13 +39,13 @@ export function ProgressRail({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary px-4 py-3",
+        "flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page px-4 py-3",
         className,
       )}
       role="group"
       aria-label={label}
     >
-      <span className="sk-text-sm-medium text-sk-text-primary">{label}</span>
+      <span className="sk-text-sm-medium text-sko-text-default">{label}</span>
       <ol className="flex flex-wrap items-center gap-1.5">
         {states.map((s, i) => {
           const isCurrent = i === currentIndex;
@@ -58,17 +58,17 @@ export function ProgressRail({
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
                   "flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium transition-colors",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   s === "done"
-                    ? "border-sk-text-success-primary bg-sk-bg-success-primary text-sk-text-success-primary"
+                    ? "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success"
                     : s === "error"
-                      ? "border-sk-text-error-primary bg-sk-bg-error-primary text-sk-text-error-primary"
+                      ? "border-sko-border-error bg-sko-bg-error-soft text-sko-text-error"
                       : s === "flagged"
-                        ? "border-sk-text-warning-primary bg-sk-bg-warning-primary text-sk-text-warning-primary"
+                        ? "border-sko-border-warning bg-sko-bg-warning-soft text-sko-text-warning"
                         : isCurrent
-                          ? "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                          : "border-sk-border-primary text-sk-text-tertiary hover:bg-sk-bg-secondary",
-                  isCurrent && s !== "pending" ? "ring-2 ring-sk-border-brand ring-offset-1" : "",
+                          ? "border-sko-border-primary bg-sko-bg-primary-soft text-sko-text-primary"
+                          : "border-sko-border-default text-sko-text-subtle hover:bg-sko-bg-subtle",
+                  isCurrent && s !== "pending" ? "ring-2 ring-sko-border-primary ring-offset-1" : "",
                 )}
               >
                 {s === "done" ? (

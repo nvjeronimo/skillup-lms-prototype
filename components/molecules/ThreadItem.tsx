@@ -31,23 +31,23 @@ export function ThreadItem({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full gap-3 rounded-lg border border-sk-border-secondary p-4 text-left transition-colors hover:border-sk-border-primary",
+        "flex w-full gap-3 rounded-lg border border-sko-border-subtle p-4 text-left transition-colors hover:border-sko-border-default",
         className,
       )}
     >
       <Avatar name={author} src={avatarUrl} size="sm" />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="sk-text-sm-semibold text-sk-text-primary">{author}</span>
-          <span className="sk-text-xs-regular text-sk-text-tertiary">{timestamp}</span>
+          <span className="sk-text-sm-semibold text-sko-text-default">{author}</span>
+          <span className="sk-text-xs-regular text-sko-text-subtle">{timestamp}</span>
         </div>
-        <p className="sk-text-sm-regular mt-1 text-sk-text-secondary">{content}</p>
+        <p className="sk-text-sm-regular mt-1 text-sko-text-muted">{content}</p>
         <span className="mt-2 flex items-center gap-4">
-          <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sk-text-tertiary">
+          <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sko-text-subtle">
             <Icon icon={ArrowUp} size={14} />
             {upvotes}
           </span>
-          <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sk-text-brand-secondary">
+          <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sko-text-primary">
             <Icon icon={MessageCircle} size={14} />
             {replies} {replies === 1 ? "reply" : "replies"}
           </span>

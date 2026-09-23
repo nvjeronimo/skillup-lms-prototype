@@ -380,10 +380,10 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         {/* The problem's own header, printed once for the whole set. The points
             line carries the score after submitting. */}
         <div className="flex flex-col gap-0.5">
-          <span className="sk-text-md-semibold text-sk-text-primary">
+          <span className="sk-text-md-semibold text-sko-text-default">
             {config.bucketPrompt}
           </span>
-          <span className="sk-text-xs-regular text-sk-text-tertiary">
+          <span className="sk-text-xs-regular text-sko-text-subtle">
             {submitted
               ? `${earned}/${total} points (${graded ? "graded" : "ungraded"})`
               : `${total} point${total === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -416,8 +416,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
                 className={cn(
                   "sk-text-sm-semibold underline",
                   bucketHintIndex + 1 >= bucketHints.length
-                    ? "cursor-not-allowed text-sk-fg-quaternary"
-                    : "text-sk-text-brand",
+                    ? "cursor-not-allowed text-sko-icon-faint"
+                    : "text-sko-text-primary",
                 )}
               >
                 Next Hint
@@ -426,8 +426,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           >
             <ol className="flex flex-col gap-1">
               {bucketHints.slice(0, bucketHintIndex + 1).map((h, i) => (
-                <li key={i} className="sk-text-sm-regular text-sk-text-secondary">
-                  <span className="sk-text-sm-semibold text-sk-text-primary">
+                <li key={i} className="sk-text-sm-regular text-sko-text-muted">
+                  <span className="sk-text-sm-semibold text-sko-text-default">
                     Hint ({i + 1} of {bucketHints.length}):{" "}
                   </span>
                   {h}
@@ -509,7 +509,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           nothing. The count comes from submitted answers only. Framed as what
           is still to come rather than what is missing. */}
       {!allAnswered ? (
-        <p className="sk-text-xs-regular text-center text-sk-text-tertiary">
+        <p className="sk-text-xs-regular text-center text-sko-text-subtle">
           {total - answeredCount} of {total} still to submit. Each answer counts once you submit it.
         </p>
       ) : null}
@@ -562,7 +562,7 @@ function QuizEntryHeader({
   ];
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone={config.variant === "practice" ? "success" : "brand"}>{config.label}</Badge>
         <Badge tone="neutral">
@@ -572,13 +572,13 @@ function QuizEntryHeader({
         </Badge>
       </div>
 
-      <h3 className="sk-text-lg-semibold text-sk-text-primary">{topic.title}</h3>
+      <h3 className="sk-text-lg-semibold text-sko-text-default">{topic.title}</h3>
 
       <ul className="flex flex-wrap gap-2">
         {facts.map((f) => (
           <li
             key={f}
-            className="sk-text-xs-regular rounded-md bg-sk-bg-secondary px-2.5 py-1 text-sk-text-secondary"
+            className="sk-text-xs-regular rounded-md bg-sko-bg-subtle px-2.5 py-1 text-sko-text-muted"
           >
             {f}
           </li>
@@ -592,7 +592,7 @@ function QuizEntryHeader({
           description="Each answer is locked in for that attempt once you submit it."
         />
       ) : (
-        <p className="sk-text-sm-regular text-sk-text-secondary">
+        <p className="sk-text-sm-regular text-sko-text-muted">
           Check your understanding before moving on. You can retake this as many times as you like.
         </p>
       )}
@@ -642,11 +642,11 @@ function QuizSummary({
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
+      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="sk-text-2xs-medium text-sk-text-brand-secondary">{config.label}</p>
-            <h3 className="sk-text-md-semibold mt-1 text-sk-text-primary">{topic.title}</h3>
+            <p className="sk-text-2xs-medium text-sko-text-primary">{config.label}</p>
+            <h3 className="sk-text-md-semibold mt-1 text-sko-text-default">{topic.title}</h3>
           </div>
           <Badge tone={passed ? "success" : "warning"} leftIcon={passed ? Check : AlertTriangle}>
             {passed ? "Passed" : "Not passed"}
@@ -656,15 +656,15 @@ function QuizSummary({
         <div
           className={cn(
             "flex items-center gap-4 rounded-lg p-4",
-            passed ? "bg-sk-bg-success-primary" : "bg-sk-bg-warning-primary",
+            passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
           )}
         >
-          <span className="sk-text-display-sm-semibold text-sk-text-primary">{pct}%</span>
+          <span className="sk-text-display-sm-semibold text-sko-text-default">{pct}%</span>
           <div>
-            <p className="sk-text-sm-semibold text-sk-text-primary">
+            <p className="sk-text-sm-semibold text-sko-text-default">
               You scored {result.score} / {result.total}
             </p>
-            <p className="sk-text-xs-regular text-sk-text-secondary">
+            <p className="sk-text-xs-regular text-sko-text-muted">
               Pass mark {config.passThresholdPct}%
               {config.weightPct ? ` · counts ${config.weightPct}% of your final grade` : ""}
             </p>
@@ -676,8 +676,8 @@ function QuizSummary({
             incorrect" already names how many were wrong and takes the learner
             straight to them, so a row of circles adds nothing on a long quiz. */}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-4">
-          <p className="sk-text-xs-regular text-sk-text-tertiary">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-sko-border-subtle pt-4">
+          <p className="sk-text-xs-regular text-sko-text-subtle">
             {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"}
             {typeof config.maxAttempts === "number" &&
             config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
@@ -710,14 +710,14 @@ function GradedSubmission({ topicId }: { topicId: string }) {
   const [submitted, setSubmitted] = React.useState(false);
   return (
     <div className="flex flex-col gap-5 py-4">
-      <section className="rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
-        <p className="sk-text-2xs-medium mb-2 text-sk-text-brand-secondary">Assignment brief</p>
-        <p className="sk-text-md-regular text-sk-text-secondary">
+      <section className="rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+        <p className="sk-text-2xs-medium mb-2 text-sko-text-primary">Assignment brief</p>
+        <p className="sk-text-md-regular text-sko-text-muted">
           Define a control plan for a process of your choice. Identify the critical-to-quality
           characteristics, the metrics you&rsquo;ll monitor, the control limits, and the response
           plan when a measurement falls out of range. Submit your plan as a PDF or DOCX.
         </p>
-        <ul className="sk-text-sm-regular mt-3 list-disc pl-5 text-sk-text-secondary">
+        <ul className="sk-text-sm-regular mt-3 list-disc pl-5 text-sko-text-muted">
           <li>1–2 pages</li>
           <li>Include at least one control chart sketch</li>
           <li>Counts toward your final grade</li>

@@ -46,7 +46,7 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "flex items-center gap-4 border-t border-sk-border-secondary bg-sk-bg-primary px-4 py-3",
+        "flex items-center gap-4 border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3",
         className,
       )}
     >
@@ -59,11 +59,11 @@ export function TopicFooterNav({
       {/* Unit info: the paginator is the stronger element; the title sits under it
           on tablet/desktop and is dropped on mobile. */}
       <div className="min-w-0 flex-1 text-center">
-        <p className="sk-text-sm-semibold text-sk-text-tertiary">
+        <p className="sk-text-sm-semibold text-sko-text-subtle">
           {position} of {total}
         </p>
         {!compact ? (
-          <p className="sk-text-xs-regular truncate text-sk-text-tertiary">{title}</p>
+          <p className="sk-text-xs-regular truncate text-sko-text-subtle">{title}</p>
         ) : null}
       </div>
 

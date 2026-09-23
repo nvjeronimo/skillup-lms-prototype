@@ -24,7 +24,7 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
       <span
         role="img"
         aria-label="Completed"
-        className={cn(base, "bg-sk-bg-success-solid text-sk-fg-white", className)}
+        className={cn(base, "bg-sko-bg-success text-sko-text-on-media", className)}
         style={dims}
       >
         <Check size={Math.round(size * (14 / 18))} strokeWidth={size >= 24 ? 2.5 : 2} />
@@ -37,7 +37,7 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
       <span
         role="img"
         aria-label="Locked"
-        className={cn(base, "bg-sk-bg-tertiary text-sk-text-tertiary", className)}
+        className={cn(base, "bg-sko-bg-muted text-sko-text-subtle", className)}
         style={dims}
       >
         <Lock size={Math.round(size * (13 / 18))} strokeWidth={stroke} />
@@ -54,14 +54,14 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
         base,
         "border-2",
         state === "In Progress"
-          ? "border-sk-fg-progress"
-          : "border-sk-border-primary",
+          ? "border-sko-border-info"
+          : "border-sko-border-default",
         className,
       )}
       style={dims}
     >
       {state === "In Progress" ? (
-        <span className="h-1/2 w-1/2 rounded-full bg-sk-fg-progress" />
+        <span className="h-1/2 w-1/2 rounded-full bg-sko-bg-info" />
       ) : null}
     </span>
   );

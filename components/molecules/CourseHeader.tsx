@@ -62,18 +62,18 @@ export function CourseHeader({
     <div
       className={cn(
         "flex items-start gap-2 px-4 pb-2 pt-4",
-        showDivider && "border-b border-sk-border-secondary",
+        showDivider && "border-b border-sko-border-subtle",
         className,
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-center gap-1">
-          <p className="sk-text-xs-medium min-w-0 flex-1 uppercase text-sk-text-tertiary">{eyebrow}</p>
+          <p className="sk-text-xs-medium min-w-0 flex-1 uppercase text-sko-text-subtle">{eyebrow}</p>
           {rowTrailing}
         </div>
-        <p className="sk-text-lg-semibold text-sk-text-primary">{title}</p>
+        <p className="sk-text-lg-semibold text-sko-text-default">{title}</p>
         {partnerList.length ? (
-          <p className="sk-text-xs-medium text-sk-text-primary">
+          <p className="sk-text-xs-medium text-sko-text-default">
             {partnerList.map((p) => p.name).join(" · ")}
           </p>
         ) : null}

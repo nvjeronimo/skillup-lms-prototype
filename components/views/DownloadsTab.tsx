@@ -44,14 +44,14 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
       ))}
 
       {/* Download all (ICP Phase 1). */}
-      <div className="mt-2 flex justify-center border-t border-sk-border-secondary pt-3">
+      <div className="mt-2 flex justify-center border-t border-sko-border-subtle pt-3">
         <button
           type="button"
           onClick={() => {
             track("download_file", { fileId: "all", type: "ZIP" });
             showToast(`Downloading ${files.length} resources…`);
           }}
-          className="sk-text-sm-medium inline-flex items-center gap-1.5 text-sk-text-brand-secondary hover:underline"
+          className="sk-text-sm-medium inline-flex items-center gap-1.5 text-sko-text-primary hover:underline"
         >
           <Icon icon={Download} size={16} />
           Download all resources

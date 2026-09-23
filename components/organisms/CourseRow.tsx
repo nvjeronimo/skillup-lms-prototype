@@ -32,8 +32,8 @@ export function CourseRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-4 rounded-xl border bg-sk-bg-primary px-5 py-3",
-        state === "Active" ? "border-sk-border-brand" : "border-sk-border-secondary",
+        "flex items-center gap-4 rounded-xl border bg-sko-bg-page px-5 py-3",
+        state === "Active" ? "border-sko-border-primary" : "border-sko-border-subtle",
         className,
       )}
     >
@@ -41,7 +41,7 @@ export function CourseRow({
         <span
           className={cn(
             "sk-text-md-semibold truncate",
-            state === "Locked" ? "text-sk-text-tertiary" : "text-sk-text-primary",
+            state === "Locked" ? "text-sko-text-subtle" : "text-sko-text-default",
           )}
         >
           {title}
@@ -51,10 +51,10 @@ export function CourseRow({
 
       {state === "Active" ? (
         <div className="flex items-center gap-3">
-          <div className="h-2 w-40 overflow-hidden rounded-full bg-sk-bg-tertiary">
-            <div className="h-full rounded-full bg-sk-fg-progress" style={{ width: `${progressPct}%` }} />
+          <div className="h-2 w-40 overflow-hidden rounded-full bg-sko-bg-muted">
+            <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${progressPct}%` }} />
           </div>
-          <span className="sk-text-sm-regular text-sk-text-tertiary">{progressPct}%</span>
+          <span className="sk-text-sm-regular text-sko-text-subtle">{progressPct}%</span>
           <Button variant="primary" size="md" onClick={onClick}>
             Resume
           </Button>
@@ -63,7 +63,7 @@ export function CourseRow({
 
       {state === "Locked" ? (
         <div className="flex items-center gap-3">
-          <span className="sk-text-xs-semibold inline-flex items-center gap-1 text-sk-text-warning-primary">
+          <span className="sk-text-xs-semibold inline-flex items-center gap-1 text-sko-text-warning">
             <Icon icon={Lock} size={14} />
             {unlockLabel}
           </span>
@@ -75,7 +75,7 @@ export function CourseRow({
 
       {state === "Available" ? (
         <div className="flex items-center gap-3">
-          <span className="sk-text-xs-semibold text-sk-text-success-primary">AVAILABLE NOW</span>
+          <span className="sk-text-xs-semibold text-sko-text-success">AVAILABLE NOW</span>
           <Button variant="primary" size="md" onClick={onClick}>
             Start
           </Button>

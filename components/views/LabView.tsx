@@ -44,14 +44,14 @@ export function LabView({ topicId }: { topicId: string }) {
         <Badge tone="neutral">~{lab.estimatedMinutes} min</Badge>
       </div>
 
-      <p className="sk-text-md-regular text-sk-text-secondary">{lab.intro}</p>
+      <p className="sk-text-md-regular text-sko-text-muted">{lab.intro}</p>
 
       {/* Prerequisites — surfaced before the download so nobody gets stuck. */}
-      <section className="flex flex-col gap-2 rounded-xl border border-sk-border-secondary bg-sk-bg-secondary p-4">
-        <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">
+      <section className="flex flex-col gap-2 rounded-xl border border-sko-border-subtle bg-sko-bg-subtle p-4">
+        <span className="sk-text-2xs-medium uppercase tracking-wide text-sko-text-subtle">
           Before you start
         </span>
-        <ul className="sk-text-sm-regular list-disc pl-5 text-sk-text-secondary">
+        <ul className="sk-text-sm-regular list-disc pl-5 text-sko-text-muted">
           {lab.prerequisites.map((p) => (
             <li key={p}>{p}</li>
           ))}
@@ -61,7 +61,7 @@ export function LabView({ topicId }: { topicId: string }) {
       {/* Files — the core affordance of a lab topic. */}
       <section className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="sk-text-md-semibold text-sk-text-primary">Lab files</h2>
+          <h2 className="sk-text-md-semibold text-sko-text-default">Lab files</h2>
           <Button
             variant="secondary"
             size="sm"
@@ -84,21 +84,21 @@ export function LabView({ topicId }: { topicId: string }) {
                   className={cn(
                     "flex flex-wrap items-center justify-between gap-3 rounded-lg border p-3",
                     got
-                      ? "border-sk-text-success-primary bg-sk-bg-success-primary"
-                      : "border-sk-border-secondary bg-sk-bg-primary",
+                      ? "border-sko-border-success bg-sko-bg-success-soft"
+                      : "border-sko-border-subtle bg-sko-bg-page",
                   )}
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <Icon
                       icon={FILE_ICON[f.kind]}
                       size={18}
-                      className={got ? "text-sk-text-success-primary" : "text-sk-text-brand-secondary"}
+                      className={got ? "text-sko-text-success" : "text-sko-text-primary"}
                     />
                     <div className="flex min-w-0 flex-col">
-                      <span className="sk-text-sm-semibold truncate text-sk-text-primary">
+                      <span className="sk-text-sm-semibold truncate text-sko-text-default">
                         {f.name}
                       </span>
-                      <span className="sk-text-xs-regular text-sk-text-tertiary">{f.size}</span>
+                      <span className="sk-text-xs-regular text-sko-text-subtle">{f.size}</span>
                     </div>
                   </div>
                   <Button
@@ -121,14 +121,14 @@ export function LabView({ topicId }: { topicId: string }) {
 
       {/* Steps to run it locally. */}
       <section className="flex flex-col gap-3">
-        <h2 className="sk-text-md-semibold text-sk-text-primary">How to run it</h2>
+        <h2 className="sk-text-md-semibold text-sko-text-default">How to run it</h2>
         <ol className="flex flex-col gap-2">
           {lab.steps.map((s, i) => (
             <li key={i} className="flex gap-3">
-              <span className="sk-text-xs-semibold mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sk-bg-brand-section text-sk-text-brand-secondary">
+              <span className="sk-text-xs-semibold mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
                 {i + 1}
               </span>
-              <span className="sk-text-sm-regular text-sk-text-secondary">{s}</span>
+              <span className="sk-text-sm-regular text-sko-text-muted">{s}</span>
             </li>
           ))}
         </ol>
@@ -153,7 +153,7 @@ export function LabView({ topicId }: { topicId: string }) {
             Mark as complete
           </Button>
           {!allDownloaded ? (
-            <p className="sk-text-xs-regular mt-2 text-sk-text-tertiary">
+            <p className="sk-text-xs-regular mt-2 text-sko-text-subtle">
               Download the lab files first.
             </p>
           ) : null}

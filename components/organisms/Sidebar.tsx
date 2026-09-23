@@ -165,7 +165,7 @@ export function Sidebar({
   // dividers — module number (green when complete), lesson labels (L1/L2, brand on
   // the active lesson) and status dots, with the active topic highlighted.
   if (collapsed) {
-    const Divider = () => <div className="h-px w-10 bg-sk-border-secondary" />;
+    const Divider = () => <div className="h-px w-10 bg-sko-border-subtle" />;
     const Dot = (topic: Topic) => (
       <div
         key={topic.id}
@@ -184,7 +184,7 @@ export function Sidebar({
         />
         {/* Saved topics carry a small bookmark mark on the rail. */}
         {bookmarks.has(topic.id) ? (
-          <span className="pointer-events-none absolute right-1.5 top-1 text-sk-text-brand-secondary">
+          <span className="pointer-events-none absolute right-1.5 top-1 text-sko-text-primary">
             <Bookmark size={11} fill="currentColor" strokeWidth={1} />
           </span>
         ) : null}
@@ -194,7 +194,7 @@ export function Sidebar({
       <>
       <aside
         className={cn(
-          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary py-4",
+          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page py-4",
           className,
         )}
         aria-label="Course navigation"
@@ -221,7 +221,7 @@ export function Sidebar({
                     <p
                       className={cn(
                         "sk-text-xs-semibold",
-                        moduleDone ? "text-sk-text-success-primary" : "text-sk-text-tertiary",
+                        moduleDone ? "text-sko-text-success" : "text-sko-text-subtle",
                       )}
                     >
                       {String(i + 1).padStart(2, "0")}
@@ -235,7 +235,7 @@ export function Sidebar({
                             <p
                               className={cn(
                                 "sk-text-xs-semibold",
-                                lessonActive ? "text-sk-text-brand-primary" : "text-sk-text-tertiary",
+                                lessonActive ? "text-sko-text-on-primary-soft" : "text-sko-text-subtle",
                               )}
                             >
                               {`L${j + 1}`}
@@ -260,7 +260,7 @@ export function Sidebar({
           onMouseEnter={keepOpen}
           onMouseLeave={scheduleClose}
         >
-          <div className="flex items-center gap-2 rounded-lg border border-sk-border-secondary bg-sk-bg-primary py-1.5 pl-3 pr-1.5 shadow-lg">
+          <div className="flex items-center gap-2 rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-lg">
             <button
               type="button"
               onClick={() => {
@@ -269,7 +269,7 @@ export function Sidebar({
               }}
               className="flex min-w-0 flex-col items-start text-left"
             >
-              <span className="sk-text-sm-medium whitespace-nowrap text-sk-text-primary">
+              <span className="sk-text-sm-medium whitespace-nowrap text-sko-text-default">
                 {flyout.topic.title}
               </span>
               <TopicTypeBadge type={flyout.topic.type} />
@@ -290,9 +290,9 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "flex h-full flex-col overflow-hidden bg-sk-bg-primary",
+        "flex h-full flex-col overflow-hidden bg-sko-bg-page",
         // Floating card on desktop/tablet; Mobile drawer fills its container.
-        isMobile ? "" : "rounded-xl border border-sk-border-secondary",
+        isMobile ? "" : "rounded-xl border border-sko-border-subtle",
         WIDTH[variant],
         className,
       )}
@@ -364,7 +364,7 @@ export function Sidebar({
           // 3-level (implicit module): topic rows directly under the Course Header.
           if (module.implicit) {
             return (
-              <div key={module.id} className="border-b border-sk-border-secondary py-2">
+              <div key={module.id} className="border-b border-sko-border-subtle py-2">
                 {moduleTopics(module).map(renderTopic)}
               </div>
             );

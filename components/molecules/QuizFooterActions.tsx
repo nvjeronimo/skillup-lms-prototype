@@ -225,9 +225,9 @@ export function QuizFooterActions({
           <a
             href={`#${reviewTargetId}`}
             className={cn(
-              "sk-text-sm-semibold rounded-md text-sk-text-brand",
+              "sk-text-sm-semibold rounded-md text-sko-text-primary",
               "sr-only focus:not-sr-only focus:px-3 focus:py-2",
-              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
+              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
             )}
           >
             Review
@@ -247,7 +247,7 @@ export function QuizFooterActions({
         {/* Unlimited attempts print no line at all — that is the platform's
             behaviour, not a hidden count. */}
         {showAttempts && typeof attemptsUsed === "number" && typeof maxAttempts === "number" ? (
-          <span className="sk-text-xs-regular text-sk-text-tertiary">
+          <span className="sk-text-xs-regular text-sko-text-subtle">
             You have used {attemptsUsed} of {maxAttempts} attempt{maxAttempts === 1 ? "" : "s"}
           </span>
         ) : null}

@@ -28,21 +28,21 @@ export function SavedNoteItem({
   const inner = (
     <>
       <span className="flex items-baseline justify-between gap-2">
-        <span className="sk-text-xs-semibold min-w-0 truncate text-sk-text-brand-secondary">
+        <span className="sk-text-xs-semibold min-w-0 truncate text-sko-text-primary">
           {ts} · {topicTitle}
         </span>
-        <span className="sk-text-xs-regular shrink-0 text-sk-text-tertiary">{savedAt}</span>
+        <span className="sk-text-xs-regular shrink-0 text-sko-text-subtle">{savedAt}</span>
       </span>
-      <span className="sk-text-sm-italic mt-2 block border-l-[3px] border-sk-border-brand pl-3 text-sk-text-tertiary">
+      <span className="sk-text-sm-italic mt-2 block border-l-[3px] border-sko-border-primary pl-3 text-sko-text-subtle">
         {anchorQuote}
       </span>
-      <span className="sk-text-sm-medium mt-2 block text-sk-text-primary">{text}</span>
+      <span className="sk-text-sm-medium mt-2 block text-sko-text-default">{text}</span>
       {tags.length ? (
         <span className="mt-2 flex flex-wrap gap-1.5">
           {tags.map((t) => (
             <span
               key={t}
-              className="sk-text-xs-medium rounded bg-sk-bg-secondary px-2 py-0.5 text-sk-text-tertiary"
+              className="sk-text-xs-medium rounded bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
             >
               #{t}
             </span>
@@ -53,7 +53,7 @@ export function SavedNoteItem({
   );
 
   const classes = cn(
-    "block w-full px-4 py-4 text-left transition-colors hover:bg-sk-bg-secondary",
+    "block w-full px-4 py-4 text-left transition-colors hover:bg-sko-bg-subtle",
     className,
   );
 

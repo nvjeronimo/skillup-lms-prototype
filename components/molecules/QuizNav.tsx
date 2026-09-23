@@ -31,7 +31,7 @@ export function QuizNavStacked({ onPrevious, onNext, className }: QuizNavStacked
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-4",
+        "flex flex-wrap items-center justify-between gap-3 border-t border-sko-border-subtle pt-4",
         className,
       )}
     >
@@ -88,27 +88,27 @@ export function QuizNavStepper({
         aria-label="Previous question"
         className={cn(
           "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md",
-          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
+          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
           onBack
-            ? "text-sk-text-secondary hover:bg-sk-bg-secondary"
-            : "cursor-not-allowed text-sk-fg-quaternary",
+            ? "text-sko-text-muted hover:bg-sko-bg-subtle"
+            : "cursor-not-allowed text-sko-icon-faint",
         )}
       >
         <Icon icon={ChevronLeft} size={20} />
       </button>
 
       <div
-        className="h-2 min-w-0 flex-1 bg-sk-bg-tertiary"
+        className="h-2 min-w-0 flex-1 bg-sko-bg-muted"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={`Quiz progress: ${value}% complete`}
       >
-        <div className="h-full bg-sk-fg-progress" style={{ width: `${value}%` }} />
+        <div className="h-full bg-sko-bg-info" style={{ width: `${value}%` }} />
       </div>
 
-      <span className="sk-text-xs-semibold shrink-0 text-sk-text-primary">
+      <span className="sk-text-xs-semibold shrink-0 text-sko-text-default">
         Question {current} of {total}
       </span>
     </div>

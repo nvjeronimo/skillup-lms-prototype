@@ -22,8 +22,8 @@ export function FilterChip({ label, count, active = false, onClick, className }:
       className={cn(
         "sk-text-sm-medium inline-flex items-center gap-1.5 rounded-full px-3 py-1 transition-colors duration-200",
         active
-          ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
-          : "bg-sk-bg-secondary text-sk-text-secondary hover:bg-sk-bg-tertiary",
+          ? "bg-sko-bg-primary-soft text-sko-text-primary"
+          : "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-muted",
         className,
       )}
     >
@@ -32,7 +32,7 @@ export function FilterChip({ label, count, active = false, onClick, className }:
         <span
           className={cn(
             "sk-text-xs-semibold",
-            active ? "text-sk-text-brand-secondary" : "text-sk-text-tertiary",
+            active ? "text-sko-text-primary" : "text-sko-text-subtle",
           )}
         >
           {count}

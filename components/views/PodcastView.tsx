@@ -55,11 +55,11 @@ export function PodcastView({ topicId }: { topicId: string }) {
       </div>
 
       {/* Audio surface — a waveform stands in for the video frame. */}
-      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
+      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <div
           className="flex h-24 items-end gap-[3px] overflow-hidden rounded-lg px-4 py-3"
           style={{
-            background: "linear-gradient(135deg, var(--sk-bg-brand-section), var(--sk-bg-secondary))",
+            background: "linear-gradient(135deg, var(--color-bg-primary-soft), var(--color-bg-subtle))",
           }}
           aria-hidden
         >
@@ -72,7 +72,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
                 key={i}
                 className={cn(
                   "flex-1 rounded-sm",
-                  played ? "bg-sk-bg-brand-solid" : "bg-sk-border-primary",
+                  played ? "bg-sko-bg-primary" : "bg-sko-border-default",
                 )}
                 style={{ height: `${h}%` }}
               />
@@ -88,7 +88,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
           value={t}
           onChange={(e) => seek(Number(e.target.value))}
           aria-label="Seek"
-          className="w-full accent-[var(--sk-bg-brand-solid)]"
+          className="w-full accent-[var(--color-bg-primary)]"
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -120,7 +120,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
             >
               15s
             </Button>
-            <span className="sk-text-xs-regular ml-1 text-sk-text-tertiary">
+            <span className="sk-text-xs-regular ml-1 text-sko-text-subtle">
               {secondsToTs(t)} / {secondsToTs(durationSeconds)}
             </span>
           </div>
@@ -161,16 +161,16 @@ export function PodcastView({ topicId }: { topicId: string }) {
       ) : null}
 
       <div className="flex flex-col gap-1">
-        <span className="sk-text-sm-medium text-sk-text-secondary">
+        <span className="sk-text-sm-medium text-sko-text-muted">
           {podcast.host}
           {podcast.guest ? ` with ${podcast.guest}` : ""}
         </span>
-        <p className="sk-text-md-regular text-sk-text-secondary">{podcast.summary}</p>
+        <p className="sk-text-md-regular text-sko-text-muted">{podcast.summary}</p>
       </div>
 
       {/* Chapters behave like transcript lines: click to seek. */}
       <section className="flex flex-col gap-2">
-        <h2 className="sk-text-md-semibold text-sk-text-primary">Chapters</h2>
+        <h2 className="sk-text-md-semibold text-sko-text-default">Chapters</h2>
         <ul className="flex flex-col gap-1">
           {podcast.chapters.map((c) => {
             const [m, sec] = c.ts.split(":").map(Number);
@@ -183,14 +183,14 @@ export function PodcastView({ topicId }: { topicId: string }) {
                   onClick={() => seek(at)}
                   className={cn(
                     "flex w-full items-baseline gap-3 rounded-lg px-3 py-2 text-left transition-colors",
-                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
-                    active ? "bg-sk-bg-brand-section" : "hover:bg-sk-bg-secondary",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
+                    active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
                   )}
                 >
                   <span
                     className={cn(
                       "sk-text-xs-medium tabular-nums",
-                      active ? "text-sk-text-brand-secondary" : "text-sk-text-tertiary",
+                      active ? "text-sko-text-primary" : "text-sko-text-subtle",
                     )}
                   >
                     {c.ts}
@@ -198,7 +198,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
                   <span
                     className={cn(
                       "sk-text-sm-regular",
-                      active ? "text-sk-text-brand-secondary" : "text-sk-text-primary",
+                      active ? "text-sko-text-primary" : "text-sko-text-default",
                     )}
                   >
                     {c.label}
@@ -210,7 +210,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
         </ul>
       </section>
 
-      <p className="sk-text-xs-regular text-sk-text-tertiary">
+      <p className="sk-text-xs-regular text-sko-text-subtle">
         Completes automatically once you have listened to 90%.
       </p>
     </div>

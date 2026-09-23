@@ -18,18 +18,18 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const VARIANT: Record<ButtonVariant, string> = {
   // Brand teal → yellow hover, dark-teal text on hover (handoff brand-aware rule).
   primary:
-    "bg-sk-bg-brand-solid text-sk-text-primary-on-brand hover:bg-sk-bg-brand-hover hover:text-sk-text-primary-on-brand-hover",
+    "bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover",
   // Outline teal.
   secondary:
-    "bg-transparent border border-sk-border-brand text-sk-text-brand hover:bg-sk-bg-brand-section",
+    "bg-transparent border border-sko-border-primary text-sko-text-primary hover:bg-sko-bg-primary-soft",
   // Ghost teal.
-  tertiary: "bg-transparent text-sk-text-brand hover:bg-sk-bg-brand-section",
+  tertiary: "bg-transparent text-sko-text-primary hover:bg-sko-bg-primary-soft",
   // Neutral outline (DS Tertiary + border-primary stroke, text-tertiary) — e.g. footer "Previous".
-  neutral: "bg-transparent border border-sk-border-primary text-sk-text-tertiary hover:bg-sk-bg-secondary",
+  neutral: "bg-transparent border border-sko-border-default text-sko-text-subtle hover:bg-sko-bg-subtle",
   // Utility / close-X stay UUI gray-neutral by design.
   destructive:
-    "bg-transparent border border-sk-border-primary text-sk-text-error-primary hover:bg-sk-bg-error-primary",
-  utility: "bg-sk-bg-secondary text-sk-text-secondary hover:bg-sk-bg-tertiary",
+    "bg-transparent border border-sko-border-default text-sko-text-error hover:bg-sko-bg-error-soft",
+  utility: "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-muted",
 };
 
 const SIZE: Record<ButtonSize, { pad: string; text: string; icon: number; square: string }> = {

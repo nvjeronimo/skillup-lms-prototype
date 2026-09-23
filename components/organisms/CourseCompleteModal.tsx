@@ -42,25 +42,25 @@ export function CourseCompleteModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-md overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary p-6 text-center shadow-xl"
+        className="relative w-full max-w-md overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page p-6 text-center shadow-xl"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
+          className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
         >
           <Icon icon={X} size={20} />
         </button>
 
-        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-sk-bg-success-solid text-sk-fg-white">
+        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-sko-bg-success text-sko-text-on-media">
           <Icon icon={Check} size={28} strokeWidth={2.5} />
         </span>
-        <h2 id={titleId} className="sk-text-display-xs-semibold mt-4 text-sk-text-primary">
+        <h2 id={titleId} className="sk-text-display-xs-semibold mt-4 text-sko-text-default">
           Course complete!
         </h2>
-        <p className="sk-text-sm-regular mt-2 text-sk-text-secondary">
-          You&rsquo;ve completed <span className="text-sk-text-primary">{courseTitle}</span>. Grab
+        <p className="sk-text-sm-regular mt-2 text-sko-text-muted">
+          You&rsquo;ve completed <span className="text-sko-text-default">{courseTitle}</span>. Grab
           your certificate, jump to the next one, or head back.
         </p>
 

@@ -83,17 +83,17 @@ export function NoteEditorModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-[560px] overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-xl"
+        className="relative w-full max-w-[560px] overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
       >
-        <header className="flex items-center justify-between border-b border-sk-border-secondary px-5 py-4">
-          <h2 id={titleId} className="sk-text-md-semibold text-sk-text-primary">
+        <header className="flex items-center justify-between border-b border-sko-border-subtle px-5 py-4">
+          <h2 id={titleId} className="sk-text-md-semibold text-sko-text-default">
             {noteId ? "Edit note" : "Add note"}
           </h2>
           <button
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -102,44 +102,44 @@ export function NoteEditorModal({
         <div className="flex flex-col gap-5 px-6 py-5">
           {anchorQuote ? (
             <div>
-              <p className="sk-text-2xs-medium mb-2 text-sk-text-tertiary">
+              <p className="sk-text-2xs-medium mb-2 text-sko-text-subtle">
                 Anchored to{" "}
-                <span className="text-sk-text-brand-secondary">{anchorTs}</span>
+                <span className="text-sko-text-primary">{anchorTs}</span>
               </p>
-              <p className="sk-text-sm-italic rounded-lg bg-sk-bg-secondary border-l-[3px] border-sk-border-brand px-4 py-3 text-sk-text-tertiary">
+              <p className="sk-text-sm-italic rounded-lg bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
                 {anchorQuote}
               </p>
             </div>
           ) : null}
 
           <label className="block">
-            <span className="sk-text-sm-medium mb-1.5 block text-sk-text-secondary">Your note</span>
+            <span className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">Your note</span>
             <textarea
               ref={textRef}
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={4}
               placeholder="Write your note…"
-              className="sk-text-sm-regular w-full resize-none rounded-lg border border-sk-border-primary bg-sk-bg-primary px-3 py-2 text-sk-text-primary outline-none focus:border-sk-border-brand"
+              className="sk-text-sm-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
             />
           </label>
 
           <div>
-            <span className="sk-text-sm-medium mb-1.5 block text-sk-text-secondary">
+            <span className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">
               Tags (optional)
             </span>
-            <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-sk-border-primary px-2 py-1.5">
+            <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-sko-border-default px-2 py-1.5">
               {tags.map((t) => (
                 <span
                   key={t}
-                  className="sk-text-xs-medium inline-flex items-center gap-1 rounded bg-sk-bg-secondary px-2 py-0.5 text-sk-text-tertiary"
+                  className="sk-text-xs-medium inline-flex items-center gap-1 rounded bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
                 >
                   #{t}
                   <button
                     type="button"
                     onClick={() => setTags((prev) => prev.filter((x) => x !== t))}
                     aria-label={`Remove ${t}`}
-                    className="hover:text-sk-text-error-primary"
+                    className="hover:text-sko-text-error"
                   >
                     <Icon icon={X} size={12} />
                   </button>
@@ -156,14 +156,14 @@ export function NoteEditorModal({
                 }}
                 placeholder="Add tag…"
                 className={cn(
-                  "sk-text-sm-regular min-w-24 flex-1 bg-transparent px-1 py-0.5 text-sk-text-primary outline-none",
+                  "sk-text-sm-regular min-w-24 flex-1 bg-transparent px-1 py-0.5 text-sko-text-default outline-none",
                 )}
               />
             </div>
           </div>
         </div>
 
-        <footer className="flex items-center justify-end gap-2 border-t border-sk-border-secondary px-5 py-4">
+        <footer className="flex items-center justify-end gap-2 border-t border-sko-border-subtle px-5 py-4">
           <Button variant="tertiary" onClick={onCancel}>
             Cancel
           </Button>

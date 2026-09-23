@@ -18,16 +18,16 @@ export function FileItem({ type, name, size, addedLabel, onDownload, className }
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-lg border border-sk-border-secondary px-4 py-3",
+        "flex items-center gap-3 rounded-lg border border-sko-border-subtle px-4 py-3",
         className,
       )}
     >
-      <span className="sk-text-2xs-semibold inline-flex h-9 w-11 shrink-0 items-center justify-center rounded-md bg-sk-bg-secondary text-sk-text-tertiary">
+      <span className="sk-text-2xs-semibold inline-flex h-9 w-11 shrink-0 items-center justify-center rounded-md bg-sko-bg-subtle text-sko-text-subtle">
         {type}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="sk-text-sm-semibold truncate text-sk-text-primary">{name}</p>
-        <p className="sk-text-xs-regular text-sk-text-tertiary">
+        <p className="sk-text-sm-semibold truncate text-sko-text-default">{name}</p>
+        <p className="sk-text-xs-regular text-sko-text-subtle">
           {size}
           {addedLabel ? ` · ${addedLabel}` : ""}
         </p>
@@ -36,7 +36,7 @@ export function FileItem({ type, name, size, addedLabel, onDownload, className }
         type="button"
         onClick={onDownload}
         aria-label={`Download ${name}`}
-        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sk-text-brand-secondary transition-colors hover:bg-sk-bg-brand-section"
+        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sko-text-primary transition-colors hover:bg-sko-bg-primary-soft"
       >
         <Icon icon={Download} size={20} />
       </button>

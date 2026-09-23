@@ -5,7 +5,8 @@
  *   1. Raw colors           — hex / rgb / hsl literals (colours must be --color-* / sko-* tokens)
  *   2. Token-role inversion — a TEXT token (`sk-text-*`) used in a bg/border position
  *                             (root cause of the dark-mode contrast breaks)
- *   3. Raw typography       — Tailwind text-size / font-weight utilities instead of `.sk-text-*`
+ *   3. Legacy colour names — the v3.2 sk-bg-/sk-text-/sk-fg-/sk-border- vocabulary
+ *   4. Raw typography       — Tailwind text-size / font-weight utilities instead of `.sk-text-*`
  *
  * Escape hatch: append `// token-lint-disable-next-line <reason>` on the line above,
  * or add a path to ALLOW. Exits non-zero on any violation. Run: `npm run lint:tokens`.
@@ -32,6 +33,13 @@ const RULES = [
     // adapt fine, so they are intentionally not flagged here.
     re: /\b(?:bg|fill|from|via|to)-(?:sk-text-|sko-text-|sko-icon-)/,
     msg: "text/icon token used as a surface/fill — use a bg token (text tokens invert between light/dark, breaking content contrast)",
+  },
+  {
+    id: "legacy-colour",
+    // the v3.2 colour vocabulary: sk-bg-*, sk-text-*, sk-fg-*, sk-border-* classes and --sk-* colour vars.
+    // Components use the element-first sko-* classes / --color-* vars (the DS names).
+    re: /(?<![\w-])[a-z-]+-sk-(?:bg|text|fg|border)-|var\(--sk-(?:bg|text|fg|border)-/,
+    msg: "deprecated v3.2 colour name — use the DS element-first sko-* class or --color-* var",
   },
   {
     id: "raw-type",

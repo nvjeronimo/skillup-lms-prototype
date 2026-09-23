@@ -39,8 +39,8 @@ const SKINS: { skin: SkinId; label: string }[] = [
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border-t border-sk-border-secondary px-4 py-3">
-      <p className="sk-text-2xs-medium mb-2 text-sk-text-tertiary">{title}</p>
+    <div className="border-t border-sko-border-subtle px-4 py-3">
+      <p className="sk-text-2xs-medium mb-2 text-sko-text-subtle">{title}</p>
       {children}
     </div>
   );
@@ -64,22 +64,22 @@ function ToggleRow({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-center gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sk-bg-secondary"
+      className="flex w-full items-center gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
     >
       <span
         aria-hidden
         className={cn(
           "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
           checked
-            ? "border-sk-border-brand bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
-            : "border-sk-border-primary text-transparent",
+            ? "border-sko-border-primary bg-sko-bg-primary text-sko-text-on-primary"
+            : "border-sko-border-default text-transparent",
         )}
       >
         <Icon icon={Check} size={12} />
       </span>
       <span className="flex flex-col">
-        <span className="sk-text-sm-medium text-sk-text-secondary">{label}</span>
-        {hint ? <span className="sk-text-xs-regular text-sk-text-tertiary">{hint}</span> : null}
+        <span className="sk-text-sm-medium text-sko-text-muted">{label}</span>
+        {hint ? <span className="sk-text-xs-regular text-sko-text-subtle">{hint}</span> : null}
       </span>
     </button>
   );
@@ -152,8 +152,8 @@ export function DemoControlsMenu({
 
   const pill =
     "sk-text-xs-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
-  const pillOn = "bg-sk-bg-brand-solid text-sk-text-primary-on-brand";
-  const pillOff = "text-sk-text-tertiary hover:bg-sk-bg-secondary hover:text-sk-text-primary";
+  const pillOn = "bg-sko-bg-primary text-sko-text-on-primary";
+  const pillOff = "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
   return (
     <div ref={ref} className="relative">
@@ -164,7 +164,7 @@ export function DemoControlsMenu({
         aria-label="Account and demo settings"
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex items-center hover:bg-sk-bg-secondary",
+          "flex items-center hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px round avatar; Desktop keeps avatar + name.
           compact ? "rounded-full" : "ml-1 gap-2 rounded-lg p-1",
         )}
@@ -175,20 +175,20 @@ export function DemoControlsMenu({
           <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
         )}
         {!compact ? (
-          <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
+          <span className="sk-text-sm-medium pr-1 text-sko-text-default">{userName}</span>
         ) : null}
       </button>
 
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-xl"
+          className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
         >
           <div className="flex items-center gap-2.5 px-4 py-3">
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <div className="min-w-0">
-              <p className="sk-text-sm-semibold truncate text-sk-text-primary">{userName}</p>
-              <p className="sk-text-xs-regular text-sk-text-tertiary">Demo preview settings</p>
+              <p className="sk-text-sm-semibold truncate text-sko-text-default">{userName}</p>
+              <p className="sk-text-xs-regular text-sko-text-subtle">Demo preview settings</p>
             </div>
           </div>
 
@@ -234,8 +234,8 @@ export function DemoControlsMenu({
                     className={cn(
                       "sk-text-sm-medium flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left transition-colors",
                       active
-                        ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                        : "text-sk-text-secondary hover:bg-sk-bg-secondary",
+                        ? "bg-sko-bg-primary-soft text-sko-text-primary"
+                        : "text-sko-text-muted hover:bg-sko-bg-subtle",
                     )}
                   >
                     {s.label}
@@ -261,15 +261,15 @@ export function DemoControlsMenu({
                     className="inline-flex h-7 w-7 items-center justify-center rounded-full"
                   >
                     {/* Swatch reads the live brand-solid token for this skin (no hardcoded hex):
-                        data-skin re-resolves --sk-bg-brand-solid to the skin's value.
+                        data-skin re-resolves --color-bg-primary to the skin's value.
                         Always set data-skin — including "teal" — so the swatch shows its
                         own skin regardless of the document's active skin. Without this,
                         the teal swatch (no attribute) inherited the active skin's colour. */}
                     <span
                       data-skin={s.skin}
                       className={cn(
-                        "size-5 rounded-full bg-sk-bg-brand-solid ring-offset-2 ring-offset-sk-bg-primary transition-all",
-                        active ? "ring-2 ring-sk-text-primary" : "ring-1 ring-sk-border-secondary",
+                        "size-5 rounded-full bg-sko-bg-primary ring-offset-2 ring-offset-sko-bg-page transition-all",
+                        active ? "ring-2 ring-sko-border-strong" : "ring-1 ring-sko-border-subtle",
                       )}
                     />
                   </button>
@@ -282,8 +282,8 @@ export function DemoControlsMenu({
             <div className="flex flex-col gap-0.5">
               {/* Text size — segmented A / A+ / A++ */}
               <div className="mb-1 flex items-center gap-2 px-1">
-                <span className="sk-text-sm-medium flex-1 text-sk-text-secondary">Text size</span>
-                <div className="flex overflow-hidden rounded-md border border-sk-border-secondary">
+                <span className="sk-text-sm-medium flex-1 text-sko-text-muted">Text size</span>
+                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
                   {(["md", "lg", "xl"] as const).map((sz, i) => (
                     <button
                       key={sz}
@@ -295,8 +295,8 @@ export function DemoControlsMenu({
                         "px-2.5 py-1 transition-colors",
                         ["sk-text-xs-semibold", "sk-text-sm-semibold", "sk-text-md-semibold"][i],
                         textSize === sz
-                          ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
-                          : "text-sk-text-secondary hover:bg-sk-bg-secondary",
+                          ? "bg-sko-bg-primary text-sko-text-on-primary"
+                          : "text-sko-text-muted hover:bg-sko-bg-subtle",
                       )}
                     >
                       A
@@ -339,10 +339,10 @@ export function DemoControlsMenu({
             <Section title="Quiz mode">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 px-1">
-                  <span className="sk-text-sm-medium flex-1 text-sk-text-secondary">
+                  <span className="sk-text-sm-medium flex-1 text-sko-text-muted">
                     Experience
                   </span>
-                  <div className="flex overflow-hidden rounded-md border border-sk-border-secondary">
+                  <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
                     {(["A", "B"] as const).map((value) => (
                       <button
                         key={value}
@@ -352,8 +352,8 @@ export function DemoControlsMenu({
                         className={cn(
                           "sk-text-xs-semibold px-2.5 py-1 transition-colors",
                           quizMode === value
-                            ? "bg-sk-bg-brand-solid text-sk-text-primary-on-brand"
-                            : "text-sk-text-secondary hover:bg-sk-bg-secondary",
+                            ? "bg-sko-bg-primary text-sko-text-on-primary"
+                            : "text-sko-text-muted hover:bg-sko-bg-subtle",
                         )}
                       >
                         {value}
@@ -361,7 +361,7 @@ export function DemoControlsMenu({
                     ))}
                   </div>
                 </div>
-                <p className="sk-text-xs-regular px-1 text-sk-text-tertiary">
+                <p className="sk-text-xs-regular px-1 text-sko-text-subtle">
                   A is how the platform behaves today, and where every quiz
                   starts. B is the proposal.
                 </p>
@@ -380,14 +380,14 @@ export function DemoControlsMenu({
             </div>
           </Section>
 
-          <div className="border-t border-sk-border-secondary p-1.5">
+          <div className="border-t border-sko-border-subtle p-1.5">
             <button
               type="button"
               onClick={() => {
                 resetDemo();
                 setOpen(false);
               }}
-              className="sk-text-sm-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sk-text-secondary transition-colors hover:bg-sk-bg-secondary hover:text-sk-text-primary"
+              className="sk-text-sm-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
             >
               <Icon icon={RotateCcw} size={16} />
               Reset demo

@@ -7,9 +7,9 @@ import { Badge } from "./Badge";
  *
  * NOTE: authored by hand — see Button.figma.tsx for why.
  *
- * "outline" tone has no confirmed Color match — mapped tentatively via
- * Type="Badge modern" (bordered treatment). Verify against the actual
- * component before relying on this mapping.
+ * Color options as of 23 Sep 2026: Gray, Brand, Error, Warning, Success, Teal, Red, Yellow
+ * (the DS merged its Untitled UI hues into Teal / Red / Yellow). The "outline" tone is the
+ * DS Type="Badge modern" treatment (bg/page + border/default + text/muted).
  */
 figma.connect(Badge, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=1046-3819", {
   variant: { Type: "Badge color" },
@@ -20,6 +20,9 @@ figma.connect(Badge, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-i
       Success: "success",
       Warning: "warning",
       Error: "error",
+      Teal: "teal",
+      Red: "red",
+      Yellow: "yellow",
     }),
     label: figma.textContent("Text"),
   },

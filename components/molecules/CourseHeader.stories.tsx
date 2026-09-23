@@ -15,7 +15,7 @@ const meta: Meta<typeof CourseHeader> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[280px] border border-sk-border-secondary bg-sk-bg-primary">
+      <div className="w-[280px] border border-sko-border-subtle bg-sko-bg-page">
         <Story />
       </div>
     ),
@@ -34,7 +34,7 @@ export const Collapsed: Story = {
   args: { compact: true, expanded: false },
   decorators: [
     (Story) => (
-      <div className="w-[72px] border border-sk-border-secondary bg-sk-bg-primary">
+      <div className="w-[72px] border border-sko-border-subtle bg-sko-bg-page">
         <Story />
       </div>
     ),

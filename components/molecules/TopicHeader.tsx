@@ -41,13 +41,13 @@ export function TopicHeader({
         {/* Duration is optional; with none, render nothing rather than a stray
             "approx." or a dash placeholder. */}
         {showDuration && duration ? (
-          <span className="sk-text-xs-regular text-sk-text-tertiary">· {durationLabel}</span>
+          <span className="sk-text-xs-regular text-sko-text-subtle">· {durationLabel}</span>
         ) : null}
         {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
       </div>
-      <h1 className="sk-text-display-xs-semibold text-sk-text-primary">{title}</h1>
+      <h1 className="sk-text-display-xs-semibold text-sko-text-default">{title}</h1>
       {showDescription && description ? (
-        <p className="sk-text-md-medium text-sk-text-secondary">{description}</p>
+        <p className="sk-text-md-medium text-sko-text-muted">{description}</p>
       ) : null}
     </header>
   );

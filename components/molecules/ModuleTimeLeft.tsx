@@ -15,11 +15,11 @@ export function ModuleTimeLeft({ summary, breakdown = [], className }: ModuleTim
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 rounded-lg bg-sk-bg-secondary px-3 py-2.5",
+        "flex flex-col gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2.5",
         className,
       )}
     >
-      <div className="flex items-center gap-1.5 text-sk-text-secondary">
+      <div className="flex items-center gap-1.5 text-sko-text-muted">
         <Clock size={14} strokeWidth={iconStroke(14)} />
         <span className="sk-text-xs-medium">{summary}</span>
       </div>
@@ -28,7 +28,7 @@ export function ModuleTimeLeft({ summary, breakdown = [], className }: ModuleTim
           {breakdown.map((b) => (
             <span
               key={b.label}
-              className="sk-text-2xs-medium rounded bg-sk-bg-primary px-1.5 py-0.5 text-sk-text-tertiary"
+              className="sk-text-2xs-medium rounded bg-sko-bg-page px-1.5 py-0.5 text-sko-text-subtle"
             >
               {b.label}
             </span>

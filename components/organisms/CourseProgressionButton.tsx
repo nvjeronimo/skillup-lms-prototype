@@ -53,7 +53,7 @@ export function CourseProgressionButton({
         <span
           className={cn(
             "sk-text-xs-medium shrink-0 uppercase",
-            isCourse ? "text-sk-text-success-primary" : "text-sk-fg-brand-primary",
+            isCourse ? "text-sko-text-success" : "text-sko-icon-primary",
           )}
         >
           {isCourse ? "Course complete" : "Module complete"}

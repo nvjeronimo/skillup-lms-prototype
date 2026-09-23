@@ -54,7 +54,7 @@ export function Avatar({
     <span className={cn("relative inline-flex shrink-0", className)}>
       <span
         className={cn(
-          "inline-flex items-center justify-center overflow-hidden bg-sk-bg-brand-section text-sk-text-brand-secondary",
+          "inline-flex items-center justify-center overflow-hidden bg-sko-bg-primary-soft text-sko-text-primary",
           shape === "square" ? "rounded-lg" : "rounded-full",
           s.box,
           s.text,
@@ -76,9 +76,10 @@ export function Avatar({
         <span
           aria-label={status === "online" ? "Online" : "Offline"}
           className={cn(
-            "absolute bottom-0 right-0 rounded-full border-2 border-sk-bg-primary",
+            "absolute bottom-0 right-0 rounded-full border-2 border-sko-bg-page",
             s.dot,
-            status === "online" ? "bg-sk-bg-success-solid" : "bg-sk-fg-quaternary",
+            // token-lint-disable-next-line DS Avatar has no Offline status (only Online, Company, Verified); grey dot kept at its previous value until the DS defines one
+            status === "online" ? "bg-sko-bg-success" : "bg-sko-icon-faint",
           )}
         />
       ) : null}

@@ -39,12 +39,12 @@ export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBa
   return (
     <span
       className={cn(
-        "sk-text-xs-medium inline-flex items-center gap-1 text-sk-text-secondary",
+        "sk-text-xs-medium inline-flex items-center gap-1 text-sko-text-muted",
         className,
       )}
     >
       {showIcon ? (
-        <Icon icon={topicTypeIcon(type)} size={14} className="text-sk-text-brand-secondary" />
+        <Icon icon={topicTypeIcon(type)} size={14} className="text-sko-text-primary" />
       ) : null}
       {topicTypeShortLabel(type)}
     </span>

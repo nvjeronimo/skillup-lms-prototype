@@ -21,7 +21,7 @@ export function BlockedView({ topicId }: { topicId: string }) {
 
   return (
     <div className="flex flex-col gap-5 py-4">
-      <section className="flex flex-col gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5">
+      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="warning" leftIcon={Lock}>
             Not available yet
@@ -48,8 +48,8 @@ export function BlockedView({ topicId }: { topicId: string }) {
 function Field({ label, value, lead }: { label: string; value: string; lead?: boolean }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="sk-text-2xs-medium uppercase tracking-wide text-sk-text-tertiary">{label}</span>
-      <p className={lead ? "sk-text-md-regular text-sk-text-secondary" : "sk-text-sm-regular text-sk-text-secondary"}>
+      <span className="sk-text-2xs-medium uppercase tracking-wide text-sko-text-subtle">{label}</span>
+      <p className={lead ? "sk-text-md-regular text-sko-text-muted" : "sk-text-sm-regular text-sko-text-muted"}>
         {value}
       </p>
     </div>
