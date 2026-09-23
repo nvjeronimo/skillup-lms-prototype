@@ -1,386 +1,344 @@
 /* ============================================================================
-   SkillUp DS Color Tokens (--sk-) — SINCRONIZADO com o DS handoff (Figma
-   c7EUDrQwP8si08aPipDSIV). NÃO EDITAR À MÃO — re-exportar do DS quando mudar.
+   SkillUp DS colour tokens — v4.0 — 2026-09-23
+   SOURCE: Figma "❖ SKO Design System", collection 🎨 SKO-Semantics (83 tokens × 6 modes).
+   GENERATED from the library export — do not edit by hand; re-export when the DS changes.
 
-   v3.2 — 2026-07-24 — border-secondary suavizado (Neutral/150 #d5dce2) +
-   alias [data-skin="teal"] para forçar SKO em swatches de preview.
+   NAMES ARE ELEMENT-FIRST: the first word says where the token goes.
+     --color-bg-*      backgrounds and fills          (Tailwind: bg-sk-bg-*)
+     --color-text-*    text                           (text-sk-text-*)
+     --color-icon-*    icons and small marks          (text-sk-icon-* / stroke)
+     --color-border-*  borders, dividers, focus rings (border-sk-border-*)
+     --color-shadow-*  shadow colour
+   Rule of three questions: what is the layer (bg / text / border)? what is it on
+   (on-primary, on-media…)? what does it mean (primary, success, error, muted…)?
 
-   ── ATRIBUTO: data-skin (era data-brand até v3.0) ──────────────────────────
-   Alinhado com o protótipo em produção. O selector [data-brand] DEIXOU de
-   existir. Usar:  <html data-skin="ink" data-theme="dark">
+   MODES
+     :root                                    SKO Light (default)
+     [data-theme="dark"]                      SKO Dark
+     [data-skin="gold"|"red"]                 Gold / Red Light  (only the 7 brand tokens change)
+     [data-skin="…"][data-theme="dark"]       Gold / Red Dark
+     [data-skin="teal"]                       explicit SKO alias (forces SKO in a nested context)
+   The DS no longer carries violet / sky / ink skins: those attributes now fall back to SKO.
+   The [data-vision="cvd"] axis is kept and re-expressed on the new status tokens.
 
-   ── MODOS ──────────────────────────────────────────────────────────────────
-     :root                                     → Light SKO (default)
-     [data-theme="dark"]                       → Dark SKO
-     [data-skin="gold|violet|sky|red|ink"]     → Light, skin alternativo
-     [data-skin="…"][data-theme="dark"]        → Dark, skin alternativo
-
-   Os blocos de skin só redefinem os 11 tokens de MARCA. Neutros, estados e
-   superfícies são partilhados e vêm de :root / [data-theme].
-
-   ── NOVO EM v3.1 ────────────────────────────────────────────────────────────
-   bg-success-solid + fg-success-on-solid · bg-warning-solid + fg-warning-on-solid
-   Criados para espelhar o protótipo (que já os usava) e completar o trio de
-   solids — o bg-error-solid já existia sem os irmãos. O warning-solid do
-   protótipo era #ac7720, que falhava AA com QUALQUER label; aqui é #f9c654
-   com label escuro (9.64:1).
-
-   ── ⚠️ FALHA AA CONHECIDA ──────────────────────────────────────────────────
-   text-success-primary sobre bg-tertiary em light = 4.51:1. Passa por 0.01.
-   É o par mais fino do sistema — re-validar se um dos dois mudar.
-
-   Validação: parse deste ficheiro, auto-descoberta dos tokens, cruzamento de
-   todos os --sk-text-* × --sk-bg-{primary,secondary,secondary-subtle,tertiary}
-   nas 12 combinações. Nunca com lista de pares escrita à mão.
-
-   Naming: nome Figma com `/` e `_` → `-`. Fonte de verdade única. Nunca hardcode.
+   LEGACY: every --sk-* name from v3.2 is kept at the end as an alias of a --color-* token,
+   so nothing breaks today. They are DEPRECATED — retire date to be set by engineering.
    ============================================================================ */
 
-/* ---------------------------------------------------------------------------
-   LIGHT — SKO (default)
-   --------------------------------------------------------------------------- */
+/* --- SKO Light ------------------------------------------------------------ */
 :root {
-  /* Backgrounds — neutros e estados (partilhados) */
-  --sk-bg-primary: #ffffff;             /* Neutral/White */
-  --sk-bg-secondary: #f3f5fa;           /* Neutral/50_N06b_Gray_Light */
-  --sk-bg-secondary-subtle: #f8f9fa;    /* Neutral/25_N06_Gray6 */
-  --sk-bg-tertiary: #e1e7ec;            /* Neutral/100_N05_Gray5 */
-  --sk-bg-success-primary: #e4fced;     /* Green/25_AB06 */
-  --sk-bg-warning-primary: #fff9eb;     /* Yellow/25_AD6 */
-  --sk-bg-error-primary: #fce8e8;       /* Red/25_AC6 */
-  --sk-bg-success-solid: #1f7643;       /* Green/800 — label branco 5.63:1 */
-  --sk-bg-warning-solid: #f9c654;       /* Yellow/300 — label escuro 9.64:1 */
-  --sk-bg-error-solid: #da3336;         /* Red/500 — label branco 4.66:1 */
-  --sk-bg-overlay: #0e1a1f80;           /* Dark-Neutral/950 @50% — estável entre temas */
-
-  /* Backgrounds — marca (redefinido por cada skin) */
-  --sk-bg-brand-primary: #ebf8ff;       /* Primary/25_P07 */
-  --sk-bg-brand-section: #ebf8ff;       /* Primary/25_P07 */
-  --sk-bg-brand-solid: #26708e;         /* Primary/600_P03 */
-  --sk-bg-brand-hover: #f9c654;         /* Yellow/300 — padrão SKO teal→amarelo */
-  --sk-bg-brand-stage: #044150;         /* Primary/900_P01 — palco de vídeo, tema-estável */
-
-  /* Borders */
-  --sk-border-primary: #8995a6;         /* Neutral/400_N03 — 3.33:1 */
-  --sk-border-secondary: #d5dce2;       /* Neutral/150 — decorativo, suave (isento de 3:1) */
-  --sk-border-brand: #26708e;           /* Primary/600_P03 */
-  --sk-border-focus-ring: #26708e;      /* WCAG 2.4.7 Focus Visible */
-
-  /* Foreground */
-  --sk-fg-white: #ffffff;
-  --sk-fg-quaternary: #b9c4ce;          /* Neutral/200_N04 */
-  --sk-fg-brand: #26708e;               /* Primary/600_P03 */
-  --sk-fg-brand-primary: #26708e;
-  --sk-fg-progress: #0086c9;            /* Primary/500_P08 */
-  --sk-fg-success-secondary: #33a864;   /* Green/500 — LMS/Foreground/fg-success-secondary; anel de progresso a 100% (Progress Circle · Completed) */
-  --sk-fg-like: var(--sk-fg-progress);  /* "like" activo = fg-progress */
-  --sk-fg-error-on-solid: #ffffff;      /* sobre bg-error-solid */
-  --sk-fg-success-on-solid: #ffffff;    /* sobre bg-success-solid — 5.63:1 */
-  --sk-fg-warning-on-solid: #13282f;    /* sobre bg-warning-solid — 9.64:1 */
-
-  /* Text */
-  --sk-text-primary: #13282f;           /* Primary/950_N00 — 15.30:1 */
-  --sk-text-secondary: #39414c;         /* Neutral/800 — 10.32:1 branco, 8.28 pior */
-  --sk-text-tertiary: #4f5b69;          /* Neutral/700 — 6.92:1 branco, 5.55 pior */
-  --sk-text-disabled: #8995a6;          /* Neutral/400_N03 — DS SKO/Colors/Text/text-disabled; separadores e texto inerte */
-  --sk-text-success-primary: #1f7643;   /* Green/800 — 5.63:1 */
-  --sk-text-warning-primary: #85580e;   /* Yellow/950 — 6.18:1 */
-  --sk-text-error-primary: #b62226;     /* Red/600 — 6.47 branco, 5.19 pior */
-  --sk-text-primary-on-brand: #ffffff;
-  --sk-text-primary-on-brand-hover: #13282f;  /* sobre amarelo — 9.64:1 */
-  --sk-text-brand: #215477;             /* Primary/700_P02 — 6.48:1 pior */
-  --sk-text-brand-primary: #044150;     /* Primary/900_P01 — 11.19:1 */
-  --sk-text-brand-secondary: #215477;   /* Primary/700_P02 */
-
-  /* Elevation — DS `Shadows/shadow-card`. One value across every mode, light
-     and dark alike, by decision — so it is declared once here and inherited.
-     On a dark surface 5% ink reads as almost
-     nothing; the card is separated by its border there, not by lift. */
-  --sk-shadow-card: 0 2px 6px -4px rgba(31, 35, 62, 0.05);
+  --color-bg-page: #ffffff;
+  --color-bg-faint: #f8f9fa;
+  --color-bg-subtle: #f3f5fa;
+  --color-bg-muted: #e1e7ec;
+  --color-bg-strong: #b9c4ce;
+  --color-bg-inverse: #13282f;
+  --color-bg-overlay: #0e1a1f80;
+  --color-bg-fixed: #ffffff;
+  --color-bg-fixed-subtle: #f8f9fa;
+  --color-bg-on-media: #ffffff;
+  --color-bg-primary: #26708e;
+  --color-bg-primary-soft: #ebf8ff;
+  --color-bg-primary-hover: #f9c654;
+  --color-bg-success: #1f7643;
+  --color-bg-success-soft: #e4fced;
+  --color-bg-warning: #f9c654;
+  --color-bg-warning-soft: #fff9eb;
+  --color-bg-error: #da3336;
+  --color-bg-error-soft: #fce8e8;
+  --color-bg-info: #0086c9;
+  --color-bg-accent-teal: #1f655e;
+  --color-bg-accent-teal-soft: #aaeeeb;
+  --color-bg-accent-green: #1f7643;
+  --color-bg-accent-green-soft: #e4fced;
+  --color-bg-accent-red: #b62226;
+  --color-bg-accent-red-soft: #fce8e8;
+  --color-bg-accent-yellow: #f9c654;
+  --color-bg-accent-yellow-soft: #fff9eb;
+  --color-text-default: #13282f;
+  --color-text-muted: #39414c;
+  --color-text-subtle: #4f5b69;
+  --color-text-placeholder: #677482;
+  --color-text-disabled: #8995a6;
+  --color-text-on-fixed: #13282f;
+  --color-text-on-media: #ffffff;
+  --color-text-primary: #215477;
+  --color-text-on-primary: #ffffff;
+  --color-text-on-primary-soft: #044150;
+  --color-text-on-primary-hover: #044150;
+  --color-text-success: #1f7643;
+  --color-text-on-success: #ffffff;
+  --color-text-warning: #85580e;
+  --color-text-on-warning: #13282f;
+  --color-text-error: #b62226;
+  --color-text-on-error: #ffffff;
+  --color-text-accent-teal: #044150;
+  --color-text-on-accent-teal: #ffffff;
+  --color-text-accent-green: #17523a;
+  --color-text-on-accent-green: #ffffff;
+  --color-text-accent-red: #60191a;
+  --color-text-on-accent-red: #ffffff;
+  --color-text-accent-yellow: #85580e;
+  --color-text-on-accent-yellow: #13282f;
+  --color-icon-default: #13282f;
+  --color-icon-muted: #39414c;
+  --color-icon-subtle: #4f5b69;
+  --color-icon-faint: #b9c4ce;
+  --color-icon-primary: #26708e;
+  --color-icon-on-primary: #ffffff;
+  --color-icon-on-media: #ffffff;
+  --color-icon-success: #1f7643;
+  --color-icon-success-strong: #33a864;
+  --color-icon-on-success: #ffffff;
+  --color-icon-warning: #85580e;
+  --color-icon-error: #b62226;
+  --color-icon-info: #0086c9;
+  --color-border-default: #8995a6;
+  --color-border-subtle: #d5dce2;
+  --color-border-strong: #13282f;
+  --color-border-disabled: #b9c4ce;
+  --color-border-inverse: #13282f;
+  --color-border-primary: #26708e;
+  --color-border-primary-soft: #ebf8ff;
+  --color-border-primary-muted: #acd5f4;
+  --color-border-success: #1f7643;
+  --color-border-success-soft: #aaedc2;
+  --color-border-warning: #85580e;
+  --color-border-warning-soft: #ffebbd;
+  --color-border-error: #b62226;
+  --color-border-error-soft: #f3afb0;
+  --color-border-info: #0086c9;
+  --color-border-focus-gap: #ffffff;
+  --color-shadow-default: #1f233e0d;
 }
 
-/* ---------------------------------------------------------------------------
-   LIGHT — skins alternativos (só tokens de marca)
-   --------------------------------------------------------------------------- */
-
-/* [data-skin="teal"] — alias explícito do SKO. O default do SKO é :root (sem
-   atributo), mas um elemento aninhado sem data-skin HERDA o skin do ancestral.
-   Isto força SKO independentemente do contexto — necessário para swatches de
-   preview que têm de mostrar o teal mesmo com o documento noutro skin.
-   Re-declara os mesmos valores de marca do :root. */
+/* --- Light skins: only the brand tokens change ----------------------------- */
 [data-skin="teal"] {
-  --sk-bg-brand-primary: #ebf8ff;
-  --sk-bg-brand-section: #ebf8ff;
-  --sk-bg-brand-solid: #26708e;
-  --sk-bg-brand-hover: #f9c654;
-  --sk-bg-brand-stage: #044150;
-  --sk-border-brand: #26708e;
-  --sk-border-focus-ring: #26708e;
-  --sk-fg-brand: #26708e;
-  --sk-fg-brand-primary: #26708e;
-  --sk-text-brand: #215477;
-  --sk-text-brand-primary: #044150;
-  --sk-text-brand-secondary: #215477;
+  --color-bg-primary: #26708e;
+  --color-bg-primary-soft: #ebf8ff;
+  --color-bg-primary-hover: #f9c654;
+  --color-text-primary: #215477;
+  --color-text-on-primary-soft: #044150;
+  --color-text-on-primary-hover: #044150;
+  --color-icon-primary: #26708e;
+  --color-border-primary: #26708e;
+  --color-border-primary-soft: #ebf8ff;
+  --color-border-primary-muted: #acd5f4;
 }
 
 [data-skin="gold"] {
-  --sk-bg-brand-primary: #f5efe4;
-  --sk-bg-brand-section: #f5efe4;
-  --sk-bg-brand-stage: #472a00;         /* Gold/900 */
-  --sk-bg-brand-solid: #8f621a;         /* Gold/600 — branco 5.34:1 */
-  --sk-bg-brand-hover: #ffda8f;         /* Gold/200 */
-  --sk-border-brand: #8f621a;
-  --sk-border-focus-ring: #8f621a;
-  --sk-fg-brand: #8f621a;
-  --sk-fg-brand-primary: #8f621a;
-  --sk-text-brand: #724c00;             /* Gold/700 — 6.13:1 */
-  --sk-text-brand-primary: #553600;     /* Gold/800 */
-  --sk-text-brand-secondary: #724c00;
-}
-
-[data-skin="violet"] {
-  --sk-bg-brand-primary: #eae4f3;
-  --sk-bg-brand-section: #eae4f3;
-  --sk-bg-brand-stage: #22024d;         /* Violet/900 */
-  --sk-bg-brand-solid: #4d1b9a;         /* Violet/600 — branco 10.83:1 */
-  --sk-bg-brand-hover: #cdb5ff;         /* Violet/200 */
-  --sk-border-brand: #4d1b9a;
-  --sk-border-focus-ring: #4d1b9a;
-  --sk-fg-brand: #4d1b9a;
-  --sk-fg-brand-primary: #4d1b9a;
-  --sk-text-brand: #3a1973;             /* Violet/700 — 10.75:1 */
-  --sk-text-brand-primary: #2a0c58;     /* Violet/800 */
-  --sk-text-brand-secondary: #3a1973;
-}
-
-[data-skin="sky"] {
-  --sk-bg-brand-primary: #e7f0f8;
-  --sk-bg-brand-section: #e7f0f8;
-  --sk-bg-brand-stage: #063050;         /* Sky/900 */
-  --sk-bg-brand-solid: #2c6ba0;         /* Sky/600 — branco 5.65:1 */
-  --sk-bg-brand-hover: #99cfff;         /* Sky/200 */
-  --sk-border-brand: #2c6ba0;
-  --sk-border-focus-ring: #2c6ba0;
-  --sk-fg-brand: #2c6ba0;
-  --sk-fg-brand-primary: #2c6ba0;
-  --sk-text-brand: #23537d;             /* Sky/700 — 6.47:1 */
-  --sk-text-brand-primary: #133c5e;     /* Sky/800 */
-  --sk-text-brand-secondary: #23537d;
+  --color-bg-primary: #553600;
+  --color-bg-primary-soft: #ffda8f;
+  --color-bg-primary-hover: #ffe4a9;
+  --color-text-primary: #553600;
+  --color-text-on-primary-soft: #553600;
+  --color-text-on-primary-hover: #553600;
+  --color-icon-primary: #553600;
+  --color-border-primary: #553600;
+  --color-border-primary-soft: #ffda8f;
+  --color-border-primary-muted: #c89536;
 }
 
 [data-skin="red"] {
-  --sk-bg-brand-primary: #f6e4e5;
-  --sk-bg-brand-section: #f6e4e5;
-  --sk-bg-brand-stage: #58060f;         /* Red/900 */
-  --sk-bg-brand-solid: #b62226;         /* Red/600 — branco 6.47:1 */
-  --sk-bg-brand-hover: #ffa19d;         /* Red/200 */
-  --sk-border-brand: #b62226;
-  --sk-border-focus-ring: #b62226;
-  --sk-fg-brand: #b62226;
-  --sk-fg-brand-primary: #b62226;
-  --sk-text-brand: #88262a;             /* Red/700 — 7.14:1 */
-  --sk-text-brand-primary: #67151a;     /* Red/800 */
-  --sk-text-brand-secondary: #88262a;
+  --color-bg-primary: #88262a;
+  --color-bg-primary-soft: #ffd5d0;
+  --color-bg-primary-hover: #ffa19d;
+  --color-text-primary: #88262a;
+  --color-text-on-primary-soft: #67151a;
+  --color-text-on-primary-hover: #67151a;
+  --color-icon-primary: #88262a;
+  --color-border-primary: #88262a;
+  --color-border-primary-soft: #ffd5d0;
+  --color-border-primary-muted: #ffa19d;
 }
 
-[data-skin="ink"] {
-  --sk-bg-brand-primary: #e1e6e8;
-  --sk-bg-brand-section: #e1e6e8;
-  --sk-bg-brand-stage: #04313d;         /* Ink/900 */
-  --sk-bg-brand-solid: #04313d;         /* Ink/900 — âncora quase preta, branco 13.89:1 */
-  --sk-bg-brand-hover: #8bc4d5;         /* Ink/200 */
-  --sk-border-brand: #04313d;
-  --sk-border-focus-ring: #04313d;
-  --sk-fg-brand: #04313d;
-  --sk-fg-brand-primary: #04313d;
-  --sk-text-brand: #001119;             /* Ink/950 — âncora em 900, passo abaixo = 950 */
-  --sk-text-brand-primary: #001119;     /* Ink/950 */
-  --sk-text-brand-secondary: #001119;
-}
-
-/* ---------------------------------------------------------------------------
-   DARK — SKO
-   Escada de superfícies 950→900→800→700 (~1.07:1). Não "regularizar".
-   --------------------------------------------------------------------------- */
+/* --- SKO Dark ------------------------------------------------------------- */
 [data-theme="dark"] {
-  --sk-bg-primary: #0e1a1f;             /* Dark-Neutral/950 — base */
-  --sk-bg-secondary: #122228;           /* Dark-Neutral/900 — raised */
-  --sk-bg-secondary-subtle: #16282f;    /* Dark-Neutral/800 — subtle */
-  --sk-bg-tertiary: #25383f;            /* Dark-Neutral/700 — elevated */
-  --sk-bg-success-primary: #102b1d;     /* Surfaces/success-dark */
-  --sk-bg-warning-primary: #2e2410;     /* Surfaces/warning-dark */
-  --sk-bg-error-primary: #34191b;       /* Surfaces/error-dark */
-  --sk-bg-success-solid: #2d9c5b;       /* Green/600 — label escuro 5.07:1 */
-  --sk-bg-warning-solid: #f9c654;       /* Yellow/300 — label escuro 9.64:1 (igual light) */
-  --sk-bg-error-solid: #e26567;         /* Red/300 — dessaturado p/ dark */
-  --sk-bg-overlay: #0e1a1f80;
-
-  --sk-bg-brand-primary: #0f2c38;       /* Dark/Teal/900 */
-  --sk-bg-brand-section: #0f2c38;
-  --sk-bg-brand-solid: #4aa3c7;         /* Dark/Teal/400 — label escuro 6.20:1 */
-  --sk-bg-brand-hover: #6cc0e0;         /* Dark/Teal/300 — hover CLAREIA */
-
-  --sk-border-primary: #8995a6;         /* Neutral/400_N03 — 4.03:1 pior superfície */
-  --sk-border-secondary: #2c3d45;       /* Dark-Neutral/650 — decorativo, suave */
-  --sk-border-brand: #4aa3c7;
-  --sk-border-focus-ring: #4aa3c7;
-
-  --sk-fg-white: #ffffff;
-  --sk-fg-quaternary: #606b7a;          /* Neutral/600_N02 */
-  --sk-fg-brand: #4aa3c7;
-  --sk-fg-brand-primary: #4aa3c7;
-  --sk-fg-progress: #66a3d6;            /* Primary/300_P05 — 4.53:1 (o mais fino em dark) */
-  --sk-fg-success-secondary: #40c075;   /* Green/300_AB04 — LMS/Foreground/fg-success-secondary (dark); anel a 100% */
-  --sk-fg-like: var(--sk-fg-progress);  /* segue fg-progress */
-  --sk-fg-error-on-solid: #0e1a1f;      /* Dark-Neutral/950 — 5.30:1 sobre #e26567 */
-  --sk-fg-success-on-solid: #0e1a1f;    /* sobre #2d9c5b — 5.07:1 */
-  --sk-fg-warning-on-solid: #13282f;    /* sobre #f9c654 — 9.64:1 */
-
-  --sk-text-primary: #eaf1f4;           /* Dark-Neutral/50 — 15.50:1 */
-  --sk-text-secondary: #b3c0c7;         /* Dark-Neutral/200 — 9.51:1 */
-  --sk-text-tertiary: #93a3ab;          /* Dark-Neutral/300 — 6.80:1 */
-  --sk-text-disabled: #53666e;          /* Dark-Neutral/500 — DS SKO/Colors/Text/text-disabled (dark) */
-  --sk-text-success-primary: #72d99a;   /* Green/200 — 7.06:1 */
-  --sk-text-warning-primary: #fab929;   /* Yellow/400 — 7.01:1 */
-  --sk-text-error-primary: #f3afb0;     /* Red/50 — 6.74:1 */
-  --sk-text-primary-on-brand: #0e1a1f;  /* Dark-Neutral/950 */
-  --sk-text-primary-on-brand-hover: #13282f;  /* sobre Teal/300 — 7.47:1 */
-  --sk-text-brand: #6cc0e0;             /* Dark/Teal/300 — 8.64:1 */
-  --sk-text-brand-primary: #cdeaf6;     /* Dark/Teal/100 */
-  --sk-text-brand-secondary: #6cc0e0;
+  --color-bg-page: #0e1a1f;
+  --color-bg-faint: #16282f;
+  --color-bg-subtle: #122228;
+  --color-bg-muted: #25383f;
+  --color-bg-strong: #2c3d45;
+  --color-bg-inverse: #eaf1f4;
+  --color-bg-overlay: #0e1a1f80;
+  --color-bg-fixed: #ffffff;
+  --color-bg-fixed-subtle: #f8f9fa;
+  --color-bg-on-media: #ffffff;
+  --color-bg-primary: #4aa3c7;
+  --color-bg-primary-soft: #0f2c38;
+  --color-bg-primary-hover: #6cc0e0;
+  --color-bg-success: #2d9c5b;
+  --color-bg-success-soft: #102b1d;
+  --color-bg-warning: #f9c654;
+  --color-bg-warning-soft: #2e2410;
+  --color-bg-error: #e26567;
+  --color-bg-error-soft: #34191b;
+  --color-bg-info: #66a3d6;
+  --color-bg-accent-teal: #42aea3;
+  --color-bg-accent-teal-soft: #044150;
+  --color-bg-accent-green: #2d9c5b;
+  --color-bg-accent-green-soft: #17523a;
+  --color-bg-accent-red: #e26567;
+  --color-bg-accent-red-soft: #60191a;
+  --color-bg-accent-yellow: #f9c654;
+  --color-bg-accent-yellow-soft: #85580e;
+  --color-text-default: #eaf1f4;
+  --color-text-muted: #b3c0c7;
+  --color-text-subtle: #93a3ab;
+  --color-text-placeholder: #73848c;
+  --color-text-disabled: #53666e;
+  --color-text-on-fixed: #13282f;
+  --color-text-on-media: #ffffff;
+  --color-text-primary: #6cc0e0;
+  --color-text-on-primary: #0e1a1f;
+  --color-text-on-primary-soft: #cdeaf6;
+  --color-text-on-primary-hover: #0e1a1f;
+  --color-text-success: #72d99a;
+  --color-text-on-success: #0e1a1f;
+  --color-text-warning: #fab929;
+  --color-text-on-warning: #13282f;
+  --color-text-error: #f3afb0;
+  --color-text-on-error: #0e1a1f;
+  --color-text-accent-teal: #aaeeeb;
+  --color-text-on-accent-teal: #13282f;
+  --color-text-accent-green: #aaedc2;
+  --color-text-on-accent-green: #13282f;
+  --color-text-accent-red: #e26567;
+  --color-text-on-accent-red: #13282f;
+  --color-text-accent-yellow: #ffebbd;
+  --color-text-on-accent-yellow: #13282f;
+  --color-icon-default: #eaf1f4;
+  --color-icon-muted: #b3c0c7;
+  --color-icon-subtle: #93a3ab;
+  --color-icon-faint: #606b7a;
+  --color-icon-primary: #4aa3c7;
+  --color-icon-on-primary: #0e1a1f;
+  --color-icon-on-media: #ffffff;
+  --color-icon-success: #72d99a;
+  --color-icon-success-strong: #40c075;
+  --color-icon-on-success: #0e1a1f;
+  --color-icon-warning: #fab929;
+  --color-icon-error: #f3afb0;
+  --color-icon-info: #66a3d6;
+  --color-border-default: #8995a6;
+  --color-border-subtle: #2c3d45;
+  --color-border-strong: #eaf1f4;
+  --color-border-disabled: #25383f;
+  --color-border-inverse: #16282f;
+  --color-border-primary: #4aa3c7;
+  --color-border-primary-soft: #0f2c38;
+  --color-border-primary-muted: #215477;
+  --color-border-success: #72d99a;
+  --color-border-success-soft: #1b6440;
+  --color-border-warning: #fab929;
+  --color-border-warning-soft: #996816;
+  --color-border-error: #f3afb0;
+  --color-border-error-soft: #741b1d;
+  --color-border-info: #66a3d6;
+  --color-border-focus-gap: #062c41;
+  --color-shadow-default: #1f233e0d;
 }
 
-/* ---------------------------------------------------------------------------
-   DARK — skins alternativos (só tokens de marca)
-   Regra: solid=400, hover=300 (clareia), text=300, section=surface-dark
-   --------------------------------------------------------------------------- */
+/* --- Dark skins ------------------------------------------------------------ */
+[data-skin="teal"][data-theme="dark"] {
+  --color-bg-primary: #4aa3c7;
+  --color-bg-primary-soft: #0f2c38;
+  --color-bg-primary-hover: #6cc0e0;
+  --color-text-primary: #6cc0e0;
+  --color-text-on-primary-soft: #cdeaf6;
+  --color-text-on-primary-hover: #0e1a1f;
+  --color-icon-primary: #4aa3c7;
+  --color-border-primary: #4aa3c7;
+  --color-border-primary-soft: #0f2c38;
+  --color-border-primary-muted: #215477;
+}
+
 [data-skin="gold"][data-theme="dark"] {
-  --sk-bg-brand-primary: #2a2f25;
-  --sk-bg-brand-section: #2a2f25;
-  --sk-bg-brand-solid: #f9c654;         /* Gold/400 */
-  --sk-bg-brand-hover: #ffd07a;         /* Gold/300 */
-  --sk-border-brand: #f9c654;
-  --sk-border-focus-ring: #f9c654;
-  --sk-fg-brand: #f9c654;
-  --sk-fg-brand-primary: #f9c654;
-  --sk-text-brand: #ffd07a;             /* Gold/300 — 8.48:1 */
-  --sk-text-brand-primary: #ffe4a9;     /* Gold/100 */
-  --sk-text-brand-secondary: #ffd07a;
-}
-
-[data-skin="violet"][data-theme="dark"] {
-  --sk-bg-brand-primary: #202839;
-  --sk-bg-brand-section: #202839;
-  --sk-bg-brand-solid: #a78bfa;         /* Violet/400 */
-  --sk-bg-brand-hover: #bd9fff;         /* Violet/300 */
-  --sk-border-brand: #a78bfa;
-  --sk-border-focus-ring: #a78bfa;
-  --sk-fg-brand: #a78bfa;
-  --sk-fg-brand-primary: #a78bfa;
-  --sk-text-brand: #bd9fff;             /* Violet/300 — 5.93:1 */
-  --sk-text-brand-primary: #dccaff;     /* Violet/100 */
-  --sk-text-brand-secondary: #bd9fff;
-}
-
-[data-skin="sky"][data-theme="dark"] {
-  --sk-bg-brand-primary: #192b36;
-  --sk-bg-brand-section: #192b36;
-  --sk-bg-brand-solid: #6ba8e0;         /* Sky/400 */
-  --sk-bg-brand-hover: #81bef6;         /* Sky/300 */
-  --sk-border-brand: #6ba8e0;
-  --sk-border-focus-ring: #6ba8e0;
-  --sk-fg-brand: #6ba8e0;
-  --sk-fg-brand-primary: #6ba8e0;
-  --sk-text-brand: #81bef6;             /* Sky/300 — 6.02:1 */
-  --sk-text-brand-primary: #b3dfff;     /* Sky/100 */
-  --sk-text-brand-secondary: #81bef6;
+  --color-bg-primary: #ffd07a;
+  --color-bg-primary-soft: #2a2f25;
+  --color-bg-primary-hover: #ffe4a9;
+  --color-text-primary: #ffd07a;
+  --color-text-on-primary-soft: #ffe4a9;
+  --color-icon-primary: #ffd07a;
+  --color-border-primary: #ffd07a;
+  --color-border-primary-soft: #2a2f25;
+  --color-border-primary-muted: #724c00;
 }
 
 [data-skin="red"][data-theme="dark"] {
-  --sk-bg-brand-primary: #28252a;
-  --sk-bg-brand-section: #28252a;
-  --sk-bg-brand-solid: #e8797b;         /* Red/400 */
-  --sk-bg-brand-hover: #ff8985;         /* Red/300 */
-  --sk-border-brand: #e8797b;
-  --sk-border-focus-ring: #e8797b;
-  --sk-fg-brand: #e8797b;
-  --sk-fg-brand-primary: #e8797b;
-  --sk-text-brand: #ff8985;             /* Red/300 — 5.34:1 */
-  --sk-text-brand-primary: #ffbbb6;     /* Red/100 */
-  --sk-text-brand-secondary: #ff8985;
+  --color-bg-primary: #ff8985;
+  --color-bg-primary-soft: #28252a;
+  --color-bg-primary-hover: #ffa19d;
+  --color-text-primary: #ff8985;
+  --color-text-on-primary-soft: #ffd5d0;
+  --color-icon-primary: #ff8985;
+  --color-border-primary: #ff8985;
+  --color-border-primary-soft: #28252a;
+  --color-border-primary-muted: #390003;
 }
 
-[data-skin="ink"][data-theme="dark"] {
-  --sk-bg-brand-primary: #15292f;
-  --sk-bg-brand-section: #15292f;
-  --sk-bg-brand-solid: #4a93a5;         /* Ink/400 — label escuro 5.06:1 */
-  --sk-bg-brand-hover: #6eaec0;         /* Ink/300 */
-  --sk-border-brand: #4a93a5;
-  --sk-border-focus-ring: #4a93a5;
-  --sk-fg-brand: #4a93a5;
-  --sk-fg-brand-primary: #4a93a5;
-  --sk-text-brand: #6eaec0;             /* Ink/300 — 4.94:1 (o mais fino dos skins) */
-  --sk-text-brand-primary: #aad8e6;     /* Ink/100 */
-  --sk-text-brand-secondary: #6eaec0;
-}
-
-/* ============================================================================
-   ORDEM DOS BLOCOS — não reordenar
-   :root → skins light → [data-theme="dark"] → skins dark.
-   [data-skin="…"] e [data-theme="dark"] têm a mesma especificidade (0,1,0);
-   é a ordem no ficheiro que garante que o dark vence nos tokens partilhados.
-   Os blocos de skin dark têm (0,2,0) e vencem nos tokens de marca.
-
-   EXEMPLOS
-     <html>                                     → Light SKO
-     <html data-theme="dark">                   → Dark SKO
-     <html data-skin="violet">                  → Light Violet
-     <html data-skin="ink" data-theme="dark">   → Dark Ink
-   ============================================================================ */
-
-/* ============================================================================
-   VISION — modo acessível para daltonismo vermelho-verde (deuter + protan, ~99%)
-   Eixo ortogonal ao skin e ao tema: <html data-vision="cvd">.
-
-   Re-tuna APENAS as cores de estado (success/warning/error). O problema real do
-   daltonismo não é a cor de marca — é os estados colapsarem: no atual, para um
-   deuteranope, warning ≈ error (ΔE 3.9). Aqui a distinção deixa o eixo
-   vermelho-verde (perdido) e passa ao azul-amarelo + luminosidade (preservados).
-
-   Paleta baseada em Okabe-Ito. Separação mínima entre estados sob deuter/protan:
-   ΔE ≥ 18 (era 3.9). Todos os tiers passam WCAG AA. Success vira AZUL — foge à
-   convenção verde=sucesso, mas é opt-in e é o que o torna seguro; o ícone ✓ mantém
-   o significado (encoding redundante).
-
-   Ordem: este bloco vem depois de :root/skins/dark. O bloco dark-vision tem
-   especificidade (0,2,0) e vence em dark. NÃO reordenar.
-   ============================================================================ */
+/* --- Vision: red-green colour-vision deficiency (Okabe-Ito), unchanged from v3.2,
+   re-expressed on the new status tokens. Comes after skins/dark on purpose. ----- */
 [data-vision="cvd"] {
-  --sk-text-success-primary: #00618f;   /* azul — 6.76:1 branco, 5.42 pior */
-  --sk-text-warning-primary: #8a5a00;   /* âmbar escuro — 5.93:1 branco */
-  --sk-text-error-primary: #9e2a2b;     /* vermelho escuro — 7.45:1 branco */
-  --sk-bg-success-solid: #0072b2;       /* azul vivo — label branco 5.19 */
-  --sk-bg-warning-solid: #e69f00;       /* âmbar vivo — label escuro 6.79 */
-  --sk-bg-error-solid: #c0392b;         /* vermelho — label branco 5.44 */
-  --sk-fg-success-on-solid: #ffffff;
-  --sk-fg-warning-on-solid: #13282f;
-  --sk-fg-error-on-solid: #ffffff;
-  --sk-bg-success-primary: #e0eff8;     /* superfície azul clara */
-  --sk-bg-warning-primary: #fdf1d6;     /* superfície âmbar clara */
-  --sk-bg-error-primary: #f7e3e1;       /* superfície vermelha clara */
+  --color-text-success: #00618f;  --color-icon-success: #00618f;  --color-border-success: #00618f;
+  --color-text-warning: #8a5a00;  --color-icon-warning: #8a5a00;  --color-border-warning: #8a5a00;
+  --color-text-error:   #9e2a2b;  --color-icon-error:   #9e2a2b;  --color-border-error:   #9e2a2b;
+  --color-bg-success: #0072b2;  --color-bg-warning: #e69f00;  --color-bg-error: #c0392b;
+  --color-text-on-success: #ffffff;  --color-text-on-warning: #13282f;  --color-text-on-error: #ffffff;
+  --color-bg-success-soft: #e0eff8;  --color-bg-warning-soft: #fdf1d6;  --color-bg-error-soft: #f7e3e1;
+}
+[data-vision="cvd"][data-theme="dark"] {
+  --color-text-success: #56b4e9;  --color-icon-success: #56b4e9;  --color-border-success: #56b4e9;
+  --color-text-warning: #e6b54d;  --color-icon-warning: #e6b54d;  --color-border-warning: #e6b54d;
+  --color-text-error:   #e8898a;  --color-icon-error:   #e8898a;  --color-border-error:   #e8898a;
+  --color-bg-success: #56b4e9;  --color-bg-warning: #e6b54d;  --color-bg-error: #e8898a;
+  --color-text-on-success: #0e1a1f;  --color-text-on-warning: #13282f;  --color-text-on-error: #0e1a1f;
+  --color-bg-success-soft: #0f2a3d;  --color-bg-warning-soft: #2e2812;  --color-bg-error-soft: #331a19;
 }
 
-[data-vision="cvd"][data-theme="dark"] {
-  --sk-text-success-primary: #56b4e9;   /* azul claro — 5.30:1 pior superfície */
-  --sk-text-warning-primary: #e6b54d;   /* âmbar claro — 6.46:1 */
-  --sk-text-error-primary: #e8898a;     /* vermelho claro — 4.88:1 */
-  --sk-bg-success-solid: #56b4e9;       /* label escuro 7.67 */
-  --sk-bg-warning-solid: #e6b54d;       /* label escuro 8.08 */
-  --sk-bg-error-solid: #e8898a;         /* label escuro 7.06 */
-  --sk-fg-success-on-solid: #0e1a1f;
-  --sk-fg-warning-on-solid: #13282f;
-  --sk-fg-error-on-solid: #0e1a1f;
-  --sk-bg-success-primary: #0f2a3d;     /* superfície azul escura */
-  --sk-bg-warning-primary: #2e2812;     /* superfície âmbar escura */
-  --sk-bg-error-primary: #331a19;       /* superfície vermelha escura */
+/* --- Legacy --sk-* aliases (v3.2 names) — DEPRECATED, do not use in new code ---- */
+:root {
+  --sk-bg-primary: var(--color-bg-page);
+  --sk-bg-secondary: var(--color-bg-subtle);
+  --sk-bg-secondary-subtle: var(--color-bg-faint);
+  --sk-bg-tertiary: var(--color-bg-muted);
+  --sk-bg-success-primary: var(--color-bg-success-soft);
+  --sk-bg-warning-primary: var(--color-bg-warning-soft);
+  --sk-bg-error-primary: var(--color-bg-error-soft);
+  --sk-bg-success-solid: var(--color-bg-success);
+  --sk-bg-warning-solid: var(--color-bg-warning);
+  --sk-bg-error-solid: var(--color-bg-error);
+  --sk-bg-overlay: var(--color-bg-overlay);
+  --sk-bg-brand-primary: var(--color-bg-primary-soft);
+  --sk-bg-brand-section: var(--color-bg-primary-soft);
+  --sk-bg-brand-solid: var(--color-bg-primary);
+  --sk-bg-brand-hover: var(--color-bg-primary-hover);
+  --sk-bg-brand-stage: var(--color-text-on-primary-soft);
+  --sk-border-primary: var(--color-border-default);
+  --sk-border-secondary: var(--color-border-subtle);
+  --sk-border-brand: var(--color-border-primary);
+  --sk-border-focus-ring: var(--color-border-primary);
+  --sk-fg-white: var(--color-text-on-media);
+  --sk-fg-quaternary: var(--color-icon-faint);
+  --sk-fg-brand: var(--color-icon-primary);
+  --sk-fg-brand-primary: var(--color-icon-primary);
+  --sk-fg-progress: var(--color-bg-info);
+  --sk-fg-success-secondary: var(--color-icon-success-strong);
+  --sk-fg-like: var(--color-bg-info);
+  --sk-fg-error-on-solid: var(--color-text-on-error);
+  --sk-fg-success-on-solid: var(--color-text-on-success);
+  --sk-fg-warning-on-solid: var(--color-text-on-warning);
+  --sk-text-primary: var(--color-text-default);
+  --sk-text-secondary: var(--color-text-muted);
+  --sk-text-tertiary: var(--color-text-subtle);
+  --sk-text-disabled: var(--color-text-disabled);
+  --sk-text-success-primary: var(--color-text-success);
+  --sk-text-warning-primary: var(--color-text-warning);
+  --sk-text-error-primary: var(--color-text-error);
+  --sk-text-primary-on-brand: var(--color-text-on-primary);
+  --sk-text-primary-on-brand-hover: var(--color-text-on-primary-hover);   /* was #13282f */
+  --sk-text-brand: var(--color-text-primary);
+  --sk-text-brand-primary: var(--color-text-on-primary-soft);
+  --sk-text-brand-secondary: var(--color-text-primary);
+  --sk-shadow-card: 0 2px 6px -4px var(--color-shadow-default);
 }

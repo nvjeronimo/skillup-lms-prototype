@@ -2,7 +2,7 @@
 /**
  * Token guardrail — enforces the design-system Definition of Done (see AUDIT.md §5).
  * Scans component/app/lib source for the bug classes the audit found:
- *   1. Raw colors           — hex / rgb / hsl literals (colours must be --sk-* tokens)
+ *   1. Raw colors           — hex / rgb / hsl literals (colours must be --color-* / sko-* tokens)
  *   2. Token-role inversion — a TEXT token (`sk-text-*`) used in a bg/border position
  *                             (root cause of the dark-mode contrast breaks)
  *   3. Raw typography       — Tailwind text-size / font-weight utilities instead of `.sk-text-*`
@@ -30,8 +30,8 @@ const RULES = [
     // a TEXT token used as a fill / gradient stop (surface role) — this is the class
     // that inverts under content in dark mode. Borders/rings/outlines are lines that
     // adapt fine, so they are intentionally not flagged here.
-    re: /\b(?:bg|fill|from|via|to)-sk-text-/,
-    msg: "text token used as a surface/fill — use a bg/fg/brand-stage token (text tokens invert between light/dark, breaking content contrast)",
+    re: /\b(?:bg|fill|from|via|to)-(?:sk-text-|sko-text-|sko-icon-)/,
+    msg: "text/icon token used as a surface/fill — use a bg token (text tokens invert between light/dark, breaking content contrast)",
   },
   {
     id: "raw-type",
