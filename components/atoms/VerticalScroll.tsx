@@ -27,14 +27,14 @@ export function VerticalScroll({
   const top = (position / 100) * travel;
   return (
     <div
-      className={cn("relative w-2 rounded-full bg-sk-bg-secondary", className)}
+      className={cn("relative w-2 rounded-full bg-sko-bg-subtle", className)}
       style={{ height }}
       role="presentation"
     >
       <div
         className={cn(
           "absolute left-0 w-2 rounded-full transition-colors",
-          dragging ? "bg-sk-fg-brand" : "bg-sk-border-primary",
+          dragging ? "bg-sko-bg-primary" : "bg-sko-border-default",
         )}
         style={{ height: thumbHeight, top }}
       />

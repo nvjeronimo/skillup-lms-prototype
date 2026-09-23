@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
   const icon = value === "Program" ? Package : BookOpen;
   return (
-    <span className="sk-text-xs-medium inline-flex items-center gap-1.5 rounded-full border border-sk-border-primary bg-sk-bg-primary px-2.5 py-1 text-sk-text-secondary">
-      <Icon icon={icon} size={14} className="text-sk-text-brand-secondary" />
+    <span className="sk-text-xs-medium inline-flex items-center gap-1.5 rounded-full border border-sko-border-default bg-sko-bg-page px-2.5 py-1 text-sko-text-muted">
+      <Icon icon={icon} size={14} className="text-sko-text-primary" />
       {value}
     </span>
   );
@@ -18,9 +18,9 @@ export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
 export type Difficulty = "Beginner" | "Intermediate" | "Advanced";
 
 const DIFFICULTY_COLOR: Record<Difficulty, string> = {
-  Beginner: "text-sk-text-success-primary",
-  Intermediate: "text-sk-text-warning-primary",
-  Advanced: "text-sk-text-error-primary",
+  Beginner: "text-sko-text-success",
+  Intermediate: "text-sko-text-warning",
+  Advanced: "text-sko-text-error",
 };
 
 /** Difficulty — signal-bars icon + colored label, no background (matches DS). */
@@ -44,8 +44,8 @@ const DELIVERY_ICON: Record<DeliveryMode, LucideIcon> = {
 /** Delivery Mode — icon + label, no background (matches DS). */
 export function DeliveryModeBadge({ value }: { value: DeliveryMode }) {
   return (
-    <span className="sk-text-xs-medium inline-flex items-center gap-1.5 text-sk-text-secondary">
-      <Icon icon={DELIVERY_ICON[value]} size={14} className="text-sk-text-brand-secondary" />
+    <span className="sk-text-xs-medium inline-flex items-center gap-1.5 text-sko-text-muted">
+      <Icon icon={DELIVERY_ICON[value]} size={14} className="text-sko-text-primary" />
       {value}
     </span>
   );
@@ -62,8 +62,8 @@ export type Provider =
 /** Provider — "by {name}" plain text (matches DS). */
 export function ProviderBadge({ value }: { value: Provider }) {
   return (
-    <span className="sk-text-xs-regular text-sk-text-tertiary">
-      by <span className="sk-text-xs-medium text-sk-text-secondary">{value}</span>
+    <span className="sk-text-xs-regular text-sko-text-subtle">
+      by <span className="sk-text-xs-medium text-sko-text-muted">{value}</span>
     </span>
   );
 }

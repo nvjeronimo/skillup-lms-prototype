@@ -180,7 +180,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Downloads and Notes tabs are short lists, so a second button there sits
   // in the same viewport as the header one and just reads as duplication.
   const bottomAction = showAction && activeTab === "transcript" ? (
-    <div className="mt-6 flex justify-end border-t border-sk-border-secondary pt-5">
+    <div className="mt-6 flex justify-end border-t border-sko-border-subtle pt-5">
       {renderAction()}
     </div>
   ) : null;
@@ -191,12 +191,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // blocked topics, and only on the primary tab.
   const discussFooter =
     discussionsPreview && !isLocked && !isBlocked && activeTab === "transcript" ? (
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-secondary px-4 py-3">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <Icon icon={MessagesSquare} size={18} className="text-sk-text-brand-secondary" />
+          <Icon icon={MessagesSquare} size={18} className="text-sko-text-primary" />
           <div className="flex flex-col">
-            <span className="sk-text-sm-semibold text-sk-text-primary">Discuss this topic</span>
-            <span className="sk-text-xs-regular text-sk-text-tertiary">
+            <span className="sk-text-sm-semibold text-sko-text-default">Discuss this topic</span>
+            <span className="sk-text-xs-regular text-sko-text-subtle">
               Join the conversation with your cohort.
             </span>
           </div>
@@ -273,7 +273,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const durationSeconds = 200;
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-sk-bg-secondary">
+    <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
       <CoursePlayerTopbar
         size={topbarSize}
         showNotifications
@@ -318,7 +318,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           />
         ) : null}
 
-        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary">
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page">
           <div
             className="sk-scroll flex-1 overflow-y-auto"
             onScroll={(e) => {
@@ -334,7 +334,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     docks (shrinks) once the content scrolls past the top. */}
                 <div
                   className={cn(
-                    "sticky top-0 z-20 bg-sk-bg-primary transition-[padding] duration-200 ease-out",
+                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-200 ease-out",
                     videoDocked ? "px-0 pb-2 pt-0" : "px-4 pb-3 pt-4",
                   )}
                 >
@@ -373,7 +373,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       The top-right action is hidden on mobile — it lives only at
                       the end of the content there. */}
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <h1 className="sk-text-display-xs-semibold min-w-0 text-sk-text-primary">
+                    <h1 className="sk-text-display-xs-semibold min-w-0 text-sko-text-default">
                       {topic.title}
                     </h1>
                     {headerStatus && bp !== "mobile" ? (

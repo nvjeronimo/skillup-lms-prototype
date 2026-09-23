@@ -2,26 +2,28 @@ import figma from "figma";
 import { InlineAlert } from "./InlineAlert";
 
 /**
- * Code Connect for Alert (SKO Design System, base component) → InlineAlert.tsx.
- * https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=1130-81134
+ * Code Connect for `LMS / Inline Alert` (SKO Design System) → InlineAlert.tsx.
+ * https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=20328-3296
  *
  * NOTE: authored by hand — see Button.figma.tsx for why.
  *
- * Do NOT confuse with "LMS / Autosave Status" (renamed from "LMS / Inline
- * Alert" during this audit to remove a naming collision) — that component
- * is the Notes-editor "Saving…/Saved" pill, unrelated to this generic
- * dismissible banner.
+ * Tones as of 23 Sep 2026: Info, Success, Warning, Error, Hint, Answer (fill bg/faint with a
+ * 2px top rule in the tone colour; Hint = bg/primary-soft, no rule; Answer = bg/subtle with a
+ * border/default rule). The Untitled UI `Alert` (node 1130-81134) is a different, dismissible
+ * banner and is not what this component renders.
  */
-figma.connect(InlineAlert, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=1130-81134", {
+figma.connect(InlineAlert, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=20328-3296", {
   props: {
-    tone: figma.enum("Color", {
-      Brand: "info",
+    tone: figma.enum("Tone", {
+      Info: "info",
       Success: "success",
       Warning: "warning",
       Error: "error",
+      Hint: "hint",
+      Answer: "answer",
     }),
-    title: figma.textContent("Text"),
-    description: figma.textContent("Supporting text"),
+    title: figma.textContent("Title"),
+    description: figma.textContent("Description"),
   },
   example: ({ tone, title, description }) => (
     <InlineAlert tone={tone} title={title} description={description} />

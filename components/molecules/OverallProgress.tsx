@@ -29,20 +29,20 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
       aria-label={`${pct}% complete`}
     >
       <svg className="h-[46px] w-[46px] -rotate-90" viewBox="0 0 46 46">
-        <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--sk-bg-tertiary)" strokeWidth="4" />
+        <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--color-bg-muted)" strokeWidth="4" />
         <circle
           cx="23"
           cy="23"
           r={radius}
           fill="none"
-          stroke={complete ? "var(--sk-fg-success-secondary)" : "var(--sk-fg-progress)"}
+          stroke={complete ? "var(--color-icon-success-strong)" : "var(--color-bg-info)"}
           strokeWidth="4"
           strokeLinecap="butt"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
         />
       </svg>
-      <span className="sk-text-xs-semibold absolute text-sk-text-primary">{pct}%</span>
+      <span className="sk-text-xs-semibold absolute text-sko-text-default">{pct}%</span>
     </div>
   );
 }
@@ -69,13 +69,13 @@ export function OverallProgress({
   return (
     <div
       className={cn(
-        "flex items-center gap-1 border-b border-sk-border-secondary px-4 pb-2 pt-0",
+        "flex items-center gap-1 border-b border-sko-border-subtle px-4 pb-2 pt-0",
         className,
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col justify-center">
-        <span className="sk-text-xs-medium uppercase text-sk-text-tertiary">Overall progress</span>
-        <span className="sk-text-xs-medium truncate text-sk-text-primary">
+        <span className="sk-text-xs-medium uppercase text-sko-text-subtle">Overall progress</span>
+        <span className="sk-text-xs-medium truncate text-sko-text-default">
           Module {moduleCurrent} of {moduleTotal}
         </span>
       </div>

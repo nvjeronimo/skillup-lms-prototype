@@ -68,7 +68,7 @@ export function VideoPlayer({
     <div
       ref={wrapRef}
       className={cn(
-        "relative w-full overflow-hidden bg-sk-bg-brand-solid transition-[height,border-radius,box-shadow] duration-200 ease-out",
+        "relative w-full overflow-hidden bg-sko-bg-primary transition-[height,border-radius,box-shadow] duration-200 ease-out",
         // Explicit pixel height drives the sticky full→docked shrink; otherwise
         // fall back to a capped 16:9 band (Storybook / non-sticky usage).
         heightPx ? "" : "aspect-video max-h-[34vh]",
@@ -79,7 +79,7 @@ export function VideoPlayer({
       style={{
         height: heightPx,
         boxShadow: docked
-          ? "0 4px 16px color-mix(in srgb, var(--sk-text-primary) 18%, transparent)"
+          ? "0 4px 16px color-mix(in srgb, var(--color-text-default) 18%, transparent)"
           : undefined,
       }}
     >
@@ -88,7 +88,7 @@ export function VideoPlayer({
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(135deg, var(--sk-bg-brand-solid), var(--sk-text-brand-primary))",
+            "linear-gradient(135deg, var(--color-bg-primary), var(--color-text-on-primary-soft))",
         }}
         aria-hidden
       />
@@ -114,20 +114,20 @@ export function VideoPlayer({
         >
           {state === "loading" ? (
             <>
-              <Loader2 size={36} strokeWidth={2} className="animate-spin text-sk-fg-white" />
-              <span className="sk-text-sm-medium text-sk-fg-white">Loading video…</span>
+              <Loader2 size={36} strokeWidth={2} className="animate-spin text-sko-text-on-media" />
+              <span className="sk-text-sm-medium text-sko-text-on-media">Loading video…</span>
             </>
           ) : null}
           {state === "error" ? (
             <>
-              <Icon icon={AlertCircle} size={36} className="text-sk-fg-white" />
-              <span className="sk-text-sm-medium text-sk-fg-white">
+              <Icon icon={AlertCircle} size={36} className="text-sko-text-on-media" />
+              <span className="sk-text-sm-medium text-sko-text-on-media">
                 Couldn’t load this video.
               </span>
               <button
                 type="button"
                 onClick={onRetry}
-                className="sk-text-sm-semibold rounded-md bg-sk-fg-white px-3 py-1.5 text-sk-text-brand-secondary"
+                className="sk-text-sm-semibold rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-primary"
               >
                 Retry
               </button>
@@ -135,11 +135,11 @@ export function VideoPlayer({
           ) : null}
           {state === "ended" ? (
             <>
-              <span className="sk-text-md-semibold text-sk-fg-white">You’ve finished this video</span>
+              <span className="sk-text-md-semibold text-sko-text-on-media">You’ve finished this video</span>
               <button
                 type="button"
                 onClick={onReplay}
-                className="sk-text-sm-semibold inline-flex items-center gap-1.5 rounded-md bg-sk-fg-white px-3 py-1.5 text-sk-text-brand-secondary"
+                className="sk-text-sm-semibold inline-flex items-center gap-1.5 rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-primary"
               >
                 <Icon icon={RotateCcw} size={16} /> Replay
               </button>
@@ -152,7 +152,7 @@ export function VideoPlayer({
         <div
           className="absolute bottom-20 left-1/2 z-10 max-w-[80%] -translate-x-1/2 rounded bg-sko-bg-overlay px-3 py-1 text-center"
         >
-          <span className="sk-text-sm-medium text-sk-fg-white">
+          <span className="sk-text-sm-medium text-sko-text-on-media">
             Welcome back. In this unit we look at the product development lifecycle…
           </span>
         </div>
@@ -174,7 +174,7 @@ export function VideoPlayer({
           aria-label="Seek"
           className="h-1 w-full cursor-pointer appearance-none rounded-full"
           style={{
-            background: `linear-gradient(to right, var(--sk-fg-progress) ${pct}%, var(--sk-bg-tertiary) ${pct}%)`,
+            background: `linear-gradient(to right, var(--color-bg-info) ${pct}%, var(--color-bg-muted) ${pct}%)`,
           }}
         />
         <div className="flex items-center justify-between">
@@ -183,11 +183,11 @@ export function VideoPlayer({
               type="button"
               onClick={() => setPlaying((p) => !p)}
               aria-label={playing ? "Pause" : "Play"}
-              className="text-sk-fg-white"
+              className="text-sko-text-on-media"
             >
               <Icon icon={playing ? Pause : Play} size={20} />
             </button>
-            <span className="sk-text-xs-medium text-sk-fg-white">
+            <span className="sk-text-xs-medium text-sko-text-on-media">
               {secondsToTs(currentTime)} / {secondsToTs(durationSeconds)}
             </span>
           </div>

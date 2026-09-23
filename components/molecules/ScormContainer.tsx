@@ -57,27 +57,27 @@ export function ScormContainer({
         className={cn(
           "flex aspect-video max-h-[52vh] w-full flex-col items-center justify-center gap-3 rounded-xl border px-6 text-center",
           state === "error"
-            ? "border-sk-text-error-primary bg-sk-bg-error-primary"
-            : "border-sk-border-secondary bg-sk-bg-secondary",
+            ? "border-sko-border-error bg-sko-bg-error-soft"
+            : "border-sko-border-subtle bg-sko-bg-subtle",
         )}
         role="group"
         aria-label={title}
       >
         {state === "loading" ? (
           <>
-            <Icon icon={Loader2} size={24} className="animate-spin text-sk-text-brand-secondary" />
-            <span className="sk-text-sm-medium text-sk-text-secondary">Loading activity…</span>
-            <span className="sk-text-xs-regular text-sk-text-tertiary">
+            <Icon icon={Loader2} size={24} className="animate-spin text-sko-text-primary" />
+            <span className="sk-text-sm-medium text-sko-text-muted">Loading activity…</span>
+            <span className="sk-text-xs-regular text-sko-text-subtle">
               Interactive packages can take a few seconds to start.
             </span>
           </>
         ) : state === "error" ? (
           <>
-            <Icon icon={AlertTriangle} size={24} className="text-sk-text-error-primary" />
-            <span className="sk-text-md-semibold text-sk-text-error-primary">
+            <Icon icon={AlertTriangle} size={24} className="text-sko-text-error" />
+            <span className="sk-text-md-semibold text-sko-text-error">
               This activity couldn&rsquo;t load
             </span>
-            <span className="sk-text-sm-regular max-w-md text-sk-text-error-primary">
+            <span className="sk-text-sm-regular max-w-md text-sko-text-error">
               Our activity server didn&rsquo;t respond. Your progress elsewhere is safe. This
               activity is ungraded.
             </span>
@@ -92,20 +92,20 @@ export function ScormContainer({
           </>
         ) : state === "ready" ? (
           <>
-            <Icon icon={Play} size={26} className="text-sk-text-brand-secondary" />
-            <span className="sk-text-sm-medium text-sk-text-secondary">
+            <Icon icon={Play} size={26} className="text-sko-text-primary" />
+            <span className="sk-text-sm-medium text-sko-text-muted">
               Activity running. Interact in the frame above
             </span>
-            <span className="sk-text-xs-regular text-sk-text-tertiary">
+            <span className="sk-text-xs-regular text-sko-text-subtle">
               Your progress and score are saved automatically and resume next time.
             </span>
           </>
         ) : (
           <>
-            <Icon icon={Play} size={26} className="text-sk-text-brand-secondary" />
-            <span className="sk-text-md-semibold text-sk-text-primary">{title}</span>
+            <Icon icon={Play} size={26} className="text-sko-text-primary" />
+            <span className="sk-text-md-semibold text-sko-text-default">{title}</span>
             {packageLabel ? (
-              <span className="sk-text-xs-regular text-sk-text-tertiary">
+              <span className="sk-text-xs-regular text-sko-text-subtle">
                 {packageLabel}
                 {packageSizeLabel ? ` · ${packageSizeLabel}` : ""}
               </span>

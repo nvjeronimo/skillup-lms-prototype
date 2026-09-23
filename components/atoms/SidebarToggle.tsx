@@ -19,7 +19,7 @@ export function SidebarToggle({ expanded, onToggle, className }: SidebarTogglePr
       aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
       aria-expanded={expanded}
       className={cn(
-        "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-sk-border-primary transition-colors duration-200 hover:bg-sk-bg-secondary",
+        "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-sko-border-default transition-colors duration-200 hover:bg-sko-bg-subtle",
         className,
       )}
     >

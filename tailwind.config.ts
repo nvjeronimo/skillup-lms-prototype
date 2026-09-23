@@ -4,9 +4,8 @@ import type { Config } from "tailwindcss";
  * The `sk` color scale (SkillUp Design System — one namespace for all brands)
  * references the CSS custom properties defined in `tokens/colors.css`. Since v4
  * (2026-09-23) the canonical names are the element-first `--color-*` tokens under
- * the `sko` namespace (bg-sko-bg-page, text-sko-text-muted, border-sko-border-subtle);
- * the `sk` namespace is the v3.2 vocabulary kept as aliases. Colour is never
- * hardcoded as hex in components.
+ * the `sko` namespace (bg-sko-bg-page, text-sko-text-muted, border-sko-border-subtle).
+ * Colour is never hardcoded as hex in components.
  */
 const config: Config = {
   content: [
@@ -25,9 +24,9 @@ const config: Config = {
            One flat namespace, the second word is the element:
              bg-sko-bg-page   text-sko-text-muted   text-sko-icon-muted
              border-sko-border-subtle   ring-sko-border-primary
-           The `sk` namespace below is v3.2, DEPRECATED: every --sk-* is now an
-           alias of a --color-* token, so old classes still render; migrate them
-           to `sko-*` and delete `sk` when no component uses it.               */
+           The v3.2 `sk` colour namespace was removed on 2026-09-23 once no
+           component used it; the --sk-* CSS aliases in tokens/colors.css stay
+           until engineering sets their retire date. Lint rejects new uses.     */
         sko: {
           "text-default": "var(--color-text-default)",
           "text-muted": "var(--color-text-muted)",
@@ -116,57 +115,6 @@ const config: Config = {
           "text-accent-yellow": "var(--color-text-accent-yellow)",
           "text-on-accent-yellow": "var(--color-text-on-accent-yellow)",
           "shadow-default": "var(--color-shadow-default)",
-        },
-        sk: {
-          bg: {
-            primary: "var(--sk-bg-primary)",
-            secondary: "var(--sk-bg-secondary)",
-            "secondary-subtle": "var(--sk-bg-secondary-subtle)",
-            tertiary: "var(--sk-bg-tertiary)",
-            "brand-primary": "var(--sk-bg-brand-primary)",
-            "brand-section": "var(--sk-bg-brand-section)",
-            "brand-solid": "var(--sk-bg-brand-solid)",
-            "brand-hover": "var(--sk-bg-brand-hover)",
-            "brand-stage": "var(--sk-bg-brand-stage)",
-            overlay: "var(--sk-bg-overlay)",
-            "success-primary": "var(--sk-bg-success-primary)",
-            "warning-primary": "var(--sk-bg-warning-primary)",
-            "error-primary": "var(--sk-bg-error-primary)",
-            "success-solid": "var(--sk-bg-success-solid)",
-            "warning-solid": "var(--sk-bg-warning-solid)",
-            "error-solid": "var(--sk-bg-error-solid)",
-          },
-          border: {
-            primary: "var(--sk-border-primary)",
-            secondary: "var(--sk-border-secondary)",
-            brand: "var(--sk-border-brand)",
-            "focus-ring": "var(--sk-border-focus-ring)",
-          },
-          fg: {
-            white: "var(--sk-fg-white)",
-            quaternary: "var(--sk-fg-quaternary)",
-            brand: "var(--sk-fg-brand)",
-            "brand-primary": "var(--sk-fg-brand-primary)",
-            progress: "var(--sk-fg-progress)",
-            like: "var(--sk-fg-like)",
-            "error-on-solid": "var(--sk-fg-error-on-solid)",
-            "success-on-solid": "var(--sk-fg-success-on-solid)",
-            "warning-on-solid": "var(--sk-fg-warning-on-solid)",
-          },
-          text: {
-            primary: "var(--sk-text-primary)",
-            secondary: "var(--sk-text-secondary)",
-            tertiary: "var(--sk-text-tertiary)",
-            disabled: "var(--sk-text-disabled)",
-            "primary-on-brand": "var(--sk-text-primary-on-brand)",
-            brand: "var(--sk-text-brand)",
-            "brand-primary": "var(--sk-text-brand-primary)",
-            "brand-secondary": "var(--sk-text-brand-secondary)",
-            "success-primary": "var(--sk-text-success-primary)",
-            "warning-primary": "var(--sk-text-warning-primary)",
-            "error-primary": "var(--sk-text-error-primary)",
-            "primary-on-brand-hover": "var(--sk-text-primary-on-brand-hover)",
-          },
         },
       },
       fontFamily: {

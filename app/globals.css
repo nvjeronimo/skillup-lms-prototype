@@ -9,8 +9,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--sk-bg-primary);
-  color: var(--sk-text-primary);
+  background: var(--color-bg-page);
+  color: var(--color-text-default);
   font-family: var(--sk-font-body);
   -webkit-font-smoothing: antialiased;
 }
@@ -30,21 +30,21 @@ button {
 
 /* Focus visibility for keyboard users — bound to brand border token. */
 :focus-visible {
-  outline: 2px solid var(--sk-border-brand);
+  outline: 2px solid var(--color-border-primary);
   outline-offset: 2px;
 }
 
 /* Thin custom scrollbar used by scroll regions (atoms/VerticalScroll mirrors this). */
 .sk-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--sk-border-primary) transparent;
+  scrollbar-color: var(--color-border-default) transparent;
 }
 .sk-scroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 .sk-scroll::-webkit-scrollbar-thumb {
-  background: var(--sk-border-primary);
+  background: var(--color-border-default);
   border-radius: 999px;
 }
 .sk-scroll::-webkit-scrollbar-track {
@@ -108,7 +108,7 @@ button {
 /* Overlay backdrop — SKO DS uses a light dim + background blur (alpha-black + blur),
    token-bound via color-mix (never a raw rgba/hex). */
 .sk-backdrop {
-  background: color-mix(in srgb, var(--sk-text-primary) 30%, transparent);
+  background: color-mix(in srgb, var(--color-text-default) 30%, transparent);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }

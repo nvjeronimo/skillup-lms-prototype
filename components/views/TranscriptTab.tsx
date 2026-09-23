@@ -83,7 +83,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   if (!topic || !transcript.length) {
     return (
-      <p className="sk-text-sm-regular px-1 py-8 text-center text-sk-text-tertiary">
+      <p className="sk-text-sm-regular px-1 py-8 text-center text-sko-text-subtle">
         No transcript available for this topic.
       </p>
     );
@@ -99,13 +99,13 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
       <div className="flex flex-wrap items-center justify-between gap-3 py-2">
-        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sk-text-secondary">
+        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-muted">
           Language:
           <span className="relative">
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sk-text-primary outline-none"
+              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sko-text-default outline-none"
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -114,7 +114,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             <ChevronDown
               size={14}
               strokeWidth={1.5}
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sk-text-tertiary"
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-text-subtle"
             />
           </span>
         </label>
@@ -127,7 +127,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 : transcript[0]?.id,
             })
           }
-          className="sk-text-sm-semibold inline-flex items-center gap-1 text-sk-text-brand-secondary hover:underline"
+          className="sk-text-sm-semibold inline-flex items-center gap-1 text-sko-text-primary hover:underline"
         >
           <Icon icon={Plus} size={16} />
           Add Note
@@ -177,14 +177,14 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       </div>
 
       {/* Feedback + license footer (ICP Phase 1). */}
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-3">
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-sko-border-subtle pt-3">
         <ContentFeedback
           value={feedback}
           onLike={() => setFeedback(feedback === "like" ? null : "like")}
           onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
           onReport={() => showToast("Thanks, we'll take a look.")}
         />
-        <a href="#" className="sk-text-xs-regular text-sk-text-tertiary hover:text-sk-text-brand-secondary">
+        <a href="#" className="sk-text-xs-regular text-sko-text-subtle hover:text-sko-text-primary">
           CC BY-SA 4.0
         </a>
       </div>

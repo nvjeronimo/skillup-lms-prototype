@@ -44,7 +44,7 @@ export function ModuleHeader({
       onClick={onToggle}
       aria-expanded={!collapsed}
       className={cn(
-        "flex w-full items-center gap-3 border-b border-sk-border-secondary bg-sk-bg-secondary-subtle px-4 py-3 text-left",
+        "flex w-full items-center gap-3 border-b border-sko-border-subtle bg-sko-bg-faint px-4 py-3 text-left",
         className,
       )}
     >
@@ -57,13 +57,13 @@ export function ModuleHeader({
           isCompleted={isCompleted}
         />
         {/* DS name box is two lines tall — longer names clip with an ellipsis. */}
-        <span className="sk-text-sm-semibold line-clamp-2 text-sk-text-primary">{title}</span>
+        <span className="sk-text-sm-semibold line-clamp-2 text-sko-text-default">{title}</span>
       </span>
       <ChevronDown
         size={24}
         strokeWidth={2}
         className={cn(
-          "shrink-0 text-sk-border-primary transition-transform duration-200",
+          "shrink-0 text-sko-border-default transition-transform duration-200",
           !collapsed && "rotate-180",
         )}
         aria-hidden

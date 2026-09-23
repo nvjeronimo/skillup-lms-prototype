@@ -35,8 +35,8 @@ function ControlButton({
       className={cn(
         "inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors",
         active
-          ? "bg-sk-bg-error-primary text-sk-text-error-primary"
-          : "bg-sk-bg-secondary text-sk-text-secondary hover:bg-sk-bg-tertiary",
+          ? "bg-sko-bg-error-soft text-sko-text-error"
+          : "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-muted",
       )}
     >
       <Icon icon={icon} size={20} />
@@ -59,16 +59,16 @@ export function LiveControlBar({
     return (
       <div
         className={cn(
-          "flex items-center justify-between gap-4 rounded-xl border border-sk-border-secondary bg-sk-bg-brand-section px-5 py-3",
+          "flex items-center justify-between gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-primary-soft px-5 py-3",
           className,
         )}
       >
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-sk-bg-error-primary px-2 py-0.5">
-            <span className="h-2 w-2 rounded-full bg-sk-bg-error-solid" aria-hidden />
-            <span className="sk-text-xs-semibold text-sk-text-error-primary">LIVE</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-sko-bg-error-soft px-2 py-0.5">
+            <span className="h-2 w-2 rounded-full bg-sko-bg-error" aria-hidden />
+            <span className="sk-text-xs-semibold text-sko-text-error">LIVE</span>
           </span>
-          <span className="sk-text-sm-medium text-sk-text-primary">Office hours with Sarah</span>
+          <span className="sk-text-sm-medium text-sko-text-default">Office hours with Sarah</span>
         </div>
         <Button variant="primary" size="md" onClick={onJoin}>
           Join live
@@ -80,7 +80,7 @@ export function LiveControlBar({
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary px-5 py-3",
+        "flex items-center justify-center gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page px-5 py-3",
         className,
       )}
     >

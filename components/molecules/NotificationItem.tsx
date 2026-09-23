@@ -42,23 +42,23 @@ export function NotificationItem({
 
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sk-bg-brand-section text-sk-text-brand-secondary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
         <Icon icon={IconCmp} size={18} />
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="sk-text-sm-semibold block text-sk-text-primary">{title}</span>
+        <span className="sk-text-sm-semibold block text-sko-text-default">{title}</span>
         {body ? (
-          <span className="sk-text-sm-regular mt-0.5 block text-sk-text-secondary">{body}</span>
+          <span className="sk-text-sm-regular mt-0.5 block text-sko-text-muted">{body}</span>
         ) : null}
-        <span className="sk-text-xs-regular mt-1 block text-sk-text-tertiary">{timestamp}</span>
+        <span className="sk-text-xs-regular mt-1 block text-sko-text-subtle">{timestamp}</span>
       </span>
 
       {/* Unread dot — right side (matches Final Screens). */}
       <span className="flex w-2 shrink-0 justify-center pt-1.5">
         {unread ? (
           <span
-            className="h-2 w-2 rounded-full bg-sk-fg-brand-primary"
+            className="h-2 w-2 rounded-full bg-sko-bg-primary"
             aria-label="Unread"
             role="img"
           />
@@ -68,7 +68,7 @@ export function NotificationItem({
   );
 
   const classes = cn(
-    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-sk-bg-secondary",
+    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-sko-bg-subtle",
     className,
   );
 

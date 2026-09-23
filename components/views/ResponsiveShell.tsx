@@ -61,10 +61,10 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   if (!width) return <>{children}</>;
 
   return (
-    <div className="flex min-h-[100dvh] justify-center bg-sk-bg-secondary">
+    <div className="flex min-h-[100dvh] justify-center bg-sko-bg-subtle">
       <div
         style={{ width }}
-        className="w-full shrink-0 overflow-hidden border-x border-sk-border-secondary bg-sk-bg-primary shadow-2xl"
+        className="w-full shrink-0 overflow-hidden border-x border-sko-border-subtle bg-sko-bg-page shadow-2xl"
       >
         {children}
       </div>

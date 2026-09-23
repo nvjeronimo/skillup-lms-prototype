@@ -25,12 +25,16 @@
   --sk-font-display: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
 }
 
-/* ---- Display ramp (Montserrat) ---- */
+/* ---- Display ramp (Montserrat) ----
+   DS names (Material type scale, renamed 21 Sep 2026): display-xs = headline-small 24/32,
+   display-sm = headline-medium 30/38, display-md = headline-large 36/44 (−2% tracking). */
 .sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(24px * var(--sk-font-scale, 1)); line-height: calc(32px * var(--sk-font-scale, 1)); }
 .sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(30px * var(--sk-font-scale, 1)); line-height: calc(38px * var(--sk-font-scale, 1)); }
-.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(36px * var(--sk-font-scale, 1)); line-height: calc(44px * var(--sk-font-scale, 1)); }
+.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(36px * var(--sk-font-scale, 1)); line-height: calc(44px * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
 
-/* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ---- */
+/* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ----
+   DS names: lg = title-medium 18/24, md = body-large 16/24, sm = body-medium 14/20,
+   xs = body-small 12/18, 2xs = label-small 10/14 uppercase +4%. */
 .sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 .sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 

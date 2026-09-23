@@ -41,15 +41,15 @@ export function CourseHub() {
   });
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-sk-bg-secondary">
-      <header className="flex h-[60px] items-center gap-3 border-b border-sk-border-secondary bg-sk-bg-primary px-4 md:px-6">
+    <div className="flex min-h-[100dvh] flex-col bg-sko-bg-subtle">
+      <header className="flex h-[60px] items-center gap-3 border-b border-sko-border-subtle bg-sko-bg-page px-4 md:px-6">
         <SkillUpLogo className="h-7" />
         <div className="flex flex-1 items-center justify-end gap-1">
           <button
             type="button"
             onClick={toggleTheme}
             aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-sk-text-tertiary transition-colors hover:bg-sk-bg-secondary"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={theme === "dark" ? Sun : Moon} size={20} />
           </button>
@@ -58,8 +58,8 @@ export function CourseHub() {
       </header>
 
       <main className="mx-auto w-full max-w-4xl flex-1 p-4 md:p-8">
-        <h1 className="sk-text-display-sm-semibold text-sk-text-primary">My Learning</h1>
-        <p className="sk-text-md-regular mt-1 text-sk-text-secondary">
+        <h1 className="sk-text-display-sm-semibold text-sko-text-default">My Learning</h1>
+        <p className="sk-text-md-regular mt-1 text-sko-text-muted">
           Pick up where you left off. {cards.length} courses enrolled.
         </p>
 

@@ -23,20 +23,20 @@ export function TopicFooterMeta({ byline, onReport }: TopicFooterMetaProps) {
   return (
     <div className="mt-6 flex flex-col gap-3">
       {byline ? (
-        <div className="flex items-center gap-4 border-t border-sk-border-secondary pt-4">
+        <div className="flex items-center gap-4 border-t border-sko-border-subtle pt-4">
           <Avatar name={byline.author} size="md" />
           <div className="min-w-0 flex-1">
-            <p className="sk-text-sm-semibold text-sk-text-primary">{byline.author}</p>
-            <p className="sk-text-sm-regular text-sk-text-secondary">{byline.role}</p>
+            <p className="sk-text-sm-semibold text-sko-text-default">{byline.author}</p>
+            <p className="sk-text-sm-regular text-sko-text-muted">{byline.role}</p>
           </div>
-          <span className="sk-text-sm-regular shrink-0 text-sk-text-tertiary">
+          <span className="sk-text-sm-regular shrink-0 text-sko-text-subtle">
             Updated {byline.updated}
           </span>
         </div>
       ) : null}
 
       <ContentFeedback
-        className={byline ? "" : "border-t border-sk-border-secondary pt-4"}
+        className={byline ? "" : "border-t border-sko-border-subtle pt-4"}
         value={feedback}
         onLike={() => setFeedback((f) => (f === "like" ? null : "like"))}
         onDislike={() => setFeedback((f) => (f === "dislike" ? null : "dislike"))}

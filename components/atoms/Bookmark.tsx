@@ -33,8 +33,8 @@ export function BookmarkButton({
       aria-pressed={bookmarked}
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex items-center justify-center rounded-md p-1 transition-colors duration-200 hover:bg-sk-bg-brand-section",
-        bookmarked ? "text-sk-text-brand-secondary" : "text-sk-text-tertiary",
+        "inline-flex items-center justify-center rounded-md p-1 transition-colors duration-200 hover:bg-sko-bg-primary-soft",
+        bookmarked ? "text-sko-text-primary" : "text-sko-text-subtle",
         className,
       )}
     >

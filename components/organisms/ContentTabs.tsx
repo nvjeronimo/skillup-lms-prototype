@@ -27,7 +27,7 @@ export interface ContentTabsProps {
 /** Count pill — bg-brand-section + text-brand-secondary, per DS (all tab states). */
 function CountBadge({ n }: { n: number }) {
   return (
-    <span className="sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sk-bg-brand-section px-1 text-sk-text-brand-secondary">
+    <span className="sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-primary-soft px-1 text-sko-text-primary">
       {n}
     </span>
   );
@@ -72,10 +72,10 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
             aria-label="Content"
             onClick={() => setOpen((o) => !o)}
             className={cn(
-              "sk-text-sm-semibold flex w-full items-center justify-between gap-2 rounded-lg border bg-sk-bg-primary px-3 py-2.5 transition-colors",
+              "sk-text-sm-semibold flex w-full items-center justify-between gap-2 rounded-lg border bg-sko-bg-page px-3 py-2.5 transition-colors",
               open
-                ? "border-sk-border-brand text-sk-text-brand-secondary"
-                : "border-sk-border-primary text-sk-text-primary",
+                ? "border-sko-border-primary text-sko-text-primary"
+                : "border-sko-border-default text-sko-text-default",
             )}
           >
             <span className="flex min-w-0 items-center gap-2">
@@ -87,7 +87,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               strokeWidth={1.5}
               className={cn(
                 "shrink-0 transition-transform",
-                open ? "rotate-180 text-sk-text-brand-secondary" : "text-sk-text-tertiary",
+                open ? "rotate-180 text-sko-text-primary" : "text-sko-text-subtle",
               )}
             />
           </button>
@@ -95,7 +95,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
           {open ? (
             <ul
               role="listbox"
-              className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-lg border border-sk-border-brand bg-sk-bg-primary shadow-lg"
+              className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-lg border border-sko-border-primary bg-sko-bg-page shadow-lg"
             >
               {tabs.map((t) => {
                 const selected = t.slug === active;
@@ -110,8 +110,8 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                       className={cn(
                         "sk-text-sm-semibold flex w-full items-center gap-2 px-3 py-2.5 text-left transition-colors",
                         selected
-                          ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                          : "text-sk-text-brand-primary hover:bg-sk-bg-secondary",
+                          ? "bg-sko-bg-primary-soft text-sko-text-primary"
+                          : "text-sko-text-on-primary-soft hover:bg-sko-bg-subtle",
                       )}
                     >
                       <span className="truncate">{t.label}</span>
@@ -131,7 +131,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-3 border-b border-sk-border-secondary",
+        "flex items-center justify-between gap-3 border-b border-sko-border-subtle",
         className,
       )}
     >
@@ -151,8 +151,8 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               className={cn(
                 "sk-text-sm-semibold relative flex shrink-0 items-center gap-1.5 px-4 py-2.5 transition-colors",
                 isActive
-                  ? "text-sk-text-brand-secondary"
-                  : "text-sk-text-tertiary hover:text-sk-text-primary",
+                  ? "text-sko-text-primary"
+                  : "text-sko-text-subtle hover:text-sko-text-default",
               )}
             >
               {tab.label}
@@ -161,8 +161,8 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                   className={cn(
                     "sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
                     isActive
-                      ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                      : "bg-sk-bg-secondary text-sk-text-secondary",
+                      ? "bg-sko-bg-primary-soft text-sko-text-primary"
+                      : "bg-sko-bg-subtle text-sko-text-muted",
                   )}
                 >
                   {tab.count}
@@ -173,7 +173,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               {isActive ? (
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-px h-0.5 rounded-t-[2px] bg-sk-border-brand"
+                  className="absolute inset-x-0 -bottom-px h-0.5 rounded-t-[2px] bg-sko-bg-primary"
                 />
               ) : null}
             </Link>

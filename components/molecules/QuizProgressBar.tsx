@@ -27,22 +27,22 @@ export function QuizProgressBar({ current, total, pct, className }: QuizProgress
 
   return (
     <div className={cn("flex items-center gap-4", className)}>
-      <span className="sk-text-xs-semibold shrink-0 text-sk-text-secondary">
+      <span className="sk-text-xs-semibold shrink-0 text-sko-text-muted">
         Question {current} of {total}
       </span>
 
       <div
-        className="h-2 min-w-0 flex-1 bg-sk-bg-tertiary"
+        className="h-2 min-w-0 flex-1 bg-sko-bg-muted"
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={`Quiz progress: ${value}% complete`}
       >
-        <div className="h-full bg-sk-fg-progress" style={{ width: `${value}%` }} />
+        <div className="h-full bg-sko-bg-info" style={{ width: `${value}%` }} />
       </div>
 
-      <span className="sk-text-xs-semibold shrink-0 text-sk-text-primary">{value}%</span>
+      <span className="sk-text-xs-semibold shrink-0 text-sko-text-default">{value}%</span>
     </div>
   );
 }

@@ -60,17 +60,17 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-[480px] overflow-hidden rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-xl"
+        className="relative w-full max-w-[480px] overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
       >
-        <header className="flex items-center justify-between border-b border-sk-border-secondary px-5 py-4">
-          <h2 id={titleId} className="sk-text-md-semibold text-sk-text-primary">
+        <header className="flex items-center justify-between border-b border-sko-border-subtle px-5 py-4">
+          <h2 id={titleId} className="sk-text-md-semibold text-sko-text-default">
             Report an issue
           </h2>
           <button
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sk-text-tertiary hover:bg-sk-bg-secondary"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -78,7 +78,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
 
         <div className="flex flex-col gap-5 px-6 py-5">
           <fieldset>
-            <legend className="sk-text-sm-medium mb-2.5 block text-sk-text-secondary">
+            <legend className="sk-text-sm-medium mb-2.5 block text-sko-text-muted">
               What’s wrong with this content?
             </legend>
             <div className="flex flex-col gap-1.5" role="radiogroup">
@@ -94,13 +94,13 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
                     className={cn(
                       "sk-text-sm-medium flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
                       selected
-                        ? "border-sk-border-brand bg-sk-bg-brand-section text-sk-text-primary"
-                        : "border-sk-border-secondary text-sk-text-secondary hover:bg-sk-bg-secondary",
+                        ? "border-sko-border-primary bg-sko-bg-primary-soft text-sko-text-default"
+                        : "border-sko-border-subtle text-sko-text-muted hover:bg-sko-bg-subtle",
                     )}
                   >
                     {r}
                     {selected ? (
-                      <Icon icon={Check} size={18} className="shrink-0 text-sk-text-brand-secondary" />
+                      <Icon icon={Check} size={18} className="shrink-0 text-sko-text-primary" />
                     ) : null}
                   </button>
                 );
@@ -109,20 +109,20 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
           </fieldset>
 
           <label className="block">
-            <span className="sk-text-sm-medium mb-1.5 block text-sk-text-secondary">
-              Details <span className="text-sk-text-tertiary">(optional)</span>
+            <span className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">
+              Details <span className="text-sko-text-subtle">(optional)</span>
             </span>
             <textarea
               value={details}
               onChange={(e) => setDetails(e.target.value)}
               rows={3}
               placeholder="Tell us more…"
-              className="sk-text-sm-regular w-full resize-none rounded-lg border border-sk-border-primary bg-sk-bg-primary px-3 py-2 text-sk-text-primary outline-none focus:border-sk-border-brand"
+              className="sk-text-sm-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
             />
           </label>
         </div>
 
-        <footer className="flex items-center justify-end gap-2 border-t border-sk-border-secondary px-5 py-4">
+        <footer className="flex items-center justify-end gap-2 border-t border-sko-border-subtle px-5 py-4">
           <Button variant="tertiary" onClick={onCancel}>
             Cancel
           </Button>

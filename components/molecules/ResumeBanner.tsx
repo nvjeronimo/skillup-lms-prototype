@@ -24,17 +24,17 @@ export function ResumeBanner({ seconds, onResume, onStartOver, className }: Resu
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-lg border border-sk-border-brand bg-sk-bg-brand-section px-4 py-3",
+        "flex flex-wrap items-center justify-between gap-3 rounded-lg border border-sko-border-primary bg-sko-bg-primary-soft px-4 py-3",
         className,
       )}
     >
       <div className="flex items-center gap-2.5">
-        <Icon icon={Play} size={16} className="text-sk-text-brand-secondary" />
+        <Icon icon={Play} size={16} className="text-sko-text-primary" />
         <div className="flex flex-col">
-          <span className="sk-text-sm-semibold text-sk-text-brand-secondary">
+          <span className="sk-text-sm-semibold text-sko-text-primary">
             Pick up where you left off
           </span>
-          <span className="sk-text-xs-regular text-sk-text-brand-secondary">
+          <span className="sk-text-xs-regular text-sko-text-primary">
             You stopped at {secondsToTs(seconds)}
           </span>
         </div>

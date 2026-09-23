@@ -28,29 +28,29 @@ export function DiscussionPrompt({
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-xl border border-sk-border-secondary bg-sk-bg-primary shadow-sk-card p-5",
+        "flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5",
         className,
       )}
     >
-      <div className="sk-text-xs-medium flex items-center gap-1.5 text-sk-text-secondary">
-        <Icon icon={MessageCircle} size={14} className="text-sk-text-brand-secondary" />
+      <div className="sk-text-xs-medium flex items-center gap-1.5 text-sko-text-muted">
+        <Icon icon={MessageCircle} size={14} className="text-sko-text-primary" />
         Discussion
-        <span className="sk-text-xs-regular text-sk-text-tertiary">· {duration}</span>
+        <span className="sk-text-xs-regular text-sko-text-subtle">· {duration}</span>
       </div>
 
-      <h3 className="sk-text-md-semibold text-sk-text-primary">{prompt}</h3>
-      <p className="sk-text-sm-regular text-sk-text-secondary">{helper}</p>
+      <h3 className="sk-text-md-semibold text-sko-text-default">{prompt}</h3>
+      <p className="sk-text-sm-regular text-sko-text-muted">{helper}</p>
 
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value.slice(0, maxChars))}
         rows={4}
         placeholder="Write your reply…"
-        className="sk-text-sm-regular w-full resize-none rounded-lg border border-sk-border-primary bg-sk-bg-secondary px-3 py-2.5 text-sk-text-primary outline-none focus:border-sk-border-brand"
+        className="sk-text-sm-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-subtle px-3 py-2.5 text-sko-text-default outline-none focus:border-sko-border-primary"
       />
 
       <div className="flex items-center justify-between">
-        <span className="sk-text-xs-regular text-sk-text-tertiary">
+        <span className="sk-text-xs-regular text-sko-text-subtle">
           {text.length} / {maxChars} characters
         </span>
         <Button variant="primary" size="md" disabled={!text.trim()} onClick={() => onSubmit?.(text)}>

@@ -63,11 +63,11 @@ function UtilityButton({
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center transition-colors hover:bg-sk-bg-secondary",
+        "inline-flex shrink-0 items-center justify-center transition-colors hover:bg-sko-bg-subtle",
         compact
-          ? cn("text-sk-fg-quaternary", large ? "h-11 w-11 rounded-lg" : "h-8 w-8 rounded-md")
-          : "h-10 w-10 rounded-lg text-sk-text-tertiary",
-        hierarchy === "secondary" && "border border-sk-border-primary bg-sk-bg-primary",
+          ? cn("text-sko-icon-faint", large ? "h-11 w-11 rounded-lg" : "h-8 w-8 rounded-md")
+          : "h-10 w-10 rounded-lg text-sko-text-subtle",
+        hierarchy === "secondary" && "border border-sko-border-default bg-sko-bg-page",
         className,
       )}
     >
@@ -118,7 +118,7 @@ export function CoursePlayerTopbar({
       <Icon icon={Bell} size={20} />
       {notificationsCount > 0 ? (
         <span
-          className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-sk-fg-brand-primary"
+          className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-sko-bg-primary"
           aria-hidden
         />
       ) : null}
@@ -129,7 +129,7 @@ export function CoursePlayerTopbar({
     return (
       <header
         className={cn(
-          "flex h-14 items-center justify-between gap-2 border-b border-sk-border-secondary bg-sk-bg-primary pl-3 pr-2",
+          "flex h-14 items-center justify-between gap-2 border-b border-sko-border-subtle bg-sko-bg-page pl-3 pr-2",
           className,
         )}
       >
@@ -168,7 +168,7 @@ export function CoursePlayerTopbar({
   return (
     <header
       className={cn(
-        "flex h-[60px] items-center gap-3 border-b border-sk-border-secondary bg-sk-bg-primary px-4 md:px-6",
+        "flex h-[60px] items-center gap-3 border-b border-sko-border-subtle bg-sko-bg-page px-4 md:px-6",
         className,
       )}
     >
@@ -181,12 +181,12 @@ export function CoursePlayerTopbar({
           {breadcrumb.map((seg, i) => (
             <React.Fragment key={seg}>
               {i > 0 ? (
-                <Icon icon={ChevronRight} size={14} className="text-sk-fg-quaternary" />
+                <Icon icon={ChevronRight} size={14} className="text-sko-icon-faint" />
               ) : null}
               <span
                 className={cn(
                   "sk-text-sm-medium truncate",
-                  i === breadcrumb.length - 1 ? "text-sk-text-primary" : "text-sk-text-tertiary",
+                  i === breadcrumb.length - 1 ? "text-sko-text-default" : "text-sko-text-subtle",
                 )}
               >
                 {seg}
@@ -230,10 +230,10 @@ export function CoursePlayerTopbar({
           <button
             type="button"
             aria-label="Account"
-            className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sk-bg-secondary"
+            className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sko-bg-subtle"
           >
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
-            <span className="sk-text-sm-medium pr-1 text-sk-text-primary">{userName}</span>
+            <span className="sk-text-sm-medium pr-1 text-sko-text-default">{userName}</span>
           </button>
         )}
 
