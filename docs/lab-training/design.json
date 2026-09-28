@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "name": "The Training Block (lab)",
+  "scope": "[data-world=\"training\"]",
+  "status": "lab exploration; not the SkillUp DS",
+  "source": "tokens/lab-training.css",
+  "routes": ["/lab/training", "/lab/training/plans", "/lab/training/course/six-sigma"],
+  "colors": {
+    "ground": { "value": "#f2f4f3", "var": "--tb-ground", "role": "page ground" },
+    "sheet": { "value": "#ffffff", "var": "--tb-sheet", "role": "printed plan surface" },
+    "ink": { "value": "#0e2b34", "var": "--tb-ink", "role": "text, strong rules, nav current mark" },
+    "ink-2": { "value": "#3c5660", "var": "--tb-ink-2", "role": "secondary text", "contrastOnSheet": 7.3 },
+    "ink-3": { "value": "#5b727a", "var": "--tb-ink-3", "role": "tertiary text", "contrastOnSheet": 4.9 },
+    "rule": { "value": "#d5dcdc", "var": "--tb-rule", "role": "hairlines" },
+    "rule-strong": { "value": "#0e2b34", "var": "--tb-rule-strong", "role": "section rule, road" },
+    "teal": { "value": "#26708e", "var": "--tb-teal", "role": "the plan (SkillUp teal, fixed)" },
+    "teal-deep": { "value": "#1b5268", "var": "--tb-teal-deep", "role": "hover/pressed" },
+    "teal-wash": { "value": "#e3eef2", "var": "--tb-teal-wash", "role": "planned block fill, mobile nav current pill" },
+    "lime": { "value": "#c8f169", "var": "--tb-lime", "role": "now: only marks containing today's date", "contrastWithInk": 12.9 },
+    "lime-deep": { "value": "#a9d93e", "var": "--tb-lime-deep", "role": "declared, unused in built pages" },
+    "done": { "value": "#7d8f96", "var": "--tb-done", "role": "done mark" },
+    "done-wash": { "value": "#e4e8e9", "var": "--tb-done-wash", "role": "done block fill, meter track" },
+    "live": { "value": "#1f7a47", "var": "--tb-live", "role": "live only" },
+    "live-wash": { "value": "#e2f3e8", "var": "--tb-live-wash", "role": "live block fill" }
+  },
+  "fonts": {
+    "display": { "family": "Big Shoulders Display", "weights": [800], "var": "--font-tb-display", "fallback": "Arial Narrow, sans-serif" },
+    "text": { "family": "Hanken Grotesk", "weights": [400, 600], "var": "--font-tb-text", "fallback": "system-ui, sans-serif" }
+  },
+  "typography": {
+    "tb-display": { "font": "display", "size": "clamp(2.5rem, 1.6rem + 3.2vw, 4.75rem)", "lineHeight": 0.95, "letterSpacing": "-0.01em" },
+    "tb-h1": { "font": "display", "size": "clamp(2rem, 1.5rem + 1.8vw, 3rem)", "lineHeight": 1 },
+    "tb-h2": { "font": "display", "size": "1.5rem", "lineHeight": 1.05, "letterSpacing": "0.02em", "transform": "uppercase" },
+    "tb-label": { "font": "display", "size": "0.8125rem", "lineHeight": 1.2, "letterSpacing": "0.08em", "transform": "uppercase" },
+    "tb-num-xl": { "font": "display", "size": "3.5rem", "numeric": "tabular-nums" },
+    "tb-num-l": { "font": "display", "size": "2rem", "numeric": "tabular-nums" },
+    "tb-num-m": { "font": "display", "size": "1.375rem", "numeric": "tabular-nums" },
+    "tb-title": { "font": "text", "weight": 600, "size": "1.25rem", "lineHeight": 1.25 },
+    "tb-body": { "font": "text", "weight": 400, "size": "1rem", "lineHeight": 1.5 },
+    "tb-body-s": { "font": "text", "weight": 400, "size": "0.875rem", "lineHeight": 1.45 },
+    "tb-meta": { "font": "text", "weight": 400, "size": "0.8125rem", "lineHeight": 1.4, "numeric": "tabular-nums" },
+    "scaleVar": "--sk-font-scale",
+    "minTextPx": 12
+  },
+  "radius": { "sheet": "3px", "button": "3px", "block": "2px", "mark": "1px" },
+  "layout": { "pageMax": "1280px", "gutter": { "base": "16px", "md": "32px" }, "grid": "12 columns at lg; Today first viewport 5 | 7" },
+  "targets": { "minMobile": "44px", "nav": "64px", "primaryButton": "52px" },
+  "focus": { "outline": "3px solid teal", "offset": "2px" },
+  "motion": {
+    "button": { "duration": "160ms", "easing": "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+    "replanIn": { "duration": "520ms", "easing": "cubic-bezier(0.16, 1, 0.3, 1)", "from": "translateX(-24px), opacity 0", "stagger": "90ms", "reducedMotion": "none" }
+  },
+  "rules": {
+    "colorRoles": {
+      "plan": "teal",
+      "now": "lime, only on a mark containing today's date: today's column, today's next topic, current plan week, the You marker; never cohort week, catch-up week or future start week",
+      "done": "graphite",
+      "moved": "dashed 1.5px teal outline + 135deg teal-wash hatch, no solid inset",
+      "live": "green, live only",
+      "navCurrent": "ink underline (desktop) / teal-wash pill (mobile), never lime"
+    },
+    "sessionBlockHeightPx": "clamp(48, 36 + 1.6*minutes, 132)",
+    "sessionBlockFace": "kind + minutes only; title in hero, THEN list and accessible name",
+    "topicBlockWidthPx": "clamp(128, 128 + 4*minutes, 440); 148 when no duration",
+    "kickers": "none above headings, except the date line above the Today title",
+    "icons": "Lucide via Icon; no Unicode glyph icons",
+    "unwiredActions": "DemoAction announces 'Lab demo — this action isn't wired yet.'",
+    "mockValues": "MockTag with reason",
+    "signatureInteraction": "Re-plan: 'Keep this plan' + 'Choose my days' (disclosure, aria-pressed day toggles, role=status confirmation)"
+  },
+  "open": [
+    "Road to race day as 12 week marks",
+    "Per-day minute totals under the week grid",
+    "Re-plan motion travelling from the missed day"
+  ]
+}
