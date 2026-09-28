@@ -12,7 +12,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  // Every route sets its own title (WCAG 2.4.2); the template adds the product.
+  // Every route sets its own title (WCAG 2.4.2) through pageTitle() in lib/utils;
+  // the template is only a fallback for a route that forgets.
   title: { template: "%s · SkillUp", default: "SkillUp" },
   description: "Prototype of the SkillUp LMS video lesson flow.",
 };

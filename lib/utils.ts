@@ -90,3 +90,13 @@ export function prefersReducedMotion(): boolean {
 export function scrollBehavior(): ScrollBehavior {
   return prefersReducedMotion() ? "auto" : "smooth";
 }
+
+/**
+ * A page title with the product suffix (WCAG 2.4.2). Returned as Next's
+ * `absolute` title: the root layout's "%s · SkillUp" template only reaches
+ * direct children and is dropped under a layout that sets its own title, so
+ * every route spells the suffix out through this helper instead.
+ */
+export function pageTitle(title: string): { absolute: string } {
+  return { absolute: `${title} · SkillUp` };
+}
