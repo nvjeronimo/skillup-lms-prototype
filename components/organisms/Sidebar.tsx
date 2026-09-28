@@ -117,7 +117,7 @@ export function Sidebar({
     if (!container) return;
     if (!isMobile) container.scrollTop = savedScrollTop; // restore persisted position
 
-    const active = container.querySelector<HTMLElement>('[aria-current="true"]');
+    const active = container.querySelector<HTMLElement>('[aria-current="page"]');
     if (active) {
       const c = container.getBoundingClientRect();
       const a = active.getBoundingClientRect();

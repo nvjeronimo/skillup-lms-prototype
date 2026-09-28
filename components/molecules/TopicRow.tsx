@@ -28,6 +28,14 @@ export interface TopicRowProps {
  * an absolutely positioned bar in the same token reproduces that exactly (12px
  * content inset in both states).
  */
+/** Spoken status, read after the title and type (the ring itself is visual). */
+const STATUS_TEXT: Record<CompletionState, string> = {
+  Done: "completed",
+  "In Progress": "in progress",
+  Pending: "not started",
+  Locked: "locked",
+};
+
 function ActiveRule() {
   return <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-sko-border-primary" />;
 }
@@ -56,8 +64,9 @@ export function TopicRow({
       <button
         type="button"
         onClick={onClick}
-        aria-current={active ? "true" : undefined}
-        aria-label={title}
+        aria-current={active ? "page" : undefined}
+        // Icon-only rail row: the name carries what the ring and badge show.
+        aria-label={`${title}, ${type}, ${STATUS_TEXT[status]}`}
         className={cn(
           // DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred.
           "relative flex w-full items-start justify-center px-2 py-3",
@@ -66,7 +75,9 @@ export function TopicRow({
         )}
       >
         {active ? <ActiveRule /> : null}
-        <CompletionStatus state={status} size={18} />
+        <span aria-hidden className="contents">
+          <CompletionStatus state={status} size={18} />
+        </span>
       </button>
     );
   }
@@ -83,12 +94,15 @@ export function TopicRow({
       <button
         type="button"
         onClick={onClick}
-        aria-current={active ? "true" : undefined}
+        aria-current={active ? "page" : undefined}
         className="flex min-w-0 flex-1 items-start gap-2 text-left"
       >
         {/* DS: the 18px status sits flush with the top padding, level with the
-            content column (row counter-axis alignment is MIN). */}
-        <CompletionStatus state={status} size={18} />
+            content column (row counter-axis alignment is MIN). Hidden from AT:
+            the status is spoken last, after title · type · duration. */}
+        <span aria-hidden className="contents">
+          <CompletionStatus state={status} size={18} />
+        </span>
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           {/* The topic title is text-primary in every state — it does not change
               colour when active or locked. */}
@@ -111,6 +125,7 @@ export function TopicRow({
             {optional ? (
               <span className="sk-text-xs-medium shrink-0 text-sko-icon-faint">Optional</span>
             ) : null}
+            <span className="sr-only">, {STATUS_TEXT[status]}</span>
           </span>
         </span>
       </button>
