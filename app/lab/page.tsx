@@ -12,7 +12,7 @@ const DASHBOARD = [
 
 export default function LabIndex() {
   return (
-    <main id="main" className="mx-auto w-full max-w-4xl flex-1 p-4 md:p-8">
+    <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-4xl flex-1 p-4 md:p-8">
       <h1 className="sk-text-display-sm-semibold text-sko-text-default">Explorations</h1>
       <p className="sk-text-md-regular mt-1 text-sko-text-muted">
         Directions to compare before one is chosen and brought into Figma. Switch persona in the top bar.

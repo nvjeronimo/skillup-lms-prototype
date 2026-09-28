@@ -10,12 +10,6 @@ export const metadata: Metadata = {
 export default function LabLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-sko-bg-subtle">
-      <a
-        href="#main"
-        className="sk-text-sm-semibold sr-only z-50 rounded-md bg-sko-bg-page px-4 py-3 text-sko-text-primary focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        Skip to content
-      </a>
       <Suspense>
         <LabTopbar />
       </Suspense>

@@ -61,7 +61,7 @@ export function View() {
   const days = week(agenda);
 
   return (
-    <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 md:px-6 md:py-8 lg:px-8">
+    <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-5xl flex-1 px-4 py-6 md:px-6 md:py-8 lg:px-8">
       <header>
         <p className="sk-text-sm-medium text-sko-text-subtle">Dashboard</p>
         <h1 className="sk-text-display-xs-semibold mt-1 text-sko-text-default">Hi {persona.firstName}</h1>

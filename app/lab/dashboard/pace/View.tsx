@@ -95,7 +95,7 @@ export function View() {
   const next = nextAction(p);
 
   return (
-    <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-8 md:py-8">
+    <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-8 md:py-8">
       <h1 className="sk-text-display-sm-semibold text-sko-text-default">
         {kind === "not-started" ? `Welcome, ${p.firstName}` : `Your week, ${p.firstName}`}
       </h1>
