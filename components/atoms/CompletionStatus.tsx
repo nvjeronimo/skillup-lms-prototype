@@ -11,8 +11,8 @@ export interface CompletionStatusProps {
 
 /**
  * 18×18 status circle (matches DS `LMS / Completion Status`):
- * Pending = empty ring · In Progress = half ring · Done = solid green circle +
- * white check · Locked = filled gray circle + gray lock.
+ * Pending = 1.5px ring on bg/page · In Progress = half ring · Done = bg/success
+ * circle + icon/on-success check · Locked = bg/muted circle + icon/muted lock.
  */
 export function CompletionStatus({ state, size = 18, className }: CompletionStatusProps) {
   const stroke = iconStroke(size);
@@ -24,7 +24,7 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
       <span
         role="img"
         aria-label="Completed"
-        className={cn(base, "bg-sk-bg-success-solid text-sk-fg-white", className)}
+        className={cn(base, "bg-sko-bg-success text-sko-icon-on-success", className)}
         style={dims}
       >
         <Check size={Math.round(size * (14 / 18))} strokeWidth={size >= 24 ? 2.5 : 2} />
@@ -37,7 +37,7 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
       <span
         role="img"
         aria-label="Locked"
-        className={cn(base, "bg-sk-bg-tertiary text-sk-text-tertiary", className)}
+        className={cn(base, "bg-sko-bg-muted text-sko-icon-muted", className)}
         style={dims}
       >
         <Lock size={Math.round(size * (13 / 18))} strokeWidth={stroke} />
@@ -46,22 +46,23 @@ export function CompletionStatus({ state, size = 18, className }: CompletionStat
   }
 
   // Pending / In Progress — ring with optional half fill via conic gradient on the border.
+  // Pending is a 1.5px (Stroke/icon) border/default ring on an opaque bg/page disc, so
+  // a tinted row (TopicRow active/hover) does not show through it.
   return (
     <span
       role="img"
       aria-label={state}
       className={cn(
         base,
-        "border-2",
         state === "In Progress"
-          ? "border-sk-fg-progress"
-          : "border-sk-border-primary",
+          ? "border-2 border-sko-border-info"
+          : "border-[1.5px] border-sko-border-default bg-sko-bg-page",
         className,
       )}
       style={dims}
     >
       {state === "In Progress" ? (
-        <span className="h-1/2 w-1/2 rounded-full bg-sk-fg-progress" />
+        <span className="h-1/2 w-1/2 rounded-full bg-sko-bg-info" />
       ) : null}
     </span>
   );

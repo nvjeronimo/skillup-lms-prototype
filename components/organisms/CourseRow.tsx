@@ -32,16 +32,19 @@ export function CourseRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-4 rounded-xl border bg-sk-bg-primary px-5 py-3",
-        state === "Active" ? "border-sk-border-brand" : "border-sk-border-secondary",
+        "flex items-center gap-4 rounded-xl border bg-sko-bg-page shadow-sk-card px-5 py-4",
+        // DS Active: border/primary at 2px inside. 1px border + 1px inset ring = 2px, no layout shift.
+        state === "Active"
+          ? "border-sko-border-primary ring-1 ring-inset ring-sko-border-primary"
+          : "border-sko-border-subtle",
         className,
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span
           className={cn(
-            "sk-text-md-semibold truncate",
-            state === "Locked" ? "text-sk-text-tertiary" : "text-sk-text-primary",
+            "sk-text-md-medium truncate",
+            state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
           )}
         >
           {title}
@@ -50,33 +53,44 @@ export function CourseRow({
       </div>
 
       {state === "Active" ? (
-        <div className="flex items-center gap-3">
-          <div className="h-2 w-40 overflow-hidden rounded-full bg-sk-bg-tertiary">
-            <div className="h-full rounded-full bg-sk-fg-progress" style={{ width: `${progressPct}%` }} />
+        <div className="flex items-center gap-4">
+          {/* DS Progress bar, Label=Right: 140 wide, bar + label gap 12. */}
+          <div className="flex w-[140px] items-center gap-3">
+            <div
+              role="progressbar"
+              aria-label={`${title} progress`}
+              aria-valuenow={progressPct}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              className="h-2 flex-1 overflow-hidden rounded-full bg-sko-bg-muted"
+            >
+              <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${progressPct}%` }} />
+            </div>
+            <span className="sk-text-sm-medium text-sko-text-muted">{progressPct}%</span>
           </div>
-          <span className="sk-text-sm-regular text-sk-text-tertiary">{progressPct}%</span>
-          <Button variant="primary" size="md" onClick={onClick}>
+          <Button variant="primary" size="sm" onClick={onClick}>
             Resume
           </Button>
         </div>
       ) : null}
 
       {state === "Locked" ? (
-        <div className="flex items-center gap-3">
-          <span className="sk-text-xs-semibold inline-flex items-center gap-1 text-sk-text-warning-primary">
-            <Icon icon={Lock} size={14} />
+        <div className="flex items-center gap-4">
+          <span className="sk-text-xs-medium inline-flex items-center gap-1.5 text-sko-text-warning">
+            <Icon icon={Lock} size={14} className="text-sko-icon-warning" />
             {unlockLabel}
           </span>
-          <Button variant="secondary" size="md" onClick={onClick}>
+          {/* DS Locked: grey outline (bg/page, border/default) — neutral, not the teal Secondary. */}
+          <Button variant="neutral" size="sm" onClick={onClick}>
             Details
           </Button>
         </div>
       ) : null}
 
       {state === "Available" ? (
-        <div className="flex items-center gap-3">
-          <span className="sk-text-xs-semibold text-sk-text-success-primary">AVAILABLE NOW</span>
-          <Button variant="primary" size="md" onClick={onClick}>
+        /* DS Available: the "AVAILABLE NOW" status label is hidden; only Start shows. */
+        <div className="flex items-center gap-4">
+          <Button variant="primary" size="sm" onClick={onClick}>
             Start
           </Button>
         </div>

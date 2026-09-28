@@ -25,12 +25,13 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
   }, []);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-sk-bg-secondary">
+    <div className="flex min-h-[100dvh] flex-col bg-sko-bg-subtle">
       <CoursePlayerTopbar size={topbarSize} showBookmark showNotifications onClose={backToCourse} />
 
       {/* Deep brand stage (theme- + skin-stable; never inverts) */}
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-sk-bg-brand-stage px-4 py-12">
-        <p className="sk-text-2xs-medium text-sk-fg-white">Certificate of Completion</p>
+      {/* token-lint-disable-next-line no DS token for a fixed deep-teal stage; kept on the v4 alias of the old brand-stage token (see PR notes: it inverts in Dark) */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-sko-text-on-primary-soft px-4 py-12">
+        <p className="sk-text-2xs-medium text-sko-text-on-media">Certificate of Completion</p>
         <CourseCertificate
           learnerName={certificate.learnerName}
           courseTitle={certificate.courseTitle}

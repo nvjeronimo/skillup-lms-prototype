@@ -7,6 +7,7 @@ import { Button } from "@/components/atoms/Button";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { useLmsStore } from "@/lib/store";
+import { useBreakpoint } from "@/lib/useBreakpoint";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
 import { tsToSeconds } from "@/lib/utils";
@@ -28,6 +29,8 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
   const showToast = useLmsStore((s) => s.showToast);
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
+  // DS Transcript Line `Device` variant: mobile stacks the active line's note pill.
+  const lineDevice = useBreakpoint() === "mobile" ? "mobile" : "desktop";
 
   // Auto-follow the active line; pause when the user scrolls manually.
   const [following, setFollowing] = React.useState(true);
@@ -83,7 +86,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   if (!topic || !transcript.length) {
     return (
-      <p className="sk-text-sm-regular px-1 py-8 text-center text-sk-text-tertiary">
+      <p className="sk-text-sm-regular px-1 py-8 text-center text-sko-text-subtle">
         No transcript available for this topic.
       </p>
     );
@@ -99,13 +102,13 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
       <div className="flex flex-wrap items-center justify-between gap-3 py-2">
-        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sk-text-secondary">
+        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-muted">
           Language:
           <span className="relative">
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sk-text-primary outline-none"
+              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sko-text-default outline-none"
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -114,7 +117,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             <ChevronDown
               size={14}
               strokeWidth={1.5}
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sk-text-tertiary"
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-icon-subtle"
             />
           </span>
         </label>
@@ -127,10 +130,11 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 : transcript[0]?.id,
             })
           }
-          className="sk-text-sm-semibold inline-flex items-center gap-1 text-sk-text-brand-secondary hover:underline"
+          // DS Link Button_def, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
+          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
-          <Icon icon={Plus} size={16} />
-          Add Note
+          <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
+          <span className="px-0.5">Add Note</span>
         </button>
       </div>
 
@@ -150,6 +154,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 text={line.text}
                 active={line.id === activeLineId}
                 hasNote={hasNote}
+                device={lineDevice}
                 onSeek={() => {
                   seekVideoTo(tsToSeconds(line.ts), line.id);
                   track("transcript_line_click", { lineId: line.id, newTs: line.ts });
@@ -176,18 +181,16 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
         ) : null}
       </div>
 
-      {/* Feedback + license footer (ICP Phase 1). */}
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-3">
-        <ContentFeedback
-          value={feedback}
-          onLike={() => setFeedback(feedback === "like" ? null : "like")}
-          onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
-          onReport={() => showToast("Thanks, we'll take a look.")}
-        />
-        <a href="#" className="sk-text-xs-regular text-sk-text-tertiary hover:text-sk-text-brand-secondary">
-          CC BY-SA 4.0
-        </a>
-      </div>
+      {/* Feedback + license footer (ICP Phase 1). ContentFeedback carries its own DS
+          12/12 padding and right-aligned licence, so no wrapper padding here. */}
+      <ContentFeedback
+        className="mt-2 border-t border-sko-border-subtle"
+        value={feedback}
+        onLike={() => setFeedback(feedback === "like" ? null : "like")}
+        onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
+        onReport={() => showToast("Thanks, we'll take a look.")}
+        license="CC BY-SA 4.0"
+      />
     </div>
   );
 }

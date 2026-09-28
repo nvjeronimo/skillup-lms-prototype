@@ -19,8 +19,8 @@ export interface TopicFooterNavProps {
 
 /**
  * DS `LMS / Topic Footer Nav` (Default V1): 12/16 padding, 16px gap, 1px top
- * hairline, three equal columns — Previous (neutral outline) · Unit info
- * ("n of N" Body/Small/Semibold over the title, Caption/Regular, both
+ * hairline, 8px bottom corners (Radius/fixed-md), three equal columns —
+ * Previous (neutral outline) · Unit info ("n of N" Body/Small/Semibold over the title, Caption/Regular, both
  * text-tertiary) · Next (`LMS / Course Progression Button`, right-aligned).
  *
  * Responsive rules (also annotated on the Figma component):
@@ -46,7 +46,7 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "flex items-center gap-4 border-t border-sk-border-secondary bg-sk-bg-primary px-4 py-3",
+        "flex items-center gap-4 rounded-b-lg border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3",
         className,
       )}
     >
@@ -59,15 +59,15 @@ export function TopicFooterNav({
       {/* Unit info: the paginator is the stronger element; the title sits under it
           on tablet/desktop and is dropped on mobile. */}
       <div className="min-w-0 flex-1 text-center">
-        <p className="sk-text-sm-semibold text-sk-text-tertiary">
+        <p className="sk-text-sm-semibold text-sko-text-subtle">
           {position} of {total}
         </p>
         {!compact ? (
-          <p className="sk-text-xs-regular truncate text-sk-text-tertiary">{title}</p>
+          <p className="sk-text-xs-regular truncate text-sko-text-subtle">{title}</p>
         ) : null}
       </div>
 
-      <div className="flex min-w-0 flex-1 items-center justify-end">
+      <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
         <CourseProgressionButton
           milestone={milestone}
           size="sm"

@@ -38,7 +38,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
       role="tablist"
       aria-label={ariaLabel}
       className={cn(
-        "sticky top-0 z-20 flex items-center gap-4 border-b border-sk-border-secondary bg-sk-bg-primary px-4",
+        "sticky top-0 z-20 flex items-center gap-4 border-b border-sko-border-subtle bg-sko-bg-page px-4",
         className,
       )}
     >
@@ -56,20 +56,21 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
             onClick={() => onChange(t.value)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              "sk-text-sm-semibold -mb-px flex items-center gap-1.5 border-b-2 py-3 transition-colors",
+              "sk-text-sm-semibold -mb-px flex items-center gap-2 border-b-2 py-3 transition-colors",
               isActive
-                ? "border-sk-border-brand text-sk-text-brand-secondary"
-                : "border-transparent text-sk-text-secondary hover:text-sk-text-primary",
+                ? "border-sko-border-primary text-sko-text-primary"
+                : "border-transparent text-sko-text-muted hover:text-sko-text-default",
             )}
           >
             {t.label}
             {typeof t.count === "number" ? (
               <span
                 className={cn(
-                  "sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5",
+                  // DS Badge v2 Soft sm: Brand on the current tab, Gray on the others.
+                  "sk-text-xs-medium inline-flex items-center rounded-full px-2 py-0.5",
                   isActive
-                    ? "bg-sk-bg-brand-section text-sk-text-brand-secondary"
-                    : "bg-sk-bg-secondary text-sk-text-tertiary",
+                    ? "bg-sko-bg-primary-soft text-sko-text-primary"
+                    : "bg-sko-bg-faint text-sko-text-muted",
                 )}
               >
                 {t.count}

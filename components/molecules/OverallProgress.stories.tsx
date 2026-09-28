@@ -17,7 +17,7 @@ export const Desktop: Story = {
   args: { device: "Desktop" },
   decorators: [
     (Story) => (
-      <div className="w-[280px] border border-sk-border-secondary bg-sk-bg-primary">
+      <div className="w-[280px] border border-sko-border-subtle bg-sko-bg-page">
         <Story />
       </div>
     ),

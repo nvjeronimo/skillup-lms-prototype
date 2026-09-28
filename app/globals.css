@@ -9,8 +9,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--sk-bg-primary);
-  color: var(--sk-text-primary);
+  background: var(--color-bg-page);
+  color: var(--color-text-default);
   font-family: var(--sk-font-body);
   -webkit-font-smoothing: antialiased;
 }
@@ -28,24 +28,46 @@ button {
   font-family: inherit;
 }
 
-/* Focus visibility for keyboard users — bound to brand border token. */
+/* Focus ring for keyboard users — DS effect style Focus rings/focus-ring: a 2px
+   gap filled with border/focus-gap (#fff light, #062c41 dark), then a 2px ring.
+   The ring stays border/primary (the DS binds bg/primary, identical in all 6
+   modes); it is an outline so it survives forced-colors mode, and the gap is a
+   box-shadow that fills the 2px outline-offset instead of showing the parent
+   surface. The gap sits in @layer base so a component's own shadow/ring utility
+   wins, and it skips text-entry fields: the DS Input field focuses with a 2px
+   border/primary border and no ring.
+   Known issue: this outline rule is emitted after @tailwind utilities, so a bare
+   `outline-none` cannot remove it (only `focus:outline-none` can). Moving it
+   into @layer base waits until the borderless fields that rely on it
+   (TranscriptControls / TranscriptTab <select>, the NoteEditorModal tag input)
+   carry a focus-within style on their wrapper. */
 :focus-visible {
-  outline: 2px solid var(--sk-border-brand);
+  outline: 2px solid var(--color-border-primary);
   outline-offset: 2px;
 }
+@layer base {
+  :focus-visible:where(
+      :not(textarea, select, input:not([type="checkbox"], [type="radio"], [type="range"]))
+    ) {
+    box-shadow: 0 0 0 2px var(--color-border-focus-gap);
+  }
+}
 
-/* Thin custom scrollbar used by scroll regions (atoms/VerticalScroll mirrors this). */
+/* Thin scrollbar for scroll regions — DS Vertical Scroll: 6px wide
+   (Scrollbar/width), radius 3 (Scrollbar/radius), no visible track, thumb in
+   border/default: thumb colour pending DS rebind (FND-18).
+   atoms/VerticalScroll mirrors this. */
 .sk-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--sk-border-primary) transparent;
+  scrollbar-color: var(--color-border-default) transparent;
 }
 .sk-scroll::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 .sk-scroll::-webkit-scrollbar-thumb {
-  background: var(--sk-border-primary);
-  border-radius: 999px;
+  background: var(--color-border-default);
+  border-radius: 3px;
 }
 .sk-scroll::-webkit-scrollbar-track {
   background: transparent;
@@ -105,12 +127,14 @@ button {
   }
 }
 
-/* Overlay backdrop — SKO DS uses a light dim + background blur (alpha-black + blur),
-   token-bound via color-mix (never a raw rgba/hex). */
+/* Overlay backdrop — the DS dim is bg/overlay (#0e1a1f at 50% in all 6 modes:
+   "the dim layer behind a modal or over a video"), a dark dim in light and dark
+   themes alike, plus Backdrop blurs/backdrop-blur-sm. Figma's background-blur
+   radius 8 exports as CSS blur(4px) (= Tailwind backdrop-blur-sm), not 8px. */
 .sk-backdrop {
-  background: color-mix(in srgb, var(--sk-text-primary) 30%, transparent);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: var(--color-bg-overlay);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 @media (prefers-reduced-motion: reduce) {
   .sk-backdrop {

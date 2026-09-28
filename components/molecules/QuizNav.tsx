@@ -31,7 +31,7 @@ export function QuizNavStacked({ onPrevious, onNext, className }: QuizNavStacked
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 border-t border-sk-border-secondary pt-4",
+        "flex flex-wrap items-center justify-between gap-3 border-t border-sko-border-subtle pt-4",
         className,
       )}
     >
@@ -57,8 +57,9 @@ export interface QuizNavStepperProps {
 }
 
 /**
- * Mode B. Sits at the **top** of the quiz: back, a progress track and the
- * question counter.
+ * Mode B. Sits at the **top** of the quiz — nested in the Question Card when
+ * `showProgress` is on: back, the question counter over a progress track, and
+ * a rule under both.
  *
  * Putting it at the top has a useful side effect — mode A's Previous/Next live
  * at the foot and leave the quiz, so the two modes are told apart at a glance
@@ -80,37 +81,50 @@ export function QuizNavStepper({
   const value = Math.max(0, Math.min(100, Math.round(pct)));
 
   return (
-    <div className={cn("flex items-center gap-4", className)}>
-      <button
-        type="button"
-        onClick={onBack}
-        disabled={!onBack}
-        aria-label="Previous question"
-        className={cn(
-          "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md",
-          "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sk-border-brand",
-          onBack
-            ? "text-sk-text-secondary hover:bg-sk-bg-secondary"
-            : "cursor-not-allowed text-sk-fg-quaternary",
-        )}
-      >
-        <Icon icon={ChevronLeft} size={20} />
-      </button>
+    // DS `LMS / Quiz · Stepper Bar`, Mode=With Back only: the bar row, then a
+    // 1px border/subtle rule, 12px apart.
+    <div className={cn("flex flex-col gap-3", className)}>
+      <div className="flex items-end gap-4">
+        {/* A link button (Link Button_def Brand/Secondary): visible "Back"
+            label, 20px chevron in icon/faint, no box. Disabled follows the
+            Link Button_def Disabled state (text/disabled). */}
+        <button
+          type="button"
+          onClick={onBack}
+          disabled={!onBack}
+          className={cn(
+            "sk-text-sm-semibold inline-flex h-5 shrink-0 items-center gap-1 rounded",
+            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
+            onBack ? "text-sko-text-subtle" : "cursor-not-allowed text-sko-text-disabled",
+          )}
+        >
+          <Icon icon={ChevronLeft} size={20} className={onBack ? "text-sko-icon-faint" : undefined} />
+          Back
+        </button>
 
-      <div
-        className="h-2 min-w-0 flex-1 bg-sk-bg-tertiary"
-        role="progressbar"
-        aria-valuenow={value}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`Quiz progress: ${value}% complete`}
-      >
-        <div className="h-full bg-sk-fg-progress" style={{ width: `${value}%` }} />
+        {/* Progress bar, Label=Top: the counter sits 8px above the track,
+            right-aligned. Fill bg/info, square ends. The track stays bg/muted:
+            DS track bg/strong fails 1.4.11 against bg/info (2.26:1 light,
+            2.82:1 dark), and the bar is the only place the answered share
+            shows. */}
+        <div className="flex min-w-0 flex-1 flex-col items-end gap-2">
+          <span className="sk-text-xs-medium text-sko-text-muted">
+            Question {current} of {total}
+          </span>
+          <div
+            className="h-2 w-full bg-sko-bg-muted"
+            role="progressbar"
+            aria-valuenow={value}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`Quiz progress: ${value}% complete`}
+          >
+            <div className="h-full bg-sko-bg-info" style={{ width: `${value}%` }} />
+          </div>
+        </div>
       </div>
 
-      <span className="sk-text-xs-semibold shrink-0 text-sk-text-primary">
-        Question {current} of {total}
-      </span>
+      <div className="h-px bg-sko-border-subtle" />
     </div>
   );
 }

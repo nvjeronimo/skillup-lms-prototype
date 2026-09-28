@@ -25,12 +25,63 @@
   --sk-font-display: var(--font-montserrat, "Montserrat"), system-ui, sans-serif;
 }
 
-/* ---- Display ramp (Montserrat) ---- */
-.sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(24px * var(--sk-font-scale, 1)); line-height: calc(32px * var(--sk-font-scale, 1)); }
-.sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(30px * var(--sk-font-scale, 1)); line-height: calc(38px * var(--sk-font-scale, 1)); }
-.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(36px * var(--sk-font-scale, 1)); line-height: calc(44px * var(--sk-font-scale, 1)); }
+/* ---- Display ramp (Montserrat) ----
+   DS names (Material type scale, renamed 21 Sep 2026): display-xs = headline-small,
+   display-sm = headline-medium, display-md = headline-large (−2% tracking in every mode).
+   The sizes are mode-aware in the DS (3. Responsive 📐 Type/size/* + Type/line-height/*):
 
-/* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ---- */
+                  Desktop   Tablet   Mobile
+     display-xs    24/32    24/32    20/30
+     display-sm    30/38    30/38    24/32
+     display-md    36/44    30/38    24/32
+
+   The custom properties below mirror those variables. Breakpoints follow
+   lib/useBreakpoint.ts (tablet 769–1024, mobile ≤ 768). A forced device preview
+   (ResponsiveShell frames the app at 834 / 375 px by inline width, which media
+   queries cannot see) is keyed on [data-device="desktop|tablet|mobile"], set on
+   <html> or on the frame; it comes last, so a forced mode beats the window width.
+   The width queries are screen-only, so print (e.g. the certificate) keeps the
+   Desktop ramp. */
+:root {
+  --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
+  --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
+  --sk-type-size-display-md: 36px;  --sk-type-line-height-display-md: 44px;
+}
+@media screen and (max-width: 1024px) {
+  :root {
+    --sk-type-size-display-md: 30px;  --sk-type-line-height-display-md: 38px;
+  }
+}
+@media screen and (max-width: 768px) {
+  :root {
+    --sk-type-size-display-xs: 20px;  --sk-type-line-height-display-xs: 30px;
+    --sk-type-size-display-sm: 24px;  --sk-type-line-height-display-sm: 32px;
+    --sk-type-size-display-md: 24px;  --sk-type-line-height-display-md: 32px;
+  }
+}
+[data-device="desktop"] {
+  --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
+  --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
+  --sk-type-size-display-md: 36px;  --sk-type-line-height-display-md: 44px;
+}
+[data-device="tablet"] {
+  --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
+  --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
+  --sk-type-size-display-md: 30px;  --sk-type-line-height-display-md: 38px;
+}
+[data-device="mobile"] {
+  --sk-type-size-display-xs: 20px;  --sk-type-line-height-display-xs: 30px;
+  --sk-type-size-display-sm: 24px;  --sk-type-line-height-display-sm: 32px;
+  --sk-type-size-display-md: 24px;  --sk-type-line-height-display-md: 32px;
+}
+
+.sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
+.sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
+.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
+
+/* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ----
+   DS names: lg = title-medium 18/24, md = body-large 16/24, sm = body-medium 14/20,
+   xs = body-small 12/18, 2xs = label-small 10/14 uppercase +4%. */
 .sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 .sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 
@@ -51,5 +102,5 @@
 .sk-text-2xs-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
 .sk-text-2xs-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
 
-/* Italic helper for note anchor quotes (uses body font) */
-.sk-text-sm-italic    { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); font-style: italic; }
+/* No italic class: the DS has no italic text style. Note anchor quotes are
+   body-medium/Regular (upright) → .sk-text-sm-regular. */

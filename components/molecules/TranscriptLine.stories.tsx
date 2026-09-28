@@ -6,6 +6,7 @@ const meta: Meta<typeof TranscriptLine> = {
   component: TranscriptLine,
   tags: ["autodocs"],
   parameters: { layout: "padded" },
+  argTypes: { device: { control: "inline-radio", options: ["desktop", "mobile"] } },
   args: {
     ts: "0:38",
     text: "The lifecycle begins long before any code is written, with deep understanding of customer needs.",
@@ -28,6 +29,17 @@ export const Default: Story = {};
 export const ActiveAddNote: Story = { args: { active: true, hasNote: false } };
 export const ActiveEditNote: Story = { args: { active: true, hasNote: true } };
 export const HasNoteInactive: Story = { args: { active: false, hasNote: true } };
+/** DS Device=Mobile, State=Active: the pill stacks under the line, left-aligned. */
+export const ActiveMobile: Story = {
+  args: { active: true, hasNote: false, device: "mobile" },
+  decorators: [
+    (Story) => (
+      <div className="max-w-sm">
+        <Story />
+      </div>
+    ),
+  ],
+};
 
 export const InContext: Story = {
   render: () => (

@@ -1,6 +1,5 @@
 import * as React from "react";
-import { ChevronDown } from "lucide-react";
-import { cn, iconStroke } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface SectionHeaderProps {
   label: string;
@@ -11,7 +10,15 @@ export interface SectionHeaderProps {
   className?: string;
 }
 
-/** Sub-section label inside modules (e.g. "Section 1 · Define and measure"). */
+/**
+ * DS `LMS / Section Header` — sub-section label inside modules (e.g.
+ * "Section 1 · Define and measure"). A 40px (minimum) row on `bg/subtle`,
+ * radius 6, 16px side padding; the 18px title line centres at 11px. The row
+ * grows when the label wraps or the text scale rises (decision 016). Title is
+ * body-small/Medium in `text/muted`, and the caret is a "▾" text glyph in
+ * body-small/Medium `text/subtle`, 8px after the title (left-aligned, not
+ * pinned to the far edge).
+ */
 export function SectionHeader({
   label,
   collapsible = false,
@@ -21,19 +28,22 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const content = (
     <>
-      <span className="sk-text-xs-semibold text-sk-text-secondary">{label}</span>
+      <span className="sk-text-xs-medium text-sko-text-muted">{label}</span>
       {collapsible ? (
-        <ChevronDown
-          size={16}
-          strokeWidth={iconStroke(16)}
+        <span
+          aria-hidden
           className={cn(
-            "text-sk-text-tertiary transition-transform duration-200",
+            "sk-text-xs-medium inline-block text-sko-text-subtle transition-transform duration-200",
             collapsed && "-rotate-90",
           )}
-        />
+        >
+          ▾
+        </span>
       ) : null}
     </>
   );
+
+  const row = "flex min-h-10 items-center justify-start gap-2 rounded-md bg-sko-bg-subtle px-4 py-[11px]";
 
   if (collapsible) {
     return (
@@ -41,17 +51,12 @@ export function SectionHeader({
         type="button"
         onClick={onToggle}
         aria-expanded={!collapsed}
-        className={cn(
-          "flex w-full items-center justify-between px-3 py-2 text-left",
-          className,
-        )}
+        className={cn(row, "w-full text-left", className)}
       >
         {content}
       </button>
     );
   }
 
-  return (
-    <div className={cn("flex items-center justify-between px-3 py-2", className)}>{content}</div>
-  );
+  return <div className={cn(row, className)}>{content}</div>;
 }

@@ -19,7 +19,7 @@ const meta: Meta<typeof CourseCard> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-4xl">
+      <div className="max-w-[1200px]">
         <Story />
       </div>
     ),

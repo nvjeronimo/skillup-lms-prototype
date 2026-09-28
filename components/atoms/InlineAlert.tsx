@@ -5,7 +5,7 @@ import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 /**
- * DS `LMS / Inline Alert` — six tones (node 5146-13852).
+ * DS `LMS / Inline Alert` — six tones (node 20328-3296). Padding 16, gap 12, 2px top rule.
  *
  * Five of them exist on the platform today: Success, Warning and Error are the
  * per-choice feedback (`<choicehint>`), Hint is the demand-hint block, and
@@ -35,6 +35,11 @@ export interface InlineAlertProps {
    */
   title: string;
   description?: string;
+  /**
+   * DS `alert-secundary-text` (`Show secondary-text`): a second muted line
+   * under the description. Info, Success, Warning and Error only.
+   */
+  secondary?: string;
   /** Hint's "Next Hint" control, rendered under the text. */
   action?: React.ReactNode;
   /**
@@ -48,34 +53,34 @@ export interface InlineAlertProps {
 
 const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
   info: {
-    box: "border-t-2 border-sk-border-brand bg-sk-bg-secondary-subtle p-3",
+    box: "border-t-2 border-sko-border-primary bg-sko-bg-faint p-4",
     icon: AlertCircle,
-    fg: "text-sk-text-brand-secondary",
+    fg: "text-sko-text-primary",
   },
   success: {
-    box: "border-t-2 border-sk-text-success-primary bg-sk-bg-secondary-subtle p-3",
+    box: "border-t-2 border-sko-border-success bg-sko-bg-faint p-4",
     icon: CheckCircle2,
-    fg: "text-sk-text-success-primary",
+    fg: "text-sko-icon-success",
   },
   warning: {
-    box: "border-t-2 border-sk-text-warning-primary bg-sk-bg-secondary-subtle p-3",
+    box: "border-t-2 border-sko-border-warning bg-sko-bg-faint p-4",
     icon: AlertCircle,
-    fg: "text-sk-text-warning-primary",
+    fg: "text-sko-icon-warning",
   },
   error: {
-    box: "border-t-2 border-sk-text-error-primary bg-sk-bg-secondary-subtle p-3",
+    box: "border-t-2 border-sko-border-error bg-sko-bg-faint p-4",
     icon: XCircle,
-    fg: "text-sk-text-error-primary",
+    fg: "text-sko-icon-error",
   },
   hint: {
-    box: "rounded-lg bg-sk-bg-brand-section p-3",
+    box: "rounded-lg bg-sko-bg-primary-soft p-4",
     icon: Lightbulb,
-    fg: "text-sk-text-brand-secondary",
+    fg: "text-sko-text-primary",
   },
   answer: {
-    box: "rounded-lg border-t-2 border-sk-border-primary bg-sk-bg-secondary p-3",
+    box: "rounded-lg border-t-2 border-sko-border-default bg-sko-bg-subtle p-4",
     icon: KeyRound,
-    fg: "text-sk-text-secondary",
+    fg: "text-sko-icon-muted",
   },
 };
 
@@ -83,6 +88,7 @@ export function InlineAlert({
   tone = "info",
   title,
   description,
+  secondary,
   action,
   children,
   onDismiss,
@@ -94,23 +100,27 @@ export function InlineAlert({
 
   return (
     <div role="status" className={cn("flex items-start gap-3", t.box, className)}>
-      <Icon icon={t.icon} size={18} className={cn("mt-0.5 shrink-0", t.fg)} />
+      <Icon icon={t.icon} size={20} className={cn("shrink-0", t.fg)} />
 
       <div className="min-w-0 flex-1">
         {children ?? (inlineTitle ? (
-          <p className="sk-text-sm-regular text-sk-text-secondary">
-            <span className="sk-text-sm-semibold text-sk-text-primary">{title} </span>
+          <p className="sk-text-sm-regular text-sko-text-default">
+            <span className="sk-text-sm-semibold text-sko-text-default">{title} </span>
             {description}
           </p>
         ) : (
           <>
-            <p className="sk-text-sm-semibold text-sk-text-primary">{title}</p>
+            <p className="sk-text-sm-semibold text-sko-text-default">{title}</p>
             {description ? (
-              <p className="sk-text-sm-regular mt-0.5 text-sk-text-secondary">{description}</p>
+              <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">{description}</p>
+            ) : null}
+            {secondary ? (
+              <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">{secondary}</p>
             ) : null}
           </>
         ))}
-        {action ? <div className="mt-2">{action}</div> : null}
+        {/* DS Copy gap is 2 with a 4px-padded Link button; a bare button needs 6. */}
+        {action ? <div className="mt-1.5">{action}</div> : null}
       </div>
 
       {onDismiss ? (
@@ -118,7 +128,7 @@ export function InlineAlert({
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss"
-          className="shrink-0 text-sk-text-tertiary hover:text-sk-text-primary"
+          className="shrink-0 text-sko-text-subtle hover:text-sko-text-default"
         >
           <Icon icon={X} size={18} />
         </button>

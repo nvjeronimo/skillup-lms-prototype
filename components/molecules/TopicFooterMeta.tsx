@@ -21,22 +21,29 @@ export function TopicFooterMeta({ byline, onReport }: TopicFooterMetaProps) {
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
 
   return (
-    <div className="mt-6 flex flex-col gap-3">
+    // No gap: ContentFeedback's own DS py-3 gives the 12px under the byline row.
+    <div className="mt-6 flex flex-col">
       {byline ? (
-        <div className="flex items-center gap-4 border-t border-sk-border-secondary pt-4">
-          <Avatar name={byline.author} size="md" />
-          <div className="min-w-0 flex-1">
-            <p className="sk-text-sm-semibold text-sk-text-primary">{byline.author}</p>
-            <p className="sk-text-sm-regular text-sk-text-secondary">{byline.role}</p>
+        // DS `LMS / Topic · Author & Updated Date`: the row bottom-aligns the date (gap 16);
+        // the Author frame is avatar md + text column (gap 12); name over role (gap 2).
+        <div className="flex items-end gap-4 border-t border-sko-border-subtle pt-4">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <Avatar name={byline.author} size="md" />
+            <div className="flex min-w-0 flex-col gap-0.5">
+              <p className="sk-text-md-semibold text-sko-text-default">{byline.author}</p>
+              <p className="sk-text-sm-regular text-sko-text-muted">{byline.role}</p>
+            </div>
           </div>
-          <span className="sk-text-sm-regular shrink-0 text-sk-text-tertiary">
+          <span className="sk-text-xs-regular shrink-0 text-sko-text-muted">
             Updated {byline.updated}
           </span>
         </div>
       ) : null}
 
+      {/* pt-4 replaces (does not add to) ContentFeedback's py-3 top, since Tailwind emits
+          pt-* after py-*: 16 under the rule, as on the byline row, and the DS 12 below. */}
       <ContentFeedback
-        className={byline ? "" : "border-t border-sk-border-secondary pt-4"}
+        className={byline ? "" : "border-t border-sko-border-subtle pt-4"}
         value={feedback}
         onLike={() => setFeedback((f) => (f === "like" ? null : "like"))}
         onDislike={() => setFeedback((f) => (f === "dislike" ? null : "dislike"))}

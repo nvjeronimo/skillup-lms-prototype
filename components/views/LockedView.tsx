@@ -8,8 +8,10 @@ import { getTopic } from "@/lib/data";
 export function LockedView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
   return (
-    <div className="py-10">
+    <div className="mx-auto max-w-xl py-10">
+      {/* LMS / Empty State has no Locked kind: drop its card border and radius here. */}
       <EmptyState
+        className="rounded-none border-0"
         icon={Lock}
         title="This topic is locked"
         description={

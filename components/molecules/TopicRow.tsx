@@ -23,12 +23,13 @@ export interface TopicRowProps {
 }
 
 /**
- * The Open row's 4px brand rule. In the DS it is an inside stroke, so it sits
- * over the padding instead of pushing the content — an absolutely positioned
- * bar reproduces that exactly (12px content inset in both states).
+ * The Open row's 4px brand rule. In the DS it is an inside left stroke bound to
+ * `border/primary`, so it sits over the padding instead of pushing the content —
+ * an absolutely positioned bar in the same token reproduces that exactly (12px
+ * content inset in both states).
  */
 function ActiveRule() {
-  return <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-sk-fg-brand-primary" />;
+  return <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-sko-border-primary" />;
 }
 
 /**
@@ -60,7 +61,7 @@ export function TopicRow({
         className={cn(
           // DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred.
           "relative flex w-full items-start justify-center px-2 py-3",
-          active ? "bg-sk-bg-brand-section" : "hover:bg-sk-bg-secondary",
+          active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
           className,
         )}
       >
@@ -74,7 +75,7 @@ export function TopicRow({
     <div
       className={cn(
         "group relative flex items-start gap-2 py-3 pl-3 pr-2 transition-colors",
-        active ? "bg-sk-bg-brand-section" : "hover:bg-sk-bg-secondary",
+        active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
         className,
       )}
     >
@@ -85,14 +86,13 @@ export function TopicRow({
         aria-current={active ? "true" : undefined}
         className="flex min-w-0 flex-1 items-start gap-2 text-left"
       >
-        {/* 18px dot against a 20px title line: 1px down keeps it optically centred. */}
-        <span className="mt-px">
-          <CompletionStatus state={status} size={18} />
-        </span>
+        {/* DS: the 18px status sits flush with the top padding, level with the
+            content column (row counter-axis alignment is MIN). */}
+        <CompletionStatus state={status} size={18} />
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           {/* The topic title is text-primary in every state — it does not change
               colour when active or locked. */}
-          <span className="sk-text-sm-medium block text-sk-text-primary">{title}</span>
+          <span className="sk-text-sm-medium block text-sko-text-default">{title}</span>
           {/* state-row: brand type badge · gray duration (Caption/Medium), 6px apart,
               on one line; the trailing duration truncates with an ellipsis. */}
           <span className="flex min-w-0 items-center gap-1.5">
@@ -100,16 +100,16 @@ export function TopicRow({
             {/* Duration is optional: render nothing rather than a dash placeholder. */}
             {duration ? (
               <>
-                <span className="sk-text-sm-medium shrink-0 text-sk-text-tertiary" aria-hidden>
+                <span className="sk-text-sm-medium shrink-0 text-sko-text-subtle" aria-hidden>
                   ·
                 </span>
-                <span className="sk-text-xs-medium min-w-0 truncate text-sk-text-tertiary">
+                <span className="sk-text-xs-medium min-w-0 truncate text-sko-text-subtle">
                   {duration}
                 </span>
               </>
             ) : null}
             {optional ? (
-              <span className="sk-text-xs-medium shrink-0 text-sk-fg-quaternary">Optional</span>
+              <span className="sk-text-xs-medium shrink-0 text-sko-icon-faint">Optional</span>
             ) : null}
           </span>
         </span>

@@ -38,7 +38,7 @@ export function LessonPageView({ topicId }: { topicId: string }) {
       </div>
 
       {page.intro ? (
-        <p className="sk-text-lg-medium text-sk-text-primary">{page.intro}</p>
+        <p className="sk-text-lg-medium text-sko-text-default">{page.intro}</p>
       ) : null}
 
       <LessonBlocks blocks={page.blocks} />
