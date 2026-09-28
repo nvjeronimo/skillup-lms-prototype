@@ -13,6 +13,7 @@ const meta: Meta<typeof TopicFooterNav> = {
     milestone: "Topic",
     previousDisabled: false,
     nextDisabled: false,
+    showBadge: false,
   },
   argTypes: {
     milestone: { control: "select", options: ["Topic", "Module", "Course"] },
@@ -27,6 +28,7 @@ export const NextDisabled: Story = { args: { nextDisabled: true } };
 export const PreviousDisabled: Story = { args: { previousDisabled: true, position: 1 } };
 export const LastOfModule: Story = { args: { milestone: "Module", position: 9, total: 9 } };
 export const LastOfCourse: Story = { args: { milestone: "Course", position: 9, total: 9 } };
+export const WithBadge: Story = { name: "Show Badge (Completed)", args: { showBadge: true } };
 export const Compact: Story = { name: "Mobile (compact)", args: { compact: true } };
 export const CompactLastOfModule: Story = {
   name: "Mobile · last of module",

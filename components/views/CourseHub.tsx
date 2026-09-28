@@ -57,7 +57,8 @@ export function CourseHub() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-4xl flex-1 p-4 md:p-8">
+      {/* xl: room for the DS Course Card List layout (1200 wide) plus 2 x 32 padding. */}
+      <main className="mx-auto w-full max-w-4xl flex-1 p-4 md:p-8 xl:max-w-[1264px]">
         <h1 className="sk-text-display-sm-semibold text-sko-text-default">My Learning</h1>
         <p className="sk-text-md-regular mt-1 text-sko-text-muted">
           Pick up where you left off. {cards.length} courses enrolled.

@@ -23,14 +23,6 @@ const RESULT_STATES: QuizQuestionState[] = [
   "Results withheld",
 ];
 
-/** States where the platform marks which options were right. */
-const MARKS_CORRECTNESS: QuizQuestionState[] = [
-  "Correct",
-  "Incorrect",
-  "Partially correct",
-  "Answer revealed",
-];
-
 export interface QuizCardProps {
   /** One of the nine platform states. No others exist. */
   state?: QuizQuestionState;
@@ -62,6 +54,11 @@ export interface QuizCardProps {
   graded?: boolean;
   /** Off in the bucket model: the questions carry no action row at all. */
   showFooterQuestions?: boolean;
+  /**
+   * DS Option Row `Show state-check-icon` (default true). Off hides the ✓ on
+   * Correct, the ✗ on Incorrect and the "Un-selected is correct" note.
+   */
+  showStateIcon?: boolean;
 
   /* ---- Passed through to the nested Footer Actions instance ---- */
   footer?: Omit<QuizFooterActionsProps, "className">;
@@ -92,22 +89,39 @@ const DEFAULT_OPTIONS: QuizOption[] = [
  * It follows that an option the learner never chose stays empty even when the
  * row is revealed as correct: `Missed` is an unchecked box on a green row. On a
  * radio `Missed` has no meaning at all (board 04, Option Row).
+ *
+ * DS Checkbox Size=sm: 16×16, 1px stroke; round for Radio, radius 4 for
+ * Checkbox. Checked is bg/primary with no stroke and an icon/on-primary mark (a
+ * 6×6 dot, or a 12px tick). Disabled is bg/faint on border/disabled.
  */
-function OptionMarker({ multiSelect, checked }: { multiSelect?: boolean; checked: boolean }) {
+function OptionMarker({
+  multiSelect,
+  checked,
+  disabled = false,
+}: {
+  multiSelect?: boolean;
+  checked: boolean;
+  disabled?: boolean;
+}) {
   return (
     <span
       aria-hidden
       className={cn(
-        "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 transition-colors",
-        multiSelect ? "rounded-[6px]" : "rounded-full",
-        checked ? "border-sko-border-primary bg-sko-bg-primary" : "border-sko-border-default bg-transparent",
+        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border transition-colors",
+        multiSelect ? "rounded" : "rounded-full",
+        checked
+          ? "border-transparent bg-sko-bg-primary"
+          : disabled
+            ? "border-sko-border-disabled bg-sko-bg-faint"
+            : "border-sko-border-default bg-sko-bg-page",
       )}
     >
       {checked ? (
         multiSelect ? (
-          <Icon icon={Check} size={13} className="text-sko-text-on-media" />
+          <Icon icon={Check} size={12} className="text-sko-icon-on-primary" />
         ) : (
-          <span className="h-2 w-2 rounded-full bg-sko-bg-fixed" />
+          // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
+          <span className="h-1.5 w-1.5 rounded-full bg-current text-sko-icon-on-primary" />
         )
       ) : null}
     </span>
@@ -124,15 +138,19 @@ function OptionMarker({ multiSelect, checked }: { multiSelect?: boolean; checked
  * alerts stay bare and the score lives on the problem header — a per-question
  * number there would be one the API never returned.
  *
- * Answer revealed uses the Answer tone; Results withheld shows none, because
- * correctness is exactly what is being withheld.
+ * Answer revealed uses the Answer tone and is rendered separately.
+ *
+ * Three states carry a notice rather than a verdict (DS Question Card, visible
+ * Inline Alert layers that are not bound to Show explanation): Last attempt and
+ * Saved warn, and Results withheld says the answer went in without saying
+ * whether it was right — correctness is exactly what is being withheld.
  */
 function verdictAlert(
   state: QuizQuestionState,
   earned: number,
   possible: number,
   withScore: boolean,
-): { tone: AlertTone; title: string } | null {
+): { tone: AlertTone; title: string; notice?: string } | null {
   const score = withScore ? ` (${earned}/${possible} point${possible === 1 ? "" : "s"})` : "";
   switch (state) {
     case "Correct":
@@ -141,6 +159,24 @@ function verdictAlert(
       return { tone: "warning", title: `Partially correct${score}` };
     case "Incorrect":
       return { tone: "error", title: `Incorrect${score}` };
+    case "Last attempt":
+      return {
+        tone: "warning",
+        title: "Last attempt",
+        notice: "Once you submit, this answer is final and your score is recorded.",
+      };
+    case "Saved":
+      return {
+        tone: "warning",
+        title: "Saved, not submitted",
+        notice: "Your answer is stored, but it has not been graded and scores nothing until you submit it.",
+      };
+    case "Results withheld":
+      return {
+        tone: "info",
+        title: "Answer submitted",
+        notice: "Results for this quiz are released after the due date.",
+      };
     default:
       return null;
   }
@@ -150,6 +186,7 @@ function verdictAlert(
 type OptionState =
   | "Unanswered"
   | "Selected"
+  | "Disabled"
   | "Correct"
   | "Incorrect"
   | "Missed"
@@ -160,42 +197,69 @@ type OptionState =
  * The right answer they did not pick is `Missed`: green, to show where the
  * answer was, but no tick and a text marker instead.
  *
- * `Correctly unselected` is gated on multi-select. Leaving a wrong option
- * unchecked is only part of an answer when there were several to weigh; on a
- * radio the untouched options stay plain. ⚑ The screens do carry one radio
- * example that uses it — see the note in the handoff.
+ * Read off the DS Question Card, variant by variant:
+ * - Correct and Incorrect mark only the learner's pick; every other row is
+ *   `Disabled`. An Incorrect card must not reveal the answer while Show answer
+ *   is still on offer.
+ * - `Missed` exists only in Partially correct and Answer revealed.
+ * - Partially correct keeps untouched wrong rows `Unanswered`.
+ * - Answer revealed marks untouched wrong rows `Correctly unselected`, gated on
+ *   multi-select: leaving a wrong option unchecked is only part of an answer
+ *   when there were several to weigh. ⚑ The DS example is a radio — see the
+ *   note in the handoff.
+ * - Results withheld and the pre-submit states never mark correctness.
  */
 function optionState(
-  marks: boolean,
+  state: QuizQuestionState,
   isSelected: boolean,
   correct: boolean,
   multiSelect: boolean,
 ): OptionState {
-  if (!marks) return isSelected ? "Selected" : "Unanswered";
-  if (correct) return isSelected ? "Correct" : "Missed";
-  if (isSelected) return "Incorrect";
-  return multiSelect ? "Correctly unselected" : "Unanswered";
+  switch (state) {
+    case "Correct":
+    case "Incorrect":
+      if (!isSelected) return "Disabled";
+      return correct ? "Correct" : "Incorrect";
+    case "Partially correct":
+      if (correct) return isSelected ? "Correct" : "Missed";
+      return isSelected ? "Incorrect" : "Unanswered";
+    case "Answer revealed":
+      if (correct) return isSelected ? "Correct" : "Missed";
+      if (isSelected) return "Incorrect";
+      return multiSelect ? "Correctly unselected" : "Unanswered";
+    default:
+      return isSelected ? "Selected" : "Unanswered";
+  }
 }
 
-/** Row chrome per state — fill, text, and the trailing marker. */
-const OPTION_ROW: Record<OptionState, { box: string; marker?: "tick" | "cross"; note?: string }> = {
-  Unanswered: { box: "border-sko-border-default text-sko-text-default" },
-  Selected: { box: "border-sko-border-primary bg-sko-bg-primary-soft text-sko-text-primary" },
+/**
+ * Row chrome per state — fill, text, and the trailing marker. Every state has
+ * the same 1px border/subtle stroke (it lives in the row's base classes): the
+ * state is carried by the fill and the label colour only.
+ */
+const OPTION_ROW: Record<
+  OptionState,
+  { box: string; marker?: "tick" | "cross"; note?: string; noteTone?: string }
+> = {
+  Unanswered: { box: "bg-sko-bg-page text-sko-text-default" },
+  Selected: { box: "bg-sko-bg-primary-soft text-sko-text-default" },
+  Disabled: { box: "bg-sko-bg-page text-sko-text-default" },
   Correct: {
-    box: "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success",
+    box: "bg-sko-bg-success-soft text-sko-text-success",
     marker: "tick",
   },
   Incorrect: {
-    box: "border-sko-border-error bg-sko-bg-error-soft text-sko-text-error",
+    box: "bg-sko-bg-error-soft text-sko-text-error",
     marker: "cross",
   },
   Missed: {
-    box: "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success",
+    box: "bg-sko-bg-success-soft text-sko-text-success",
     note: "This should be selected",
   },
   "Correctly unselected": {
-    box: "border-sko-border-default text-sko-text-default",
+    box: "bg-sko-bg-page text-sko-text-default",
     note: "Un-selected is correct",
+    noteTone: "text-sko-text-subtle",
   },
 };
 
@@ -228,6 +292,7 @@ export function QuizCard({
   pointsEarned,
   graded = true,
   showFooterQuestions = true,
+  showStateIcon = true,
   footer,
   selectedIds = [],
   onToggleOption,
@@ -235,49 +300,53 @@ export function QuizCard({
   className,
 }: QuizCardProps) {
   const revealed = RESULT_STATES.includes(state);
-  const marks = MARKS_CORRECTNESS.includes(state);
   const earned = state === "Correct" ? points : state === "Partially correct" ? Math.max(1, points - 1) : 0;
   // The card owns a footer only when it is the problem — that is exactly the
   // A-1/A-2 split, so it also decides whether the verdict carries a score. No
   // new property: the contract has six and this is derived from one of them.
-  const alert = verdictAlert(state, earned, points, showFooterQuestions);
+  // The same split decides the three notices (Last attempt, Saved, Results
+  // withheld): they speak about submitting, which is the problem's business, so
+  // in the bucket they would repeat on every question of the set.
+  const verdict = verdictAlert(state, earned, points, showFooterQuestions);
+  const alert = verdict && (!verdict.notice || showFooterQuestions) ? verdict : null;
   const chosen = options.filter((o) => selectedIds.includes(o.id));
 
   return (
     <div
       id={id}
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5",
+        "flex flex-col gap-5 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-6 shadow-sk-card",
         className,
       )}
     >
+      {/* DS `Platform prompt` frame: the Instruction with the points line 4px
+          under it. */}
+      {showPlatformPrompt || showPoints ? (
+        <div className="flex flex-col gap-1">
+          {/* The block's display_name. Authored text — it differs per course,
+              and in ours it is the same generic line above every question. */}
+          {showPlatformPrompt ? (
+            <span className="sk-text-md-semibold text-sko-text-default">{platformPrompt}</span>
+          ) : null}
+
+          {/* `.problem-progress`. Empty in every course we can read, so off in
+              A-1. In the bucket it carries the score for the whole set. */}
+          {showPoints ? (
+            <span className="sk-text-xs-medium text-sko-text-subtle">
+              {typeof pointsEarned === "number"
+                ? `${pointsEarned}/${points} points (${graded ? "graded" : "ungraded"})`
+                : `${points} point${points === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
+      {/* DS: the nested Stepper Bar sits after the Platform prompt and before
+          the Question. */}
       {showProgress ? progress : null}
 
-      {/* The block's display_name. Authored text — it differs per course, and
-          in ours it is the same generic line above every question. */}
-      {showPlatformPrompt ? (
-        <span className="sk-text-md-semibold text-sko-text-default">{platformPrompt}</span>
-      ) : null}
-
-      {/* `.problem-progress`. Empty in every course we can read, so off in A-1.
-          In the bucket it carries the score for the whole set. */}
-      {showPoints ? (
-        <span className="sk-text-xs-regular text-sko-text-subtle">
-          {typeof pointsEarned === "number"
-            ? `${pointsEarned}/${points} points (${graded ? "graded" : "ungraded"})`
-            : `${points} point${points === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
-        </span>
-      ) : null}
-
-      <h3
-        className={cn(
-          showPlatformPrompt
-            ? "sk-text-md-regular text-sko-text-muted"
-            : "sk-text-md-semibold text-sko-text-default",
-        )}
-      >
-        {question}
-      </h3>
+      {/* body-large/Medium in text/default in all nine states, prompt or not. */}
+      <h3 className="sk-text-md-medium text-sko-text-default">{question}</h3>
 
       {multiSelect ? (
         <span className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sko-text-subtle">
@@ -288,9 +357,12 @@ export function QuizCard({
       <ul className="flex flex-col gap-2">
         {options.map((opt) => {
           const isSelected = selectedIds.includes(opt.id);
-          const rowState = optionState(marks, isSelected, Boolean(opt.correct), multiSelect);
+          const rowState = optionState(state, isSelected, Boolean(opt.correct), multiSelect);
           const row = OPTION_ROW[rowState];
           const plain = rowState === "Unanswered";
+          // `Show state-check-icon` hides the ✓, the ✗ and the Correctly-unselected note.
+          const showNote = row.note && (showStateIcon || rowState !== "Correctly unselected");
+          const showMarker = showStateIcon ? row.marker : undefined;
           return (
             <li key={opt.id}>
               <button
@@ -301,19 +373,28 @@ export function QuizCard({
                 aria-checked={isSelected}
                 data-option-state={rowState}
                 className={cn(
-                  "sk-text-sm-medium flex w-full items-start gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors",
+                  "sk-text-sm-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   row.box,
-                  plain && revealed ? "opacity-60" : null,
                   plain && !revealed ? "hover:bg-sko-bg-subtle" : null,
                 )}
               >
-                <OptionMarker multiSelect={multiSelect} checked={isSelected} />
+                <OptionMarker
+                  multiSelect={multiSelect}
+                  checked={isSelected}
+                  disabled={rowState === "Disabled"}
+                />
                 <span className="flex-1">{opt.label}</span>
                 {/* A text marker where a tick would mislead. */}
-                {row.note ? <span className="sk-text-sm-semibold mt-0.5 shrink-0">{row.note}</span> : null}
-                {row.marker === "tick" ? <Icon icon={Check} size={16} className="mt-0.5" /> : null}
-                {row.marker === "cross" ? <Icon icon={X} size={16} className="mt-0.5" /> : null}
+                {showNote ? (
+                  <span className={cn("sk-text-xs-medium mt-0.5 shrink-0", row.noteTone)}>{row.note}</span>
+                ) : null}
+                {showMarker === "tick" ? (
+                  <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" />
+                ) : null}
+                {showMarker === "cross" ? (
+                  <Icon icon={X} size={24} className="shrink-0 text-sko-icon-error" />
+                ) : null}
               </button>
             </li>
           );
@@ -325,9 +406,10 @@ export function QuizCard({
           tone={alert.tone}
           title={alert.title}
           description={
-            showExplanation
+            alert.notice ??
+            (showExplanation
               ? chosen.filter((o) => o.feedback).map((o) => o.feedback).join(" ")
-              : undefined
+              : undefined)
           }
         />
       ) : null}
@@ -356,9 +438,9 @@ export function QuizCard({
               onClick={onNextHint}
               disabled={hintIndex + 1 >= hints.length}
               className={cn(
-                "sk-text-sm-semibold underline",
+                "sk-text-sm-semibold",
                 hintIndex + 1 >= hints.length
-                  ? "cursor-not-allowed text-sko-icon-faint"
+                  ? "cursor-not-allowed text-sko-text-disabled"
                   : "text-sko-text-primary",
               )}
             >
@@ -368,7 +450,7 @@ export function QuizCard({
         >
           <ol className="flex flex-col gap-1">
             {hints.slice(0, hintIndex + 1).map((h, i) => (
-              <li key={i} className="sk-text-sm-regular text-sko-text-muted">
+              <li key={i} className="sk-text-sm-regular text-sko-text-default">
                 <span className="sk-text-sm-semibold text-sko-text-default">
                   Hint ({i + 1} of {hints.length}):{" "}
                 </span>

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check, RotateCcw, AlertTriangle } from "lucide-react";
 import { QuizCard } from "@/components/organisms/QuizCard";
 import {
   QuizFooterActions,
@@ -12,7 +11,7 @@ import {
 import { QuizNavStepper } from "@/components/molecules/QuizNav";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
-import { Badge } from "@/components/atoms/Badge";
+import { Badge, type BadgeColor } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import {
   ATTEMPTS_DISPLAY_CEILING,
@@ -171,6 +170,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   }
 
   if (phase === "completed" && result) {
+    const nextTopic = getAdjacentTopics(topicId, getCourseBySlug(courseSlug)).next;
     return (
       <QuizSummary
         topic={topic}
@@ -180,6 +180,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         attemptsExhausted={attemptsExhausted}
         onRetake={() => startAttempt()}
         onRetryIncorrect={(idx) => startAttempt(idx)}
+        onNextTopic={
+          nextTopic ? () => router.push(`/course/${courseSlug}/topic/${nextTopic.id}`) : undefined
+        }
       />
     );
   }
@@ -350,6 +353,17 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         // attempt. Do not relabel it.
         onReset: () =>
           setAnswers((prev) => prev.map((a, j) => (j === i ? freshAnswer() : a))),
+        // Mode B chrome. Forward means the next question still open, never i+1;
+        // with nothing left open, Next goes to the results.
+        onNext: () => {
+          const n = nextUnanswered(i);
+          if (n >= 0) setIndex(n);
+          else setPhase("completed");
+        },
+        onSkip: () => {
+          const n = nextUnanswered(i);
+          if (n >= 0) setIndex(n);
+        },
       },
     };
   }
@@ -379,11 +393,11 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
       <div className="flex flex-col gap-4 py-4">
         {/* The problem's own header, printed once for the whole set. The points
             line carries the score after submitting. */}
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <span className="sk-text-md-semibold text-sko-text-default">
             {config.bucketPrompt}
           </span>
-          <span className="sk-text-xs-regular text-sko-text-subtle">
+          <span className="sk-text-xs-medium text-sko-text-subtle">
             {submitted
               ? `${earned}/${total} points (${graded ? "graded" : "ungraded"})`
               : `${total} point${total === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -414,9 +428,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
                 onClick={() => setBucketHintIndex((i) => Math.min(bucketHints.length - 1, i + 1))}
                 disabled={bucketHintIndex + 1 >= bucketHints.length}
                 className={cn(
-                  "sk-text-sm-semibold underline",
+                  "sk-text-sm-semibold",
                   bucketHintIndex + 1 >= bucketHints.length
-                    ? "cursor-not-allowed text-sko-icon-faint"
+                    ? "cursor-not-allowed text-sko-text-disabled"
                     : "text-sko-text-primary",
                 )}
               >
@@ -426,7 +440,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           >
             <ol className="flex flex-col gap-1">
               {bucketHints.slice(0, bucketHintIndex + 1).map((h, i) => (
-                <li key={i} className="sk-text-sm-regular text-sko-text-muted">
+                <li key={i} className="sk-text-sm-regular text-sko-text-default">
                   <span className="sk-text-sm-semibold text-sko-text-default">
                     Hint ({i + 1} of {bucketHints.length}):{" "}
                   </span>
@@ -477,16 +491,27 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   }
 
   /* ---- Mode B: a stepper, nav at the top, results in place at the end ---- */
+  const stepProps = cardPropsFor(index);
   return (
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
-      <QuizNavStepper
-        current={index + 1}
-        total={total}
-        pct={(answeredCount / total) * 100}
-        onBack={index > 0 ? () => setIndex((i) => Math.max(0, i - 1)) : undefined}
+      {/* DS: `Show progress` nests the Stepper Bar (Mode=With Back only) inside
+          the card, after the Platform prompt and before the Question. */}
+      <QuizCard
+        {...stepProps}
+        showProgress
+        progress={
+          <QuizNavStepper
+            current={index + 1}
+            total={total}
+            pct={(answeredCount / total) * 100}
+            onBack={index > 0 ? () => setIndex((i) => Math.max(0, i - 1)) : undefined}
+          />
+        }
+        // The standalone primary below is mode B's forward action (and becomes
+        // See results at the end), so the footer's Next question link stays
+        // off rather than showing a second one.
+        footer={{ ...stepProps.footer, showNext: false }}
       />
-
-      <QuizCard {...cardPropsFor(index)} />
 
       {/* Mode B's forward action. It is not a card property: the card's footer
           is the problem's, and `Show next` is mode B chrome that ships off. */}
@@ -556,31 +581,37 @@ function QuizEntryHeader({
   const attempts = attemptsLabel(config);
   const facts = [
     `${questionCount} questions`,
-    `~${config.estMinutes} min`,
+    `About ${config.estMinutes} min`,
     ...(attempts ? [attempts] : []),
-    `Pass ≥ ${config.passThresholdPct}%`,
+    `Pass mark ${config.passThresholdPct}%`,
   ];
 
+  // DS Entry Header: the first badge is Brand in every variant; the second is
+  // Teal "Ungraded" on practice, Warning on a graded quiz (module grade) and
+  // Error on a final exam (course grade).
+  const practice = config.variant === "practice";
+  const weight: { color: BadgeColor; label: string } | null = practice
+    ? { color: "teal", label: "Ungraded" }
+    : config.weightPct
+      ? config.variant === "graded"
+        ? { color: "warning", label: `${config.weightPct}% of module grade` }
+        : { color: "error", label: `${config.weightPct}% of course grade` }
+      : null;
+
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+    <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge tone={config.variant === "practice" ? "success" : "brand"}>{config.label}</Badge>
-        <Badge tone="neutral">
-          {config.weightPct
-            ? `Counts ${config.weightPct}% of your final grade`
-            : "Doesn't affect your grade"}
-        </Badge>
+        <Badge color="brand">{config.label}</Badge>
+        {weight ? <Badge color={weight.color}>{weight.label}</Badge> : null}
       </div>
 
       <h3 className="sk-text-lg-semibold text-sko-text-default">{topic.title}</h3>
 
+      {/* Meta facts: Badge v2 Soft sm Gray. */}
       <ul className="flex flex-wrap gap-2">
         {facts.map((f) => (
-          <li
-            key={f}
-            className="sk-text-xs-regular rounded-md bg-sko-bg-subtle px-2.5 py-1 text-sko-text-muted"
-          >
-            {f}
+          <li key={f}>
+            <Badge color="gray">{f}</Badge>
           </li>
         ))}
       </ul>
@@ -598,8 +629,8 @@ function QuizEntryHeader({
       )}
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button variant="primary" size="lg" onClick={onStart}>
-          {resumed ? "Resume quiz" : `Start ${config.variant === "practice" ? "practice" : "quiz"}`}
+        <Button variant="primary" size="md" onClick={onStart}>
+          {resumed ? "Resume quiz" : `Start ${config.label.toLowerCase()}`}
         </Button>
 
         {/* Secondary action only when there is somewhere to send the learner
@@ -607,7 +638,7 @@ function QuizEntryHeader({
             no parent to review — and what decides this is the link, not the
             quiz variant: a module-level final exam does have one. */}
         {reviewParent ? (
-          <Button variant="secondary" size="lg" onClick={onReviewParent}>
+          <Button variant="secondary" size="md" onClick={onReviewParent}>
             Review {reviewParent} first
           </Button>
         ) : null}
@@ -625,6 +656,7 @@ function QuizSummary({
   attemptsExhausted,
   onRetake,
   onRetryIncorrect,
+  onNextTopic,
 }: {
   topic: { title: string };
   config: QuizConfig;
@@ -633,72 +665,100 @@ function QuizSummary({
   attemptsExhausted: boolean;
   onRetake: () => void;
   onRetryIncorrect: (indices: number[]) => void;
+  /** Withheld results: the only way on is the next topic. Omitted at the end of the course. */
+  onNextTopic?: () => void;
 }) {
   const pct = Math.round((result.score / result.total) * 100);
   const passed = pct >= config.passThresholdPct;
+  // DS Results=Withheld: `show_correctness: never` masks the score too, so the
+  // summary says what was recorded and never prints a percentage.
+  const withheld = Boolean(config.resultsWithheld);
+  const tone = passed ? "text-sko-text-success" : "text-sko-text-warning";
   const incorrectIdx = outcomes
     .map((o, i) => (o === false ? i : -1))
     .filter((i) => i >= 0);
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-        <div className="flex items-start justify-between gap-3">
+      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
+        <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="sk-text-2xs-medium text-sko-text-primary">{config.label}</p>
+            <p className="sk-text-xs-semibold uppercase text-sko-text-primary">{config.label}</p>
             <h3 className="sk-text-md-semibold mt-1 text-sko-text-default">{topic.title}</h3>
           </div>
-          <Badge tone={passed ? "success" : "warning"} leftIcon={passed ? Check : AlertTriangle}>
-            {passed ? "Passed" : "Not passed"}
+          <Badge size="md" color={withheld ? "gray" : passed ? "success" : "warning"}>
+            {withheld ? "Recorded" : passed ? "Passed" : "Not passed"}
           </Badge>
         </div>
 
-        <div
-          className={cn(
-            "flex items-center gap-4 rounded-lg p-4",
-            passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
-          )}
-        >
-          <span className="sk-text-display-sm-semibold text-sko-text-default">{pct}%</span>
-          <div>
-            <p className="sk-text-sm-semibold text-sko-text-default">
-              You scored {result.score} / {result.total}
-            </p>
-            <p className="sk-text-xs-regular text-sko-text-muted">
-              Pass mark {config.passThresholdPct}%
-              {config.weightPct ? ` · counts ${config.weightPct}% of your final grade` : ""}
-            </p>
+        {/* Score-Group: 20/24 padding, 20 gap, Radius/fixed-lg (10). */}
+        {withheld ? (
+          <div className="flex items-center gap-5 rounded-[10px] bg-sko-bg-subtle px-6 py-5">
+            <div className="flex flex-col gap-1">
+              <p className="sk-text-md-semibold text-sko-text-subtle">
+                {result.total} of {result.total} answered
+              </p>
+              <p className="sk-text-sm-medium text-sko-text-subtle">
+                Results are released after the due date.
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            className={cn(
+              "flex items-center gap-5 rounded-[10px] px-6 py-5",
+              passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
+            )}
+          >
+            <span className={cn("sk-text-display-md-bold", tone)}>{pct}%</span>
+            <div className="flex flex-col gap-1">
+              <p className={cn("sk-text-md-semibold", tone)}>
+                You scored {result.score} / {result.total}
+              </p>
+              <p className={cn("sk-text-sm-medium", tone)}>
+                Pass mark {config.passThresholdPct}%
+                {config.weightPct ? ` · counts ${config.weightPct}% of your final grade` : ""}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* No per-question circle map. The ruling that removed the dots from
             the progress indicator covers the results screen too: "Retry
             incorrect" already names how many were wrong and takes the learner
             straight to them, so a row of circles adds nothing on a long quiz. */}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-sko-border-subtle pt-4">
-          <p className="sk-text-xs-regular text-sko-text-subtle">
-            {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"}
-            {typeof config.maxAttempts === "number" &&
-            config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
-              ? ` · ${config.maxAttempts - result.attempts} left`
-              : ""}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {incorrectIdx.length && !attemptsExhausted ? (
-              <Button variant="primary" onClick={() => onRetryIncorrect(incorrectIdx)}>
-                Retry incorrect ({incorrectIdx.length})
-              </Button>
-            ) : null}
-            <Button
-              variant="secondary"
-              leftIcon={RotateCcw}
-              onClick={onRetake}
-              disabled={attemptsExhausted}
-            >
-              {attemptsExhausted ? "No attempts left" : "Retake quiz"}
-            </Button>
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-sko-border-subtle pt-4">
+          {withheld ? (
+            <>
+              <p className="sk-text-sm-medium text-sko-text-subtle">Your answers are saved</p>
+              {onNextTopic ? (
+                <Button variant="primary" onClick={onNextTopic}>
+                  Next topic
+                </Button>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <p className="sk-text-sm-medium text-sko-text-subtle">
+                {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"}
+                {typeof config.maxAttempts === "number" &&
+                config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
+                  ? ` · ${config.maxAttempts - result.attempts} left`
+                  : ""}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {incorrectIdx.length && !attemptsExhausted ? (
+                  <Button variant="primary" onClick={() => onRetryIncorrect(incorrectIdx)}>
+                    Retry incorrect ({incorrectIdx.length})
+                  </Button>
+                ) : null}
+                <Button variant="secondary" onClick={onRetake} disabled={attemptsExhausted}>
+                  {attemptsExhausted ? "No attempts left" : "Retake quiz"}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </section>
     </div>

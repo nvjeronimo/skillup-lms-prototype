@@ -1,21 +1,24 @@
 /* ============================================================================
-   SkillUp DS colour tokens — v4.0 — 2026-09-23
-   SOURCE: Figma "❖ SKO Design System", collection 🎨 SKO-Semantics (87 tokens × 6 modes).
+   SkillUp DS colour tokens — v4.1 — 2026-09-28
+   SOURCE: Figma "❖ SKO Design System", collection 🎨 SKO-Semantics (114 tokens × 6 modes).
    GENERATED from the library export — do not edit by hand; re-export when the DS changes.
 
    NAMES ARE ELEMENT-FIRST: the first word says where the token goes.
-     --color-bg-*      backgrounds and fills          (Tailwind: bg-sk-bg-*)
-     --color-text-*    text                           (text-sk-text-*)
-     --color-icon-*    icons and small marks          (text-sk-icon-* / stroke)
-     --color-border-*  borders, dividers, focus rings (border-sk-border-*)
+     --color-bg-*      backgrounds and fills          (Tailwind: bg-sko-bg-*)
+     --color-text-*    text                           (text-sko-text-*)
+     --color-icon-*    icons and small marks          (text-sko-icon-* / stroke)
+     --color-border-*  borders, dividers, focus rings (border-sko-border-*)
      --color-shadow-*  shadow colour
    Rule of three questions: what is the layer (bg / text / border)? what is it on
    (on-primary, on-media…)? what does it mean (primary, success, error, muted…)?
+   12 DS tokens carry no Web code syntax in Figma yet (bg/overlay-soft, bg/on-media-soft,
+   icon/on-fixed, text/on-inverse, text/accent-cyan…orange); their CSS names follow the
+   same rule: DS "a/b-c" → --color-a-b-c.
 
    MODES
      :root                                    SKO Light (default)
      [data-theme="dark"]                      SKO Dark
-     [data-skin="gold"|"red"]                 Gold / Red Light  (only the 7 brand tokens change)
+     [data-skin="gold"|"red"]                 Gold / Red Light  (only the brand tokens + bg/accent-teal-soft change)
      [data-skin="…"][data-theme="dark"]       Gold / Red Dark
      [data-skin="teal"]                       explicit SKO alias (forces SKO in a nested context)
    The DS no longer carries violet / sky / ink skins: those attributes now fall back to SKO.
@@ -49,8 +52,9 @@
   --color-bg-error: #da3336;
   --color-bg-error-soft: #fce8e8;
   --color-bg-info: #0086c9;
+  --color-bg-info-soft: #acd5f4;
   --color-bg-accent-teal: #1f655e;
-  --color-bg-accent-teal-soft: #aaeeeb;
+  --color-bg-accent-teal-soft: #e8fffe;
   --color-bg-accent-green: #1f7643;
   --color-bg-accent-green-soft: #e4fced;
   --color-bg-accent-red: #b62226;
@@ -75,6 +79,7 @@
   --color-text-on-warning: #13282f;
   --color-text-error: #b62226;
   --color-text-on-error: #ffffff;
+  --color-text-info: #044150;
   --color-text-accent-teal: #044150;
   --color-text-on-accent-teal: #ffffff;
   --color-text-accent-green: #17523a;
@@ -83,6 +88,14 @@
   --color-text-on-accent-red: #ffffff;
   --color-text-accent-yellow: #85580e;
   --color-text-on-accent-yellow: #13282f;
+  --color-text-accent-cyan: #0e7090;
+  --color-text-accent-blue: #175cd3;
+  --color-text-accent-indigo: #3538cd;
+  --color-text-accent-violet: #6927da;
+  --color-text-accent-purple: #5925dc;
+  --color-text-accent-fuchsia: #9f1ab1;
+  --color-text-accent-pink: #c11574;
+  --color-text-accent-orange: #b93815;
   --color-icon-default: #13282f;
   --color-icon-muted: #39414c;
   --color-icon-subtle: #4f5b69;
@@ -96,14 +109,22 @@
   --color-icon-on-success: #ffffff;
   --color-icon-warning: #85580e;
   --color-icon-error: #b62226;
-  --color-icon-info: #0086c9;
+  --color-icon-info: #044150;
+  --color-icon-accent-teal: #044150;
+  --color-icon-on-accent-teal: #ffffff;
+  --color-icon-accent-green: #17523a;
+  --color-icon-on-accent-green: #ffffff;
+  --color-icon-accent-red: #60191a;
+  --color-icon-on-accent-red: #ffffff;
+  --color-icon-accent-yellow: #85580e;
+  --color-icon-on-accent-yellow: #13282f;
   --color-border-default: #8995a6;
   --color-border-subtle: #d5dce2;
   --color-border-strong: #13282f;
   --color-border-disabled: #b9c4ce;
   --color-border-inverse: #13282f;
   --color-border-primary: #26708e;
-  --color-border-primary-soft: #ebf8ff;
+  --color-border-primary-soft: #acd5f4;
   --color-border-primary-muted: #acd5f4;
   --color-border-success: #1f7643;
   --color-border-success-soft: #aaedc2;
@@ -112,6 +133,15 @@
   --color-border-error: #b62226;
   --color-border-error-soft: #f3afb0;
   --color-border-info: #0086c9;
+  --color-border-info-soft: #51bffc;
+  --color-border-accent-teal: #1f655e;
+  --color-border-accent-teal-soft: #aaeeeb;
+  --color-border-accent-green: #1f7643;
+  --color-border-accent-green-soft: #aaedc2;
+  --color-border-accent-red: #b62226;
+  --color-border-accent-red-soft: #e8797b;
+  --color-border-accent-yellow: #f9c654;
+  --color-border-accent-yellow-soft: #ffebbd;
   --color-border-focus-gap: #ffffff;
   --color-shadow-default: #1f233e0d;
 }
@@ -121,12 +151,13 @@
   --color-bg-primary: #26708e;
   --color-bg-primary-soft: #ebf8ff;
   --color-bg-primary-hover: #f9c654;
+  --color-bg-accent-teal-soft: #e8fffe;
   --color-text-primary: #215477;
   --color-text-on-primary-soft: #044150;
   --color-text-on-primary-hover: #044150;
   --color-icon-primary: #26708e;
   --color-border-primary: #26708e;
-  --color-border-primary-soft: #ebf8ff;
+  --color-border-primary-soft: #acd5f4;
   --color-border-primary-muted: #acd5f4;
 }
 
@@ -134,12 +165,13 @@
   --color-bg-primary: #553600;
   --color-bg-primary-soft: #ffda8f;
   --color-bg-primary-hover: #ffe4a9;
+  --color-bg-accent-teal-soft: #aaeeeb;
   --color-text-primary: #553600;
   --color-text-on-primary-soft: #553600;
   --color-text-on-primary-hover: #553600;
   --color-icon-primary: #553600;
   --color-border-primary: #553600;
-  --color-border-primary-soft: #ffda8f;
+  --color-border-primary-soft: #c89536;
   --color-border-primary-muted: #c89536;
 }
 
@@ -147,12 +179,13 @@
   --color-bg-primary: #88262a;
   --color-bg-primary-soft: #ffd5d0;
   --color-bg-primary-hover: #ffa19d;
+  --color-bg-accent-teal-soft: #aaeeeb;
   --color-text-primary: #88262a;
   --color-text-on-primary-soft: #67151a;
   --color-text-on-primary-hover: #67151a;
   --color-icon-primary: #88262a;
   --color-border-primary: #88262a;
-  --color-border-primary-soft: #ffd5d0;
+  --color-border-primary-soft: #ffa19d;
   --color-border-primary-muted: #ffa19d;
 }
 
@@ -179,7 +212,8 @@
   --color-bg-warning-soft: #2e2410;
   --color-bg-error: #e26567;
   --color-bg-error-soft: #34191b;
-  --color-bg-info: #66a3d6;
+  --color-bg-info: #0086c9;
+  --color-bg-info-soft: #044150;
   --color-bg-accent-teal: #42aea3;
   --color-bg-accent-teal-soft: #044150;
   --color-bg-accent-green: #2d9c5b;
@@ -206,6 +240,7 @@
   --color-text-on-warning: #13282f;
   --color-text-error: #f3afb0;
   --color-text-on-error: #0e1a1f;
+  --color-text-info: #6cc0e0;
   --color-text-accent-teal: #aaeeeb;
   --color-text-on-accent-teal: #13282f;
   --color-text-accent-green: #aaedc2;
@@ -214,6 +249,14 @@
   --color-text-on-accent-red: #13282f;
   --color-text-accent-yellow: #ffebbd;
   --color-text-on-accent-yellow: #13282f;
+  --color-text-accent-cyan: #06aed4;
+  --color-text-accent-blue: #2e90fa;
+  --color-text-accent-indigo: #8098f9;
+  --color-text-accent-violet: #a48afb;
+  --color-text-accent-purple: #9b8afb;
+  --color-text-accent-fuchsia: #d444f1;
+  --color-text-accent-pink: #ee46bc;
+  --color-text-accent-orange: #ef6820;
   --color-icon-default: #eaf1f4;
   --color-icon-muted: #b3c0c7;
   --color-icon-subtle: #93a3ab;
@@ -227,14 +270,22 @@
   --color-icon-on-success: #0e1a1f;
   --color-icon-warning: #fab929;
   --color-icon-error: #f3afb0;
-  --color-icon-info: #66a3d6;
+  --color-icon-info: #6cc0e0;
+  --color-icon-accent-teal: #aaeeeb;
+  --color-icon-on-accent-teal: #13282f;
+  --color-icon-accent-green: #aaedc2;
+  --color-icon-on-accent-green: #0e1a1f;
+  --color-icon-accent-red: #e8797b;
+  --color-icon-on-accent-red: #13282f;
+  --color-icon-accent-yellow: #ffebbd;
+  --color-icon-on-accent-yellow: #13282f;
   --color-border-default: #8995a6;
   --color-border-subtle: #2c3d45;
   --color-border-strong: #eaf1f4;
   --color-border-disabled: #25383f;
   --color-border-inverse: #16282f;
   --color-border-primary: #4aa3c7;
-  --color-border-primary-soft: #0f2c38;
+  --color-border-primary-soft: #215477;
   --color-border-primary-muted: #215477;
   --color-border-success: #72d99a;
   --color-border-success-soft: #1b6440;
@@ -242,7 +293,16 @@
   --color-border-warning-soft: #996816;
   --color-border-error: #f3afb0;
   --color-border-error-soft: #741b1d;
-  --color-border-info: #66a3d6;
+  --color-border-info: #0086c9;
+  --color-border-info-soft: #215477;
+  --color-border-accent-teal: #42aea3;
+  --color-border-accent-teal-soft: #0f595d;
+  --color-border-accent-green: #2d9c5b;
+  --color-border-accent-green-soft: #1b6440;
+  --color-border-accent-red: #e26567;
+  --color-border-accent-red-soft: #741b1d;
+  --color-border-accent-yellow: #f9c654;
+  --color-border-accent-yellow-soft: #996816;
   --color-border-focus-gap: #062c41;
   --color-shadow-default: #1f233e0d;
 }
@@ -252,12 +312,13 @@
   --color-bg-primary: #4aa3c7;
   --color-bg-primary-soft: #0f2c38;
   --color-bg-primary-hover: #6cc0e0;
+  --color-bg-accent-teal-soft: #044150;
   --color-text-primary: #6cc0e0;
   --color-text-on-primary-soft: #cdeaf6;
   --color-text-on-primary-hover: #0e1a1f;
   --color-icon-primary: #4aa3c7;
   --color-border-primary: #4aa3c7;
-  --color-border-primary-soft: #0f2c38;
+  --color-border-primary-soft: #215477;
   --color-border-primary-muted: #215477;
 }
 
@@ -269,7 +330,7 @@
   --color-text-on-primary-soft: #ffe4a9;
   --color-icon-primary: #ffd07a;
   --color-border-primary: #ffd07a;
-  --color-border-primary-soft: #2a2f25;
+  --color-border-primary-soft: #724c00;
   --color-border-primary-muted: #724c00;
 }
 
@@ -281,7 +342,7 @@
   --color-text-on-primary-soft: #ffd5d0;
   --color-icon-primary: #ff8985;
   --color-border-primary: #ff8985;
-  --color-border-primary-soft: #28252a;
+  --color-border-primary-soft: #390003;
   --color-border-primary-muted: #390003;
 }
 

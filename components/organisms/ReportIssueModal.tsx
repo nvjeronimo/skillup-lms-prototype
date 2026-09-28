@@ -100,7 +100,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
                   >
                     {r}
                     {selected ? (
-                      <Icon icon={Check} size={18} className="shrink-0 text-sko-text-primary" />
+                      <Icon icon={Check} size={18} className="shrink-0 text-sko-icon-primary" />
                     ) : null}
                   </button>
                 );

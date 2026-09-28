@@ -35,17 +35,19 @@ export interface CoursePlayerTopbarProps {
 }
 
 /**
- * DS `Buttons/Button utility`, Size=sm. Tertiary is the bare 32px icon button;
- * Secondary adds the 1px `border-primary` outline (the mobile course-menu
- * trigger). Desktop keeps the prototype's 40px hit area.
+ * DS `Buttons/Button utility`, Size=sm, on every topbar size: a 32px square,
+ * padding 6 (Spacing/sm), radius 6 (Radius/fixed-sm), 20px icon in `icon/faint`.
+ * Tertiary is the bare button; Secondary adds a 1px `border/default` outline on
+ * `bg/page` (the mobile course-menu trigger). `large` is DS `Button close X`
+ * Size=lg: 44px, padding 8, radius 8. Hover (all three): `bg/faint`, icon
+ * `icon/subtle`.
  */
 function UtilityButton({
   label,
   onClick,
   children,
   hierarchy = "tertiary",
-  compact = false,
-  /** Mobile close: DS `Button close X` Size=lg, a 44px square. */
+  /** Close: DS `Button close X` Size=lg, a 44px square. */
   large = false,
   className,
 }: {
@@ -53,7 +55,6 @@ function UtilityButton({
   onClick?: () => void;
   children: React.ReactNode;
   hierarchy?: "tertiary" | "secondary";
-  compact?: boolean;
   large?: boolean;
   className?: string;
 }) {
@@ -63,10 +64,8 @@ function UtilityButton({
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center transition-colors hover:bg-sko-bg-subtle",
-        compact
-          ? cn("text-sko-icon-faint", large ? "h-11 w-11 rounded-lg" : "h-8 w-8 rounded-md")
-          : "h-10 w-10 rounded-lg text-sko-text-subtle",
+        "inline-flex shrink-0 items-center justify-center text-sko-icon-faint transition-colors hover:bg-sko-bg-faint hover:text-sko-icon-subtle",
+        large ? "h-11 w-11 rounded-lg" : "h-8 w-8 rounded-md",
         hierarchy === "secondary" && "border border-sko-border-default bg-sko-bg-page",
         className,
       )}
@@ -77,14 +76,19 @@ function UtilityButton({
 }
 
 /**
- * Course player top chrome (DS `LMS / Course Player Topbar`). Desktop: SkillUp
- * logo (left), spacer, then Notifications · Saved · Avatar+name · Close (right).
- * Breadcrumb, AI and Theme are optional (off by default) and used in Storybook.
+ * Course player top chrome (DS `LMS / Course Player Topbar`).
+ *
+ * Desktop (60px, padding 8/16/8/24) and Tablet (padding 8/16/8/20): two rows
+ * 16px apart. Left row (32px apart on Desktop, 24 on Tablet): the 114×33 logo
+ * and, on Desktop, the breadcrumb. Right row, 8px apart: AI · Notifications ·
+ * Saved (32px Tertiary utility) · Theme · Avatar label group (24px round avatar
+ * + name) · 44px close. Breadcrumb, AI and Theme are optional (off by default)
+ * and used in Storybook; Discussions has no DS slot.
  *
  * Mobile (Size=Mobile, 375×56): 0/8/0/12 padding, space-between. Left, 6px
  * apart: the course-menu trigger (32px Secondary utility button, `list` icon)
  * and the logo at 33px. Right, 8px apart: Notifications · Saved (32px Tertiary)
- * · 24px round avatar · 44px close. Icons in `fg-quaternary`.
+ * · 24px round avatar · 44px close. Icons in `icon/faint`.
  */
 export function CoursePlayerTopbar({
   size = "Desktop",
@@ -124,6 +128,8 @@ export function CoursePlayerTopbar({
       ) : null}
     </span>
   );
+  // DS `Button close X` Size=lg: x-close at 24px keeps a 1.5 stroke (iconStroke(24) would give 2).
+  const closeIcon = <Icon icon={X} size={24} strokeWidth={1.5} />;
 
   if (isMobile) {
     return (
@@ -134,7 +140,7 @@ export function CoursePlayerTopbar({
         )}
       >
         <div className="flex min-w-0 items-center gap-1.5">
-          <UtilityButton label="Open course menu" onClick={onMenu} hierarchy="secondary" compact>
+          <UtilityButton label="Open course menu" onClick={onMenu} hierarchy="secondary">
             <Icon icon={List} size={20} />
           </UtilityButton>
           <a href="#" aria-label="SkillUp home" className="flex items-center">
@@ -143,12 +149,12 @@ export function CoursePlayerTopbar({
         </div>
         <div className="flex items-center gap-2">
           {showNotifications ? (
-            <UtilityButton label={notificationsLabel} onClick={onNotifications} compact>
+            <UtilityButton label={notificationsLabel} onClick={onNotifications}>
               {bell}
             </UtilityButton>
           ) : null}
           {showBookmark ? (
-            <UtilityButton label="Saved items" onClick={onBookmark} compact>
+            <UtilityButton label="Saved items" onClick={onBookmark}>
               <Icon icon={Bookmark} size={20} />
             </UtilityButton>
           ) : null}
@@ -157,8 +163,8 @@ export function CoursePlayerTopbar({
               <Avatar name={userName} src={userAvatarUrl} size="xs" />
             </button>
           )}
-          <UtilityButton label="Exit course player" onClick={onClose} compact large>
-            <Icon icon={X} size={20} />
+          <UtilityButton label="Exit course player" onClick={onClose} large>
+            {closeIcon}
           </UtilityButton>
         </div>
       </header>
@@ -168,35 +174,45 @@ export function CoursePlayerTopbar({
   return (
     <header
       className={cn(
-        "flex h-[60px] items-center gap-3 border-b border-sko-border-subtle bg-sko-bg-page px-4 md:px-6",
+        // DS padding 8/16/8/24 (Desktop) · 8/16/8/20 (Tablet); the 60px height with
+        // items-center covers the 8px vertical padding.
+        "flex h-[60px] items-center gap-4 border-b border-sko-border-subtle bg-sko-bg-page",
+        isDesktop ? "pl-6 pr-4" : "pl-5 pr-4",
         className,
       )}
     >
-      <a href="#" aria-label="SkillUp home" className="flex items-center">
-        <SkillUpLogo className="h-7" />
-      </a>
+      <div className={cn("flex min-w-0 flex-1 items-center", isDesktop ? "gap-8" : "gap-6")}>
+        <a href="#" aria-label="SkillUp home" className="flex shrink-0 items-center">
+          <SkillUpLogo className="h-[33px]" />
+        </a>
 
-      {isDesktop && breadcrumb.length ? (
-        <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1">
-          {breadcrumb.map((seg, i) => (
-            <React.Fragment key={seg}>
-              {i > 0 ? (
-                <Icon icon={ChevronRight} size={14} className="text-sko-icon-faint" />
-              ) : null}
-              <span
-                className={cn(
-                  "sk-text-sm-medium truncate",
-                  i === breadcrumb.length - 1 ? "text-sko-text-default" : "text-sko-text-subtle",
-                )}
-              >
-                {seg}
-              </span>
-            </React.Fragment>
-          ))}
-        </nav>
-      ) : null}
+        {isDesktop && breadcrumb.length ? (
+          <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2">
+            {breadcrumb.map((seg, i) => (
+              <React.Fragment key={seg}>
+                {i > 0 ? (
+                  <Icon icon={ChevronRight} size={16} className="shrink-0 text-sko-icon-faint" />
+                ) : null}
+                <span
+                  className={cn(
+                    "sk-text-sm-semibold truncate",
+                    i === breadcrumb.length - 1 ? "text-sko-text-primary" : "text-sko-text-subtle",
+                  )}
+                >
+                  {seg}
+                </span>
+              </React.Fragment>
+            ))}
+          </nav>
+        ) : null}
+      </div>
 
-      <div className="flex flex-1 items-center justify-end gap-1">
+      <div className="flex items-center gap-2">
+        {showAi ? (
+          <UtilityButton label="AI Assistant" onClick={onAi}>
+            <Icon icon={Sparkles} size={20} />
+          </UtilityButton>
+        ) : null}
         {showNotifications ? (
           <UtilityButton label={notificationsLabel} onClick={onNotifications}>
             {bell}
@@ -212,11 +228,6 @@ export function CoursePlayerTopbar({
             <Icon icon={MessagesSquare} size={20} />
           </UtilityButton>
         ) : null}
-        {showAi ? (
-          <UtilityButton label="AI Assistant" onClick={onAi}>
-            <Icon icon={Sparkles} size={20} />
-          </UtilityButton>
-        ) : null}
         {showTheme ? (
           <UtilityButton
             label={theme === "Dark" ? "Switch to light theme" : "Switch to dark theme"}
@@ -227,18 +238,16 @@ export function CoursePlayerTopbar({
         ) : null}
 
         {accountMenu ?? (
-          <button
-            type="button"
-            aria-label="Account"
-            className="ml-1 flex items-center gap-2 rounded-lg p-1 hover:bg-sko-bg-subtle"
-          >
-            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
-            <span className="sk-text-sm-medium pr-1 text-sko-text-default">{userName}</span>
+          // DS `Avatar label group` Size=sm: 24px round avatar, 8px gap, name in
+          // body-medium/Semibold, no padding around the group.
+          <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-md">
+            <Avatar name={userName} src={userAvatarUrl} size="xs" />
+            <span className="sk-text-sm-semibold text-sko-text-default">{userName}</span>
           </button>
         )}
 
-        <UtilityButton label="Exit course player" onClick={onClose}>
-          <Icon icon={X} size={20} />
+        <UtilityButton label="Exit course player" onClick={onClose} large>
+          {closeIcon}
         </UtilityButton>
       </div>
     </header>

@@ -27,7 +27,7 @@ export function SavedTopicItem({
 }: SavedTopicItemProps) {
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={topicTypeIcon(topicType)} size={18} />
       </span>
       <span className="min-w-0 flex-1">

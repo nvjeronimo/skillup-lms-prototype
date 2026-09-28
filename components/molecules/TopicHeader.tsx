@@ -35,13 +35,20 @@ export function TopicHeader({
   const durationLabel = needsApprox ? `approx. ${duration}` : duration;
 
   return (
-    <header className={cn("flex flex-col gap-2", className)}>
-      <div className="flex flex-wrap items-center gap-1.5">
+    // DS: root, Content Container and meta-row → title are 4px apart; meta-row items 8px.
+    <header className={cn("flex flex-col gap-1", className)}>
+      <div className="flex flex-wrap items-center gap-2">
         <TopicTypeBadge type={type} />
         {/* Duration is optional; with none, render nothing rather than a stray
-            "approx." or a dash placeholder. */}
+            "approx." or a dash placeholder. Separator and Duration are two
+            body-medium/Medium layers in text/subtle, as in the DS meta-row. */}
         {showDuration && duration ? (
-          <span className="sk-text-xs-regular text-sko-text-subtle">· {durationLabel}</span>
+          <>
+            <span aria-hidden className="sk-text-sm-medium text-sko-text-subtle">
+              ·
+            </span>
+            <span className="sk-text-sm-medium text-sko-text-subtle">{durationLabel}</span>
+          </>
         ) : null}
         {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
       </div>

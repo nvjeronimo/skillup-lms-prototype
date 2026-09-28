@@ -194,7 +194,7 @@ export function Sidebar({
       <>
       <aside
         className={cn(
-          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page py-4",
+          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-4",
           className,
         )}
         aria-label="Course navigation"
@@ -292,7 +292,7 @@ export function Sidebar({
       className={cn(
         "flex h-full flex-col overflow-hidden bg-sko-bg-page",
         // Floating card on desktop/tablet; Mobile drawer fills its container.
-        isMobile ? "" : "rounded-xl border border-sko-border-subtle",
+        isMobile ? "" : "rounded-lg border border-sko-border-subtle",
         WIDTH[variant],
         className,
       )}
@@ -342,7 +342,7 @@ export function Sidebar({
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="sk-scroll flex-1 overflow-y-auto pb-4"
+        className="sk-scroll flex-1 overflow-y-auto"
       >
         {course.modules.map((module) => {
           const moduleCollapsed = collapsedModules.has(module.id);

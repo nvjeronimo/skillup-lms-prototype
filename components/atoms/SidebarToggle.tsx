@@ -1,6 +1,5 @@
 import * as React from "react";
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { cn, iconStroke } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface SidebarToggleProps {
   expanded: boolean;
@@ -8,10 +7,15 @@ export interface SidebarToggleProps {
   className?: string;
 }
 
-/** Sidebar expand/collapse toggle — Expanded · Collapsed. DS: 24×24, glyph strokes in `border-primary`. */
+/**
+ * DS `sidebar-expand-collapse-toggle` — Expanded · Collapsed. A 24×24 panel
+ * glyph stroked 1.5px in `border/default` (the stroke the Sidebar-ICP instances
+ * use): a 19×16 outline with radius 2 at (3,4), plus a 7×16 left pane that is
+ * filled when Expanded and outline-only when Collapsed. No chevron.
+ * Stroke geometry is inset by half the stroke so the outer edge matches the
+ * DS inside stroke.
+ */
 export function SidebarToggle({ expanded, onToggle, className }: SidebarToggleProps) {
-  const size = 20;
-  const IconCmp = expanded ? PanelLeftClose : PanelLeftOpen;
   return (
     <button
       type="button"
@@ -23,7 +27,21 @@ export function SidebarToggle({ expanded, onToggle, className }: SidebarTogglePr
         className,
       )}
     >
-      <IconCmp size={size} strokeWidth={iconStroke(size)} />
+      <svg
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        <rect x="3.75" y="4.75" width="17.5" height="14.5" rx="1.25" fill="none" />
+        <path
+          d="M9.25 4.75H5A1.25 1.25 0 0 0 3.75 6v12A1.25 1.25 0 0 0 5 19.25h4.25z"
+          fill={expanded ? "currentColor" : "none"}
+        />
+      </svg>
     </button>
   );
 }

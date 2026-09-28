@@ -1,34 +1,29 @@
 "use client";
 
 import * as React from "react";
-import { Play, Pause, SkipBack, SkipForward, Headphones, Download } from "lucide-react";
-import { Icon } from "@/lib/icons";
+import { Headphones } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
-import { Button } from "@/components/atoms/Button";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
+import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { getPodcast } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn, secondsToTs } from "@/lib/utils";
 
-const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
-
 /**
- * Podcast — the same chrome as Video with the video surface replaced by a
- * waveform. Per the Topic Content Types model this is an Audio asset, so the
- * completion rule and the transcript/chapter affordances match Video.
+ * Podcast — the same player as Video. Per the Topic Content Types model this is
+ * an Audio asset delivered through the Video XBlock, so the DS Player is the
+ * Video player 16:9 with an audio caption, and the completion rule and the
+ * transcript/chapter affordances match Video.
  */
 export function PodcastView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
   const podcast = React.useMemo(() => (topic ? getPodcast(topic) : null), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
-  const showToast = useLmsStore((s) => s.showToast);
   const resumePositions = useLmsStore((s) => s.resumePositions);
   const saveResumePosition = useLmsStore((s) => s.saveResumePosition);
   const clearResumePosition = useLmsStore((s) => s.clearResumePosition);
 
   const durationSeconds = 1144; // 19:04
-  const [playing, setPlaying] = React.useState(false);
-  const [speedIdx, setSpeedIdx] = React.useState(1);
   // Start at zero and OFFER the stored position, rather than silently jumping —
   // matching how Video behaves. Same family, same expectation.
   const [t, setT] = React.useState(0);
@@ -37,7 +32,6 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
 
   if (!topic || !podcast) return null;
-  const pct = Math.min(100, (t / durationSeconds) * 100);
 
   function seek(next: number) {
     const clamped = Math.max(0, Math.min(durationSeconds, next));
@@ -54,96 +48,14 @@ export function PodcastView({ topicId }: { topicId: string }) {
         <Badge tone="neutral">{podcast.episodeLabel}</Badge>
       </div>
 
-      {/* Audio surface — a waveform stands in for the video frame. */}
-      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-        <div
-          className="flex h-24 items-end gap-[3px] overflow-hidden rounded-lg px-4 py-3"
-          style={{
-            background: "linear-gradient(135deg, var(--color-bg-primary-soft), var(--color-bg-subtle))",
-          }}
-          aria-hidden
-        >
-          {Array.from({ length: 64 }).map((_, i) => {
-            // Deterministic pseudo-waveform so it never shifts between renders.
-            const h = 20 + ((i * 37) % 60);
-            const played = (i / 64) * 100 <= pct;
-            return (
-              <span
-                key={i}
-                className={cn(
-                  "flex-1 rounded-sm",
-                  played ? "bg-sko-bg-primary" : "bg-sko-border-default",
-                )}
-                style={{ height: `${h}%` }}
-              />
-            );
-          })}
-        </div>
-
-        {/* Scrubber + controls, mirroring the video player's control set. */}
-        <input
-          type="range"
-          min={0}
-          max={durationSeconds}
-          value={t}
-          onChange={(e) => seek(Number(e.target.value))}
-          aria-label="Seek"
-          className="w-full accent-[var(--color-bg-primary)]"
-        />
-
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              aria-label="Back 15 seconds"
-              leftIcon={SkipBack}
-              onClick={() => seek(t - 15)}
-            >
-              15s
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              aria-label={playing ? "Pause" : "Play"}
-              leftIcon={playing ? Pause : Play}
-              onClick={() => setPlaying((p) => !p)}
-            >
-              {playing ? "Pause" : "Play"}
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              aria-label="Forward 15 seconds"
-              rightIcon={SkipForward}
-              onClick={() => seek(t + 15)}
-            >
-              15s
-            </Button>
-            <span className="sk-text-xs-regular ml-1 text-sko-text-subtle">
-              {secondsToTs(t)} / {secondsToTs(durationSeconds)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setSpeedIdx((i) => (i + 1) % SPEEDS.length)}
-            >
-              {SPEEDS[speedIdx]}×
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={Download}
-              onClick={() => showToast("Downloading episode audio…")}
-            >
-              Audio
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* DS LMS / Podcast · Player (20328:3337) is a Lesson Block Kind=Video (Audio):
+          the same Video player 16:9 as a Video topic, plus a caption. */}
+      <figure className="flex flex-col gap-2 rounded-xl shadow-sk-card">
+        <VideoPlayer durationSeconds={durationSeconds} currentTime={t} onSeek={seek} />
+        <figcaption className="sk-text-xs-regular text-sko-text-subtle">
+          Podcast episode · {secondsToTs(durationSeconds)} · transcript available
+        </figcaption>
+      </figure>
 
       {showResume ? (
         <ResumeBanner

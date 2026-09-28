@@ -1,7 +1,7 @@
 import type { Preview } from "@storybook/react";
 import React from "react";
 import { Montserrat } from "next/font/google";
-// Import the Tailwind-built global stylesheet so every `bg-sk-*` / `text-sk-*` /
+// Import the Tailwind-built global stylesheet so every `bg-sko-*` / `text-sko-*` /
 // layout utility is available in Storybook exactly as in the app. globals.css also
 // @imports the color + typography token stylesheets.
 import "../app/globals.css";
@@ -22,11 +22,12 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: "sk-primary",
+      // DS tokens, so the canvas follows the theme/skin like the app does.
+      default: "bg/page",
       values: [
-        { name: "sk-primary", value: "#ffffff" },
-        { name: "sk-secondary", value: "#f3f5fa" },
-        { name: "sk-brand-section", value: "#ebf8ff" },
+        { name: "bg/page", value: "var(--color-bg-page)" },
+        { name: "bg/subtle", value: "var(--color-bg-subtle)" },
+        { name: "bg/primary-soft", value: "var(--color-bg-primary-soft)" },
       ],
     },
     a11y: {

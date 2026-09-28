@@ -77,7 +77,7 @@ export function FileUploadZone({
             : "border-sko-border-primary bg-sko-bg-primary-soft",
         )}
       >
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-sko-border-subtle bg-sko-bg-page text-sko-text-primary">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-sko-border-subtle bg-sko-bg-page text-sko-icon-primary">
           <Icon icon={UploadCloud} size={22} />
         </span>
         <p className="sk-text-sm-medium text-sko-text-muted">

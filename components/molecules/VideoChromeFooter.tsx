@@ -125,10 +125,11 @@ export function VideoChromeFooter({
               setDlOpen((o) => !o);
               setLangOpen(false);
             }}
-            className="sk-text-sm-medium inline-flex items-center gap-1.5 text-sko-text-primary hover:underline"
+            // DS Link Button_def, Type=Brand · Hierarchy=Primary · md.
+            className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
           >
-            <Icon icon={Download} size={16} />
-            Download transcript
+            <Icon icon={Download} size={16} className="text-sko-icon-primary" />
+            <span className="px-0.5">Download transcript</span>
           </button>
           {dlOpen ? (
             <ul

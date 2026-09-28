@@ -42,37 +42,45 @@ export function CourseCompleteModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-md overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page p-6 text-center shadow-xl"
+        className="relative w-full max-w-[440px] overflow-hidden rounded-2xl border border-sko-border-subtle bg-sko-bg-page text-center shadow-xl"
       >
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
-        >
-          <Icon icon={X} size={20} />
-        </button>
+        {/* Close row: DS pt 16 / pr 16, right-aligned, 60 high (16 + 44). */}
+        <div className="flex justify-end pr-4 pt-4">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-sko-text-subtle hover:bg-sko-bg-subtle"
+          >
+            <Icon icon={X} size={24} />
+          </button>
+        </div>
 
-        <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-sko-bg-success text-sko-text-on-media">
-          <Icon icon={Check} size={28} strokeWidth={2.5} />
-        </span>
-        <h2 id={titleId} className="sk-text-display-xs-semibold mt-4 text-sko-text-default">
-          Course complete!
-        </h2>
-        <p className="sk-text-sm-regular mt-2 text-sko-text-muted">
-          You&rsquo;ve completed <span className="text-sko-text-default">{courseTitle}</span>. Grab
-          your certificate, jump to the next one, or head back.
-        </p>
+        {/* Content: DS padding 4/32/24/32, gap 12, centred. */}
+        <div className="flex flex-col items-center gap-3 px-8 pb-6 pt-1">
+          <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-success text-sko-icon-on-media">
+            <Icon icon={Check} size={32} strokeWidth={1.5} absoluteStrokeWidth />
+          </span>
+          <h2 id={titleId} className="sk-text-display-xs-semibold text-sko-text-default">
+            Course complete!
+          </h2>
+          <p className="sk-text-sm-regular text-sko-text-muted">
+            You&rsquo;ve completed <span className="text-sko-text-default">{courseTitle}</span>. Grab
+            your certificate, jump to the next one, or head back.
+          </p>
+        </div>
 
-        <div className="mt-6 flex flex-col gap-2">
-          <Button variant="primary" size="lg" onClick={onNextCourse}>
+        {/* Actions: DS padding 16/24/24/24, gap 8; all three are Size=md. */}
+        <div className="flex flex-col gap-2 px-6 pb-6 pt-4">
+          <Button variant="primary" size="md" onClick={onNextCourse}>
             Go to next course
           </Button>
-          <Button variant="secondary" size="lg" onClick={onViewCertificate}>
+          <Button variant="secondary" size="md" onClick={onViewCertificate}>
             View certificate
           </Button>
-          <Button variant="tertiary" size="md" onClick={onBackToCourse ?? onClose}>
-            Back to course page
+          {/* Legacy DS Tertiary = neutral outline (border/default, text/subtle). */}
+          <Button variant="neutral" size="md" onClick={onBackToCourse ?? onClose}>
+            ← Back to course page
           </Button>
         </div>
       </div>

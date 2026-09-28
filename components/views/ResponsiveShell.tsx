@@ -8,7 +8,8 @@ const FRAME_WIDTH: Record<DeviceMode, number | null> = {
   auto: null,
   desktop: null,
   tablet: 834,
-  mobile: 390,
+  // DS mobile canvas: the Mobile topbar variant is 375 wide.
+  mobile: 375,
 };
 
 /**

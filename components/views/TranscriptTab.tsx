@@ -7,6 +7,7 @@ import { Button } from "@/components/atoms/Button";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { useLmsStore } from "@/lib/store";
+import { useBreakpoint } from "@/lib/useBreakpoint";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
 import { tsToSeconds } from "@/lib/utils";
@@ -28,6 +29,8 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
   const showToast = useLmsStore((s) => s.showToast);
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
+  // DS Transcript Line `Device` variant: mobile stacks the active line's note pill.
+  const lineDevice = useBreakpoint() === "mobile" ? "mobile" : "desktop";
 
   // Auto-follow the active line; pause when the user scrolls manually.
   const [following, setFollowing] = React.useState(true);
@@ -114,7 +117,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             <ChevronDown
               size={14}
               strokeWidth={1.5}
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-text-subtle"
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-icon-subtle"
             />
           </span>
         </label>
@@ -127,10 +130,11 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 : transcript[0]?.id,
             })
           }
-          className="sk-text-sm-semibold inline-flex items-center gap-1 text-sko-text-primary hover:underline"
+          // DS Link Button_def, Type=Brand · Hierarchy=Primary · md.
+          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
-          <Icon icon={Plus} size={16} />
-          Add Note
+          <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
+          <span className="px-0.5">Add Note</span>
         </button>
       </div>
 
@@ -150,6 +154,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 text={line.text}
                 active={line.id === activeLineId}
                 hasNote={hasNote}
+                device={lineDevice}
                 onSeek={() => {
                   seekVideoTo(tsToSeconds(line.ts), line.id);
                   track("transcript_line_click", { lineId: line.id, newTs: line.ts });

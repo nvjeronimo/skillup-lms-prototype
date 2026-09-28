@@ -50,7 +50,8 @@ export function ModuleInfo({
               {topicsCompleted} of {topicsTotal}
             </span>
             {isCompleted ? (
-              <Check size={14} strokeWidth={2} className="text-sko-text-success" aria-hidden />
+              // DS completed-check: 1.5px `icon/success` stroke at 14px (absolute, not scaled).
+              <Check size={14} strokeWidth={1.5} absoluteStrokeWidth className="text-sko-icon-success" aria-hidden />
             ) : null}
           </span>
         </>

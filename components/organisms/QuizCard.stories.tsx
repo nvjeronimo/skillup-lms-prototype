@@ -62,6 +62,14 @@ export const Saved: Story = {
   },
 };
 
+/** One attempt left on a final submit: the card warns before the answer is locked in. */
+export const LastAttempt: Story = {
+  args: {
+    state: "Last attempt",
+    footer: { submitEnabled: true, showHint: true, showSave: true, saved: true, showAnswer: true, showReset: true, showAttempts: true, attemptsUsed: 1, maxAttempts: 2 },
+  },
+};
+
 /** Submitted and correct — Submit disabled, and Reset is never offered here. */
 export const Correct: Story = {
   args: { state: "Correct", footer: { showAnswer: true, showReview: true } },
@@ -99,6 +107,17 @@ export const AnswerRevealed: Story = {
 /** `show_correctness: never` — submitted, and the result is masked. */
 export const ResultsWithheld: Story = {
   args: { state: "Results withheld", footer: { showReview: true } },
+};
+
+/** `Show state-check-icon` off: no ✓, no ✗ and no "Un-selected is correct" note. */
+export const NoStateIcon: Story = {
+  args: {
+    state: "Answer revealed",
+    multiSelect: true,
+    selectedIds: ["b"],
+    showStateIcon: false,
+    footer: { showReview: true },
+  },
 };
 
 /** Attempts spent: the counter reads N of N, Submit is dead and Reset is gone. */

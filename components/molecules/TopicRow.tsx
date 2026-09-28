@@ -23,12 +23,13 @@ export interface TopicRowProps {
 }
 
 /**
- * The Open row's 4px brand rule. In the DS it is an inside stroke, so it sits
- * over the padding instead of pushing the content — an absolutely positioned
- * bar reproduces that exactly (12px content inset in both states).
+ * The Open row's 4px brand rule. In the DS it is an inside left stroke bound to
+ * `border/primary`, so it sits over the padding instead of pushing the content —
+ * an absolutely positioned bar in the same token reproduces that exactly (12px
+ * content inset in both states).
  */
 function ActiveRule() {
-  return <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-sko-bg-primary" />;
+  return <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-sko-border-primary" />;
 }
 
 /**
@@ -85,10 +86,9 @@ export function TopicRow({
         aria-current={active ? "true" : undefined}
         className="flex min-w-0 flex-1 items-start gap-2 text-left"
       >
-        {/* 18px dot against a 20px title line: 1px down keeps it optically centred. */}
-        <span className="mt-px">
-          <CompletionStatus state={status} size={18} />
-        </span>
+        {/* DS: the 18px status sits flush with the top padding, level with the
+            content column (row counter-axis alignment is MIN). */}
+        <CompletionStatus state={status} size={18} />
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           {/* The topic title is text-primary in every state — it does not change
               colour when active or locked. */}

@@ -24,10 +24,10 @@ export interface ContentTabsProps {
   className?: string;
 }
 
-/** Count pill — bg-brand-section + text-brand-secondary, per DS (all tab states). */
+/** Count pill (DS Mobile Tab Select › Count badge): bg/primary-soft + text/primary in every row. */
 function CountBadge({ n }: { n: number }) {
   return (
-    <span className="sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-primary-soft px-1 text-sko-text-primary">
+    <span className="sk-text-xs-medium inline-flex items-center rounded-full bg-sko-bg-primary-soft px-2 py-0.5 text-sko-text-primary">
       {n}
     </span>
   );
@@ -138,7 +138,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
       <div
         role="tablist"
         aria-label="Content"
-        className="flex items-center gap-1 overflow-x-auto overflow-y-hidden"
+        className="flex items-center gap-3 overflow-x-auto overflow-y-hidden"
       >
         {tabs.map((tab) => {
           const isActive = tab.slug === active;
@@ -149,7 +149,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               role="tab"
               aria-selected={isActive}
               className={cn(
-                "sk-text-sm-semibold relative flex shrink-0 items-center gap-1.5 px-4 py-2.5 transition-colors",
+                "sk-text-sm-semibold relative flex shrink-0 items-center gap-2 px-1 pb-3 pt-0 transition-colors",
                 isActive
                   ? "text-sko-text-primary"
                   : "text-sko-text-subtle hover:text-sko-text-default",
@@ -159,10 +159,11 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               {typeof tab.count === "number" ? (
                 <span
                   className={cn(
-                    "sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
+                    // DS Badge v2 Soft sm: Brand on the current tab, Gray on the others.
+                    "sk-text-xs-medium inline-flex items-center rounded-full px-2 py-0.5",
                     isActive
                       ? "bg-sko-bg-primary-soft text-sko-text-primary"
-                      : "bg-sko-bg-subtle text-sko-text-muted",
+                      : "bg-sko-bg-faint text-sko-text-muted",
                   )}
                 >
                   {tab.count}

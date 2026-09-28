@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Play, Maximize2, AlertTriangle, RotateCcw, Loader2 } from "lucide-react";
-import { Icon } from "@/lib/icons";
+import { Maximize2, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
@@ -53,27 +52,30 @@ export function ScormContainer({
         ) : null}
       </div>
 
+      {/* DS LMS / Activity · SCORM Frame (20328:3488): centred column, p 0/40,
+          gap 8, r12, shadow-card, no icon in any state. Title body-large/Bold
+          (semibold until .sk-text-md-bold exists, CT-22), description
+          body-medium/Regular, both in the state's colour. */}
       <div
         className={cn(
-          "flex aspect-video max-h-[52vh] w-full flex-col items-center justify-center gap-3 rounded-xl border px-6 text-center",
+          "flex aspect-video max-h-[52vh] w-full flex-col items-center justify-center gap-2 rounded-xl border px-10 text-center shadow-sk-card",
           state === "error"
             ? "border-sko-border-error bg-sko-bg-error-soft"
             : "border-sko-border-subtle bg-sko-bg-subtle",
         )}
         role="group"
         aria-label={title}
+        aria-busy={state === "loading" || undefined}
       >
         {state === "loading" ? (
           <>
-            <Icon icon={Loader2} size={24} className="animate-spin text-sko-text-primary" />
-            <span className="sk-text-sm-medium text-sko-text-muted">Loading activity…</span>
-            <span className="sk-text-xs-regular text-sko-text-subtle">
+            <span className="sk-text-md-semibold text-sko-text-muted">Loading activity…</span>
+            <span className="sk-text-sm-regular text-sko-text-muted">
               Interactive packages can take a few seconds to start.
             </span>
           </>
         ) : state === "error" ? (
           <>
-            <Icon icon={AlertTriangle} size={24} className="text-sko-text-error" />
             <span className="sk-text-md-semibold text-sko-text-error">
               This activity couldn&rsquo;t load
             </span>
@@ -81,38 +83,38 @@ export function ScormContainer({
               Our activity server didn&rsquo;t respond. Your progress elsewhere is safe. This
               activity is ungraded.
             </span>
-            <div className="flex flex-wrap justify-center gap-2 pt-1">
-              <Button variant="primary" size="sm" leftIcon={RotateCcw} onClick={onRetry}>
+            <div className="flex flex-wrap justify-center gap-2 pt-2">
+              <Button variant="primary" size="md" leftIcon={RotateCcw} onClick={onRetry}>
                 Try again
               </Button>
-              <Button variant="secondary" size="sm" onClick={onSkip}>
+              <Button variant="secondary" size="md" onClick={onSkip}>
                 Skip for now
               </Button>
             </div>
           </>
         ) : state === "ready" ? (
           <>
-            <Icon icon={Play} size={26} className="text-sko-text-primary" />
-            <span className="sk-text-sm-medium text-sko-text-muted">
+            <span className="sk-text-md-semibold text-sko-text-muted">
               Activity running. Interact in the frame above
             </span>
-            <span className="sk-text-xs-regular text-sko-text-subtle">
+            <span className="sk-text-sm-regular text-sko-text-muted">
               Your progress and score are saved automatically and resume next time.
             </span>
           </>
         ) : (
           <>
-            <Icon icon={Play} size={26} className="text-sko-text-primary" />
             <span className="sk-text-md-semibold text-sko-text-default">{title}</span>
             {packageLabel ? (
-              <span className="sk-text-xs-regular text-sko-text-subtle">
+              <span className="sk-text-sm-regular text-sko-text-default">
                 {packageLabel}
                 {packageSizeLabel ? ` · ${packageSizeLabel}` : ""}
               </span>
             ) : null}
-            <Button variant="primary" onClick={onLaunch}>
-              Start activity
-            </Button>
+            <div className="flex justify-center gap-2 pt-2">
+              <Button variant="primary" size="md" onClick={onLaunch}>
+                Start activity
+              </Button>
+            </div>
           </>
         )}
       </div>

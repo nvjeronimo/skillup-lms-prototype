@@ -46,7 +46,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-/** A labelled on/off row rendered as an accessible switch. */
+/**
+ * A labelled on/off row rendered as an accessible switch. Mirrors the DS Toggle
+ * (1102:4208) Type=Default, Size=sm, Text=True: a 36×20 track (padding 2) with a
+ * 16px knob, gap 8 to the label, top-aligned.
+ */
 function ToggleRow({
   label,
   hint,
@@ -64,22 +68,30 @@ function ToggleRow({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-center gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
+      className="flex w-full items-start gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
     >
+      {/* Track: bg/primary on, bg/muted off; the knob sits right when on. */}
       <span
         aria-hidden
         className={cn(
-          "inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
-          checked
-            ? "border-sko-border-primary bg-sko-bg-primary text-sko-text-on-primary"
-            : "border-sko-border-default text-transparent",
+          "inline-flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors",
+          checked ? "justify-end bg-sko-bg-primary" : "justify-start bg-sko-bg-muted",
         )}
       >
-        <Icon icon={Check} size={12} />
+        {/* Knob: 16px, Elevation/level2 (= Tailwind `shadow`). */}
+        <span
+          className={cn(
+            "size-4 rounded-full shadow",
+            checked
+              ? // token-lint-disable-next-line DS toggle knob binds icon/on-primary
+                "bg-sko-icon-on-primary"
+              : "bg-sko-bg-on-media",
+          )}
+        />
       </span>
       <span className="flex flex-col">
         <span className="sk-text-sm-medium text-sko-text-muted">{label}</span>
-        {hint ? <span className="sk-text-xs-regular text-sko-text-subtle">{hint}</span> : null}
+        {hint ? <span className="sk-text-sm-regular text-sko-text-subtle">{hint}</span> : null}
       </span>
     </button>
   );
@@ -165,17 +177,15 @@ export function DemoControlsMenu({
         onClick={() => setOpen((o) => !o)}
         className={cn(
           "flex items-center hover:bg-sko-bg-subtle",
-          // DS topbar Mobile: a bare 24px round avatar; Desktop keeps avatar + name.
+          // DS topbar: Mobile is a bare 24px round avatar; Desktop/Tablet is the
+          // "Avatar label group" Size=sm (Avatar xs + gap 8 + name). The p-1
+          // rounded-lg hover wrapper is a prototype affordance.
           compact ? "rounded-full" : "ml-1 gap-2 rounded-lg p-1",
         )}
       >
-        {compact ? (
-          <Avatar name={userName} src={userAvatarUrl} size="xs" />
-        ) : (
-          <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
-        )}
+        <Avatar name={userName} src={userAvatarUrl} size="xs" />
         {!compact ? (
-          <span className="sk-text-sm-medium pr-1 text-sko-text-default">{userName}</span>
+          <span className="sk-text-sm-semibold pr-1 text-sko-text-default">{userName}</span>
         ) : null}
       </button>
 
@@ -185,7 +195,7 @@ export function DemoControlsMenu({
           className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
         >
           <div className="flex items-center gap-2.5 px-4 py-3">
-            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
+            <Avatar name={userName} src={userAvatarUrl} size="sm" />
             <div className="min-w-0">
               <p className="sk-text-sm-semibold truncate text-sko-text-default">{userName}</p>
               <p className="sk-text-xs-regular text-sko-text-subtle">Demo preview settings</p>

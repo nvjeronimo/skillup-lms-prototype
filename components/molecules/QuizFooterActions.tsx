@@ -128,9 +128,16 @@ export function ctaFlags(state: QuizQuestionState, ctx: CtaContext): CtaFlags {
 export interface QuizFooterActionsProps extends Partial<CtaFlags> {
   /** Off hides the whole secondary group; the primary action is unaffected. */
   showSecondaryActions?: boolean;
-  /** Off hides Submit — the bucket model has one primary for the whole set. */
+  /**
+   * Off hides the whole Primary action frame — Submit and the attempts line —
+   * as the DS `Show Primary action` does. The bucket model has one primary for
+   * the whole set.
+   */
   showPrimaryAction?: boolean;
-  /** The platform prints no attempts line at all when attempts are unlimited. */
+  /**
+   * DS `Show attempts` (default true). The line still needs both numbers, so
+   * unlimited attempts — which the platform prints nothing for — pass none.
+   */
   showAttempts?: boolean;
   attemptsUsed?: number;
   maxAttempts?: number;
@@ -139,6 +146,10 @@ export interface QuizFooterActionsProps extends Partial<CtaFlags> {
   onSave?: () => void;
   onShowAnswer?: () => void;
   onReset?: () => void;
+  /** Mode B `Next question`. */
+  onNext?: () => void;
+  /** Mode B `Skip question`. */
+  onSkip?: () => void;
   /** Returns focus to the question header, as the platform's review-btn does. */
   reviewTargetId?: string;
   className?: string;
@@ -156,7 +167,7 @@ export function QuizFooterActions({
   showReset = false,
   showReview = false,
   showNext = false,
-  showAttempts = false,
+  showAttempts = true,
   attemptsUsed,
   maxAttempts,
   onSubmit,
@@ -164,16 +175,35 @@ export function QuizFooterActions({
   onSave,
   onShowAnswer,
   onReset,
+  onNext,
+  onSkip,
   reviewTargetId,
   className,
 }: QuizFooterActionsProps) {
   const secondary = showSecondaryActions;
 
   return (
-    // Secondary actions sit left, the primary right, with the attempts line
-    // under it — the platform's `.submit-attempt-container`.
-    <div className={cn("flex flex-wrap items-start justify-between gap-3", className)}>
-      <div className="flex flex-wrap items-center gap-3">
+    // Secondary actions sit left, the primary right — bottom-aligned, as the
+    // DS row is (counter-axis MAX). Both rows wrap with an 8px gap.
+    <div className={cn("flex flex-wrap items-end justify-between gap-2", className)}>
+      {/* DS order: Hint, Skip question, Save draft / Draft saved, Show answer,
+          Next question, Reset. Hint, Show answer, Next question and Reset are
+          Link buttons (Link Button_def Brand/Primary); Skip and Save are
+          Secondary. */}
+      <div className="flex flex-wrap items-center gap-2">
+        {secondary && showHint ? (
+          <Button hierarchy="link" size="md" onClick={onHint}>
+            Hint
+          </Button>
+        ) : null}
+
+        {/* Mode B chrome — off in mode A. */}
+        {secondary && showSkip ? (
+          <Button variant="secondary" size="md" onClick={onSkip}>
+            Skip question
+          </Button>
+        ) : null}
+
         {secondary && showSave ? (
           saved ? (
             // A confirmation, not an action.
@@ -187,35 +217,24 @@ export function QuizFooterActions({
           )
         ) : null}
 
-        {secondary && showHint ? (
-          <Button variant="tertiary" size="md" onClick={onHint}>
-            Hint
+        {secondary && showAnswer ? (
+          <Button hierarchy="link" size="md" onClick={onShowAnswer}>
+            Show answer
           </Button>
         ) : null}
 
-        {secondary && showAnswer ? (
-          <Button variant="tertiary" size="md" onClick={onShowAnswer}>
-            Show answer
+        {/* Mode B chrome — off in mode A. */}
+        {secondary && showNext ? (
+          <Button hierarchy="link" size="md" onClick={onNext}>
+            Next question
           </Button>
         ) : null}
 
         {/* Reset deletes the answer and publishes a zero without refunding the
             attempt. Never relabel it: "Try again" would hide that cost. */}
         {secondary && showReset ? (
-          <Button variant="tertiary" size="md" onClick={onReset}>
+          <Button hierarchy="link" size="md" onClick={onReset}>
             Reset
-          </Button>
-        ) : null}
-
-        {/* Mode B chrome — off in mode A. */}
-        {secondary && showNext ? (
-          <Button variant="tertiary" size="md">
-            Next question
-          </Button>
-        ) : null}
-        {secondary && showSkip ? (
-          <Button variant="tertiary" size="md">
-            Skip question
           </Button>
         ) : null}
 
@@ -235,23 +254,25 @@ export function QuizFooterActions({
         ) : null}
       </div>
 
-      <div className="flex flex-col items-end gap-1">
-        {/* The label is always "Submit". edX toggles `disabled` and nothing
-            else — there is no Submitted, no Try again, in any state. */}
-        {showPrimaryAction ? (
+      {/* DS `Primary action`: one row, the attempts line to the LEFT of
+          Submit. `Show Primary action` hides the whole frame, line included. */}
+      {showPrimaryAction ? (
+        <div className="flex items-center justify-end gap-2">
+          {/* Unlimited attempts print no line at all — that is the platform's
+              behaviour, not a hidden count. */}
+          {showAttempts && typeof attemptsUsed === "number" && typeof maxAttempts === "number" ? (
+            <span className="sk-text-xs-medium text-sko-text-subtle">
+              You have used {attemptsUsed} of {maxAttempts} attempt{maxAttempts === 1 ? "" : "s"}
+            </span>
+          ) : null}
+
+          {/* The label is always "Submit". edX toggles `disabled` and nothing
+              else — there is no Submitted, no Try again, in any state. */}
           <Button variant="primary" size="md" disabled={!submitEnabled} onClick={onSubmit}>
             Submit
           </Button>
-        ) : null}
-
-        {/* Unlimited attempts print no line at all — that is the platform's
-            behaviour, not a hidden count. */}
-        {showAttempts && typeof attemptsUsed === "number" && typeof maxAttempts === "number" ? (
-          <span className="sk-text-xs-regular text-sko-text-subtle">
-            You have used {attemptsUsed} of {maxAttempts} attempt{maxAttempts === 1 ? "" : "s"}
-          </span>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 }

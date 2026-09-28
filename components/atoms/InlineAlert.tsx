@@ -35,6 +35,11 @@ export interface InlineAlertProps {
    */
   title: string;
   description?: string;
+  /**
+   * DS `alert-secundary-text` (`Show secondary-text`): a second muted line
+   * under the description. Info, Success, Warning and Error only.
+   */
+  secondary?: string;
   /** Hint's "Next Hint" control, rendered under the text. */
   action?: React.ReactNode;
   /**
@@ -55,17 +60,17 @@ const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
   success: {
     box: "border-t-2 border-sko-border-success bg-sko-bg-faint p-4",
     icon: CheckCircle2,
-    fg: "text-sko-text-success",
+    fg: "text-sko-icon-success",
   },
   warning: {
     box: "border-t-2 border-sko-border-warning bg-sko-bg-faint p-4",
     icon: AlertCircle,
-    fg: "text-sko-text-warning",
+    fg: "text-sko-icon-warning",
   },
   error: {
     box: "border-t-2 border-sko-border-error bg-sko-bg-faint p-4",
     icon: XCircle,
-    fg: "text-sko-text-error",
+    fg: "text-sko-icon-error",
   },
   hint: {
     box: "rounded-lg bg-sko-bg-primary-soft p-4",
@@ -75,7 +80,7 @@ const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
   answer: {
     box: "rounded-lg border-t-2 border-sko-border-default bg-sko-bg-subtle p-4",
     icon: KeyRound,
-    fg: "text-sko-text-muted",
+    fg: "text-sko-icon-muted",
   },
 };
 
@@ -83,6 +88,7 @@ export function InlineAlert({
   tone = "info",
   title,
   description,
+  secondary,
   action,
   children,
   onDismiss,
@@ -94,11 +100,11 @@ export function InlineAlert({
 
   return (
     <div role="status" className={cn("flex items-start gap-3", t.box, className)}>
-      <Icon icon={t.icon} size={18} className={cn("mt-0.5 shrink-0", t.fg)} />
+      <Icon icon={t.icon} size={20} className={cn("shrink-0", t.fg)} />
 
       <div className="min-w-0 flex-1">
         {children ?? (inlineTitle ? (
-          <p className="sk-text-sm-regular text-sko-text-muted">
+          <p className="sk-text-sm-regular text-sko-text-default">
             <span className="sk-text-sm-semibold text-sko-text-default">{title} </span>
             {description}
           </p>
@@ -108,9 +114,13 @@ export function InlineAlert({
             {description ? (
               <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">{description}</p>
             ) : null}
+            {secondary ? (
+              <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">{secondary}</p>
+            ) : null}
           </>
         ))}
-        {action ? <div className="mt-2">{action}</div> : null}
+        {/* DS Copy gap is 2 with a 4px-padded Link button; a bare button needs 6. */}
+        {action ? <div className="mt-1.5">{action}</div> : null}
       </div>
 
       {onDismiss ? (

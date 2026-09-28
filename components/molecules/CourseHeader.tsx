@@ -7,7 +7,8 @@ export interface CourseHeaderProps {
   eyebrow?: string;
   title: string;
   /** DS `Partner: Name` line under the course name — one or more partner names,
-   *  Caption/Medium in text-primary, joined with a middle dot. */
+   *  body-small/Medium in `text/muted` (DS Provider-Partner Badge label), joined
+   *  with a middle dot. */
   partners?: Partner[];
   /** Legacy single-name form; equivalent to `partners=[{ name }]`. */
   partner?: string;
@@ -73,7 +74,7 @@ export function CourseHeader({
         </div>
         <p className="sk-text-lg-semibold text-sko-text-default">{title}</p>
         {partnerList.length ? (
-          <p className="sk-text-xs-medium text-sko-text-default">
+          <p className="sk-text-xs-medium text-sko-text-muted">
             {partnerList.map((p) => p.name).join(" · ")}
           </p>
         ) : null}

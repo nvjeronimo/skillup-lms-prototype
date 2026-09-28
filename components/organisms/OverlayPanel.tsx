@@ -105,7 +105,8 @@ export function OverlayPanel({
               <button
                 type="button"
                 onClick={headerAction.onClick}
-                className="sk-text-sm-medium text-sko-text-primary"
+                // DS Link Button_def Brand/Primary (text-only: px-1 = structure 2 + label 2).
+                className="sk-text-sm-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
               >
                 {headerAction.label}
               </button>
@@ -115,7 +116,7 @@ export function OverlayPanel({
               type="button"
               onClick={onClose}
               aria-label="Close panel"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-icon-subtle hover:bg-sko-bg-subtle"
             >
               <Icon icon={X} size={20} />
             </button>
@@ -140,7 +141,7 @@ export function OverlayPanel({
 
         {footer ? (
           <footer className="border-t border-sko-border-subtle px-6 py-4 text-center">
-            <a href={footer.href} className="sk-text-sm-medium text-sko-text-primary">
+            <a href={footer.href} className="sk-text-sm-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint">
               {footer.label}
             </a>
           </footer>

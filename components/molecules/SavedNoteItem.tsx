@@ -33,7 +33,7 @@ export function SavedNoteItem({
         </span>
         <span className="sk-text-xs-regular shrink-0 text-sko-text-subtle">{savedAt}</span>
       </span>
-      <span className="sk-text-sm-italic mt-2 block border-l-[3px] border-sko-border-primary pl-3 text-sko-text-subtle">
+      <span className="sk-text-sm-regular mt-2 block border-l-[3px] border-sko-border-primary py-1.5 pl-3 text-sko-text-subtle">
         {anchorQuote}
       </span>
       <span className="sk-text-sm-medium mt-2 block text-sko-text-default">{text}</span>
@@ -42,7 +42,7 @@ export function SavedNoteItem({
           {tags.map((t) => (
             <span
               key={t}
-              className="sk-text-xs-medium rounded bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
+              className="sk-text-xs-medium rounded-full bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
             >
               #{t}
             </span>

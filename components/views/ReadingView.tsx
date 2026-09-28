@@ -24,22 +24,22 @@ export function ReadingView({ topicId }: { topicId: string }) {
         </section>
       ))}
 
-      <blockquote className="border-l-[3px] border-sko-border-primary bg-sko-bg-primary-soft px-5 py-4">
-        <p className="sk-text-lg-medium italic text-sko-text-default">“{article.pullQuote.text}”</p>
-        <footer className="sk-text-sm-regular mt-2 text-sko-text-subtle">
+      {/* DS Lesson Block Kind=HTML (Blockquote), 21354:6807. */}
+      <blockquote className="flex flex-col gap-1.5 rounded-lg border-l-4 border-sko-border-primary bg-sko-bg-primary-soft px-5 py-[18px]">
+        <p className="sk-text-md-medium text-sko-text-primary">“{article.pullQuote.text}”</p>
+        <footer className="sk-text-sm-regular text-sko-text-primary">
           {article.pullQuote.attribution}
         </footer>
       </blockquote>
 
-      <section className="rounded-xl border border-sko-border-subtle bg-sko-bg-subtle p-5">
-        <p className="sk-text-2xs-medium mb-3 text-sko-text-subtle">Key takeaways</p>
-        <ul className="flex flex-col gap-2">
+      {/* DS Lesson Block Kind=HTML (Key Takeaways), 21354:6808. */}
+      <section className="flex flex-col gap-3 rounded-xl bg-sko-bg-muted px-6 py-[22px]">
+        <p className="sk-text-xs-medium uppercase text-sko-text-subtle">Key takeaways</p>
+        <ul className="flex flex-col gap-3">
           {article.takeaways.map((t, i) => (
-            <li key={i} className="flex gap-2">
-              <span className="sk-text-xs-semibold mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
-                {i + 1}
-              </span>
-              <span className="sk-text-sm-regular text-sko-text-default">{t}</span>
+            <li key={i} className="flex gap-3.5">
+              <span className="sk-text-sm-semibold w-4 shrink-0 text-sko-text-primary">{i + 1}</span>
+              <span className="sk-text-md-medium text-sko-text-default">{t}</span>
             </li>
           ))}
         </ul>

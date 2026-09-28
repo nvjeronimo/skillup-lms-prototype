@@ -13,6 +13,7 @@ export interface CourseCardProps {
   difficulty: Difficulty;
   deliveryMode: DeliveryMode;
   progressPct: number;
+  /** Right-hand label of the progress row (DS "Time-Left", e.g. "3h 20m left"). */
   estimation: string;
   initials: string;
   upNext?: { type: TopicType; title: string };
@@ -20,7 +21,14 @@ export interface CourseCardProps {
   className?: string;
 }
 
-/** My Learning dashboard row. One per enrolled course. */
+/**
+ * My Learning dashboard row. One per enrolled course.
+ *
+ * Matches DS `LMS / Course Card` Layout=List (20888:6124) from xl up: thumb,
+ * titles, progress and up-next are direct children of one row (padding 16,
+ * gap 24). The List layout is 1200 wide in the DS and does not fit narrower
+ * containers, so below xl the same blocks stack.
+ */
 export function CourseCard({
   title,
   provider,
@@ -37,36 +45,60 @@ export function CourseCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-4 md:flex-row md:items-center",
+        "flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-4 xl:flex-row xl:items-center xl:gap-6",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 gap-4">
-        <span className="sk-text-display-xs-semibold inline-flex h-[100px] w-[100px] shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary text-sko-text-on-primary">
+      <div className="flex min-w-0 flex-1 gap-4 xl:gap-6">
+        {/* DS thumb: bg/primary-soft, Initials text/primary. List 79px (Grid 86px). */}
+        <span className="sk-text-display-xs-semibold inline-flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary-soft text-sko-text-primary">
           {initials}
         </span>
-        <div className="min-w-0 flex-1">
+        {/* DS titles: vertical, gap 2 — Course Type badge, Title, Meta-Row. */}
+        <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value={courseType} />
-          <div className="mt-1.5 flex flex-wrap items-center gap-2">
-            <h3 className="sk-text-md-semibold text-sko-text-default">{title}</h3>
+          <h3 className="sk-text-md-semibold text-sko-text-default">{title}</h3>
+          {/* DS Meta-Row: gap 16 — Provider badge, then badges (gap 8). */}
+          <div className="flex flex-wrap items-center gap-4">
             <ProviderBadge value={provider} />
+            <div className="flex items-center gap-2">
+              <DifficultyBadge value={difficulty} />
+              <DeliveryModeBadge value={deliveryMode} />
+            </div>
           </div>
-          <div className="mt-2 flex flex-wrap items-center gap-4">
-            <DifficultyBadge value={difficulty} />
-            <DeliveryModeBadge value={deliveryMode} />
-          </div>
-          <p className="sk-text-sm-regular mt-2 text-sko-text-subtle">
-            {progressPct}% complete · Estimated completion: {estimation}
-          </p>
+        </div>
+      </div>
+
+      {/* DS progress: own column, 280 wide in List (gap 6); gap 8 when stacked. */}
+      <div className="flex flex-col gap-2 xl:w-[280px] xl:shrink-0 xl:gap-1.5">
+        <div className="flex items-center justify-between">
+          <span className="sk-text-md-semibold text-sko-text-default">{progressPct}% complete</span>
+          <span className="sk-text-sm-regular text-sko-text-subtle">{estimation}</span>
+        </div>
+        <div
+          role="progressbar"
+          aria-label={`${title} progress`}
+          aria-valuenow={progressPct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          className="h-2 overflow-hidden rounded-full bg-sko-bg-muted"
+        >
+          {/* DS rule: progress bars fill with bg/info. */}
+          <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${progressPct}%` }} />
         </div>
       </div>
 
       {upNext ? (
-        <div className="flex flex-col gap-2 rounded-lg bg-sko-bg-subtle p-4 md:w-72">
-          <span className="sk-text-2xs-medium text-sko-text-primary">Up next</span>
-          <span className="sk-text-sm-medium text-sko-text-default">{upNext.title}</span>
-          <TopicTypeBadge type={upNext.type} />
-          <Button variant="primary" size="sm" onClick={onResume} className="mt-1 self-start">
+        /* DS up-next: horizontal, centred, padding 8/12, gap 16, radius 8, bg/subtle. */
+        <div className="flex min-w-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2 xl:max-w-[320px]">
+          {/* DS Next-Content: vertical, gap 6 — Overline, Next-Title (1 line), Topic-Types badge. */}
+          <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
+            <span className="sk-text-2xs-semibold text-sko-text-subtle">Up next</span>
+            <span className="sk-text-sm-medium w-full truncate text-sko-text-default">{upNext.title}</span>
+            <TopicTypeBadge type={upNext.type} />
+          </div>
+          {/* DS cta-slot (List): Buttons/Button Size=lg, Hierarchy=Secondary. */}
+          <Button variant="secondary" size="lg" onClick={onResume} className="shrink-0">
             Resume
           </Button>
         </div>

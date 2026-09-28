@@ -51,10 +51,11 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
             track("download_file", { fileId: "all", type: "ZIP" });
             showToast(`Downloading ${files.length} resources…`);
           }}
-          className="sk-text-sm-medium inline-flex items-center gap-1.5 text-sko-text-primary hover:underline"
+          // DS Link Button_def Type=Brand, Hierarchy=Primary: 1px icon/primary underline, bg/faint on hover.
+          className="sk-text-sm-semibold inline-flex items-center gap-1 border-b border-sko-icon-primary px-0.5 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
         >
-          <Icon icon={Download} size={16} />
-          Download all resources
+          <Icon icon={Download} size={16} className="text-sko-icon-primary" />
+          <span className="px-0.5">Download all resources</span>
         </button>
       </div>
     </div>

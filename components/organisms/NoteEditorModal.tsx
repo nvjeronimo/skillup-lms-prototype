@@ -106,7 +106,7 @@ export function NoteEditorModal({
                 Anchored to{" "}
                 <span className="text-sko-text-primary">{anchorTs}</span>
               </p>
-              <p className="sk-text-sm-italic rounded-lg bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
+              <p className="sk-text-sm-regular rounded-lg bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
                 {anchorQuote}
               </p>
             </div>
@@ -132,7 +132,7 @@ export function NoteEditorModal({
               {tags.map((t) => (
                 <span
                   key={t}
-                  className="sk-text-xs-medium inline-flex items-center gap-1 rounded bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
+                  className="sk-text-xs-medium inline-flex items-center gap-1 rounded-full bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
                 >
                   #{t}
                   <button

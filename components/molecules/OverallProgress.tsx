@@ -12,10 +12,12 @@ export interface OverallProgressProps {
 /**
  * 46×46 progress ring with the percentage in its centre. The arc is blue while
  * in progress and turns green once complete (DS `LMS / Progress Circle` ·
- * Completed). Its ends are square (butt), matching the DS ring.
+ * Completed). Its ends are square (butt), matching the DS ring. The DS arc has
+ * innerRadius 0.8 on a 46px ellipse: a 4.6px band from r=18.4 to r=23, so the
+ * stroke is centred on r=20.7.
  */
 function ProgressRing({ pct, className }: { pct: number; className?: string }) {
-  const radius = 18;
+  const radius = 20.7;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (pct / 100) * circumference;
   const complete = pct >= 100;
@@ -29,14 +31,14 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
       aria-label={`${pct}% complete`}
     >
       <svg className="h-[46px] w-[46px] -rotate-90" viewBox="0 0 46 46">
-        <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--color-bg-muted)" strokeWidth="4" />
+        <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--color-bg-muted)" strokeWidth="4.6" />
         <circle
           cx="23"
           cy="23"
           r={radius}
           fill="none"
           stroke={complete ? "var(--color-icon-success-strong)" : "var(--color-bg-info)"}
-          strokeWidth="4"
+          strokeWidth="4.6"
           strokeLinecap="butt"
           strokeDasharray={circumference}
           strokeDashoffset={offset}

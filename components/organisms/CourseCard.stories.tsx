@@ -13,13 +13,13 @@ const meta: Meta<typeof CourseCard> = {
     difficulty: "Intermediate",
     deliveryMode: "Flexible + Live",
     progressPct: 67,
-    estimation: "May 24",
+    estimation: "3h 20m left",
     initials: "AI",
     upNext: { type: "Video", title: "The lifecycle begins long before any code…" },
   },
   decorators: [
     (Story) => (
-      <div className="max-w-4xl">
+      <div className="max-w-[1200px]">
         <Story />
       </div>
     ),

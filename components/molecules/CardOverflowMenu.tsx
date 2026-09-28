@@ -19,7 +19,7 @@ export interface CardOverflowMenuProps {
 }
 
 const DEFAULT_ITEMS: OverflowMenuItem[] = [
-  { label: "Rate course" },
+  { label: "Rate" },
   { label: "Share" },
   { label: "Unenroll", destructive: true },
 ];
@@ -47,7 +47,7 @@ export function CardOverflowMenu({
       {open ? (
         <ul
           role="menu"
-          className="absolute right-0 z-10 mt-1 w-44 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg"
+          className="absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-sk-card"
         >
           {items.map((item) => (
             <li key={item.label} role="none">
@@ -59,7 +59,7 @@ export function CardOverflowMenu({
                   setOpen(false);
                 }}
                 className={cn(
-                  "sk-text-sm-medium block w-full px-3 py-2 text-left hover:bg-sko-bg-subtle",
+                  "sk-text-sm-medium block w-full p-3 text-left hover:bg-sko-bg-subtle",
                   item.destructive ? "text-sko-text-error" : "text-sko-text-default",
                 )}
               >

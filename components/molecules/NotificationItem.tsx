@@ -42,7 +42,7 @@ export function NotificationItem({
 
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={IconCmp} size={18} />
       </span>
 

@@ -18,10 +18,12 @@ export interface CourseProgressionButtonProps {
 /**
  * DS `LMS / Course Progression Button` — the footer's forward step. Navigation
  * only, never the topic's action.
- * - Topic  → Secondary outline "Next" + arrow. Naming the next topic inside the button
+ * - Topic  → Brand/Secondary "Next" + arrow. Naming the next topic inside the button
  *            was tried and parked (TBD, Sep 2026): for now the label is always just "Next".
- * - Module → "MODULE COMPLETE" caption (fg-brand-primary) + Primary "Go to next Module" + arrow.
- * - Course → "COURSE COMPLETE" caption (text-success-primary) + Primary "Go to next Course" + arrow.
+ * - Module → "MODULE COMPLETED" caption (text/primary, body-small/Medium) + Brand/Primary
+ *            "Go to next Module" + arrow.
+ * - Course → "COURSE COMPLETED" caption (text/success) + Success/Primary (bg/success)
+ *            "Go to next Course" + arrow.
  */
 export function CourseProgressionButton({
   milestone = "Topic",
@@ -34,7 +36,7 @@ export function CourseProgressionButton({
   if (milestone === "Topic") {
     return (
       <Button
-        variant="secondary"
+        hierarchy="secondary"
         size={size}
         rightIcon={ArrowRight}
         disabled={disabled}
@@ -53,13 +55,20 @@ export function CourseProgressionButton({
         <span
           className={cn(
             "sk-text-xs-medium shrink-0 uppercase",
-            isCourse ? "text-sko-text-success" : "text-sko-icon-primary",
+            isCourse ? "text-sko-text-success" : "text-sko-text-primary",
           )}
         >
-          {isCourse ? "Course complete" : "Module complete"}
+          {isCourse ? "Course completed" : "Module completed"}
         </span>
       ) : null}
-      <Button variant="primary" size={size} rightIcon={ArrowRight} disabled={disabled} onClick={onClick}>
+      <Button
+        tone={isCourse ? "success" : "brand"}
+        hierarchy="primary"
+        size={size}
+        rightIcon={ArrowRight}
+        disabled={disabled}
+        onClick={onClick}
+      >
         {isCourse ? "Go to next Course" : "Go to next Module"}
       </Button>
     </span>

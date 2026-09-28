@@ -7,8 +7,7 @@ const meta: Meta<typeof ModuleTimeLeft> = {
   tags: ["autodocs"],
   parameters: { layout: "padded" },
   args: {
-    summary: "1 h 20 min remaining",
-    breakdown: [{ label: "3 videos" }, { label: "2 readings" }, { label: "1 quiz" }],
+    segments: ["20 min of videos left", "1h 47m of readings left", "1 graded assignment left"],
   },
 };
 export default meta;
@@ -16,4 +15,4 @@ export default meta;
 type Story = StoryObj<typeof ModuleTimeLeft>;
 
 export const Default: Story = {};
-export const NoBreakdown: Story = { args: { breakdown: [] } };
+export const SingleSegment: Story = { args: { segments: ["20 min of videos left"] } };

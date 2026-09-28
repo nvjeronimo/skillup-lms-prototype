@@ -57,7 +57,7 @@ export function ProgressRail({
                 aria-label={`${itemLabel} ${i + 1}: ${s}`}
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
-                  "flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-medium transition-colors",
+                  "sk-text-xs-medium flex h-7 w-7 items-center justify-center rounded-full border transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   s === "done"
                     ? "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success"

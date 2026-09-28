@@ -173,7 +173,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const showAction = !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
   // in the footer, never in the header — a header CTA invites premature
-  // completion. The header's top-right slot carries the ✓ "Marked as Completed"
+  // completion. The header's top-right slot carries the ✓ "Marked as completed"
   // STATUS badge, and only once the topic is complete (any type).
   const headerStatus = isCompleted ? renderAction() : null;
   // The end-of-content action only belongs at the end of the CONTENT. The

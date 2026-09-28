@@ -38,14 +38,16 @@ export function ThreadItem({
       <Avatar name={author} src={avatarUrl} size="sm" />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="sk-text-sm-semibold text-sko-text-default">{author}</span>
+          <span className="sk-text-sm-medium text-sko-text-default">{author}</span>
           <span className="sk-text-xs-regular text-sko-text-subtle">{timestamp}</span>
         </div>
-        <p className="sk-text-sm-regular mt-1 text-sko-text-muted">{content}</p>
+        <p className="sk-text-sm-regular mt-2 text-sko-text-default">{content}</p>
         <span className="mt-2 flex items-center gap-4">
-          <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sko-text-subtle">
-            <Icon icon={ArrowUp} size={14} />
-            {upvotes}
+          {/* DS `upvote-btn`: a pill. Display-only here, because the whole card is a
+              <button> and interactive elements cannot be nested inside it. */}
+          <span className="inline-flex items-center gap-1 rounded-full border border-sko-border-subtle px-2 py-1">
+            <Icon icon={ArrowUp} size={14} className="text-sko-icon-muted" />
+            <span className="sk-text-xs-medium text-sko-text-default">{upvotes}</span>
           </span>
           <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sko-text-primary">
             <Icon icon={MessageCircle} size={14} />

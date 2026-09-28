@@ -22,7 +22,10 @@ const LANGS = [
   { code: "fr", label: "Français" },
 ];
 
-/** Tab-row controls for the transcript: Language · Download transcript · Add Note. */
+/**
+ * Tab-row controls for the transcript: Language · Download transcript · Add Note.
+ * Download + Add Note are DS Link Button_def (Type=Brand · Hierarchy=Primary · md).
+ */
 export function TranscriptControls({
   showLanguage = true,
   showDownload = true,
@@ -54,7 +57,7 @@ export function TranscriptControls({
             <ChevronDown
               size={14}
               strokeWidth={1.5}
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-text-subtle"
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-icon-subtle"
             />
           </span>
         </label>
@@ -64,10 +67,11 @@ export function TranscriptControls({
         <button
           type="button"
           onClick={onDownload}
-          className="sk-text-sm-medium inline-flex items-center gap-1.5 text-sko-text-primary hover:underline"
+          aria-label="Download transcript"
+          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
-          <Icon icon={Download} size={16} />
-          <span className="hidden md:inline">Download transcript</span>
+          <Icon icon={Download} size={16} className="text-sko-icon-primary" />
+          <span className="hidden px-0.5 md:inline">Download transcript</span>
         </button>
       ) : null}
 
@@ -75,10 +79,10 @@ export function TranscriptControls({
         <button
           type="button"
           onClick={onAddNote}
-          className="sk-text-sm-semibold inline-flex items-center gap-1 text-sko-text-primary hover:underline"
+          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
-          <Icon icon={Plus} size={16} />
-          Add Note
+          <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
+          <span className="px-0.5">Add Note</span>
         </button>
       ) : null}
     </div>

@@ -1,7 +1,8 @@
 /* Storybook canvas baseline — keeps stories visually consistent with the app. */
 body {
   font-family: var(--sk-font-body);
-  color: var(--sk-text-primary);
+  color: var(--color-text-default);
+  background: var(--color-bg-page);
 }
 
 * {

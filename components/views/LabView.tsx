@@ -1,21 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { Download, FileText, Table2, NotebookPen, Check, TerminalSquare } from "lucide-react";
-import { Icon } from "@/lib/icons";
+import { Download, Check, TerminalSquare } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { FileTypeChip, fileExtension } from "@/components/views/LessonBlocks";
 import { getLab } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
-
-const FILE_ICON = {
-  notebook: NotebookPen,
-  pdf: FileText,
-  data: Table2,
-} as const;
 
 /**
  * Lab — a notebook the learner downloads and runs offline. Distinct from an
@@ -47,8 +41,9 @@ export function LabView({ topicId }: { topicId: string }) {
       <p className="sk-text-md-regular text-sko-text-muted">{lab.intro}</p>
 
       {/* Prerequisites — surfaced before the download so nobody gets stuck. */}
-      <section className="flex flex-col gap-2 rounded-xl border border-sko-border-subtle bg-sko-bg-subtle p-4">
-        <span className="sk-text-2xs-medium uppercase tracking-wide text-sko-text-subtle">
+      {/* DS LMS / Lab · Prerequisites (20328:3331): p16, gap 8, r10. */}
+      <section className="flex flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-subtle p-4">
+        <span className="sk-text-xs-medium uppercase text-sko-text-subtle">
           Before you start
         </span>
         <ul className="sk-text-sm-regular list-disc pl-5 text-sko-text-muted">
@@ -80,21 +75,19 @@ export function LabView({ topicId }: { topicId: string }) {
             const got = downloaded.has(f.name);
             return (
               <li key={f.name}>
+                {/* DS LMS / Lab · File Row (20328:3330): p 8/12, file-type chip, meta gap 2. */}
                 <div
                   className={cn(
-                    "flex flex-wrap items-center justify-between gap-3 rounded-lg border p-3",
+                    "flex flex-wrap items-center justify-between gap-3 rounded-lg border px-3 py-2",
                     got
                       ? "border-sko-border-success bg-sko-bg-success-soft"
                       : "border-sko-border-subtle bg-sko-bg-page",
                   )}
                 >
                   <div className="flex min-w-0 items-center gap-3">
-                    <Icon
-                      icon={FILE_ICON[f.kind]}
-                      size={18}
-                      className={got ? "text-sko-text-success" : "text-sko-text-primary"}
-                    />
-                    <div className="flex min-w-0 flex-col">
+                    <FileTypeChip label={fileExtension(f.name, f.kind)} tone={got ? "success" : "subtle"} />
+                    <div className="flex min-w-0 flex-col gap-0.5">
+                      {/* DS body-medium/Bold — semibold until .sk-text-sm-bold exists (CT-22). */}
                       <span className="sk-text-sm-semibold truncate text-sko-text-default">
                         {f.name}
                       </span>
@@ -125,7 +118,9 @@ export function LabView({ topicId }: { topicId: string }) {
         <ol className="flex flex-col gap-2">
           {lab.steps.map((s, i) => (
             <li key={i} className="flex gap-3">
-              <span className="sk-text-xs-semibold mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
+              {/* DS LMS / Numbered Step (20328:3297): 22px circle, body-small/Bold
+                  (semibold until .sk-text-xs-bold exists, CT-22). */}
+              <span className="sk-text-xs-semibold inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
                 {i + 1}
               </span>
               <span className="sk-text-sm-regular text-sko-text-muted">{s}</span>
