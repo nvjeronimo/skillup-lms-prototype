@@ -409,14 +409,16 @@ export function VideoPlayer({
 
           <ActionButton
             kind="label"
-            label="Playback speed"
+            // Name contains the visible "1×" (WCAG 2.5.3 label in name).
+            label={`Playback speed, ${SPEEDS[speedIdx]}×`}
+            tooltip="Playback speed"
             onClick={() => setSpeedIdx((i) => (i + 1) % SPEEDS.length)}
           >
             {SPEEDS[speedIdx]}×
           </ActionButton>
           <ActionButton
             kind="label"
-            label="Toggle captions"
+            label="CC, subtitles"
             tooltip="Subtitles/CC"
             active={captions}
             aria-pressed={captions}

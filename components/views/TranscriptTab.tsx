@@ -108,7 +108,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sko-text-default outline-none"
+              className="sk-text-sm-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
             >
               <option value="en">English</option>
               <option value="es">Español</option>

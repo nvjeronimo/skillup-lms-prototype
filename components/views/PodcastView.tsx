@@ -88,6 +88,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
           value={t}
           onChange={(e) => seek(Number(e.target.value))}
           aria-label="Seek"
+          aria-valuetext={`${secondsToTs(t)} of ${secondsToTs(durationSeconds)}`}
           className="w-full accent-[var(--color-bg-info)]"
         />
 
@@ -96,7 +97,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
             <Button
               variant="secondary"
               size="sm"
-              aria-label="Back 15 seconds"
+              aria-label="Back 15s"
               leftIcon={SkipBack}
               onClick={() => seek(t - 15)}
             >
@@ -114,7 +115,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
             <Button
               variant="secondary"
               size="sm"
-              aria-label="Forward 15 seconds"
+              aria-label="Forward 15s"
               rightIcon={SkipForward}
               onClick={() => seek(t + 15)}
             >
@@ -129,6 +130,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
             <Button
               variant="secondary"
               size="sm"
+              aria-label={`Playback speed, ${SPEEDS[speedIdx]}×`}
               onClick={() => setSpeedIdx((i) => (i + 1) % SPEEDS.length)}
             >
               {SPEEDS[speedIdx]}×

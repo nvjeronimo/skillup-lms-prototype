@@ -47,7 +47,7 @@ export function TranscriptControls({
               aria-label="Caption language"
               value={currentLanguage}
               onChange={(e) => onLanguageChange?.(e.target.value)}
-              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sko-text-default outline-none"
+              className="sk-text-sm-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
             >
               {LANGS.map((l) => (
                 <option key={l.code} value={l.code}>
