@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useDisclosure } from "@/lib/useDisclosure";
 import type { TabSlug } from "@/lib/store";
 
 export interface ContentTab {
@@ -45,30 +46,8 @@ function CountBadge({ n }: { n: number }) {
  * trigger). A visually hidden h2 names the region that follows.
  */
 export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", className }: ContentTabsProps) {
-  const [open, setOpen] = React.useState(false);
-  const selectRef = React.useRef<HTMLDivElement>(null);
-  const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const listId = React.useId();
+  const { open, close, containerRef, triggerProps, panelProps } = useDisclosure();
   const current = tabs.find((t) => t.slug === active) ?? tabs[0];
-
-  React.useEffect(() => {
-    if (!open) return;
-    function onDoc(e: MouseEvent) {
-      if (selectRef.current && !selectRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
-    }
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   const heading = <h2 className="sr-only">{current.label}</h2>;
 
@@ -76,13 +55,10 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
     return (
       <>
         <div className={cn("flex items-center justify-between gap-3", className)}>
-          <nav ref={selectRef} aria-label="Topic content" className="relative flex-1">
+          <nav ref={containerRef} aria-label="Topic content" className="relative flex-1">
             <button
-              ref={triggerRef}
               type="button"
-              aria-expanded={open}
-              aria-controls={open ? listId : undefined}
-              onClick={() => setOpen((o) => !o)}
+              {...triggerProps}
               className={cn(
                 "sk-text-sm-semibold flex w-full items-center justify-between gap-2 rounded-lg border bg-sko-bg-page px-3 py-2.5 transition-colors",
                 open
@@ -108,7 +84,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
 
             {open ? (
               <ul
-                id={listId}
+                {...panelProps}
                 className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-lg border border-sko-border-primary bg-sko-bg-page shadow-lg"
               >
                 {tabs.map((t) => {
@@ -118,7 +94,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                       <Link
                         href={t.href}
                         aria-current={selected ? "page" : undefined}
-                        onClick={() => setOpen(false)}
+                        onClick={close}
                         className={cn(
                           "sk-text-sm-semibold flex w-full items-center gap-2 px-3 py-2.5 text-left transition-colors",
                           selected

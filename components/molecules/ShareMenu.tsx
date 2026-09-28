@@ -24,7 +24,12 @@ const ITEMS: { channel: ShareChannel; label: string; icon: LucideIcon }[] = [
   { channel: "email", label: "Email", icon: Mail },
 ];
 
-/** Dropdown of share channels (Certificate Share button). Esc + outside click close. */
+/**
+ * Dropdown of share channels (Certificate Share button). A disclosure panel of
+ * plain buttons, not an ARIA menu; the owner wires Escape / outside click /
+ * focus return through useDisclosure. `onClose` still fires on Escape for
+ * standalone use (Storybook).
+ */
 export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
   React.useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -36,21 +41,19 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
 
   return (
     <ul
-      role="menu"
       className={cn(
         "w-48 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg",
         className,
       )}
     >
       {ITEMS.map((item) => (
-        <li key={item.channel} role="none">
+        <li key={item.channel}>
           <button
-            role="menuitem"
             type="button"
             onClick={() => onSelect?.(item.channel)}
             className="sk-text-sm-medium flex w-full items-center gap-2.5 px-4 py-3 text-left text-sko-text-default hover:bg-sko-bg-subtle"
           >
-            <Icon icon={item.icon} size={16} className="text-sko-text-subtle" />
+            <Icon icon={item.icon} size={16} className="text-sko-text-subtle" aria-hidden />
             {item.label}
           </button>
         </li>
