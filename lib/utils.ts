@@ -74,3 +74,19 @@ export function durationToSeconds(label: string | undefined): number {
     (h ? +h[1] * 3600 : 0) + (m ? +m[1] * 60 : 0) + (s ? +s[1] : 0);
   return total || 200;
 }
+
+/**
+ * True when motion should be reduced: the OS setting (prefers-reduced-motion)
+ * or the app's own "Reduce motion" switch (data-reduce-motion on <html>).
+ * CSS handles animations; use this for JS-driven motion such as smooth scrolls.
+ */
+export function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  if (document.documentElement.hasAttribute("data-reduce-motion")) return true;
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+}
+
+/** `scrollIntoView` / `scrollTo` behaviour that respects reduced motion. */
+export function scrollBehavior(): ScrollBehavior {
+  return prefersReducedMotion() ? "auto" : "smooth";
+}
