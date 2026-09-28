@@ -36,11 +36,14 @@ export interface CoursePlayerTopbarProps {
 
 /**
  * DS `Buttons/Button utility`, Size=sm, on every topbar size: a 32px square,
- * padding 6 (Spacing/sm), radius 6 (Radius/fixed-sm), 20px icon in `icon/faint`.
+ * padding 6 (Spacing/sm), radius 6 (Radius/fixed-sm), 20px icon in `icon/subtle`.
  * Tertiary is the bare button; Secondary adds a 1px `border/default` outline on
  * `bg/page` (the mobile course-menu trigger). `large` is DS `Button close X`
- * Size=lg: 44px, padding 8, radius 8. Hover (all three): `bg/faint`, icon
- * `icon/subtle`.
+ * Size=lg: 44px, padding 8, radius 8. Hover (all three): `bg/faint`.
+ *
+ * The icon is `icon/subtle` at rest, not the DS `icon/faint`: faint on `bg/page`
+ * is about 1.77:1, below WCAG 1.4.11's 3:1 (audit TB-02). DS rebind pending: the
+ * Button utility and Button close X Default icon should bind `icon/subtle`.
  */
 function UtilityButton({
   label,
@@ -64,7 +67,7 @@ function UtilityButton({
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center text-sko-icon-faint transition-colors hover:bg-sko-bg-faint hover:text-sko-icon-subtle",
+        "inline-flex shrink-0 items-center justify-center text-sko-icon-subtle transition-colors hover:bg-sko-bg-faint",
         large ? "h-11 w-11 rounded-lg" : "h-8 w-8 rounded-md",
         hierarchy === "secondary" && "border border-sko-border-default bg-sko-bg-page",
         className,
@@ -81,14 +84,14 @@ function UtilityButton({
  * Desktop (60px, padding 8/16/8/24) and Tablet (padding 8/16/8/20): two rows
  * 16px apart. Left row (32px apart on Desktop, 24 on Tablet): the 114×33 logo
  * and, on Desktop, the breadcrumb. Right row, 8px apart: AI · Notifications ·
- * Saved (32px Tertiary utility) · Theme · Avatar label group (24px round avatar
- * + name) · 44px close. Breadcrumb, AI and Theme are optional (off by default)
- * and used in Storybook; Discussions has no DS slot.
+ * Saved (32px Tertiary utility) · Theme · account button (32px square avatar
+ * + name, the profile style from PR #9) · 44px close. Breadcrumb, AI and Theme
+ * are optional (off by default) and used in Storybook; Discussions has no DS slot.
  *
  * Mobile (Size=Mobile, 375×56): 0/8/0/12 padding, space-between. Left, 6px
  * apart: the course-menu trigger (32px Secondary utility button, `list` icon)
  * and the logo at 33px. Right, 8px apart: Notifications · Saved (32px Tertiary)
- * · 24px round avatar · 44px close. Icons in `icon/faint`.
+ * · 24px round avatar · 44px close. Icons in `icon/subtle` (see UtilityButton).
  */
 export function CoursePlayerTopbar({
   size = "Desktop",
@@ -128,8 +131,9 @@ export function CoursePlayerTopbar({
       ) : null}
     </span>
   );
-  // DS `Button close X` Size=lg: x-close at 24px keeps a 1.5 stroke (iconStroke(24) would give 2).
-  const closeIcon = <Icon icon={X} size={24} strokeWidth={1.5} />;
+  // DS `Button close X` Size=lg: x-close at 24px. The DS draws a 1.5 stroke; locked
+  // decision 013 (icons >= 24px use 2px) wins, so iconStroke(24) gives 2.
+  const closeIcon = <Icon icon={X} size={24} />;
 
   if (isMobile) {
     return (
@@ -238,10 +242,11 @@ export function CoursePlayerTopbar({
         ) : null}
 
         {accountMenu ?? (
-          // DS `Avatar label group` Size=sm: 24px round avatar, 8px gap, name in
-          // body-medium/Semibold, no padding around the group.
+          // Account button: 32px square avatar (PR #9 squares the profile avatar to
+          // match the topbar icon buttons and CTAs; the DS `Avatar label group` draws a
+          // 24px circle), 8px gap, name in body-medium/Semibold.
           <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-md">
-            <Avatar name={userName} src={userAvatarUrl} size="xs" />
+            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <span className="sk-text-sm-semibold text-sko-text-default">{userName}</span>
           </button>
         )}

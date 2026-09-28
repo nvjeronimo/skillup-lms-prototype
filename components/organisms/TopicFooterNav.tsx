@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "@/components/atoms/Button";
-import { TopicActionBar } from "@/components/molecules/TopicActionBar";
 import { CourseProgressionButton, type Milestone } from "./CourseProgressionButton";
 import { cn } from "@/lib/utils";
 
@@ -15,8 +14,6 @@ export interface TopicFooterNavProps {
   onNext?: () => void;
   /** Mobile (≤768): title hidden, milestone captions hidden. */
   compact?: boolean;
-  /** DS `Show Badge` (default off): the Topic-Status-Badge Completed before the Next button. */
-  showBadge?: boolean;
   className?: string;
 }
 
@@ -32,8 +29,6 @@ export interface TopicFooterNavProps {
  *   paginator stays) and milestone captions are hidden.
  * Next always reads "Next" + arrow; naming the next topic in the button is TBD.
  * Previous is disabled on the first topic, never hidden; Next is never hidden.
- * `showBadge` adds the Topic-Status-Badge (Completed) 12px before Next, as the DS
- * `Show Badge` boolean does in the "Second Button" frame.
  */
 export function TopicFooterNav({
   position,
@@ -45,7 +40,6 @@ export function TopicFooterNav({
   onPrevious,
   onNext,
   compact = false,
-  showBadge = false,
   className,
 }: TopicFooterNavProps) {
   return (
@@ -74,7 +68,6 @@ export function TopicFooterNav({
       </div>
 
       <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
-        {showBadge ? <TopicActionBar state="completed" /> : null}
         <CourseProgressionButton
           milestone={milestone}
           size="sm"

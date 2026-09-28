@@ -12,11 +12,12 @@ export interface ModuleTimeLeftProps {
  * DS `LMS / Module Time-Left`: one horizontal row, 4/0/4/0 padding
  * (Spacing/xs), 8px gap (Spacing/md), no fill, radius or icon. Each segment is
  * body-small/Medium in `text/subtle`; the "·" separators between segments are
- * body-small/Medium in `icon/faint`.
+ * body-small/Medium in `icon/faint`. The row wraps when the segments are wider
+ * than their container (e.g. the 280px sidebar), so it never overflows.
  */
 export function ModuleTimeLeft({ segments, className }: ModuleTimeLeftProps) {
   return (
-    <div className={cn("flex items-center gap-2 py-1", className)}>
+    <div className={cn("flex flex-wrap items-center gap-2 py-1", className)}>
       {segments.map((segment, i) => (
         <React.Fragment key={`${i}-${segment}`}>
           {i > 0 ? (

@@ -34,6 +34,11 @@ export const Destructive: Story = { args: { tone: "destructive", hierarchy: "pri
 export const Success: Story = { args: { tone: "success", hierarchy: "primary", children: "Go to next Course" } };
 export const Link: Story = { args: { hierarchy: "link", rightIcon: ArrowRight, children: "View details" } };
 export const Utility: Story = { args: { variant: "utility", children: "Filter" } };
+/** Legacy `variant="destructive"`: UUI grey stroke, red label, error-soft hover (decision 003). */
+export const LegacyDestructive: Story = {
+  name: "Destructive (legacy, UUI grey)",
+  args: { variant: "destructive", size: "sm", children: "Leave session" },
+};
 export const Disabled: Story = { args: { hierarchy: "primary", disabled: true } };
 export const Loading: Story = { args: { hierarchy: "primary", loading: true, children: "Saving" } };
 export const WithIcon: Story = { args: { hierarchy: "primary", leftIcon: Plus, children: "Add note" } };
@@ -104,6 +109,7 @@ export const AllVariants: Story = {
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="neutral">Neutral (legacy)</Button>
+        <Button variant="destructive">Destructive (legacy)</Button>
         <Button variant="utility">Utility (legacy)</Button>
       </div>
     </div>

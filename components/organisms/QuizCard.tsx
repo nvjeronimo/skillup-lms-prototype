@@ -92,7 +92,8 @@ const DEFAULT_OPTIONS: QuizOption[] = [
  *
  * DS Checkbox Size=sm: 16×16, 1px stroke; round for Radio, radius 4 for
  * Checkbox. Checked is bg/primary with no stroke and an icon/on-primary mark (a
- * 6×6 dot, or a 12px tick). Disabled is bg/faint on border/disabled.
+ * 6×6 dot, or a 12px tick). Disabled is bg/faint on border/disabled at
+ * opacity 40, as the DS draws it (and as LessonBlocks OptionRadio does).
  */
 function OptionMarker({
   multiSelect,
@@ -112,7 +113,7 @@ function OptionMarker({
         checked
           ? "border-transparent bg-sko-bg-primary"
           : disabled
-            ? "border-sko-border-disabled bg-sko-bg-faint"
+            ? "border-sko-border-disabled bg-sko-bg-faint opacity-40"
             : "border-sko-border-default bg-sko-bg-page",
       )}
     >
@@ -143,14 +144,16 @@ function OptionMarker({
  * Three states carry a notice rather than a verdict (DS Question Card, visible
  * Inline Alert layers that are not bound to Show explanation): Last attempt and
  * Saved warn, and Results withheld says the answer went in without saying
- * whether it was right — correctness is exactly what is being withheld.
+ * whether it was right — correctness is exactly what is being withheld. It
+ * carries the title only: the prototype models Results withheld as
+ * `show_correctness: never`, so there is no release date to promise.
  */
 function verdictAlert(
   state: QuizQuestionState,
   earned: number,
   possible: number,
   withScore: boolean,
-): { tone: AlertTone; title: string; notice?: string } | null {
+): { tone: AlertTone; title: string; notice?: boolean; description?: string } | null {
   const score = withScore ? ` (${earned}/${possible} point${possible === 1 ? "" : "s"})` : "";
   switch (state) {
     case "Correct":
@@ -163,20 +166,18 @@ function verdictAlert(
       return {
         tone: "warning",
         title: "Last attempt",
-        notice: "Once you submit, this answer is final and your score is recorded.",
+        notice: true,
+        description: "Once you submit, this answer is final and your score is recorded.",
       };
     case "Saved":
       return {
         tone: "warning",
         title: "Saved, not submitted",
-        notice: "Your answer is stored, but it has not been graded and scores nothing until you submit it.",
+        notice: true,
+        description: "Your answer is stored, but it has not been graded and scores nothing until you submit it.",
       };
     case "Results withheld":
-      return {
-        tone: "info",
-        title: "Answer submitted",
-        notice: "Results for this quiz are released after the due date.",
-      };
+      return { tone: "info", title: "Answer submitted", notice: true };
     default:
       return null;
   }
@@ -197,16 +198,19 @@ type OptionState =
  * The right answer they did not pick is `Missed`: green, to show where the
  * answer was, but no tick and a text marker instead.
  *
- * Read off the DS Question Card, variant by variant:
- * - Correct and Incorrect mark only the learner's pick; every other row is
- *   `Disabled`. An Incorrect card must not reveal the answer while Show answer
- *   is still on offer.
- * - `Missed` exists only in Partially correct and Answer revealed.
- * - Partially correct keeps untouched wrong rows `Unanswered`.
- * - Answer revealed marks untouched wrong rows `Correctly unselected`, gated on
- *   multi-select: leaving a wrong option unchecked is only part of an answer
- *   when there were several to weigh. ⚑ The DS example is a radio — see the
- *   note in the handoff.
+ * The marking follows the quiz spec (04 F-QZ-007, and 06 §14.8 row 6: a
+ * Partially correct checkbox card shows "Missed + Correctly unselected"):
+ * - Incorrect marks only the learner's pick; every other row is `Disabled`. An
+ *   Incorrect card must not reveal the answer while Show answer is still on
+ *   offer.
+ * - Correct marks the learner's pick; on a multi-select card the untouched
+ *   wrong rows are `Correctly unselected`, on a radio they are `Disabled`.
+ * - Partially correct and Answer revealed mark every row: `Missed` for the
+ *   right answer not picked, and `Correctly unselected` for an untouched wrong
+ *   row, gated on multi-select — leaving a wrong option unchecked is only part
+ *   of an answer when there were several to weigh. ⚑ The DS Question Card
+ *   keeps these rows `Unanswered` on Partially correct and uses a radio for its
+ *   Answer revealed example; the spec wins here — see the note in the handoff.
  * - Results withheld and the pre-submit states never mark correctness.
  */
 function optionState(
@@ -216,13 +220,13 @@ function optionState(
   multiSelect: boolean,
 ): OptionState {
   switch (state) {
-    case "Correct":
     case "Incorrect":
       if (!isSelected) return "Disabled";
       return correct ? "Correct" : "Incorrect";
+    case "Correct":
+      if (!isSelected) return multiSelect && !correct ? "Correctly unselected" : "Disabled";
+      return correct ? "Correct" : "Incorrect";
     case "Partially correct":
-      if (correct) return isSelected ? "Correct" : "Missed";
-      return isSelected ? "Incorrect" : "Unanswered";
     case "Answer revealed":
       if (correct) return isSelected ? "Correct" : "Missed";
       if (isSelected) return "Incorrect";
@@ -406,10 +410,11 @@ export function QuizCard({
           tone={alert.tone}
           title={alert.title}
           description={
-            alert.notice ??
-            (showExplanation
-              ? chosen.filter((o) => o.feedback).map((o) => o.feedback).join(" ")
-              : undefined)
+            alert.notice
+              ? alert.description
+              : showExplanation
+                ? chosen.filter((o) => o.feedback).map((o) => o.feedback).join(" ")
+                : undefined
           }
         />
       ) : null}
@@ -437,11 +442,13 @@ export function QuizCard({
               type="button"
               onClick={onNextHint}
               disabled={hintIndex + 1 >= hints.length}
+              // DS Next Hint: a link button with a 1px bottom stroke in every
+              // state (border/disabled once the hints run out).
               className={cn(
-                "sk-text-sm-semibold",
+                "sk-text-sm-semibold border-b px-0.5 py-1",
                 hintIndex + 1 >= hints.length
-                  ? "cursor-not-allowed text-sko-text-disabled"
-                  : "text-sko-text-primary",
+                  ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
+                  : "border-sko-border-primary text-sko-text-primary",
               )}
             >
               Next Hint

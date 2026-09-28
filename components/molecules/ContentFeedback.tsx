@@ -40,10 +40,13 @@ export function ContentFeedback({
   const [reportOpen, setReportOpen] = React.useState(false);
   const liked = value === "like";
   const disliked = value === "dislike";
-  const btn = "sk-text-xs-medium inline-flex items-center gap-2 transition-colors";
+  // Hover pad: px-2/py-1 cancelled by -mx-2/-my-1, so the DS geometry (no item padding,
+  // gap 16 = 2 × 8) is unchanged while the hover fill and hit area come back (18 + 8 = 26px tall).
+  const btn =
+    "sk-text-xs-medium -mx-2 -my-1 inline-flex items-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-sko-bg-subtle";
   const glyph = { size: 16, strokeWidth: 1.5, absoluteStrokeWidth: true } as const;
   return (
-    <div className={cn("flex items-center justify-between gap-4 py-3", className)}>
+    <div className={cn("flex flex-wrap items-center justify-between gap-4 py-3", className)}>
       <div className="flex items-center gap-4">
         <button
           type="button"

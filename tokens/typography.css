@@ -39,18 +39,20 @@
    lib/useBreakpoint.ts (tablet 769–1024, mobile ≤ 768). A forced device preview
    (ResponsiveShell frames the app at 834 / 375 px by inline width, which media
    queries cannot see) is keyed on [data-device="desktop|tablet|mobile"], set on
-   <html> or on the frame; it comes last, so a forced mode beats the window width. */
+   <html> or on the frame; it comes last, so a forced mode beats the window width.
+   The width queries are screen-only, so print (e.g. the certificate) keeps the
+   Desktop ramp. */
 :root {
   --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
   --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
   --sk-type-size-display-md: 36px;  --sk-type-line-height-display-md: 44px;
 }
-@media (max-width: 1024px) {
+@media screen and (max-width: 1024px) {
   :root {
     --sk-type-size-display-md: 30px;  --sk-type-line-height-display-md: 38px;
   }
 }
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   :root {
     --sk-type-size-display-xs: 20px;  --sk-type-line-height-display-xs: 30px;
     --sk-type-size-display-sm: 24px;  --sk-type-line-height-display-sm: 32px;

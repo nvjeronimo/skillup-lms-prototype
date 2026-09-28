@@ -12,8 +12,8 @@ export type ToastTone = "neutral" | "success" | "warning" | "error" | "info";
 
 /**
  * What the toast shows. Extends the store's `ToastModel` with the DS fields
- * the store does not carry yet: `tone` (defaults to `success`, the check the
- * toast has always shown) and an optional `title` above the message.
+ * the store does not carry yet: `tone` (defaults to `neutral`; pass `success`
+ * only for real confirmations) and an optional `title` above the message.
  */
 export interface ToastContent extends ToastModel {
   tone?: ToastTone;
@@ -37,7 +37,10 @@ const TONE: Record<ToastTone, { box: string; icon: LucideIcon; fg: string }> = {
   success: {
     box: "bg-sko-bg-success-soft border-sko-border-success-soft",
     icon: CheckCircle2,
-    fg: "text-sko-icon-success-strong",
+    // Not the DS binding (icon/success-strong, 2.81:1 on bg/success-soft and
+    // not remapped by data-vision=cvd); icon/success passes 3:1 in both themes.
+    // DS rebind pending: toast-ds-icon-tokens.
+    fg: "text-sko-icon-success",
   },
   info: {
     box: "bg-sko-bg-primary-soft border-sko-border-primary-muted",
@@ -78,7 +81,7 @@ export function Toast({ toast, onDone, duration = 4000, showClose = true, classN
 
   if (!toast) return null;
 
-  const tone = TONE[toast.tone ?? "success"];
+  const tone = TONE[toast.tone ?? "neutral"];
 
   return (
     <div

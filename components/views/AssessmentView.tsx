@@ -427,11 +427,13 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
                 type="button"
                 onClick={() => setBucketHintIndex((i) => Math.min(bucketHints.length - 1, i + 1))}
                 disabled={bucketHintIndex + 1 >= bucketHints.length}
+                // DS Next Hint: a link button with a 1px bottom stroke in every
+                // state (border/disabled once the hints run out).
                 className={cn(
-                  "sk-text-sm-semibold",
+                  "sk-text-sm-semibold border-b px-0.5 py-1",
                   bucketHintIndex + 1 >= bucketHints.length
-                    ? "cursor-not-allowed text-sko-text-disabled"
-                    : "text-sko-text-primary",
+                    ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
+                    : "border-sko-border-primary text-sko-text-primary",
                 )}
               >
                 Next Hint
@@ -581,21 +583,24 @@ function QuizEntryHeader({
   const attempts = attemptsLabel(config);
   const facts = [
     `${questionCount} questions`,
-    `About ${config.estMinutes} min`,
+    // Decision 004: estimated durations take the "approx." prefix.
+    `approx. ${config.estMinutes} min`,
     ...(attempts ? [attempts] : []),
     `Pass mark ${config.passThresholdPct}%`,
   ];
 
   // DS Entry Header: the first badge is Brand in every variant; the second is
-  // Teal "Ungraded" on practice, Warning on a graded quiz (module grade) and
-  // Error on a final exam (course grade).
+  // Teal on practice, Warning on a graded quiz and Error on a final exam. The
+  // copy is ours, not the DS sample's: weightPct is a share of the final grade
+  // (QuizConfig), and QuizSummary states the same figure on the same basis.
   const practice = config.variant === "practice";
   const weight: { color: BadgeColor; label: string } | null = practice
-    ? { color: "teal", label: "Ungraded" }
+    ? { color: "teal", label: "Doesn't affect your grade" }
     : config.weightPct
-      ? config.variant === "graded"
-        ? { color: "warning", label: `${config.weightPct}% of module grade` }
-        : { color: "error", label: `${config.weightPct}% of course grade` }
+      ? {
+          color: config.variant === "graded" ? "warning" : "error",
+          label: `Counts ${config.weightPct}% of your final grade`,
+        }
       : null;
 
   return (
@@ -694,14 +699,11 @@ function QuizSummary({
         {/* Score-Group: 20/24 padding, 20 gap, Radius/fixed-lg (10). */}
         {withheld ? (
           <div className="flex items-center gap-5 rounded-[10px] bg-sko-bg-subtle px-6 py-5">
-            <div className="flex flex-col gap-1">
-              <p className="sk-text-md-semibold text-sko-text-subtle">
-                {result.total} of {result.total} answered
-              </p>
-              <p className="sk-text-sm-medium text-sko-text-subtle">
-                Results are released after the due date.
-              </p>
-            </div>
+            {/* No release line: resultsWithheld is `show_correctness: never`,
+                so the results are never released. */}
+            <p className="sk-text-md-semibold text-sko-text-subtle">
+              {result.total} of {result.total} answered
+            </p>
           </div>
         ) : (
           <div

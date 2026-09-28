@@ -13,7 +13,7 @@ export interface CourseCardProps {
   difficulty: Difficulty;
   deliveryMode: DeliveryMode;
   progressPct: number;
-  /** Right-hand label of the progress row (DS "Time-Left", e.g. "3h 20m left"). */
+  /** Estimated completion (e.g. "May 24"), shown as "Est. completion: {estimation}" at the right of the progress row. */
   estimation: string;
   initials: string;
   upNext?: { type: TopicType; title: string };
@@ -27,7 +27,8 @@ export interface CourseCardProps {
  * Matches DS `LMS / Course Card` Layout=List (20888:6124) from xl up: thumb,
  * titles, progress and up-next are direct children of one row (padding 16,
  * gap 24). The List layout is 1200 wide in the DS and does not fit narrower
- * containers, so below xl the same blocks stack.
+ * containers, so below xl the same blocks stack and the overflow (···)
+ * trigger is pinned to the card's top-right corner.
  */
 export function CourseCard({
   title,
@@ -45,11 +46,12 @@ export function CourseCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-4 xl:flex-row xl:items-center xl:gap-6",
+        "relative flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-4 xl:flex-row xl:items-center xl:gap-6",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 gap-4 xl:gap-6">
+      {/* Stacked: pr-10 keeps the titles clear of the pinned 32px overflow trigger. */}
+      <div className="flex min-w-0 flex-1 gap-4 pr-10 xl:gap-6 xl:pr-0">
         {/* DS thumb: bg/primary-soft, Initials text/primary. List 79px (Grid 86px). */}
         <span className="sk-text-display-xs-semibold inline-flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary-soft text-sko-text-primary">
           {initials}
@@ -71,9 +73,11 @@ export function CourseCard({
 
       {/* DS progress: own column, 280 wide in List (gap 6); gap 8 when stacked. */}
       <div className="flex flex-col gap-2 xl:w-[280px] xl:shrink-0 xl:gap-1.5">
-        <div className="flex items-center justify-between">
-          <span className="sk-text-md-semibold text-sko-text-default">{progressPct}% complete</span>
-          <span className="sk-text-sm-regular text-sko-text-subtle">{estimation}</span>
+        {/* "Est. completion:" rather than the full "Estimated completion:" so the label
+            fits the 280px List column; if it still does not, it wraps right-aligned. */}
+        <div className="flex items-center justify-between gap-2">
+          <span className="sk-text-md-semibold shrink-0 whitespace-nowrap text-sko-text-default">{progressPct}% complete</span>
+          <span className="sk-text-sm-regular text-right text-sko-text-subtle">Est. completion: {estimation}</span>
         </div>
         <div
           role="progressbar"
@@ -89,7 +93,8 @@ export function CourseCard({
       </div>
 
       {upNext ? (
-        /* DS up-next: horizontal, centred, padding 8/12, gap 16, radius 8, bg/subtle. */
+        /* DS up-next: horizontal, centred, padding 8/12, gap 16, radius 8, bg/subtle.
+           xl:max-w-[320px] is a guard, no DS value. */
         <div className="flex min-w-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2 xl:max-w-[320px]">
           {/* DS Next-Content: vertical, gap 6 — Overline, Next-Title (1 line), Topic-Types badge. */}
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
@@ -104,7 +109,11 @@ export function CourseCard({
         </div>
       ) : null}
 
-      <CardOverflowMenu />
+      {/* Stacked: pinned top-right so the menu (right-0) opens under its trigger.
+          xl: back in the row as its last item. */}
+      <div className="absolute right-4 top-4 xl:static">
+        <CardOverflowMenu />
+      </div>
     </div>
   );
 }

@@ -13,7 +13,7 @@ const meta: Meta<typeof CourseCard> = {
     difficulty: "Intermediate",
     deliveryMode: "Flexible + Live",
     progressPct: 67,
-    estimation: "3h 20m left",
+    estimation: "May 24",
     initials: "AI",
     upNext: { type: "Video", title: "The lifecycle begins long before any code…" },
   },

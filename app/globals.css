@@ -55,17 +55,18 @@ button {
 
 /* Thin scrollbar for scroll regions — DS Vertical Scroll: 6px wide
    (Scrollbar/width), radius 3 (Scrollbar/radius), no visible track, thumb in
-   icon/faint. atoms/VerticalScroll mirrors this. */
+   border/default: thumb colour pending DS rebind (FND-18).
+   atoms/VerticalScroll mirrors this. */
 .sk-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-icon-faint) transparent;
+  scrollbar-color: var(--color-border-default) transparent;
 }
 .sk-scroll::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 .sk-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-icon-faint);
+  background: var(--color-border-default);
   border-radius: 3px;
 }
 .sk-scroll::-webkit-scrollbar-track {

@@ -37,19 +37,28 @@ const DEMO_PARTICIPANTS: LiveParticipant[] = [
   { name: "Sofia Lopes" },
 ];
 
-/** DS Avatar group Size=sm: 32px avatars overlapping by 8px, then a "+N" text avatar. */
+/**
+ * DS Avatar group, Size=sm: 32px avatars overlapping by 8px, each with a 1.5px bg/page
+ * outer ring, then the group's "+N" text avatar (bg/muted, 0.75px border/subtle inside
+ * stroke, body-medium Semibold in text/subtle). The strip is decorative: the
+ * "N of M participants joined" sentence next to it carries the information, so it is
+ * hidden from assistive tech rather than read out initial by initial.
+ */
 function ParticipantsStrip({ participants, joined }: { participants: LiveParticipant[]; joined: number }) {
   const extra = Math.max(0, joined - participants.length);
   return (
-    <div className="flex -space-x-2">
+    <div className="flex -space-x-2" aria-hidden="true">
       {participants.map((p) => (
-        <Avatar key={p.name} name={p.name} src={p.src} size="sm" />
+        <Avatar
+          key={p.name}
+          name={p.name}
+          src={p.src}
+          size="sm"
+          className="rounded-full ring-[1.5px] ring-sko-bg-page"
+        />
       ))}
       {extra > 0 ? (
-        <span
-          className="sk-text-xs-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary"
-          aria-label={`${extra} more participants`}
-        >
+        <span className="sk-text-sm-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle ring-[1.5px] ring-sko-bg-page">
           +{extra}
         </span>
       ) : null}
@@ -112,29 +121,24 @@ export function LiveControlBar({
         className,
       )}
     >
+      {/* DS Live On buttons are all 44px: the default md size, same as the Join state. */}
       <div className="flex flex-wrap items-center gap-2">
-        <Button variant="secondary" size="sm" leftIcon={muted ? Mic : MicOff} onClick={() => setMuted((m) => !m)}>
+        <Button variant="secondary" leftIcon={muted ? Mic : MicOff} onClick={() => setMuted((m) => !m)}>
           {muted ? "Unmute" : "Mute"}
         </Button>
-        <Button
-          variant="secondary"
-          size="sm"
-          leftIcon={camOff ? Video : VideoOff}
-          onClick={() => setCamOff((c) => !c)}
-        >
+        <Button variant="secondary" leftIcon={camOff ? Video : VideoOff} onClick={() => setCamOff((c) => !c)}>
           {camOff ? "Camera on" : "Camera off"}
         </Button>
-        <Button variant="secondary" size="sm" leftIcon={Hand} onClick={() => setHand((h) => !h)}>
+        <Button variant="secondary" leftIcon={Hand} onClick={() => setHand((h) => !h)}>
           {hand ? "Lower hand" : "Raise hand"}
         </Button>
-        <Button variant="secondary" size="sm" leftIcon={MessageSquare}>
+        <Button variant="secondary" leftIcon={MessageSquare}>
           Open chat
         </Button>
       </div>
-      {/* DS: Destructive Primary (fill bg/error). The Button atom has no filled
-          destructive variant yet, so this stays the outline destructive until
-          `destructive-primary` lands in components/atoms/Button.tsx. */}
-      <Button variant="destructive" size="sm" leftIcon={LogOut} onClick={onLeave}>
+      {/* Leave uses the legacy grey destructive (decision 003) until the V2 filled
+          Destructive/Primary is approved. */}
+      <Button variant="destructive" leftIcon={LogOut} onClick={onLeave}>
         Leave session
       </Button>
     </div>

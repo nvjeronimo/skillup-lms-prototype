@@ -60,7 +60,8 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 
 
 /* ── Colour bindings, read from Badge v2 Size=sm on 28 Sep 2026 ─────────────────────────
    Every class below is the DS variable bound on that variant: base fill (bg-*), base
-   stroke (ring-*), Text fill (text-sko-text-*) and icon vector (text-sko-icon-*). */
+   stroke (ring-*; except the Outline stroke, see DS-D1), Text fill (text-sko-text-*) and
+   icon vector (text-sko-icon-*). The Plain icon circle is PLAIN_CIRCLE. */
 
 /* Style=Soft: fill + text, no stroke. Accents are the STRONG fills with on-accent text. */
 const SOFT: Record<BadgeColor, string> = {
@@ -76,20 +77,19 @@ const SOFT: Record<BadgeColor, string> = {
   yellow: "bg-sko-bg-accent-yellow text-sko-text-on-accent-yellow",
 };
 
-/* Style=Outline: soft fill + 1px inside stroke. The DS binds the stroke to the TEXT token
-   of the same colour (text/muted on Gray, text/primary on Brand…); mirrored as-is until
-   DS-D1 decides whether these strokes move to border/* tokens. */
+/* Style=Outline: soft fill + 1px soft inside stroke on the colour's soft border token.
+   DS-D1: DS binds text/* on the stroke; the DS description says soft outline. */
 const OUTLINE: Record<BadgeColor, string> = {
-  gray: "bg-sko-bg-faint ring-sko-text-muted text-sko-text-muted",
-  brand: "bg-sko-bg-primary-soft ring-sko-text-primary text-sko-text-primary",
-  info: "bg-sko-bg-info-soft ring-sko-text-info text-sko-text-info",
-  success: "bg-sko-bg-success-soft ring-sko-text-success text-sko-text-success",
-  warning: "bg-sko-bg-warning-soft ring-sko-text-warning text-sko-text-warning",
-  error: "bg-sko-bg-error-soft ring-sko-text-error text-sko-text-error",
-  teal: "bg-sko-bg-accent-teal-soft ring-sko-text-accent-teal text-sko-text-accent-teal",
-  green: "bg-sko-bg-accent-green-soft ring-sko-text-accent-green text-sko-text-accent-green",
-  red: "bg-sko-bg-accent-red-soft ring-sko-text-accent-red text-sko-text-accent-red",
-  yellow: "bg-sko-bg-accent-yellow-soft ring-sko-text-accent-yellow text-sko-text-accent-yellow",
+  gray: "bg-sko-bg-faint ring-sko-border-subtle text-sko-text-muted",
+  brand: "bg-sko-bg-primary-soft ring-sko-border-primary-soft text-sko-text-primary",
+  info: "bg-sko-bg-info-soft ring-sko-border-info-soft text-sko-text-info",
+  success: "bg-sko-bg-success-soft ring-sko-border-success-soft text-sko-text-success",
+  warning: "bg-sko-bg-warning-soft ring-sko-border-warning-soft text-sko-text-warning",
+  error: "bg-sko-bg-error-soft ring-sko-border-error-soft text-sko-text-error",
+  teal: "bg-sko-bg-accent-teal-soft ring-sko-border-accent-teal-soft text-sko-text-accent-teal",
+  green: "bg-sko-bg-accent-green-soft ring-sko-border-accent-green-soft text-sko-text-accent-green",
+  red: "bg-sko-bg-accent-red-soft ring-sko-border-accent-red-soft text-sko-text-accent-red",
+  yellow: "bg-sko-bg-accent-yellow-soft ring-sko-border-accent-yellow-soft text-sko-text-accent-yellow",
 };
 
 /* Style=Modern: page fill + 1px inside stroke on the colour's border token. */
@@ -106,7 +106,8 @@ const MODERN: Record<BadgeColor, string> = {
   yellow: "bg-sko-bg-page ring-sko-border-accent-yellow text-sko-text-accent-yellow",
 };
 
-/* Style=Plain: text only, no fill, no stroke. */
+/* Style=Plain: text only, no fill, no stroke (a leading icon gets its own soft circle,
+   see PLAIN_CIRCLE). */
 const PLAIN: Record<BadgeColor, string> = {
   gray: "text-sko-text-muted",
   brand: "text-sko-text-primary",
@@ -128,11 +129,9 @@ const SURFACE: Record<BadgeVariant, Record<BadgeColor, string>> = {
 };
 
 /* The leading icon has its own icon/* binding (it does not inherit the label colour).
-   Status, brand, gray and info icons are the same in every Style; accents differ: Soft uses
-   icon/on-accent-* (it sits on the strong fill), Outline and Modern use icon/accent-*.
-   Plain: the DS binds icon/on-accent-* too, but with no fill that token is pure white on
-   bg/page in Light (an invisible icon), so Plain follows Outline/Modern here — flagged
-   as a DS binding defect. */
+   Status, brand, gray and info icons are the same in every Style; accents differ: Soft and
+   Plain use icon/on-accent-* (Soft's icon sits on the strong pill fill, Plain's on the strong
+   accent circle — see PLAIN_CIRCLE), Outline and Modern use icon/accent-*. */
 const ICON_BASE = {
   gray: "text-sko-icon-subtle",
   brand: "text-sko-icon-primary",
@@ -162,14 +161,29 @@ const ICON: Record<BadgeVariant, Record<BadgeColor, string>> = {
   soft: ICON_ON_ACCENT,
   outline: ICON_ACCENT,
   modern: ICON_ACCENT,
-  plain: ICON_ACCENT,
+  plain: ICON_ON_ACCENT,
+};
+
+/* Style=Plain with a leading icon: the 12px icon sits in a 20×20 rounded-full circle filled
+   with the colour's Soft-style fill ("icon in a soft circle", e.g. 21889:539962). */
+const PLAIN_CIRCLE: Record<BadgeColor, string> = {
+  gray: "bg-sko-bg-faint",
+  brand: "bg-sko-bg-primary-soft",
+  info: "bg-sko-bg-info-soft",
+  success: "bg-sko-bg-success-soft",
+  warning: "bg-sko-bg-warning-soft",
+  error: "bg-sko-bg-error-soft",
+  teal: "bg-sko-bg-accent-teal",
+  green: "bg-sko-bg-accent-green",
+  red: "bg-sko-bg-accent-red",
+  yellow: "bg-sko-bg-accent-yellow",
 };
 
 /* ── Geometry, from `_Badge base` (21889:2597) ───────────────────────────────────────────
    Pill sm: 22px, py 2, label 0/8, with a leading icon pl 6 · icon 12 · 6px gap · pr 8.
    Pill md: 24px, py 2, label 0/10, with a leading icon pl 8 · icon 12 · 4px gap · pr 10.
    Pill lg: 28px, py 4, label 0/12, with a leading icon pl 10 · icon 12 · 4px gap · pr 12.
-   Plain: no padding, 6px gap, the 12px icon centred in a 20×20 container. */
+   Plain: no padding, 6px gap, the 12px icon centred in a 20×20 soft circle. */
 const PILL_SIZE: Record<BadgeSize, { label: string; icon: string; text: string }> = {
   sm: { label: "py-0.5 px-2", icon: "py-0.5 pl-1.5 pr-2 gap-1.5", text: "sk-text-xs-medium" },
   md: { label: "py-0.5 px-2.5", icon: "py-0.5 pl-2 pr-2.5 gap-1", text: "sk-text-sm-medium" },
@@ -213,7 +227,12 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
     >
       {leftIcon ? (
         plain ? (
-          <span className="inline-flex size-5 shrink-0 items-center justify-center">
+          <span
+            className={cn(
+              "inline-flex size-5 shrink-0 items-center justify-center rounded-full",
+              PLAIN_CIRCLE[c],
+            )}
+          >
             <Icon icon={leftIcon} size={12} className={ICON[v][c]} />
           </span>
         ) : (

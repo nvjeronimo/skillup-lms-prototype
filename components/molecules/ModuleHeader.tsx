@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
 import { ModuleInfo } from "@/components/atoms/ModuleInfo";
-import { cn } from "@/lib/utils";
+import { cn, iconStroke } from "@/lib/utils";
 
 export interface ModuleHeaderProps {
   label: string;
@@ -20,7 +20,8 @@ export interface ModuleHeaderProps {
  * DS `LMS / Module Header` (State = Expanded · Collapsed), 86px tall on a
  * two-line name. Horizontal row, 12px gap, 12/16 padding, vertically centred:
  * a label column (`LMS / Module Info` eyebrow + body-medium/Semibold name, 8px
- * apart) and a 24px chevron stroked 1.5px in `border/default`.
+ * apart) and a 24px chevron in `border/default`, stroked 2px per decision 013
+ * (the DS draws 1.5px; DS fix pending).
  *
  * The row sits on `bg/faint`. Only State=Collapsed carries a 1px bottom
  * hairline (`border/subtle`, inside), which separates stacked closed modules;
@@ -64,8 +65,8 @@ export function ModuleHeader({
       </span>
       <ChevronDown
         size={24}
-        /* DS: 1.5px at 24px (overrides the lib/utils iconStroke ≥24 → 2 rule). */
-        strokeWidth={1.5}
+        /* Decision 013: 24px icons use a 2px stroke (DS draws 1.5px — DS fix pending). */
+        strokeWidth={iconStroke(24)}
         className={cn(
           "shrink-0 text-sko-border-default transition-transform duration-200",
           !collapsed && "rotate-180",

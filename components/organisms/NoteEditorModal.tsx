@@ -130,16 +130,17 @@ export function NoteEditorModal({
             </span>
             <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-sko-border-default px-2 py-1.5">
               {tags.map((t) => (
+                // DS Input field Type=Tags chip = `Tag` md Gray (r6, border/default, bg/page, X in icon-faint).
                 <span
                   key={t}
-                  className="sk-text-xs-medium inline-flex items-center gap-1 rounded-full bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
+                  className="sk-text-sm-medium inline-flex items-center gap-1 rounded-md border border-sko-border-default bg-sko-bg-page py-0.5 pl-[5px] pr-1 text-sko-text-muted"
                 >
                   #{t}
                   <button
                     type="button"
                     onClick={() => setTags((prev) => prev.filter((x) => x !== t))}
                     aria-label={`Remove ${t}`}
-                    className="hover:text-sko-text-error"
+                    className="text-sko-icon-faint hover:text-sko-text-error"
                   >
                     <Icon icon={X} size={12} />
                   </button>

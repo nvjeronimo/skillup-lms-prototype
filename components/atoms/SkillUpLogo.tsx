@@ -1,12 +1,9 @@
 import { cn } from "@/lib/utils";
 
 /**
- * SkillUp wordmark. Theme-aware, following the DS Skillup_logo (19617:36654):
- * - Light: Property 1=color: dark-teal "Skill" and icon marks, light-blue "Up" and icon disc.
- * - Dark: Property 1=Monotone_Light, as in the Dark topbar (19975:537713). The whole
- *   mark is white: "Skill", "Up", and the icon marks, with a white ring (with a gap)
- *   in place of the light-blue disc. The disc is hidden. The asset keeps the
- *   598×173 geometry, so the same height class sizes both.
+ * SkillUp wordmark. Theme-aware: the brand-ink parts ("Skill" + icon marks,
+ * dark teal in light) become white in dark mode — the dark ink is unreadable
+ * on a dark background. The light-blue "Up" + icon circle stay the same in both.
  *
  * Implemented as two <img>s toggled by [data-theme] in CSS (see globals.css).
  * No flash: data-theme is set pre-paint by the theme init script in layout.tsx.

@@ -216,9 +216,11 @@ function KnowledgeCheck({
               >
                 <OptionRadio checked={isPicked} disabled={answered && !isPicked && !o.correct} />
                 <span className="flex-1">{o.label}</span>
-                {missed ? <span className="sk-text-xs-medium shrink-0">Correct answer</span> : null}
-                {markRight && isPicked ? <Icon icon={Check} size={16} /> : null}
-                {markWrong ? <Icon icon={X} size={16} /> : null}
+                {missed ? <span className="sk-text-xs-medium shrink-0">This should be selected</span> : null}
+                {markRight && isPicked ? (
+                  <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" />
+                ) : null}
+                {markWrong ? <Icon icon={X} size={24} className="shrink-0 text-sko-icon-error" /> : null}
               </button>
             </li>
           );

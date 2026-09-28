@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Maximize2, RotateCcw } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
@@ -84,7 +84,7 @@ export function ScormContainer({
               activity is ungraded.
             </span>
             <div className="flex flex-wrap justify-center gap-2 pt-2">
-              <Button variant="primary" size="md" leftIcon={RotateCcw} onClick={onRetry}>
+              <Button variant="primary" size="md" onClick={onRetry}>
                 Try again
               </Button>
               <Button variant="secondary" size="md" onClick={onSkip}>

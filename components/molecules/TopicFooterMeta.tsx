@@ -21,7 +21,8 @@ export function TopicFooterMeta({ byline, onReport }: TopicFooterMetaProps) {
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
 
   return (
-    <div className="mt-6 flex flex-col gap-3">
+    // No gap: ContentFeedback's own DS py-3 gives the 12px under the byline row.
+    <div className="mt-6 flex flex-col">
       {byline ? (
         // DS `LMS / Topic · Author & Updated Date`: the row bottom-aligns the date (gap 16);
         // the Author frame is avatar md + text column (gap 12); name over role (gap 2).
@@ -39,6 +40,8 @@ export function TopicFooterMeta({ byline, onReport }: TopicFooterMetaProps) {
         </div>
       ) : null}
 
+      {/* pt-4 replaces (does not add to) ContentFeedback's py-3 top, since Tailwind emits
+          pt-* after py-*: 16 under the rule, as on the byline row, and the DS 12 below. */}
       <ContentFeedback
         className={byline ? "" : "border-t border-sko-border-subtle pt-4"}
         value={feedback}

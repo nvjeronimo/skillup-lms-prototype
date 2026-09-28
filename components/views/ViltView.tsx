@@ -93,7 +93,9 @@ function StageStepper({ current }: { current: ViltStage }) {
                 "sk-text-xs-medium inline-flex items-center rounded-full px-2 py-1 ring-1 ring-inset",
                 isCurrent
                   ? s.stage === "live"
-                    ? "bg-sko-bg-error-soft text-sko-text-error ring-sko-border-error"
+                    ? // Green is the LIVE NOW colour (decision 012); red stays for errors and
+                      // destructive actions. The DS 20322:705552 red is logged as a DS fix.
+                      "bg-sko-bg-success-soft text-sko-text-success ring-sko-border-success"
                     : "bg-sko-bg-primary-soft text-sko-text-primary ring-sko-border-primary"
                   : isPast
                     ? "bg-sko-bg-subtle text-sko-text-subtle ring-sko-border-subtle"
@@ -109,23 +111,37 @@ function StageStepper({ current }: { current: ViltStage }) {
   );
 }
 
-/* DS VILT · Session Meta: fields 32px apart with a 1px border/subtle rule between them.
-   The rule is the next field's left border so the <dl> keeps valid dt/dd groups. */
+/* DS VILT · Session Meta: equal columns (flex-[1_0_0]) with a 12px row gap, and a 1px
+   border/subtle rule 32px before each field after the first. The rule is the field's left
+   border so the <dl> keeps valid dt/dd groups. The rules only show once all four fields fit
+   on one row (a 38rem wrapper: 4 x 8rem + 3 x 32px); below that the fields wrap without
+   rules, so no wrapped row starts with a stray rule and indent. A container query, since
+   the column width depends on the sidebar, not the viewport (at 769px, the tablet sidebar
+   leaves a 357px column where md: would already draw the rules). */
 function SessionMeta({ session }: { session: ViltSession }) {
   return (
-    <dl className="flex flex-wrap items-stretch gap-8">
-      {[
-        ["When", session.whenLabel],
-        ["Duration", session.durationLabel],
-        ["Host", session.host],
-        ["Platform", session.platform],
-      ].map(([k, v], i) => (
-        <div key={k} className={cn("flex flex-col gap-0.5", i > 0 && "border-l border-sko-border-subtle pl-8")}>
-          <dt className="sk-text-xs-medium uppercase text-sko-text-subtle">{k}</dt>
-          <dd className="sk-text-sm-medium text-sko-text-default">{v}</dd>
-        </div>
-      ))}
-    </dl>
+    <div className="[container-type:inline-size]">
+      <dl className="flex flex-wrap items-stretch gap-x-6 gap-y-3 [@container(min-width:38rem)]:gap-x-8">
+        {[
+          ["When", session.whenLabel],
+          ["Duration", session.durationLabel],
+          ["Host", session.host],
+          ["Platform", session.platform],
+        ].map(([k, v], i) => (
+          <div
+            key={k}
+            className={cn(
+              "flex min-w-[8rem] flex-1 flex-col gap-0.5",
+              i > 0 &&
+                "border-sko-border-subtle [@container(min-width:38rem)]:border-l [@container(min-width:38rem)]:pl-8",
+            )}
+          >
+            <dt className="sk-text-xs-medium uppercase text-sko-text-subtle">{k}</dt>
+            <dd className="sk-text-sm-medium text-sko-text-default">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }
 
@@ -254,11 +270,18 @@ function RecordingStage({ session }: { session: ViltSession }) {
     <section className="flex flex-col gap-4">
       <span className="sk-text-xs-regular text-sko-text-subtle">{session.whenLabel}</span>
 
-      {/* DS VILT · Stage Surface, Stage=Recording: bg/muted surface, the player, then the
-          RECORDING pill. The recording IS a Video asset — same player as any Video topic. */}
-      <div className="flex flex-col items-center gap-1.5 rounded-xl bg-sko-bg-muted px-8">
-        <VideoPlayer durationSeconds={durationToSeconds(session.durationLabel)} />
-        <span className="sk-text-xs-medium inline-flex items-center rounded-full bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
+      {/* DS VILT · Stage Surface, Stage=Recording (20322:705648): bg/muted surface with the
+          640x360 md player centred at full surface height, and the RECORDING pill pinned
+          top-left at 16/16 over the muted margin. The recording IS a Video asset — same
+          player as any Video topic. The side margin only clears the pill from a 55rem
+          surface up; below that the player drops under the pill (pt-14, pb-8) instead of
+          being covered by it. A container query, since the column width depends on the
+          sidebar and side panel, not the viewport. */}
+      <div className="relative flex justify-center rounded-xl bg-sko-bg-muted px-8 [container-type:inline-size]">
+        <div className="w-full max-w-[640px] pb-8 pt-14 [@container(min-width:55rem)]:py-0">
+          <VideoPlayer durationSeconds={durationToSeconds(session.durationLabel)} size="md" />
+        </div>
+        <span className="sk-text-xs-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-full bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
           Recording
         </span>
       </div>

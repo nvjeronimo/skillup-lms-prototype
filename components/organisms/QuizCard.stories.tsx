@@ -84,7 +84,7 @@ export const Incorrect: Story = {
   },
 };
 
-/** Multi-select only: some right, none wrong. */
+/** Multi-select only: some right, none wrong. The untouched right answer is Missed and the untouched wrong one is Correctly unselected (06 §14.8 row 6). */
 export const PartiallyCorrect: Story = {
   args: {
     state: "Partially correct",

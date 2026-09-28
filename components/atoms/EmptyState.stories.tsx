@@ -13,13 +13,12 @@ export default meta;
 
 type Story = StoryObj<typeof EmptyState>;
 
-/** DS Kind=Notes: edit-02 glyph and the Primary sm "Add first note" CTA. */
+/** DS Kind=Notes: edit-02 glyph, no CTA (notes are created from a transcript line). */
 export const NotesEmpty: Story = {
   args: {
     icon: Edit2,
     title: "No notes yet",
     description: "Create notes from the Transcript tab: click + Note on any line.",
-    action: <Button variant="primary" size="sm">Add first note</Button>,
   },
 };
 

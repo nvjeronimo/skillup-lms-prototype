@@ -94,8 +94,8 @@ const LEVEL_ICON: Record<Difficulty, LucideIcon> = {
 
 /**
  * Difficulty (DS `LMS / Difficulty Badge`, 19975:538077): Badge v2 Style=Outline, Size=sm,
- * Color=Gray for every level — bg/faint pill, 1px inside stroke, label text/muted, level
- * glyph icon/subtle at 12px.
+ * Color=Gray for every level — bg/faint pill, 1px inside stroke border/subtle (DS-D1), label
+ * text/muted, level glyph icon/subtle at 12px.
  */
 export function DifficultyBadge({ value }: { value: Difficulty }) {
   return (

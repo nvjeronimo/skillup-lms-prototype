@@ -5,8 +5,8 @@ import { Send, Sparkles, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
-/** Mirrors the DS `LMS / AI Panel` Mode options 1:1 (the tab label for "Ask AI" stays "Ask"). */
-export type AIMode = "Key Takeaways" | "Ask AI" | "Chat" | "Related";
+/** DS `LMS / AI Panel` Mode (the DS names "Ask" as "Ask AI"; the prototype keeps "Ask", ADR 008). */
+export type AIMode = "Key Takeaways" | "Ask" | "Chat" | "Related";
 
 export interface AIPanelProps {
   mode?: AIMode;
@@ -17,7 +17,7 @@ export interface AIPanelProps {
 
 const MODES: { value: AIMode; label: string }[] = [
   { value: "Key Takeaways", label: "Takeaways" },
-  { value: "Ask AI", label: "Ask" },
+  { value: "Ask", label: "Ask" },
   { value: "Chat", label: "Chat" },
   { value: "Related", label: "Related" },
 ];
@@ -46,12 +46,12 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   return <p className="sk-text-xs-medium uppercase text-sko-text-subtle">{children}</p>;
 }
 
-/** Right-side AI assistant panel. Mode = Key Takeaways · Ask AI · Chat · Related (DS `LMS / AI Panel`). */
+/** Right-side AI assistant panel. Mode = Key Takeaways · Ask · Chat · Related (DS `LMS / AI Panel`). */
 export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, className }: AIPanelProps) {
   return (
     <aside
       className={cn(
-        "flex h-full w-[360px] flex-col rounded-l-lg border-l border-sko-border-subtle bg-sko-bg-page",
+        "flex h-full w-[360px] flex-col border-l border-sko-border-subtle bg-sko-bg-page",
         className,
       )}
       aria-label="AI assistant"
@@ -71,8 +71,9 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
         </button>
       </header>
 
-      {/* DS mode-col: p20, gap 16 — Tabs, Section-Title, then the mode's list (gap 12). */}
-      <div className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-5">
+      {/* DS mode-col: p20, gap 16 — Tabs, Section-Title, then the mode's list (gap 12).
+          The tablist sits outside the scroll area so it stays pinned in a long Chat. */}
+      <div className="px-5 pt-5">
         <div role="tablist" aria-label="AI assistant mode" className="flex items-center gap-3">
           {MODES.map((m) => {
             const isActive = m.value === mode;
@@ -101,7 +102,9 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
             );
           })}
         </div>
+      </div>
 
+      <div className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto px-5 pb-5 pt-4">
         {mode === "Key Takeaways" ? (
           <>
             <Eyebrow>Key takeaways · {TAKEAWAYS.length}</Eyebrow>
@@ -119,7 +122,7 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
           </>
         ) : null}
 
-        {mode === "Ask AI" ? (
+        {mode === "Ask" ? (
           <>
             <Eyebrow>Ask anything</Eyebrow>
             <div className="flex flex-col gap-3">
@@ -179,7 +182,7 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
         ) : null}
       </div>
 
-      {mode === "Ask AI" || mode === "Chat" ? (
+      {mode === "Ask" || mode === "Chat" ? (
         <div className="flex items-center gap-2 border-t border-sko-border-subtle px-3 py-3">
           <input
             placeholder="Type a message…"

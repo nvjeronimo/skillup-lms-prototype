@@ -103,13 +103,16 @@ export function QuizNavStepper({
         </button>
 
         {/* Progress bar, Label=Top: the counter sits 8px above the track,
-            right-aligned. Track bg/strong, fill bg/info, square ends. */}
+            right-aligned. Fill bg/info, square ends. The track stays bg/muted:
+            DS track bg/strong fails 1.4.11 against bg/info (2.26:1 light,
+            2.82:1 dark), and the bar is the only place the answered share
+            shows. */}
         <div className="flex min-w-0 flex-1 flex-col items-end gap-2">
           <span className="sk-text-xs-medium text-sko-text-muted">
             Question {current} of {total}
           </span>
           <div
-            className="h-2 w-full bg-sko-bg-strong"
+            className="h-2 w-full bg-sko-bg-muted"
             role="progressbar"
             aria-valuenow={value}
             aria-valuemin={0}

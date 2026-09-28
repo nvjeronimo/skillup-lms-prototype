@@ -59,7 +59,7 @@ export function CourseCompleteModal({
         {/* Content: DS padding 4/32/24/32, gap 12, centred. */}
         <div className="flex flex-col items-center gap-3 px-8 pb-6 pt-1">
           <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-success text-sko-icon-on-media">
-            <Icon icon={Check} size={32} strokeWidth={1.5} absoluteStrokeWidth />
+            <Icon icon={Check} size={32} />
           </span>
           <h2 id={titleId} className="sk-text-display-xs-semibold text-sko-text-default">
             Course complete!

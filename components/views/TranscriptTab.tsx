@@ -130,8 +130,8 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 : transcript[0]?.id,
             })
           }
-          // DS Link Button_def, Type=Brand · Hierarchy=Primary · md.
-          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          // DS Link Button_def, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
+          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
           <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Add Note</span>
@@ -181,18 +181,16 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
         ) : null}
       </div>
 
-      {/* Feedback + license footer (ICP Phase 1). */}
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-sko-border-subtle pt-3">
-        <ContentFeedback
-          value={feedback}
-          onLike={() => setFeedback(feedback === "like" ? null : "like")}
-          onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
-          onReport={() => showToast("Thanks, we'll take a look.")}
-        />
-        <a href="#" className="sk-text-xs-regular text-sko-text-subtle hover:text-sko-text-primary">
-          CC BY-SA 4.0
-        </a>
-      </div>
+      {/* Feedback + license footer (ICP Phase 1). ContentFeedback carries its own DS
+          12/12 padding and right-aligned licence, so no wrapper padding here. */}
+      <ContentFeedback
+        className="mt-2 border-t border-sko-border-subtle"
+        value={feedback}
+        onLike={() => setFeedback(feedback === "like" ? null : "like")}
+        onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
+        onReport={() => showToast("Thanks, we'll take a look.")}
+        license="CC BY-SA 4.0"
+      />
     </div>
   );
 }

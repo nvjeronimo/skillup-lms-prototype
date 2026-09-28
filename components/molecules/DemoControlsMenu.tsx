@@ -70,12 +70,17 @@ function ToggleRow({
       onClick={() => onChange(!checked)}
       className="flex w-full items-start gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
     >
-      {/* Track: bg/primary on, bg/muted off; the knob sits right when on. */}
+      {/* Track: bg/primary on, bg/muted off; the knob sits right when on. The off track
+          adds a 1px inset border/default ring: the DS bg/muted track and white knob are
+          about 1.25:1 against bg/page, below WCAG 1.4.11's 3:1 (DS defect BA-11 on the
+          Accessibility Standards switches). The ring is inset, so the box stays 36×20. */}
       <span
         aria-hidden
         className={cn(
           "inline-flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors",
-          checked ? "justify-end bg-sko-bg-primary" : "justify-start bg-sko-bg-muted",
+          checked
+            ? "justify-end bg-sko-bg-primary"
+            : "justify-start bg-sko-bg-muted ring-1 ring-inset ring-sko-border-default",
         )}
       >
         {/* Knob: 16px, Elevation/level2 (= Tailwind `shadow`). */}
@@ -177,13 +182,17 @@ export function DemoControlsMenu({
         onClick={() => setOpen((o) => !o)}
         className={cn(
           "flex items-center hover:bg-sko-bg-subtle",
-          // DS topbar: Mobile is a bare 24px round avatar; Desktop/Tablet is the
-          // "Avatar label group" Size=sm (Avatar xs + gap 8 + name). The p-1
-          // rounded-lg hover wrapper is a prototype affordance.
+          // DS topbar Mobile: a bare 24px round avatar. Desktop/Tablet keep a 32px square
+          // avatar + name (PR #9 squares the profile avatar to match the topbar icon
+          // buttons and CTAs; the DS "Avatar label group" draws a 24px circle).
           compact ? "rounded-full" : "ml-1 gap-2 rounded-lg p-1",
         )}
       >
-        <Avatar name={userName} src={userAvatarUrl} size="xs" />
+        {compact ? (
+          <Avatar name={userName} src={userAvatarUrl} size="xs" />
+        ) : (
+          <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
+        )}
         {!compact ? (
           <span className="sk-text-sm-semibold pr-1 text-sko-text-default">{userName}</span>
         ) : null}
@@ -195,7 +204,7 @@ export function DemoControlsMenu({
           className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
         >
           <div className="flex items-center gap-2.5 px-4 py-3">
-            <Avatar name={userName} src={userAvatarUrl} size="sm" />
+            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <div className="min-w-0">
               <p className="sk-text-sm-semibold truncate text-sko-text-default">{userName}</p>
               <p className="sk-text-xs-regular text-sko-text-subtle">Demo preview settings</p>

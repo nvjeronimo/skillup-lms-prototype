@@ -13,9 +13,9 @@ export interface AvatarProps {
   /** Online status dot. */
   status?: "online" | "offline" | "none";
   /**
-   * Corner shape. "circle" (default) is the only shape in the DS Avatar
-   * (radius 9999), including the topbar profile avatar. "square" (rounded-lg)
-   * is kept for backward compatibility only; it has no DS match.
+   * Corner shape. "circle" (default) for people (thread authors, bylines);
+   * "square" for the profile avatar, to match the rounded-lg of the topbar
+   * icon buttons and CTAs.
    */
   shape?: "circle" | "square";
   className?: string;
@@ -33,8 +33,10 @@ const SIZE: Record<AvatarSize, { box: string; text: string; border: string; dot:
 };
 
 const DOT_COLOR: Record<"online" | "offline", string> = {
-  // token-lint-disable-next-line DS _Avatar online indicator binds icon/success-strong as fill
-  online: "bg-sko-icon-success-strong",
+  // The DS _Avatar online indicator binds icon/success-strong as its fill. bg/success is
+  // kept instead: the colourblind-safe [data-vision='cvd'] blocks in tokens/colors.css
+  // remap it to blue, and they do not remap icon/success-strong.
+  online: "bg-sko-bg-success",
   // token-lint-disable-next-line DS Avatar has no Offline status (only Online, Company, Verified); grey dot kept at its previous value until the DS defines one
   offline: "bg-sko-icon-faint",
 };

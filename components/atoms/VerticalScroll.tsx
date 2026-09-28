@@ -15,7 +15,9 @@ export interface VerticalScrollProps {
  * DS `Vertical Scroll` — custom scrollbar visualisation atom (decorative; real
  * scrolling uses the `.sk-scroll` native styling). Useful for documenting the
  * rail in Storybook. DS: 6px wide (Scrollbar/width) with radius 3
- * (Scrollbar/radius, fully round at 6px), no track fill, thumb in `icon/faint`.
+ * (Scrollbar/radius, fully round at 6px), no track fill, thumb in
+ * `border/default` (the DS binds `icon/faint`, 1.77:1 on bg/page — thumb colour
+ * pending DS rebind (FND-18)).
  * The `dragging` state is prototype-only (the DS component has no variant).
  */
 export function VerticalScroll({
@@ -37,8 +39,8 @@ export function VerticalScroll({
       <div
         className={cn(
           "absolute left-0 w-1.5 rounded-full transition-colors",
-          // token-lint-disable-next-line DS binds the thumb fill to icon/faint (a mark, not a surface under content)
-          dragging ? "bg-sko-bg-primary" : "bg-sko-icon-faint",
+          // thumb colour pending DS rebind (FND-18)
+          dragging ? "bg-sko-bg-primary" : "bg-sko-border-default",
         )}
         style={{ height: thumbHeight, top }}
       />

@@ -24,8 +24,8 @@ export interface ProgressRailProps {
  * prose elsewhere on the screen.
  *
  * Quizzes no longer use this: the DS replaced their dot rail with the
- * `Quiz · Progress Bar` variant (see QuizProgressBar), because a dot per
- * question reads as noise on a long quiz.
+ * Stepper Bar's progress track (see QuizNavStepper in QuizNav), because a dot
+ * per question reads as noise on a long quiz.
  */
 export function ProgressRail({
   states,

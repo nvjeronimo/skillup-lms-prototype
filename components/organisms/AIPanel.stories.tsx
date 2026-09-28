@@ -7,7 +7,7 @@ const meta: Meta<typeof AIPanel> = {
   tags: ["autodocs"],
   parameters: { layout: "fullscreen" },
   args: { mode: "Key Takeaways" },
-  argTypes: { mode: { control: "radio", options: ["Key Takeaways", "Ask AI", "Chat", "Related"] } },
+  argTypes: { mode: { control: "radio", options: ["Key Takeaways", "Ask", "Chat", "Related"] } },
   decorators: [
     (Story) => (
       <div className="flex h-[600px] justify-end">
@@ -21,6 +21,6 @@ export default meta;
 type Story = StoryObj<typeof AIPanel>;
 
 export const KeyTakeaways: Story = { args: { mode: "Key Takeaways" } };
-export const AskAI: Story = { args: { mode: "Ask AI" } };
+export const Ask: Story = { args: { mode: "Ask" } };
 export const Chat: Story = { args: { mode: "Chat" } };
 export const Related: Story = { args: { mode: "Related" } };

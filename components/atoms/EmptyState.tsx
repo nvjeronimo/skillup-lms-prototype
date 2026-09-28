@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { cn } from "@/lib/utils";
+import { cn, iconStroke } from "@/lib/utils";
 
 export interface EmptyStateProps {
   icon: LucideIcon;
@@ -14,8 +14,9 @@ export interface EmptyStateProps {
 /**
  * DS `LMS / Empty State` (node 19975-537992): 1px border/subtle, radius 12,
  * padding 48/32, gap 16; 56px rounded-square pictograph on bg/primary-soft with a
- * 28px icon/primary glyph (stroke 1.5); title body-large/Medium, body
- * body-medium/Medium filling the width. Used for Notes empty, Downloads empty, etc.
+ * 28px icon/primary glyph (2px stroke per decision 013, not the DS 1.5); title
+ * body-large/Medium, body body-medium/Medium filling the width. Used for Notes
+ * empty, Downloads empty, etc.
  */
 export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
   return (
@@ -26,7 +27,7 @@ export function EmptyState({ icon, title, description, action, className }: Empt
       )}
     >
       <span className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-sko-bg-primary-soft text-sko-icon-primary">
-        <Icon icon={icon} size={28} strokeWidth={1.5} absoluteStrokeWidth />
+        <Icon icon={icon} size={28} strokeWidth={iconStroke(28)} />
       </span>
       <p className="sk-text-md-medium text-sko-text-default">{title}</p>
       {description ? (

@@ -125,8 +125,8 @@ export function VideoChromeFooter({
               setDlOpen((o) => !o);
               setLangOpen(false);
             }}
-            // DS Link Button_def, Type=Brand · Hierarchy=Primary · md.
-            className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+            // DS Link Button_def, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
+            className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
           >
             <Icon icon={Download} size={16} className="text-sko-icon-primary" />
             <span className="px-0.5">Download transcript</span>

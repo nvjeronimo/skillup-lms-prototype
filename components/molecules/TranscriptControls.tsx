@@ -24,7 +24,8 @@ const LANGS = [
 
 /**
  * Tab-row controls for the transcript: Language · Download transcript · Add Note.
- * Download + Add Note are DS Link Button_def (Type=Brand · Hierarchy=Primary · md).
+ * Download + Add Note are DS Link Button_def (Type=Brand · Hierarchy=Primary · md),
+ * with the 1px bottom stroke in border/primary (h-7 is border-box, so height stays 28).
  */
 export function TranscriptControls({
   showLanguage = true,
@@ -68,7 +69,7 @@ export function TranscriptControls({
           type="button"
           onClick={onDownload}
           aria-label="Download transcript"
-          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
           <Icon icon={Download} size={16} className="text-sko-icon-primary" />
           <span className="hidden px-0.5 md:inline">Download transcript</span>
@@ -79,7 +80,7 @@ export function TranscriptControls({
         <button
           type="button"
           onClick={onAddNote}
-          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
           <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Add Note</span>

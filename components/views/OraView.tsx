@@ -201,9 +201,21 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
               <span className="sk-text-sm-semibold truncate text-sko-text-default">{file}</span>
               <span className="sk-text-xs-regular text-sko-text-subtle">2.4 MB · uploaded</span>
             </div>
-            <Button variant="secondary" size="sm" className="ml-auto" onClick={() => setFile(null)}>
-              Replace
-            </Button>
+            {/* Hidden while the Submit Gate is open: files can't be replaced once confirming. */}
+            {!confirming ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="ml-auto"
+                onClick={() => {
+                  setFile(null);
+                  setDescription("");
+                  setConfirming(false);
+                }}
+              >
+                Replace
+              </Button>
+            ) : null}
           </div>
           <label className="flex flex-col gap-1.5">
             <span className="sk-text-xs-medium uppercase text-sko-text-subtle">

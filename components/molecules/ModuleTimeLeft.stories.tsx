@@ -16,3 +16,13 @@ type Story = StoryObj<typeof ModuleTimeLeft>;
 
 export const Default: Story = {};
 export const SingleSegment: Story = { args: { segments: ["20 min of videos left"] } };
+/** At the 280px sidebar width the DS sample segments wrap instead of overflowing. */
+export const SidebarWidth: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ width: 280 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
