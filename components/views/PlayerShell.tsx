@@ -321,7 +321,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           />
         ) : null}
 
-        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page outline-none"
+        >
           <div
             className="sk-scroll flex-1 overflow-y-auto"
             onScroll={(e) => {

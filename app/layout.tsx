@@ -12,7 +12,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "SkillUp LMS · Video Lesson",
+  // Every route sets its own title (WCAG 2.4.2); the template adds the product.
+  title: { template: "%s · SkillUp", default: "SkillUp" },
   description: "Prototype of the SkillUp LMS video lesson flow.",
 };
 
@@ -30,6 +31,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
+        {/* First focusable element on every page (WCAG 2.4.1). Every route
+            renders <main id="main" tabIndex={-1}>. */}
+        <a
+          href="#main"
+          className="sk-text-sm-semibold sr-only rounded-lg border border-sko-border-primary bg-sko-bg-page px-4 py-3 text-sko-text-primary shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]"
+        >
+          Skip to content
+        </a>
         <ResponsiveShell>{children}</ResponsiveShell>
       </body>
     </html>
