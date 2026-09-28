@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Bookmark } from "lucide-react";
+import { Bookmark, X } from "lucide-react";
+import { Icon } from "@/lib/icons";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
 import { LessonHeader } from "@/components/atoms/LessonHeader";
@@ -37,9 +38,11 @@ export interface SidebarProps {
   onToggleModule?: (moduleId: string) => void;
   onSelectTopic?: (topicId: string) => void;
   onToggleBookmark?: (topicId: string) => void;
-  /** Mobile drawer close — the DS Mobile variant has no close control, so this
-   *  is wired to the Escape key (the shell's backdrop handles the tap). */
+  /** Mobile drawer close — renders the DS Mobile header (title + 44px close X).
+   *  Escape and the backdrop are handled by the drawer dialog in the shell. */
   onCloseMobile?: () => void;
+  /** Id for the Mobile header title, so the drawer dialog can be labelled by it. */
+  mobileTitleId?: string;
   className?: string;
 }
 
@@ -74,6 +77,7 @@ export function Sidebar({
   onSelectTopic,
   onToggleBookmark,
   onCloseMobile,
+  mobileTitleId,
   className,
 }: SidebarProps) {
   const collapsed = variant === "Collapsed";
@@ -127,15 +131,6 @@ export function Sidebar({
     if (!isMobile) savedScrollTop = container.scrollTop;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopicId]);
-
-  React.useEffect(() => {
-    if (!isMobile || !onCloseMobile) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCloseMobile();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [isMobile, onCloseMobile]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
@@ -192,13 +187,14 @@ export function Sidebar({
     );
     return (
       <>
-      <aside
+      <nav
         className={cn(
           "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-4",
           className,
         )}
-        aria-label="Course navigation"
+        aria-label="Course"
       >
+        <h2 className="sr-only">Course navigation</h2>
         <div className="flex flex-col items-center gap-2 pb-3">
           <SidebarToggle expanded={false} onToggle={onToggleSidebar} />
           <OverallProgress
@@ -250,7 +246,7 @@ export function Sidebar({
             );
           })}
         </div>
-      </aside>
+      </nav>
 
       {/* Hover flyout — title + bookmark toggle for the rail's icon-only rows. */}
       {flyout ? (
@@ -288,7 +284,7 @@ export function Sidebar({
   }
 
   return (
-    <aside
+    <nav
       className={cn(
         "flex h-full flex-col overflow-hidden bg-sko-bg-page",
         // Floating card on desktop/tablet; Mobile drawer fills its container.
@@ -296,14 +292,32 @@ export function Sidebar({
         WIDTH[variant],
         className,
       )}
-      aria-label="Course navigation"
+      aria-label="Course"
     >
+      {isMobile && onCloseMobile ? (
+        /* DS "Mobile header" (title + close): the drawer is a modal dialog, so it
+           needs a visible close control (WCAG 2.1.2 / 2.5.8) — Escape and the
+           backdrop tap still work too. The title labels the dialog. */
+        <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-sko-border-subtle pl-4 pr-2">
+          <h2 id={mobileTitleId} className="sk-text-md-semibold text-sko-text-default">
+            Course menu
+          </h2>
+          <button
+            type="button"
+            onClick={onCloseMobile}
+            aria-label="Close course menu"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-sko-icon-subtle transition-colors hover:bg-sko-bg-faint"
+          >
+            <Icon icon={X} size={24} />
+          </button>
+        </div>
+      ) : (
+        <h2 className="sr-only">Course navigation</h2>
+      )}
       {isMobile ? (
         /* Mobile (DS Sidebar-ICP · Mobile): the course header keeps its own
            hairline, the toggle is hidden and there is no Overall Progress block —
-           the 46px ring sits top-right of the header, level with the eyebrow.
-           The DS "Mobile header" (title + close) is hidden, so the drawer has no
-           close control of its own: the backdrop and Escape close it. */
+           the 46px ring sits top-right of the header, level with the eyebrow. */
         <CourseHeader
           title={course.title}
           eyebrow="Course"
@@ -395,6 +409,6 @@ export function Sidebar({
           );
         })}
       </div>
-    </aside>
+    </nav>
   );
 }

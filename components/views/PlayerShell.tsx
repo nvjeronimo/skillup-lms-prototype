@@ -25,6 +25,7 @@ import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/lib/useDialog";
 import {
   topicFamily,
   topicDescription,
@@ -282,6 +283,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           track("mobile_drawer_open");
           setMobileDrawerOpen(true);
         }}
+        menuExpanded={bp === "mobile" && mobileDrawerOpen}
+        menuControls={COURSE_DRAWER_ID}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
         showDiscussions={discussionsPreview}
@@ -434,34 +437,29 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         </main>
       </div>
 
-      {/* Mobile drawer */}
-      {bp === "mobile" && mobileDrawerOpen ? (
-        <div className="fixed inset-0 z-40">
-          <div
-            className="sk-backdrop sk-animate-fade absolute inset-0"
-            onClick={() => setMobileDrawerOpen(false)}
-            aria-hidden
+      {/* Mobile drawer — a modal dialog (focus moves in, is trapped, the page
+          behind is inert, Esc / backdrop / Close dismiss, focus returns to the
+          "Open course menu" trigger). */}
+      <MobileCourseDrawer
+        open={bp === "mobile" && mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+      >
+        {(titleId) => (
+          <Sidebar
+            course={activeCourse}
+            currentTopicId={topicId}
+            variant="Mobile"
+            collapsedModules={collapsedModules}
+            bookmarks={bookmarks}
+            completed={completedTopics}
+            onToggleModule={toggleModule}
+            onSelectTopic={navigateTopic}
+            onToggleBookmark={toggleBookmark}
+            onCloseMobile={() => setMobileDrawerOpen(false)}
+            mobileTitleId={titleId}
           />
-          <div className="sk-animate-slide-left absolute left-0 top-0 h-full">
-            {/* The drawer's close sits in the course header (next to the progress
-                ring), matching DS Sidebar v2 · Mobile. */}
-            <div className="relative h-full">
-              <Sidebar
-                course={activeCourse}
-                currentTopicId={topicId}
-                variant="Mobile"
-                collapsedModules={collapsedModules}
-                bookmarks={bookmarks}
-                completed={completedTopics}
-                onToggleModule={toggleModule}
-                onSelectTopic={navigateTopic}
-                onToggleBookmark={toggleBookmark}
-                onCloseMobile={() => setMobileDrawerOpen(false)}
-              />
-            </div>
-          </div>
-        </div>
-      ) : null}
+        )}
+      </MobileCourseDrawer>
 
       {/* Overlay panels — mutually exclusive */}
       <NotificationsPanel
@@ -534,6 +532,37 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       />
 
       <Toast toast={toast} onDone={clearToast} />
+    </div>
+  );
+}
+
+const COURSE_DRAWER_ID = "course-drawer";
+
+/** The mobile course drawer as a modal dialog (see useDialog). */
+function MobileCourseDrawer({
+  open,
+  onClose,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  children: (titleId: string) => React.ReactNode;
+}) {
+  const titleId = React.useId();
+  const ref = useDialog(open, onClose);
+  if (!open) return null;
+  return (
+    <div ref={ref} className="fixed inset-0 z-40">
+      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
+      <div
+        id={COURSE_DRAWER_ID}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        className="sk-animate-slide-left absolute left-0 top-0 h-full"
+      >
+        {children(titleId)}
+      </div>
     </div>
   );
 }
