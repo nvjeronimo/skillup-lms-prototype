@@ -5,6 +5,7 @@ import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { InlineAlert, type AlertTone } from "@/components/atoms/InlineAlert";
 import { cn } from "@/lib/utils";
+import { useRovingRadio } from "@/lib/useRovingRadio";
 import type { QuizOption } from "@/lib/content";
 import {
   QuizFooterActions,
@@ -314,6 +315,20 @@ export function QuizCard({
   const verdict = verdictAlert(state, earned, points, showFooterQuestions);
   const alert = verdict && (!verdict.notice || showFooterQuestions) ? verdict : null;
   const chosen = options.filter((o) => selectedIds.includes(o.id));
+  // Options are a labelled radiogroup (single) or group of checkboxes (multi).
+  // Single-select gets the APG roving tabindex: one Tab stop, arrows move + check.
+  const questionId = React.useId();
+  const hintId = React.useId();
+  const selectedIndex = options.findIndex((o) => selectedIds.includes(o.id));
+  const roving = useRovingRadio(
+    options.length,
+    selectedIndex,
+    (i) => {
+      const next = options[i];
+      if (next && !selectedIds.includes(next.id)) onToggleOption?.(next.id);
+    },
+    { disabled: revealed || multiSelect },
+  );
 
   return (
     <div
@@ -350,16 +365,21 @@ export function QuizCard({
       {showProgress ? progress : null}
 
       {/* body-large/Medium in text/default in all nine states, prompt or not. */}
-      <h3 className="sk-text-md-medium text-sko-text-default">{question}</h3>
+      <h3 id={questionId} className="sk-text-md-medium text-sko-text-default">{question}</h3>
 
       {multiSelect ? (
-        <span className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sko-text-subtle">
+        <span id={hintId} className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sko-text-subtle">
           Select all that apply
         </span>
       ) : null}
 
-      <ul className="flex flex-col gap-2">
-        {options.map((opt) => {
+      <div
+        role={multiSelect ? "group" : "radiogroup"}
+        aria-labelledby={questionId}
+        aria-describedby={multiSelect ? hintId : undefined}
+        className="flex flex-col gap-2"
+      >
+        {options.map((opt, i) => {
           const isSelected = selectedIds.includes(opt.id);
           const rowState = optionState(state, isSelected, Boolean(opt.correct), multiSelect);
           const row = OPTION_ROW[rowState];
@@ -368,9 +388,10 @@ export function QuizCard({
           const showNote = row.note && (showStateIcon || rowState !== "Correctly unselected");
           const showMarker = showStateIcon ? row.marker : undefined;
           return (
-            <li key={opt.id}>
+            <div key={opt.id}>
               <button
                 type="button"
+                {...(multiSelect ? {} : roving.itemProps(i))}
                 onClick={() => !revealed && onToggleOption?.(opt.id)}
                 disabled={revealed}
                 role={multiSelect ? "checkbox" : "radio"}
@@ -394,16 +415,22 @@ export function QuizCard({
                   <span className={cn("sk-text-xs-medium mt-0.5 shrink-0", row.noteTone)}>{row.note}</span>
                 ) : null}
                 {showMarker === "tick" ? (
-                  <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" />
+                  <>
+                    <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" aria-hidden />
+                    <span className="sr-only">, correct</span>
+                  </>
                 ) : null}
                 {showMarker === "cross" ? (
-                  <Icon icon={X} size={24} className="shrink-0 text-sko-icon-error" />
+                  <>
+                    <Icon icon={X} size={24} className="shrink-0 text-sko-icon-error" aria-hidden />
+                    <span className="sr-only">, incorrect</span>
+                  </>
                 ) : null}
               </button>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
 
       {alert ? (
         <InlineAlert
