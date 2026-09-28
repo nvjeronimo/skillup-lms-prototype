@@ -48,6 +48,8 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 /** Right-side AI assistant panel. Mode = Key Takeaways · Ask · Chat · Related (DS `LMS / AI Panel`). */
 export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, className }: AIPanelProps) {
+  const askId = React.useId();
+  const messageId = React.useId();
   return (
     <aside
       className={cn(
@@ -126,7 +128,11 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
           <>
             <Eyebrow>Ask anything</Eyebrow>
             <div className="flex flex-col gap-3">
+              <label htmlFor={askId} className="sr-only">
+                Ask about this topic
+              </label>
               <input
+                id={askId}
                 placeholder="Ask about this topic…"
                 className="sk-text-sm-medium w-full rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
               />
@@ -184,7 +190,11 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
 
       {mode === "Ask" || mode === "Chat" ? (
         <div className="flex items-center gap-2 border-t border-sko-border-subtle px-3 py-3">
+          <label htmlFor={messageId} className="sr-only">
+            Message
+          </label>
           <input
+            id={messageId}
             placeholder="Type a message…"
             className="sk-text-sm-regular flex-1 rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
           />

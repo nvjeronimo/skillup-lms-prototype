@@ -28,6 +28,9 @@ export function DiscussionPrompt({
 }: DiscussionPromptProps) {
   const [text, setText] = React.useState("");
 
+  const replyId = React.useId();
+  const countId = React.useId();
+
   return (
     <div
       className={cn(
@@ -40,7 +43,12 @@ export function DiscussionPrompt({
       <h3 className="sk-text-md-semibold text-sko-text-default">{prompt}</h3>
       <p className="sk-text-sm-regular text-sko-text-muted">{helper}</p>
 
+      <label htmlFor={replyId} className="sr-only">
+        Your reply
+      </label>
       <textarea
+        id={replyId}
+        aria-describedby={countId}
         value={text}
         onChange={(e) => setText(e.target.value.slice(0, maxChars))}
         rows={4}
@@ -49,7 +57,7 @@ export function DiscussionPrompt({
       />
 
       <div className="flex items-center justify-between">
-        <span className="sk-text-xs-medium text-sko-text-subtle">
+        <span id={countId} className="sk-text-xs-medium text-sko-text-subtle">
           {text.length} / {maxChars} characters
         </span>
         <Button variant="primary" size="sm" disabled={!text.trim()} onClick={() => onSubmit?.(text)}>
