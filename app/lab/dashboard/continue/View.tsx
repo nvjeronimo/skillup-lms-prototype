@@ -38,7 +38,7 @@ export function View() {
   const rest = persona.enrolments.filter((e) => e.id !== hero?.id && e.status !== "in-progress");
 
   return (
-    <main id="main" className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12 pt-6 md:px-8 md:pt-10">
+    <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-5xl flex-1 px-4 pb-12 pt-6 md:px-8 md:pt-10">
       <Greeting persona={persona} hero={hero} returning={returning} />
 
       {hero ? (

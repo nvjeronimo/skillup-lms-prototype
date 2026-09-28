@@ -374,7 +374,7 @@ export function View() {
   const nothingStarted = counts["in-progress"] === 0 && counts.completed === 0;
 
   return (
-    <main id="main" className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 md:p-8 xl:max-w-[1264px]">
+    <main id="main" tabIndex={-1} className="outline-none mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 md:p-8 xl:max-w-[1264px]">
       <header className="flex flex-col gap-1">
         <h1 className="sk-text-display-sm-semibold text-sko-text-default">
           {nothingStarted ? `Welcome, ${persona.firstName}` : `Your learning, ${persona.firstName}`}
