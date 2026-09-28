@@ -4,6 +4,7 @@ import * as React from "react";
 import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { useDialog } from "@/lib/useDialog";
 
 export interface CourseCompleteModalProps {
   open: boolean;
@@ -24,19 +25,15 @@ export function CourseCompleteModal({
   onBackToCourse,
 }: CourseCompleteModalProps) {
   const titleId = React.useId();
-
-  React.useEffect(() => {
-    if (!open) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  // Focus starts on the primary action (the close X is first in DOM order, but
+  // landing on it invites dismissing the celebration); trapped; Esc closes;
+  // focus returns to the trigger (the footer Next button).
+  const primaryRef = React.useRef<HTMLButtonElement>(null);
+  const dialogRef = useDialog(open, onClose, { initialFocusRef: primaryRef });
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+    <div ref={dialogRef} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
       <div
         role="dialog"
@@ -72,7 +69,7 @@ export function CourseCompleteModal({
 
         {/* Actions: DS padding 16/24/24/24, gap 8; all three are Size=md. */}
         <div className="flex flex-col gap-2 px-6 pb-6 pt-4">
-          <Button variant="primary" size="md" onClick={onNextCourse}>
+          <Button ref={primaryRef} variant="primary" size="md" onClick={onNextCourse}>
             Go to next course
           </Button>
           <Button variant="secondary" size="md" onClick={onViewCertificate}>

@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/lib/useDialog";
 import type { NotePayload } from "@/lib/types";
 
 export interface NoteEditorModalProps {
@@ -22,7 +23,11 @@ export interface NoteEditorModalProps {
   onSave: (payload: NotePayload) => void;
 }
 
-/** Modal editor for a transcript-anchored note. Esc cancels, Cmd/Ctrl+Enter saves. */
+/**
+ * Modal editor for a transcript-anchored note. Esc cancels, Cmd/Ctrl+Enter saves.
+ * Focus starts in the note field, is trapped while open and returns to the
+ * trigger on close (useDialog).
+ */
 export function NoteEditorModal({
   open,
   anchorTs,
@@ -39,6 +44,8 @@ export function NoteEditorModal({
   const [tagDraft, setTagDraft] = React.useState("");
   const textRef = React.useRef<HTMLTextAreaElement>(null);
   const titleId = React.useId();
+  const tagInputId = React.useId();
+  const dialogRef = useDialog(open, onCancel, { initialFocusRef: textRef });
 
   // Reset fields whenever the modal (re)opens with new content.
   React.useEffect(() => {
@@ -46,8 +53,6 @@ export function NoteEditorModal({
       setText(initialText);
       setTags(initialTags);
       setTagDraft("");
-      const t = window.setTimeout(() => textRef.current?.focus(), 0);
-      return () => window.clearTimeout(t);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, noteId, lineId]);
@@ -57,11 +62,8 @@ export function NoteEditorModal({
     onSave({ noteId, lineId, text: text.trim(), tags });
   }
 
+  // Escape is handled by useDialog.
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      onCancel();
-    }
     if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
       e.preventDefault();
       commitSave();
@@ -77,7 +79,11 @@ export function NoteEditorModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onKeyDown={handleKeyDown}>
+    <div
+      ref={dialogRef}
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      onKeyDown={handleKeyDown}
+    >
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
       <div
         role="dialog"
@@ -125,9 +131,9 @@ export function NoteEditorModal({
           </label>
 
           <div>
-            <span className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">
+            <label htmlFor={tagInputId} className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">
               Tags (optional)
-            </span>
+            </label>
             <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-sko-border-default px-2 py-1.5">
               {tags.map((t) => (
                 // DS Input field Type=Tags chip = `Tag` md Gray (r6, border/default, bg/page, X in icon-faint).
@@ -147,6 +153,7 @@ export function NoteEditorModal({
                 </span>
               ))}
               <input
+                id={tagInputId}
                 value={tagDraft}
                 onChange={(e) => setTagDraft(e.target.value)}
                 onKeyDown={(e) => {
