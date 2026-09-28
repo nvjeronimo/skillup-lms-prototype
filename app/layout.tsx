@@ -22,7 +22,9 @@ export const metadata: Metadata = {
 // only flips them post-hydration — a visible flash of light-themed chrome
 // (white CC/Edit pills, white progress circles) on every load of a dark-mode
 // session. Mirrors ResponsiveShell's attribute logic; must stay in sync with it.
-const THEME_INIT_SCRIPT = `(function(){try{var raw=localStorage.getItem('sk-lms-demo');if(!raw)return;var s=JSON.parse(raw).state;if(!s)return;if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');var d=document.documentElement;if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');if(s.largeTargets)d.setAttribute('data-large-targets','');}catch(e){}})();`;
+// Large targets: the stored choice wins; with no choice they default ON at
+// ≤767px (useLargeTargets in lib/store.ts).
+const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;var s={};try{var raw=localStorage.getItem('sk-lms-demo');s=(raw&&JSON.parse(raw).state)||{};}catch(e){}try{if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');var lt=s.largeTargetsChoice;if(lt===undefined||lt===null)lt=s.largeTargets===true?true:(s.deviceMode==='mobile'||window.matchMedia('(max-width: 767px)').matches)?true:null;if(lt===true)d.setAttribute('data-large-targets','');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

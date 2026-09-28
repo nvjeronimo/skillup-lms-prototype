@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { notesSeed, allCourses, getTopic } from "./data";
@@ -82,7 +83,12 @@ interface LmsState {
   textSize: TextSize;
   reduceMotion: boolean;
   underlineLinks: boolean;
-  largeTargets: boolean;
+  /**
+   * The learner's explicit Larger touch targets choice; `null` = never chosen,
+   * so the default applies (ON at ≤767px / mobile preview, OFF otherwise —
+   * product decision). Read the effective value with `useLargeTargets()`.
+   */
+  largeTargetsChoice: boolean | null;
   /** Preview flag: the WIP "Discuss this topic" surface. Off by default. */
   discussionsPreview: boolean;
   /**
@@ -200,7 +206,7 @@ export const useLmsStore = create<LmsState>()(
   textSize: "md",
   reduceMotion: false,
   underlineLinks: false,
-  largeTargets: false,
+  largeTargetsChoice: null,
   discussionsPreview: false,
   quizMode: "A",
 
@@ -411,7 +417,7 @@ export const useLmsStore = create<LmsState>()(
   },
   setLargeTargets: (largeTargets) => {
     track("a11y_change", { setting: "largeTargets", value: String(largeTargets) });
-    set({ largeTargets });
+    set({ largeTargetsChoice: largeTargets });
   },
   setQuizMode: (quizMode) => {
     track("preview_toggle", { feature: "quiz_mode", value: quizMode });
@@ -448,13 +454,21 @@ export const useLmsStore = create<LmsState>()(
     }),
     {
       name: "sk-lms-demo",
-      version: 2,
+      version: 3,
       storage: skStorage,
       // v2 dropped the third "Default" quiz mode. Anyone carrying the stored
       // `null` from v1 lands on A, which is what Default resolved to anyway.
+      // v3 replaced the boolean `largeTargets` with `largeTargetsChoice`: a stored
+      // `true` was a deliberate opt-in and is kept; a stored `false` was only the
+      // old default, so it becomes "no choice" and the mobile default applies.
       migrate: (state, from) => {
-        const s = (state ?? {}) as Partial<LmsState>;
-        return from < 2 && !s.quizMode ? { ...s, quizMode: "A" as const } : s;
+        let s = (state ?? {}) as Partial<LmsState> & { largeTargets?: boolean };
+        if (from < 2 && !s.quizMode) s = { ...s, quizMode: "A" as const };
+        if (from < 3) {
+          const { largeTargets, ...rest } = s;
+          s = { ...rest, largeTargetsChoice: largeTargets ? true : null };
+        }
+        return s;
       },
       // Persist demo progress + UI prefs only — not transient/session UI.
       partialize: (s) => ({
@@ -474,7 +488,7 @@ export const useLmsStore = create<LmsState>()(
         textSize: s.textSize,
         reduceMotion: s.reduceMotion,
         underlineLinks: s.underlineLinks,
-        largeTargets: s.largeTargets,
+        largeTargetsChoice: s.largeTargetsChoice,
         discussionsPreview: s.discussionsPreview,
         quizMode: s.quizMode,
       }),
@@ -485,4 +499,29 @@ export const useLmsStore = create<LmsState>()(
 /** Derived helper: does this topic currently have any notes? */
 export function useTopicHasNote(lineId: string): boolean {
   return useLmsStore((s) => s.notes.some((n) => n.transcriptLineId === lineId));
+}
+
+/** Viewport width at or below which the product treats the app as mobile. */
+export const MOBILE_MAX_WIDTH = 767;
+
+/**
+ * Effective Larger touch targets flag: the learner's explicit choice when there
+ * is one, otherwise ON on mobile (viewport ≤767px, or the mobile preview frame)
+ * and OFF elsewhere. The default never overwrites the stored choice.
+ */
+export function useLargeTargets(): boolean {
+  const choice = useLmsStore((s) => s.largeTargetsChoice);
+  const deviceMode = useLmsStore((s) => s.deviceMode);
+  const [narrow, setNarrow] = React.useState(
+    () => typeof window !== "undefined" && window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`).matches,
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`);
+    const update = () => setNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  if (choice !== null && choice !== undefined) return choice;
+  return deviceMode === "mobile" || (deviceMode === "auto" && narrow);
 }

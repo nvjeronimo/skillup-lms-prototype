@@ -7,7 +7,7 @@ import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
 import { topicFamily } from "@/lib/content";
-import { useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
+import { useLargeTargets, useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
@@ -137,7 +137,7 @@ export function DemoControlsMenu({
   const setReduceMotion = useLmsStore((s) => s.setReduceMotion);
   const underlineLinks = useLmsStore((s) => s.underlineLinks);
   const setUnderlineLinks = useLmsStore((s) => s.setUnderlineLinks);
-  const largeTargets = useLmsStore((s) => s.largeTargets);
+  const largeTargets = useLargeTargets();
   const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
   const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
   const setDiscussionsPreview = useLmsStore((s) => s.setDiscussionsPreview);
@@ -332,7 +332,7 @@ export function DemoControlsMenu({
               />
               <ToggleRow
                 label="Larger touch targets"
-                hint="Minimum 44×44 px controls"
+                hint="Minimum 44×44 px controls · on by default on mobile"
                 checked={largeTargets}
                 onChange={setLargeTargets}
               />
