@@ -81,7 +81,7 @@
 
 /* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ----
    DS names: lg = title-medium 18/24, md = body-large 16/24, sm = body-medium 14/20,
-   xs = body-small 12/18, 2xs = label-small 10/14 uppercase +4%. */
+   xs = body-small 12/18, 2xs = label-small 12/18 uppercase +4% (was 10/14; no text below 12px). */
 .sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 .sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 
@@ -97,10 +97,10 @@
 .sk-text-xs-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
 .sk-text-xs-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
 
-/* ---- 2xs — uppercase eyebrows (10px, +4% letter-spacing, UPPER-cased) ---- */
-.sk-text-2xs-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
-.sk-text-2xs-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
-.sk-text-2xs-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(10px * var(--sk-font-scale, 1)); line-height: calc(14px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+/* ---- 2xs — uppercase eyebrows (12px / 18px, +4% letter-spacing, UPPER-cased) ---- */
+.sk-text-2xs-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-2xs-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* No italic class: the DS has no italic text style. Note anchor quotes are
    body-medium/Regular (upright) → .sk-text-sm-regular. */

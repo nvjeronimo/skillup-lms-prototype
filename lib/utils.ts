@@ -74,3 +74,29 @@ export function durationToSeconds(label: string | undefined): number {
     (h ? +h[1] * 3600 : 0) + (m ? +m[1] * 60 : 0) + (s ? +s[1] : 0);
   return total || 200;
 }
+
+/**
+ * True when motion should be reduced: the OS setting (prefers-reduced-motion)
+ * or the app's own "Reduce motion" switch (data-reduce-motion on <html>).
+ * CSS handles animations; use this for JS-driven motion such as smooth scrolls.
+ */
+export function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  if (document.documentElement.hasAttribute("data-reduce-motion")) return true;
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+}
+
+/** `scrollIntoView` / `scrollTo` behaviour that respects reduced motion. */
+export function scrollBehavior(): ScrollBehavior {
+  return prefersReducedMotion() ? "auto" : "smooth";
+}
+
+/**
+ * A page title with the product suffix (WCAG 2.4.2). Returned as Next's
+ * `absolute` title: the root layout's "%s · SkillUp" template only reaches
+ * direct children and is dropped under a layout that sets its own title, so
+ * every route spells the suffix out through this helper instead.
+ */
+export function pageTitle(title: string): { absolute: string } {
+  return { absolute: `${title} · SkillUp` };
+}

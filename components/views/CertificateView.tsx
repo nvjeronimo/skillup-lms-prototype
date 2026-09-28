@@ -30,8 +30,8 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
 
       {/* Deep brand stage (theme- + skin-stable; never inverts) */}
       {/* token-lint-disable-next-line no DS token for a fixed deep-teal stage; kept on the v4 alias of the old brand-stage token (see PR notes: it inverts in Dark) */}
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-sko-text-on-primary-soft px-4 py-12">
-        <p className="sk-text-2xs-medium text-sko-text-on-media">Certificate of Completion</p>
+      <main id="main" tabIndex={-1} className="flex flex-1 flex-col items-center justify-center gap-6 bg-sko-text-on-primary-soft px-4 py-12 outline-none">
+        <h1 className="sk-text-2xs-medium text-sko-text-on-media">Certificate of Completion</h1>
         <CourseCertificate
           learnerName={certificate.learnerName}
           courseTitle={certificate.courseTitle}
@@ -47,7 +47,7 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
           onDownload={() => showToast("Downloading certificate (PDF)…")}
           onPrint={() => track("certificate_print")}
         />
-      </div>
+      </main>
 
       <Toast toast={toast} onDone={clearToast} />
     </div>

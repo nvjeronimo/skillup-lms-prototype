@@ -6,6 +6,7 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { ShareMenu, type ShareChannel } from "@/components/molecules/ShareMenu";
 import { cn } from "@/lib/utils";
+import { useDisclosure } from "@/lib/useDisclosure";
 
 export interface CertificateStats {
   modules: number | string;
@@ -46,18 +47,8 @@ export function CourseCertificate({
   onPrint,
   className,
 }: CourseCertificateProps) {
-  const [shareOpen, setShareOpen] = React.useState(false);
-  const shareWrapRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (shareWrapRef.current && !shareWrapRef.current.contains(e.target as Node)) {
-        setShareOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
-  }, []);
+  // Share is a disclosure: Esc / outside click close, focus returns to Share.
+  const share = useDisclosure();
 
   function handlePrint() {
     onPrint?.();
@@ -116,25 +107,18 @@ export function CourseCertificate({
         <Button variant="neutral" size="md" onClick={onBack}>
           ← Back to course page
         </Button>
-        <div className="relative" ref={shareWrapRef}>
-          <Button
-            variant="secondary"
-            size="md"
-            rightIcon={Share2}
-            onClick={() => setShareOpen((o) => !o)}
-            aria-haspopup="menu"
-            aria-expanded={shareOpen}
-          >
+        <div className="relative" ref={share.containerRef}>
+          <Button variant="secondary" size="md" rightIcon={Share2} {...share.triggerProps}>
             Share
           </Button>
-          {shareOpen ? (
-            <div className="absolute bottom-full right-0 z-20 mb-1">
+          {share.open ? (
+            <div {...share.panelProps} className="absolute bottom-full right-0 z-20 mb-1">
               <ShareMenu
                 onSelect={(c) => {
                   onShare?.(c);
-                  setShareOpen(false);
+                  share.close();
                 }}
-                onClose={() => setShareOpen(false)}
+                onClose={share.close}
               />
             </div>
           ) : null}

@@ -186,7 +186,8 @@ button {
 [data-large-targets] button,
 [data-large-targets] [role="button"],
 [data-large-targets] [role="radio"],
-[data-large-targets] [role="switch"] {
+[data-large-targets] [role="switch"],
+[data-large-targets] select {
   min-height: 44px;
   min-width: 44px;
 }

@@ -10,15 +10,10 @@ import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
-import { tsToSeconds } from "@/lib/utils";
+import { scrollBehavior, tsToSeconds } from "@/lib/utils";
 import { track } from "@/lib/analytics";
 
 const PAUSE_MS = 8000;
-
-function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined" || !window.matchMedia) return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
 
 export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
@@ -45,7 +40,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     const el = activeLineId ? lineRefs.current[activeLineId] : null;
     el?.scrollIntoView({
       block: "center",
-      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      behavior: scrollBehavior(),
     });
   }, [activeLineId]);
 
@@ -108,7 +103,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="sk-text-sm-medium appearance-none bg-transparent pr-5 text-sko-text-default outline-none"
+              className="sk-text-sm-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
             >
               <option value="en">English</option>
               <option value="es">Español</option>

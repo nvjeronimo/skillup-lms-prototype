@@ -5,6 +5,8 @@ import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/lib/useDialog";
+import { useRovingRadio } from "@/lib/useRovingRadio";
 
 export interface ReportIssuePayload {
   reason: string;
@@ -30,6 +32,10 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
   const [reason, setReason] = React.useState<string | null>(null);
   const [details, setDetails] = React.useState("");
   const titleId = React.useId();
+  const legendId = React.useId();
+  const dialogRef = useDialog(open, onCancel);
+  const reasonIndex = reason ? REASONS.indexOf(reason as (typeof REASONS)[number]) : -1;
+  const roving = useRovingRadio(REASONS.length, reasonIndex, (i) => setReason(REASONS[i]));
 
   // Reset whenever the modal (re)opens.
   React.useEffect(() => {
@@ -44,17 +50,10 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
     onSubmit({ reason, details: details.trim() || undefined });
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      onCancel();
-    }
-  }
-
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onKeyDown={handleKeyDown}>
+    <div ref={dialogRef} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
       <div
         role="dialog"
@@ -78,11 +77,11 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
 
         <div className="flex flex-col gap-5 px-6 py-5">
           <fieldset>
-            <legend className="sk-text-sm-medium mb-2.5 block text-sko-text-muted">
+            <legend id={legendId} className="sk-text-sm-medium mb-2.5 block text-sko-text-muted">
               What’s wrong with this content?
             </legend>
-            <div className="flex flex-col gap-1.5" role="radiogroup">
-              {REASONS.map((r) => {
+            <div className="flex flex-col gap-1.5" role="radiogroup" aria-labelledby={legendId}>
+              {REASONS.map((r, i) => {
                 const selected = reason === r;
                 return (
                   <button
@@ -90,6 +89,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
                     type="button"
                     role="radio"
                     aria-checked={selected}
+                    {...roving.itemProps(i)}
                     onClick={() => setReason(r)}
                     className={cn(
                       "sk-text-sm-medium flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",

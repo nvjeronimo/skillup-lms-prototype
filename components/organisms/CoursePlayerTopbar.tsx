@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sparkles, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
@@ -23,6 +24,10 @@ export interface CoursePlayerTopbarProps {
   /** Unread count — surfaced in the Notifications button aria-label + dot. */
   notificationsCount?: number;
   onMenu?: () => void;
+  /** Mobile course-menu state: drives aria-expanded on the trigger. */
+  menuExpanded?: boolean;
+  /** Id of the course-menu drawer, for aria-controls on the trigger. */
+  menuControls?: string;
   onAi?: () => void;
   onDiscussions?: () => void;
   onBookmark?: () => void;
@@ -53,6 +58,7 @@ function UtilityButton({
   /** Close: DS `Button close X` Size=lg, a 44px square. */
   large = false,
   className,
+  ...aria
 }: {
   label: string;
   onClick?: () => void;
@@ -60,12 +66,16 @@ function UtilityButton({
   hierarchy?: "tertiary" | "secondary";
   large?: boolean;
   className?: string;
+  "aria-expanded"?: boolean;
+  "aria-controls"?: string;
+  "aria-haspopup"?: "dialog";
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
+      {...aria}
       className={cn(
         "inline-flex shrink-0 items-center justify-center text-sko-icon-subtle transition-colors hover:bg-sko-bg-faint",
         large ? "h-11 w-11 rounded-lg" : "h-8 w-8 rounded-md",
@@ -106,6 +116,8 @@ export function CoursePlayerTopbar({
   theme = "Light",
   notificationsCount = 0,
   onMenu,
+  menuExpanded = false,
+  menuControls,
   onAi,
   onDiscussions,
   onBookmark,
@@ -144,12 +156,19 @@ export function CoursePlayerTopbar({
         )}
       >
         <div className="flex min-w-0 items-center gap-1.5">
-          <UtilityButton label="Open course menu" onClick={onMenu} hierarchy="secondary">
+          <UtilityButton
+            label="Open course menu"
+            onClick={onMenu}
+            hierarchy="secondary"
+            aria-haspopup="dialog"
+            aria-expanded={menuExpanded}
+            aria-controls={menuExpanded ? menuControls : undefined}
+          >
             <Icon icon={List} size={20} />
           </UtilityButton>
-          <a href="#" aria-label="SkillUp home" className="flex items-center">
+          <Link href="/" aria-label="SkillUp, My Learning" className="flex items-center">
             <SkillUpLogo className="h-[33px]" />
-          </a>
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           {showNotifications ? (
@@ -186,9 +205,9 @@ export function CoursePlayerTopbar({
       )}
     >
       <div className={cn("flex min-w-0 flex-1 items-center", isDesktop ? "gap-8" : "gap-6")}>
-        <a href="#" aria-label="SkillUp home" className="flex shrink-0 items-center">
+        <Link href="/" aria-label="SkillUp, My Learning" className="flex shrink-0 items-center">
           <SkillUpLogo className="h-[33px]" />
-        </a>
+        </Link>
 
         {isDesktop && breadcrumb.length ? (
           <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2">

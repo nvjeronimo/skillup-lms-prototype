@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { FilterChip } from "@/components/atoms/FilterChip";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/lib/useDialog";
 
 export interface OverlayPanelFilter {
   label: string;
@@ -24,12 +25,11 @@ export interface OverlayPanelProps {
   children: React.ReactNode;
 }
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
-
 /**
  * Shared right-overlay chrome: backdrop + slide-in panel + header + scroll body +
- * footer. Esc + backdrop close. Focus is trapped while open; first focus = close X.
+ * footer. Esc + backdrop close. Focus is trapped while open, the page behind is
+ * inert, first focus = close X, and focus returns to the trigger on close
+ * (useDialog).
  */
 export function OverlayPanel({
   open,
@@ -41,56 +41,18 @@ export function OverlayPanel({
   footer,
   children,
 }: OverlayPanelProps) {
-  const panelRef = React.useRef<HTMLDivElement>(null);
   const closeRef = React.useRef<HTMLButtonElement>(null);
   const titleId = React.useId();
-
-  // Focus the close button when opening.
-  React.useEffect(() => {
-    if (open) {
-      const t = window.setTimeout(() => closeRef.current?.focus(), 0);
-      return () => window.clearTimeout(t);
-    }
-  }, [open]);
-
-  // Esc to close + Tab focus trap.
-  React.useEffect(() => {
-    if (!open) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-      if (e.key === "Tab" && panelRef.current) {
-        const nodes = Array.from(
-          panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
-        ).filter((el) => el.offsetParent !== null);
-        if (nodes.length === 0) return;
-        const first = nodes[0];
-        const last = nodes[nodes.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  const dialogRef = useDialog(open, onClose, { initialFocusRef: closeRef });
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div ref={dialogRef} className="fixed inset-0 z-50">
       {/* Backdrop — SKO DS light dim + blur (token-bound via .sk-backdrop). */}
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
 
       <aside
-        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

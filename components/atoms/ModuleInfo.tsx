@@ -30,9 +30,9 @@ export function ModuleInfo({
 }: ModuleInfoProps) {
   const tone = isCompleted ? "text-sko-text-success" : "text-sko-text-subtle";
   return (
-    // 14px row (DS): the Caption separator is taller than the Overline text, so
-    // the row is pinned to the Overline height and the dot centres inside it.
-    <span className={cn("flex h-3.5 items-center gap-2", className)}>
+    // 18px row: pinned to the Overline height (label-small, 12/18 since the
+    // no-text-below-12 decision) so the Caption separator dot centres inside it.
+    <span className={cn("flex h-[18px] items-center gap-2", className)}>
       <span className={cn("sk-text-2xs-medium", tone)}>{label}</span>
       {showTopicProgress ? (
         <>

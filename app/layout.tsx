@@ -12,7 +12,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "SkillUp LMS · Video Lesson",
+  // Every route sets its own title (WCAG 2.4.2) through pageTitle() in lib/utils;
+  // the template is only a fallback for a route that forgets.
+  title: { template: "%s · SkillUp", default: "SkillUp" },
   description: "Prototype of the SkillUp LMS video lesson flow.",
 };
 
@@ -21,7 +23,9 @@ export const metadata: Metadata = {
 // only flips them post-hydration — a visible flash of light-themed chrome
 // (white CC/Edit pills, white progress circles) on every load of a dark-mode
 // session. Mirrors ResponsiveShell's attribute logic; must stay in sync with it.
-const THEME_INIT_SCRIPT = `(function(){try{var raw=localStorage.getItem('sk-lms-demo');if(!raw)return;var s=JSON.parse(raw).state;if(!s)return;if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');var d=document.documentElement;if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');if(s.largeTargets)d.setAttribute('data-large-targets','');}catch(e){}})();`;
+// Large targets: the stored choice wins; with no choice they default ON at
+// ≤767px (useLargeTargets in lib/store.ts).
+const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;var s={};try{var raw=localStorage.getItem('sk-lms-demo');s=(raw&&JSON.parse(raw).state)||{};}catch(e){}try{if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');var lt=s.largeTargetsChoice;if(lt===undefined||lt===null)lt=s.largeTargets===true?true:(s.deviceMode==='mobile'||window.matchMedia('(max-width: 767px)').matches)?true:null;if(lt===true)d.setAttribute('data-large-targets','');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -30,6 +34,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
+        {/* First focusable element on every page (WCAG 2.4.1). Every route
+            renders <main id="main" tabIndex={-1}>. */}
+        <a
+          href="#main"
+          className="sk-text-sm-semibold sr-only rounded-lg border border-sko-border-primary bg-sko-bg-page px-4 py-3 text-sko-text-primary shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]"
+        >
+          Skip to content
+        </a>
         <ResponsiveShell>{children}</ResponsiveShell>
       </body>
     </html>

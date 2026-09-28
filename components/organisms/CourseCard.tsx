@@ -103,7 +103,14 @@ export function CourseCard({
             <TopicTypeBadge type={upNext.type} />
           </div>
           {/* DS cta-slot (List): Buttons/Button Size=lg, Hierarchy=Secondary. */}
-          <Button variant="secondary" size="lg" onClick={onResume} className="shrink-0">
+          {/* Unique name per card (WCAG 2.4.6); the visible "Resume" stays first. */}
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={onResume}
+            aria-label={`Resume ${title}`}
+            className="shrink-0"
+          >
             Resume
           </Button>
         </div>
@@ -112,7 +119,7 @@ export function CourseCard({
       {/* Stacked: pinned top-right so the menu (right-0) opens under its trigger.
           xl: back in the row as its last item. */}
       <div className="absolute right-4 top-4 xl:static">
-        <CardOverflowMenu />
+        <CardOverflowMenu itemLabel={title} />
       </div>
     </div>
   );

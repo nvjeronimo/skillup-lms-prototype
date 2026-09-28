@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useLmsStore, type DeviceMode } from "@/lib/store";
+import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
 const FRAME_WIDTH: Record<DeviceMode, number | null> = {
@@ -26,7 +26,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const textSize = useLmsStore((s) => s.textSize);
   const reduceMotion = useLmsStore((s) => s.reduceMotion);
   const underlineLinks = useLmsStore((s) => s.underlineLinks);
-  const largeTargets = useLmsStore((s) => s.largeTargets);
+  const largeTargets = useLargeTargets();
   const width = FRAME_WIDTH[mode];
 
   const flag = (attr: string, on: boolean) => {

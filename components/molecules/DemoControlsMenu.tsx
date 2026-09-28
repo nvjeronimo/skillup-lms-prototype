@@ -7,9 +7,10 @@ import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
 import { topicFamily } from "@/lib/content";
-import { useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
+import { useLargeTargets, useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { useDisclosure } from "@/lib/useDisclosure";
 
 const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
   { mode: "auto", label: "Responsive (follow window)", icon: MonitorSmartphone },
@@ -113,13 +114,17 @@ export interface DemoControlsMenuProps {
  * Profile button that opens a demo-settings menu (preview device · content shape
  * · brand skin). Replaces the old floating widget — same controls, tucked into
  * the top-bar account menu so it no longer crowds the viewport.
+ *
+ * A disclosure panel, not an ARIA menu: it holds switches, pressed buttons and
+ * a segmented control, which a role="menu" cannot contain. Tab moves through
+ * it; Escape closes it and returns focus to the profile button (useDisclosure).
  */
 export function DemoControlsMenu({
   userName = "Olivia Rhye",
   userAvatarUrl,
   compact = false,
 }: DemoControlsMenuProps) {
-  const [open, setOpen] = React.useState(false);
+  const { open, setOpen, containerRef, triggerProps, panelProps } = useDisclosure();
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const skin = useLmsStore((s) => s.skin);
@@ -132,7 +137,7 @@ export function DemoControlsMenu({
   const setReduceMotion = useLmsStore((s) => s.setReduceMotion);
   const underlineLinks = useLmsStore((s) => s.underlineLinks);
   const setUnderlineLinks = useLmsStore((s) => s.setUnderlineLinks);
-  const largeTargets = useLmsStore((s) => s.largeTargets);
+  const largeTargets = useLargeTargets();
   const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
   const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
   const setDiscussionsPreview = useLmsStore((s) => s.setDiscussionsPreview);
@@ -149,23 +154,6 @@ export function DemoControlsMenu({
   const activeTopicId = pathname?.match(/^\/course\/[^/]+\/topic\/([^/]+)/)?.[1];
   const activeTopic = activeTopicId ? getTopic(activeTopicId) : undefined;
   const onQuiz = activeTopic ? topicFamily(activeTopic.type) === "assessment" : false;
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!open) return;
-    function onDoc(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
 
   const pill =
     "sk-text-xs-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
@@ -173,13 +161,11 @@ export function DemoControlsMenu({
   const pillOff = "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={containerRef} className="relative">
       <button
         type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
+        {...triggerProps}
         aria-label="Account and demo settings"
-        onClick={() => setOpen((o) => !o)}
         className={cn(
           "flex items-center hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px round avatar. Desktop/Tablet keep a 32px square
@@ -200,7 +186,9 @@ export function DemoControlsMenu({
 
       {open ? (
         <div
-          role="menu"
+          {...panelProps}
+          role="group"
+          aria-label="Account and demo settings"
           className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
         >
           <div className="flex items-center gap-2.5 px-4 py-3">
@@ -344,7 +332,7 @@ export function DemoControlsMenu({
               />
               <ToggleRow
                 label="Larger touch targets"
-                hint="Minimum 44×44 px controls"
+                hint="Minimum 44×44 px controls · on by default on mobile"
                 checked={largeTargets}
                 onChange={setLargeTargets}
               />

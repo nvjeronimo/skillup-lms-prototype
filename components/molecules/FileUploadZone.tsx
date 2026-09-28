@@ -109,7 +109,7 @@ export function FileUploadZone({
               key={f.id}
               className="flex items-center gap-3 rounded-lg border border-sko-border-subtle p-3"
             >
-              <span className="sk-text-2xs-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded bg-sko-bg-primary-soft text-sko-text-primary">
+              <span className="sk-text-2xs-semibold inline-flex h-8 min-w-8 shrink-0 px-1 items-center justify-center rounded bg-sko-bg-primary-soft text-sko-text-primary">
                 {f.type}
               </span>
               <div className="min-w-0 flex-1">
