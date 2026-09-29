@@ -2,220 +2,134 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Check, ChevronDown, Lock, Radio } from "lucide-react";
+import { Check, ChevronDown, Lock } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { formatMinutes, pad, type CoursePlanModel, type PlanModule, type PlanTopic, type WeekRow } from "./plan-model";
+import type { CoursePlanModel, PlanModule, PlanTopic } from "./plan-model";
 
-/** Width is load: a block grows with its minutes, clamped so a 4-minute video stays readable. */
-const blockWidth = (m: number | null) => (m == null ? 148 : Math.min(440, Math.round(128 + m * 4)));
-
-function stateWords(t: PlanTopic): string {
-  const moved = t.movedFrom ? `, moved here from week ${t.movedFrom} by your re-plan` : "";
-  switch (t.state) {
-    case "done":
-      return `Done${moved}`;
-    case "next":
-      return `Today, your next topic${moved}`;
-    case "locked":
-      return `Locked, opens after you finish ${t.lockedBy}`;
-    case "live":
-      return "Live session";
-    default:
-      return `To do${moved}`;
-  }
+/** "VILT-Live Session" → "Live", "VILT-Recording" → "Recording"; the rest as the course names them. */
+function kind(t: PlanTopic): string {
+  if (t.live) return "Live";
+  return t.type.replace(/^VILT-/, "");
 }
 
-function blockClass(t: PlanTopic) {
-  if (t.state === "next") return cn("tb-cp-next", t.movedFrom && "tb-cp-next-moved");
-  if (t.state === "locked") return "tb-cp-locked";
-  if (t.state === "done") return "tb-block tb-block-done";
-  if (t.state === "live") return "tb-block tb-block-live";
-  if (t.movedFrom) return "tb-block tb-block-moved";
-  return "tb-block";
+/** One meta line: kind · time, then only the facts that change what the learner does. */
+function meta(t: PlanTopic): string {
+  const parts = [kind(t)];
+  if (t.live) parts.push(t.duration);
+  else if (t.minutes != null) parts.push(`${t.minutes} min`);
+  if (t.graded && !/graded/i.test(t.type)) parts.push("Graded");
+  if (t.movedFrom) parts.push(`moved from week ${t.movedFrom}`);
+  if (t.state === "locked" && t.lockedBy) parts.push(`opens after you finish ${t.lockedBy}`);
+  return parts.filter(Boolean).join(" · ");
 }
 
-function markClass(t: PlanTopic) {
-  if (t.state === "done") return "tb-mark-done";
-  if (t.state === "next") return "tb-mark-today";
-  if (t.movedFrom) return "tb-mark-plan tb-mark-moved";
-  return "tb-mark-plan";
+const STATE_WORD: Record<PlanTopic["state"], string> = {
+  done: "Done",
+  next: "",
+  todo: "Planned",
+  locked: "Locked",
+};
+
+/** Three marks only: done, the one next topic (lime), planned. Locked is a lock icon. */
+function Mark({ t }: { t: PlanTopic }) {
+  return (
+    <span className="flex h-5 w-4 flex-none items-center justify-center" aria-hidden>
+      {t.state === "done" ? (
+        <Icon icon={Check} size={16} className="tb-c-ink2" />
+      ) : t.state === "locked" ? (
+        <Icon icon={Lock} size={14} className="tb-c-ink3" />
+      ) : (
+        <span className={cn("tb-mark", t.state === "next" ? "tb-mark-today" : "tb-mark-plan")} />
+      )}
+    </span>
+  );
 }
 
-function Block({ t }: { t: PlanTopic }) {
-  const time = t.state === "live" || t.minutes == null ? t.duration || "No time set" : null;
-  const inner = (
+function TopicRow({ t }: { t: PlanTopic }) {
+  const body = (
     <>
-      <span className="flex items-start justify-between gap-2">
-        <span className={cn("tb-meta", t.state === "next" ? "tb-c-ink" : "tb-c-ink2")}>
-          {t.state === "next" ? <span className="tb-label">Today · </span> : null}
-          {t.type}
+      <Mark t={t} />
+      <span className="min-w-0 flex-1">
+        {t.state === "next" ? null : <span className="sr-only">{STATE_WORD[t.state]}: </span>}
+        <span className={cn("tb-body-s block", t.state === "next" && "tb-strong", t.state === "locked" && "tb-c-ink2")}>
+          {t.title}
         </span>
-        {t.state === "done" ? <Icon icon={Check} size={16} aria-hidden="true" /> : null}
-        {t.state === "locked" ? <Icon icon={Lock} size={16} aria-hidden="true" /> : null}
-        {t.state === "live" ? <Icon icon={Radio} size={16} className="tb-c-live" aria-hidden="true" /> : null}
-      </span>
-      <span className="tb-body-s tb-strong tb-cp-title mt-1 line-clamp-3 break-words">{t.title}</span>
-      <span className="tb-meta tb-c-ink2 mt-auto flex flex-wrap items-baseline gap-x-2 pt-2">
-        {time ? (
-          <span>{time}</span>
-        ) : (
-          <span>
-            <span className="tb-num tb-num-m tb-c-ink">{t.minutes}</span> min
-          </span>
-        )}
-        {t.movedFrom ? <span>· from wk {pad(t.movedFrom)}</span> : null}
-        {t.state === "locked" ? <span className="w-full">Opens after {t.lockedBy}</span> : null}
-      </span>
-      <span className="sr-only">
-        , {t.duration || "no time set"}, {stateWords(t)}
+        <span className="tb-meta tb-c-ink2 block">
+          {t.state === "next" ? <span className="tb-strong tb-c-ink">Next · </span> : null}
+          {meta(t)}
+        </span>
       </span>
     </>
   );
-  const cls = cn("tb-cp-block flex min-h-[92px] flex-col px-3 py-2.5", blockClass(t));
-  const style: React.CSSProperties = { flex: `0 1 ${blockWidth(t.minutes)}px`, minWidth: 128, maxWidth: "100%" };
+  const cls = "flex min-h-[44px] items-start gap-3 py-2.5";
   return (
-    <li className="flex" style={style}>
+    <li className="tb-rule-t">
       {t.state === "locked" ? (
-        <div className={cn(cls, "w-full")}>{inner}</div>
+        <div className={cls}>{body}</div>
       ) : (
-        <Link href={t.href} className={cn(cls, "w-full")} aria-current={t.state === "next" ? "step" : undefined}>
-          {inner}
+        <Link href={t.href} className={cn(cls, "hover:underline")} aria-current={t.state === "next" ? "step" : undefined}>
+          {body}
         </Link>
       )}
     </li>
   );
 }
 
-function Row({ row, thisWeek }: { row: WeekRow; thisWeek: number }) {
-  const now = row.week === thisWeek;
-  return (
-    <li className="tb-rule-t grid grid-cols-1 gap-2 py-3 md:grid-cols-[104px_1fr] md:gap-6">
-      <p className="flex items-baseline gap-2 md:flex-col md:gap-1">
-        <span className="tb-label tb-c-ink3">Week</span>
-        <span className={cn("tb-num tb-num-m tb-slot md:text-left", now ? "tb-c-ink" : "tb-c-ink2")}>{pad(row.week)}</span>
-        {now ? <span className="tb-bg-ink tb-label rounded-sm px-1.5 py-0.5">This week</span> : null}
-      </p>
-      {row.movedTo ? (
-        <p className="tb-body-s tb-c-ink2 flex items-center gap-2 md:min-h-[92px]">
-          <span className="tb-mark tb-mark-plan tb-mark-moved" aria-hidden />
-          Moved to week {pad(row.movedTo)} by your re-plan — nothing dropped.
-        </p>
-      ) : (
-        <ul className="flex flex-wrap gap-2" aria-label={`Week ${row.week} topics`}>
-          {row.topics.map((t) => (
-            <Block key={t.id} t={t} />
-          ))}
-        </ul>
-      )}
-    </li>
-  );
-}
-
-function ModuleRow({
-  mod,
-  open,
-  onToggle,
-  thisWeek,
-  started,
-}: {
-  mod: PlanModule;
-  open: boolean;
-  onToggle: () => void;
-  thisWeek: number;
-  started: boolean;
-}) {
+function ModuleItem({ mod, open, onToggle }: { mod: PlanModule; open: boolean; onToggle: () => void }) {
   const panelId = `cp-panel-${mod.id}`;
-  const weeks = mod.weekFrom === mod.weekTo ? pad(mod.weekFrom) : `${pad(mod.weekFrom)}–${pad(mod.weekTo)}`;
-  const minutes = mod.topics.reduce((a, t) => a + (t.minutes ?? 0), 0);
-  const allDone = mod.done === mod.topics.length;
   return (
-    <li className="tb-rule-strong-t">
-      <div className="grid grid-cols-1 md:grid-cols-[104px_1fr] md:gap-6">
-        <p className="hidden pt-5 md:block">
-          <span className="tb-label tb-c-ink3 block">Weeks</span>
-          <span className="tb-num tb-num-m mt-1 block">{weeks}</span>
-        </p>
-        <div>
-          <h3>
-            <button
-              type="button"
-              aria-expanded={open}
-              aria-controls={panelId}
-              onClick={onToggle}
-              className="flex min-h-[64px] w-full items-start gap-3 py-4 text-left"
-            >
-              <span className="flex-1">
-                <span className="tb-title block">
-                  <span className="tb-num tb-c-ink3 mr-2">{mod.number}</span>
-                  <span className="sr-only">Module {mod.number}: </span>
-                  {mod.title}
-                </span>
-                <span className="tb-meta tb-c-ink2 mt-1 block md:hidden">Weeks {weeks}</span>
-              </span>
-              <span className={cn("tb-meta tb-c-ink2 hidden shrink-0 pt-1 text-right", open && "sm:block")}>
-                {started ? (
-                  <>
-                    <span className="tb-num tb-num-m tb-c-ink">{mod.done}</span> / {mod.topics.length} done
-                  </>
-                ) : (
-                  <>
-                    {mod.topics.length} topics · {formatMinutes(minutes)}
-                  </>
-                )}
-              </span>
-              <span className="tb-c-ink2 inline-flex h-11 w-11 shrink-0 items-center justify-center" aria-hidden>
-                <Icon icon={ChevronDown} size={22} className={cn("transition-transform motion-reduce:transition-none", open && "rotate-180")} />
-              </span>
-            </button>
-          </h3>
-          {/* Collapsed: the module as a strip of marks — one per topic, same colour rules. */}
-          <div className={cn("-mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 pb-4", open && "hidden")}>
-            <span className="flex flex-wrap gap-1" aria-hidden>
-              {mod.topics.map((t) => (
-                <span key={t.id} className={cn("tb-mark", markClass(t))} />
-              ))}
+    <li className="tb-rule-t">
+      <h3>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={onToggle}
+          className="flex min-h-[56px] w-full items-center gap-4 py-3 text-left"
+        >
+          <span className="min-w-0 flex-1">
+            <span className="tb-title block">{mod.title}</span>
+            <span className="tb-body-s tb-c-ink2 block">
+              {mod.done} of {mod.topics.length} done
             </span>
-            <span className="tb-meta tb-c-ink2">
-              {allDone ? "All done" : started ? `${mod.done} of ${mod.topics.length} done` : `${mod.topics.length} topics · ${formatMinutes(minutes)}`}
-              {mod.topics.some((t) => t.state === "locked") ? " · part locked" : ""}
-            </span>
-          </div>
-        </div>
-      </div>
-
+          </span>
+          <Icon
+            icon={ChevronDown}
+            size={20}
+            aria-hidden="true"
+            className={cn("tb-c-ink2 flex-none transition-transform motion-reduce:transition-none", open && "rotate-180")}
+          />
+        </button>
+      </h3>
       <div id={panelId} hidden={!open} className="pb-4">
-        {mod.segments.map((seg) => {
-          const locked = seg.rows.flatMap((r) => r.topics).filter((t) => t.state === "locked");
-          return (
-            <section key={seg.id} aria-labelledby={seg.label ? `${seg.id}-h` : undefined}>
-              {seg.label ? (
-                <div className="md:pl-[128px]">
-                  <h4 id={`${seg.id}-h`} className="tb-label tb-c-ink2 pb-2 pt-3">
-                    Lesson · {seg.label}
-                  </h4>
-                  {locked.length ? (
-                    <p className="tb-body-s tb-c-ink2 flex items-center gap-2 pb-3">
-                      <Icon icon={Lock} size={16} aria-hidden="true" />
-                      {locked.length} topics open after you finish {locked[0].lockedBy}.
-                    </p>
-                  ) : null}
-                </div>
-              ) : null}
-              <ol aria-label={seg.label ? `${seg.label}, week by week` : `Module ${mod.number}, week by week`}>
-                {seg.rows.map((row) => (
-                  <Row key={row.week} row={row} thisWeek={thisWeek} />
+        {mod.lessons.map((lesson) =>
+          lesson.label ? (
+            <section key={lesson.id} aria-labelledby={`${lesson.id}-h`} className="mt-2">
+              <h4 id={`${lesson.id}-h`} className="tb-label tb-c-ink2 py-2">
+                {lesson.label}
+              </h4>
+              <ol>
+                {lesson.topics.map((t) => (
+                  <TopicRow key={t.id} t={t} />
                 ))}
               </ol>
             </section>
-          );
-        })}
+          ) : (
+            <ol key={lesson.id}>
+              {lesson.topics.map((t) => (
+                <TopicRow key={t.id} t={t} />
+              ))}
+            </ol>
+          ),
+        )}
       </div>
     </li>
   );
 }
 
-export function PlanTable({ model, thisWeek, started }: { model: CoursePlanModel; thisWeek: number; started: boolean }) {
+/** The plan: modules as a plain accordion; the module holding the next topic opens by default. */
+export function PlanModules({ model }: { model: CoursePlanModel }) {
   const [open, setOpen] = React.useState<Set<string>>(() => new Set(model.nextModuleId ? [model.nextModuleId] : []));
   const toggle = (id: string) =>
     setOpen((s) => {
@@ -226,31 +140,10 @@ export function PlanTable({ model, thisWeek, started }: { model: CoursePlanModel
     });
 
   return (
-    <>
-      <div className="mt-4 hidden grid-cols-[104px_1fr] gap-6 pb-2 md:grid" aria-hidden>
-        <span className="tb-label tb-c-ink3">Plan week</span>
-        <span className="tb-label tb-c-ink3">Topics · wider block = more minutes</span>
-      </div>
-      <ol className="tb-cp-table mt-2 md:mt-0" aria-label="Modules">
-        {model.modules.map((m) => (
-          <ModuleRow
-            key={m.id}
-            mod={m}
-            open={open.has(m.id)}
-            onToggle={() => toggle(m.id)}
-            thisWeek={thisWeek}
-            started={started}
-          />
-        ))}
-      </ol>
-      <ul className="tb-meta tb-c-ink2 tb-rule-strong-t flex flex-wrap gap-x-4 gap-y-2 pt-3" aria-label="Legend">
-        <li className="flex items-center gap-1.5"><span className="tb-mark tb-mark-done" aria-hidden />Done</li>
-        <li className="flex items-center gap-1.5"><span className="tb-mark tb-mark-today" aria-hidden />Today</li>
-        <li className="flex items-center gap-1.5"><span className="tb-mark tb-mark-plan" aria-hidden />Planned</li>
-        <li className="flex items-center gap-1.5"><span className="tb-mark tb-mark-plan tb-mark-moved" aria-hidden />Moved by a re-plan</li>
-        <li className="flex items-center gap-1.5"><span className="tb-mark tb-cp-mark-live" aria-hidden />Live session</li>
-        <li className="flex items-center gap-1.5"><Icon icon={Lock} size={12} aria-hidden="true" />Locked</li>
-      </ul>
-    </>
+    <ul className="tb-rule-b mt-4">
+      {model.modules.map((m) => (
+        <ModuleItem key={m.id} mod={m} open={open.has(m.id)} onToggle={() => toggle(m.id)} />
+      ))}
+    </ul>
   );
 }

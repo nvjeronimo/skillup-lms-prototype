@@ -1,76 +1,246 @@
 {
-  "version": 1,
+  "version": 2,
   "name": "The Training Block (lab)",
   "scope": "[data-world=\"training\"]",
-  "status": "lab exploration; not the SkillUp DS",
+  "status": "lab exploration; not the SkillUp DS (the SkillUp DS in Figma stays the authority; integration is a later step)",
   "source": "tokens/lab-training.css",
-  "routes": ["/lab/training", "/lab/training/plans", "/lab/training/course/six-sigma"],
+  "routes": [
+    "/lab/training",
+    "/lab/training/plans",
+    "/lab/training/course/six-sigma"
+  ],
+  "distilled": {
+    "date": "2026-09-29",
+    "why": "first version was cognitively overwhelming",
+    "principle": [
+      "one job per page",
+      "at most one primary action per page",
+      "three marks: done, today/next, planned",
+      "one accent: lime = today, the only lime on a page",
+      "moved and live are said in words"
+    ],
+    "voices": {
+      "display": "page titles and today's session title only",
+      "text": "everything else, sentence case"
+    },
+    "mockTag": "one per page, at the bottom",
+    "pageJobs": {
+      "today": "start today's session",
+      "plans": "pick a plan",
+      "coursePlan": "continue, and see what is left"
+    },
+    "removed": [
+      "session blocks sized by minutes",
+      "topic widths",
+      "hatching and dashed moved outlines",
+      "green live colour",
+      "12-week strips",
+      "load meter and legends",
+      "road to race day",
+      "race-day and around-this-plan blocks",
+      "tb-replan-in motion",
+      "tb-num-* sizes",
+      "condensed caps labels and buttons",
+      "--tb-live, --tb-live-wash, --tb-lime-deep"
+    ]
+  },
   "colors": {
-    "ground": { "value": "#f2f4f3", "var": "--tb-ground", "role": "page ground" },
-    "sheet": { "value": "#ffffff", "var": "--tb-sheet", "role": "printed plan surface" },
-    "ink": { "value": "#0e2b34", "var": "--tb-ink", "role": "text, strong rules, nav current mark" },
-    "ink-2": { "value": "#3c5660", "var": "--tb-ink-2", "role": "secondary text", "contrastOnSheet": 7.3 },
-    "ink-3": { "value": "#5b727a", "var": "--tb-ink-3", "role": "tertiary text", "contrastOnSheet": 4.9 },
-    "rule": { "value": "#d5dcdc", "var": "--tb-rule", "role": "hairlines" },
-    "rule-strong": { "value": "#0e2b34", "var": "--tb-rule-strong", "role": "section rule, road" },
-    "teal": { "value": "#26708e", "var": "--tb-teal", "role": "the plan (SkillUp teal, fixed)" },
-    "teal-deep": { "value": "#1b5268", "var": "--tb-teal-deep", "role": "hover/pressed" },
-    "teal-wash": { "value": "#e3eef2", "var": "--tb-teal-wash", "role": "planned block fill, mobile nav current pill" },
-    "lime": { "value": "#c8f169", "var": "--tb-lime", "role": "now: only marks containing today's date", "contrastWithInk": 12.9 },
-    "lime-deep": { "value": "#a9d93e", "var": "--tb-lime-deep", "role": "declared, unused in built pages" },
-    "done": { "value": "#7d8f96", "var": "--tb-done", "role": "done mark" },
-    "done-wash": { "value": "#e4e8e9", "var": "--tb-done-wash", "role": "done block fill, meter track" },
-    "live": { "value": "#1f7a47", "var": "--tb-live", "role": "live only" },
-    "live-wash": { "value": "#e2f3e8", "var": "--tb-live-wash", "role": "live block fill" }
+    "ground": {
+      "value": "#f2f4f3",
+      "var": "--tb-ground",
+      "role": "page ground"
+    },
+    "sheet": {
+      "value": "#ffffff",
+      "var": "--tb-sheet",
+      "role": "nav bar, Change days panel"
+    },
+    "ink": {
+      "value": "#0e2b34",
+      "var": "--tb-ink",
+      "role": "text, done day mark, pressed day toggle, avatar, desktop nav current bar"
+    },
+    "ink-2": {
+      "value": "#3c5660",
+      "var": "--tb-ink-2",
+      "role": "secondary text, done check on course plan",
+      "contrastOnSheet": 7.3
+    },
+    "ink-3": {
+      "value": "#5b727a",
+      "var": "--tb-ink-3",
+      "role": "tertiary text, lock, rest-day dot, not-built nav items",
+      "contrastOnSheet": 4.9
+    },
+    "rule": {
+      "value": "#d5dcdc",
+      "var": "--tb-rule",
+      "role": "1px hairlines between rows and above sections"
+    },
+    "teal": {
+      "value": "#26708e",
+      "var": "--tb-teal",
+      "role": "the plan: planned marks, primary button, links, focus ring (SkillUp teal, fixed)"
+    },
+    "teal-deep": {
+      "value": "#1b5268",
+      "var": "--tb-teal-deep",
+      "role": "hover"
+    },
+    "teal-wash": {
+      "value": "#e3eef2",
+      "var": "--tb-teal-wash",
+      "role": "phone tab bar current pill only"
+    },
+    "lime": {
+      "value": "#c8f169",
+      "var": "--tb-lime",
+      "role": "today: today's day mark, the course plan's next-topic mark; one per page",
+      "contrastWithInk": 12.9
+    }
   },
   "fonts": {
-    "display": { "family": "Big Shoulders Display", "weights": [800], "var": "--font-tb-display", "fallback": "Arial Narrow, sans-serif" },
-    "text": { "family": "Hanken Grotesk", "weights": [400, 600], "var": "--font-tb-text", "fallback": "system-ui, sans-serif" }
+    "display": {
+      "family": "Big Shoulders Display",
+      "weights": [
+        800
+      ],
+      "var": "--font-tb-display",
+      "fallback": "Arial Narrow, sans-serif",
+      "use": "page titles and today's session title only"
+    },
+    "text": {
+      "family": "Hanken Grotesk",
+      "weights": [
+        400,
+        600
+      ],
+      "var": "--font-tb-text",
+      "fallback": "system-ui, sans-serif",
+      "use": "everything else, sentence case"
+    }
   },
   "typography": {
-    "tb-display": { "font": "display", "size": "clamp(2.5rem, 1.6rem + 3.2vw, 4.75rem)", "lineHeight": 0.95, "letterSpacing": "-0.01em" },
-    "tb-h1": { "font": "display", "size": "clamp(2rem, 1.5rem + 1.8vw, 3rem)", "lineHeight": 1 },
-    "tb-h2": { "font": "display", "size": "1.5rem", "lineHeight": 1.05, "letterSpacing": "0.02em", "transform": "uppercase" },
-    "tb-label": { "font": "display", "size": "0.8125rem", "lineHeight": 1.2, "letterSpacing": "0.08em", "transform": "uppercase" },
-    "tb-num-xl": { "font": "display", "size": "3.5rem", "numeric": "tabular-nums" },
-    "tb-num-l": { "font": "display", "size": "2rem", "numeric": "tabular-nums" },
-    "tb-num-m": { "font": "display", "size": "1.375rem", "numeric": "tabular-nums" },
-    "tb-title": { "font": "text", "weight": 600, "size": "1.25rem", "lineHeight": 1.25 },
-    "tb-body": { "font": "text", "weight": 400, "size": "1rem", "lineHeight": 1.5 },
-    "tb-body-s": { "font": "text", "weight": 400, "size": "0.875rem", "lineHeight": 1.45 },
-    "tb-meta": { "font": "text", "weight": 400, "size": "0.8125rem", "lineHeight": 1.4, "numeric": "tabular-nums" },
+    "tb-display": {
+      "font": "display",
+      "weight": 800,
+      "size": "clamp(2.5rem, 1.6rem + 3.2vw, 4.75rem)",
+      "lineHeight": 0.95,
+      "letterSpacing": "-0.01em",
+      "use": "today's session title"
+    },
+    "tb-h1": {
+      "font": "display",
+      "weight": 800,
+      "size": "clamp(2rem, 1.5rem + 1.8vw, 3rem)",
+      "lineHeight": 1,
+      "use": "page titles (Plans, course plan)"
+    },
+    "tb-h2": {
+      "font": "text",
+      "weight": 600,
+      "size": "1.25rem",
+      "lineHeight": 1.3,
+      "use": "section headings"
+    },
+    "tb-title": {
+      "font": "text",
+      "weight": 600,
+      "size": "1.25rem",
+      "lineHeight": 1.25,
+      "use": "plan, module and next-topic titles"
+    },
+    "tb-body": {
+      "font": "text",
+      "weight": 400,
+      "size": "1rem",
+      "lineHeight": 1.5
+    },
+    "tb-body-s": {
+      "font": "text",
+      "weight": 400,
+      "size": "0.875rem",
+      "lineHeight": 1.45
+    },
+    "tb-label": {
+      "font": "text",
+      "weight": 600,
+      "size": "0.8125rem",
+      "lineHeight": 1.3,
+      "use": "nav items, day toggles, lesson names, avatar initials"
+    },
+    "tb-meta": {
+      "font": "text",
+      "weight": 400,
+      "size": "0.8125rem",
+      "lineHeight": 1.4,
+      "numeric": "tabular-nums"
+    },
+    "case": "sentence case everywhere; no uppercase transforms",
     "scaleVar": "--sk-font-scale",
-    "minTextPx": 12
+    "minTextPx": 13
   },
-  "radius": { "sheet": "3px", "button": "3px", "block": "2px", "mark": "1px" },
-  "layout": { "pageMax": "1280px", "gutter": { "base": "16px", "md": "32px" }, "grid": "12 columns at lg; Today first viewport 5 | 7" },
-  "targets": { "minMobile": "44px", "nav": "64px", "primaryButton": "52px" },
-  "focus": { "outline": "3px solid teal", "offset": "2px" },
+  "radius": {
+    "sheet": "3px",
+    "button": "3px",
+    "dayToggle": "2px",
+    "topicMark": "1px",
+    "circles": "day marks (40px), avatar, phone-tab pill"
+  },
+  "layout": {
+    "contentMax": "880px, single column",
+    "barMax": "1280px",
+    "gutter": {
+      "base": "16px",
+      "md": "32px"
+    },
+    "sections": "1px rule on top, 40–48px apart"
+  },
+  "targets": {
+    "minMobile": "44px",
+    "nav": "64px",
+    "primaryButton": "52px",
+    "moduleButton": "56px"
+  },
+  "focus": {
+    "outline": "3px solid teal",
+    "offset": "2px"
+  },
   "motion": {
-    "button": { "duration": "160ms", "easing": "cubic-bezier(0.2, 0.8, 0.2, 1)" },
-    "replanIn": { "duration": "520ms", "easing": "cubic-bezier(0.16, 1, 0.3, 1)", "from": "translateX(-24px), opacity 0", "stagger": "90ms", "reducedMotion": "none" }
+    "button": {
+      "duration": "160ms",
+      "easing": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+      "reducedMotion": "none"
+    },
+    "accordionChevron": {
+      "property": "rotate 180deg",
+      "reducedMotion": "none"
+    }
+  },
+  "marks": {
+    "today": {
+      "done": "40px ink circle with white check",
+      "today": "40px lime circle",
+      "planned": "40px circle, 1.5px teal outline",
+      "rest": "4px ink-3 dot"
+    },
+    "coursePlan": {
+      "done": "16px ink-2 check",
+      "next": "12px lime square, 1.5px ink inset",
+      "planned": "12px square, 1.5px teal outline",
+      "locked": "14px ink-3 lock, reason in meta line"
+    }
   },
   "rules": {
-    "colorRoles": {
-      "plan": "teal",
-      "now": "lime, only on a mark containing today's date: today's column, today's next topic, current plan week, the You marker; never cohort week, catch-up week or future start week",
-      "done": "graphite",
-      "moved": "dashed 1.5px teal outline + 135deg teal-wash hatch, no solid inset",
-      "live": "green, live only",
-      "navCurrent": "ink underline (desktop) / teal-wash pill (mobile), never lime"
-    },
-    "sessionBlockHeightPx": "clamp(48, 36 + 1.6*minutes, 132)",
-    "sessionBlockFace": "kind + minutes only; title in hero, THEN list and accessible name",
-    "topicBlockWidthPx": "clamp(128, 128 + 4*minutes, 440); 148 when no duration",
-    "kickers": "none above headings, except the date line above the Today title",
+    "oneLime": "lime on one thing per page: the mark that is today (course plan: today's next topic); never nav, buttons, headings, row fills or status",
+    "saidInWords": "moved and live are words in the meta line, never a colour, outline or pattern",
+    "onePrimary": "at most one primary button per page; every other action is quiet",
+    "navCurrent": "ink 4px bar (desktop) / teal-wash pill (phone), never lime",
+    "kickers": "none above headings, except the date line above today's session title",
     "icons": "Lucide via Icon; no Unicode glyph icons",
     "unwiredActions": "DemoAction announces 'Lab demo — this action isn't wired yet.'",
-    "mockValues": "MockTag with reason",
-    "signatureInteraction": "Re-plan: 'Keep this plan' + 'Choose my days' (disclosure, aria-pressed day toggles, role=status confirmation)"
+    "mockValues": "one MockTag per page, at the bottom, with its reason",
+    "signatureInteraction": "Change days: aria-expanded disclosure, seven aria-pressed day toggles, quiet 'Use these days', role=status result; no 'Keep this plan' button because keeping is the default"
   },
-  "open": [
-    "Road to race day as 12 week marks",
-    "Per-day minute totals under the week grid",
-    "Re-plan motion travelling from the missed day"
-  ]
+  "open": []
 }
