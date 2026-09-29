@@ -16,7 +16,7 @@
       "one job per page",
       "at most one primary action per page",
       "three marks: done, today/next, planned",
-      "one accent: lime = today, the only lime on a page",
+      "one accent: accent yellow = today, the only accent yellow on a page",
       "moved and live are said in words"
     ],
     "voices": {
@@ -41,7 +41,7 @@
       "tb-replan-in motion",
       "tb-num-* sizes",
       "condensed caps labels and buttons",
-      "--tb-live, --tb-live-wash, --tb-lime-deep"
+      "--tb-live, --tb-live-wash, --tb-accent yellow-deep"
     ]
   },
   "colors": {
@@ -92,37 +92,28 @@
       "var": "--tb-teal-wash",
       "role": "phone tab bar current pill only"
     },
-    "lime": {
-      "value": "#c8f169",
-      "var": "--tb-lime",
-      "role": "today: today's day mark, the course plan's next-topic mark; one per page",
-      "contrastWithInk": 12.9
+    "now": {
+      "value": "#f9c654",
+      "var": "--tb-now",
+      "source": "SKO DS --color-bg-accent-yellow",
+      "on": "--color-text-on-accent-yellow #13282f",
+      "role": "today: today's day mark, the course plan's next-topic mark; one per page, always with a 1.5px ink inset"
     }
   },
   "fonts": {
-    "display": {
-      "family": "Big Shoulders Display",
-      "weights": [
-        800
-      ],
-      "var": "--font-tb-display",
-      "fallback": "Arial Narrow, sans-serif",
-      "use": "page titles and today's session title only"
-    },
-    "text": {
-      "family": "Hanken Grotesk",
+    "family": {
+      "family": "Montserrat",
+      "source": "SKO DS --sk-font-display / --sk-font-body (next/font in app/layout.tsx)",
       "weights": [
         400,
         600
       ],
-      "var": "--font-tb-text",
-      "fallback": "system-ui, sans-serif",
-      "use": "everything else, sentence case"
+      "use": "everything; titles at 600 with -0.02em tracking"
     }
   },
   "typography": {
     "tb-display": {
-      "font": "display",
+      "font": "family",
       "weight": 800,
       "size": "clamp(2.5rem, 1.6rem + 3.2vw, 4.75rem)",
       "lineHeight": 0.95,
@@ -130,47 +121,47 @@
       "use": "today's session title"
     },
     "tb-h1": {
-      "font": "display",
+      "font": "family",
       "weight": 800,
       "size": "clamp(2rem, 1.5rem + 1.8vw, 3rem)",
       "lineHeight": 1,
       "use": "page titles (Plans, course plan)"
     },
     "tb-h2": {
-      "font": "text",
+      "font": "family",
       "weight": 600,
       "size": "1.25rem",
       "lineHeight": 1.3,
       "use": "section headings"
     },
     "tb-title": {
-      "font": "text",
+      "font": "family",
       "weight": 600,
       "size": "1.25rem",
       "lineHeight": 1.25,
       "use": "plan, module and next-topic titles"
     },
     "tb-body": {
-      "font": "text",
+      "font": "family",
       "weight": 400,
       "size": "1rem",
       "lineHeight": 1.5
     },
     "tb-body-s": {
-      "font": "text",
+      "font": "family",
       "weight": 400,
       "size": "0.875rem",
       "lineHeight": 1.45
     },
     "tb-label": {
-      "font": "text",
+      "font": "family",
       "weight": 600,
       "size": "0.8125rem",
       "lineHeight": 1.3,
       "use": "nav items, day toggles, lesson names, avatar initials"
     },
     "tb-meta": {
-      "font": "text",
+      "font": "family",
       "weight": 400,
       "size": "0.8125rem",
       "lineHeight": 1.4,
@@ -220,22 +211,22 @@
   "marks": {
     "today": {
       "done": "40px ink circle with white check",
-      "today": "40px lime circle",
+      "today": "40px accent yellow circle",
       "planned": "40px circle, 1.5px teal outline",
       "rest": "4px ink-3 dot"
     },
     "coursePlan": {
       "done": "16px ink-2 check",
-      "next": "12px lime square, 1.5px ink inset",
+      "next": "12px accent yellow square, 1.5px ink inset",
       "planned": "12px square, 1.5px teal outline",
       "locked": "14px ink-3 lock, reason in meta line"
     }
   },
   "rules": {
-    "oneLime": "lime on one thing per page: the mark that is today (course plan: today's next topic); never nav, buttons, headings, row fills or status",
+    "oneAccent": "accent yellow on one thing per page: the mark that is today (course plan: today's next topic); never nav, buttons, headings, row fills or status",
     "saidInWords": "moved and live are words in the meta line, never a colour, outline or pattern",
     "onePrimary": "at most one primary button per page; every other action is quiet",
-    "navCurrent": "ink 4px bar (desktop) / teal-wash pill (phone), never lime",
+    "navCurrent": "ink 4px bar (desktop) / teal-wash pill (phone), never accent yellow",
     "kickers": "none above headings, except the date line above today's session title",
     "icons": "Lucide via Icon; no Unicode glyph icons",
     "unwiredActions": "DemoAction announces 'Lab demo — this action isn't wired yet.'",

@@ -2,7 +2,8 @@
  * Lab world: "The Training Block" (/lab/training/*).
  * An exploration outside the SKO DS. Only SkillUp teal (#26708e) is fixed.
  * Distilled: two voices (condensed display for page and session titles only, text face for everything else),
- * three marks (done, today, planned) and one accent (lime = today). Moved and live are said in words.
+ * three marks (done, today, planned) and one accent (SKO accent yellow = today). Moved and live are said in words.
+ * Type is the DS face, Montserrat, for every voice.
  * Scoped to [data-world="training"] so nothing leaks into the product.
  */
 
@@ -21,11 +22,12 @@
   --tb-teal-wash: #e3eef2;       /* planned block fill */
 
   /* today */
-  --tb-lime: #c8f169;            /* split-time highlighter; ink on it = 12.9:1 */
+  --tb-now: var(--color-bg-accent-yellow, #f9c654);        /* SKO DS bg/accent-yellow: today, once per page */
+  --tb-on-now: var(--color-text-on-accent-yellow, #13282f); /* SKO DS text/on-accent-yellow */
 
   --tb-radius: 3px;
-  --tb-font-display: var(--font-tb-display), "Arial Narrow", sans-serif;
-  --tb-font-text: var(--font-tb-text), system-ui, sans-serif;
+  --tb-font-display: var(--sk-font-display, "Montserrat"), system-ui, sans-serif; /* SKO DS: Montserrat */
+  --tb-font-text: var(--sk-font-body, "Montserrat"), system-ui, sans-serif;
 
   background: var(--tb-ground);
   color: var(--tb-ink);
@@ -33,23 +35,24 @@
   font-feature-settings: "tnum" 0;
 }
 
-[data-world="training"] ::selection { background: var(--tb-lime); color: var(--tb-ink); }
+[data-world="training"] ::selection { background: var(--tb-now); color: var(--tb-on-now); }
 [data-world="training"] :focus-visible { outline: 3px solid var(--tb-teal); outline-offset: 2px; }
 
 /* ---------- type: hierarchy by scale, two weights ---------- */
 [data-world="training"] .tb-display {
   font-family: var(--tb-font-display);
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 0.95;
-  font-size: calc(clamp(2.5rem, 1.6rem + 3.2vw, 4.75rem) * var(--sk-font-scale, 1));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-size: calc(clamp(2rem, 1.5rem + 2vw, 3.25rem) * var(--sk-font-scale, 1));
   text-wrap: balance;
 }
 [data-world="training"] .tb-h1 {
   font-family: var(--tb-font-display);
-  font-weight: 800;
-  line-height: 1;
-  font-size: calc(clamp(2rem, 1.5rem + 1.8vw, 3rem) * var(--sk-font-scale, 1));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-size: calc(clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem) * var(--sk-font-scale, 1));
 }
 [data-world="training"] .tb-h2 {
   font-weight: 600;
@@ -75,7 +78,6 @@
 [data-world="training"] .tb-bg-ground { background: var(--tb-ground); }
 [data-world="training"] .tb-bg-teal-wash { background: var(--tb-teal-wash); }
 [data-world="training"] .tb-bg-ink { background: var(--tb-ink); color: var(--tb-sheet); }
-[data-world="training"] .tb-bg-lime { background: var(--tb-lime); color: var(--tb-ink); }
 [data-world="training"] .tb-rule-b { border-bottom: 1px solid var(--tb-rule); }
 [data-world="training"] .tb-rule-t { border-top: 1px solid var(--tb-rule); }
 [data-world="training"] .tb-sheet {
@@ -107,7 +109,7 @@
 /* ---------- plan marks ---------- */
 [data-world="training"] .tb-mark { display: inline-block; width: 0.75rem; height: 0.75rem; border-radius: 1px; flex: none; }
 [data-world="training"] .tb-mark-plan { box-shadow: inset 0 0 0 1.5px var(--tb-teal); }
-[data-world="training"] .tb-mark-today { background: var(--tb-lime); box-shadow: inset 0 0 0 1.5px var(--tb-ink); }
+[data-world="training"] .tb-mark-today { background: var(--tb-now); color: var(--tb-on-now); box-shadow: inset 0 0 0 1.5px var(--tb-ink); }
 
 @media (prefers-reduced-motion: reduce) {
   [data-world="training"] .tb-btn { transition: none; }
