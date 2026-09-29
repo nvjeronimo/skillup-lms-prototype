@@ -1,7 +1,8 @@
 /*
  * Lab world: "The Training Block" (/lab/training/*).
  * An exploration outside the SKO DS. Only SkillUp teal (#26708e) is fixed.
- * One rule per colour: teal = the plan, lime = today, graphite = done, dashed teal = moved, green = live.
+ * Distilled: two voices (condensed display for page and session titles only, text face for everything else),
+ * three marks (done, today, planned) and one accent (lime = today). Moved and live are said in words.
  * Scoped to [data-world="training"] so nothing leaks into the product.
  */
 
@@ -13,7 +14,6 @@
   --tb-ink-2: #3c5660;           /* secondary text, 7.3:1 on white */
   --tb-ink-3: #5b727a;           /* tertiary text, 4.9:1 on white */
   --tb-rule: #d5dcdc;            /* hairline grid rules */
-  --tb-rule-strong: #0e2b34;
 
   /* the plan */
   --tb-teal: #26708e;            /* SkillUp teal — fixed */
@@ -22,15 +22,6 @@
 
   /* today */
   --tb-lime: #c8f169;            /* split-time highlighter; ink on it = 12.9:1 */
-  --tb-lime-deep: #a9d93e;
-
-  /* done */
-  --tb-done: #7d8f96;            /* graphite mark */
-  --tb-done-wash: #e4e8e9;
-
-  /* live — the only other colour */
-  --tb-live: #1f7a47;
-  --tb-live-wash: #e2f3e8;
 
   --tb-radius: 3px;
   --tb-font-display: var(--font-tb-display), "Arial Narrow", sans-serif;
@@ -61,29 +52,14 @@
   font-size: calc(clamp(2rem, 1.5rem + 1.8vw, 3rem) * var(--sk-font-scale, 1));
 }
 [data-world="training"] .tb-h2 {
-  font-family: var(--tb-font-display);
-  font-weight: 800;
-  line-height: 1.05;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  font-size: calc(1.5rem * var(--sk-font-scale, 1));
+  font-weight: 600;
+  line-height: 1.3;
+  font-size: calc(1.25rem * var(--sk-font-scale, 1));
 }
-[data-world="training"] .tb-num {
-  font-family: var(--tb-font-display);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-[data-world="training"] .tb-num-xl { font-size: calc(3.5rem * var(--sk-font-scale, 1)); }
-[data-world="training"] .tb-num-l  { font-size: calc(2rem * var(--sk-font-scale, 1)); }
-[data-world="training"] .tb-num-m  { font-size: calc(1.375rem * var(--sk-font-scale, 1)); }
 [data-world="training"] .tb-label {
-  font-family: var(--tb-font-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-weight: 600;
   font-size: calc(0.8125rem * var(--sk-font-scale, 1));
-  line-height: 1.2;
+  line-height: 1.3;
 }
 [data-world="training"] .tb-body   { font-size: calc(1rem * var(--sk-font-scale, 1)); line-height: 1.5; font-weight: 400; }
 [data-world="training"] .tb-body-s { font-size: calc(0.875rem * var(--sk-font-scale, 1)); line-height: 1.45; font-weight: 400; }
@@ -95,16 +71,13 @@
 [data-world="training"] .tb-c-ink2 { color: var(--tb-ink-2); }
 [data-world="training"] .tb-c-ink3 { color: var(--tb-ink-3); }
 [data-world="training"] .tb-c-teal { color: var(--tb-teal); }
-[data-world="training"] .tb-c-live { color: var(--tb-live); }
 [data-world="training"] .tb-bg-sheet { background: var(--tb-sheet); }
 [data-world="training"] .tb-bg-ground { background: var(--tb-ground); }
 [data-world="training"] .tb-bg-teal-wash { background: var(--tb-teal-wash); }
 [data-world="training"] .tb-bg-ink { background: var(--tb-ink); color: var(--tb-sheet); }
 [data-world="training"] .tb-bg-lime { background: var(--tb-lime); color: var(--tb-ink); }
-[data-world="training"] .tb-bg-teal { background: var(--tb-teal); color: #ffffff; }
 [data-world="training"] .tb-rule-b { border-bottom: 1px solid var(--tb-rule); }
 [data-world="training"] .tb-rule-t { border-top: 1px solid var(--tb-rule); }
-[data-world="training"] .tb-rule-strong-t { border-top: 2px solid var(--tb-rule-strong); }
 [data-world="training"] .tb-sheet {
   background: var(--tb-sheet);
   border: 1px solid var(--tb-rule);
@@ -116,7 +89,7 @@
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   min-height: 52px; padding: 0 1.5rem;
   border-radius: var(--tb-radius);
-  font-family: var(--tb-font-display); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+  font-weight: 600;
   font-size: calc(1rem * var(--sk-font-scale, 1));
   transition: background-color 160ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -125,7 +98,6 @@
 [data-world="training"] .tb-btn-primary:active { transform: translateY(1px); }
 [data-world="training"] .tb-btn-quiet { min-height: 44px; padding: 0 1rem; background: transparent; color: var(--tb-ink); box-shadow: inset 0 0 0 1.5px var(--tb-ink); }
 [data-world="training"] .tb-btn-quiet:hover { background: var(--tb-sheet); }
-[data-world="training"] .tb-btn-live { background: var(--tb-live); color: #ffffff; }
 [data-world="training"] .tb-link {
   color: var(--tb-teal); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px;
   min-height: 44px; display: inline-flex; align-items: center;
@@ -133,74 +105,18 @@
 [data-world="training"] .tb-link:hover { color: var(--tb-teal-deep); }
 
 /* ---------- plan marks ---------- */
-[data-world="training"] .tb-block {
-  border-radius: 2px;
-  background: var(--tb-teal-wash);
-  box-shadow: inset 0 0 0 1px var(--tb-teal);
-  color: var(--tb-ink);
-}
-[data-world="training"] .tb-block-done { background: var(--tb-done-wash); box-shadow: inset 0 0 0 1px var(--tb-done); color: var(--tb-ink-2); }
-[data-world="training"] .tb-block-moved {
-  background: repeating-linear-gradient(135deg, transparent 0 6px, var(--tb-teal-wash) 6px 8px);
-  box-shadow: none;
-  outline: 1.5px dashed var(--tb-teal); outline-offset: -1.5px;
-}
-[data-world="training"] .tb-block-missed { background: transparent; box-shadow: inset 0 0 0 1px var(--tb-rule); color: var(--tb-ink-3); }
-[data-world="training"] .tb-block-live { background: var(--tb-live-wash); box-shadow: inset 0 0 0 1px var(--tb-live); }
 [data-world="training"] .tb-mark { display: inline-block; width: 0.75rem; height: 0.75rem; border-radius: 1px; flex: none; }
-[data-world="training"] .tb-mark-done { background: var(--tb-done); }
 [data-world="training"] .tb-mark-plan { box-shadow: inset 0 0 0 1.5px var(--tb-teal); }
 [data-world="training"] .tb-mark-today { background: var(--tb-lime); box-shadow: inset 0 0 0 1.5px var(--tb-ink); }
-[data-world="training"] .tb-mark-moved { border: 1.5px dashed var(--tb-teal); }
-[data-world="training"] .tb-mark-live { background: var(--tb-live); border-radius: 50%; }
-[data-world="training"] .tb-hyphen { hyphens: auto; overflow-wrap: normal; word-break: normal; }
-[data-world="training"] .tb-today-col { background: var(--tb-lime); }
-[data-world="training"] .tb-meter { height: 10px; background: var(--tb-done-wash); border-radius: 1px; overflow: hidden; }
-[data-world="training"] .tb-meter > span { display: block; height: 100%; background: var(--tb-teal); }
-[data-world="training"] .tb-road { height: 2px; background: var(--tb-rule-strong); }
 
-/* Re-plan motion: moved blocks slide in from the past, once, and settle. */
-@keyframes tb-replan-in {
-  from { transform: translateX(-24px); opacity: 0; }
-  to   { transform: none; opacity: 1; }
-}
-[data-world="training"] .tb-replan-in { animation: tb-replan-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 @media (prefers-reduced-motion: reduce) {
-  [data-world="training"] .tb-replan-in { animation: none; }
   [data-world="training"] .tb-btn { transition: none; }
 }
-:root[data-reduce-motion] [data-world="training"] .tb-replan-in { animation: none; }
 
-/* plans page */
 /* Plan title: the reading face at a step above body — hierarchy by scale, the 600 weight only. */
 [data-world="training"] .tb-title {
   font-family: var(--tb-font-text);
   font-weight: 600;
   font-size: calc(1.25rem * var(--sk-font-scale, 1));
   line-height: 1.25;
-}
-/* The 12-week mini plan: twelve squares that shrink with the row, never overflow it. */
-[data-world="training"] .tb-weeks {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 3px;
-  max-width: 336px;
-}
-[data-world="training"] .tb-weeks > .tb-mark { width: 100%; height: auto; aspect-ratio: 1 / 1; }
-/* Fixed timing-board slot so numerals line up whatever their width. */
-[data-world="training"] .tb-slot { display: inline-block; min-width: 2ch; text-align: right; }
-
-/* course plan page */
-/* Topic blocks on the plan table: the title underlines on hover — no motion, the block stays put. */
-[data-world="training"] a.tb-cp-block:hover .tb-cp-title { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
-/* The one lime thing on the page: today's next topic. */
-[data-world="training"] .tb-cp-next { border-radius: 2px; background: var(--tb-lime); color: var(--tb-ink); box-shadow: inset 0 0 0 1.5px var(--tb-ink); }
-[data-world="training"] .tb-cp-next-moved { outline: 1.5px dashed var(--tb-teal); outline-offset: 3px; }
-/* Locked: the plain sheet, no plan colour — the reason is printed on it. */
-[data-world="training"] .tb-cp-locked { border-radius: 2px; background: var(--tb-sheet); color: var(--tb-ink-2); box-shadow: inset 0 0 0 1px var(--tb-rule); }
-[data-world="training"] .tb-cp-mark-live { background: var(--tb-live-wash); box-shadow: inset 0 0 0 1px var(--tb-live); }
-/* The printed plan: modules sit on the sheet, hairlines between week rows. */
-[data-world="training"] .tb-cp-table > li { background: var(--tb-sheet); padding-left: 1rem; padding-right: 1rem; }
-@media (min-width: 768px) {
-  [data-world="training"] .tb-cp-table > li { padding-left: 1.5rem; padding-right: 1.5rem; }
 }

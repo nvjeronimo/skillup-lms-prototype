@@ -1,5 +1,5 @@
 /**
- * The Six Sigma course read as a 12-week training block.
+ * The Six Sigma course read as a 12-week plan: modules, and the topics left in each.
  *
  * REAL: modules, lessons, topic titles, types, durations and `locked` come from lib/data-model.json.
  * MOCK: which week each topic sits in, the persona's done set and the re-plan moves. edX has no schedule
@@ -9,7 +9,7 @@ import { course } from "@/lib/data";
 import type { Topic } from "@/lib/types";
 import type { PersonaId } from "@/lib/lab/dashboard-mock";
 
-export type TopicState = "done" | "next" | "todo" | "locked" | "live";
+export type TopicState = "done" | "next" | "todo" | "locked";
 
 export interface PlanTopic {
   id: string;
@@ -20,6 +20,7 @@ export interface PlanTopic {
   /** Whole minutes, or null when the data has no time for it. */
   minutes: number | null;
   state: TopicState;
+  live: boolean;
   week: number;
   /** Present when the re-plan moved this topic. */
   movedFrom?: number;
@@ -29,45 +30,31 @@ export interface PlanTopic {
   href: string;
 }
 
-export interface WeekRow {
-  week: number;
-  topics: PlanTopic[];
-  /** Every topic planned here was moved to this week. */
-  movedTo?: number;
-}
-
-export interface Segment {
+export interface Lesson {
   id: string;
   /** Lesson name; absent when the module holds topics directly. */
   label?: string;
-  rows: WeekRow[];
+  topics: PlanTopic[];
 }
 
 export interface PlanModule {
   id: string;
-  number: string;
   title: string;
-  segments: Segment[];
+  lessons: Lesson[];
   topics: PlanTopic[];
-  weekFrom: number;
-  weekTo: number;
   done: number;
 }
 
 export interface CoursePlanModel {
   modules: PlanModule[];
-  topics: PlanTopic[];
   next?: PlanTopic;
   nextModuleId?: string;
   done: number;
   total: number;
-  minutesLeft: number;
-  minutesTotal: number;
-  graded: PlanTopic[];
-  moved: PlanTopic[];
+  moved: number;
 }
 
-/** MOCK: the cohort plan — which week each topic is planned for. Race day is week 12. */
+/** MOCK: the cohort plan — which week each topic is planned for. */
 const BASE_WEEK: Record<string, number> = {
   "m1-t1": 1, "m1-t2": 1, "m1-t3": 2,
   "m2-t1": 3, "m2-t2": 4, "m2-t3": 5,
@@ -106,15 +93,6 @@ export function toMinutes(d: string): number | null {
   return null;
 }
 
-export function formatMinutes(total: number): string {
-  const h = Math.floor(total / 60);
-  const m = total % 60;
-  if (!h) return `${m} min`;
-  return m ? `${h} h ${m} min` : `${h} h`;
-}
-
-export const pad = (n: number) => String(n).padStart(2, "0");
-
 const isLive = (t: Topic) => t.type === "VILT-Live Session";
 const isGraded = (t: Topic) =>
   /Graded|Peer|Project/.test(t.type) || /^(Graded|Final Exam|Final Project)/.test(t.title);
@@ -130,74 +108,51 @@ export function getCoursePlan(personaId: PersonaId): CoursePlanModel {
       ? mod.lessons.map((l) => ({ id: l.id, label: l.label as string | undefined, topics: l.topics }))
       : [{ id: `${mod.id}-all`, label: undefined as string | undefined, topics: mod.topics ?? [] }];
 
-    const planTopics: PlanTopic[] = [];
-    const segments: Segment[] = groups.map((g, gi) => {
+    const lessons: Lesson[] = groups.map((g, gi) => {
       const prereq = gi > 0 ? groups[gi - 1].label : mi > 0 ? course.modules[mi - 1].title : undefined;
       const topics = g.topics.map<PlanTopic>((t) => {
         const base = BASE_WEEK[t.id] ?? 12;
         const moved = moves[t.id];
-        const pt: PlanTopic = {
+        return {
           id: t.id,
           title: t.title,
           type: t.type,
           duration: t.duration,
           minutes: toMinutes(t.duration),
-          state: done.has(t.id) ? "done" : t.locked ? "locked" : isLive(t) ? "live" : "todo",
+          state: done.has(t.id) ? "done" : t.locked ? "locked" : "todo",
+          live: isLive(t),
           week: moved ?? base,
           movedFrom: moved !== undefined && moved !== base ? base : undefined,
           lockedBy: t.locked ? prereq : undefined,
           graded: isGraded(t),
           href: `/course/${course.slug}/topic/${t.id}`,
         };
-        return pt;
       });
-      planTopics.push(...topics);
-
-      // A row for every week this segment touches — including weeks the re-plan emptied.
-      const weeks = new Set<number>();
-      topics.forEach((t) => {
-        weeks.add(t.week);
-        if (t.movedFrom) weeks.add(t.movedFrom);
-      });
-      const rows = Array.from(weeks)
-        .sort((a, b) => a - b)
-        .map<WeekRow>((w) => {
-          const here = topics.filter((t) => t.week === w);
-          const left = topics.filter((t) => t.movedFrom === w);
-          return { week: w, topics: here, movedTo: here.length === 0 && left.length ? left[0].week : undefined };
-        });
-      return { id: g.id, label: g.label, rows };
+      return { id: g.id, label: g.label, topics };
     });
 
-    const weeks = planTopics.flatMap((t) => (t.movedFrom ? [t.week, t.movedFrom] : [t.week]));
+    const topics = lessons.flatMap((l) => l.topics);
     modules.push({
       id: mod.id,
-      number: mod.label.replace(/\D+/g, ""),
       title: mod.title,
-      segments,
-      topics: planTopics,
-      weekFrom: Math.min(...weeks),
-      weekTo: Math.max(...weeks),
-      done: planTopics.filter((t) => t.state === "done").length,
+      lessons,
+      topics,
+      done: topics.filter((t) => t.state === "done").length,
     });
-    all.push(...planTopics);
+    all.push(...topics);
   });
 
-  const next = all.find((t) => t.state === "todo");
+  // The next topic is the first one still to do that isn't a scheduled live session.
+  const next = all.find((t) => t.state === "todo" && !t.live);
   if (next) next.state = "next";
   const nextModuleId = next ? modules.find((m) => m.topics.includes(next))?.id : undefined;
-  const known = (ts: PlanTopic[]) => ts.reduce((a, t) => a + (t.minutes ?? 0), 0);
 
   return {
     modules,
-    topics: all,
     next,
     nextModuleId,
     done: all.filter((t) => t.state === "done").length,
     total: all.length,
-    minutesLeft: known(all.filter((t) => t.state !== "done")),
-    minutesTotal: known(all),
-    graded: all.filter((t) => t.graded),
-    moved: all.filter((t) => t.movedFrom !== undefined),
+    moved: all.filter((t) => t.movedFrom !== undefined).length,
   };
 }
