@@ -1,0 +1,326 @@
+/*
+ * Lab world D: "Dawn" (/lab/worlds/dawn/*).
+ * Progress is light. A course not started sits in deep night; as it is finished the horizon turns cobalt,
+ * rose gathers above it, and a finished course stands in full day. Fused from a theatre cyclorama cue:
+ * a depthless cyc black, a low cobalt horizon, rose above it, and white day reserved for "done".
+ * SkillUp teal (#26708e) is the one colour you press: every action is teal, nothing else is.
+ * Scoped to [data-world="dawn"]; nothing leaks into the product.
+ */
+
+@property --dw-light {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+[data-world="dawn"] {
+  /* the cyc */
+  --dw-night: #06070d;            /* cyc black, a breath of blue so it is not dead */
+  --dw-night-2: #0b0d1b;          /* lifted ground under the horizon */
+  --dw-cobalt: #2a46ff;           /* the horizon band */
+  --dw-cobalt-deep: #1424a8;
+  --dw-violet: #6a34c4;           /* where cobalt turns to rose */
+  --dw-rose: #ff6fae;             /* rose gathering */
+  --dw-rose-soft: #ffc6de;
+  --dw-day: #f7f5fc;              /* white-day wash, faintly lavender */
+  --dw-day-2: #ebe7fa;
+
+  /* ink on night (starlight) — all measured on --dw-night-2 and on the zenith scrim */
+  --dw-star: #eff1fa;             /* 17.1:1 */
+  --dw-star-2: #b8bdd3;           /* 10.4:1; 9.1:1 on the lit reflection */
+  --dw-star-3: #979db8;           /*  7.2:1; 6.3:1 on the lit reflection */
+  /* ink on day */
+  --dw-ink: #14162b;              /* 16.5:1 on --dw-day */
+  --dw-ink-2: #45485f;            /*  8.3:1 */
+  --dw-ink-3: #5a5d75;            /*  6.0:1 (5.3:1 on --dw-day-2) */
+
+  /* the action */
+  --dw-teal: #26708e;             /* SkillUp teal. White on it 5.6:1; against night 3.6:1 (non-text) */
+  --dw-teal-press: #1d5a73;
+  --dw-teal-glow: #8fd3ea;        /* focus ring on night, 12:1 */
+
+  --dw-font-display: var(--font-dw-display), "Bodoni 72", Didot, Georgia, serif;
+  --dw-font-text: var(--font-dw-text), system-ui, sans-serif;
+
+  /* phase-dependent roles (night by default; [data-phase="day"] flips them) */
+  --dw-fg: var(--dw-star);
+  --dw-fg-2: var(--dw-star-2);
+  --dw-fg-3: var(--dw-star-3);
+  --dw-focus: var(--dw-teal-glow);
+  --dw-rule: rgba(184, 189, 211, 0.18);
+
+  background: var(--dw-night);
+  color: var(--dw-fg);
+  font-family: var(--dw-font-text);
+  -webkit-font-smoothing: antialiased;
+  font-kerning: normal;
+}
+
+/* The world owns the page: the root scrollbar and canvas take its palette too. */
+html:has([data-world="dawn"]) {
+  scrollbar-color: #2b3160 var(--dw-night, #06070d);
+  background: #06070d;
+}
+[data-world="dawn"] * { scrollbar-color: #2b3160 transparent; }
+
+[data-world="dawn"] ::selection { background: var(--dw-rose-soft); color: var(--dw-ink); }
+[data-world="dawn"] :focus-visible { outline: 2px solid var(--dw-focus); outline-offset: 3px; border-radius: 2px; }
+[data-world="dawn"] main:focus-visible { outline: none; }
+
+/* ---------- type: a playbill Didone for names, a sturdy grotesk for everything read ---------- */
+[data-world="dawn"] .dw-display {
+  font-family: var(--dw-font-display);
+  font-weight: 500;
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  font-size: calc(clamp(2.5rem, 1.4rem + 4.4vw, 5rem) * var(--sk-font-scale, 1));
+  text-wrap: balance;
+}
+[data-world="dawn"] .dw-h1 {
+  font-family: var(--dw-font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  font-size: calc(clamp(2.25rem, 1.6rem + 2.6vw, 3.75rem) * var(--sk-font-scale, 1));
+  text-wrap: balance;
+}
+[data-world="dawn"] .dw-h2 {
+  font-family: var(--dw-font-display);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.1;
+  font-size: calc(clamp(1.625rem, 1.3rem + 1.2vw, 2.375rem) * var(--sk-font-scale, 1));
+  text-wrap: balance;
+}
+[data-world="dawn"] .dw-h3 {
+  font-weight: 600;
+  line-height: 1.3;
+  font-size: calc(1rem * var(--sk-font-scale, 1));
+}
+/* the phase word: italic Didone, always paired with the % or a state in words */
+[data-world="dawn"] .dw-phase {
+  font-family: var(--dw-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.25em;
+  line-height: 1;
+  letter-spacing: 0;
+}
+[data-world="dawn"] .dw-lede   { font-size: calc(1.125rem * var(--sk-font-scale, 1)); line-height: 1.5; font-weight: 400; }
+[data-world="dawn"] .dw-body   { font-size: calc(1rem * var(--sk-font-scale, 1)); line-height: 1.5; font-weight: 400; }
+[data-world="dawn"] .dw-body-s { font-size: calc(0.9375rem * var(--sk-font-scale, 1)); line-height: 1.45; font-weight: 400; }
+[data-world="dawn"] .dw-meta   { font-size: calc(0.8125rem * var(--sk-font-scale, 1)); line-height: 1.4; font-weight: 400; font-variant-numeric: tabular-nums; }
+[data-world="dawn"] .dw-label  { font-size: calc(0.9375rem * var(--sk-font-scale, 1)); line-height: 1.3; font-weight: 600; }
+[data-world="dawn"] .dw-strong { font-weight: 600; }
+[data-world="dawn"] .dw-num    { font-variant-numeric: tabular-nums; }
+
+[data-world="dawn"] .dw-fg   { color: var(--dw-fg); }
+[data-world="dawn"] .dw-fg-2 { color: var(--dw-fg-2); }
+[data-world="dawn"] .dw-fg-3 { color: var(--dw-fg-3); }
+[data-world="dawn"] .dw-rule-t { border-top: 1px solid var(--dw-rule); }
+[data-world="dawn"] .dw-rule-b { border-bottom: 1px solid var(--dw-rule); }
+
+/* ---------- navigation ---------- */
+[data-world="dawn"] .dw-nav { background: var(--dw-night); border-bottom: 1px solid var(--dw-rule); }
+[data-world="dawn"] .dw-nav .sk-logo-light { display: none; }
+[data-world="dawn"] .dw-nav .sk-logo-dark { display: block; }
+[data-world="dawn"] .dw-navlink {
+  position: relative;
+  color: var(--dw-star-2);
+  font-size: calc(0.9375rem * var(--sk-font-scale, 1));
+  font-weight: 500;
+}
+[data-world="dawn"] .dw-navlink:hover { color: var(--dw-star); }
+[data-world="dawn"] .dw-navlink[aria-current] { color: var(--dw-star); }
+/* the current page is lit from below: a short cobalt horizon under the word, plus the word itself is brighter */
+[data-world="dawn"] .dw-navlink[aria-current]::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--dw-cobalt) 20%, var(--dw-rose) 80%, transparent);
+  box-shadow: 0 0 12px 1px rgba(42, 70, 255, 0.7);
+}
+
+/* ---------- actions: teal is the only colour you press ---------- */
+[data-world="dawn"] .dw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: 52px;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  font-size: calc(1rem * var(--sk-font-scale, 1));
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+[data-world="dawn"] .dw-btn--primary {
+  background: var(--dw-teal);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(143, 211, 234, 0.25), 0 10px 32px -12px rgba(38, 112, 142, 0.9);
+}
+[data-world="dawn"] .dw-btn--primary:hover { background: var(--dw-teal-press); }
+[data-world="dawn"] .dw-btn--quiet {
+  min-height: 44px;
+  padding: 0 1.125rem;
+  background: transparent;
+  color: var(--dw-fg);
+  border: 1px solid color-mix(in srgb, var(--dw-fg) 42%, transparent);
+}
+[data-world="dawn"] .dw-btn--quiet:hover { border-color: var(--dw-fg); }
+[data-world="dawn"] .dw-link {
+  color: var(--dw-fg);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--dw-fg) 40%, transparent);
+  text-underline-offset: 0.2em;
+}
+[data-world="dawn"] .dw-link:hover { text-decoration-color: var(--dw-fg); }
+
+/* ---------- the horizon band ---------- */
+/* One band = a sky (with its horizon line at the bottom) and the ground under it.
+   --dw-target is the light the band rises to (0..1); --dw-light animates to it once on load. */
+[data-world="dawn"] .dw-band {
+  --dw-light: var(--dw-target, 0);
+  /* how much of each light is up */
+  --dw-c: clamp(0.14, calc(0.14 + var(--dw-light) * 5), 1);
+  --dw-r: clamp(0, calc((var(--dw-light) - 0.3) * 2.2), 1);
+  position: relative;
+  isolation: isolate;
+  animation: dw-rise 2600ms cubic-bezier(0.16, 0.84, 0.3, 1) both;
+  animation-delay: calc(var(--dw-i, 0) * 140ms + 150ms);
+}
+@keyframes dw-rise {
+  from { --dw-light: 0; }
+}
+
+[data-world="dawn"] .dw-sky {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #04050a 0%, #080a18 62%, #0c1030 100%);
+}
+[data-world="dawn"] .dw-sky > .dw-l {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+[data-world="dawn"] .dw-l--cobalt {
+  opacity: var(--dw-c);
+  background:
+    radial-gradient(ellipse 45% 38% at 70% 100%, rgba(140, 160, 255, 0.75) 0%, rgba(60, 90, 255, 0.35) 45%, transparent 100%),
+    linear-gradient(to top, rgba(42, 70, 255, 0.95) 0%, rgba(30, 48, 210, 0.62) 12%, rgba(20, 30, 130, 0.28) 38%, transparent 68%);
+}
+[data-world="dawn"] .dw-l--rose {
+  opacity: var(--dw-r);
+  background:
+    radial-gradient(ellipse 75% 95% at 70% 100%, rgba(255, 214, 230, 0.95) 0%, rgba(255, 111, 174, 0.9) 20%, rgba(170, 60, 190, 0.55) 46%, rgba(106, 52, 196, 0.2) 66%, transparent 82%);
+}
+/* the sky stays dark overhead, so the names written there always read */
+[data-world="dawn"] .dw-l--zenith {
+  background: linear-gradient(to bottom, rgba(6, 7, 13, 0.94) 0%, rgba(6, 7, 13, 0.72) 34%, rgba(6, 7, 13, 0) 62%);
+}
+[data-world="dawn"] .dw-l--day {
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 80% 120% at 70% 100%, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(to top, #fde9f2 0%, var(--dw-day) 38%, var(--dw-day-2) 100%);
+}
+/* grain: the matte cyc cloth, so the light has a surface to land on */
+[data-world="dawn"] .dw-l--grain {
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+/* the horizon line itself — always present, even at night: the structure the light rises from */
+[data-world="dawn"] .dw-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  opacity: calc(0.45 + var(--dw-c) * 0.55);
+  background: linear-gradient(90deg, rgba(42, 70, 255, 0) 0%, rgba(90, 110, 255, 0.9) 22%, rgba(150, 170, 255, 1) 62%, rgba(42, 70, 255, 0) 100%);
+  box-shadow: 0 0 18px 2px rgba(42, 70, 255, 0.55);
+}
+[data-world="dawn"] .dw-sky-content { position: relative; z-index: 1; }
+
+/* the ground: dark floor with a faint reflection of whatever light is up */
+[data-world="dawn"] .dw-ground {
+  position: relative;
+  background:
+    radial-gradient(ellipse 40% 90px at 70% 0, rgba(60, 90, 255, calc(var(--dw-c) * 0.22)) 0%, rgba(60, 90, 255, 0) 100%),
+    radial-gradient(ellipse 30% 70px at 70% 0, rgba(255, 111, 174, calc(var(--dw-r) * 0.16)) 0%, rgba(255, 111, 174, 0) 100%),
+    linear-gradient(to bottom, rgba(42, 70, 255, calc(var(--dw-c) * 0.12)) 0, rgba(42, 70, 255, 0) 88px),
+    var(--dw-night-2);
+}
+[data-world="dawn"] .dw-ground--night { background: var(--dw-night); }
+
+/* full day: the white wash is reserved for done. Static, no rise — done is already done. */
+[data-world="dawn"] [data-phase="day"] {
+  --dw-fg: var(--dw-ink);
+  --dw-fg-2: var(--dw-ink-2);
+  --dw-fg-3: var(--dw-ink-3);
+  --dw-focus: var(--dw-teal);
+  --dw-rule: rgba(20, 22, 43, 0.14);
+  color: var(--dw-fg);
+}
+[data-world="dawn"] .dw-band[data-phase="day"] { animation: none; --dw-light: 1; }
+[data-world="dawn"] [data-phase="day"] .dw-sky { background: var(--dw-day-2); }
+[data-world="dawn"] [data-phase="day"] .dw-l--day { opacity: 1; }
+[data-world="dawn"] [data-phase="day"] .dw-l--zenith { display: none; }
+[data-world="dawn"] [data-phase="day"] .dw-l--grain { opacity: 0.05; }
+[data-world="dawn"] [data-phase="day"] .dw-horizon {
+  opacity: 1;
+  background: linear-gradient(90deg, rgba(255, 111, 174, 0) 0%, rgba(255, 111, 174, 0.55) 40%, rgba(42, 70, 255, 0.35) 80%, rgba(42, 70, 255, 0) 100%);
+  box-shadow: none;
+}
+[data-world="dawn"] [data-phase="day"] .dw-ground { background: #ffffff; }
+[data-world="dawn"] [data-phase="day"] .dw-btn--primary { box-shadow: none; }
+
+/* sky heights */
+[data-world="dawn"] .dw-sky--hero { min-height: clamp(300px, 46vh, 520px); }
+[data-world="dawn"] .dw-sky--band { min-height: 168px; }
+[data-world="dawn"] .dw-sky--module { min-height: 132px; }
+@media (min-width: 768px) {
+  [data-world="dawn"] .dw-sky--hero { min-height: clamp(380px, 58vh, 620px); }
+  [data-world="dawn"] .dw-sky--band { min-height: 200px; }
+  [data-world="dawn"] .dw-sky--module { min-height: 156px; }
+}
+
+/* ---------- topics in the open module ---------- */
+[data-world="dawn"] .dw-topic {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  min-height: 44px;
+  padding: 0.625rem 0;
+}
+[data-world="dawn"] a.dw-topic:hover .dw-topic-title { text-decoration: underline; text-underline-offset: 0.2em; }
+[data-world="dawn"] .dw-topic[data-state="next"] .dw-topic-title { font-weight: 600; }
+[data-world="dawn"] .dw-state { font-size: calc(0.8125rem * var(--sk-font-scale, 1)); line-height: 1.4; font-weight: 600; white-space: nowrap; }
+[data-world="dawn"] .dw-state--next { color: var(--dw-rose-soft); }
+
+/* the week line */
+[data-world="dawn"] .dw-day-name {
+  font-family: var(--dw-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: calc(1.125rem * var(--sk-font-scale, 1));
+  line-height: 1.3;
+}
+
+/* MockTag sits on night: give it its own light ground so the DS warning colours keep their contrast */
+[data-world="dawn"] .dw-mock { background: var(--dw-day); border-radius: 8px; }
+
+/* ---------- motion: one moment — the light comes up to where you are ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-world="dawn"] .dw-band { animation: none; }
+  [data-world="dawn"] .dw-btn { transition: none; }
+}
+[data-reduce-motion] [data-world="dawn"] .dw-band { animation: none; }

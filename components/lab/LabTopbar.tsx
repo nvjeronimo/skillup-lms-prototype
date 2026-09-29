@@ -20,13 +20,14 @@ export function LabTopbar() {
   const persona = params.get("persona") ?? "maya";
 
   // Inside a lab *world* the world owns its navigation; the lab keeps only a slim strip for testing.
-  if (pathname.startsWith("/lab/training")) {
+  const world = pathname.startsWith("/lab/training") ? "World: The Training Block" : pathname.startsWith("/lab/worlds") ? "Worlds" : null;
+  if (world) {
     return (
       <div className="flex min-h-[44px] flex-wrap items-center gap-x-4 gap-y-1 border-b border-sko-border-subtle bg-sko-bg-page px-4 py-1 md:px-6">
         <Link href="/lab" className="sk-text-sm-semibold inline-flex min-h-[44px] items-center text-sko-text-primary">
           ← All explorations
         </Link>
-        <span className="sk-text-sm-medium text-sko-text-muted">World: The Training Block</span>
+        <span className="sk-text-sm-medium text-sko-text-muted">{world}</span>
         <label className="ml-auto flex items-center gap-2">
           <span className="sk-text-sm-medium text-sko-text-muted">Persona</span>
           <select
