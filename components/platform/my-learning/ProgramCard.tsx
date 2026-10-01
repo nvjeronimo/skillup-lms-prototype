@@ -1,0 +1,133 @@
+import { Badge } from "@/components/atoms/Badge";
+import { Button } from "@/components/atoms/Button";
+import { DeliveryModeBadge } from "@/components/atoms/MetaBadges";
+import {
+  myLearningProgramProgressLabel,
+  myLearningProgramUpNextLabel,
+  type MyLearningProgram,
+} from "@/lib/platform/my-learning";
+import { cn } from "@/lib/utils";
+
+export interface ProgramCardProps {
+  program: MyLearningProgram;
+  /** DS `Layout`: Grid is stacked, List puts the hero on the left (desktop only). */
+  layout: "grid" | "list";
+  onAction?: () => void;
+  className?: string;
+}
+
+/* Buttons/Button sm is 36 tall as drawn; on mobile the target grows to 44 without moving
+   the layout (an invisible 4px band above and below). */
+const TARGET_44 =
+  "relative shrink-0 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-1 max-md:before:content-['']";
+
+/**
+ * DS `LMS / Platform / Program card` (6388:3858): one program in My Learning. White card,
+ * 1px border/subtle, radius 8, no shadow.
+ * Hero on bg/primary, gap 12: Delivery Mode badge + cohort (Badge v2 Gray), the eyebrow
+ * (label-small/Semibold), the title (headline-medium/Semibold) and the Week / Courses /
+ * Lessons line (body-small/Medium, gap 20), all text/on-primary. The ring is decoration:
+ * a 340 circle with a 56 stroke in bg/on-media at 8 %, clipped by the hero.
+ * Body, gap 16: the percent (headline-medium/Bold) with its label, the DS Progress bar
+ * (8 tall, square, bg/strong track, bg/info fill, stepped by 10: nearest step), then the
+ * footer — In progress: "Up next" + a primary "Continue"; Not started: a Badge v2 Gray
+ * status + a secondary "Details" (Buttons/Button sm).
+ * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
+ * Grid (6388:116437 / 6388:116628): stacked, cards keep their own height.
+ * List (6388:116802 / 6388:116940): min height 280, hero 502 wide with its content spread
+ * top to bottom, body centred.
+ *
+ * Known open issue: the DS draws the eyebrow at 70 % and the stats at 80 % layer opacity,
+ * which fails AA on bg/primary. Both are text/on-primary at 100 % here.
+ */
+export function ProgramCard({ program, layout, onAction, className }: ProgramCardProps) {
+  const list = layout === "list";
+  const showCohort = list || program.cohortInGrid;
+  // The DS Progress bar has steps of 10; the real value goes to assistive tech.
+  const step = Math.min(100, Math.max(0, Math.round(program.progressPct / 10) * 10));
+  // Unique name per card (WCAG 2.4.6); the visible label stays first.
+  const actionLabel = `${program.cta} ${program.title}`;
+
+  return (
+    <article
+      className={cn(
+        // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
+        // so desktop padding is 23 (+1 border = the DS 24 inset).
+        "flex overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page",
+        list ? "min-h-[280px] items-stretch" : "flex-col",
+        className,
+      )}
+    >
+      <div
+        className={cn(
+          "relative flex flex-col items-start gap-3 overflow-hidden bg-sko-bg-primary p-4 md:p-5 lg:p-[23px]",
+          list ? "w-[42%] shrink-0 justify-between xl:w-[502px]" : "w-full",
+        )}
+      >
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute top-[-70px] size-[340px] rounded-full border-[56px] border-sko-bg-on-media opacity-[0.08]",
+            list ? "right-[-140px]" : "right-[-142px]",
+          )}
+        />
+        <div className="relative flex flex-wrap items-center gap-2">
+          <DeliveryModeBadge value={program.delivery} />
+          {showCohort ? <Badge color="gray">{program.cohort}</Badge> : null}
+        </div>
+        <div className="relative flex w-full flex-col gap-1 text-sko-text-on-primary">
+          <p className="sk-text-2xs-semibold">{program.eyebrow}</p>
+          <h3 className="sk-text-display-sm-semibold">{program.title}</h3>
+        </div>
+        <ul className="sk-text-xs-medium relative flex flex-wrap items-start gap-x-5 gap-y-1 whitespace-nowrap text-sko-text-on-primary">
+          {program.stats.map((stat) => (
+            <li key={stat}>{stat}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:p-[23px]", list ? "flex-1 justify-center" : "w-full")}>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="sk-text-display-sm-bold text-sko-text-default">{program.progressPct}%</span>
+            <span className="sk-text-2xs-semibold whitespace-nowrap text-sko-text-subtle">
+              {myLearningProgramProgressLabel}
+            </span>
+          </div>
+          <div
+            role="progressbar"
+            aria-label={`${program.title} progress`}
+            aria-valuenow={program.progressPct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            className="h-2 bg-sko-bg-strong"
+          >
+            {/* DS rule: progress bars fill with bg/info. */}
+            <div className="h-full bg-sko-bg-info" style={{ width: `${step}%` }} />
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-1">
+          {program.upNext ? (
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="sk-text-xs-regular text-sko-text-subtle">{myLearningProgramUpNextLabel}</span>
+              <span className="sk-text-sm-semibold text-sko-text-default">{program.upNext}</span>
+            </div>
+          ) : program.status ? (
+            <Badge color="gray">{program.status}</Badge>
+          ) : (
+            <span />
+          )}
+          <Button
+            hierarchy={program.cta === "Continue" ? "primary" : "secondary"}
+            size="sm"
+            onClick={onAction}
+            aria-label={actionLabel}
+            className={TARGET_44}
+          >
+            {program.cta}
+          </Button>
+        </div>
+      </div>
+    </article>
+  );
+}

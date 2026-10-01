@@ -34,6 +34,7 @@
      display-xs    24/32    24/32    20/30
      display-sm    30/38    30/38    24/32
      display-md    36/44    30/38    24/32
+     display-2xl   72/90    60/72    48/60
 
    The custom properties below mirror those variables. Breakpoints follow
    lib/useBreakpoint.ts (tablet 769–1024, mobile ≤ 768). A forced device preview
@@ -46,10 +47,12 @@
   --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
   --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
   --sk-type-size-display-md: 36px;  --sk-type-line-height-display-md: 44px;
+  --sk-type-size-display-2xl: 72px; --sk-type-line-height-display-2xl: 90px;
 }
 @media screen and (max-width: 1024px) {
   :root {
     --sk-type-size-display-md: 30px;  --sk-type-line-height-display-md: 38px;
+    --sk-type-size-display-2xl: 60px; --sk-type-line-height-display-2xl: 72px;
   }
 }
 @media screen and (max-width: 768px) {
@@ -57,26 +60,37 @@
     --sk-type-size-display-xs: 20px;  --sk-type-line-height-display-xs: 30px;
     --sk-type-size-display-sm: 24px;  --sk-type-line-height-display-sm: 32px;
     --sk-type-size-display-md: 24px;  --sk-type-line-height-display-md: 32px;
+    --sk-type-size-display-2xl: 48px; --sk-type-line-height-display-2xl: 60px;
   }
 }
 [data-device="desktop"] {
   --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
   --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
   --sk-type-size-display-md: 36px;  --sk-type-line-height-display-md: 44px;
+  --sk-type-size-display-2xl: 72px; --sk-type-line-height-display-2xl: 90px;
 }
 [data-device="tablet"] {
   --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
   --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
   --sk-type-size-display-md: 30px;  --sk-type-line-height-display-md: 38px;
+  --sk-type-size-display-2xl: 60px; --sk-type-line-height-display-2xl: 72px;
 }
 [data-device="mobile"] {
   --sk-type-size-display-xs: 20px;  --sk-type-line-height-display-xs: 30px;
   --sk-type-size-display-sm: 24px;  --sk-type-line-height-display-sm: 32px;
   --sk-type-size-display-md: 24px;  --sk-type-line-height-display-md: 32px;
+  --sk-type-size-display-2xl: 48px; --sk-type-line-height-display-2xl: 60px;
 }
 
 .sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
 .sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
+/* Bold steps of the same ramp (DS headline-small/Bold, headline-medium/Bold) and the one
+   hero figure, display-large/Bold (DS display-2xl, 72/90, -2% tracking), used by the
+   platform pages (Dashboard, My Learning, Program Detail). */
+.sk-text-display-xs-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
+.sk-text-display-sm-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
+.sk-text-display-2xl-bold     { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-2xl, 72px) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-2xl, 90px) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
+.sk-text-display-md-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
 .sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
 
 /* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ----
