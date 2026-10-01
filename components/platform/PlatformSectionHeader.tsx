@@ -16,10 +16,11 @@ export interface PlatformSectionHeaderProps {
 }
 
 /* DS Action: Buttons/Button sm · Link gray with arrow-right — body-medium/Semibold in
-   text/subtle, 4 gap, 20 icon, radius 4, no underline. 20px tall as drawn; on mobile the
-   target grows to 44px and the negative margin keeps the header at the title's height. */
+   text/subtle, 4 gap, 20 icon, radius 4, no underline. 20px tall as drawn; the target grows
+   to 44px on mobile and to 24px from tablet up (WCAG 2.5.8), and the negative margin keeps
+   the header at the title's height. */
 const ACTION =
-  "sk-text-sm-semibold inline-flex shrink-0 items-center justify-center gap-1 rounded text-sko-text-subtle transition-colors hover:text-sko-text-default max-md:-my-[7px] max-md:min-h-11";
+  "sk-text-sm-semibold inline-flex shrink-0 items-center justify-center gap-1 rounded text-sko-text-subtle transition-colors hover:text-sko-text-default max-md:-my-[7px] max-md:min-h-11 md:-my-0.5 md:min-h-6";
 
 /**
  * DS `LMS / Platform / Section header` (6382:3172): section title for the platform pages.

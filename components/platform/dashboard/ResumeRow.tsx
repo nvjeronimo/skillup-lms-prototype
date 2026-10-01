@@ -1,12 +1,14 @@
-import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { DeliveryModeBadge, type DeliveryMode } from "@/components/atoms/MetaBadges";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { cn } from "@/lib/utils";
 
 export interface ResumeRowProps {
   title: string;
   deliveryMode: DeliveryMode;
   progressPct: number;
-  onResume?: () => void;
+  /** Where "Resume" goes. */
+  href: string;
   className?: string;
 }
 
@@ -16,9 +18,10 @@ export interface ResumeRowProps {
  * ~390px. Same atoms and tokens as the DS row: title (body-large/Medium), the Delivery Mode
  * badge under it (gap 8), then the DS Progress bar with the percentage (gap 12) and the
  * button (gap 16). bg/page, 2px border/primary, radius 12, padding 16, gap 12, no shadow.
- * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum.
+ * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
+ * opens the course, so it is a link with the button look (atoms/ButtonLink).
  */
-export function ResumeRow({ title, deliveryMode, progressPct, onResume, className }: ResumeRowProps) {
+export function ResumeRow({ title, deliveryMode, progressPct, href, className }: ResumeRowProps) {
   return (
     <div
       className={cn(
@@ -31,22 +34,16 @@ export function ResumeRow({ title, deliveryMode, progressPct, onResume, classNam
         <DeliveryModeBadge value={deliveryMode} />
       </div>
       <div className="flex items-center gap-4">
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <div
-            role="progressbar"
-            aria-label={`${title} progress`}
-            aria-valuenow={progressPct}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-sko-bg-muted"
-          >
-            <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${progressPct}%` }} />
-          </div>
-          <span className="sk-text-sm-medium whitespace-nowrap text-sko-text-muted">{progressPct}%</span>
-        </div>
-        <Button hierarchy="primary" size="md" className="shrink-0" aria-label={`Resume ${title}`} onClick={onResume}>
+        <PlatformProgressBar
+          track="muted"
+          value={progressPct}
+          label={`${title} progress`}
+          showValue
+          className="min-w-0 flex-1"
+        />
+        <ButtonLink href={href} hierarchy="primary" size="md" className="shrink-0" aria-label={`Resume ${title}`}>
           Resume
-        </Button>
+        </ButtonLink>
       </div>
     </div>
   );

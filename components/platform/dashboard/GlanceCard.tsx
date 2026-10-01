@@ -20,6 +20,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
   return (
     <section
       aria-labelledby="dashboard-glance-title"
+      data-mock="No API for lessons today, live attendance, time learned or XP"
       className={cn(
         "relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-lg bg-sko-bg-inverse p-4 md:gap-5 md:p-5 lg:p-6",
         className,

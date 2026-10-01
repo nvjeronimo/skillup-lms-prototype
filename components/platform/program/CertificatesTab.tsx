@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import { Button } from "@/components/atoms/Button";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { useLmsStore } from "@/lib/store";
 import type { Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument } from "./CertificateDocument";
-import { CardShell, ProgramProgressBar, SectionIntro } from "./parts";
+import { CardShell, SectionIntro } from "./parts";
 
 /**
  * DS `LMS / Course Detail / Certificate card` (5425:566), the two states the page draws.
@@ -29,7 +30,7 @@ function CertificateCard({ certificate }: { certificate: ProgramCertificate }) {
             <li key={req.title} className="flex flex-col gap-0.5">
               <p className="sk-text-sm-semibold text-sko-text-default">{req.title}</p>
               <p className="sk-text-xs-regular text-sko-text-subtle">{req.detail}</p>
-              <ProgramProgressBar value={req.percent} label={req.title} />
+              <PlatformProgressBar value={req.percent} label={req.title} />
             </li>
           ))}
         </ul>
@@ -82,7 +83,10 @@ export function CertificatesTab({ program }: { program: Program }) {
   return (
     <div className="flex flex-col gap-6">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
-      <ul className="flex flex-wrap items-start gap-6">
+      <ul
+        data-mock="Certificate artwork, IDs and requirements are not readable yet"
+        className="flex flex-wrap items-start gap-6"
+      >
         {program.certificates.map((certificate) => (
           <li key={certificate.courseId} className="flex w-full flex-col gap-2 sm:w-[320px]">
             <h3 className="sk-text-sm-semibold text-sko-text-default">{certificate.courseLabel}</h3>

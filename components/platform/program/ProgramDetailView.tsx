@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import {
   DEFAULT_PROGRAM_TAB,
   PROGRAM_TABS,
@@ -14,7 +15,6 @@ import { CoursesTab } from "./CoursesTab";
 import { DisclosureList } from "./DisclosureList";
 import { ProgramHeader } from "./ProgramHeader";
 import { ProgramSidebar } from "./ProgramSidebar";
-import { ProgramTabs, programTabDomIds } from "./ProgramTabs";
 import { SectionIntro } from "./parts";
 
 /**
@@ -59,13 +59,13 @@ export function ProgramDetailView({ program }: { program: Program }) {
     faqs: (
       <div className="flex flex-col gap-6">
         <SectionIntro title={program.faqsIntro.title} />
-        <DisclosureList items={program.faqs} />
+        <DisclosureList items={program.faqs} mock="Program FAQs have no API" />
       </div>
     ),
     about: (
       <div className="flex flex-col gap-6">
         <SectionIntro title={program.aboutIntro.title} lead={program.aboutIntro.lead} />
-        <DisclosureList items={program.about} />
+        <DisclosureList items={program.about} mock="Program About sections have no API" />
       </div>
     ),
   };
@@ -75,26 +75,30 @@ export function ProgramDetailView({ program }: { program: Program }) {
       <ProgramHeader program={program} />
 
       <div className="mx-auto w-full max-w-[1280px] px-6 md:px-8 lg:px-10">
-        <ProgramTabs baseId={baseId} active={active} onSelect={selectTab} />
+        {/* DS Horizontal tabs, Size=md on every breakpoint, on their own rule. All four panels stay mounted. */}
+        <PlatformTabs
+          tabs={PROGRAM_TABS}
+          value={active}
+          onChange={selectTab}
+          idBase={baseId}
+          ariaLabel="Program sections"
+        />
       </div>
 
       <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-10 px-6 pb-20 pt-8 md:px-8 lg:flex-row lg:items-start lg:px-10">
         <div className="min-w-0 flex-1">
-          {PROGRAM_TABS.map((tab) => {
-            const ids = programTabDomIds(baseId, tab.id);
-            return (
-              <div
-                key={tab.id}
-                role="tabpanel"
-                id={ids.panel}
-                aria-labelledby={ids.tab}
-                tabIndex={0}
-                hidden={tab.id !== active}
-              >
-                {panels[tab.id]}
-              </div>
-            );
-          })}
+          {PROGRAM_TABS.map((tab) => (
+            <div
+              key={tab.id}
+              role="tabpanel"
+              id={platformPanelId(baseId, tab.id)}
+              aria-labelledby={platformTabId(baseId, tab.id)}
+              tabIndex={0}
+              hidden={tab.id !== active}
+            >
+              {panels[tab.id]}
+            </div>
+          ))}
         </div>
         <ProgramSidebar program={program} className="lg:w-[320px] lg:shrink-0" />
       </div>

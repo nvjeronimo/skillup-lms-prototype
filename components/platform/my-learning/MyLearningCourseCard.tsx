@@ -1,8 +1,9 @@
 import { Clock } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
-import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +11,6 @@ export interface MyLearningCourseCardProps {
   course: MyLearningCourse;
   /** DS `Layout`: Grid is the browsing card, List the scan row (desktop only). */
   layout: "grid" | "list";
-  onAction?: () => void;
   className?: string;
 }
 
@@ -54,17 +54,7 @@ function Progress({ course, className }: { course: MyLearningCourse; className?:
         </span>
         <span className="sk-text-sm-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
       </div>
-      <div
-        role="progressbar"
-        aria-label={`${course.title} progress`}
-        aria-valuenow={pct}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        className="h-2 overflow-hidden rounded-full bg-sko-bg-muted"
-      >
-        {/* DS rule: progress bars fill with bg/info. */}
-        <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${pct}%` }} />
-      </div>
+      <PlatformProgressBar track="muted" value={pct} label={`${course.title} progress`} />
     </div>
   );
 }
@@ -79,6 +69,7 @@ function Progress({ course, className }: { course: MyLearningCourse; className?:
  * List: one row, padding 16, gap 24 — thumb 120, titles with the Meta-Row (provider, gap 16,
  * badges), progress 280 wide (gap 6), then the up-next block (overline, title, topic type)
  * with a secondary Buttons/Button lg inside it.
+ * The action opens the course, so it is a link with the button look (atoms/ButtonLink).
  *
  * The older `organisms/CourseCard` is the previous List layout (overflow menu, "Est.
  * completion", 80px thumb) and is still used by the course hub, so this card is built
@@ -88,14 +79,15 @@ function Progress({ course, className }: { course: MyLearningCourse; className?:
  * 20) → title-medium/Semibold; "UP NEXT" (SemiBold 11, +0.6) → label-small/Semibold; the
  * next title (Medium 15) → body-medium/Medium; the meta (Regular 14) → body-medium/Regular.
  */
-export function MyLearningCourseCard({ course, layout, onAction, className }: MyLearningCourseCardProps) {
+export function MyLearningCourseCard({ course, layout, className }: MyLearningCourseCardProps) {
   const surface = "rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${course.cta} ${course.title}`;
 
   if (layout === "list") {
     return (
-      <article className={cn(surface, "flex items-center gap-6 p-4", className)}>
+      // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
+      <article className={cn(surface, "flex items-center gap-6 p-[15px]", className)}>
         <Thumb initials={course.initials} className="size-[120px]" />
         <div className="flex min-w-[200px] flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
@@ -117,16 +109,17 @@ export function MyLearningCourseCard({ course, layout, onAction, className }: My
             </span>
             <TopicTypeBadge type={course.upNext.type} />
           </div>
-          <Button hierarchy="secondary" size="lg" onClick={onAction} aria-label={actionLabel} className="shrink-0">
+          <ButtonLink href={course.href} hierarchy="secondary" size="lg" aria-label={actionLabel} className="shrink-0">
             {course.cta}
-          </Button>
+          </ButtonLink>
         </div>
       </article>
     );
   }
 
   return (
-    <article className={cn(surface, "flex flex-col items-start gap-4 p-6", className)}>
+    // Same inside-stroke rule as the list row: 23 + 1 = the DS 24.
+    <article className={cn(surface, "flex flex-col items-start gap-4 p-[23px]", className)}>
       <div className="flex w-full items-start gap-4">
         <Thumb initials={course.initials} className="size-[86px]" />
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
@@ -150,9 +143,9 @@ export function MyLearningCourseCard({ course, layout, onAction, className }: My
         <TopicTypeBadge type={course.upNext.type} className="shrink-0" />
       </div>
       {/* mt-auto: in a row of cards with titles of different length, the action stays at the bottom. */}
-      <Button hierarchy="primary" size="lg" onClick={onAction} aria-label={actionLabel} className="mt-auto">
+      <ButtonLink href={course.href} hierarchy="primary" size="lg" aria-label={actionLabel} className="mt-auto">
         {course.cta}
-      </Button>
+      </ButtonLink>
     </article>
   );
 }

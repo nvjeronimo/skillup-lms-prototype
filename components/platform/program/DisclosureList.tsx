@@ -70,7 +70,7 @@ function DisclosureRow({
  * border/subtle, radius 8, padding 24 — of accordion rows, 20 apart, every row after the
  * first under a 1px rule with 24 above it. Rows open independently.
  */
-export function DisclosureList({ items, className }: { items: ProgramDisclosureItem[]; className?: string }) {
+export function DisclosureList({ items, mock, className }: { items: ProgramDisclosureItem[]; mock?: string; className?: string }) {
   const [open, setOpen] = React.useState<Set<string>>(
     () => new Set(items.filter((i) => i.defaultOpen).map((i) => i.id)),
   );
@@ -84,8 +84,10 @@ export function DisclosureList({ items, className }: { items: ProgramDisclosureI
 
   return (
     <ul
+      data-mock={mock}
       className={cn(
-        "flex flex-col gap-5 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6",
+        // The DS stroke is inside the card and the CSS border is outside the padding: 23 + 1 = the DS 24 on desktop.
+        "flex flex-col gap-5 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6 lg:p-[23px]",
         className,
       )}
     >

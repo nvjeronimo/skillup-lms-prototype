@@ -21,7 +21,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
       aria-label="Program details"
       className={cn("grid gap-4 md:grid-cols-2 md:items-start lg:flex lg:flex-col lg:items-stretch", className)}
     >
-      <CardShell label="Program dates" gap="lg">
+      <CardShell label="Program dates" gap="lg" mock="Program dates have no API; the relative labels are computed">
         <ul className="flex flex-col">
           {program.dates.map((date, index) => (
             <li
@@ -52,7 +52,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
         </ul>
       </CardShell>
 
-      <CardShell label="What's included">
+      <CardShell label="What's included" mock="Content counts per program have no API">
         <ul className="sk-text-sm-regular list-disc ps-[21px] text-sko-text-default">
           {program.included.map((item) => (
             <li key={item}>{item}</li>
@@ -60,7 +60,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
         </ul>
       </CardShell>
 
-      <CardShell label="Program instructor" gap="lg">
+      <CardShell label="Program instructor" gap="lg" mock="No instructor field on the LMS APIs">
         <ul className="flex flex-col gap-4">
           {program.instructors.map((person) => (
             <li key={person.name} className="flex items-center gap-2">
