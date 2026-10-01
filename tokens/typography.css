@@ -77,6 +77,12 @@
 
 .sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
 .sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
+/* Bold steps of the same ramp (DS headline-small/Bold, headline-medium/Bold) and the one
+   hero figure, display-large/Bold (DS display-2xl, 72/90, -2% tracking), used by the
+   platform pages (Dashboard, My Learning, Program Detail). */
+.sk-text-display-xs-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
+.sk-text-display-sm-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
+.sk-text-display-2xl-bold     { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-2xl, 72px) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-2xl, 90px) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
 .sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
 
 /* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ----
