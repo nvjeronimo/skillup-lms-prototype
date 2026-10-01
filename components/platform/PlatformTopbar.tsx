@@ -150,7 +150,7 @@ function Initials() {
 /**
  * DS `LMS / Platform / Topbar` (6374:3608), on every platform page while the LMS sidebar
  * is in development. Light: bg/page with a 1px border/subtle rule below.
- * - Desktop (≥1025): 72px, padding 16/24 — logo · the five sections · notifications · learner.
+ * - Desktop (≥1025): 72px with the rule, padding 16/24 — logo · the five sections · notifications · learner.
  * - Compact (tablet and mobile): padding 8/16 — logo · notifications · avatar · menu.
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
  *   disclosure list under the bar.
@@ -177,7 +177,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
   return (
     <header className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
       {/* Desktop */}
-      <div className="hidden h-[72px] items-center justify-between px-6 py-4 lg:flex">
+      <div className="hidden h-[71px] items-center justify-between px-6 lg:flex">
         <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
           <SkillUpLogo className="h-[30px]" />
         </Link>
@@ -206,7 +206,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
       </div>
 
       {/* Compact */}
-      <div className="flex items-center justify-between px-4 py-2 lg:hidden">
+      {/* 49px as drawn (8 + 32 + 8 + rule): the controls are 44px targets, so the bar pads 2px. */}
+      <div className="flex items-center justify-between px-4 py-0.5 lg:hidden">
         <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
           <SkillUpLogo className="h-[30px]" />
         </Link>
