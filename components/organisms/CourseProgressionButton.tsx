@@ -50,11 +50,13 @@ export function CourseProgressionButton({
 
   const isCourse = milestone === "Course";
   return (
-    <span className={cn("flex min-w-0 items-center gap-3", className)}>
+    <span className={cn("flex items-center gap-3", compact && "min-w-0", className)}>
       {!compact ? (
         <span
           className={cn(
-            "sk-text-xs-medium shrink-0 uppercase",
+            // Shown only when the footer row is at least 36rem wide (the nav is the
+            // container): on a tablet next to the sidebar there is no room for it.
+            "sk-text-xs-medium hidden shrink-0 whitespace-nowrap uppercase [@container(min-width:36rem)]:inline",
             isCourse ? "text-sko-text-success" : "text-sko-text-primary",
           )}
         >
@@ -69,7 +71,7 @@ export function CourseProgressionButton({
         disabled={disabled}
         onClick={onClick}
         // Mobile: the label may take two lines; the button grows instead of clipping it.
-        className={compact ? "!h-auto min-h-9 py-1.5 text-left" : undefined}
+        className={compact ? "!h-auto min-h-9 py-1.5 text-left" : "shrink-0 whitespace-nowrap"}
       >
         {isCourse ? "Go to next Course" : "Go to next Module"}
       </Button>

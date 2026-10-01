@@ -47,14 +47,16 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "flex items-center rounded-b-lg border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3",
-        // Mobile: the side columns hug their buttons so a milestone label
-        // ("Go to next Module") gets the room three equal columns cannot give it.
-        compact ? "gap-2" : "gap-4",
+        "items-center rounded-b-lg border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3 [container-type:inline-size]",
+        // Desktop/tablet: equal side columns keep the unit info centred, but a side never
+        // shrinks below its content, so "Module completed" + "Go to next Module" pushes
+        // the centre over instead of wrapping inside a 36px button.
+        // Mobile: the side columns hug their buttons and the milestone label may wrap.
+        compact ? "flex gap-2" : "grid grid-cols-[1fr_minmax(0,auto)_1fr] gap-4",
         className,
       )}
     >
-      <div className={cn("flex items-center", compact ? "flex-none" : "flex-1")}>
+      <div className={cn("flex items-center", compact && "flex-none")}>
         <Button variant="neutral" size="sm" disabled={previousDisabled} onClick={onPrevious}>
           Previous
         </Button>
@@ -63,7 +65,7 @@ export function TopicFooterNav({
       {/* Unit info: the paginator is the stronger element; the title sits under it
           on tablet/desktop and is dropped on mobile. */}
       {/* Mobile: the paginator never wraps ("3 of 25" on one line); the Next side gives way. */}
-      <div className={cn("flex-1 text-center", compact ? "min-w-max whitespace-nowrap" : "min-w-0")}>
+      <div className={cn("text-center", compact ? "min-w-max flex-1 whitespace-nowrap" : "min-w-0")}>
         <p className="sk-text-sm-semibold text-sko-text-subtle">
           {position} of {total}
         </p>
@@ -72,7 +74,7 @@ export function TopicFooterNav({
         ) : null}
       </div>
 
-      <div className={cn("flex min-w-0 items-center justify-end gap-3", compact ? "shrink" : "flex-1")}>
+      <div className={cn("flex items-center justify-end gap-3", compact && "min-w-0 shrink")}>
         <CourseProgressionButton
           milestone={milestone}
           size="sm"
