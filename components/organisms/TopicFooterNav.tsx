@@ -26,7 +26,8 @@ export interface TopicFooterNavProps {
  * Responsive rules (also annotated on the Figma component):
  * - Desktop ≥1025 and Tablet 769–1024: the full row above.
  * - Mobile ≤768: same padding and 36px buttons; the topic title is hidden (the
- *   paginator stays) and milestone captions are hidden.
+ *   paginator stays) and milestone captions are hidden. The side columns hug their
+ *   buttons (8px gap) and a milestone label may wrap to two lines.
  * Next always reads "Next" + arrow; naming the next topic in the button is TBD.
  * Previous is disabled on the first topic, never hidden; Next is never hidden.
  */
@@ -46,11 +47,14 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "flex items-center gap-4 rounded-b-lg border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3",
+        "flex items-center rounded-b-lg border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3",
+        // Mobile: the side columns hug their buttons so a milestone label
+        // ("Go to next Module") gets the room three equal columns cannot give it.
+        compact ? "gap-2" : "gap-4",
         className,
       )}
     >
-      <div className="flex flex-1 items-center">
+      <div className={cn("flex items-center", compact ? "flex-none" : "flex-1")}>
         <Button variant="neutral" size="sm" disabled={previousDisabled} onClick={onPrevious}>
           Previous
         </Button>
@@ -58,7 +62,8 @@ export function TopicFooterNav({
 
       {/* Unit info: the paginator is the stronger element; the title sits under it
           on tablet/desktop and is dropped on mobile. */}
-      <div className="min-w-0 flex-1 text-center">
+      {/* Mobile: the paginator never wraps ("3 of 25" on one line); the Next side gives way. */}
+      <div className={cn("flex-1 text-center", compact ? "min-w-max whitespace-nowrap" : "min-w-0")}>
         <p className="sk-text-sm-semibold text-sko-text-subtle">
           {position} of {total}
         </p>
@@ -67,7 +72,7 @@ export function TopicFooterNav({
         ) : null}
       </div>
 
-      <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
+      <div className={cn("flex min-w-0 items-center justify-end gap-3", compact ? "shrink" : "flex-1")}>
         <CourseProgressionButton
           milestone={milestone}
           size="sm"

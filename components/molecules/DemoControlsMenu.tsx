@@ -275,7 +275,7 @@ export function DemoControlsMenu({
                     <span
                       data-skin={s.skin}
                       className={cn(
-                        "size-5 rounded-full bg-sko-bg-primary ring-offset-2 ring-offset-sko-bg-page transition-all",
+                        "size-5 rounded-full bg-sko-bg-primary ring-offset-2 ring-offset-sko-bg-page transition-shadow",
                         active ? "ring-2 ring-sko-border-strong" : "ring-1 ring-sko-border-subtle",
                       )}
                     />

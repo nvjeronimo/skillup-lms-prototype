@@ -108,15 +108,37 @@ button {
   animation: sk-fade-in 200ms ease-out;
 }
 
-/* Respect reduced-motion: disable panel/drawer/toast animations + smooth scroll. */
+/* Reduced motion (the OS setting here; the Accessibility panel's switch further down
+   applies the same rules). Movement is removed, feedback is kept: colour and opacity
+   changes still ease, sliding surfaces fade in, and the spinner pulses. A blanket
+   "0.001ms on everything" would also freeze the spinner and drop every hover cue. */
+@keyframes sk-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
+  /* Movement goes: no smooth scroll, and only non-moving properties may transition
+     (so slides, the docking video and rotating chevrons snap). */
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+    transition-property: color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke, opacity, box-shadow !important;
+  }
+  /* Panels and the drawer still announce themselves: a short fade replaces the slide. */
+  .sk-animate-slide-right,
+  .sk-animate-slide-left {
+    animation: sk-fade-in 150ms ease-out;
+  }
+  /* A spinner that stops looks like a hang: it breathes instead of turning. */
+  .animate-spin {
+    animation: sk-pulse 1.2s ease-in-out infinite;
   }
 }
 
@@ -165,14 +187,25 @@ button {
 [data-text-size="lg"] { --sk-font-scale: 1.15; }
 [data-text-size="xl"] { --sk-font-scale: 1.30; }
 
-/* Reduzir movimento — força-o em todo o lado (WCAG 2.3.3). */
+/* Reduzir movimento: o interruptor do painel aplica as mesmas regras que a
+   preferência do sistema (ver "Reduced motion" acima) (WCAG 2.3.3). */
+/* Movement goes: no smooth scroll, and only non-moving properties may transition
+   (so slides, the docking video and rotating chevrons snap). */
 [data-reduce-motion] *,
 [data-reduce-motion] *::before,
 [data-reduce-motion] *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow !important;
+}
+/* Panels and the drawer still announce themselves: a short fade replaces the slide. */
+[data-reduce-motion] .sk-animate-slide-right,
+[data-reduce-motion] .sk-animate-slide-left {
+  animation: sk-fade-in 150ms ease-out;
+}
+/* A spinner that stops looks like a hang: it breathes instead of turning. */
+[data-reduce-motion] .animate-spin {
+  animation: sk-pulse 1.2s ease-in-out infinite;
 }
 
 /* Sublinhar sempre os links — não depender da cor para os distinguir. */

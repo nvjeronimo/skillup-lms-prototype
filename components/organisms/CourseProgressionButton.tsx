@@ -68,6 +68,8 @@ export function CourseProgressionButton({
         rightIcon={ArrowRight}
         disabled={disabled}
         onClick={onClick}
+        // Mobile: the label may take two lines; the button grows instead of clipping it.
+        className={compact ? "!h-auto min-h-9 py-1.5 text-left" : undefined}
       >
         {isCourse ? "Go to next Course" : "Go to next Module"}
       </Button>

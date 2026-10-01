@@ -213,7 +213,8 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
     <span
       ref={ref}
       className={cn(
-        "inline-flex items-center",
+        // A badge never wraps its label; the row it sits in wraps instead.
+        "inline-flex items-center whitespace-nowrap",
         plain
           ? "gap-1.5"
           : cn("rounded-full", leftIcon ? geometry.icon : geometry.label),

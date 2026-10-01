@@ -312,12 +312,14 @@ export function VideoPlayer({
           className={cn(
             // Centred with auto margins, not left-1/2: that halves the width the text can
             // use and wraps the caption into a column that a short player clips.
-            "absolute inset-x-0 z-10 mx-auto w-fit max-w-[90%] rounded bg-sko-bg-overlay px-3 py-1 text-center",
+            "absolute inset-x-0 z-10 mx-auto w-fit max-w-[90%] overflow-hidden rounded bg-sko-bg-overlay text-center",
             // Clears the action bar, which is two rows tall on md.
             bar("bottom-28", "bottom-20", "bottom-28 [@container(min-width:40rem)]:bottom-20"),
           )}
         >
-          <span className="sk-text-sm-medium text-sko-text-on-media">
+          {/* Two bg/overlay layers (50% each, 75% together): one layer leaves white text
+              at about 3.4:1 over a bright frame; two keep it above 4.5:1 on any video. */}
+          <span className="sk-text-sm-medium block bg-sko-bg-overlay px-3 py-1 text-sko-text-on-media">
             Welcome back. In this unit we look at the product development lifecycle…
           </span>
         </div>
