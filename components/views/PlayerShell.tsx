@@ -417,7 +417,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   rightSlot={headerStatus ?? undefined}
                 />
                 <div className="mt-5">
-                  <ContentTabs tabs={tabs} active={activeTab} />
+                  <ContentTabs
+                    tabs={tabs}
+                    active={activeTab}
+                    variant={bp === "mobile" ? "select" : "tabs"}
+                  />
                   {children}
                 </div>
                 {footerMeta}

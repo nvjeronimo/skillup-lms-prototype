@@ -309,7 +309,13 @@ export function VideoPlayer({
 
       {captions && state === "ready" ? (
         <div
-          className="absolute bottom-20 left-1/2 z-10 max-w-[80%] -translate-x-1/2 rounded bg-sko-bg-overlay px-3 py-1 text-center"
+          className={cn(
+            // Centred with auto margins, not left-1/2: that halves the width the text can
+            // use and wraps the caption into a column that a short player clips.
+            "absolute inset-x-0 z-10 mx-auto w-fit max-w-[90%] rounded bg-sko-bg-overlay px-3 py-1 text-center",
+            // Clears the action bar, which is two rows tall on md.
+            bar("bottom-28", "bottom-20", "bottom-28 [@container(min-width:40rem)]:bottom-20"),
+          )}
         >
           <span className="sk-text-sm-medium text-sko-text-on-media">
             Welcome back. In this unit we look at the product development lifecycle…
@@ -317,7 +323,9 @@ export function VideoPlayer({
         </div>
       ) : null}
 
-      {/* DS `_Video actions bar`: one row, lg pad 24/16/16/16 gap 4 · md pad 24/12/8/12 gap 2. */}
+      {/* DS `_Video actions bar`: lg pad 24/16/16/16 gap 4, one row · md pad 24/12/8/12 gap 2.
+          On md the progress takes its own row above the buttons: with 44px controls there is
+          no room left for a usable slider on a phone-width player. */}
       <div
         className={cn("absolute inset-x-0 bottom-0 z-20 pt-6", bar(
             "px-3 pb-2",
@@ -328,7 +336,12 @@ export function VideoPlayer({
           background: "linear-gradient(to top, var(--color-bg-overlay), transparent)",
         }}
       >
-        <div className={cn("flex items-center", bar("gap-0.5", "gap-1", "gap-0.5 [@container(min-width:40rem)]:gap-1"))}>
+        <div
+          className={cn(
+            "flex items-center",
+            bar("flex-wrap gap-0.5", "gap-1", "flex-wrap gap-0.5 [@container(min-width:40rem)]:flex-nowrap [@container(min-width:40rem)]:gap-1"),
+          )}
+        >
           <ActionButton label={playing ? "Pause" : "Play"} onClick={togglePlay} align="start">
             <Icon icon={playing ? Pause : Play} size={16} />
           </ActionButton>
@@ -374,9 +387,10 @@ export function VideoPlayer({
                   value={audible}
                   onChange={handleVolume}
                   aria-label="Volume"
-                  className={cn("h-1 w-10 cursor-pointer appearance-none rounded-full", VOLUME_THUMB)}
+                  // 4px track inside a 24px hit area, as on Seek.
+                  className={cn("box-content h-1 w-10 cursor-pointer appearance-none rounded-full bg-clip-content py-2.5", VOLUME_THUMB)}
                   style={{
-                    background: `linear-gradient(to right, var(--color-bg-on-media) ${audible}%, var(--color-bg-on-media-soft) ${audible}%)`,
+                    backgroundImage: `linear-gradient(to right, var(--color-bg-on-media) ${audible}%, var(--color-bg-on-media-soft) ${audible}%)`,
                   }}
                 />
               </div>
@@ -385,7 +399,16 @@ export function VideoPlayer({
 
           {/* DS `Video progress`: timestamp start · slider · timestamp end. Decision 019:
               elapsed / total. tabular-nums keeps the slider from jittering as digits change. */}
-          <div className={cn("flex min-w-0 flex-1 items-center gap-2", bar("px-1", "px-2", "px-1 [@container(min-width:40rem)]:px-2"))}>
+          <div
+            className={cn(
+              "flex min-w-0 items-center gap-2",
+              bar(
+                "order-first basis-full px-1",
+                "flex-1 px-2",
+                "order-first basis-full px-1 [@container(min-width:40rem)]:order-none [@container(min-width:40rem)]:flex-1 [@container(min-width:40rem)]:basis-0 [@container(min-width:40rem)]:px-2",
+              ),
+            )}
+          >
             <span className="sk-text-xs-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
               {secondsToTs(currentTime)}
             </span>
@@ -397,9 +420,11 @@ export function VideoPlayer({
               onChange={handleScrub}
               aria-label="Seek"
               aria-valuetext={`${secondsToTs(currentTime)} of ${secondsToTs(durationSeconds)}`}
-              className="h-2 w-full min-w-0 cursor-pointer appearance-none rounded-full backdrop-blur-sm"
+              // 8px track inside a 24px hit area (WCAG 2.5.8): the padding is part of the
+              // target, the gradient is clipped to the content box.
+              className="box-content h-2 w-full min-w-0 cursor-pointer appearance-none rounded-full bg-clip-content py-2"
               style={{
-                background: `linear-gradient(to right, var(--color-bg-info) ${pct}%, var(--color-bg-on-media-soft) ${pct}%)`,
+                backgroundImage: `linear-gradient(to right, var(--color-bg-info) ${pct}%, var(--color-bg-on-media-soft) ${pct}%)`,
               }}
             />
             <span className="sk-text-xs-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
@@ -407,6 +432,8 @@ export function VideoPlayer({
             </span>
           </div>
 
+          {/* md: pushes speed, CC and fullscreen to the right of the buttons row. */}
+          <span aria-hidden className={bar("flex-1", "hidden", "flex-1 [@container(min-width:40rem)]:hidden")} />
           <ActionButton
             kind="label"
             // Name contains the visible "1×" (WCAG 2.5.3 label in name).

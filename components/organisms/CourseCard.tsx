@@ -59,7 +59,7 @@ export function CourseCard({
         {/* DS titles: vertical, gap 2 — Course Type badge, Title, Meta-Row. */}
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value={courseType} />
-          <h3 className="sk-text-md-semibold text-sko-text-default">{title}</h3>
+          <h2 className="sk-text-md-semibold text-sko-text-default">{title}</h2>
           {/* DS Meta-Row: gap 16 — Provider badge, then badges (gap 8). */}
           <div className="flex flex-wrap items-center gap-4">
             <ProviderBadge value={provider} />
