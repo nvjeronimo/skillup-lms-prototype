@@ -166,7 +166,8 @@ export function CoursePlayerTopbar({
           >
             <Icon icon={List} size={20} />
           </UtilityButton>
-          <Link href="/" aria-label="SkillUp, My Learning" className="flex items-center">
+          {/* 44px target on mobile; the mark itself stays 33px. */}
+          <Link href="/" aria-label="SkillUp, My Learning" className="flex min-h-11 items-center">
             <SkillUpLogo className="h-[33px]" />
           </Link>
         </div>
