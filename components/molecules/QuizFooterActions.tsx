@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
+import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 /**
@@ -41,7 +43,7 @@ export interface CtaFlags {
   submitEnabled: boolean;
   showHint: boolean;
   showSave: boolean;
-  /** Save renders as a disabled "Draft saved" confirmation rather than an action. */
+  /** Save renders as a "Draft saved" status (role="status"), not a disabled button. */
   saved: boolean;
   showAnswer: boolean;
   showReset: boolean;
@@ -206,10 +208,13 @@ export function QuizFooterActions({
 
         {secondary && showSave ? (
           saved ? (
-            // A confirmation, not an action.
-            <Button variant="secondary" size="md" disabled>
+            // A status, not an action: announced politely, never a disabled button
+            // (unreadable at 1.8:1 and it reads as "unavailable"). It disappears as
+            // soon as the answer changes — AssessmentView resets `saved` on edit.
+            <p role="status" className="sk-text-sm-medium inline-flex min-h-[44px] items-center gap-1.5 text-sko-text-success">
+              <Icon icon={CheckCircle2} size={16} aria-hidden="true" />
               Draft saved
-            </Button>
+            </p>
           ) : (
             <Button variant="secondary" size="md" onClick={onSave}>
               Save draft
