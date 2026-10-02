@@ -17,6 +17,10 @@ export default function LabIndex() {
       <p className="sk-text-md-regular mt-1 text-sko-text-muted">
         Directions to compare before one is chosen and brought into Figma. Switch persona in the top bar.
       </p>
+      <Link href="/lab/worlds" className="mt-6 flex flex-col gap-1 rounded-xl border border-sko-border-primary bg-sko-bg-page p-4">
+        <span className="sk-text-md-semibold text-sko-text-primary">Worlds: four out-of-the-box directions</span>
+        <span className="sk-text-sm-regular text-sko-text-muted">Exhibition, Album, Field and Dawn, each across Home, My Learning and a course.</span>
+      </Link>
       <h2 className="sk-text-lg-semibold mt-8 text-sko-text-default">Dashboard / Home</h2>
       <ul className="mt-3 grid gap-3 md:grid-cols-2">
         {DASHBOARD.map((d) => (

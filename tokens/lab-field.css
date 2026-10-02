@@ -1,0 +1,345 @@
+/*
+ * Lab world C: "Field" (/lab/worlds/field/*).
+ * One colour owns the screen: a saturated SkillUp teal field. The interface floats on it as detached white
+ * objects (capsules, pills, slabs). Outside the SKO DS on purpose; scoped to [data-world="field"].
+ *
+ * Contrast (WCAG 2.x, measured):
+ *   white on field #1b7494 ........ 5.29:1  all text on the field is white (body and display)
+ *   ink #081c24 on field .......... 3.31:1  large text / focus ring only, never body copy
+ *   ink on white / cream .......... 18.6 / 16.6:1
+ *   ink-2 #3f555d on white/cream/mist  7.87 / 6.86 / 6.66:1
+ *   ink on signal #ffd23f ......... 12.10:1
+ *   signal on field ............... 3.66:1  (focus ring inner band, non-text)
+ * Accents: signal yellow = "the next thing" (the one primary disc, the up-next marker, the focus band).
+ *          coral = decoration only (abstract objects); it never carries meaning.
+ */
+
+[data-world="field"] {
+  --fd-field: #1b7494;        /* SkillUp teal, a step brighter and more saturated than #26708e */
+  --fd-field-deep: #125a74;   /* lobes and shadows inside the field */
+  --fd-ink: #081c24;          /* teal-black */
+  --fd-ink-2: #3f555d;        /* secondary text on light objects */
+  --fd-white: #ffffff;
+  --fd-cream: #f4efe4;        /* the slab */
+  --fd-sand: #e9e2d3;         /* decorative tone for layered objects */
+  --fd-mist: #e3eef2;         /* progress track, hover wash on white */
+  --fd-rule: #d9d3c6;         /* hairlines on cream */
+  --fd-rule-white: #e2e8ea;   /* hairlines on white */
+  --fd-signal: #ffd23f;       /* accent 1: the next thing */
+  --fd-coral: #f2735a;        /* accent 2: decoration only */
+
+  --fd-shadow-float: 0 1px 0 rgba(8, 28, 36, 0.06), 0 22px 44px -22px rgba(4, 30, 40, 0.55);
+  --fd-shadow-slab: 0 -1px 0 rgba(8, 28, 36, 0.05), 0 -18px 40px -24px rgba(4, 30, 40, 0.45);
+  --fd-overshoot: cubic-bezier(0.22, 1, 0.36, 1);
+  --fd-g: 16px;               /* page gutter */
+  --fd-inset: 0px;            /* slab inset from the viewport edge (full-bleed on phones) */
+  --fd-font: var(--font-fd), "Helvetica Neue", Arial, sans-serif;
+
+  background: var(--fd-field);
+  color: var(--fd-white);
+  font-family: var(--fd-font);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) {
+  [data-world="field"] { --fd-g: 40px; --fd-inset: 16px; }
+}
+
+/* ---------- browser surfaces ---------- */
+html:has([data-world="field"]) {
+  background: #1b7494;
+  scrollbar-color: #f4efe4 #125a74;
+}
+html:has([data-world="field"])::-webkit-scrollbar { width: 12px; background: #125a74; }
+html:has([data-world="field"])::-webkit-scrollbar-thumb { background: #f4efe4; border-radius: 999px; border: 3px solid #125a74; }
+[data-world="field"] ::selection { background: var(--fd-signal); color: var(--fd-ink); }
+/* Two-band ring: signal inside (3.66:1 on the field), ink outside (3.31:1 on the field, 18:1 on white). */
+[data-world="field"] :focus-visible {
+  outline: 3px solid var(--fd-ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--fd-signal);
+}
+[data-world="field"] main:focus-visible { outline: none; box-shadow: none; }
+/* The logo sits on a white capsule in every theme: always the light-ground artwork. */
+[data-world="field"] .sk-logo-light { display: block; }
+[data-world="field"] .sk-logo-dark { display: none; }
+
+/* ---------- layout ---------- */
+[data-world="field"] .fd-wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--fd-g);
+}
+/* Inside a slab the wrap loses the slab's inset, so slab text lines up with the headline. */
+[data-world="field"] .fd-slab > .fd-wrap {
+  max-width: calc(1280px - 2 * var(--fd-inset));
+  padding-inline: calc(var(--fd-g) - var(--fd-inset));
+}
+
+/* ---------- type: one grotesque, hierarchy by scale ---------- */
+[data-world="field"] .fd-display {
+  font-weight: 700;
+  font-size: clamp(2.75rem, 1.7rem + 4.5vw, 5.5rem); /* 44px at 390 → 88px from ~1300 */
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+[data-world="field"] .fd-h2 {
+  font-weight: 700;
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+[data-world="field"] .fd-h3 {
+  font-weight: 650;
+  font-size: clamp(1.1875rem, 1rem + 0.5vw, 1.375rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+}
+[data-world="field"] .fd-lede {
+  font-weight: 400;
+  font-size: clamp(1.125rem, 0.95rem + 0.55vw, 1.375rem); /* 18 → 22px */
+  line-height: 1.45;
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+[data-world="field"] .fd-body { font-weight: 400; font-size: 1rem; line-height: 1.5; }
+[data-world="field"] .fd-label { font-weight: 600; font-size: 1rem; line-height: 1.2; }
+[data-world="field"] .fd-meta { font-weight: 500; font-size: 0.875rem; line-height: 1.4; }
+[data-world="field"] .fd-num { font-variant-numeric: tabular-nums; }
+
+[data-world="field"] .fd-c-white { color: var(--fd-white); }
+[data-world="field"] .fd-c-ink { color: var(--fd-ink); }
+[data-world="field"] .fd-c-ink2 { color: var(--fd-ink-2); }
+
+/* ---------- nav: a floating capsule and a detached pill ---------- */
+[data-world="field"] .fd-capsule {
+  background: var(--fd-white);
+  color: var(--fd-ink);
+  border-radius: 999px;
+  box-shadow: var(--fd-shadow-float);
+}
+[data-world="field"] .fd-navlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 14px;
+  border-radius: 999px;
+  font-weight: 550;
+  font-size: 0.9375rem;
+  color: var(--fd-ink);
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  [data-world="field"] .fd-navlink { min-height: 48px; padding-inline: 20px; font-size: 1.0625rem; }
+}
+[data-world="field"] .fd-navlink:hover { background: var(--fd-mist); }
+[data-world="field"] .fd-navlink[aria-current] { background: var(--fd-field); color: var(--fd-white); }
+[data-world="field"] .fd-initials {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--fd-field);
+  color: var(--fd-white);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- the one primary action: a white pill whose disc crosses it ---------- */
+[data-world="field"] .fd-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 0 80px 0 30px;
+  border-radius: 999px;
+  background: var(--fd-white);
+  color: var(--fd-ink);
+  font-weight: 650;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  box-shadow: var(--fd-shadow-float);
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+[data-world="field"] .fd-pill:focus-visible {
+  box-shadow: 0 0 0 3px var(--fd-signal), var(--fd-shadow-float);
+}
+[data-world="field"] .fd-pill__label {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.4s var(--fd-overshoot);
+}
+[data-world="field"] .fd-pill__disc {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: calc(100% - 56px);
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--fd-signal);
+  color: var(--fd-ink);
+  transition: left 0.4s var(--fd-overshoot);
+}
+/* The signature moment: on hover or keyboard focus the disc crosses the capsule, the label steps aside. */
+@media (hover: hover) {
+  [data-world="field"] .fd-pill:hover .fd-pill__disc { left: 8px; }
+  [data-world="field"] .fd-pill:hover .fd-pill__label { transform: translateX(50px); }
+}
+[data-world="field"] .fd-pill:focus-visible .fd-pill__disc,
+[data-world="field"] .fd-pill:active .fd-pill__disc { left: 8px; }
+[data-world="field"] .fd-pill:focus-visible .fd-pill__label,
+[data-world="field"] .fd-pill:active .fd-pill__label { transform: translateX(50px); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-world="field"] .fd-pill__disc,
+  [data-world="field"] .fd-pill__label { transition: none; }
+  [data-world="field"] .fd-pill:hover .fd-pill__disc,
+  [data-world="field"] .fd-pill:focus-visible .fd-pill__disc,
+  [data-world="field"] .fd-pill:active .fd-pill__disc { left: calc(100% - 56px); }
+  [data-world="field"] .fd-pill:hover .fd-pill__label,
+  [data-world="field"] .fd-pill:focus-visible .fd-pill__label,
+  [data-world="field"] .fd-pill:active .fd-pill__label { transform: none; }
+  [data-world="field"] .fd-pill:hover { background: var(--fd-cream); }
+}
+:root[data-reduce-motion] [data-world="field"] .fd-pill__disc,
+:root[data-reduce-motion] [data-world="field"] .fd-pill__label { transition: none; }
+:root[data-reduce-motion] [data-world="field"] .fd-pill:is(:hover, :focus-visible, :active) .fd-pill__disc { left: calc(100% - 56px); }
+:root[data-reduce-motion] [data-world="field"] .fd-pill:is(:hover, :focus-visible, :active) .fd-pill__label { transform: none; }
+
+/* ---------- circular wells ---------- */
+[data-world="field"] .fd-well {
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 50%;
+  background: var(--fd-field);
+  color: var(--fd-white);
+}
+[data-world="field"] .fd-well--next { background: var(--fd-signal); color: var(--fd-ink); }
+[data-world="field"] .fd-well--quiet { background: var(--fd-mist); color: var(--fd-ink); }
+[data-world="field"] .fd-well--num { font-weight: 700; font-size: 1.125rem; }
+
+/* ---------- slabs: full-bleed, 48px top radius, rising from below ---------- */
+[data-world="field"] .fd-slab {
+  position: relative;
+  margin-inline: var(--fd-inset);
+  border-radius: 32px 32px 0 0;
+  background: var(--fd-cream);
+  color: var(--fd-ink);
+  box-shadow: var(--fd-shadow-slab);
+}
+@media (min-width: 768px) {
+  [data-world="field"] .fd-slab { border-radius: 48px 48px 0 0; }
+}
+[data-world="field"] .fd-slab--white { background: var(--fd-white); }
+/* A stack of slabs: each one overlaps the last by its own radius. */
+[data-world="field"] .fd-stack > .fd-slab + .fd-slab { margin-top: -48px; }
+[data-world="field"] .fd-stack > .fd-slab:not(:last-child) { padding-bottom: calc(48px + 28px); } /* the overlap, plus air */
+
+/* ---------- floating course capsules (My Learning) ---------- */
+[data-world="field"] .fd-course {
+  position: relative;
+  background: var(--fd-white);
+  color: var(--fd-ink);
+  border-radius: 32px;
+  box-shadow: var(--fd-shadow-float);
+}
+@media (min-width: 768px) {
+  [data-world="field"] .fd-course { border-radius: 999px; }
+}
+[data-world="field"] .fd-track { height: 6px; border-radius: 999px; background: var(--fd-mist); overflow: hidden; }
+[data-world="field"] .fd-track > span { display: block; height: 100%; border-radius: inherit; background: var(--fd-field); }
+
+/* secondary action: an outlined ghost, never the coloured disc */
+[data-world="field"] .fd-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 6px 0 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--fd-ink);
+  color: var(--fd-ink);
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+[data-world="field"] .fd-ghost:hover { background: var(--fd-mist); }
+[data-world="field"] .fd-ghost__disc {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--fd-ink);
+  color: var(--fd-white);
+}
+
+/* ---------- rows inside slabs ---------- */
+[data-world="field"] .fd-rows > li + li { border-top: 1px solid var(--fd-rule); }
+[data-world="field"] .fd-slab--white .fd-rows > li + li { border-top-color: var(--fd-rule-white); }
+[data-world="field"] .fd-cols > li + li { border-top: 1px solid var(--fd-rule); }
+@media (min-width: 768px) {
+  [data-world="field"] .fd-cols > li + li { border-top: 0; border-left: 1px solid var(--fd-rule); }
+}
+[data-world="field"] .fd-link { color: var(--fd-ink); text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+[data-world="field"] .fd-link:hover { text-decoration-line: underline; }
+[data-world="field"] .fd-chip-next {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--fd-signal);
+  color: var(--fd-ink);
+  font-weight: 650;
+  font-size: 0.875rem;
+}
+[data-world="field"] .fd-disclose {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 16px;
+  min-height: 56px;
+  text-align: left;
+  color: var(--fd-ink);
+  cursor: pointer;
+  border-radius: 24px;
+}
+[data-world="field"] .fd-disclose__chev {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fd-ink);
+}
+[data-world="field"] .fd-disclose[aria-expanded="true"] .fd-disclose__chev svg { transform: rotate(180deg); }
+
+/* ---------- abstract objects ---------- */
+[data-world="field"] .fd-objects { display: block; width: 100%; height: auto; }
+[data-world="field"] .fd-f-field-deep { fill: var(--fd-field-deep); }
+[data-world="field"] .fd-f-cream { fill: var(--fd-cream); }
+[data-world="field"] .fd-f-sand { fill: var(--fd-sand); }
+[data-world="field"] .fd-f-white { fill: var(--fd-white); }
+[data-world="field"] .fd-f-signal { fill: var(--fd-signal); }
+[data-world="field"] .fd-f-coral { fill: var(--fd-coral); }
+[data-world="field"] .fd-f-ink { fill: var(--fd-ink); }
+[data-world="field"] .fd-f-mist { fill: var(--fd-mist); }
+[data-world="field"] .fd-f-field { fill: var(--fd-field); }

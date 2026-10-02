@@ -1,0 +1,350 @@
+/*
+ * Lab world A: "Exhibition" (/lab/worlds/exhibition/*).
+ * Each course is an exhibition: modules are rooms, topics are wall labels.
+ * An exploration outside the SKO DS. Only the SkillUp logo and SkillUp teal (#26708e) are fixed.
+ *
+ * The palette is the institution's: every room is painted one committed colour, madder (a deep wine
+ * pigment wall, the way contemporary galleries paint a whole show), the labels are white card mounted on
+ * it, and the artworks carry all the other colour. Teal is the guide: it only ever sits on white card,
+ * because teal on madder is 2.25:1.
+ *
+ * Contrast (measured): white on madder 12.5:1 · rose on madder 8.2:1 · ink on white 17.9:1 ·
+ * ink-2 on white 8.2:1 · ink-2 on plaster 7.1:1 · teal on white 5.5:1 · white on teal 5.5:1 ·
+ * madder on plaster 10.9:1.
+ *
+ * Scoped to [data-world="exhibition"] so nothing leaks into the product.
+ */
+
+[data-world="exhibition"] {
+  /* the building */
+  --ex-wall: #5b1f30;            /* madder: every room is painted this */
+  --ex-wall-deep: #481725;       /* the wall in shadow, for the frame edge */
+  --ex-plaster: #f3eef0;         /* corridor plaster, rose-cool — never cream */
+  --ex-card: #ffffff;            /* label card */
+  --ex-lit: #fffaf3;             /* a lit room on the plan */
+
+  /* ink */
+  --ex-ink: #1f1419;             /* 17.9:1 on card */
+  --ex-ink-2: #5d4a51;           /* 8.2:1 on card, 7.1:1 on plaster */
+  --ex-onwall: #ffffff;          /* 12.5:1 on madder */
+  --ex-onwall-2: #ecc9d1;        /* rose, 8.2:1 on madder */
+  --ex-line: #e3b7c1;            /* plan lines and vinyl rules on the wall */
+  --ex-hair: #e6dde0;            /* hairlines on card */
+
+  /* the guide: SkillUp teal, fixed */
+  --ex-teal: #26708e;
+  --ex-teal-deep: #1b5268;
+
+  /* the artworks' pigments */
+  --ex-p-paper: #f4f2ec;
+  --ex-p-ink: #1d1a1f;
+  --ex-p-vermilion: #d8452b;
+  --ex-p-ochre: #d49a2e;
+  --ex-p-cobalt: #274a9a;
+  --ex-p-teal: #26708e;
+  --ex-p-blush: #e7b9ae;
+  --ex-p-sky: #a9c7d1;
+  --ex-p-olive: #5f6236;
+
+  --ex-focus: var(--ex-onwall);  /* on the wall; card surfaces switch it to teal */
+
+  --ex-font-sans: var(--font-ex-sans), "Helvetica Neue", Arial, sans-serif;
+  --ex-font-work: var(--font-ex-work), Georgia, serif;
+
+  background: var(--ex-plaster);
+  color: var(--ex-ink);
+  font-family: var(--ex-font-sans);
+}
+
+/* browser surfaces: the page scroller only while this world is on screen */
+html:has([data-world="exhibition"]) {
+  scrollbar-color: var(--ex-wall, #5b1f30) var(--ex-plaster, #f3eef0);
+}
+[data-world="exhibition"] ::selection { background: var(--ex-teal); color: var(--ex-card); }
+[data-world="exhibition"] :focus-visible { outline: 3px solid var(--ex-focus); outline-offset: 3px; }
+[data-world="exhibition"] .ex-on-card,
+[data-world="exhibition"] .ex-on-plaster { --ex-focus: var(--ex-teal); }
+
+/* The world is always lit the same way: keep the dark-ink logo even when the app is in dark mode. */
+[data-world="exhibition"] .sk-logo-light { display: block; }
+[data-world="exhibition"] .sk-logo-dark { display: none; }
+
+/* ---------- grounds ---------- */
+[data-world="exhibition"] .ex-wall {
+  --ex-focus: var(--ex-onwall);
+  color: var(--ex-onwall);
+  /* the ceiling wash every gallery wall has: static, part of the room, not an effect */
+  background:
+    radial-gradient(ellipse 80% 60% at 30% -10%, rgba(255, 228, 214, 0.13), transparent 70%),
+    var(--ex-wall);
+}
+[data-world="exhibition"] .ex-plaster { background: var(--ex-plaster); color: var(--ex-ink); }
+[data-world="exhibition"] .ex-card {
+  --ex-focus: var(--ex-teal);
+  background: var(--ex-card);
+  color: var(--ex-ink);
+  /* a mounted label: a hairline shadow at the bottom edge, like foamboard off the wall */
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.28), 0 14px 28px -18px rgba(0, 0, 0, 0.6);
+}
+[data-world="exhibition"] .ex-rule-b { border-bottom: 1px solid var(--ex-hair); }
+[data-world="exhibition"] .ex-rule-t { border-top: 1px solid var(--ex-hair); }
+[data-world="exhibition"] .ex-rule-t-wall { border-top: 1px solid var(--ex-line); }
+
+/* ---------- colour ---------- */
+[data-world="exhibition"] .ex-c-ink { color: var(--ex-ink); }
+[data-world="exhibition"] .ex-c-ink2 { color: var(--ex-ink-2); }
+[data-world="exhibition"] .ex-c-onwall { color: var(--ex-onwall); }
+[data-world="exhibition"] .ex-c-onwall2 { color: var(--ex-onwall-2); }
+[data-world="exhibition"] .ex-c-wall { color: var(--ex-wall); }
+[data-world="exhibition"] .ex-c-teal { color: var(--ex-teal); }
+
+/* ---------- type ----------
+ * Two families, three voices.
+ *  Archivo, stretched to 125% width: exhibition-poster type, for page titles and room numbers only.
+ *  Archivo at normal width: the label and wayfinding text, a plain grotesk like gallery signage.
+ *  Instrument Serif italic: titles of works, which museum labels always set in italic. Here, topic and
+ *  course titles.
+ */
+[data-world="exhibition"] .ex-poster {
+  font-family: var(--ex-font-sans);
+  font-weight: 800;
+  font-variation-settings: "wdth" 125;
+  font-size: calc(clamp(2rem, 1.1rem + 3.6vw, 4rem) * var(--sk-font-scale, 1));
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+[data-world="exhibition"] .ex-room-no {
+  font-family: var(--ex-font-sans);
+  font-weight: 800;
+  font-variation-settings: "wdth" 125;
+  font-size: calc(clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem) * var(--sk-font-scale, 1));
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+[data-world="exhibition"] .ex-h2 {
+  font-family: var(--ex-font-sans);
+  font-weight: 700;
+  font-variation-settings: "wdth" 112;
+  font-size: calc(1.375rem * var(--sk-font-scale, 1));
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+[data-world="exhibition"] .ex-work {
+  font-family: var(--ex-font-work);
+  font-style: italic;
+  font-weight: 400;
+  font-size: calc(clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem) * var(--sk-font-scale, 1));
+  line-height: 1.08;
+  text-wrap: balance;
+}
+[data-world="exhibition"] .ex-work-s {
+  font-family: var(--ex-font-work);
+  font-style: italic;
+  font-weight: 400;
+  font-size: calc(1.375rem * var(--sk-font-scale, 1));
+  line-height: 1.15;
+  text-wrap: balance;
+}
+[data-world="exhibition"] .ex-body {
+  font-size: calc(1rem * var(--sk-font-scale, 1));
+  line-height: 1.55;
+  font-weight: 400;
+}
+[data-world="exhibition"] .ex-lead {
+  font-size: calc(1.125rem * var(--sk-font-scale, 1));
+  line-height: 1.5;
+  font-weight: 400;
+}
+[data-world="exhibition"] .ex-meta {
+  font-size: calc(0.9375rem * var(--sk-font-scale, 1));
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+[data-world="exhibition"] .ex-small {
+  font-size: calc(0.8125rem * var(--sk-font-scale, 1));
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+[data-world="exhibition"] .ex-strong { font-weight: 650; }
+[data-world="exhibition"] .ex-nav-link {
+  font-size: calc(0.9375rem * var(--sk-font-scale, 1));
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- links and actions ---------- */
+[data-world="exhibition"] .ex-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+[data-world="exhibition"] .ex-link:hover { text-decoration-thickness: 2px; }
+
+/* the one primary action on every page: teal, square like a gallery sign, always on white card */
+[data-world="exhibition"] .ex-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: 52px;
+  padding: 0 1.5rem;
+  background: var(--ex-teal);
+  color: var(--ex-card);
+  font-size: calc(1rem * var(--sk-font-scale, 1));
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  border-radius: 0;
+  transition: background-color 160ms ease;
+}
+[data-world="exhibition"] .ex-btn:hover { background: var(--ex-teal-deep); }
+[data-world="exhibition"] .ex-btn:focus-visible { outline: 3px solid var(--ex-teal); outline-offset: 3px; }
+
+/* secondary: an outlined sign in ink */
+[data-world="exhibition"] .ex-btn-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--ex-ink);
+  color: var(--ex-ink);
+  background: transparent;
+  font-size: calc(0.9375rem * var(--sk-font-scale, 1));
+  font-weight: 600;
+  border-radius: 0;
+}
+[data-world="exhibition"] .ex-btn-quiet:hover { background: var(--ex-plaster); }
+
+/* a label whose title is a link: the whole label is the target */
+[data-world="exhibition"] .ex-stretch::after { content: ""; position: absolute; inset: 0; }
+[data-world="exhibition"] .ex-stretch:focus-visible { outline: none; }
+[data-world="exhibition"] .ex-stretch:focus-visible::after { outline: 3px solid var(--ex-onwall); outline-offset: 4px; } /* rings the card from the wall side */
+[data-world="exhibition"] .ex-stretch:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+
+/* ---------- nav ---------- */
+[data-world="exhibition"] .ex-nav-current { box-shadow: inset 0 -3px 0 var(--ex-wall); color: var(--ex-ink); }
+[data-world="exhibition"] .ex-nav-idle { color: var(--ex-ink-2); }
+[data-world="exhibition"] .ex-nav-idle:hover { color: var(--ex-ink); }
+
+/* ---------- the works ---------- */
+[data-world="exhibition"] .ex-frame {
+  position: relative;
+  display: block;
+  /* hung, not placed: a thin shadow gap to the wall and a soft cast shadow below */
+  box-shadow: 0 0 0 1px var(--ex-wall-deep), 0 30px 50px -28px rgba(0, 0, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.25);
+  background: var(--ex-p-paper);
+}
+[data-world="exhibition"] .ex-frame > svg { display: block; width: 100%; height: 100%; }
+
+/* ---------- the floor plan (wall vinyl at the entrance of the show) ---------- */
+[data-world="exhibition"] .ex-plan { display: flex; flex-direction: column; }
+[data-world="exhibition"] .ex-room {
+  position: relative;
+  border: 3px solid var(--ex-line);
+  margin-top: -3px;
+  flex-basis: auto;
+}
+[data-world="exhibition"] .ex-room:first-child { margin-top: 0; }
+/* doorways: a gap in the wall between one room and the next */
+[data-world="exhibition"] .ex-room + .ex-room::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: -3px;
+  left: 2rem;
+  width: 3.5rem;
+  height: 3px;
+  background: var(--ex-wall);
+}
+/* the entrance, in the outer wall of Room 1 */
+[data-world="exhibition"] .ex-room:first-child::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: -3px;
+  left: 2rem;
+  width: 3.5rem;
+  height: 3px;
+  background: var(--ex-wall);
+}
+@media (min-width: 768px) {
+  [data-world="exhibition"] .ex-plan { flex-direction: row; }
+  [data-world="exhibition"] .ex-room { margin-top: 0; margin-left: -3px; flex-basis: 0; min-height: 15rem; }
+  [data-world="exhibition"] .ex-room:first-child { margin-left: 0; }
+  [data-world="exhibition"] .ex-room + .ex-room::before { top: auto; bottom: 2.5rem; left: -3px; width: 3px; height: 3.5rem; }
+}
+[data-world="exhibition"] .ex-room-btn { --ex-focus: var(--ex-onwall); }
+[data-world="exhibition"] .ex-plan .ex-room-no { font-size: calc(clamp(1.5rem, 0.9rem + 1.2vw, 2.25rem) * var(--sk-font-scale, 1)); }
+[data-world="exhibition"] .ex-room-btn:focus-visible { outline-offset: -9px; }
+[data-world="exhibition"] .ex-room-btn:hover .ex-room-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+[data-world="exhibition"] .ex-room[data-viewing="true"]:not([data-lit="true"]) {
+  background: rgba(255, 255, 255, 0.06);
+}
+/* the room you are in is lit */
+[data-world="exhibition"] .ex-room[data-lit="true"] { color: var(--ex-ink); }
+[data-world="exhibition"] .ex-room[data-lit="true"] .ex-room-btn { --ex-focus: var(--ex-teal); position: relative; z-index: 0; }
+[data-world="exhibition"] .ex-room-light {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 0%, #ffffff, transparent 75%),
+    var(--ex-lit);
+  box-shadow: 0 0 60px 6px rgba(255, 226, 190, 0.28);
+}
+[data-world="exhibition"] .ex-here-dot {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 999px;
+  background: var(--ex-teal);
+  box-shadow: 0 0 0 4px rgba(38, 112, 142, 0.18);
+}
+
+/* ---------- wall labels ---------- */
+[data-world="exhibition"] .ex-label-closed {
+  border: 1px dashed var(--ex-line);
+  color: var(--ex-onwall-2);
+}
+
+/* ---------- the one authored moment: the lights come up on the work ---------- */
+@keyframes ex-lights-up {
+  0% { filter: brightness(0.16) saturate(0.2); }
+  45% { filter: brightness(0.7) saturate(0.7); }
+  100% { filter: brightness(1) saturate(1); }
+}
+@keyframes ex-pool-up {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ex-room-up {
+  from { opacity: 0.35; box-shadow: 0 0 0 0 rgba(255, 226, 190, 0); }
+  to { opacity: 1; box-shadow: 0 0 60px 6px rgba(255, 226, 190, 0.28); }
+}
+[data-world="exhibition"] .ex-lightup { animation: ex-lights-up 1700ms cubic-bezier(0.3, 0.05, 0.2, 1) 200ms both; }
+[data-world="exhibition"] .ex-pool {
+  position: absolute;
+  inset: -14% -12% auto;
+  height: 48%;
+  pointer-events: none;
+  /* closest-side keeps the pool inside its own box: no hard edge where it ends */
+  background: radial-gradient(closest-side, rgba(255, 236, 222, 0.16), rgba(255, 236, 222, 0));
+  animation: ex-pool-up 1700ms cubic-bezier(0.3, 0.05, 0.2, 1) 200ms both;
+}
+[data-world="exhibition"] .ex-room-light.ex-roomup { animation: ex-room-up 1500ms cubic-bezier(0.3, 0.05, 0.2, 1) 250ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-world="exhibition"] .ex-lightup,
+  [data-world="exhibition"] .ex-pool,
+  [data-world="exhibition"] .ex-room-light.ex-roomup { animation: none; }
+  [data-world="exhibition"] .ex-btn { transition: none; }
+}
+[data-reduce-motion] [data-world="exhibition"] .ex-lightup,
+[data-reduce-motion] [data-world="exhibition"] .ex-pool,
+[data-reduce-motion] [data-world="exhibition"] .ex-room-light.ex-roomup { animation: none; }

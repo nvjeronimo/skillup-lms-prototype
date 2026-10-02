@@ -95,9 +95,10 @@ const sixSigma = (over: Partial<Enrolment>): Enrolment => ({
   provider: "SkillUp",
   selfPaced: true,
   status: "in-progress",
-  pct: 38,
-  topicsDone: 16,
-  topicsTotal: 42,
+  // Counts follow the real course (25 topics) and the plan model's done sets, so every page agrees.
+  pct: 24,
+  topicsDone: 6,
+  topicsTotal: 25,
   nextTopic: { type: "Video", title: "Introduction to the DMAIC methodology", href: topic("six-sigma", "m3-t1") },
   cert: "notpassing",
   program: { value: "Operational Excellence", mock: MOCK.program },
@@ -112,7 +113,7 @@ export const personas: Record<PersonaId, Persona> = {
     firstName: "Noah",
     blurb: "Cautious newcomer · back after a long pause · two courses not started",
     enrolments: [
-      sixSigma({ status: "not-started", pct: 0, topicsDone: 0, lastActive: "14 months ago" }),
+      sixSigma({ status: "not-started", pct: 0, topicsDone: 0, lastActive: "14 months ago", nextTopic: { type: "Reading", title: "What is Six Sigma?", href: topic("six-sigma", "m1-t1") } }),
       {
         id: "cyber-foundations",
         title: "Cybersecurity Foundations",
@@ -191,7 +192,7 @@ export const personas: Record<PersonaId, Persona> = {
     firstName: "Dev",
     blurb: "Stall-and-returner · behind pace · missed a live session",
     enrolments: [
-      sixSigma({ pct: 12, topicsDone: 5, lastActive: "19 days ago", nextTopic: { type: "Reading", title: "The measure phase", href: topic("six-sigma", "m2-t3") } }),
+      sixSigma({ pct: 12, topicsDone: 3, lastActive: "19 days ago", nextTopic: { type: "Video", title: "Lean principles overview", href: topic("six-sigma", "m2-t1") } }),
       {
         id: "data-analytics",
         title: "Data Analytics with SQL",
@@ -230,7 +231,7 @@ export const personas: Record<PersonaId, Persona> = {
     firstName: "Priya",
     blurb: "Credential collector · ahead of cohort · six enrolments",
     enrolments: [
-      sixSigma({ pct: 71, topicsDone: 30, nextTopic: { type: "Quiz", title: "Practice Quiz: Analyze", href: "#" }, cert: "audit_passing" }),
+      sixSigma({ pct: 52, topicsDone: 13, nextTopic: { type: "Quiz", title: "Practice Quiz: Analyze", href: "#" }, cert: "audit_passing" }),
       { id: "remote-teams", title: "Leadership in Remote Teams", provider: "SkillUp", selfPaced: true, status: "completed", pct: 100, topicsDone: 24, topicsTotal: 24, cert: "downloadable", lastActive: "2 months ago" },
       { id: "agile", title: "Agile Delivery", provider: "SkillUp", selfPaced: true, status: "completed", pct: 100, topicsDone: 20, topicsTotal: 20, cert: "downloadable", lastActive: "4 months ago" },
       { id: "sql", title: "Data Analytics with SQL", provider: "SkillUp", selfPaced: true, status: "completed", pct: 100, topicsDone: 35, topicsTotal: 35, cert: "generating", lastActive: "Yesterday" },
