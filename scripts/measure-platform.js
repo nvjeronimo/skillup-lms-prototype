@@ -32,6 +32,7 @@
       ["Due item 1", [458, 111], (d) => mock(d, "No API for due dates").children[0]],
       ["Due item 2", [458, 83], (d) => mock(d, "No API for due dates").children[1]],
       ["Due item 3", [458, 110], (d) => mock(d, "No API for due dates").children[2]],
+      ["Course row (resume)", [708, 68], (d) => all(d, "main li").filter((li) => /Resume/.test(li.textContent))[0]],
       ["Jump tile", [288, 124], (d) => mock(d, "Counts and mentor").children[0]],
     ],
     "/platform/my-learning": [

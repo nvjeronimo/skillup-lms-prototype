@@ -229,8 +229,9 @@ button {
    Platform pages: sample-data marks. The pages under /platform are a test build
    and most of their figures have no API yet. The note under the top bar has a
    switch that sets [data-show-mock] on the page; every block tagged
-   data-mock="<what is missing>" then gets a dashed outline and a label that says
-   why, in full (never hover-only). Off by default so the screens can be compared
+   data-mock="<what is missing>" then gets a dashed outline and a short SAMPLE
+   chip; the reasons are listed in full in the note (never hover-only). The chip
+   stays short so it does not cover the content it marks. Off by default so the screens can be compared
    with the Figma frames.
    ============================================================================ */
 [data-show-mock] [data-mock] {
@@ -241,12 +242,11 @@ button {
   position: relative;
 }
 [data-show-mock] [data-mock]::after {
-  content: "SAMPLE · " attr(data-mock);
+  content: "SAMPLE";
   position: absolute;
   top: 4px;
   right: 4px;
   z-index: 5;
-  max-width: calc(100% - 8px);
   padding: 0 6px;
   border: 1px dashed var(--color-border-warning);
   border-radius: 6px;
@@ -259,6 +259,6 @@ button {
   letter-spacing: 0;
   text-transform: none;
   text-align: left;
-  white-space: normal;
+  white-space: nowrap;
   pointer-events: none;
 }

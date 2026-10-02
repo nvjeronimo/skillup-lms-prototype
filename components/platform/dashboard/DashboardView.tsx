@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { CourseRow } from "@/components/organisms/CourseRow";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHeader";
@@ -30,7 +29,6 @@ import { StreakCard } from "./StreakCard";
  * Mobile: everything stacks, the resume list uses the Resume row, tiles go 2 × 2.
  */
 export function DashboardView() {
-  const router = useRouter();
   const showToast = useLmsStore((s) => s.showToast);
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
@@ -92,7 +90,7 @@ export function DashboardView() {
                       deliveryMode={course.deliveryMode}
                       state="Active"
                       progressPct={course.progressPct}
-                      onClick={() => router.push(course.href)}
+                      href={course.href}
                     />
                   </div>
                 </li>

@@ -18,7 +18,8 @@ const SHOW_MOCK_KEY = "sk-platform-show-mock";
  *
  * Under the bar sits the test-build note with the "Show which" switch: it sets
  * `data-show-mock` here, and every block tagged `data-mock="<what has no API>"`
- * gets a dashed outline and a label (styles in app/globals.css).
+ * gets a dashed outline and a SAMPLE chip (styles in app/globals.css), while the note
+ * lists what each one is missing.
  */
 export function PlatformPage({
   current,
@@ -49,8 +50,45 @@ export function PlatformPage({
       }
       return !on;
     });
+  // With the marks on, the note lists what each marked block is missing. Read from the
+  // rendered blocks (only the visible ones: a hidden tab panel keeps its markup), and
+  // again when the page changes under it (a tab switch, a search, a new route).
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const [reasons, setReasons] = React.useState<string[]>([]);
+  React.useEffect(() => {
+    const root = rootRef.current;
+    if (!showMock || !root) {
+      setReasons([]);
+      return;
+    }
+    let timer = 0;
+    const read = () => {
+      const seen = new Set<string>();
+      root.querySelectorAll<HTMLElement>("main [data-mock]").forEach((el) => {
+        if (el.offsetParent !== null && el.dataset.mock) seen.add(el.dataset.mock);
+      });
+      const next = [...seen];
+      setReasons((prev) => (prev.join("|") === next.join("|") ? prev : next));
+    };
+    const schedule = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(read, 80);
+    };
+    schedule();
+    const main = root.querySelector("main");
+    const observer = new MutationObserver(schedule);
+    if (main) observer.observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden"] });
+    return () => {
+      window.clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [showMock]);
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-sko-bg-faint" data-show-mock={showMock ? "" : undefined}>
+    <div
+      ref={rootRef}
+      className="flex min-h-[100dvh] flex-col bg-sko-bg-faint"
+      data-show-mock={showMock ? "" : undefined}
+    >
       <PlatformTopbar current={current} />
       {/* Test-build note. The same dashed warning treatment as the /lab note, so a
           screenshot of these pages is not read as a promise about the data. */}
@@ -70,6 +108,13 @@ export function PlatformPage({
         >
           {showMock ? "Hide sample-data marks" : "Show which"}
         </button>
+        {showMock && reasons.length ? (
+          <ul className="sk-text-xs-regular w-full list-disc pb-1 ps-5">
+            {reasons.map((r) => (
+              <li key={r}>{r}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       <main id="main" tabIndex={-1} className={cn("flex-1 outline-none", className)}>
         {children}
