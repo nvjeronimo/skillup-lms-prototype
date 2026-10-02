@@ -13,16 +13,17 @@ colors:
   teal: "#26708e"
   teal-deep: "#1b5268"
   teal-wash: "#e3eef2"
-  lime: "#c8f169"
+  now: "var(--color-bg-accent-yellow) #f9c654 (SKO DS)"
+  on-now: "var(--color-text-on-accent-yellow) #13282f (SKO DS)"
 typography:
-  display: { family: "Big Shoulders Display", weight: 800, size: "clamp(2.5rem, 1.6rem + 3.2vw, 4.75rem)", lineHeight: 0.95, letterSpacing: "-0.01em" }
-  h1: { family: "Big Shoulders Display", weight: 800, size: "clamp(2rem, 1.5rem + 1.8vw, 3rem)", lineHeight: 1 }
-  h2: { family: "Hanken Grotesk", weight: 600, size: "1.25rem", lineHeight: 1.3 }
-  title: { family: "Hanken Grotesk", weight: 600, size: "1.25rem", lineHeight: 1.25 }
-  body: { family: "Hanken Grotesk", weight: 400, size: "1rem", lineHeight: 1.5 }
-  body-s: { family: "Hanken Grotesk", weight: 400, size: "0.875rem", lineHeight: 1.45 }
-  label: { family: "Hanken Grotesk", weight: 600, size: "0.8125rem", lineHeight: 1.3 }
-  meta: { family: "Hanken Grotesk", weight: 400, size: "0.8125rem", lineHeight: 1.4, numeric: tabular-nums }
+  display: { family: "Montserrat", weight: 600, size: "clamp(2rem, 1.5rem + 2vw, 3.25rem)", lineHeight: 1.1, letterSpacing: "-0.02em" }
+  h1: { family: "Montserrat", weight: 600, size: "clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem)", lineHeight: 1.15, letterSpacing: "-0.02em" }
+  h2: { family: "Montserrat", weight: 600, size: "1.25rem", lineHeight: 1.3 }
+  title: { family: "Montserrat", weight: 600, size: "1.25rem", lineHeight: 1.25 }
+  body: { family: "Montserrat", weight: 400, size: "1rem", lineHeight: 1.5 }
+  body-s: { family: "Montserrat", weight: 400, size: "0.875rem", lineHeight: 1.45 }
+  label: { family: "Montserrat", weight: 600, size: "0.8125rem", lineHeight: 1.3 }
+  meta: { family: "Montserrat", weight: 400, size: "0.8125rem", lineHeight: 1.4, numeric: tabular-nums }
 rounded:
   sheet: 3px
   button: 3px
@@ -45,6 +46,8 @@ components:
 
 # The Training Block — design system (lab)
 
+> **29 Sep, second pass:** type moved to Montserrat and the today accent to SKO `bg/accent-yellow` (the lime was retired), both read from the DS tokens, as a first step toward integration.
+>
 > **Scope.** This documents the `/lab/training` exploration only, scoped to `[data-world="training"]` in `tokens/lab-training.css`. It is not the SkillUp design system: the SkillUp DS in Figma stays the visual authority. Integrating anything here into the SkillUp DS is a later, separate step.
 
 ## 1. Overview
@@ -57,11 +60,11 @@ Pages built: Today (`app/lab/training/View.tsx`), Plans (`app/lab/training/plans
 
 The first version was cognitively overwhelming. It was distilled, and this record describes the distilled build.
 
-- **The principle.** One job per page, and one primary action per page. Three marks only: done, today/next, planned. One accent: lime means today, and it is the only lime on a page. Moved and live are said in words ("moved from last week", "Live session · 18:00"), never drawn as their own colour or pattern.
+- **The principle.** One job per page, and one primary action per page. Three marks only: done, today/next, planned. One accent: accent yellow means today, and it is the only accent yellow on a page. Moved and live are said in words ("moved from last week", "Live session · 18:00"), never drawn as their own colour or pattern.
 - **Two voices.** The condensed display face is only for page titles and today's session title. Everything else is the text face in sentence case: section headings, labels, navigation, buttons.
 - **One MockTag per page**, at the bottom.
 - **What each page is for.** Today: start today's session. Plans: pick a plan. Course plan: continue, and see what is left.
-- **Removed, for cognitive load:** session blocks sized by minutes, topic blocks sized by width, hatching and dashed "moved" outlines, the green "live" colour, 12-week strips, the load meter and the legends, the road to race day, the race-day and "around this plan" blocks, the re-plan slide-in motion, the large numeral sizes, and condensed uppercase labels and buttons. Their tokens (`--tb-live`, `--tb-live-wash`, `--tb-lime-deep`) are gone from the stylesheet.
+- **Removed, for cognitive load:** session blocks sized by minutes, topic blocks sized by width, hatching and dashed "moved" outlines, the green "live" colour, 12-week strips, the load meter and the legends, the road to race day, the race-day and "around this plan" blocks, the re-plan slide-in motion, the large numeral sizes, and condensed uppercase labels and buttons. Their tokens (`--tb-live`, `--tb-live-wash`, `--tb-now-deep`) are gone from the stylesheet.
 
 ## 2. Colors — one rule per colour
 
@@ -74,20 +77,20 @@ The first version was cognitively overwhelming. It was distilled, and this recor
 | `--tb-rule` | 1px hairlines between rows and above each section. |
 | `--tb-teal` | **The plan.** Planned marks (1.5px teal outline), the primary button, links, focus ring. |
 | `--tb-teal-wash` | The current-tab pill in the phone tab bar. Nothing else. |
-| `--tb-lime` | **Today.** Today's day mark on Today; the next topic's mark on the course plan. |
+| `--tb-now` | **Today.** Today's day mark on Today; the next topic's mark on the course plan. |
 
-**The One Lime Rule.** Lime is on one thing per page: the mark that is today (or, on the course plan, today's next topic). Never on navigation, a button, a heading, a row fill or a status. Anything lime carries a 1.5px ink inset or ink text (12.9:1).
+**The One Accent Rule.** Accent yellow is on one thing per page: the mark that is today (or, on the course plan, today's next topic). Never on navigation, a button, a heading, a row fill or a status. Anything accent yellow carries a 1.5px ink inset or ink text (12.9:1).
 
 **The Said-in-Words Rule.** A moved session or topic is a normal planned row whose meta line says so ("moved from last week", "moved from week 3"). A live session is a normal row whose meta line says "Live now" or "Live session · time". No colour, outline or pattern marks either.
 
-**Navigation current page.** Desktop: ink text with a 4px ink bar at the bottom. Phone tab bar: ink icon and label, icon inside a teal-wash pill. Never lime.
+**Navigation current page.** Desktop: ink text with a 4px ink bar at the bottom. Phone tab bar: ink icon and label, icon inside a teal-wash pill. Never accent yellow.
 
 **Out-of-world colour.** `MockTag` uses the SkillUp DS warning tokens (`sko-*`) on purpose so mocked values read the same across every lab world.
 
-## 3. Typography — two voices
+## 3. Typography — one family, two sizes of voice
 
-- **Big Shoulders Display 800** (`--font-tb-display`, fallback "Arial Narrow"): the page title (`.tb-h1`, 32–48px fluid, on Plans and the course plan) and today's session title (`.tb-display`, 40–76px fluid, on Today, where the page's own h1 is visually hidden). Nowhere else.
-- **Hanken Grotesk 400 / 600** (`--font-tb-text`), sentence case throughout: section headings (`.tb-h2`, 20px/600), row and module titles (`.tb-title`, 20px/600), body 16px, body-s 14px, meta 13px in tabular figures, and labels (`.tb-label`, 13px/600) for nav items, day toggles, lesson names and the avatar initials. Emphasis is `.tb-strong` (600).
+- **One family: Montserrat, the SKO DS face** (`--tb-font-display` / `--tb-font-text` alias `--sk-font-display` / `--sk-font-body`). The page title (`.tb-h1`, 600, 28–40px fluid, on Plans and the course plan) and today's session title (`.tb-display`, 600, 32–52px fluid, on Today, where the page's own h1 is visually hidden). Nowhere else.
+- **Montserrat 400 / 600**, sentence case throughout: section headings (`.tb-h2`, 20px/600), row and module titles (`.tb-title`, 20px/600), body 16px, body-s 14px, meta 13px in tabular figures, and labels (`.tb-label`, 13px/600) for nav items, day toggles, lesson names and the avatar initials. Emphasis is `.tb-strong` (600).
 - Every size multiplies by `--sk-font-scale`. Text never goes below 13px.
 - **No kickers or eyebrows above headings.** The one exception is the date line above today's session title ("Tuesday 30 September"), in body-s ink-2. "Next · " sits inline at the start of a meta line, never above a heading.
 
@@ -97,8 +100,8 @@ Flat. No shadows. Depth comes from the sheet on the ground and 1px hairlines bet
 
 ## 5. Components
 
-- **Day mark (Today, "This week").** Seven 40px circles in a row, one per day, weekday above. Done: ink fill with a white check. Today: lime. Planned: 1.5px teal outline. Rest day: a 4px ink-3 dot. Each day's accessible name gives the date, the state word and the session count.
-- **Topic mark (course plan).** Done: a 16px check in ink-2. Next: a 12px lime square with a 1.5px ink inset. Planned: a 12px square with a 1.5px teal outline. Locked: a 14px lock in ink-3, with the reason printed in the meta line.
+- **Day mark (Today, "This week").** Seven 40px circles in a row, one per day, weekday above. Done: ink fill with a white check. Today: accent yellow. Planned: 1.5px teal outline. Rest day: a 4px ink-3 dot. Each day's accessible name gives the date, the state word and the session count.
+- **Topic mark (course plan).** Done: a 16px check in ink-2. Next: a 12px accent yellow square with a 1.5px ink inset. Planned: a 12px square with a 1.5px teal outline. Locked: a 14px lock in ink-3, with the reason printed in the meta line.
 - **Row.** Title in the text face, one meta line beneath in ink-2 (`kind · minutes`, then only facts that change what the learner does: graded, moved, locked reason). Rows are separated by 1px rules and are at least 44px tall; hover underlines, nothing moves.
 - **Module accordion (course plan).** Each module is a 56px button with its title and "n of m done", and a chevron that rotates (off under reduced motion). The module holding the next topic opens by default.
 - **Plan row (Plans).** Title (links to the course plan where one exists), one status line, one action. Rows are grouped under sentence-case headings (In progress, Ready to start, Opens later, Finished) only when there is more than one group.
@@ -124,7 +127,7 @@ Keeping the plan is the default, so there is no "Keep this plan" button. After a
 - Do keep to three marks (done, today/next, planned) and say every other state in words.
 - Do keep finished sessions and topics visible.
 - Do say "moved" and "nothing was dropped"; never label a session late, overdue or missed.
-- Don't put lime on anything that is not today, and never on more than one thing per page.
+- Don't put accent yellow on anything that is not today, and never on more than one thing per page.
 - Don't use the display face for anything but page titles and today's session title; don't set labels or buttons in uppercase.
 - Don't use shadows, cards-with-progress-bars grids, legends, or a welcome banner.
 

@@ -111,7 +111,7 @@ function dayState(d: PlanDay): DayState {
 
 const DAY_WORD: Record<DayState, string> = { done: "done", today: "today", planned: "planned", rest: "rest day" };
 
-/** Seven days, one mark each. The only lime on the page is today. */
+/** Seven days, one mark each. The only accent yellow on the page is today. */
 function WeekMarks({ days }: { days: PlanDay[] }) {
   return (
     <ol className="mt-5 grid grid-cols-7 gap-1" aria-label="This week, day by day">
@@ -125,7 +125,7 @@ function WeekMarks({ days }: { days: PlanDay[] }) {
               aria-hidden
               className={cn(
                 "flex h-10 w-10 items-center justify-center rounded-full",
-                st === "today" && "tb-bg-lime",
+                st === "today" && "tb-mark-today",
                 st === "done" && "tb-bg-ink",
                 st === "planned" && "tb-mark-plan",
               )}

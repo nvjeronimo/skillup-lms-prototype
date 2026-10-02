@@ -31,7 +31,7 @@ const STATE_WORD: Record<PlanTopic["state"], string> = {
   locked: "Locked",
 };
 
-/** Three marks only: done, the one next topic (lime), planned. Locked is a lock icon. */
+/** Three marks only: done, the one next topic (accent yellow), planned. Locked is a lock icon. */
 function Mark({ t }: { t: PlanTopic }) {
   return (
     <span className="flex h-5 w-4 flex-none items-center justify-center" aria-hidden>
