@@ -4,14 +4,17 @@ import * as React from "react";
 import Link from "next/link";
 import { BookOpen, ChevronRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { useLmsStore } from "@/lib/store";
 import type { Program } from "@/lib/platform/program";
-import { ProgramCtaLink, ProgramProgressBar } from "./parts";
 
 /* Breadcrumb item (DS `_Breadcrumb button base`): body-medium/Semibold, text/subtle; the
-   current page is text/primary. 44px tall below desktop so each crumb is a full touch target. */
-const CRUMB = "sk-text-sm-semibold inline-flex min-h-11 items-center lg:min-h-0";
+   current page is text/primary. 44px tall below desktop so each crumb is a full touch target.
+   20px tall as drawn on desktop: the target grows to 24px (WCAG 2.5.8) and the negative
+   margin keeps the breadcrumb at its drawn height. */
+const CRUMB = "sk-text-sm-semibold inline-flex min-h-11 items-center lg:-my-0.5 lg:min-h-6";
 
 /**
  * DS `LMS / Course Detail / Course header`, Type=Program (6443:18729): the hero above the tab
@@ -129,6 +132,7 @@ export function ProgramHeader({ program }: { program: Program }) {
           </div>
 
           <section
+            data-mock="Program progress is not sent by the Course Home APIs"
             aria-label={program.progress.label}
             className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-4 lg:w-[360px]"
           >
@@ -136,11 +140,11 @@ export function ProgramHeader({ program }: { program: Program }) {
               <p className="sk-text-display-sm-bold text-sko-text-default">{program.progress.percent}%</p>
               <p className="sk-text-xs-regular text-sko-text-subtle">{program.progress.label}</p>
             </div>
-            <ProgramProgressBar value={program.progress.percent} label={program.progress.label} />
+            <PlatformProgressBar value={program.progress.percent} label={program.progress.label} />
             <p className="sk-text-xs-regular text-sko-text-subtle">{program.progress.status}</p>
-            <ProgramCtaLink href={program.progress.href} size="lg" className="w-full">
+            <ButtonLink href={program.progress.href} size="lg" className="w-full">
               {program.progress.cta}
-            </ProgramCtaLink>
+            </ButtonLink>
             <p className="sk-text-xs-regular text-sko-text-subtle">{program.progress.footer}</p>
           </section>
         </div>

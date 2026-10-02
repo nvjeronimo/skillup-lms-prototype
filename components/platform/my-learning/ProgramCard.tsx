@@ -1,6 +1,8 @@
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { DeliveryModeBadge } from "@/components/atoms/MetaBadges";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import {
   myLearningProgramProgressLabel,
   myLearningProgramUpNextLabel,
@@ -12,6 +14,7 @@ export interface ProgramCardProps {
   program: MyLearningProgram;
   /** DS `Layout`: Grid is stacked, List puts the hero on the left (desktop only). */
   layout: "grid" | "list";
+  /** Called by the action of a program without a page (`program.href` unset). */
   onAction?: () => void;
   className?: string;
 }
@@ -31,7 +34,8 @@ const TARGET_44 =
  * Body, gap 16: the percent (headline-medium/Bold) with its label, the DS Progress bar
  * (8 tall, square, bg/strong track, bg/info fill, stepped by 10: nearest step), then the
  * footer — In progress: "Up next" + a primary "Continue"; Not started: a Badge v2 Gray
- * status + a secondary "Details" (Buttons/Button sm).
+ * status + a secondary "Details" (Buttons/Button sm). The action is a link with the button
+ * look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
  * Grid (6388:116437 / 6388:116628): stacked, cards keep their own height.
  * List (6388:116802 / 6388:116940): min height 280, hero 502 wide with its content spread
@@ -43,16 +47,16 @@ const TARGET_44 =
 export function ProgramCard({ program, layout, onAction, className }: ProgramCardProps) {
   const list = layout === "list";
   const showCohort = list || program.cohortInGrid;
-  // The DS Progress bar has steps of 10; the real value goes to assistive tech.
-  const step = Math.min(100, Math.max(0, Math.round(program.progressPct / 10) * 10));
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${program.cta} ${program.title}`;
+  const hierarchy = program.cta === "Continue" ? "primary" : "secondary";
 
   return (
     <article
+      data-mock="Program weeks, lessons, cohort and up next have no API"
       className={cn(
         // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
-        // so desktop padding is 23 (+1 border = the DS 24 inset).
+        // so the desktop side padding is 23 (+1 border = the DS 24 inset). The height already matches with 24.
         "flex overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page",
         list ? "min-h-[280px] items-stretch" : "flex-col",
         className,
@@ -60,7 +64,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
     >
       <div
         className={cn(
-          "relative flex flex-col items-start gap-3 overflow-hidden bg-sko-bg-primary p-4 md:p-5 lg:p-[23px]",
+          "relative flex flex-col items-start gap-3 overflow-hidden bg-sko-bg-primary p-4 md:p-5 lg:px-[23px] lg:py-6",
           list ? "w-[42%] shrink-0 justify-between xl:w-[502px]" : "w-full",
         )}
       >
@@ -86,7 +90,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         </ul>
       </div>
 
-      <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:p-[23px]", list ? "flex-1 justify-center" : "w-full")}>
+      <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-center" : "w-full")}>
         <div className="flex flex-col gap-2">
           <div className="flex items-baseline justify-between gap-3">
             <span className="sk-text-display-sm-bold text-sko-text-default">{program.progressPct}%</span>
@@ -94,17 +98,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
               {myLearningProgramProgressLabel}
             </span>
           </div>
-          <div
-            role="progressbar"
-            aria-label={`${program.title} progress`}
-            aria-valuenow={program.progressPct}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            className="h-2 bg-sko-bg-strong"
-          >
-            {/* DS rule: progress bars fill with bg/info. */}
-            <div className="h-full bg-sko-bg-info" style={{ width: `${step}%` }} />
-          </div>
+          {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
+          <PlatformProgressBar stepped value={program.progressPct} label={`${program.title} progress`} />
         </div>
         <div className="flex items-center justify-between gap-1">
           {program.upNext ? (
@@ -117,15 +112,15 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           ) : (
             <span />
           )}
-          <Button
-            hierarchy={program.cta === "Continue" ? "primary" : "secondary"}
-            size="sm"
-            onClick={onAction}
-            aria-label={actionLabel}
-            className={TARGET_44}
-          >
-            {program.cta}
-          </Button>
+          {program.href ? (
+            <ButtonLink href={program.href} hierarchy={hierarchy} size="sm" aria-label={actionLabel} className={TARGET_44}>
+              {program.cta}
+            </ButtonLink>
+          ) : (
+            <Button hierarchy={hierarchy} size="sm" onClick={onAction} aria-label={actionLabel} className={TARGET_44}>
+              {program.cta}
+            </Button>
+          )}
         </div>
       </div>
     </article>

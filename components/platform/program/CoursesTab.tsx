@@ -4,10 +4,12 @@ import * as React from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { useLmsStore } from "@/lib/store";
 import { CONTENT_PENDING, type Program, type ProgramCourse } from "@/lib/platform/program";
 import { cn } from "@/lib/utils";
-import { ProgramCtaLink, ProgramProgressBar, SectionIntro } from "./parts";
+import { SectionIntro } from "./parts";
 
 /** The row's `LMS / Course Detail / Meta` line: dot-separated facts. */
 function courseMeta(course: ProgramCourse): string {
@@ -74,7 +76,7 @@ function CoursePanel({ course }: { course: ProgramCourse }) {
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
         {hasBar ? (
-          <ProgramProgressBar
+          <PlatformProgressBar
             value={progress}
             label={`${name}: course progress`}
             showValue
@@ -82,9 +84,9 @@ function CoursePanel({ course }: { course: ProgramCourse }) {
           />
         ) : null}
         {course.state === "in-progress" && course.href ? (
-          <ProgramCtaLink href={course.href} aria-label={`Resume course: ${name}`} className="shrink-0">
+          <ButtonLink href={course.href} aria-label={`Resume course: ${name}`} className="shrink-0">
             Resume course
-          </ProgramCtaLink>
+          </ButtonLink>
         ) : (
           <Button
             hierarchy={course.state === "in-progress" ? "primary" : "secondary"}
@@ -136,7 +138,8 @@ function CourseRow({
           aria-controls={panelId}
           onClick={onToggle}
           className={cn(
-            "flex w-full items-center gap-3 p-4 text-left focus-visible:-outline-offset-2",
+            // The DS stroke is inside the row and the CSS border is outside the padding: 15 + 1 = the DS 16 on desktop.
+            "flex w-full items-center gap-3 p-4 text-left focus-visible:-outline-offset-2 lg:p-[15px]",
             open && "border-b border-sko-border-subtle",
           )}
         >
@@ -153,7 +156,7 @@ function CourseRow({
           />
         </button>
       </h3>
-      <div id={panelId} role="region" aria-labelledby={buttonId} hidden={!open} className="px-5 py-1">
+      <div id={panelId} role="region" aria-labelledby={buttonId} hidden={!open} className="px-5 py-1 lg:px-[19px]">
         <CoursePanel course={course} />
       </div>
     </li>
@@ -180,7 +183,10 @@ export function CoursesTab({ program }: { program: Program }) {
   return (
     <div className="flex flex-col gap-6">
       <SectionIntro title={program.coursesIntro.title} lead={program.coursesIntro.lead} />
-      <ol className="flex flex-col gap-3">
+      <ol
+        data-mock="Course intro, topics and progress inside a program have no API"
+        className="flex flex-col gap-3"
+      >
         {program.courses.map((course) => (
           <CourseRow key={course.id} course={course} open={open.has(course.id)} onToggle={() => toggle(course.id)} />
         ))}

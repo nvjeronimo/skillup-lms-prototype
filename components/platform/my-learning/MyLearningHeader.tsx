@@ -16,7 +16,10 @@ export function MyLearningHeader() {
       <h1 className="sk-text-display-md-bold shrink-0 whitespace-nowrap text-sko-text-default">
         {myLearningHeading.title} <span className="text-sko-text-subtle">{myLearningHeading.emphasis}</span>
       </h1>
-      <ul className="flex min-w-0 flex-col border-y border-sko-border-subtle md:w-[600px] md:flex-row">
+      <ul
+        data-mock="Daily goals, items and minutes have no API"
+        className="flex min-w-0 flex-col border-y border-sko-border-subtle md:w-[600px] md:flex-row"
+      >
         {myLearningStats.map((stat, i) => (
           <li key={stat.label} className="flex min-w-0 md:flex-1">
             <PlatformStat

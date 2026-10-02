@@ -224,3 +224,41 @@ button {
   min-height: 44px;
   min-width: 44px;
 }
+
+/* ============================================================================
+   Platform pages: sample-data marks. The pages under /platform are a test build
+   and most of their figures have no API yet. The note under the top bar has a
+   switch that sets [data-show-mock] on the page; every block tagged
+   data-mock="<what is missing>" then gets a dashed outline and a label that says
+   why, in full (never hover-only). Off by default so the screens can be compared
+   with the Figma frames.
+   ============================================================================ */
+[data-show-mock] [data-mock] {
+  outline: 1px dashed var(--color-border-warning);
+  outline-offset: 3px;
+}
+[data-show-mock] [data-mock]:not(.absolute, .fixed, .sticky) {
+  position: relative;
+}
+[data-show-mock] [data-mock]::after {
+  content: "SAMPLE · " attr(data-mock);
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 5;
+  max-width: calc(100% - 8px);
+  padding: 0 6px;
+  border: 1px dashed var(--color-border-warning);
+  border-radius: 6px;
+  background: var(--color-bg-warning-soft);
+  color: var(--color-text-warning);
+  font-family: var(--sk-font-body);
+  font-weight: 600;
+  font-size: calc(12px * var(--sk-font-scale, 1));
+  line-height: calc(18px * var(--sk-font-scale, 1));
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}

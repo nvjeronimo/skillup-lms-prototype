@@ -58,7 +58,10 @@ export function DashboardView() {
               emphasis="this week"
               action={{ label: "View calendar", onClick: () => notInPrototype("Calendar") }}
             />
-            <ul className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page">
+            <ul
+              data-mock="No API for due dates or live sessions"
+              className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page"
+            >
               {dashboardDue.map(({ id, ...item }) => (
                 <DueItem key={id} {...item} />
               ))}
@@ -81,7 +84,7 @@ export function DashboardView() {
                     title={course.title}
                     deliveryMode={course.deliveryMode}
                     progressPct={course.progressPct}
-                    onResume={() => router.push(course.href)}
+                    href={course.href}
                   />
                   <div className="hidden md:block">
                     <CourseRow
@@ -100,7 +103,10 @@ export function DashboardView() {
 
         <section aria-labelledby="dashboard-jump-title" className="flex flex-col gap-4">
           <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
-          <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <ul
+            data-mock="Counts and mentor availability have no API"
+            className="grid grid-cols-2 gap-4 md:grid-cols-4"
+          >
             {dashboardJump.map((tile) => (
               <li key={tile.id} className="min-w-0">
                 <JumpTile

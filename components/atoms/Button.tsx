@@ -50,8 +50,10 @@ const PRIMARY_DISABLED = cn(
 const OUTLINE_DISABLED =
   "disabled:ring-sko-border-subtle disabled:forced-colors:border-sko-border-subtle disabled:text-sko-text-disabled";
 const GHOST_DISABLED = "disabled:text-sko-text-disabled";
-/* Brand icons take icon/primary while enabled; disabled icons inherit the label colour. */
-const BRAND_ICON = "[&:enabled_svg]:text-sko-icon-primary";
+/* Brand icons take icon/primary while enabled; disabled icons inherit the label colour.
+   `:not(:disabled)` rather than `:enabled`: the same on a <button>, and it also matches the
+   <a> of atoms/ButtonLink, which `:enabled` never does. */
+const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
 /* Link Button_def: a 1px bottom stroke in every state (tone colour, border/disabled when
    Disabled), radius 0, radius 6 when Focused. */
 const LINK =
@@ -98,8 +100,8 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
   success: {
     // Hover pending DS-03 (the V2 Success/Primary Hover is defective): bg/success-soft + text/success.
     primary: cn(
-      "bg-sko-bg-success text-sko-text-on-success [&:enabled_svg]:text-sko-icon-on-success",
-      "hover:bg-sko-bg-success-soft hover:text-sko-text-success [&:enabled:hover_svg]:text-sko-icon-success",
+      "bg-sko-bg-success text-sko-text-on-success [&:not(:disabled)_svg]:text-sko-icon-on-success",
+      "hover:bg-sko-bg-success-soft hover:text-sko-text-success [&:not(:disabled):hover_svg]:text-sko-icon-success",
       PRIMARY_DISABLED,
     ),
     secondary: cn(
@@ -177,10 +179,75 @@ const LINK_SIZE: Record<ButtonSize, { pad: string; text: string; icon: number }>
   xl: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-md-semibold", icon: 20 },
 };
 
+export interface ButtonStyleProps {
+  tone?: ButtonTone;
+  hierarchy?: ButtonHierarchy;
+  /** @deprecated Use `tone` + `hierarchy`. */
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  iconOnly?: boolean;
+  loading?: boolean;
+  className?: string;
+}
+
+/* Resolves the deprecated `variant` against tone + hierarchy: what both exports below read. */
+function resolveButton({ tone, hierarchy, variant }: Pick<ButtonStyleProps, "tone" | "hierarchy" | "variant">) {
+  const legacy: LegacyStyle | null =
+    hierarchy === undefined && tone === undefined && isLegacyStyle(variant) ? variant : null;
+  const alias = variant && !isLegacyStyle(variant) ? VARIANT_ALIAS[variant] : undefined;
+  // A legacy `destructive` mixed with tone/hierarchy props falls back to the V2 Destructive tone.
+  const t: ButtonTone = tone ?? alias?.tone ?? (variant === "destructive" ? "destructive" : "brand");
+  const h: ButtonHierarchy = hierarchy ?? alias?.hierarchy ?? "primary";
+  const isLink = legacy === null && (h === "link" || h === "link-subtle");
+  return { legacy, t, h, isLink };
+}
+
+/**
+ * The classes of a DS Button V2 for a set of visual props. Pure, so anything that must look
+ * like a button without being a <button> (atoms/ButtonLink) renders the same classes.
+ */
+export function buttonClassName({
+  tone,
+  hierarchy,
+  variant,
+  size = "md",
+  iconOnly = false,
+  loading = false,
+  className,
+}: ButtonStyleProps = {}): string {
+  const { legacy, t, h, isLink } = resolveButton({ tone, hierarchy, variant });
+  const s = SIZE[size];
+  const l = LINK_SIZE[size];
+  return cn(
+    "inline-flex items-center justify-center transition-colors duration-200 disabled:pointer-events-none",
+    "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--btn-ring)]",
+    FOCUS_RING[legacy === "destructive" ? "destructive" : legacy ? "brand" : t],
+    isLink ? "rounded-none" : "rounded-md",
+    iconOnly ? cn(s.square, s.squareSvg) : isLink ? l.pad : s.pad,
+    isLink ? l.text : s.text,
+    legacy ? LEGACY[legacy] : VARIANT[t][h],
+    loading && "pointer-events-none",
+    className,
+  );
+}
+
+/** The icon size that goes with `buttonClassName` for the same props. */
+export function buttonIconSize({
+  tone,
+  hierarchy,
+  variant,
+  size = "md",
+  iconOnly = false,
+}: Pick<ButtonStyleProps, "tone" | "hierarchy" | "variant" | "size" | "iconOnly"> = {}): number {
+  const { isLink } = resolveButton({ tone, hierarchy, variant });
+  return iconOnly ? SIZE[size].squareIcon : isLink ? LINK_SIZE[size].icon : SIZE[size].icon;
+}
+
 /**
  * DS Button V2: Button_def (Type × Hierarchy), Link Button_def (`hierarchy="link" | "link-subtle"`)
  * and Icon Button_def (`iconOnly`). The deprecated `variant` prop maps onto tone + hierarchy.
  * Destructive + utility stay UUI gray-neutral by design (`variant="destructive" | "utility"`).
+ * For navigation use atoms/ButtonLink: the same look on a real link.
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
@@ -200,17 +267,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   },
   ref,
 ) {
-  const legacy: LegacyStyle | null =
-    hierarchy === undefined && tone === undefined && isLegacyStyle(variant) ? variant : null;
-  const alias = variant && !isLegacyStyle(variant) ? VARIANT_ALIAS[variant] : undefined;
-  // A legacy `destructive` mixed with tone/hierarchy props falls back to the V2 Destructive tone.
-  const t: ButtonTone = tone ?? alias?.tone ?? (variant === "destructive" ? "destructive" : "brand");
-  const h: ButtonHierarchy = hierarchy ?? alias?.hierarchy ?? "primary";
-  const isLink = legacy === null && (h === "link" || h === "link-subtle");
-
-  const s = SIZE[size];
-  const l = LINK_SIZE[size];
-  const iconSize = iconOnly ? s.squareIcon : isLink ? l.icon : s.icon;
+  const iconSize = buttonIconSize({ tone, hierarchy, variant, size, iconOnly });
   const hasLabel = !iconOnly && children !== undefined && children !== null && children !== false && children !== "";
   const spinner = loading ? (
     <Icon icon={Loader2} size={iconSize} className="animate-spin" aria-hidden="true" />
@@ -222,17 +279,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       disabled={disabled}
       aria-busy={loading || undefined}
       aria-disabled={loading || undefined}
-      className={cn(
-        "inline-flex items-center justify-center transition-colors duration-200 disabled:pointer-events-none",
-        "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--btn-ring)]",
-        FOCUS_RING[legacy === "destructive" ? "destructive" : legacy ? "brand" : t],
-        isLink ? "rounded-none" : "rounded-md",
-        iconOnly ? cn(s.square, s.squareSvg) : isLink ? l.pad : s.pad,
-        isLink ? l.text : s.text,
-        legacy ? LEGACY[legacy] : VARIANT[t][h],
-        loading && "pointer-events-none",
-        className,
-      )}
+      className={buttonClassName({ tone, hierarchy, variant, size, iconOnly, loading, className })}
       {...rest}
       onClick={loading ? (e) => e.preventDefault() : onClick}
     >

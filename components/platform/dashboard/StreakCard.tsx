@@ -70,6 +70,7 @@ export function StreakCard({ count, label, week, message, className }: StreakCar
   return (
     <section
       aria-label="Streak"
+      data-mock="Streak and days learned are not exposed by any API"
       className={cn(
         "flex flex-col gap-3 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:p-6",
         className,

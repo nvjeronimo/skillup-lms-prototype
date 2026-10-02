@@ -4,6 +4,7 @@ import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
+import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { useLmsStore } from "@/lib/store";
 import {
   MY_LEARNING_DEFAULT_TAB,
@@ -13,14 +14,11 @@ import {
   myLearningPrograms,
   myLearningSearch,
   myLearningTabs,
-  type MyLearningCourse,
-  type MyLearningProgram,
   type MyLearningTab,
   type MyLearningView,
 } from "@/lib/platform/my-learning";
 import { cn } from "@/lib/utils";
 import { BrowseTile } from "./BrowseTile";
-import { CollectionTabs, collectionPanelId, collectionTabId } from "./CollectionTabs";
 import { MyLearningCourseCard } from "./MyLearningCourseCard";
 import { ProgramCard } from "./ProgramCard";
 import { SearchField } from "./SearchField";
@@ -77,9 +75,6 @@ export function MyLearningCollection() {
   }));
 
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
-  const openCourse = (course: MyLearningCourse) => router.push(course.href);
-  const openProgram = (program: MyLearningProgram) =>
-    program.href ? router.push(program.href) : notInPrototype(program.title);
 
   const listView = view === "list";
 
@@ -87,12 +82,17 @@ export function MyLearningCollection() {
     <section aria-label="My courses and programs" className="flex flex-col gap-4 md:gap-5 lg:gap-6">
       <div className="flex flex-col gap-4 pt-2 md:flex-row md:items-center md:justify-between md:border-b md:border-sko-border-subtle">
         <div className="border-b border-sko-border-subtle md:min-w-0 md:flex-1 md:border-b-0">
-          <CollectionTabs
+          {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
+              is the border of the toolbar, and only the selected panel is rendered. */}
+          <PlatformTabs
             tabs={tabs}
-            active={tab}
+            value={tab}
             onChange={(id) => setParam("tab", id, MY_LEARNING_DEFAULT_TAB)}
-            label="My learning"
+            size="responsive"
+            rule="parent"
+            panels="selected"
             idBase={ID_BASE}
+            ariaLabel="My learning"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export function MyLearningCollection() {
         </div>
       </div>
 
-      <div role="tabpanel" id={collectionPanelId(ID_BASE, tab)} aria-labelledby={collectionTabId(ID_BASE, tab)}>
+      <div role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
         <h2 className="sr-only">{tabLabel}</h2>
         {/* Tells assistive tech how many cards the search left. */}
         <p role="status" className="sr-only">
@@ -128,12 +128,7 @@ export function MyLearningCollection() {
             <ul className={cn(GRID, listView && "lg:hidden")}>
               {courses.map((course) => (
                 <li key={course.id} className="flex min-w-0">
-                  <MyLearningCourseCard
-                    course={course}
-                    layout="grid"
-                    onAction={() => openCourse(course)}
-                    className="w-full"
-                  />
+                  <MyLearningCourseCard course={course} layout="grid" className="w-full" />
                 </li>
               ))}
               {/* The way out to the catalog closes the grid. */}
@@ -149,7 +144,7 @@ export function MyLearningCollection() {
               <ul className={LIST}>
                 {courses.map((course) => (
                   <li key={course.id}>
-                    <MyLearningCourseCard course={course} layout="list" onAction={() => openCourse(course)} />
+                    <MyLearningCourseCard course={course} layout="list" />
                   </li>
                 ))}
               </ul>
@@ -161,7 +156,7 @@ export function MyLearningCollection() {
             <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
               {programs.map((program) => (
                 <li key={program.id} className="min-w-0">
-                  <ProgramCard program={program} layout="grid" onAction={() => openProgram(program)} />
+                  <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.title)} />
                 </li>
               ))}
             </ul>
@@ -169,7 +164,7 @@ export function MyLearningCollection() {
               <ul className={LIST}>
                 {programs.map((program) => (
                   <li key={program.id}>
-                    <ProgramCard program={program} layout="list" onAction={() => openProgram(program)} />
+                    <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.title)} />
                   </li>
                 ))}
               </ul>
