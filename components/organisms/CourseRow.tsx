@@ -2,6 +2,8 @@ import * as React from "react";
 import { Lock } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { DeliveryModeBadge, type DeliveryMode } from "@/components/atoms/MetaBadges";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +17,8 @@ export interface CourseRowProps {
   progressPct?: number;
   /** Unlock label (Locked state), e.g. "UNLOCKS MAY 18". */
   unlockLabel?: string;
+  /** Where Resume / Start goes. With it the action is a real link; `onClick` is for actions that stay on the page. */
+  href?: string;
   onClick?: () => void;
   className?: string;
 }
@@ -26,13 +30,16 @@ export function CourseRow({
   state = "Active",
   progressPct = 0,
   unlockLabel = "UNLOCKS MAY 18",
+  href,
   onClick,
   className,
 }: CourseRowProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-4 rounded-xl border bg-sko-bg-page shadow-sk-card px-5 py-4",
+        // The DS stroke is inside the 68px row and the CSS border is outside the padding:
+        // 19 / 15 + 1 border = the DS 20 / 16.
+        "flex items-center gap-4 rounded-xl border bg-sko-bg-page shadow-sk-card px-[19px] py-[15px]",
         // DS Active: border/primary at 2px inside. 1px border + 1px inset ring = 2px, no layout shift.
         state === "Active"
           ? "border-sko-border-primary ring-1 ring-inset ring-sko-border-primary"
@@ -55,22 +62,22 @@ export function CourseRow({
       {state === "Active" ? (
         <div className="flex items-center gap-4">
           {/* DS Progress bar, Label=Right: 140 wide, bar + label gap 12. */}
-          <div className="flex w-[140px] items-center gap-3">
-            <div
-              role="progressbar"
-              aria-label={`${title} progress`}
-              aria-valuenow={progressPct}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              className="h-2 flex-1 overflow-hidden rounded-full bg-sko-bg-muted"
-            >
-              <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${progressPct}%` }} />
-            </div>
-            <span className="sk-text-sm-medium text-sko-text-muted">{progressPct}%</span>
-          </div>
-          <Button variant="primary" size="sm" onClick={onClick}>
-            Resume
-          </Button>
+          <PlatformProgressBar
+            value={progressPct}
+            label={`${title} progress`}
+            track="muted"
+            showValue
+            className="w-[140px]"
+          />
+          {href ? (
+            <ButtonLink href={href} hierarchy="primary" size="sm" aria-label={`Resume ${title}`}>
+              Resume
+            </ButtonLink>
+          ) : (
+            <Button variant="primary" size="sm" onClick={onClick}>
+              Resume
+            </Button>
+          )}
         </div>
       ) : null}
 
@@ -90,9 +97,15 @@ export function CourseRow({
       {state === "Available" ? (
         /* DS Available: the "AVAILABLE NOW" status label is hidden; only Start shows. */
         <div className="flex items-center gap-4">
-          <Button variant="primary" size="sm" onClick={onClick}>
-            Start
-          </Button>
+          {href ? (
+            <ButtonLink href={href} hierarchy="primary" size="sm" aria-label={`Start ${title}`}>
+              Start
+            </ButtonLink>
+          ) : (
+            <Button variant="primary" size="sm" onClick={onClick}>
+              Start
+            </Button>
+          )}
         </div>
       ) : null}
     </div>
