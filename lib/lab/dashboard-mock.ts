@@ -112,7 +112,7 @@ export const personas: Record<PersonaId, Persona> = {
     firstName: "Noah",
     blurb: "Cautious newcomer · back after a long pause · two courses not started",
     enrolments: [
-      sixSigma({ status: "not-started", pct: 0, topicsDone: 0, lastActive: "14 months ago" }),
+      sixSigma({ status: "not-started", pct: 0, topicsDone: 0, lastActive: "14 months ago", nextTopic: { type: "Reading", title: "What is Six Sigma?", href: topic("six-sigma", "m1-t1") } }),
       {
         id: "cyber-foundations",
         title: "Cybersecurity Foundations",
@@ -191,7 +191,7 @@ export const personas: Record<PersonaId, Persona> = {
     firstName: "Dev",
     blurb: "Stall-and-returner · behind pace · missed a live session",
     enrolments: [
-      sixSigma({ pct: 12, topicsDone: 5, lastActive: "19 days ago", nextTopic: { type: "Reading", title: "The measure phase", href: topic("six-sigma", "m2-t3") } }),
+      sixSigma({ pct: 12, topicsDone: 5, lastActive: "19 days ago", nextTopic: { type: "Video", title: "Lean principles overview", href: topic("six-sigma", "m2-t1") } }),
       {
         id: "data-analytics",
         title: "Data Analytics with SQL",

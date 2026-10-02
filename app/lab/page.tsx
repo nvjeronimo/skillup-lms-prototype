@@ -17,6 +17,16 @@ export default function LabIndex() {
       <p className="sk-text-md-regular mt-1 text-sko-text-muted">
         Directions to compare before one is chosen and brought into Figma. Switch persona in the top bar.
       </p>
+      <Link
+        href="/lab/pages"
+        className="mt-6 flex flex-col gap-1 rounded-xl border border-sko-border-primary bg-sko-bg-page p-4"
+      >
+        <span className="sk-text-md-semibold text-sko-text-primary">Page options: Today, Plans and Course plan</span>
+        <span className="sk-text-sm-regular text-sko-text-muted">Four ideas per page, in the SkillUp DS.</span>
+      </Link>
+      <Link href="/lab/training?persona=dev" className="sk-text-sm-semibold mt-3 inline-flex min-h-[44px] items-center text-sko-text-primary underline">
+        The Training Block (earlier exploration)
+      </Link>
       <h2 className="sk-text-lg-semibold mt-8 text-sko-text-default">Dashboard / Home</h2>
       <ul className="mt-3 grid gap-3 md:grid-cols-2">
         {DASHBOARD.map((d) => (
