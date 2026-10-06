@@ -2,6 +2,8 @@ import * as React from "react";
 import { CourseTypeBadge, DifficultyBadge, DeliveryModeBadge, ProviderBadge, type Difficulty, type DeliveryMode, type Provider } from "@/components/atoms/MetaBadges";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
+import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CardOverflowMenu } from "@/components/molecules/CardOverflowMenu";
 import { cn } from "@/lib/utils";
 import type { TopicType } from "@/lib/types";
@@ -17,6 +19,8 @@ export interface CourseCardProps {
   estimation: string;
   initials: string;
   upNext?: { type: TopicType; title: string };
+  /** Where Resume goes. With it the action is a real link; `onResume` is the fallback. */
+  resumeHref?: string;
   onResume?: () => void;
   className?: string;
 }
@@ -40,6 +44,7 @@ export function CourseCard({
   estimation,
   initials,
   upNext,
+  resumeHref,
   onResume,
   className,
 }: CourseCardProps) {
@@ -79,17 +84,7 @@ export function CourseCard({
           <span className="sk-text-md-semibold shrink-0 whitespace-nowrap text-sko-text-default">{progressPct}% complete</span>
           <span className="sk-text-sm-regular text-right text-sko-text-subtle">Est. completion: {estimation}</span>
         </div>
-        <div
-          role="progressbar"
-          aria-label={`${title} progress`}
-          aria-valuenow={progressPct}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          className="h-2 overflow-hidden rounded-full bg-sko-bg-muted"
-        >
-          {/* DS rule: progress bars fill with bg/info. */}
-          <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${progressPct}%` }} />
-        </div>
+        <PlatformProgressBar value={progressPct} label={`${title} progress`} track="muted" />
       </div>
 
       {upNext ? (
@@ -104,15 +99,27 @@ export function CourseCard({
           </div>
           {/* DS cta-slot (List): Buttons/Button Size=lg, Hierarchy=Secondary. */}
           {/* Unique name per card (WCAG 2.4.6); the visible "Resume" stays first. */}
-          <Button
-            variant="secondary"
-            size="lg"
-            onClick={onResume}
-            aria-label={`Resume ${title}`}
-            className="shrink-0"
-          >
-            Resume
-          </Button>
+          {resumeHref ? (
+            <ButtonLink
+              href={resumeHref}
+              hierarchy="secondary"
+              size="lg"
+              aria-label={`Resume ${title}`}
+              className="shrink-0"
+            >
+              Resume
+            </ButtonLink>
+          ) : (
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={onResume}
+              aria-label={`Resume ${title}`}
+              className="shrink-0"
+            >
+              Resume
+            </Button>
+          )}
         </div>
       ) : null}
 

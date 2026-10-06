@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
@@ -23,7 +22,6 @@ function initials(title: string): string {
 
 /** Course Hub — the landing page. One card per course; Resume enters the course. */
 export function CourseHub() {
-  const router = useRouter();
   const completedTopics = useLmsStore((s) => s.completedTopics);
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
@@ -77,7 +75,7 @@ export function CourseHub() {
               estimation={pct === 100 ? "Completed" : "2 weeks"}
               initials={initials(course.title)}
               upNext={next ? { type: next.type, title: next.title } : undefined}
-              onResume={() => router.push(`/course/${course.slug}/topic/${next?.id ?? ""}`)}
+              resumeHref={`/course/${course.slug}/topic/${next?.id ?? ""}`}
             />
           ))}
         </div>
