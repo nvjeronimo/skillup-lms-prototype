@@ -126,9 +126,15 @@ export function MyLearningCollection() {
         ) : tab === "courses" ? (
           <>
             <ul className={cn(GRID, listView && "lg:hidden")}>
-              {courses.map((course) => (
+              {/* One primary action in the grid: the first course. The DS card draws every action as Primary. */}
+              {courses.map((course, index) => (
                 <li key={course.id} className="flex min-w-0">
-                  <MyLearningCourseCard course={course} layout="grid" className="w-full" />
+                  <MyLearningCourseCard
+                    course={course}
+                    layout="grid"
+                    emphasis={index === 0 ? "primary" : "secondary"}
+                    className="w-full"
+                  />
                 </li>
               ))}
               {/* The way out to the catalog closes the grid. */}

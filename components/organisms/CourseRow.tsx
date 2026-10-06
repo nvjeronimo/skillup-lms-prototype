@@ -20,6 +20,8 @@ export interface CourseRowProps {
   /** Where Resume / Start goes. With it the action is a real link; `onClick` is for actions that stay on the page. */
   href?: string;
   onClick?: () => void;
+  /** Weight of the Resume action (Active). In a list only the first row is `primary`. Defaults to the DS look. */
+  emphasis?: "primary" | "secondary";
   className?: string;
 }
 
@@ -32,6 +34,7 @@ export function CourseRow({
   unlockLabel = "UNLOCKS MAY 18",
   href,
   onClick,
+  emphasis = "primary",
   className,
 }: CourseRowProps) {
   return (
@@ -70,11 +73,11 @@ export function CourseRow({
             className="w-[140px]"
           />
           {href ? (
-            <ButtonLink href={href} hierarchy="primary" size="sm" aria-label={`Resume ${title}`}>
+            <ButtonLink href={href} hierarchy={emphasis} size="sm" aria-label={`Resume ${title}`}>
               Resume
             </ButtonLink>
           ) : (
-            <Button variant="primary" size="sm" onClick={onClick}>
+            <Button hierarchy={emphasis} size="sm" onClick={onClick}>
               Resume
             </Button>
           )}

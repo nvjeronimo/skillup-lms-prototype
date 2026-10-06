@@ -9,6 +9,8 @@ export interface ResumeRowProps {
   progressPct: number;
   /** Where "Resume" goes. */
   href: string;
+  /** Weight of the action. In a list only the first row is `primary`. */
+  emphasis?: "primary" | "secondary";
   className?: string;
 }
 
@@ -21,7 +23,7 @@ export interface ResumeRowProps {
  * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
  * opens the course, so it is a link with the button look (atoms/ButtonLink).
  */
-export function ResumeRow({ title, deliveryMode, progressPct, href, className }: ResumeRowProps) {
+export function ResumeRow({ title, deliveryMode, progressPct, href, emphasis = "primary", className }: ResumeRowProps) {
   return (
     <div
       className={cn(
@@ -41,7 +43,7 @@ export function ResumeRow({ title, deliveryMode, progressPct, href, className }:
           showValue
           className="min-w-0 flex-1"
         />
-        <ButtonLink href={href} hierarchy="primary" size="md" className="shrink-0" aria-label={`Resume ${title}`}>
+        <ButtonLink href={href} hierarchy={emphasis} size="md" className="shrink-0" aria-label={`Resume ${title}`}>
           Resume
         </ButtonLink>
       </div>

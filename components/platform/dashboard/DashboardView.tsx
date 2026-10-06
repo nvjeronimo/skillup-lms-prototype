@@ -74,15 +74,18 @@ export function DashboardView() {
               action={{ label: "My learning", href: "/platform/my-learning" }}
             />
             <ul className="flex flex-col gap-4">
-              {dashboardResume.map((course) => (
+              {dashboardResume.map((course, index) => (
                 <li key={course.id}>
-                  {/* Mobile: the Resume row. Tablet and desktop: the DS Course Row. */}
+                  {/* Mobile: the Resume row. Tablet and desktop: the DS Course Row.
+                      One primary action in the list: the course touched last. The DS row draws
+                      every Resume as Primary; three equal primaries hid the next step. */}
                   <ResumeRow
                     className="md:hidden"
                     title={course.title}
                     deliveryMode={course.deliveryMode}
                     progressPct={course.progressPct}
                     href={course.href}
+                    emphasis={index === 0 ? "primary" : "secondary"}
                   />
                   <div className="hidden md:block">
                     <CourseRow
@@ -91,6 +94,7 @@ export function DashboardView() {
                       state="Active"
                       progressPct={course.progressPct}
                       href={course.href}
+                      emphasis={index === 0 ? "primary" : "secondary"}
                     />
                   </div>
                 </li>
