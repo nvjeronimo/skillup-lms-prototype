@@ -1,3 +1,4 @@
+import { user } from "@/lib/data";
 import type { DeliveryMode, Difficulty } from "@/components/atoms/MetaBadges";
 
 /**
@@ -230,7 +231,7 @@ const AI_DIGITAL_MARKETING: Program = {
       title: "Digital Marketing Fundamentals and the AI Mindset",
       issuedLine: "Issued 12 September 2026.",
       document: {
-        learner: "John Smith",
+        learner: user.name,
         courseTitle: "Digital Marketing Fundamentals and the AI Mindset",
         summary: "4 modules  ·  about 12 hours",
         issuedOn: "12 September 2026",

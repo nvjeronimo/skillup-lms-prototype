@@ -11,6 +11,8 @@ export interface MyLearningCourseCardProps {
   course: MyLearningCourse;
   /** DS `Layout`: Grid is the browsing card, List the scan row (desktop only). */
   layout: "grid" | "list";
+  /** Weight of the Grid action. In a collection only the first card is `primary`. Defaults to the DS look. */
+  emphasis?: "primary" | "secondary";
   className?: string;
 }
 
@@ -79,7 +81,7 @@ function Progress({ course, className }: { course: MyLearningCourse; className?:
  * 20) → title-medium/Semibold; "UP NEXT" (SemiBold 11, +0.6) → label-small/Semibold; the
  * next title (Medium 15) → body-medium/Medium; the meta (Regular 14) → body-medium/Regular.
  */
-export function MyLearningCourseCard({ course, layout, className }: MyLearningCourseCardProps) {
+export function MyLearningCourseCard({ course, layout, emphasis = "primary", className }: MyLearningCourseCardProps) {
   const surface = "rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${course.cta} ${course.title}`;
@@ -143,7 +145,7 @@ export function MyLearningCourseCard({ course, layout, className }: MyLearningCo
         <TopicTypeBadge type={course.upNext.type} className="shrink-0" />
       </div>
       {/* mt-auto: in a row of cards with titles of different length, the action stays at the bottom. */}
-      <ButtonLink href={course.href} hierarchy="primary" size="lg" aria-label={actionLabel} className="mt-auto">
+      <ButtonLink href={course.href} hierarchy={emphasis} size="lg" aria-label={actionLabel} className="mt-auto">
         {course.cta}
       </ButtonLink>
     </article>

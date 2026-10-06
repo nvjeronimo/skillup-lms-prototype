@@ -1,8 +1,20 @@
-/** The learner shown on the platform pages (mock; the Figma screens use John Smith). */
+import { user } from "@/lib/data";
+
+const [firstName = user.name] = user.name.split(" ");
+
+/**
+ * The learner shown on the platform pages: the same mock user as the course player and the
+ * home page (`lib/data-model.json`), so a test session shows one person throughout. The Figma
+ * platform screens are drawn with "John Smith"; the name is sample data either way.
+ */
 export const platformUser = {
-  name: "John Smith",
-  firstName: "John",
-  initials: "JS",
+  name: user.name,
+  firstName,
+  initials: user.name
+    .split(" ")
+    .map((word) => word[0]?.toUpperCase() ?? "")
+    .slice(0, 2)
+    .join(""),
   role: "Learner · Pro",
 } as const;
 

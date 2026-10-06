@@ -44,7 +44,12 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     });
   }, [activeLineId]);
 
+  // Not on the first render: scrollIntoView also moves the page, so a topic would open
+  // with its title already scrolled under the player. Follow from the first line change on.
+  const mountedLineId = React.useRef(activeLineId);
   React.useEffect(() => {
+    if (mountedLineId.current === activeLineId) return;
+    mountedLineId.current = null;
     if (following) scrollToActive();
   }, [activeLineId, following, scrollToActive]);
 
