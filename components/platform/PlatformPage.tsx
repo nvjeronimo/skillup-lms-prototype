@@ -98,7 +98,7 @@ export function PlatformPage({
       >
         <p className="sk-text-sm-regular">
           <span className="sk-text-sm-semibold">Test build.</span> Most figures on this page are sample data: no
-          API returns them yet.
+          API returns them yet. The navigation is not final either: top bar or sidebar is still under study.
         </p>
         <button
           type="button"
