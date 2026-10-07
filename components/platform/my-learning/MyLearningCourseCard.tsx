@@ -28,14 +28,13 @@ function Delivery({ course }: { course: MyLearningCourse }) {
   );
 }
 
-/* DS thumb: bg/primary-soft, radius 10, Initials in text/primary (Montserrat Bold 20, no
-   text style: nearest is title-medium/Semibold). */
+/* DS thumb: bg/primary-soft, radius 10, Initials in text/primary, title-large/Bold. */
 function Thumb({ initials, className }: { initials: string; className?: string }) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        "sk-text-lg-semibold inline-flex shrink-0 items-center justify-center rounded-[10px] bg-sko-bg-primary-soft text-sko-text-primary",
+        "sk-text-xl-bold inline-flex shrink-0 items-center justify-center rounded-[10px] bg-sko-bg-primary-soft text-sko-text-primary",
         className,
       )}
     >
@@ -93,7 +92,7 @@ export function MyLearningCourseCard({ course, layout, emphasis = "primary", cla
         <Thumb initials={course.initials} className="size-[120px]" />
         <div className="flex min-w-[200px] flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-lg-semibold text-sko-text-default">{course.title}</h3>
+          <h3 className="sk-text-xl-semibold text-sko-text-default">{course.title}</h3>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <ProviderBadge value={course.provider} />
             <div className="flex items-start gap-2">
@@ -126,7 +125,7 @@ export function MyLearningCourseCard({ course, layout, emphasis = "primary", cla
         <Thumb initials={course.initials} className="size-[86px]" />
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-lg-semibold text-sko-text-default">{course.title}</h3>
+          <h3 className="sk-text-xl-semibold text-sko-text-default">{course.title}</h3>
           <ProviderBadge value={course.provider} />
         </div>
       </div>

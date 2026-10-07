@@ -45,6 +45,7 @@
    Desktop ramp. */
 :root {
   --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
+  --sk-type-size-text-xl: 20px;     --sk-type-line-height-text-xl: 30px;
   --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
   --sk-type-size-display-md: 36px;  --sk-type-line-height-display-md: 44px;
   --sk-type-size-display-2xl: 72px; --sk-type-line-height-display-2xl: 90px;
@@ -58,6 +59,7 @@
 @media screen and (max-width: 768px) {
   :root {
     --sk-type-size-display-xs: 20px;  --sk-type-line-height-display-xs: 30px;
+    --sk-type-size-text-xl: 18px;     --sk-type-line-height-text-xl: 28px;
     --sk-type-size-display-sm: 24px;  --sk-type-line-height-display-sm: 32px;
     --sk-type-size-display-md: 24px;  --sk-type-line-height-display-md: 32px;
     --sk-type-size-display-2xl: 48px; --sk-type-line-height-display-2xl: 60px;
@@ -65,18 +67,21 @@
 }
 [data-device="desktop"] {
   --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
+  --sk-type-size-text-xl: 20px;     --sk-type-line-height-text-xl: 30px;
   --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
   --sk-type-size-display-md: 36px;  --sk-type-line-height-display-md: 44px;
   --sk-type-size-display-2xl: 72px; --sk-type-line-height-display-2xl: 90px;
 }
 [data-device="tablet"] {
   --sk-type-size-display-xs: 24px;  --sk-type-line-height-display-xs: 32px;
+  --sk-type-size-text-xl: 20px;     --sk-type-line-height-text-xl: 30px;
   --sk-type-size-display-sm: 30px;  --sk-type-line-height-display-sm: 38px;
   --sk-type-size-display-md: 30px;  --sk-type-line-height-display-md: 38px;
   --sk-type-size-display-2xl: 60px; --sk-type-line-height-display-2xl: 72px;
 }
 [data-device="mobile"] {
   --sk-type-size-display-xs: 20px;  --sk-type-line-height-display-xs: 30px;
+  --sk-type-size-text-xl: 18px;     --sk-type-line-height-text-xl: 28px;
   --sk-type-size-display-sm: 24px;  --sk-type-line-height-display-sm: 32px;
   --sk-type-size-display-md: 24px;  --sk-type-line-height-display-md: 32px;
   --sk-type-size-display-2xl: 48px; --sk-type-line-height-display-2xl: 60px;
@@ -96,6 +101,9 @@
 /* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ----
    DS names: lg = title-medium 18/24, md = body-large 16/24, sm = body-medium 14/20,
    xs = body-small 12/18, 2xs = label-small 12/18 uppercase +4% (was 10/14; no text below 12px). */
+/* title-large (DS 20/30; 18/28 on mobile): the course card title and its thumb initials. */
+.sk-text-xl-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(var(--sk-type-size-text-xl) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-text-xl) * var(--sk-font-scale, 1)); }
+.sk-text-xl-bold      { font-family: var(--sk-font-body); font-weight: 700; font-size: calc(var(--sk-type-size-text-xl) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-text-xl) * var(--sk-font-scale, 1)); }
 .sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 .sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 
