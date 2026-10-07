@@ -169,7 +169,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const isCompleted = completedTopics.has(topicId);
   const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (
-    <TopicActionBar state={actionState} onComplete={() => markComplete(topicId)} />
+    <TopicActionBar
+      state={actionState}
+      onComplete={() => markComplete(topicId)}
+      // Quiz, ORA and VILT have no manual completion (reading-screen-matrix §4).
+      manual={!(family === "assessment" || family === "graded" || family === "ora" || family === "vilt")}
+    />
   );
   const showAction = !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
@@ -254,9 +259,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     blocked: "About",
   };
 
+  // Reading has no Downloads tab (17 Sep decision): its files are linked in the body, and
+  // with one option left the tab bar is hidden.
   const tabs = isVideo
     ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
-    : [{ ...transcriptTab, label: PRIMARY_LABEL[family] }, downloadsTab];
+    : family === "reading"
+      ? [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
+      : [{ ...transcriptTab, label: PRIMARY_LABEL[family] }, downloadsTab];
+  const showTabs = tabs.length > 1;
 
   function navigateTopic(id: string) {
     setCurrentTopic(id);
@@ -388,11 +398,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     ) : null}
                   </div>
                   <div className="mt-4">
-                    <ContentTabs
-                      tabs={tabs}
-                      active={activeTab}
-                      variant={bp === "mobile" ? "select" : "tabs"}
-                    />
+                    {showTabs ? (
+                      <ContentTabs
+                        tabs={tabs}
+                        active={activeTab}
+                        variant={bp === "mobile" ? "select" : "tabs"}
+                      />
+                    ) : null}
                     {children}
                   </div>
                   {bottomAction}
@@ -417,11 +429,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   rightSlot={headerStatus ?? undefined}
                 />
                 <div className="mt-5">
-                  <ContentTabs
-                    tabs={tabs}
-                    active={activeTab}
-                    variant={bp === "mobile" ? "select" : "tabs"}
-                  />
+                  {showTabs ? (
+                    <ContentTabs
+                      tabs={tabs}
+                      active={activeTab}
+                      variant={bp === "mobile" ? "select" : "tabs"}
+                    />
+                  ) : null}
                   {children}
                 </div>
                 {footerMeta}

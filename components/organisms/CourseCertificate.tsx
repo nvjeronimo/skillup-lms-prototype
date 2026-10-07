@@ -11,7 +11,8 @@ import { useDisclosure } from "@/lib/useDisclosure";
 export interface CertificateStats {
   modules: number | string;
   topics: number | string;
-  time: string;
+  /** Not shown: Open edX keeps no time-learned figure (metadata map §37). Kept so callers need not change. */
+  time?: string;
   avgQuiz: string;
 }
 
@@ -58,7 +59,6 @@ export function CourseCertificate({
   const STAT = [
     { value: stats.modules, label: "Modules" },
     { value: stats.topics, label: "Topics" },
-    { value: stats.time, label: "Time" },
     { value: stats.avgQuiz, label: "Avg quiz" },
   ];
 
