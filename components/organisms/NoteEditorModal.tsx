@@ -81,7 +81,8 @@ export function NoteEditorModal({
   return (
     <div
       ref={dialogRef}
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      // DS `LMS / Note Editor`: a bottom sheet on mobile, a centred 560 modal from tablet up.
+      className="fixed inset-0 z-[60] flex items-end justify-center md:items-center md:p-4"
       onKeyDown={handleKeyDown}
     >
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
@@ -89,9 +90,14 @@ export function NoteEditorModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-[560px] overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+        className="relative max-h-[92dvh] w-full overflow-y-auto rounded-t-xl border-t border-sko-border-subtle bg-sko-bg-page shadow-xl md:max-w-[560px] md:rounded-lg md:border"
       >
-        <header className="flex items-center justify-between border-b border-sko-border-subtle px-5 py-4">
+        {/* Mobile grabber (DS: 36 x 4, fully rounded). Decorative: the sheet closes with Cancel, X or Escape. */}
+        <div aria-hidden className="flex justify-center pt-2 md:hidden">
+          <span className="h-1 w-9 rounded-full bg-sko-bg-strong" />
+        </div>
+        {/* Padding is the DS Spacing/2xl and 3xl: 16 on mobile, 20 on tablet, 20/24 on desktop. */}
+        <header className="flex items-center justify-between gap-3 p-4 md:p-5 lg:px-6">
           <h2 id={titleId} className="sk-text-md-semibold text-sko-text-default">
             {noteId ? "Edit note" : "Add note"}
           </h2>
@@ -99,20 +105,20 @@ export function NoteEditorModal({
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+            className="-m-2.5 inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle md:-m-1 md:h-8 md:w-8"
           >
             <Icon icon={X} size={20} />
           </button>
         </header>
 
-        <div className="flex flex-col gap-5 px-6 py-5">
+        <div className="flex flex-col gap-4 p-4 md:gap-5 md:p-5 lg:p-6">
           {anchorQuote ? (
             <div>
-              <p className="sk-text-2xs-medium mb-2 text-sko-text-subtle">
+              <p className="sk-text-2xs-semibold mb-2 text-sko-text-subtle">
                 Anchored to{" "}
                 <span className="text-sko-text-primary">{anchorTs}</span>
               </p>
-              <p className="sk-text-sm-regular rounded-lg bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
+              <p className="sk-text-sm-regular rounded-md bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
                 {anchorQuote}
               </p>
             </div>
@@ -171,11 +177,12 @@ export function NoteEditorModal({
           </div>
         </div>
 
-        <footer className="flex items-center justify-end gap-2 border-t border-sko-border-subtle px-5 py-4">
-          <Button variant="tertiary" onClick={onCancel}>
+        {/* DS footer: bg/subtle, Cancel Secondary + Save Primary; full width and clear of the home bar on mobile. */}
+        <footer className="flex items-center justify-end gap-3 bg-sko-bg-subtle px-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] pt-4 md:p-5 lg:px-6">
+          <Button hierarchy="secondary" onClick={onCancel} className="flex-1 md:flex-none">
             Cancel
           </Button>
-          <Button variant="primary" onClick={commitSave} disabled={!text.trim()}>
+          <Button hierarchy="primary" onClick={commitSave} disabled={!text.trim()} className="flex-1 md:flex-none">
             Save note
           </Button>
         </footer>
