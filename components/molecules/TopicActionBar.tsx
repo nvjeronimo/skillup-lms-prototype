@@ -11,7 +11,8 @@ import { Badge } from "@/components/atoms/Badge";
  * - action     (quiz/assignment) → "Submit" + trailing arrow-right, Buttons/Button sm
  *   Primary (DS Milestone=Submit)
  * - review     (graded, submitted) → "Under Review", Badge v2 Soft sm Warning
- * - completed  → "Marked as completed", Badge v2 Soft sm Success
+ * - completed  → "Marked as completed", Badge v2 Soft sm Success. Types the learner cannot
+ *   complete by hand (Quiz, ORA, VILT) read "Completed" instead (`manual={false}`).
  */
 export type TopicActionState = "incomplete" | "action" | "review" | "completed";
 
@@ -19,14 +20,16 @@ export interface TopicActionBarProps {
   state: TopicActionState;
   onComplete?: () => void;
   onSubmit?: () => void;
+  /** False for types with no manual completion: the completed badge then reads "Completed". */
+  manual?: boolean;
   className?: string;
 }
 
-export function TopicActionBar({ state, onComplete, onSubmit, className }: TopicActionBarProps) {
+export function TopicActionBar({ state, onComplete, onSubmit, manual = true, className }: TopicActionBarProps) {
   if (state === "completed") {
     return (
       <Badge color="success" leftIcon={CircleCheck} className={className}>
-        Marked as completed
+        {manual ? "Marked as completed" : "Completed"}
       </Badge>
     );
   }

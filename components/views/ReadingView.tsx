@@ -1,13 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { getArticle } from "@/lib/content";
+import { getArticle, getDownloads } from "@/lib/content";
 import { getTopic } from "@/lib/data";
+import { useLmsStore } from "@/lib/store";
 
 export function ReadingView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
+  const showToast = useLmsStore((s) => s.showToast);
   if (!topic) return null;
   const article = getArticle(topic);
+  const files = getDownloads(topic);
 
   return (
     <article className="flex flex-col gap-5 py-4">
@@ -44,6 +47,33 @@ export function ReadingView({ topicId }: { topicId: string }) {
           ))}
         </ul>
       </section>
+
+      {/* Reading has no Downloads tab: its files are links in the body, and a link opens the
+          file in a new tab (Studio has no download button). */}
+      {files.length ? (
+        <section className="flex flex-col gap-2">
+          <h2 className="sk-text-display-xs-semibold text-sko-text-default">Files</h2>
+          <ul className="flex flex-col gap-1">
+            {files.map((f) => (
+              <li key={f.id}>
+                <a
+                  href={`#file-${f.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    showToast(`Opening ${f.name} in a new tab…`);
+                  }}
+                  className="sk-text-md-medium inline-flex min-h-11 items-center gap-2 text-sko-text-primary underline underline-offset-2"
+                >
+                  {f.name}
+                  <span className="sk-text-sm-regular text-sko-text-subtle no-underline">
+                    {f.type} · {f.size}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </article>
   );
 }
