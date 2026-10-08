@@ -85,6 +85,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
   const completedTopics = useLmsStore((s) => s.completedTopics);
+  const submittedTopics = useLmsStore((s) => s.submittedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
@@ -239,17 +240,17 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // and "Go to next Course" at the final topic. The milestone ("MODULE COMPLETED") only
   // shows once this topic is done: on an unfinished last topic the footer stays a plain Next.
   // The course counts as complete when every topic the learner can finish in the prototype
-  // is finished. Left out: locked topics, types not available yet, VILT (completes by
-  // attendance) and quizzes (the prototype has no submit that completes them).
+  // is finished. Left out: locked topics, types not available yet and VILT (completes by
+  // attendance). A quiz completes when it is submitted; a graded assignment counts once it
+  // is submitted, since its review happens outside the prototype.
   const courseDone = flatTopics(getCourseForTopic(topicId)).every((t) => {
     const f = topicFamily(t.type);
     return (
       t.locked ||
       f === "blocked" ||
       f === "vilt" ||
-      f === "assessment" ||
-      f === "graded" ||
-      completedTopics.has(t.id)
+      completedTopics.has(t.id) ||
+      (f === "graded" && submittedTopics.has(t.id))
     );
   });
   const milestone: Milestone = !next
