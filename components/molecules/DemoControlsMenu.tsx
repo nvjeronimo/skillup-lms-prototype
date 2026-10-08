@@ -6,8 +6,8 @@ import { Check, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
-import { topicFamily } from "@/lib/content";
-import { useLargeTargets, useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
+import { getPartnerLab, topicFamily } from "@/lib/content";
+import { useLargeTargets, useLmsStore, type DeviceMode, type LabLaunch, type Skin as SkinId } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
@@ -29,6 +29,13 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 // Brand skins — one per skin in the DS "2. Skins" variable collection.
 // Label code = each skin's brand anchor (bg-brand-solid, light) in the DS ramp.
 // Only SKO carries a legacy brand code (P03); the rest are their own ramps.
+const LAB_LAUNCHES: { value: LabLaunch; label: string }[] = [
+  { value: "new-tab", label: "New tab" },
+  { value: "inline", label: "Inline" },
+  { value: "modal", label: "Modal" },
+  { value: "refused", label: "Refused" },
+];
+
 const SKINS: { skin: SkinId; label: string }[] = [
   { skin: "teal", label: "Teal · default (P03)" },
   { skin: "ink", label: "Ink (Ink/900)" },
@@ -154,6 +161,10 @@ export function DemoControlsMenu({
   const activeTopicId = pathname?.match(/^\/course\/[^/]+\/topic\/([^/]+)/)?.[1];
   const activeTopic = activeTopicId ? getTopic(activeTopicId) : undefined;
   const onQuiz = activeTopic ? topicFamily(activeTopic.type) === "assessment" : false;
+  // Same rule for the lab launch: only an LTI lab (one that sends a score) has the setting.
+  const onLtiLab = activeTopic ? Boolean(getPartnerLab(activeTopic)?.scored) : false;
+  const labLaunch = useLmsStore((s) => s.labLaunch);
+  const setLabLaunch = useLmsStore((s) => s.setLabLaunch);
 
   const pill =
     "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
@@ -371,6 +382,36 @@ export function DemoControlsMenu({
                 <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
                   A is how the platform behaves today, and where every quiz
                   starts. B is the proposal.
+                </p>
+              </div>
+            </Section>
+          ) : null}
+
+          {onLtiLab ? (
+            <Section title="Lab launch">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+                  {LAB_LAUNCHES.map((l) => (
+                    <button
+                      key={l.value}
+                      type="button"
+                      aria-pressed={labLaunch === l.value}
+                      onClick={() => setLabLaunch(l.value)}
+                      className={cn(
+                        "sk-text-body-small-semibold flex-1 px-2 py-1 transition-colors",
+                        labLaunch === l.value
+                          ? "bg-sko-bg-primary text-sko-text-on-primary"
+                          : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                      )}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                  New tab is how the Google labs open today. Inline and Modal are the other
+                  LTI settings, still to be tested in Studio. Refused is what the learner
+                  gets when the provider does not allow the frame.
                 </p>
               </div>
             </Section>
