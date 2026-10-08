@@ -1,10 +1,11 @@
 import { user } from "@/lib/data";
 import type { DeliveryMode, Difficulty } from "@/components/atoms/MetaBadges";
+import type { MyLearningCourse } from "@/lib/platform/my-learning";
 
 /**
- * Mock data of the Program Detail page (Figma section 6443:18721, "Program Detail — sources").
- * Copy is verbatim from the four desktop frames: Courses 6443:18722, Certificates 6449:21234,
- * FAQs 6448:20247, About 6448:24409. Where the design draws an item closed and gives it no
+ * Mock data of the Program page (Figma handoff frame 6728:15050, twelve cards: Courses,
+ * Certificates, FAQs and About on desktop, tablet and mobile, as they read on 8 Oct 2026).
+ * Copy is verbatim from the frames. Where the design draws an item closed and gives it no
  * body, the body is left out and the page prints CONTENT_PENDING.
  */
 
@@ -26,23 +27,37 @@ export function isProgramTab(value: string | null | undefined): value is Program
   return PROGRAM_TABS.some((t) => t.id === value);
 }
 
-export type ProgramCourseState = "complete" | "in-progress" | "not-started";
+/** One module of a course outline, as the DS `Module-Row` shows it inside a course row. */
+export interface ProgramModule {
+  number: number;
+  /** As drawn, "Module N · Title". */
+  title: string;
+  complete: boolean;
+  /** "12 topics", or "3 of 10 topics" on the module the learner is in. */
+  topics: string;
+  /** "3h 13m". Nobody authors `effort_time` yet (open question 2), so this is sample data. */
+  duration: string;
+  /** The module the learner left off in. */
+  current?: boolean;
+}
 
+/**
+ * One row of the Courses tab (DS `LMS/Platform/Program-Detail/Course-Row`): the DS Course
+ * Card, a modules bar that says where the learner is, and the course outline once the row
+ * is expanded (one call per course, made when the row opens).
+ */
 export interface ProgramCourse {
   id: string;
   /** Position in the program, 1-based. */
   number: number;
-  /** As drawn in the row, "Course N · Title". */
-  title: string;
-  state: ProgramCourseState;
-  /** Course completion, 0–100. Drawn for In progress (and 100 for Complete). */
-  progress?: number;
-  /** `introductory_sentence`. */
-  intro?: string;
-  /** `topics_covered`: plain strings, not real topics. */
-  topics?: string[];
-  /** Where the course opens. Only one course has a player in the prototype. */
-  href?: string;
+  /** What the DS `LMS / Course Card` shows. No `href`: the course has no player in the prototype. */
+  card: MyLearningCourse;
+  /** Modules bar, in body-medium/Semibold: "4 modules", or "Module 2 of 4" for the course in progress. */
+  position: string;
+  /** Modules bar, in text/subtle: the topic count, or the name of the module the learner is in. */
+  detail: string;
+  /** The outline. Only the course in progress is drawn open; the rest print CONTENT_PENDING. */
+  modules?: ProgramModule[];
   /** Open when the page loads (as drawn). */
   defaultOpen?: boolean;
 }
@@ -141,10 +156,53 @@ export interface Program {
 /** The existing course player; the only course of the program the prototype can open. */
 const COURSE_PLAYER_HREF = "/course/six-sigma/topic/m3-t1";
 
+/**
+ * A course row of the program. Every course is SkillUp · Beginner · Flexible Learning as
+ * drawn; a course not started yet opens on its "Course Introduction" video. The cover is the
+ * placeholder picture of the Figma screens (the field is the course's own `course_image`).
+ */
+function programCourse(
+  number: number,
+  title: string,
+  initials: string,
+  cover: string,
+  {
+    position,
+    detail,
+    modules,
+    defaultOpen,
+    ...card
+  }: Pick<ProgramCourse, "position" | "detail" | "modules" | "defaultOpen"> &
+    Pick<MyLearningCourse, "progressMeta"> &
+    Partial<Pick<MyLearningCourse, "progressPct" | "upNext" | "cta" | "href">>,
+): ProgramCourse {
+  return {
+    id: `course-${number}`,
+    number,
+    card: {
+      id: `course-${number}`,
+      title,
+      initials,
+      imageSrc: `/platform/covers/${cover}.jpg`,
+      provider: "SkillUp",
+      difficulty: "Beginner",
+      delivery: "Flexible Learning",
+      progressPct: null,
+      upNext: { title: "Course Introduction", type: "Video" },
+      cta: "Start",
+      ...card,
+    },
+    position,
+    detail,
+    modules,
+    defaultOpen,
+  };
+}
+
 const AI_DIGITAL_MARKETING: Program = {
   slug: "ai-driven-digital-marketing",
   title: "Certificate Program in AI Augmented Digital Marketing",
-  imageSrc: "/platform/program-ai-digital-marketing.png",
+  imageSrc: "/platform/covers/program-ai-digital-marketing.jpg",
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { courses: "7 courses", duration: "4 months", org: "SkillUp" },
@@ -162,61 +220,68 @@ const AI_DIGITAL_MARKETING: Program = {
     lead: "This Certificate Program comprises 7 courses that take you on a journey from the fundamentals to an advanced skill level.",
   },
   courses: [
-    {
-      id: "course-1",
-      number: 1,
-      title: "Course 1 · Digital Marketing Fundamentals and the AI Mindset",
-      state: "complete",
-      progress: 100,
-    },
-    {
-      id: "course-2",
-      number: 2,
-      title: "Course 2 · AI-Driven Content and Brand Communication",
-      state: "in-progress",
-      progress: 40,
-      intro:
-        "Create scalable, brand-consistent marketing content using AI while maintaining strategic clarity and authenticity.",
-      topics: [
-        "Brand positioning and messaging architecture",
-        "AI-assisted copywriting and content systems",
-        "Multi-format content creation (blog, visual, video)",
-        "AI content personalization and scaling workflows",
-        "Editorial planning and content operations",
-      ],
+    programCourse(1, "Digital Marketing Fundamentals and the AI Mindset", "DM", "program-course-1-digital-marketing-fundamentals", {
+      progressPct: 100,
+      progressMeta: "12 hours total",
+      upNext: { certificate: "Issued 12 Sep 2026" },
+      cta: "Review",
+      position: "4 modules",
+      detail: "All complete · 36 topics",
+    }),
+    programCourse(2, "AI-Driven Content and Brand Communication", "AC", "program-course-2-ai-driven-content", {
+      progressPct: 40,
+      progressMeta: "13 hours total",
+      upNext: { title: "Creating impactful ad copy with effective prompts", type: "Reading" },
+      cta: "Resume",
       href: COURSE_PLAYER_HREF,
+      position: "Module 2 of 4",
+      detail: "AI-Assisted Content Development",
+      modules: [
+        { number: 1, title: "Module 1 · Brand Strategy & Voice Systems", complete: true, topics: "12 topics", duration: "3h 13m" },
+        {
+          number: 2,
+          title: "Module 2 · AI-Assisted Content Development",
+          complete: false,
+          topics: "3 of 10 topics",
+          duration: "3h 22m",
+          current: true,
+        },
+        { number: 3, title: "Module 3 · AI for Visual Content", complete: false, topics: "10 topics", duration: "3h 04m" },
+        {
+          number: 4,
+          title: "Module 4 · Final Project, Assessment, and Wrap-Up",
+          complete: false,
+          topics: "6 topics",
+          duration: "3h 14m",
+        },
+      ],
       defaultOpen: true,
-    },
-    {
-      id: "course-3",
-      number: 3,
-      title: "Course 3 · SEO, GEO, and Organic Growth with AI",
-      state: "not-started",
-    },
-    {
-      id: "course-4",
-      number: 4,
-      title: "Course 4 · Paid Advertising, Media & AI-Integrated Campaign Strategy",
-      state: "not-started",
-    },
-    {
-      id: "course-5",
-      number: 5,
-      title: "Course 5 · Social Media and Ecommerce Marketing",
-      state: "not-started",
-    },
-    {
-      id: "course-6",
-      number: 6,
-      title: "Course 6 · Email, CRM, and Lifecycle Marketing with AI",
-      state: "not-started",
-    },
-    {
-      id: "course-7",
-      number: 7,
-      title: "Course 7 · Capstone Project: AI-First Marketing System",
-      state: "not-started",
-    },
+    }),
+    programCourse(3, "SEO, GEO, and Organic Growth with AI", "SG", "program-course-3-seo-geo-organic-growth", {
+      progressMeta: "13 hours total",
+      position: "4 modules",
+      detail: "43 topics",
+    }),
+    programCourse(4, "Paid Advertising, Media & AI-Integrated Campaign Strategy", "PA", "program-course-4-paid-advertising", {
+      progressMeta: "15 hours total",
+      position: "4 modules",
+      detail: "54 topics",
+    }),
+    programCourse(5, "Social Media and Ecommerce Marketing", "SM", "program-course-5-social-media-ecommerce", {
+      progressMeta: "16 hours total",
+      position: "5 modules",
+      detail: "64 topics",
+    }),
+    programCourse(6, "Email, CRM, and Lifecycle Marketing with AI", "EC", "program-course-6-email-crm-lifecycle", {
+      progressMeta: "10 hours total",
+      position: "3 modules",
+      detail: "34 topics",
+    }),
+    programCourse(7, "Capstone Project: AI-First Marketing System", "CP", "program-course-7-capstone", {
+      progressMeta: "6 hours total",
+      position: "4 modules",
+      detail: "11 topics",
+    }),
   ],
 
   certificatesIntro: {

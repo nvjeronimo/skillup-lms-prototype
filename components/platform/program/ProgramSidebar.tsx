@@ -6,20 +6,20 @@ import { cn } from "@/lib/utils";
 import { CardShell } from "./parts";
 
 /**
- * The right column of Program Detail (6443:18743), three `LMS / Course Detail / Sidebar card`
- * instances 16 apart, the same on every tab:
+ * The right column of the Program page, three `LMS / Course Detail / Sidebar card` instances
+ * 16 apart, the same on Certificates, FAQs and About (the Courses tab has none):
  * - Program dates (Type=Dates, 6443:18749): rows of a 44×48 date tile (bg/subtle, radius 8),
  *   title, date line and the relative badge (Badge v2 Outline / Gray), split by 1px rules;
  * - What's included (Card shell, 6445:24736): a bulleted list, body-medium/Regular;
  * - Program instructor (Type=Team, 6443:18745): DS Avatar md + name + role.
- * 320px wide on desktop; below desktop the cards move under the main column (two columns on
- * tablet, one on mobile), which Figma does not draw.
+ * 320px wide on the right on desktop and tablet; on mobile the three cards follow the main
+ * column at full width.
  */
 export function ProgramSidebar({ program, className }: { program: Program; className?: string }) {
   return (
     <aside
       aria-label="Program details"
-      className={cn("grid gap-4 md:grid-cols-2 md:items-start lg:flex lg:flex-col lg:items-stretch", className)}
+      className={cn("flex flex-col gap-4", className)}
     >
       <CardShell label="Program dates" gap="lg" mock="Program dates have no API; the relative labels are computed">
         <ul className="flex flex-col">

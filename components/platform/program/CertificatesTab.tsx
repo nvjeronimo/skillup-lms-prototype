@@ -75,20 +75,21 @@ function CertificateCard({ certificate }: { certificate: ProgramCertificate }) {
 }
 
 /**
- * Certificates tab (main column 6449:21245): the Section intro, one 320px column per course
- * the learner has started — the course line (body-medium/Semibold) over its Certificate
- * card, 24 apart and wrapping — and the note about the courses not started yet.
+ * Certificates tab: the Section intro, one 320px column per course the learner has started
+ * (the course line, body-medium/Semibold, over its Certificate card) and the note about the
+ * courses not started yet. Desktop: the columns side by side, 24 apart. Tablet: one under
+ * the other at 320, 20 apart. Mobile: at full width, 16 apart.
  */
 export function CertificatesTab({ program }: { program: Program }) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
       <ul
         data-mock="Certificate artwork, IDs and requirements are not readable yet"
-        className="flex flex-wrap items-start gap-6"
+        className="flex flex-wrap items-start gap-4 md:gap-5 lg:gap-6"
       >
         {program.certificates.map((certificate) => (
-          <li key={certificate.courseId} className="flex w-full flex-col gap-2 sm:w-[320px]">
+          <li key={certificate.courseId} className="flex w-full flex-col gap-2 md:w-[320px]">
             <h3 className="sk-text-body-medium-semibold text-sko-text-default">{certificate.courseLabel}</h3>
             <CertificateCard certificate={certificate} />
           </li>

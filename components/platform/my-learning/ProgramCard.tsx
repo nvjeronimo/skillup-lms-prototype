@@ -25,11 +25,13 @@ const TARGET_44 =
   "relative shrink-0 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-1 max-md:before:content-['']";
 
 /**
- * DS `LMS / Platform / Program card` (6388:3858): one program in My Learning. White card,
+ * DS `LMS/Platform/My-Learning/Program-Card`: one program in My Learning. White card,
  * 1px border/subtle, radius 8, no shadow.
- * Hero on bg/primary, gap 12: Delivery Mode badge + cohort (Badge v2 Gray), the eyebrow
- * (label-small/Semibold), the title (headline-medium/Semibold) and the Week / Courses /
- * Lessons line (body-small/Medium, gap 20), all text/on-primary. The ring is decoration:
+ * Hero on bg/primary, gap 12: the Delivery Mode badge, the eyebrow (label-small/Semibold),
+ * the title (headline-medium/Semibold) and the courses line ("1 of 7 courses complete",
+ * body-small/Medium), all text/on-primary. `Week`, `Lessons` and `Show cohort` left the DS
+ * component on 8 Oct: Open edX has no cohort, week or lesson counter for a program.
+ * The ring is decoration:
  * a 340 circle with a 56 stroke in bg/on-media at 8 %, clipped by the hero.
  * Body, gap 16: the percent (headline-medium/Bold) with its label, the DS Progress bar
  * (8 tall, square, bg/strong track, bg/info fill, stepped by 10: nearest step), then the
@@ -37,23 +39,22 @@ const TARGET_44 =
  * status + a secondary "Details" (Buttons/Button sm). The action is a link with the button
  * look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
- * Grid (6388:116437 / 6388:116628): stacked, cards keep their own height.
- * List (6388:116802 / 6388:116940): min height 280, hero 502 wide with its content spread
- * top to bottom, body centred.
+ * Grid: stacked, cards keep their own height (384 × 370 and 384 × 404 on desktop).
+ * List: min height 280, hero 502 wide with its content spread top to bottom, body centred.
+ * Everything on the card comes from `relatedPrograms` and `progress_details` (handoff map
+ * §37.4), so it carries no sample-data mark.
  *
- * Known open issue: the DS draws the eyebrow at 70 % and the stats at 80 % layer opacity,
+ * Known open issue: the DS draws the eyebrow at 70 % and the courses line at 80 % layer opacity,
  * which fails AA on bg/primary. Both are text/on-primary at 100 % here.
  */
 export function ProgramCard({ program, layout, onAction, className }: ProgramCardProps) {
   const list = layout === "list";
-  const showCohort = list || program.cohortInGrid;
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${program.cta} ${program.title}`;
   const hierarchy = program.cta === "Continue" ? "primary" : "secondary";
 
   return (
     <article
-      data-mock="Program weeks, lessons, cohort and up next have no API"
       className={cn(
         // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
         // so the desktop side padding is 23 (+1 border = the DS 24 inset). The height already matches with 24.
@@ -77,17 +78,12 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         />
         <div className="relative flex flex-wrap items-center gap-2">
           <DeliveryModeBadge value={program.delivery} />
-          {showCohort ? <Badge color="gray">{program.cohort}</Badge> : null}
         </div>
         <div className="relative flex w-full flex-col gap-1 text-sko-text-on-primary">
           <p className="sk-text-label-small-semibold">{program.eyebrow}</p>
           <h3 className="sk-text-headline-medium-semibold">{program.title}</h3>
         </div>
-        <ul className="sk-text-body-small-medium relative flex flex-wrap items-start gap-x-5 gap-y-1 whitespace-nowrap text-sko-text-on-primary">
-          {program.stats.map((stat) => (
-            <li key={stat}>{stat}</li>
-          ))}
-        </ul>
+        <p className="sk-text-body-small-medium relative text-sko-text-on-primary">{program.courses}</p>
       </div>
 
       <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-center" : "w-full")}>

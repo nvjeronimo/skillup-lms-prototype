@@ -1,15 +1,16 @@
-import { Award, Calendar, MessagesSquare, User, type LucideIcon } from "lucide-react";
+import { Award, MessagesSquare, User, type LucideIcon } from "lucide-react";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
 
 /**
- * Mock data of the platform Dashboard (Figma 6374:16006 / 6397:16635 / 6400:29528).
+ * Mock data of the platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop
+ * 6408:72361, tablet 6408:72704, mobile 6418:127183, as they read on 8 Oct 2026).
  * Copy is verbatim from the Figma frames. Nothing here is read from an API yet.
  */
 
 export const dashboardGreeting = { salutation: "Good morning," } as const;
 
-/* ── Today at a glance (LMS / Platform / Glance card, 6384:17651) ───────────────────── */
+/* ── Your learning at a glance (LMS/Platform/Dashboard/Today-at-a-glance) ───────────── */
 
 export interface DashboardStat {
   label: string;
@@ -17,48 +18,19 @@ export interface DashboardStat {
   detail: string;
 }
 
+/**
+ * Totals Open edX can serve (handoff map §37.4): the first three come from Learner Home in
+ * one call; Programs needs `progress_details` once per program for "in progress".
+ * The streak card and the "today" figures left the screens on 7 Oct: nothing returns them.
+ */
 export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
-  title: "Today at a glance",
+  title: "Your learning at a glance",
   stats: [
-    { label: "Today's lessons", value: "3", detail: "2 done · 1 in progress" },
-    { label: "Live attendance", value: "80%", detail: "4 of 5 sessions" },
-    { label: "Week Time learned", value: "1h 24m", detail: "Goal · 2h" },
-    { label: "XP this week", value: "+420", detail: "Top 8% in cohort" },
+    { label: "Courses in progress", value: "3", detail: "of 5 enrolled" },
+    { label: "Courses completed", value: "1", detail: "of 5 enrolled" },
+    { label: "Certificates", value: "1", detail: "ready to download" },
+    { label: "Programs", value: "2", detail: "1 in progress" },
   ],
-};
-
-/* ── Streak (LMS / Platform / Streak card, 6384:17785) ──────────────────────────────── */
-
-/** `LMS / Course Detail / Week day` states used on the Dashboard. */
-export type WeekDayState = "done" | "today-done" | "upcoming";
-
-export interface DashboardWeekDay {
-  /** Two-letter label shown in the strip. */
-  day: string;
-  /** Full name, for assistive tech. */
-  name: string;
-  state: WeekDayState;
-}
-
-export const dashboardStreak: {
-  count: number;
-  /** Two lines, as drawn. */
-  label: [string, string];
-  week: DashboardWeekDay[];
-  message: { before: string; highlight: string; after: string };
-} = {
-  count: 12,
-  label: ["Day streak", "keep going"],
-  week: [
-    { day: "Su", name: "Sunday", state: "done" },
-    { day: "Mo", name: "Monday", state: "done" },
-    { day: "Tu", name: "Tuesday", state: "done" },
-    { day: "We", name: "Wednesday", state: "today-done" },
-    { day: "Th", name: "Thursday", state: "upcoming" },
-    { day: "Fr", name: "Friday", state: "upcoming" },
-    { day: "Sa", name: "Saturday", state: "upcoming" },
-  ],
-  message: { before: "You extended your streak — ", highlight: "13 hours", after: " left in the day. Nice work!" },
 };
 
 /* ── Due this week (LMS / Platform / Due item, 6382:3495) ───────────────────────────── */
@@ -73,26 +45,18 @@ export interface DashboardDueItem {
   urgency: "today" | "upcoming";
   title: string;
   meta: string;
-  /** DS Badge v2 Soft sm: Error + dot for Live, Warning for Due …. */
-  status: { label: string; color: BadgeColor; dot?: boolean };
+  /** DS Badge v2 Soft sm, Warning: "Due …". */
+  status: { label: string; color: BadgeColor };
 }
 
+/** Assignment deadlines only, titled as the Dates API titles them (one call per enrolled course). */
 export const dashboardDue: DashboardDueItem[] = [
-  {
-    id: "live-qa-agile-coaching",
-    day: "24",
-    when: "Today",
-    urgency: "today",
-    title: "Live Q&A: Agile Coaching with David Chen",
-    meta: "Module 2 · 4:00 PM · 30 min · Attendance required",
-    status: { label: "Live", color: "error", dot: true },
-  },
   {
     id: "peer-review-persona-research",
     day: "24",
     when: "Tonight",
     urgency: "today",
-    title: "Peer review · Persona research draft",
+    title: "Persona research draft (Peer Assessment)",
     meta: "UX Research and Design Thinking · 11:59 PM",
     status: { label: "Due 11:59", color: "warning" },
   },
@@ -101,8 +65,8 @@ export const dashboardDue: DashboardDueItem[] = [
     day: "26",
     when: "Fri",
     urgency: "upcoming",
-    title: "Submit assignment 02 · Audience segmentation",
-    meta: "AI-Driven Digital Marketing · Module 2 · Quiz + 350-word write-up",
+    title: "Assignment 02 · Audience segmentation",
+    meta: "AI-Driven Digital Marketing · Homework",
     status: { label: "Due Fri", color: "warning" },
   },
 ];
@@ -121,8 +85,8 @@ export interface DashboardResumeCourse {
 const COURSE_PLAYER = "/course/six-sigma/topic/m3-t1";
 
 export const dashboardResume: DashboardResumeCourse[] = [
-  { id: "ai-driven-digital-marketing", title: "AI-Driven Digital Marketing", deliveryMode: "Flexible + Live", progressPct: 38, href: COURSE_PLAYER },
-  { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible + Live", progressPct: 5, href: COURSE_PLAYER },
+  { id: "ai-driven-digital-marketing", title: "AI-Driven Digital Marketing", deliveryMode: "Flexible Learning", progressPct: 38, href: COURSE_PLAYER },
+  { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: COURSE_PLAYER },
   { id: "leadership-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: COURSE_PLAYER },
 ];
 
@@ -130,7 +94,7 @@ export const dashboardResume: DashboardResumeCourse[] = [
 
 export interface DashboardJumpTile {
   id: string;
-  /** DS icon → lucide: message-chat-circle, calendar, award-01, user-01. */
+  /** DS icon → lucide: message-chat-circle, award-01, user-01. */
   icon: LucideIcon;
   title: string;
   description: string;
@@ -139,14 +103,13 @@ export interface DashboardJumpTile {
 }
 
 export const dashboardJump: DashboardJumpTile[] = [
-  { id: "discussion", icon: MessagesSquare, title: "Discussion", description: "12 new replies · 2 mentions" },
-  { id: "book-a-mentor", icon: Calendar, title: "Book a mentor", description: "Mara has Thursday open" },
+  { id: "discussion", icon: MessagesSquare, title: "Discussion", description: "12 unread updates in your courses" },
   {
     id: "certificates",
     icon: Award,
     title: "Certificates",
-    description: "2 in progress · 1 to download",
+    description: "3 in progress · 1 to download",
     href: "/course/six-sigma/certificate",
   },
-  { id: "profile", icon: User, title: "Profile", description: "Skills · Settings · Sharing" },
+  { id: "profile", icon: User, title: "Profile", description: "Your details · Account settings" },
 ];

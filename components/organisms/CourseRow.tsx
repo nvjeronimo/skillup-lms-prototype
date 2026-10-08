@@ -42,11 +42,8 @@ export function CourseRow({
       className={cn(
         // The DS stroke is inside the 68px row and the CSS border is outside the padding:
         // 19 / 15 + 1 border = the DS 20 / 16.
-        "flex items-center gap-4 rounded-xl border bg-sko-bg-page shadow-sk-card px-[19px] py-[15px]",
-        // DS Active: border/primary at 2px inside. 1px border + 1px inset ring = 2px, no layout shift.
-        state === "Active"
-          ? "border-sko-border-primary ring-1 ring-inset ring-sko-border-primary"
-          : "border-sko-border-subtle",
+        // Every state has the same 1px border/subtle stroke in the DS (read 8 Oct 2026).
+        "flex items-center gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card px-[19px] py-[15px]",
         className,
       )}
     >
