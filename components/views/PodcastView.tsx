@@ -89,7 +89,8 @@ export function PodcastView({ topicId }: { topicId: string }) {
           onChange={(e) => seek(Number(e.target.value))}
           aria-label="Seek"
           aria-valuetext={`${secondsToTs(t)} of ${secondsToTs(durationSeconds)}`}
-          className="w-full accent-[var(--color-bg-info)]"
+          // With larger touch targets on (the mobile default) the slider is 44 high.
+          className="w-full accent-[var(--color-bg-info)] [[data-large-targets]_&]:min-h-[44px]"
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3">
