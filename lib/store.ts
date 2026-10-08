@@ -112,6 +112,10 @@ interface LmsState {
    * invisible to whoever is being tested (quizzes/08-two-modes.md §7).
    */
   quizMode: "A" | "B";
+  /** Courses that run on a partner's platform (IBM) and that the learner has started there, by slug. */
+  hostedCoursesStarted: Record<string, number>;
+  /** "Don't show again" on the dialog shown before leaving SkillUp for a hosted course. */
+  skipLeavingDialog: boolean;
   /**
    * How an LTI lab opens. `new-tab` is how the Google labs are authored today. `inline` and
    * `modal` are the other two values of the LTI component's "Open tool in" setting, and
@@ -164,6 +168,9 @@ interface LmsState {
   setDiscussionsPreview: (v: boolean) => void;
   setQuizMode: (v: "A" | "B") => void;
   setLabLaunch: (v: LabLaunch) => void;
+  /** The learner left for the partner's platform to take a hosted course. */
+  hostedCourseStarted: (slug: string) => void;
+  setSkipLeavingDialog: (v: boolean) => void;
   /** The learner opened the lab on the partner's platform. */
   labOpened: (topicId: string) => void;
   /** The partner sent a score back (LTI): stores it and completes the topic. */
@@ -237,6 +244,8 @@ export const useLmsStore = create<LmsState>()(
   discussionsPreview: false,
   quizMode: "A",
   labLaunch: "new-tab",
+  hostedCoursesStarted: {},
+  skipLeavingDialog: false,
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -480,6 +489,9 @@ export const useLmsStore = create<LmsState>()(
     set({ quizMode });
   },
   setLabLaunch: (labLaunch) => set({ labLaunch }),
+  hostedCourseStarted: (slug) =>
+    set((state) => ({ hostedCoursesStarted: { ...state.hostedCoursesStarted, [slug]: Date.now() } })),
+  setSkipLeavingDialog: (skipLeavingDialog) => set({ skipLeavingDialog }),
   setDiscussionsPreview: (discussionsPreview) => {
     track("preview_toggle", { feature: "discussions", value: String(discussionsPreview) });
     set({ discussionsPreview });
@@ -505,6 +517,8 @@ export const useLmsStore = create<LmsState>()(
       resumePositions: {},
       oraState: {},
       labState: {},
+      hostedCoursesStarted: {},
+      skipLeavingDialog: false,
       activeLineId: "ln-3",
       toast: { message: "Demo reset to its initial state" },
     });
@@ -536,6 +550,8 @@ export const useLmsStore = create<LmsState>()(
         resumePositions: s.resumePositions,
         oraState: s.oraState,
         labState: s.labState,
+        hostedCoursesStarted: s.hostedCoursesStarted,
+        skipLeavingDialog: s.skipLeavingDialog,
         bookmarks: s.bookmarks,
         notes: s.notes,
         notificationsRead: s.notificationsRead,

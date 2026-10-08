@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { SectionIntro } from "@/components/platform/program/parts";
@@ -95,6 +96,20 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
     dates: <DatesTab course={course} />,
     qa: <QaTab course={course} threadId={openThread} />,
   };
+
+  // A course hosted by a partner is the header alone: the screens (I1, I2) stop there.
+  if (course.hosted) {
+    return (
+      <>
+        <CourseHeader course={course} />
+        <div className="mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8">
+          <div data-mock="Not designed yet: what this page shows under the header for a course hosted by a partner">
+            <InlineAlert tone="info" title={course.hosted.dialog.title} description={course.hosted.dialog.body} />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
