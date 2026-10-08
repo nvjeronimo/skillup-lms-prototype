@@ -23,7 +23,7 @@
         "topics": [
           { "id": "m1-t1", "type": "Reading", "title": "What is Six Sigma?", "duration": "approx. 8 min read", "completed": true },
           { "id": "m1-t2", "type": "Video", "title": "History and origins", "duration": "5 min", "completed": true },
-          { "id": "m1-t3", "type": "Practice Assignment", "title": "Quick check", "duration": "approx. 8 min", "completed": true }
+          { "id": "m1-t3", "type": "Practice Assignment", "title": "Quick check", "duration": "approx. 8 min", "completed": false }
         ]
       },
       {
