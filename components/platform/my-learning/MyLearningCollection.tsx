@@ -81,7 +81,9 @@ export function MyLearningCollection() {
   return (
     <section aria-label="My courses and programs" className="flex flex-col gap-4 md:gap-5 lg:gap-6">
       <div className="flex flex-col gap-4 pt-2 md:flex-row md:items-center md:justify-between md:border-b md:border-sko-border-subtle">
-        <div className="border-b border-sko-border-subtle md:min-w-0 md:flex-1 md:border-b-0">
+        {/* The Size=sm tabs already grow their target to 44 upwards, so the "larger targets"
+            min-height is switched off on them: it would make the 32px row 44 tall. */}
+        <div className="border-b border-sko-border-subtle max-md:[&_[role=tab]]:min-h-0 md:min-w-0 md:flex-1 md:border-b-0">
           {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
               is the border of the toolbar, and only the selected panel is rendered. */}
           <PlatformTabs
