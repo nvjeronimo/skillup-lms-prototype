@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 /**
  * One row of the list (DS FAQ accordion item, 1358:191501 open / 1358:191714 closed): the
  * title (body-large/Semibold, text/default) with a 24px plus-circle, minus-circle when open
- * (icon/faint), 16 apart; the body (body-large/Regular, text/subtle) sits 4 under the title
+ * (icon/faint), 16 apart (8 on mobile); the body (body-large/Regular, text/subtle) sits 4 under the title
  * and stops short of the icon. Paragraphs of a body are 16 apart.
  * The title is the accordion button inside the row's <h3>; its hit area is padded to 44px
  * without moving the layout.
@@ -30,7 +30,8 @@ function DisclosureRow({
   const panelId = `${uid}-panel`;
   const body = item.body ?? [CONTENT_PENDING];
   return (
-    <li className={cn(!first && "border-t border-sko-border-subtle pt-6")}>
+    // The DS rule is drawn inside the space above the row: 1px border + 15 / 19 / 23 = 16 / 20 / 24.
+    <li className={cn(!first && "border-t border-sko-border-subtle pt-[15px] md:pt-[19px] lg:pt-[23px]")}>
       <h3>
         <button
           type="button"
@@ -38,7 +39,7 @@ function DisclosureRow({
           aria-expanded={open}
           aria-controls={panelId}
           onClick={onToggle}
-          className="-my-2.5 flex w-full items-start gap-4 py-2.5 text-left"
+          className="-my-2.5 flex w-full items-start gap-2 py-2.5 text-left md:gap-4"
         >
           <span className="sk-text-body-large-semibold min-w-0 flex-1 text-sko-text-default">{item.title}</span>
           <Icon
@@ -55,7 +56,7 @@ function DisclosureRow({
         role="region"
         aria-labelledby={buttonId}
         hidden={!open}
-        className="sk-text-body-large-regular mt-1 space-y-4 pr-10 text-sko-text-subtle"
+        className="sk-text-body-large-regular mt-1 space-y-4 pr-8 text-sko-text-subtle md:pr-10"
       >
         {body.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
@@ -66,9 +67,11 @@ function DisclosureRow({
 }
 
 /**
- * The FAQ list (6448:24335) and the About sections (6448:26798): one card — bg/page, 1px
- * border/subtle, radius 8, padding 24 — of accordion rows, 20 apart, every row after the
- * first under a 1px rule with 24 above it. Rows open independently.
+ * The FAQ list and the About sections: one card (bg/page, 1px border/subtle, radius 8) of
+ * accordion rows, every row after the first under a 1px rule. Padding of the card and the
+ * space above each rule 24 / 20 / 16, rows 20 / 20 / 16 apart (desktop / tablet / mobile).
+ * The DS stroke takes part in the layout, so the border adds to the padding.
+ * Rows open independently.
  */
 export function DisclosureList({ items, mock, className }: { items: ProgramDisclosureItem[]; mock?: string; className?: string }) {
   const [open, setOpen] = React.useState<Set<string>>(
@@ -86,8 +89,7 @@ export function DisclosureList({ items, mock, className }: { items: ProgramDiscl
     <ul
       data-mock={mock}
       className={cn(
-        // The DS stroke is inside the card and the CSS border is outside the padding: 23 + 1 = the DS 24 on desktop.
-        "flex flex-col gap-5 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6 lg:p-[23px]",
+        "flex flex-col gap-4 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:gap-5 md:p-5 lg:p-6",
         className,
       )}
     >

@@ -11,21 +11,27 @@ import { useLmsStore } from "@/lib/store";
 import type { Program } from "@/lib/platform/program";
 
 /* Breadcrumb item (DS `_Breadcrumb button base`): body-medium/Semibold, text/subtle; the
-   current page is text/primary. 44px tall below desktop so each crumb is a full touch target.
-   20px tall as drawn on desktop: the target grows to 24px (WCAG 2.5.8) and the negative
-   margin keeps the breadcrumb at its drawn height. */
-const CRUMB = "sk-text-body-medium-semibold inline-flex min-h-11 items-center lg:-my-0.5 lg:min-h-6";
+   current page is text/primary. 20px tall as drawn. The target is 44px below desktop and
+   24px on desktop (WCAG 2.5.8); the negative margin keeps the breadcrumb at its drawn height. */
+const CRUMB = "sk-text-body-medium-semibold -my-3 inline-flex min-h-11 items-center lg:-my-0.5 lg:min-h-6";
 
 /**
- * DS `LMS / Course Detail / Course header`, Type=Program (6443:18729): the hero above the tab
- * bar. The component pins the Semantics collection to Dark, so the whole band carries
- * `data-theme="dark"` and every token below resolves dark in both app themes.
+ * DS `LMS/Platform/Course-Detail/Course-Header`, Kind=Program, on its three breakpoints: the
+ * hero above the tab bar, on bg/subtle. The component pins the Semantics collection to Dark,
+ * so the whole band carries `data-theme="dark"` and every token below resolves dark in both
+ * app themes.
  *
- * Decoration (decorative only): a 220px circle on bg/primary at 12% and a 360px circle of
- * diagonal hatch — 1px border/primary lines every 10px along the edge — at 35%, drawn in CSS.
+ * Decoration (decorative only): a circle on bg/primary at 12% and a circle of diagonal
+ * hatch (1px border/primary lines every 10px along the edge) at 35%, drawn in CSS.
  * Content: breadcrumb, Course Type Badge, thumbnail + title (the page's <h1>), delivery and
- * difficulty badges, the stats row, and the Progress card (5422:600) in flow on the right.
- * Below desktop the card drops under the title block at full width (not drawn in Figma).
+ * difficulty badges, the stats row, and the Progress card.
+ * - Desktop (1280 × 352): padding 20 / 40 / 40, the Progress card (360) on the right.
+ * - Tablet (960 × 321): padding 16 / 24 / 32, 16 between the blocks, the Progress card (320)
+ *   stays on the right of the title block, 24 apart.
+ * - Mobile (375 × 525): padding 16 / 16 / 24, everything stacked 16 apart, the Progress card
+ *   at full width.
+ * As drawn, the breadcrumb ends at "Programs" below desktop (the title is the <h1> right
+ * under it) and the mobile variant has no thumbnail.
  */
 export function ProgramHeader({ program }: { program: Program }) {
   const showToast = useLmsStore((s) => s.showToast);
@@ -43,10 +49,10 @@ export function ProgramHeader({ program }: { program: Program }) {
       data-skin={mounted && skin !== "teal" ? skin : undefined}
       className="relative overflow-hidden bg-sko-bg-subtle"
     >
-      <div className="relative mx-auto w-full max-w-[1280px] px-6 pb-10 pt-5 md:px-8 lg:px-10">
+      <div className="relative mx-auto w-full max-w-[1280px] px-4 pb-6 pt-4 md:px-6 md:pb-8 lg:px-10 lg:pb-10 lg:pt-5">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-[100px] -top-[100px] size-[360px] rounded-full opacity-[0.35]"
+          className="pointer-events-none absolute -right-[103px] -top-[100px] size-[273px] rounded-full opacity-[0.35] md:-right-[73px] md:-top-[110px] lg:-right-[100px] lg:-top-[100px] lg:size-[360px]"
           style={{
             backgroundImage:
               "repeating-linear-gradient(45deg, var(--color-border-primary) 0 1px, transparent 1px 7.07px)",
@@ -54,12 +60,12 @@ export function ProgramHeader({ program }: { program: Program }) {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute right-[280px] top-[60px] hidden size-[220px] rounded-full bg-sko-bg-primary opacity-[0.12] lg:block"
+          className="pointer-events-none absolute -left-[56px] top-[256px] size-[147px] rounded-full bg-sko-bg-primary opacity-[0.12] md:left-auto md:right-[205px] md:top-[29px] md:size-[220px] lg:right-[280px] lg:top-[60px]"
         />
 
         <nav aria-label="Breadcrumb" className="relative">
-          <ol className="flex flex-wrap items-center gap-x-2">
-            <li className="flex items-center gap-2">
+          <ol className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
+            <li className="flex items-center gap-1.5 md:gap-2">
               <Link
                 href="/platform/my-learning"
                 className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}
@@ -68,7 +74,7 @@ export function ProgramHeader({ program }: { program: Program }) {
               </Link>
               <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
             </li>
-            <li className="flex items-center gap-2">
+            <li className="flex items-center gap-1.5 md:gap-2">
               {/* No Programs page in the prototype: say so instead of a dead link. */}
               <button
                 type="button"
@@ -77,9 +83,10 @@ export function ProgramHeader({ program }: { program: Program }) {
               >
                 Programs
               </button>
-              <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
+              <Icon icon={ChevronRight} size={16} aria-hidden className="hidden text-sko-icon-muted lg:block" />
             </li>
-            <li className="flex min-w-0 items-center">
+            {/* Below desktop the DS breadcrumb stops at the parent: the title is the <h1> right under it. */}
+            <li className="hidden min-w-0 items-center lg:flex">
               <span aria-current="page" className={`${CRUMB} text-sko-text-primary`}>
                 {program.title}
               </span>
@@ -87,9 +94,10 @@ export function ProgramHeader({ program }: { program: Program }) {
           </ol>
         </nav>
 
-        <div className="relative mt-[18.75px] flex flex-col gap-6 pt-6 lg:flex-row lg:items-start lg:gap-10">
-          <div className="flex min-w-0 flex-1 flex-col lg:min-h-[228.75px]">
-            <div className="flex items-center gap-2 py-3">
+        <div className="relative mt-4 flex flex-col gap-4 md:flex-row md:items-start md:gap-6 lg:mt-[18.75px] lg:gap-10 lg:pt-6">
+          <div className="flex min-w-0 flex-1 flex-col gap-4 lg:min-h-[228.75px] lg:gap-0">
+            {/* Below desktop the row is 36 tall: it is where the partner logos sit on a course. */}
+            <div className="flex h-9 items-center gap-2 lg:h-auto lg:py-3">
               <CourseTypeBadge value="Program" />
             </div>
 
@@ -98,14 +106,14 @@ export function ProgramHeader({ program }: { program: Program }) {
               <img
                 src={program.imageSrc}
                 alt=""
-                className="size-16 shrink-0 rounded-lg bg-sko-bg-muted object-cover md:size-[88px]"
+                className="hidden size-[88px] shrink-0 rounded-lg bg-sko-bg-muted object-cover md:block"
               />
               <h1 className="sk-text-headline-large-semibold min-w-0 flex-1 text-sko-text-default">
                 {program.title}
               </h1>
             </div>
 
-            <ul aria-label="Format and level" className="flex flex-wrap items-start gap-2 py-3">
+            <ul aria-label="Format and level" className="flex flex-wrap items-start gap-2 lg:py-3">
               <li className="flex">
                 <DeliveryModeBadge value={program.deliveryMode} />
               </li>
@@ -120,7 +128,8 @@ export function ProgramHeader({ program }: { program: Program }) {
                   {i > 0 ? (
                     <span aria-hidden className="h-[19px] border-l border-sko-border-default" />
                   ) : null}
-                  <span className="sk-text-body-medium-regular flex items-center gap-1.5 text-sko-text-default">
+                  {/* The DS row is 19 tall (the height of its separators); the 20px line is centred on it. */}
+                  <span className="sk-text-body-medium-regular flex h-[19px] items-center gap-1.5 text-sko-text-default">
                     {i === 0 ? (
                       <Icon icon={BookOpen} size={18} aria-hidden className="text-sko-icon-default" />
                     ) : null}
@@ -134,7 +143,8 @@ export function ProgramHeader({ program }: { program: Program }) {
           <section
             data-mock="Program progress is not sent by the Course Home APIs"
             aria-label={program.progress.label}
-            className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-4 lg:w-[360px]"
+            // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
+            className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
           >
             <div className="flex items-end justify-between gap-3">
               <p className="sk-text-headline-medium-bold text-sko-text-default">{program.progress.percent}%</p>
