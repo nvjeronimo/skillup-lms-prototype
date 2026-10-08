@@ -6,6 +6,7 @@ import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { getPartnerLab } from "@/lib/content";
 import { getTopic } from "@/lib/data";
+import { getCourseDetailBySlug } from "@/lib/platform/course-detail";
 import { LAB_SCORES_KEY } from "@/lib/store";
 
 /**
@@ -23,6 +24,36 @@ function StandIn({ partner }: { partner: string }) {
   const topic = getTopic(topicId);
   const lab = topic ? getPartnerLab(topic) : null;
   const [ended, setEnded] = React.useState(false);
+
+  // A whole course hosted by the partner (IBM): nothing of it is ours and nothing comes back.
+  const course = getCourseDetailBySlug(params.get("course") ?? "");
+  if (course?.hosted && course.hosted.partner.toLowerCase() === partner) {
+    return (
+      <main
+        id="main"
+        tabIndex={-1}
+        className="flex min-h-[100dvh] flex-col items-center justify-center gap-4 bg-sko-bg-subtle p-6 text-center outline-none"
+      >
+        <span className="sk-text-label-small-medium uppercase text-sko-text-subtle">
+          Prototype stand-in · not a SkillUp screen
+        </span>
+        <h1 className="sk-text-title-large-bold text-sko-text-default">
+          {course.hosted.partner} · {course.title}
+        </h1>
+        <p className="sk-text-body-medium-regular max-w-[520px] text-sko-text-muted">
+          In the product this is {course.hosted.partner}&rsquo;s own site, where the learner signs in with an{" "}
+          {course.hosted.partner} account and takes the course. The course itself is not part of the prototype.
+        </p>
+        <div className="w-full max-w-[520px] text-left">
+          <InlineAlert
+            tone="info"
+            title="We do not know yet what comes back to SkillUp"
+            description="Whether IBM reports progress or completion is an open question, so the SkillUp page shows a dash for progress."
+          />
+        </div>
+      </main>
+    );
+  }
 
   if (!topic || !lab || lab.partner !== partner) {
     return (

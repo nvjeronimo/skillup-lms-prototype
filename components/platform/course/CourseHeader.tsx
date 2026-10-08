@@ -5,6 +5,7 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import type { CourseDetail } from "@/lib/platform/course-detail";
+import { HostedProgressCard } from "./HostedProgressCard";
 import { cn } from "@/lib/utils";
 
 /* Breadcrumb item, as on the Program header: body-medium/Semibold, 44px tall below desktop,
@@ -125,31 +126,35 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
             </div>
           </div>
 
-          <section
-            aria-label={course.progress.label}
-            className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
-          >
-            <div className="flex items-end justify-between gap-3">
-              <p className="sk-text-headline-medium-bold text-sko-text-default">{course.progress.percent}%</p>
-              <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.label}</p>
-            </div>
-            <PlatformProgressBar value={course.progress.percent} label={course.progress.label} />
-            <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.eyebrow}</p>
-            <ButtonLink href={course.progress.href} size="lg" className="w-full">
-              {course.progress.cta}
-            </ButtonLink>
-            <p className="sk-text-body-small-medium flex items-center gap-1.5 text-sko-text-warning">
-              <span aria-hidden className="size-[7px] shrink-0 rounded-full bg-sko-bg-warning" />
-              {course.progress.notPassing}
-            </p>
-            <p className="sk-text-body-small-regular flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sko-text-subtle">
-              <span>{course.progress.done}</span>
-              <span aria-hidden>·</span>
-              <span data-mock="Time left has no source: effort_time is null on every block">
-                {course.progress.timeLeft}
-              </span>
-            </p>
-          </section>
+          {course.hosted ? (
+            <HostedProgressCard course={course} hosted={course.hosted} />
+          ) : (
+            <section
+              aria-label={course.progress.label}
+              className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
+            >
+              <div className="flex items-end justify-between gap-3">
+                <p className="sk-text-headline-medium-bold text-sko-text-default">{course.progress.percent}%</p>
+                <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.label}</p>
+              </div>
+              <PlatformProgressBar value={course.progress.percent} label={course.progress.label} />
+              <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.eyebrow}</p>
+              <ButtonLink href={course.progress.href} size="lg" className="w-full">
+                {course.progress.cta}
+              </ButtonLink>
+              <p className="sk-text-body-small-medium flex items-center gap-1.5 text-sko-text-warning">
+                <span aria-hidden className="size-[7px] shrink-0 rounded-full bg-sko-bg-warning" />
+                {course.progress.notPassing}
+              </p>
+              <p className="sk-text-body-small-regular flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sko-text-subtle">
+                <span>{course.progress.done}</span>
+                <span aria-hidden>·</span>
+                <span data-mock="Time left has no source: effort_time is null on every block">
+                  {course.progress.timeLeft}
+                </span>
+              </p>
+            </section>
+          )}
         </div>
       </div>
     </header>

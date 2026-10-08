@@ -183,6 +183,18 @@ export interface QaThread {
 
 /* ── The course ─────────────────────────────────────────────────────────────────────── */
 
+export interface HostedCourse {
+  partner: string;
+  /** Where the course lives. In the prototype, a stand-in page that says so. */
+  href: string;
+  /** Progress card before the learner has left for the partner: eyebrow and button. */
+  start: { eyebrow: string; cta: string };
+  /** Progress card once the course was started there. The percentage reads as a dash. */
+  started: { eyebrow: string; cta: string };
+  /** The dialog shown before leaving SkillUp for the first time (DS Modal, Horizontal). */
+  dialog: { title: string; body: string; dontShowAgain: string; cancel: string; confirm: string };
+}
+
 export interface CourseDetail {
   slug: string;
   title: string;
@@ -203,6 +215,13 @@ export interface CourseDetail {
     timeLeft: string;
   };
   search: { placeholder: string };
+  /**
+   * Set when the whole course runs on a partner's platform (IBM): *Start course* sends the
+   * learner there and nothing of the course is in our Studio (lab-third-party-platforms.md).
+   * The page is then the header alone: what sits under it is not designed, because we do not
+   * know yet what IBM shows or reports back.
+   */
+  hosted?: HostedCourse;
 
   update: { title: string; body: string };
   intro: { title: string; lead: string };
@@ -714,7 +733,34 @@ const SIX_SIGMA: CourseDetail = {
   },
 };
 
-const COURSES: CourseDetail[] = [SIX_SIGMA];
+/**
+ * A course that runs on IBM (Figma I1 6792:139729 and I2 6792:139888, with tablet and mobile).
+ * The screens are the Course Detail header alone, with the Progress card changed; everything
+ * under the header is the Six Sigma sample and is not rendered for a hosted course.
+ */
+const CLOUD_COMPUTING: CourseDetail = {
+  ...SIX_SIGMA,
+  slug: "introduction-to-cloud-computing",
+  title: "Introduction to Cloud Computing",
+  partners: [{ name: "IBM", logoSrc: "/platform/partner-ibm.jpg" }],
+  stats: { structure: "4 modules · 42 topics", duration: "~ 14 hours", org: "IBM · CC0101EN" },
+  progress: { ...SIX_SIGMA.progress, percent: 0 },
+  hosted: {
+    partner: "IBM",
+    href: "/partner/ibm?course=introduction-to-cloud-computing",
+    start: { eyebrow: "Hosted by IBM · opens in a new tab", cta: "Start course" },
+    started: { eyebrow: "Progress is tracked on IBM", cta: "Continue on IBM" },
+    dialog: {
+      title: "This course continues on IBM",
+      body: "IBM hosts the lessons and labs for this course. It opens in a new tab and you sign in with your IBM account. Your enrolment on SkillUp stays active.",
+      dontShowAgain: "Don’t show again",
+      cancel: "Cancel",
+      confirm: "Continue to IBM",
+    },
+  },
+};
+
+const COURSES: CourseDetail[] = [SIX_SIGMA, CLOUD_COMPUTING];
 
 export function getCourseDetailBySlug(slug: string): CourseDetail | undefined {
   return COURSES.find((c) => c.slug === slug);
