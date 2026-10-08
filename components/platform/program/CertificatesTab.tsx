@@ -17,13 +17,21 @@ import { CardShell, SectionIntro } from "./parts";
  * detail (body-small/Regular, text/subtle) and a progress bar, 16 apart.
  * This is not organisms/CourseCertificate, which is the full certificate page.
  * The actions are 44px tall on mobile (36px from tablet up, as drawn).
+ * Also the Certificate card of the Course Detail sidebar and Progress tab (Status=Not earned).
  */
-function CertificateCard({ certificate }: { certificate: ProgramCertificate }) {
+export function CertificateCard({
+  certificate,
+  labelAs = "p",
+}: {
+  certificate: ProgramCertificate;
+  /** The eyebrow is a plain line under a course title (Program) and a heading when the card stands alone (Course Detail). */
+  labelAs?: "h2" | "h3" | "p";
+}) {
   const showToast = useLmsStore((s) => s.showToast);
 
   if (certificate.status === "not-earned") {
     return (
-      <CardShell label="Certificate" labelAs="p" gap="lg">
+      <CardShell label="Certificate" labelAs={labelAs} gap="lg">
         <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
         <ul className="flex flex-col gap-4">
           {certificate.requirements.map((req) => (
@@ -39,7 +47,7 @@ function CertificateCard({ certificate }: { certificate: ProgramCertificate }) {
   }
 
   return (
-    <CardShell label="Certificate" labelAs="p" gap="lg">
+    <CardShell label="Certificate" labelAs={labelAs} gap="lg">
       <div className="relative aspect-[1123/794] w-full overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
         <div className="absolute inset-0">
           <CertificateDocument

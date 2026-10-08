@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button, type ButtonHierarchy } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
@@ -40,6 +41,17 @@ function Progress({ course, className }: { course: MyLearningCourse; className?:
       </div>
       <PlatformProgressBar track="muted" value={pct} label={`${course.title} progress`} />
     </div>
+  );
+}
+
+/* The title opens the course's Course Detail page when it has one; it looks as drawn until hovered. */
+function CourseTitle({ course }: { course: MyLearningCourse }) {
+  return course.detailHref ? (
+    <Link href={course.detailHref} className="hover:underline">
+      {course.title}
+    </Link>
+  ) : (
+    <>{course.title}</>
   );
 }
 
@@ -117,7 +129,9 @@ export function MyLearningCourseCard({
         />
         <div className={cn("flex flex-col items-start gap-0.5", inRow ? "min-w-0 flex-1 basis-0" : "min-w-[200px] flex-1")}>
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-title-large-semibold text-sko-text-default">{course.title}</h3>
+          <h3 className="sk-text-title-large-semibold text-sko-text-default">
+            <CourseTitle course={course} />
+          </h3>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <ProviderBadge value={course.provider} />
             <div className="flex items-start gap-2">
@@ -158,7 +172,9 @@ export function MyLearningCourseCard({
         <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-[86px]" />
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-title-large-semibold text-sko-text-default">{course.title}</h3>
+          <h3 className="sk-text-title-large-semibold text-sko-text-default">
+            <CourseTitle course={course} />
+          </h3>
           <ProviderBadge value={course.provider} />
         </div>
       </div>

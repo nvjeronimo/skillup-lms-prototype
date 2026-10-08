@@ -18,6 +18,8 @@ export const MY_LEARNING_DEFAULT_VIEW: MyLearningView = "grid";
 
 /** The existing course player: every course card opens it. */
 const COURSE_PLAYER_HREF = "/course/six-sigma/topic/m3-t1";
+/** The one course with a Course Detail page in the prototype. */
+const COURSE_DETAIL_HREF = "/platform/course/six-sigma";
 
 /* ── Header ─────────────────────────────────────────────────────────────────────────── */
 
@@ -75,6 +77,8 @@ export interface MyLearningCourse {
   cta: "Resume" | "Start" | "Review";
   /** Where the action goes. Without it the course has no page in the prototype and the card calls `onAction`. */
   href?: string;
+  /** Where the title goes: the course's Course Detail page. */
+  detailHref?: string;
 }
 
 const COVERS = "/platform/covers";
@@ -93,6 +97,7 @@ export const myLearningCourses: MyLearningCourse[] = [
     upNext: { title: "Discovery interview techniques", type: "Video" },
     cta: "Resume",
     href: COURSE_PLAYER_HREF,
+    detailHref: COURSE_DETAIL_HREF,
   },
   {
     id: "project-management-with-ai-tools",
@@ -107,6 +112,7 @@ export const myLearningCourses: MyLearningCourse[] = [
     upNext: { title: "AI-assisted sprint planning", type: "Video" },
     cta: "Resume",
     href: COURSE_PLAYER_HREF,
+    detailHref: COURSE_DETAIL_HREF,
   },
   {
     id: "leadership-in-remote-teams",
@@ -121,6 +127,7 @@ export const myLearningCourses: MyLearningCourse[] = [
     upNext: { title: "Async standups", type: "Video" },
     cta: "Resume",
     href: COURSE_PLAYER_HREF,
+    detailHref: COURSE_DETAIL_HREF,
   },
   {
     // The completed course: full bar, the certificate line, Review.
@@ -136,6 +143,7 @@ export const myLearningCourses: MyLearningCourse[] = [
     upNext: { certificate: "Issued 12 Sep 2026" },
     cta: "Review",
     href: COURSE_PLAYER_HREF,
+    detailHref: COURSE_DETAIL_HREF,
   },
   {
     id: "business-analytics-with-python",
@@ -150,6 +158,7 @@ export const myLearningCourses: MyLearningCourse[] = [
     upNext: { title: "Python environment setup", type: "Reading" },
     cta: "Start",
     href: COURSE_PLAYER_HREF,
+    detailHref: COURSE_DETAIL_HREF,
   },
 ];
 
