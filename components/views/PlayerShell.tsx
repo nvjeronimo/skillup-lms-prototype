@@ -463,8 +463,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             title={topic.title}
             milestone={milestone}
             previousDisabled={!previous}
-            // On the last topic, Next would open the course-complete dialog: not before the topic is done.
-            nextDisabled={!next && !isCompleted}
+            // On the last topic, Next opens the course-complete dialog: not before the topic is done.
+            // A topic the learner cannot complete (locked, or a type not available yet) does not hold
+            // the course back, or the dialog could never be reached.
+            nextDisabled={!next && !isCompleted && !isLocked && !isBlocked}
             compact={bp === "mobile"}
             onPrevious={() => previous && navigateTopic(previous.id)}
             onNext={() => (next ? navigateTopic(next.id) : setCompleteOpen(true))}
