@@ -14,6 +14,8 @@ export interface ScormContainerProps {
   packageLabel?: string;
   packageSizeLabel?: string;
   state?: ScormState;
+  /** The topic is already complete: launching again is a Secondary action, a review. */
+  completed?: boolean;
   onLaunch?: () => void;
   onRetry?: () => void;
   onSkip?: () => void;
@@ -32,6 +34,7 @@ export function ScormContainer({
   packageLabel,
   packageSizeLabel,
   state = "idle",
+  completed = false,
   onLaunch,
   onRetry,
   onSkip,
@@ -111,8 +114,9 @@ export function ScormContainer({
               </span>
             ) : null}
             <div className="flex justify-center gap-2 pt-2">
-              <Button variant="primary" size="md" onClick={onLaunch}>
-                Start activity
+              {/* Once the topic is complete the footer carries the one Primary (Next). */}
+              <Button variant={completed ? "secondary" : "primary"} size="md" onClick={onLaunch}>
+                {completed ? "Open activity again" : "Start activity"}
               </Button>
             </div>
           </>

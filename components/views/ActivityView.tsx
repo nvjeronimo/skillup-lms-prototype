@@ -151,6 +151,7 @@ function ScormActivity({
         packageLabel={packageLabel}
         packageSizeLabel={packageSizeLabel}
         state={state}
+        completed={isCompleted}
         onLaunch={launch}
         onRetry={launch}
         onSkip={() => showToast("Skipped. This activity is ungraded.")}

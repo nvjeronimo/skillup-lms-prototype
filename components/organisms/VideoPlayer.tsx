@@ -423,8 +423,9 @@ export function VideoPlayer({
               aria-label="Seek"
               aria-valuetext={`${secondsToTs(currentTime)} of ${secondsToTs(durationSeconds)}`}
               // 8px track inside a 24px hit area (WCAG 2.5.8): the padding is part of the
-              // target, the gradient is clipped to the content box.
-              className="box-content h-2 w-full min-w-0 cursor-pointer appearance-none rounded-full bg-clip-content py-2"
+              // target, the gradient is clipped to the content box. With larger touch targets
+              // on (the mobile default) the padding grows to a 44px hit area; the track stays 8.
+              className="box-content h-2 w-full min-w-0 cursor-pointer appearance-none rounded-full bg-clip-content py-2 [[data-large-targets]_&]:py-[18px]"
               style={{
                 backgroundImage: `linear-gradient(to right, var(--color-bg-info) ${pct}%, var(--color-bg-on-media-soft) ${pct}%)`,
               }}
