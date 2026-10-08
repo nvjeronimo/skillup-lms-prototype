@@ -4,7 +4,6 @@ import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
-import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { SectionIntro } from "@/components/platform/program/parts";
 import {
   COURSE_TABS,
@@ -16,25 +15,12 @@ import {
 import { cn } from "@/lib/utils";
 import { CourseAlert } from "./CourseAlert";
 import { CourseHeader } from "./CourseHeader";
+import { CourseSearch } from "./CourseSearch";
 import { CourseSidebar } from "./CourseSidebar";
 import { DatesTab } from "./DatesTab";
 import { ModuleList } from "./ModuleList";
 import { ProgressTab } from "./ProgressTab";
 import { QaTab } from "./QaTab";
-
-/**
- * The "Course search" field of the tab row (Content search, feature 33): DS Input field sm
- * with the search icon. The field is drawn as the screens show it; the search itself is
- * still being designed, so what is typed goes nowhere.
- */
-function CourseSearch({ label, className }: { label: string; className?: string }) {
-  const [value, setValue] = React.useState("");
-  return (
-    <form role="search" className={className} onSubmit={(event) => event.preventDefault()}>
-      <SearchField value={value} onChange={setValue} label={label} />
-    </form>
-  );
-}
 
 /**
  * Course Detail, self-paced (Figma handoff 6146:10226; Course 6406:39255, Progress
@@ -51,7 +37,7 @@ function CourseSearch({ label, className }: { label: string; className?: string 
  * ones `hidden`) so open modules and a typed reply survive a tab change.
  *
  * Mobile: the tabs are DS Size=sm on their own row and the search moves to the top of the
- * Course tab (the other tabs are drawn without it). An open question shows the conversation
+ * tab content, on every tab; it opens as a full screen (components/platform/course/CourseSearch). An open question shows the conversation
  * alone: the course header and the tab row are not shown for that view.
  */
 export function CourseDetailView({ course }: { course: CourseDetail }) {
@@ -84,7 +70,6 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
     course: (
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-8 lg:gap-10">
         <div className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
-          <CourseSearch label={course.search.placeholder} className="md:hidden" />
           <CourseAlert tone="brand" layout="stacked" title={course.update.title} body={course.update.body} dismissible />
           <SectionIntro title={course.intro.title} lead={course.intro.lead} />
           <ModuleList modules={course.modules} topicHref={course.progress.href} />
@@ -130,11 +115,21 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             ariaLabel="Course sections"
             className="-mb-px min-w-0 flex-1"
           />
-          <CourseSearch label={course.search.placeholder} className="hidden w-[320px] shrink-0 pb-[7px] pt-2 md:block" />
+          <CourseSearch label={course.search.placeholder} topicHref={course.progress.href} variant="popup" className="hidden w-[320px] shrink-0 pb-[7px] pt-2 md:block" />
         </div>
       </div>
 
       <div className="mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8">
+        {/* Mobile: the search sits above every tab, not only Course (asked by Nelson on 8 Oct;
+            the Figma screens draw it on the Course tab only). Not on an open Q&A conversation. */}
+        {openThread ? null : (
+          <CourseSearch
+            label={course.search.placeholder}
+            topicHref={course.progress.href}
+            variant="sheet"
+            className="mb-4 md:hidden"
+          />
+        )}
         {COURSE_TABS.map((tab) => (
           <div
             key={tab.id}

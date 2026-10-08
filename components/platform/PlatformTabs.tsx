@@ -20,8 +20,9 @@ export interface PlatformTabsProps<T extends string> {
    * `md`: DS Size=md on every breakpoint (48 tall, body-large/Semibold, badge md).
    * `responsive`: Size=sm on mobile (32 tall, body-medium/Semibold, badge sm, the target
    * grown to 44 upwards) and Size=md from tablet up.
+   * `sm`: Size=sm on every breakpoint, for a tab row inside a panel.
    */
-  size?: "md" | "responsive";
+  size?: "md" | "responsive" | "sm";
   /**
    * `own`: the row draws its 1px border/subtle rule itself and scrolls sideways when the
    * tabs do not fit. `parent`: the parent draws the rule as its bottom border and the
@@ -68,6 +69,7 @@ export function PlatformTabs<T extends string>({
 }: PlatformTabsProps<T>) {
   const refs = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const responsive = size === "responsive";
+  const small = size === "sm";
   const ownRule = rule === "own";
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -110,7 +112,9 @@ export function PlatformTabs<T extends string>({
             className={cn(
               "relative flex shrink-0 items-center justify-center gap-2 px-1 transition-colors",
               // Size=sm is 32 tall with 12 under the label; an invisible band grows the target to 44 upwards.
-              responsive
+              small
+                ? "sk-text-body-medium-semibold h-8 pb-3 before:absolute before:inset-x-0 before:-top-3 before:bottom-0 before:content-[''] [[data-large-targets]_&]:before:-top-3"
+                : responsive
                 ? "h-8 pb-3 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-top-3 max-md:before:bottom-0 max-md:before:content-[''] md:h-auto md:py-3"
                 : "sk-text-body-large-semibold py-3",
               // The scrolling row clips an outline drawn outside the tab.
@@ -133,7 +137,7 @@ export function PlatformTabs<T extends string>({
               </Badge>
             ) : null}
             {tab.count !== undefined ? (
-              <Badge color={badgeColor} size="md" className={responsive ? "hidden md:inline-flex" : undefined}>
+              <Badge color={badgeColor} size={small ? "sm" : "md"} className={responsive ? "hidden md:inline-flex" : undefined}>
                 {tab.count}
               </Badge>
             ) : null}

@@ -11,6 +11,10 @@ export interface SearchFieldProps {
   /** Shown as the placeholder and used as the accessible name. */
   label: string;
   className?: string;
+  /** Ref of the <input>, for a parent that moves focus to it. */
+  inputRef?: React.Ref<HTMLInputElement>;
+  /** Extra attributes of the <input>: onFocus, onKeyDown, enterKeyHint, aria-* … */
+  inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange" | "type" | "className">;
 }
 
 /**
@@ -19,7 +23,7 @@ export interface SearchFieldProps {
  * body-large/Regular with text/placeholder for the placeholder. 40 tall as drawn; 44 on
  * mobile (minimum target). Focus: 2px border/primary, no ring (the DS Input focus).
  */
-export function SearchField({ value, onChange, label, className }: SearchFieldProps) {
+export function SearchField({ value, onChange, label, className, inputRef, inputProps }: SearchFieldProps) {
   return (
     <label
       className={cn(
@@ -36,6 +40,8 @@ export function SearchField({ value, onChange, label, className }: SearchFieldPr
         onChange={(event) => onChange(event.target.value)}
         placeholder={label}
         autoComplete="off"
+        {...inputProps}
+        ref={inputRef}
         className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default placeholder:text-sko-text-placeholder focus:outline-none"
       />
     </label>
