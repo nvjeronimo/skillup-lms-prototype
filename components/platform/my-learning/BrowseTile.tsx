@@ -27,8 +27,8 @@ export function BrowseTile({ title, subtitle, onClick, className }: BrowseTilePr
       )}
     >
       <Icon icon={Plus} size={32} strokeWidth={1.5} className="text-sko-icon-subtle" aria-hidden="true" />
-      <span className="sk-text-sm-semibold text-sko-text-default">{title}</span>
-      <span className="sk-text-xs-regular text-sko-text-subtle">{subtitle}</span>
+      <span className="sk-text-body-medium-semibold text-sko-text-default">{title}</span>
+      <span className="sk-text-body-small-regular text-sko-text-subtle">{subtitle}</span>
     </button>
   );
 }

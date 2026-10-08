@@ -40,14 +40,14 @@ export function TranscriptControls({
   return (
     <div className={cn("flex items-center gap-3", className)}>
       {showLanguage ? (
-        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-muted">
+        <label className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-muted">
           <span className="hidden sm:inline">Language:</span>
           <span className="relative">
             <select
               aria-label="Caption language"
               value={currentLanguage}
               onChange={(e) => onLanguageChange?.(e.target.value)}
-              className="sk-text-sm-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
+              className="sk-text-body-medium-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
             >
               {LANGS.map((l) => (
                 <option key={l.code} value={l.code}>
@@ -69,7 +69,7 @@ export function TranscriptControls({
           type="button"
           onClick={onDownload}
           aria-label="Download transcript"
-          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
           <Icon icon={Download} size={16} className="text-sko-icon-primary" />
           <span className="hidden px-0.5 md:inline">Download transcript</span>
@@ -80,7 +80,7 @@ export function TranscriptControls({
         <button
           type="button"
           onClick={onAddNote}
-          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
           <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Add Note</span>

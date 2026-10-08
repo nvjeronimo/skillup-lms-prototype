@@ -35,12 +35,12 @@ export function ProgramSidebar({ program, className }: { program: Program; class
                 aria-hidden
                 className="flex h-12 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-sko-bg-subtle"
               >
-                <span className="sk-text-md-semibold text-sko-text-default">{date.day}</span>
-                <span className="sk-text-xs-semibold text-sko-text-subtle">{date.month}</span>
+                <span className="sk-text-body-large-semibold text-sko-text-default">{date.day}</span>
+                <span className="sk-text-body-small-semibold text-sko-text-subtle">{date.month}</span>
               </span>
               <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
-                <p className="sk-text-sm-semibold text-sko-text-default">{date.title}</p>
-                <p className="sk-text-xs-regular text-sko-text-subtle">
+                <p className="sk-text-body-medium-semibold text-sko-text-default">{date.title}</p>
+                <p className="sk-text-body-small-regular text-sko-text-subtle">
                   <time dateTime={date.iso}>{date.detail}</time>
                 </p>
                 <Badge variant="outline" color="gray">
@@ -53,7 +53,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
       </CardShell>
 
       <CardShell label="What's included" mock="Content counts per program have no API">
-        <ul className="sk-text-sm-regular list-disc ps-[21px] text-sko-text-default">
+        <ul className="sk-text-body-medium-regular list-disc ps-[21px] text-sko-text-default">
           {program.included.map((item) => (
             <li key={item}>{item}</li>
           ))}
@@ -66,8 +66,8 @@ export function ProgramSidebar({ program, className }: { program: Program; class
             <li key={person.name} className="flex items-center gap-2">
               <Avatar name={person.name} size="md" />
               <div className="flex min-w-0 flex-1 flex-col">
-                <p className="sk-text-sm-semibold text-sko-text-default">{person.name}</p>
-                <p className="sk-text-sm-regular text-sko-text-subtle">{person.role}</p>
+                <p className="sk-text-body-medium-semibold text-sko-text-default">{person.name}</p>
+                <p className="sk-text-body-medium-regular text-sko-text-subtle">{person.role}</p>
               </div>
             </li>
           ))}

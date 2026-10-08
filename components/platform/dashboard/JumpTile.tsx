@@ -26,8 +26,8 @@ export function JumpTile({ icon, title, description, href, onClick }: JumpTilePr
       <span className="flex rounded-lg bg-sko-bg-primary-soft p-2">
         <Icon icon={icon} size={20} className="text-sko-icon-primary" aria-hidden="true" />
       </span>
-      <span className="sk-text-sm-semibold w-full text-sko-text-default">{title}</span>
-      <span className="sk-text-xs-regular w-full text-sko-text-subtle">{description}</span>
+      <span className="sk-text-body-medium-semibold w-full text-sko-text-default">{title}</span>
+      <span className="sk-text-body-small-regular w-full text-sko-text-subtle">{description}</span>
     </>
   );
   return href ? (

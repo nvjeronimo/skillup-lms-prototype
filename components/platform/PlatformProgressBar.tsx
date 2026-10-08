@@ -62,7 +62,7 @@ export function PlatformProgressBar({
     <div className={cn("flex items-center gap-3", className)}>
       {bar}
       {/* The progressbar already carries the value. */}
-      <span aria-hidden="true" className="sk-text-sm-medium shrink-0 text-sko-text-muted">
+      <span aria-hidden="true" className="sk-text-body-medium-medium shrink-0 text-sko-text-muted">
         {pct}%
       </span>
     </div>

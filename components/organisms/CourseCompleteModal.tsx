@@ -58,10 +58,10 @@ export function CourseCompleteModal({
           <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-success text-sko-icon-on-media">
             <Icon icon={Check} size={32} />
           </span>
-          <h2 id={titleId} className="sk-text-display-xs-semibold text-sko-text-default">
+          <h2 id={titleId} className="sk-text-headline-small-semibold text-sko-text-default">
             Course complete!
           </h2>
-          <p className="sk-text-sm-regular text-sko-text-muted">
+          <p className="sk-text-body-medium-regular text-sko-text-muted">
             You&rsquo;ve completed <span className="text-sko-text-default">{courseTitle}</span>. Grab
             your certificate, jump to the next one, or head back.
           </p>

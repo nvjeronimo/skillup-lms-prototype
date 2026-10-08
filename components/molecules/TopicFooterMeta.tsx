@@ -30,11 +30,11 @@ export function TopicFooterMeta({ byline, onReport }: TopicFooterMetaProps) {
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <Avatar name={byline.author} size="md" />
             <div className="flex min-w-0 flex-col gap-0.5">
-              <p className="sk-text-md-semibold text-sko-text-default">{byline.author}</p>
-              <p className="sk-text-sm-regular text-sko-text-muted">{byline.role}</p>
+              <p className="sk-text-body-large-semibold text-sko-text-default">{byline.author}</p>
+              <p className="sk-text-body-medium-regular text-sko-text-muted">{byline.role}</p>
             </div>
           </div>
-          <span className="sk-text-xs-regular shrink-0 text-sko-text-muted">
+          <span className="sk-text-body-small-regular shrink-0 text-sko-text-muted">
             Updated {byline.updated}
           </span>
         </div>

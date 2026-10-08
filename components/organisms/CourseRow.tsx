@@ -53,7 +53,7 @@ export function CourseRow({
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span
           className={cn(
-            "sk-text-md-medium truncate",
+            "sk-text-body-large-medium truncate",
             state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
           )}
         >
@@ -86,7 +86,7 @@ export function CourseRow({
 
       {state === "Locked" ? (
         <div className="flex items-center gap-4">
-          <span className="sk-text-xs-medium inline-flex items-center gap-1.5 text-sko-text-warning">
+          <span className="sk-text-body-small-medium inline-flex items-center gap-1.5 text-sko-text-warning">
             <Icon icon={Lock} size={14} className="text-sko-icon-warning" />
             {unlockLabel}
           </span>

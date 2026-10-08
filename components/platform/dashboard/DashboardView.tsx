@@ -37,7 +37,7 @@ export function DashboardView() {
       {/* The frames are drawn at 1280; wider windows keep the 1200 content width. */}
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
-        <h1 className="sk-text-display-md-bold text-sko-text-default">
+        <h1 className="sk-text-headline-large-bold text-sko-text-default">
           {dashboardGreeting.salutation}{" "}
           <br />
           <span className="text-sko-text-subtle">{platformUser.firstName}.</span>

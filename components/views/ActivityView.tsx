@@ -73,7 +73,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
         onJump={(i) => toggle(i)}
       />
 
-      <p className="sk-text-md-regular text-sko-text-muted">{activity.intro}</p>
+      <p className="sk-text-body-large-regular text-sko-text-muted">{activity.intro}</p>
 
       <ol className="flex flex-col gap-2">
         {activity.steps.map((s, i) => {
@@ -103,8 +103,8 @@ export function ActivityView({ topicId }: { topicId: string }) {
                   {isDone ? <Icon icon={Check} size={12} /> : null}
                 </span>
                 <span>
-                  <span className="sk-text-sm-semibold block text-sko-text-default">{s.title}</span>
-                  <span className="sk-text-sm-regular mt-0.5 block text-sko-text-muted">
+                  <span className="sk-text-body-medium-semibold block text-sko-text-default">{s.title}</span>
+                  <span className="sk-text-body-medium-regular mt-0.5 block text-sko-text-muted">
                     {s.detail}
                   </span>
                 </span>

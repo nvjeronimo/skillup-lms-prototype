@@ -38,15 +38,15 @@ export function LabView({ topicId }: { topicId: string }) {
         <Badge tone="neutral">~{lab.estimatedMinutes} min</Badge>
       </div>
 
-      <p className="sk-text-md-regular text-sko-text-muted">{lab.intro}</p>
+      <p className="sk-text-body-large-regular text-sko-text-muted">{lab.intro}</p>
 
       {/* Prerequisites — surfaced before the download so nobody gets stuck. */}
       {/* DS LMS / Lab · Prerequisites (20328:3331): p16, gap 8, r10. */}
       <section className="flex flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-subtle p-4">
-        <span className="sk-text-xs-medium uppercase text-sko-text-subtle">
+        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
           Before you start
         </span>
-        <ul className="sk-text-sm-regular list-disc pl-5 text-sko-text-muted">
+        <ul className="sk-text-body-medium-regular list-disc pl-5 text-sko-text-muted">
           {lab.prerequisites.map((p) => (
             <li key={p}>{p}</li>
           ))}
@@ -56,7 +56,7 @@ export function LabView({ topicId }: { topicId: string }) {
       {/* Files — the core affordance of a lab topic. */}
       <section className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="sk-text-md-semibold text-sko-text-default">Lab files</h2>
+          <h2 className="sk-text-body-large-semibold text-sko-text-default">Lab files</h2>
           <Button
             variant="secondary"
             size="sm"
@@ -87,11 +87,11 @@ export function LabView({ topicId }: { topicId: string }) {
                   <div className="flex min-w-0 items-center gap-3">
                     <FileTypeChip label={fileExtension(f.name, f.kind)} tone={got ? "success" : "subtle"} />
                     <div className="flex min-w-0 flex-col gap-0.5">
-                      {/* DS body-medium/Bold — semibold until .sk-text-sm-bold exists (CT-22). */}
-                      <span className="sk-text-sm-semibold truncate text-sko-text-default">
+                      {/* DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22). */}
+                      <span className="sk-text-body-medium-semibold truncate text-sko-text-default">
                         {f.name}
                       </span>
-                      <span className="sk-text-xs-regular text-sko-text-subtle">{f.size}</span>
+                      <span className="sk-text-body-small-regular text-sko-text-subtle">{f.size}</span>
                     </div>
                   </div>
                   <Button
@@ -114,16 +114,16 @@ export function LabView({ topicId }: { topicId: string }) {
 
       {/* Steps to run it locally. */}
       <section className="flex flex-col gap-3">
-        <h2 className="sk-text-md-semibold text-sko-text-default">How to run it</h2>
+        <h2 className="sk-text-body-large-semibold text-sko-text-default">How to run it</h2>
         <ol className="flex flex-col gap-2">
           {lab.steps.map((s, i) => (
             <li key={i} className="flex gap-3">
               {/* DS LMS / Numbered Step (20328:3297): 22px circle, body-small/Bold
-                  (semibold until .sk-text-xs-bold exists, CT-22). */}
-              <span className="sk-text-xs-semibold inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
+                  (semibold until .sk-text-body-small-bold exists, CT-22). */}
+              <span className="sk-text-body-small-semibold inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
                 {i + 1}
               </span>
-              <span className="sk-text-sm-regular text-sko-text-muted">{s}</span>
+              <span className="sk-text-body-medium-regular text-sko-text-muted">{s}</span>
             </li>
           ))}
         </ol>
@@ -148,7 +148,7 @@ export function LabView({ topicId }: { topicId: string }) {
             Mark as complete
           </Button>
           {!allDownloaded ? (
-            <p className="sk-text-xs-regular mt-2 text-sko-text-subtle">
+            <p className="sk-text-body-small-regular mt-2 text-sko-text-subtle">
               Download the lab files first.
             </p>
           ) : null}

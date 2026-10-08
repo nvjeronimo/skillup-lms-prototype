@@ -60,7 +60,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search notes…"
-          className="sk-text-md-regular flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder"
+          className="sk-text-body-large-regular flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder"
           aria-label="Search notes"
         />
       </div>
@@ -97,15 +97,15 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
           />
         ))
       ) : (
-        <p className="sk-text-sm-regular py-6 text-center text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular py-6 text-center text-sko-text-subtle">
           No notes match your filter.
         </p>
       )}
 
       <div className="mt-2 flex items-start gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2.5">
         <Icon icon={Info} size={16} className="mt-0.5 text-sko-icon-subtle" />
-        <p className="sk-text-sm-regular text-sko-text-muted">
-          Create notes from the Transcript tab: click <span className="sk-text-sm-semibold">+ Note</span> on any line.
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
+          Create notes from the Transcript tab: click <span className="sk-text-body-medium-semibold">+ Note</span> on any line.
         </p>
       </div>
     </div>

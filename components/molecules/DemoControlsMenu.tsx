@@ -41,7 +41,7 @@ const SKINS: { skin: SkinId; label: string }[] = [
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-t border-sko-border-subtle px-4 py-3">
-      <p className="sk-text-2xs-medium mb-2 text-sko-text-subtle">{title}</p>
+      <p className="sk-text-label-small-medium mb-2 text-sko-text-subtle">{title}</p>
       {children}
     </div>
   );
@@ -96,8 +96,8 @@ function ToggleRow({
         />
       </span>
       <span className="flex flex-col">
-        <span className="sk-text-sm-medium text-sko-text-muted">{label}</span>
-        {hint ? <span className="sk-text-sm-regular text-sko-text-subtle">{hint}</span> : null}
+        <span className="sk-text-body-medium-medium text-sko-text-muted">{label}</span>
+        {hint ? <span className="sk-text-body-medium-regular text-sko-text-subtle">{hint}</span> : null}
       </span>
     </button>
   );
@@ -156,7 +156,7 @@ export function DemoControlsMenu({
   const onQuiz = activeTopic ? topicFamily(activeTopic.type) === "assessment" : false;
 
   const pill =
-    "sk-text-xs-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
+    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
   const pillOn = "bg-sko-bg-primary text-sko-text-on-primary";
   const pillOff = "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
@@ -180,7 +180,7 @@ export function DemoControlsMenu({
           <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
         )}
         {!compact ? (
-          <span className="sk-text-sm-semibold pr-1 text-sko-text-default">{userName}</span>
+          <span className="sk-text-body-medium-semibold pr-1 text-sko-text-default">{userName}</span>
         ) : null}
       </button>
 
@@ -194,8 +194,8 @@ export function DemoControlsMenu({
           <div className="flex items-center gap-2.5 px-4 py-3">
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <div className="min-w-0">
-              <p className="sk-text-sm-semibold truncate text-sko-text-default">{userName}</p>
-              <p className="sk-text-xs-regular text-sko-text-subtle">Demo preview settings</p>
+              <p className="sk-text-body-medium-semibold truncate text-sko-text-default">{userName}</p>
+              <p className="sk-text-body-small-regular text-sko-text-subtle">Demo preview settings</p>
             </div>
           </div>
 
@@ -239,7 +239,7 @@ export function DemoControlsMenu({
                     aria-pressed={active}
                     title={s.title}
                     className={cn(
-                      "sk-text-sm-medium flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left transition-colors",
+                      "sk-text-body-medium-medium flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left transition-colors",
                       active
                         ? "bg-sko-bg-primary-soft text-sko-text-primary"
                         : "text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -289,7 +289,7 @@ export function DemoControlsMenu({
             <div className="flex flex-col gap-0.5">
               {/* Text size — segmented A / A+ / A++ */}
               <div className="mb-1 flex items-center gap-2 px-1">
-                <span className="sk-text-sm-medium flex-1 text-sko-text-muted">Text size</span>
+                <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">Text size</span>
                 <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
                   {(["md", "lg", "xl"] as const).map((sz, i) => (
                     <button
@@ -300,7 +300,7 @@ export function DemoControlsMenu({
                       onClick={() => setTextSize(sz)}
                       className={cn(
                         "px-2.5 py-1 transition-colors",
-                        ["sk-text-xs-semibold", "sk-text-sm-semibold", "sk-text-md-semibold"][i],
+                        ["sk-text-body-small-semibold", "sk-text-body-medium-semibold", "sk-text-body-large-semibold"][i],
                         textSize === sz
                           ? "bg-sko-bg-primary text-sko-text-on-primary"
                           : "text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -346,7 +346,7 @@ export function DemoControlsMenu({
             <Section title="Quiz mode">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 px-1">
-                  <span className="sk-text-sm-medium flex-1 text-sko-text-muted">
+                  <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">
                     Experience
                   </span>
                   <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
@@ -357,7 +357,7 @@ export function DemoControlsMenu({
                         aria-pressed={quizMode === value}
                         onClick={() => setQuizMode(value)}
                         className={cn(
-                          "sk-text-xs-semibold px-2.5 py-1 transition-colors",
+                          "sk-text-body-small-semibold px-2.5 py-1 transition-colors",
                           quizMode === value
                             ? "bg-sko-bg-primary text-sko-text-on-primary"
                             : "text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -368,7 +368,7 @@ export function DemoControlsMenu({
                     ))}
                   </div>
                 </div>
-                <p className="sk-text-xs-regular px-1 text-sko-text-subtle">
+                <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
                   A is how the platform behaves today, and where every quiz
                   starts. B is the proposal.
                 </p>
@@ -394,7 +394,7 @@ export function DemoControlsMenu({
                 resetDemo();
                 setOpen(false);
               }}
-              className="sk-text-sm-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
+              className="sk-text-body-medium-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
             >
               <Icon icon={RotateCcw} size={16} />
               Reset demo

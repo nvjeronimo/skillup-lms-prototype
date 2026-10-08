@@ -51,7 +51,7 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
           <button
             type="button"
             onClick={() => onSelect?.(item.channel)}
-            className="sk-text-sm-medium flex w-full items-center gap-2.5 px-4 py-3 text-left text-sko-text-default hover:bg-sko-bg-subtle"
+            className="sk-text-body-medium-medium flex w-full items-center gap-2.5 px-4 py-3 text-left text-sko-text-default hover:bg-sko-bg-subtle"
           >
             <Icon icon={item.icon} size={16} className="text-sko-text-subtle" aria-hidden />
             {item.label}

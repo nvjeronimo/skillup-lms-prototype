@@ -101,7 +101,7 @@ function Stepper({
     // horizontal segmented pill — three equal-width segments split by vertical
     // dividers, each tinted by its state. Completed = green, current = brand,
     // upcoming = bg/faint. 26px circles; numbers body-medium/Bold (semibold
-    // until .sk-text-sm-bold exists, CT-22).
+    // until .sk-text-body-medium-bold exists, CT-22).
     <ol className="flex overflow-hidden rounded-xl border border-sko-border-subtle">
       {steps.map((s, i) => {
         const isCurrent = s.id === step;
@@ -124,16 +124,16 @@ function Stepper({
                     : "bg-sko-bg-subtle text-sko-text-subtle",
               )}
             >
-              {s.done ? <Icon icon={Check} size={16} /> : <span className="sk-text-sm-semibold">{i + 1}</span>}
+              {s.done ? <Icon icon={Check} size={16} /> : <span className="sk-text-body-medium-semibold">{i + 1}</span>}
             </span>
             <span
               className={cn(
                 "truncate",
                 s.done
-                  ? "sk-text-sm-semibold text-sko-text-success"
+                  ? "sk-text-body-medium-semibold text-sko-text-success"
                   : isCurrent
-                    ? "sk-text-sm-semibold text-sko-text-primary"
-                    : "sk-text-sm-medium text-sko-text-subtle",
+                    ? "sk-text-body-medium-semibold text-sko-text-primary"
+                    : "sk-text-body-medium-medium text-sko-text-subtle",
               )}
             >
               {s.label}
@@ -148,14 +148,14 @@ function Stepper({
 function Rubric({ ora }: { ora: OraContent }) {
   return (
     <div className="flex flex-col gap-2">
-      <span className="sk-text-2xs-medium text-sko-text-subtle">
+      <span className="sk-text-label-small-medium text-sko-text-subtle">
         Rubric · {oraMaxPoints(ora)} points
       </span>
       <ul className="flex flex-col gap-1">
         {ora.criteria.map((c) => (
           <li key={c.id} className="flex items-baseline justify-between gap-3">
-            <span className="sk-text-sm-regular text-sko-text-muted">{c.label}</span>
-            <span className="sk-text-sm-medium shrink-0 text-sko-text-primary">
+            <span className="sk-text-body-medium-regular text-sko-text-muted">{c.label}</span>
+            <span className="sk-text-body-medium-medium shrink-0 text-sko-text-primary">
               {c.maxPoints} pts
             </span>
           </li>
@@ -179,8 +179,8 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
         <Badge tone="neutral">{ora.dueLabel}</Badge>
       </div>
 
-      <p className="sk-text-md-regular text-sko-text-muted">{ora.brief}</p>
-      <p className="sk-text-sm-regular text-sko-text-muted">{ora.deliverable}</p>
+      <p className="sk-text-body-large-regular text-sko-text-muted">{ora.brief}</p>
+      <p className="sk-text-body-medium-regular text-sko-text-muted">{ora.deliverable}</p>
 
       <Rubric ora={ora} />
 
@@ -197,9 +197,9 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
               no icon, meta gap 2, trailing Replace. */}
           <div className="flex items-center gap-3 rounded-lg bg-sko-bg-success-soft px-3 py-2">
             <div className="flex min-w-0 flex-col gap-0.5">
-              {/* DS body-medium/Bold — semibold until .sk-text-sm-bold exists (CT-22). */}
-              <span className="sk-text-sm-semibold truncate text-sko-text-default">{file}</span>
-              <span className="sk-text-xs-regular text-sko-text-subtle">2.4 MB · uploaded</span>
+              {/* DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22). */}
+              <span className="sk-text-body-medium-semibold truncate text-sko-text-default">{file}</span>
+              <span className="sk-text-body-small-regular text-sko-text-subtle">2.4 MB · uploaded</span>
             </div>
             {/* Hidden while the Submit Gate is open: files can't be replaced once confirming. */}
             {!confirming ? (
@@ -218,14 +218,14 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
             ) : null}
           </div>
           <label className="flex flex-col gap-1.5">
-            <span className="sk-text-xs-medium uppercase text-sko-text-subtle">
+            <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
               Description (required for each file)
             </span>
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Control plan with chart and response actions"
-              className="sk-text-sm-regular rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus-visible:border-sko-border-primary"
+              className="sk-text-body-medium-regular rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus-visible:border-sko-border-primary"
             />
           </label>
         </div>
@@ -236,11 +236,11 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
           className="flex flex-col items-center gap-1.5 rounded-[10px] border border-dashed border-sko-border-default bg-sko-bg-subtle px-5 py-6 transition-colors hover:border-sko-border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary"
         >
           {/* DS State=Empty (20328:3584): no icon; prompt body-medium/Bold
-              (semibold until .sk-text-sm-bold exists, CT-22). */}
-          <span className="sk-text-sm-semibold text-sko-text-primary">
+              (semibold until .sk-text-body-medium-bold exists, CT-22). */}
+          <span className="sk-text-body-medium-semibold text-sko-text-primary">
             Drag &amp; drop or browse files
           </span>
-          <span className="sk-text-xs-regular text-sko-text-subtle">
+          <span className="sk-text-body-small-regular text-sko-text-subtle">
             {ora.acceptedTypes.join(" ")} · max 500 MB total
           </span>
         </button>
@@ -249,15 +249,15 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
       {confirming ? (
         // DS LMS / ORA · Submit Gate (20344:3359): p16, gap 8, r10, warning
         // fill + stroke, IRREVERSIBLE tag. Tag and title are Bold in the DS —
-        // semibold until .sk-text-xs-bold / .sk-text-md-bold exist (CT-22).
+        // semibold until .sk-text-body-small-bold / .sk-text-body-large-bold exist (CT-22).
         <div className="flex flex-col gap-2 rounded-[10px] border border-sko-border-warning bg-sko-bg-warning-soft p-4">
-          <span className="sk-text-xs-semibold self-start rounded-md border border-sko-border-warning px-2 py-1 text-sko-text-warning">
+          <span className="sk-text-body-small-semibold self-start rounded-md border border-sko-border-warning px-2 py-1 text-sko-text-warning">
             IRREVERSIBLE
           </span>
-          <span className="sk-text-md-semibold text-sko-text-warning">
+          <span className="sk-text-body-large-semibold text-sko-text-warning">
             Submit your response?
           </span>
-          <p className="sk-text-sm-regular text-sko-text-warning">
+          <p className="sk-text-body-medium-regular text-sko-text-warning">
             After you submit, you cannot edit or replace your files. Your submission goes to a peer
             for review.
           </p>
@@ -276,7 +276,7 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
             Submit response
           </Button>
           {file && !ready ? (
-            <span className="sk-text-xs-regular text-sko-text-subtle">
+            <span className="sk-text-body-small-regular text-sko-text-subtle">
               Add a description to continue.
             </span>
           ) : null}
@@ -309,12 +309,12 @@ function PeerStep({
       <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         {/* DS LMS / ORA · Waiting Panel Kind=No peers yet (20328:3591): p24,
             gap 6, r10, no icon; title body-large/Bold (semibold until
-            .sk-text-md-bold exists, CT-22). */}
+            .sk-text-body-large-bold exists, CT-22). */}
         <div className="flex flex-col items-center gap-1.5 rounded-[10px] bg-sko-bg-subtle p-6 text-center">
-          <span className="sk-text-md-semibold text-sko-text-default">
+          <span className="sk-text-body-large-semibold text-sko-text-default">
             No submissions to review yet
           </span>
-          <p className="sk-text-sm-regular max-w-md text-sko-text-muted">
+          <p className="sk-text-body-medium-regular max-w-md text-sko-text-muted">
             Nobody in your cohort has submitted work that needs reviewing right now. Check back
             later. We&rsquo;ll email you when one is available.
           </p>
@@ -338,22 +338,22 @@ function PeerStep({
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="sk-text-2xs-medium text-sko-text-primary">
+        <span className="sk-text-label-small-medium text-sko-text-primary">
           {/* "Review 1 of 1" is noise — only show the count when there are several. */}
           {ora.requiredReviews > 1
             ? `Review ${reviewsGiven + 1} of ${ora.requiredReviews}`
             : "Review a peer's submission"}
         </span>
-        <span className="sk-text-xs-regular text-sko-text-subtle">Anonymous peer</span>
+        <span className="sk-text-body-small-regular text-sko-text-subtle">Anonymous peer</span>
       </div>
 
       <div className="flex items-center gap-3 rounded-lg bg-sko-bg-subtle px-3 py-2.5">
         <Icon icon={FileText} size={16} className="text-sko-text-primary" />
         <div className="flex min-w-0 flex-col">
-          <span className="sk-text-sm-semibold truncate text-sko-text-default">
+          <span className="sk-text-body-medium-semibold truncate text-sko-text-default">
             Control_plan_submission.pdf
           </span>
-          <span className="sk-text-xs-regular text-sko-text-subtle">
+          <span className="sk-text-body-small-regular text-sko-text-subtle">
             &ldquo;Control plan for the invoicing process&rdquo;
           </span>
         </div>
@@ -362,7 +362,7 @@ function PeerStep({
         </Button>
       </div>
 
-      <span className="sk-text-2xs-medium text-sko-text-primary">
+      <span className="sk-text-label-small-medium text-sko-text-primary">
         Score against the rubric
       </span>
 
@@ -370,14 +370,14 @@ function PeerStep({
         {ora.criteria.map((c) => (
           // DS LMS / ORA · Rubric Criterion (20328:3563): p12, gap 8, r10,
           // border/subtle, title inside the box (body-medium/Bold — semibold
-          // until .sk-text-sm-bold exists, CT-22). Options are Quiz · Option
+          // until .sk-text-body-medium-bold exists, CT-22). Options are Quiz · Option
           // Rows; Scored = State=Selected (bg/primary-soft, checked radio).
           // The floated legend is laid out inside the fieldset, not on its border.
           <fieldset
             key={c.id}
             className="flex flex-col gap-2 rounded-[10px] border border-sko-border-subtle p-3"
           >
-            <legend className="sk-text-sm-semibold float-left w-full text-sko-text-default">
+            <legend className="sk-text-body-medium-semibold float-left w-full text-sko-text-default">
               {c.label}
             </legend>
             {c.options.map((o) => {
@@ -389,7 +389,7 @@ function PeerStep({
                   aria-pressed={selected}
                   onClick={() => setScores((s) => ({ ...s, [c.id]: o.points }))}
                   className={cn(
-                    "sk-text-sm-regular flex items-center gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left text-sko-text-default transition-colors",
+                    "sk-text-body-medium-regular flex items-center gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left text-sko-text-default transition-colors",
                     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                     selected ? "bg-sko-bg-primary-soft" : "bg-sko-bg-page hover:bg-sko-bg-subtle",
                   )}
@@ -407,7 +407,7 @@ function PeerStep({
       </div>
 
       <label className="flex flex-col gap-1.5">
-        <span className="sk-text-2xs-medium text-sko-text-subtle">
+        <span className="sk-text-label-small-medium text-sko-text-subtle">
           {ora.overallCommentPrompt} (required)
         </span>
         <textarea
@@ -415,7 +415,7 @@ function PeerStep({
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Share one specific thing that worked well…"
-          className="sk-text-sm-regular rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default outline-none focus-visible:border-sko-border-primary"
+          className="sk-text-body-medium-regular rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default outline-none focus-visible:border-sko-border-primary"
         />
       </label>
 
@@ -423,7 +423,7 @@ function PeerStep({
         <Button variant="primary" disabled={!ready} onClick={onSubmitReview}>
           Submit review
         </Button>
-        <span className="sk-text-xs-regular text-sko-text-subtle">
+        <span className="sk-text-body-small-regular text-sko-text-subtle">
           {Object.keys(scores).length} of {ora.criteria.length} criteria scored
         </span>
       </div>
@@ -443,12 +443,12 @@ function WaitingStep({
     <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
       {/* DS LMS / ORA · Waiting Panel Kind=Awaiting grade (20328:3591): p24,
           gap 6, r10, no icon; title body-large/Bold (semibold until
-          .sk-text-md-bold exists, CT-22). */}
+          .sk-text-body-large-bold exists, CT-22). */}
       <div className="flex flex-col items-center gap-1.5 rounded-[10px] bg-sko-bg-primary-soft p-6 text-center">
-        <span className="sk-text-md-semibold text-sko-text-primary">
+        <span className="sk-text-body-large-semibold text-sko-text-primary">
           Waiting for peer assessment
         </span>
-        <span className="sk-text-sm-regular text-sko-text-primary">
+        <span className="sk-text-body-medium-regular text-sko-text-primary">
           {reviewsReceived} of 1 peers have reviewed your work
         </span>
       </div>
@@ -459,7 +459,7 @@ function WaitingStep({
         description="Response submitted · peer review completed. We'll email you when your grade is released."
       />
 
-      <p className="sk-text-xs-regular text-sko-text-subtle">
+      <p className="sk-text-body-small-regular text-sko-text-subtle">
         If peers are slow, the requirement relaxes automatically after 7 days, so your grade is never
         blocked indefinitely.
       </p>
@@ -501,12 +501,12 @@ function GradeStep({
     <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
       {/* DS LMS / ORA · Grade Panel Score (20328:3634): p20, gap 2, r10.
           Score is headline-medium/Bold — semibold until
-          .sk-text-display-sm-bold exists (CT-22). */}
+          .sk-text-headline-medium-bold exists (CT-22). */}
       <div className="flex flex-col items-center gap-0.5 rounded-[10px] bg-sko-bg-success-soft p-5">
-        <span className="sk-text-display-sm-semibold text-sko-text-success">
+        <span className="sk-text-headline-medium-semibold text-sko-text-success">
           {score} / {max}
         </span>
-        <span className="sk-text-xs-medium text-sko-text-success">
+        <span className="sk-text-body-small-medium text-sko-text-success">
           {pct}% · {staffOverride ? "graded by the course team" : "peer-assessed"}
         </span>
       </div>
@@ -520,7 +520,7 @@ function GradeStep({
       ) : null}
 
       <div className="flex flex-col gap-1.5">
-        <span className="sk-text-xs-medium uppercase text-sko-text-subtle">
+        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
           Breakdown · median score per criterion
         </span>
         <ul className="flex flex-col gap-1.5">
@@ -529,11 +529,11 @@ function GradeStep({
               key={b.label}
               className="flex items-center justify-between gap-3 rounded-md bg-sko-bg-subtle px-3 py-2"
             >
-              <span className="sk-text-sm-regular text-sko-text-default">{b.label}</span>
+              <span className="sk-text-body-medium-regular text-sko-text-default">{b.label}</span>
               <span
                 className={cn(
-                  // DS body-medium/Bold — semibold until .sk-text-sm-bold exists (CT-22).
-                  "sk-text-sm-semibold shrink-0",
+                  // DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22).
+                  "sk-text-body-medium-semibold shrink-0",
                   b.got === b.max ? "text-sko-text-success" : "text-sko-text-warning",
                 )}
               >
@@ -545,10 +545,10 @@ function GradeStep({
       </div>
 
       <div className="flex flex-col gap-1 rounded-[10px] bg-sko-bg-primary-soft p-4">
-        <span className="sk-text-xs-medium uppercase text-sko-text-primary">
+        <span className="sk-text-body-small-medium uppercase text-sko-text-primary">
           {staffOverride ? "Feedback from the course team" : "Feedback from your peer"}
         </span>
-        <p className="sk-text-sm-regular text-sko-text-primary">
+        <p className="sk-text-body-medium-regular text-sko-text-primary">
           {staffOverride
             ? "“Your response plan was stronger than the peer score reflected. Ownership was clearly assigned. Score adjusted.”"
             : "“Clear chart and well-structured limits. The response plan could name an owner for each trigger.”"}

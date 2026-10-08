@@ -45,7 +45,7 @@ export function ProgressRail({
       role="group"
       aria-label={label}
     >
-      <span className="sk-text-sm-medium text-sko-text-default">{label}</span>
+      <span className="sk-text-body-medium-medium text-sko-text-default">{label}</span>
       <ol className="flex flex-wrap items-center gap-1.5">
         {states.map((s, i) => {
           const isCurrent = i === currentIndex;
@@ -57,7 +57,7 @@ export function ProgressRail({
                 aria-label={`${itemLabel} ${i + 1}: ${s}`}
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
-                  "sk-text-xs-medium flex h-7 w-7 items-center justify-center rounded-full border transition-colors",
+                  "sk-text-body-small-medium flex h-7 w-7 items-center justify-center rounded-full border transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   s === "done"
                     ? "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success"

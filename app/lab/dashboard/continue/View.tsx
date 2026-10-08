@@ -82,8 +82,8 @@ function Greeting({ persona, hero, returning }: { persona: Persona; hero?: Enrol
           : "Here is where you left off.";
   return (
     <header className="mb-5 md:mb-6">
-      <h1 className="sk-text-display-sm-semibold text-sko-text-default">{title}</h1>
-      <p className="sk-text-md-regular mt-1 text-sko-text-muted">{sub}</p>
+      <h1 className="sk-text-headline-medium-semibold text-sko-text-default">{title}</h1>
+      <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">{sub}</p>
     </header>
   );
 }
@@ -102,18 +102,18 @@ function ResumeCard({ enrolment, away }: { enrolment: Enrolment; away?: string }
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:gap-10">
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <div>
-            <p className="sk-text-xs-semibold uppercase tracking-wide text-sko-text-primary">{eyebrow}</p>
-            <h2 id="resume-heading" className="sk-text-display-xs-semibold mt-1 text-sko-text-default">
+            <p className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-primary">{eyebrow}</p>
+            <h2 id="resume-heading" className="sk-text-headline-small-semibold mt-1 text-sko-text-default">
               {enrolment.title}
             </h2>
-            <p className="sk-text-sm-regular mt-1 text-sko-text-muted">
+            <p className="sk-text-body-medium-regular mt-1 text-sko-text-muted">
               {enrolment.provider} · {enrolment.selfPaced ? "Self-paced" : "Instructor-paced"}
               {notStarted ? ` · ${enrolment.topicsTotal} topics` : null}
             </p>
           </div>
 
           {away && !notStarted ? (
-            <p className="sk-text-sm-medium flex items-start gap-2 rounded-lg border border-sko-border-warning-soft bg-sko-bg-warning-soft px-3 py-2 text-sko-text-warning">
+            <p className="sk-text-body-medium-medium flex items-start gap-2 rounded-lg border border-sko-border-warning-soft bg-sko-bg-warning-soft px-3 py-2 text-sko-text-warning">
               <Icon icon={Clock} size={16} className="mt-0.5 shrink-0 text-sko-icon-warning" aria-hidden="true" />
               <span>
                 Last visit {away}. That is fine. A few minutes today is enough to get the thread back.
@@ -123,12 +123,12 @@ function ResumeCard({ enrolment, away }: { enrolment: Enrolment; away?: string }
 
           {next ? (
             <div className="rounded-lg bg-sko-bg-subtle p-4">
-              <p className="sk-text-xs-semibold uppercase tracking-wide text-sko-text-subtle">
+              <p className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-subtle">
                 {notStarted ? "First topic" : "Up next"}
               </p>
               <div className="mt-2 flex flex-col gap-1">
                 <TopicTypeBadge type={next.type as TopicType} />
-                <p className="sk-text-lg-semibold text-sko-text-default">{next.title}</p>
+                <p className="sk-text-title-medium-semibold text-sko-text-default">{next.title}</p>
               </div>
             </div>
           ) : null}
@@ -152,22 +152,22 @@ function ResumeCard({ enrolment, away }: { enrolment: Enrolment; away?: string }
 function AlsoInProgress({ enrolments }: { enrolments: Enrolment[] }) {
   return (
     <section aria-labelledby="also-heading" className="mt-8">
-      <h2 id="also-heading" className="sk-text-lg-semibold text-sko-text-default">
+      <h2 id="also-heading" className="sk-text-title-medium-semibold text-sko-text-default">
         Also in progress
       </h2>
       <ul className="mt-3 divide-y divide-sko-border-subtle overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page">
         {enrolments.map((e) => (
           <li key={e.id} className="flex flex-col gap-3 p-4 md:flex-row md:items-center md:gap-6">
             <div className="min-w-0 flex-1">
-              <h3 className="sk-text-md-semibold text-sko-text-default">{e.title}</h3>
+              <h3 className="sk-text-body-large-semibold text-sko-text-default">{e.title}</h3>
               {e.nextTopic ? (
-                <p className="sk-text-sm-regular mt-1 flex flex-wrap items-center gap-x-2 text-sko-text-muted">
+                <p className="sk-text-body-medium-regular mt-1 flex flex-wrap items-center gap-x-2 text-sko-text-muted">
                   <span>Next:</span>
                   <TopicTypeBadge type={e.nextTopic.type as TopicType} />
                   <span className="text-sko-text-default">{e.nextTopic.title}</span>
                 </p>
               ) : null}
-              <p className="sk-text-xs-regular mt-1 text-sko-text-subtle">Last active {e.lastActive.toLowerCase()}</p>
+              <p className="sk-text-body-small-regular mt-1 text-sko-text-subtle">Last active {e.lastActive.toLowerCase()}</p>
             </div>
             <TopicProgress enrolment={e} size="sm" className="md:w-44 md:shrink-0" />
             <Link href={e.nextTopic?.href ?? "#"} className={cn(linkSecondary, "w-full md:w-auto")}>
@@ -192,7 +192,7 @@ function RestSummary({ rest }: { rest: Enrolment[] }) {
     .filter(([n]) => (n as number) > 0)
     .map(([n, label]) => `${n} ${label}`);
   return (
-    <p className="sk-text-sm-regular mt-4 flex flex-wrap items-center gap-x-2 text-sko-text-muted">
+    <p className="sk-text-body-medium-regular mt-4 flex flex-wrap items-center gap-x-2 text-sko-text-muted">
       <span>
         {rest.length === 1 ? "1 more course" : `${rest.length} more courses`}: {parts.join(", ")}.
       </span>
@@ -208,7 +208,7 @@ function RestSummary({ rest }: { rest: Enrolment[] }) {
 function AroundStrip({ persona, hero }: { persona: Persona; hero?: Enrolment }) {
   return (
     <section aria-labelledby="around-heading" className="mt-10">
-      <h2 id="around-heading" className="sk-text-lg-semibold text-sko-text-default">
+      <h2 id="around-heading" className="sk-text-title-medium-semibold text-sko-text-default">
         Around your learning
       </h2>
       <div className="mt-3 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -227,18 +227,18 @@ function CertificateCard({ persona, hero }: { persona: Persona; hero: Enrolment 
   const earned = persona.certificatesEarned;
   return (
     <div className={CARD}>
-      <h3 className="sk-text-md-semibold flex items-center gap-2 text-sko-text-default">
+      <h3 className="sk-text-body-large-semibold flex items-center gap-2 text-sko-text-default">
         <Icon icon={Award} size={20} className="text-sko-icon-primary" aria-hidden="true" />
         Certificate
       </h3>
       <div>
-        <p className="sk-text-sm-semibold text-sko-text-default">{copy.title}</p>
-        <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">
+        <p className="sk-text-body-medium-semibold text-sko-text-default">{copy.title}</p>
+        <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">
           {hero.title}: {copy.detail}
         </p>
       </div>
       {earned > 0 ? (
-        <p className="sk-text-sm-regular flex items-center gap-2 text-sko-text-muted">
+        <p className="sk-text-body-medium-regular flex items-center gap-2 text-sko-text-muted">
           <Icon icon={CheckCircle2} size={16} className="shrink-0 text-sko-icon-success" aria-hidden="true" />
           {earned === 1 ? "1 certificate earned so far" : `${earned} certificates earned so far`}
         </p>
@@ -263,12 +263,12 @@ function WeeklyGoalCard({ persona }: { persona: Persona }) {
       : `${left} more ${left === 1 ? "day" : "days"} to reach it.`;
   return (
     <div className={CARD}>
-      <h3 className="sk-text-md-semibold flex items-center gap-2 text-sko-text-default">
+      <h3 className="sk-text-body-large-semibold flex items-center gap-2 text-sko-text-default">
         <Icon icon={CalendarDays} size={20} className="text-sko-icon-primary" aria-hidden="true" />
         Weekly goal
       </h3>
       <div>
-        <p className="sk-text-sm-semibold text-sko-text-default">
+        <p className="sk-text-body-medium-semibold text-sko-text-default">
           {daysDone} of {daysTarget} learning days this week
         </p>
         <div className="mt-2 flex gap-1.5" aria-hidden="true">
@@ -279,7 +279,7 @@ function WeeklyGoalCard({ persona }: { persona: Persona }) {
             />
           ))}
         </div>
-        <p className="sk-text-sm-regular mt-2 text-sko-text-muted">{note}</p>
+        <p className="sk-text-body-medium-regular mt-2 text-sko-text-muted">{note}</p>
       </div>
       {persona.weeklyGoal.mock ? <MockTag reason={persona.weeklyGoal.mock} layout="block" /> : null}
     </div>
@@ -291,19 +291,19 @@ function ComingUpCard({ persona, className }: { persona: Persona; className?: st
   const due = pickDue(persona.due.value);
   return (
     <div className={cn(CARD, className)}>
-      <h3 className="sk-text-md-semibold flex items-center gap-2 text-sko-text-default">
+      <h3 className="sk-text-body-large-semibold flex items-center gap-2 text-sko-text-default">
         <Icon icon={Clock} size={20} className="text-sko-icon-primary" aria-hidden="true" />
         Coming up
       </h3>
       <ul className="flex flex-col gap-3">
         <li className="flex flex-col gap-1">
-          <p className="sk-text-xs-semibold uppercase tracking-wide text-sko-text-subtle">Next live session</p>
-          {live ? <LiveLine session={live} /> : <p className="sk-text-sm-regular text-sko-text-muted">No sessions scheduled.</p>}
+          <p className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-subtle">Next live session</p>
+          {live ? <LiveLine session={live} /> : <p className="sk-text-body-medium-regular text-sko-text-muted">No sessions scheduled.</p>}
           {persona.live.mock ? <MockTag reason={persona.live.mock} /> : null}
         </li>
         <li className="flex flex-col gap-1 border-t border-sko-border-subtle pt-3">
-          <p className="sk-text-xs-semibold uppercase tracking-wide text-sko-text-subtle">Next due</p>
-          {due ? <DueLine item={due} /> : <p className="sk-text-sm-regular text-sko-text-muted">Nothing due.</p>}
+          <p className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-subtle">Next due</p>
+          {due ? <DueLine item={due} /> : <p className="sk-text-body-medium-regular text-sko-text-muted">Nothing due.</p>}
           {persona.due.mock ? <MockTag reason={persona.due.mock} /> : null}
         </li>
       </ul>
@@ -326,10 +326,10 @@ function LiveLine({ session }: { session: LiveSession }) {
         {b.label}
       </Badge>
       {/* No live-session page exists in the prototype yet. */}
-      <Link href="#" className={cn(linkText, "sk-text-sm-semibold")}>
+      <Link href="#" className={cn(linkText, "sk-text-body-medium-semibold")}>
         {session.title}
       </Link>
-      <span className="sk-text-xs-regular text-sko-text-subtle">
+      <span className="sk-text-body-small-regular text-sko-text-subtle">
         {session.when} · {session.course}
       </span>
     </div>
@@ -350,10 +350,10 @@ function DueLine({ item }: { item: DueItem }) {
       <Badge color={b.color} leftIcon={b.icon}>
         {b.label}
       </Badge>
-      <Link href={item.href} className={cn(linkText, "sk-text-sm-semibold")}>
+      <Link href={item.href} className={cn(linkText, "sk-text-body-medium-semibold")}>
         {item.title}
       </Link>
-      <span className="sk-text-xs-regular text-sko-text-subtle">
+      <span className="sk-text-body-small-regular text-sko-text-subtle">
         {item.kind} · {item.dueLabel} · {item.course}
       </span>
     </div>

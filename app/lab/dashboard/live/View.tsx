@@ -63,19 +63,19 @@ export function View() {
   return (
     <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-5xl flex-1 px-4 py-6 md:px-6 md:py-8 lg:px-8">
       <header>
-        <p className="sk-text-sm-medium text-sko-text-subtle">Dashboard</p>
-        <h1 className="sk-text-display-xs-semibold mt-1 text-sko-text-default">Hi {persona.firstName}</h1>
-        <p className="sk-text-md-regular mt-1 text-sko-text-muted">What is on, in time order.</p>
+        <p className="sk-text-body-medium-medium text-sko-text-subtle">Dashboard</p>
+        <h1 className="sk-text-headline-small-semibold mt-1 text-sko-text-default">Hi {persona.firstName}</h1>
+        <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">What is on, in time order.</p>
       </header>
 
       <PickUp enrolment={next} onGo={go} />
 
       <section aria-labelledby="schedule-h" className="mt-8">
         <div className="flex flex-col gap-2">
-          <h2 id="schedule-h" className="sk-text-lg-semibold text-sko-text-default">
+          <h2 id="schedule-h" className="sk-text-title-medium-semibold text-sko-text-default">
             Schedule
           </h2>
-          <p className="sk-text-sm-regular text-sko-text-muted">
+          <p className="sk-text-body-medium-regular text-sko-text-muted">
             Today is <time dateTime={`${MOCK_TODAY}T${MOCK_NOW}`}>{longDay(MOCK_TODAY)}, {MOCK_NOW}</time> (mock date).
           </p>
           <div className="flex flex-col gap-1.5">
@@ -159,11 +159,11 @@ function PickUp({ enrolment, onGo }: { enrolment?: Enrolment; onGo: (href: strin
               <Icon icon={topicTypeIcon(topic.type as TopicType)} size={20} className="text-sko-icon-primary" />
             </span>
             <div className="min-w-0">
-              <h2 id="pickup-h" className="sk-text-xs-semibold text-sko-text-subtle">
+              <h2 id="pickup-h" className="sk-text-body-small-semibold text-sko-text-subtle">
                 {enrolment.status === "not-started" ? "Start here" : "Pick up where you left off"}
               </h2>
-              <p className="sk-text-md-semibold text-sko-text-default md:truncate">{topic.title}</p>
-              <p className="sk-text-sm-regular text-sko-text-muted md:truncate">
+              <p className="sk-text-body-large-semibold text-sko-text-default md:truncate">{topic.title}</p>
+              <p className="sk-text-body-medium-regular text-sko-text-muted md:truncate">
                 {topic.type} · {enrolment.title} ·{" "}
                 {enrolment.status === "not-started" ? "Not started" : `${enrolment.pct}% done`}
               </p>
@@ -181,10 +181,10 @@ function PickUp({ enrolment, onGo }: { enrolment?: Enrolment; onGo: (href: strin
         </div>
       ) : (
         <>
-          <h2 id="pickup-h" className="sk-text-xs-semibold text-sko-text-subtle">
+          <h2 id="pickup-h" className="sk-text-body-small-semibold text-sko-text-subtle">
             Pick up
           </h2>
-          <p className="sk-text-md-semibold text-sko-text-default">You are all caught up — no course in progress.</p>
+          <p className="sk-text-body-large-semibold text-sko-text-default">You are all caught up — no course in progress.</p>
         </>
       )}
     </section>
@@ -205,7 +205,7 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
       aria-labelledby="strip-h"
       className={cn("rounded-xl border border-sko-border-subtle bg-sko-bg-page p-3 md:p-4", className)}
     >
-      <h3 id="strip-h" className="sk-text-sm-semibold text-sko-text-default">
+      <h3 id="strip-h" className="sk-text-body-medium-semibold text-sko-text-default">
         This week at a glance
       </h3>
       <ol aria-hidden="true" className="mt-3 grid grid-cols-7 gap-1">
@@ -217,13 +217,13 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
               d.isToday ? "bg-sko-bg-primary-soft ring-2 ring-inset ring-sko-border-primary" : "bg-sko-bg-subtle",
             )}
           >
-            <span className={cn("sk-text-xs-medium", d.isToday ? "text-sko-text-primary" : "text-sko-text-subtle")}>
+            <span className={cn("sk-text-body-small-medium", d.isToday ? "text-sko-text-primary" : "text-sko-text-subtle")}>
               {d.weekday}
             </span>
-            <span className="sk-text-sm-semibold text-sko-text-default">{d.dayOfMonth}</span>
+            <span className="sk-text-body-medium-semibold text-sko-text-default">{d.dayOfMonth}</span>
             <span
               className={cn(
-                "sk-text-xs-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
+                "sk-text-body-small-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
                 d.count > 0 ? "bg-sko-bg-primary text-sko-text-on-primary" : "text-sko-text-disabled",
               )}
             >
@@ -232,8 +232,8 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
           </li>
         ))}
       </ol>
-      <p className="sk-text-sm-regular mt-3 text-sko-text-muted">
-        <span className="sk-text-sm-medium text-sko-text-default">
+      <p className="sk-text-body-medium-regular mt-3 text-sko-text-muted">
+        <span className="sk-text-body-medium-medium text-sko-text-default">
           {shortDay(days[0].date)} – {shortDay(days[6].date)}:
         </span>{" "}
         {summary} Today is {days.find((d) => d.isToday)?.weekday}.
@@ -260,18 +260,18 @@ function AgendaSection({ id, title, subtitle, items, empty, added, onAdd, onGo }
   return (
     <section aria-labelledby={hid}>
       <div className="flex flex-wrap items-baseline gap-x-2">
-        <h3 id={hid} className="sk-text-md-semibold text-sko-text-default">
+        <h3 id={hid} className="sk-text-body-large-semibold text-sko-text-default">
           {title}
         </h3>
-        {subtitle ? <span className="sk-text-sm-regular text-sko-text-subtle">{subtitle}</span> : null}
+        {subtitle ? <span className="sk-text-body-medium-regular text-sko-text-subtle">{subtitle}</span> : null}
         {items.length > 0 ? (
-          <span className="sk-text-sm-regular text-sko-text-subtle">
+          <span className="sk-text-body-medium-regular text-sko-text-subtle">
             · {items.length} {items.length === 1 ? "item" : "items"}
           </span>
         ) : null}
       </div>
       {items.length === 0 ? (
-        <p className="sk-text-sm-regular mt-2 border-l-2 border-sko-border-subtle pl-3 text-sko-text-muted">{empty}</p>
+        <p className="sk-text-body-medium-regular mt-2 border-l-2 border-sko-border-subtle pl-3 text-sko-text-muted">{empty}</p>
       ) : (
         <ol className="mt-3 flex flex-col gap-2">
           {items.map((it) => (
@@ -289,8 +289,8 @@ function When({ item }: { item: AgendaItem }) {
   const t = timeOf(item.at);
   const line = (a: string, b?: string) => (
     <>
-      <span className="sk-text-sm-semibold block text-sko-text-default">{a}</span>
-      {b ? <span className="sk-text-xs-regular block text-sko-text-muted">{b}</span> : null}
+      <span className="sk-text-body-medium-semibold block text-sko-text-default">{a}</span>
+      {b ? <span className="sk-text-body-small-regular block text-sko-text-muted">{b}</span> : null}
     </>
   );
   let body: React.ReactNode;
@@ -403,14 +403,14 @@ function AgendaRow({ item, added, onAdd, onGo }: { item: AgendaItem; added: bool
       <When item={item} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="sk-text-xs-medium inline-flex items-center gap-1.5 text-sko-text-subtle">
+          <span className="sk-text-body-small-medium inline-flex items-center gap-1.5 text-sko-text-subtle">
             <Icon icon={topicTypeIcon(KIND_TOPIC_TYPE[item.kind])} size={14} className="text-sko-icon-primary" />
             {item.kind}
           </span>
           <Status item={item} />
         </div>
-        <p className="sk-text-md-semibold mt-1 text-sko-text-default">{item.title}</p>
-        <p className="sk-text-sm-regular text-sko-text-muted">
+        <p className="sk-text-body-large-semibold mt-1 text-sko-text-default">{item.title}</p>
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
           {item.course}
           {item.host ? ` · with ${item.host}` : null}
           {item.bucket === "today" && item.kind === "Live session" ? " · Join opens 10 min before" : null}
@@ -433,8 +433,8 @@ function NothingScheduled({ added, onAdd }: { added: boolean; onAdd: () => void 
         <Icon icon={CalendarPlus} size={20} className="text-sko-icon-subtle" />
       </span>
       <div className="min-w-0 flex-1">
-        <h3 className="sk-text-md-semibold text-sko-text-default">Nothing scheduled this week</h3>
-        <p className="sk-text-sm-regular text-sko-text-muted">
+        <h3 className="sk-text-body-large-semibold text-sko-text-default">Nothing scheduled this week</h3>
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
           Your courses are self-paced: no live sessions or deadlines. A regular slot helps — try two 30-minute
           sessions this week.
         </p>

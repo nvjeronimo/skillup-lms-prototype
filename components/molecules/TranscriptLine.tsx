@@ -72,17 +72,17 @@ export function TranscriptLine({
           ) : null}
           <span
             className={cn(
-              "sk-text-xs-medium whitespace-nowrap",
+              "sk-text-body-small-medium whitespace-nowrap",
               active ? "text-sko-text-on-primary-soft" : "text-sko-text-subtle",
             )}
           >
             {ts}
           </span>
         </span>
-        <span className="sk-text-sm-regular min-w-0 flex-1 text-sko-text-default">
+        <span className="sk-text-body-medium-regular min-w-0 flex-1 text-sko-text-default">
           {text}
           {showDuration && duration ? (
-            <span className="sk-text-xs-regular ml-2 text-sko-text-subtle">{duration}</span>
+            <span className="sk-text-body-small-regular ml-2 text-sko-text-subtle">{duration}</span>
           ) : null}
         </span>
       </button>
@@ -92,7 +92,7 @@ export function TranscriptLine({
           type="button"
           onClick={hasNote ? onEditNote : onAddNote}
           aria-label={`${hasNote ? "Edit" : "Add"} note at ${ts}`}
-          className="sk-text-xs-semibold flex shrink-0 items-center gap-1 self-start rounded-full bg-sko-bg-primary-soft py-1 pl-2 pr-3 text-sko-text-primary"
+          className="sk-text-body-small-semibold flex shrink-0 items-center gap-1 self-start rounded-full bg-sko-bg-primary-soft py-1 pl-2 pr-3 text-sko-text-primary"
         >
           <Icon icon={hasNote ? Edit3 : Plus} size={14} />
           {hasNote ? "Edit" : "Note"}

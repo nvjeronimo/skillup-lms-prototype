@@ -219,7 +219,7 @@ export function CoursePlayerTopbar({
                 ) : null}
                 <span
                   className={cn(
-                    "sk-text-sm-semibold truncate",
+                    "sk-text-body-medium-semibold truncate",
                     i === breadcrumb.length - 1 ? "text-sko-text-primary" : "text-sko-text-subtle",
                   )}
                 >
@@ -267,7 +267,7 @@ export function CoursePlayerTopbar({
           // 24px circle), 8px gap, name in body-medium/Semibold.
           <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-md">
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
-            <span className="sk-text-sm-semibold text-sko-text-default">{userName}</span>
+            <span className="sk-text-body-medium-semibold text-sko-text-default">{userName}</span>
           </button>
         )}
 

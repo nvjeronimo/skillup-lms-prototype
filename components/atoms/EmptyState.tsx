@@ -31,9 +31,9 @@ export function EmptyState({ icon, title, description, action, titleAs: Title = 
       <span className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={icon} size={28} strokeWidth={iconStroke(28)} />
       </span>
-      <Title className="sk-text-md-medium text-sko-text-default">{title}</Title>
+      <Title className="sk-text-body-large-medium text-sko-text-default">{title}</Title>
       {description ? (
-        <p className="sk-text-sm-medium w-full text-sko-text-muted">{description}</p>
+        <p className="sk-text-body-medium-medium w-full text-sko-text-muted">{description}</p>
       ) : null}
       {action ? <div>{action}</div> : null}
     </div>

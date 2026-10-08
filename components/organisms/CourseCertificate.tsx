@@ -78,16 +78,16 @@ export function CourseCertificate({
 
       {/* Body */}
       <div className="flex flex-col items-center gap-3 px-8 py-8 text-center">
-        <p className="sk-text-xs-medium uppercase text-sko-text-subtle">This certifies that</p>
-        <p className="sk-text-display-md-bold text-sko-text-default">{learnerName}</p>
-        <p className="sk-text-sm-regular text-sko-text-muted">has successfully completed</p>
-        <p className="sk-text-display-xs-semibold text-sko-text-default">{courseTitle}</p>
+        <p className="sk-text-body-small-medium uppercase text-sko-text-subtle">This certifies that</p>
+        <p className="sk-text-headline-large-bold text-sko-text-default">{learnerName}</p>
+        <p className="sk-text-body-medium-regular text-sko-text-muted">has successfully completed</p>
+        <p className="sk-text-headline-small-semibold text-sko-text-default">{courseTitle}</p>
 
         <div className="flex flex-wrap items-start justify-center gap-6">
           {STAT.map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-0.5">
-              <p className="sk-text-md-medium text-sko-text-default">{s.value}</p>
-              <p className="sk-text-xs-medium text-sko-text-subtle">{s.label}</p>
+              <p className="sk-text-body-large-medium text-sko-text-default">{s.value}</p>
+              <p className="sk-text-body-small-medium text-sko-text-subtle">{s.label}</p>
             </div>
           ))}
         </div>
@@ -95,8 +95,8 @@ export function CourseCertificate({
 
       {/* Meta row */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-sko-border-subtle px-8 py-6">
-        <span className="sk-text-xs-medium text-sko-text-muted">Issued by {provider}</span>
-        <span className="sk-text-xs-medium uppercase text-sko-text-subtle">
+        <span className="sk-text-body-small-medium text-sko-text-muted">Issued by {provider}</span>
+        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
           {dateLabel} · {certificateId}
         </span>
       </div>

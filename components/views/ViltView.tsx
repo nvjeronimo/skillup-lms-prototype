@@ -83,14 +83,14 @@ function StageStepper({ current }: { current: ViltStage }) {
         return (
           <React.Fragment key={s.stage}>
             {i > 0 ? (
-              <li aria-hidden className="sk-text-xs-regular text-sko-text-subtle">
+              <li aria-hidden className="sk-text-body-small-regular text-sko-text-subtle">
                 →
               </li>
             ) : null}
             <li
               aria-current={isCurrent ? "step" : undefined}
               className={cn(
-                "sk-text-xs-medium inline-flex items-center rounded-full px-2 py-1 ring-1 ring-inset",
+                "sk-text-body-small-medium inline-flex items-center rounded-full px-2 py-1 ring-1 ring-inset",
                 isCurrent
                   ? s.stage === "live"
                     ? // Green is the LIVE NOW colour (decision 012); red stays for errors and
@@ -136,8 +136,8 @@ function SessionMeta({ session }: { session: ViltSession }) {
                 "border-sko-border-subtle [@container(min-width:38rem)]:border-l [@container(min-width:38rem)]:pl-8",
             )}
           >
-            <dt className="sk-text-xs-medium uppercase text-sko-text-subtle">{k}</dt>
-            <dd className="sk-text-sm-medium text-sko-text-default">{v}</dd>
+            <dt className="sk-text-body-small-medium uppercase text-sko-text-subtle">{k}</dt>
+            <dd className="sk-text-body-medium-medium text-sko-text-default">{v}</dd>
           </div>
         ))}
       </dl>
@@ -148,10 +148,10 @@ function SessionMeta({ session }: { session: ViltSession }) {
 function Agenda({ items }: { items: string[] }) {
   return (
     <div className="flex flex-col gap-1.5 rounded-lg border border-sko-border-subtle px-4 py-6">
-      <span className="sk-text-xs-medium uppercase text-sko-text-subtle">
+      <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
         What we&rsquo;ll cover
       </span>
-      <ul className="sk-text-sm-regular list-disc pl-5 text-sko-text-muted">
+      <ul className="sk-text-body-medium-regular list-disc pl-5 text-sko-text-muted">
         {items.map((a) => (
           <li key={a}>{a}</li>
         ))}
@@ -179,17 +179,17 @@ function PreLive({
         <Badge tone="neutral">Scheduled</Badge>
       </div>
 
-      <h3 className="sk-text-lg-semibold text-sko-text-default">{session.title}</h3>
+      <h3 className="sk-text-title-medium-semibold text-sko-text-default">{session.title}</h3>
 
       {/* Countdown — the learner's primary orientation before the session. */}
       <div className="flex flex-col items-center gap-1 rounded-lg bg-sko-bg-primary-soft px-4 py-6">
-        <span className="sk-text-display-xs-semibold text-sko-text-primary">
+        <span className="sk-text-headline-small-semibold text-sko-text-primary">
           Your class starts in {session.minutesUntilStart} minutes
         </span>
         {/* Say what happens next, not what is missing: the learner is waiting on
             the host, and the sentence should carry them to the join rather than
             report an absence. */}
-        <span className="sk-text-xs-regular text-sko-text-primary">
+        <span className="sk-text-body-small-regular text-sko-text-primary">
           {locked ? (
             <>
               Once your instructor opens the session, you&rsquo;ll be able to join. The button
@@ -213,7 +213,7 @@ function PreLive({
         </Button>
       </div>
 
-      <p className="sk-text-xs-regular text-sko-text-subtle">
+      <p className="sk-text-body-small-regular text-sko-text-subtle">
         {locked
           ? "Prefer to catch up later? A recording is published here afterwards and counts for completion just the same."
           : "Attendance is tracked. Stay for at least half the session for it to count towards completion."}
@@ -239,10 +239,10 @@ function LiveStage({
         <div className="flex flex-col items-center gap-1.5 text-center">
           <Icon icon={Users} size={28} className="text-sko-text-on-primary" />
           <div className="flex flex-col items-center gap-1.5">
-            <span className="sk-text-md-semibold text-sko-text-on-primary">
+            <span className="sk-text-body-large-semibold text-sko-text-on-primary">
               Live session in progress
             </span>
-            <span className="sk-text-xs-regular text-sko-text-on-primary">
+            <span className="sk-text-body-small-regular text-sko-text-on-primary">
               Hosted on {session.platform}
             </span>
           </div>
@@ -268,7 +268,7 @@ function LiveStage({
 function RecordingStage({ session }: { session: ViltSession }) {
   return (
     <section className="flex flex-col gap-4">
-      <span className="sk-text-xs-regular text-sko-text-subtle">{session.whenLabel}</span>
+      <span className="sk-text-body-small-regular text-sko-text-subtle">{session.whenLabel}</span>
 
       {/* DS VILT · Stage Surface, Stage=Recording (20322:705648): bg/muted surface with the
           640x360 md player centred at full surface height, and the RECORDING pill pinned
@@ -281,7 +281,7 @@ function RecordingStage({ session }: { session: ViltSession }) {
         <div className="w-full max-w-[640px] pb-8 pt-14 [@container(min-width:55rem)]:py-0">
           <VideoPlayer durationSeconds={durationToSeconds(session.durationLabel)} size="md" />
         </div>
-        <span className="sk-text-xs-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-full bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
+        <span className="sk-text-body-small-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-full bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
           Recording
         </span>
       </div>

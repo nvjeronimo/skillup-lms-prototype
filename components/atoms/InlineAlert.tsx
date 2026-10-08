@@ -104,18 +104,18 @@ export function InlineAlert({
 
       <div className="min-w-0 flex-1">
         {children ?? (inlineTitle ? (
-          <p className="sk-text-sm-regular text-sko-text-default">
-            <span className="sk-text-sm-semibold text-sko-text-default">{title} </span>
+          <p className="sk-text-body-medium-regular text-sko-text-default">
+            <span className="sk-text-body-medium-semibold text-sko-text-default">{title} </span>
             {description}
           </p>
         ) : (
           <>
-            <p className="sk-text-sm-semibold text-sko-text-default">{title}</p>
+            <p className="sk-text-body-medium-semibold text-sko-text-default">{title}</p>
             {description ? (
-              <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">{description}</p>
+              <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">{description}</p>
             ) : null}
             {secondary ? (
-              <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">{secondary}</p>
+              <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">{secondary}</p>
             ) : null}
           </>
         ))}

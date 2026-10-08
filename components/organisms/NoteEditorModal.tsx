@@ -98,7 +98,7 @@ export function NoteEditorModal({
         </div>
         {/* Padding is the DS Spacing/2xl and 3xl: 16 on mobile, 20 on tablet, 20/24 on desktop. */}
         <header className="flex items-center justify-between gap-3 p-4 md:p-5 lg:px-6">
-          <h2 id={titleId} className="sk-text-md-semibold text-sko-text-default">
+          <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
             {noteId ? "Edit note" : "Add note"}
           </h2>
           <button
@@ -114,30 +114,30 @@ export function NoteEditorModal({
         <div className="flex flex-col gap-4 p-4 md:gap-5 md:p-5 lg:p-6">
           {anchorQuote ? (
             <div>
-              <p className="sk-text-2xs-semibold mb-2 text-sko-text-subtle">
+              <p className="sk-text-label-small-semibold mb-2 text-sko-text-subtle">
                 Anchored to{" "}
                 <span className="text-sko-text-primary">{anchorTs}</span>
               </p>
-              <p className="sk-text-sm-regular rounded-md bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
+              <p className="sk-text-body-medium-regular rounded-md bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
                 {anchorQuote}
               </p>
             </div>
           ) : null}
 
           <label className="block">
-            <span className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">Your note</span>
+            <span className="sk-text-body-medium-medium mb-1.5 block text-sko-text-muted">Your note</span>
             <textarea
               ref={textRef}
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={4}
               placeholder="Write your note…"
-              className="sk-text-sm-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
+              className="sk-text-body-medium-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
             />
           </label>
 
           <div>
-            <label htmlFor={tagInputId} className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">
+            <label htmlFor={tagInputId} className="sk-text-body-medium-medium mb-1.5 block text-sko-text-muted">
               Tags (optional)
             </label>
             <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-sko-border-default px-2 py-1.5">
@@ -145,7 +145,7 @@ export function NoteEditorModal({
                 // DS Input field Type=Tags chip = `Tag` md Gray (r6, border/default, bg/page, X in icon-faint).
                 <span
                   key={t}
-                  className="sk-text-sm-medium inline-flex items-center gap-1 rounded-md border border-sko-border-default bg-sko-bg-page py-0.5 pl-[5px] pr-1 text-sko-text-muted"
+                  className="sk-text-body-medium-medium inline-flex items-center gap-1 rounded-md border border-sko-border-default bg-sko-bg-page py-0.5 pl-[5px] pr-1 text-sko-text-muted"
                 >
                   #{t}
                   <button
@@ -170,7 +170,7 @@ export function NoteEditorModal({
                 }}
                 placeholder="Add tag…"
                 className={cn(
-                  "sk-text-sm-regular min-w-24 flex-1 bg-transparent px-1 py-0.5 text-sko-text-default outline-none",
+                  "sk-text-body-medium-regular min-w-24 flex-1 bg-transparent px-1 py-0.5 text-sko-text-default outline-none",
                 )}
               />
             </div>

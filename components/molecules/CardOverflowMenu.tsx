@@ -65,7 +65,7 @@ export function CardOverflowMenu({
                   setOpen(false);
                 }}
                 className={cn(
-                  "sk-text-sm-medium block w-full p-3 text-left hover:bg-sko-bg-subtle",
+                  "sk-text-body-medium-medium block w-full p-3 text-left hover:bg-sko-bg-subtle",
                   item.destructive ? "text-sko-text-error" : "text-sko-text-default",
                 )}
               >

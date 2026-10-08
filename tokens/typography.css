@@ -7,7 +7,9 @@
    - Display sizes for hero titles
    - Text lg → 2xs ramp for body/eyebrow
 
-   Naming: .sk-text-{size}-{weight}  (matches Figma style names).
+   Naming: .sk-text-{DS text style}-{weight}, e.g. .sk-text-body-large-semibold for the DS
+   style body-large/Semibold. Until 8 Oct 2026 the classes used the old ramp names
+   (md, sm, display-xs…); the sizes did not change.
    Apply via className. Do NOT inline font-size/font-weight.
 
    NOTE: Montserrat is loaded via `next/font/google` in app/layout.tsx, which
@@ -26,8 +28,10 @@
 }
 
 /* ---- Display ramp (Montserrat) ----
-   DS names (Material type scale, renamed 21 Sep 2026): display-xs = headline-small,
-   display-sm = headline-medium, display-md = headline-large (−2% tracking in every mode).
+   Classes carry the DS text-style names: headline-small, headline-medium, headline-large
+   (−2% tracking in every mode) and display-large. The CSS variables below keep the names of
+   the DS variables they mirror (Type/size/display-xs = headline-small, display-sm =
+   headline-medium, display-md = headline-large, display-2xl = display-large).
    The sizes are mode-aware in the DS (3. Responsive 📐 Type/size/* + Type/line-height/*):
 
                   Desktop   Tablet   Mobile
@@ -87,42 +91,43 @@
   --sk-type-size-display-2xl: 48px; --sk-type-line-height-display-2xl: 60px;
 }
 
-.sk-text-display-xs-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
-.sk-text-display-sm-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
+.sk-text-headline-small-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
+.sk-text-headline-medium-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
 /* Bold steps of the same ramp (DS headline-small/Bold, headline-medium/Bold) and the one
    hero figure, display-large/Bold (DS display-2xl, 72/90, -2% tracking), used by the
    platform pages (Dashboard, My Learning, Program Detail). */
-.sk-text-display-xs-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
-.sk-text-display-sm-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
-.sk-text-display-2xl-bold     { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-2xl, 72px) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-2xl, 90px) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
-.sk-text-display-md-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
-.sk-text-display-md-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
+.sk-text-headline-small-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-xs) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-xs) * var(--sk-font-scale, 1)); }
+.sk-text-headline-medium-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-sm) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-sm) * var(--sk-font-scale, 1)); }
+.sk-text-display-large-bold     { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-2xl, 72px) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-2xl, 90px) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
+.sk-text-headline-large-semibold  { font-family: var(--sk-font-display); font-weight: 600; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
+.sk-text-headline-large-bold      { font-family: var(--sk-font-display); font-weight: 700; font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1)); letter-spacing: -0.02em; }
 
 /* ---- Text ramp (Montserrat — font-family-body in the SKO DS) ----
-   DS names: lg = title-medium 18/24, md = body-large 16/24, sm = body-medium 14/20,
-   xs = body-small 12/18, 2xs = label-small 12/18 uppercase +4% (was 10/14; no text below 12px). */
+   title-medium 18/24, body-large 16/24, body-medium 14/20, body-small 12/18,
+   label-small 12/18 uppercase +4% (no text below 12px). Old class names, for anyone
+   reading older PRs: lg, md, sm, xs, 2xs in that order. */
 /* title-large (DS 20/30; 18/28 on mobile): the course card title and its thumb initials. */
-.sk-text-xl-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(var(--sk-type-size-text-xl) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-text-xl) * var(--sk-font-scale, 1)); }
-.sk-text-xl-bold      { font-family: var(--sk-font-body); font-weight: 700; font-size: calc(var(--sk-type-size-text-xl) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-text-xl) * var(--sk-font-scale, 1)); }
-.sk-text-lg-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
-.sk-text-lg-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-title-large-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(var(--sk-type-size-text-xl) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-text-xl) * var(--sk-font-scale, 1)); }
+.sk-text-title-large-bold      { font-family: var(--sk-font-body); font-weight: 700; font-size: calc(var(--sk-type-size-text-xl) * var(--sk-font-scale, 1)); line-height: calc(var(--sk-type-line-height-text-xl) * var(--sk-font-scale, 1)); }
+.sk-text-title-medium-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-title-medium-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(18px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 
-.sk-text-md-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
-.sk-text-md-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
-.sk-text-md-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-body-large-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-body-large-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
+.sk-text-body-large-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(16px * var(--sk-font-scale, 1)); line-height: calc(24px * var(--sk-font-scale, 1)); }
 
-.sk-text-sm-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
-.sk-text-sm-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
-.sk-text-sm-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
+.sk-text-body-medium-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
+.sk-text-body-medium-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
+.sk-text-body-medium-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(14px * var(--sk-font-scale, 1)); line-height: calc(20px * var(--sk-font-scale, 1)); }
 
-.sk-text-xs-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
-.sk-text-xs-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
-.sk-text-xs-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
+.sk-text-body-small-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
+.sk-text-body-small-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
+.sk-text-body-small-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
 
 /* ---- 2xs — uppercase eyebrows (12px / 18px, +4% letter-spacing, UPPER-cased) ---- */
-.sk-text-2xs-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
-.sk-text-2xs-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
-.sk-text-2xs-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-label-small-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-label-small-medium   { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
+.sk-text-label-small-semibold { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* No italic class: the DS has no italic text style. Note anchor quotes are
-   body-medium/Regular (upright) → .sk-text-sm-regular. */
+   body-medium/Regular (upright) → .sk-text-body-medium-regular. */

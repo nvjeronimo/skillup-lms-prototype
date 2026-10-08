@@ -160,23 +160,23 @@ const SIZE: Record<
   { pad: string; text: string; icon: number; square: string; squareIcon: number; squareSvg: string }
 > = {
   // 36 tall, 8/12 padding, 4 gap, body-medium/Semibold, 20 icon.
-  sm: { pad: "h-9 px-3 gap-1", text: "sk-text-sm-semibold", icon: 20, square: "h-9 w-9", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
+  sm: { pad: "h-9 px-3 gap-1", text: "sk-text-body-medium-semibold", icon: 20, square: "h-9 w-9", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
   // 44 tall, 12/12 padding, 4 gap, body-medium/Semibold, 20 icon.
-  md: { pad: "h-11 px-3 gap-1", text: "sk-text-sm-semibold", icon: 20, square: "h-11 w-11", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
+  md: { pad: "h-11 px-3 gap-1", text: "sk-text-body-medium-semibold", icon: 20, square: "h-11 w-11", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
   // 48 tall, 12/16 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only).
-  lg: { pad: "h-12 px-4 gap-1.5", text: "sk-text-md-semibold", icon: 20, square: "h-12 w-12", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
+  lg: { pad: "h-12 px-4 gap-1.5", text: "sk-text-body-large-semibold", icon: 20, square: "h-12 w-12", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
   // 56 tall, 16/20 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only).
-  xl: { pad: "h-14 px-5 gap-1.5", text: "sk-text-md-semibold", icon: 20, square: "h-14 w-14", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
+  xl: { pad: "h-14 px-5 gap-1.5", text: "sk-text-body-large-semibold", icon: 20, square: "h-14 w-14", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
 };
 
 /* ._Link Button_Structure 21851:7588 has md and lg only: sm maps to md, xl to lg.
    4/2 padding, 4 gap, radius 0, 1px bottom stroke (the LINK border-b). The bottom padding
    is 3px so the stroke keeps the 28/32 heights. */
 const LINK_SIZE: Record<ButtonSize, { pad: string; text: string; icon: number }> = {
-  sm: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-sm-semibold", icon: 16 },
-  md: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-sm-semibold", icon: 16 },
-  lg: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-md-semibold", icon: 20 },
-  xl: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-md-semibold", icon: 20 },
+  sm: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-medium-semibold", icon: 16 },
+  md: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-medium-semibold", icon: 16 },
+  lg: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
+  xl: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
 };
 
 export interface ButtonStyleProps {

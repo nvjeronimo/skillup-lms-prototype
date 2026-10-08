@@ -93,7 +93,7 @@ export function QuizNavStepper({
           onClick={onBack}
           disabled={!onBack}
           className={cn(
-            "sk-text-sm-semibold inline-flex h-5 shrink-0 items-center gap-1 rounded",
+            "sk-text-body-medium-semibold inline-flex h-5 shrink-0 items-center gap-1 rounded",
             "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
             onBack ? "text-sko-text-subtle" : "cursor-not-allowed text-sko-text-disabled",
           )}
@@ -108,7 +108,7 @@ export function QuizNavStepper({
             2.82:1 dark), and the bar is the only place the answered share
             shows. */}
         <div className="flex min-w-0 flex-1 flex-col items-end gap-2">
-          <span className="sk-text-xs-medium text-sko-text-muted">
+          <span className="sk-text-body-small-medium text-sko-text-muted">
             Question {current} of {total}
           </span>
           <div

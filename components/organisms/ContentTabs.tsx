@@ -27,7 +27,7 @@ export interface ContentTabsProps {
 /** Count pill (DS Mobile Tab Select › Count badge): bg/primary-soft + text/primary in every row. */
 function CountBadge({ n }: { n: number }) {
   return (
-    <span className="sk-text-xs-medium inline-flex items-center rounded-full bg-sko-bg-primary-soft px-2 py-0.5 text-sko-text-primary">
+    <span className="sk-text-body-small-medium inline-flex items-center rounded-full bg-sko-bg-primary-soft px-2 py-0.5 text-sko-text-primary">
       {n}
     </span>
   );
@@ -60,7 +60,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               type="button"
               {...triggerProps}
               className={cn(
-                "sk-text-sm-semibold flex w-full items-center justify-between gap-2 rounded-lg border bg-sko-bg-page px-3 py-2.5 transition-colors",
+                "sk-text-body-medium-semibold flex w-full items-center justify-between gap-2 rounded-lg border bg-sko-bg-page px-3 py-2.5 transition-colors",
                 open
                   ? "border-sko-border-primary text-sko-text-primary"
                   : "border-sko-border-default text-sko-text-default",
@@ -96,7 +96,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                         aria-current={selected ? "page" : undefined}
                         onClick={close}
                         className={cn(
-                          "sk-text-sm-semibold flex w-full items-center gap-2 px-3 py-2.5 text-left transition-colors",
+                          "sk-text-body-medium-semibold flex w-full items-center gap-2 px-3 py-2.5 text-left transition-colors",
                           selected
                             ? "bg-sko-bg-primary-soft text-sko-text-primary"
                             : "text-sko-text-on-primary-soft hover:bg-sko-bg-subtle",
@@ -136,7 +136,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                     href={tab.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "sk-text-sm-semibold relative flex shrink-0 items-center gap-2 px-1 pb-3 pt-0 transition-colors",
+                      "sk-text-body-medium-semibold relative flex shrink-0 items-center gap-2 px-1 pb-3 pt-0 transition-colors",
                       isActive
                         ? "text-sko-text-primary"
                         : "text-sko-text-subtle hover:text-sko-text-default",
@@ -147,7 +147,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                       <span
                         className={cn(
                           // DS Badge v2 Soft sm: Brand on the current tab, Gray on the others.
-                          "sk-text-xs-medium inline-flex items-center rounded-full px-2 py-0.5",
+                          "sk-text-body-small-medium inline-flex items-center rounded-full px-2 py-0.5",
                           isActive
                             ? "bg-sko-bg-primary-soft text-sko-text-primary"
                             : "bg-sko-bg-faint text-sko-text-muted",

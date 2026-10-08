@@ -31,7 +31,7 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
       {/* Brand stage: bg/primary with its own text pair, so the overline holds AA in every
           theme and skin (the old stage sat on a text token that turned pale in Dark). */}
       <main id="main" tabIndex={-1} className="flex flex-1 flex-col items-center justify-center gap-6 bg-sko-bg-primary px-4 py-12 outline-none">
-        <h1 className="sk-text-2xs-medium text-sko-text-on-primary">Certificate of Completion</h1>
+        <h1 className="sk-text-label-small-medium text-sko-text-on-primary">Certificate of Completion</h1>
         <CourseCertificate
           learnerName={certificate.learnerName}
           courseTitle={certificate.courseTitle}

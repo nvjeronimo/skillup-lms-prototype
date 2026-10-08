@@ -26,9 +26,9 @@ export function PlatformStat({ label, value, detail, theme = "default", divider 
   if (theme === "inverse") {
     return (
       <div className={cn("flex min-w-0 flex-col justify-end gap-1 text-sko-text-on-inverse", className)}>
-        <p className="sk-text-display-sm-bold">{value}</p>
-        <p className="sk-text-2xs-semibold opacity-60 [[data-theme=dark]_&]:opacity-70">{label}</p>
-        <p className="sk-text-xs-medium opacity-50 [[data-theme=dark]_&]:opacity-70">{detail}</p>
+        <p className="sk-text-headline-medium-bold">{value}</p>
+        <p className="sk-text-label-small-semibold opacity-60 [[data-theme=dark]_&]:opacity-70">{label}</p>
+        <p className="sk-text-body-small-medium opacity-50 [[data-theme=dark]_&]:opacity-70">{detail}</p>
       </div>
     );
   }
@@ -40,9 +40,9 @@ export function PlatformStat({ label, value, detail, theme = "default", divider 
         className,
       )}
     >
-      <p className="sk-text-2xs-semibold text-sko-text-muted">{label}</p>
-      <p className="sk-text-display-sm-bold text-sko-text-default">{value}</p>
-      <p className="sk-text-xs-medium text-sko-text-muted">{detail}</p>
+      <p className="sk-text-label-small-semibold text-sko-text-muted">{label}</p>
+      <p className="sk-text-headline-medium-bold text-sko-text-default">{value}</p>
+      <p className="sk-text-body-small-medium text-sko-text-muted">{detail}</p>
     </div>
   );
 }

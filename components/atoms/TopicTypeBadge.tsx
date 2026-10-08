@@ -40,7 +40,7 @@ export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBa
   return (
     <span
       className={cn(
-        "sk-text-xs-medium inline-flex items-center gap-1.5 text-sko-text-subtle",
+        "sk-text-body-small-medium inline-flex items-center gap-1.5 text-sko-text-subtle",
         className,
       )}
     >

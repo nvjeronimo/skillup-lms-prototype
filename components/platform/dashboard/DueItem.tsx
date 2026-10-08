@@ -16,17 +16,17 @@ export function DueItem({ day, when, urgency, title, meta, status }: Omit<Dashbo
       <div className="flex w-[60px] shrink-0 flex-col">
         <span
           className={cn(
-            "sk-text-display-xs-bold",
+            "sk-text-headline-small-bold",
             urgency === "today" ? "text-sko-text-error" : "text-sko-text-default",
           )}
         >
           {day}
         </span>
-        <span className="sk-text-2xs-semibold text-sko-text-subtle">{when}</span>
+        <span className="sk-text-label-small-semibold text-sko-text-subtle">{when}</span>
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <p className="sk-text-sm-semibold text-sko-text-default">{title}</p>
-        <p className="sk-text-xs-regular text-sko-text-subtle">{meta}</p>
+        <p className="sk-text-body-medium-semibold text-sko-text-default">{title}</p>
+        <p className="sk-text-body-small-regular text-sko-text-subtle">{meta}</p>
       </div>
       {/* _Badge base Dot: 6 left, an 8px dot slot, 4 to the label. The Badge atom has no Dot
           option, so the slot is composed here (pl-1.5 + gap-1 over the atom's px-2). */}

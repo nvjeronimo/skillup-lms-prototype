@@ -100,9 +100,9 @@ export function Toast({ toast, onDone, duration = 4000, showClose = true, classN
         <div className="flex min-w-0 flex-col gap-2">
           <div className="flex flex-col gap-1">
             {toast.title ? (
-              <p className="sk-text-sm-semibold text-sko-text-default">{toast.title}</p>
+              <p className="sk-text-body-medium-semibold text-sko-text-default">{toast.title}</p>
             ) : null}
-            <p className="sk-text-sm-medium text-sko-text-muted">{toast.message}</p>
+            <p className="sk-text-body-medium-medium text-sko-text-muted">{toast.message}</p>
           </div>
           {toast.actionLabel ? (
             <button
@@ -111,7 +111,7 @@ export function Toast({ toast, onDone, duration = 4000, showClose = true, classN
                 toast.onAction?.();
                 onDone?.();
               }}
-              className="sk-text-sm-semibold self-start text-sko-text-subtle"
+              className="sk-text-body-medium-semibold self-start text-sko-text-subtle"
             >
               {toast.actionLabel}
             </button>

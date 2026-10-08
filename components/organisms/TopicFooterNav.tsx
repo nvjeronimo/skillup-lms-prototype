@@ -66,11 +66,11 @@ export function TopicFooterNav({
           on tablet/desktop and is dropped on mobile. */}
       {/* Mobile: the paginator never wraps ("3 of 25" on one line); the Next side gives way. */}
       <div className={cn("text-center", compact ? "min-w-max flex-1 whitespace-nowrap" : "min-w-0")}>
-        <p className="sk-text-sm-semibold text-sko-text-subtle">
+        <p className="sk-text-body-medium-semibold text-sko-text-subtle">
           {position} of {total}
         </p>
         {!compact ? (
-          <p className="sk-text-xs-regular truncate text-sko-text-subtle">{title}</p>
+          <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{title}</p>
         ) : null}
       </div>
 

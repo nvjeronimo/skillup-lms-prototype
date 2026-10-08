@@ -96,20 +96,20 @@ export function PlatformPage({
         role="note"
         className="sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-1 text-sko-text-warning md:px-8 lg:px-10"
       >
-        <p className="sk-text-sm-regular">
-          <span className="sk-text-sm-semibold">Test build.</span> Most figures on this page are sample data: no
+        <p className="sk-text-body-medium-regular">
+          <span className="sk-text-body-medium-semibold">Test build.</span> Most figures on this page are sample data: no
           API returns them yet. The navigation is not final either: top bar or sidebar is still under study.
         </p>
         <button
           type="button"
           aria-pressed={showMock}
           onClick={toggleMock}
-          className="sk-text-sm-semibold inline-flex min-h-11 items-center underline underline-offset-2"
+          className="sk-text-body-medium-semibold inline-flex min-h-11 items-center underline underline-offset-2"
         >
           {showMock ? "Hide sample-data marks" : "Show which"}
         </button>
         {showMock && reasons.length ? (
-          <ul className="sk-text-xs-regular w-full list-disc pb-1 ps-5">
+          <ul className="sk-text-body-small-regular w-full list-disc pb-1 ps-5">
             {reasons.map((r) => (
               <li key={r}>{r}</li>
             ))}

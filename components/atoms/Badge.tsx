@@ -185,9 +185,9 @@ const PLAIN_CIRCLE: Record<BadgeColor, string> = {
    Pill lg: 28px, py 4, label 0/12, with a leading icon pl 10 · icon 12 · 4px gap · pr 12.
    Plain: no padding, 6px gap, the 12px icon centred in a 20×20 soft circle. */
 const PILL_SIZE: Record<BadgeSize, { label: string; icon: string; text: string }> = {
-  sm: { label: "py-0.5 px-2", icon: "py-0.5 pl-1.5 pr-2 gap-1.5", text: "sk-text-xs-medium" },
-  md: { label: "py-0.5 px-2.5", icon: "py-0.5 pl-2 pr-2.5 gap-1", text: "sk-text-sm-medium" },
-  lg: { label: "py-1 px-3", icon: "py-1 pl-2.5 pr-3 gap-1", text: "sk-text-sm-medium" },
+  sm: { label: "py-0.5 px-2", icon: "py-0.5 pl-1.5 pr-2 gap-1.5", text: "sk-text-body-small-medium" },
+  md: { label: "py-0.5 px-2.5", icon: "py-0.5 pl-2 pr-2.5 gap-1", text: "sk-text-body-medium-medium" },
+  lg: { label: "py-1 px-3", icon: "py-1 pl-2.5 pr-3 gap-1", text: "sk-text-body-medium-medium" },
 };
 
 function resolveTone(tone: BadgeTone | undefined): { color?: BadgeColor; variant?: BadgeVariant } {
@@ -207,7 +207,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
   const v: BadgeVariant = variant ?? fromTone.variant ?? "soft";
   const plain = v === "plain";
   const geometry = PILL_SIZE[size];
-  const textStyle = eyebrow ? "sk-text-2xs-semibold" : geometry.text;
+  const textStyle = eyebrow ? "sk-text-label-small-semibold" : geometry.text;
 
   return (
     <span

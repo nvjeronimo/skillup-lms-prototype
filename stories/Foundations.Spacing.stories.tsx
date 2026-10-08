@@ -66,22 +66,22 @@ function Foundations() {
   return (
     <div className="flex flex-col gap-8 p-6">
       <section>
-        <h2 className="sk-text-lg-semibold mb-1 text-sko-text-default">Spacing</h2>
-        <p className="sk-text-sm-regular mb-4 text-sko-text-subtle">
+        <h2 className="sk-text-title-medium-semibold mb-1 text-sko-text-default">Spacing</h2>
+        <p className="sk-text-body-medium-regular mb-4 text-sko-text-subtle">
           4pt grid with a 6px half-step. From Spacing/2xl up the value shrinks on Tablet and
           Mobile (bars: D = Desktop, T = Tablet, M = Mobile).
         </p>
         <div className="flex flex-col gap-3">
           {SPACING.map((s) => (
             <div key={s.token} className="flex items-center gap-4">
-              <code className="sk-text-xs-regular w-28 shrink-0 text-sko-text-subtle">{s.token}</code>
-              <span className="sk-text-xs-regular w-28 shrink-0 text-sko-text-subtle">
+              <code className="sk-text-body-small-regular w-28 shrink-0 text-sko-text-subtle">{s.token}</code>
+              <span className="sk-text-body-small-regular w-28 shrink-0 text-sko-text-subtle">
                 {modeLabel(s.px)}
               </span>
               <div className="flex flex-col gap-1">
                 {s.px.map((px, i) => (
                   <div key={MODES[i]} className="flex items-center gap-2">
-                    <span className="sk-text-2xs-regular w-3 text-sko-text-subtle">{MODES[i]}</span>
+                    <span className="sk-text-label-small-regular w-3 text-sko-text-subtle">{MODES[i]}</span>
                     <span className="h-2 rounded-sm bg-sko-bg-primary" style={{ width: px }} />
                   </div>
                 ))}
@@ -92,15 +92,15 @@ function Foundations() {
       </section>
 
       <section>
-        <h2 className="sk-text-lg-semibold mb-1 text-sko-text-default">Container</h2>
-        <p className="sk-text-sm-regular mb-4 text-sko-text-subtle">
+        <h2 className="sk-text-title-medium-semibold mb-1 text-sko-text-default">Container</h2>
+        <p className="sk-text-body-medium-regular mb-4 text-sko-text-subtle">
           Page inset, the gap between items inside a container, and the content column width.
         </p>
         <div className="flex flex-col gap-2">
           {CONTAINER.map((c) => (
             <div key={c.token} className="flex items-center gap-4">
-              <code className="sk-text-xs-regular w-36 shrink-0 text-sko-text-subtle">{c.token}</code>
-              <span className="sk-text-xs-regular text-sko-text-default">
+              <code className="sk-text-body-small-regular w-36 shrink-0 text-sko-text-subtle">{c.token}</code>
+              <span className="sk-text-body-small-regular text-sko-text-default">
                 D {c.px[0]} · T {c.px[1]} · M {c.px[2]}
               </span>
             </div>
@@ -109,8 +109,8 @@ function Foundations() {
       </section>
 
       <section>
-        <h2 className="sk-text-lg-semibold mb-1 text-sko-text-default">Radii</h2>
-        <p className="sk-text-sm-regular mb-4 text-sko-text-subtle">
+        <h2 className="sk-text-title-medium-semibold mb-1 text-sko-text-default">Radii</h2>
+        <p className="sk-text-body-medium-regular mb-4 text-sko-text-subtle">
           Buttons use Radius/fixed-sm (6), inputs fixed-md (8), cards and panels fixed-xl (12),
           modals fixed-2xl (16), badges fixed-full.
         </p>
@@ -121,21 +121,21 @@ function Foundations() {
                 className="h-16 w-16 border border-sko-border-primary bg-sko-bg-primary-soft"
                 style={{ borderRadius: r.px }}
               />
-              <code className="sk-text-xs-regular text-sko-text-subtle">{r.token}</code>
-              <span className="sk-text-2xs-regular normal-case text-sko-text-subtle">
+              <code className="sk-text-body-small-regular text-sko-text-subtle">{r.token}</code>
+              <span className="sk-text-label-small-regular normal-case text-sko-text-subtle">
                 {r.px === 9999 ? "full" : `${r.px}px`} · {r.cls}
               </span>
             </div>
           ))}
         </div>
-        <p className="sk-text-sm-regular mb-2 mt-6 text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular mb-2 mt-6 text-sko-text-subtle">
           Radius/flex-* equals fixed-* up to xl; the three largest steps are mode-aware:
         </p>
         <div className="flex flex-col gap-2">
           {FLEX_RADII.map((r) => (
             <div key={r.token} className="flex items-center gap-4">
-              <code className="sk-text-xs-regular w-36 shrink-0 text-sko-text-subtle">{r.token}</code>
-              <span className="sk-text-xs-regular text-sko-text-default">
+              <code className="sk-text-body-small-regular w-36 shrink-0 text-sko-text-subtle">{r.token}</code>
+              <span className="sk-text-body-small-regular text-sko-text-default">
                 D {r.px[0]} · T {r.px[1]} · M {r.px[2]}
               </span>
             </div>

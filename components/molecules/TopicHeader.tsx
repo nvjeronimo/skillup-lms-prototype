@@ -44,17 +44,17 @@ export function TopicHeader({
             body-medium/Medium layers in text/subtle, as in the DS meta-row. */}
         {showDuration && duration ? (
           <>
-            <span aria-hidden className="sk-text-sm-medium text-sko-text-subtle">
+            <span aria-hidden className="sk-text-body-medium-medium text-sko-text-subtle">
               ·
             </span>
-            <span className="sk-text-sm-medium text-sko-text-subtle">{durationLabel}</span>
+            <span className="sk-text-body-medium-medium text-sko-text-subtle">{durationLabel}</span>
           </>
         ) : null}
         {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
       </div>
-      <h1 className="sk-text-display-xs-semibold text-sko-text-default">{title}</h1>
+      <h1 className="sk-text-headline-small-semibold text-sko-text-default">{title}</h1>
       {showDescription && description ? (
-        <p className="sk-text-md-medium text-sko-text-muted">{description}</p>
+        <p className="sk-text-body-large-medium text-sko-text-muted">{description}</p>
       ) : null}
     </header>
   );

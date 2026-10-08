@@ -40,7 +40,7 @@ function DisclosureRow({
           onClick={onToggle}
           className="-my-2.5 flex w-full items-start gap-4 py-2.5 text-left"
         >
-          <span className="sk-text-md-semibold min-w-0 flex-1 text-sko-text-default">{item.title}</span>
+          <span className="sk-text-body-large-semibold min-w-0 flex-1 text-sko-text-default">{item.title}</span>
           <Icon
             icon={open ? CircleMinus : CirclePlus}
             size={24}
@@ -55,7 +55,7 @@ function DisclosureRow({
         role="region"
         aria-labelledby={buttonId}
         hidden={!open}
-        className="sk-text-md-regular mt-1 space-y-4 pr-10 text-sko-text-subtle"
+        className="sk-text-body-large-regular mt-1 space-y-4 pr-10 text-sko-text-subtle"
       >
         {body.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>

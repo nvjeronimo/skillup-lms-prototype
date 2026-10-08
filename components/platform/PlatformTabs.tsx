@@ -112,7 +112,7 @@ export function PlatformTabs<T extends string>({
               // Size=sm is 32 tall with 12 under the label; an invisible band grows the target to 44 upwards.
               responsive
                 ? "h-8 pb-3 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-top-3 max-md:before:bottom-0 max-md:before:content-[''] md:h-auto md:py-3"
-                : "sk-text-md-semibold py-3",
+                : "sk-text-body-large-semibold py-3",
               // The scrolling row clips an outline drawn outside the tab.
               ownRule && "focus-visible:-outline-offset-2",
               selected ? "text-sko-text-primary" : "text-sko-text-subtle hover:text-sko-text-default",
@@ -121,8 +121,8 @@ export function PlatformTabs<T extends string>({
             {/* The DS text styles are not responsive, so `responsive` renders a label and a badge per size. */}
             {responsive ? (
               <>
-                <span className="sk-text-sm-semibold md:hidden">{tab.label}</span>
-                <span className="sk-text-md-semibold hidden md:inline">{tab.label}</span>
+                <span className="sk-text-body-medium-semibold md:hidden">{tab.label}</span>
+                <span className="sk-text-body-large-semibold hidden md:inline">{tab.label}</span>
               </>
             ) : (
               tab.label
