@@ -22,6 +22,12 @@ export type Vision = "default" | "cvd";
 /** Text scale — md = 100%, lg = 115%, xl = 130% (WCAG 1.4.4 resize text). */
 export type TextSize = "md" | "lg" | "xl";
 
+/** LTI "Open tool in" (plus the refused-frame fallback). See `labLaunch` in the store. */
+export type LabLaunch = "new-tab" | "inline" | "modal" | "refused";
+
+/** Where the partner stand-in page (app/partner) leaves a lab score for SkillUp to collect. */
+export const LAB_SCORES_KEY = "sk-lab-scores";
+
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
   message: string;
@@ -53,6 +59,14 @@ interface LmsState {
       score?: number;
       staffOverride?: boolean;
     }
+  >;
+  /**
+   * Partner-lab progress per topic (lab-third-party-platforms.md). `openedAt` is when the
+   * learner last left for the partner's platform; `score` is what an LTI lab sent back.
+   */
+  labState: Record<
+    string,
+    { openedAt?: number; completedAt?: number; score?: { earned: number; total: number } }
   >;
   /** Transcript line currently highlighted as Active (independent of playback). */
   activeLineId: string | null;
@@ -98,6 +112,13 @@ interface LmsState {
    * invisible to whoever is being tested (quizzes/08-two-modes.md §7).
    */
   quizMode: "A" | "B";
+  /**
+   * How an LTI lab opens. `new-tab` is how the Google labs are authored today. `inline` and
+   * `modal` are the other two values of the LTI component's "Open tool in" setting, and
+   * `refused` is what the learner gets when the provider does not allow the frame. The last
+   * three wait for the content team's test in Studio, so they live in the demo menu only.
+   */
+  labLaunch: LabLaunch;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -142,6 +163,11 @@ interface LmsState {
   setLargeTargets: (v: boolean) => void;
   setDiscussionsPreview: (v: boolean) => void;
   setQuizMode: (v: "A" | "B") => void;
+  setLabLaunch: (v: LabLaunch) => void;
+  /** The learner opened the lab on the partner's platform. */
+  labOpened: (topicId: string) => void;
+  /** The partner sent a score back (LTI): stores it and completes the topic. */
+  labScoreReceived: (topicId: string, earned: number, total: number) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -188,6 +214,7 @@ export const useLmsStore = create<LmsState>()(
   currentVideoTimestamp: 0,
   resumePositions: {},
   oraState: {},
+  labState: {},
   activeLineId: "ln-3",
   notes: notesSeed,
   noteEditor: { open: false },
@@ -209,6 +236,7 @@ export const useLmsStore = create<LmsState>()(
   largeTargetsChoice: null,
   discussionsPreview: false,
   quizMode: "A",
+  labLaunch: "new-tab",
 
   setSidebarExpanded: (v) => set({ sidebarExpanded: v }),
   toggleSidebar: () =>
@@ -338,8 +366,36 @@ export const useLmsStore = create<LmsState>()(
       const next = new Set(state.completedTopics);
       next.add(topicId);
       track("topic_complete", { topicId });
-      const title = getTopic(topicId)?.title ?? "topic";
-      return { completedTopics: next, toast: { message: `Marked as complete · ${title}` } };
+      const topic = getTopic(topicId);
+      const title = topic?.title ?? "topic";
+      // A lab remembers the day it was completed: its launch card states it.
+      const labState =
+        topic?.type === "Lab"
+          ? { ...state.labState, [topicId]: { ...state.labState[topicId], completedAt: Date.now() } }
+          : state.labState;
+      return { completedTopics: next, labState, toast: { message: `Marked as complete · ${title}` } };
+    }),
+
+  labOpened: (topicId) =>
+    set((state) => ({
+      labState: { ...state.labState, [topicId]: { ...state.labState[topicId], openedAt: Date.now() } },
+    })),
+
+  labScoreReceived: (topicId, earned, total) =>
+    set((state) => {
+      if (state.labState[topicId]?.score) return state;
+      const completed = new Set(state.completedTopics);
+      completed.add(topicId);
+      track("topic_complete", { topicId });
+      const title = getTopic(topicId)?.title ?? "lab";
+      return {
+        completedTopics: completed,
+        labState: {
+          ...state.labState,
+          [topicId]: { ...state.labState[topicId], completedAt: Date.now(), score: { earned, total } },
+        },
+        toast: { message: `Score received · ${title}` },
+      };
     }),
 
   submitForReview: (topicId) =>
@@ -423,6 +479,7 @@ export const useLmsStore = create<LmsState>()(
     track("preview_toggle", { feature: "quiz_mode", value: quizMode });
     set({ quizMode });
   },
+  setLabLaunch: (labLaunch) => set({ labLaunch }),
   setDiscussionsPreview: (discussionsPreview) => {
     track("preview_toggle", { feature: "discussions", value: String(discussionsPreview) });
     set({ discussionsPreview });
@@ -447,6 +504,7 @@ export const useLmsStore = create<LmsState>()(
       currentVideoTimestamp: 0,
       resumePositions: {},
       oraState: {},
+      labState: {},
       activeLineId: "ln-3",
       toast: { message: "Demo reset to its initial state" },
     });
@@ -477,6 +535,7 @@ export const useLmsStore = create<LmsState>()(
         quizResults: s.quizResults,
         resumePositions: s.resumePositions,
         oraState: s.oraState,
+        labState: s.labState,
         bookmarks: s.bookmarks,
         notes: s.notes,
         notificationsRead: s.notificationsRead,
@@ -491,10 +550,35 @@ export const useLmsStore = create<LmsState>()(
         largeTargetsChoice: s.largeTargetsChoice,
         discussionsPreview: s.discussionsPreview,
         quizMode: s.quizMode,
+        labLaunch: s.labLaunch,
       }),
     },
   ),
 );
+
+// The partner stand-in (app/partner) runs in another tab, or in a frame on the lab topic.
+// It leaves the score under LAB_SCORES_KEY, the way an LTI tool posts a grade back to the
+// platform, and never applies it itself: only the SkillUp side keeps score. A SkillUp page
+// picks it up at once through the `storage` event, or on its next load if none was open.
+function applyLabScores() {
+  try {
+    const raw = window.localStorage.getItem(LAB_SCORES_KEY);
+    if (!raw) return;
+    window.localStorage.removeItem(LAB_SCORES_KEY);
+    const scores = JSON.parse(raw) as Record<string, { earned: number; total: number }>;
+    for (const [topicId, score] of Object.entries(scores)) {
+      useLmsStore.getState().labScoreReceived(topicId, score.earned, score.total);
+    }
+  } catch {
+    // Storage blocked or a malformed entry: the lab simply stays "waiting for your score".
+  }
+}
+if (typeof window !== "undefined" && !window.location.pathname.startsWith("/partner")) {
+  applyLabScores();
+  window.addEventListener("storage", (event) => {
+    if (event.key === LAB_SCORES_KEY && event.newValue) applyLabScores();
+  });
+}
 
 /** Derived helper: does this topic currently have any notes? */
 export function useTopicHasNote(lineId: string): boolean {

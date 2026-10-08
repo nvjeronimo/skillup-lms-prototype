@@ -27,6 +27,7 @@ import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
 import {
+  getPartnerLab,
   topicFamily,
   topicDescription,
   getDownloads,
@@ -154,11 +155,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // lab, finish the ORA journey), so they get no Mark-as-Complete bar — it would
   // duplicate the action they already own. Passive content (video / reading /
   // podcast / discussion) gets the completion action in the FOOTER only.
+  // A partner lab (Google, Microsoft) is the exception among labs: its content has no
+  // action of its own. Microsoft sends nothing back, so the learner marks it complete;
+  // Google sends a score, so there is nothing to mark and only the status shows once done.
+  const partnerLab = getPartnerLab(topic);
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
     family === "activity" ||
-    family === "lab" ||
+    (family === "lab" && !partnerLab) ||
     family === "ora";
   // VILT never exposes a manual "Mark as complete". Completion comes from one of
   // two paths, whichever happens first: attendance on the live (join + ≥50%,
@@ -188,7 +193,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       }
     />
   );
-  const showAction = !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
+  const showAction =
+    !isLocked && !hasInFrameAction && !isVilt && !isBlocked && !(partnerLab?.scored && !isCompleted);
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
   // in the footer, never in the header — a header CTA invites premature
   // completion. The header's top-right slot carries the ✓ "Marked as completed"
@@ -292,8 +298,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // with one option left the tab bar is hidden.
   const tabs = isVideo
     ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
-    : family === "reading"
-      ? [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
+    : family === "reading" || partnerLab
+      ? // Same rule for a partner lab: it has no files of ours, so no Downloads tab.
+        [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
       : [{ ...transcriptTab, label: PRIMARY_LABEL[family] }, downloadsTab];
   const showTabs = tabs.length > 1;
 
@@ -457,7 +464,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   description={topicDescription(topic)}
                   rightSlot={headerStatus ?? undefined}
                 />
-                <div className="mt-5">
+                {/* A partner lab opens with the divider Reading uses, 12 under the header. */}
+                <div className={partnerLab ? "mt-3" : "mt-5"}>
                   {showTabs ? (
                     <ContentTabs
                       tabs={tabs}

@@ -32,7 +32,7 @@ export function TopicBody({ topicId, courseSlug }: { topicId: string; courseSlug
     case "activity":
       return <ActivityView topicId={topicId} />;
     case "lab":
-      return <LabView topicId={topicId} />;
+      return <LabView topicId={topicId} courseSlug={courseSlug} />;
     case "ora":
       return <OraView topicId={topicId} />;
     case "lessonPage":

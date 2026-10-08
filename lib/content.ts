@@ -222,7 +222,10 @@ export function topicDescription(topic: FlatTopic): string {
     case "lessonPage":
       return `A guided page that brings together everything on this topic: video, notes, diagrams and downloads.`;
     case "lab":
-      return `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`;
+      return (
+        getPartnerLab(topic)?.description ??
+        `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`
+      );
     case "podcast":
       return `A conversation you can listen to on the move, with transcript and chapters included.`;
     case "vilt":
@@ -650,7 +653,11 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
     }
     case "lab":
       // Same principle: the lab's own assets are what the learner needs.
-      files = getLab(topic).files.map((f) => make(extType(f.name), f.name, f.size));
+      // A partner lab has no files of ours: everything is on the partner's platform.
+      {
+        const lab = getLab(topic);
+        files = lab.kind === "download" ? lab.files.map((f) => make(extType(f.name), f.name, f.size)) : [];
+      }
       break;
     case "ora":
       files = [
@@ -740,7 +747,9 @@ export function getViltSession(topic: FlatTopic): ViltSession {
 
 /* ----------------------------------------------------------------- Lab --- */
 
-export interface LabContent {
+/** The download lab: a notebook the learner runs on their own machine. */
+export interface DownloadLabContent {
+  kind: "download";
   intro: string;
   /** What the learner needs before starting. */
   prerequisites: string[];
@@ -750,12 +759,75 @@ export interface LabContent {
 }
 
 /**
- * A Lab is authored as an HTML block plus downloadable assets — the learner
+ * The partner lab (lab-third-party-platforms.md): it runs on the partner's own platform
+ * and the learner leaves ours to do it. What differs per partner is what comes back.
+ *
+ * - Google is an LTI component (`lti_consumer`) with a score: the topic completes when
+ *   Google sends the score, so there is no manual action.
+ * - Microsoft is a link in a Text component: nothing comes back, so the learner marks
+ *   the topic complete.
+ */
+export interface PartnerLabContent {
+  kind: "partner";
+  partner: "google" | "microsoft";
+  /** DS `LMS / Provider-Partner Badge` on the launch card. */
+  provider: "Google Cloud" | "Microsoft";
+  /** The partner's lab platform, as the learner knows it. */
+  platform: string;
+  /** True when the partner sends a score back (LTI, graded). */
+  scored: boolean;
+  description: string;
+  intro: string;
+  prerequisites: string[];
+}
+
+export type LabContent = DownloadLabContent | PartnerLabContent;
+
+const PARTNER_LABS: Record<string, PartnerLabContent> = {
+  "m3-t4e2": {
+    kind: "partner",
+    partner: "google",
+    provider: "Google Cloud",
+    platform: "Google Skills",
+    scored: true,
+    description:
+      "A hands-on lab on Google Cloud: create a virtual machine, connect to it and deploy a web server.",
+    intro:
+      "This lab runs on Google Skills, Google's own lab platform. You work in a real Google Cloud project with temporary credentials, so you don't need your own Google Cloud account or a credit card.",
+    prerequisites: [
+      "A desktop or laptop: this lab is not supported in the mobile app",
+      "Chrome, in an Incognito window, so your personal Google account stays out of the lab",
+      "About 45 minutes in one sitting: the lab timer can't be paused",
+    ],
+  },
+  "m3-t4e3": {
+    kind: "partner",
+    partner: "microsoft",
+    provider: "Microsoft",
+    platform: "Microsoft Learn",
+    scored: false,
+    description:
+      "A Microsoft Learn module with hands-on exercises on Azure Service Bus and Queue Storage.",
+    intro:
+      "This lab is a module on Microsoft Learn. You read the units and do the exercises on Microsoft's site, then come back here to mark the topic as complete.",
+    prerequisites: [
+      "A Microsoft account, to sign in to Microsoft Learn and save your progress there",
+      "A desktop or laptop is recommended for the exercises",
+      "About 50 minutes",
+    ],
+  },
+};
+
+/**
+ * A download Lab is authored as an HTML block plus downloadable assets — the learner
  * runs it offline in their own Jupyter install, so there is no grading and
  * completion is manual. That is why it is not an Activity (SCORM).
  */
 export function getLab(topic: FlatTopic): LabContent {
+  const partner = PARTNER_LABS[topic.id];
+  if (partner) return partner;
   return {
+    kind: "download",
     intro:
       "In this lab you'll run pre-written Python against a sample process dataset to calculate capability indices and spot the drivers of variation. Everything runs locally and nothing is submitted.",
     prerequisites: [
@@ -775,6 +847,11 @@ export function getLab(topic: FlatTopic): LabContent {
     ],
     estimatedMinutes: 45,
   };
+}
+
+/** The partner lab behind a topic, or null for every other topic (download labs included). */
+export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
+  return PARTNER_LABS[topic.id] ?? null;
 }
 
 /* ------------------------------------------------------------- Podcast --- */
