@@ -119,11 +119,9 @@ export function MyLearningCourseCard({ course, layout, emphasis = "primary", cla
   }
 
   return (
-    // Padding is the DS Spacing/3xl: 16 on mobile, 20 on tablet, 24 on desktop. Same
-    // inside-stroke rule as the list row: the 1px border counts, so each value is one less.
-    <article
-      className={cn(surface, "flex flex-col items-start gap-4 p-[15px] md:p-[19px] lg:p-[23px]", className)}
-    >
+    // Padding is the DS Spacing/3xl: 16 on mobile, 20 on tablet, 24 on desktop. In the DS
+    // grid card the 1px stroke takes part in the layout, so the border adds to the padding.
+    <article className={cn(surface, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
       <div className="flex w-full items-start gap-4">
         <Thumb initials={course.initials} className="size-[86px]" />
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">

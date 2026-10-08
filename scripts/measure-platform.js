@@ -38,7 +38,7 @@
     "/platform/my-learning": [
       ["Stat", [200, 122], (d) => mock(d, "Daily goals").children[0]],
       ["Tabs row height", [null, 48], (d) => d.querySelector("[role=tab]")],
-      ["Course card, grid", [384, 358], (d) => all(d, "[role=tabpanel] li")[0]],
+      ["Course card, grid", [384, 360], (d) => all(d, "[role=tabpanel] li")[0]],
     ],
     "/platform/my-learning?view=list": [
       ["Course card, list", [1200, 152], (d) => all(d, "[role=tabpanel] li")[0]],
