@@ -39,6 +39,8 @@ import {
   getCourseBySlug,
   getTopic,
   getAdjacentTopics,
+  getCourseForTopic,
+  flatTopics,
   notifications,
   savedNotes,
   savedTopics,
@@ -236,13 +238,27 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Footer progression: Next normally, but "Go to next Module" at a module boundary
   // and "Go to next Course" at the final topic. The milestone ("MODULE COMPLETED") only
   // shows once this topic is done: on an unfinished last topic the footer stays a plain Next.
-  const milestone: Milestone = !isCompleted
-    ? "Topic"
-    : !next
+  // The course counts as complete when every topic the learner can finish in the prototype
+  // is finished. Left out: locked topics, types not available yet, VILT (completes by
+  // attendance) and quizzes (the prototype has no submit that completes them).
+  const courseDone = flatTopics(getCourseForTopic(topicId)).every((t) => {
+    const f = topicFamily(t.type);
+    return (
+      t.locked ||
+      f === "blocked" ||
+      f === "vilt" ||
+      f === "assessment" ||
+      f === "graded" ||
+      completedTopics.has(t.id)
+    );
+  });
+  const milestone: Milestone = !next
+    ? courseDone
       ? "Course"
-      : next.moduleId !== topic.moduleId
-        ? "Module"
-        : "Topic";
+      : "Topic"
+    : isCompleted && next.moduleId !== topic.moduleId
+      ? "Module"
+      : "Topic";
 
   const notesCount = topicNotes(topicId, allNotes).length;
   const downloadsCount = getDownloads(topic).length;
@@ -463,13 +479,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             title={topic.title}
             milestone={milestone}
             previousDisabled={!previous}
-            // On the last topic, Next opens the course-complete dialog: not before the topic is done.
-            // A topic the learner cannot complete (locked, or a type not available yet) does not hold
-            // the course back, or the dialog could never be reached.
-            nextDisabled={!next && !isCompleted && !isLocked && !isBlocked}
+            // On the last topic, Next opens the course-complete dialog: only once the course is done.
+            nextDisabled={!next && !courseDone}
             compact={bp === "mobile"}
             onPrevious={() => previous && navigateTopic(previous.id)}
-            onNext={() => (next ? navigateTopic(next.id) : setCompleteOpen(true))}
+            onNext={() => {
+              if (next) navigateTopic(next.id);
+              else if (courseDone) setCompleteOpen(true);
+            }}
           />
         </main>
       </div>
