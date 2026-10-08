@@ -80,6 +80,7 @@ export function DashboardView() {
                     deliveryMode={course.deliveryMode}
                     progressPct={course.progressPct}
                     href={course.href}
+                    homeHref={course.homeHref}
                     emphasis={index === 0 ? "primary" : "secondary"}
                   />
                   <div className="hidden md:block">
@@ -89,6 +90,7 @@ export function DashboardView() {
                       state="Active"
                       progressPct={course.progressPct}
                       href={course.href}
+                    homeHref={course.homeHref}
                       emphasis={index === 0 ? "primary" : "secondary"}
                     />
                   </div>

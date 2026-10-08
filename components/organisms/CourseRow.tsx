@@ -1,4 +1,5 @@
 import * as React from "react";
+import Link from "next/link";
 import { Lock } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
@@ -19,6 +20,8 @@ export interface CourseRowProps {
   unlockLabel?: string;
   /** Where Resume / Start goes. With it the action is a real link; `onClick` is for actions that stay on the page. */
   href?: string;
+  /** The course's page: the title becomes a link to it. */
+  homeHref?: string;
   onClick?: () => void;
   /** Weight of the Resume action (Active). In a list only the first row is `primary`. Defaults to the DS look. */
   emphasis?: "primary" | "secondary";
@@ -33,6 +36,7 @@ export function CourseRow({
   progressPct = 0,
   unlockLabel = "UNLOCKS MAY 18",
   href,
+  homeHref,
   onClick,
   emphasis = "primary",
   className,
@@ -54,7 +58,13 @@ export function CourseRow({
             state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
           )}
         >
-          {title}
+          {homeHref && state !== "Locked" ? (
+            <Link href={homeHref} className="hover:underline">
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
         </span>
         <DeliveryModeBadge value={deliveryMode} />
       </div>

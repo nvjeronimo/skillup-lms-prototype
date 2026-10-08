@@ -8,7 +8,8 @@ import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
-import { certificate, DEFAULT_TOPIC_ID } from "@/lib/data";
+import { certificate } from "@/lib/data";
+import { courseHomeHref } from "@/lib/platform/routes";
 
 export function CertificateView({ courseSlug }: { courseSlug: string }) {
   const router = useRouter();
@@ -18,7 +19,8 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
   const clearToast = useLmsStore((s) => s.clearToast);
 
   const topbarSize: TopbarSize = bp === "mobile" ? "Mobile" : bp === "tablet" ? "Tablet" : "Desktop";
-  const backToCourse = () => router.push(`/course/${courseSlug}/topic/${DEFAULT_TOPIC_ID}`);
+  // Back from the certificate is the course page, where the certificate card lives.
+  const backToCourse = () => router.push(courseHomeHref(courseSlug));
 
   React.useEffect(() => {
     track("certificate_view");

@@ -142,7 +142,8 @@ export const myLearningCourses: MyLearningCourse[] = [
     progressMeta: "8 hours total",
     upNext: { certificate: "Issued 12 Sep 2026" },
     cta: "Review",
-    href: COURSE_PLAYER_HREF,
+    // A finished course is reviewed from its own page, not from the last unit.
+    href: COURSE_DETAIL_HREF,
     detailHref: COURSE_DETAIL_HREF,
   },
   {

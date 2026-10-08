@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { DeliveryModeBadge, type DeliveryMode } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
@@ -9,6 +10,8 @@ export interface ResumeRowProps {
   progressPct: number;
   /** Where "Resume" goes. */
   href: string;
+  /** The course's page: the title becomes a link to it. */
+  homeHref?: string;
   /** Weight of the action. In a list only the first row is `primary`. */
   emphasis?: "primary" | "secondary";
   className?: string;
@@ -24,7 +27,7 @@ export interface ResumeRowProps {
  * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
  * opens the course, so it is a link with the button look (atoms/ButtonLink).
  */
-export function ResumeRow({ title, deliveryMode, progressPct, href, emphasis = "primary", className }: ResumeRowProps) {
+export function ResumeRow({ title, deliveryMode, progressPct, href, homeHref, emphasis = "primary", className }: ResumeRowProps) {
   return (
     <div
       className={cn(
@@ -33,7 +36,15 @@ export function ResumeRow({ title, deliveryMode, progressPct, href, emphasis = "
       )}
     >
       <div className="flex flex-col items-start gap-2">
-        <p className="sk-text-body-large-medium w-full text-sko-text-default">{title}</p>
+        <p className="sk-text-body-large-medium w-full text-sko-text-default">
+          {homeHref ? (
+            <Link href={homeHref} className="hover:underline">
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
+        </p>
         <DeliveryModeBadge value={deliveryMode} />
       </div>
       <div className="flex items-center gap-4">

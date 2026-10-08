@@ -78,16 +78,19 @@ export interface DashboardResumeCourse {
   title: string;
   deliveryMode: DeliveryMode;
   progressPct: number;
-  /** Where Resume goes. Every row opens the one course the prototype has. */
+  /** Where Resume goes (`resumeUrl`). Every row opens the one course the prototype has. */
   href: string;
+  /** Where the title goes (`homeUrl`): the course's page. */
+  homeHref: string;
 }
 
 const COURSE_PLAYER = "/course/six-sigma/topic/m3-t1";
+const COURSE_HOME = "/platform/course/six-sigma";
 
 export const dashboardResume: DashboardResumeCourse[] = [
-  { id: "ai-driven-digital-marketing", title: "AI-Driven Digital Marketing", deliveryMode: "Flexible Learning", progressPct: 38, href: COURSE_PLAYER },
-  { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: COURSE_PLAYER },
-  { id: "leadership-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: COURSE_PLAYER },
+  { id: "ai-driven-digital-marketing", title: "AI-Driven Digital Marketing", deliveryMode: "Flexible Learning", progressPct: 38, href: COURSE_PLAYER, homeHref: COURSE_HOME },
+  { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: COURSE_PLAYER, homeHref: COURSE_HOME },
+  { id: "leadership-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: COURSE_PLAYER, homeHref: COURSE_HOME },
 ];
 
 /* ── Jump somewhere (LMS / Platform / Jump tile, 6382:3302) ─────────────────────────── */
