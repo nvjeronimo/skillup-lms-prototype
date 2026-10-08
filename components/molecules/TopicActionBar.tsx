@@ -12,7 +12,8 @@ import { Badge } from "@/components/atoms/Badge";
  *   Primary (DS Milestone=Submit)
  * - review     (graded, submitted) → "Under Review", Badge v2 Soft sm Warning
  * - completed  → "Marked as completed", Badge v2 Soft sm Success. Types the learner cannot
- *   complete by hand (Quiz, ORA, VILT) read "Completed" instead (`manual={false}`).
+ *   complete by hand (Quiz, ORA, VILT), and Video, which completes itself, read "Completed"
+ *   instead (`manual={false}`).
  */
 export type TopicActionState = "incomplete" | "action" | "review" | "completed";
 

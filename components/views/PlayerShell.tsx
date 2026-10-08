@@ -172,8 +172,17 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     <TopicActionBar
       state={actionState}
       onComplete={() => markComplete(topicId)}
-      // Quiz, ORA and VILT have no manual completion (reading-screen-matrix §4).
-      manual={!(family === "assessment" || family === "graded" || family === "ora" || family === "vilt")}
+      // Quiz, ORA and VILT have no manual completion, and Video completes on its own at 90%
+      // watched (reading-screen-matrix §4): their badge reads "Completed".
+      manual={
+        !(
+          family === "assessment" ||
+          family === "graded" ||
+          family === "ora" ||
+          family === "vilt" ||
+          family === "video"
+        )
+      }
     />
   );
   const showAction = !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
@@ -225,12 +234,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     ) : null;
 
   // Footer progression: Next normally, but "Go to next Module" at a module boundary
-  // and "Go to next Course" at the final topic.
-  const milestone: Milestone = !next
-    ? "Course"
-    : next.moduleId !== topic.moduleId
-      ? "Module"
-      : "Topic";
+  // and "Go to next Course" at the final topic. The milestone ("MODULE COMPLETED") only
+  // shows once this topic is done: on an unfinished last topic the footer stays a plain Next.
+  const milestone: Milestone = !isCompleted
+    ? "Topic"
+    : !next
+      ? "Course"
+      : next.moduleId !== topic.moduleId
+        ? "Module"
+        : "Topic";
 
   const notesCount = topicNotes(topicId, allNotes).length;
   const downloadsCount = getDownloads(topic).length;
@@ -451,7 +463,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             title={topic.title}
             milestone={milestone}
             previousDisabled={!previous}
-            nextDisabled={false}
+            // On the last topic, Next would open the course-complete dialog: not before the topic is done.
+            nextDisabled={!next && !isCompleted}
             compact={bp === "mobile"}
             onPrevious={() => previous && navigateTopic(previous.id)}
             onNext={() => (next ? navigateTopic(next.id) : setCompleteOpen(true))}
