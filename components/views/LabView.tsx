@@ -411,8 +411,9 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
       <section className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="sk-text-body-large-semibold text-sko-text-default">Lab files</h2>
+          {/* One primary per list: Download all is the action, the rows are Secondary. */}
           <Button
-            variant="secondary"
+            variant="primary"
             size="sm"
             leftIcon={Download}
             onClick={() => {
@@ -449,7 +450,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
                     </div>
                   </div>
                   <Button
-                    variant={got ? "secondary" : "primary"}
+                    variant="secondary"
                     size="sm"
                     leftIcon={got ? Check : Download}
                     onClick={() => {
