@@ -42,7 +42,7 @@ export function LiveNowBanner({
             label at 4.5:1+ in every mode; the dot follows the label colour. */}
         <span
           className={cn(
-            "sk-text-xs-medium inline-flex shrink-0 items-center gap-1.5 rounded-full py-1 pl-2 pr-3 uppercase",
+            "sk-text-body-small-medium inline-flex shrink-0 items-center gap-1.5 rounded-full py-1 pl-2 pr-3 uppercase",
             isLive ? "bg-sko-bg-success text-sko-text-on-success" : "bg-sko-bg-warning text-sko-text-on-warning",
           )}
         >
@@ -50,15 +50,15 @@ export function LiveNowBanner({
           {isLive ? "Live now" : "Upcoming"}
         </span>
         <div className="flex min-w-0 flex-col gap-0.5">
-          <p className="sk-text-sm-regular truncate text-sko-text-default">{title}</p>
+          <p className="sk-text-body-medium-regular truncate text-sko-text-default">{title}</p>
           {subtitle ? (
-            <p className="sk-text-xs-regular truncate text-sko-text-muted">{subtitle}</p>
+            <p className="sk-text-body-small-regular truncate text-sko-text-muted">{subtitle}</p>
           ) : null}
         </div>
       </div>
 
       <div className="flex shrink-0 items-center gap-4">
-        <span className="sk-text-xs-medium hidden text-sko-text-subtle md:block">{status}</span>
+        <span className="sk-text-body-small-medium hidden text-sko-text-subtle md:block">{status}</span>
         <Button variant="primary" size="md" onClick={onAction}>
           {isLive ? "Join Live Now" : "Set reminder"}
         </Button>

@@ -9,7 +9,7 @@ export default function PlatformLoading() {
     <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-3 bg-sko-bg-faint">
       <div role="status" className="flex flex-col items-center gap-3">
         <Loader2 size={32} strokeWidth={2} aria-hidden className="animate-spin text-sko-icon-primary" />
-        <p className="sk-text-sm-medium text-sko-text-muted">Loading your learning…</p>
+        <p className="sk-text-body-medium-medium text-sko-text-muted">Loading your learning…</p>
       </div>
     </div>
   );

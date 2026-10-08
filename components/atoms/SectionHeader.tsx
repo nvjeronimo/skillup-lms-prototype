@@ -28,12 +28,12 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const content = (
     <>
-      <span className="sk-text-xs-medium text-sko-text-muted">{label}</span>
+      <span className="sk-text-body-small-medium text-sko-text-muted">{label}</span>
       {collapsible ? (
         <span
           aria-hidden
           className={cn(
-            "sk-text-xs-medium inline-block text-sko-text-subtle transition-transform duration-200",
+            "sk-text-body-small-medium inline-block text-sko-text-subtle transition-transform duration-200",
             collapsed && "-rotate-90",
           )}
         >

@@ -31,7 +31,7 @@ export default function PlatformError({ error, reset }: { error: Error & { diges
               </Button>
               <Link
                 href="/platform/dashboard"
-                className="sk-text-sm-semibold inline-flex min-h-11 items-center text-sko-text-primary underline underline-offset-2"
+                className="sk-text-body-medium-semibold inline-flex min-h-11 items-center text-sko-text-primary underline underline-offset-2"
               >
                 Go to Dashboard
               </Link>

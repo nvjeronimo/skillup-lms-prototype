@@ -52,7 +52,7 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
             showToast(`Downloading ${files.length} resources…`);
           }}
           // DS Link Button_def Type=Brand, Hierarchy=Primary: 1px icon/primary underline, bg/faint on hover.
-          className="sk-text-sm-semibold inline-flex items-center gap-1 border-b border-sko-icon-primary px-0.5 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
+          className="sk-text-body-medium-semibold inline-flex items-center gap-1 border-b border-sko-icon-primary px-0.5 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
         >
           <Icon icon={Download} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Download all resources</span>

@@ -17,7 +17,7 @@ export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
   return (
     <span
       className={cn(
-        "sk-text-xs-semibold inline-flex items-center gap-1 uppercase",
+        "sk-text-body-small-semibold inline-flex items-center gap-1 uppercase",
         program ? "text-sko-text-primary" : "text-sko-text-subtle",
       )}
     >

@@ -13,11 +13,11 @@ const DASHBOARD = [
 export default function LabIndex() {
   return (
     <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-4xl flex-1 p-4 md:p-8">
-      <h1 className="sk-text-display-sm-semibold text-sko-text-default">Explorations</h1>
-      <p className="sk-text-md-regular mt-1 text-sko-text-muted">
+      <h1 className="sk-text-headline-medium-semibold text-sko-text-default">Explorations</h1>
+      <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">
         Directions to compare before one is chosen and brought into Figma. Switch persona in the top bar.
       </p>
-      <h2 className="sk-text-lg-semibold mt-8 text-sko-text-default">Dashboard / Home</h2>
+      <h2 className="sk-text-title-medium-semibold mt-8 text-sko-text-default">Dashboard / Home</h2>
       <ul className="mt-3 grid gap-3 md:grid-cols-2">
         {DASHBOARD.map((d) => (
           <li key={d.slug}>
@@ -25,9 +25,9 @@ export default function LabIndex() {
               href={`/lab/dashboard/${d.slug}`}
               className="flex h-full flex-col gap-1 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 hover:border-sko-border-primary"
             >
-              <span className="sk-text-md-semibold text-sko-text-default">{d.name}</span>
-              <span className="sk-text-sm-regular text-sko-text-muted">{d.hero}</span>
-              <span className="sk-text-xs-medium text-sko-text-subtle">For: {d.serves}</span>
+              <span className="sk-text-body-large-semibold text-sko-text-default">{d.name}</span>
+              <span className="sk-text-body-medium-regular text-sko-text-muted">{d.hero}</span>
+              <span className="sk-text-body-small-medium text-sko-text-subtle">For: {d.serves}</span>
             </Link>
           </li>
         ))}

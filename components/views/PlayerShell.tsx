@@ -213,8 +213,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         <div className="flex items-center gap-2.5">
           <Icon icon={MessagesSquare} size={18} className="text-sko-text-primary" />
           <div className="flex flex-col">
-            <span className="sk-text-sm-semibold text-sko-text-default">Discuss this topic</span>
-            <span className="sk-text-xs-regular text-sko-text-subtle">
+            <span className="sk-text-body-medium-semibold text-sko-text-default">Discuss this topic</span>
+            <span className="sk-text-body-small-regular text-sko-text-subtle">
               Join the conversation with your cohort.
             </span>
           </div>
@@ -419,7 +419,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       The top-right action is hidden on mobile — it lives only at
                       the end of the content there. */}
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <h1 className="sk-text-display-xs-semibold min-w-0 text-sko-text-default">
+                    <h1 className="sk-text-headline-small-semibold min-w-0 text-sko-text-default">
                       {topic.title}
                     </h1>
                     {headerStatus && bp !== "mobile" ? (

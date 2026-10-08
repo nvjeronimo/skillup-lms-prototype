@@ -36,7 +36,7 @@ function CourseNumber({ course }: { course: ProgramCourse }) {
     <span
       aria-hidden
       className={cn(
-        "sk-text-sm-semibold flex size-8 shrink-0 items-center justify-center rounded-full",
+        "sk-text-body-medium-semibold flex size-8 shrink-0 items-center justify-center rounded-full",
         complete ? "bg-sko-bg-success text-sko-icon-on-success" : "bg-sko-bg-primary-soft text-sko-text-on-primary-soft",
       )}
     >
@@ -61,12 +61,12 @@ function CoursePanel({ course }: { course: ProgramCourse }) {
 
   return (
     <div className="flex flex-col gap-4 py-2">
-      <p className="sk-text-sm-regular text-sko-text-subtle">{course.intro ?? CONTENT_PENDING}</p>
+      <p className="sk-text-body-medium-regular text-sko-text-subtle">{course.intro ?? CONTENT_PENDING}</p>
 
       {course.topics?.length ? (
         <div className="flex flex-col gap-1.5">
-          <h4 className="sk-text-2xs-semibold text-sko-text-subtle">Topics covered</h4>
-          <ul className="sk-text-sm-regular list-disc ps-[21px] text-sko-text-default">
+          <h4 className="sk-text-label-small-semibold text-sko-text-subtle">Topics covered</h4>
+          <ul className="sk-text-body-medium-regular list-disc ps-[21px] text-sko-text-default">
             {course.topics.map((topic) => (
               <li key={topic}>{topic}</li>
             ))}
@@ -145,8 +145,8 @@ function CourseRow({
         >
           <CourseNumber course={course} />
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="sk-text-md-semibold text-sko-text-default">{course.title}</span>
-            <span className="sk-text-xs-regular text-sko-text-subtle">{courseMeta(course)}</span>
+            <span className="sk-text-body-large-semibold text-sko-text-default">{course.title}</span>
+            <span className="sk-text-body-small-regular text-sko-text-subtle">{courseMeta(course)}</span>
           </span>
           <Icon
             icon={ChevronDown}

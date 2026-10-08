@@ -30,10 +30,10 @@ export function FileTypeChip({
   tone?: "primary" | "subtle" | "success";
 }) {
   return (
-    // DS body-small/Bold — sk-text-xs-semibold until .sk-text-xs-bold exists (CT-22).
+    // DS body-small/Bold — sk-text-body-small-semibold until .sk-text-body-small-bold exists (CT-22).
     <span
       className={cn(
-        "sk-text-xs-semibold shrink-0 rounded-md border px-1.5 py-1",
+        "sk-text-body-small-semibold shrink-0 rounded-md border px-1.5 py-1",
         tone === "success"
           ? "border-sko-border-success text-sko-text-success"
           : tone === "subtle"
@@ -94,10 +94,10 @@ function Block({ block }: { block: LessonBlock }) {
       return (
         <section className="flex flex-col gap-2">
           {block.heading ? (
-            <h2 className="sk-text-display-xs-semibold text-sko-text-default">{block.heading}</h2>
+            <h2 className="sk-text-headline-small-semibold text-sko-text-default">{block.heading}</h2>
           ) : null}
           {block.paragraphs.map((p, i) => (
-            <p key={i} className="sk-text-md-regular text-sko-text-muted">
+            <p key={i} className="sk-text-body-large-regular text-sko-text-muted">
               {p}
             </p>
           ))}
@@ -109,7 +109,7 @@ function Block({ block }: { block: LessonBlock }) {
         <figure className="flex flex-col gap-2">
           {/* Video unit/asset — same player component as any Video topic. */}
           <VideoPlayer durationSeconds={durationToSeconds(block.durationLabel)} />
-          <figcaption className="sk-text-xs-regular text-sko-text-subtle">
+          <figcaption className="sk-text-body-small-regular text-sko-text-subtle">
             Video · {block.durationLabel} · transcript available
           </figcaption>
         </figure>
@@ -125,7 +125,7 @@ function Block({ block }: { block: LessonBlock }) {
           >
             <Icon icon={ImageIcon} size={24} className="text-sko-text-subtle" />
           </div>
-          <figcaption className="sk-text-xs-regular text-sko-text-subtle">
+          <figcaption className="sk-text-body-small-regular text-sko-text-subtle">
             {block.caption}
           </figcaption>
         </figure>
@@ -137,11 +137,11 @@ function Block({ block }: { block: LessonBlock }) {
           <div className="flex min-w-0 items-center gap-3">
             <FileTypeChip label={fileExtension(block.name, block.fileKind)} tone="primary" />
             <div className="flex min-w-0 flex-col gap-0.5">
-              {/* DS body-medium/Bold — semibold until .sk-text-sm-bold exists (CT-22). */}
-              <span className="sk-text-sm-semibold truncate text-sko-text-default">
+              {/* DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22). */}
+              <span className="sk-text-body-medium-semibold truncate text-sko-text-default">
                 {block.name}
               </span>
-              <span className="sk-text-xs-regular text-sko-text-subtle">{block.size}</span>
+              <span className="sk-text-body-small-regular text-sko-text-subtle">{block.size}</span>
             </div>
           </div>
           <Button
@@ -181,11 +181,11 @@ function KnowledgeCheck({
 
   return (
     <section className="flex flex-col gap-2 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-5 shadow-sk-card">
-      <span className="sk-text-xs-medium uppercase text-sko-text-primary">
+      <span className="sk-text-body-small-medium uppercase text-sko-text-primary">
         Quick check · not graded
       </span>
-      {/* DS body-large/Bold — semibold until .sk-text-md-bold exists (CT-22). */}
-      <h3 className="sk-text-md-semibold text-sko-text-default">{question}</h3>
+      {/* DS body-large/Bold — semibold until .sk-text-body-large-bold exists (CT-22). */}
+      <h3 className="sk-text-body-large-semibold text-sko-text-default">{question}</h3>
 
       <ul className="flex flex-col gap-2">
         {options.map((o) => {
@@ -205,7 +205,7 @@ function KnowledgeCheck({
                 disabled={answered}
                 aria-pressed={isPicked}
                 className={cn(
-                  "sk-text-sm-regular flex w-full items-center gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
+                  "sk-text-body-medium-regular flex w-full items-center gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   markRight
                     ? "bg-sko-bg-success-soft text-sko-text-success"
@@ -216,7 +216,7 @@ function KnowledgeCheck({
               >
                 <OptionRadio checked={isPicked} disabled={answered && !isPicked && !o.correct} />
                 <span className="flex-1">{o.label}</span>
-                {missed ? <span className="sk-text-xs-medium shrink-0">This should be selected</span> : null}
+                {missed ? <span className="sk-text-body-small-medium shrink-0">This should be selected</span> : null}
                 {markRight && isPicked ? (
                   <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" />
                 ) : null}
@@ -230,7 +230,7 @@ function KnowledgeCheck({
       {answered && chosen?.feedback ? (
         <p
           className={cn(
-            "sk-text-sm-regular",
+            "sk-text-body-medium-regular",
             isCorrect ? "text-sko-text-success" : "text-sko-text-error",
           )}
         >

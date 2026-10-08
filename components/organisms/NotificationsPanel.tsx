@@ -80,7 +80,7 @@ export function NotificationsPanel({
       />
 
       {visible.length === 0 ? (
-        <p className="sk-text-sm-regular px-4 py-8 text-center text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular px-4 py-8 text-center text-sko-text-subtle">
           You are all caught up.
         </p>
       ) : (

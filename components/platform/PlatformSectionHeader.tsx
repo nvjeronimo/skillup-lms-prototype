@@ -20,7 +20,7 @@ export interface PlatformSectionHeaderProps {
    to 44px on mobile and to 24px from tablet up (WCAG 2.5.8), and the negative margin keeps
    the header at the title's height. */
 const ACTION =
-  "sk-text-sm-semibold inline-flex shrink-0 items-center justify-center gap-1 rounded text-sko-text-subtle transition-colors hover:text-sko-text-default max-md:-my-[7px] max-md:min-h-11 md:-my-0.5 md:min-h-6";
+  "sk-text-body-medium-semibold inline-flex shrink-0 items-center justify-center gap-1 rounded text-sko-text-subtle transition-colors hover:text-sko-text-default max-md:-my-[7px] max-md:min-h-11 md:-my-0.5 md:min-h-6";
 
 /**
  * DS `LMS / Platform / Section header` (6382:3172): section title for the platform pages.
@@ -37,7 +37,7 @@ export function PlatformSectionHeader({ id, title, emphasis, action, className }
 
   return (
     <div className={cn("flex items-center justify-between gap-4", className)}>
-      <h2 id={id} className="sk-text-display-xs-bold flex min-w-0 flex-1 flex-wrap items-start gap-x-1.5">
+      <h2 id={id} className="sk-text-headline-small-bold flex min-w-0 flex-1 flex-wrap items-start gap-x-1.5">
         <span className="whitespace-nowrap text-sko-text-default">{title}</span>
         {emphasis ? (
           <>

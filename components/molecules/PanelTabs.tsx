@@ -56,7 +56,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
             onClick={() => onChange(t.value)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              "sk-text-sm-semibold -mb-px flex items-center gap-2 border-b-2 py-3 transition-colors",
+              "sk-text-body-medium-semibold -mb-px flex items-center gap-2 border-b-2 py-3 transition-colors",
               isActive
                 ? "border-sko-border-primary text-sko-text-primary"
                 : "border-transparent text-sko-text-muted hover:text-sko-text-default",
@@ -67,7 +67,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
               <span
                 className={cn(
                   // DS Badge v2 Soft sm: Brand on the current tab, Gray on the others.
-                  "sk-text-xs-medium inline-flex items-center rounded-full px-2 py-0.5",
+                  "sk-text-body-small-medium inline-flex items-center rounded-full px-2 py-0.5",
                   isActive
                     ? "bg-sko-bg-primary-soft text-sko-text-primary"
                     : "bg-sko-bg-faint text-sko-text-muted",

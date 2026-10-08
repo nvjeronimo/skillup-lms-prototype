@@ -23,12 +23,12 @@ export function LabTopbar() {
   if (pathname.startsWith("/lab/training")) {
     return (
       <div className="flex min-h-[44px] flex-wrap items-center gap-x-4 gap-y-1 border-b border-sko-border-subtle bg-sko-bg-page px-4 py-1 md:px-6">
-        <Link href="/lab" className="sk-text-sm-semibold inline-flex min-h-[44px] items-center text-sko-text-primary">
+        <Link href="/lab" className="sk-text-body-medium-semibold inline-flex min-h-[44px] items-center text-sko-text-primary">
           ← All explorations
         </Link>
-        <span className="sk-text-sm-medium text-sko-text-muted">World: The Training Block</span>
+        <span className="sk-text-body-medium-medium text-sko-text-muted">World: The Training Block</span>
         <label className="ml-auto flex items-center gap-2">
-          <span className="sk-text-sm-medium text-sko-text-muted">Persona</span>
+          <span className="sk-text-body-medium-medium text-sko-text-muted">Persona</span>
           <select
             value={persona}
             onChange={(e) => {
@@ -36,7 +36,7 @@ export function LabTopbar() {
               next.set("persona", e.target.value);
               router.replace(`${pathname}?${next.toString()}`);
             }}
-            className="sk-text-sm-medium min-h-[44px] rounded-md border border-sko-border-default bg-sko-bg-page px-2 text-sko-text-default"
+            className="sk-text-body-medium-medium min-h-[44px] rounded-md border border-sko-border-default bg-sko-bg-page px-2 text-sko-text-default"
           >
             {personaIds.map((id) => (
               <option key={id} value={id}>
@@ -63,7 +63,7 @@ export function LabTopbar() {
               href={item.href === "/" ? item.href : `${item.href}?persona=${persona}`}
               aria-current={current ? "page" : undefined}
               className={cn(
-                "sk-text-sm-semibold inline-flex min-h-[44px] items-center rounded-md px-3",
+                "sk-text-body-medium-semibold inline-flex min-h-[44px] items-center rounded-md px-3",
                 current ? "bg-sko-bg-primary-soft text-sko-text-primary" : "text-sko-text-muted hover:bg-sko-bg-faint",
               )}
             >
@@ -73,7 +73,7 @@ export function LabTopbar() {
         })}
       </nav>
       <label className="flex items-center gap-2">
-        <span className="sk-text-sm-medium text-sko-text-muted">Persona</span>
+        <span className="sk-text-body-medium-medium text-sko-text-muted">Persona</span>
         <select
           value={persona}
           onChange={(e) => {
@@ -81,7 +81,7 @@ export function LabTopbar() {
             next.set("persona", e.target.value);
             router.replace(`${pathname}?${next.toString()}`);
           }}
-          className="sk-text-sm-medium min-h-[44px] rounded-md border border-sko-border-default bg-sko-bg-page px-2 text-sko-text-default"
+          className="sk-text-body-medium-medium min-h-[44px] rounded-md border border-sko-border-default bg-sko-bg-page px-2 text-sko-text-default"
         >
           {personaIds.map((id) => (
             <option key={id} value={id}>

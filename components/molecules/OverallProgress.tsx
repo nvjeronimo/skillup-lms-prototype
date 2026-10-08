@@ -44,7 +44,7 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
           strokeDashoffset={offset}
         />
       </svg>
-      <span className="sk-text-xs-semibold absolute text-sko-text-default">{pct}%</span>
+      <span className="sk-text-body-small-semibold absolute text-sko-text-default">{pct}%</span>
     </div>
   );
 }
@@ -76,8 +76,8 @@ export function OverallProgress({
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col justify-center">
-        <span className="sk-text-xs-medium uppercase text-sko-text-subtle">Overall progress</span>
-        <span className="sk-text-xs-medium truncate text-sko-text-default">
+        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">Overall progress</span>
+        <span className="sk-text-body-small-medium truncate text-sko-text-default">
           Module {moduleCurrent} of {moduleTotal}
         </span>
       </div>

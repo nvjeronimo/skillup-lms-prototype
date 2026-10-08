@@ -86,7 +86,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   if (!topic || !transcript.length) {
     return (
-      <p className="sk-text-sm-regular px-1 py-8 text-center text-sko-text-subtle">
+      <p className="sk-text-body-medium-regular px-1 py-8 text-center text-sko-text-subtle">
         No transcript available for this topic.
       </p>
     );
@@ -102,13 +102,13 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
       <div className="flex flex-wrap items-center justify-between gap-3 py-2">
-        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-muted">
+        <label className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-muted">
           Language:
           <span className="relative">
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="sk-text-sm-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
+              className="sk-text-body-medium-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -131,7 +131,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             })
           }
           // DS Link Button_def, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
-          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
         >
           <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Add Note</span>

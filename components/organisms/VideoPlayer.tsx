@@ -123,7 +123,7 @@ function ActionButton({
         aria-label={label}
         className={cn(
           ACTION_LAYOUT,
-          kind === "label" && "sk-text-xs-semibold",
+          kind === "label" && "sk-text-body-small-semibold",
           active
             ? "bg-sko-bg-on-media text-sko-text-on-fixed"
             : tone ?? cn(kind === "label" ? ACTION_LABEL : ACTION_ICON, ACTION_HOVER),
@@ -136,7 +136,7 @@ function ActionButton({
       <span
         aria-hidden
         className={cn(
-          "sk-text-sm-semibold pointer-events-none invisible absolute bottom-full mb-2 whitespace-nowrap rounded-lg bg-sko-bg-inverse px-2 py-1 text-sko-text-on-inverse opacity-0 transition-opacity",
+          "sk-text-body-medium-semibold pointer-events-none invisible absolute bottom-full mb-2 whitespace-nowrap rounded-lg bg-sko-bg-inverse px-2 py-1 text-sko-text-on-inverse opacity-0 transition-opacity",
           "peer-hover:visible peer-hover:opacity-100 peer-focus-visible:visible peer-focus-visible:opacity-100",
           ELEVATION_LEVEL4,
           TOOLTIP_ALIGN[align],
@@ -274,19 +274,19 @@ export function VideoPlayer({
           {state === "loading" ? (
             <>
               <Loader2 size={36} strokeWidth={2} className="animate-spin text-sko-icon-on-media" />
-              <span className="sk-text-sm-medium text-sko-text-on-media">Loading video…</span>
+              <span className="sk-text-body-medium-medium text-sko-text-on-media">Loading video…</span>
             </>
           ) : null}
           {state === "error" ? (
             <>
               <Icon icon={AlertCircle} size={36} className="text-sko-icon-on-media" />
-              <span className="sk-text-sm-medium text-sko-text-on-media">
+              <span className="sk-text-body-medium-medium text-sko-text-on-media">
                 Couldn’t load this video.
               </span>
               <button
                 type="button"
                 onClick={onRetry}
-                className="sk-text-sm-semibold rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
+                className="sk-text-body-medium-semibold rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
               >
                 Retry
               </button>
@@ -294,11 +294,11 @@ export function VideoPlayer({
           ) : null}
           {state === "ended" ? (
             <>
-              <span className="sk-text-md-semibold text-sko-text-on-media">You’ve finished this video</span>
+              <span className="sk-text-body-large-semibold text-sko-text-on-media">You’ve finished this video</span>
               <button
                 type="button"
                 onClick={onReplay}
-                className="sk-text-sm-semibold inline-flex items-center gap-1.5 rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
+                className="sk-text-body-medium-semibold inline-flex items-center gap-1.5 rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
               >
                 <Icon icon={RotateCcw} size={16} className="text-sko-icon-on-fixed" /> Replay
               </button>
@@ -319,7 +319,7 @@ export function VideoPlayer({
         >
           {/* Two bg/overlay layers (50% each, 75% together): one layer leaves white text
               at about 3.4:1 over a bright frame; two keep it above 4.5:1 on any video. */}
-          <span className="sk-text-sm-medium block bg-sko-bg-overlay px-3 py-1 text-sko-text-on-media">
+          <span className="sk-text-body-medium-medium block bg-sko-bg-overlay px-3 py-1 text-sko-text-on-media">
             Welcome back. In this unit we look at the product development lifecycle…
           </span>
         </div>
@@ -411,7 +411,7 @@ export function VideoPlayer({
               ),
             )}
           >
-            <span className="sk-text-xs-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
+            <span className="sk-text-body-small-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
               {secondsToTs(currentTime)}
             </span>
             <input
@@ -429,7 +429,7 @@ export function VideoPlayer({
                 backgroundImage: `linear-gradient(to right, var(--color-bg-info) ${pct}%, var(--color-bg-on-media-soft) ${pct}%)`,
               }}
             />
-            <span className="sk-text-xs-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
+            <span className="sk-text-body-small-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
               {secondsToTs(durationSeconds)}
             </span>
           </div>

@@ -23,7 +23,7 @@ export function WeekDay({ day, name, state }: DashboardWeekDay) {
         aria-hidden="true"
         className={cn(
           "whitespace-nowrap text-center",
-          today ? "sk-text-xs-semibold text-sko-text-on-primary-soft" : "sk-text-xs-medium text-sko-text-subtle",
+          today ? "sk-text-body-small-semibold text-sko-text-on-primary-soft" : "sk-text-body-small-medium text-sko-text-subtle",
         )}
       >
         {day}
@@ -78,10 +78,10 @@ export function StreakCard({ count, label, week, message, className }: StreakCar
     >
       <p className="flex items-end gap-3">
         {/* display-large/Bold: 72/90, 60/72, 48/60 by mode (tokens/typography.css). */}
-        <span className="sk-text-display-2xl-bold whitespace-nowrap text-sko-text-primary">
+        <span className="sk-text-display-large-bold whitespace-nowrap text-sko-text-primary">
           {count}
         </span>{" "}
-        <span className="sk-text-2xs-semibold w-[129px] pb-2 text-sko-text-subtle">
+        <span className="sk-text-label-small-semibold w-[129px] pb-2 text-sko-text-subtle">
           {label[0]}
           <br />
           {label[1]}
@@ -92,9 +92,9 @@ export function StreakCard({ count, label, week, message, className }: StreakCar
           <WeekDay key={d.day} {...d} />
         ))}
       </ul>
-      <p className="sk-text-sm-regular max-w-[310px] text-sko-text-subtle">
+      <p className="sk-text-body-medium-regular max-w-[310px] text-sko-text-subtle">
         {message.before}
-        <span className="sk-text-sm-semibold text-sko-text-primary">{message.highlight}</span>
+        <span className="sk-text-body-medium-semibold text-sko-text-primary">{message.highlight}</span>
         {message.after}
       </p>
     </section>

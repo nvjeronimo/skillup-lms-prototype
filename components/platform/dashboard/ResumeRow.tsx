@@ -32,7 +32,7 @@ export function ResumeRow({ title, deliveryMode, progressPct, href, emphasis = "
       )}
     >
       <div className="flex flex-col items-start gap-2">
-        <p className="sk-text-md-medium w-full text-sko-text-default">{title}</p>
+        <p className="sk-text-body-large-medium w-full text-sko-text-default">{title}</p>
         <DeliveryModeBadge value={deliveryMode} />
       </div>
       <div className="flex items-center gap-4">

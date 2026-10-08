@@ -36,7 +36,7 @@ export function SearchField({ value, onChange, label, className }: SearchFieldPr
         onChange={(event) => onChange(event.target.value)}
         placeholder={label}
         autoComplete="off"
-        className="sk-text-md-regular min-w-0 flex-1 bg-transparent text-sko-text-default placeholder:text-sko-text-placeholder focus:outline-none"
+        className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default placeholder:text-sko-text-placeholder focus:outline-none"
       />
     </label>
   );

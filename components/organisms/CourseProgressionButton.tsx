@@ -56,7 +56,7 @@ export function CourseProgressionButton({
           className={cn(
             // Shown only when the footer row is at least 36rem wide (the nav is the
             // container): on a tablet next to the sidebar there is no room for it.
-            "sk-text-xs-medium hidden shrink-0 whitespace-nowrap uppercase [@container(min-width:36rem)]:inline",
+            "sk-text-body-small-medium hidden shrink-0 whitespace-nowrap uppercase [@container(min-width:36rem)]:inline",
             isCourse ? "text-sko-text-success" : "text-sko-text-primary",
           )}
         >

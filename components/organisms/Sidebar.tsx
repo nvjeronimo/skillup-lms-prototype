@@ -216,7 +216,7 @@ export function Sidebar({
                   {module.implicit ? null : (
                     <p
                       className={cn(
-                        "sk-text-xs-semibold",
+                        "sk-text-body-small-semibold",
                         moduleDone ? "text-sko-text-success" : "text-sko-text-subtle",
                       )}
                     >
@@ -230,7 +230,7 @@ export function Sidebar({
                           <React.Fragment key={lesson.id}>
                             <p
                               className={cn(
-                                "sk-text-xs-semibold",
+                                "sk-text-body-small-semibold",
                                 lessonActive ? "text-sko-text-on-primary-soft" : "text-sko-text-subtle",
                               )}
                             >
@@ -265,7 +265,7 @@ export function Sidebar({
               }}
               className="flex min-w-0 flex-col items-start text-left"
             >
-              <span className="sk-text-sm-medium whitespace-nowrap text-sko-text-default">
+              <span className="sk-text-body-medium-medium whitespace-nowrap text-sko-text-default">
                 {flyout.topic.title}
               </span>
               <TopicTypeBadge type={flyout.topic.type} />
@@ -299,7 +299,7 @@ export function Sidebar({
            needs a visible close control (WCAG 2.1.2 / 2.5.8) — Escape and the
            backdrop tap still work too. The title labels the dialog. */
         <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-sko-border-subtle pl-4 pr-2">
-          <h2 id={mobileTitleId} className="sk-text-md-semibold text-sko-text-default">
+          <h2 id={mobileTitleId} className="sk-text-body-large-semibold text-sko-text-default">
             Course menu
           </h2>
           <button

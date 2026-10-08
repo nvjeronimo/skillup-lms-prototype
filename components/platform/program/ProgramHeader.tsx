@@ -14,7 +14,7 @@ import type { Program } from "@/lib/platform/program";
    current page is text/primary. 44px tall below desktop so each crumb is a full touch target.
    20px tall as drawn on desktop: the target grows to 24px (WCAG 2.5.8) and the negative
    margin keeps the breadcrumb at its drawn height. */
-const CRUMB = "sk-text-sm-semibold inline-flex min-h-11 items-center lg:-my-0.5 lg:min-h-6";
+const CRUMB = "sk-text-body-medium-semibold inline-flex min-h-11 items-center lg:-my-0.5 lg:min-h-6";
 
 /**
  * DS `LMS / Course Detail / Course header`, Type=Program (6443:18729): the hero above the tab
@@ -100,7 +100,7 @@ export function ProgramHeader({ program }: { program: Program }) {
                 alt=""
                 className="size-16 shrink-0 rounded-lg bg-sko-bg-muted object-cover md:size-[88px]"
               />
-              <h1 className="sk-text-display-md-semibold min-w-0 flex-1 text-sko-text-default">
+              <h1 className="sk-text-headline-large-semibold min-w-0 flex-1 text-sko-text-default">
                 {program.title}
               </h1>
             </div>
@@ -120,7 +120,7 @@ export function ProgramHeader({ program }: { program: Program }) {
                   {i > 0 ? (
                     <span aria-hidden className="h-[19px] border-l border-sko-border-default" />
                   ) : null}
-                  <span className="sk-text-sm-regular flex items-center gap-1.5 text-sko-text-default">
+                  <span className="sk-text-body-medium-regular flex items-center gap-1.5 text-sko-text-default">
                     {i === 0 ? (
                       <Icon icon={BookOpen} size={18} aria-hidden className="text-sko-icon-default" />
                     ) : null}
@@ -137,15 +137,15 @@ export function ProgramHeader({ program }: { program: Program }) {
             className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-4 lg:w-[360px]"
           >
             <div className="flex items-end justify-between gap-3">
-              <p className="sk-text-display-sm-bold text-sko-text-default">{program.progress.percent}%</p>
-              <p className="sk-text-xs-regular text-sko-text-subtle">{program.progress.label}</p>
+              <p className="sk-text-headline-medium-bold text-sko-text-default">{program.progress.percent}%</p>
+              <p className="sk-text-body-small-regular text-sko-text-subtle">{program.progress.label}</p>
             </div>
             <PlatformProgressBar value={program.progress.percent} label={program.progress.label} />
-            <p className="sk-text-xs-regular text-sko-text-subtle">{program.progress.status}</p>
+            <p className="sk-text-body-small-regular text-sko-text-subtle">{program.progress.status}</p>
             <ButtonLink href={program.progress.href} size="lg" className="w-full">
               {program.progress.cta}
             </ButtonLink>
-            <p className="sk-text-xs-regular text-sko-text-subtle">{program.progress.footer}</p>
+            <p className="sk-text-body-small-regular text-sko-text-subtle">{program.progress.footer}</p>
           </section>
         </div>
       </div>

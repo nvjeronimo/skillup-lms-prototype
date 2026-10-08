@@ -61,7 +61,7 @@ export function ModuleHeader({
           isCompleted={isCompleted}
         />
         {/* DS name is auto-height with truncation off — long names wrap, never clip. */}
-        <span className="sk-text-sm-semibold text-sko-text-default">{title}</span>
+        <span className="sk-text-body-medium-semibold text-sko-text-default">{title}</span>
       </span>
       <ChevronDown
         size={24}

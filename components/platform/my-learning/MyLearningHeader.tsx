@@ -13,7 +13,7 @@ export function MyLearningHeader() {
   return (
     <header className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-6">
       {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
-      <h1 className="sk-text-display-md-bold shrink-0 whitespace-nowrap text-sko-text-default">
+      <h1 className="sk-text-headline-large-bold shrink-0 whitespace-nowrap text-sko-text-default">
         {myLearningHeading.title} <span className="text-sko-text-subtle">{myLearningHeading.emphasis}</span>
       </h1>
       <ul

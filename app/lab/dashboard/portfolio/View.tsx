@@ -62,7 +62,7 @@ const FOCUS =
 /** A link dressed as DS Button V2 Brand (md, 44px). Button renders a <button>, so links get this. */
 function linkButton(hierarchy: "primary" | "secondary") {
   return cn(
-    "sk-text-sm-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-md px-3 transition-colors duration-200",
+    "sk-text-body-medium-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-md px-3 transition-colors duration-200",
     FOCUS,
     hierarchy === "primary"
       ? "bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
@@ -81,24 +81,24 @@ function PickUp({ e }: { e: Enrolment }) {
       className="flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 shadow-sk-card md:flex-row md:items-center md:gap-6"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <h2 id="pickup-h" className="sk-text-xs-semibold uppercase tracking-wide text-sko-text-subtle">
+        <h2 id="pickup-h" className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-subtle">
           {starting ? "Start here" : "Pick up"}
         </h2>
-        <p className="sk-text-md-semibold text-sko-text-default">{e.title}</p>
+        <p className="sk-text-body-large-semibold text-sko-text-default">{e.title}</p>
         {e.nextTopic ? (
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="sk-text-sm-regular text-sko-text-muted">{starting ? "First topic:" : "Next:"}</span>
+            <span className="sk-text-body-medium-regular text-sko-text-muted">{starting ? "First topic:" : "Next:"}</span>
             <TopicTypeBadge type={e.nextTopic.type as TopicType} />
-            <span className="sk-text-sm-medium min-w-0 text-sko-text-default">{e.nextTopic.title}</span>
+            <span className="sk-text-body-medium-medium min-w-0 text-sko-text-default">{e.nextTopic.title}</span>
           </p>
         ) : null}
         {stale ? (
-          <p className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-warning">
+          <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-warning">
             <Icon icon={Clock} size={16} className="shrink-0 text-sko-icon-warning" aria-hidden="true" />
             Last activity {e.lastActive} — pick up with one topic.
           </p>
         ) : !starting ? (
-          <p className="sk-text-sm-regular text-sko-text-subtle">{activityLine(e)}</p>
+          <p className="sk-text-body-medium-regular text-sko-text-subtle">{activityLine(e)}</p>
         ) : null}
       </div>
       {e.nextTopic ? (
@@ -129,7 +129,7 @@ function Summary({ enrolments }: { enrolments: Enrolment[] }) {
         <h2 id="summary-h" className="sr-only">
           Where you stand
         </h2>
-        <p className="sk-text-md-regular text-sko-text-muted">
+        <p className="sk-text-body-large-regular text-sko-text-muted">
           You have {notStarted === 1 ? "one course" : `${notStarted} courses`} ready to start, and
           nothing here is timed — begin with one topic whenever you are ready.
         </p>
@@ -150,16 +150,16 @@ function Summary({ enrolments }: { enrolments: Enrolment[] }) {
       <dl className="flex flex-wrap gap-x-8 gap-y-3">
         {items.map((it) => (
           <div key={it.label} className="flex flex-col-reverse">
-            <dt className="sk-text-sm-regular text-sko-text-muted">
+            <dt className="sk-text-body-medium-regular text-sko-text-muted">
               {it.label}
               {it.note ? <span className="text-sko-text-subtle"> · {it.note}</span> : null}
             </dt>
-            <dd className="sk-text-display-xs-semibold text-sko-text-default">{it.value}</dd>
+            <dd className="sk-text-headline-small-semibold text-sko-text-default">{it.value}</dd>
           </div>
         ))}
         <div className="flex flex-col-reverse">
-          <dt className="sk-text-sm-regular text-sko-text-muted">Enrolled</dt>
-          <dd className="sk-text-display-xs-semibold text-sko-text-subtle">{enrolments.length}</dd>
+          <dt className="sk-text-body-medium-regular text-sko-text-muted">Enrolled</dt>
+          <dd className="sk-text-headline-small-semibold text-sko-text-subtle">{enrolments.length}</dd>
         </div>
       </dl>
     </section>
@@ -178,21 +178,21 @@ function CertLine({ e }: { e: Enrolment }) {
       );
     case "generating":
       return (
-        <p className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-default">
+        <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-default">
           <Icon icon={Hourglass} size={16} className="shrink-0 text-sko-icon-primary" aria-hidden="true" />
           Certificate being prepared
         </p>
       );
     case "audit_passing":
       return (
-        <p className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-success">
+        <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-success">
           <Icon icon={Award} size={16} className="shrink-0 text-sko-icon-success" aria-hidden="true" />
           Passing — finish to earn it
         </p>
       );
     default:
       return (
-        <p className="sk-text-sm-regular flex items-center gap-1.5 text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular flex items-center gap-1.5 text-sko-text-subtle">
           <Icon icon={Award} size={16} className="shrink-0 text-sko-icon-muted" aria-hidden="true" />
           Certificate on completion
         </p>
@@ -218,14 +218,14 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
               {s.label}
             </Badge>
             {e.program ? (
-              <span className="sk-text-xs-medium text-sko-text-subtle">Programme · {e.program.value}</span>
+              <span className="sk-text-body-small-medium text-sko-text-subtle">Programme · {e.program.value}</span>
             ) : null}
           </div>
           {e.program?.mock ? <MockTag reason={e.program.mock} /> : null}
-          <h3 id={headingId} className="sk-text-md-semibold text-sko-text-default">
+          <h3 id={headingId} className="sk-text-body-large-semibold text-sko-text-default">
             {e.title}
           </h3>
-          <p className="sk-text-xs-regular text-sko-text-subtle">
+          <p className="sk-text-body-small-regular text-sko-text-subtle">
             {e.provider} · {e.selfPaced ? "Self-paced" : "Instructor-paced"}
           </p>
         </div>
@@ -233,8 +233,8 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
         {showProgress ? (
           <div className="flex flex-col gap-1.5">
             <div className="flex items-baseline justify-between gap-2">
-              <span className="sk-text-sm-semibold text-sko-text-default">{e.pct}% complete</span>
-              <span className="sk-text-xs-regular text-sko-text-subtle">
+              <span className="sk-text-body-medium-semibold text-sko-text-default">{e.pct}% complete</span>
+              <span className="sk-text-body-small-regular text-sko-text-subtle">
                 {e.topicsDone} of {e.topicsTotal} topics
               </span>
             </div>
@@ -255,29 +255,29 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
         {e.status === "locked" && e.lockedBy ? (
           <div className="flex items-start gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2">
             <Icon icon={Lock} size={16} className="mt-0.5 shrink-0 text-sko-icon-muted" aria-hidden="true" />
-            <p className="sk-text-sm-regular text-sko-text-muted">
-              <span className="sk-text-sm-semibold text-sko-text-default">Unlocks after {e.lockedBy}.</span> Finish that
+            <p className="sk-text-body-medium-regular text-sko-text-muted">
+              <span className="sk-text-body-medium-semibold text-sko-text-default">Unlocks after {e.lockedBy}.</span> Finish that
               course and this one opens.
             </p>
           </div>
         ) : e.nextTopic && e.status !== "completed" ? (
           <div className="flex min-w-0 flex-col items-start gap-1 rounded-lg bg-sko-bg-subtle px-3 py-2">
-            <span className="sk-text-xs-semibold text-sko-text-subtle">
+            <span className="sk-text-body-small-semibold text-sko-text-subtle">
               {e.status === "not-started" ? "First topic" : "Up next"}
             </span>
-            <span className="sk-text-sm-medium w-full text-sko-text-default">{e.nextTopic.title}</span>
+            <span className="sk-text-body-medium-medium w-full text-sko-text-default">{e.nextTopic.title}</span>
             <TopicTypeBadge type={e.nextTopic.type as TopicType} />
           </div>
         ) : null}
 
         <div className="mt-auto flex flex-col gap-3">
           {stale ? (
-            <p className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-warning">
+            <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-warning">
               <Icon icon={Clock} size={16} className="shrink-0 text-sko-icon-warning" aria-hidden="true" />
               {activityLine(e)}
             </p>
           ) : e.status !== "locked" ? (
-            <p className="sk-text-xs-regular text-sko-text-subtle">{activityLine(e)}</p>
+            <p className="sk-text-body-small-regular text-sko-text-subtle">{activityLine(e)}</p>
           ) : null}
           <CertLine e={e} />
           {e.nextTopic && (e.status === "in-progress" || e.status === "not-started") ? (
@@ -300,11 +300,11 @@ function Certificates({ enrolments }: { enrolments: Enrolment[] }) {
 
   return (
     <section aria-labelledby="certs-h" className="flex flex-col gap-4">
-      <h2 id="certs-h" className="sk-text-lg-semibold text-sko-text-default">
+      <h2 id="certs-h" className="sk-text-title-medium-semibold text-sko-text-default">
         Certificates
       </h2>
       {earned.length === 0 ? (
-        <p className="sk-text-sm-regular text-sko-text-muted">
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
           No certificates yet. Each course gives you one when you pass it, and it will wait for you here.
         </p>
       ) : (
@@ -318,13 +318,13 @@ function Certificates({ enrolments }: { enrolments: Enrolment[] }) {
                 <Icon icon={Award} size={20} aria-hidden="true" />
               </span>
               <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
-                <p className="sk-text-sm-semibold text-sko-text-default">{e.title}</p>
+                <p className="sk-text-body-medium-semibold text-sko-text-default">{e.title}</p>
                 {e.cert === "downloadable" ? (
                   <Button hierarchy="secondary" size="md" leftIcon={Download}>
                     Download<span className="sr-only"> certificate: {e.title}</span>
                   </Button>
                 ) : (
-                  <p className="sk-text-sm-regular flex items-center gap-1.5 text-sko-text-muted">
+                  <p className="sk-text-body-medium-regular flex items-center gap-1.5 text-sko-text-muted">
                     <Icon icon={Hourglass} size={16} className="shrink-0 text-sko-icon-muted" aria-hidden="true" />
                     Being prepared — it will be ready to download here.
                   </p>
@@ -335,12 +335,12 @@ function Certificates({ enrolments }: { enrolments: Enrolment[] }) {
         </ul>
       )}
       {passing.length > 0 ? (
-        <p className="sk-text-sm-regular text-sko-text-muted">
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
           On the way:{" "}
           {passing.map((e, i) => (
             <React.Fragment key={e.id}>
               {i > 0 ? ", " : null}
-              <span className="sk-text-sm-semibold text-sko-text-default">{e.title}</span>
+              <span className="sk-text-body-medium-semibold text-sko-text-default">{e.title}</span>
             </React.Fragment>
           ))}{" "}
           — you are passing; finish the course to earn the certificate.
@@ -376,10 +376,10 @@ export function View() {
   return (
     <main id="main" tabIndex={-1} className="outline-none mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 md:p-8 xl:max-w-[1264px]">
       <header className="flex flex-col gap-1">
-        <h1 className="sk-text-display-sm-semibold text-sko-text-default">
+        <h1 className="sk-text-headline-medium-semibold text-sko-text-default">
           {nothingStarted ? `Welcome, ${persona.firstName}` : `Your learning, ${persona.firstName}`}
         </h1>
-        <p className="sk-text-md-regular text-sko-text-muted">
+        <p className="sk-text-body-large-regular text-sko-text-muted">
           {nothingStarted
             ? "Everything you are enrolled in, in one place."
             : `Where you stand across ${all.length} ${all.length === 1 ? "course" : "courses"}.`}
@@ -391,7 +391,7 @@ export function View() {
       <Summary enrolments={all} />
 
       <section aria-labelledby="courses-h" className="flex flex-col gap-4">
-        <h2 id="courses-h" className="sk-text-lg-semibold text-sko-text-default">
+        <h2 id="courses-h" className="sk-text-title-medium-semibold text-sko-text-default">
           Your courses
         </h2>
 
@@ -406,7 +406,7 @@ export function View() {
                   aria-pressed={on}
                   onClick={() => setFilter(f.id)}
                   className={cn(
-                    "sk-text-sm-semibold inline-flex h-11 items-center gap-1.5 rounded-full px-4 transition-colors duration-200",
+                    "sk-text-body-medium-semibold inline-flex h-11 items-center gap-1.5 rounded-full px-4 transition-colors duration-200",
                     FOCUS,
                     on
                       ? "bg-sko-bg-primary text-sko-text-on-primary"
@@ -415,7 +415,7 @@ export function View() {
                 >
                   {on ? <Icon icon={Check} size={16} aria-hidden="true" /> : null}
                   {f.label}
-                  <span className={on ? "sk-text-sm-regular" : "sk-text-sm-regular text-sko-text-subtle"}>
+                  <span className={on ? "sk-text-body-medium-regular" : "sk-text-body-medium-regular text-sko-text-subtle"}>
                     {counts[f.id]}
                   </span>
                 </button>
@@ -424,7 +424,7 @@ export function View() {
           </div>
         ) : null}
 
-        <p role="status" aria-live="polite" className="sk-text-sm-regular text-sko-text-muted">
+        <p role="status" aria-live="polite" className="sk-text-body-medium-regular text-sko-text-muted">
           Showing {shown.length} {shown.length === 1 ? "course" : "courses"}
           {filter === "all" ? "" : ` · ${filterLabel}`}
           {filter === "not-started" && all.some((e) => e.status === "locked") ? " (includes locked courses)" : ""}
@@ -438,7 +438,7 @@ export function View() {
           </ul>
         ) : (
           <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed border-sko-border-default p-6">
-            <p className="sk-text-md-medium text-sko-text-default">No {filterLabel.toLowerCase()} courses right now.</p>
+            <p className="sk-text-body-large-medium text-sko-text-default">No {filterLabel.toLowerCase()} courses right now.</p>
             <Button hierarchy="secondary" size="md" onClick={() => setFilter("all")}>
               Show all courses
             </Button>

@@ -106,7 +106,7 @@ export function TopicRow({
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           {/* The topic title is text-primary in every state — it does not change
               colour when active or locked. */}
-          <span className="sk-text-sm-medium block text-sko-text-default">{title}</span>
+          <span className="sk-text-body-medium-medium block text-sko-text-default">{title}</span>
           {/* state-row: brand type badge · gray duration (Caption/Medium), 6px apart,
               on one line; the trailing duration truncates with an ellipsis. */}
           <span className="flex min-w-0 items-center gap-1.5">
@@ -114,16 +114,16 @@ export function TopicRow({
             {/* Duration is optional: render nothing rather than a dash placeholder. */}
             {duration ? (
               <>
-                <span className="sk-text-sm-medium shrink-0 text-sko-text-subtle" aria-hidden>
+                <span className="sk-text-body-medium-medium shrink-0 text-sko-text-subtle" aria-hidden>
                   ·
                 </span>
-                <span className="sk-text-xs-medium min-w-0 truncate text-sko-text-subtle">
+                <span className="sk-text-body-small-medium min-w-0 truncate text-sko-text-subtle">
                   {duration}
                 </span>
               </>
             ) : null}
             {optional ? (
-              <span className="sk-text-xs-medium shrink-0 text-sko-icon-faint">Optional</span>
+              <span className="sk-text-body-small-medium shrink-0 text-sko-icon-faint">Optional</span>
             ) : null}
             <span className="sr-only">, {STATUS_TEXT[status]}</span>
           </span>

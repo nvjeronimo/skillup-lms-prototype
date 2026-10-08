@@ -48,8 +48,8 @@ export function BlockedView({ topicId }: { topicId: string }) {
 function Field({ label, value, lead }: { label: string; value: string; lead?: boolean }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="sk-text-2xs-medium text-sko-text-subtle">{label}</span>
-      <p className={lead ? "sk-text-md-regular text-sko-text-muted" : "sk-text-sm-regular text-sko-text-muted"}>
+      <span className="sk-text-label-small-medium text-sko-text-subtle">{label}</span>
+      <p className={lead ? "sk-text-body-large-regular text-sko-text-muted" : "sk-text-body-medium-regular text-sko-text-muted"}>
         {value}
       </p>
     </div>

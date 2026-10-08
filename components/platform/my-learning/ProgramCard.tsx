@@ -80,10 +80,10 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           {showCohort ? <Badge color="gray">{program.cohort}</Badge> : null}
         </div>
         <div className="relative flex w-full flex-col gap-1 text-sko-text-on-primary">
-          <p className="sk-text-2xs-semibold">{program.eyebrow}</p>
-          <h3 className="sk-text-display-sm-semibold">{program.title}</h3>
+          <p className="sk-text-label-small-semibold">{program.eyebrow}</p>
+          <h3 className="sk-text-headline-medium-semibold">{program.title}</h3>
         </div>
-        <ul className="sk-text-xs-medium relative flex flex-wrap items-start gap-x-5 gap-y-1 whitespace-nowrap text-sko-text-on-primary">
+        <ul className="sk-text-body-small-medium relative flex flex-wrap items-start gap-x-5 gap-y-1 whitespace-nowrap text-sko-text-on-primary">
           {program.stats.map((stat) => (
             <li key={stat}>{stat}</li>
           ))}
@@ -93,8 +93,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
       <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-center" : "w-full")}>
         <div className="flex flex-col gap-2">
           <div className="flex items-baseline justify-between gap-3">
-            <span className="sk-text-display-sm-bold text-sko-text-default">{program.progressPct}%</span>
-            <span className="sk-text-2xs-semibold whitespace-nowrap text-sko-text-subtle">
+            <span className="sk-text-headline-medium-bold text-sko-text-default">{program.progressPct}%</span>
+            <span className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-subtle">
               {myLearningProgramProgressLabel}
             </span>
           </div>
@@ -104,8 +104,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         <div className="flex items-center justify-between gap-1">
           {program.upNext ? (
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span className="sk-text-xs-regular text-sko-text-subtle">{myLearningProgramUpNextLabel}</span>
-              <span className="sk-text-sm-semibold text-sko-text-default">{program.upNext}</span>
+              <span className="sk-text-body-small-regular text-sko-text-subtle">{myLearningProgramUpNextLabel}</span>
+              <span className="sk-text-body-medium-semibold text-sko-text-default">{program.upNext}</span>
             </div>
           ) : program.status ? (
             <Badge color="gray">{program.status}</Badge>

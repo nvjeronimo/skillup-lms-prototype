@@ -43,7 +43,7 @@ const RELATED = [
 
 /** DS `Section-Title`: body-small/Medium, uppercase. Spacing comes from the column gap. */
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="sk-text-xs-medium uppercase text-sko-text-subtle">{children}</p>;
+  return <p className="sk-text-body-small-medium uppercase text-sko-text-subtle">{children}</p>;
 }
 
 /** Right-side AI assistant panel. Mode = Key Takeaways · Ask · Chat · Related (DS `LMS / AI Panel`). */
@@ -59,7 +59,7 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
       aria-label="AI assistant"
     >
       <header className="flex items-center justify-between border-b border-sko-border-subtle pb-4 pl-5 pr-4 pt-5">
-        <span className="sk-text-md-medium inline-flex items-center gap-2 text-sko-text-default">
+        <span className="sk-text-body-large-medium inline-flex items-center gap-2 text-sko-text-default">
           <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" />
           AI Assistant
         </span>
@@ -86,7 +86,7 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
                 aria-selected={isActive}
                 onClick={() => onModeChange?.(m.value)}
                 className={cn(
-                  "sk-text-sm-semibold relative px-1 pb-3 pt-0 transition-colors",
+                  "sk-text-body-medium-semibold relative px-1 pb-3 pt-0 transition-colors",
                   isActive
                     ? "text-sko-text-primary"
                     : "text-sko-text-subtle hover:text-sko-text-default",
@@ -116,8 +116,8 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
                   key={t.ts}
                   className="rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3"
                 >
-                  <span className="sk-text-xs-medium block text-sko-text-primary">{t.ts}</span>
-                  <span className="sk-text-sm-medium mt-1.5 block text-sko-text-default">{t.text}</span>
+                  <span className="sk-text-body-small-medium block text-sko-text-primary">{t.ts}</span>
+                  <span className="sk-text-body-medium-medium mt-1.5 block text-sko-text-default">{t.text}</span>
                 </li>
               ))}
             </ul>
@@ -134,13 +134,13 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
               <input
                 id={askId}
                 placeholder="Ask about this topic…"
-                className="sk-text-sm-medium w-full rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
+                className="sk-text-body-medium-medium w-full rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
               />
               <div className="flex flex-wrap gap-2">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s}
-                    className="sk-text-xs-medium rounded-full bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
+                    className="sk-text-body-small-medium rounded-full bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
                   >
                     {s}
                   </button>
@@ -155,14 +155,14 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
             <Eyebrow>Conversation · 2 messages</Eyebrow>
             <div className="flex flex-col gap-3">
               <div className="rounded-lg bg-sko-bg-primary-soft p-3">
-                <span className="sk-text-xs-medium block uppercase text-sko-text-primary">You</span>
-                <span className="sk-text-sm-medium mt-1 block text-sko-text-default">
+                <span className="sk-text-body-small-medium block uppercase text-sko-text-primary">You</span>
+                <span className="sk-text-body-medium-medium mt-1 block text-sko-text-default">
                   What’s the difference between MVP and prototype?
                 </span>
               </div>
               <div className="rounded-lg border border-sko-border-subtle bg-sko-bg-subtle p-3">
-                <span className="sk-text-xs-medium block uppercase text-sko-text-subtle">AI Assistant</span>
-                <span className="sk-text-sm-medium mt-1 block text-sko-text-default">
+                <span className="sk-text-body-small-medium block uppercase text-sko-text-subtle">AI Assistant</span>
+                <span className="sk-text-body-medium-medium mt-1 block text-sko-text-default">
                   An MVP tests assumptions in real conditions; a prototype tests interactions. Use
                   MVP for risk, prototype for design.
                 </span>
@@ -178,8 +178,8 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
               {RELATED.map((r) => (
                 <li key={r.title}>
                   <button className="w-full rounded-lg border border-sko-border-subtle bg-sko-bg-page p-3 text-left hover:border-sko-border-default">
-                    <span className="sk-text-sm-medium block text-sko-text-default">{r.title}</span>
-                    <span className="sk-text-xs-medium mt-0.5 block text-sko-text-subtle">{r.meta}</span>
+                    <span className="sk-text-body-medium-medium block text-sko-text-default">{r.title}</span>
+                    <span className="sk-text-body-small-medium mt-0.5 block text-sko-text-subtle">{r.meta}</span>
                   </button>
                 </li>
               ))}
@@ -196,7 +196,7 @@ export function AIPanel({ mode = "Key Takeaways", onModeChange, onClose, classNa
           <input
             id={messageId}
             placeholder="Type a message…"
-            className="sk-text-sm-regular flex-1 rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
+            className="sk-text-body-medium-regular flex-1 rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
           />
           <button
             type="button"

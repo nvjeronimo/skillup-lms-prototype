@@ -34,7 +34,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
         aria-hidden="true"
         className="pointer-events-none absolute -right-[102px] top-[calc(50%-76px)] size-[320px] -translate-y-1/2 rounded-full bg-sko-bg-primary opacity-[0.12]"
       />
-      <h2 id="dashboard-glance-title" className="sk-text-2xs-semibold relative text-sko-text-on-inverse">
+      <h2 id="dashboard-glance-title" className="sk-text-label-small-semibold relative text-sko-text-on-inverse">
         {title}
       </h2>
       <ul className="relative grid grid-cols-2 gap-6">

@@ -22,8 +22,8 @@ function itemClass(current: boolean) {
   return cn(
     "flex items-center gap-1.5 rounded-lg px-3 py-2 transition-colors",
     current
-      ? "sk-text-sm-semibold bg-sko-bg-primary-soft text-sko-text-primary"
-      : "sk-text-sm-medium text-sko-text-subtle hover:bg-sko-bg-faint hover:text-sko-text-default",
+      ? "sk-text-body-medium-semibold bg-sko-bg-primary-soft text-sko-text-primary"
+      : "sk-text-body-medium-medium text-sko-text-subtle hover:bg-sko-bg-faint hover:text-sko-text-default",
   );
 }
 
@@ -95,13 +95,13 @@ function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclos
       {...panelProps}
       className="absolute right-0 top-[calc(100%+8px)] z-40 w-64 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-3 shadow-lg"
     >
-      <p className="sk-text-sm-semibold text-sko-text-default">{platformUser.name}</p>
-      <p className="sk-text-2xs-regular text-sko-text-subtle">{platformUser.role}</p>
+      <p className="sk-text-body-medium-semibold text-sko-text-default">{platformUser.name}</p>
+      <p className="sk-text-label-small-regular text-sko-text-subtle">{platformUser.role}</p>
       <div className="mt-3 flex flex-col gap-2 border-t border-sko-border-subtle pt-3">
         <button
           type="button"
           onClick={toggleTheme}
-          className="sk-text-sm-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default hover:bg-sko-bg-subtle"
+          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default hover:bg-sko-bg-subtle"
         >
           <Icon icon={theme === "dark" ? Sun : Moon} size={20} className="text-sko-icon-default" />
           {theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
@@ -114,7 +114,7 @@ function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclos
               aria-pressed={skin === s.skin}
               onClick={() => setSkin(s.skin)}
               className={cn(
-                "sk-text-xs-semibold inline-flex min-h-11 flex-1 items-center justify-center rounded-md transition-colors",
+                "sk-text-body-small-semibold inline-flex min-h-11 flex-1 items-center justify-center rounded-md transition-colors",
                 skin === s.skin
                   ? "bg-sko-bg-primary text-sko-text-on-primary"
                   : "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
@@ -126,7 +126,7 @@ function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclos
         </div>
         <Link
           href="/"
-          className="sk-text-sm-medium flex min-h-11 items-center rounded-md px-2 text-sko-text-primary hover:bg-sko-bg-subtle"
+          className="sk-text-body-medium-medium flex min-h-11 items-center rounded-md px-2 text-sko-text-primary hover:bg-sko-bg-subtle"
         >
           Back to the prototype home
         </Link>
@@ -140,7 +140,7 @@ function Initials() {
   return (
     <span
       aria-hidden
-      className="sk-text-sm-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
+      className="sk-text-body-medium-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
     >
       {platformUser.initials}
     </span>
@@ -195,8 +195,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
             >
               <Initials />
               <span className="flex flex-col whitespace-nowrap">
-                <span className="sk-text-xs-semibold text-sko-text-default">{platformUser.name}</span>
-                <span className="sk-text-2xs-regular text-sko-text-subtle">{platformUser.role}</span>
+                <span className="sk-text-body-small-semibold text-sko-text-default">{platformUser.name}</span>
+                <span className="sk-text-label-small-regular text-sko-text-subtle">{platformUser.role}</span>
               </span>
               <Icon icon={ChevronDown} size={16} className="text-sko-icon-default" />
             </button>

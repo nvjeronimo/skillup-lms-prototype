@@ -22,12 +22,12 @@ export function FileItem({ type, name, size, addedLabel, onDownload, className }
         className,
       )}
     >
-      <span className="sk-text-xs-medium inline-flex shrink-0 items-center rounded border border-sko-border-subtle bg-sko-bg-subtle px-1.5 py-1 text-sko-text-muted">
+      <span className="sk-text-body-small-medium inline-flex shrink-0 items-center rounded border border-sko-border-subtle bg-sko-bg-subtle px-1.5 py-1 text-sko-text-muted">
         {type}
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <p className="sk-text-sm-medium truncate text-sko-text-default">{name}</p>
-        <p className="sk-text-xs-medium text-sko-text-subtle">
+        <p className="sk-text-body-medium-medium truncate text-sko-text-default">{name}</p>
+        <p className="sk-text-body-small-medium text-sko-text-subtle">
           {size}
           {addedLabel ? ` · ${addedLabel}` : ""}
         </p>

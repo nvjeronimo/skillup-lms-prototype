@@ -15,7 +15,7 @@ export default function ProgramNotFound() {
           action={
             <Link
               href="/platform/my-learning?tab=programs"
-              className="sk-text-sm-semibold inline-flex min-h-11 items-center text-sko-text-primary underline underline-offset-2"
+              className="sk-text-body-medium-semibold inline-flex min-h-11 items-center text-sko-text-primary underline underline-offset-2"
             >
               See your programs
             </Link>

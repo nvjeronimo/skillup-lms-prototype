@@ -24,12 +24,12 @@ function CertificateCard({ certificate }: { certificate: ProgramCertificate }) {
   if (certificate.status === "not-earned") {
     return (
       <CardShell label="Certificate" labelAs="p" gap="lg">
-        <p className="sk-text-md-semibold text-sko-text-default">{certificate.title}</p>
+        <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
         <ul className="flex flex-col gap-4">
           {certificate.requirements.map((req) => (
             <li key={req.title} className="flex flex-col gap-0.5">
-              <p className="sk-text-sm-semibold text-sko-text-default">{req.title}</p>
-              <p className="sk-text-xs-regular text-sko-text-subtle">{req.detail}</p>
+              <p className="sk-text-body-medium-semibold text-sko-text-default">{req.title}</p>
+              <p className="sk-text-body-small-regular text-sko-text-subtle">{req.detail}</p>
               <PlatformProgressBar value={req.percent} label={req.title} />
             </li>
           ))}
@@ -48,8 +48,8 @@ function CertificateCard({ certificate }: { certificate: ProgramCertificate }) {
           />
         </div>
       </div>
-      <p className="sk-text-md-semibold text-sko-text-default">{certificate.title}</p>
-      <p className="sk-text-sm-regular text-sko-text-subtle">{certificate.issuedLine}</p>
+      <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
+      <p className="sk-text-body-medium-regular text-sko-text-subtle">{certificate.issuedLine}</p>
       <div className="flex items-start gap-1.5">
         <Button
           hierarchy="primary"
@@ -89,12 +89,12 @@ export function CertificatesTab({ program }: { program: Program }) {
       >
         {program.certificates.map((certificate) => (
           <li key={certificate.courseId} className="flex w-full flex-col gap-2 sm:w-[320px]">
-            <h3 className="sk-text-sm-semibold text-sko-text-default">{certificate.courseLabel}</h3>
+            <h3 className="sk-text-body-medium-semibold text-sko-text-default">{certificate.courseLabel}</h3>
             <CertificateCard certificate={certificate} />
           </li>
         ))}
       </ul>
-      <p className="sk-text-sm-regular text-sko-text-subtle">{program.certificatesNote}</p>
+      <p className="sk-text-body-medium-regular text-sko-text-subtle">{program.certificatesNote}</p>
     </div>
   );
 }

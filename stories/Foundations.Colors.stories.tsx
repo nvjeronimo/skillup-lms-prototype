@@ -163,8 +163,8 @@ function Swatch({ ds, modes }: Token) {
         style={{ background: `var(${cssVar(ds)})` }}
       />
       <span className="min-w-0">
-        <span className="sk-text-sm-semibold block text-sko-text-default">{ds}</span>
-        <span className="sk-text-xs-regular block text-sko-text-subtle">{cssVar(ds)}</span>
+        <span className="sk-text-body-medium-semibold block text-sko-text-default">{ds}</span>
+        <span className="sk-text-body-small-regular block text-sko-text-subtle">{cssVar(ds)}</span>
         <span className="mt-1 flex flex-wrap gap-1">
           {modes.map((hex, i) => (
             <span
@@ -185,7 +185,7 @@ function ColorTokens() {
     <div className="flex flex-col gap-6 bg-sko-bg-page p-6">
       {GROUPS.map((g) => (
         <section key={g.group}>
-          <h2 className="sk-text-lg-semibold mb-3 text-sko-text-default">
+          <h2 className="sk-text-title-medium-semibold mb-3 text-sko-text-default">
             {g.group} · {g.tokens.length}
           </h2>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">

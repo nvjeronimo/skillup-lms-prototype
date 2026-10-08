@@ -47,7 +47,7 @@ export function FileUploadZone({
 
   return (
     <div className={cn("flex flex-col gap-4", className)}>
-      <p className="sk-text-md-semibold text-sko-text-default">Upload files</p>
+      <p className="sk-text-body-large-semibold text-sko-text-default">Upload files</p>
 
       <div
         role="button"
@@ -80,11 +80,11 @@ export function FileUploadZone({
         <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-sko-border-subtle bg-sko-bg-page text-sko-icon-primary">
           <Icon icon={UploadCloud} size={22} />
         </span>
-        <p className="sk-text-sm-medium text-sko-text-muted">
+        <p className="sk-text-body-medium-medium text-sko-text-muted">
           Drop files here, or{" "}
-          <span className="sk-text-sm-semibold text-sko-text-primary">browse files</span>
+          <span className="sk-text-body-medium-semibold text-sko-text-primary">browse files</span>
         </p>
-        <p className="sk-text-xs-regular text-sko-text-subtle">
+        <p className="sk-text-body-small-regular text-sko-text-subtle">
           {acceptedTypes.join(", ")} · {maxSizeMB} MB max per file
         </p>
         <input
@@ -97,9 +97,9 @@ export function FileUploadZone({
       </div>
 
       <div aria-live="polite">
-        <p className="sk-text-sm-regular mb-2 text-sko-text-muted">
+        <p className="sk-text-body-medium-regular mb-2 text-sko-text-muted">
           Uploaded files{" "}
-          <span className="sk-text-sm-semibold text-sko-text-default">
+          <span className="sk-text-body-medium-semibold text-sko-text-default">
             {doneCount} of {requiredCount} required
           </span>
         </p>
@@ -109,21 +109,21 @@ export function FileUploadZone({
               key={f.id}
               className="flex items-center gap-3 rounded-lg border border-sko-border-subtle p-3"
             >
-              <span className="sk-text-2xs-semibold inline-flex h-8 min-w-8 shrink-0 px-1 items-center justify-center rounded bg-sko-bg-primary-soft text-sko-text-primary">
+              <span className="sk-text-label-small-semibold inline-flex h-8 min-w-8 shrink-0 px-1 items-center justify-center rounded bg-sko-bg-primary-soft text-sko-text-primary">
                 {f.type}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="sk-text-sm-semibold truncate text-sko-text-default">{f.name}</p>
-                <p className="sk-text-xs-regular text-sko-text-subtle">{f.size}</p>
+                <p className="sk-text-body-medium-semibold truncate text-sko-text-default">{f.name}</p>
+                <p className="sk-text-body-small-regular text-sko-text-subtle">{f.size}</p>
               </div>
               {f.status === "done" ? (
-                <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sko-text-success">
+                <span className="sk-text-body-small-medium inline-flex items-center gap-1 text-sko-text-success">
                   <Icon icon={Check} size={14} /> Uploaded
                 </span>
               ) : f.status === "uploading" ? (
-                <span className="sk-text-xs-medium text-sko-text-subtle">Uploading…</span>
+                <span className="sk-text-body-small-medium text-sko-text-subtle">Uploading…</span>
               ) : (
-                <span className="sk-text-xs-medium text-sko-text-error">Failed</span>
+                <span className="sk-text-body-small-medium text-sko-text-error">Failed</span>
               )}
               <button
                 type="button"

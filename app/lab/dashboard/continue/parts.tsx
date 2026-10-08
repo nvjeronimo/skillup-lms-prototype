@@ -9,13 +9,13 @@ const FOCUS =
 
 export const linkPrimary = cn(
   "inline-flex min-h-[44px] h-12 items-center justify-center gap-1.5 rounded-md px-5 transition-colors",
-  "sk-text-md-semibold bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover",
+  "sk-text-body-large-semibold bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover",
   FOCUS,
 );
 
 export const linkSecondary = cn(
   "inline-flex min-h-[44px] items-center justify-center gap-1 rounded-md px-4 transition-colors",
-  "sk-text-sm-semibold bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary hover:bg-sko-bg-faint",
+  "sk-text-body-medium-semibold bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary hover:bg-sko-bg-faint",
   "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-primary",
   FOCUS,
 );
@@ -53,7 +53,7 @@ export function TopicProgress({
         {/* DS rule: progress bars fill with bg/info. */}
         <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${pct}%` }} />
       </div>
-      <p className={cn(size === "md" ? "sk-text-sm-medium" : "sk-text-xs-medium", "text-sko-text-muted")}>{label}</p>
+      <p className={cn(size === "md" ? "sk-text-body-medium-medium" : "sk-text-body-small-medium", "text-sko-text-muted")}>{label}</p>
     </div>
   );
 }

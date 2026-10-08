@@ -34,7 +34,7 @@ function Thumb({ initials, className }: { initials: string; className?: string }
     <span
       aria-hidden="true"
       className={cn(
-        "sk-text-xl-bold inline-flex shrink-0 items-center justify-center rounded-[10px] bg-sko-bg-primary-soft text-sko-text-primary",
+        "sk-text-title-large-bold inline-flex shrink-0 items-center justify-center rounded-[10px] bg-sko-bg-primary-soft text-sko-text-primary",
         className,
       )}
     >
@@ -50,10 +50,10 @@ function Progress({ course, className }: { course: MyLearningCourse; className?:
   return (
     <div className={cn("flex flex-col", className)}>
       <div className="flex items-center justify-between gap-2">
-        <span className="sk-text-md-semibold whitespace-nowrap text-sko-text-default">
+        <span className="sk-text-body-large-semibold whitespace-nowrap text-sko-text-default">
           {course.progressPct === null ? "Not started" : `${course.progressPct}% complete`}
         </span>
-        <span className="sk-text-sm-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
+        <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
       </div>
       <PlatformProgressBar track="muted" value={pct} label={`${course.title} progress`} />
     </div>
@@ -92,7 +92,7 @@ export function MyLearningCourseCard({ course, layout, emphasis = "primary", cla
         <Thumb initials={course.initials} className="size-[120px]" />
         <div className="flex min-w-[200px] flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-xl-semibold text-sko-text-default">{course.title}</h3>
+          <h3 className="sk-text-title-large-semibold text-sko-text-default">{course.title}</h3>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <ProviderBadge value={course.provider} />
             <div className="flex items-start gap-2">
@@ -104,8 +104,8 @@ export function MyLearningCourseCard({ course, layout, emphasis = "primary", cla
         <Progress course={course} className="w-[280px] min-w-[180px] shrink gap-1.5" />
         <div className="flex min-w-0 shrink-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2">
           <div className="flex min-w-0 flex-col items-start gap-1.5">
-            <span className="sk-text-2xs-semibold text-sko-text-subtle">Up next</span>
-            <span className="sk-text-sm-medium max-w-[240px] truncate text-sko-text-default">
+            <span className="sk-text-label-small-semibold text-sko-text-subtle">Up next</span>
+            <span className="sk-text-body-medium-medium max-w-[240px] truncate text-sko-text-default">
               {course.upNext.title}
             </span>
             <TopicTypeBadge type={course.upNext.type} />
@@ -128,7 +128,7 @@ export function MyLearningCourseCard({ course, layout, emphasis = "primary", cla
         <Thumb initials={course.initials} className="size-[86px]" />
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-xl-semibold text-sko-text-default">{course.title}</h3>
+          <h3 className="sk-text-title-large-semibold text-sko-text-default">{course.title}</h3>
           <ProviderBadge value={course.provider} />
         </div>
       </div>
@@ -139,8 +139,8 @@ export function MyLearningCourseCard({ course, layout, emphasis = "primary", cla
       <Progress course={course} className="w-full gap-2" />
       <div className="flex w-full items-center justify-between gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2">
         <div className="flex min-w-0 flex-1 items-center gap-3">
-          <span className="sk-text-2xs-semibold shrink-0 text-sko-text-subtle">Up next</span>
-          <span className="sk-text-sm-medium min-w-0 flex-1 truncate text-sko-text-default">
+          <span className="sk-text-label-small-semibold shrink-0 text-sko-text-subtle">Up next</span>
+          <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-sko-text-default">
             {course.upNext.title}
           </span>
         </div>

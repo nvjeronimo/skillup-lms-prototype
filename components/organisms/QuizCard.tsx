@@ -345,13 +345,13 @@ export function QuizCard({
           {/* The block's display_name. Authored text — it differs per course,
               and in ours it is the same generic line above every question. */}
           {showPlatformPrompt ? (
-            <span className="sk-text-md-semibold text-sko-text-default">{platformPrompt}</span>
+            <span className="sk-text-body-large-semibold text-sko-text-default">{platformPrompt}</span>
           ) : null}
 
           {/* `.problem-progress`. Empty in every course we can read, so off in
               A-1. In the bucket it carries the score for the whole set. */}
           {showPoints ? (
-            <span className="sk-text-xs-medium text-sko-text-subtle">
+            <span className="sk-text-body-small-medium text-sko-text-subtle">
               {typeof pointsEarned === "number"
                 ? `${pointsEarned}/${points} points (${graded ? "graded" : "ungraded"})`
                 : `${points} point${points === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -365,10 +365,10 @@ export function QuizCard({
       {showProgress ? progress : null}
 
       {/* body-large/Medium in text/default in all nine states, prompt or not. */}
-      <h3 id={questionId} className="sk-text-md-medium text-sko-text-default">{question}</h3>
+      <h3 id={questionId} className="sk-text-body-large-medium text-sko-text-default">{question}</h3>
 
       {multiSelect ? (
-        <span id={hintId} className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sko-text-subtle">
+        <span id={hintId} className="sk-text-label-small-medium -mt-2 uppercase tracking-wide text-sko-text-subtle">
           Select all that apply
         </span>
       ) : null}
@@ -398,7 +398,7 @@ export function QuizCard({
                 aria-checked={isSelected}
                 data-option-state={rowState}
                 className={cn(
-                  "sk-text-sm-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
+                  "sk-text-body-medium-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   row.box,
                   plain && !revealed ? "hover:bg-sko-bg-subtle" : null,
@@ -412,7 +412,7 @@ export function QuizCard({
                 <span className="flex-1">{opt.label}</span>
                 {/* A text marker where a tick would mislead. */}
                 {showNote ? (
-                  <span className={cn("sk-text-xs-medium mt-0.5 shrink-0", row.noteTone)}>{row.note}</span>
+                  <span className={cn("sk-text-body-small-medium mt-0.5 shrink-0", row.noteTone)}>{row.note}</span>
                 ) : null}
                 {showMarker === "tick" ? (
                   <>
@@ -472,7 +472,7 @@ export function QuizCard({
               // DS Next Hint: a link button with a 1px bottom stroke in every
               // state (border/disabled once the hints run out).
               className={cn(
-                "sk-text-sm-semibold border-b px-0.5 py-1",
+                "sk-text-body-medium-semibold border-b px-0.5 py-1",
                 hintIndex + 1 >= hints.length
                   ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
                   : "border-sko-border-primary text-sko-text-primary",
@@ -484,8 +484,8 @@ export function QuizCard({
         >
           <ol className="flex flex-col gap-1">
             {hints.slice(0, hintIndex + 1).map((h, i) => (
-              <li key={i} className="sk-text-sm-regular text-sko-text-default">
-                <span className="sk-text-sm-semibold text-sko-text-default">
+              <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
+                <span className="sk-text-body-medium-semibold text-sko-text-default">
                   Hint ({i + 1} of {hints.length}):{" "}
                 </span>
                 {h}

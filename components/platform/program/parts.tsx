@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 export function SectionIntro({ title, lead }: { title: string; lead?: string }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <h2 className="sk-text-display-xs-bold text-sko-text-default">{title}</h2>
-      {lead ? <p className="sk-text-md-regular text-sko-text-muted">{lead}</p> : null}
+      <h2 className="sk-text-headline-small-bold text-sko-text-default">{title}</h2>
+      {lead ? <p className="sk-text-body-large-regular text-sko-text-muted">{lead}</p> : null}
     </div>
   );
 }
@@ -47,7 +47,7 @@ export function CardShell({
         className,
       )}
     >
-      <Label className="sk-text-2xs-medium text-sko-text-default">{label}</Label>
+      <Label className="sk-text-label-small-medium text-sko-text-default">{label}</Label>
       {children}
     </section>
   );
