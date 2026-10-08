@@ -9,7 +9,6 @@ import {
   dashboardGreeting,
   dashboardJump,
   dashboardResume,
-  dashboardStreak,
 } from "@/lib/platform/dashboard";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
@@ -17,16 +16,15 @@ import { DueItem } from "./DueItem";
 import { GlanceCard } from "./GlanceCard";
 import { JumpTile } from "./JumpTile";
 import { ResumeRow } from "./ResumeRow";
-import { StreakCard } from "./StreakCard";
 
 /**
- * Platform Dashboard (Figma: Desktop 6374:16006, Tablet 6397:16635, Mobile 6400:29528).
- * Greeting, Overview (Glance card + Streak card), Due this week + Pick up where you left
- * off, Jump somewhere. Page padding 40 / 32 / 24, 80 / 64 / 48 below, 32 / 24 / 20 between
- * the blocks (desktop / tablet / mobile).
- * Desktop: Overview is a row (Streak 360 wide) and Due (460) sits beside Resume.
- * Tablet: Overview stays a row (Streak 352), Due and Resume stack, four tiles in a row.
- * Mobile: everything stacks, the resume list uses the Resume row, tiles go 2 × 2.
+ * Platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop 6408:72361, tablet
+ * 6408:72704, mobile 6418:127183).
+ * Greeting, the glance card, Due this week + Pick up where you left off, Jump somewhere.
+ * Page padding 40 / 32 / 24, 80 / 64 / 48 below, 32 / 24 / 20 between the blocks
+ * (desktop / tablet / mobile).
+ * Desktop: Due (440) sits beside Resume (728). Tablet: Due and Resume stack, three tiles in
+ * a row. Mobile: everything stacks, the resume list uses the Resume row, tiles go two a row.
  */
 export function DashboardView() {
   const showToast = useLmsStore((s) => s.showToast);
@@ -39,17 +37,15 @@ export function DashboardView() {
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
         <h1 className="sk-text-headline-large-bold text-sko-text-default">
           {dashboardGreeting.salutation}{" "}
-          <br />
+          {/* One line from tablet up; on mobile the name takes the second line, as drawn. */}
+          <br className="md:hidden" />
           <span className="text-sko-text-subtle">{platformUser.firstName}.</span>
         </h1>
 
-        <div className="flex flex-col gap-5 md:flex-row md:items-stretch md:gap-6 lg:gap-8">
-          <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} className="md:flex-1" />
-          <StreakCard {...dashboardStreak} className="md:w-[352px] md:shrink-0 lg:w-[360px]" />
-        </div>
+        <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />
 
         <div className="flex flex-col gap-5 md:gap-6 lg:flex-row lg:items-start lg:gap-8">
-          <section aria-labelledby="dashboard-due-title" className="flex flex-col gap-4 lg:w-[460px] lg:shrink-0">
+          <section aria-labelledby="dashboard-due-title" className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
             <PlatformSectionHeader
               id="dashboard-due-title"
               title="Due"
@@ -57,7 +53,7 @@ export function DashboardView() {
               action={{ label: "View calendar", onClick: () => notInPrototype("Calendar") }}
             />
             <ul
-              data-mock="No API for due dates or live sessions"
+              data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
               className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page"
             >
               {dashboardDue.map(({ id, ...item }) => (
@@ -77,8 +73,7 @@ export function DashboardView() {
               {dashboardResume.map((course, index) => (
                 <li key={course.id}>
                   {/* Mobile: the Resume row. Tablet and desktop: the DS Course Row.
-                      One primary action in the list: the course touched last. The DS row draws
-                      every Resume as Primary; three equal primaries hid the next step. */}
+                      One primary action in the list: the course touched last; the rest are Secondary. */}
                   <ResumeRow
                     className="md:hidden"
                     title={course.title}
@@ -106,8 +101,8 @@ export function DashboardView() {
         <section aria-labelledby="dashboard-jump-title" className="flex flex-col gap-4">
           <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
           <ul
-            data-mock="Counts and mentor availability have no API"
-            className="grid grid-cols-2 gap-4 md:grid-cols-4"
+            data-mock="The Discussion count needs the notifications flag switched on"
+            className="grid grid-cols-2 gap-4 md:grid-cols-3"
           >
             {dashboardJump.map((tile) => (
               <li key={tile.id} className="min-w-0">

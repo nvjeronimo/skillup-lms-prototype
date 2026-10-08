@@ -15,11 +15,12 @@ export interface ResumeRowProps {
 }
 
 /**
- * `LMS / Platform / Resume row` (6418:18853): a course to resume on a narrow screen, the
+ * DS `LMS/Platform/Dashboard/Resume-Row`: a course to resume on a narrow screen, the
  * mobile stand-in for the DS `LMS / Course Row`, which cannot show its delivery badge under
  * ~390px. Same atoms and tokens as the DS row: title (body-large/Medium), the Delivery Mode
  * badge under it (gap 8), then the DS Progress bar with the percentage (gap 12) and the
- * button (gap 16). bg/page, 2px border/primary, radius 12, padding 16, gap 12, no shadow.
+ * button (gap 16). bg/page, 1px border/subtle, radius 12, padding 16, gap 12, no shadow
+ * (327 × 136 as drawn; the DS stroke is part of the layout, so the border adds to the padding).
  * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
  * opens the course, so it is a link with the button look (atoms/ButtonLink).
  */
@@ -27,7 +28,7 @@ export function ResumeRow({ title, deliveryMode, progressPct, href, emphasis = "
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-xl border-2 border-sko-border-primary bg-sko-bg-page p-4",
+        "flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4",
         className,
       )}
     >

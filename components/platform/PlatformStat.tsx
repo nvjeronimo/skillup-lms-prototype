@@ -18,17 +18,17 @@ export interface PlatformStatProps {
  * DS `LMS / Platform / Stat` (6378:3299): one figure — a label, the value, a detail line.
  * Default: label-small/Semibold text/muted · headline-medium/Bold text/default ·
  * body-small/Medium text/muted, gap 8, padding 16.
- * Inverse: value · label · detail, gap 4, all text/on-inverse; the label sits at 60% and
- * the detail at 50% layer opacity (the DS has no translucent text token). In Dark, bg/inverse
- * turns light and those two fail AA (4.45:1 and 3.28:1), so both sit at 70% there.
+ * Inverse: value · label · detail, gap 4, all text/on-inverse; the label sits at 80% and
+ * the detail at 60% layer opacity (the DS has no translucent text token). In Dark, bg/inverse
+ * turns light and the detail fails AA at 60%, so it sits at 70% there.
  */
 export function PlatformStat({ label, value, detail, theme = "default", divider = false, className }: PlatformStatProps) {
   if (theme === "inverse") {
     return (
       <div className={cn("flex min-w-0 flex-col justify-end gap-1 text-sko-text-on-inverse", className)}>
         <p className="sk-text-headline-medium-bold">{value}</p>
-        <p className="sk-text-label-small-semibold opacity-60 [[data-theme=dark]_&]:opacity-70">{label}</p>
-        <p className="sk-text-body-small-medium opacity-50 [[data-theme=dark]_&]:opacity-70">{detail}</p>
+        <p className="sk-text-label-small-semibold opacity-80">{label}</p>
+        <p className="sk-text-body-small-medium opacity-60 [[data-theme=dark]_&]:opacity-70">{detail}</p>
       </div>
     );
   }
