@@ -28,11 +28,15 @@ export interface MyLearningStat {
   detail: string;
 }
 
-/** Three DS `Stat`, Theme=Default: totals from Learner Home, the same as the Dashboard glance card. */
+/**
+ * Three DS `Stat`, Theme=Default: totals from Learner Home, the same as the Dashboard glance
+ * card. They count every course the learner has an enrolment in: the five single courses and
+ * the two program courses already started (course 1, complete, and course 2, in progress).
+ */
 export const myLearningStats: MyLearningStat[] = [
-  { label: "In progress", value: "3", detail: "courses" },
-  { label: "Completed", value: "1", detail: "course" },
-  { label: "Certificates", value: "1", detail: "earned" },
+  { label: "In progress", value: "4", detail: "courses" },
+  { label: "Completed", value: "2", detail: "courses" },
+  { label: "Certificates", value: "2", detail: "earned" },
 ];
 
 /* ── Toolbar ────────────────────────────────────────────────────────────────────────── */
@@ -143,7 +147,7 @@ const COURSES: MyLearningCourse[] = [
     difficulty: "Advanced",
     delivery: "Flexible Learning",
     progressPct: null,
-    progressMeta: "Starts Apr 28",
+    progressMeta: "Starts Oct 14",
     upNext: { title: "Python environment setup", type: "Reading" },
     cta: "Start",
   },

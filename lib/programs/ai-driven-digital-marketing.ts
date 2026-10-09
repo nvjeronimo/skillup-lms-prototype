@@ -18,7 +18,7 @@ const program: Program = {
   imageSrc: "/platform/covers/program-ai-digital-marketing.jpg",
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
-  stats: { courses: "7 courses", duration: "4 months", org: "SkillUp" },
+  stats: { courses: "7 courses", duration: "10 months", org: "SkillUp" },
   progress: {
     percent: 14,
     label: "Program progress",
@@ -377,13 +377,15 @@ const program: Program = {
     },
   ],
   included: [
-    "76 videos",
-    "90 readings",
-    "13 podcasts",
-    "10 activities",
-    "24 hands-on labs",
+    // Counted from the seven course outlines (lib/courses), not from the frames.
+    "97 videos",
+    "87 readings",
+    "27 activities",
+    "20 practice quizzes",
+    "18 graded quizzes",
+    "17 graded assignments",
     "6 final projects",
-    "6 final assessments",
+    "7 peer reviews",
     "1 capstone project",
   ],
   instructors: [
