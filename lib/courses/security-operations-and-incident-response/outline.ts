@@ -86,6 +86,48 @@ export const outline: Course = {
               title: "Log sources: endpoints, identity, network and cloud",
               duration: "13 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec4-m1-t3-ln1",
+                  ts: "0:00",
+                  text: "A security operations team sees an organisation through its logs. Four groups of sources give most of the picture, and each one answers a different question.",
+                },
+                {
+                  id: "sec4-m1-t3-ln2",
+                  ts: "0:20",
+                  text: "Endpoints are laptops, servers and phones. Their logs say what ran: which program started, which program launched it, under which account, and which files it touched.",
+                },
+                {
+                  id: "sec4-m1-t3-ln3",
+                  ts: "0:40",
+                  text: "Identity sources are the directory and the identity provider. They say who signed in, from where, by which method and whether it worked, and they record changes such as a new administrator or a reset password.",
+                },
+                {
+                  id: "sec4-m1-t3-ln4",
+                  ts: "0:55",
+                  text: "Network sources are firewalls, DNS resolvers, proxies and VPN gateways. They say which device talked to which address, when, and how much data moved. They usually do not see the content.",
+                },
+                {
+                  id: "sec4-m1-t3-ln5",
+                  ts: "1:15",
+                  text: "Cloud and SaaS sources are audit logs. They record actions inside a service: a file shared with an outside address, a mail forwarding rule created, a storage setting changed.",
+                },
+                {
+                  id: "sec4-m1-t3-ln6",
+                  ts: "1:30",
+                  text: "No single source tells the story. A sign-in from an unusual place is an identity event. The forwarding rule created two minutes later is a SaaS event. The link between them is the account name and the time.",
+                },
+                {
+                  id: "sec4-m1-t3-ln7",
+                  ts: "1:50",
+                  text: "That is why analysts pivot from one source to another using what the events share: the account, the device, the address and the time.",
+                },
+                {
+                  id: "sec4-m1-t3-ln8",
+                  ts: "2:10",
+                  text: "When you take on a new environment, list the sources under these four headings and mark which ones are switched on and collected. The empty headings are your blind spots. The next reading looks at what a single event must contain.",
+                },
+              ],
             },
             {
               id: "sec4-m1-t4",
@@ -113,6 +155,48 @@ export const outline: Course = {
               title: "How a SIEM collects, normalises and correlates",
               duration: "13 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec4-m1-t6-ln1",
+                  ts: "0:00",
+                  text: "A SIEM, which stands for security information and event management, is where the logs of an organisation come together. It does three jobs: it collects, it normalises and it correlates.",
+                },
+                {
+                  id: "sec4-m1-t6-ln2",
+                  ts: "0:20",
+                  text: "Collection brings events in. Agents on endpoints forward them, network devices send them, and cloud services are read through their interfaces. The first check on any SIEM is whether every expected source is still sending.",
+                },
+                {
+                  id: "sec4-m1-t6-ln3",
+                  ts: "0:40",
+                  text: "Each product writes events in its own way. One calls the account “user”, another “subject”, a third “actor”. Timestamps arrive in different formats and time zones.",
+                },
+                {
+                  id: "sec4-m1-t6-ln4",
+                  ts: "0:55",
+                  text: "Normalisation maps them onto common fields: one name for the account, one for the source address, and one time format in UTC. After that, a single search covers every source.",
+                },
+                {
+                  id: "sec4-m1-t6-ln5",
+                  ts: "1:15",
+                  text: "Enrichment adds what the event does not say about itself: the owner of the device, the department of the user, whether the address belongs to the company.",
+                },
+                {
+                  id: "sec4-m1-t6-ln6",
+                  ts: "1:30",
+                  text: "Correlation joins events that mean little apart. Ten failed sign-ins are routine. Ten failures followed by a success from a new country, and then a new forwarding rule on the same account, are worth an alert.",
+                },
+                {
+                  id: "sec4-m1-t6-ln7",
+                  ts: "1:50",
+                  text: "The result is an alert in a queue, with the underlying events attached, for an analyst to triage.",
+                },
+                {
+                  id: "sec4-m1-t6-ln8",
+                  ts: "2:10",
+                  text: "A SIEM does not find anything by itself. It applies the rules it has been given to the data it has been sent. A missing source or a badly written rule produces silence, and silence looks exactly like safety.",
+                },
+              ],
             },
             {
               id: "sec4-m1-t7",
@@ -157,6 +241,48 @@ export const outline: Course = {
               title: "Detection rules: signatures, thresholds and behaviour",
               duration: "13 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec4-m2-t1-ln1",
+                  ts: "0:00",
+                  text: "A detection rule is a question asked of the logs over and over. There are three broad ways to write one, and each has its own strength and its own blind spot.",
+                },
+                {
+                  id: "sec4-m2-t1-ln2",
+                  ts: "0:20",
+                  text: "A signature matches something already known to be bad: the hash of a file, a domain name, a specific pattern in a request. It is precise and cheap. It is also blind to anything new, and attackers can change a file or a domain in minutes.",
+                },
+                {
+                  id: "sec4-m2-t1-ln3",
+                  ts: "0:40",
+                  text: "A threshold counts. More than twenty failed sign-ins for one account in five minutes. More than a gigabyte sent to one outside address in an hour.",
+                },
+                {
+                  id: "sec4-m2-t1-ln4",
+                  ts: "0:55",
+                  text: "Thresholds catch noisy activity. They miss the patient attacker who stays below the number, and they fire on the member of staff who really did forget a password.",
+                },
+                {
+                  id: "sec4-m2-t1-ln5",
+                  ts: "1:15",
+                  text: "A behavioural rule compares activity with a baseline, either the user's own history or what is normal for the role. An accounts clerk who starts running administration tools at three in the morning stands out without any signature.",
+                },
+                {
+                  id: "sec4-m2-t1-ln6",
+                  ts: "1:30",
+                  text: "Behavioural rules can catch what nobody has seen before. Their cost is false positives, because people change their habits for ordinary reasons.",
+                },
+                {
+                  id: "sec4-m2-t1-ln7",
+                  ts: "1:50",
+                  text: "Good coverage layers the three, and every rule is tuned. Tuning means reading the alerts a rule produced last month and adjusting it so that more of them are worth an analyst's time.",
+                },
+                {
+                  id: "sec4-m2-t1-ln8",
+                  ts: "2:10",
+                  text: "Each rule should carry a note saying what it looks for, why that matters and what the analyst should check first. An alert that nobody understands gets closed, whatever it found.",
+                },
+              ],
             },
             {
               id: "sec4-m2-t2",
@@ -286,6 +412,48 @@ export const outline: Course = {
               title: "Preparation: plans, roles and contact lists",
               duration: "12 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec4-m3-t1-ln1",
+                  ts: "0:00",
+                  text: "The outcome of an incident is largely decided before it starts. Preparation is the phase in which you have time to think, so it is where the thinking should be done.",
+                },
+                {
+                  id: "sec4-m3-t1-ln2",
+                  ts: "0:20",
+                  text: "Start with a plan of a few pages. It says what counts as an incident, who declares one, who leads the response and who may take decisions such as shutting down a service.",
+                },
+                {
+                  id: "sec4-m3-t1-ln3",
+                  ts: "0:40",
+                  text: "Name roles, not only people. An incident lead who coordinates. A technical lead who investigates. Someone who handles communication. Someone who keeps the log. Each role has a deputy, because incidents do not avoid holidays.",
+                },
+                {
+                  id: "sec4-m3-t1-ln4",
+                  ts: "0:55",
+                  text: "Build the contact list: the response team, senior management, the IT supplier, the insurer, legal advice, and the regulator's reporting line. Include telephone numbers.",
+                },
+                {
+                  id: "sec4-m3-t1-ln5",
+                  ts: "1:15",
+                  text: "Keep a copy of the plan and the list outside the systems they describe, printed or on a separate service. If email is the thing that has been compromised, a plan stored in email is out of reach and may be read by the intruder.",
+                },
+                {
+                  id: "sec4-m3-t1-ln6",
+                  ts: "1:30",
+                  text: "Agree a second channel for the team to talk on, for the same reason.",
+                },
+                {
+                  id: "sec4-m3-t1-ln7",
+                  ts: "1:50",
+                  text: "Prepare the practical things: logging switched on and retained, backups tested, administrator access to the key services confirmed, and the authority to isolate a device given in advance.",
+                },
+                {
+                  id: "sec4-m3-t1-ln8",
+                  ts: "2:10",
+                  text: "Then rehearse. A tabletop exercise, one hour around a table with a scenario, shows where the plan is wrong while being wrong costs nothing. Run one at least once a year and correct the plan afterwards.",
+                },
+              ],
             },
             {
               id: "sec4-m3-t2",
@@ -300,6 +468,48 @@ export const outline: Course = {
               title: "Containment: stop the spread, keep the evidence",
               duration: "13 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec4-m3-t3-ln1",
+                  ts: "0:00",
+                  text: "Containment means stopping an incident from getting worse while you are still working out what it is. It comes with a tension: act fast, but do not destroy what you will need in order to understand what happened.",
+                },
+                {
+                  id: "sec4-m3-t3-ln2",
+                  ts: "0:20",
+                  text: "Think of it in two steps. Short-term containment happens in minutes: isolate the affected device from the network, disable or reset the affected account, block the address or the domain.",
+                },
+                {
+                  id: "sec4-m3-t3-ln3",
+                  ts: "0:40",
+                  text: "Isolate a device. Do not switch it off. A running machine holds evidence in memory that is lost when the power goes: the processes, the connections, sometimes the encryption keys. Most endpoint tools can cut a device off from the network and keep it reachable for the investigator.",
+                },
+                {
+                  id: "sec4-m3-t3-ln4",
+                  ts: "0:55",
+                  text: "For an account, change the password, end its active sessions and check the sign-in methods registered on it. A password reset alone can leave an intruder's session open, or their own device registered as a second factor.",
+                },
+                {
+                  id: "sec4-m3-t3-ln5",
+                  ts: "1:15",
+                  text: "Longer-term containment keeps the business running while you prepare a clean fix: a temporary firewall rule, moving a service to a rebuilt server, closer monitoring of the accounts involved.",
+                },
+                {
+                  id: "sec4-m3-t3-ln6",
+                  ts: "1:30",
+                  text: "Before you change anything, record its state: a screenshot, an export of the relevant logs, a note of the time. Then write down each action, who took it and when.",
+                },
+                {
+                  id: "sec4-m3-t3-ln7",
+                  ts: "1:50",
+                  text: "Scope before you declare victory. If one laptop was affected, search for the same indicators on the others. Containing one machine out of three only tells the intruder that you have noticed.",
+                },
+                {
+                  id: "sec4-m3-t3-ln8",
+                  ts: "2:10",
+                  text: "And decide in advance who may authorise a disruptive step, such as taking the booking system offline. At two in the morning there should be no doubt whose decision that is.",
+                },
+              ],
             },
             {
               id: "sec4-m3-t4",
