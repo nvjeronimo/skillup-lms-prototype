@@ -128,6 +128,19 @@ const DOCS: SearchDoc[] = [
     "A critical-to-quality requirement starts from the voice of the customer and ends in a measure."),
 ];
 
+/**
+ * Prototype only: searches that are known to give each state, offered when the field is
+ * empty so a reviewer does not have to guess what the sample content holds.
+ */
+export const SEARCH_SAMPLES: { query: string; gives: string }[] = [
+  { query: "control chart", gives: "29 results, four types" },
+  { query: "DMAIC", gives: "a few results" },
+  { query: "Pareto", gives: "text and a quiz" },
+  { query: "baseline", gives: "a few results" },
+  { query: "kanbam", gives: "no results" },
+  { query: SEARCH_FAIL_WORD, gives: "the search fails" },
+];
+
 /** Results the learner cannot open, counted by the platform for this search string. */
 const ACCESS_DENIED: Record<string, number> = { "control chart": 2 };
 
