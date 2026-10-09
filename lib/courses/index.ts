@@ -9,6 +9,9 @@ import businessAnalyticsWithPython from "./business-analytics-with-python";
 import digitalMarketingFundamentalsAndTheAiMindset from "./digital-marketing-fundamentals-and-the-ai-mindset";
 import seoGeoAndOrganicGrowthWithAi from "./seo-geo-and-organic-growth-with-ai";
 import paidAdvertisingMediaAndAiIntegratedCampaignStrategy from "./paid-advertising-media-and-ai-integrated-campaign-strategy";
+import socialMediaAndEcommerceMarketing from "./social-media-and-ecommerce-marketing";
+import emailCrmAndLifecycleMarketingWithAi from "./email-crm-and-lifecycle-marketing-with-ai";
+import capstoneProjectAiFirstMarketingSystem from "./capstone-project-ai-first-marketing-system";
 
 /**
  * The registry of courses with content of their own. To add one, add its folder next to this
@@ -29,6 +32,9 @@ export const COURSES: CourseEntry[] = [
   digitalMarketingFundamentalsAndTheAiMindset,
   seoGeoAndOrganicGrowthWithAi,
   paidAdvertisingMediaAndAiIntegratedCampaignStrategy,
+  socialMediaAndEcommerceMarketing,
+  emailCrmAndLifecycleMarketingWithAi,
+  capstoneProjectAiFirstMarketingSystem,
 ];
 
 /** Ids and slugs taken by the sample courses of lib/data (Six Sigma topics are "m1-t1", unprefixed). */
