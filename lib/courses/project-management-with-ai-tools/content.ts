@@ -90,6 +90,258 @@ export const content: CourseContent = {
         "Ask for the assumptions, then let the team correct the draft.",
       ],
     },
+    "pma-m1-t2": {
+      lede: "Every project is bounded by what it must deliver, by when, with what money and to what standard. These four are tied together: move one and at least one other moves with it. Managing that link, and making the choice visible to the people who own it, is the centre of the project manager's job.",
+      sections: [
+        {
+          heading: "Four constraints, one system",
+          paragraphs: [
+            "Scope is the work and the result that have been agreed. Time is the schedule. Cost is money and people's hours. Quality is how well the result has to work. The first three are often drawn as a triangle with quality in the middle, because quality is what quietly suffers when the three sides are squeezed.",
+            "The practical meaning is simple. If the sponsor adds a feature, something else gives: the date moves, the budget grows, another feature is dropped or the testing gets thinner. There is no fifth option in which nothing changes.",
+          ],
+        },
+        {
+          heading: "Find out which one is fixed",
+          paragraphs: [
+            "On most projects one constraint is truly fixed and the others have some room. A trade-fair stand has a fixed date. A grant-funded project has a fixed budget. A safety system has fixed quality.",
+            "Ask the sponsor at the start: if we cannot have everything, what do we protect first? Write the answer in the charter. It will settle arguments months later, when the pressure is high and memories differ.",
+          ],
+        },
+        {
+          heading: "Present trade-offs as options",
+          paragraphs: [
+            "When a change request arrives, the answer is neither yes nor no. It is a short list of options with their price. We can add the report if the launch moves by two weeks, or if the export feature waits for the next release, or if we add a developer for a month at this cost.",
+            "The sponsor chooses, because the sponsor owns the business outcome. Your part is to make sure the choice is informed and recorded. A project manager who absorbs every request without naming the cost has still made a trade-off. They have made it silently, usually against quality or against the team's evenings.",
+          ],
+        },
+        {
+          heading: "What an assistant can add",
+          paragraphs: [
+            "An AI assistant is useful for laying out options quickly. Give it the change and the current plan and ask what would have to move. Treat the result as a first list to check with the team. The assistant does not know which constraint your sponsor cares about most, or what was promised in a meeting it did not attend.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "You cannot say yes to more scope without saying what it costs. You can only choose who finds out, and when.",
+        attribution: "Course notes, Module 1",
+      },
+      takeaways: [
+        "Scope, time, cost and quality move together; a change to one changes another.",
+        "Ask which constraint is fixed, and write it in the charter.",
+        "Answer a change request with priced options, not with yes or no.",
+        "The sponsor decides the trade-off; the project manager makes it visible.",
+      ],
+    },
+    "pma-m1-t4": {
+      lede: "An AI assistant is a fast drafter and a tireless summariser. It is also confident when it is wrong and knows nothing about your project beyond what you paste in. Knowing where that line runs is what makes it save time instead of creating risk.",
+      sections: [
+        {
+          heading: "Where it helps",
+          paragraphs: [
+            "Assistants are good at producing a first version of structured text. They can turn a scope description into a draft work breakdown, list likely risks for a type of project, rewrite a status update for a different audience, pull decisions and actions out of meeting notes, or suggest questions you have not asked.",
+            "They are also good at volume and patience. Checking forty user stories for missing acceptance criteria, or comparing two versions of a plan, is work a person does badly on a Friday afternoon. In each case the assistant starts from material you gave it and returns something you can verify.",
+          ],
+        },
+        {
+          heading: "Where it fails",
+          paragraphs: [
+            "An assistant does not know your team's capacity, your client's politics or what was agreed in the corridor. When it lacks a fact it does not stop. It fills the gap with something plausible. A date, a figure or a name of a standard can be invented and presented in the same assured tone as everything else.",
+            "It is weak at arithmetic across long tables unless it uses a calculation tool, and it tends to agree with the framing you give it. Ask whether your plan is realistic and you will often hear that it is. Ask what could make the plan fail and you get a more useful answer.",
+          ],
+        },
+        {
+          heading: "What stays with you",
+          paragraphs: [
+            "Three things cannot be delegated. Judgement: deciding which trade-off is right for this sponsor. Commitment: only the team can say what it will deliver. Accountability: if the report is wrong, the person who sent it answers for it, whoever drafted it.",
+            "This gives a working rule for the course. The assistant drafts. You check every fact, figure and date against a source. The team commits. If you could not explain a line of the plan without the assistant, the line is not ready.",
+          ],
+        },
+        {
+          heading: "A quick test before you use it",
+          paragraphs: [
+            "Ask three questions. Can I check the output against something I trust? Would an error be caught before it does harm? Am I allowed to share this input with the tool? Three times yes means go ahead. A no on any of them means do the task yourself, or change the task.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "Treat the assistant as a capable new colleague on their first day: quick and well read, with no knowledge of this project.",
+        attribution: "Course notes, Module 1",
+      },
+      takeaways: [
+        "Use an assistant for first drafts, summaries, reformatting and checklists.",
+        "Expect confident errors: verify every fact, figure and date.",
+        "Ask what could go wrong, not whether the plan is good.",
+        "Judgement, commitment and accountability stay with people.",
+      ],
+    },
+    "pma-m2-t5": {
+      lede: "A list of tasks with estimates is not yet a schedule. The schedule appears when you add the order in which things must happen. That order produces one chain of tasks that decides the finish date, and knowing which chain it is tells you where to look every week.",
+      sections: [
+        {
+          heading: "Dependencies",
+          paragraphs: [
+            "A dependency is a link between two tasks. The most common is finish-to-start: the copy must be approved before the page can be built. Less often two tasks must start together or finish together.",
+            "Separate hard dependencies from habits. Testing cannot begin before there is something to test. That is hard. “We always do design before content” may be a preference, and breaking it could let two tasks run in parallel. Also mark external dependencies, those that rest on a supplier, a client approval or another team. They cause the most delay, because you do not control them.",
+          ],
+        },
+        {
+          heading: "The critical path",
+          paragraphs: [
+            "Draw the tasks as a network and add up the durations along each route from start to finish. The longest route is the critical path. It sets the earliest possible finish date. A day lost on it is a day lost on the project.",
+            "Tasks off the critical path have float: the time they can slip without moving the end date. A task with five days of float can start late without harm. A task with none cannot. As work progresses the critical path can change, so recalculate it when the plan changes instead of trusting the picture from week one.",
+          ],
+        },
+        {
+          heading: "Buffers",
+          paragraphs: [
+            "People pad their own estimates to be safe, and the padding is then used up, because work expands to fill the time allowed. A better approach is to estimate each task honestly and to place the safety margin where everyone can see it.",
+            "Put a project buffer at the end of the critical path, shared by all the tasks on it. Where a non-critical chain joins the critical path, add a small feeding buffer so that a late side task does not delay the main line. Then report buffer use each week. Half the work done with a quarter of the buffer used is healthy. The reverse is an early warning.",
+          ],
+        },
+        {
+          heading: "Checking a schedule drafted by an assistant",
+          paragraphs: [
+            "An assistant can propose dependencies and calculate a path from a task list. Check three things in its draft: links it invented from general knowledge, links it missed because they exist only in your organisation, and people booked on two tasks at the same time. A critical path that ignores who is available is a path on paper only.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "Watch the critical path every week. Everything else can wait a day; it cannot.",
+        attribution: "Course notes, Module 2",
+      },
+      takeaways: [
+        "Record dependencies, and question the ones that are only habit.",
+        "The critical path is the longest chain of dependent tasks; it sets the finish date.",
+        "Float is how far a task can slip without moving the end.",
+        "Keep one visible buffer at the end of the critical path and report how much is used.",
+      ],
+    },
+    "pma-m3-t2": {
+      lede: "A team lists the risks it has met before. The ones that hurt are often those nobody in the room has experienced. An AI assistant has read about a great many projects and can widen the list quickly, provided you treat its output as questions to investigate and not as findings.",
+      sections: [
+        {
+          heading: "Ask by category",
+          paragraphs: [
+            "A prompt such as “what are the risks of this project?” returns the familiar ones. Ask category by category instead: technical, supplier, people and skills, legal and regulatory, data, schedule, budget, stakeholder, external events. For each, ask for five risks specific to the project brief you pasted, written as cause, event and effect.",
+            "Then change the angle. Ask the assistant to answer as the finance director, as the support team lead, as the supplier. Each role sees different things going wrong.",
+          ],
+        },
+        {
+          heading: "Run a pre-mortem",
+          paragraphs: [
+            "A pre-mortem starts from failure. Tell the assistant: it is six months from now and this project has failed badly. Write five different accounts of how it happened. People and assistants both find it easier to explain a failure that has “already happened” than to predict one.",
+            "Bring the accounts to the team and ask which feel uncomfortably plausible. That reaction is your signal. The team knows things the assistant does not.",
+          ],
+        },
+        {
+          heading: "Filter hard",
+          paragraphs: [
+            "Expect forty suggestions and keep perhaps six. Remove the generic ones that apply to any project. Remove the ones that rest on facts the assistant invented about your situation. Merge the duplicates.",
+            "For each one that survives, check that a real cause exists in your project. “A key person may leave” becomes a risk for your register only when you can name the person and what only they know.",
+          ],
+        },
+        {
+          heading: "What the assistant cannot give you",
+          paragraphs: [
+            "It cannot give you probability. It has no information about how likely something is in your organisation, so any figure it offers is a guess. Score the risks with the team. It also cannot own a risk. Every item that enters the register needs a named person who will watch its trigger and act on it.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "Use the assistant to widen the list and the team to decide what is true.",
+        attribution: "Course notes, Module 3",
+      },
+      takeaways: [
+        "Prompt by risk category and by stakeholder role to get past the usual list.",
+        "Use a pre-mortem: assume the project failed and ask how.",
+        "Discard generic and invented items; keep those with a real cause in your project.",
+        "The team scores probability and owns each risk. The assistant does neither.",
+      ],
+    },
+    "pma-m3-t5": {
+      lede: "A status report has one purpose: to let someone who was not there know where the project stands and what they need to do about it. Most reports fail because they list activity and leave the reader to work out the rest. This reading gives a structure that fits on one screen.",
+      sections: [
+        {
+          heading: "Lead with the answer",
+          paragraphs: [
+            "Open with the overall status in one line and the reason in the next: on track, at risk or off track, and why. A reader who stops after two lines should still know the essential thing.",
+            "If you use red, amber and green, define them once and keep to the definitions. For example: green means the date and budget hold. Amber means one is threatened and there is a plan. Red means one will be missed without a decision from the sponsor. A project that stays green until the week it turns red has told its readers nothing for months.",
+          ],
+        },
+        {
+          heading: "Progress against the plan",
+          paragraphs: [
+            "Report outcomes against the plan, with numbers. “Worked on the payment integration” is activity. “Payment integration: 6 of 9 stories done, 7 planned by this date” is status. Show the milestone dates, the forecast for each and whether it has moved since the last report.",
+            "Keep the same layout every week. Regular readers then learn where to look and notice at once what has changed.",
+          ],
+        },
+        {
+          heading: "Risks, issues and what you need",
+          paragraphs: [
+            "List the top three risks or issues, each with its owner and the next action. Then put decisions needed in a section of their own, with a name and a date: “Decision needed from Dana by Friday: approve the extra test environment, or accept a one-week delay to performance testing.”",
+            "This section is the reason most senior readers open the report. Place it where they will see it, not at the bottom of the second page.",
+          ],
+        },
+        {
+          heading: "Drafting with an assistant",
+          paragraphs: [
+            "An assistant can turn your board export and your notes into this structure in seconds, and it can produce a shorter version for executives. It will also smooth bad news into something pleasant and may fill a gap with a figure that looks right. Check every number and date against the source, and read the status line last: it has to be your judgement.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "If the reader has to work out whether to worry, the report has not done its job.",
+        attribution: "Course notes, Module 3",
+      },
+      takeaways: [
+        "First line: overall status and the reason.",
+        "Report outcomes against the plan with numbers, in the same layout each week.",
+        "Give decisions needed their own section, with a name and a date.",
+        "Let an assistant format the report; check the facts and write the status line yourself.",
+      ],
+    },
+    "pma-m4-t2": {
+      lede: "The plan says when the project should finish. The work done so far says when it will. A forecast uses the rate the team has really achieved to project the remaining work, and it states the answer as a range. This reading shows the calculation and how to present it.",
+      sections: [
+        {
+          heading: "Start from the measured rate",
+          paragraphs: [
+            "For a team working in sprints, velocity is the amount of work completed per sprint, in story points or in number of items. Take the last three to five sprints. Do not use the velocity the plan assumed, and do not use the best sprint.",
+            "Suppose 120 points remain and the last four sprints delivered 18, 22, 20 and 20. The average is 20, so the central forecast is six more sprints.",
+          ],
+        },
+        {
+          heading: "Give a range",
+          paragraphs: [
+            "A single date hides the uncertainty. Use the slowest and fastest recent sprints to set the limits. At 22 points per sprint the work takes five and a half sprints, so six in practice. At 18 it takes six and two thirds, so seven. The forecast is six to seven sprints, most likely six.",
+            "Tell stakeholders the range and what it depends on. As the project advances and less work remains, the range narrows on its own. A forecast that grows more precise over time is a sign of an honest process.",
+          ],
+        },
+        {
+          heading: "Account for scope that grows",
+          paragraphs: [
+            "Remaining work is rarely fixed. New items are found and requirements are clarified. Measure it. If the backlog has grown by about 4 points per sprint while the team completes 20, the net progress is 16 per sprint, and 120 points will take seven and a half sprints, not six.",
+            "A burn-up chart shows this well. One line is the work completed and another is the total scope. The finish is where the two lines meet. When the scope line rises as fast as the completed line, no date is safe until someone decides what to cut.",
+          ],
+        },
+        {
+          heading: "When the forecast and the plan disagree",
+          paragraphs: [
+            "Report the gap as soon as you see it, with options: reduce scope, move the date, or add capacity where that is realistic. Adding people late usually slows a team first. An assistant can do the arithmetic and draw the chart from your sprint data. It cannot know that two developers are on leave next month, so adjust the rate for what you know is coming.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "Forecast from what the team has done, not from what the plan hoped.",
+        attribution: "Course notes, Module 4",
+      },
+      takeaways: [
+        "Use the average of the last three to five sprints as the rate.",
+        "Present a range, built from the slowest and fastest recent sprints.",
+        "Subtract scope growth from velocity to get net progress.",
+        "Raise a gap between forecast and plan early, with options.",
+      ],
+    },
   },
   quizzes: {
     "pma-m2-t6": [
@@ -151,6 +403,180 @@ export const content: CourseContent = {
           },
           { id: "c", label: "On the tasks that are not on the critical path", feedback: "Those tasks already have float. The finish date depends on the critical path." },
           { id: "d", label: "Nowhere: a good plan needs no buffer", feedback: "A plan with no buffer assumes nothing will go wrong." },
+        ],
+      },
+    ],
+    "pma-m1-t7": [
+      {
+        question: "A client wants a certified payment system by a date set by a regulator, with requirements written into a contract. Which delivery approach fits best?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "Stable requirements, a fixed date and a high cost of late change point to predictive delivery, or to a hybrid with predictive milestones. Agile fits where requirements are discovered along the way.",
+        reviewTopicId: "pma-m1-t3",
+        reviewTopicTitle: "Predictive, agile and hybrid delivery",
+        options: [
+          { id: "a", label: "Agile, because it is the modern approach", feedback: "The approach should fit the work. Here the requirements are fixed and late change is costly." },
+          { id: "b", label: "Predictive, or a hybrid with fixed milestones", correct: true, feedback: "Correct. The requirements are known and the contract and regulator fix the frame." },
+          { id: "c", label: "No defined approach: decide week by week", feedback: "A regulated, contracted project needs a visible plan from the start." },
+          { id: "d", label: "Whichever the assistant recommends", feedback: "The assistant does not know your contract. The choice is yours to justify." },
+        ],
+      },
+      {
+        question: "Which of these is a project and not operations?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "A project is temporary and produces a defined result, then ends. Operations are ongoing and repeat.",
+        reviewTopicId: "pma-m1-t1",
+        reviewTopicTitle: "Course Introduction",
+        options: [
+          { id: "a", label: "Answering customer support tickets each day", feedback: "Ongoing and repeating: that is operations." },
+          { id: "b", label: "Running the monthly payroll", feedback: "It repeats every month with no end: operations." },
+          { id: "c", label: "Moving the company's files to a new storage system by March", correct: true, feedback: "Correct. It has a defined result and an end date." },
+          { id: "d", label: "Monitoring the servers", feedback: "Continuous work with no end point." },
+        ],
+      },
+      {
+        question: "You are about to ask an assistant to draft a project charter. Which input improves the draft most?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "The assistant knows nothing about your project. Goal, scope including what is out, constraints, team and what is already agreed turn a generic draft into a usable one.",
+        reviewTopicId: "pma-m1-t5",
+        reviewTopicTitle: "Giving an assistant project context",
+        options: [
+          { id: "a", label: "A request to be creative", feedback: "Creativity without facts produces a plausible fiction." },
+          { id: "b", label: "The goal, the scope with what is out of scope, the constraints and the team", correct: true, feedback: "Correct. That is the context the assistant cannot guess." },
+          { id: "c", label: "A longer prompt that repeats the request three times", feedback: "Repetition adds no information." },
+          { id: "d", label: "The name of a project management standard", feedback: "A standard gives the format. It says nothing about your project." },
+        ],
+      },
+      {
+        question: "A sponsor says the launch date cannot move. What should the project manager establish next?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "If time is fixed, the room has to come from scope, cost or quality. Agreeing which of them can move, before pressure arrives, is what makes later trade-offs quick.",
+        reviewTopicId: "pma-m1-t2",
+        reviewTopicTitle: "Scope, time, cost and quality: the trade-offs a project manager owns",
+        options: [
+          { id: "a", label: "Nothing: a fixed date makes planning simple", feedback: "A fixed date makes the other constraints the ones that have to give." },
+          { id: "b", label: "Which of scope, budget and quality can move if needed", correct: true, feedback: "Correct. That is where the trade-off will be made." },
+          { id: "c", label: "How much overtime the team will accept", feedback: "Overtime is a hidden cost and quality cut, not a plan." },
+          { id: "d", label: "Whether the sponsor really means it", feedback: "Take it as stated, and agree what gives instead." },
+        ],
+      },
+    ],
+    "pma-m1-t8": [
+      {
+        question: "Halfway through a project the sponsor asks for an extra report, with the same date and the same budget. What is the best reply?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "The four constraints move together. The project manager's job is to show the options and their price, and to let the sponsor choose.",
+        reviewTopicId: "pma-m1-t2",
+        reviewTopicTitle: "Scope, time, cost and quality: the trade-offs a project manager owns",
+        options: [
+          { id: "a", label: "Yes, and ask the team to fit it in", feedback: "Something will give, usually quality or the team's evenings, and nobody will have chosen it." },
+          { id: "b", label: "No, the scope is closed", feedback: "The sponsor owns the outcome and may judge the report worth its price." },
+          { id: "c", label: "Present options: move the date, drop another item, or add budget", correct: true, feedback: "Correct. The sponsor decides with the cost in view." },
+          { id: "d", label: "Ask an assistant to decide", feedback: "An assistant can list options. The decision belongs to the sponsor." },
+        ],
+      },
+      {
+        question: "An assistant's draft plan says a data migration “typically takes three weeks”. How should you treat that figure?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "An assistant produces plausible figures whether or not it has a basis for them. A duration has to come from your team's estimate or from comparable past projects.",
+        reviewTopicId: "pma-m1-t4",
+        reviewTopicTitle: "What AI assistants can and cannot do for a project manager",
+        options: [
+          { id: "a", label: "Use it: the assistant has seen many projects", feedback: "It has no knowledge of your data, your systems or your team." },
+          { id: "b", label: "Double it to be safe", feedback: "Doubling a guess gives a larger guess." },
+          { id: "c", label: "Replace it with an estimate from the team or from similar past work", correct: true, feedback: "Correct. The figure needs a source you can check." },
+          { id: "d", label: "Delete the task", feedback: "The task is real. Only the number is unsupported." },
+        ],
+      },
+      {
+        question: "In a hybrid delivery approach, what is typically predictive and what is agile?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "A common hybrid fixes the frame, with milestones, budget and contract planned up front, and lets the team build in iterations inside it.",
+        reviewTopicId: "pma-m1-t3",
+        reviewTopicTitle: "Predictive, agile and hybrid delivery",
+        options: [
+          { id: "a", label: "Milestones and budget are planned up front; the build runs in sprints", correct: true, feedback: "Correct. A fixed frame with iterative work inside it." },
+          { id: "b", label: "The team is agile and nobody plans", feedback: "Agile teams plan every cycle. Hybrid adds an up-front frame." },
+          { id: "c", label: "Each task alternates between the two", feedback: "The split is by level, not by task." },
+          { id: "d", label: "Predictive for small projects, agile for large ones", feedback: "Size is not the test. Stability of requirements is." },
+        ],
+      },
+      {
+        question: "Which task should stay with the project manager and not be handed to an assistant?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "Drafting, summarising and reformatting can be checked afterwards. Committing to a date on behalf of the team is a decision with accountability, and only people can make it.",
+        reviewTopicId: "pma-m1-t4",
+        reviewTopicTitle: "What AI assistants can and cannot do for a project manager",
+        options: [
+          { id: "a", label: "Summarising a long meeting transcript", feedback: "A good use, with a check of the decisions against your notes." },
+          { id: "b", label: "Rewriting a status update for executives", feedback: "A good use: you can verify it against the original." },
+          { id: "c", label: "Telling the client which date the team commits to", correct: true, feedback: "Correct. Commitment and accountability stay with people." },
+          { id: "d", label: "Listing questions for a kickoff meeting", feedback: "A good use: a list to choose from." },
+        ],
+      },
+    ],
+    "pma-m3-t7": [
+      {
+        question: "Which entry is written the way a useful risk register needs?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "A risk written as cause, event and effect tells you what to watch and what is at stake. A label alone does neither.",
+        reviewTopicId: "pma-m3-t1",
+        reviewTopicTitle: "Building a risk register that gets used",
+        options: [
+          { id: "a", label: "Supplier risk", feedback: "A label. It does not say what might happen or why." },
+          { id: "b", label: "Because the supplier has one engineer on our account, the integration may slip, which would move the launch", correct: true, feedback: "Correct. Cause, event and effect are all there." },
+          { id: "c", label: "Things might go wrong with the integration", feedback: "Too vague to watch or to act on." },
+          { id: "d", label: "The integration is late", feedback: "That has already happened: it is an issue, not a risk." },
+        ],
+      },
+      {
+        question: "An assistant suggests forty risks for your project. What do you do with the list?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "The assistant widens the list. The team decides what is true. Keep only the risks with a real cause in your project, and give each an owner.",
+        reviewTopicId: "pma-m3-t2",
+        reviewTopicTitle: "Using an AI assistant to surface risks you have not thought of",
+        options: [
+          { id: "a", label: "Add all forty to the register", feedback: "A register nobody can read is a register nobody uses." },
+          { id: "b", label: "Ignore it: the team knows the project better", feedback: "The team knows the project. The list may still show a blind spot." },
+          { id: "c", label: "Filter with the team and keep those with a real cause here", correct: true, feedback: "Correct. Expect to keep a handful." },
+          { id: "d", label: "Ask the assistant to score their probability", feedback: "It has no information about likelihood in your organisation." },
+        ],
+      },
+      {
+        question: "What belongs in the first line of a status report?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "Lead with the answer: the overall status and the reason. A reader who stops there should still know whether to worry.",
+        reviewTopicId: "pma-m3-t5",
+        reviewTopicTitle: "Status reports people read",
+        options: [
+          { id: "a", label: "A list of everything the team did this week", feedback: "That is activity. The reader wants to know where the project stands." },
+          { id: "b", label: "The overall status and the reason for it", correct: true, feedback: "Correct. The essential thing first." },
+          { id: "c", label: "Thanks to the team", feedback: "Kind, but it does not tell the reader the status." },
+          { id: "d", label: "The project's history", feedback: "Regular readers know it. New ones can ask." },
+        ],
+      },
+      {
+        question: "What is a pre-mortem?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "A pre-mortem imagines that the project has already failed and asks for the story of how. It brings out risks that a forward-looking question misses.",
+        reviewTopicId: "pma-m3-t2",
+        reviewTopicTitle: "Using an AI assistant to surface risks you have not thought of",
+        options: [
+          { id: "a", label: "A review held after the project closes", feedback: "That is a post-mortem or retrospective." },
+          { id: "b", label: "An exercise that assumes the project has failed and asks how it happened", correct: true, feedback: "Correct. It is done before the work, to find risks." },
+          { id: "c", label: "A budget check before kickoff", feedback: "A different activity." },
+          { id: "d", label: "A meeting to assign blame early", feedback: "The aim is to find risks, not people at fault." },
         ],
       },
     ],
