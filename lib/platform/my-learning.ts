@@ -184,8 +184,10 @@ export interface MyLearningProgram {
   /** State=Not started: the Badge v2 Gray status, with a secondary "Details". */
   status?: string;
   cta: "Continue" | "Details";
-  /** No href: the program has no page in the prototype. */
+  /** The program page: what the card and its title open. No href: no page in the prototype. */
   href?: string;
+  /** What the button opens when it is not the program page: the player of the course in progress. */
+  actionHref?: string;
 }
 
 export const myLearningPrograms: MyLearningProgram[] = [
@@ -200,6 +202,7 @@ export const myLearningPrograms: MyLearningProgram[] = [
     upNext: "Course 2 · AI-Driven Content and Brand Communication",
     cta: "Continue",
     href: "/platform/program/ai-driven-digital-marketing",
+    actionHref: coursePlayerHref("ai-driven-content-and-brand-communication"),
   },
   {
     id: "cybersecurity-fundamentals",

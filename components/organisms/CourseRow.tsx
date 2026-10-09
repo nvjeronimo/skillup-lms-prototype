@@ -54,7 +54,8 @@ export function CourseRow({
         // The DS stroke is inside the 68px row and the CSS border is outside the padding:
         // 19 / 15 + 1 border = the DS 20 / 16.
         // Every state has the same 1px border/subtle stroke in the DS (read 8 Oct 2026).
-        "flex items-center gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card px-[19px] py-[15px]",
+        "relative flex items-center gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card px-[19px] py-[15px]",
+        homeHref && state !== "Locked" && "transition-colors has-[span_a:hover]:border-sko-border-default",
         className,
       )}
     >
@@ -66,7 +67,7 @@ export function CourseRow({
           )}
         >
           {homeHref && state !== "Locked" ? (
-            <Link href={homeHref} className="hover:underline">
+            <Link href={homeHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
               {title}
             </Link>
           ) : (
@@ -89,11 +90,11 @@ export function CourseRow({
             className="w-[140px]"
           />
           {href ? (
-            <ButtonLink href={href} hierarchy={emphasis} size="sm" aria-label={`Resume ${title}`}>
+            <ButtonLink href={href} hierarchy={emphasis} size="sm" className="relative z-[1]" aria-label={`Resume ${title}`}>
               Resume
             </ButtonLink>
           ) : (
-            <Button hierarchy={emphasis} size="sm" onClick={onClick}>
+            <Button hierarchy={emphasis} size="sm" onClick={onClick} className="relative z-[1]">
               Resume
             </Button>
           )}

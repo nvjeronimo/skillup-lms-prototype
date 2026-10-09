@@ -44,10 +44,12 @@ function Progress({ course, className }: { course: MyLearningCourse; className?:
   );
 }
 
-/* The title opens the course's Course Detail page when it has one; it looks as drawn until hovered. */
+/* The whole card opens the course's Course Detail page when it has one (asked by Nelson on
+   10 Oct 2026): the title is the link and its ::after covers the card, so the card has one
+   accessible name and the action stays a separate control above it. */
 function CourseTitle({ course }: { course: MyLearningCourse }) {
   return course.detailHref ? (
-    <Link href={course.detailHref} className="hover:underline">
+    <Link href={course.detailHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
       {course.title}
     </Link>
   ) : (
@@ -70,11 +72,11 @@ function Action({
   className?: string;
 }) {
   return course.href ? (
-    <ButtonLink href={course.href} hierarchy={hierarchy} size="lg" aria-label={label} className={className}>
+    <ButtonLink href={course.href} hierarchy={hierarchy} size="lg" aria-label={label} className={cn("relative z-[1]", className)}>
       {course.cta}
     </ButtonLink>
   ) : (
-    <Button hierarchy={hierarchy} size="lg" aria-label={label} onClick={onAction} className={className}>
+    <Button hierarchy={hierarchy} size="lg" aria-label={label} onClick={onAction} className={cn("relative z-[1]", className)}>
       {course.cta}
     </Button>
   );
@@ -113,6 +115,8 @@ export function MyLearningCourseCard({
 }: MyLearningCourseCardProps) {
   const inRow = context === "row";
   const surface = inRow ? "" : "rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
+  // The card is the target of its title link; a card of its own shows it on hover.
+  const clickable = cn("relative", course.detailHref && !inRow && "transition-colors has-[h3_a:hover]:border-sko-border-default");
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${course.cta} ${course.title}`;
   const next = "certificate" in course.upNext ? null : course.upNext;
@@ -121,7 +125,7 @@ export function MyLearningCourseCard({
 
   if (layout === "list") {
     return (
-      <article className={cn(surface, "flex items-center gap-6 p-4", className)}>
+      <article className={cn(surface, clickable, "flex items-center gap-6 p-4", className)}>
         <CourseThumb
           initials={course.initials}
           imageSrc={course.imageSrc}
@@ -167,7 +171,7 @@ export function MyLearningCourseCard({
   }
 
   return (
-    <article className={cn(surface, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
+    <article className={cn(surface, clickable, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
       <div className="flex w-full items-start gap-4">
         <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-[86px]" />
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
