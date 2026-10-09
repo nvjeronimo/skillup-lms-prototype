@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /**
  * Topic bodies of "Security Foundations and the Threat Landscape": six readings, three
@@ -491,8 +492,8 @@ export const content: CourseContent = {
         question: "Which control most limits the harm once ransomware has already encrypted a file server?",
         explanation:
           "After encryption, prevention has failed. What decides the outcome is whether clean copies exist that the ransomware could not reach, and whether anyone has practised restoring them.",
-        reviewTopicId: "sec1-m2-t4",
-        reviewTopicTitle: "Ransomware: why it works and what limits it",
+        reviewTopicId: "sec1-m2-t2",
+        reviewTopicTitle: "How an intrusion unfolds, stage by stage",
         options: [
           { id: "a", label: "A stronger password policy", feedback: "Useful beforehand. It does not bring the files back." },
           {
@@ -530,8 +531,8 @@ export const content: CourseContent = {
         platformPrompt: "Choose the correct option",
         explanation:
           "A change of payment details is confirmed through a second channel that the message did not supply. A reply, or a call to a number in the email, reaches whoever sent it.",
-        reviewTopicId: "sec1-m3-t3",
-        reviewTopicTitle: "Pretexting, vishing and business email compromise",
+        reviewTopicId: "sec1-m3-t1",
+        reviewTopicTitle: "Why social engineering works",
         options: [
           { id: "a", label: "Reply to the email and ask whether it is genuine", feedback: "If the mailbox is compromised or imitated, the reply goes to the criminal." },
           { id: "b", label: "Call the number in the email's signature", feedback: "The signature is part of the message you are trying to verify." },
@@ -566,8 +567,8 @@ export const content: CourseContent = {
         question: "A colleague realises that five minutes ago they entered their password on a page that was not the real sign-in. What should they do first?",
         explanation:
           "Speed matters more than certainty. An early report lets the password be changed and the sessions ended before the account is used, and lets the same message be removed from other mailboxes.",
-        reviewTopicId: "sec1-m3-t9",
-        reviewTopicTitle: "Building a reporting culture",
+        reviewTopicId: "sec1-m3-t2",
+        reviewTopicTitle: "Recognising phishing: seven signals",
         options: [
           { id: "a", label: "Wait and see whether anything unusual happens", feedback: "Waiting gives the criminal the time they need." },
           { id: "b", label: "Delete the email so that nobody finds out", feedback: "The message is evidence, and others may have received it." },
@@ -585,7 +586,7 @@ export const content: CourseContent = {
   assignments: {
     "sec1-m2-t9": {
       brief:
-        "Build a risk register for Fernhill Bakery, the fictional twelve-person business described in the case file in Handouts. Identify at least eight risks to its information and systems, rate each one, and propose a treatment. Submit the completed template as an XLSX or a PDF.",
+        "Build a risk register for Fernhill Bakery, the fictional twelve-person business described in the case file in Handouts. Identify at least eight risks to its information and systems, rate each one, and propose a treatment. Fill in the template, then submit the completed register as a PDF or DOCX.",
       requirements: [
         "At least 8 risks, each written as asset, threat and weakness",
         "Likelihood and impact on the three-point scale, with one line of reasoning",
@@ -595,4 +596,5 @@ export const content: CourseContent = {
     },
   },
   ora: {},
+  activities,
 };

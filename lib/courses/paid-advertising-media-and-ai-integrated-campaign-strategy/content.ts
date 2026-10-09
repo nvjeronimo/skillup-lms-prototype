@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 export const content: CourseContent = {
   byline: {
@@ -39,8 +40,8 @@ export const content: CourseContent = {
       question: "You hand a campaign to automated bidding. Which of these stays your decision?",
       explanation:
         "Automation chooses bids and placements within the limits you give it. The goal, the budget, the conversion you count and the exclusions that protect the brand are set by you, and reviewed by you.",
-      reviewTopicId: "paid-m3-t11",
-      reviewTopicTitle: "Automated campaign types: what you control and what you do not",
+      reviewTopicId: "paid-m1-t12",
+      reviewTopicTitle: "Budgets, bid strategies and automated bidding",
       options: [
         { id: "a", label: "The bid in each individual auction", feedback: "That is exactly what automated bidding takes over." },
         {
@@ -450,4 +451,5 @@ export const content: CourseContent = {
     },
   },
   ora: {},
+  activities,
 };

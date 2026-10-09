@@ -1,4 +1,5 @@
 import type { CourseContent, OraContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /**
  * The final submission, as the Project topic and the Peer Review topic after it both show
@@ -302,4 +303,5 @@ export const content: CourseContent = {
     "cps-m4-t1": FINAL_SUBMISSION,
     "cps-m4-t2": FINAL_SUBMISSION,
   },
+  activities,
 };

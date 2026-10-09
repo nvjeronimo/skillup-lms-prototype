@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /**
  * Topic bodies of "Security Operations and Incident Response": six readings, three practice
@@ -553,8 +554,8 @@ export const content: CourseContent = {
         question: "Why does eradication come before recovery?",
         explanation:
           "If the intruder's access or the original weakness is still present, restored systems are compromised again, sometimes within hours. Remove the cause, then restore.",
-        reviewTopicId: "sec4-m3-t4",
-        reviewTopicTitle: "Eradication and recovery: back to a known good state",
+        reviewTopicId: "sec4-m3-t2",
+        reviewTopicTitle: "The incident response lifecycle, phase by phase",
         options: [
           { id: "a", label: "Because backups take a long time to copy", feedback: "Duration is not the reason for the order." },
           {
@@ -600,4 +601,5 @@ export const content: CourseContent = {
     },
   },
   ora: {},
+  activities,
 };

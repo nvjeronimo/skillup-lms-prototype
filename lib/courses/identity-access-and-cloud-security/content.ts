@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /**
  * Topic bodies of "Identity, Access and Cloud Security": six readings, three practice
@@ -585,7 +586,7 @@ export const content: CourseContent = {
   assignments: {
     "sec3-m2-t9": {
       brief:
-        "Design the access model for Quillhaven Publishing, the fictional thirty-person company described in the case file in Handouts. Define its roles, say what each role can reach, and set the rules for privileged accounts and for people who join, move or leave. Submit the role matrix and a one-page rationale.",
+        "Design the access model for Quillhaven Publishing, the fictional thirty-person company described in the case file in Handouts. Define its roles, say what each role can reach, and set the rules for privileged accounts and for people who join, move or leave. Submit the role matrix and a one-page rationale as one PDF or DOCX.",
       requirements: [
         "A role matrix: 5 to 8 roles against the systems in the case file",
         "No person holds an administrator role on their everyday account",
@@ -595,4 +596,5 @@ export const content: CourseContent = {
     },
   },
   ora: {},
+  activities,
 };

@@ -24,6 +24,7 @@ export type {
   WeeklyGoal,
 } from "@/lib/platform/course-detail";
 export type {
+  ActivityContent,
   ArticleContent,
   AssignmentBrief,
   DownloadLabContent,
@@ -35,7 +36,7 @@ export type {
   TopicByline,
   ViltSession,
 } from "@/lib/content";
-export type { CourseContent, CourseEntry } from "./types";
+export type { CourseActivity, CourseContent, CourseEntry } from "./types";
 
 export { GRAY, SIX_SIGMA, week } from "./sample-page";
 export { moduleTopics, resumeTopicOf };

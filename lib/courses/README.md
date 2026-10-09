@@ -16,6 +16,7 @@ lib/courses/
     outline.ts      export const outline: Course          the player's sidebar
     page.ts         export const page: CourseDetail       /platform/course/<slug>
     content.ts      export const content: CourseContent   topic bodies, byline
+    activities.ts   export const activities                the Activity topics, when the course has any
 lib/programs/
   index.ts          the registry: PROGRAMS, getProgramBySlug
   types.ts          Program and its parts
@@ -80,6 +81,7 @@ outline under the same title.
 | `podcasts` (optional) | a Podcast (`host`, `guest`, `episodeLabel`, `summary`, `chapters`); its length is the topic's `duration` | topic id |
 | `lessonPages` (optional) | a Lesson Page (`intro`, `blocks`) | topic id |
 | `sessions` (optional) | a VILT-Live Session / VILT-Recording: only the fields that differ from the plain session (`whenLabel`, `host`, `agenda`, …) | topic id |
+| `activities` (optional) | an Activity (`intro`, `steps`, the last step saying what a good result looks like, and `file`: the worksheet the Downloads tab lists); written in `activities.ts` of the folder and listed in `content.ts` | topic id |
 
 A topic with no entry gets plain wording that names no subject (end of `lib/content.ts`), so
 write bodies for the topics a learner lands on (the resume topic, the due assignment) and
@@ -145,7 +147,7 @@ node scripts/check-tokens.mjs
 
 The registry checks, on load: unique slugs and ids, the id prefix, `page.slug` / `page.title`
 against the outline, module and course counters against the topics, that every content
-key is a topic of the course, and that a lab, podcast, lesson page or session is written
+key is a topic of the course, and that a lab, podcast, lesson page, session or activity is written
 for a topic of that type. Then open `/platform/course/<slug>` on its four tabs
 (`?tab=progress|dates|qa`), the resume topic and the due assignment in the player
 (`/course/<slug>/topic/<topicId>`), and the card on `/platform/my-learning` or the program page.

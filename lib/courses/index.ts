@@ -107,6 +107,7 @@ function problems(entries: CourseEntry[]): string[] {
       [content.podcasts, ["Podcast"]],
       [content.lessonPages, ["Lesson Page"]],
       [content.sessions, ["VILT-Live Session", "VILT-Recording"]],
+      [content.activities, ["Activity"]],
     ];
     for (const [group, types] of groups) {
       for (const id of Object.keys(group ?? {})) {

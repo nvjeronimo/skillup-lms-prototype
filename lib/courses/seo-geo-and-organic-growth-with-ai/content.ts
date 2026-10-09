@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 export const content: CourseContent = {
   byline: {
@@ -527,4 +528,5 @@ export const content: CourseContent = {
     },
   },
   ora: {},
+  activities,
 };

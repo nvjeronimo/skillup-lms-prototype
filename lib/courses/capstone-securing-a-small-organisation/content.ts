@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /**
  * Topic bodies of "Capstone: Securing a Small Organisation": the brief and six more
@@ -512,7 +513,7 @@ export const content: CourseContent = {
   assignments: {
     "sec5-m1-t7": {
       brief:
-        "Using the case file, list the information, systems and services that Tidewater Veterinary Group depends on, then build the risk register for them. This is the foundation of the plan: Milestones 2 and 3 must trace back to the risks you record here. Submit both tables in the milestone template, as an XLSX or a PDF.",
+        "Using the case file, list the information, systems and services that Tidewater Veterinary Group depends on, then build the risk register for them. This is the foundation of the plan: Milestones 2 and 3 must trace back to the risks you record here. Fill in both tables in the milestone template, then submit them as one PDF or DOCX.",
       requirements: [
         "An inventory of at least 15 assets, with an owner and a sensitivity for each",
         "At least 10 risks, each written as asset, threat and weakness, and rated",
@@ -662,4 +663,5 @@ export const content: CourseContent = {
       ],
     },
   },
+  activities,
 };

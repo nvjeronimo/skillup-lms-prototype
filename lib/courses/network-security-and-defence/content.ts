@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /**
  * Topic bodies of "Network Security and Defence". All of Module 1 is written (the
@@ -516,4 +517,5 @@ export const content: CourseContent = {
       ],
     },
   },
+  activities,
 };

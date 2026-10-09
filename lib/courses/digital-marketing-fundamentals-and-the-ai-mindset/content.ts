@@ -1,4 +1,5 @@
 import type { CourseContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 export const content: CourseContent = {
   byline: {
@@ -447,8 +448,8 @@ export const content: CourseContent = {
         question: "Which of these is a specific marketing objective?",
         explanation:
           "An objective is specific when it names a metric, a number to reach and a date. Without them a team cannot tell whether it succeeded.",
-        reviewTopicId: "dmf-m2-t2",
-        reviewTopicTitle: "Specific objectives and the metrics that follow",
+        reviewTopicId: "dmf-m2-t1",
+        reviewTopicTitle: "From business goals to marketing objectives",
         options: [
           { id: "a", label: "Grow our presence on social media", feedback: "There is no number and no date, so nobody can say whether it was met." },
           { id: "b", label: "Get more traffic than last year", feedback: "More by how much, by when, and traffic from whom?" },
@@ -486,4 +487,5 @@ export const content: CourseContent = {
     },
   },
   ora: {},
+  activities,
 };
