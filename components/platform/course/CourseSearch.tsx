@@ -13,6 +13,7 @@ import { SearchField } from "@/components/platform/my-learning/SearchField";
 import {
   SEARCH_FAIL_WORD,
   SEARCH_PAGE_SIZE,
+  SEARCH_SAMPLES,
   excerptOf,
   searchCourse,
   searchPattern,
@@ -113,6 +114,14 @@ function useCourseSearch(active: boolean) {
     run(q);
   }
 
+  /** Prototype helper: fill the field with a sample search and send it. */
+  function runSample(q: string) {
+    setText(q);
+    setFilter("all");
+    writeUrl(q, "all");
+    run(q);
+  }
+
   function showMore() {
     const page = searchCourse(query, Math.ceil(results.length / SEARCH_PAGE_SIZE));
     setResults((current) => [...current, ...page.results]);
@@ -129,7 +138,7 @@ function useCourseSearch(active: boolean) {
 
   return {
     text, query, results, total, accessDenied, filter, open, view,
-    setOpen, change, submit, showMore, selectFilter, retry: () => run(query),
+    setOpen, change, submit, showMore, selectFilter, runSample, retry: () => run(query),
   };
 }
 
@@ -210,6 +219,34 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
   const idBase = React.useId();
   const { view, text, query, results, total, accessDenied, filter } = search;
   const typed = text.trim();
+
+  // Prototype only, not in the design: with the field empty, the searches that the sample
+  // content answers. In the product an empty field shows nothing.
+  if (view === "none") {
+    return (
+      <div data-prototype-note className="flex flex-col gap-3">
+        <p className="sk-text-label-small-medium uppercase text-sko-text-subtle">Prototype note · sample content</p>
+        <p className="sk-text-body-small-regular text-sko-text-subtle">
+          The prototype searches about forty sample items, not the real course. Type one of these and press Enter,
+          or select it:
+        </p>
+        <ul className="flex flex-col gap-1">
+          {SEARCH_SAMPLES.map((sample) => (
+            <li key={sample.query}>
+              <button
+                type="button"
+                onClick={() => search.runSample(sample.query)}
+                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg px-3 text-left hover:bg-sko-bg-subtle md:min-h-9"
+              >
+                <span className="sk-text-body-medium-semibold text-sko-text-primary">{sample.query}</span>
+                <span className="sk-text-body-small-regular text-sko-text-subtle">{sample.gives}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 
   if (view === "hint") {
     return (
@@ -446,7 +483,8 @@ export function CourseSearch({ label, topicHref, variant, className }: CourseSea
     );
   }
 
-  const showPopup = search.open && search.view !== "none";
+  // With the field empty the popup holds the prototype's sample searches.
+  const showPopup = search.open;
   return (
     <div ref={rootRef} className={className}>
      {/* The popup hangs from the field itself, 8 under it, whatever padding the row gives this block. */}
