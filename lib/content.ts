@@ -2,6 +2,7 @@ import { COURSES } from "./courses";
 import type { CourseContent } from "./courses/types";
 import { getCourseForTopic, topicDownloads as seedDownloads } from "./data";
 import type { DownloadFile, FlatTopic, TopicType, TranscriptLine } from "./types";
+import { durationToSeconds } from "./utils";
 
 /**
  * Dummy content for every topic type so the prototype feels complete when you
@@ -337,6 +338,22 @@ export function getTranscript(topic: FlatTopic): TranscriptLine[] {
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const spoken = ownContent(topic) ? plainTranscript(subject, mod) : lines;
   return spoken.map((text, i) => ({ id: `${topic.id}-l${i + 1}`, ts: fmt(i * 18), text }));
+}
+
+/**
+ * The caption cues of a video topic: the lines the player prints over the picture, one at
+ * a time. They are the topic's transcript. A course with its own content shows captions
+ * only on a video whose transcript is written (the plain wording that fills its
+ * Transcript tab is not a caption); the sample courses caption every video.
+ */
+export function getCaptions(topic: FlatTopic): TranscriptLine[] {
+  if (topic.transcript && topic.transcript.length) return topic.transcript;
+  return ownContent(topic) ? [] : getTranscript(topic);
+}
+
+/** The length of a video or audio topic in seconds, read from its `duration` ("12 min", "3m 20s"). */
+export function getMediaSeconds(topic: FlatTopic): number {
+  return durationToSeconds(topic.duration);
 }
 
 export function getArticle(topic: FlatTopic): ArticleContent {
@@ -727,6 +744,8 @@ export interface ViltSession {
 
 export function getViltSession(topic: FlatTopic): ViltSession {
   const isRecording = topic.type === "VILT-Recording";
+  const own = ownContent(topic);
+  if (own) return { ...plainSession(topic, own), ...own.sessions?.[topic.id] };
   if (isRecording) {
     return {
       stage: "recording",
@@ -846,6 +865,8 @@ const PARTNER_LABS: Record<string, PartnerLabContent> = {
 export function getLab(topic: FlatTopic): LabContent {
   const partner = PARTNER_LABS[topic.id];
   if (partner) return partner;
+  const own = ownContent(topic);
+  if (own) return own.labs?.[topic.id] ?? plainLab(topic);
   return {
     kind: "download",
     intro:
@@ -882,11 +903,17 @@ export interface PodcastContent {
   episodeLabel: string;
   summary: string;
   chapters: { ts: string; label: string }[];
+  /** Length of the episode, from the topic's `duration`. */
+  durationSeconds: number;
 }
 
 /** Podcast uses an audio asset — same player chrome as Video, audio surface. */
 export function getPodcast(topic: FlatTopic): PodcastContent {
+  const durationSeconds = getMediaSeconds(topic);
+  const own = ownContent(topic);
+  if (own) return { ...(own.podcasts?.[topic.id] ?? plainPodcast(topic, own, durationSeconds)), durationSeconds };
   return {
+    durationSeconds,
     host: "Dr. Marta Silva",
     guest: "Ana Ferreira, Head of Quality at Northwind",
     episodeLabel: "Episode 4",
@@ -1037,6 +1064,8 @@ export interface LessonPageContent {
 }
 
 export function getLessonPage(topic: FlatTopic): LessonPageContent {
+  const own = ownContent(topic);
+  if (own) return own.lessonPages?.[topic.id] ?? plainLessonPage(topic);
   return {
     intro:
       "This page pulls together everything you need on control charts: the theory, a worked example, the template you'll use, and a quick check before you move on.",
@@ -1250,5 +1279,104 @@ function plainOra(topic: FlatTopic): OraContent {
         ],
       },
     ],
+  };
+}
+
+/** "approx. 30 min" → 30, for the badge of a lab. */
+const minutesOf = (topic: FlatTopic) => Math.max(1, Math.round(getMediaSeconds(topic) / 60));
+
+function plainLab(topic: FlatTopic): DownloadLabContent {
+  return {
+    kind: "download",
+    intro: `In this lab you work through “${topic.title}” on your own machine, with the lab files. Nothing is submitted and it isn't graded.`,
+    prerequisites: ["A desktop or laptop", "The lab files, saved in one folder"],
+    steps: [
+      "Download the lab files.",
+      "Read the instructions once before you start.",
+      "Work through the tasks in order and keep your results.",
+      "Compare your results with the worked example at the end of the instructions.",
+    ],
+    files: [
+      { name: "lab-instructions.pdf", kind: "pdf", size: "240 KB" },
+      { name: "lab-files.zip", kind: "data", size: "96 KB" },
+    ],
+    estimatedMinutes: minutesOf(topic),
+  };
+}
+
+function plainPodcast(topic: FlatTopic, own: CourseContent, seconds: number): Omit<PodcastContent, "durationSeconds"> {
+  const at = (share: number) => {
+    const s = Math.floor(seconds * share);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  };
+  return {
+    host: own.byline.author,
+    episodeLabel: "Audio episode",
+    summary: `A conversation about “${topic.title}”: why it matters in ${topic.moduleTitle}, an example from practice and what to take from it into the work that follows.`,
+    chapters: [
+      { ts: at(0), label: "Introduction" },
+      { ts: at(0.2), label: "The main idea" },
+      { ts: at(0.55), label: "An example from practice" },
+      { ts: at(0.85), label: "What to take away" },
+    ],
+  };
+}
+
+function plainLessonPage(topic: FlatTopic): LessonPageContent {
+  return {
+    intro: `This page brings together what you need on “${topic.title}”: the main ideas, a point to watch and the notes to keep.`,
+    blocks: [
+      {
+        kind: "text",
+        heading: "Why it matters",
+        paragraphs: [
+          `This topic is part of ${topic.moduleTitle}. The practice tasks and the graded work of this module assume you can apply it, not only define it.`,
+          "Read the page once from top to bottom, then go back to the parts you would have done differently.",
+        ],
+      },
+      {
+        kind: "callout",
+        tone: "info",
+        title: "Before you move on",
+        body: "Try each idea on one example from your own work. An idea you have applied once is easier to recall than one you have only read.",
+      },
+      {
+        kind: "text",
+        heading: "How to use it",
+        paragraphs: ["Keep a short note of what changed in your example. You can reuse it in the next assignment."],
+      },
+      { kind: "file", name: "lesson-notes.pdf", fileKind: "pdf", size: "120 KB" },
+    ],
+  };
+}
+
+function plainSession(topic: FlatTopic, own: CourseContent): ViltSession {
+  const shared = {
+    title: topic.title,
+    host: own.byline.author,
+    platform: "Zoom" as const,
+    joinUnlocksMinutesBefore: 15,
+  };
+  if (topic.type === "VILT-Recording") {
+    return {
+      ...shared,
+      stage: "recording",
+      whenLabel: "Recorded last week",
+      durationLabel: topic.duration,
+      minutesUntilStart: 0,
+      agenda: ["Recap of the module so far", "A worked example", "Open Q&A from the cohort"],
+      attendees: { live: 0, total: 30 },
+      completionRule: "Completes automatically once you have watched 90%.",
+    };
+  }
+  return {
+    ...shared,
+    stage: "pre-live",
+    whenLabel: "Today · 15:00–16:00, your time",
+    durationLabel: "60 min",
+    minutesUntilStart: 12,
+    agenda: ["Bring one example from your own work", "Work on it in breakout groups", "Feedback round with the cohort"],
+    attendees: { live: 24, total: 30 },
+    completionRule: "Attend live (join + at least 50% of the session) or watch the recording to 90%.",
   };
 }

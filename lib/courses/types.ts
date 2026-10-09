@@ -1,4 +1,14 @@
-import type { ArticleContent, AssignmentBrief, OraContent, QuizQuestion, TopicByline } from "@/lib/content";
+import type {
+  ArticleContent,
+  AssignmentBrief,
+  DownloadLabContent,
+  LessonPageContent,
+  OraContent,
+  PodcastContent,
+  QuizQuestion,
+  TopicByline,
+  ViltSession,
+} from "@/lib/content";
 import type { CourseDetail } from "@/lib/platform/course-detail";
 import type { Course } from "@/lib/types";
 
@@ -18,6 +28,18 @@ export interface CourseContent {
   quizzes: Record<string, QuizQuestion[]>;
   assignments: Record<string, AssignmentBrief>;
   ora: Record<string, OraContent>;
+  /*
+   * The topic types below are optional: a course lists them only when its outline has such
+   * a topic. A topic with no entry gets plain wording that names no subject, never the sample.
+   */
+  /** A Lab the learner runs on their own machine: intro, prerequisites, steps, files. By topic id. */
+  labs?: Record<string, DownloadLabContent>;
+  /** A Podcast: host, guest, summary and chapters. Its length is the topic's `duration`. */
+  podcasts?: Record<string, Omit<PodcastContent, "durationSeconds">>;
+  /** A Lesson Page: its intro and its blocks, in order. */
+  lessonPages?: Record<string, LessonPageContent>;
+  /** A VILT session (live or recording): only the fields that differ from the plain session. */
+  sessions?: Record<string, Partial<Omit<ViltSession, "stage" | "title">>>;
 }
 /**
  * One course with content of its own, as its folder exports it (lib/courses/<slug>/index.ts)

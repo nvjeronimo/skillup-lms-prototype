@@ -16,8 +16,8 @@ import {
   VolumeX,
 } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { cn, secondsToTs } from "@/lib/utils";
-import type { VideoState } from "@/lib/types";
+import { cn, secondsToTs, tsToSeconds } from "@/lib/utils";
+import type { TranscriptLine, VideoState } from "@/lib/types";
 
 /** DS `_Video actions bar` Size. Set by the caller; the bar never re-sizes itself. */
 export type VideoPlayerSize = "md" | "lg";
@@ -29,6 +29,11 @@ export interface VideoPlayerProps {
   /** Controlled current time. */
   currentTime?: number;
   onSeek?: (seconds: number) => void;
+  /**
+   * Caption cues: the transcript lines of the topic. The overlay prints the line for the
+   * current time (the first line before it starts). None, or left out: no caption overlay.
+   */
+  captions?: Pick<TranscriptLine, "ts" | "text">[];
   /** Lifecycle state for edge-case rendering: ready · loading · error · ended. */
   state?: VideoState;
   onRetry?: () => void;
@@ -51,6 +56,20 @@ export interface VideoPlayerProps {
 
 const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
 const SKIP_SECONDS = 10;
+/** A caption is one short line: a longer transcript line is cut at a word and ends with "…". */
+const CAPTION_MAX = 72;
+
+/** The cue for the current time: the last line that has started, or the first one. */
+function captionAt(cues: Pick<TranscriptLine, "ts" | "text">[], seconds: number): string | null {
+  if (cues.length === 0) return null;
+  let line = cues[0];
+  for (const cue of cues) {
+    if (tsToSeconds(cue.ts) <= seconds) line = cue;
+  }
+  if (line.text.length <= CAPTION_MAX) return line.text;
+  const cut = line.text.lastIndexOf(" ", CAPTION_MAX);
+  return `${line.text.slice(0, cut > 0 ? cut : CAPTION_MAX).replace(/[,;:]$/, "")}…`;
+}
 
 /** Translucent surfaces are tokens that carry their own alpha (bg/overlay-soft, bg/on-media-soft, bg/overlay): no color-mix, no layer opacity. */
 
@@ -159,6 +178,7 @@ export function VideoPlayer({
   durationSeconds = 200,
   currentTime = 0,
   onSeek,
+  captions: cues,
   state = "ready",
   onRetry,
   onReplay,
@@ -181,6 +201,7 @@ export function VideoPlayer({
     size === "lg" ? lg : size === "md" ? md : auto;
   const pct = durationSeconds > 0 ? Math.min(100, (currentTime / durationSeconds) * 100) : 0;
   const audible = muted ? 0 : volume;
+  const caption = cues ? captionAt(cues, currentTime) : null;
 
   React.useEffect(() => {
     function onChange() {
@@ -307,7 +328,7 @@ export function VideoPlayer({
         </div>
       )}
 
-      {captions && state === "ready" ? (
+      {captions && caption && state === "ready" ? (
         <div
           className={cn(
             // Centred with auto margins, not left-1/2: that halves the width the text can
@@ -320,7 +341,7 @@ export function VideoPlayer({
           {/* Two bg/overlay layers (50% each, 75% together): one layer leaves white text
               at about 3.4:1 over a bright frame; two keep it above 4.5:1 on any video. */}
           <span className="sk-text-body-medium-medium block bg-sko-bg-overlay px-3 py-1 text-sko-text-on-media">
-            Welcome back. In this unit we look at the product development lifecycle…
+            {caption}
           </span>
         </div>
       ) : null}

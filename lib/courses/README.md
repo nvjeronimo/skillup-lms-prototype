@@ -76,11 +76,20 @@ outline under the same title.
 | `articles` | a Reading (`lede`, `sections`, `pullQuote`, `takeaways`) | topic id |
 | `assignments` | a Graded Assignment (`brief`, `requirements`) | topic id |
 | `ora` | a Peer-graded / Peer Review / Project | topic id |
+| `labs` (optional) | a Lab run on the learner's machine (`kind: "download"`, `intro`, `prerequisites`, `steps`, `files`, `estimatedMinutes`) | topic id |
+| `podcasts` (optional) | a Podcast (`host`, `guest`, `episodeLabel`, `summary`, `chapters`); its length is the topic's `duration` | topic id |
+| `lessonPages` (optional) | a Lesson Page (`intro`, `blocks`) | topic id |
+| `sessions` (optional) | a VILT-Live Session / VILT-Recording: only the fields that differ from the plain session (`whenLabel`, `host`, `agenda`, …) | topic id |
 
 A topic with no entry gets plain wording that names no subject (end of `lib/content.ts`), so
 write bodies for the topics a learner lands on (the resume topic, the due assignment) and
-leave the maps empty (`{}`) for the rest. `reviewTopicId` in a quiz question is a topic id
-of the same course.
+leave the maps empty (`{}`) for the rest (the optional ones can be left out). `reviewTopicId`
+in a quiz question is a topic id of the same course. An entry in an optional map must sit
+under a topic of that type: a lab written for a topic that is still an `Activity` stops the build.
+
+A video shows its `duration` as the length of the player, and its transcript as captions,
+one line at a time. A video with no transcript written has no captions (its Transcript tab
+still gets the plain wording). Durations read "12 min" or "3m 20s".
 
 ### What must agree with the shared files
 
@@ -135,7 +144,8 @@ node scripts/check-tokens.mjs
 ```
 
 The registry checks, on load: unique slugs and ids, the id prefix, `page.slug` / `page.title`
-against the outline, module and course counters against the topics, and that every content
-key is a topic of the course. Then open `/platform/course/<slug>` on its four tabs
+against the outline, module and course counters against the topics, that every content
+key is a topic of the course, and that a lab, podcast, lesson page or session is written
+for a topic of that type. Then open `/platform/course/<slug>` on its four tabs
 (`?tab=progress|dates|qa`), the resume topic and the due assignment in the player
 (`/course/<slug>/topic/<topicId>`), and the card on `/platform/my-learning` or the program page.

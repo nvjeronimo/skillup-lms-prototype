@@ -296,7 +296,7 @@ export const page: CourseDetail = {
             author: "David Chen",
             label: "STAFF",
             accepted: true,
-            body: "Yes. Every exercise uses diagrams and sample data you open in the browser: a packet capture summary, a rule base as a table, a device list. Nothing is installed, and nothing is run against a real network.",
+            body: "Yes. Every exercise uses diagrams and sample data: a packet capture summary and a rule base that you download and open as tables in any spreadsheet program, and a device list. No security tool is installed, and nothing is run against a real network.",
             time: "2 days ago",
           },
           { id: "m3", from: "learner", author: "You", body: "Good, that settles it. Thank you.", time: "yesterday" },

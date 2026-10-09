@@ -34,6 +34,8 @@ import {
   topicFamily,
   topicDescription,
   getDownloads,
+  getCaptions,
+  getMediaSeconds,
   getTranscript,
   getDiscussionThreads,
   getByline,
@@ -321,7 +323,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     ? getTranscript(topic).find((l) => l.id === noteEditor.lineId)
     : undefined;
 
-  const durationSeconds = 200;
+  const durationSeconds = getMediaSeconds(topic);
 
   return (
     <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
@@ -398,6 +400,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 >
                   <VideoPlayer
                     durationSeconds={durationSeconds}
+                    captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
                     heightPx={videoHeight}
                     docked={videoDocked}
