@@ -28,7 +28,14 @@ export interface CourseRowProps {
   className?: string;
 }
 
-/** Course row in program lists — Active / Locked / Available states (matches DS). */
+/**
+ * Course row in program lists — Active / Locked / Available states (matches DS).
+ *
+ * A long title wraps instead of being cut (10 Oct 2026, as fixed in Figma: the row grows from
+ * 68 to 80 with a two-line title, and the delivery badge keeps its full width beside it).
+ * Nothing is truncated; a row too narrow for two lines is the caller's to replace (the
+ * Dashboard switches to the Resume row below 700px of row width).
+ */
 export function CourseRow({
   title,
   deliveryMode = "Live Sessions",
@@ -54,7 +61,7 @@ export function CourseRow({
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span
           className={cn(
-            "sk-text-body-large-medium truncate",
+            "sk-text-body-large-medium min-w-0",
             state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
           )}
         >
@@ -66,11 +73,13 @@ export function CourseRow({
             title
           )}
         </span>
-        <DeliveryModeBadge value={deliveryMode} />
+        <span className="flex shrink-0">
+          <DeliveryModeBadge value={deliveryMode} />
+        </span>
       </div>
 
       {state === "Active" ? (
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-4">
           {/* DS Progress bar, Label=Right: 140 wide, bar + label gap 12. */}
           <PlatformProgressBar
             value={progressPct}

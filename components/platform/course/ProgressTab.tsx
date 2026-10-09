@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CertificateCard } from "@/components/platform/program/CertificatesTab";
 import type { CourseDetail } from "@/lib/platform/course-detail";
+import { cn } from "@/lib/utils";
 import { CourseAlert } from "./CourseAlert";
 import { WeeklyGoalCard } from "./WeeklyGoalCard";
 
@@ -49,8 +50,12 @@ function CompletionRing({ percent, label }: { percent: number; label: string }) 
  * The table is a real <table>. On mobile the design keeps two columns, the weight and the
  * grade written into the first one ("Final Quiz · 50%, worth 30%"): the two middle columns
  * drop out and the same values join the row header.
+ *
+ * `passed` is a PROPOSAL of 10 Oct 2026 (the DS has Result=Below pass only on these screens):
+ * the verdict badge in Success, a success check at the pass mark instead of the warning
+ * triangle, and the section scores in text/default instead of text/error.
  */
-function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["grade"] }) {
+function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progressTab"]["grade"]; passed?: boolean }) {
   const head = "px-0 py-2 text-right";
   const cell = "sk-text-body-medium-regular py-3 text-right align-top text-sko-text-muted";
   return (
@@ -62,7 +67,7 @@ function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["grade"] }
         <h3 id="course-grade-title" className="sk-text-headline-small-bold text-sko-text-default">
           {grade.title}
         </h3>
-        <Badge color="error" size="md">
+        <Badge color={passed ? "success" : "error"} size="md">
           {grade.badge}
         </Badge>
       </div>
@@ -80,7 +85,12 @@ function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["grade"] }
             className="sk-text-body-small-medium absolute top-0 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap text-sko-text-default"
             style={{ left: `${grade.passPercent}%` }}
           >
-            <Icon icon={AlertTriangle} size={14} aria-hidden className="text-sko-icon-warning" />
+            <Icon
+              icon={passed ? CheckCircle2 : AlertTriangle}
+              size={14}
+              aria-hidden
+              className={passed ? "text-sko-icon-success" : "text-sko-icon-warning"}
+            />
             {grade.passLabel}
           </p>
         </div>
@@ -146,7 +156,14 @@ function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["grade"] }
                 >
                   <span className="sk-text-body-medium-regular min-w-0 text-sko-text-default">{item.title}</span>
                   {/* DS body-medium/Bold: semibold until .sk-text-body-medium-bold exists (CT-22). */}
-                  <span className="sk-text-body-medium-semibold shrink-0 text-sko-text-error">{item.score}</span>
+                  <span
+                    className={cn(
+                      "sk-text-body-medium-semibold shrink-0",
+                      passed ? "text-sko-text-default" : "text-sko-text-error",
+                    )}
+                  >
+                    {item.score}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -162,6 +179,9 @@ function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["grade"] }
  * heading, Completion card, the passing-grade alert, the Grade summary and a closing line —
  * beside the Certificate and Weekly goal cards. Desktop splits the row in two equal columns,
  * 40 apart; tablet keeps the sidebar at 320, 32 apart; mobile stacks everything, 16 apart.
+ *
+ * A passed course (`course.passed`, a proposal of 10 Oct 2026) turns the alert and the grade
+ * to the success tokens and has no Weekly goal card: the Certificate card stands alone.
  */
 export function ProgressTab({ course }: { course: CourseDetail }) {
   const tab = course.progressTab;
@@ -184,16 +204,16 @@ export function ProgressTab({ course }: { course: CourseDetail }) {
           <CompletionRing percent={tab.completion.percent} label={tab.completion.title} />
         </section>
 
-        <CourseAlert tone="warning" title={tab.passAlert.title} body={tab.passAlert.body} />
+        <CourseAlert tone={course.passed ? "success" : "warning"} title={tab.passAlert.title} body={tab.passAlert.body} />
 
-        <GradeSummary grade={tab.grade} />
+        <GradeSummary grade={tab.grade} passed={course.passed} />
 
         <p className="sk-text-body-large-regular text-sko-text-muted">{tab.note}</p>
       </div>
 
-      <aside aria-label="Certificate and weekly goal" className="flex flex-col gap-4 md:w-[320px] md:shrink-0 lg:w-auto lg:flex-1 lg:shrink">
+      <aside aria-label={tab.weeklyGoal ? "Certificate and weekly goal" : "Certificate"} className="flex flex-col gap-4 md:w-[320px] md:shrink-0 lg:w-auto lg:flex-1 lg:shrink">
         <CertificateCard certificate={course.certificate} labelAs="h3" />
-        <WeeklyGoalCard goal={tab.weeklyGoal} labelAs="h3" />
+        {tab.weeklyGoal ? <WeeklyGoalCard goal={tab.weeklyGoal} labelAs="h3" /> : null}
       </aside>
     </div>
   );

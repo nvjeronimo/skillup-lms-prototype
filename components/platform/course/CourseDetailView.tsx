@@ -131,6 +131,16 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             className="mb-4 md:hidden"
           />
         )}
+        {/* PROPOSAL (10 Oct 2026): the passed state has no Figma screen; the page says so on every
+            tab, with the note of the sample certificate page. Not on an open Q&A conversation. */}
+        {course.passed && !openThread ? (
+          <InlineAlert
+            tone="info"
+            title="Proposal: the passed course is not designed yet"
+            description="No Figma screen shows a completed course. The success colours of the grade, the issued certificate with View and Download, and the missing weekly goal are a proposal built from parts that already exist."
+            className="mb-4 md:mb-5 lg:mb-6"
+          />
+        ) : null}
         {COURSE_TABS.map((tab) => (
           <div
             key={tab.id}

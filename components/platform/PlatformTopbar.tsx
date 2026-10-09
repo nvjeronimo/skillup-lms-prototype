@@ -149,6 +149,10 @@ function Initials() {
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
  *   disclosure list under the bar.
  * Calendar, Discussion and Services have no page in the prototype.
+ *
+ * The menu lists the sections in the order of the desktop bar (decided by Nelson on 10 Oct
+ * 2026): both render `PLATFORM_SECTIONS` through `SectionLinks`, so the order cannot differ.
+ * Do not give the menu a list of its own.
  */
 export function PlatformTopbar({ current }: { current: PlatformSection }) {
   const showToast = useLmsStore((s) => s.showToast);

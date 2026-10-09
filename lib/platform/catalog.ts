@@ -1,7 +1,8 @@
+import { COURSES as OWN_COURSES } from "@/lib/courses";
 import { coursesBySlug, course as sampleCourse, getCourseBySlug } from "@/lib/data";
 import type { Course } from "@/lib/types";
 import { myLearningCourses } from "./my-learning";
-import { PROGRAMS, type ProgramCertificate } from "./program";
+import { PROGRAMS, type Program, type ProgramCertificate } from "./program";
 
 /**
  * Every course the platform pages name, so each one has a page and a player under its own
@@ -66,15 +67,68 @@ export function playerCourse(slug: string): Course {
   return entry ? { ...sampleCourse, slug, title: entry.title } : getCourseBySlug(slug);
 }
 
-/** The issued certificate of a course, looked up in the programs. */
+/**
+ * The issued certificate of a course: the one its program lists or, for a course of no
+ * program, the one on its own page (lib/courses/<slug>/page).
+ */
 export function getIssuedCertificate(
   courseSlug: string,
 ): { certificate: Extract<ProgramCertificate, { status: "issued" }>; course: CatalogCourse } | undefined {
   const course = getCatalogCourse(courseSlug);
-  if (!course?.program) return undefined;
+  if (!course) return undefined;
   const program = PROGRAMS.find((p) => p.slug === course.program?.slug);
-  const certificate = program?.certificates.find(
-    (c) => c.status === "issued" && c.courseId === `course-${course.program?.number}`,
-  );
+  const certificate = program
+    ? program.certificates.find((c) => c.status === "issued" && c.courseId === `course-${course.program?.number}`)
+    : OWN_COURSES.find((c) => c.page.slug === courseSlug)?.page.certificate;
   return certificate && certificate.status === "issued" ? { certificate, course } : undefined;
+}
+
+/* ── The certificate of a program (PROPOSAL, NOT DESIGNED: 10 Oct 2026) ─────────────── */
+
+export interface ProgramCertificateCourse {
+  slug: string;
+  number: number;
+  title: string;
+  /** 0–100, or null when the course has not been started. */
+  percent: number | null;
+}
+
+export interface ProgramCertificateState {
+  program: Program;
+  certificate: ProgramCertificate;
+  /** Courses complete, of `courses.length`. */
+  complete: number;
+  courses: ProgramCertificateCourse[];
+}
+
+/**
+ * The certificate of a program. Issued when the program file carries one
+ * (`programCertificate`); otherwise not earned, with what is missing counted from the
+ * program's own course rows: a course counts when it is at 100%.
+ */
+export function getProgramCertificate(programSlug: string): ProgramCertificateState | undefined {
+  const program = PROGRAMS.find((p) => p.slug === programSlug);
+  if (!program) return undefined;
+  const courses = program.courses.map((c) => ({
+    slug: c.slug,
+    number: c.number,
+    title: c.card.title,
+    percent: c.card.progressPct,
+  }));
+  const total = courses.length;
+  const complete = courses.filter((c) => c.percent === 100).length;
+  const certificate: ProgramCertificate = program.programCertificate ?? {
+    status: "not-earned",
+    courseId: `program-${program.slug}`,
+    courseLabel: "Program certificate",
+    title: complete === total ? "All courses complete: your certificate is being prepared" : "Not earned yet",
+    requirements: [
+      {
+        title: "Complete every course of the program",
+        detail: `${complete} of ${total} courses complete`,
+        percent: total ? Math.round((complete / total) * 100) : 0,
+      },
+    ],
+  };
+  return { program, certificate, complete, courses };
 }

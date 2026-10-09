@@ -219,8 +219,19 @@ export interface CourseDetail {
     timeLeft: string;
   };
   search: { placeholder: string };
-  /** The program this course is part of: the breadcrumb then goes through it. */
+  /**
+   * The program this course is part of: the breadcrumb then goes through it, wherever the
+   * course was opened from (decided by Nelson on 10 Oct 2026). `getCourseDetailBySlug` fills it
+   * from the registry of programs (lib/platform/catalog), so a course file cannot leave it out.
+   */
   program?: { slug: string; title: string };
+  /**
+   * PROPOSAL, NOT DESIGNED (10 Oct 2026). The learner passed the course: the pass line of the
+   * header, the grade badge and the passing-grade alert take the success tokens, and the page
+   * says at the top that this state has no Figma screen. Absent on every course in progress or
+   * not started, which render exactly as drawn.
+   */
+  passed?: boolean;
   /**
    * Set when the whole course runs on a partner's platform (IBM): *Start course* sends the
    * learner there and nothing of the course is in our Studio (lab-third-party-platforms.md).
@@ -234,7 +245,8 @@ export interface CourseDetail {
   modules: CourseModule[];
   mentor: { label: string; title: string; body: string; cta: string };
   team: { label: string; people: CoursePerson[]; cta: string };
-  weeklyGoal: WeeklyGoal;
+  /** Left out on a passed course (proposal of 10 Oct 2026): no weekly goal once the course is done. */
+  weeklyGoal?: WeeklyGoal;
   certificate: ProgramCertificate;
   handouts: { label: string; items: string[] };
   upcomingDates: { label: string; items: CourseSidebarDate[]; cta: string };
@@ -257,7 +269,8 @@ export interface CourseDetail {
       sections: GradeSection[];
     };
     note: string;
-    weeklyGoal: WeeklyGoal;
+    /** Left out on a passed course, as on the Course tab. */
+    weeklyGoal?: WeeklyGoal;
   };
 
   datesTab: {
@@ -301,8 +314,11 @@ const COURSES: CourseDetail[] = [SIX_SIGMA, CLOUD_COMPUTING, ...OWN_COURSES.map(
  */
 export function getCourseDetailBySlug(slug: string): CourseDetail | undefined {
   const own = COURSES.find((c) => c.slug === slug);
-  if (own) return own;
   const entry = getCatalogCourse(slug);
+  // The program path is decided here, from the registry of programs, for every course alike:
+  // the breadcrumb does not depend on where the course was opened from, nor on its own file.
+  const program = entry?.program ? { slug: entry.program.slug, title: entry.program.title } : undefined;
+  if (own) return program ? { ...own, program } : own;
   if (!entry) return undefined;
   const percent = entry.percent ?? 0;
   return {
@@ -318,7 +334,7 @@ export function getCourseDetailBySlug(slug: string): CourseDetail | undefined {
       cta: entry.percent === null ? "Start course" : percent >= 100 ? "Review course" : "Resume course",
       href: coursePlayerHref(slug),
     },
-    program: entry.program ? { slug: entry.program.slug, title: entry.program.title } : undefined,
+    program,
   };
 }
 

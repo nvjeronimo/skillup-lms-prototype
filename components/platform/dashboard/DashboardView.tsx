@@ -25,6 +25,13 @@ import { ResumeRow } from "./ResumeRow";
  * (desktop / tablet / mobile).
  * Desktop: Due (440) sits beside Resume (728). Tablet: Due and Resume stack, three tiles in
  * a row. Mobile: everything stacks, the resume list uses the Resume row, tiles go two a row.
+ *
+ * Resume list (10 Oct 2026): which row a course gets depends on the width of the list, not of
+ * the window (a container query on each item). From 700px the DS Course Row, whose title
+ * wraps to two lines at most there; below it the Resume row, which stacks the title over the
+ * badge. That covers mobile as before and also the desktop layout between 1024 and ~1250,
+ * where the list is narrower than on a tablet (472px at 1024) and the Course Row cannot hold
+ * a long title, its badge, the bar and the button on one line.
  */
 export function DashboardView() {
   const showToast = useLmsStore((s) => s.showToast);
@@ -71,11 +78,11 @@ export function DashboardView() {
             />
             <ul className="flex flex-col gap-4">
               {dashboardResume.map((course, index) => (
-                <li key={course.id}>
-                  {/* Mobile: the Resume row. Tablet and desktop: the DS Course Row.
+                <li key={course.id} className="[container-type:inline-size]">
+                  {/* A list narrower than 700: the Resume row. From 700: the DS Course Row.
                       One primary action in the list: the course touched last; the rest are Secondary. */}
                   <ResumeRow
-                    className="md:hidden"
+                    className="[@container_(min-width:700px)]:hidden"
                     title={course.title}
                     deliveryMode={course.deliveryMode}
                     progressPct={course.progressPct}
@@ -83,7 +90,7 @@ export function DashboardView() {
                     homeHref={course.homeHref}
                     emphasis={index === 0 ? "primary" : "secondary"}
                   />
-                  <div className="hidden md:block">
+                  <div className="hidden [@container_(min-width:700px)]:block">
                     <CourseRow
                       title={course.title}
                       deliveryMode={course.deliveryMode}
