@@ -16,6 +16,7 @@ import { Button } from "@/components/atoms/Button";
 import {
   ATTEMPTS_DISPLAY_CEILING,
   attemptsLabel,
+  getAssignmentBrief,
   getQuiz,
   getQuizConfig,
   topicFamily,
@@ -770,19 +771,16 @@ function QuizSummary({
 /* ---- Graded assignment: brief + file upload + submit ---- */
 function GradedSubmission({ topicId }: { topicId: string }) {
   const [submitted, setSubmitted] = React.useState(false);
+  // The brief is the course's own when it has one (lib/content).
+  const topic = getTopic(topicId);
+  const assignment = topic ? getAssignmentBrief(topic) : null;
   return (
     <div className="flex flex-col gap-5 py-4">
       <section className="rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <p className="sk-text-label-small-medium mb-2 text-sko-text-primary">Assignment brief</p>
-        <p className="sk-text-body-large-regular text-sko-text-muted">
-          Define a control plan for a process of your choice. Identify the critical-to-quality
-          characteristics, the metrics you&rsquo;ll monitor, the control limits, and the response
-          plan when a measurement falls out of range. Submit your plan as a PDF or DOCX.
-        </p>
+        <p className="sk-text-body-large-regular text-sko-text-muted">{assignment?.brief}</p>
         <ul className="sk-text-body-medium-regular mt-3 list-disc pl-5 text-sko-text-muted">
-          <li>1–2 pages</li>
-          <li>Include at least one control chart sketch</li>
-          <li>Counts toward your final grade</li>
+          {assignment?.requirements.map((requirement) => <li key={requirement}>{requirement}</li>)}
         </ul>
       </section>
 

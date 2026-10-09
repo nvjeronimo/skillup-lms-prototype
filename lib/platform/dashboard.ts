@@ -62,7 +62,8 @@ export const dashboardDue: DashboardDueItem[] = [
     title: "Persona research draft (Peer Assessment)",
     meta: "UX Research and Design Thinking · 11:59 PM",
     status: { label: "Due 11:59", color: "warning" },
-    href: coursePlayerHref("ux-research-and-design-thinking", "m3-t4f"),
+    // "Persona research draft", the peer assessment that closes Module 1 of the course.
+    href: coursePlayerHref("ux-research-and-design-thinking", "uxr-m1-t10"),
   },
   {
     id: "assignment-02-audience-segmentation",
@@ -72,7 +73,8 @@ export const dashboardDue: DashboardDueItem[] = [
     title: "Assignment 02 · Audience segmentation",
     meta: "AI-Driven Digital Marketing · Homework",
     status: { label: "Due Fri", color: "warning" },
-    href: coursePlayerHref(slugify("AI-Driven Content and Brand Communication"), "m3-t4j"),
+    // "Assignment 02 · Audience segmentation", the homework that closes Module 2 of the course.
+    href: coursePlayerHref(slugify("AI-Driven Content and Brand Communication"), "acb-m2-t10"),
   },
 ];
 
@@ -83,7 +85,7 @@ export interface DashboardResumeCourse {
   title: string;
   deliveryMode: DeliveryMode;
   progressPct: number;
-  /** Where Resume goes (`resumeUrl`). Every row opens the one course the prototype has. */
+  /** Where Resume goes (`resumeUrl`): the course's own player. */
   href: string;
   /** Where the title goes (`homeUrl`): the course's page. */
   homeHref: string;

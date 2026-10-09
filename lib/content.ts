@@ -1,10 +1,14 @@
-import { topicDownloads as seedDownloads } from "./data";
+import { aiContentCourse, getCourseForTopic, topicDownloads as seedDownloads, uxResearchCourse } from "./data";
 import type { DownloadFile, FlatTopic, TopicType, TranscriptLine } from "./types";
 
 /**
  * Dummy content for every topic type so the prototype feels complete when you
  * navigate the whole course. Deterministic, Six-Sigma-themed, derived from the
  * topic's title/type. The Video topic keeps its real transcript (lib/data).
+ *
+ * The two platform courses with an outline of their own never print the Six Sigma
+ * sample: a few of their topics have a body written for them and the rest get
+ * wording that names no subject (see "Courses with their own content" at the end).
  */
 
 export interface ArticleContent {
@@ -253,7 +257,9 @@ export interface TopicByline {
   updated: string;
 }
 
-export function getByline(_topic: FlatTopic): TopicByline {
+export function getByline(topic: FlatTopic): TopicByline {
+  const own = ownContent(topic);
+  if (own) return own.byline;
   return {
     author: "Dr. Sarah Chen",
     role: "Lead instructor · ASQ-Certified Six Sigma Black Belt",
@@ -327,10 +333,18 @@ export function getTranscript(topic: FlatTopic): TranscriptLine[] {
     `That's the essence of ${subject}. In the next topic we build on it, so jot down anything you want to revisit.`,
   ];
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  return lines.map((text, i) => ({ id: `${topic.id}-l${i + 1}`, ts: fmt(i * 18), text }));
+  const spoken = ownContent(topic) ? plainTranscript(subject, mod) : lines;
+  return spoken.map((text, i) => ({ id: `${topic.id}-l${i + 1}`, ts: fmt(i * 18), text }));
 }
 
 export function getArticle(topic: FlatTopic): ArticleContent {
+  const own = ownContent(topic);
+  if (own) {
+    return {
+      byline: { author: own.byline.author, date: `Updated ${own.byline.updated}`, readingTime: topic.duration },
+      ...(own.articles[topic.id] ?? plainArticle(topic)),
+    };
+  }
   return {
     byline: { author: "Dr. Sarah Chen", date: "Updated May 2026", readingTime: topic.duration },
     lede: `${topic.title} is a cornerstone of the ${topic.moduleTitle} module. This reading distils the essentials so you can apply them with confidence in the assignments that follow.`,
@@ -364,6 +378,8 @@ export function getArticle(topic: FlatTopic): ArticleContent {
 }
 
 export function getQuiz(topic: FlatTopic): QuizQuestion[] {
+  const own = ownContent(topic);
+  if (own) return own.quizzes[topic.id] ?? own.quiz;
   return [
     {
       question: "What is the primary goal of Six Sigma?",
@@ -532,7 +548,7 @@ export function attemptsLabel(config: QuizConfig): string | undefined {
 export function getActivity(topic: FlatTopic): ActivityContent {
   // Branching / scenario activities are authored as SCORM packages.
   const isScorm = /scenario|match|connect|simulat/i.test(topic.title);
-  return {
+  const activity: ActivityContent = {
     kind: isScorm ? "scorm" : "checklist",
     packageLabel: "Articulate Storyline package",
     packageSizeLabel: "8.4 MB",
@@ -556,9 +572,11 @@ export function getActivity(topic: FlatTopic): ActivityContent {
       },
     ],
   };
+  return ownContent(topic) ? { ...activity, steps: PLAIN_ACTIVITY_STEPS } : activity;
 }
 
 export function getDiscussionThreads(topic: FlatTopic): DiscussionThread[] {
+  if (ownContent(topic)) return PLAIN_DISCUSSION_THREADS;
   return [
     {
       author: "Carlos M.",
@@ -911,6 +929,8 @@ export interface OraContent {
 }
 
 export function getOra(topic: FlatTopic): OraContent {
+  const own = ownContent(topic);
+  if (own) return own.ora[topic.id] ?? plainOra(topic);
   return {
     brief:
       "Define a control plan for a process of your choice. Identify the critical-to-quality characteristics, the metrics you'll monitor, the control limits, and the response plan when a measurement falls out of range.",
@@ -969,6 +989,24 @@ export function getOra(topic: FlatTopic): OraContent {
 
 export function oraMaxPoints(content: OraContent): number {
   return content.criteria.reduce((sum, c) => sum + c.maxPoints, 0);
+}
+
+/* --------------------------------------------------- Graded assignment --- */
+
+/** The brief of a Graded Assignment (a file submission): a paragraph and its short list. */
+export interface AssignmentBrief {
+  brief: string;
+  requirements: string[];
+}
+
+export function getAssignmentBrief(topic: FlatTopic): AssignmentBrief {
+  const own = ownContent(topic);
+  if (own) return own.assignments[topic.id] ?? plainAssignmentBrief(topic);
+  return {
+    brief:
+      "Define a control plan for a process of your choice. Identify the critical-to-quality characteristics, the metrics you’ll monitor, the control limits, and the response plan when a measurement falls out of range. Submit your plan as a PDF or DOCX.",
+    requirements: ["1–2 pages", "Include at least one control chart sketch", "Counts toward your final grade"],
+  };
 }
 
 /* --------------------------------------------------------- Lesson Page --- */
@@ -1058,6 +1096,539 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
             label: "That the control limits are too wide",
             feedback: "Wide limits would make signals harder to see, not create a sustained run.",
           },
+        ],
+      },
+    ],
+  };
+}
+
+/* ------------------------------------------- Courses with their own content --- */
+
+/**
+ * What a platform course with its own outline (lib/data) says in place of the Six Sigma
+ * sample. Written for the topics a learner is most likely to open: the one the course
+ * resumes on, one reading, one practice quiz and the assignment the Dashboard lists as due.
+ * A video's own transcript sits on the topic itself (lib/data). Every other topic of the
+ * course gets the plain wording below, which names no subject.
+ */
+interface OwnCourseContent {
+  byline: TopicByline;
+  /** The questions of every quiz of the course that has none of its own. */
+  quiz: QuizQuestion[];
+  /** By topic id. */
+  articles: Record<string, Omit<ArticleContent, "byline">>;
+  quizzes: Record<string, QuizQuestion[]>;
+  assignments: Record<string, AssignmentBrief>;
+  ora: Record<string, OraContent>;
+}
+
+const AI_CONTENT: OwnCourseContent = {
+  byline: {
+    author: "Rajesh Menon",
+    role: "Lead instructor · AI Augmented Digital Marketing",
+    updated: "September 2026",
+  },
+  quiz: [
+    {
+      question: "What is a brand voice guide for?",
+      platformPrompt: "Choose the correct option",
+      explanation:
+        "A voice guide describes how the brand sounds, with traits and examples, so that copy stays recognisable whoever drafts it: a colleague, an agency or an AI assistant.",
+      options: [
+        {
+          id: "a",
+          label: "Keeping copy recognisable as the same brand, whoever or whatever drafts it",
+          correct: true,
+          feedback: "Correct. The guide is what a writer, or a prompt, is checked against.",
+        },
+        { id: "b", label: "Listing the brand's colours and logo sizes", feedback: "That is the visual identity guide. The voice guide is about words." },
+        { id: "c", label: "Removing the need to edit AI drafts", feedback: "A guide improves the first draft. Someone still has to check and edit it." },
+        { id: "d", label: "Describing the target audience", feedback: "The audience belongs in the content brief. The voice guide describes how the brand speaks." },
+      ],
+    },
+    {
+      question: "Which of these belongs in a content brief?",
+      platformPrompt: "Choose the correct option",
+      explanation:
+        "The brief describes the job: the reader, the single action, the one message, the voice and the format. The copy itself comes after.",
+      options: [
+        { id: "a", label: "The finished copy", feedback: "The brief comes before the copy. It describes the job, not the result." },
+        { id: "b", label: "The single action you want the reader to take", correct: true, feedback: "Correct. One reader, one action, one message." },
+        { id: "c", label: "Every feature of the product", feedback: "A brief that lists everything gives the draft nothing to lead with." },
+        { id: "d", label: "The name of the AI tool you will use", feedback: "The brief should work with any tool, or with a human writer." },
+      ],
+    },
+    {
+      question: "Who is responsible for the accuracy of copy drafted with an AI assistant?",
+      explanation:
+        "The assistant drafts; it does not check facts about your product or your market. Whoever publishes the copy answers for every claim in it.",
+      options: [
+        { id: "a", label: "The assistant", feedback: "An assistant can state things that are not true of your product. It cannot answer for them." },
+        { id: "b", label: "The provider of the tool", feedback: "The provider supplies the tool. What you publish with it is yours." },
+        { id: "c", label: "The person or team that publishes it", correct: true, feedback: "Correct. Publishing a claim makes it yours to support." },
+        { id: "d", label: "Nobody, if the copy is labelled as AI-assisted", feedback: "A label tells the reader how the copy was made. It does not make a claim true." },
+      ],
+    },
+  ],
+  articles: {
+    "acb-m2-t4": {
+      lede: "An ad has a few seconds and a few words. A prompt that only says “write an ad for our product” leaves every decision that matters to the assistant. This reading shows how to make those decisions yourself and put them in the prompt.",
+      sections: [
+        {
+          heading: "Start from the brief, not from the ad",
+          paragraphs: [
+            "Ad copy fails for the same reasons with or without AI: it speaks to everyone, it promises several things at once, or it sounds like any other brand. The content brief from the first video of this module answers those three points before a word is drafted: one reader, one action, one message.",
+            "Put the brief into the prompt in that order. Name the reader as a person in a situation (“a shop owner who does the accounts on Sunday evening”), not as a demographic. State the single action you want. Give the one message in a plain sentence, the way you would say it aloud.",
+          ],
+        },
+        {
+          heading: "Give the assistant the limits of the format",
+          paragraphs: [
+            "Every ad placement has limits: a headline of a few words, a description of one or two lines, a call to action chosen from a short list. Put the limits in the prompt as numbers, and ask for the output in a labelled layout (Headline, Description, Call to action) so you can compare variants line by line.",
+            "Add the voice traits from your voice guide, with one example of copy that is on voice and one that is not. Examples steer an assistant further than adjectives do: “friendly” says little, a sentence you would actually publish says a lot.",
+          ],
+        },
+        {
+          heading: "Ask for variants, then edit",
+          paragraphs: [
+            "Ask for five to ten variants that differ in angle, not in wording: one that leads with the problem, one with the outcome, one with proof, one with a question. Variants that differ only in synonyms give you nothing to test.",
+            "Then do the part the assistant cannot. Check every claim against something you can show. Remove anything a competitor could say unchanged. Read the headline alone, since many people will not read further. Keep two or three variants worth testing, and record which prompt produced them.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "What you leave out of a prompt, the assistant decides for you.",
+        attribution: "Course notes, Module 2",
+      },
+      takeaways: [
+        "Decide one reader, one action and one message before you prompt.",
+        "State the format limits as numbers and ask for a labelled layout.",
+        "Show the voice with one on-voice and one off-voice example.",
+        "Ask for variants that differ in angle, then check every claim yourself.",
+      ],
+    },
+  },
+  quizzes: {
+    "acb-m2-t5": [
+      {
+        question: "Which prompt gives an AI assistant the most to work with for a social ad?",
+        platformPrompt: "Choose the correct option",
+        hints: [
+          "Look for the prompt that says who the ad is for.",
+          "A format limit stated as a number is a good sign.",
+        ],
+        explanation:
+          "A useful prompt carries the brief: one reader, one action, the format limits and the voice. The other three leave those decisions to the assistant.",
+        reviewTopicId: "acb-m2-t2",
+        reviewTopicTitle: "Anatomy of an effective prompt",
+        options: [
+          { id: "a", label: "Write a great ad for our accounting app.", feedback: "No reader, no action and no limits: the assistant has to guess all three." },
+          {
+            id: "b",
+            label: "Write 5 headlines of up to 30 characters for shop owners who do their accounts on Sunday evening. Goal: start a free trial. Voice: plain and direct.",
+            correct: true,
+            feedback: "Correct. It names the reader, the action, the format limit and the voice.",
+          },
+          { id: "c", label: "Write an ad that will go viral with our target audience.", feedback: "“Viral” is a hope, not an instruction, and the audience is not described." },
+          { id: "d", label: "Write the best possible ad. Be creative.", feedback: "Without a reader or a message, the result is copy any brand could use." },
+        ],
+      },
+      {
+        question: "You ask for ten ad variants and get ten that differ only in wording. What is the best next prompt?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "Variants are worth testing when they differ in angle: the problem, the outcome, proof, a question. Ask for the angles by name.",
+        reviewTopicId: "acb-m2-t4",
+        reviewTopicTitle: "Creating impactful ad copy with effective prompts",
+        options: [
+          { id: "a", label: "Ask for twenty more.", feedback: "More of the same gives you more synonyms, not more ideas." },
+          {
+            id: "b",
+            label: "Ask for variants that each take a different angle: the problem, the outcome, proof, a question.",
+            correct: true,
+            feedback: "Correct. Naming the angles is what makes the variants different.",
+          },
+          { id: "c", label: "Ask the assistant to pick the best one.", feedback: "It cannot know which will work with your audience. A test can." },
+          { id: "d", label: "Raise the word limit.", feedback: "Longer copy does not change the angle." },
+        ],
+      },
+      {
+        question: "An AI draft says your product is “the fastest on the market”. What do you do before publishing?",
+        explanation:
+          "An assistant writes what sounds plausible. A comparative claim needs evidence you hold; without it, remove the claim or reword it to something you can show.",
+        reviewTopicId: "acb-m1-t10",
+        reviewTopicTitle: "Responsible use: claims, sources and disclosure",
+        options: [
+          {
+            id: "a",
+            label: "Check that you can support the claim, and remove or reword it if you cannot.",
+            correct: true,
+            feedback: "Correct. A claim you publish is a claim you have to support.",
+          },
+          { id: "b", label: "Keep it: the assistant must have found it somewhere.", feedback: "An assistant can state things that are not true of your product." },
+          { id: "c", label: "Make it stronger with an exclamation mark.", feedback: "Punctuation does not make a claim true." },
+          { id: "d", label: "Ask the assistant whether the claim is true.", feedback: "It cannot verify facts about your product. You can." },
+        ],
+      },
+    ],
+  },
+  assignments: {
+    "acb-m2-t10": {
+      brief:
+        "Choose a brand you know, or use the case-study brand from Module 1. Split its audience into three segments by need or situation, not by age or location alone. For each segment, write the content brief and the prompt you would give an AI assistant for one social post, then add the draft you would publish after editing. Submit your work as a PDF or DOCX.",
+      requirements: [
+        "One page per segment: who they are, what they need and the one message for them",
+        "The prompt and the edited draft for each segment",
+        "Counts toward your final grade",
+      ],
+    },
+  },
+  ora: {},
+};
+
+const UX_RESEARCH: OwnCourseContent = {
+  byline: {
+    author: "Dr. Marta Silva",
+    role: "Lead instructor · UX Research and Design Thinking",
+    updated: "September 2026",
+  },
+  quiz: [
+    {
+      question: "What is the purpose of the Empathize stage in design thinking?",
+      platformPrompt: "Choose the correct option",
+      explanation:
+        "Empathize comes first so that the problem you define is one real people have. Ideas, prototypes and tests all come after it.",
+      options: [
+        {
+          id: "a",
+          label: "To understand people's needs and context before defining the problem",
+          correct: true,
+          feedback: "Correct. The later stages build on what you learn here.",
+        },
+        { id: "b", label: "To test a finished prototype", feedback: "That is the Test stage, at the other end of the process." },
+        { id: "c", label: "To generate as many ideas as possible", feedback: "That is Ideate. It needs a defined problem to work on." },
+        { id: "d", label: "To choose the visual style", feedback: "Visual style is a design decision made much later." },
+      ],
+    },
+    {
+      question: "Which of these is the strongest evidence for a design decision?",
+      platformPrompt: "Choose the correct option",
+      explanation:
+        "Observed behaviour across several participants is stronger than opinion, prediction or what another product does.",
+      options: [
+        { id: "a", label: "What one stakeholder believes users want", feedback: "A belief is a hypothesis to test, not evidence." },
+        { id: "b", label: "What participants say they would do in future", feedback: "People are poor at predicting their own behaviour." },
+        { id: "c", label: "What several participants were observed doing", correct: true, feedback: "Correct. Behaviour, seen more than once, is the firmest ground." },
+        { id: "d", label: "What a competitor has launched", feedback: "A competitor's choice tells you about their users and constraints, not yours." },
+      ],
+    },
+    {
+      question: "A persona should be based on…",
+      explanation:
+        "A persona summarises patterns found across research participants. Without that link to evidence it is a character the team invented.",
+      options: [
+        { id: "a", label: "The team's ideal customer", feedback: "That describes who the team hopes for, not who was found." },
+        { id: "b", label: "Demographic data alone", feedback: "Age and location say little about goals and behaviour." },
+        { id: "c", label: "Patterns found in research with real users", correct: true, feedback: "Correct. Each trait should trace back to participants." },
+        { id: "d", label: "A single memorable interview", feedback: "One person is a case, not a pattern." },
+      ],
+    },
+  ],
+  articles: {
+    "uxr-m1-t4": {
+      lede: "An interview guide is a one-page plan for a conversation. It keeps you on the research question when the conversation wanders, and it makes five interviews comparable. It is not a script to read aloud.",
+      sections: [
+        {
+          heading: "Start from what you need to learn",
+          paragraphs: [
+            "Write the research question at the top of the page: the thing the team does not know and has to decide on. “How do people choose where to book a table for a group?” is a research question. “Would people use our group-booking feature?” is not: it asks for a prediction, and people are poor at predicting their own behaviour.",
+            "Under it, list three or four topics you need to cover. Topics, not questions: how they do it today, what goes wrong, what they have tried, who else is involved.",
+          ],
+        },
+        {
+          heading: "Write questions that ask for stories",
+          paragraphs: [
+            "For each topic, write one opening question about a specific past occasion: “Tell me about the last time you organised a dinner for more than four people.” Then note two or three follow-ups to use if the story stalls: what happened next, what was hard about that, how they decided.",
+            "Check each question against three rules. It is open, so it cannot be answered with yes or no. It is neutral, so it does not suggest the answer. It asks one thing at a time.",
+          ],
+        },
+        {
+          heading: "Shape the session",
+          paragraphs: [
+            "Order the guide the way a conversation flows: an introduction that explains the purpose and asks for consent to take notes or record, a warm-up about the person, the main topics from the general to the specific, and a close that asks what you missed.",
+            "Run one pilot interview with a colleague before the first real session. You will find the question nobody understands and the topic that takes twice as long as planned. Change the guide, then keep it stable for the rest of the round.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "Ask about the last time, not about next time.",
+        attribution: "Course notes, Module 1",
+      },
+      takeaways: [
+        "Put the research question at the top; every question in the guide should serve it.",
+        "Plan topics first, then one story question and a few follow-ups for each.",
+        "Keep questions open, neutral and single.",
+        "Pilot the guide once before the first real interview.",
+      ],
+    },
+  },
+  quizzes: {
+    "uxr-m1-t5": [
+      {
+        question: "Which of these is a leading question?",
+        platformPrompt: "Choose the correct option",
+        hints: [
+          "A leading question suggests its own answer.",
+          "Look for the question that names a feeling the person has not mentioned.",
+        ],
+        explanation:
+          "A leading question carries the answer inside it. Asking what happened, and how it went, lets the person supply the feeling themselves.",
+        reviewTopicId: "uxr-m1-t3",
+        reviewTopicTitle: "Discovery interview techniques",
+        options: [
+          { id: "a", label: "Tell me about the last time you booked a table for a group.", feedback: "Open and neutral: it asks for a story." },
+          {
+            id: "b",
+            label: "Don't you find it frustrating when booking sites hide the price?",
+            correct: true,
+            feedback: "Correct. It tells the person what to feel before they answer.",
+          },
+          { id: "c", label: "What did you do after the booking failed?", feedback: "A neutral follow-up about what happened." },
+          { id: "d", label: "Who else was involved in the decision?", feedback: "Open and neutral." },
+        ],
+      },
+      {
+        question: "Why ask about a specific past occasion rather than what someone usually does?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "“Usually” invites a tidy summary. A specific occasion brings back the steps, the tools and what went wrong, which is the material you need.",
+        reviewTopicId: "uxr-m1-t3",
+        reviewTopicTitle: "Discovery interview techniques",
+        options: [
+          { id: "a", label: "It makes the interview shorter.", feedback: "Stories often take longer. The gain is detail, not time." },
+          {
+            id: "b",
+            label: "A specific occasion gives steps and details; “usually” gives a summary and opinions.",
+            correct: true,
+            feedback: "Correct. Detail from a real occasion is evidence.",
+          },
+          { id: "c", label: "People prefer talking about the past.", feedback: "Preference is not the reason. The quality of the detail is." },
+          { id: "d", label: "It removes the need for follow-up questions.", feedback: "Follow-ups are still how you get to the reasons." },
+        ],
+      },
+      {
+        question: "Where does the research question go in an interview guide?",
+        explanation:
+          "The research question is for the team: it sits at the top of the guide and every interview question is checked against it. Participants are asked about their own experience.",
+        reviewTopicId: "uxr-m1-t4",
+        reviewTopicTitle: "Writing an interview guide",
+        options: [
+          {
+            id: "a",
+            label: "At the top of the guide, as the test every question has to pass",
+            correct: true,
+            feedback: "Correct. It keeps the guide, and the conversation, on course.",
+          },
+          { id: "b", label: "It is the first question you ask the participant", feedback: "Participants get questions about their own experience, not the team's question." },
+          { id: "c", label: "In the closing section", feedback: "The close asks what you missed. The research question frames the whole guide." },
+          { id: "d", label: "It is agreed by the team but not written down", feedback: "Unwritten, it drifts from one interview to the next." },
+        ],
+      },
+    ],
+  },
+  assignments: {},
+  ora: {
+    "uxr-m1-t10": {
+      brief:
+        "Using the five interview transcripts of the case study (or your own interviews, if you have run at least three), draft one persona. Show the evidence behind it: the patterns you found across participants, and the quotes or observations that support each one.",
+      deliverable:
+        "Submit a PDF or DOCX of 1–2 pages: the persona (goals, behaviours, pain points, context) and an evidence table that links each trait to at least two participants.",
+      dueLabel: "Due 24 Sep 2026",
+      requiredReviews: 1,
+      acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
+      overallCommentPrompt: "Which part of your peer's persona was best supported by evidence?",
+      criteria: [
+        {
+          id: "c1",
+          label: "Task 1 · Ground the persona in evidence",
+          maxPoints: 6,
+          options: [
+            { points: 6, label: "Every trait is linked to two or more participants" },
+            { points: 4, label: "Most traits are linked to evidence; some rest on one participant" },
+            { points: 2, label: "Evidence is mentioned but not linked to traits" },
+            { points: 0, label: "Not attempted" },
+          ],
+        },
+        {
+          id: "c2",
+          label: "Task 2 · Describe goals and behaviours",
+          maxPoints: 5,
+          options: [
+            { points: 5, label: "Goals and behaviours are specific and come from the interviews" },
+            { points: 3, label: "Goals are clear; behaviours are generic" },
+            { points: 0, label: "Missing or invented" },
+          ],
+        },
+        {
+          id: "c3",
+          label: "Task 3 · Put the pain points in context",
+          maxPoints: 5,
+          options: [
+            { points: 5, label: "Each pain point is tied to a situation and a consequence" },
+            { points: 3, label: "Pain points are listed without context" },
+            { points: 0, label: "Not attempted" },
+          ],
+        },
+        {
+          id: "c4",
+          label: "Task 4 · Keep the persona usable",
+          maxPoints: 4,
+          options: [
+            { points: 4, label: "One page, easy to scan, no invented detail" },
+            { points: 2, label: "Complete, but padded with detail the research does not support" },
+            { points: 0, label: "Not attempted" },
+          ],
+        },
+      ],
+    },
+  },
+};
+
+const OWN_CONTENT: Record<string, OwnCourseContent> = {
+  [aiContentCourse.slug]: AI_CONTENT,
+  [uxResearchCourse.slug]: UX_RESEARCH,
+};
+
+/** The content of the topic's course, when that course has its own; undefined for the sample courses. */
+function ownContent(topic: FlatTopic): OwnCourseContent | undefined {
+  return OWN_CONTENT[getCourseForTopic(topic.id).slug];
+}
+
+/* Plain wording for the topics of those courses that have no body of their own. */
+
+function plainTranscript(subject: string, mod: string): string[] {
+  return [
+    `Welcome back. In this lesson we work through ${subject} and where it fits within ${mod}.`,
+    `Let's start with why it matters, and with what tends to go wrong when this step is skipped.`,
+    `Here's the core idea in plain terms, before we look at how it works in practice.`,
+    `A common mistake is to rush to the result. We'll slow down and look at the decisions behind it.`,
+    `Let's walk through a short example, so you can see each step before you try it yourself.`,
+    `Pause here if you want to take a note. The next part builds on this example.`,
+    `That's the essence of ${subject}. The next topic builds on it, so note anything you want to revisit.`,
+  ];
+}
+
+function plainArticle(topic: FlatTopic): Omit<ArticleContent, "byline"> {
+  return {
+    lede: `${topic.title} is part of ${topic.moduleTitle}. This reading sets out the main ideas and how to use them in the work that follows.`,
+    sections: [
+      {
+        heading: "Why it matters",
+        paragraphs: [
+          "This topic is here because the later work depends on it. The practice tasks and the graded work of this module assume you can apply it, not only define it.",
+          "Read it once for the overall argument, then go back to the parts you would have done differently.",
+        ],
+      },
+      {
+        heading: "How to use it",
+        paragraphs: [
+          "Take one example from your own work and try each idea on it as you read. An idea you have applied once is easier to recall than one you have only read.",
+          "Keep a short note of what changed in your example. You can reuse it in the next assignment.",
+        ],
+      },
+    ],
+    pullQuote: {
+      text: "An idea you have applied once is easier to recall than one you have only read.",
+      attribution: "Course notes",
+    },
+    takeaways: [
+      "Read for the decisions each idea helps you make.",
+      "Try each idea on one example from your own work.",
+      "Note what changed, and bring it to the next assignment.",
+    ],
+  };
+}
+
+const PLAIN_ACTIVITY_STEPS: ActivityContent["steps"] = [
+  { title: "Read the task", detail: "Open the worksheet in the Downloads tab and read the task and the example." },
+  { title: "Do a first pass", detail: "Work through the task once, without stopping to polish." },
+  { title: "Compare with the example", detail: "Check your result against the worked example and note where it differs." },
+  { title: "Note one change", detail: "Write down the one thing you would do differently next time." },
+];
+
+const PLAIN_DISCUSSION_THREADS: DiscussionThread[] = [
+  {
+    author: "Carlos M.",
+    timestamp: "2 hours ago",
+    content:
+      "The example in this topic helped. I tried it on my own project and my first version was too broad; narrowing it to one audience fixed it.",
+    replies: 3,
+    upvotes: 12,
+  },
+  {
+    author: "Aisha R.",
+    timestamp: "Yesterday",
+    content: "Useful to see the reasoning and not only the result. I am keeping the checklist from this one.",
+    replies: 1,
+    upvotes: 8,
+  },
+];
+
+function plainAssignmentBrief(topic: FlatTopic): AssignmentBrief {
+  return {
+    brief: `Complete the task set out in “${topic.title}” and submit your work as a PDF or DOCX. The full brief and the submission template are in the Downloads tab.`,
+    requirements: ["1–2 pages", "Use the submission template", "Counts toward your final grade"],
+  };
+}
+
+function plainOra(topic: FlatTopic): OraContent {
+  return {
+    brief: `Complete “${topic.title}” as set out in the project brief in the Downloads tab, then submit your work for review by a peer.`,
+    deliverable: "Submit a PDF or DOCX. Say what you decided and why, not only what you made.",
+    dueLabel: "Due date on the Dates tab",
+    requiredReviews: 1,
+    acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
+    overallCommentPrompt: "What did you like most about your peer's submission?",
+    criteria: [
+      {
+        id: "c1",
+        label: "Task 1 · Meet the brief",
+        maxPoints: 6,
+        options: [
+          { points: 6, label: "Every part of the brief is covered" },
+          { points: 4, label: "Most of the brief is covered" },
+          { points: 2, label: "Parts of the brief are missing" },
+          { points: 0, label: "Not attempted" },
+        ],
+      },
+      {
+        id: "c2",
+        label: "Task 2 · Support the decisions",
+        maxPoints: 5,
+        options: [
+          { points: 5, label: "Each decision is explained and supported" },
+          { points: 3, label: "Decisions are stated but not supported" },
+          { points: 0, label: "No reasoning given" },
+        ],
+      },
+      {
+        id: "c3",
+        label: "Task 3 · Present the work clearly",
+        maxPoints: 5,
+        options: [
+          { points: 5, label: "Clear structure, easy to follow" },
+          { points: 3, label: "Complete but hard to follow" },
+          { points: 0, label: "Not attempted" },
+        ],
+      },
+      {
+        id: "c4",
+        label: "Task 4 · Say what you would change",
+        maxPoints: 4,
+        options: [
+          { points: 4, label: "A specific change, with the reason for it" },
+          { points: 2, label: "A general remark" },
+          { points: 0, label: "Not attempted" },
         ],
       },
     ],
