@@ -9,6 +9,7 @@ import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { certificate } from "@/lib/data";
+import { playerCourse } from "@/lib/platform/catalog";
 import { courseHomeHref } from "@/lib/platform/routes";
 
 export function CertificateView({ courseSlug }: { courseSlug: string }) {
@@ -36,7 +37,7 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
         <h1 className="sk-text-label-small-medium text-sko-text-on-primary">Certificate of Completion</h1>
         <CourseCertificate
           learnerName={certificate.learnerName}
-          courseTitle={certificate.courseTitle}
+          courseTitle={playerCourse(courseSlug).title}
           provider={certificate.provider}
           dateLabel={certificate.dateLabel}
           certificateId={certificate.certificateId}

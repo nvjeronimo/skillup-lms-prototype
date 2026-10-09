@@ -1,5 +1,6 @@
 import type { DeliveryMode, Difficulty, Provider } from "@/components/atoms/MetaBadges";
 import type { TopicType } from "@/lib/types";
+import { coursePageHref, coursePlayerHref } from "./hrefs";
 
 /**
  * Mock data of the platform My Learning page (Figma handoff cards 04–11 of 6408:35150, as
@@ -16,10 +17,6 @@ export type MyLearningView = "grid" | "list";
 export const MY_LEARNING_DEFAULT_TAB: MyLearningTab = "courses";
 export const MY_LEARNING_DEFAULT_VIEW: MyLearningView = "grid";
 
-/** The existing course player: every course card opens it. */
-const COURSE_PLAYER_HREF = "/course/six-sigma/topic/m3-t1";
-/** The one course with a Course Detail page in the prototype. */
-const COURSE_DETAIL_HREF = "/platform/course/six-sigma";
 
 /* ── Header ─────────────────────────────────────────────────────────────────────────── */
 
@@ -83,7 +80,7 @@ export interface MyLearningCourse {
 
 const COVERS = "/platform/covers";
 
-export const myLearningCourses: MyLearningCourse[] = [
+const COURSES: MyLearningCourse[] = [
   {
     id: "ux-research-and-design-thinking",
     title: "UX Research and Design Thinking",
@@ -96,8 +93,6 @@ export const myLearningCourses: MyLearningCourse[] = [
     progressMeta: "10 hours total",
     upNext: { title: "Discovery interview techniques", type: "Video" },
     cta: "Resume",
-    href: COURSE_PLAYER_HREF,
-    detailHref: COURSE_DETAIL_HREF,
   },
   {
     id: "project-management-with-ai-tools",
@@ -111,8 +106,6 @@ export const myLearningCourses: MyLearningCourse[] = [
     progressMeta: "12 hours total",
     upNext: { title: "AI-assisted sprint planning", type: "Video" },
     cta: "Resume",
-    href: COURSE_PLAYER_HREF,
-    detailHref: COURSE_DETAIL_HREF,
   },
   {
     id: "leadership-in-remote-teams",
@@ -126,8 +119,6 @@ export const myLearningCourses: MyLearningCourse[] = [
     progressMeta: "6 hours total",
     upNext: { title: "Async standups", type: "Video" },
     cta: "Resume",
-    href: COURSE_PLAYER_HREF,
-    detailHref: COURSE_DETAIL_HREF,
   },
   {
     // The completed course: full bar, the certificate line, Review.
@@ -142,9 +133,6 @@ export const myLearningCourses: MyLearningCourse[] = [
     progressMeta: "8 hours total",
     upNext: { certificate: "Issued 12 Sep 2026" },
     cta: "Review",
-    // A finished course is reviewed from its own page, not from the last unit.
-    href: COURSE_DETAIL_HREF,
-    detailHref: COURSE_DETAIL_HREF,
   },
   {
     id: "business-analytics-with-python",
@@ -158,10 +146,18 @@ export const myLearningCourses: MyLearningCourse[] = [
     progressMeta: "Starts Apr 28",
     upNext: { title: "Python environment setup", type: "Reading" },
     cta: "Start",
-    href: COURSE_PLAYER_HREF,
-    detailHref: COURSE_DETAIL_HREF,
   },
 ];
+
+/**
+ * Every course opens its own page (the title: `homeUrl`) and its own player (the button:
+ * `resumeUrl`); the id is the course's slug. A finished course is reviewed from its page.
+ */
+export const myLearningCourses: MyLearningCourse[] = COURSES.map((course) => ({
+  ...course,
+  href: course.cta === "Review" ? coursePageHref(course.id) : coursePlayerHref(course.id),
+  detailHref: coursePageHref(course.id),
+}));
 
 /* ── Browse tile (LMS / Platform / Browse tile, 6388:116426) ────────────────────────── */
 

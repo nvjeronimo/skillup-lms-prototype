@@ -1,6 +1,7 @@
 import { user } from "@/lib/data";
 import type { DeliveryMode, Difficulty } from "@/components/atoms/MetaBadges";
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
+import { certificatePageHref, coursePageHref, coursePlayerHref, slugify } from "./hrefs";
 
 /**
  * Mock data of the Program page (Figma handoff frame 6728:15050, twelve cards: Courses,
@@ -48,9 +49,11 @@ export interface ProgramModule {
  */
 export interface ProgramCourse {
   id: string;
+  /** The course's slug: its page is /platform/course/<slug>, its player /course/<slug>/…. */
+  slug: string;
   /** Position in the program, 1-based. */
   number: number;
-  /** What the DS `LMS / Course Card` shows. No `href`: the course has no player in the prototype. */
+  /** What the DS `LMS / Course Card` shows: the title opens the course page, the button the player. */
   card: MyLearningCourse;
   /** Modules bar, in body-medium/Semibold: "4 modules", or "Module 2 of 4" for the course in progress. */
   position: string;
@@ -107,6 +110,8 @@ export type ProgramCertificate =
       title: string;
       issuedLine: string;
       document: CertificateDocumentData;
+      /** Where View goes: the certificate's own page. */
+      viewHref?: string;
     }
   | {
       status: "not-earned";
@@ -154,7 +159,8 @@ export interface Program {
 }
 
 /** The existing course player; the only course of the program the prototype can open. */
-const COURSE_PLAYER_HREF = "/course/six-sigma/topic/m3-t1";
+/** The course the learner is in (course 2): the header's Resume opens its player. */
+const COURSE_PLAYER_HREF = coursePlayerHref(slugify("AI-Driven Content and Brand Communication"));
 
 /**
  * A course row of the program. Every course is SkillUp · Beginner · Flexible Learning as
@@ -176,8 +182,10 @@ function programCourse(
     Pick<MyLearningCourse, "progressMeta"> &
     Partial<Pick<MyLearningCourse, "progressPct" | "upNext" | "cta" | "href">>,
 ): ProgramCourse {
+  const slug = slugify(title);
   return {
     id: `course-${number}`,
+    slug,
     number,
     card: {
       id: `course-${number}`,
@@ -191,6 +199,9 @@ function programCourse(
       upNext: { title: "Course Introduction", type: "Video" },
       cta: "Start",
       ...card,
+      // A finished course is reviewed from its page; the others open the player.
+      href: card.cta === "Review" ? coursePageHref(slug) : coursePlayerHref(slug),
+      detailHref: coursePageHref(slug),
     },
     position,
     detail,
@@ -292,6 +303,7 @@ const AI_DIGITAL_MARKETING: Program = {
     {
       status: "issued",
       courseId: "course-1",
+      viewHref: certificatePageHref(slugify("Digital Marketing Fundamentals and the AI Mindset")),
       courseLabel: "Course 1 · Digital Marketing Fundamentals and the AI Mindset",
       title: "Digital Marketing Fundamentals and the AI Mindset",
       issuedLine: "Issued 12 September 2026.",
@@ -420,7 +432,7 @@ const AI_DIGITAL_MARKETING: Program = {
   ],
 };
 
-const PROGRAMS: Program[] = [AI_DIGITAL_MARKETING];
+export const PROGRAMS: Program[] = [AI_DIGITAL_MARKETING];
 
 export function getProgramBySlug(slug: string): Program | undefined {
   return PROGRAMS.find((p) => p.slug === slug);
