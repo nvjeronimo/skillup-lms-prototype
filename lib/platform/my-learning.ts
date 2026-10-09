@@ -204,8 +204,9 @@ export const myLearningPrograms: MyLearningProgram[] = [
     delivery: "Flexible Learning",
     courses: "0 of 5 courses complete",
     progressPct: 0,
-    status: "Not started · Starts May 12",
+    status: "Not started · Starts Oct 5",
     cta: "Details",
+    href: "/platform/program/cybersecurity-fundamentals",
   },
 ];
 

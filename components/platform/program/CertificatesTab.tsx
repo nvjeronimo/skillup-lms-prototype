@@ -105,17 +105,20 @@ export function CertificatesTab({ program }: { program: Program }) {
   return (
     <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
-      <ul
-        data-mock="Certificate artwork, IDs and requirements are not readable yet"
-        className="flex flex-wrap items-start gap-4 md:gap-5 lg:gap-6"
-      >
-        {program.certificates.map((certificate) => (
-          <li key={certificate.courseId} className="flex w-full flex-col gap-2 md:w-[320px]">
-            <h3 className="sk-text-body-medium-semibold text-sko-text-default">{certificate.courseLabel}</h3>
-            <CertificateCard certificate={certificate} />
-          </li>
-        ))}
-      </ul>
+      {/* No course started yet: no list, the note alone (an empty list would still take a gap). */}
+      {program.certificates.length > 0 ? (
+        <ul
+          data-mock="Certificate artwork, IDs and requirements are not readable yet"
+          className="flex flex-wrap items-start gap-4 md:gap-5 lg:gap-6"
+        >
+          {program.certificates.map((certificate) => (
+            <li key={certificate.courseId} className="flex w-full flex-col gap-2 md:w-[320px]">
+              <h3 className="sk-text-body-medium-semibold text-sko-text-default">{certificate.courseLabel}</h3>
+              <CertificateCard certificate={certificate} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <p className="sk-text-body-medium-regular text-sko-text-subtle">{program.certificatesNote}</p>
     </div>
   );

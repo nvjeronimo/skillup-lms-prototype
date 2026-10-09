@@ -12,6 +12,11 @@ import paidAdvertisingMediaAndAiIntegratedCampaignStrategy from "./paid-advertis
 import socialMediaAndEcommerceMarketing from "./social-media-and-ecommerce-marketing";
 import emailCrmAndLifecycleMarketingWithAi from "./email-crm-and-lifecycle-marketing-with-ai";
 import capstoneProjectAiFirstMarketingSystem from "./capstone-project-ai-first-marketing-system";
+import securityFoundationsAndTheThreatLandscape from "./security-foundations-and-the-threat-landscape";
+import networkSecurityAndDefence from "./network-security-and-defence";
+import identityAccessAndCloudSecurity from "./identity-access-and-cloud-security";
+import securityOperationsAndIncidentResponse from "./security-operations-and-incident-response";
+import capstoneSecuringASmallOrganisation from "./capstone-securing-a-small-organisation";
 
 /**
  * The registry of courses with content of their own. To add one, add its folder next to this
@@ -35,6 +40,11 @@ export const COURSES: CourseEntry[] = [
   socialMediaAndEcommerceMarketing,
   emailCrmAndLifecycleMarketingWithAi,
   capstoneProjectAiFirstMarketingSystem,
+  securityFoundationsAndTheThreatLandscape,
+  networkSecurityAndDefence,
+  identityAccessAndCloudSecurity,
+  securityOperationsAndIncidentResponse,
+  capstoneSecuringASmallOrganisation,
 ];
 
 /** Ids and slugs taken by the sample courses of lib/data (Six Sigma topics are "m1-t1", unprefixed). */
