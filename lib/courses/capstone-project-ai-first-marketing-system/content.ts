@@ -156,6 +156,51 @@ export const content: CourseContent = {
         "The final submission is the milestones revised and joined; the note on what changed is read first.",
       ],
     },
+    "cps-m2-t1": {
+      lede: "Every milestone, and the final submission, is graded with the same rubric. It has four parts and it is short. This reading goes through each part with an example of work that earns full marks and one that does not, so that you can check your own before you submit.",
+      sections: [
+        {
+          heading: "Strategy and channel plan",
+          paragraphs: [
+            "Full marks go to a plan with one objective, a specific audience, and a reason for every channel chosen and every channel left out. The objective is a sentence with a person and an action: “Parents of children aged four to eight who live within five kilometres book a trial swimming lesson: 60 bookings by the end of June.”",
+            "A weaker version reads: “Increase awareness and grow our social following.” It names no person and no action, and nobody could say in June whether it had been met. A list of channels with no reasons scores in the middle. A list of tactics with no objective behind it scores near the bottom.",
+            "Reasons can be brief. “Search ads: parents look for lessons by town name, and intent is high.” “No short-video platform this quarter: nobody on the team can film weekly.” The second line earns as much credit as the first.",
+          ],
+        },
+        {
+          heading: "Content, campaign and lifecycle assets",
+          paragraphs: [
+            "The rubric asks for one finished asset per channel, on voice, each traceable to the objective. Finished means it could be published as it stands: a real headline, real copy, a real call to action. An outline labelled “post about lessons” is not an asset.",
+            "The test a grader applies is whether the asset could belong to another brand. “Summer is here! Book now and make a splash” could be any swimming school anywhere. “Mia put her face in the water in week two. Trial lessons at the Elm Street pool, Saturdays at nine” could only be this one.",
+          ],
+        },
+        {
+          heading: "Measurement plan",
+          paragraphs: [
+            "Full marks need three things for each objective: one metric, where it is read, and the result that would change the plan. “Trial bookings per week, read from the booking system every Monday. Under ten a week by mid-May: move budget from social to search.”",
+            "A table of fifteen metrics with no targets and no decisions scores in the middle, however complete it looks. The grader is looking for evidence that a number would lead to an action.",
+          ],
+        },
+        {
+          heading: "AI workflow log and responsible use",
+          paragraphs: [
+            "Each AI-assisted step is one row: the step, the tool, the prompt or a summary of it, what was checked, and who checked it. “Search ad headlines: drafted with a writing assistant from brief B1; character counts and the price checked against the booking page by me; two headlines removed for unsupported claims.”",
+            "“Used AI to help with the ads” records nothing a reader could repeat or trust, and scores accordingly. The log is also where you show judgement: the three things you would never hand over in this business, and why.",
+            "Across all four parts the pattern is the same. The rubric rewards a decision you can explain over a quantity of material.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "A grader asks one question of every page: what did this person decide, and can I see why?",
+        attribution: "Capstone rubric notes",
+      },
+      takeaways: [
+        "The same four-part rubric is used for each milestone and for the final submission.",
+        "Strategy: one objective with a person and an action, and a reason for each channel in or out.",
+        "Assets: finished, on voice, and impossible to mistake for another brand's.",
+        "Measurement and log: every metric leads to a decision, and every AI step records its check.",
+      ],
+    },
   },
   quizzes: {
     "cps-m3-t3": [
