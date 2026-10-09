@@ -1,7 +1,7 @@
 import { Award, MessagesSquare, User, type LucideIcon } from "lucide-react";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
-import { coursePageHref, coursePlayerHref, programPageHref, slugify } from "./hrefs";
+import { coursePageHref, coursePlayerHref, slugify } from "./hrefs";
 
 /**
  * Mock data of the platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop
@@ -68,11 +68,11 @@ export const dashboardDue: DashboardDueItem[] = [
   {
     id: "assignment-02-audience-segmentation",
     day: "26",
-    when: "Fri",
+    when: "Sat",
     urgency: "upcoming",
     title: "Assignment 02 · Audience segmentation",
-    meta: "AI-Driven Digital Marketing · Homework",
-    status: { label: "Due Fri", color: "warning" },
+    meta: "AI-Driven Content and Brand Communication · Homework",
+    status: { label: "Due Sat", color: "warning" },
     // "Assignment 02 · Audience segmentation", the homework that closes Module 2 of the course.
     href: coursePlayerHref(slugify("AI-Driven Content and Brand Communication"), "acb-m2-t10"),
   },
@@ -94,8 +94,8 @@ export interface DashboardResumeCourse {
 const PROGRAM_COURSE = slugify("AI-Driven Content and Brand Communication");
 
 export const dashboardResume: DashboardResumeCourse[] = [
-  // A program: Resume opens the course the learner is in, the title opens the program's page.
-  { id: "ai-driven-digital-marketing", title: "AI-Driven Digital Marketing", deliveryMode: "Flexible Learning", progressPct: 38, href: coursePlayerHref(PROGRAM_COURSE), homeHref: programPageHref("ai-driven-digital-marketing") },
+  // Learner Home lists enrolments, which are courses: the row is the course the learner is in, not its program.
+  { id: PROGRAM_COURSE, title: "AI-Driven Content and Brand Communication", deliveryMode: "Flexible Learning", progressPct: 40, href: coursePlayerHref(PROGRAM_COURSE), homeHref: coursePageHref(PROGRAM_COURSE) },
   { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: coursePlayerHref("ux-research-and-design-thinking"), homeHref: coursePageHref("ux-research-and-design-thinking") },
   { id: "leadership-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: coursePlayerHref("leadership-in-remote-teams"), homeHref: coursePageHref("leadership-in-remote-teams") },
 ];

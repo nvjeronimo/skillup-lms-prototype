@@ -337,7 +337,7 @@ const AI_DIGITAL_MARKETING: Program = {
       title: "Not earned yet, keep on track!",
       requirements: [
         { title: "Reach the passing grade", detail: "28% now · 70% needed", percent: 28 },
-        { title: "Complete the course content", detail: "14 of 35 topics · 40%", percent: 40 },
+        { title: "Complete the course content", detail: "15 of 38 topics · 40%", percent: 40 },
       ],
     },
   ],

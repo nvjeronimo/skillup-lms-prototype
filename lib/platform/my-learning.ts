@@ -187,12 +187,13 @@ export interface MyLearningProgram {
 export const myLearningPrograms: MyLearningProgram[] = [
   {
     id: "ai-driven-digital-marketing",
-    title: "AI-Driven Digital Marketing Certificate",
+    // The program's own title, as its page shows it.
+    title: "Certificate Program in AI Augmented Digital Marketing",
     eyebrow: "Program · 7 courses",
     delivery: "Flexible Learning",
     courses: "1 of 7 courses complete",
     progressPct: 14,
-    upNext: "Course 2 · SEO & Organic Search",
+    upNext: "Course 2 · AI-Driven Content and Brand Communication",
     cta: "Continue",
     href: "/platform/program/ai-driven-digital-marketing",
   },
