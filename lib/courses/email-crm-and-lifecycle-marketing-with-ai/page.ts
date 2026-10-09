@@ -8,7 +8,7 @@ import { outline } from "./outline";
  * (lib/programs/ai-driven-digital-marketing): 3 modules, 34 topics, about 10 hours, no
  * progress, next up "Course Introduction". Nothing is done, graded or overdue. Today is
  * 24 Sep 2026; the due dates are those of the suggested pace of the program, which reaches
- * this course on 1 Feb 2027 (sample data: the program file gives only its start and end).
+ * this course on 8 Mar 2027 (sample data: the program file gives only its start and end).
  */
 const WEEKLY_GOAL: WeeklyGoal = {
   state: "set",
@@ -92,22 +92,22 @@ export const page: CourseDetail = {
     items: [
       {
         id: "suggested-start",
-        iso: "2027-02-01",
+        iso: "2027-03-08",
         day: "01",
         month: "FEB",
         title: "Suggested start",
         detail: "Program pace · after course 5",
-        relative: "In 4 months",
+        relative: "In 5 months",
         relativeColor: "gray",
       },
       {
         id: "assignment-01",
-        iso: "2027-02-07",
+        iso: "2027-03-14",
         day: "07",
         month: "FEB",
         title: "Assignment 01 · Welcome series",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 4 months",
+        relative: "In 5 months",
         relativeColor: "gray",
       },
     ],
@@ -193,8 +193,8 @@ export const page: CourseDetail = {
     upcoming: [
       {
         id: "suggested-start",
-        iso: "2027-02-01T00:00",
-        date: "01 Feb 2027",
+        iso: "2027-03-08T00:00",
+        date: "08 Mar 2027",
         time: "00:00 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }],
@@ -203,8 +203,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-01",
-        iso: "2027-02-07T23:59",
-        date: "07 Feb 2027",
+        iso: "2027-03-14T23:59",
+        date: "14 Mar 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -217,8 +217,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-foundations",
-        iso: "2027-02-09T23:59",
-        date: "09 Feb 2027",
+        iso: "2027-03-16T23:59",
+        date: "16 Mar 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -231,8 +231,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-02",
-        iso: "2027-02-16T23:59",
-        date: "16 Feb 2027",
+        iso: "2027-03-23T23:59",
+        date: "23 Mar 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -245,8 +245,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-crm",
-        iso: "2027-02-18T23:59",
-        date: "18 Feb 2027",
+        iso: "2027-03-25T23:59",
+        date: "25 Mar 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -259,8 +259,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-project",
-        iso: "2027-02-26T23:59",
-        date: "26 Feb 2027",
+        iso: "2027-04-02T23:59",
+        date: "02 Apr 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -273,8 +273,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-assessment",
-        iso: "2027-02-28T23:59",
-        date: "28 Feb 2027",
+        iso: "2027-04-04T23:59",
+        date: "04 Apr 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -287,8 +287,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2027-03-01T09:00",
-        date: "01 Mar 2027",
+        iso: "2027-04-05T09:00",
+        date: "05 Apr 2027",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],

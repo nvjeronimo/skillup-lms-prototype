@@ -9,7 +9,7 @@ const FINAL_SUBMISSION: OraContent = {
     "Submit your AI-first marketing system for one business: the three milestones, revised after the comments you received and joined into one document. A reader who knows nothing about the business should be able to see what you would do, in which order, how you would know it worked, and which parts an AI tool does.",
   deliverable:
     "Submit one PDF of 8 to 12 pages using the marketing system template: strategy and channel plan, one finished asset per channel, the customer lifecycle, the measurement plan and the AI workflow log. Add half a page on what you changed after each milestone review. Leave out real customer data and anything confidential.",
-  dueLabel: "Due 24 Mar 2027",
+  dueLabel: "Due 28 Apr 2027",
   requiredReviews: 2,
   acceptedTypes: [".pdf"],
   overallCommentPrompt: "If this business could act on only one part of your peer's system this month, which should it be, and why?",

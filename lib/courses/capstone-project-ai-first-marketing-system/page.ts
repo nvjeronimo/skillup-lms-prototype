@@ -9,7 +9,7 @@ import { outline } from "./outline";
  * progress, next up "Course Introduction". The grade is the project: three milestones, the
  * final submission and the peer reviews given. Nothing is done, graded or overdue. Today is
  * 24 Sep 2026; the due dates are those of the suggested pace of the program, which reaches
- * the capstone on 1 Mar 2027 (sample data: the program file gives only its start and end).
+ * the capstone on 5 Apr 2027 (sample data: the program file gives only its start and end).
  */
 const WEEKLY_GOAL: WeeklyGoal = {
   state: "set",
@@ -94,22 +94,22 @@ export const page: CourseDetail = {
     items: [
       {
         id: "suggested-start",
-        iso: "2027-03-01",
+        iso: "2027-04-05",
         day: "01",
         month: "MAR",
         title: "Suggested start",
         detail: "Program pace · after course 6",
-        relative: "In 5 months",
+        relative: "In 6 months",
         relativeColor: "gray",
       },
       {
         id: "milestone-1",
-        iso: "2027-03-07",
+        iso: "2027-04-11",
         day: "07",
         month: "MAR",
         title: "Milestone 1 · Strategy and channel plan",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 5 months",
+        relative: "In 6 months",
         relativeColor: "gray",
       },
     ],
@@ -191,8 +191,8 @@ export const page: CourseDetail = {
     upcoming: [
       {
         id: "suggested-start",
-        iso: "2027-03-01T00:00",
-        date: "01 Mar 2027",
+        iso: "2027-04-05T00:00",
+        date: "05 Apr 2027",
         time: "00:00 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }],
@@ -201,8 +201,8 @@ export const page: CourseDetail = {
       },
       {
         id: "milestone-1",
-        iso: "2027-03-07T23:59",
-        date: "07 Mar 2027",
+        iso: "2027-04-11T23:59",
+        date: "11 Apr 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -215,8 +215,8 @@ export const page: CourseDetail = {
       },
       {
         id: "milestone-2",
-        iso: "2027-03-14T23:59",
-        date: "14 Mar 2027",
+        iso: "2027-04-18T23:59",
+        date: "18 Apr 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -229,8 +229,8 @@ export const page: CourseDetail = {
       },
       {
         id: "milestone-3",
-        iso: "2027-03-19T23:59",
-        date: "19 Mar 2027",
+        iso: "2027-04-23T23:59",
+        date: "23 Apr 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -243,8 +243,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-submission",
-        iso: "2027-03-24T23:59",
-        date: "24 Mar 2027",
+        iso: "2027-04-28T23:59",
+        date: "28 Apr 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -257,8 +257,8 @@ export const page: CourseDetail = {
       },
       {
         id: "peer-reviews",
-        iso: "2027-03-28T23:59",
-        date: "28 Mar 2027",
+        iso: "2027-05-02T23:59",
+        date: "02 May 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -271,8 +271,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2027-03-29T09:00",
-        date: "29 Mar 2027",
+        iso: "2027-05-03T09:00",
+        date: "03 May 2027",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],

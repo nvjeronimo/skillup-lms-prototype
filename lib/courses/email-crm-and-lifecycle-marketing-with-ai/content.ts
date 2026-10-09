@@ -6,7 +6,7 @@ const FINAL_PROJECT: OraContent = {
     "Design the lifecycle email plan for one customer journey of a business you know, or of the case-study shop. Start from the lifecycle map of Assignment 02. For each stage, name the segment, the flow that serves it, what triggers the flow and what ends it. Write two of the emails in full.",
   deliverable:
     "Submit a PDF or DOCX of 3 to 5 pages using the lifecycle map template: the map, the flows, two finished emails with subject line and preview text, one test you would run, and a short note on where you used AI and what you changed in its drafts. Use the sample contact list, not real contacts.",
-  dueLabel: "Due 26 Feb 2027",
+  dueLabel: "Due 2 Apr 2027",
   requiredReviews: 2,
   acceptedTypes: [".pdf", ".docx"],
   overallCommentPrompt: "Which email in your peer's plan would you most like to receive, and what makes it work?",

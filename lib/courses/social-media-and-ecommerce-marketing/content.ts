@@ -6,7 +6,7 @@ const FINAL_PROJECT: OraContent = {
     "Plan the launch of one product for the business you have worked on in this course. The plan joins your four assignments: the audience and the leading job, a two-week content calendar around the launch, the product page and the shop listing, and the funnel numbers you will watch in the first month.",
   deliverable:
     "Submit a PDF or DOCX of 4 to 6 pages using the launch plan template: objective, audience, channels, calendar, product page, measurement, and a short note on where you used AI and what you changed in its drafts.",
-  dueLabel: "Due 30 Jan 2027",
+  dueLabel: "Due 6 Mar 2027",
   requiredReviews: 2,
   acceptedTypes: [".pdf", ".docx"],
   overallCommentPrompt: "Which part of your peer's launch plan would you act on first, and why?",
