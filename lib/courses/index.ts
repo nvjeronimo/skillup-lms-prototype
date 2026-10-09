@@ -2,6 +2,10 @@ import { flattenOutline, moduleTopics } from "./outline";
 import type { CourseEntry } from "./types";
 import aiDrivenContentAndBrandCommunication from "./ai-driven-content-and-brand-communication";
 import uxResearchAndDesignThinking from "./ux-research-and-design-thinking";
+import projectManagementWithAiTools from "./project-management-with-ai-tools";
+import leadershipInRemoteTeams from "./leadership-in-remote-teams";
+import introToProductAnalytics from "./intro-to-product-analytics";
+import businessAnalyticsWithPython from "./business-analytics-with-python";
 
 /**
  * The registry of courses with content of their own. To add one, add its folder next to this
@@ -15,6 +19,10 @@ import uxResearchAndDesignThinking from "./ux-research-and-design-thinking";
 export const COURSES: CourseEntry[] = [
   aiDrivenContentAndBrandCommunication,
   uxResearchAndDesignThinking,
+  projectManagementWithAiTools,
+  leadershipInRemoteTeams,
+  introToProductAnalytics,
+  businessAnalyticsWithPython,
 ];
 
 /** Ids and slugs taken by the sample courses of lib/data (Six Sigma topics are "m1-t1", unprefixed). */
