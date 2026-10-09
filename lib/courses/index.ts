@@ -6,6 +6,9 @@ import projectManagementWithAiTools from "./project-management-with-ai-tools";
 import leadershipInRemoteTeams from "./leadership-in-remote-teams";
 import introToProductAnalytics from "./intro-to-product-analytics";
 import businessAnalyticsWithPython from "./business-analytics-with-python";
+import digitalMarketingFundamentalsAndTheAiMindset from "./digital-marketing-fundamentals-and-the-ai-mindset";
+import seoGeoAndOrganicGrowthWithAi from "./seo-geo-and-organic-growth-with-ai";
+import paidAdvertisingMediaAndAiIntegratedCampaignStrategy from "./paid-advertising-media-and-ai-integrated-campaign-strategy";
 
 /**
  * The registry of courses with content of their own. To add one, add its folder next to this
@@ -23,6 +26,9 @@ export const COURSES: CourseEntry[] = [
   leadershipInRemoteTeams,
   introToProductAnalytics,
   businessAnalyticsWithPython,
+  digitalMarketingFundamentalsAndTheAiMindset,
+  seoGeoAndOrganicGrowthWithAi,
+  paidAdvertisingMediaAndAiIntegratedCampaignStrategy,
 ];
 
 /** Ids and slugs taken by the sample courses of lib/data (Six Sigma topics are "m1-t1", unprefixed). */
