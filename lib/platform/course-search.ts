@@ -4,10 +4,16 @@
  * In the product the request is `POST {LMS}/search/{course_id}` with `search_string`,
  * `page_size` 20 and `page_index`; each result brings `content_type`, `display_name`, an
  * `excerpt` with the matches marked, `location[]` and `url`; the page brings `total` and
- * `access_denied_count`. The prototype has no index: it filters the sample content below,
- * so the first five results and the totals for "control chart" are the ones of the screens
- * and any other word still gives an honest answer (results, or none).
+ * `access_denied_count`. The prototype has no index. On Six Sigma, the course of the screens,
+ * it filters the sample content below, so the first five results and the totals for "control
+ * chart" are the ones of the screens. On a course with content of its own (lib/courses) it
+ * filters that course: every lesson and topic title, and the topic bodies written for it.
+ * Either way any word gives an honest answer (results, or none).
  */
+import { COURSES } from "@/lib/courses";
+import { moduleTopics, playerTopicHref } from "@/lib/courses/outline";
+import type { CourseEntry } from "@/lib/courses/types";
+import type { Topic, TopicType } from "@/lib/types";
 
 /** `content_type` as the screens name it: Text, Video, CAPA (Quiz), Sequence (Lesson). */
 export type SearchContentType = "Text" | "Video" | "Quiz" | "Lesson";
@@ -20,6 +26,10 @@ export interface SearchDoc {
   text?: string;
   /** `location[]`: module › lesson › topic. */
   location: string[];
+  /** `url`: the topic the result opens. Without it the result opens where the course resumes. */
+  href?: string;
+  /** The learner cannot open it yet: left out of the results and counted. */
+  locked?: boolean;
 }
 
 export interface SearchResult extends SearchDoc {
@@ -128,6 +138,57 @@ const DOCS: SearchDoc[] = [
     "A critical-to-quality requirement starts from the voice of the customer and ends in a measure."),
 ];
 
+const QUIZ_TYPES: TopicType[] = ["Quiz", "Practice Assignment", "Graded Assignment"];
+const typeOf = (topic: Topic): SearchContentType =>
+  topic.type === "Video" ? "Video" : QUIZ_TYPES.includes(topic.type) ? "Quiz" : "Text";
+
+/** What the course wrote for a topic, as one text: transcript, article, quiz questions or brief. */
+function bodyOf(topic: Topic, { content }: CourseEntry): string | undefined {
+  const article = content.articles[topic.id];
+  const brief = content.assignments[topic.id];
+  const parts = [
+    ...(topic.transcript ?? []).map((line) => line.text),
+    ...(article ? [article.lede, ...article.sections.flatMap((section) => section.paragraphs)] : []),
+    ...(content.quizzes[topic.id] ?? []).map((q) => q.question),
+    ...(brief ? [brief.brief, ...brief.requirements] : []),
+  ];
+  return parts.length > 0 ? parts.join(" ") : undefined;
+}
+
+/** A course of the registry as search content, in course order: each lesson, then its topics. */
+function docsOf(entry: CourseEntry): SearchDoc[] {
+  const { outline } = entry;
+  return outline.modules.flatMap((mod) => {
+    const lessons = mod.lessons ?? [{ id: mod.id, label: "", topics: moduleTopics(mod) }];
+    return lessons.flatMap((lesson) => [
+      ...(lesson.label
+        ? [{ id: lesson.id, type: "Lesson" as const, title: lesson.label, location: [mod.title], href: lesson.topics[0] && playerTopicHref(outline.slug, lesson.topics[0].id), locked: lesson.topics.every((t) => t.locked) }]
+        : []),
+      ...lesson.topics.map((topic) => ({
+        id: topic.id,
+        type: typeOf(topic),
+        title: topic.title,
+        text: bodyOf(topic, entry),
+        location: [mod.title, lesson.label, topic.title].filter(Boolean),
+        href: playerTopicHref(outline.slug, topic.id),
+        locked: topic.locked,
+      })),
+    ]);
+  });
+}
+
+const OWN_DOCS = new Map<string, SearchDoc[]>();
+/** The content a course's search looks in: its own when it has it, the Six Sigma sample otherwise. */
+function docsFor(slug?: string): SearchDoc[] {
+  const entry = slug ? COURSES.find((c) => c.outline.slug === slug) : undefined;
+  if (!entry) return DOCS;
+  if (!OWN_DOCS.has(entry.outline.slug)) OWN_DOCS.set(entry.outline.slug, docsOf(entry));
+  return OWN_DOCS.get(entry.outline.slug)!;
+}
+
+/** Whether the search of this course looks in the course's own content. */
+export const hasOwnSearchContent = (slug?: string) => docsFor(slug) !== DOCS;
+
 /**
  * Prototype only: searches that are known to give each state, offered when the field is
  * empty so a reviewer does not have to guess what the sample content holds.
@@ -140,6 +201,32 @@ export const SEARCH_SAMPLES: { query: string; gives: string }[] = [
   { query: "kanbam", gives: "no results" },
   { query: SEARCH_FAIL_WORD, gives: "the search fails" },
 ];
+
+const STOP = new Set(["about", "after", "before", "between", "check", "course", "first", "graded", "introduction", "module", "practice", "their", "these", "through", "using", "where", "which", "with", "your", "assignment", "final", "project", "review"]);
+
+/**
+ * The same list for a course with its own content, worked out from it: the two words its
+ * titles use most, one word found only in a written body, then no results and the failure.
+ */
+export function searchSamples(slug?: string): { query: string; gives: string }[] {
+  if (!hasOwnSearchContent(slug)) return SEARCH_SAMPLES;
+  const docs = docsFor(slug);
+  const words = (text: string) => text.toLowerCase().match(/[a-z]{5,}/g) ?? [];
+  const inTitles = new Map<string, number>();
+  for (const d of docs) for (const w of new Set(words(d.title))) if (!STOP.has(w)) inTitles.set(w, (inTitles.get(w) ?? 0) + 1);
+  const common = [...inTitles.entries()].sort((a, b) => b[1] - a[1]).slice(0, 2).map(([w]) => w);
+  const bodyOnly = docs.flatMap((d) => words(d.text ?? "")).find((w) => w.length >= 7 && !STOP.has(w) && !inTitles.has(w));
+  const count = (q: string) => {
+    const n = searchCourse(q, 0, slug).total;
+    return `${n} ${n === 1 ? "result" : "results"}`;
+  };
+  return [
+    ...common.map((query) => ({ query, gives: count(query) })),
+    ...(bodyOnly ? [{ query: bodyOnly, gives: `${count(bodyOnly)}, in a topic body` }] : []),
+    { query: "kanbam", gives: "no results" },
+    { query: SEARCH_FAIL_WORD, gives: "the search fails" },
+  ];
+}
 
 /** Results the learner cannot open, counted by the platform for this search string. */
 const ACCESS_DENIED: Record<string, number> = { "control chart": 2 };
@@ -159,22 +246,23 @@ function countMatches(text: string | undefined, pattern: RegExp): number {
 }
 
 /** Every result for the search string, in relevance order. */
-function findAll(query: string): SearchResult[] {
+function findAll(query: string, slug?: string): SearchResult[] {
   const pattern = searchPattern(query);
   if (!pattern) return [];
-  return DOCS.map((d) => ({ ...d, matches: countMatches(d.title, pattern) + countMatches(d.text, pattern) })).filter(
+  return docsFor(slug).map((d) => ({ ...d, matches: countMatches(d.title, pattern) + countMatches(d.text, pattern) })).filter(
     (r) => r.matches > 0,
   );
 }
 
 /** One page of results, as `page_index` 0, 1, … of the platform's search. */
-export function searchCourse(query: string, pageIndex: number): SearchPage {
-  const all = findAll(query);
+export function searchCourse(query: string, pageIndex: number, slug?: string): SearchPage {
+  const found = findAll(query, slug);
+  const all = found.filter((r) => !r.locked);
   const start = pageIndex * SEARCH_PAGE_SIZE;
   return {
     results: all.slice(start, start + SEARCH_PAGE_SIZE),
     total: all.length,
-    accessDenied: ACCESS_DENIED[query.trim().toLowerCase()] ?? 0,
+    accessDenied: hasOwnSearchContent(slug) ? found.length - all.length : (ACCESS_DENIED[query.trim().toLowerCase()] ?? 0),
   };
 }
 

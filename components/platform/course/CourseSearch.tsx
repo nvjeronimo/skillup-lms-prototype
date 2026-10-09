@@ -13,9 +13,10 @@ import { SearchField } from "@/components/platform/my-learning/SearchField";
 import {
   SEARCH_FAIL_WORD,
   SEARCH_PAGE_SIZE,
-  SEARCH_SAMPLES,
+  hasOwnSearchContent,
   excerptOf,
   searchCourse,
+  searchSamples,
   searchPattern,
   type SearchContentType,
   type SearchResult,
@@ -35,7 +36,7 @@ type Status = "idle" | "loading" | "done" | "error";
  * came back. The keyword and the type stay in the URL (`q`, `f`), as the platform's own
  * search does, so a result opened and then Back brings the search back.
  */
-function useCourseSearch(active: boolean) {
+function useCourseSearch(active: boolean, slug: string) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -76,13 +77,13 @@ function useCourseSearch(active: boolean) {
         setStatus("error");
         return;
       }
-      const page = searchCourse(q, 0);
+      const page = searchCourse(q, 0, slug);
       setResults(page.results);
       setTotal(page.total);
       setAccessDenied(page.accessDenied);
       setStatus("done");
     }, 700);
-  }, []);
+  }, [slug]);
 
   // A URL that carries `q` reopens the search (a shared link, or Back from a result).
   const restored = React.useRef(false);
@@ -123,7 +124,7 @@ function useCourseSearch(active: boolean) {
   }
 
   function showMore() {
-    const page = searchCourse(query, Math.ceil(results.length / SEARCH_PAGE_SIZE));
+    const page = searchCourse(query, Math.ceil(results.length / SEARCH_PAGE_SIZE), slug);
     setResults((current) => [...current, ...page.results]);
   }
 
@@ -137,7 +138,7 @@ function useCourseSearch(active: boolean) {
     text.trim() === "" ? "none" : text.trim() !== query ? "hint" : status === "idle" ? "hint" : status;
 
   return {
-    text, query, results, total, accessDenied, filter, open, view,
+    slug, text, query, results, total, accessDenied, filter, open, view,
     setOpen, change, submit, showMore, selectFilter, runSample, retry: () => run(query),
   };
 }
@@ -227,11 +228,13 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
       <div data-prototype-note className="flex flex-col gap-3">
         <p className="sk-text-label-small-medium uppercase text-sko-text-subtle">Prototype note · sample content</p>
         <p className="sk-text-body-small-regular text-sko-text-subtle">
-          The prototype searches about forty sample items, not the real course. Type one of these and press Enter,
-          or select it:
+          {hasOwnSearchContent(search.slug)
+            ? "The prototype searches this course's lesson and topic titles and the few topic bodies written for it."
+            : "The prototype searches about forty sample items, not the real course."}{" "}
+          Type one of these and press Enter, or select it:
         </p>
         <ul className="flex flex-col gap-1">
-          {SEARCH_SAMPLES.map((sample) => (
+          {searchSamples(search.slug).map((sample) => (
             <li key={sample.query}>
               <button
                 type="button"
@@ -361,7 +364,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
         aria-label={heading}
       >
         {shown.map((result) => (
-          <ResultRow key={result.id} result={result} query={query} href={topicHref} compact={compact} />
+          <ResultRow key={result.id} result={result} query={query} href={result.href ?? topicHref} compact={compact} />
         ))}
       </ul>
       {current === "all" ? (
@@ -391,6 +394,8 @@ export interface CourseSearchProps {
   label: string;
   /** Where a result goes. The prototype has one topic page per course, so every result opens it. */
   topicHref: string;
+  /** The course searched: one with content of its own is searched in that content. */
+  slug: string;
   /**
    * `popup`: desktop and tablet, the results open in a panel 8 under the field, right-aligned
    * with it, 560 wide. `sheet`: mobile, the search opens as a full screen with the field and Cancel.
@@ -408,7 +413,7 @@ export interface CourseSearchProps {
  * Both the popup and the sheet are local compositions, as in Figma: the DS has no search
  * popup and no result row yet.
  */
-export function CourseSearch({ label, topicHref, variant, className }: CourseSearchProps) {
+export function CourseSearch({ label, topicHref, slug, variant, className }: CourseSearchProps) {
   // Two instances live on the page (tab row from tablet up, top of the Course tab on mobile);
   // only the one that is on screen restores a search from the URL.
   const [active, setActive] = React.useState(false);
@@ -420,7 +425,7 @@ export function CourseSearch({ label, topicHref, variant, className }: CourseSea
     return () => mq.removeEventListener("change", update);
   }, [variant]);
 
-  const search = useCourseSearch(active);
+  const search = useCourseSearch(active, slug);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const sheetInputRef = React.useRef<HTMLInputElement>(null);
   const { setOpen } = search;

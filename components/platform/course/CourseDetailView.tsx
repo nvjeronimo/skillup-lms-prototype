@@ -115,7 +115,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             ariaLabel="Course sections"
             className="-mb-px min-w-0 flex-1"
           />
-          <CourseSearch label={course.search.placeholder} topicHref={course.progress.href} variant="popup" className="hidden w-[320px] shrink-0 pb-[7px] pt-2 md:block" />
+          <CourseSearch label={course.search.placeholder} topicHref={course.progress.href} slug={course.slug} variant="popup" className="hidden w-[320px] shrink-0 pb-[7px] pt-2 md:block" />
         </div>
       </div>
 
@@ -126,6 +126,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
           <CourseSearch
             label={course.search.placeholder}
             topicHref={course.progress.href}
+            slug={course.slug}
             variant="sheet"
             className="mb-4 md:hidden"
           />
