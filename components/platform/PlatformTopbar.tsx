@@ -124,12 +124,6 @@ function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclos
             </button>
           ))}
         </div>
-        <Link
-          href="/"
-          className="sk-text-body-medium-medium flex min-h-11 items-center rounded-md px-2 text-sko-text-primary hover:bg-sko-bg-subtle"
-        >
-          Back to the prototype home
-        </Link>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/component
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { useLmsStore } from "@/lib/store";
 import type { Program } from "@/lib/platform/program";
+import { MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 
 /* Breadcrumb item (DS `_Breadcrumb button base`): body-medium/Semibold, text/subtle; the
    current page is text/primary. 20px tall as drawn. The target is 44px below desktop and
@@ -75,14 +76,13 @@ export function ProgramHeader({ program }: { program: Program }) {
               <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
             </li>
             <li className="flex items-center gap-1.5 md:gap-2">
-              {/* No Programs page in the prototype: say so instead of a dead link. */}
-              <button
-                type="button"
-                onClick={() => showToast("Programs is not part of this prototype yet")}
+              {/* Programs is a tab of My Learning. */}
+              <Link
+                href={MY_LEARNING_PROGRAMS_HREF}
                 className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}
               >
                 Programs
-              </button>
+              </Link>
               <Icon icon={ChevronRight} size={16} aria-hidden className="hidden text-sko-icon-muted lg:block" />
             </li>
             {/* Below desktop the DS breadcrumb stops at the parent: the title is the <h1> right under it. */}

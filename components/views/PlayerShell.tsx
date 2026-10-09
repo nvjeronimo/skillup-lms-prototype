@@ -21,6 +21,7 @@ import { MessagesSquare } from "lucide-react";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
 import { CourseCompleteModal } from "@/components/organisms/CourseCompleteModal";
 import { Toast } from "@/components/organisms/Toast";
+import { MY_LEARNING_HREF, courseHomeHref } from "@/lib/platform/routes";
 import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
@@ -338,7 +339,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         showTheme
         theme={theme === "dark" ? "Dark" : "Light"}
         onTheme={toggleTheme}
-        onClose={() => router.push("/")}
+        // Leaving the player goes back to the page of the course it was opened for.
+        onClose={() => router.push(courseHomeHref(courseSlug))}
         accountMenu={
           <DemoControlsMenu
             userName={user.name}
@@ -584,14 +586,18 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onClose={() => setCompleteOpen(false)}
         onNextCourse={() => {
           setCompleteOpen(false);
-          router.push("/");
+          // No "next course" is defined yet: the learner picks it in My Learning.
+          router.push(MY_LEARNING_HREF);
         }}
         onViewCertificate={() => {
           setCompleteOpen(false);
           track("certificate_view", { from: "complete_modal" });
           router.push(`/course/${courseSlug}/certificate`);
         }}
-        onBackToCourse={() => setCompleteOpen(false)}
+        onBackToCourse={() => {
+          setCompleteOpen(false);
+          router.push(courseHomeHref(courseSlug));
+        }}
       />
 
       <Toast toast={toast} onDone={clearToast} />
