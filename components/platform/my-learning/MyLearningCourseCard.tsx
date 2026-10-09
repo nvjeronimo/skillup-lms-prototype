@@ -97,8 +97,8 @@ function Action({
  * The action opens the course, so it is a link with the button look (atoms/ButtonLink).
  *
  * The older `organisms/CourseCard` is the previous List layout (overflow menu, "Est.
- * completion", 80px thumb) and is still used by the course hub, so this card is built
- * beside it from the same atoms instead of changing that one.
+ * completion", 80px thumb). The course hub that used it is gone (9 Oct 2026); it stays as
+ * the Storybook reference of that layout, and this card is built on its own.
  *
  * Text without a DS style in the component, mapped to the nearest class: "UP NEXT"
  * (SemiBold 11, +0.6) → label-small/Semibold.
