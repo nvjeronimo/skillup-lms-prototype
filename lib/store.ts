@@ -3,7 +3,7 @@
 import * as React from "react";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { notesSeed, allCourses, getTopic } from "./data";
+import { notesSeed, aiContentCourse, allCourses, flatTopics, getTopic, uxResearchCourse } from "./data";
 import { getTranscript } from "./content";
 import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
@@ -207,6 +207,15 @@ function seedBookmarks(): Set<string> {
 /** Seed completed topics from the course data (topics flagged completed). */
 function seedCompleted(): Set<string> {
   return new Set(everyTopic.filter((t) => t.completed).map((t) => t.id));
+}
+
+/** The seeded completion of the courses added in v4, for a browser that stored its progress before them. */
+function seedCompletedV4(): string[] {
+  return [aiContentCourse, uxResearchCourse].flatMap((c) =>
+    flatTopics(c)
+      .filter((t) => t.completed)
+      .map((t) => t.id),
+  );
 }
 
 let noteCounter = notesSeed.length;
@@ -526,19 +535,24 @@ export const useLmsStore = create<LmsState>()(
     }),
     {
       name: "sk-lms-demo",
-      version: 3,
+      version: 4,
       storage: skStorage,
       // v2 dropped the third "Default" quiz mode. Anyone carrying the stored
       // `null` from v1 lands on A, which is what Default resolved to anyway.
       // v3 replaced the boolean `largeTargets` with `largeTargetsChoice`: a stored
       // `true` was a deliberate opt-in and is kept; a stored `false` was only the
       // old default, so it becomes "no choice" and the mobile default applies.
+      // v4 added two courses with an outline of their own: a stored set of completed
+      // topics predates them, so their seeded completion is added to it (nothing is removed).
       migrate: (state, from) => {
         let s = (state ?? {}) as Partial<LmsState> & { largeTargets?: boolean };
         if (from < 2 && !s.quizMode) s = { ...s, quizMode: "A" as const };
         if (from < 3) {
           const { largeTargets, ...rest } = s;
           s = { ...rest, largeTargetsChoice: largeTargets ? true : null };
+        }
+        if (from < 4 && s.completedTopics) {
+          s = { ...s, completedTopics: new Set([...Array.from(s.completedTopics), ...seedCompletedV4()]) };
         }
         return s;
       },

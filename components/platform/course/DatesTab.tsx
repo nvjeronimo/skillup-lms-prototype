@@ -121,28 +121,31 @@ export function DatesTab({ course }: { course: CourseDetail }) {
     <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
       <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
 
-      <CourseAlert
-        tone="warning"
-        title={tab.missedAlert.title}
-        body={tab.missedAlert.body}
-        dismissible
-        action={
-          <Button
-            hierarchy="secondary"
-            size="sm"
-            onClick={() => showToast("Shift due dates is not part of this prototype yet")}
-            className="max-md:h-11"
-          >
-            {tab.missedAlert.cta}
-          </Button>
-        }
-      />
+      {/* Only for a learner who is behind the suggested schedule. */}
+      {tab.missedAlert ? (
+        <CourseAlert
+          tone="warning"
+          title={tab.missedAlert.title}
+          body={tab.missedAlert.body}
+          dismissible
+          action={
+            <Button
+              hierarchy="secondary"
+              size="sm"
+              onClick={() => showToast("Shift due dates is not part of this prototype yet")}
+              className="max-md:h-11"
+            >
+              {tab.missedAlert.cta}
+            </Button>
+          }
+        />
+      ) : null}
 
       <div className="flex flex-col gap-3">
         <Divider as="h3">{tab.pastLabel}</Divider>
         <DateCard items={tab.past} href={course.progress.href} label={tab.pastLabel} />
         <Divider>
-          <time dateTime="2026-09-18">{tab.todayLabel}</time>
+          <time dateTime={tab.todayIso}>{tab.todayLabel}</time>
         </Divider>
         <Divider as="h3">{tab.upcomingLabel}</Divider>
         <DateCard items={tab.upcoming} href={course.progress.href} label={tab.upcomingLabel} />

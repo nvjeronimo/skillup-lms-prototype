@@ -7,9 +7,11 @@ import { PROGRAMS, type ProgramCertificate } from "./program";
  * Every course the platform pages name, so each one has a page and a player under its own
  * title (decided by Nelson on 9 Oct 2026: a card must not land on another course).
  *
- * The prototype still has one set of sample content: the body of every course page and
- * every player topic is the Six Sigma sample. Only the identity is the course's own: its
- * title, its picture, its progress and, for a course of a program, the program it belongs to.
+ * Two of them have content of their own, on the page (lib/platform/course-detail) and in the
+ * player (lib/data): "AI-Driven Content and Brand Communication" and "UX Research and Design
+ * Thinking". For every other one the body of the course page and of every player topic is
+ * still the Six Sigma sample, and only the identity is the course's own: its title, its
+ * picture, its progress and, for a course of a program, the program it belongs to.
  */
 export interface CatalogCourse {
   slug: string;
@@ -54,8 +56,9 @@ export function nextCourseInProgram(slug: string): CatalogCourse | undefined {
 }
 
 /**
- * The course the player shows for a slug. A catalogue course plays the sample content under
- * its own slug and title, so the sidebar, the exit and the certificate name the right course.
+ * The course the player shows for a slug: its own outline when it has one. Any other
+ * catalogue course plays the sample content under its own slug and title, so the sidebar,
+ * the exit and the certificate name the right course.
  */
 export function playerCourse(slug: string): Course {
   if (coursesBySlug[slug]) return coursesBySlug[slug];
