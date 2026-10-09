@@ -186,6 +186,180 @@ export const content: CourseContent = {
         "Set a frequency limit across flows, and retire contacts who no longer respond.",
       ],
     },
+    "crm-m1-t4": {
+      lede: "Email marketing is regulated almost everywhere, and the rules differ from one country to the next. This reading is not legal advice. It sets out the principles that the main laws share, so that you know what to ask before a list is used and can recognise a practice that will cause trouble.",
+      sections: [
+        {
+          heading: "Consent, and what counts as it",
+          paragraphs: [
+            "In many countries, including those of the European Union and the United Kingdom, you need a person's consent before sending them marketing email. Consent means a clear action for a stated purpose: a box the person ticks themselves, next to words that say what they will receive. A box ticked in advance does not count, and neither does a line buried in the terms.",
+            "Some laws allow a narrow exception for existing customers: you may email about similar products if the person was offered a way to refuse when they gave the address, and in every message since. Other countries, such as the United States, permit email without prior consent and regulate its content and the opt-out. When your list crosses borders, working to the stricter standard is the simplest policy.",
+          ],
+        },
+        {
+          heading: "Proof and purpose",
+          paragraphs: [
+            "Keep a record for each contact: when they signed up, on which form, and what the form said. If a subscriber or a regulator asks, “they must have opted in” is not an answer.",
+            "Consent is tied to its purpose. Someone who gave an address to receive a receipt has not agreed to a weekly newsletter. Someone who downloaded a guide from a partner has not agreed to hear from you. Bought and scraped lists fail on both counts, and they wreck deliverability as well.",
+          ],
+        },
+        {
+          heading: "Unsubscribes",
+          paragraphs: [
+            "Every marketing email needs a working way to stop that is easy to find and takes one or two clicks. Do not ask for a login, a reason or a password. Honour the request quickly: the law allows a set number of days in some countries, and good systems do it at once.",
+            "Large mailbox providers also expect bulk senders to support one-click unsubscribe in the message header, which shows as an unsubscribe link beside the sender's name. An unsubscribe is a better outcome than a spam complaint. Make it the easier of the two.",
+          ],
+        },
+        {
+          heading: "Honest identification",
+          paragraphs: [
+            "The message must say who sent it. Use a real sender name, a subject line that matches the content, and a postal address for the business where the law asks for one. A subject line that imitates an order update to win an open is deceptive, and filters as well as regulators treat it that way.",
+            "Transactional messages such as receipts and password resets are treated differently from marketing, because the customer needs them. Keep promotion out of them, or the distinction is lost.",
+            "An AI assistant has no idea who on your list agreed to what. It will draft the message. Whether it may be sent to this person is a question for your records.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "A person who cannot leave your list easily will leave it through the spam button.",
+        attribution: "Course notes, Module 1",
+      },
+      takeaways: [
+        "Rules differ by country; when unsure, work to the stricter one and take advice.",
+        "Consent is a clear action for a stated purpose, and you keep the proof.",
+        "Every marketing email carries an easy unsubscribe, honoured promptly.",
+        "Identify the sender honestly and keep promotion out of transactional mail.",
+      ],
+    },
+    "crm-m1-t7": {
+      lede: "In a crowded inbox an email is three pieces of text: who it is from, the subject line and the preview. The reader decides on those alone whether to open, ignore or delete. This reading takes them in the order the eye does.",
+      sections: [
+        {
+          heading: "The sender name",
+          paragraphs: [
+            "People look at the sender first, and open mail from names they recognise. Use the name subscribers know you by, and keep it the same from one send to the next. “Green Corner” or “Maya at Green Corner” works. A bare “noreply” does not, and it also tells the reader that nobody will see a reply.",
+            "Send from an address on your own domain that accepts replies. Replies are a strong positive signal to mailbox providers, and some of the most useful customer feedback arrives that way.",
+          ],
+        },
+        {
+          heading: "The subject line",
+          paragraphs: [
+            "Phones show about 30 to 40 characters of a subject line, so put the point in the first few words. Be specific about what is inside: “Three plants that survive a dark hallway” tells the reader more than “Our March newsletter”.",
+            "Curiosity can work if the email pays it off. What does not work for long is the trick: “Re:” on a message that is no reply, false urgency, capitals and rows of exclamation marks. They may win one open. They lose trust, and filters treat them as marks of spam.",
+          ],
+        },
+        {
+          heading: "The preview text",
+          paragraphs: [
+            "The preview is the grey line after the subject. If you do not set it, the mail app fills it with whatever comes first in the message, which is often “View this email in your browser”.",
+            "Write it as the second half of the subject line. If the subject is “Three plants that survive a dark hallway”, the preview might be “And the one mistake that kills all of them”. Do not repeat the subject, and do not waste the space on housekeeping.",
+          ],
+        },
+        {
+          heading: "Testing, with care",
+          paragraphs: [
+            "Most email tools will send two subject lines to a small part of the list and the better one to the rest. Use it, and change only one thing between the two versions.",
+            "Be careful what you count. Some mail apps load messages in the background for privacy, which records an open that no person made. Judge a subject line by the clicks and orders that follow, not by opens alone. An AI assistant is a quick source of twenty candidate lines. Choosing two worth testing, and checking that they are honest, is your part.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "The subject line makes a promise. The first screen of the email has to keep it.",
+        attribution: "Course notes, Module 1",
+      },
+      takeaways: [
+        "Keep a recognisable sender name and a reply address that someone reads.",
+        "Put the point of the subject line in the first 30 to 40 characters, and be specific.",
+        "Write the preview text as a continuation of the subject.",
+        "Test one change at a time, and judge by clicks and orders.",
+      ],
+    },
+    "crm-m1-t10": {
+      lede: "Your email will be opened on a phone more often than on a computer, sometimes with the colours inverted, sometimes read aloud by software, and often with images switched off. A design that only works in the preview window of your email tool will fail many of its readers. This reading covers the three conditions to design for.",
+      sections: [
+        {
+          heading: "Small screens",
+          paragraphs: [
+            "Use a single column. Side-by-side columns shrink to unreadable strips on a phone. Set body text at 16 pixels or more, keep paragraphs short, and leave space between them.",
+            "Make the main action a button that a thumb can hit: around 44 pixels tall, with room around it, and with words that say what happens, such as “Read the watering guide”. Put it high enough that most readers see it without scrolling far.",
+          ],
+        },
+        {
+          heading: "Dark mode",
+          paragraphs: [
+            "Many readers set their mail app to a dark theme, and the app may then change your colours for you. Black text on a transparent background can become black on black. A logo with dark lettering can vanish.",
+            "A few habits prevent most of this. Use real text, not text inside images. Give logos a transparent background and make sure they are readable on both light and dark, or add a light outline. Avoid pure white and pure black blocks, which invert harshly. Then test in both modes before sending.",
+          ],
+        },
+        {
+          heading: "Screen readers and images off",
+          paragraphs: [
+            "A screen reader reads the email aloud in the order of its code. Use real headings, write link text that makes sense out of context, and give every meaningful image a short description in its alternative text. Decorative images get an empty one, so that the software skips them.",
+            "The same alternative text is what readers see when images are blocked, which some work mail systems do by default. An email that is one large picture then shows as an empty box. Keep the message in text, and let images support it.",
+            "Contrast matters to everyone reading in sunlight. Aim for a ratio of at least 4.5 to 1 between text and its background, and do not rely on colour alone to mark a link.",
+          ],
+        },
+        {
+          heading: "Test before you send",
+          paragraphs: [
+            "Send the email to yourself and open it on a phone in light mode, then dark. Turn images off. If you can, listen to it with the phone's screen reader for one minute. Each check takes less time than fixing a campaign after it has gone to the whole list.",
+            "An AI assistant can draft alternative text from a description of the image and can point out vague link text. It cannot see how your email renders in a particular mail app. Only a test send shows that.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "An email that only works with images on, in light mode, on a wide screen was designed for the person who made it.",
+        attribution: "Course notes, Module 1",
+      },
+      takeaways: [
+        "One column, text of 16 pixels or more, and a button a thumb can hit.",
+        "Use real text and logos that survive a dark background; test both modes.",
+        "Write alternative text and meaningful link text; keep the message out of images.",
+        "Send a test and check phone, dark mode and images off before every campaign.",
+      ],
+    },
+    "crm-m2-t2": {
+      lede: "A customer's relationship with a business changes over time, and the right message changes with it. Lifecycle stages are a small set of labels that say where each contact stands today. They let you stop sending one newsletter to everyone and start answering the question each person has now.",
+      sections: [
+        {
+          heading: "The stages",
+          paragraphs: [
+            "A simple model for a shop has six. A subscriber has given an address and not bought. A first-time customer has placed one order. A repeat customer has placed two or more. A loyal customer buys regularly and often spends more. An at-risk customer used to buy and has gone quiet. A lapsed customer has been quiet for so long that you should assume they have left.",
+            "Your business may need different names. A service might have lead, trial, client and renewal. Keep the list short enough that everyone can recite it.",
+          ],
+        },
+        {
+          heading: "Rules, not impressions",
+          paragraphs: [
+            "A stage is only useful if a rule decides it. “Repeat customer: two or more orders, the latest within 120 days” can be applied by software. “Engaged customer” cannot.",
+            "Take the time limits from your own data. If most customers who reorder do so within 45 days, someone silent for 90 is at risk. For a shop that sells mattresses the same gap means nothing. Each contact should sit in exactly one stage at a time, and move automatically when the rule says so.",
+          ],
+        },
+        {
+          heading: "The question at each stage",
+          paragraphs: [
+            "A subscriber is asking whether to trust you with a first order: show what you sell, proof from other customers, and a reason to try. A first-time customer is asking whether they chose well: help them use the product, then suggest the natural next one.",
+            "A repeat customer wants to be recognised, not treated like a stranger: early access, a restock reminder, fewer generic promotions. An at-risk customer needs a reason to return and a simple way to say what went wrong. A lapsed customer gets one last invitation, and then silence.",
+          ],
+        },
+        {
+          heading: "The moves that matter most",
+          paragraphs: [
+            "Count how many contacts sit in each stage and how many move each month. Two moves usually deserve the most attention. Subscriber to first order, because a list that never buys is a cost. And first order to second, because in most shops a customer who has bought twice is much more likely to keep buying than one who has bought once.",
+            "This map of stages, rules and messages is what you will draw in Assignment 02.",
+          ],
+        },
+      ],
+      pullQuote: {
+        text: "A lifecycle stage is a rule about what someone has done, not an opinion about who they are.",
+        attribution: "Course notes, Module 2",
+      },
+      takeaways: [
+        "Stages label where each contact stands: subscriber, first-time, repeat, loyal, at-risk, lapsed.",
+        "Define each stage by a rule on orders and dates, drawn from your own data.",
+        "Each stage has its own question, and the message answers it.",
+        "Watch two moves closely: subscriber to first order, and first order to second.",
+      ],
+    },
   },
   quizzes: {
     "crm-m1-t9": [
@@ -247,6 +421,129 @@ export const content: CourseContent = {
           { id: "b", label: "They are asked to log in to confirm", feedback: "A barrier. Many will mark the next email as spam instead." },
           { id: "c", label: "They receive three emails asking them to stay", feedback: "They asked you to stop. More emails are the opposite." },
           { id: "d", label: "They are moved to a different marketing list", feedback: "That ignores the request. They unsubscribed from your marketing, not from one list." },
+        ],
+      },
+    ],
+    "crm-m1-t12": [
+      {
+        question: "Which of these most damages a sender's reputation with mailbox providers?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "Reputation is built from how recipients treat your mail. Spam complaints and messages to dead addresses lower it. Opens, replies and clicks raise it.",
+        reviewTopicId: "crm-m1-t3",
+        reviewTopicTitle: "How an email reaches the inbox: authentication, reputation, filters",
+        options: [
+          { id: "a", label: "Sending at the same time every week", feedback: "A regular rhythm is normal and does no harm." },
+          { id: "b", label: "Subscribers replying to the emails", feedback: "Replies are a positive signal." },
+          {
+            id: "c",
+            label: "A rising share of recipients marking the messages as spam",
+            correct: true,
+            feedback: "Correct. Complaints are the clearest sign that the mail is unwanted.",
+          },
+          { id: "d", label: "Using a recognisable sender name", feedback: "Recognition helps opens and lowers complaints." },
+        ],
+      },
+      {
+        question: "A customer typed an email address at checkout to receive a receipt. The form said nothing else. Under a consent-based law, what may the shop send?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "Under consent-based rules, permission covers the purpose stated when it was given. An address supplied for a receipt allows order messages. Marketing needs its own consent or a limited existing-customer exception.",
+        reviewTopicId: "crm-m1-t4",
+        reviewTopicTitle: "Consent, unsubscribes and the rules you must follow",
+        options: [
+          { id: "a", label: "A weekly newsletter, since the shop now has the address", feedback: "Holding an address is not consent. It was given for a receipt." },
+          {
+            id: "b",
+            label: "Messages about the order. Marketing needs consent, or a narrow exception the customer was told about and could refuse",
+            correct: true,
+            feedback: "Correct. Consent is tied to the purpose stated when the address was given.",
+          },
+          {
+            id: "c",
+            label: "Anything, as long as there is an unsubscribe link",
+            feedback: "An unsubscribe link is required, but it does not replace permission where consent is the rule.",
+          },
+          { id: "d", label: "Offers from partner companies", feedback: "The customer never agreed to hear from third parties." },
+        ],
+      },
+      {
+        question: "An email is a single large image that contains all the text. Which readers receive an empty or unusable message?",
+        explanation:
+          "Text inside an image cannot be read by a screen reader and disappears when images are blocked. Keep the message in real text and give images alternative text.",
+        reviewTopicId: "crm-m1-t10",
+        reviewTopicTitle: "Designing for small screens, dark mode and screen readers",
+        options: [
+          { id: "a", label: "Only people on slow connections", feedback: "They wait longer. Others get nothing at all." },
+          { id: "b", label: "Nobody: all mail apps show images", feedback: "Some block images by default, especially at work." },
+          { id: "c", label: "Only people using dark mode", feedback: "Dark mode may alter colours, but the bigger failures are blocked images and screen readers." },
+          {
+            id: "d",
+            label: "People whose mail app blocks images, and people using a screen reader",
+            correct: true,
+            feedback: "Correct. Neither can get at text that exists only as a picture.",
+          },
+        ],
+      },
+    ],
+    "crm-m2-t6": [
+      {
+        question: "In a CRM, which of these is an event and not a property?",
+        platformPrompt: "Choose the correct option",
+        hints: [
+          "An event happened at a moment in time.",
+          "A property has one current value.",
+        ],
+        explanation:
+          "An event is something that happened, with a time, and events accumulate. A property describes the contact now and has a single current value.",
+        reviewTopicId: "crm-m2-t1",
+        reviewTopicTitle: "What a CRM holds: contacts, events and properties",
+        options: [
+          { id: "a", label: "Country: Portugal", feedback: "A property: one current value that describes the contact." },
+          { id: "b", label: "Lifecycle stage: repeat customer", feedback: "A property, worked out from the order events." },
+          { id: "c", label: "Placed an order on 3 March", correct: true, feedback: "Correct. It happened at a moment in time and joins the contact's history." },
+          { id: "d", label: "Total spent: 240", feedback: "A property, calculated from all the order events." },
+        ],
+      },
+      {
+        question: "A customer placed nine orders last year with a high total, and has not ordered for five months. Which description fits?",
+        platformPrompt: "Choose the correct option",
+        explanation:
+          "Recency is time since the last order, frequency the number of orders, value the amount spent. Someone who used to buy often and has stopped is high on frequency and value and low on recency.",
+        reviewTopicId: "crm-m2-t3",
+        reviewTopicTitle: "Segmenting by behaviour: recency, frequency and value",
+        options: [
+          {
+            id: "a",
+            label: "High recency, high frequency, high value: a best customer",
+            feedback: "Recency measures time since the last order. Five months is not recent.",
+          },
+          {
+            id: "b",
+            label: "Low recency, high frequency, high value: a valuable customer at risk",
+            correct: true,
+            feedback: "Correct. This is the group a win-back message is for.",
+          },
+          { id: "c", label: "High recency, low frequency, low value: a new customer", feedback: "Nine orders and a high total describe an established customer." },
+          { id: "d", label: "Low on all three: email rarely", feedback: "Frequency and value are high. Only recency is low." },
+        ],
+      },
+      {
+        question: "Which definition of a lifecycle stage can a system apply automatically?",
+        explanation:
+          "A stage needs a rule based on recorded events and dates, so that every contact falls into exactly one stage and moves when the rule is met.",
+        reviewTopicId: "crm-m2-t2",
+        reviewTopicTitle: "Lifecycle stages: from subscriber to repeat customer",
+        options: [
+          { id: "a", label: "Engaged customer: someone who likes the brand", feedback: "Liking cannot be measured from a record." },
+          { id: "b", label: "Good customer: someone worth keeping", feedback: "That is an opinion with no rule behind it." },
+          { id: "c", label: "Warm lead: seems interested", feedback: "“Seems” is an impression. A rule needs events and dates." },
+          {
+            id: "d",
+            label: "Repeat customer: two or more orders, the latest within 120 days",
+            correct: true,
+            feedback: "Correct. Orders and dates are on the record, so software can apply the rule.",
+          },
         ],
       },
     ],
