@@ -27,9 +27,9 @@ export interface DashboardStat {
 export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
   title: "Your learning at a glance",
   stats: [
-    { label: "Courses in progress", value: "3", detail: "of 5 enrolled" },
-    { label: "Courses completed", value: "1", detail: "of 5 enrolled" },
-    { label: "Certificates", value: "1", detail: "ready to download" },
+    { label: "Courses in progress", value: "4", detail: "of 7 enrolled" },
+    { label: "Courses completed", value: "2", detail: "of 7 enrolled" },
+    { label: "Certificates", value: "2", detail: "ready to download" },
     { label: "Programs", value: "2", detail: "1 in progress" },
   ],
 };
@@ -118,7 +118,7 @@ export const dashboardJump: DashboardJumpTile[] = [
     id: "certificates",
     icon: Award,
     title: "Certificates",
-    description: "3 in progress · 1 to download",
+    description: "4 in progress · 2 to download",
     href: "/course/six-sigma/certificate",
   },
   { id: "profile", icon: User, title: "Profile", description: "Your details · Account settings" },
