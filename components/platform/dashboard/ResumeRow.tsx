@@ -31,14 +31,15 @@ export function ResumeRow({ title, deliveryMode, progressPct, href, homeHref, em
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4",
+        "relative flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4",
+        homeHref && "transition-colors has-[p_a:hover]:border-sko-border-default",
         className,
       )}
     >
       <div className="flex flex-col items-start gap-2">
         <p className="sk-text-body-large-medium w-full text-sko-text-default">
           {homeHref ? (
-            <Link href={homeHref} className="hover:underline">
+            <Link href={homeHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
               {title}
             </Link>
           ) : (
@@ -55,7 +56,7 @@ export function ResumeRow({ title, deliveryMode, progressPct, href, homeHref, em
           showValue
           className="min-w-0 flex-1"
         />
-        <ButtonLink href={href} hierarchy={emphasis} size="md" className="shrink-0" aria-label={`Resume ${title}`}>
+        <ButtonLink href={href} hierarchy={emphasis} size="md" className="relative z-[1] shrink-0" aria-label={`Resume ${title}`}>
           Resume
         </ButtonLink>
       </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
@@ -22,7 +23,7 @@ export interface ProgramCardProps {
 /* Buttons/Button sm is 36 tall as drawn; on mobile the target grows to 44 without moving
    the layout (an invisible 4px band above and below). */
 const TARGET_44 =
-  "relative shrink-0 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-1 max-md:before:content-['']";
+  "relative z-[2] shrink-0 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-1 max-md:before:content-['']";
 
 /**
  * DS `LMS/Platform/My-Learning/Program-Card`: one program in My Learning. White card,
@@ -58,11 +59,19 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
       className={cn(
         // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
         // so the desktop side padding is 23 (+1 border = the DS 24 inset). The height already matches with 24.
-        "flex overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page",
+        "relative flex overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page",
+        program.href && "transition-colors has-[a:hover]:border-sko-border-default",
         list ? "min-h-[280px] items-stretch" : "flex-col",
         className,
       )}
     >
+      {/* The whole card opens the program page (asked by Nelson on 10 Oct 2026). The hero clips
+          its content, so the title link cannot be stretched over the card: this second link
+          covers it for the pointer only (the title is the one keyboards and readers reach), and
+          the action stays a separate control above it. */}
+      {program.href ? (
+        <Link href={program.href} aria-hidden="true" tabIndex={-1} className="peer absolute inset-0 z-[1]" />
+      ) : null}
       <div
         className={cn(
           "relative flex flex-col items-start gap-3 overflow-hidden bg-sko-bg-primary p-4 md:p-5 lg:px-[23px] lg:py-6",
@@ -81,7 +90,15 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         </div>
         <div className="relative flex w-full flex-col gap-1 text-sko-text-on-primary">
           <p className="sk-text-label-small-semibold">{program.eyebrow}</p>
-          <h3 className="sk-text-headline-medium-semibold">{program.title}</h3>
+          <h3 className="sk-text-headline-medium-semibold">
+            {program.href ? (
+              <Link href={program.href} className="hover:underline">
+                {program.title}
+              </Link>
+            ) : (
+              program.title
+            )}
+          </h3>
         </div>
         <p className="sk-text-body-small-medium relative text-sko-text-on-primary">{program.courses}</p>
       </div>
@@ -108,8 +125,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           ) : (
             <span />
           )}
-          {program.href ? (
-            <ButtonLink href={program.href} hierarchy={hierarchy} size="sm" aria-label={actionLabel} className={TARGET_44}>
+          {program.actionHref ?? program.href ? (
+            <ButtonLink href={(program.actionHref ?? program.href)!} hierarchy={hierarchy} size="sm" aria-label={actionLabel} className={TARGET_44}>
               {program.cta}
             </ButtonLink>
           ) : (
