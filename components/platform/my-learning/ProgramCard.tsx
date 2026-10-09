@@ -40,8 +40,12 @@ const TARGET_44 =
  * status + a secondary "Details" (Buttons/Button sm). The action is a link with the button
  * look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
- * Grid: stacked, cards keep their own height (384 × 370 and 384 × 404 on desktop).
- * List: min height 280, hero 502 wide with its content spread top to bottom, body centred.
+ * Grid: stacked. The title keeps the height of three lines and is cut at the third (DS change
+ * of 10 Oct 2026), so every hero is 248 tall on desktop and the cards are 408 (In progress)
+ * and 404 (Not started) whatever the title.
+ * List: min height 280, hero 502 wide with its content spread top to bottom; the title is cut
+ * at two lines; the body spreads too, progress at the top and the footer at the bottom (it
+ * was centred until 10 Oct 2026).
  * Everything on the card comes from `relatedPrograms` and `progress_details` (handoff map
  * §37.4), so it carries no sample-data mark.
  *
@@ -90,7 +94,15 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         </div>
         <div className="relative flex w-full flex-col gap-1 text-sko-text-on-primary">
           <p className="sk-text-label-small-semibold">{program.eyebrow}</p>
-          <h3 className="sk-text-headline-medium-semibold">
+          <h3
+            title={program.title}
+            className={cn(
+              "sk-text-headline-medium-semibold",
+              // DS, 10 Oct 2026: Grid keeps room for three lines and cuts a longer title there, so
+              // cards in a row have the same hero; List cuts at two.
+              list ? "line-clamp-2" : "line-clamp-3 min-h-[3lh]",
+            )}
+          >
             {program.href ? (
               <Link href={program.href} className="hover:underline">
                 {program.title}
@@ -103,7 +115,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         <p className="sk-text-body-small-medium relative text-sko-text-on-primary">{program.courses}</p>
       </div>
 
-      <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-center" : "w-full")}>
+      <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-between" : "w-full")}>
         <div className="flex flex-col gap-2">
           <div className="flex items-baseline justify-between gap-3">
             <span className="sk-text-headline-medium-bold text-sko-text-default">{program.progressPct}%</span>
