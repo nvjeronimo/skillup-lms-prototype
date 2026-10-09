@@ -1,13 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { AlertCircle, Info, X } from "lucide-react";
+import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 export interface CourseAlertProps {
-  /** DS `Color`: Brand (the course update) or Warning (passing grade, missed deadline). */
-  tone: "brand" | "warning";
+  /**
+   * DS `Color`: Brand (the course update) or Warning (passing grade, missed deadline).
+   * Success is a PROPOSAL of 10 Oct 2026 for the passed course: no screen draws it.
+   */
+  tone: "brand" | "warning" | "success";
   /**
    * `stacked`: DS Breakpoint=Mobile on every width — the icon above the text (the course
    * update is drawn like this on all three breakpoints).
@@ -38,6 +41,13 @@ const TONE = {
     icon: AlertCircle,
     iconColor: "text-sko-icon-warning",
     // Breakpoint=Mobile binds the title to text/muted, Breakpoint=Desktop to text/default.
+    title: "text-sko-text-muted md:text-sko-text-default",
+  },
+  // Proposal (10 Oct 2026): the Warning alert with the success tokens and a check.
+  success: {
+    box: "border-sko-border-success-soft bg-sko-bg-success-soft",
+    icon: CheckCircle2,
+    iconColor: "text-sko-icon-success",
     title: "text-sko-text-muted md:text-sko-text-default",
   },
 } as const;

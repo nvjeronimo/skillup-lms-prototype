@@ -65,14 +65,18 @@ export interface CertificateRequirement {
 }
 
 export interface CertificateDocumentData {
-  learner: string;
+  /** Left out, the sheet prints the signed-in learner (`user` of lib/data, through lib/platform/user). */
+  learner?: string;
+  /** "program" changes the sentence above the title; a course certificate when absent. */
+  kind?: "course" | "program";
   courseTitle: string;
   summary: string;
   issuedOn: string;
   certificateId: string;
   verifyUrl: string;
-  partnerLogoSrc: string;
-  partnerName: string;
+  /** A certificate without a partner prints the SkillUp logo alone (both optional since 10 Oct 2026). */
+  partnerLogoSrc?: string;
+  partnerName?: string;
   signatories: { name: string; role: string; signatureSrc: string }[];
 }
 
@@ -124,6 +128,12 @@ export interface Program {
   certificatesIntro: { title: string; lead: string };
   certificates: ProgramCertificate[];
   certificatesNote: string;
+  /**
+   * PROPOSAL, NOT DESIGNED (10 Oct 2026). The certificate of the program itself, once issued.
+   * Left out, the page derives the not-earned state from the courses (lib/platform/catalog,
+   * `getProgramCertificate`): no sample program is complete, so no program file sets it.
+   */
+  programCertificate?: Extract<ProgramCertificate, { status: "issued" }>;
   faqsIntro: { title: string };
   faqs: ProgramDisclosureItem[];
   aboutIntro: { title: string; lead: string };

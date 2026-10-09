@@ -13,7 +13,8 @@ export function generateMetadata({ params }: Params): Metadata {
 }
 
 /**
- * The certificate of a course of a program, on a page of its own. A PROPOSAL: no Figma
+ * The certificate of a course, on a page of its own (a course of a program or, since 10 Oct
+ * 2026, a course of no program that carries an issued certificate on its own page). A PROPOSAL: no Figma
  * screen exists for it yet (asked for by Nelson on 9 Oct 2026 as a sample page); the page
  * says so itself.
  */
@@ -22,7 +23,12 @@ export default function CertificatePage({ params }: Params) {
   if (!found) notFound();
   return (
     <PlatformPage current="my-learning">
-      <CertificatePageView certificate={found.certificate} course={found.course} />
+      <CertificatePageView
+        kind="course"
+        certificate={found.certificate}
+        program={found.course.program}
+        courseSlug={found.course.slug}
+      />
     </PlatformPage>
   );
 }

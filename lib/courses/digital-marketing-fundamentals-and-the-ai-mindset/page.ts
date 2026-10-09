@@ -1,5 +1,5 @@
-import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
-import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
+import { GRAY, SIX_SIGMA, modulesFromOutline, playerHref } from "@/lib/courses/kit";
+import type { CourseDetail } from "@/lib/courses/kit";
 import { outline } from "./outline";
 
 /**
@@ -9,17 +9,11 @@ import { outline } from "./outline";
  * 12 hours, all complete, certificate issued 12 September 2026. The course opened with the
  * program on 27 June 2026. Today is 24 Sep 2026. The weighted grade is 91% against the 70%
  * needed.
+ *
+ * Since 10 Oct 2026 the page shows a PROPOSAL of the passed state (`passed`), which has no
+ * Figma screen: the pass line, the grade badge and the alert in the success tokens, and no
+ * weekly goal, since nothing is left to plan.
  */
-const WEEKLY_GOAL: WeeklyGoal = {
-  state: "set",
-  title: "Your weekly goal",
-  body: "A day counts when you open any lesson in this course, including one you review.",
-  week: THIS_WEEK,
-  days: week(["missed", "done", "missed", "today", "upcoming", "upcoming", "upcoming"]),
-  count: "1 of 3 days this week",
-  lastWeek: "Last week: 0 of 3",
-  plan: "Regular · 3 days a week.",
-};
 
 export const page: CourseDetail = {
   slug: outline.slug,
@@ -40,6 +34,7 @@ export const page: CourseDetail = {
     timeLeft: "Completed 12 Sep 2026",
   },
   search: SIX_SIGMA.search,
+  passed: true,
   program: {
     slug: "ai-driven-digital-marketing",
     title: "Certificate Program in AI Augmented Digital Marketing",
@@ -68,8 +63,8 @@ export const page: CourseDetail = {
     ],
     cta: "Ask the course team",
   },
-  weeklyGoal: WEEKLY_GOAL,
-  // The same certificate as the program file lists for course 1: every value below is a copy.
+  // The same certificate as the program file lists for course 1: every value below is a copy,
+  // but the learner's name, which the sheet reads from `user`.
   certificate: {
     status: "issued",
     courseId: outline.slug,
@@ -78,7 +73,6 @@ export const page: CourseDetail = {
     title: outline.title,
     issuedLine: "Issued 12 September 2026.",
     document: {
-      learner: "Olivia Rhye",
       courseTitle: outline.title,
       summary: "4 modules  ·  about 12 hours",
       issuedOn: "12 September 2026",
@@ -182,7 +176,6 @@ export const page: CourseDetail = {
       ],
     },
     note: SIX_SIGMA.progressTab.note,
-    weeklyGoal: WEEKLY_GOAL,
   },
 
   datesTab: {

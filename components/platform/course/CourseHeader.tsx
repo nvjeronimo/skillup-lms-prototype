@@ -165,8 +165,18 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
               <ButtonLink href={course.progress.href} size="lg" className="w-full">
                 {course.progress.cta}
               </ButtonLink>
-              <p className="sk-text-body-small-medium flex items-center gap-1.5 text-sko-text-warning">
-                <span aria-hidden className="size-[7px] shrink-0 rounded-full bg-sko-bg-warning" />
+              {/* The grade line. Drawn in warning (below the pass mark); on a passed course it takes the
+                  success tokens: a proposal of 10 Oct 2026, not designed. */}
+              <p
+                className={cn(
+                  "sk-text-body-small-medium flex items-center gap-1.5",
+                  course.passed ? "text-sko-text-success" : "text-sko-text-warning",
+                )}
+              >
+                <span
+                  aria-hidden
+                  className={cn("size-[7px] shrink-0 rounded-full", course.passed ? "bg-sko-bg-success" : "bg-sko-bg-warning")}
+                />
                 {course.progress.notPassing}
               </p>
               <p className="sk-text-body-small-regular flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sko-text-subtle">

@@ -1,5 +1,5 @@
-import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
-import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
+import { GRAY, SIX_SIGMA, modulesFromOutline, playerHref } from "@/lib/courses/kit";
+import type { CourseDetail } from "@/lib/courses/kit";
 import { outline } from "./outline";
 
 /**
@@ -8,21 +8,12 @@ import { outline } from "./outline";
  * 12 Sep 2026. The weighted grade is 88% against the 70% needed. Today is 24 Sep 2026, the
  * day of the Dashboard: every deadline of the course is in the past.
  *
- * The page has no drawn state for a passed course, so three parts say it in words only: the
- * line under the button (`progress.notPassing`), the grade badge and the Certificate card,
- * which uses the "not-earned" shape with both requirements met. The "issued" shape needs a
- * partner logo, and this course has no partner.
+ * The page has no drawn state for a passed course. Since 10 Oct 2026 it shows a PROPOSAL of
+ * one (`passed`): the pass line, the grade badge and the alert in the success tokens, the
+ * Certificate card in its issued shape, and no weekly goal, since nothing is left to plan.
+ * This course has no partner, so its certificate prints the SkillUp logo alone; the learner's
+ * name is not written here, the sheet reads it from `user`.
  */
-const WEEKLY_GOAL: WeeklyGoal = {
-  state: "set",
-  title: "Your weekly goal",
-  body: "A day counts when you open any lesson in this course.",
-  week: THIS_WEEK,
-  days: week(["missed", "missed", "missed", "today", "upcoming", "upcoming", "upcoming"]),
-  count: "0 of 3 days this week",
-  lastWeek: "Last week: 0 of 3",
-  plan: "Regular · 3 days a week.",
-};
 
 export const page: CourseDetail = {
   slug: outline.slug,
@@ -43,6 +34,7 @@ export const page: CourseDetail = {
     timeLeft: "Certificate issued 12 Sep 2026",
   },
   search: SIX_SIGMA.search,
+  passed: true,
 
   update: {
     title: "Course update",
@@ -67,16 +59,33 @@ export const page: CourseDetail = {
     ],
     cta: "Ask the course team",
   },
-  weeklyGoal: WEEKLY_GOAL,
   certificate: {
-    status: "not-earned",
+    status: "issued",
     courseId: outline.slug,
+    viewHref: `/platform/certificate/${outline.slug}`,
     courseLabel: outline.title,
-    title: "Issued 12 Sep 2026",
-    requirements: [
-      { title: "Reach the passing grade", detail: "88% reached · 70% needed", percent: 100 },
-      { title: "Complete the course content", detail: "32 of 32 topics · 100%", percent: 100 },
-    ],
+    title: outline.title,
+    issuedLine: "Issued 12 September 2026.",
+    // Sample values: the ID and the verification address are made up, like the program's.
+    document: {
+      courseTitle: outline.title,
+      summary: "4 modules  ·  about 8 hours",
+      issuedOn: "12 September 2026",
+      certificateId: "SKL-IPA01-2609-4M8Q",
+      verifyUrl: "skillup.online/certificates/4m8q2d7x",
+      signatories: [
+        {
+          name: "Priya Raman",
+          role: "Head of Learning, SkillUp Online",
+          signatureSrc: "/platform/certificate-signature-1.svg",
+        },
+        {
+          name: "Kenji Watanabe",
+          role: "Lead instructor, SkillUp Online",
+          signatureSrc: "/platform/certificate-signature-2.svg",
+        },
+      ],
+    },
   },
   handouts: {
     label: "Handouts",
@@ -151,7 +160,6 @@ export const page: CourseDetail = {
       ],
     },
     note: SIX_SIGMA.progressTab.note,
-    weeklyGoal: WEEKLY_GOAL,
   },
 
   datesTab: {

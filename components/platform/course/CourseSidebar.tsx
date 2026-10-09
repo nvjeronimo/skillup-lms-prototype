@@ -84,7 +84,8 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
         </ButtonLink>
       </CardShell>
 
-      <WeeklyGoalCard goal={course.weeklyGoal} />
+      {/* No weekly goal on a passed course (proposal of 10 Oct 2026): the data leaves it out. */}
+      {course.weeklyGoal ? <WeeklyGoalCard goal={course.weeklyGoal} /> : null}
 
       <CertificateCard certificate={course.certificate} labelAs="h2" />
 

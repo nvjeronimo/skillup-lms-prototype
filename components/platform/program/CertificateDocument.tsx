@@ -2,6 +2,7 @@ import * as React from "react";
 import { Check } from "lucide-react";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import type { CertificateDocumentData } from "@/lib/platform/program";
+import { platformUser } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
 
 /* The artwork is an A4 landscape sheet, 1123 × 794 at 96 dpi. It is drawn at that size in
@@ -49,6 +50,9 @@ function Signatory({ name, role, signatureSrc }: CertificateDocumentData["signat
   );
 }
 
+/** The name on the sheet: the certificate's own or, left out, the signed-in learner (`user`). */
+export const certificateLearner = (data: CertificateDocumentData) => data.learner ?? platformUser.name;
+
 /**
  * DS `LMS / Course Detail / Certificate document` (5774:1195), as the thumbnail of the
  * Certificate card. Visual representation only: the platform renders the real certificate
@@ -56,6 +60,10 @@ function Signatory({ name, role, signatureSrc }: CertificateDocumentData["signat
  * print is not page text. White edge 24, 2px border/primary safe area (padding 40/48/32),
  * header (SkillUp logo · partner), body, signatures + seal, verification strip.
  * Put it in a box with `container-type: inline-size` and the sheet's 1123/794 ratio.
+ *
+ * Since 10 Oct 2026 (proposal): the partner block is printed only when the certificate has a
+ * partner, the learner defaults to the signed-in learner, and `kind: "program"` changes the
+ * sentence above the title.
  */
 export function CertificateDocument({ data, label }: { data: CertificateDocumentData; label: string }) {
   return (
@@ -74,15 +82,17 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
           <span className="flex" style={{ height: u(40), margin: u(8) }}>
             <SkillUpLogo className="h-full" />
           </span>
-          <div className="flex items-center" style={{ gap: u(12) }}>
-            <Line size={12} leading={18} className="sk-text-body-small-regular text-sko-text-subtle">
-              In partnership with
-            </Line>
-            <span className="flex items-center justify-center" style={{ width: u(104), height: u(41) }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={data.partnerLogoSrc} alt="" style={{ width: u(75), height: u(28) }} />
-            </span>
-          </div>
+          {data.partnerLogoSrc ? (
+            <div className="flex items-center" style={{ gap: u(12) }}>
+              <Line size={12} leading={18} className="sk-text-body-small-regular text-sko-text-subtle">
+                In partnership with
+              </Line>
+              <span className="flex items-center justify-center" style={{ width: u(104), height: u(41) }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={data.partnerLogoSrc} alt="" style={{ width: u(75), height: u(28) }} />
+              </span>
+            </div>
+          ) : null}
         </div>
 
         <div className="flex flex-col items-center text-center" style={{ gap: u(12) }}>
@@ -94,11 +104,13 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
             This is to certify that
           </Line>
           <Line size={48} leading={60} className="sk-text-headline-medium-semibold tracking-[-0.02em] text-sko-text-default">
-            {data.learner}
+            {certificateLearner(data)}
           </Line>
           <span className="bg-sko-bg-primary" style={{ width: u(360), height: u(2) }} />
           <Line size={18} leading={24} className="sk-text-body-large-regular text-sko-text-muted">
-            has successfully completed the professional course
+            {data.kind === "program"
+              ? "has successfully completed the certificate program"
+              : "has successfully completed the professional course"}
           </Line>
           <Line size={30} leading={38} className="sk-text-headline-medium-semibold text-sko-text-on-primary-soft">
             {data.courseTitle}
