@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { useLmsStore } from "@/lib/store";
 import type { Program, ProgramCertificate } from "@/lib/platform/program";
@@ -59,15 +60,27 @@ export function CertificateCard({
       <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
       <p className="sk-text-body-medium-regular text-sko-text-subtle">{certificate.issuedLine}</p>
       <div className="flex items-start gap-1.5">
-        <Button
-          hierarchy="primary"
-          size="sm"
-          aria-label={`View certificate: ${certificate.title}`}
-          onClick={() => showToast("View certificate is not part of this prototype yet")}
-          className="min-w-0 flex-1 max-md:h-11"
-        >
-          View
-        </Button>
+        {certificate.viewHref ? (
+          <ButtonLink
+            href={certificate.viewHref}
+            hierarchy="primary"
+            size="sm"
+            aria-label={`View certificate: ${certificate.title}`}
+            className="min-w-0 flex-1 max-md:h-11"
+          >
+            View
+          </ButtonLink>
+        ) : (
+          <Button
+            hierarchy="primary"
+            size="sm"
+            aria-label={`View certificate: ${certificate.title}`}
+            onClick={() => showToast("View certificate is not part of this prototype yet")}
+            className="min-w-0 flex-1 max-md:h-11"
+          >
+            View
+          </Button>
+        )}
         <Button
           hierarchy="secondary"
           size="sm"

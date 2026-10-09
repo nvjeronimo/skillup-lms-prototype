@@ -1,6 +1,7 @@
 import { Award, MessagesSquare, User, type LucideIcon } from "lucide-react";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
+import { coursePageHref, coursePlayerHref, programPageHref, slugify } from "./hrefs";
 
 /**
  * Mock data of the platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop
@@ -47,6 +48,8 @@ export interface DashboardDueItem {
   meta: string;
   /** DS Badge v2 Soft sm, Warning: "Due …". */
   status: { label: string; color: BadgeColor };
+  /** The assignment in the player (the Dates API gives each one its `link`). */
+  href: string;
 }
 
 /** Assignment deadlines only, titled as the Dates API titles them (one call per enrolled course). */
@@ -59,6 +62,7 @@ export const dashboardDue: DashboardDueItem[] = [
     title: "Persona research draft (Peer Assessment)",
     meta: "UX Research and Design Thinking · 11:59 PM",
     status: { label: "Due 11:59", color: "warning" },
+    href: coursePlayerHref("ux-research-and-design-thinking", "m3-t4f"),
   },
   {
     id: "assignment-02-audience-segmentation",
@@ -68,6 +72,7 @@ export const dashboardDue: DashboardDueItem[] = [
     title: "Assignment 02 · Audience segmentation",
     meta: "AI-Driven Digital Marketing · Homework",
     status: { label: "Due Fri", color: "warning" },
+    href: coursePlayerHref(slugify("AI-Driven Content and Brand Communication"), "m3-t4j"),
   },
 ];
 
@@ -84,13 +89,13 @@ export interface DashboardResumeCourse {
   homeHref: string;
 }
 
-const COURSE_PLAYER = "/course/six-sigma/topic/m3-t1";
-const COURSE_HOME = "/platform/course/six-sigma";
+const PROGRAM_COURSE = slugify("AI-Driven Content and Brand Communication");
 
 export const dashboardResume: DashboardResumeCourse[] = [
-  { id: "ai-driven-digital-marketing", title: "AI-Driven Digital Marketing", deliveryMode: "Flexible Learning", progressPct: 38, href: COURSE_PLAYER, homeHref: COURSE_HOME },
-  { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: COURSE_PLAYER, homeHref: COURSE_HOME },
-  { id: "leadership-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: COURSE_PLAYER, homeHref: COURSE_HOME },
+  // A program: Resume opens the course the learner is in, the title opens the program's page.
+  { id: "ai-driven-digital-marketing", title: "AI-Driven Digital Marketing", deliveryMode: "Flexible Learning", progressPct: 38, href: coursePlayerHref(PROGRAM_COURSE), homeHref: programPageHref("ai-driven-digital-marketing") },
+  { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: coursePlayerHref("ux-research-and-design-thinking"), homeHref: coursePageHref("ux-research-and-design-thinking") },
+  { id: "leadership-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: coursePlayerHref("leadership-in-remote-teams"), homeHref: coursePageHref("leadership-in-remote-teams") },
 ];
 
 /* ── Jump somewhere (LMS / Platform / Jump tile, 6382:3302) ─────────────────────────── */

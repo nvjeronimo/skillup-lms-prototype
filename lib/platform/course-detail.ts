@@ -2,6 +2,8 @@ import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode, Difficulty } from "@/components/atoms/MetaBadges";
 import type { TopicType } from "@/lib/types";
 import type { ProgramCertificate } from "@/lib/platform/program";
+import { getCatalogCourse } from "./catalog";
+import { coursePlayerHref } from "./hrefs";
 
 /**
  * Mock data of the Course Detail page, self-paced (Figma handoff frame 6146:10226, "Platform
@@ -215,6 +217,8 @@ export interface CourseDetail {
     timeLeft: string;
   };
   search: { placeholder: string };
+  /** The program this course is part of: the breadcrumb then goes through it. */
+  program?: { slug: string; title: string };
   /**
    * Set when the whole course runs on a partner's platform (IBM): *Start course* sends the
    * learner there and nothing of the course is in our Studio (lab-third-party-platforms.md).
@@ -762,8 +766,32 @@ const CLOUD_COMPUTING: CourseDetail = {
 
 const COURSES: CourseDetail[] = [SIX_SIGMA, CLOUD_COMPUTING];
 
+/**
+ * The page of a course. Six Sigma and the IBM course are written out above; every other
+ * course of the catalogue gets the same sample body under its own title, picture, progress
+ * and program (lib/platform/catalog).
+ */
 export function getCourseDetailBySlug(slug: string): CourseDetail | undefined {
-  return COURSES.find((c) => c.slug === slug);
+  const own = COURSES.find((c) => c.slug === slug);
+  if (own) return own;
+  const entry = getCatalogCourse(slug);
+  if (!entry) return undefined;
+  const percent = entry.percent ?? 0;
+  return {
+    ...SIX_SIGMA,
+    slug,
+    title: entry.title,
+    imageSrc: entry.imageSrc ?? SIX_SIGMA.imageSrc,
+    partners: [],
+    stats: { ...SIX_SIGMA.stats, org: "SkillUp" },
+    progress: {
+      ...SIX_SIGMA.progress,
+      percent,
+      cta: entry.percent === null ? "Start course" : percent >= 100 ? "Review course" : "Resume course",
+      href: coursePlayerHref(slug),
+    },
+    program: entry.program ? { slug: entry.program.slug, title: entry.program.title } : undefined,
+  };
 }
 
 /** The one course that has a Course Detail page in the prototype. */

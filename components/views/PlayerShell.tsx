@@ -21,6 +21,8 @@ import { MessagesSquare } from "lucide-react";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
 import { CourseCompleteModal } from "@/components/organisms/CourseCompleteModal";
 import { Toast } from "@/components/organisms/Toast";
+import { nextCourseInProgram, playerCourse } from "@/lib/platform/catalog";
+import { coursePageHref } from "@/lib/platform/hrefs";
 import { MY_LEARNING_HREF, courseHomeHref } from "@/lib/platform/routes";
 import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
@@ -92,7 +94,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
-  const activeCourse = getCourseBySlug(courseSlug);
+  // A catalogue course plays the sample content under its own slug and title.
+  const activeCourse = playerCourse(courseSlug);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
   const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
@@ -586,8 +589,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onClose={() => setCompleteOpen(false)}
         onNextCourse={() => {
           setCompleteOpen(false);
-          // No "next course" is defined yet: the learner picks it in My Learning.
-          router.push(MY_LEARNING_HREF);
+          // The next course of the program, on its page; a course of no program, or the last
+          // one, goes back to My Learning.
+          const nextCourse = nextCourseInProgram(courseSlug);
+          router.push(nextCourse ? coursePageHref(nextCourse.slug) : MY_LEARNING_HREF);
         }}
         onViewCertificate={() => {
           setCompleteOpen(false);

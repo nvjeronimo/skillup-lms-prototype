@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Badge } from "@/components/atoms/Badge";
 import type { DashboardDueItem } from "@/lib/platform/dashboard";
 import { cn } from "@/lib/utils";
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils";
  * Soft sm Warning ("Due …"). Gap 12, padding 16 / 20 (16 / 16 on
  * mobile), a 1px border/subtle rule below every item but the last.
  */
-export function DueItem({ day, when, urgency, title, meta, status }: Omit<DashboardDueItem, "id">) {
+export function DueItem({ day, when, urgency, title, meta, status, href }: Omit<DashboardDueItem, "id">) {
   return (
     <li className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5">
       <div className="flex w-[60px] shrink-0 flex-col">
@@ -26,7 +27,12 @@ export function DueItem({ day, when, urgency, title, meta, status }: Omit<Dashbo
         <span className="sk-text-label-small-semibold text-sko-text-subtle">{when}</span>
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <p className="sk-text-body-medium-semibold text-sko-text-default">{title}</p>
+        <p className="sk-text-body-medium-semibold text-sko-text-default">
+          {/* The title opens the assignment in the player. */}
+          <Link href={href} className="hover:underline">
+            {title}
+          </Link>
+        </p>
         <p className="sk-text-body-small-regular text-sko-text-subtle">{meta}</p>
       </div>
       <Badge color={status.color} className="shrink-0 whitespace-nowrap">

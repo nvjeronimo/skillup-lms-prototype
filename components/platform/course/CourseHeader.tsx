@@ -5,6 +5,8 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import type { CourseDetail } from "@/lib/platform/course-detail";
+import { programPageHref } from "@/lib/platform/hrefs";
+import { MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 import { HostedProgressCard } from "./HostedProgressCard";
 import { cn } from "@/lib/utils";
 
@@ -52,13 +54,34 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
               </Link>
               <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
             </li>
-            <li className="flex items-center gap-1.5 md:gap-2">
-              {/* The Courses tab of My Learning is its default view. */}
-              <Link href="/platform/my-learning" className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}>
-                Courses
-              </Link>
-              <Icon icon={ChevronRight} size={16} aria-hidden className="hidden text-sko-icon-muted lg:block" />
-            </li>
+            {course.program ? (
+              <>
+                {/* A course of a program is reached through it: My Learning › Programs › the program. */}
+                <li className="flex items-center gap-1.5 md:gap-2">
+                  <Link href={MY_LEARNING_PROGRAMS_HREF} className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}>
+                    Programs
+                  </Link>
+                  <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
+                </li>
+                <li className="flex min-w-0 items-center gap-1.5 md:gap-2">
+                  <Link
+                    href={programPageHref(course.program.slug)}
+                    className={`${CRUMB} min-w-0 text-sko-text-subtle hover:text-sko-text-default`}
+                  >
+                    {course.program.title}
+                  </Link>
+                  <Icon icon={ChevronRight} size={16} aria-hidden className="hidden text-sko-icon-muted lg:block" />
+                </li>
+              </>
+            ) : (
+              <li className="flex items-center gap-1.5 md:gap-2">
+                {/* The Courses tab of My Learning is its default view. */}
+                <Link href="/platform/my-learning" className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}>
+                  Courses
+                </Link>
+                <Icon icon={ChevronRight} size={16} aria-hidden className="hidden text-sko-icon-muted lg:block" />
+              </li>
+            )}
             {/* Tablet and mobile draw the trail without its last item: the title is right under it. */}
             <li className="hidden min-w-0 items-center lg:flex">
               <span aria-current="page" className={`${CRUMB} text-sko-text-primary`}>
