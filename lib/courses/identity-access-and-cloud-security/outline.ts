@@ -144,7 +144,55 @@ export const outline: Course = {
           id: "sec3-m1-l2",
           label: "Signing in once",
           topics: [
-            { id: "sec3-m1-t6", type: "Video", title: "Single sign-on and federation", duration: "12 min", completed: false },
+            {
+              id: "sec3-m1-t6",
+              type: "Video",
+              title: "Single sign-on and federation",
+              duration: "12 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec3-m1-t6-ln1",
+                  ts: "0:00",
+                  text: "A member of staff at Quillhaven Publishing uses about fifteen applications. With a separate account in each one, that is fifteen passwords, fifteen sets of settings and fifteen accounts to remove when the person leaves.",
+                },
+                {
+                  id: "sec3-m1-t6-ln2",
+                  ts: "0:20",
+                  text: "Single sign-on replaces them with one sign-in. The user proves who they are to an identity provider, and the identity provider vouches for them to each application.",
+                },
+                {
+                  id: "sec3-m1-t6-ln3",
+                  ts: "0:40",
+                  text: "The application never sees the password. It receives a signed statement, usually called a token or an assertion, that says who the user is, when they signed in and how. The application trusts it because it can check the signature.",
+                },
+                {
+                  id: "sec3-m1-t6-ln4",
+                  ts: "0:55",
+                  text: "Federation is the same arrangement across organisations. Your identity provider vouches for your staff to a supplier's service, so the supplier does not need to hold passwords for them.",
+                },
+                {
+                  id: "sec3-m1-t6-ln5",
+                  ts: "1:15",
+                  text: "You will meet two families of standards. SAML is the older one and is common in business applications. OpenID Connect is newer, built on OAuth 2.0, and common in web and mobile applications. They solve the same problem.",
+                },
+                {
+                  id: "sec3-m1-t6-ln6",
+                  ts: "1:30",
+                  text: "The gain for security is one place to enforce the rules. Multi-factor authentication, device checks and sign-in alerts are set once and apply to everything behind the identity provider.",
+                },
+                {
+                  id: "sec3-m1-t6-ln7",
+                  ts: "1:50",
+                  text: "The cost is concentration. The identity provider account is now the key to every application, so it gets the strongest sign-in method you have, and its administrators are few and closely watched.",
+                },
+                {
+                  id: "sec3-m1-t6-ln8",
+                  ts: "2:10",
+                  text: "One practical check: make sure each application accepts only single sign-on. A local password left active beside it is a back door that none of your rules cover.",
+                },
+              ],
+            },
             {
               id: "sec3-m1-t7",
               type: "Reading",
@@ -188,6 +236,48 @@ export const outline: Course = {
               title: "Least privilege and separation of duties",
               duration: "12 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec3-m2-t1-ln1",
+                  ts: "0:00",
+                  text: "Two principles decide most questions about access. Least privilege limits what one account can do. Separation of duties limits what one person can do alone.",
+                },
+                {
+                  id: "sec3-m2-t1-ln2",
+                  ts: "0:20",
+                  text: "Least privilege means each account has the access its task needs, and no more. The test is simple: if this account were stolen today, what could the thief reach?",
+                },
+                {
+                  id: "sec3-m2-t1-ln3",
+                  ts: "0:40",
+                  text: "In practice it means starting from nothing and adding. A new editor at Quillhaven gets the manuscripts of their own imprint. They do not get the whole shared drive because that was quicker to set up.",
+                },
+                {
+                  id: "sec3-m2-t1-ln4",
+                  ts: "0:55",
+                  text: "It also applies to time. Access for a project ends with the project. Administrator rights are requested for a task and expire when it is finished.",
+                },
+                {
+                  id: "sec3-m2-t1-ln5",
+                  ts: "1:15",
+                  text: "Separation of duties splits a sensitive action between two people, so that neither can complete it alone. One person enters a new supplier's bank details, and another approves the first payment.",
+                },
+                {
+                  id: "sec3-m2-t1-ln6",
+                  ts: "1:30",
+                  text: "In IT the same idea appears in several places: the person who writes a change is not the one who approves it, and the administrator of a system cannot edit the log of their own actions.",
+                },
+                {
+                  id: "sec3-m2-t1-ln7",
+                  ts: "1:50",
+                  text: "A small company cannot always spare two people. Where it cannot, it uses a compensating control: the action is logged, and someone outside the task reviews the log every month.",
+                },
+                {
+                  id: "sec3-m2-t1-ln8",
+                  ts: "2:10",
+                  text: "Both principles cost a little convenience, and both pay for themselves on the day an account is compromised or a mistake is made. The next reading turns them into roles.",
+                },
+              ],
             },
             {
               id: "sec3-m2-t2",
@@ -202,6 +292,48 @@ export const outline: Course = {
               title: "Privileged accounts and how to contain them",
               duration: "13 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec3-m2-t3-ln1",
+                  ts: "0:00",
+                  text: "A privileged account can change how a system works: create users, read every mailbox, switch off logging, delete backups. Whoever controls it controls the organisation's data.",
+                },
+                {
+                  id: "sec3-m2-t3-ln2",
+                  ts: "0:20",
+                  text: "The first rule is to separate it from everyday work. An administrator has two accounts: a normal one for email and browsing, and a privileged one that is used only for administration.",
+                },
+                {
+                  id: "sec3-m2-t3-ln3",
+                  ts: "0:40",
+                  text: "The reason is exposure. Email and the web are where phishing and malware arrive. If the account that reads email is also a global administrator, one bad click reaches everything.",
+                },
+                {
+                  id: "sec3-m2-t3-ln4",
+                  ts: "0:55",
+                  text: "The second rule is to keep the number small. Count the accounts that hold the highest role. In a company of thirty people, two or three named people is normal. Twelve is a finding.",
+                },
+                {
+                  id: "sec3-m2-t3-ln5",
+                  ts: "1:15",
+                  text: "The third is to grant privilege for a period and not for good. With just-in-time access, the administrator requests the role, gives a reason, holds it for an hour, and the request is recorded.",
+                },
+                {
+                  id: "sec3-m2-t3-ln6",
+                  ts: "1:30",
+                  text: "Privileged accounts get the strongest sign-in available, which means a phishing-resistant method, and they are used from a managed device.",
+                },
+                {
+                  id: "sec3-m2-t3-ln7",
+                  ts: "1:50",
+                  text: "Keep one emergency account, often called a break-glass account, for the day the identity provider or the usual method fails. Give it a long random password held in a sealed envelope or a safe, an alert on every use, and a test twice a year.",
+                },
+                {
+                  id: "sec3-m2-t3-ln8",
+                  ts: "2:10",
+                  text: "Finally, every privileged action is logged somewhere the administrator cannot edit. Containment is not distrust of the people. It is making sure that a stolen administrator account cannot also hide what it did.",
+                },
+              ],
             },
             {
               id: "sec3-m2-t4",
@@ -280,6 +412,48 @@ export const outline: Course = {
               title: "Cloud service models: IaaS, PaaS and SaaS",
               duration: "12 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec3-m3-t1-ln1",
+                  ts: "0:00",
+                  text: "A cloud service is somebody else's computers, rented by the hour or by the user. The service models describe how much of the stack you rent and how much you still run yourself.",
+                },
+                {
+                  id: "sec3-m3-t1-ln2",
+                  ts: "0:20",
+                  text: "With infrastructure as a service, IaaS, you rent virtual machines, storage and networks. The provider runs the buildings, the hardware and the layer that separates customers. You run the operating system and everything above it.",
+                },
+                {
+                  id: "sec3-m3-t1-ln3",
+                  ts: "0:40",
+                  text: "With platform as a service, PaaS, you hand over your code or your data and the provider runs the operating system and the runtime. A managed database is an example. You no longer patch the server, but you still decide who may connect.",
+                },
+                {
+                  id: "sec3-m3-t1-ln4",
+                  ts: "0:55",
+                  text: "With software as a service, SaaS, you use a finished application through a browser. Email, file sharing and the manuscript tracking system at Quillhaven are all SaaS.",
+                },
+                {
+                  id: "sec3-m3-t1-ln5",
+                  ts: "1:15",
+                  text: "The pattern is easy to remember. The higher the model, the less you operate and the less you can configure.",
+                },
+                {
+                  id: "sec3-m3-t1-ln6",
+                  ts: "1:30",
+                  text: "Two things never move to the provider in any model: your data and your accounts. Who can sign in, what they can see and what is shared outside the company are always your decisions.",
+                },
+                {
+                  id: "sec3-m3-t1-ln7",
+                  ts: "1:50",
+                  text: "A small company usually lives almost entirely in SaaS. Its security work is then mostly identity and settings: strong sign-in, sensible sharing defaults and audit logging turned on.",
+                },
+                {
+                  id: "sec3-m3-t1-ln8",
+                  ts: "2:10",
+                  text: "When you look at any cloud service, start by asking which model it is. The answer tells you which controls are yours to set. The next reading draws that line in detail.",
+                },
+              ],
             },
             {
               id: "sec3-m3-t2",
@@ -294,6 +468,48 @@ export const outline: Course = {
               title: "Cloud identity: roles, policies and conditions",
               duration: "13 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec3-m3-t3-ln1",
+                  ts: "0:00",
+                  text: "In a cloud account, almost every action is a request to an interface, and every request is checked against identity rules before it runs. Identity does the job that the network edge used to do.",
+                },
+                {
+                  id: "sec3-m3-t3-ln2",
+                  ts: "0:20",
+                  text: "Start with the vocabulary. A principal is who is asking: a person, an application or a service. An action is what they ask to do. A resource is what they ask to do it to.",
+                },
+                {
+                  id: "sec3-m3-t3-ln3",
+                  ts: "0:40",
+                  text: "A policy is a written rule that joins the three: this principal may read objects in this storage location. In general nothing is allowed until a policy allows it, and an explicit deny overrides an allow.",
+                },
+                {
+                  id: "sec3-m3-t3-ln4",
+                  ts: "0:55",
+                  text: "A role is a set of permissions that is not tied to one person. A person or a service takes on the role for a period and receives temporary credentials that expire by themselves.",
+                },
+                {
+                  id: "sec3-m3-t3-ln5",
+                  ts: "1:15",
+                  text: "That is the important difference from a long-lived access key. A key that never expires is valid for whoever finds it, for as long as nobody notices. Temporary credentials limit that window to minutes or hours.",
+                },
+                {
+                  id: "sec3-m3-t3-ln6",
+                  ts: "1:30",
+                  text: "Conditions narrow a policy further. The rule applies only if the user signed in with multi-factor authentication, only from a managed device, or only to resources that carry a certain tag.",
+                },
+                {
+                  id: "sec3-m3-t3-ln7",
+                  ts: "1:50",
+                  text: "The most common mistake is the wildcard: a policy that allows every action on every resource, written to make an error message go away. Review policies for wildcards and replace them with the actions that are really used.",
+                },
+                {
+                  id: "sec3-m3-t3-ln8",
+                  ts: "2:10",
+                  text: "Providers publish reports of which permissions each identity has used. Compare what is granted with what is used, and remove the difference. That is least privilege, applied to the cloud.",
+                },
+              ],
             },
             {
               id: "sec3-m3-t4",

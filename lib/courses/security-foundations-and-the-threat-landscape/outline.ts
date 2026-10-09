@@ -150,6 +150,48 @@ export const outline: Course = {
               title: "Preventive, detective and corrective controls",
               duration: "12 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec1-m1-t6-ln1",
+                  ts: "0:00",
+                  text: "Once a risk is on the register, the usual treatment is a control. Controls are easier to choose when you sort them by what they do in time: before, during and after an event.",
+                },
+                {
+                  id: "sec1-m1-t6-ln2",
+                  ts: "0:20",
+                  text: "A preventive control acts before. It stops the event from happening: a door lock, multi-factor authentication at sign-in, a firewall rule, disk encryption on a laptop.",
+                },
+                {
+                  id: "sec1-m1-t6-ln3",
+                  ts: "0:40",
+                  text: "A detective control acts during or just after. It does not stop anything. It tells someone that the event took place: a sign-in alert, a camera, a monthly review of who holds administrator rights.",
+                },
+                {
+                  id: "sec1-m1-t6-ln4",
+                  ts: "0:55",
+                  text: "A corrective control acts after. It limits the damage and brings things back: restoring from backup, resetting a stolen password, reinstalling a laptop, the incident response plan itself.",
+                },
+                {
+                  id: "sec1-m1-t6-ln5",
+                  ts: "1:15",
+                  text: "The three types need each other. Prevention with no detection fails silently. Detection with no correction produces alerts that nobody can act on.",
+                },
+                {
+                  id: "sec1-m1-t6-ln6",
+                  ts: "1:30",
+                  text: "There is a second way to sort controls, by what they are made of. Technical controls are settings and software. Administrative controls are policies, training and procedures. Physical controls are locks, badges and cabinets.",
+                },
+                {
+                  id: "sec1-m1-t6-ln7",
+                  ts: "1:50",
+                  text: "The two sortings combine. A visitor log is physical and detective. A leaver checklist is administrative and preventive. A tested backup is technical and corrective.",
+                },
+                {
+                  id: "sec1-m1-t6-ln8",
+                  ts: "2:10",
+                  text: "When you review a risk, ask three questions: what stops it, what would tell us, and what would we do then. An empty answer to any of them is the gap to fix first. You will practise this in the activity that follows.",
+                },
+              ],
             },
             {
               id: "sec1-m1-t7",
@@ -188,7 +230,55 @@ export const outline: Course = {
           id: "sec1-m2-l1",
           label: "Who attacks and why",
           topics: [
-            { id: "sec1-m2-t1", type: "Video", title: "Threat actors and their motives", duration: "12 min", completed: false },
+            {
+              id: "sec1-m2-t1",
+              type: "Video",
+              title: "Threat actors and their motives",
+              duration: "12 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec1-m2-t1-ln1",
+                  ts: "0:00",
+                  text: "A threat actor is a person or a group that could cause harm on purpose or by accident. Knowing who they are tells you what they want, and what they want tells you what to protect first.",
+                },
+                {
+                  id: "sec1-m2-t1-ln2",
+                  ts: "0:20",
+                  text: "The largest group is financially motivated criminals. They want money, and they are not choosy about victims. They look for whatever is easy: reused passwords, unpatched systems, staff who will pay a false invoice.",
+                },
+                {
+                  id: "sec1-m2-t1-ln3",
+                  ts: "0:40",
+                  text: "State-backed groups have longer goals, such as intelligence or disruption. They are patient and well resourced. Most small organisations meet them only indirectly, as a supplier or a customer of the real target.",
+                },
+                {
+                  id: "sec1-m2-t1-ln4",
+                  ts: "0:55",
+                  text: "Hacktivists want attention for a cause. Their usual results are defaced websites, leaked documents and services knocked offline for a few hours.",
+                },
+                {
+                  id: "sec1-m2-t1-ln5",
+                  ts: "1:15",
+                  text: "Insiders already have access. Some are malicious, for example a member of staff leaving for a competitor with the customer list. Far more are careless or rushed: the wrong attachment, the lost laptop, the shared password.",
+                },
+                {
+                  id: "sec1-m2-t1-ln6",
+                  ts: "1:30",
+                  text: "Opportunists and hobbyists complete the list. They run widely available tools against anything they find, without a plan. Their skill is low, but there are many of them.",
+                },
+                {
+                  id: "sec1-m2-t1-ln7",
+                  ts: "1:50",
+                  text: "For each actor, think about three things: motive, capability and how they choose targets. A bakery is unlikely to be picked by name. It is very likely to be found by an automated search for weak remote access.",
+                },
+                {
+                  id: "sec1-m2-t1-ln8",
+                  ts: "2:10",
+                  text: "So the question for Fernhill Bakery is not “who would want to attack a bakery?” but “what would a criminal who found us by chance be able to do?” The next reading follows that criminal through an intrusion, stage by stage.",
+                },
+              ],
+            },
             {
               id: "sec1-m2-t2",
               type: "Reading",
@@ -202,6 +292,48 @@ export const outline: Course = {
               title: "Malware families: what each one does",
               duration: "13 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec1-m2-t3-ln1",
+                  ts: "0:00",
+                  text: "Malware is software written to do harm. The family names describe two different things, how it arrives and what it does once it is running, and it helps to keep those apart.",
+                },
+                {
+                  id: "sec1-m2-t3-ln2",
+                  ts: "0:20",
+                  text: "By how it spreads: a virus attaches itself to a file and needs a person to open it. A worm copies itself across a network with no help. A trojan pretends to be something useful, and the user installs it.",
+                },
+                {
+                  id: "sec1-m2-t3-ln3",
+                  ts: "0:40",
+                  text: "By what it does: ransomware encrypts files and demands payment for the key, and now usually copies the data first so that it can also threaten to publish it.",
+                },
+                {
+                  id: "sec1-m2-t3-ln4",
+                  ts: "0:55",
+                  text: "Spyware and information stealers collect what is on the device, above all saved passwords and browser sessions. A stolen session can let a criminal into an account without ever passing the sign-in page.",
+                },
+                {
+                  id: "sec1-m2-t3-ln5",
+                  ts: "1:15",
+                  text: "A remote access trojan gives someone else control of the device. A bot joins the device to a network of thousands that is rented out to send spam or flood websites. A cryptominer simply uses the processor and the electricity.",
+                },
+                {
+                  id: "sec1-m2-t3-ln6",
+                  ts: "1:30",
+                  text: "Some malware leaves almost nothing on disk. It misuses tools that are already part of the operating system, which is why modern protection watches behaviour and not only files.",
+                },
+                {
+                  id: "sec1-m2-t3-ln7",
+                  ts: "1:50",
+                  text: "The defences are much the same for every family. Keep systems patched. Do not work day to day with administrator rights. Let only approved software run. Use endpoint protection that reports to someone. Keep backups that the infected machine cannot reach.",
+                },
+                {
+                  id: "sec1-m2-t3-ln8",
+                  ts: "2:10",
+                  text: "When you read about a new strain, ask two questions: how does it get in, and what does it do next? Those two answers tell you which of your controls it has to defeat.",
+                },
+              ],
             },
             {
               id: "sec1-m2-t4",
@@ -274,7 +406,55 @@ export const outline: Course = {
           id: "sec1-m3-l1",
           label: "Social engineering",
           topics: [
-            { id: "sec1-m3-t1", type: "Video", title: "Why social engineering works", duration: "11 min", completed: false },
+            {
+              id: "sec1-m3-t1",
+              type: "Video",
+              title: "Why social engineering works",
+              duration: "11 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec1-m3-t1-ln1",
+                  ts: "0:00",
+                  text: "Social engineering is persuading a person to do something that helps an attacker. It works because it uses habits that are normally good ones.",
+                },
+                {
+                  id: "sec1-m3-t1-ln2",
+                  ts: "0:20",
+                  text: "The first lever is authority. We do what a manager, a bank or the police ask. A message that appears to come from the owner of the business is rarely questioned.",
+                },
+                {
+                  id: "sec1-m3-t1-ln3",
+                  ts: "0:40",
+                  text: "The second is urgency. A deadline pushes us to act before we think: the account closes today, the payment must leave within the hour.",
+                },
+                {
+                  id: "sec1-m3-t1-ln4",
+                  ts: "0:55",
+                  text: "The third is helpfulness. Reception staff and support desks are hired to solve problems for people, and a polite caller with a believable problem is hard to refuse.",
+                },
+                {
+                  id: "sec1-m3-t1-ln5",
+                  ts: "1:15",
+                  text: "Then come familiarity and fear. A message that copies the look of a service we use every day gets less attention, and a threat of a fine or of embarrassment gets a fast reaction.",
+                },
+                {
+                  id: "sec1-m3-t1-ln6",
+                  ts: "1:30",
+                  text: "Notice what is missing from this list: stupidity. People who are caught are usually busy, trying to do their job well, and reading on a small screen between two other tasks.",
+                },
+                {
+                  id: "sec1-m3-t1-ln7",
+                  ts: "1:50",
+                  text: "So the defence is not to tell people to be more careful. It is to give them a pause and a second channel: for any request that moves money, changes payment details or shares a password, confirm it by a route you already trust.",
+                },
+                {
+                  id: "sec1-m3-t1-ln8",
+                  ts: "2:10",
+                  text: "It is also to make reporting easy and free of blame. One person who reports a suspicious message in the first five minutes protects everyone who received the same one. The next reading gives you seven signals to look for.",
+                },
+              ],
+            },
             {
               id: "sec1-m3-t2",
               type: "Reading",
@@ -315,6 +495,48 @@ export const outline: Course = {
               title: "Passwords, passphrases and password managers",
               duration: "12 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec1-m3-t6-ln1",
+                  ts: "0:00",
+                  text: "Passwords fail in three ways. They are guessed, they are reused, and they are given away on fake pages. Good habits deal with the first two. The third needs multi-factor authentication, which is the next reading.",
+                },
+                {
+                  id: "sec1-m3-t6-ln2",
+                  ts: "0:20",
+                  text: "Length beats complexity. A passphrase of four or five unrelated words is long, hard to guess and easier to type than eight characters full of symbols.",
+                },
+                {
+                  id: "sec1-m3-t6-ln3",
+                  ts: "0:40",
+                  text: "Guessing is not done by a person at a keyboard. It is done with lists of the most common passwords and with the passwords that have already leaked from other sites. A password that follows a common pattern is on those lists.",
+                },
+                {
+                  id: "sec1-m3-t6-ln4",
+                  ts: "0:55",
+                  text: "That is why reuse does the most damage. When one site loses its password database, criminals try the same email and password everywhere else. If each account has its own password, the loss stays with that one site.",
+                },
+                {
+                  id: "sec1-m3-t6-ln5",
+                  ts: "1:15",
+                  text: "Nobody can remember a hundred unique passwords, and nobody should try. A password manager creates them, stores them encrypted and fills them in.",
+                },
+                {
+                  id: "sec1-m3-t6-ln6",
+                  ts: "1:30",
+                  text: "A manager also helps against fake pages. It offers the saved password only on the real address of the site. If it does not offer to fill in the field, stop and look at the address bar.",
+                },
+                {
+                  id: "sec1-m3-t6-ln7",
+                  ts: "1:50",
+                  text: "Protect the manager itself with a long passphrase that you use nowhere else, and with multi-factor authentication. Keep its recovery codes on paper in a safe place.",
+                },
+                {
+                  id: "sec1-m3-t6-ln8",
+                  ts: "2:10",
+                  text: "Two older rules can be dropped. Forced changes every ninety days lead to predictable variations, so change a password when there is a sign it has leaked. And shared accounts should become individual ones, so that the log shows who did what.",
+                },
+              ],
             },
             {
               id: "sec1-m3-t7",
