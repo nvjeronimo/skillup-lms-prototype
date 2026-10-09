@@ -83,16 +83,34 @@ const program: Program = {
       progressMeta: "16 hours total",
       position: "5 modules",
       detail: "64 topics",
+      modules: [
+        { number: 1, title: "Module 1 · Social Media Strategy & Platform Fundamentals", complete: false, topics: "14 topics", duration: "3h 13m" },
+        { number: 2, title: "Module 2 · Content, Community & Creator Partnerships", complete: false, topics: "14 topics", duration: "3h 21m" },
+        { number: 3, title: "Module 3 · Social Commerce & Ecommerce Storefronts", complete: false, topics: "14 topics", duration: "3h 21m" },
+        { number: 4, title: "Module 4 · Ecommerce Growth: Conversion, Retention & Analytics", complete: false, topics: "14 topics", duration: "3h 23m" },
+        { number: 5, title: "Module 5 · Final Project, Assessment, and Wrap-Up", complete: false, topics: "8 topics", duration: "3h 00m" },
+      ],
     }),
     programCourse(6, "Email, CRM, and Lifecycle Marketing with AI", "EC", "program-course-6-email-crm-lifecycle", {
       progressMeta: "10 hours total",
       position: "3 modules",
       detail: "34 topics",
+      modules: [
+        { number: 1, title: "Module 1 · Email Foundations & Deliverability", complete: false, topics: "12 topics", duration: "3h 07m" },
+        { number: 2, title: "Module 2 · CRM, Segmentation & Lifecycle Automation", complete: false, topics: "12 topics", duration: "3h 25m" },
+        { number: 3, title: "Module 3 · AI Personalisation, Final Project, and Wrap-Up", complete: false, topics: "10 topics", duration: "3h 38m" },
+      ],
     }),
     programCourse(7, "Capstone Project: AI-First Marketing System", "CP", "program-course-7-capstone", {
       progressMeta: "6 hours total",
       position: "4 modules",
       detail: "11 topics",
+      modules: [
+        { number: 1, title: "Module 1 · Project Brief & Planning", complete: false, topics: "3 topics", duration: "51m" },
+        { number: 2, title: "Module 2 · Build: Strategy, Channels & Content", complete: false, topics: "3 topics", duration: "2h 27m" },
+        { number: 3, title: "Module 3 · Measure, Document & Check", complete: false, topics: "3 topics", duration: "1h 07m" },
+        { number: 4, title: "Module 4 · Final Submission & Peer Review", complete: false, topics: "2 topics", duration: "1h 45m" },
+      ],
     }),
   ],
 
