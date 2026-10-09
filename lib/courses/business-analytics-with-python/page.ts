@@ -5,9 +5,9 @@ import { outline } from "./outline";
 /**
  * "Business Analytics with Python": a stand-alone course of My Learning, not started. Its
  * figures follow the My Learning card: no progress (0 of 44 topics), first up the reading
- * "Python environment setup". The card gives no total effort, only "Starts Apr 28": the
- * 15 hours here are the sum of the outline, and the start is read as 28 Apr 2027, the next
- * 28 April after today (24 Sep 2026, the day of the Dashboard). The content is open before
+ * "Python environment setup". The card gives no total effort, only "Starts Oct 14": the
+ * 15 hours here are the sum of the outline, and the start is 14 Oct 2026, three weeks after
+ * today (24 Sep 2026, the day of the Dashboard). The content is open before
  * then, which is why the card offers Start; the due dates count from the start date.
  */
 const WEEKLY_GOAL: WeeklyGoal = {
@@ -43,7 +43,7 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The due dates of this course count from 28 Apr 2027. The content is already open, so you can set up Python and work through Module 1 before then. The sales sample used in every module is in Handouts.",
+    body: "The due dates of this course count from 14 Oct 2026. The content is already open, so you can set up Python and work through Module 1 before then. The sales sample used in every module is in Handouts.",
   },
   intro: {
     title: "What you'll learn",
@@ -91,22 +91,22 @@ export const page: CourseDetail = {
     items: [
       {
         id: "course-starts",
-        iso: "2027-04-28",
+        iso: "2026-10-14",
         day: "28",
         month: "APR",
         title: "Course starts",
         detail: "Due dates count from this day",
-        relative: "In 7 months",
+        relative: "In 20 days",
         relativeColor: "gray",
       },
       {
         id: "graded-quiz-foundations",
-        iso: "2027-05-09",
+        iso: "2026-10-25",
         day: "09",
         month: "MAY",
         title: "Graded Quiz: Python and pandas foundations",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 7 months",
+        relative: "In 31 days",
         relativeColor: "gray",
       },
     ],
@@ -192,8 +192,8 @@ export const page: CourseDetail = {
     upcoming: [
       {
         id: "course-starts",
-        iso: "2027-04-28T00:00",
-        date: "28 Apr 2027",
+        iso: "2026-10-14T00:00",
+        date: "14 Oct 2026",
         time: "00:00 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }],
@@ -202,8 +202,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-foundations",
-        iso: "2027-05-09T23:59",
-        date: "09 May 2027",
+        iso: "2026-10-25T23:59",
+        date: "25 Oct 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -216,8 +216,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-01",
-        iso: "2027-05-23T23:59",
-        date: "23 May 2027",
+        iso: "2026-11-08T23:59",
+        date: "08 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -230,8 +230,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-exploration",
-        iso: "2027-06-06T23:59",
-        date: "06 Jun 2027",
+        iso: "2026-11-22T23:59",
+        date: "22 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -244,8 +244,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-02",
-        iso: "2027-06-20T23:59",
-        date: "20 Jun 2027",
+        iso: "2026-12-06T23:59",
+        date: "06 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -258,8 +258,8 @@ export const page: CourseDetail = {
       },
       {
         id: "capstone-project",
-        iso: "2027-07-04T23:59",
-        date: "04 Jul 2027",
+        iso: "2026-12-20T23:59",
+        date: "20 Dec 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -272,8 +272,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-assessment",
-        iso: "2027-07-07T23:59",
-        date: "07 Jul 2027",
+        iso: "2026-12-23T23:59",
+        date: "23 Dec 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -286,8 +286,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2027-07-12T09:00",
-        date: "12 Jul 2027",
+        iso: "2026-12-28T09:00",
+        date: "28 Dec 2026",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],
@@ -296,8 +296,8 @@ export const page: CourseDetail = {
       },
       {
         id: "course-ends",
-        iso: "2028-04-30T23:59",
-        date: "30 Apr 2028",
+        iso: "2027-10-17T23:59",
+        date: "17 Oct 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }],
@@ -364,7 +364,7 @@ export const page: CourseDetail = {
       },
       {
         id: "start-before-date",
-        title: "The course starts on 28 Apr. Can I begin the content now?",
+        title: "The course starts on 14 Oct. Can I begin the content now?",
         preview: "You: Good, I will start with the setup this week.",
         meta: "last week  ·  3 replies",
         answered: true,
