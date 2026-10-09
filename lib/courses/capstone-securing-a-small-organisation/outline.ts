@@ -180,6 +180,48 @@ export const outline: Course = {
               title: "Turning risks into a control plan",
               duration: "10 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec5-m2-t1-ln1",
+                  ts: "0:00",
+                  text: "You now have a risk register for Tidewater. Milestone 2 turns it into a design, and the bridge between the two is a control plan: one table that says what will be done about each risk.",
+                },
+                {
+                  id: "sec5-m2-t1-ln2",
+                  ts: "0:20",
+                  text: "Start from your five highest risks, not from a list of products. For each risk, ask what would stop it, what would reveal it, and what would limit the damage.",
+                },
+                {
+                  id: "sec5-m2-t1-ln3",
+                  ts: "0:40",
+                  text: "Take the phished email account. Multi-factor authentication would have stopped it. An alert on a new forwarding rule would have revealed it. A rehearsed step to reset the account and warn clients would have limited it.",
+                },
+                {
+                  id: "sec5-m2-t1-ln4",
+                  ts: "0:55",
+                  text: "Now look for controls that answer several risks at once. Multi-factor authentication on the office suite and on the practice management service appears against four or five rows of most registers. Those controls go first.",
+                },
+                {
+                  id: "sec5-m2-t1-ln5",
+                  ts: "1:15",
+                  text: "Give each row the same columns: the risk it answers, the control, who runs it, what it costs in money and in hours, and how you will know it is working.",
+                },
+                {
+                  id: "sec5-m2-t1-ln6",
+                  ts: "1:30",
+                  text: "The last column is the one most plans leave out. “Backups are configured” is a setting. “A file was restored on the first Monday of the month” is evidence.",
+                },
+                {
+                  id: "sec5-m2-t1-ln7",
+                  ts: "1:50",
+                  text: "Be honest about who runs each control. The office manager fits this work around everything else she does, and the contractor has one day a month. A control that needs daily attention from a specialist will not be run.",
+                },
+                {
+                  id: "sec5-m2-t1-ln8",
+                  ts: "2:10",
+                  text: "Finally, write down what you decided not to do, and why. An accepted risk with a reason is part of the design. A risk that is silently missing reads as an oversight.",
+                },
+              ],
             },
             {
               id: "sec5-m2-t2",
@@ -251,6 +293,48 @@ export const outline: Course = {
               title: "A monitoring plan sized for a small organisation",
               duration: "10 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec5-m3-t1-ln1",
+                  ts: "0:00",
+                  text: "Tidewater will not have a security operations team. Its monitoring plan has to work with an office manager, a contractor one day a month, and whatever the services it already pays for can do.",
+                },
+                {
+                  id: "sec5-m3-t1-ln2",
+                  ts: "0:20",
+                  text: "So begin with what is built in. The office suite and the practice management service both keep audit logs and can send alerts by email. Check that auditing is switched on and how long the records are kept.",
+                },
+                {
+                  id: "sec5-m3-t1-ln3",
+                  ts: "0:40",
+                  text: "Choose a short list of alerts that almost always mean something: a new mail forwarding rule, a sign-in from a country where the practice has no staff, a new administrator, multi-factor authentication switched off for an account, a backup job that failed.",
+                },
+                {
+                  id: "sec5-m3-t1-ln4",
+                  ts: "0:55",
+                  text: "Five alerts that someone reads are worth more than fifty that everyone ignores. If an alert fires every day and is never acted on, either fix its cause or remove it.",
+                },
+                {
+                  id: "sec5-m3-t1-ln5",
+                  ts: "1:15",
+                  text: "Give every alert an owner and a first action. The alert goes to a shared mailbox that the office manager checks each morning, with a deputy for her days off, and each alert has a few lines saying what to do.",
+                },
+                {
+                  id: "sec5-m3-t1-ln6",
+                  ts: "1:30",
+                  text: "Add a weekly routine of fifteen minutes: look at the backup report, the list of administrators and the devices that have missed updates.",
+                },
+                {
+                  id: "sec5-m3-t1-ln7",
+                  ts: "1:50",
+                  text: "Say when to call for help. If an alert involves the owner's account, a payment or client records, the office manager telephones the contractor that day. She does not wait for the monthly visit.",
+                },
+                {
+                  id: "sec5-m3-t1-ln8",
+                  ts: "2:10",
+                  text: "Write all of this as one table: the signal, where it comes from, who sees it, the first action and when to escalate. That table is the centre of Milestone 3.",
+                },
+              ],
             },
             {
               id: "sec5-m3-t2",
@@ -324,6 +408,48 @@ export const outline: Course = {
               duration: "10 min",
               completed: false,
               locked: true,
+              transcript: [
+                {
+                  id: "sec5-m4-t2-ln1",
+                  ts: "0:00",
+                  text: "The owner of Tidewater is a vet. She will decide whether your plan happens, and she has about ten minutes to give it. Your presentation is for her, not for another security specialist.",
+                },
+                {
+                  id: "sec5-m4-t2-ln2",
+                  ts: "0:20",
+                  text: "Open with the decision you need: “I am asking you to approve three actions this quarter, at this cost.” Do not open with the method or with the history of the assessment.",
+                },
+                {
+                  id: "sec5-m4-t2-ln3",
+                  ts: "0:40",
+                  text: "Describe risk in the terms of the business. Not “credential compromise leading to lateral movement”, but “someone signs in as a receptionist and sends false invoices to your clients, as happened in the spring”.",
+                },
+                {
+                  id: "sec5-m4-t2-ln4",
+                  ts: "0:55",
+                  text: "Put a number on the cost and a range on the harm. A day without the practice management service at two clinics is a figure she can estimate better than you can. Ask her for it and use it.",
+                },
+                {
+                  id: "sec5-m4-t2-ln5",
+                  ts: "1:15",
+                  text: "Show three priorities, not twenty findings. The full register stays in the appendix for the contractor.",
+                },
+                {
+                  id: "sec5-m4-t2-ln6",
+                  ts: "1:30",
+                  text: "Be straight about what the plan does not cover. A sentence such as “this plan does not yet cover the imaging workstation, and here is how we limit that risk until it does” builds more trust than a claim that everything is fixed.",
+                },
+                {
+                  id: "sec5-m4-t2-ln7",
+                  ts: "1:50",
+                  text: "Avoid fear. Frightening an owner produces either paralysis or a single purchase that solves little. Calm, specific and costed works better.",
+                },
+                {
+                  id: "sec5-m4-t2-ln8",
+                  ts: "2:10",
+                  text: "End with the next step and a date: who does what on Monday, and when you will report back. Then stop and take questions. The one-page summary in your final project follows this same order.",
+                },
+              ],
             },
             {
               id: "sec5-m4-t3",
