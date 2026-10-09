@@ -3,7 +3,7 @@
 import * as React from "react";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { notesSeed, aiContentCourse, allCourses, flatTopics, getTopic, uxResearchCourse } from "./data";
+import { notesSeed, allCourses, flatTopics, getTopic } from "./data";
 import { getTranscript } from "./content";
 import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
@@ -75,6 +75,11 @@ interface LmsState {
   bookmarks: Set<string>;
   /** Topics the learner has explicitly completed (Option A: action in content). */
   completedTopics: Set<string>;
+  /**
+   * The courses, by slug, whose seeded completion `completedTopics` already holds. A course
+   * that is not listed is new to this browser: see `withNewCourses`.
+   */
+  seededCourses: string[];
   /** Graded topics submitted and awaiting a grade (shows "Under Review"). */
   submittedTopics: Set<string>;
   /** Latest quiz result per topic — score, total + how many attempts taken. */
@@ -209,13 +214,36 @@ function seedCompleted(): Set<string> {
   return new Set(everyTopic.filter((t) => t.completed).map((t) => t.id));
 }
 
-/** The seeded completion of the courses added in v4, for a browser that stored its progress before them. */
-function seedCompletedV4(): string[] {
-  return [aiContentCourse, uxResearchCourse].flatMap((c) =>
-    flatTopics(c)
-      .filter((t) => t.completed)
-      .map((t) => t.id),
-  );
+/** Every course whose completion is seeded: what `seededCourses` reads on a fresh browser. */
+function seedCourses(): string[] {
+  return allCourses.map((c) => c.slug);
+}
+
+/** The three sample courses of lib/data: all a stored state knew before v4. */
+const COURSES_BEFORE_V4 = ["six-sigma", "capstone", "quick-start"];
+/** What a v4 state stored before `seededCourses` existed had been seeded with. */
+const COURSES_OF_V4 = [...COURSES_BEFORE_V4, "ai-driven-content-and-brand-communication", "ux-research-and-design-thinking"];
+
+/**
+ * Adding a course needs no store version and no migration step. A course's seeded completion
+ * is the topics its outline flags `completed` (lib/courses/<slug>/outline.ts). A browser that
+ * stored its progress before the course existed does not have them, so every time the stored
+ * state is read (`merge` below), the seeded completion of each course it has never seen is
+ * added to its completed topics, and the course is recorded as seen. Nothing is ever removed,
+ * and a course already seen is left alone, so the learner's own progress in it stands.
+ */
+function withNewCourses(stored: Partial<LmsState>): Partial<LmsState> {
+  // No stored progress: the fresh state stands, and it is seeded with every course.
+  if (!stored.completedTopics) return { ...stored, seededCourses: seedCourses() };
+  const seen = new Set(stored.seededCourses ?? COURSES_OF_V4);
+  const seeded = allCourses
+    .filter((c) => !seen.has(c.slug))
+    .flatMap((c) => flatTopics(c).filter((t) => t.completed).map((t) => t.id));
+  return {
+    ...stored,
+    completedTopics: new Set([...Array.from(stored.completedTopics), ...seeded]),
+    seededCourses: seedCourses(),
+  };
 }
 
 let noteCounter = notesSeed.length;
@@ -236,6 +264,7 @@ export const useLmsStore = create<LmsState>()(
   noteEditor: { open: false },
   bookmarks: seedBookmarks(),
   completedTopics: seedCompleted(),
+  seededCourses: seedCourses(),
   submittedTopics: new Set<string>(),
   quizResults: {},
   notificationsRead: new Set<string>(),
@@ -515,6 +544,7 @@ export const useLmsStore = create<LmsState>()(
     track("demo_reset");
     set({
       completedTopics: seedCompleted(),
+      seededCourses: seedCourses(),
       submittedTopics: new Set<string>(),
       quizResults: {},
       bookmarks: seedBookmarks(),
@@ -543,7 +573,8 @@ export const useLmsStore = create<LmsState>()(
       // `true` was a deliberate opt-in and is kept; a stored `false` was only the
       // old default, so it becomes "no choice" and the mobile default applies.
       // v4 added two courses with an outline of their own: a stored set of completed
-      // topics predates them, so their seeded completion is added to it (nothing is removed).
+      // topics predates them. Their seeded completion is added by `withNewCourses`, as for
+      // any course added since; the step here only says which courses that state knew.
       migrate: (state, from) => {
         let s = (state ?? {}) as Partial<LmsState> & { largeTargets?: boolean };
         if (from < 2 && !s.quizMode) s = { ...s, quizMode: "A" as const };
@@ -551,14 +582,19 @@ export const useLmsStore = create<LmsState>()(
           const { largeTargets, ...rest } = s;
           s = { ...rest, largeTargetsChoice: largeTargets ? true : null };
         }
-        if (from < 4 && s.completedTopics) {
-          s = { ...s, completedTopics: new Set([...Array.from(s.completedTopics), ...seedCompletedV4()]) };
-        }
+        if (from < 4) s = { ...s, seededCourses: COURSES_BEFORE_V4 };
         return s;
       },
+      // Runs on every read of the stored state, after `migrate`: the default shallow merge,
+      // plus the seeded completion of any course added since that state was written.
+      merge: (persisted, current) => ({
+        ...current,
+        ...withNewCourses((persisted ?? {}) as Partial<LmsState>),
+      }),
       // Persist demo progress + UI prefs only — not transient/session UI.
       partialize: (s) => ({
         completedTopics: s.completedTopics,
+        seededCourses: s.seededCourses,
         submittedTopics: s.submittedTopics,
         quizResults: s.quizResults,
         resumePositions: s.resumePositions,

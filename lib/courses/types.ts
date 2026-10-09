@@ -1,0 +1,38 @@
+import type { ArticleContent, AssignmentBrief, OraContent, QuizQuestion, TopicByline } from "@/lib/content";
+import type { CourseDetail } from "@/lib/platform/course-detail";
+import type { Course } from "@/lib/types";
+
+/**
+ * What a course with its own outline says in the player in place of the Six Sigma
+ * sample. Written for the topics a learner is most likely to open: the one the course
+ * resumes on, one reading, one practice quiz and the assignment the Dashboard lists as due.
+ * A video's own transcript sits on the topic itself, in the outline. Every other topic of
+ * the course gets plain wording that names no subject (the end of lib/content).
+ */
+export interface CourseContent {
+  byline: TopicByline;
+  /** The questions of every quiz of the course that has none of its own. */
+  quiz: QuizQuestion[];
+  /** By topic id. */
+  articles: Record<string, Omit<ArticleContent, "byline">>;
+  quizzes: Record<string, QuizQuestion[]>;
+  assignments: Record<string, AssignmentBrief>;
+  ora: Record<string, OraContent>;
+}
+/**
+ * One course with content of its own, as its folder exports it (lib/courses/<slug>/index.ts)
+ * and as the registry lists it (lib/courses/index.ts).
+ */
+export interface CourseEntry {
+  /**
+   * The player outline. Its `slug` is the course's address; its `id` is the prefix of every
+   * module, lesson, topic and transcript-line id in it. A topic flagged `completed` is done
+   * when the demo starts (the store seeds its completion from here); the one flagged
+   * `active` is where Resume lands.
+   */
+  outline: Course;
+  /** The course page, /platform/course/<slug>. */
+  page: CourseDetail;
+  /** Topic bodies and the byline of the course. */
+  content: CourseContent;
+}

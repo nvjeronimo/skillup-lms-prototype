@@ -1,3 +1,29 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:storybook/recommended", "prettier"]
+  "extends": ["next/core-web-vitals", "plugin:storybook/recommended", "prettier"],
+  "overrides": [
+    {
+      "files": ["lib/courses/*/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": ["@/lib/data", "@/lib/content", "@/lib/store", "@/lib/courses", "@/lib/courses/index", "..", "../index"],
+            "patterns": ["@/lib/platform/*", "@/lib/programs/*"]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["lib/programs/*.ts"],
+      "excludedFiles": ["lib/programs/index.ts", "lib/programs/kit.ts", "lib/programs/types.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": ["@/lib/programs", "@/lib/programs/index", ".", "./index", "@/lib/platform/program", "@/lib/platform/catalog", "@/lib/platform/course-detail"]
+          }
+        ]
+      }
+    }
+  ]
 }

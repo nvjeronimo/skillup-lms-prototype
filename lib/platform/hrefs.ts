@@ -1,3 +1,4 @@
+import { playerTopicHref } from "@/lib/courses/outline";
 import { resumeTopicId } from "@/lib/data";
 
 /**
@@ -9,7 +10,7 @@ import { resumeTopicId } from "@/lib/data";
  */
 export const coursePageHref = (slug: string) => `/platform/course/${slug}`;
 export const coursePlayerHref = (slug: string, topicId: string = resumeTopicId(slug)) =>
-  `/course/${slug}/topic/${topicId}`;
+  playerTopicHref(slug, topicId);
 export const programPageHref = (slug: string) => `/platform/program/${slug}`;
 export const certificatePageHref = (courseSlug: string) => `/platform/certificate/${courseSlug}`;
 
