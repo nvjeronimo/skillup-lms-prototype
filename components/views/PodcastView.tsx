@@ -25,7 +25,6 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const saveResumePosition = useLmsStore((s) => s.saveResumePosition);
   const clearResumePosition = useLmsStore((s) => s.clearResumePosition);
 
-  const durationSeconds = 1144; // 19:04
   const [playing, setPlaying] = React.useState(false);
   const [speedIdx, setSpeedIdx] = React.useState(1);
   // Start at zero and OFFER the stored position, rather than silently jumping —
@@ -36,6 +35,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
 
   if (!topic || !podcast) return null;
+  const durationSeconds = podcast.durationSeconds;
   const pct = Math.min(100, (t / durationSeconds) * 100);
 
   function seek(next: number) {

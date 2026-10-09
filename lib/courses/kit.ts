@@ -23,7 +23,18 @@ export type {
   WeekDayState,
   WeeklyGoal,
 } from "@/lib/platform/course-detail";
-export type { ArticleContent, AssignmentBrief, OraContent, QuizQuestion, TopicByline } from "@/lib/content";
+export type {
+  ArticleContent,
+  AssignmentBrief,
+  DownloadLabContent,
+  LessonBlock,
+  LessonPageContent,
+  OraContent,
+  PodcastContent,
+  QuizQuestion,
+  TopicByline,
+  ViltSession,
+} from "@/lib/content";
 export type { CourseContent, CourseEntry } from "./types";
 
 export { GRAY, SIX_SIGMA, week } from "./sample-page";

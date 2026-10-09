@@ -3,7 +3,9 @@ import type { Course } from "@/lib/courses/kit";
 /**
  * "Business Analytics with Python": a stand-alone course on My Learning, not started.
  * 44 topics, none done. No topic is flagged `active`: Start lands on the first topic,
- * "Python environment setup", the one the card names.
+ * "Python environment setup", the one the card names. The hands-on work is four Labs (one
+ * per module, on the starter notebooks of Handouts), "Loading data" is a Lesson Page and
+ * "Missing values" a Podcast: types changed on 9 Oct 2026, topic counts and durations kept.
  */
 export const outline: Course = {
   id: "bap",
@@ -47,16 +49,47 @@ export const outline: Course = {
               ],
             },
             { id: "bap-m1-t3", type: "Reading", title: "Python refresher: types, functions and comprehensions", duration: "approx. 20 min read", completed: false },
-            { id: "bap-m1-t4", type: "Activity", title: "Run your first notebook on the sales sample", duration: "approx. 30 min", completed: false },
+            { id: "bap-m1-t4", type: "Lab", title: "Run your first notebook on the sales sample", duration: "approx. 30 min", completed: false },
           ],
         },
         {
           id: "bap-m1-l2",
           label: "pandas essentials",
           topics: [
-            { id: "bap-m1-t5", type: "Video", title: "DataFrames and Series: the mental model", duration: "16 min", completed: false },
-            { id: "bap-m1-t6", type: "Reading", title: "Loading data: CSV, Excel and SQL", duration: "approx. 15 min read", completed: false },
-            { id: "bap-m1-t7", type: "Video", title: "Selecting, filtering and sorting", duration: "15 min", completed: false },
+            {
+              id: "bap-m1-t5",
+              type: "Video",
+              title: "DataFrames and Series: the mental model",
+              duration: "16 min",
+              completed: false,
+              transcript: [
+                { id: "bap-m1-t5-ln1", ts: "0:00", text: "A DataFrame is a table: rows are records, columns are fields. If you have used a spreadsheet, you already know the shape." },
+                { id: "bap-m1-t5-ln2", ts: "0:16", text: "Each column is a Series: one type of value, a date, a price, a region, with a label attached to every row." },
+                { id: "bap-m1-t5-ln3", ts: "0:33", text: "Those labels are the index. By default it counts 0, 1, 2. It can also be an order id or a date, and that changes how you look rows up." },
+                { id: "bap-m1-t5-ln4", ts: "0:52", text: "The difference from a spreadsheet is that you act on whole columns. Price times quantity gives a new column in one line, with no loop." },
+                { id: "bap-m1-t5-ln5", ts: "1:10", text: "pandas lines values up by label, not by position. Add two Series with different indexes and you get missing values where the labels do not match." },
+                { id: "bap-m1-t5-ln6", ts: "1:29", text: "So the first three things to ask of any DataFrame are its shape, its column types and what its index is. The methods are shape, dtypes and index." },
+                { id: "bap-m1-t5-ln7", ts: "1:47", text: "Next you load real files into this structure. Keep the picture in mind: a table of typed columns that share one index." },
+              ],
+            },
+            { id: "bap-m1-t6", type: "Lesson Page", title: "Loading data: CSV, Excel and SQL", duration: "approx. 15 min", completed: false },
+            {
+              id: "bap-m1-t7",
+              type: "Video",
+              title: "Selecting, filtering and sorting",
+              duration: "15 min",
+              completed: false,
+              transcript: [
+                { id: "bap-m1-t7-ln1", ts: "0:00", text: "Most analysis starts by cutting a table down: these columns, those rows, in this order. pandas has one tool for each." },
+                { id: "bap-m1-t7-ln2", ts: "0:15", text: "To select columns, pass a list of names in square brackets. You get a smaller DataFrame with the same rows." },
+                { id: "bap-m1-t7-ln3", ts: "0:31", text: "To filter rows, write a condition on a column. The result is a column of True and False, called a mask, and the mask keeps the rows marked True." },
+                { id: "bap-m1-t7-ln4", ts: "0:50", text: "Combine conditions with the ampersand for and, the vertical bar for or, and put each condition in its own brackets." },
+                { id: "bap-m1-t7-ln5", ts: "1:08", text: "Use loc when you want rows and columns in one step, by label. Use iloc when you mean positions, such as the first ten rows." },
+                { id: "bap-m1-t7-ln6", ts: "1:26", text: "To sort, call sort_values with the column name. Sorting returns a new table: the original stays as it was unless you assign the result." },
+                { id: "bap-m1-t7-ln7", ts: "1:44", text: "After every filter, check the row count. If 5,000 orders became 12, the condition is probably wrong, not the business." },
+                { id: "bap-m1-t7-ln8", ts: "2:02", text: "The practice quiz that follows uses these three moves on the orders table." },
+              ],
+            },
             { id: "bap-m1-t8", type: "Practice Assignment", title: "Practice Quiz: pandas essentials", duration: "approx. 10 min", completed: false },
             { id: "bap-m1-t9", type: "Quiz", title: "Graded Quiz: Python and pandas foundations", duration: "approx. 12 min", completed: false },
           ],
@@ -75,10 +108,10 @@ export const outline: Course = {
           id: "bap-m2-l1",
           label: "Cleaning",
           topics: [
-            { id: "bap-m2-t1", type: "Video", title: "Missing values: find, explain, then decide", duration: "14 min", completed: false },
+            { id: "bap-m2-t1", type: "Podcast", title: "Missing values: find, explain, then decide", duration: "14 min", completed: false },
             { id: "bap-m2-t2", type: "Reading", title: "Types, dates and categories done properly", duration: "approx. 18 min read", completed: false },
             { id: "bap-m2-t3", type: "Video", title: "Duplicates, outliers and silent errors", duration: "15 min", completed: false },
-            { id: "bap-m2-t4", type: "Activity", title: "Clean an orders export of 5,000 rows", duration: "approx. 30 min", completed: false },
+            { id: "bap-m2-t4", type: "Lab", title: "Clean an orders export of 5,000 rows", duration: "approx. 30 min", completed: false },
           ],
         },
         {
@@ -110,7 +143,7 @@ export const outline: Course = {
             { id: "bap-m3-t2", type: "Reading", title: "Descriptive statistics that answer business questions", duration: "approx. 18 min read", completed: false },
             { id: "bap-m3-t3", type: "Video", title: "Charts with matplotlib and seaborn", duration: "18 min", completed: false },
             { id: "bap-m3-t4", type: "Reading", title: "Choosing the chart for the comparison you are making", duration: "approx. 12 min read", completed: false },
-            { id: "bap-m3-t5", type: "Activity", title: "Chart revenue by region, month and channel", duration: "approx. 30 min", completed: false },
+            { id: "bap-m3-t5", type: "Lab", title: "Chart revenue by region, month and channel", duration: "approx. 30 min", completed: false },
           ],
         },
         {
@@ -140,7 +173,7 @@ export const outline: Course = {
             { id: "bap-m4-t1", type: "Video", title: "Linear regression: what a coefficient means", duration: "18 min", completed: false },
             { id: "bap-m4-t2", type: "Reading", title: "Train, test and the cost of overfitting", duration: "approx. 18 min read", completed: false },
             { id: "bap-m4-t3", type: "Video", title: "Fitting and checking a model with scikit-learn", duration: "20 min", completed: false },
-            { id: "bap-m4-t4", type: "Activity", title: "Model the effect of price on weekly demand", duration: "approx. 35 min", completed: false },
+            { id: "bap-m4-t4", type: "Lab", title: "Model the effect of price on weekly demand", duration: "approx. 35 min", completed: false },
           ],
         },
         {

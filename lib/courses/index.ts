@@ -95,10 +95,26 @@ function problems(entries: CourseEntry[]): string[] {
       found.push(`${name}: modulesCompleted / modulesTotal do not match its modules`);
     }
 
-    const topicIds = new Set(topics.map((t) => t.id));
-    for (const group of [content.articles, content.quizzes, content.assignments, content.ora]) {
-      for (const id of Object.keys(group)) {
-        if (!topicIds.has(id)) found.push(`${name}: content is written for "${id}", which is not a topic of the course`);
+    const byId = new Map(topics.map((t) => [t.id, t]));
+    // Each map of content and, for the optional ones, the topic types that read it: a lab
+    // written for a topic that is still an Activity would never be shown.
+    const groups: [Record<string, unknown> | undefined, string[] | null][] = [
+      [content.articles, null],
+      [content.quizzes, null],
+      [content.assignments, null],
+      [content.ora, null],
+      [content.labs, ["Lab"]],
+      [content.podcasts, ["Podcast"]],
+      [content.lessonPages, ["Lesson Page"]],
+      [content.sessions, ["VILT-Live Session", "VILT-Recording"]],
+    ];
+    for (const [group, types] of groups) {
+      for (const id of Object.keys(group ?? {})) {
+        const topic = byId.get(id);
+        if (!topic) found.push(`${name}: content is written for "${id}", which is not a topic of the course`);
+        else if (types && !types.includes(topic.type)) {
+          found.push(`${name}: content for a ${types[0]} is written for "${id}", which is a ${topic.type}`);
+        }
       }
     }
   }

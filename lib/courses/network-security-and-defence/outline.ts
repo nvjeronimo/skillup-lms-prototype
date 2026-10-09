@@ -3,7 +3,10 @@ import type { Course } from "@/lib/courses/kit";
 /**
  * "Network Security and Defence": course 2 of 5 of the Cybersecurity Fundamentals
  * Certificate, not started. 39 topics in 4 modules, none done: the player opens on
- * the first topic. Module 4 is locked until Module 3 is complete.
+ * the first topic. Module 4 is locked until Module 3 is complete. Two hands-on topics
+ * are Labs on sample files (the packet capture summary, the rule base), "The TCP/IP model"
+ * is a Lesson Page and "Zero trust in plain terms" a Podcast: types changed on 9 Oct 2026,
+ * topic counts and durations kept.
  */
 export const outline: Course = {
   id: "sec2",
@@ -75,9 +78,9 @@ export const outline: Course = {
             },
             {
               id: "sec2-m1-t2",
-              type: "Reading",
+              type: "Lesson Page",
               title: "The TCP/IP model in four layers",
-              duration: "approx. 14 min read",
+              duration: "approx. 14 min",
               completed: false,
             },
             {
@@ -86,6 +89,48 @@ export const outline: Course = {
               title: "IP addresses, subnets and routing",
               duration: "14 min",
               completed: false,
+              transcript: [
+                {
+                  id: "sec2-m1-t3-ln1",
+                  ts: "0:00",
+                  text: "Every device on a network needs an address, in the same way every building on a street needs a number.",
+                },
+                {
+                  id: "sec2-m1-t3-ln2",
+                  ts: "0:15",
+                  text: "An IPv4 address is four numbers from 0 to 255. Part of it names the network and the rest names the device on that network.",
+                },
+                {
+                  id: "sec2-m1-t3-ln3",
+                  ts: "0:32",
+                  text: "The subnet mask says where the split falls. With 255.255.255.0, the first three numbers are the network and the last is the device.",
+                },
+                {
+                  id: "sec2-m1-t3-ln4",
+                  ts: "0:50",
+                  text: "Devices on the same subnet talk to each other directly. For anything else they hand the packet to their default gateway, which is a router.",
+                },
+                {
+                  id: "sec2-m1-t3-ln5",
+                  ts: "1:08",
+                  text: "A router reads the destination, looks in its routing table and passes the packet one hop closer. No router knows the whole path.",
+                },
+                {
+                  id: "sec2-m1-t3-ln6",
+                  ts: "1:26",
+                  text: "Some ranges are private: 10, 172.16 to 172.31 and 192.168. They are reused in every office and never routed on the internet.",
+                },
+                {
+                  id: "sec2-m1-t3-ln7",
+                  ts: "1:44",
+                  text: "For a defender, the subnet is the first boundary. Traffic that crosses it passes a router or a firewall, and that is where it can be filtered and logged.",
+                },
+                {
+                  id: "sec2-m1-t3-ln8",
+                  ts: "2:03",
+                  text: "In the next reading you add ports to the picture, and write down what normal traffic looks like.",
+                },
+              ],
             },
             {
               id: "sec2-m1-t4",
@@ -160,7 +205,7 @@ export const outline: Course = {
             },
             {
               id: "sec2-m1-t8",
-              type: "Activity",
+              type: "Lab",
               title: "Label the layers in a packet capture summary",
               duration: "approx. 15 min",
               completed: false,
@@ -229,7 +274,7 @@ export const outline: Course = {
           id: "sec2-m2-l2",
           label: "Designing the zones",
           topics: [
-            { id: "sec2-m2-t6", type: "Video", title: "Zero trust in plain terms", duration: "11 min", completed: false },
+            { id: "sec2-m2-t6", type: "Podcast", title: "Zero trust in plain terms", duration: "11 min", completed: false },
             {
               id: "sec2-m2-t7",
               type: "Reading",
@@ -274,7 +319,50 @@ export const outline: Course = {
           id: "sec2-m3-l1",
           label: "Controlling traffic",
           topics: [
-            { id: "sec2-m3-t1", type: "Video", title: "How a firewall decides", duration: "12 min", completed: false },
+            {
+              id: "sec2-m3-t1",
+              type: "Video",
+              title: "How a firewall decides",
+              duration: "12 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec2-m3-t1-ln1",
+                  ts: "0:00",
+                  text: "A firewall sits where two zones meet and answers one question for every new connection: is this allowed?",
+                },
+                {
+                  id: "sec2-m3-t1-ln2",
+                  ts: "0:14",
+                  text: "It answers from a list of rules. Each rule names a source, a destination, a service and an action: allow or deny.",
+                },
+                {
+                  id: "sec2-m3-t1-ln3",
+                  ts: "0:30",
+                  text: "The firewall reads the list from the top and stops at the first rule that matches. Order is part of the policy.",
+                },
+                {
+                  id: "sec2-m3-t1-ln4",
+                  ts: "0:46",
+                  text: "That is why a broad rule near the top can hide a careful one below it. The careful rule is still there, and it never runs.",
+                },
+                {
+                  id: "sec2-m3-t1-ln5",
+                  ts: "1:03",
+                  text: "A stateful firewall remembers the connections it has allowed, so the replies come back without a rule of their own.",
+                },
+                {
+                  id: "sec2-m3-t1-ln6",
+                  ts: "1:20",
+                  text: "The last rule should deny everything else and log it. What you forgot to allow then fails safely, and the log tells you what was tried.",
+                },
+                {
+                  id: "sec2-m3-t1-ln7",
+                  ts: "1:38",
+                  text: "Next you write a small rule base yourself, starting from the flows the office really needs.",
+                },
+              ],
+            },
             {
               id: "sec2-m3-t2",
               type: "Reading",
@@ -291,7 +379,7 @@ export const outline: Course = {
             },
             {
               id: "sec2-m3-t4",
-              type: "Activity",
+              type: "Lab",
               title: "Review a firewall rule base for gaps",
               duration: "approx. 20 min",
               completed: false,
