@@ -134,7 +134,6 @@ export function MyLearningCollection() {
                   <MyLearningCourseCard
                     course={course}
                     layout="grid"
-                    emphasis={index === 0 ? "primary" : "secondary"}
                     className="w-full"
                   />
                 </li>

@@ -57,7 +57,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
   const list = layout === "list";
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${program.cta} ${program.title}`;
-  const hierarchy = program.cta === "Continue" ? "primary" : "secondary";
+  // DS, 10 Oct 2026: the action is Secondary in both states.
+  const hierarchy = "secondary";
 
   return (
     <article
@@ -127,13 +128,28 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
           <PlatformProgressBar stepped value={program.progressPct} label={`${program.title} progress`} />
         </div>
-        {/* Same height in both states (asked by Nelson on 10 Oct 2026): the footer keeps the room
-            of "Up next" with a two-line title, and a longer title is cut at the second line. */}
-        <div className="flex min-h-[60px] items-center justify-between gap-1">
+        {/* DS footer, 10 Oct 2026: a box 60 tall in both states, so every card has one height.
+            In progress: on bg/subtle, "Up next" over the course name on one line, cut when longer
+            (Grid: the overline in capitals, the name Medium; List: sentence case, Semibold).
+            Not started: a 1px border/subtle box with the status and Details. */}
+        <div
+          className={cn(
+            "flex min-h-[60px] items-center justify-between gap-4 rounded-lg",
+            // The border is drawn inside the box: 1px less padding keeps both states 60 tall.
+            program.upNext ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle px-[11px] py-[7px]",
+          )}
+        >
           {program.upNext ? (
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span className="sk-text-body-small-regular text-sko-text-subtle">{myLearningProgramUpNextLabel}</span>
-              <span title={program.upNext} className="sk-text-body-medium-semibold line-clamp-2 text-sko-text-default">{program.upNext}</span>
+            <div className={cn("flex min-w-0 flex-1 flex-col", list ? "gap-0.5" : "gap-1.5")}>
+              <span className={cn("sk-text-body-small-semibold text-sko-text-subtle", !list && "uppercase")}>
+                {myLearningProgramUpNextLabel}
+              </span>
+              <span
+                title={program.upNext}
+                className={cn("truncate text-sko-text-default", list ? "sk-text-body-medium-semibold" : "sk-text-body-medium-medium")}
+              >
+                {program.upNext}
+              </span>
             </div>
           ) : program.status ? (
             <Badge color="gray">{program.status}</Badge>
