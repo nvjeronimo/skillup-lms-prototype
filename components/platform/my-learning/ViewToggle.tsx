@@ -21,8 +21,10 @@ const OPTIONS: { view: MyLearningView; label: string; icon: LucideIcon }[] = [
 /**
  * DS Button group, icon only (6376:17198): two 44 × 40 segments in one 1px border/default
  * frame, radius 8, Elevation/level1, a 1px border/default rule between them. The current
- * view sits on bg/muted, the other on bg/page; each carries the 2px inner bottom shade of
- * the DS skeuomorphic shadow. Icon 20.
+ * view sits on bg/primary with an icon/on-primary icon, the other on bg/page with icon/subtle
+ * (DS change of 10 Oct 2026: the current segment was bg/muted, 1.2:1 against the other, and
+ * could not be told apart). Each carries the 2px inner bottom shade of the DS skeuomorphic
+ * shadow. Icon 20.
  * A group of two toggle buttons (aria-pressed). Desktop only: below desktop the collections
  * are Grid only, so the parent hides it.
  */
@@ -54,8 +56,8 @@ export function ViewToggle({ view, onChange, className }: ViewToggleProps) {
               last && "rounded-r-[7px]",
               index > 0 && "border-l border-sko-border-default",
               pressed
-                ? "bg-sko-bg-muted text-sko-icon-default"
-                : "bg-sko-bg-page text-sko-icon-muted hover:bg-sko-bg-faint",
+                ? "bg-sko-bg-primary text-sko-icon-on-primary"
+                : "bg-sko-bg-page text-sko-icon-subtle hover:bg-sko-bg-faint",
             )}
           >
             <Icon icon={option.icon} size={20} aria-hidden="true" />

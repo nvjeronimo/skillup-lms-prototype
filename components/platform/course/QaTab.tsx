@@ -205,7 +205,8 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             <SearchField value={query} onChange={setQuery} label={tab.search} />
           </div>
           <div className="px-[11px] pb-3">
-            {/* DS `Button group`: 40px segments, 1px border/default, radius 8; the pressed one on bg/subtle. */}
+            {/* DS `Button group`: 40px segments, 1px border/default, radius 8; the pressed one on bg/primary
+                with text/on-primary (DS change of 10 Oct 2026; it was bg/subtle, hard to tell apart). */}
             <div
               role="group"
               aria-label="Filter questions"
@@ -218,9 +219,11 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                   aria-pressed={filter === item.id}
                   onClick={() => setFilter(item.id)}
                   className={cn(
-                    "sk-text-body-medium-semibold h-10 px-4 text-sko-text-default focus-visible:-outline-offset-2 max-md:h-11",
+                    "sk-text-body-medium-semibold h-10 px-4 focus-visible:-outline-offset-2 max-md:h-11",
                     index > 0 && "border-l border-sko-border-default",
-                    filter === item.id ? "bg-sko-bg-subtle" : "bg-sko-bg-page hover:bg-sko-bg-faint",
+                    filter === item.id
+                      ? "bg-sko-bg-primary text-sko-text-on-primary"
+                      : "bg-sko-bg-page text-sko-text-muted hover:bg-sko-bg-faint hover:text-sko-text-default",
                   )}
                 >
                   {item.label}
