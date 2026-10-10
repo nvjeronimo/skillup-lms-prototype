@@ -73,6 +73,7 @@ function writtenBody(topic: Topic, { content }: CourseEntry): unknown[] {
     (content.quizzes[id] ?? []).map((q) => q.question),
     content.assignments[id],
     content.ora[id]?.brief,
+    content.activities?.[id],
     content.labs?.[id],
     content.podcasts?.[id],
     content.lessonPages?.[id],
