@@ -41,8 +41,9 @@ const TARGET_44 =
  * look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
  * Grid: stacked. The title keeps the height of three lines and is cut at the third (DS change
- * of 10 Oct 2026), so every hero is 248 tall on desktop and the cards are 408 (In progress)
- * and 404 (Not started) whatever the title.
+ * of 10 Oct 2026), so every hero is 248 tall on desktop. The footer has one height in both
+ * states, so every program card is the same height whatever it holds (Nelson, 10 Oct 2026;
+ * the DS draws 408 for In progress and 404 for Not started).
  * List: min height 280, hero 502 wide with its content spread top to bottom; the title is cut
  * at two lines; the body spreads too, progress at the top and the footer at the bottom (it
  * was centred until 10 Oct 2026).
@@ -126,11 +127,13 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
           <PlatformProgressBar stepped value={program.progressPct} label={`${program.title} progress`} />
         </div>
-        <div className="flex items-center justify-between gap-1">
+        {/* Same height in both states (asked by Nelson on 10 Oct 2026): the footer keeps the room
+            of "Up next" with a two-line title, and a longer title is cut at the second line. */}
+        <div className="flex min-h-[60px] items-center justify-between gap-1">
           {program.upNext ? (
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <span className="sk-text-body-small-regular text-sko-text-subtle">{myLearningProgramUpNextLabel}</span>
-              <span className="sk-text-body-medium-semibold text-sko-text-default">{program.upNext}</span>
+              <span title={program.upNext} className="sk-text-body-medium-semibold line-clamp-2 text-sko-text-default">{program.upNext}</span>
             </div>
           ) : program.status ? (
             <Badge color="gray">{program.status}</Badge>
