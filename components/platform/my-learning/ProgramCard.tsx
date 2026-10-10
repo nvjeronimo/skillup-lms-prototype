@@ -1,14 +1,18 @@
+"use client";
+
+import * as React from "react";
 import Link from "next/link";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { DeliveryModeBadge } from "@/components/atoms/MetaBadges";
+import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import {
   myLearningProgramProgressLabel,
   myLearningProgramUpNextLabel,
   type MyLearningProgram,
 } from "@/lib/platform/my-learning";
+import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export interface ProgramCardProps {
@@ -28,12 +32,14 @@ const TARGET_44 =
 /**
  * DS `LMS/Platform/My-Learning/Program-Card`: one program in My Learning. White card,
  * 1px border/subtle, radius 8, no shadow.
- * Hero on bg/primary, gap 12: the Delivery Mode badge, the eyebrow (label-small/Semibold),
- * the title (headline-medium/Semibold) and the courses line ("1 of 7 courses complete",
- * body-small/Medium), all text/on-primary. `Week`, `Lessons` and `Show cohort` left the DS
- * component on 8 Oct: Open edX has no cohort, week or lesson counter for a program.
- * The ring is decoration:
- * a 340 circle with a 56 stroke in bg/on-media at 8 %, clipped by the hero.
+ * Hero (DS change of 10 Oct 2026, the same on the four variants): a dark surface, bg/subtle
+ * with the Semantics collection pinned to Dark. Top row: the Course Type badge "Program" and
+ * the partner logos (36 tall chips); the title (headline-medium/Semibold, text/default); the
+ * Delivery Mode and Difficulty badges; the courses line ("1 of 7 courses complete",
+ * body-small/Medium at 80 %). The eyebrow "Program · N courses" left the component with its
+ * property. Decoration: a 340 ring with a 56 stroke in bg/primary at 8 %, low on the left, and
+ * a 207 circle of diagonal hatch (border/primary) at 35 %, high on the right; both are clipped
+ * by the hero.
  * Body, gap 16: the percent (headline-medium/Bold) with its label, the DS Progress bar
  * (8 tall, square, bg/strong track, bg/info fill, stepped by 10: nearest step), then the
  * footer — In progress: "Up next" + a primary "Continue"; Not started: a Badge v2 Gray
@@ -50,8 +56,7 @@ const TARGET_44 =
  * Everything on the card comes from `relatedPrograms` and `progress_details` (handoff map
  * §37.4), so it carries no sample-data mark.
  *
- * Known open issue: the DS draws the eyebrow at 70 % and the courses line at 80 % layer opacity,
- * which fails AA on bg/primary. Both are text/on-primary at 100 % here.
+ * The courses line keeps the DS 80 % layer opacity: on the dark hero it stays well above AA.
  */
 export function ProgramCard({ program, layout, onAction, className }: ProgramCardProps) {
   const list = layout === "list";
@@ -59,6 +64,9 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
   const actionLabel = `${program.cta} ${program.title}`;
   // DS, 10 Oct 2026: the action is Secondary in both states.
   const hierarchy = "secondary";
+  const skin = useLmsStore((st) => st.skin);
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
 
   return (
     <article
@@ -79,42 +87,74 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         <Link href={program.href} aria-hidden="true" tabIndex={-1} className="peer absolute inset-0 z-[1]" />
       ) : null}
       <div
+        // The DS hero pins the Semantics collection to Dark: every token below resolves dark in
+        // both app themes. The brand skin lives on <html>, so a nested dark band repeats it.
+        data-theme="dark"
+        data-skin={mounted && skin !== "teal" ? skin : undefined}
         className={cn(
-          "relative flex flex-col items-start gap-3 overflow-hidden bg-sko-bg-primary p-4 md:p-5 lg:px-[23px] lg:py-6",
+          "relative flex flex-col items-start gap-3 overflow-hidden bg-sko-bg-subtle p-4 md:p-5 lg:px-[23px] lg:py-6",
           list ? "w-[42%] shrink-0 justify-between xl:w-[502px]" : "w-full",
         )}
       >
+        {/* Decoration: a ring low on the left, a hatched circle high on the right. */}
         <span
           aria-hidden="true"
-          className={cn(
-            "pointer-events-none absolute top-[-70px] size-[340px] rounded-full border-[56px] border-sko-bg-on-media opacity-[0.08]",
-            list ? "right-[-140px]" : "right-[-142px]",
-          )}
+          className="pointer-events-none absolute -bottom-[170px] -left-[170px] size-[340px] rounded-full border-[56px] border-sko-bg-primary opacity-[0.08]"
         />
-        <div className="relative flex flex-wrap items-center gap-2">
-          <DeliveryModeBadge value={program.delivery} />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-[79px] -top-1 size-[207px] rounded-full opacity-[0.35]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(45deg, var(--color-border-primary) 0 1px, transparent 1px 7.07px)",
+          }}
+        />
+        <div className="relative flex w-full flex-col gap-3">
+          <div className="flex w-full flex-col gap-1">
+            <div className="flex min-h-9 w-full items-center justify-between gap-2">
+              <CourseTypeBadge value="Program" />
+              {program.partners.length ? (
+                <ul
+                  aria-label="Partners"
+                  data-mock="Partner logos have no field: org is the platform's own key"
+                  className="flex items-center gap-3"
+                >
+                  {program.partners.map((partner) => (
+                    <li
+                      key={partner.name}
+                      className="flex h-9 w-[77px] items-center justify-center rounded border border-sko-text-on-primary bg-sko-bg-page p-[3px]"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={partner.logoSrc} alt={partner.name} width={69} height={28} className="h-7 w-[69px] object-contain" />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+            <h3
+              title={program.title}
+              className={cn(
+                "sk-text-headline-medium-semibold text-sko-text-default",
+                // Grid keeps room for three lines and cuts a longer title there, so cards in a row
+                // have the same hero; List cuts at two.
+                list ? "line-clamp-2" : "line-clamp-3 min-h-[3lh]",
+              )}
+            >
+              {program.href ? (
+                <Link href={program.href} className="hover:underline">
+                  {program.title}
+                </Link>
+              ) : (
+                program.title
+              )}
+            </h3>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <DeliveryModeBadge value={program.delivery} />
+            <DifficultyBadge value={program.difficulty} />
+          </div>
         </div>
-        <div className="relative flex w-full flex-col gap-1 text-sko-text-on-primary">
-          <p className="sk-text-label-small-semibold">{program.eyebrow}</p>
-          <h3
-            title={program.title}
-            className={cn(
-              "sk-text-headline-medium-semibold",
-              // DS, 10 Oct 2026: Grid keeps room for three lines and cuts a longer title there, so
-              // cards in a row have the same hero; List cuts at two.
-              list ? "line-clamp-2" : "line-clamp-3 min-h-[3lh]",
-            )}
-          >
-            {program.href ? (
-              <Link href={program.href} className="hover:underline">
-                {program.title}
-              </Link>
-            ) : (
-              program.title
-            )}
-          </h3>
-        </div>
-        <p className="sk-text-body-small-medium relative text-sko-text-on-primary">{program.courses}</p>
+        <p className="sk-text-body-small-medium relative text-sko-text-default opacity-80">{program.courses}</p>
       </div>
 
       <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-between" : "w-full")}>
@@ -129,8 +169,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           <PlatformProgressBar stepped value={program.progressPct} label={`${program.title} progress`} />
         </div>
         {/* DS footer, 10 Oct 2026: a box 60 tall in both states, so every card has one height.
-            In progress: on bg/subtle, "Up next" over the course name on one line, cut when longer
-            (Grid: the overline in capitals, the name Medium; List: sentence case, Semibold).
+            In progress: on bg/subtle, "Up next" over the course name (Semibold) on one line, cut
+            when longer.
             Not started: a 1px border/subtle box with the status and Details. */}
         <div
           className={cn(
@@ -140,14 +180,9 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           )}
         >
           {program.upNext ? (
-            <div className={cn("flex min-w-0 flex-1 flex-col", list ? "gap-0.5" : "gap-1.5")}>
-              <span className={cn("sk-text-body-small-semibold text-sko-text-subtle", !list && "uppercase")}>
-                {myLearningProgramUpNextLabel}
-              </span>
-              <span
-                title={program.upNext}
-                className={cn("truncate text-sko-text-default", list ? "sk-text-body-medium-semibold" : "sk-text-body-medium-medium")}
-              >
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="sk-text-body-small-semibold text-sko-text-subtle">{myLearningProgramUpNextLabel}</span>
+              <span title={program.upNext} className="sk-text-body-medium-semibold truncate text-sko-text-default">
                 {program.upNext}
               </span>
             </div>
