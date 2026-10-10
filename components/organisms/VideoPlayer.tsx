@@ -242,11 +242,7 @@ export function VideoPlayer({
   const currentTime = onSeek ? controlledTime : ownTime;
   const wrapRef = React.useRef<HTMLDivElement>(null);
 
-  // Classes per bar size; `auto` switches on the player's own width (container query at
-  // 40rem). Written out in full so Tailwind generates them.
-  const bar = (md: string, lg: string, auto: string) =>
-    size === "lg" ? lg : size === "md" || size === "sm" ? md : auto;
-  // The same for the action bar, which has three sizes. `auto` is written sm first, then md
+  // Classes per size of the action bar, which has three. `auto` is written sm first, then md
   // from 30rem and lg from 40rem of player width. `md` is `auto` without its lg classes: the
   // md row needs 480px, so a forced md player falls back to sm on a phone.
   const pick = (sm: string, lg: string, auto: string) =>
@@ -395,9 +391,11 @@ export function VideoPlayer({
           className={cn(
             // Centred with auto margins, not left-1/2: that halves the width the text can
             // use and wraps the caption into a column that a short player clips.
-            "absolute inset-x-0 z-10 mx-auto w-fit max-w-[90%] overflow-hidden rounded bg-sko-bg-overlay text-center",
-            // Clears the action bar, which is two rows tall on md.
-            bar("bottom-28", "bottom-20", "bottom-28 [@container(min-width:40rem)]:bottom-20"),
+            // pointer-events-none: on sm the caption sits over the seek slider's taller touch area.
+            "pointer-events-none absolute inset-x-0 z-10 mx-auto w-fit max-w-[94%] overflow-hidden rounded bg-sko-bg-overlay text-center",
+            // Sits just above the action bar: 70 tall on sm, at most 72 on md and lg since the bar
+            // follows the DS. At the old 112 a wrapped caption left the top of a short phone player.
+            pick("bottom-[74px]", "bottom-20", "bottom-[74px] [@container(min-width:30rem)]:bottom-20"),
           )}
         >
           {/* Two bg/overlay layers (50% each, 75% together): one layer leaves white text
