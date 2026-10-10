@@ -114,6 +114,8 @@ export interface ActivityContent {
   /** SCORM only — shown so the learner knows what they are about to open. */
   packageLabel?: string;
   packageSizeLabel?: string;
+  /** The worksheet the steps refer to, as the Downloads tab lists it. Without one, the plain worksheet. */
+  file?: { name: string; size: string };
 }
 
 export interface DiscussionThread {
@@ -591,7 +593,11 @@ export function getActivity(topic: FlatTopic): ActivityContent {
       },
     ],
   };
-  return ownContent(topic) ? { ...activity, steps: PLAIN_ACTIVITY_STEPS } : activity;
+  const own = ownContent(topic);
+  if (!own) return activity;
+  // A course's own activity is a checklist unless it says otherwise: its steps are the exercise.
+  const written = own.activities?.[topic.id];
+  return written ? { kind: "checklist", ...written } : { ...activity, steps: PLAIN_ACTIVITY_STEPS };
 }
 
 export function getDiscussionThreads(topic: FlatTopic): DiscussionThread[] {
@@ -677,9 +683,12 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
         make("DOCX", "submission-template.docx", "54 KB"),
       ];
       break;
-    case "activity":
-      files = [make("XLSX", "activity-worksheet.xlsx", "32 KB")];
+    case "activity": {
+      // The worksheet a course named for this activity, so the steps and the tab agree.
+      const file = getActivity(topic).file;
+      files = [file ? make(extType(file.name), file.name, file.size) : make("XLSX", "activity-worksheet.xlsx", "32 KB")];
       break;
+    }
     case "lessonPage": {
       // Derive from the page's own file blocks, so the Downloads tab and the
       // content agree instead of advertising a file that isn't on the page.

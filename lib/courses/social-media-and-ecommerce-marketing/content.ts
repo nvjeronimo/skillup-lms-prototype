@@ -1,4 +1,5 @@
 import type { CourseContent, OraContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /** The final project, as the Project topic and the Peer Review topic after it both show it. */
 const FINAL_PROJECT: OraContent = {
@@ -499,8 +500,8 @@ export const content: CourseContent = {
         platformPrompt: "Choose the correct option",
         explanation:
           "Tags and shops show what the catalogue says. If the catalogue is not updated from the store, shoppers see prices and stock that are no longer true.",
-        reviewTopicId: "smec-m3-t3",
-        reviewTopicTitle: "Setting up a product catalogue and keeping it in sync",
+        reviewTopicId: "smec-m3-t1",
+        reviewTopicTitle: "From post to purchase: how social commerce works",
         options: [
           { id: "a", label: "The video is too long", feedback: "Length does not affect what the product card shows." },
           {
@@ -574,4 +575,5 @@ export const content: CourseContent = {
     "smec-m5-t4": FINAL_PROJECT,
     "smec-m5-t5": FINAL_PROJECT,
   },
+  activities,
 };

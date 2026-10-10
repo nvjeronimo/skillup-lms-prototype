@@ -1,4 +1,5 @@
 import type {
+  ActivityContent,
   ArticleContent,
   AssignmentBrief,
   DownloadLabContent,
@@ -11,6 +12,13 @@ import type {
 } from "@/lib/content";
 import type { CourseDetail } from "@/lib/platform/course-detail";
 import type { Course } from "@/lib/types";
+
+/**
+ * An Activity as a course writes it: the purpose (`intro`), the steps of the exercise, the last
+ * of which says what a good result looks like, and the worksheet the steps refer to (`file`).
+ * It is a checklist unless `kind` says "scorm".
+ */
+export type CourseActivity = Omit<ActivityContent, "kind"> & Partial<Pick<ActivityContent, "kind">>;
 
 /**
  * What a course with its own outline says in the player in place of the Six Sigma
@@ -40,6 +48,8 @@ export interface CourseContent {
   lessonPages?: Record<string, LessonPageContent>;
   /** A VILT session (live or recording): only the fields that differ from the plain session. */
   sessions?: Record<string, Partial<Omit<ViltSession, "stage" | "title">>>;
+  /** An Activity: its purpose, its steps and its worksheet. */
+  activities?: Record<string, CourseActivity>;
 }
 /**
  * One course with content of its own, as its folder exports it (lib/courses/<slug>/index.ts)

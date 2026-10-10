@@ -1,4 +1,5 @@
 import type { CourseContent, OraContent } from "@/lib/courses/kit";
+import { activities } from "./activities";
 
 /** The final project, as the Project topic and the Peer Review topic after it both show it. */
 const FINAL_PROJECT: OraContent = {
@@ -574,4 +575,5 @@ export const content: CourseContent = {
     "crm-m3-t7": FINAL_PROJECT,
     "crm-m3-t8": FINAL_PROJECT,
   },
+  activities,
 };

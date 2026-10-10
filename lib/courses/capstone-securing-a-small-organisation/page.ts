@@ -212,7 +212,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "MILESTONE", color: GRAY }, { label: "UPCOMING", color: GRAY }],
         title: "Module 2 · Milestone 2 · Network and access design",
-        description: "Submit the zone diagram, the flow table and the access matrix as one PDF.",
+        description: "Submit the zone diagram, the flow table and the access matrix as one PDF or DOCX.",
       },
       {
         id: "peer-review-two-control-designs",
