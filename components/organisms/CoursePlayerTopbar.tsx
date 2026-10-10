@@ -106,7 +106,7 @@ function UtilityButton({
 export function CoursePlayerTopbar({
   size = "Desktop",
   breadcrumb = [],
-  userName = "Olivia Rhye",
+  userName = "John Smith",
   userAvatarUrl,
   showAi = false,
   showBookmark = true,

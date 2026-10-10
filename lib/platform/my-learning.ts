@@ -30,8 +30,9 @@ export interface MyLearningStat {
 
 /**
  * Three DS `Stat`, Theme=Default: totals from Learner Home, the same as the Dashboard glance
- * card. They count every course the learner has an enrolment in: the five single courses and
- * the two program courses already started (course 1, complete, and course 2, in progress).
+ * card. The learner is enrolled in 17 courses (10 Oct 2026): the five single courses, the
+ * seven of the AI program and the five of the Cybersecurity program. The Dashboard prints
+ * that total ("of 17 enrolled"); 4 of the 17 are in progress and 2 are complete.
  */
 export const myLearningStats: MyLearningStat[] = [
   { label: "In progress", value: "4", detail: "courses" },

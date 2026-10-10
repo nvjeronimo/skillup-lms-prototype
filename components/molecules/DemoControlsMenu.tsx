@@ -127,7 +127,7 @@ export interface DemoControlsMenuProps {
  * it; Escape closes it and returns focus to the profile button (useDisclosure).
  */
 export function DemoControlsMenu({
-  userName = "Olivia Rhye",
+  userName = "John Smith",
   userAvatarUrl,
   compact = false,
 }: DemoControlsMenuProps) {

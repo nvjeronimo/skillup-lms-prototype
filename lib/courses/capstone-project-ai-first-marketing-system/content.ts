@@ -62,7 +62,7 @@ const FINAL_SUBMISSION: OraContent = {
 export const content: CourseContent = {
   byline: {
     author: "Rajesh Menon",
-    role: "Lead instructor · AI Augmented Digital Marketing",
+    role: "Lead instructor · Capstone Project: AI-First Marketing System",
     updated: "September 2026",
   },
   quiz: [

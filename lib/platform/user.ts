@@ -4,8 +4,8 @@ const [firstName = user.name] = user.name.split(" ");
 
 /**
  * The learner shown on the platform pages: the same mock user as the course player and the
- * home page (`lib/data-model.json`), so a test session shows one person throughout. The Figma
- * platform screens are drawn with "John Smith"; the name is sample data either way.
+ * home page (`lib/data-model.json`), so a test session shows one person throughout: "John
+ * Smith", as the Figma screens are drawn (10 Oct 2026; "Olivia Rhye" before).
  */
 export const platformUser = {
   name: user.name,

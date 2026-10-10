@@ -10,7 +10,7 @@ import { activities } from "./activities";
 export const content: CourseContent = {
   byline: {
     author: "Dr. Amara Okafor",
-    role: "Lead instructor · Cybersecurity Fundamentals",
+    role: "Lead instructor · Security Foundations and the Threat Landscape",
     updated: "September 2026",
   },
   quiz: [

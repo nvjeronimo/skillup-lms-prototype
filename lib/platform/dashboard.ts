@@ -23,12 +23,14 @@ export interface DashboardStat {
  * Totals Open edX can serve (handoff map §37.4): the first three come from Learner Home in
  * one call; Programs needs `progress_details` once per program for "in progress".
  * The streak card and the "today" figures left the screens on 7 Oct: nothing returns them.
+ * "of 17 enrolled" (10 Oct 2026) counts every course the learner is enrolled in: the five
+ * single courses, the seven of the AI program and the five of the Cybersecurity program.
  */
 export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
   title: "Your learning at a glance",
   stats: [
-    { label: "Courses in progress", value: "4", detail: "of 7 enrolled" },
-    { label: "Courses completed", value: "2", detail: "of 7 enrolled" },
+    { label: "Courses in progress", value: "4", detail: "of 17 enrolled" },
+    { label: "Courses completed", value: "2", detail: "of 17 enrolled" },
     { label: "Certificates", value: "2", detail: "ready to download" },
     { label: "Programs", value: "2", detail: "1 in progress" },
   ],

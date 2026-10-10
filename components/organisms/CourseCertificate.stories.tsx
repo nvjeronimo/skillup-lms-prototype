@@ -7,7 +7,7 @@ const meta: Meta<typeof CourseCertificate> = {
   tags: ["autodocs"],
   parameters: { layout: "padded" },
   args: {
-    learnerName: "Olivia Rhye",
+    learnerName: "John Smith",
     courseTitle: "Six Sigma for Process Improvement",
     provider: "SkillUp",
     dateLabel: "June 22, 2026",
