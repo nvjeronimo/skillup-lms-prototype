@@ -160,7 +160,7 @@ export function MyLearningCollection() {
           </>
         ) : (
           <>
-            {/* items-start: program cards keep their own height (a longer title makes a taller card). */}
+            {/* items-start: the two states differ by 4px (footer 40 or 36); the title no longer changes the height. */}
             <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
               {programs.map((program) => (
                 <li key={program.id} className="min-w-0">
