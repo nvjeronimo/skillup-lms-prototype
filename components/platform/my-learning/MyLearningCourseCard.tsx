@@ -57,6 +57,11 @@ function CourseTitle({ course }: { course: MyLearningCourse }) {
   );
 }
 
+/* Every card has the same height whatever its title (asked by Nelson on 10 Oct 2026): the
+   title keeps the height of two lines and is cut at the second. The full title stays in the
+   `title` attribute and in the link's name. */
+const TITLE_TWO_LINES = "line-clamp-2";
+
 /* The action opens the course: a link with the button look when the course has a page, a button otherwise. */
 function Action({
   course,
@@ -133,7 +138,7 @@ export function MyLearningCourseCard({
         />
         <div className={cn("flex flex-col items-start gap-0.5", inRow ? "min-w-0 flex-1 basis-0" : "min-w-[200px] flex-1")}>
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-title-large-semibold text-sko-text-default">
+          <h3 title={course.title} className={cn("sk-text-title-large-semibold text-sko-text-default", TITLE_TWO_LINES, inRow && "min-h-[2lh]")}>
             <CourseTitle course={course} />
           </h3>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
@@ -148,7 +153,9 @@ export function MyLearningCourseCard({
         <div
           className={cn(
             "flex min-w-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2",
-            inRow ? "flex-1 basis-0" : "shrink-0",
+            // In a course row the block keeps the height of a two-line title with its type badge,
+            // so every row is the same height.
+            inRow ? "min-h-[106px] flex-1 basis-0" : "shrink-0",
           )}
         >
           <div className={cn("flex min-w-0 flex-col items-start gap-1.5", inRow && "flex-1")}>
@@ -156,8 +163,9 @@ export function MyLearningCourseCard({
             <span
               className={cn(
                 "sk-text-body-medium-medium text-sko-text-default",
-                // My Learning: one line, cut at 240. In a course row the block has the width and the title wraps.
-                !inRow && "max-w-[240px] truncate",
+                // My Learning: one line, cut at 240. In a course row the block has the width and the
+                // title wraps, to two lines at most.
+                inRow ? "line-clamp-2" : "max-w-[240px] truncate",
               )}
             >
               {nextTitle}
@@ -176,7 +184,7 @@ export function MyLearningCourseCard({
         <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-[86px]" />
         <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
-          <h3 className="sk-text-title-large-semibold text-sko-text-default">
+          <h3 title={course.title} className={cn("sk-text-title-large-semibold min-h-[2lh] text-sko-text-default", TITLE_TWO_LINES)}>
             <CourseTitle course={course} />
           </h3>
           <ProviderBadge value={course.provider} />
