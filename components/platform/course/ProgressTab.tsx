@@ -177,8 +177,10 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
 /**
  * Progress tab (desktop 6406:41528, tablet 6406:41969, mobile 6406:42331): the main column —
  * heading, Completion card, the passing-grade alert, the Grade summary and a closing line —
- * beside the Certificate and Weekly goal cards. Desktop splits the row in two equal columns,
- * 40 apart; tablet keeps the sidebar at 320, 32 apart; mobile stacks everything, 16 apart.
+ * beside the Certificate and Weekly goal cards. The sidebar is 320 wide on desktop (40 apart,
+ * main column 840 at 1280) and on tablet (32 apart), as on the Course tab; mobile stacks
+ * everything, 16 apart. Until 10 Oct 2026 desktop split the row in two equal columns: Nelson
+ * changed the desktop screen that day.
  *
  * A passed course (`course.passed`, a proposal of 10 Oct 2026) turns the alert and the grade
  * to the success tokens and has no Weekly goal card: the Certificate card stands alone.
@@ -211,7 +213,7 @@ export function ProgressTab({ course }: { course: CourseDetail }) {
         <p className="sk-text-body-large-regular text-sko-text-muted">{tab.note}</p>
       </div>
 
-      <aside aria-label={tab.weeklyGoal ? "Certificate and weekly goal" : "Certificate"} className="flex flex-col gap-4 md:w-[320px] md:shrink-0 lg:w-auto lg:flex-1 lg:shrink">
+      <aside aria-label={tab.weeklyGoal ? "Certificate and weekly goal" : "Certificate"} className="flex flex-col gap-4 md:w-[320px] md:shrink-0">
         <CertificateCard certificate={course.certificate} labelAs="h3" />
         {tab.weeklyGoal ? <WeeklyGoalCard goal={tab.weeklyGoal} labelAs="h3" /> : null}
       </aside>
