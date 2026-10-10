@@ -13,7 +13,6 @@ import { SearchField } from "@/components/platform/my-learning/SearchField";
 import {
   SEARCH_FAIL_WORD,
   SEARCH_PAGE_SIZE,
-  hasOwnSearchContent,
   excerptOf,
   searchCourse,
   searchSamples,
@@ -228,9 +227,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
       <div data-prototype-note className="flex flex-col gap-3">
         <p className="sk-text-label-small-medium uppercase text-sko-text-subtle">Prototype note · sample content</p>
         <p className="sk-text-body-small-regular text-sko-text-subtle">
-          {hasOwnSearchContent(search.slug)
-            ? "The prototype searches this course's lesson and topic titles and the few topic bodies written for it."
-            : "The prototype searches about forty sample items, not the real course."}{" "}
+          The prototype searches this course&apos;s lesson and topic titles and what each topic shows in the player.
           Type one of these and press Enter, or select it:
         </p>
         <ul className="flex flex-col gap-1">
