@@ -254,15 +254,33 @@ function findAll(query: string, slug?: string): SearchResult[] {
   );
 }
 
+/**
+ * The Six Sigma sample is the content of the screens, not the outline of the player, so a
+ * result has no topic of its own. It opens a player topic of its kind (a reading, a video, a
+ * quiz, a lesson page), so that following a result shows the right kind of page.
+ */
+const SAMPLE_COURSE = "six-sigma";
+const SAMPLE_TOPIC: Record<SearchContentType, string[]> = {
+  Text: ["m3-t3", "m1-t1", "m2-t2"],
+  Video: ["m3-t1", "m3-t2", "m2-t1"],
+  Quiz: ["m3-t4j", "m3-t4", "m1-t3"],
+  Lesson: ["m3-t4g"],
+};
+function withSampleHref(result: SearchResult, index: number): SearchResult {
+  const topics = SAMPLE_TOPIC[result.type];
+  return { ...result, href: playerTopicHref(SAMPLE_COURSE, topics[index % topics.length]) };
+}
+
 /** One page of results, as `page_index` 0, 1, … of the platform's search. */
 export function searchCourse(query: string, pageIndex: number, slug?: string): SearchPage {
   const found = findAll(query, slug);
-  const all = found.filter((r) => !r.locked);
+  const own = hasOwnSearchContent(slug);
+  const all = found.filter((r) => !r.locked).map((r, i) => (own || slug !== SAMPLE_COURSE ? r : withSampleHref(r, i)));
   const start = pageIndex * SEARCH_PAGE_SIZE;
   return {
     results: all.slice(start, start + SEARCH_PAGE_SIZE),
     total: all.length,
-    accessDenied: hasOwnSearchContent(slug) ? found.length - all.length : (ACCESS_DENIED[query.trim().toLowerCase()] ?? 0),
+    accessDenied: own ? found.length - all.length : (ACCESS_DENIED[query.trim().toLowerCase()] ?? 0),
   };
 }
 

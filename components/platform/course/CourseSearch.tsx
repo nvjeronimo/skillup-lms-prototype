@@ -392,7 +392,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
 export interface CourseSearchProps {
   /** Placeholder and accessible name of the field. */
   label: string;
-  /** Where a result goes. The prototype has one topic page per course, so every result opens it. */
+  /** Where a result without a topic of its own goes: the topic the course resumes on. */
   topicHref: string;
   /** The course searched: one with content of its own is searched in that content. */
   slug: string;
