@@ -4,7 +4,7 @@ import { activities } from "./activities";
 export const content: CourseContent = {
   byline: {
     author: "Rajesh Menon",
-    role: "Lead instructor · AI Augmented Digital Marketing",
+    role: "Lead instructor · AI-Driven Content and Brand Communication",
     updated: "September 2026",
   },
   quiz: [

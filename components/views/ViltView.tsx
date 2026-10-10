@@ -266,6 +266,8 @@ function LiveStage({
 
 /* ---- Stage 3 · Recording: now a Video asset ---- */
 function RecordingStage({ session }: { session: ViltSession }) {
+  // The recording keeps its own time so the caption follows the scrubber (10 Oct 2026).
+  const [time, setTime] = React.useState(0);
   return (
     <section className="flex flex-col gap-4">
       <span className="sk-text-body-small-regular text-sko-text-subtle">{session.whenLabel}</span>
@@ -279,7 +281,13 @@ function RecordingStage({ session }: { session: ViltSession }) {
           sidebar and side panel, not the viewport. */}
       <div className="relative flex justify-center rounded-xl bg-sko-bg-muted px-8 [container-type:inline-size]">
         <div className="w-full max-w-[640px] pb-8 pt-14 [@container(min-width:55rem)]:py-0">
-          <VideoPlayer durationSeconds={durationToSeconds(session.durationLabel)} size="md" />
+          <VideoPlayer
+            durationSeconds={durationToSeconds(session.durationLabel)}
+            captions={session.transcript}
+            currentTime={time}
+            onSeek={setTime}
+            size="md"
+          />
         </div>
         <span className="sk-text-body-small-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-full bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
           Recording

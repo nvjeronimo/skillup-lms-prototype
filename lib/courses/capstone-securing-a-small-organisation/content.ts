@@ -11,7 +11,7 @@ import { activities } from "./activities";
 export const content: CourseContent = {
   byline: {
     author: "Dr. Amara Okafor",
-    role: "Lead instructor · Cybersecurity Fundamentals",
+    role: "Lead instructor · Capstone: Securing a Small Organisation",
     updated: "September 2026",
   },
   quiz: [

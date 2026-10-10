@@ -353,6 +353,13 @@ export function getCaptions(topic: FlatTopic): TranscriptLine[] {
   return ownContent(topic) ? [] : getTranscript(topic);
 }
 
+/**
+ * One timed line of a video embedded in another topic (a Lesson Page video block, a session
+ * recording): what the player captions. Optional where it is written, 10 Oct 2026: an
+ * embedded video with no transcript has no caption, as a video topic.
+ */
+export type TranscriptCue = Pick<TranscriptLine, "ts" | "text">;
+
 /** The length of a video or audio topic in seconds, read from its `duration` ("12 min", "3m 20s"). */
 export function getMediaSeconds(topic: FlatTopic): number {
   return durationToSeconds(topic.duration);
@@ -749,6 +756,8 @@ export interface ViltSession {
   attendees: { live: number; total: number };
   /** Completion rule differs per stage — attendance vs watched. */
   completionRule: string;
+  /** Recording only: the lines its player captions, as on a Video topic. None: no caption. */
+  transcript?: TranscriptCue[];
 }
 
 export function getViltSession(topic: FlatTopic): ViltSession {
@@ -772,6 +781,17 @@ export function getViltSession(topic: FlatTopic): ViltSession {
       ],
       attendees: { live: 0, total: 30 },
       completionRule: "Completes automatically once you have watched 90%.",
+      // 10 Oct 2026: the recording has a transcript of its own, so its player is captioned.
+      transcript: [
+        { ts: "0:00", text: "Welcome, everyone. Today is all questions on measurement systems." },
+        { ts: "3:40", text: "First, the Gauge R&R study: ten parts, three operators, two trials." },
+        { ts: "11:15", text: "Repeatability is the gauge itself; reproducibility is the operators." },
+        { ts: "19:30", text: "Under 10% of total variation the system is fine; over 30% it is not." },
+        { ts: "27:45", text: "A common pitfall: picking parts that do not span the process range." },
+        { ts: "36:10", text: "Another one: operators who know which part they are measuring." },
+        { ts: "44:20", text: "On to your questions. Carlos asks what to do with attribute data." },
+        { ts: "53:05", text: "To close: fix the measurement system before you trust the baseline." },
+      ],
     };
   }
   return {
@@ -1061,7 +1081,7 @@ export function getAssignmentBrief(topic: FlatTopic): AssignmentBrief {
  */
 export type LessonBlock =
   | { kind: "text"; heading?: string; paragraphs: string[] }
-  | { kind: "video"; title: string; durationLabel: string }
+  | { kind: "video"; title: string; durationLabel: string; transcript?: TranscriptCue[] }
   | { kind: "image"; caption: string; alt: string }
   | { kind: "file"; name: string; fileKind: "pdf" | "doc" | "data"; size: string }
   | { kind: "callout"; tone: "info" | "warning"; title: string; body: string }
@@ -1091,6 +1111,16 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
         kind: "video",
         title: "Reading a control chart in 4 minutes",
         durationLabel: "4m 12s",
+        // 10 Oct 2026: the embedded video has a transcript of its own, so its player is captioned.
+        transcript: [
+          { ts: "0:00", text: "A control chart answers one question: has the process changed?" },
+          { ts: "0:28", text: "Start with the centre line. It is the mean of the process." },
+          { ts: "0:58", text: "The control limits sit three standard deviations either side." },
+          { ts: "1:32", text: "Points that bounce around inside the limits are common-cause noise." },
+          { ts: "2:06", text: "One point beyond a limit is a signal. Look for what changed." },
+          { ts: "2:44", text: "Seven points in a row on one side mean the average has shifted." },
+          { ts: "3:25", text: "Remember: the limits come from the process, not from the customer." },
+        ],
       },
       {
         kind: "image",

@@ -79,7 +79,7 @@ outline under the same title.
 | `ora` | a Peer-graded / Peer Review / Project | topic id |
 | `labs` (optional) | a Lab run on the learner's machine (`kind: "download"`, `intro`, `prerequisites`, `steps`, `files`, `estimatedMinutes`) | topic id |
 | `podcasts` (optional) | a Podcast (`host`, `guest`, `episodeLabel`, `summary`, `chapters`); its length is the topic's `duration` | topic id |
-| `lessonPages` (optional) | a Lesson Page (`intro`, `blocks`) | topic id |
+| `lessonPages` (optional) | a Lesson Page (`intro`, `blocks`; a `video` block and a recording in `sessions` take an optional `transcript` of `{ ts, text }` lines, which captions their player) | topic id |
 | `sessions` (optional) | a VILT-Live Session / VILT-Recording: only the fields that differ from the plain session (`whenLabel`, `host`, `agenda`, …) | topic id |
 | `activities` (optional) | an Activity (`intro`, `steps`, the last step saying what a good result looks like, and `file`: the worksheet the Downloads tab lists); written in `activities.ts` of the folder and listed in `content.ts` | topic id |
 

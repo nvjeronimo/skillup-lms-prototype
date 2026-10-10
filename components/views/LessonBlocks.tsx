@@ -108,7 +108,7 @@ function Block({ block }: { block: LessonBlock }) {
       return (
         <figure className="flex flex-col gap-2">
           {/* Video unit/asset — same player component as any Video topic. */}
-          <VideoPlayer durationSeconds={durationToSeconds(block.durationLabel)} />
+          <EmbeddedVideo block={block} />
           <figcaption className="sk-text-body-small-regular text-sko-text-subtle">
             Video · {block.durationLabel} · transcript available
           </figcaption>
@@ -167,6 +167,22 @@ function Block({ block }: { block: LessonBlock }) {
  * An inline knowledge check. Ungraded and single-question — it exists to break
  * up reading, not to assess, so it has no attempts counter or results summary.
  */
+/**
+ * The player of a video block. It keeps its own time, apart from the topic video's time in
+ * the store, so the caption follows the scrubber (10 Oct 2026). No transcript: no caption.
+ */
+function EmbeddedVideo({ block }: { block: Extract<LessonBlock, { kind: "video" }> }) {
+  const [time, setTime] = React.useState(0);
+  return (
+    <VideoPlayer
+      durationSeconds={durationToSeconds(block.durationLabel)}
+      captions={block.transcript}
+      currentTime={time}
+      onSeek={setTime}
+    />
+  );
+}
+
 function KnowledgeCheck({
   question,
   options,
