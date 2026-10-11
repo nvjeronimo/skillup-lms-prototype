@@ -17,7 +17,7 @@ const SKINS: { skin: Skin; label: string }[] = [
   { skin: "red", label: "Red" },
 ];
 
-/** DS `LMS / Platform / Topbar item` (6373:3313): Current = bg/primary-soft + text/primary. */
+/** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
   return cn(
     "flex items-center gap-1.5 rounded-lg px-3 py-2 transition-colors",
@@ -27,18 +27,35 @@ function itemClass(current: boolean) {
   );
 }
 
+/**
+ * The desktop bar: DS `Horizontal tabs`, Type=Underline, Size=md (the look of
+ * platform/PlatformTabs). These stay links in a <nav> with `aria-current`, not an ARIA
+ * tablist: each one opens another page.
+ */
+function tabClass(current: boolean) {
+  return cn(
+    "sk-text-body-large-semibold relative flex items-center gap-2 px-1 py-3 transition-colors",
+    current ? "text-sko-text-primary" : "text-sko-text-subtle hover:text-sko-text-default",
+  );
+}
+
 function SectionLinks({
   current,
+  look = "menu",
   onPick,
   className,
   itemClassName,
 }: {
   current: PlatformSection;
+  /** `tabs`: the desktop bar. `menu`: the rows of the compact menu. */
+  look?: "tabs" | "menu";
   onPick?: () => void;
   className?: string;
   itemClassName?: string;
 }) {
   const showToast = useLmsStore((s) => s.showToast);
+  const tabs = look === "tabs";
+  const itemLook = tabs ? tabClass : itemClass;
   return (
     <ul className={className}>
       {PLATFORM_SECTIONS.map((s) => {
@@ -47,9 +64,17 @@ function SectionLinks({
           <>
             {s.label}
             {typeof s.count === "number" ? (
-              <Badge color="gray" variant="soft" size="sm" aria-label={`${s.count} items`}>
+              <Badge
+                color={tabs && isCurrent ? "brand" : "gray"}
+                variant="soft"
+                size={tabs ? "md" : "sm"}
+                aria-label={`${s.count} items`}
+              >
                 {s.count}
               </Badge>
+            ) : null}
+            {tabs && isCurrent ? (
+              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-0.5 rounded-t-[2px] bg-sko-bg-primary" />
             ) : null}
           </>
         );
@@ -60,7 +85,7 @@ function SectionLinks({
                 href={s.href}
                 aria-current={isCurrent ? "page" : undefined}
                 onClick={onPick}
-                className={cn(itemClass(isCurrent), itemClassName)}
+                className={cn(itemLook(isCurrent), itemClassName)}
               >
                 {content}
               </Link>
@@ -72,7 +97,7 @@ function SectionLinks({
                   onPick?.();
                   showToast(`${s.label} is not part of this prototype yet`);
                 }}
-                className={cn(itemClass(false), itemClassName)}
+                className={cn(itemLook(false), itemClassName)}
               >
                 {content}
               </button>
@@ -145,6 +170,8 @@ function Initials() {
  * DS `LMS / Platform / Topbar` (6374:3608), on every platform page while the LMS sidebar
  * is in development. Light: bg/page with a 1px border/subtle rule below.
  * - Desktop (≥1025): 72px with the rule, padding 16/24 — logo · the five sections · notifications · learner.
+ *   The sections are a DS `Horizontal tabs` instance, Type=Underline, Size=md (Nelson, 11 Oct
+ *   2026; before that, five `Topbar-Item` pills): 48 tall, centred in the bar, with its own rule.
  * - Compact (tablet and mobile): padding 8/16 — logo · notifications · avatar · menu.
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
  *   disclosure list under the bar.
@@ -180,7 +207,11 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
           <SkillUpLogo className="h-[30px]" />
         </Link>
         <nav aria-label="Platform">
-          <SectionLinks current={current} className="flex items-start gap-1" />
+          <SectionLinks
+            current={current}
+            look="tabs"
+            className="flex items-start gap-3 shadow-[inset_0_-1px_0_0_var(--color-border-subtle)] forced-colors:border-b forced-colors:border-sko-border-subtle"
+          />
         </nav>
         <div className="flex items-center gap-3">
           {bell}
