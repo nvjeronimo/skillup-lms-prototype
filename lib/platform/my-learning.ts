@@ -173,9 +173,10 @@ export const myLearningBrowseTile = { title: "Browse catalog", subtitle: "Add a 
 export interface MyLearningProgram {
   id: string;
   title: string;
-  /** "Program · N courses": `relatedPrograms.numberOfCourses`. */
-  eyebrow: string;
   delivery: DeliveryMode;
+  difficulty: Difficulty;
+  /** Partner logos, as on the course and program headers. Sample: no field returns them. */
+  partners: { name: string; logoSrc: string }[];
   /** "N of M courses complete": `progress_details`, completed ÷ all courses. */
   courses: string;
   /** 0–100: the same ratio. */
@@ -196,8 +197,12 @@ export const myLearningPrograms: MyLearningProgram[] = [
     id: "ai-driven-digital-marketing",
     // The program's own title, as its page shows it.
     title: "Certificate Program in AI Augmented Digital Marketing",
-    eyebrow: "Program · 7 courses",
     delivery: "Flexible Learning",
+    difficulty: "Beginner",
+    partners: [
+      { name: "Microsoft", logoSrc: "/platform/partner-microsoft.jpg" },
+      { name: "IBM", logoSrc: "/platform/partner-ibm.jpg" },
+    ],
     courses: "1 of 7 courses complete",
     progressPct: 14,
     upNext: "Course 2 · AI-Driven Content and Brand Communication",
@@ -208,8 +213,9 @@ export const myLearningPrograms: MyLearningProgram[] = [
   {
     id: "cybersecurity-fundamentals",
     title: "Cybersecurity Fundamentals Certificate",
-    eyebrow: "Program · 5 courses",
     delivery: "Flexible Learning",
+    difficulty: "Beginner",
+    partners: [],
     courses: "0 of 5 courses complete",
     progressPct: 0,
     status: "Not started · Starts Oct 5",

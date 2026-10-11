@@ -62,6 +62,11 @@ function CourseTitle({ course }: { course: MyLearningCourse }) {
    `title` attribute and in the link's name. */
 const TITLE_TWO_LINES = "line-clamp-2";
 
+/* Buttons/Button sm is 36 tall as drawn (DS Course-Card since 10 Oct 2026); on mobile the target
+   grows to 44 without moving the layout (an invisible 4px band above and below). */
+const TARGET_44 =
+  "max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-1 max-md:before:content-['']";
+
 /* The action opens the course: a link with the button look when the course has a page, a button otherwise. */
 function Action({
   course,
@@ -77,11 +82,11 @@ function Action({
   className?: string;
 }) {
   return course.href ? (
-    <ButtonLink href={course.href} hierarchy={hierarchy} size="lg" aria-label={label} className={cn("relative z-[1]", className)}>
+    <ButtonLink href={course.href} hierarchy={hierarchy} size="sm" aria-label={label} className={cn("relative z-[1]", TARGET_44, className)}>
       {course.cta}
     </ButtonLink>
   ) : (
-    <Button hierarchy={hierarchy} size="lg" aria-label={label} onClick={onAction} className={cn("relative z-[1]", className)}>
+    <Button hierarchy={hierarchy} size="sm" aria-label={label} onClick={onAction} className={cn("relative z-[1]", TARGET_44, className)}>
       {course.cta}
     </Button>
   );
@@ -113,7 +118,7 @@ function Action({
 export function MyLearningCourseCard({
   course,
   layout,
-  emphasis = "primary",
+  emphasis = "secondary",
   context = "card",
   onAction,
   className,
@@ -134,11 +139,19 @@ export function MyLearningCourseCard({
         <CourseThumb
           initials={course.initials}
           imageSrc={course.imageSrc}
-          className={inRow ? "size-[86px]" : "size-[118px]"}
+          className="size-[86px]"
         />
         <div className={cn("flex flex-col items-start gap-0.5", inRow ? "min-w-0 flex-1 basis-0" : "min-w-[200px] flex-1")}>
           <CourseTypeBadge value="Course" />
-          <h3 title={course.title} className={cn("sk-text-title-large-semibold text-sko-text-default", TITLE_TWO_LINES, inRow && "min-h-[2lh]")}>
+          <h3
+            title={course.title}
+            className={cn(
+              "sk-text-title-large-semibold text-sko-text-default",
+              // DS List (10 Oct 2026): 120 tall with an 86 thumb, so the title is one line and a
+              // longer one is cut. In a course row of a program page it keeps two lines.
+              inRow ? cn(TITLE_TWO_LINES, "min-h-[2lh]") : "line-clamp-1",
+            )}
+          >
             <CourseTitle course={course} />
           </h3>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
