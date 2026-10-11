@@ -4,22 +4,22 @@ import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
+import { CourseRowCard } from "@/components/platform/CourseRowCard";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { useLmsStore } from "@/lib/store";
 import {
   MY_LEARNING_DEFAULT_TAB,
   MY_LEARNING_DEFAULT_VIEW,
   myLearningBrowseTile,
-  myLearningCourses,
   myLearningPrograms,
   myLearningSearch,
   myLearningTabs,
   type MyLearningTab,
   type MyLearningView,
 } from "@/lib/platform/my-learning";
+import type { MyLearningCourseRow } from "@/lib/platform/my-learning-rows";
 import { cn } from "@/lib/utils";
 import { BrowseTile } from "./BrowseTile";
-import { MyLearningCourseCard } from "./MyLearningCourseCard";
 import { ProgramCard } from "./ProgramCard";
 import { SearchField } from "./SearchField";
 import { ViewToggle } from "./ViewToggle";
@@ -30,6 +30,9 @@ const ID_BASE = "my-learning";
 const GRID = "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
 /* List: one column, 24 apart. Desktop only. */
 const LIST = "hidden flex-col gap-6 lg:flex";
+
+/* The row is the target of its card's title link: it shows it on hover, as the card did. */
+const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
 
 const matches = (title: string, query: string) => title.toLowerCase().includes(query);
 
@@ -43,13 +46,28 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
  * Courses and Grid, leave it clean). Search filters the cards of the selected tab by title.
  * Below desktop the collections are Grid only: the toggle is hidden, and a `?view=list`
  * URL still shows the grid there.
+ *
+ * Courses (decided by Nelson on 11 Oct 2026): every course is a DS `Course-Row`, not the
+ * course card on its own: `Breakpoint` Desktop in the list, Compact in the grid and at every
+ * width below desktop. All rows start closed and each opens on its own; the grid aligns its
+ * rows at the top, so an opened row grows alone and the rows beside it keep their height.
+ * The rows come from the page (lib/platform/my-learning-rows, read on the server).
  */
-export function MyLearningCollection() {
+export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCourseRow[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const showToast = useLmsStore((s) => s.showToast);
   const [query, setQuery] = React.useState("");
+  // The rows opened by the learner, by course id: the grid and the list show the same ones.
+  const [openRows, setOpenRows] = React.useState<Set<string>>(() => new Set());
+  const toggleRow = (id: string) =>
+    setOpenRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   const tab: MyLearningTab = params.get("tab") === "programs" ? "programs" : MY_LEARNING_DEFAULT_TAB;
   const view: MyLearningView = params.get("view") === "list" ? "list" : MY_LEARNING_DEFAULT_VIEW;
@@ -63,7 +81,7 @@ export function MyLearningCollection() {
   };
 
   const needle = query.trim().toLowerCase();
-  const courses = myLearningCourses.filter((c) => matches(c.title, needle));
+  const courses = courseRows.filter((row) => matches(row.card.title, needle));
   const programs = myLearningPrograms.filter((p) => matches(p.title, needle));
   const shown = tab === "courses" ? courses.length : programs.length;
   const tabLabel = myLearningTabs.find((t) => t.id === tab)?.label ?? "";
@@ -71,7 +89,7 @@ export function MyLearningCollection() {
 
   const tabs = myLearningTabs.map((t) => ({
     ...t,
-    count: t.id === "courses" ? myLearningCourses.length : myLearningPrograms.length,
+    count: t.id === "courses" ? courseRows.length : myLearningPrograms.length,
   }));
 
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
@@ -127,19 +145,20 @@ export function MyLearningCollection() {
           />
         ) : tab === "courses" ? (
           <>
-            <ul className={cn(GRID, listView && "lg:hidden")}>
-              {/* One primary action in the grid: the first course. The DS card draws every action as Primary. */}
-              {courses.map((course, index) => (
-                <li key={course.id} className="flex min-w-0">
-                  <MyLearningCourseCard
-                    course={course}
-                    layout="grid"
-                    className="w-full"
-                  />
-                </li>
+            {/* items-start: an opened row does not stretch the rows of its line. */}
+            <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+              {courses.map((row) => (
+                <CourseRowCard
+                  key={row.card.id}
+                  {...row}
+                  breakpoint="compact"
+                  open={openRows.has(row.card.id)}
+                  onToggle={() => toggleRow(row.card.id)}
+                  className={ROW_HOVER}
+                />
               ))}
-              {/* The way out to the catalog closes the grid. */}
-              <li className="flex min-w-0">
+              {/* The way out to the catalog closes the grid. It keeps the height of its line. */}
+              <li className="flex min-w-0 self-stretch">
                 <BrowseTile
                   title={myLearningBrowseTile.title}
                   subtitle={myLearningBrowseTile.subtitle}
@@ -149,10 +168,15 @@ export function MyLearningCollection() {
             </ul>
             {listView ? (
               <ul className={LIST}>
-                {courses.map((course) => (
-                  <li key={course.id}>
-                    <MyLearningCourseCard course={course} layout="list" />
-                  </li>
+                {courses.map((row) => (
+                  <CourseRowCard
+                    key={row.card.id}
+                    {...row}
+                    breakpoint="desktop"
+                    open={openRows.has(row.card.id)}
+                    onToggle={() => toggleRow(row.card.id)}
+                    className={ROW_HOVER}
+                  />
                 ))}
               </ul>
             ) : null}

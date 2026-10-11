@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { MyLearningCollection } from "@/components/platform/my-learning/MyLearningCollection";
 import { MyLearningHeader } from "@/components/platform/my-learning/MyLearningHeader";
+import { myLearningCourseRows } from "@/lib/platform/my-learning-rows";
 import { pageTitle } from "@/lib/utils";
 
 export const metadata = { title: pageTitle("My Learning") };
@@ -13,6 +14,8 @@ export const metadata = { title: pageTitle("My Learning") };
  * at the 1200 of the desktop frame.
  * The Collection reads the tab and the view from the URL (useSearchParams), hence the
  * Suspense boundary.
+ * The course rows are read here, on the server (11 Oct 2026): their modules come from each
+ * course's own page data, which stays out of the browser bundle.
  */
 export default function MyLearningPage() {
   return (
@@ -20,7 +23,7 @@ export default function MyLearningPage() {
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         <MyLearningHeader />
         <Suspense fallback={null}>
-          <MyLearningCollection />
+          <MyLearningCollection courseRows={myLearningCourseRows} />
         </Suspense>
       </div>
     </PlatformPage>
