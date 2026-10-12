@@ -119,6 +119,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
   const [completeOpen, setCompleteOpen] = React.useState(false);
   const completionFlow = useLmsStore((s) => s.completionFlow);
+  const labProgress = useLmsStore((s) => s.labState[topicId]);
   /** The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026). */
   const [askOpen, setAskOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
@@ -173,6 +174,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // action of its own. Microsoft sends nothing back, so the learner marks it complete;
   // Google sends a score, so there is nothing to mark and only the status shows once done.
   const partnerLab = getPartnerLab(topic);
+  const labOpenedAt = labProgress?.openedAt;
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
@@ -194,6 +196,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     <TopicActionBar
       state={actionState}
       onComplete={() => markComplete(topicId)}
+      // On a partner lab that has not been opened yet, the launch button is the primary action.
+      secondary={Boolean(partnerLab) && !labOpenedAt}
       // Quiz, ORA and VILT have no manual completion, and Video completes on its own at 90%
       // watched (reading-screen-matrix §4): their badge reads "Completed".
       manual={
