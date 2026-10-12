@@ -398,9 +398,9 @@ export function VideoPlayer({
             pick("bottom-[74px]", "bottom-20", "bottom-[74px] [@container(min-width:30rem)]:bottom-20"),
           )}
         >
-          {/* Two bg/overlay layers (50% each, 75% together): one layer leaves white text
-              at about 3.4:1 over a bright frame; two keep it above 4.5:1 on any video. */}
-          <span className="sk-text-body-medium-medium block bg-sko-bg-overlay px-3 py-1 text-sko-text-on-media">
+          {/* One bg/overlay layer, on the wrapper. At 70% (12 Oct 2026) it keeps white text at
+              6.56:1 over a white frame; at 50% it took two layers to stay above 4.5:1. */}
+          <span className="sk-text-body-medium-medium block px-3 py-1 text-sko-text-on-media">
             {caption}
           </span>
         </div>

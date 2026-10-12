@@ -149,7 +149,7 @@ button {
   }
 }
 
-/* Overlay backdrop — the DS dim is bg/overlay (#0e1a1f at 50% in all 6 modes:
+/* Overlay backdrop — the DS dim is bg/overlay (#0e1a1f at 70% in all 6 modes since 12 Oct 2026, 50% before:
    "the dim layer behind a modal or over a video"), a dark dim in light and dark
    themes alike, plus Backdrop blurs/backdrop-blur-sm. Figma's background-blur
    radius 8 exports as CSS blur(4px) (= Tailwind backdrop-blur-sm), not 8px. */
