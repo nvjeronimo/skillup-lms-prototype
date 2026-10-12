@@ -63,7 +63,10 @@ const LINK =
    type; the Icon Button keeps the faint grey both had before. Applied in buttonClassName, not
    in VARIANT: `cn` does not merge Tailwind classes, so only one hover fill may be emitted. */
 const OUTLINE_HOVER: Record<ButtonTone, string> = {
-  brand: "hover:bg-sko-bg-primary-hover",
+  // On the yellow fill the label and the icon take text/on-primary-hover (Nelson, 12 Oct 2026):
+  // text/primary was 1.29:1 there in the dark theme.
+  brand:
+    "hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover [&:not(:disabled):hover_svg]:text-sko-text-on-primary-hover",
   destructive: "hover:bg-sko-bg-error-soft",
   success: "hover:bg-sko-bg-accent-green-soft",
 };
