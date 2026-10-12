@@ -98,7 +98,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
                     <CourseRow
                       title={course.headline}
                       context={course.context}
-                      deliveryMode={course.deliveryMode}
+                      next={course.next}
                       state="Active"
                       progressPct={course.progressPct}
                       href={course.href}

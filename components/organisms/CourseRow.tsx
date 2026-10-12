@@ -5,7 +5,8 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
-import { DeliveryModeBadge, type DeliveryMode } from "@/components/atoms/MetaBadges";
+import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
+import type { TopicType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export type CourseRowState = "Active" | "Locked" | "Available";
@@ -15,7 +16,8 @@ export interface CourseRowProps {
   title: string;
   /** The line under it: "Course · Program", or the program alone under a Locked course. One line, cut with an ellipsis. */
   context?: string;
-  deliveryMode?: DeliveryMode;
+  /** The topic the action opens: its type badge and its length sit above the headline. */
+  next?: { type: TopicType; duration?: string };
   state?: CourseRowState;
   /** Progress % (Active state). */
   progressPct?: number;
@@ -34,19 +36,21 @@ export interface CourseRowProps {
 /**
  * Course row in program lists — Active / Locked / Available states (matches DS).
  *
- * A long title wraps instead of being cut (10 Oct 2026, as fixed in Figma: the row grows from
- * 68 to 80 with a two-line title, and the delivery badge keeps its full width beside it).
+ * A long title wraps instead of being cut (10 Oct 2026, as fixed in Figma).
  * A row too narrow for two lines is the caller's to replace (the Dashboard switches to the
  * Resume row below 700px of row width).
  *
  * DS v2.0 (Nelson, 12 Oct 2026): the row says where the learner left off. `title` is the
  * module, `context` the course and its program on a second line (body-small Regular,
- * text/subtle, 2 under the title, one line). The row is 76 tall with both lines.
+ * text/subtle, 2 under the title, one line). Above the title, `next` prints the type of the
+ * topic the action opens (DS Topic-Types-Badge) and its length, 8 apart with a "·" between
+ * (body-small Medium, text/subtle). The row is 96 tall with the three lines. The delivery
+ * badge left the row in this version.
  */
 export function CourseRow({
   title,
   context,
-  deliveryMode = "Live Sessions",
+  next,
   state = "Active",
   progressPct = 0,
   unlockLabel = "UNLOCKS MAY 18",
@@ -64,31 +68,50 @@ export function CourseRow({
         // The DS stroke is inside the 68px row and the CSS border is outside the padding:
         // 19 / 15 + 1 border = the DS 20 / 16.
         // Every state has the same 1px border/subtle stroke in the DS (read 8 Oct 2026).
-        "relative flex items-center gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card px-[19px] py-[15px]",
-        homeHref && state !== "Locked" && "transition-colors has-[span_a:hover]:border-sko-border-default",
+        "relative flex items-center gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page px-[19px] py-[15px] shadow-sk-card",
+        homeHref &&
+          state !== "Locked" &&
+          "transition-colors has-[span_a:hover]:border-sko-border-default",
         className,
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <span
-            className={cn(
-              "sk-text-body-large-medium min-w-0",
-              state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
-            )}
-          >
-            {homeHref && state !== "Locked" ? (
-              <Link href={homeHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
-                {title}
-              </Link>
-            ) : (
-              title
-            )}
+          <span className="flex min-w-0 flex-col">
+            {next ? (
+              <span className="sk-text-body-small-medium flex items-center gap-2 text-sko-text-subtle">
+                <TopicTypeBadge type={next.type} />
+                {next.duration ? (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span>{next.duration}</span>
+                  </>
+                ) : null}
+              </span>
+            ) : null}
+            <span
+              className={cn(
+                "sk-text-body-large-medium min-w-0",
+                state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
+              )}
+            >
+              {homeHref && state !== "Locked" ? (
+                <Link
+                  href={homeHref}
+                  className="after:absolute after:inset-0 after:content-[''] hover:underline"
+                >
+                  {title}
+                </Link>
+              ) : (
+                title
+              )}
+            </span>
           </span>
-          {context ? <span className="sk-text-body-small-regular truncate text-sko-text-subtle">{context}</span> : null}
-        </span>
-        <span className="flex shrink-0">
-          <DeliveryModeBadge value={deliveryMode} />
+          {context ? (
+            <span className="sk-text-body-small-regular truncate text-sko-text-subtle">
+              {context}
+            </span>
+          ) : null}
         </span>
       </div>
 
@@ -103,7 +126,13 @@ export function CourseRow({
             className="w-[140px]"
           />
           {href ? (
-            <ButtonLink href={href} hierarchy={emphasis} size="sm" className="relative z-[1]" aria-label={`Resume ${subject}`}>
+            <ButtonLink
+              href={href}
+              hierarchy={emphasis}
+              size="sm"
+              className="relative z-[1]"
+              aria-label={`Resume ${subject}`}
+            >
               Resume
             </ButtonLink>
           ) : (
