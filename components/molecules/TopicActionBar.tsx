@@ -23,10 +23,23 @@ export interface TopicActionBarProps {
   onSubmit?: () => void;
   /** False for types with no manual completion: the completed badge then reads "Completed". */
   manual?: boolean;
+  /**
+   * True while the page has another primary action the learner has not used yet: a partner
+   * lab that has not been opened, where the launch button is the primary. Mark as Complete is
+   * then Secondary, and turns Primary once the lab has been opened (Nelson, 12 Oct 2026).
+   */
+  secondary?: boolean;
   className?: string;
 }
 
-export function TopicActionBar({ state, onComplete, onSubmit, manual = true, className }: TopicActionBarProps) {
+export function TopicActionBar({
+  state,
+  onComplete,
+  onSubmit,
+  manual = true,
+  secondary = false,
+  className,
+}: TopicActionBarProps) {
   if (state === "completed") {
     return (
       <Badge color="success" leftIcon={CircleCheck} className={className}>
@@ -55,7 +68,7 @@ export function TopicActionBar({ state, onComplete, onSubmit, manual = true, cla
     );
   }
   return (
-    <Button variant="primary" size="sm" onClick={onComplete} className={className}>
+    <Button variant={secondary ? "secondary" : "primary"} size="sm" onClick={onComplete} className={className}>
       Mark as Complete
     </Button>
   );
