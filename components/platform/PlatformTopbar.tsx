@@ -28,13 +28,14 @@ function itemClass(current: boolean) {
 }
 
 /**
- * The desktop bar: DS `Horizontal tabs`, Type=Underline, Size=md (the look of
- * platform/PlatformTabs). These stay links in a <nav> with `aria-current`, not an ARIA
- * tablist: each one opens another page.
+ * The desktop bar: DS `LMS/Platform/Navigation/Topbar-Item` v2.0, an underline tab that fills the
+ * height of the bar (body-large Semibold, padding 0/4). `Current=On` is text/primary with a 3px
+ * bg/primary bar along the bottom, sitting on the rule of the top bar. These stay links in a
+ * <nav> with `aria-current`, not an ARIA tablist: each one opens another page.
  */
 function tabClass(current: boolean) {
   return cn(
-    "sk-text-body-large-semibold relative flex items-center gap-2 px-1 py-3 transition-colors",
+    "sk-text-body-large-semibold relative flex items-center gap-2 px-1 transition-colors",
     current ? "text-sko-text-primary" : "text-sko-text-subtle hover:text-sko-text-default",
   );
 }
@@ -74,12 +75,12 @@ function SectionLinks({
               </Badge>
             ) : null}
             {tabs && isCurrent ? (
-              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-0.5 rounded-t-[2px] bg-sko-bg-primary" />
+              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] rounded-t-[2px] bg-sko-bg-primary" />
             ) : null}
           </>
         );
         return (
-          <li key={s.id}>
+          <li key={s.id} className={tabs ? "flex" : undefined}>
             {s.href ? (
               <Link
                 href={s.href}
@@ -170,8 +171,9 @@ function Initials() {
  * DS `LMS / Platform / Topbar` (6374:3608), on every platform page while the LMS sidebar
  * is in development. Light: bg/page with a 1px border/subtle rule below.
  * - Desktop (≥1025): 72px with the rule, padding 16/24 — logo · the five sections · notifications · learner.
- *   The sections are a DS `Horizontal tabs` instance, Type=Underline, Size=md (Nelson, 11 Oct
- *   2026; before that, five `Topbar-Item` pills): 48 tall, centred in the bar, with its own rule.
+ *   The sections are five DS `Topbar-Item` (v2.0, Nelson, 12 Oct 2026): underline tabs that fill
+ *   the height of the bar, 12 apart, with no rule of their own. The page sets which one is current;
+ *   in Figma that is `Current=On` on the item, there is no property for it on the Topbar.
  * - Compact (tablet and mobile): padding 8/16 — logo · notifications · avatar · menu.
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
  *   disclosure list under the bar.
@@ -206,12 +208,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
         <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
           <SkillUpLogo className="h-[30px]" />
         </Link>
-        <nav aria-label="Platform">
-          <SectionLinks
-            current={current}
-            look="tabs"
-            className="flex items-start gap-3 shadow-[inset_0_-1px_0_0_var(--color-border-subtle)] forced-colors:border-b forced-colors:border-sko-border-subtle"
-          />
+        <nav aria-label="Platform" className="self-stretch">
+          <SectionLinks current={current} look="tabs" className="flex h-full items-stretch gap-3" />
         </nav>
         <div className="flex items-center gap-3">
           {bell}
