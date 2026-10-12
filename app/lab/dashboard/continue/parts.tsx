@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { CertStatus, DueItem, Enrolment, LiveSession } from "@/lib/lab/dashboard-mock";
 
-/* Links styled as DS Button V2 (Brand). Button.tsx renders a <button>; navigation needs <a>. */
+/* Links styled as DS Button (Brand). Button.tsx renders a <button>; navigation needs <a>. */
 const FOCUS =
   "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]";
 

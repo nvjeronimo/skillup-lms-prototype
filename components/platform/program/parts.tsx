@@ -64,14 +64,14 @@ export interface SidebarDate {
   detail: string;
   /** Relative badge; computed by the product, not sent by the platform. */
   relative: string;
-  /** Badge v2 Outline colour: Gray unless the date is close (Yellow on Course Detail). */
+  /** Badge Outline colour: Gray unless the date is close (Yellow on Course Detail). */
   relativeColor?: BadgeColor;
 }
 
 /**
  * The rows of `LMS / Course Detail / Sidebar card`, Type=Dates (Program 6443:18749, Course
  * Detail 6406:39282): a 44×48 date tile (bg/subtle, radius 8), the title, the date line and
- * the relative badge (Badge v2 Outline), split by 1px rules.
+ * the relative badge (Badge Outline), split by 1px rules.
  */
 export function SidebarDateList({ dates }: { dates: SidebarDate[] }) {
   return (

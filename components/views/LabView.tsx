@@ -251,7 +251,7 @@ function PartnerLabView({
       />
     ) : null;
 
-  // The card's actions are 36 high in the DS (`Buttons/Button` md), which is Button V2 sm here.
+  // The card's actions are 36 high in the DS (`Buttons/Button` md), which is Button sm here.
   const newTab = (hierarchy: "primary" | "secondary", label: string) => (
     <ButtonLink
       href={href}

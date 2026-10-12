@@ -24,7 +24,7 @@ export interface ButtonLinkProps
 }
 
 /**
- * DS Button V2 on a link: the look of atoms/Button (same classes, same markup inside) on a
+ * DS Button on a link: the look of atoms/Button (same classes, same markup inside) on a
  * Next <Link>, for every action that goes to a page. A link stays a link: it can be opened
  * in a new tab, it is announced as a link and Next prefetches it. Actions that stay on the
  * page keep atoms/Button. A link has no Disabled or Loading state and no icon-only form.

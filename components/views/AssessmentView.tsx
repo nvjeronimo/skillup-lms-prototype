@@ -613,7 +613,7 @@ function QuizEntryHeader({
 
       <h3 className="sk-text-title-medium-semibold text-sko-text-default">{topic.title}</h3>
 
-      {/* Meta facts: Badge v2 Soft sm Gray. */}
+      {/* Meta facts: Badge Soft sm Gray. */}
       <ul className="flex flex-wrap gap-2">
         {facts.map((f) => (
           <li key={f}>

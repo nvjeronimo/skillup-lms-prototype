@@ -85,9 +85,9 @@ export function QuizNavStepper({
     // 1px border/subtle rule, 12px apart.
     <div className={cn("flex flex-col gap-3", className)}>
       <div className="flex items-end gap-4">
-        {/* A link button (Link Button_def Brand/Secondary): visible "Back"
+        {/* A link button (Link Button Brand/Secondary): visible "Back"
             label, 20px chevron in icon/faint, no box. Disabled follows the
-            Link Button_def Disabled state (text/disabled). */}
+            Link Button Disabled state (text/disabled). */}
         <button
           type="button"
           onClick={onBack}

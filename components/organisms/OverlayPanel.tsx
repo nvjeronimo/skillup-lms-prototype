@@ -67,7 +67,7 @@ export function OverlayPanel({
               <button
                 type="button"
                 onClick={headerAction.onClick}
-                // DS Link Button_def Brand/Primary (text-only: px-1 = structure 2 + label 2).
+                // DS Link Button Brand/Primary (text-only: px-1 = structure 2 + label 2).
                 className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
               >
                 {headerAction.label}

@@ -65,7 +65,7 @@ export const Sizes: Story = {
   ),
 };
 
-/** The seven DS Button_def Type × Hierarchy combinations, then the four Link Button_def ones. */
+/** The seven DS Button Type × Hierarchy combinations, then the four Link Button ones. */
 const COMBOS: Array<[ButtonTone, ButtonHierarchy]> = [
   ["brand", "primary"],
   ["brand", "secondary"],

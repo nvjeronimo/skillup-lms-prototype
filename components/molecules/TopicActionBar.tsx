@@ -10,8 +10,8 @@ import { Badge } from "@/components/atoms/Badge";
  * - incomplete (passive content) → "Mark as Complete", Buttons/Button sm Primary
  * - action     (quiz/assignment) → "Submit" + trailing arrow-right, Buttons/Button sm
  *   Primary (DS Milestone=Submit)
- * - review     (graded, submitted) → "Under Review", Badge v2 Soft sm Warning
- * - completed  → "Marked as completed", Badge v2 Soft sm Success. Types the learner cannot
+ * - review     (graded, submitted) → "Under Review", Badge Soft sm Warning
+ * - completed  → "Marked as completed", Badge Soft sm Success. Types the learner cannot
  *   complete by hand (Quiz, ORA, VILT), and Video, which completes itself, read "Completed"
  *   instead (`manual={false}`).
  */

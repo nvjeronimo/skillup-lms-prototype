@@ -66,7 +66,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
             {typeof t.count === "number" ? (
               <span
                 className={cn(
-                  // DS Badge v2 Soft sm: Brand on the current tab, Gray on the others.
+                  // DS Badge Soft sm: Brand on the current tab, Gray on the others.
                   "sk-text-body-small-medium inline-flex items-center rounded-full px-2 py-0.5",
                   isActive
                     ? "bg-sko-bg-primary-soft text-sko-text-primary"

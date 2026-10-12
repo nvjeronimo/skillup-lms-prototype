@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export interface PlatformTab<T extends string> {
   id: T;
   label: string;
-  /** Shown in a Badge v2 Soft after the label: Brand on the selected tab, Gray on the others. */
+  /** Shown in a Badge Soft after the label: Brand on the selected tab, Gray on the others. */
   count?: number;
 }
 

@@ -188,7 +188,7 @@ export function QuizFooterActions({
     <div className={cn("flex flex-wrap items-end justify-between gap-2", className)}>
       {/* DS order: Hint, Skip question, Save draft / Draft saved, Show answer,
           Next question, Reset. Hint, Show answer, Next question and Reset are
-          Link buttons (Link Button_def Brand/Primary); Skip and Save are
+          Link buttons (Link Button Brand/Primary); Skip and Save are
           Secondary. */}
       <div className="flex flex-wrap items-center gap-2">
         {secondary && showHint ? (

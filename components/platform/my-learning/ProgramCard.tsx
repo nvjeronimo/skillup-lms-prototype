@@ -42,7 +42,7 @@ const TARGET_44 =
  * by the hero.
  * Body, gap 16: the percent (headline-medium/Bold) with its label, the DS Progress bar
  * (8 tall, square, bg/strong track, bg/info fill, stepped by 10: nearest step), then the
- * footer — In progress: "Up next" + a primary "Continue"; Not started: a Badge v2 Gray
+ * footer — In progress: "Up next" + a primary "Continue"; Not started: a Badge Gray
  * status + a secondary "Details" (Buttons/Button sm). The action is a link with the button
  * look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.

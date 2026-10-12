@@ -16,7 +16,7 @@ import { CardShell, SectionIntro } from "./parts";
  * DS `LMS / Course Detail / Certificate card` (5425:566), the two states the page draws.
  * Issued: the Certificate document thumbnail (bg/subtle, 1px border/subtle, radius 8), the
  * course title (body-large/Semibold), the issue line (body-medium/Regular, text/subtle) and
- * View (Primary) + Download (Secondary), Button V2 sm, sharing the row with a 6px gap.
+ * View (Primary) + Download (Secondary), Button sm, sharing the row with a 6px gap.
  * Not earned: the fixed title and the requirements, each a title (body-medium/Semibold), a
  * detail (body-small/Regular, text/subtle) and a progress bar, 16 apart.
  * This is not organisms/CourseCertificate, which is the full certificate page.
