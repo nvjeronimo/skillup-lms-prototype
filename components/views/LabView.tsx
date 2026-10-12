@@ -7,6 +7,7 @@ import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { Alert } from "@/components/molecules/Alert";
 import { LabLaunchCard, type LabLaunchState } from "@/components/molecules/LabLaunchCard";
 import { LabModal } from "@/components/organisms/LabModal";
 import { FileTypeChip, fileExtension } from "@/components/views/LessonBlocks";
@@ -32,17 +33,20 @@ export function LabView({ topicId, courseSlug }: { topicId: string; courseSlug: 
   );
 }
 
-/** DS `LMS / Lab · Prerequisites` (20328:3331): p16, gap 8, r10. */
+/**
+ * What the learner needs before the lab: the DS `Alert` (Brand, Floating) with the
+ * requirements as a list. Nelson replaced `LMS/ICP/Topics/Lab-Prerequisites` with it on
+ * 12 Oct 2026, on every Lab screen.
+ */
 function Prerequisites({ items }: { items: string[] }) {
   return (
-    <section className="flex flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-subtle p-4">
-      <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">Before you start</span>
-      <ul className="sk-text-body-medium-regular list-disc pl-5 text-sko-text-muted">
+    <Alert title="BEFORE YOU START">
+      <ul className="list-disc pl-5">
         {items.map((p) => (
           <li key={p}>{p}</li>
         ))}
       </ul>
-    </section>
+    </Alert>
   );
 }
 
@@ -404,17 +408,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
       <p className="sk-text-body-large-regular text-sko-text-muted">{lab.intro}</p>
 
       {/* Prerequisites — surfaced before the download so nobody gets stuck. */}
-      {/* DS LMS / Lab · Prerequisites (20328:3331): p16, gap 8, r10. */}
-      <section className="flex flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-subtle p-4">
-        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
-          Before you start
-        </span>
-        <ul className="sk-text-body-medium-regular list-disc pl-5 text-sko-text-muted">
-          {lab.prerequisites.map((p) => (
-            <li key={p}>{p}</li>
-          ))}
-        </ul>
-      </section>
+      <Prerequisites items={lab.prerequisites} />
 
       {/* Files — the core affordance of a lab topic. */}
       <section className="flex flex-col gap-3">
