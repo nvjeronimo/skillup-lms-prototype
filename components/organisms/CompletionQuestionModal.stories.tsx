@@ -9,7 +9,7 @@ const meta: Meta<typeof CompletionQuestionModal> = {
   args: {
     open: true,
     noun: "lab",
-    reason: "SkillUp can't see your progress on Google Skills, so we ask you.",
+    reason: "Your progress on Google Skills isn't tracked automatically. Please confirm whether you've completed this lab.",
     onYes: () => {},
     onNotYet: () => {},
     onClose: () => {},
@@ -29,13 +29,13 @@ type Story = StoryObj<typeof CompletionQuestionModal>;
 export const Lab: Story = {};
 
 export const Reading: Story = {
-  args: { noun: "reading", reason: "SkillUp can't tell when a reading is done, so we ask you." },
+  args: { noun: "reading", reason: "Your progress on this reading isn't tracked automatically. Please confirm whether you've completed this reading." },
 };
 
 export const LastTopic: Story = {
-  args: { noun: "reading", reason: "SkillUp can't tell when a reading is done, so we ask you.", hasNext: false },
+  args: { noun: "reading", reason: "Your progress on this reading isn't tracked automatically. Please confirm whether you've completed this reading.", hasNext: false },
 };
 
 export const VideoFallback: Story = {
-  args: { noun: "video", reason: "SkillUp can't measure playback here, so we ask you." },
+  args: { noun: "video", reason: "Your progress on this video isn't tracked automatically. Please confirm whether you've completed this video." },
 };

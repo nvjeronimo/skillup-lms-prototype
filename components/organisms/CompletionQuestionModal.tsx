@@ -14,17 +14,18 @@ export interface CompletionQuestionModalProps {
   reason: string;
   /** False on the last topic: there is nowhere to go on to, so the text does not promise it. */
   hasNext?: boolean;
-  /** The learner has finished: complete the topic and move on. */
+  /** "Yes, completed": mark the topic as completed and advance to the next topic. */
   onYes: () => void;
-  /** Not finished: move on and leave the topic not completed. */
+  /** "Not yet": keep the topic incomplete and advance to the next topic. */
   onNotYet: () => void;
-  /** Close, Esc or the backdrop: stay on the page, nothing changes. */
+  /** Close, Esc or the backdrop: no change, remain on the current topic. */
   onClose: () => void;
 }
 
 /**
- * The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026,
- * lab-third-party-platforms.md §4; Figma frames 7070:14832 and 7077:18132). DS `Modal` Type=Horizontal:
+ * The question Next asks when the learner moves on from a topic the platform cannot measure
+ * without Mark as Complete (lab-third-party-platforms.md §4; Figma frames 7070:14832 and
+ * 7077:18132). Copy and the three behaviours are Navdeep's, 12 Oct 2026. DS `Modal` Type=Horizontal:
  * featured icon beside the title and supporting text, close top right, two actions right
  * aligned. On a phone the actions stack and the primary one comes first, as in the DS
  * mobile variant.
@@ -61,14 +62,16 @@ export function CompletionQuestionModal({
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-1 pr-10">
             <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
-              Have you finished this {noun}?
+              Have you completed this {noun}?
             </h2>
-            <p id={descId} className="sk-text-body-medium-regular text-sko-text-muted">
-              {reason}{" "}
-              {hasNext
-                ? `Either way you go to the next topic, and you can come back to this ${noun} at any time.`
-                : `You can come back to this ${noun} at any time.`}
-            </p>
+            <div id={descId} className="sk-text-body-medium-regular flex flex-col text-sko-text-muted">
+              <p>{reason}</p>
+              <p>
+                {hasNext
+                  ? `You can move to the next topic either way and return to this ${noun} anytime.`
+                  : `You can return to this ${noun} anytime.`}
+              </p>
+            </div>
           </div>
           <button
             type="button"
@@ -82,7 +85,7 @@ export function CompletionQuestionModal({
 
         <div className="flex flex-col gap-3 p-6 sm:flex-row-reverse sm:justify-start">
           <Button variant="primary" size="md" onClick={onYes}>
-            Yes, I&rsquo;ve finished
+            Yes, completed
           </Button>
           <Button variant="secondary" size="md" onClick={onNotYet}>
             Not yet

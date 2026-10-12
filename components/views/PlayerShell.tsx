@@ -207,9 +207,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       }
     />
   );
-  // The rule since 12 Oct 2026 (lab-third-party-platforms.md §4): on a topic the platform cannot
-  // measure there is no Mark as Complete button. The footer stays Previous / Next, and Next asks
-  // whether the learner has finished. The demo menu can switch back to the button.
+  // The rule since 12 Oct 2026 (lab-third-party-platforms.md §4, after Navdeep's comments): on a
+  // topic the platform cannot measure, Mark as Complete stays at the end of the content, and Next
+  // asks whether the learner has completed it when they move on without the button. The demo
+  // menu can switch the question off, which leaves the button alone as it was before.
   const asksOnNext = completionFlow === "ask-on-next" && completesByHand(topic) && !isLocked;
   const showAction =
     !isLocked && !hasInFrameAction && !isVilt && !isBlocked && !(partnerLab?.scored && !isCompleted);
@@ -221,7 +222,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // The end-of-content action only belongs at the end of the CONTENT. The
   // Downloads and Notes tabs are short lists, so a second button there sits
   // in the same viewport as the header one and just reads as duplication.
-  const bottomAction = showAction && !asksOnNext && activeTab === "transcript" ? (
+  const bottomAction = showAction && activeTab === "transcript" ? (
     <div className="mt-6 flex justify-end border-t border-sko-border-subtle pt-5">
       {renderAction()}
     </div>
