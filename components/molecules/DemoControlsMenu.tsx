@@ -6,8 +6,15 @@ import { Check, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
-import { getPartnerLab, topicFamily } from "@/lib/content";
-import { useLargeTargets, useLmsStore, type DeviceMode, type LabLaunch, type Skin as SkinId } from "@/lib/store";
+import { completesByHand, getPartnerLab, topicFamily } from "@/lib/content";
+import {
+  useLargeTargets,
+  useLmsStore,
+  type CompletionFlow,
+  type DeviceMode,
+  type LabLaunch,
+  type Skin as SkinId,
+} from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
@@ -34,6 +41,11 @@ const LAB_LAUNCHES: { value: LabLaunch; label: string }[] = [
   { value: "inline", label: "Inline" },
   { value: "modal", label: "Modal" },
   { value: "refused", label: "Refused" },
+];
+
+const COMPLETION_FLOWS: { value: CompletionFlow; label: string }[] = [
+  { value: "ask-on-next", label: "Next asks" },
+  { value: "mark-as-complete", label: "Mark as Complete" },
 ];
 
 const SKINS: { skin: SkinId; label: string }[] = [
@@ -165,6 +177,10 @@ export function DemoControlsMenu({
   const onLtiLab = activeTopic ? Boolean(getPartnerLab(activeTopic)?.scored) : false;
   const labLaunch = useLmsStore((s) => s.labLaunch);
   const setLabLaunch = useLmsStore((s) => s.setLabLaunch);
+  // The completion test shows on the topics it changes: the ones the learner completes by hand.
+  const onHandCompleted = activeTopic ? completesByHand(activeTopic) : false;
+  const completionFlow = useLmsStore((s) => s.completionFlow);
+  const setCompletionFlow = useLmsStore((s) => s.setCompletionFlow);
 
   const pill =
     "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
@@ -412,6 +428,36 @@ export function DemoControlsMenu({
                   New tab is how the Google labs open today. Inline and Modal are the other
                   LTI settings, still to be tested in Studio. Refused is what the learner
                   gets when the provider does not allow the frame.
+                </p>
+              </div>
+            </Section>
+          ) : null}
+
+          {onHandCompleted ? (
+            <Section title="Completion (test)">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+                  {COMPLETION_FLOWS.map((f) => (
+                    <button
+                      key={f.value}
+                      type="button"
+                      aria-pressed={completionFlow === f.value}
+                      onClick={() => setCompletionFlow(f.value)}
+                      className={cn(
+                        "sk-text-body-small-semibold flex-1 px-2 py-1 transition-colors",
+                        completionFlow === f.value
+                          ? "bg-sko-bg-primary text-sko-text-on-primary"
+                          : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                      )}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                  Next asks: the footer is Previous and Next, and Next asks whether you have
+                  finished. Mark as Complete is the button the prototype had before. A test,
+                  not decided.
                 </p>
               </div>
             </Section>

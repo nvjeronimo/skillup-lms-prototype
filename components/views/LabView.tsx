@@ -101,6 +101,8 @@ function PartnerLabView({
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const progress = useLmsStore((s) => s.labState[topicId]);
   const labLaunch = useLmsStore((s) => s.labLaunch);
+  // Test of 12 Oct 2026: Next asks whether the lab is done, instead of a Mark as Complete button.
+  const asks = useLmsStore((s) => s.completionFlow) === "ask-on-next";
   const labOpened = useLmsStore((s) => s.labOpened);
   const [modalOpen, setModalOpen] = React.useState(false);
   const cardRef = React.useRef<HTMLElement>(null);
@@ -186,7 +188,9 @@ function PartnerLabView({
     ? [
         "Open the module. It starts in a new tab and this page stays open.",
         "Work through the units and exercises on Microsoft Learn.",
-        "Come back to this page and select Mark as Complete.",
+        asks
+          ? "Come back to this page. When you select Next, we ask if you have finished."
+          : "Come back to this page and select Mark as Complete.",
       ]
     : launch === "inline"
       ? [
@@ -231,13 +235,16 @@ function PartnerLabView({
         ? {
             tone: "info",
             title: "Finished the lab?",
-            description: "Select Mark as Complete below so it counts towards your progress.",
+            description: asks
+              ? "Select Next and answer yes, so it counts towards your progress."
+              : "Select Mark as Complete below so it counts towards your progress.",
           }
         : {
             tone: "info",
             title: "SkillUp can't see your progress on Microsoft Learn",
-            description:
-              "Nothing is sent back when you finish, so this topic stays open until you mark it as complete.",
+            description: asks
+              ? "Nothing is sent back when you finish, so we ask you when you select Next."
+              : "Nothing is sent back when you finish, so this topic stays open until you mark it as complete.",
           };
 
   // Google's own help does not recommend phones or tablets for its labs. The warning sits
@@ -377,6 +384,8 @@ function PartnerLabView({
 function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabContent }) {
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const markComplete = useLmsStore((s) => s.markComplete);
+  // Test of 12 Oct 2026: Next asks whether the lab is done, instead of the button below.
+  const asks = useLmsStore((s) => s.completionFlow) === "ask-on-next";
   const showToast = useLmsStore((s) => s.showToast);
   const [downloaded, setDownloaded] = React.useState<Set<string>>(new Set());
 
@@ -486,13 +495,17 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
 
       <InlineAlert
         tone="info"
-        title="You mark this lab complete yourself"
-        description="The notebook runs on your own machine and is ungraded. Mark it complete once you have worked through it."
+        title={asks ? "SkillUp can't see this lab" : "You mark this lab complete yourself"}
+        description={
+          asks
+            ? "The notebook runs on your own machine and is ungraded. When you select Next, we ask if you have finished."
+            : "The notebook runs on your own machine and is ungraded. Mark it complete once you have worked through it."
+        }
       />
 
       {isCompleted ? (
         <InlineAlert tone="success" title="Lab complete" description="Nice work." />
-      ) : (
+      ) : asks ? null : (
         <div>
           <Button
             variant="primary"
