@@ -838,42 +838,64 @@ export interface DownloadLabContent {
 export interface PartnerLabContent {
   kind: "partner";
   partner: "google" | "microsoft";
-  /** DS `LMS / Provider-Partner Badge` on the launch card. */
+  /** DS `Provider-Partner Badge` on the launch card. */
   provider: "Google Cloud" | "Microsoft";
   /** The partner's lab platform, as the learner knows it. */
   platform: string;
-  /** True when the partner sends a score back (LTI, graded). */
-  scored: boolean;
+  /** The launch button, as on the Lab screens of 12 Oct 2026. */
+  launchLabel: string;
+  /** The line under the title on the launch card: where the lab opens and what it shares. */
+  cardLine: string;
+  /**
+   * True when the lab's component can be set to open inside the page. Two Microsoft courses do
+   * today (lab-third-party-platforms.md §8); every other lab opens in a new tab.
+   */
+  inPage?: boolean;
   description: string;
   intro: string;
   prerequisites: string[];
+  /** "How this lab works", when the lab opens in a new tab. */
+  steps: [string, string, string];
+  /** The note under the steps once the topic is completed. */
+  afterCompletion: string;
 }
 
 export type LabContent = DownloadLabContent | PartnerLabContent;
 
+// Nothing comes back from a partner (9 Oct 2026): no score, no completion. The learner
+// completes the topic with Mark as Complete, and Next asks if they move on without it.
 const PARTNER_LABS: Record<string, PartnerLabContent> = {
   "m3-t4e2": {
     kind: "partner",
     partner: "google",
     provider: "Google Cloud",
     platform: "Google Skills",
-    scored: true,
+    launchLabel: "Open Lab",
+    cardLine: "Google Skills · opens in a new tab · shares your username and email",
     description:
       "A hands-on lab on Google Cloud: create a virtual machine, connect to it and deploy a web server.",
     intro:
-      "This lab runs on Google Skills, Google's own lab platform. You work in a real Google Cloud project with temporary credentials, so you don't need your own Google Cloud account or a credit card.",
+      "This lab runs on Google Skills, Google's own lab platform. You sign in with a Google account and work in a real Google Cloud project.",
     prerequisites: [
-      "A desktop or laptop: this lab is not supported in the mobile app",
-      "Chrome, in an Incognito window, so your personal Google account stays out of the lab",
-      "About 45 minutes in one sitting: the lab timer can't be paused",
+      "A Google account, to sign in to Google Skills and accept its terms",
+      "A desktop or laptop with Chrome: Google doesn't recommend phones or tablets for its labs",
+      "Time to finish in one sitting: some labs are timed and close by themselves",
     ],
+    steps: [
+      "Open the lab. It starts in a new tab and this page stays open.",
+      "Sign in to Google Skills, start the lab and follow its instructions.",
+      "Come back to this page and select Mark as Complete.",
+    ],
+    afterCompletion: "Open it whenever you want to practise. The topic stays complete.",
   },
   "m3-t4e3": {
     kind: "partner",
     partner: "microsoft",
     provider: "Microsoft",
     platform: "Microsoft Learn",
-    scored: false,
+    launchLabel: "Open on Microsoft Learn",
+    cardLine: "Microsoft Learn · opens in a new tab",
+    inPage: true,
     description:
       "A Microsoft Learn module with hands-on exercises on Azure Service Bus and Queue Storage.",
     intro:
@@ -883,6 +905,13 @@ const PARTNER_LABS: Record<string, PartnerLabContent> = {
       "A desktop or laptop is recommended for the exercises",
       "About 50 minutes",
     ],
+    steps: [
+      "Open the module. It starts in a new tab and this page stays open.",
+      "Work through the units and exercises on Microsoft Learn.",
+      "Come back to this page and select Mark as Complete.",
+    ],
+    afterCompletion:
+      "Open the module on Microsoft Learn whenever you want to review it. The topic stays complete.",
   },
 };
 
@@ -934,13 +963,12 @@ export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
  * playback. In the product they complete by themselves at 90% played, and Next asks only when
  * playback cannot be measured. The prototype is always in that case.
  *
- * Left out: a partner lab that sends a score (it completes by itself), the types with their own
- * submission (quiz, assignment, ORA) and VILT (attendance).
+ * Left out: the types with their own submission (quiz, assignment, ORA) and VILT (attendance).
  */
 export function completesByHand(topic: FlatTopic): boolean {
   const family = topicFamily(topic.type);
-  if (family === "lab") return !getPartnerLab(topic)?.scored;
   return (
+    family === "lab" ||
     family === "reading" ||
     family === "lessonPage" ||
     family === "activity" ||
