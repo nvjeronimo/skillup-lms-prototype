@@ -84,6 +84,8 @@ export const dashboardDue: DashboardDueItem[] = [
 
 export interface DashboardResumeCourse {
   id: string;
+  /** The course's slug: its page and its outline, where the module to resume is read. */
+  slug: string;
   title: string;
   deliveryMode: DeliveryMode;
   progressPct: number;
@@ -97,9 +99,9 @@ const PROGRAM_COURSE = slugify("AI-Driven Content and Brand Communication");
 
 export const dashboardResume: DashboardResumeCourse[] = [
   // Learner Home lists enrolments, which are courses: the row is the course the learner is in, not its program.
-  { id: PROGRAM_COURSE, title: "AI-Driven Content and Brand Communication", deliveryMode: "Flexible Learning", progressPct: 40, href: coursePlayerHref(PROGRAM_COURSE), homeHref: coursePageHref(PROGRAM_COURSE) },
-  { id: "ux-research-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: coursePlayerHref("ux-research-and-design-thinking"), homeHref: coursePageHref("ux-research-and-design-thinking") },
-  { id: "leadership-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: coursePlayerHref("leadership-in-remote-teams"), homeHref: coursePageHref("leadership-in-remote-teams") },
+  { id: PROGRAM_COURSE, slug: PROGRAM_COURSE, title: "AI-Driven Content and Brand Communication", deliveryMode: "Flexible Learning", progressPct: 40, href: coursePlayerHref(PROGRAM_COURSE), homeHref: coursePageHref(PROGRAM_COURSE) },
+  { id: "ux-research-design-thinking", slug: "ux-research-and-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: coursePlayerHref("ux-research-and-design-thinking"), homeHref: coursePageHref("ux-research-and-design-thinking") },
+  { id: "leadership-remote-teams", slug: "leadership-in-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: coursePlayerHref("leadership-in-remote-teams"), homeHref: coursePageHref("leadership-in-remote-teams") },
 ];
 
 /* ── Jump somewhere (LMS / Platform / Jump tile, 6382:3302) ─────────────────────────── */

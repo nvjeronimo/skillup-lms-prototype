@@ -8,8 +8,8 @@ import {
   dashboardGlance,
   dashboardGreeting,
   dashboardJump,
-  dashboardResume,
 } from "@/lib/platform/dashboard";
+import type { DashboardResumeRow } from "@/lib/platform/dashboard-resume";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
 import { DueItem } from "./DueItem";
@@ -32,8 +32,11 @@ import { ResumeRow } from "./ResumeRow";
  * badge. That covers mobile as before and also the desktop layout between 1024 and ~1250,
  * where the list is narrower than on a tablet (472px at 1024) and the Course Row cannot hold
  * a long title, its badge, the bar and the button on one line.
+ *
+ * Each row says where the learner left off (12 Oct 2026): the module is the headline, the
+ * course and its program the line under it. The rows come from lib/platform/dashboard-resume.
  */
-export function DashboardView() {
+export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
   const showToast = useLmsStore((s) => s.showToast);
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
@@ -77,13 +80,14 @@ export function DashboardView() {
               action={{ label: "My learning", href: "/platform/my-learning" }}
             />
             <ul className="flex flex-col gap-4">
-              {dashboardResume.map((course, index) => (
+              {resume.map((course, index) => (
                 <li key={course.id} className="[container-type:inline-size]">
                   {/* A list narrower than 700: the Resume row. From 700: the DS Course Row.
                       One primary action in the list: the course touched last; the rest are Secondary. */}
                   <ResumeRow
                     className="[@container_(min-width:700px)]:hidden"
-                    title={course.title}
+                    title={course.headline}
+                    context={course.context}
                     deliveryMode={course.deliveryMode}
                     progressPct={course.progressPct}
                     href={course.href}
@@ -92,7 +96,8 @@ export function DashboardView() {
                   />
                   <div className="hidden [@container_(min-width:700px)]:block">
                     <CourseRow
-                      title={course.title}
+                      title={course.headline}
+                      context={course.context}
                       deliveryMode={course.deliveryMode}
                       state="Active"
                       progressPct={course.progressPct}

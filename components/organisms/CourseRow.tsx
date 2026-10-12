@@ -11,7 +11,10 @@ import { cn } from "@/lib/utils";
 export type CourseRowState = "Active" | "Locked" | "Available";
 
 export interface CourseRowProps {
+  /** The headline: the module the learner left off in (Active), the first module (Available), the course (Locked). */
   title: string;
+  /** The line under it: "Course · Program", or the program alone under a Locked course. One line, cut with an ellipsis. */
+  context?: string;
   deliveryMode?: DeliveryMode;
   state?: CourseRowState;
   /** Progress % (Active state). */
@@ -33,11 +36,16 @@ export interface CourseRowProps {
  *
  * A long title wraps instead of being cut (10 Oct 2026, as fixed in Figma: the row grows from
  * 68 to 80 with a two-line title, and the delivery badge keeps its full width beside it).
- * Nothing is truncated; a row too narrow for two lines is the caller's to replace (the
- * Dashboard switches to the Resume row below 700px of row width).
+ * A row too narrow for two lines is the caller's to replace (the Dashboard switches to the
+ * Resume row below 700px of row width).
+ *
+ * DS v2.0 (Nelson, 12 Oct 2026): the row says where the learner left off. `title` is the
+ * module, `context` the course and its program on a second line (body-small Regular,
+ * text/subtle, 2 under the title, one line). The row is 76 tall with both lines.
  */
 export function CourseRow({
   title,
+  context,
   deliveryMode = "Live Sessions",
   state = "Active",
   progressPct = 0,
@@ -48,6 +56,8 @@ export function CourseRow({
   emphasis = "primary",
   className,
 }: CourseRowProps) {
+  // What the controls name: the module and, with it, the course it belongs to.
+  const subject = context ? `${title}, ${context}` : title;
   return (
     <div
       className={cn(
@@ -60,19 +70,22 @@ export function CourseRow({
       )}
     >
       <div className="flex min-w-0 flex-1 items-center gap-3">
-        <span
-          className={cn(
-            "sk-text-body-large-medium min-w-0",
-            state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
-          )}
-        >
-          {homeHref && state !== "Locked" ? (
-            <Link href={homeHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
-              {title}
-            </Link>
-          ) : (
-            title
-          )}
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span
+            className={cn(
+              "sk-text-body-large-medium min-w-0",
+              state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
+            )}
+          >
+            {homeHref && state !== "Locked" ? (
+              <Link href={homeHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
+                {title}
+              </Link>
+            ) : (
+              title
+            )}
+          </span>
+          {context ? <span className="sk-text-body-small-regular truncate text-sko-text-subtle">{context}</span> : null}
         </span>
         <span className="flex shrink-0">
           <DeliveryModeBadge value={deliveryMode} />
@@ -84,13 +97,13 @@ export function CourseRow({
           {/* DS Progress bar, Label=Right: 140 wide, bar + label gap 12. */}
           <PlatformProgressBar
             value={progressPct}
-            label={`${title} progress`}
+            label={`${subject} progress`}
             track="muted"
             showValue
             className="w-[140px]"
           />
           {href ? (
-            <ButtonLink href={href} hierarchy={emphasis} size="sm" className="relative z-[1]" aria-label={`Resume ${title}`}>
+            <ButtonLink href={href} hierarchy={emphasis} size="sm" className="relative z-[1]" aria-label={`Resume ${subject}`}>
               Resume
             </ButtonLink>
           ) : (
@@ -118,7 +131,7 @@ export function CourseRow({
         /* DS Available: the "AVAILABLE NOW" status label is hidden; only Start shows. */
         <div className="flex items-center gap-4">
           {href ? (
-            <ButtonLink href={href} hierarchy="primary" size="sm" aria-label={`Start ${title}`}>
+            <ButtonLink href={href} hierarchy="primary" size="sm" aria-label={`Start ${subject}`}>
               Start
             </ButtonLink>
           ) : (
