@@ -69,14 +69,14 @@ All three are mode-aware.
 | `rounded-none` | 0 | `Radius/fixed-none` | |
 | `rounded-sm` | 2 | `Radius/fixed-xxs` | |
 | `rounded` | 4 | `Radius/fixed-xs` | small chips |
-| `rounded-md` | 6 | `Radius/fixed-sm` | buttons (Button V2, all sizes) |
+| `rounded-md` | 6 | `Radius/fixed-sm` | buttons (Button, all sizes) |
 | `rounded-lg` | 8 | `Radius/fixed-md` | inputs, menus, certificate |
 | `rounded-[10px]` | 10 | `Radius/fixed-lg` | (no Tailwind step) |
 | `rounded-xl` | 12 | `Radius/fixed-xl` | cards, panels, video frame |
 | `rounded-2xl` | 16 | `Radius/fixed-2xl` | modals |
 | `rounded-[20px]` | 20 | `Radius/fixed-3xl` | (no Tailwind step) |
 | `rounded-3xl` | 24 | `Radius/fixed-4xl` | |
-| `rounded-full` | 9999 | `Radius/fixed-full` | Badge v2 (Shape=Pill), avatars, rings |
+| `rounded-full` | 9999 | `Radius/fixed-full` | Badge (Shape=Pill), avatars, rings |
 
 `Radius/flex-*` matches `fixed-*` from `none` to `xl` (and `full`); the three
 largest steps are mode-aware:

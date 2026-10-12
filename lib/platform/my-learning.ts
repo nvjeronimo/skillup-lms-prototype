@@ -183,7 +183,7 @@ export interface MyLearningProgram {
   progressPct: number;
   /** State=In progress: the first course in progress, with a primary "Continue". */
   upNext?: string;
-  /** State=Not started: the Badge v2 Gray status, with a secondary "Details". */
+  /** State=Not started: the Badge Gray status, with a secondary "Details". */
   status?: string;
   cta: "Continue" | "Details";
   /** The program page: what the card and its title open. No href: no page in the prototype. */

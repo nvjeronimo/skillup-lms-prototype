@@ -17,7 +17,7 @@ type QaFilter = CourseDetail["qaTab"]["filters"][number]["id"];
 
 /**
  * DS `LMS/Platform/Course-Detail/Thread-Row`: padding 12, a 1px rule under it. The flags
- * (Badge v2 Outline sm), the title (body-medium/Semibold when selected or unread, Medium once
+ * (Badge Outline sm), the title (body-medium/Semibold when selected or unread, Medium once
  * read), a one-line preview (body-small/Regular, text/muted) and the meta line (text/subtle),
  * 4 apart; an 8px dot on the right when unread. Selected is on bg/primary-soft.
  * The row opens its conversation, so it is a link.
@@ -99,7 +99,7 @@ function ThreadRow({
  * DS `LMS/Platform/Course-Detail/Message`. Learner: right-aligned, "You" over a bg/primary
  * bubble (text/on-primary; radius 10, 2 on the bottom right) and the time. Mentor: DS Avatar
  * sm, then the author line — name (body-small/Medium), `author_label` and "ACCEPTED ANSWER"
- * as Badge v2 Outline — over a bg/subtle bubble (radius 10, 2 on the bottom left), the time
+ * as Badge Outline — over a bg/subtle bubble (radius 10, 2 on the bottom left), the time
  * and "Report". Bubbles hug their text up to 420px; on mobile they fill the column.
  */
 function Message({ message, report, onReport }: { message: QaMessage; report: string; onReport: () => void }) {

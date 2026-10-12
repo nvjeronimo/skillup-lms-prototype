@@ -2,10 +2,10 @@ import figma from "figma";
 import { Button } from "./Button";
 
 /**
- * Code Connect for Button V2 (SKO Design System, "Buttons (WIP)" page):
- * - Button_def       https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7608
- * - Icon Button_def  https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7720
- * - Link Button_def  https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7679
+ * Code Connect for Button (SKO Design System, "Buttons" page):
+ * - Button       https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7608
+ * - Icon Button  https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7720
+ * - Link Button  https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7679
  * The legacy Buttons/Button (3287:427074) is no longer connected.
  *
  * NOTE: authored by hand — this Figma file's plan does not include Code
@@ -55,7 +55,7 @@ figma.connect(Button, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-
   ),
 });
 
-/** Icon Button_def: the same Type × Hierarchy × State, Size on `._Icon Button_Structure`. */
+/** Icon Button: the same Type × Hierarchy × State, Size on `._Icon Button_Structure`. */
 figma.connect(Button, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7720", {
   props: {
     tone: figma.enum("Type", {
@@ -91,7 +91,7 @@ figma.connect(Button, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-
 });
 
 /**
- * Link Button_def: Hierarchy=Primary is the tone-coloured link, Hierarchy=Secondary the grey
+ * Link Button: Hierarchy=Primary is the tone-coloured link, Hierarchy=Secondary the grey
  * link (Brand only). `._Link Button_Structure` has md and lg sizes.
  */
 figma.connect(Button, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21851-7679", {

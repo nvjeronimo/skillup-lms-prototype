@@ -4,7 +4,7 @@ import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 /**
- * Mirrors the DS `Badge v2` component (21889:541076): three axes, Style × Size × Color.
+ * Mirrors the DS `Badge` component (21889:541076): three axes, Style × Size × Color.
  * Color covers the ten production options (Gray, Brand, Info, Success, Warning, Error,
  * Teal, Green, Red, Yellow). The eight provisional hues (Cyan…Orange) and Style=Soft Light
  * (bound to primitives, not roles) have no code counterpart yet.
@@ -58,7 +58,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 
   eyebrow?: boolean;
 }
 
-/* ── Colour bindings, read from Badge v2 Size=sm on 28 Sep 2026 ─────────────────────────
+/* ── Colour bindings, read from Badge Size=sm on 28 Sep 2026 ─────────────────────────
    Every class below is the DS variable bound on that variant: base fill (bg-*), base
    stroke (ring-*; except the Outline stroke, see DS-D1), Text fill (text-sko-text-*) and
    icon vector (text-sko-icon-*). The Plain icon circle is PLAIN_CIRCLE. */
@@ -197,7 +197,7 @@ function resolveTone(tone: BadgeTone | undefined): { color?: BadgeColor; variant
   return { color: tone };
 }
 
-/** Generic badge (DS Badge v2). The typed LMS badge families compose this. */
+/** Generic badge (DS Badge). The typed LMS badge families compose this. */
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   { color, variant, size = "sm", tone, leftIcon, eyebrow = false, className, children, ...rest },
   ref,

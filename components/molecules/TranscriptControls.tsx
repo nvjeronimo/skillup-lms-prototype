@@ -24,7 +24,7 @@ const LANGS = [
 
 /**
  * Tab-row controls for the transcript: Language · Download transcript · Add Note.
- * Download + Add Note are DS Link Button_def (Type=Brand · Hierarchy=Primary · md),
+ * Download + Add Note are DS Link Button (Type=Brand · Hierarchy=Primary · md),
  * with the 1px bottom stroke in border/primary (h-7 is border-box, so height stays 28).
  */
 export function TranscriptControls({

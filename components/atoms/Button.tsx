@@ -3,17 +3,17 @@ import { Loader2, type LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
-/** DS Button V2 `Type` (Button_def / Link Button_def / Icon Button_def). */
+/** DS Button `Type` (Button / Link Button / Icon Button). */
 export type ButtonTone = "brand" | "destructive" | "success";
 /**
- * DS Button V2 `Hierarchy`. Primary/Secondary/Tertiary are Button_def; `link` and
- * `link-subtle` are Link Button_def Hierarchy=Primary and Hierarchy=Secondary (the grey link).
+ * DS Button `Hierarchy`. Primary/Secondary/Tertiary are Button; `link` and
+ * `link-subtle` are Link Button Hierarchy=Primary and Hierarchy=Secondary (the grey link).
  */
 export type ButtonHierarchy = "primary" | "secondary" | "tertiary" | "link" | "link-subtle";
 /**
  * @deprecated Use `tone` + `hierarchy`. Kept so existing call sites keep working:
  * primary/secondary/tertiary → Brand. `neutral`, `destructive` and `utility` keep their own
- * styles: `neutral` has no Button V2 equivalent yet, and destructive + utility stay UUI
+ * styles: `neutral` has no Button equivalent yet, and destructive + utility stay UUI
  * gray-neutral by design (decision 003). `tone="destructive"` gives the V2 Destructive styles.
  */
 export type ButtonVariant = "primary" | "secondary" | "tertiary" | "neutral" | "destructive" | "utility";
@@ -29,7 +29,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: ButtonSize;
   leftIcon?: LucideIcon;
   rightIcon?: LucideIcon;
-  /** Render an icon-only square button (DS Icon Button_def): 20px icon at sm/md, 24px at lg/xl. */
+  /** Render an icon-only square button (DS Icon Button): 20px icon at sm/md, 24px at lg/xl. */
   iconOnly?: boolean;
   /**
    * DS State=Loading: a spinner takes the leading-icon slot and the label stays visible.
@@ -39,7 +39,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loading?: boolean;
 }
 
-/* Colour per Type × Hierarchy, as bound in Button_def 21851:7608 and Link Button_def 21851:7679.
+/* Colour per Type × Hierarchy, as bound in Button 21851:7608 and Link Button 21851:7679.
    Strokes are INSIDE in the DS, so they are drawn as inset rings and add no width.
    Forced colors (Windows High Contrast) drops box-shadows, so every ring also gets a real
    1px border there (the forced-colors:border* classes), or outline buttons lose their edge. */
@@ -54,7 +54,7 @@ const GHOST_DISABLED = "disabled:text-sko-text-disabled";
    `:not(:disabled)` rather than `:enabled`: the same on a <button>, and it also matches the
    <a> of atoms/ButtonLink, which `:enabled` never does. */
 const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
-/* Link Button_def: a 1px bottom stroke in every state (tone colour, border/disabled when
+/* Link Button: a 1px bottom stroke in every state (tone colour, border/disabled when
    Disabled), radius 0, radius 6 when Focused. */
 const LINK =
   "border-b bg-transparent hover:bg-sko-bg-faint focus-visible:rounded-md disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
@@ -120,7 +120,7 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
   },
 };
 
-/* Styles kept outside Button V2: `neutral` has no V2 equivalent yet (the ICP cases V2 misses);
+/* Styles kept outside Button: `neutral` has no equivalent in it yet (the ICP cases it misses);
    `destructive` and `utility` stay UUI gray-neutral by design (decision 003). No DS disabled
    state exists for them, so they keep the 50% opacity. */
 type LegacyStyle = "neutral" | "destructive" | "utility";
@@ -203,7 +203,7 @@ function resolveButton({ tone, hierarchy, variant }: Pick<ButtonStyleProps, "ton
 }
 
 /**
- * The classes of a DS Button V2 for a set of visual props. Pure, so anything that must look
+ * The classes of a DS Button for a set of visual props. Pure, so anything that must look
  * like a button without being a <button> (atoms/ButtonLink) renders the same classes.
  */
 export function buttonClassName({
@@ -244,8 +244,8 @@ export function buttonIconSize({
 }
 
 /**
- * DS Button V2: Button_def (Type × Hierarchy), Link Button_def (`hierarchy="link" | "link-subtle"`)
- * and Icon Button_def (`iconOnly`). The deprecated `variant` prop maps onto tone + hierarchy.
+ * DS Button: Button (Type × Hierarchy), Link Button (`hierarchy="link" | "link-subtle"`)
+ * and Icon Button (`iconOnly`). The deprecated `variant` prop maps onto tone + hierarchy.
  * Destructive + utility stay UUI gray-neutral by design (`variant="destructive" | "utility"`).
  * For navigation use atoms/ButtonLink: the same look on a real link.
  */

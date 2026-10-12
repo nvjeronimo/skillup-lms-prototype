@@ -48,7 +48,7 @@ export interface DashboardDueItem {
   urgency: "today" | "upcoming";
   title: string;
   meta: string;
-  /** DS Badge v2 Soft sm, Warning: "Due …". */
+  /** DS Badge Soft sm, Warning: "Due …". */
   status: { label: string; color: BadgeColor };
   /** The assignment in the player (the Dates API gives each one its `link`). */
   href: string;

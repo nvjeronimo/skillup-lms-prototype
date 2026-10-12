@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
  * sessions left the list on 7 Oct: nothing in Open edX carries them).
  * Date (60 wide): the day in headline-small/Bold, text/error when Urgency is Today and
  * text/default when Upcoming, over label-small/Semibold text/subtle. Content: title
- * body-medium/Semibold, meta body-small/Regular text/subtle, gap 2. Status: DS Badge v2
+ * body-medium/Semibold, meta body-small/Regular text/subtle, gap 2. Status: DS Badge
  * Soft sm Warning ("Due …"). Gap 12, padding 16 / 20 (16 / 16 on
  * mobile), a 1px border/subtle rule below every item but the last.
  */

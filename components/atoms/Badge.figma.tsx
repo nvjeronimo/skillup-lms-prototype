@@ -2,12 +2,12 @@ import figma from "figma";
 import { Badge } from "./Badge";
 
 /**
- * Code Connect for Badge v2 (SKO Design System).
+ * Code Connect for Badge (SKO Design System).
  * https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-id=21889-541076
  *
  * NOTE: authored by hand — see Button.figma.tsx for why.
  *
- * Badge v2 has three variant axes: Style (Soft | Outline | Modern | Plain | Soft Light),
+ * Badge has three variant axes: Style (Soft | Outline | Modern | Plain | Soft Light),
  * Size (sm | md | lg) and Color (Gray, Brand, Error, Warning, Success, Teal, Green, Red,
  * Yellow, Info + 8 provisional hues). The label is the TEXT property "Text" on the nested,
  * exposed `_Badge base` instance. Not mapped yet (no code counterpart): Style=Soft Light

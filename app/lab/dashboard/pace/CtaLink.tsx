@@ -5,7 +5,7 @@ import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 /**
- * A navigation CTA with Button V2 md styling (44px). The Button atom renders a <button>, and a
+ * A navigation CTA with Button md styling (44px). The Button atom renders a <button>, and a
  * link must stay a link, so this mirrors its Brand Primary / Brand Secondary / Success Primary
  * classes on a Next <Link>.
  */

@@ -59,7 +59,7 @@ function activityLine(e: Enrolment): string {
 const FOCUS =
   "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]";
 
-/** A link dressed as DS Button V2 Brand (md, 44px). Button renders a <button>, so links get this. */
+/** A link dressed as DS Button Brand (md, 44px). Button renders a <button>, so links get this. */
 function linkButton(hierarchy: "primary" | "secondary") {
   return cn(
     "sk-text-body-medium-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-md px-3 transition-colors duration-200",

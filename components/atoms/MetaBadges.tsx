@@ -93,7 +93,7 @@ const LEVEL_ICON: Record<Difficulty, LucideIcon> = {
 };
 
 /**
- * Difficulty (DS `LMS / Difficulty Badge`, 19975:538077): Badge v2 Style=Outline, Size=sm,
+ * Difficulty (DS `LMS / Difficulty Badge`, 19975:538077): Badge Style=Outline, Size=sm,
  * Color=Gray for every level — bg/faint pill, 1px inside stroke border/subtle (DS-D1), label
  * text/muted, level glyph icon/subtle at 12px.
  */
@@ -115,7 +115,7 @@ const DELIVERY_ICON: Record<DeliveryMode, LucideIcon> = {
 };
 
 /**
- * Delivery Mode (DS `LMS / Delivery Mode Badge`, 19975:538084): Badge v2 Style=Soft,
+ * Delivery Mode (DS `LMS / Delivery Mode Badge`, 19975:538084): Badge Style=Soft,
  * Size=sm, Color=Info — bg/info-soft pill, no stroke, label text/info, icon icon/info at 12px.
  */
 export function DeliveryModeBadge({ value }: { value: DeliveryMode }) {
@@ -135,7 +135,7 @@ export type Provider =
   | "Pacific Lutheran University";
 
 /**
- * Provider (DS `LMS / Provider-Partner Badge`, 19975:538091): Badge v2 Style=Plain, Size=sm,
+ * Provider (DS `LMS / Provider-Partner Badge`, 19975:538091): Badge Style=Plain, Size=sm,
  * Color=Gray — the provider name only (body-small/Medium, text/muted), no "by" prefix.
  */
 export function ProviderBadge({ value }: { value: Provider }) {
