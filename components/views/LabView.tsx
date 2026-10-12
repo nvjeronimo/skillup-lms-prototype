@@ -292,7 +292,9 @@ function PartnerLabView({
           : lab.intro}
       </p>
 
-      <Prerequisites items={lab.prerequisites} />
+      {/* Once the lab has been opened the learner has seen what it needs: the block goes, like
+          the computer warning above (Nelson, 12 Oct 2026). */}
+      {!opened && !isCompleted ? <Prerequisites items={lab.prerequisites} /> : null}
 
       {inline ? (
         <>
