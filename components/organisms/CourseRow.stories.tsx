@@ -8,7 +8,6 @@ const meta: Meta<typeof CourseRow> = {
   parameters: { layout: "padded" },
   args: {
     title: "Digital Marketing Fundamentals",
-    deliveryMode: "Live Sessions",
     state: "Active",
     progressPct: 0,
   },
