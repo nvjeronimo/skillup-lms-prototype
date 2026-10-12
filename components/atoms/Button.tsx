@@ -59,14 +59,12 @@ const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
 const LINK =
   "border-b bg-transparent hover:bg-sko-bg-faint focus-visible:rounded-md disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
 
-/* The outline buttons on hover (DS, 12 Oct 2026): a text Button fills with a colour of its
-   type; the Icon Button keeps the faint grey both had before. Applied in buttonClassName, not
-   in VARIANT: `cn` does not merge Tailwind classes, so only one hover fill may be emitted. */
+/* The outline buttons on hover: every type fills with its own soft colour and keeps its text
+   and icon colours (Nelson, 12 Oct 2026, after trying a yellow and a solid fill for Brand that
+   day). The Icon Button keeps the faint grey. Applied in buttonClassName, not in VARIANT: `cn`
+   does not merge Tailwind classes, so only one hover fill may be emitted. */
 const OUTLINE_HOVER: Record<ButtonTone, string> = {
-  // On the yellow fill the label and the icon take text/on-primary-hover (Nelson, 12 Oct 2026):
-  // text/primary was 1.29:1 there in the dark theme.
-  brand:
-    "hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover [&:not(:disabled):hover_svg]:text-sko-text-on-primary-hover",
+  brand: "hover:bg-sko-bg-primary-soft",
   destructive: "hover:bg-sko-bg-error-soft",
   success: "hover:bg-sko-bg-accent-green-soft",
 };
