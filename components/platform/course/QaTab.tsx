@@ -205,25 +205,25 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             <SearchField value={query} onChange={setQuery} label={tab.search} />
           </div>
           <div className="px-[11px] pb-3">
-            {/* DS `Button group`: 40px segments, 1px border/default, radius 8; the pressed one on bg/primary
-                with text/on-primary (DS change of 10 Oct 2026; it was bg/subtle, hard to tell apart). */}
+            {/* DS `Button group` v2.0 (11 Oct 2026): a bg/muted track, padding 4, gap 2, radius 8; the pressed
+                segment is a pill on bg/page with 1px border/subtle and text/primary. Until then the segments
+                were joined and the pressed one sat on bg/primary. */}
             <div
               role="group"
               aria-label="Filter questions"
-              className="inline-flex overflow-hidden rounded-lg border border-sko-border-default shadow-sm"
+              className="inline-flex gap-0.5 rounded-lg bg-sko-bg-muted p-1"
             >
-              {tab.filters.map((item, index) => (
+              {tab.filters.map((item) => (
                 <button
                   key={item.id}
                   type="button"
                   aria-pressed={filter === item.id}
                   onClick={() => setFilter(item.id)}
                   className={cn(
-                    "sk-text-body-medium-semibold h-10 px-4 focus-visible:-outline-offset-2 max-md:h-11",
-                    index > 0 && "border-l border-sko-border-default",
+                    "sk-text-body-medium-semibold h-8 rounded-md border px-4 transition-colors max-md:h-11",
                     filter === item.id
-                      ? "bg-sko-bg-primary text-sko-text-on-primary"
-                      : "bg-sko-bg-page text-sko-text-muted hover:bg-sko-bg-faint hover:text-sko-text-default",
+                      ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
+                      : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
                   )}
                 >
                   {item.label}
