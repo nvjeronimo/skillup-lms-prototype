@@ -120,6 +120,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const [completeOpen, setCompleteOpen] = React.useState(false);
   const completionFlow = useLmsStore((s) => s.completionFlow);
   const labProgress = useLmsStore((s) => s.labState[topicId]);
+  const labLaunch = useLmsStore((s) => s.labLaunch);
   /** The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026). */
   const [askOpen, setAskOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
@@ -171,10 +172,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // duplicate the action they already own. Passive content (video / reading /
   // podcast / discussion) gets the completion action in the FOOTER only.
   // A partner lab (Google, Microsoft) is the exception among labs: its content has no
-  // action of its own. Microsoft sends nothing back, so the learner marks it complete;
-  // Google sends a score, so there is nothing to mark and only the status shows once done.
+  // action of its own and nothing comes back from the partner, so the learner marks it
+  // complete here, like a Reading.
   const partnerLab = getPartnerLab(topic);
   const labOpenedAt = labProgress?.openedAt;
+  // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
+  const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
@@ -197,7 +200,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       state={actionState}
       onComplete={() => markComplete(topicId)}
       // On a partner lab that has not been opened yet, the launch button is the primary action.
-      secondary={Boolean(partnerLab) && !labOpenedAt}
+      secondary={Boolean(partnerLab) && !labOpenedAt && !labInPage}
       // Quiz, ORA and VILT have no manual completion, and Video completes on its own at 90%
       // watched (reading-screen-matrix §4): their badge reads "Completed".
       manual={
@@ -217,7 +220,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // menu can switch the question off, which leaves the button alone as it was before.
   const asksOnNext = completionFlow === "ask-on-next" && completesByHand(topic) && !isLocked;
   const showAction =
-    !isLocked && !hasInFrameAction && !isVilt && !isBlocked && !(partnerLab?.scored && !isCompleted);
+    !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
   // in the footer, never in the header — a header CTA invites premature
   // completion. The header's top-right slot carries the ✓ "Marked as completed"

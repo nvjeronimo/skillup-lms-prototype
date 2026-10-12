@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { Download, Check, ExternalLink, TerminalSquare } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
@@ -9,10 +8,9 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Alert } from "@/components/molecules/Alert";
 import { LabLaunchCard, type LabLaunchState } from "@/components/molecules/LabLaunchCard";
-import { LabModal } from "@/components/organisms/LabModal";
 import { FileTypeChip, fileExtension } from "@/components/views/LessonBlocks";
 import { getLab, type DownloadLabContent, type PartnerLabContent } from "@/lib/content";
-import { getAdjacentTopics, getTopic } from "@/lib/data";
+import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { cn } from "@/lib/utils";
@@ -22,12 +20,12 @@ import { cn } from "@/lib/utils";
  * machine; the partner lab runs on the partner's platform (Google, Microsoft) and the
  * learner leaves ours to do it.
  */
-export function LabView({ topicId, courseSlug }: { topicId: string; courseSlug: string }) {
+export function LabView({ topicId }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
   const lab = React.useMemo(() => (topic ? getLab(topic) : null), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!topic || !lab) return null;
   return lab.kind === "partner" ? (
-    <PartnerLabView topicId={topicId} courseSlug={courseSlug} title={topic.title} lab={lab} />
+    <PartnerLabView topicId={topicId} title={topic.title} lab={lab} />
   ) : (
     <DownloadLabView topicId={topicId} lab={lab} />
   );
@@ -67,210 +65,89 @@ function NumberedStep({ n, children }: { n: number; children: React.ReactNode })
 
 const DAY = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
-/** "50 minutes ago", for the card of a lab that reports nothing back. */
-function ago(from: number, now: number): string {
-  const minutes = Math.floor((now - from) / 60000);
-  if (minutes < 1) return "less than a minute ago";
-  if (minutes === 1) return "1 minute ago";
-  if (minutes < 60) return `${minutes} minutes ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
-  return `on ${DAY.format(from)}`;
-}
-
 /**
- * Partner lab (Figma `Lab · Third-party platforms`, 6789:325; lab-third-party-platforms.md).
+ * Partner lab (Figma `Lab · Third-party platforms`, 6789:325; lab-third-party-platforms.md §4).
  *
- * Google is an LTI component with a score: opening the lab leaves the topic waiting, and
- * the score coming back completes it, with nothing to mark by hand. Microsoft is a link:
- * nothing comes back, so the shell shows Mark as Complete under the content.
+ * Nothing comes back from the partner, Google or Microsoft: no score, no completion. The
+ * launch card only knows that the lab was opened, and when for the first time. The learner
+ * completes the topic with Mark as Complete (the shell renders it under the content), and
+ * Next asks if they move on without it.
  *
- * `labLaunch` (demo menu) switches the Google lab between the new tab it opens in today and
- * the alternatives still to be tested in Studio: inline, modal, and the provider refusing
- * the frame. A lab with no LTI component has no such setting and always opens in a new tab.
+ * `labLaunch` (demo menu) only applies to a lab whose component can open inside the page: it
+ * shows the lab in the inline frame, or the frame not loading with the way out to a new tab.
+ * Every other lab opens in a new tab.
  */
-function PartnerLabView({
-  topicId,
-  courseSlug,
-  title,
-  lab,
-}: {
-  topicId: string;
-  courseSlug: string;
-  title: string;
-  lab: PartnerLabContent;
-}) {
-  const router = useRouter();
+function PartnerLabView({ topicId, title, lab }: { topicId: string; title: string; lab: PartnerLabContent }) {
   const bp = useBreakpoint();
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const progress = useLmsStore((s) => s.labState[topicId]);
   const labLaunch = useLmsStore((s) => s.labLaunch);
   const labOpened = useLmsStore((s) => s.labOpened);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const cardRef = React.useRef<HTMLElement>(null);
-  // Closing the modal returns focus to "Open lab". When the score arrived meanwhile that
-  // button is gone (the card now reads Completed), so focus goes to the card instead.
-  const closeModal = React.useCallback(() => {
-    setModalOpen(false);
-    window.requestAnimationFrame(() => {
-      if (document.activeElement === document.body) cardRef.current?.focus();
-    });
-  }, []);
-  // Keeps "opened N minutes ago" current while the learner is away on the partner's site.
-  const [now, setNow] = React.useState(() => Date.now());
-  React.useEffect(() => {
-    const id = window.setInterval(() => setNow(Date.now()), 30000);
-    return () => window.clearInterval(id);
-  }, []);
 
-  const google = lab.partner === "google";
-  const launch = lab.scored ? labLaunch : "new-tab";
+  // A setting stored by an earlier version ("modal") falls back to the new tab.
+  const launch = lab.inPage && (labLaunch === "inline" || labLaunch === "refused") ? labLaunch : "new-tab";
   const opened = Boolean(progress?.openedAt);
   const href = `/partner/${lab.partner}?topic=${topicId}`;
-  const next = getAdjacentTopics(topicId).next;
+  // The lab runs in the page until the learner sends it to a new tab; from then on it is "opened".
+  const inline = launch === "inline" && !opened;
+  const refused = launch === "refused" && !opened;
 
-  const cardState: LabLaunchState = isCompleted
-    ? "completed"
-    : opened
-      ? "opened"
-      : launch === "refused"
-        ? "unavailable"
-        : "ready";
-
-  const again = google ? "Open the lab again" : "Open on Microsoft Learn again";
-  const card: Record<LabLaunchState, { title: string; description: string; action: string }> = google
-    ? {
-        ready: {
-          title,
-          description:
-            launch === "modal"
-              ? `${lab.platform} · opens in a window over this page · graded, 1 point`
-              : `${lab.platform} · opens in a new tab · graded, 1 point`,
-          action: "Open lab",
-        },
-        opened: {
-          title: "Your lab is open in another tab",
-          description: `Finish it in ${lab.platform}. This page updates when your score arrives.`,
-          action: again,
-        },
-        completed: {
-          title: "Lab complete",
-          description: progress?.score
-            ? `Score ${progress.score.earned} / ${progress.score.total} · received from ${lab.platform} on ${DAY.format(progress.completedAt ?? now)}`
-            : `Completed on ${DAY.format(progress?.completedAt ?? now)}`,
-          action: again,
-        },
-        unavailable: {
+  const cardState: LabLaunchState = opened ? "opened" : refused ? "unavailable" : "ready";
+  const card =
+    cardState === "unavailable"
+      ? {
           title: "This lab can't be shown inside the page",
           description:
-            "The lab provider doesn't allow it. Open the lab in a new tab instead: your score still comes back here.",
+            "Open the lab in a new tab instead. When you finish, come back to this page and select Mark as Complete.",
           action: "Open in a new tab",
-        },
-      }
+        }
+      : { title, description: lab.cardLine, action: lab.launchLabel };
+
+  const steps = inline
+    ? [
+        "Start the lab in the frame below this list.",
+        "Follow the instructions inside the frame.",
+        "When you finish, select Mark as Complete at the end of this page.",
+      ]
+    : refused
+      ? [
+          "Open the lab. It starts in a new tab and this page stays open.",
+          "Follow the instructions in the lab.",
+          "Come back to this page and select Mark as Complete.",
+        ]
+      : lab.steps;
+
+  const alert: { tone: "info" | "success"; title: string; description: string } = isCompleted
+    ? { tone: "success", title: "You can do this lab again", description: lab.afterCompletion }
     : {
-        ready: {
-          title,
-          description: `${lab.platform} · opens in a new tab · not graded`,
-          action: "Open on Microsoft Learn",
-        },
-        opened: {
-          title: "Back from Microsoft Learn?",
-          description: `You opened this lab ${ago(progress?.openedAt ?? now, now)}.`,
-          action: again,
-        },
-        completed: {
-          title: "Lab complete",
-          description: `You marked this lab as complete on ${DAY.format(progress?.completedAt ?? now)}`,
-          action: again,
-        },
-        unavailable: { title, description: "", action: "Open in a new tab" },
+        tone: "info",
+        title:
+          inline || refused
+            ? "SkillUp can't see your progress in the lab"
+            : `SkillUp can't see your progress on ${lab.platform}`,
+        description:
+          "Nothing is sent back when you finish. Select Mark as Complete when you are done; if you select Next first, we ask you.",
       };
 
-  const steps = !google
-    ? [
-        "Open the module. It starts in a new tab and this page stays open.",
-        "Work through the units and exercises on Microsoft Learn.",
-        "Come back to this page and select Mark as Complete.",
-      ]
-    : launch === "inline"
-      ? [
-          "Start the lab in the frame below this list.",
-          "Follow the instructions and check your progress as you go.",
-          "End the lab. Your score comes back and the topic is marked complete for you.",
-        ]
-      : [
-          launch === "modal"
-            ? "Open the lab. It opens in a window over this page."
-            : "Open the lab. It starts in a new tab and this page stays open.",
-          `Follow the instructions in ${lab.platform} and check your progress there as you go.`,
-          "End the lab. Your score comes back to this page and the topic is marked complete for you.",
-        ];
-
-  const alert: { tone: "info" | "success"; title: string; description: string } = google
-    ? isCompleted
-      ? {
-          tone: "success",
-          title: "Topic marked complete for you",
-          description: `${lab.platform} sent your score, so there is nothing to mark by hand.`,
-        }
-      : opened
-        ? {
-            tone: "info",
-            title: "Waiting for your score",
-            description: `It arrives after you end the lab in ${lab.platform}. You can move on to the next topic in the meantime.`,
-          }
-        : {
-            tone: "info",
-            title: "Google receives your username and email",
-            description:
-              "Only what is needed to start the lab under your name and send your score back to SkillUp.",
-          }
-    : isCompleted
-      ? {
-          tone: "success",
-          title: "Marked as complete",
-          description: "You can open the module on Microsoft Learn again whenever you want to review it.",
-        }
-      : opened
-        ? {
-            tone: "info",
-            title: "Finished the lab?",
-            description: "Select Mark as Complete below so it counts towards your progress.",
-          }
-        : {
-            tone: "info",
-            title: "SkillUp can't see your progress on Microsoft Learn",
-            description:
-              "Nothing is sent back when you finish. Select Mark as Complete when you are done; if you select Next first, we ask you.",
-          };
-
-  // Google's own help does not recommend phones or tablets for its labs. The warning sits
-  // above the launch, on tablet and mobile, until the lab has been opened.
+  // Shown only until the lab has been opened, like the Before you start block (12 Oct 2026).
+  // Google's own help does not recommend phones or tablets for its labs; a lab inside the
+  // page is a third-party frame 800 px high, which is hard to use on a phone.
+  const neverOpened = !opened && !isCompleted;
   const needsComputer =
-    google && bp !== "desktop" && !opened && !isCompleted ? (
+    neverOpened && lab.partner === "google" && bp !== "desktop" ? (
       <InlineAlert
         tone="warning"
         title="This lab needs a computer"
         description="Google doesn't recommend phones or tablets for its labs, and this one may not work here. You can read the instructions now and do the lab later on a desktop or laptop."
       />
+    ) : neverOpened && (inline || refused) && bp === "mobile" ? (
+      <InlineAlert
+        tone="warning"
+        title="This lab works best on a computer"
+        description="The lab is built for a wide screen and a keyboard. You can read the instructions now and do the lab later on a desktop or laptop."
+      />
     ) : null;
 
-  // The card's actions are 36 high in the DS (`Buttons/Button` md), which is Button sm here.
-  const newTab = (hierarchy: "primary" | "secondary", label: string) => (
-    <ButtonLink
-      href={href}
-      target="_blank"
-      rel="noopener"
-      hierarchy={hierarchy}
-      size="sm"
-      rightIcon={ExternalLink}
-      onClick={() => labOpened(topicId)}
-    >
-      {label}
-    </ButtonLink>
-  );
-
-  const inline = launch === "inline" && !opened;
   const stepList = (
     <>
       <h2 className="sk-text-title-large-bold text-sko-text-default">How this lab works</h2>
@@ -288,27 +165,29 @@ function PartnerLabView({
     <div className="flex flex-col gap-3 border-t border-sko-border-subtle pt-3">
       <p className="sk-text-body-large-medium text-sko-text-default">
         {inline
-          ? `This lab runs on ${lab.platform} and opens right here, inside the page. You work in a real Google Cloud project with temporary credentials.`
-          : lab.intro}
+          ? "This lab opens right here, inside the page. If you need more room, you can open it in a new tab."
+          : refused
+            ? "This lab is set to open inside the page. It can't be shown here right now, so it opens in a new tab instead."
+            : lab.intro}
       </p>
 
       {/* Once the lab has been opened the learner has seen what it needs: the block goes, like
-          the computer warning above (Nelson, 12 Oct 2026). */}
-      {!opened && !isCompleted ? <Prerequisites items={lab.prerequisites} /> : null}
+          the computer warning (Nelson, 12 Oct 2026). */}
+      {neverOpened ? <Prerequisites items={lab.prerequisites} /> : null}
 
       {inline ? (
         <>
           {stepList}
           {needsComputer}
           {/* LTI "Open tool in: Inline": 800 px high by default (`inline_height`). A sketch,
-              like its Figma source: no DS component until the Studio test (§2 of the doc). */}
+              like its Figma source (card E1): no DS component for the frame. */}
           <section
-            aria-label={`${lab.platform} lab`}
+            aria-label={`${lab.provider} lab`}
             className="overflow-hidden rounded-lg border border-sko-border-default bg-sko-bg-page"
           >
             <div className="flex flex-wrap items-center justify-between gap-3 bg-sko-bg-faint py-2 pl-4 pr-2">
               <span className="sk-text-body-medium-semibold min-w-0 text-sko-text-default">
-                {lab.platform} · {title}
+                {lab.provider} · {title}
               </span>
               <ButtonLink
                 href={href}
@@ -322,54 +201,39 @@ function PartnerLabView({
                 Open in a new tab
               </ButtonLink>
             </div>
-            <iframe title={`${lab.platform} · ${title}`} src={`${href}&embed=1`} className="block h-[800px] w-full bg-sko-bg-subtle" />
+            <iframe title={`${lab.provider} · ${title}`} src={`${href}&embed=1`} className="block h-[800px] w-full bg-sko-bg-subtle" />
           </section>
         </>
       ) : (
         <>
           {needsComputer}
           <LabLaunchCard
-            ref={cardRef}
             state={cardState}
             provider={lab.provider}
-            title={card[cardState].title}
-            description={card[cardState].description}
+            title={card.title}
+            description={card.description}
+            openedOn={progress?.openedAt ? `First opened on ${DAY.format(progress.openedAt)}` : undefined}
           >
-            {cardState === "ready" && launch === "modal" ? (
-              <Button variant="primary" size="sm" onClick={() => setModalOpen(true)}>
-                {card.ready.action}
-              </Button>
-            ) : (
-              newTab(cardState === "ready" || cardState === "unavailable" ? "primary" : "secondary", card[cardState].action)
-            )}
-            {cardState === "unavailable" && next ? (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => router.push(`/course/${courseSlug}/topic/${next.id}`)}
-              >
-                Skip for now
-              </Button>
-            ) : null}
+            {/* The card's action is 36 high in the DS (`Button` md), which is Button sm here.
+                Primary until the lab has been opened, Secondary after: Mark as Complete is the
+                reverse, so the page has one primary action at a time. */}
+            <ButtonLink
+              href={href}
+              target="_blank"
+              rel="noopener"
+              hierarchy={cardState === "opened" ? "secondary" : "primary"}
+              size="sm"
+              rightIcon={ExternalLink}
+              onClick={() => labOpened(topicId)}
+            >
+              {card.action}
+            </ButtonLink>
           </LabLaunchCard>
           {stepList}
         </>
       )}
 
       <InlineAlert tone={alert.tone} title={alert.title} description={alert.description} />
-
-      <LabModal
-        open={modalOpen}
-        title={title}
-        src={`${href}&embed=1`}
-        newTabHref={href}
-        compact={bp === "mobile"}
-        onOpenNewTab={() => {
-          labOpened(topicId);
-          setModalOpen(false);
-        }}
-        onClose={closeModal}
-      />
     </div>
   );
 }
@@ -496,7 +360,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
             disabled={!allDownloaded}
             onClick={() => markComplete(topicId)}
           >
-            Mark as complete
+            Mark as Complete
           </Button>
           {!allDownloaded ? (
             <p className="sk-text-body-small-regular mt-2 text-sko-text-subtle">

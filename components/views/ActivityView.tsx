@@ -172,7 +172,7 @@ function ScormActivity({
       ) : state === "ready" ? (
         <div>
           <Button variant="primary" onClick={onComplete}>
-            Mark as complete
+            Mark as Complete
           </Button>
         </div>
       ) : null}

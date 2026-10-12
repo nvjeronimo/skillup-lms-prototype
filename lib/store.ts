@@ -22,8 +22,11 @@ export type Vision = "default" | "cvd";
 /** Text scale — md = 100%, lg = 115%, xl = 130% (WCAG 1.4.4 resize text). */
 export type TextSize = "md" | "lg" | "xl";
 
-/** LTI "Open tool in" (plus the refused-frame fallback). See `labLaunch` in the store. */
-export type LabLaunch = "new-tab" | "inline" | "modal" | "refused";
+/**
+ * How a partner lab opens: a new tab (the default), inside the page (the option for the few
+ * courses whose lab already loads there), or the frame not loading. See `labLaunch` in the store.
+ */
+export type LabLaunch = "new-tab" | "inline" | "refused";
 
 /**
  * How a topic the platform cannot measure gets completed. `ask-on-next` is the rule since
@@ -32,9 +35,6 @@ export type LabLaunch = "new-tab" | "inline" | "modal" | "refused";
  * date. The names are kept from the first version so stored settings still apply.
  */
 export type CompletionFlow = "ask-on-next" | "mark-as-complete";
-
-/** Where the partner stand-in page (app/partner) leaves a lab score for SkillUp to collect. */
-export const LAB_SCORES_KEY = "sk-lab-scores";
 
 /** Toast payload — supports an optional inline action (e.g. Undo). */
 export interface ToastModel {
@@ -69,13 +69,11 @@ interface LmsState {
     }
   >;
   /**
-   * Partner-lab progress per topic (lab-third-party-platforms.md). `openedAt` is when the
-   * learner last left for the partner's platform; `score` is what an LTI lab sent back.
+   * Partner-lab progress per topic (lab-third-party-platforms.md §4). `openedAt` is when the
+   * learner first opened the lab: the launch card shows it. Nothing comes back from the partner,
+   * so there is no score here.
    */
-  labState: Record<
-    string,
-    { openedAt?: number; completedAt?: number; score?: { earned: number; total: number } }
-  >;
+  labState: Record<string, { openedAt?: number; completedAt?: number }>;
   /** Transcript line currently highlighted as Active (independent of playback). */
   activeLineId: string | null;
   notes: Note[];
@@ -130,10 +128,9 @@ interface LmsState {
   /** "Don't show again" on the dialog shown before leaving SkillUp for a hosted course. */
   skipLeavingDialog: boolean;
   /**
-   * How an LTI lab opens. `new-tab` is how the Google labs are authored today. `inline` and
-   * `modal` are the other two values of the LTI component's "Open tool in" setting, and
-   * `refused` is what the learner gets when the provider does not allow the frame. The last
-   * three wait for the content team's test in Studio, so they live in the demo menu only.
+   * How a lab that can open inside the page opens. `new-tab` is the default for every lab.
+   * `inline` is the lab inside the page (LTI "Open tool in: Inline") and `refused` is the frame
+   * not loading, which is what the two Microsoft courses show today. Both live in the demo menu.
    */
   labLaunch: LabLaunch;
   /**
@@ -193,8 +190,6 @@ interface LmsState {
   setSkipLeavingDialog: (v: boolean) => void;
   /** The learner opened the lab on the partner's platform. */
   labOpened: (topicId: string) => void;
-  /** The partner sent a score back (LTI): stores it and completes the topic. */
-  labScoreReceived: (topicId: string, earned: number, total: number) => void;
   /** Restore the original seeded demo state (completion, quizzes, bookmarks, notes…). */
   resetDemo: () => void;
 }
@@ -431,7 +426,7 @@ export const useLmsStore = create<LmsState>()(
       track("topic_complete", { topicId });
       const topic = getTopic(topicId);
       const title = topic?.title ?? "topic";
-      // A lab remembers the day it was completed: its launch card states it.
+      // A lab remembers the day it was completed.
       const labState =
         topic?.type === "Lab"
           ? { ...state.labState, [topicId]: { ...state.labState[topicId], completedAt: Date.now() } }
@@ -439,27 +434,13 @@ export const useLmsStore = create<LmsState>()(
       return { completedTopics: next, labState, toast: { message: `Marked as complete · ${title}` } };
     }),
 
+  // The date of the FIRST opening is the one kept: opening the lab again does not move it.
   labOpened: (topicId) =>
-    set((state) => ({
-      labState: { ...state.labState, [topicId]: { ...state.labState[topicId], openedAt: Date.now() } },
-    })),
-
-  labScoreReceived: (topicId, earned, total) =>
-    set((state) => {
-      if (state.labState[topicId]?.score) return state;
-      const completed = new Set(state.completedTopics);
-      completed.add(topicId);
-      track("topic_complete", { topicId });
-      const title = getTopic(topicId)?.title ?? "lab";
-      return {
-        completedTopics: completed,
-        labState: {
-          ...state.labState,
-          [topicId]: { ...state.labState[topicId], completedAt: Date.now(), score: { earned, total } },
-        },
-        toast: { message: `Score received · ${title}` },
-      };
-    }),
+    set((state) =>
+      state.labState[topicId]?.openedAt
+        ? state
+        : { labState: { ...state.labState, [topicId]: { ...state.labState[topicId], openedAt: Date.now() } } },
+    ),
 
   submitForReview: (topicId) =>
     set((state) => {
@@ -642,30 +623,6 @@ export const useLmsStore = create<LmsState>()(
     },
   ),
 );
-
-// The partner stand-in (app/partner) runs in another tab, or in a frame on the lab topic.
-// It leaves the score under LAB_SCORES_KEY, the way an LTI tool posts a grade back to the
-// platform, and never applies it itself: only the SkillUp side keeps score. A SkillUp page
-// picks it up at once through the `storage` event, or on its next load if none was open.
-function applyLabScores() {
-  try {
-    const raw = window.localStorage.getItem(LAB_SCORES_KEY);
-    if (!raw) return;
-    window.localStorage.removeItem(LAB_SCORES_KEY);
-    const scores = JSON.parse(raw) as Record<string, { earned: number; total: number }>;
-    for (const [topicId, score] of Object.entries(scores)) {
-      useLmsStore.getState().labScoreReceived(topicId, score.earned, score.total);
-    }
-  } catch {
-    // Storage blocked or a malformed entry: the lab simply stays "waiting for your score".
-  }
-}
-if (typeof window !== "undefined" && !window.location.pathname.startsWith("/partner")) {
-  applyLabScores();
-  window.addEventListener("storage", (event) => {
-    if (event.key === LAB_SCORES_KEY && event.newValue) applyLabScores();
-  });
-}
 
 /** Derived helper: does this topic currently have any notes? */
 export function useTopicHasNote(lineId: string): boolean {

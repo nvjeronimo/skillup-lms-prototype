@@ -38,9 +38,8 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 // Only SKO carries a legacy brand code (P03); the rest are their own ramps.
 const LAB_LAUNCHES: { value: LabLaunch; label: string }[] = [
   { value: "new-tab", label: "New tab" },
-  { value: "inline", label: "Inline" },
-  { value: "modal", label: "Modal" },
-  { value: "refused", label: "Refused" },
+  { value: "inline", label: "In the page" },
+  { value: "refused", label: "Not loading" },
 ];
 
 const COMPLETION_FLOWS: { value: CompletionFlow; label: string }[] = [
@@ -173,8 +172,8 @@ export function DemoControlsMenu({
   const activeTopicId = pathname?.match(/^\/course\/[^/]+\/topic\/([^/]+)/)?.[1];
   const activeTopic = activeTopicId ? getTopic(activeTopicId) : undefined;
   const onQuiz = activeTopic ? topicFamily(activeTopic.type) === "assessment" : false;
-  // Same rule for the lab launch: only an LTI lab (one that sends a score) has the setting.
-  const onLtiLab = activeTopic ? Boolean(getPartnerLab(activeTopic)?.scored) : false;
+  // Same rule for the lab launch: only a lab whose component can open inside the page has it.
+  const onLtiLab = activeTopic ? Boolean(getPartnerLab(activeTopic)?.inPage) : false;
   const labLaunch = useLmsStore((s) => s.labLaunch);
   const setLabLaunch = useLmsStore((s) => s.setLabLaunch);
   // The completion test shows on the topics it changes: the ones the learner completes by hand.
@@ -425,9 +424,9 @@ export function DemoControlsMenu({
                   ))}
                 </div>
                 <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
-                  New tab is how the Google labs open today. Inline and Modal are the other
-                  LTI settings, still to be tested in Studio. Refused is what the learner
-                  gets when the provider does not allow the frame.
+                  New tab is the default for every lab. In the page is the option for the few
+                  courses whose lab already loads there (two Microsoft courses); Not loading
+                  is what those courses show today, with the way out to a new tab.
                 </p>
               </div>
             </Section>
