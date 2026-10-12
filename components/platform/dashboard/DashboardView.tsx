@@ -88,7 +88,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
                     className="[@container_(min-width:700px)]:hidden"
                     title={course.headline}
                     context={course.context}
-                    deliveryMode={course.deliveryMode}
+                    next={course.next}
                     progressPct={course.progressPct}
                     href={course.href}
                     homeHref={course.homeHref}

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { DeliveryModeBadge, type DeliveryMode } from "@/components/atoms/MetaBadges";
+import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
+import type { TopicType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export interface ResumeRowProps {
@@ -9,7 +10,8 @@ export interface ResumeRowProps {
   title: string;
   /** The line under it: "Course · Program". One line, cut with an ellipsis. */
   context?: string;
-  deliveryMode: DeliveryMode;
+  /** The topic Resume opens: its type badge and its length sit above the title. */
+  next?: { type: TopicType; duration?: string };
   progressPct: number;
   /** Where "Resume" goes. */
   href: string;
@@ -21,18 +23,17 @@ export interface ResumeRowProps {
 }
 
 /**
- * DS `LMS/Platform/Dashboard/Resume-Row`: a course to resume on a narrow screen, the
- * mobile stand-in for the DS `LMS / Course Row`, which cannot show its delivery badge under
- * ~390px. Same atoms and tokens as the DS row: title (body-large/Medium), the Delivery Mode
- * badge under it (gap 8), then the DS Progress bar with the percentage (gap 12) and the
- * button (gap 16). bg/page, 1px border/subtle, radius 12, padding 16, gap 12, no shadow
- * (327 × 136 as drawn; the DS stroke is part of the layout, so the border adds to the padding).
+ * DS `LMS/Platform/Dashboard/Resume-Row` v1.1 (12 Oct 2026): a course to resume on a narrow
+ * screen, the mobile pair of the DS `LMS/Platform/Discovery/Course-Row`, with the same three
+ * lines: the type of the topic Resume opens and its length (body-small Medium, text/subtle),
+ * the module the learner left off in (body-large Medium, wraps), and `context`, the course and
+ * its program (body-small Regular, text/subtle, one line, 2 under the title). Then the DS
+ * Progress bar with the percentage and the button (gap 12 above, 16 between). bg/page, 1px
+ * border/subtle, radius 12, padding 16, no shadow. No delivery badge since v1.1.
  * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
  * opens the course, so it is a link with the button look (atoms/ButtonLink).
- * DS v1.1 (12 Oct 2026): the title is the module the learner left off in and `context`
- * (course · program, body-small Regular, text/subtle) sits 2 under it, on one line.
  */
-export function ResumeRow({ title, context, deliveryMode, progressPct, href, homeHref, emphasis = "primary", className }: ResumeRowProps) {
+export function ResumeRow({ title, context, next, progressPct, href, homeHref, emphasis = "primary", className }: ResumeRowProps) {
   const subject = context ? `${title}, ${context}` : title;
   return (
     <div
@@ -42,8 +43,19 @@ export function ResumeRow({ title, context, deliveryMode, progressPct, href, hom
         className,
       )}
     >
-      <div className="flex flex-col items-start gap-2">
-        <div className="flex w-full min-w-0 flex-col gap-0.5">
+      <div className="flex w-full min-w-0 flex-col gap-0.5">
+        <div className="flex w-full min-w-0 flex-col">
+          {next ? (
+            <p className="sk-text-body-small-medium flex items-center gap-2 text-sko-text-subtle">
+              <TopicTypeBadge type={next.type} />
+              {next.duration ? (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <span>{next.duration}</span>
+                </>
+              ) : null}
+            </p>
+          ) : null}
           <p className="sk-text-body-large-medium w-full text-sko-text-default">
             {homeHref ? (
               <Link href={homeHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
@@ -53,9 +65,8 @@ export function ResumeRow({ title, context, deliveryMode, progressPct, href, hom
               title
             )}
           </p>
-          {context ? <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{context}</p> : null}
         </div>
-        <DeliveryModeBadge value={deliveryMode} />
+        {context ? <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{context}</p> : null}
       </div>
       <div className="flex items-center gap-4">
         <PlatformProgressBar
