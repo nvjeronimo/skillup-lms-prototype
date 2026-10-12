@@ -20,6 +20,7 @@ import { Icon } from "@/lib/icons";
 import { MessagesSquare } from "lucide-react";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
 import { CourseCompleteModal } from "@/components/organisms/CourseCompleteModal";
+import { CompletionQuestionModal } from "@/components/organisms/CompletionQuestionModal";
 import { Toast } from "@/components/organisms/Toast";
 import { nextCourseInProgram, playerCourse } from "@/lib/platform/catalog";
 import { coursePageHref } from "@/lib/platform/hrefs";
@@ -30,6 +31,8 @@ import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
 import {
+  completesByHand,
+  completionNoun,
   getPartnerLab,
   topicFamily,
   topicDescription,
@@ -114,12 +117,16 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
   const [completeOpen, setCompleteOpen] = React.useState(false);
+  const completionFlow = useLmsStore((s) => s.completionFlow);
+  /** The question Next asks on a topic the learner completes by hand (test of 12 Oct 2026). */
+  const [askOpen, setAskOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
   const [videoDocked, setVideoDocked] = React.useState(false);
 
   // Keep currentTopicId in sync with the route + emit topic_enter.
   React.useEffect(() => {
     setCurrentTopic(topicId);
+    setAskOpen(false);
     track("topic_enter", { topicId });
   }, [topicId, setCurrentTopic]);
 
@@ -199,6 +206,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       }
     />
   );
+  // Test of 12 Oct 2026 (lab-third-party-platforms.md §9): on a topic the learner completes by
+  // hand there is no Mark as Complete button. The footer stays Previous / Next, and Next asks
+  // whether the learner has finished. The demo menu switches back to the button.
+  const asksOnNext = completionFlow === "ask-on-next" && completesByHand(topic) && !isLocked;
   const showAction =
     !isLocked && !hasInFrameAction && !isVilt && !isBlocked && !(partnerLab?.scored && !isCompleted);
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
@@ -209,7 +220,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // The end-of-content action only belongs at the end of the CONTENT. The
   // Downloads and Notes tabs are short lists, so a second button there sits
   // in the same viewport as the header one and just reads as duplication.
-  const bottomAction = showAction && activeTab === "transcript" ? (
+  const bottomAction = showAction && !asksOnNext && activeTab === "transcript" ? (
     <div className="mt-6 flex justify-end border-t border-sko-border-subtle pt-5">
       {renderAction()}
     </div>
@@ -255,7 +266,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // is finished. Left out: locked topics, types not available yet and VILT (completes by
   // attendance). A quiz completes when it is submitted; a graded assignment counts once it
   // is submitted, since its review happens outside the prototype.
-  const courseDone = flatTopics(getCourseForTopic(topicId)).every((t) => {
+  const courseTopics = flatTopics(getCourseForTopic(topicId));
+  const countsAsDone = (t: (typeof courseTopics)[number]) => {
     const f = topicFamily(t.type);
     return (
       t.locked ||
@@ -264,7 +276,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       completedTopics.has(t.id) ||
       (f === "graded" && submittedTopics.has(t.id))
     );
-  });
+  };
+  const courseDone = courseTopics.every(countsAsDone);
+  // What the course would be once this topic is completed: on the last topic, "Yes, I've
+  // finished" can be the answer that finishes the course.
+  const courseDoneAfterThis = courseTopics.every((t) => t.id === topicId || countsAsDone(t));
+  const asksNow = asksOnNext && !isCompleted;
   const milestone: Milestone = !next
     ? courseDone
       ? "Course"
@@ -497,11 +514,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             milestone={milestone}
             previousDisabled={!previous}
             // On the last topic, Next opens the course-complete dialog: only once the course is done.
-            nextDisabled={!next && !courseDone}
+            // A topic that asks keeps Next enabled on the last topic too: the answer may finish the course.
+            nextDisabled={!next && !courseDone && !asksNow}
             compact={bp === "mobile"}
             onPrevious={() => previous && navigateTopic(previous.id)}
             onNext={() => {
-              if (next) navigateTopic(next.id);
+              if (asksNow) setAskOpen(true);
+              else if (next) navigateTopic(next.id);
               else if (courseDone) setCompleteOpen(true);
             }}
           />
@@ -584,6 +603,32 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         initialTags={editorNote?.tags ?? []}
         onCancel={closeNoteEditor}
         onSave={saveNote}
+      />
+
+      <CompletionQuestionModal
+        open={askOpen}
+        noun={completionNoun(topic)}
+        reason={
+          partnerLab
+            ? `SkillUp can't see your progress on ${partnerLab.platform}, so we ask you.`
+            : family === "lab"
+              ? "The notebook runs on your own machine, where SkillUp can't see it, so we ask you."
+              : `SkillUp can't tell when a ${completionNoun(topic)} is done, so we ask you.`
+        }
+        hasNext={Boolean(next)}
+        onYes={() => {
+          setAskOpen(false);
+          track("completion_question", { topicId, answer: "yes" });
+          markComplete(topicId);
+          if (next) navigateTopic(next.id);
+          else if (courseDoneAfterThis) setCompleteOpen(true);
+        }}
+        onNotYet={() => {
+          setAskOpen(false);
+          track("completion_question", { topicId, answer: "not_yet" });
+          if (next) navigateTopic(next.id);
+        }}
+        onClose={() => setAskOpen(false)}
       />
 
       <CourseCompleteModal

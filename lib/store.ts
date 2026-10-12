@@ -25,6 +25,13 @@ export type TextSize = "md" | "lg" | "xl";
 /** LTI "Open tool in" (plus the refused-frame fallback). See `labLaunch` in the store. */
 export type LabLaunch = "new-tab" | "inline" | "modal" | "refused";
 
+/**
+ * How a topic the platform cannot measure gets completed. `ask-on-next` is the test of 12 Oct
+ * 2026: the footer stays Previous / Next and Next asks whether the learner has finished.
+ * `mark-as-complete` is the button the prototype had until then. See `completionFlow` in the store.
+ */
+export type CompletionFlow = "ask-on-next" | "mark-as-complete";
+
 /** Where the partner stand-in page (app/partner) leaves a lab score for SkillUp to collect. */
 export const LAB_SCORES_KEY = "sk-lab-scores";
 
@@ -128,6 +135,12 @@ interface LmsState {
    * three wait for the content team's test in Studio, so they live in the demo menu only.
    */
   labLaunch: LabLaunch;
+  /**
+   * Completion of the topics the learner completes by hand (`completesByHand` in lib/content).
+   * A test, not a decision (lab-third-party-platforms.md §9): the demo menu switches back to
+   * the Mark as Complete button to compare the two.
+   */
+  completionFlow: CompletionFlow;
 
   setSidebarExpanded: (v: boolean) => void;
   toggleSidebar: () => void;
@@ -173,6 +186,7 @@ interface LmsState {
   setDiscussionsPreview: (v: boolean) => void;
   setQuizMode: (v: "A" | "B") => void;
   setLabLaunch: (v: LabLaunch) => void;
+  setCompletionFlow: (v: CompletionFlow) => void;
   /** The learner left for the partner's platform to take a hosted course. */
   hostedCourseStarted: (slug: string) => void;
   setSkipLeavingDialog: (v: boolean) => void;
@@ -282,6 +296,7 @@ export const useLmsStore = create<LmsState>()(
   discussionsPreview: false,
   quizMode: "A",
   labLaunch: "new-tab",
+  completionFlow: "ask-on-next",
   hostedCoursesStarted: {},
   skipLeavingDialog: false,
 
@@ -527,6 +542,10 @@ export const useLmsStore = create<LmsState>()(
     set({ quizMode });
   },
   setLabLaunch: (labLaunch) => set({ labLaunch }),
+  setCompletionFlow: (completionFlow) => {
+    track("preview_toggle", { feature: "completion_flow", value: completionFlow });
+    set({ completionFlow });
+  },
   hostedCourseStarted: (slug) =>
     set((state) => ({ hostedCoursesStarted: { ...state.hostedCoursesStarted, [slug]: Date.now() } })),
   setSkipLeavingDialog: (skipLeavingDialog) => set({ skipLeavingDialog }),
@@ -617,6 +636,7 @@ export const useLmsStore = create<LmsState>()(
         discussionsPreview: s.discussionsPreview,
         quizMode: s.quizMode,
         labLaunch: s.labLaunch,
+        completionFlow: s.completionFlow,
       }),
     },
   ),

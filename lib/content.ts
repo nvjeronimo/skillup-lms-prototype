@@ -877,7 +877,7 @@ const PARTNER_LABS: Record<string, PartnerLabContent> = {
     description:
       "A Microsoft Learn module with hands-on exercises on Azure Service Bus and Queue Storage.",
     intro:
-      "This lab is a module on Microsoft Learn. You read the units and do the exercises on Microsoft's site, then come back here to mark the topic as complete.",
+      "This lab is a module on Microsoft Learn. You read the units and do the exercises on Microsoft's site, then come back here to complete the topic.",
     prerequisites: [
       "A Microsoft account, to sign in to Microsoft Learn and save your progress there",
       "A desktop or laptop is recommended for the exercises",
@@ -922,6 +922,26 @@ export function getLab(topic: FlatTopic): LabContent {
 /** The partner lab behind a topic, or null for every other topic (download labs included). */
 export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
   return PARTNER_LABS[topic.id] ?? null;
+}
+
+/**
+ * Topics the platform cannot measure, so the learner says when they are done: a Reading, a
+ * Lesson Page, a lab the learner downloads, and a partner lab that sends nothing back. A
+ * partner lab that sends a score completes by itself and is left out, like every type with
+ * its own action (quiz, assignment, activity) and the ones that complete by playing (video,
+ * podcast) or by attendance (VILT).
+ */
+export function completesByHand(topic: FlatTopic): boolean {
+  const family = topicFamily(topic.type);
+  if (family === "reading" || family === "lessonPage") return true;
+  if (family === "lab") return !getPartnerLab(topic)?.scored;
+  return false;
+}
+
+/** The word the completion question uses for the topic: "Have you finished this lab?" */
+export function completionNoun(topic: FlatTopic): string {
+  const family = topicFamily(topic.type);
+  return family === "lab" ? "lab" : family === "lessonPage" ? "lesson" : "reading";
 }
 
 /* ------------------------------------------------------------- Podcast --- */

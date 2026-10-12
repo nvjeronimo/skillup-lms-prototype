@@ -115,7 +115,7 @@ function StandIn({ partner }: { partner: string }) {
           <InlineAlert
             tone="info"
             title="Nothing is sent back to SkillUp"
-            description="When you finish the module, close this tab and select Mark as Complete on the SkillUp topic."
+            description="When you finish the module, close this tab and go back to the SkillUp topic to complete it."
           />
         </div>
       )}
