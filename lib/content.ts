@@ -925,23 +925,53 @@ export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
 }
 
 /**
- * Topics the platform cannot measure, so the learner says when they are done: a Reading, a
- * Lesson Page, a lab the learner downloads, and a partner lab that sends nothing back. A
- * partner lab that sends a score completes by itself and is left out, like every type with
- * its own action (quiz, assignment, activity) and the ones that complete by playing (video,
- * podcast) or by attendance (VILT).
+ * Topics the platform cannot measure (lab-third-party-platforms.md §4): a Reading, a Lesson Page,
+ * an Activity, a lab the learner downloads and a partner lab that sends nothing back. They keep
+ * their Mark as Complete button, and Next asks the learner whether they have completed the topic
+ * when they move on without it.
+ *
+ * Video and Podcast are in the list here for one reason: the prototype does not measure
+ * playback. In the product they complete by themselves at 90% played, and Next asks only when
+ * playback cannot be measured. The prototype is always in that case.
+ *
+ * Left out: a partner lab that sends a score (it completes by itself), the types with their own
+ * submission (quiz, assignment, ORA) and VILT (attendance).
  */
 export function completesByHand(topic: FlatTopic): boolean {
   const family = topicFamily(topic.type);
-  if (family === "reading" || family === "lessonPage") return true;
   if (family === "lab") return !getPartnerLab(topic)?.scored;
-  return false;
+  return (
+    family === "reading" ||
+    family === "lessonPage" ||
+    family === "activity" ||
+    family === "video" ||
+    family === "podcast"
+  );
 }
 
 /** The word the completion question uses for the topic: "Have you finished this lab?" */
 export function completionNoun(topic: FlatTopic): string {
-  const family = topicFamily(topic.type);
-  return family === "lab" ? "lab" : family === "lessonPage" ? "lesson" : "reading";
+  switch (topicFamily(topic.type)) {
+    case "lab":
+      return "lab";
+    case "lessonPage":
+      return "lesson";
+    case "activity":
+      return "activity";
+    case "video":
+      return "video";
+    case "podcast":
+      return "podcast";
+    default:
+      return "reading";
+  }
+}
+
+/** Why Next has to ask, in one sentence for the dialog (copy by Navdeep, 12 Oct 2026). */
+export function completionReason(topic: FlatTopic): string {
+  const noun = completionNoun(topic);
+  const where = getPartnerLab(topic)?.platform ?? `this ${noun}`;
+  return `Your progress on ${where} isn't tracked automatically. Please confirm whether you've completed this ${noun}.`;
 }
 
 /* ------------------------------------------------------------- Podcast --- */

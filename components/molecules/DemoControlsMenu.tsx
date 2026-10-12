@@ -44,8 +44,8 @@ const LAB_LAUNCHES: { value: LabLaunch; label: string }[] = [
 ];
 
 const COMPLETION_FLOWS: { value: CompletionFlow; label: string }[] = [
-  { value: "ask-on-next", label: "Next asks" },
-  { value: "mark-as-complete", label: "Mark as Complete" },
+  { value: "ask-on-next", label: "Button + Next asks" },
+  { value: "mark-as-complete", label: "Button only" },
 ];
 
 const SKINS: { skin: SkinId; label: string }[] = [
@@ -434,7 +434,7 @@ export function DemoControlsMenu({
           ) : null}
 
           {onHandCompleted ? (
-            <Section title="Completion (test)">
+            <Section title="Completion">
               <div className="flex flex-col gap-1.5">
                 <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
                   {COMPLETION_FLOWS.map((f) => (
@@ -455,9 +455,9 @@ export function DemoControlsMenu({
                   ))}
                 </div>
                 <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
-                  Next asks: the footer is Previous and Next, and Next asks whether you have
-                  finished. Mark as Complete is the button the prototype had before. A test,
-                  not decided.
+                  The rule since 12 Oct: Mark as Complete at the end of the content, and Next
+                  asks whether you have completed the topic if you move on without it. Button
+                  only switches the question off, as it was before.
                 </p>
               </div>
             </Section>
