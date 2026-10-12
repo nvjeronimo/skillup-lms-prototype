@@ -8,7 +8,7 @@ import { useDialog } from "@/lib/useDialog";
 
 export interface CompletionQuestionModalProps {
   open: boolean;
-  /** What the topic is called in the question: "lab", "reading", "lesson". */
+  /** What the topic is called in the question: "lab", "reading", "lesson", "activity", "video", "podcast". */
   noun: string;
   /** Why we have to ask, in one sentence. */
   reason: string;
@@ -23,8 +23,8 @@ export interface CompletionQuestionModalProps {
 }
 
 /**
- * The question Next asks on a topic the platform cannot measure (test of 12 Oct 2026,
- * lab-third-party-platforms.md §9; Figma frame 7070:14832). DS `Modal` Type=Horizontal:
+ * The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026,
+ * lab-third-party-platforms.md §4; Figma frames 7070:14832 and 7077:18132). DS `Modal` Type=Horizontal:
  * featured icon beside the title and supporting text, close top right, two actions right
  * aligned. On a phone the actions stack and the primary one comes first, as in the DS
  * mobile variant.

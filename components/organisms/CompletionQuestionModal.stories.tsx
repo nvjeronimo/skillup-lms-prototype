@@ -35,3 +35,7 @@ export const Reading: Story = {
 export const LastTopic: Story = {
   args: { noun: "reading", reason: "SkillUp can't tell when a reading is done, so we ask you.", hasNext: false },
 };
+
+export const VideoFallback: Story = {
+  args: { noun: "video", reason: "SkillUp can't measure playback here, so we ask you." },
+};

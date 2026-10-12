@@ -26,8 +26,8 @@ export type TextSize = "md" | "lg" | "xl";
 export type LabLaunch = "new-tab" | "inline" | "modal" | "refused";
 
 /**
- * How a topic the platform cannot measure gets completed. `ask-on-next` is the test of 12 Oct
- * 2026: the footer stays Previous / Next and Next asks whether the learner has finished.
+ * How a topic the platform cannot measure gets completed. `ask-on-next` is the default since
+ * 12 Oct 2026: the footer stays Previous / Next and Next asks whether the learner has finished.
  * `mark-as-complete` is the button the prototype had until then. See `completionFlow` in the store.
  */
 export type CompletionFlow = "ask-on-next" | "mark-as-complete";
@@ -136,9 +136,9 @@ interface LmsState {
    */
   labLaunch: LabLaunch;
   /**
-   * Completion of the topics the learner completes by hand (`completesByHand` in lib/content).
-   * A test, not a decision (lab-third-party-platforms.md §9): the demo menu switches back to
-   * the Mark as Complete button to compare the two.
+   * Completion of the topics the platform cannot measure (`completesByHand` in lib/content).
+   * Next asks is the product rule since 12 Oct 2026 (lab-third-party-platforms.md §4); the demo
+   * menu can switch back to the Mark as Complete button to compare the two.
    */
   completionFlow: CompletionFlow;
 

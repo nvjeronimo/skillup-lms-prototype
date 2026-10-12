@@ -33,6 +33,7 @@ import { useDialog } from "@/lib/useDialog";
 import {
   completesByHand,
   completionNoun,
+  completionReason,
   getPartnerLab,
   topicFamily,
   topicDescription,
@@ -118,7 +119,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
   const [completeOpen, setCompleteOpen] = React.useState(false);
   const completionFlow = useLmsStore((s) => s.completionFlow);
-  /** The question Next asks on a topic the learner completes by hand (test of 12 Oct 2026). */
+  /** The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026). */
   const [askOpen, setAskOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
   const [videoDocked, setVideoDocked] = React.useState(false);
@@ -206,9 +207,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       }
     />
   );
-  // Test of 12 Oct 2026 (lab-third-party-platforms.md §9): on a topic the learner completes by
-  // hand there is no Mark as Complete button. The footer stays Previous / Next, and Next asks
-  // whether the learner has finished. The demo menu switches back to the button.
+  // The rule since 12 Oct 2026 (lab-third-party-platforms.md §4): on a topic the platform cannot
+  // measure there is no Mark as Complete button. The footer stays Previous / Next, and Next asks
+  // whether the learner has finished. The demo menu can switch back to the button.
   const asksOnNext = completionFlow === "ask-on-next" && completesByHand(topic) && !isLocked;
   const showAction =
     !isLocked && !hasInFrameAction && !isVilt && !isBlocked && !(partnerLab?.scored && !isCompleted);
@@ -608,13 +609,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       <CompletionQuestionModal
         open={askOpen}
         noun={completionNoun(topic)}
-        reason={
-          partnerLab
-            ? `SkillUp can't see your progress on ${partnerLab.platform}, so we ask you.`
-            : family === "lab"
-              ? "The notebook runs on your own machine, where SkillUp can't see it, so we ask you."
-              : `SkillUp can't tell when a ${completionNoun(topic)} is done, so we ask you.`
-        }
+        reason={completionReason(topic)}
         hasNext={Boolean(next)}
         onYes={() => {
           setAskOpen(false);

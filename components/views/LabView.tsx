@@ -105,7 +105,7 @@ function PartnerLabView({
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const progress = useLmsStore((s) => s.labState[topicId]);
   const labLaunch = useLmsStore((s) => s.labLaunch);
-  // Test of 12 Oct 2026: Next asks whether the lab is done, instead of a Mark as Complete button.
+  // Since 12 Oct 2026 Next asks whether the lab is done, instead of a Mark as Complete button.
   const asks = useLmsStore((s) => s.completionFlow) === "ask-on-next";
   const labOpened = useLmsStore((s) => s.labOpened);
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -388,7 +388,7 @@ function PartnerLabView({
 function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabContent }) {
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const markComplete = useLmsStore((s) => s.markComplete);
-  // Test of 12 Oct 2026: Next asks whether the lab is done, instead of the button below.
+  // Since 12 Oct 2026 Next asks whether the lab is done, instead of the button below.
   const asks = useLmsStore((s) => s.completionFlow) === "ask-on-next";
   const showToast = useLmsStore((s) => s.showToast);
   const [downloaded, setDownloaded] = React.useState<Set<string>>(new Set());

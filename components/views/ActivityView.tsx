@@ -137,6 +137,8 @@ function ScormActivity({
 }) {
   const [state, setState] = React.useState<ScormState>("idle");
   const showToast = useLmsStore((s) => s.showToast);
+  // Since 12 Oct 2026 Next asks whether the activity is done, instead of the button below.
+  const asks = useLmsStore((s) => s.completionFlow) === "ask-on-next";
 
   function launch() {
     setState("loading");
@@ -169,7 +171,7 @@ function ScormActivity({
 
       {isCompleted ? (
         <InlineAlert tone="success" title="Activity complete" description="Nice work." />
-      ) : state === "ready" ? (
+      ) : state === "ready" && !asks ? (
         <div>
           <Button variant="primary" onClick={onComplete}>
             Mark as complete

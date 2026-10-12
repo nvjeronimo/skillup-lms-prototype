@@ -434,7 +434,7 @@ export function DemoControlsMenu({
           ) : null}
 
           {onHandCompleted ? (
-            <Section title="Completion (test)">
+            <Section title="Completion">
               <div className="flex flex-col gap-1.5">
                 <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
                   {COMPLETION_FLOWS.map((f) => (
@@ -455,9 +455,9 @@ export function DemoControlsMenu({
                   ))}
                 </div>
                 <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
-                  Next asks: the footer is Previous and Next, and Next asks whether you have
-                  finished. Mark as Complete is the button the prototype had before. A test,
-                  not decided.
+                  Next asks is the rule since 12 Oct: the footer is Previous and Next, and Next
+                  asks whether you have finished. Mark as Complete is the button the prototype
+                  had before, kept here to compare.
                 </p>
               </div>
             </Section>
