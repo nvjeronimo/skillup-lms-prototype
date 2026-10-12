@@ -59,6 +59,16 @@ const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
 const LINK =
   "border-b bg-transparent hover:bg-sko-bg-faint focus-visible:rounded-md disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
 
+/* The outline buttons on hover (DS, 12 Oct 2026): a text Button fills with a colour of its
+   type; the Icon Button keeps the faint grey both had before. Applied in buttonClassName, not
+   in VARIANT: `cn` does not merge Tailwind classes, so only one hover fill may be emitted. */
+const OUTLINE_HOVER: Record<ButtonTone, string> = {
+  brand: "hover:bg-sko-bg-primary-hover",
+  destructive: "hover:bg-sko-bg-error-soft",
+  success: "hover:bg-sko-bg-accent-green-soft",
+};
+const OUTLINE_HOVER_ICON = "hover:bg-sko-bg-faint";
+
 const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
   brand: {
     // Teal fill → yellow hover, dark text on hover (handoff brand-aware rule).
@@ -67,7 +77,7 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       PRIMARY_DISABLED,
     ),
     secondary: cn(
-      "bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary hover:bg-sko-bg-faint",
+      "bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary",
       "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-primary",
       BRAND_ICON,
       OUTLINE_DISABLED,
@@ -83,13 +93,13 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       PRIMARY_DISABLED,
     ),
     secondary: cn(
-      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error hover:bg-sko-bg-faint",
+      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error",
       "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-error",
       OUTLINE_DISABLED,
     ),
     // No Destructive/Tertiary in the DS: falls back to Destructive/Secondary.
     tertiary: cn(
-      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error hover:bg-sko-bg-faint",
+      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error",
       "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-error",
       OUTLINE_DISABLED,
     ),
@@ -105,13 +115,13 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       PRIMARY_DISABLED,
     ),
     secondary: cn(
-      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success hover:bg-sko-bg-faint",
+      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success",
       "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-success",
       OUTLINE_DISABLED,
     ),
     // No Success/Tertiary in the DS: falls back to Success/Secondary.
     tertiary: cn(
-      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success hover:bg-sko-bg-faint",
+      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success",
       "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-success",
       OUTLINE_DISABLED,
     ),
@@ -226,6 +236,8 @@ export function buttonClassName({
     iconOnly ? cn(s.square, s.squareSvg) : isLink ? l.pad : s.pad,
     isLink ? l.text : s.text,
     legacy ? LEGACY[legacy] : VARIANT[t][h],
+    // Secondary, and the Destructive / Success Tertiary that fall back to it.
+    !legacy && (h === "secondary" || (h === "tertiary" && t !== "brand")) && (iconOnly ? OUTLINE_HOVER_ICON : OUTLINE_HOVER[t]),
     loading && "pointer-events-none",
     className,
   );

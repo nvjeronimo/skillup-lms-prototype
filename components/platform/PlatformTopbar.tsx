@@ -172,7 +172,7 @@ function Initials() {
  * is in development. Light: bg/page with a 1px border/subtle rule below.
  * - Desktop (≥1025): 72px with the rule, padding 16/24 — logo · the five sections · notifications · learner.
  *   The sections are five DS `Topbar-Item` (v2.0, Nelson, 12 Oct 2026): underline tabs that fill
- *   the height of the bar, 12 apart, with no rule of their own. The page sets which one is current;
+ *   the height of the bar, 24 apart (12 until 12 Oct), with no rule of their own. The page sets which one is current;
  *   in Figma that is `Current=On` on the item, there is no property for it on the Topbar.
  * - Compact (tablet and mobile): padding 8/16 — logo · notifications · avatar · menu.
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
@@ -209,7 +209,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
           <SkillUpLogo className="h-[30px]" />
         </Link>
         <nav aria-label="Platform" className="self-stretch">
-          <SectionLinks current={current} look="tabs" className="flex h-full items-stretch gap-3" />
+          <SectionLinks current={current} look="tabs" className="flex h-full items-stretch gap-6" />
         </nav>
         <div className="flex items-center gap-3">
           {bell}
