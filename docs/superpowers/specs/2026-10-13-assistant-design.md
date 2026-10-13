@@ -30,9 +30,11 @@ Success, in the prototype:
 | 3 | **Answers and routes, never acts.** Answers carry links and buttons. The assistant never changes state: it does not mark complete, submit, save, enrol. |
 | 4 | **A floating chat** (at spec review). A launcher in the bottom corner opens a floating chat window, on platform pages and in the player alike. It replaces the docked right-hand panel of the first draft. The first-steps assistant of spec 2 is a floating chat too. |
 
-Consequence of decision 4: the docked `AIPanel` (Key Takeaways, Ask, Chat, Related) is not
-mounted by this work and stays as it is, in Storybook only. Whether the player keeps a docked
-panel for Key Takeaways and Related next to the floating chat is left open.
+Consequence of decision 4, decided by Nelson at plan approval: the docked `AIPanel` (Key
+Takeaways, Ask, Chat, Related) is **removed** from the prototype and replaced by the floating
+chat, together with the unwired `showAi` button of the player's top bar. Key Takeaways and
+Related have no place in the prototype any more; the topic's takeaways are what "Summarise
+this topic" answers with.
 
 Decision 2 widens ADR 008 (*AI Panel built into the player*) and does not reverse it. 008
 rejected a standalone assistant because it would lose the topic context; here the topic context
@@ -151,7 +153,7 @@ lists the suggestions for the current page. It never invents an answer.
   always come from the snapshot, so the model can neither invent a route nor word a button.
 - Model: `ASSISTANT_MODEL`, default `claude-sonnet-5-5` (my choice: quick enough for chat and
   cheaper than Opus for short answers over a small context; one variable to change).
-- Limits: 500 output tokens, question ≤ 500 characters, last 10 messages only, and a per-IP
+- Limits: 1,500 output tokens at low effort (see the note under §10), question ≤ 500 characters, last 10 messages only, and a per-IP
   counter (20 questions per hour). The counter lives in memory, so on Vercel it is best effort:
   each serverless instance counts on its own. The real ceiling is a spend limit set on the API
   key in the Anthropic console; DEPLOY.md will say so.
@@ -205,7 +207,7 @@ open animation; the launcher is the last stop in the tab order of the page.
 
 ## 6. Out of scope
 
-Figma screens · mounting or changing the docked `AIPanel` · the assistant acting on data · proactive suggestions (phase 2 in ADR 008) ·
+Figma screens beyond the chat component itself · the assistant acting on data · proactive suggestions (phase 2 in ADR 008) ·
 voice · conversation history across sessions ·
 languages other than English · `/lab` · the first-steps checklist (spec 2).
 
@@ -232,3 +234,19 @@ whether an assistant service is in scope at all, and where the model runs.
 One PR to `main` on a feature branch, squash-merged by Nelson. `package-lock.json` stays out.
 `DEPLOY.md` gains the two environment variables and the spend-limit note. The ICP Hub gets a
 line once it is merged.
+
+## 10. What the build changed
+
+- **Output ceiling 1,500 tokens, not 500.** The default model always thinks, and its thinking
+  shares the ceiling with the answer; 500 would cut answers short. The answer is kept short by
+  the prompt (90 words) and by `effort: "low"`.
+- **A refusal or an empty reply is answered by the script**, like any other failure. The API's
+  server-side model fallback is not used.
+- **"Start a new conversation"** in the window's header (not in the first design): it empties
+  the conversation and brings the suggestions back.
+- **The scripted caption uses the small body style.** The prototype has no dev-note text style.
+- **Layer:** the chat sits at z 45: above the page and the top bars, under the overlay
+  panels (50), the dialogs (60) and the toasts (70).
+- **In the device-preview frame** the chat is fixed to the browser viewport, as toasts are.
+- **Model mode was not run**: no API key was available during the build. The route was
+  checked without a key (`GET` → script, `POST` → 503) and its pure parts are unit-tested.
