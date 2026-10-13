@@ -27,22 +27,6 @@ const fromKnowledge = (id: string, actionIds?: string[]): Reply => ({ text: getK
 /** In matching order: the first intent that matches the question and applies on this page answers it. */
 const INTENTS: Intent[] = [
   {
-    suggestion: "How do I get started?",
-    keywords: /\b(get started|getting started|first steps?|where do i (start|begin))\b/,
-    reply: (snapshot) => {
-      const left = snapshot.firstSteps?.left;
-      if (!left?.length) return null;
-      // The button of the first step that has somewhere to go.
-      const target = STEPS.filter((step) => left.includes(step.label))
-        .map((step) => stepAction(step.id, snapshot))
-        .find((action): action is ActionEntry => action !== null && action !== "ask");
-      return {
-        text: `You have ${left.length} first ${left.length === 1 ? "step" : "steps"} left:\n${lines(left)}`,
-        actionIds: target ? [target.id] : [],
-      };
-    },
-  },
-  {
     suggestion: "Summarise this topic",
     keywords: /\b(summar\w*|takeaways?|recap)\b/,
     reply: ({ topic }) =>
@@ -65,7 +49,7 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "What should I do next?",
-    keywords: /\b(what (should|do|can) i do|what now|do next|next step)\b/,
+    keywords: /\b(what (should|do|can) i do(?! first)|what now|do next|next step)\b/,
     reply: (snapshot) => {
       const next = nextStep(snapshot);
       return next
@@ -129,6 +113,22 @@ const INTENTS: Intent[] = [
   },
   { suggestion: "How do notes work?", keywords: /\bnotes?\b/, reply: () => fromKnowledge("notes") },
   { suggestion: "Why is my lab not complete?", keywords: /\blabs?\b/, reply: () => fromKnowledge("lab") },
+  {
+    suggestion: "How do I get started?",
+    keywords: /\b(get started|getting started|do first|where do i (start|begin))\b/,
+    reply: (snapshot) => {
+      const left = snapshot.firstSteps?.left;
+      if (!left?.length) return null;
+      // The button of the first step that has somewhere to go.
+      const target = STEPS.filter((step) => left.includes(step.label))
+        .map((step) => stepAction(step.id, snapshot))
+        .find((action): action is ActionEntry => action !== null && action !== "ask");
+      return {
+        text: `You have ${left.length} first ${left.length === 1 ? "step" : "steps"} left:\n${lines(left)}`,
+        actionIds: target ? [target.id] : [],
+      };
+    },
+  },
   {
     suggestion: "What can you do?",
     keywords: /\b(help|what can you)\b/,

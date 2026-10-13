@@ -105,8 +105,8 @@ function Chat({ pathname }: { pathname: string }) {
   const set = (next: boolean) => {
     setOpen(next);
     setSelfOpened(false);
-    // Opened or closed by the learner: the window never opens by itself after that.
-    firstSteps.greeted();
+    // "You're set." has been seen once the window closes: next time it is the chat alone.
+    if (!next) firstSteps.acknowledge();
     try {
       sessionStorage.setItem(OPEN_KEY, next ? "1" : "0");
     } catch {
@@ -116,9 +116,16 @@ function Chat({ pathname }: { pathname: string }) {
   // Closing gives the focus back to the launcher. On a phone the launcher is not rendered
   // under the sheet, so the focus moves once it is back (the effect below).
   const refocus = React.useRef(false);
+  // Opened or closed by the learner: the window never opens by itself after that. (Not in
+  // `set`: the sheet closing on navigation is not the learner's doing.)
   const close = () => {
     refocus.current = true;
+    firstSteps.greeted();
     set(false);
+  };
+  const openByLearner = () => {
+    firstSteps.greeted();
+    set(true);
   };
   React.useEffect(() => {
     if (open || !refocus.current) return;
@@ -155,6 +162,10 @@ function Chat({ pathname }: { pathname: string }) {
 
   return (
     <>
+      {/* The window opening by itself leaves the focus on the page: this is how it is heard. */}
+      <p role="status" className="sr-only">
+        {open && selfOpened ? `SkillUp Assistant opened: ${firstSteps.left} first steps to get you started.` : ""}
+      </p>
       {open ? (
         <AssistantWindow
           id={windowId}
@@ -184,7 +195,7 @@ function Chat({ pathname }: { pathname: string }) {
         <AssistantLauncher
           ref={launcherRef}
           open={open}
-          onToggle={() => (open ? close() : set(true))}
+          onToggle={() => (open ? close() : openByLearner())}
           controls={windowId}
           badge={firstSteps.left}
           className="fixed z-[45]"

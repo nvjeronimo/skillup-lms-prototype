@@ -197,3 +197,23 @@ One PR to `main`, squash-merged by Nelson. Then, if proposal E stands, the Figma
   topic completed on an earlier visit ticked "Complete a topic" at once.
 - **A fresh state is written only once something happens** (a step, the greeting, a skip).
 - **The Next card is not shown when the next step is the page the learner is on.**
+
+## 12. After the independent review (13 Oct 2026)
+
+- **Two browser tabs agree.** Every change is reduced from what is stored, and a tab picks up
+  what another tab wrote: a skip or a finished list in one tab is no longer undone by the other.
+- **"You're set." is shown once.** After the window closes, the next opening is the chat alone.
+- **The step announced is the one that has just ticked**, not the last done step of the list.
+- **The window opening by itself is said to a screen reader** ("SkillUp Assistant opened: 5
+  first steps to get you started.") through a status region; the focus stays on the page.
+- **Only the learner's own open or close counts as greeted.** The sheet closing on navigation
+  on a phone does not.
+- **"How do I get started?" no longer takes other questions**: "the first step to get my
+  certificate" gets the certificate answer; "What should I do first?" gets the first steps.
+- **A stored state is cleaned on read** (a step listed twice; five done but still active).
+- **After Skip, the focus goes to the chat's input.** After a restart, the page the learner is
+  on counts at once.
+- **Not done, known:** buttons in the view are 36 px on desktop (44 px with larger targets on,
+  as everywhere); the count badge uses the error colour; a course added to the prototype later
+  seeds completions that can tick "Complete a topic"; with storage blocked the window opens by
+  itself on every full load; "How do I get started?" is not offered as a suggestion.

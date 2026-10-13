@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { STORAGE_KEY, createState, load, reduce, save } from "./progress";
+import { STORAGE_KEY, createState, load, loadStored, reduce, save } from "./progress";
 
 const start = createState(["t1", "t2"]);
 const visit = (kind: "program" | "course", slug = "x") => ({ type: "visited" as const, page: { kind, slug } });
@@ -99,5 +99,22 @@ describe("storage", () => {
         start,
       ),
     ).not.toThrow();
+  });
+  it("cleans a stored state that repeats a step or forgot it was finished", () => {
+    const stored = (value: unknown) => ({ getItem: () => JSON.stringify(value) });
+    expect(load(stored({ status: "active", done: ["ask", "ask", "program"], baseline: [], greeted: true }), []).done).toEqual([
+      "program",
+      "ask",
+    ]);
+    expect(
+      load(stored({ status: "active", done: ["program", "course", "topic", "complete", "ask"], baseline: [], greeted: true }), [])
+        .status,
+    ).toBe("done");
+  });
+  it("tells a stored state from none (another tab may have written one)", () => {
+    expect(loadStored({ getItem: () => null })).toBeNull();
+    expect(loadStored(undefined)).toBeNull();
+    const d = reduce(start, { type: "dismissed" });
+    expect(loadStored({ getItem: () => JSON.stringify(d) })).toEqual(d);
   });
 });

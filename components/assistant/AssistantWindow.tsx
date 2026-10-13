@@ -94,20 +94,21 @@ export function AssistantWindow({
     // The input is rendered with the Ask tab: focus it once it is there.
     window.setTimeout(() => inputRef.current?.focus(), 0);
   };
-  // A step that ticks while the window is open is said once.
-  const doneCount = firstSteps?.rows.filter((row) => row.done).length ?? 0;
-  const lastDone = React.useRef(doneCount);
+  // A step that ticks while the window is open is said once: the one that was not done before.
+  const doneKey = (firstSteps?.rows ?? []).filter((row) => row.done).map((row) => row.id).join(",");
+  const lastDone = React.useRef(doneKey);
   const [ticked, setTicked] = React.useState("");
   React.useEffect(() => {
-    if (!firstSteps || doneCount <= lastDone.current) {
-      lastDone.current = doneCount;
-      return;
-    }
-    lastDone.current = doneCount;
-    const row = [...firstSteps.rows].reverse().find((r) => r.done);
-    const left = firstSteps.rows.length - doneCount;
-    if (row) setTicked(`Done: ${row.label}. ${left} ${left === 1 ? "step" : "steps"} left.`);
-  }, [doneCount, firstSteps]);
+    const before = lastDone.current.split(",");
+    lastDone.current = doneKey;
+    const rows = firstSteps?.rows ?? [];
+    const row = rows.find((r) => r.done && !before.includes(r.id));
+    if (!row) return;
+    const left = rows.filter((r) => !r.done).length;
+    setTicked(`Done: ${row.label}. ${left} ${left === 1 ? "step" : "steps"} left.`);
+    // Only when the set of done steps changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doneKey]);
 
   const answering = status === "answering";
   const last = messages[messages.length - 1];
@@ -193,7 +194,17 @@ export function AssistantWindow({
           aria-labelledby={platformTabId(tabsId, "first-steps")}
           className="sk-scroll flex-1 overflow-y-auto p-5"
         >
-          <FirstStepsView {...firstSteps} firstName={firstName} next={next} onAsk={toAsk} />
+          <FirstStepsView
+            {...firstSteps}
+            firstName={firstName}
+            next={next}
+            onAsk={toAsk}
+            onSkip={() => {
+              firstSteps.onSkip();
+              // The view goes away with its Skip button: the focus goes to the chat's input.
+              toAsk();
+            }}
+          />
         </div>
       ) : (
       <div

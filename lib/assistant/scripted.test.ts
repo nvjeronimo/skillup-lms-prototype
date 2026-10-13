@@ -49,6 +49,16 @@ describe("answerScripted", () => {
     expect(a.actions).toHaveLength(1);
     expect(answerScripted("How do I get started?", dash).text).toContain(FALLBACK_LEAD);
   });
+  it("keeps the first-steps answer for questions about getting started", () => {
+    const fs = { status: "active" as const, done: [], baseline: [], greeted: true };
+    const active = buildSnapshot(state, { kind: "dashboard" }, fs);
+    expect(answerScripted("What should I do first?", active).text).toContain("first steps left");
+    expect(answerScripted("what is the first step to get my certificate", active).text).toContain(
+      getKnowledge("certificate").answer,
+    );
+    expect(answerScripted("how do I get started with the lab?", active).text).toContain(getKnowledge("lab").answer);
+    expect(answerScripted("What should I do next?", active).text).not.toContain("first steps left");
+  });
   it("only ever returns buttons that are in the snapshot", () => {
     const known = new Set(dash.actions.map((a) => a.id));
     for (const q of suggestionsFor(dash))

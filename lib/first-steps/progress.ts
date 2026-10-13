@@ -69,15 +69,25 @@ function isState(value: unknown): value is FirstStepsState {
   );
 }
 
-/** Nothing stored, storage blocked, or anything that is not a state: start fresh from today. */
-export function load(storage: Pick<Storage, "getItem"> | undefined, completedTopics: string[]): FirstStepsState {
+/**
+ * The state in storage, or null when there is none, storage is blocked, or what is there is
+ * not a state. Steps come back in their own order, each once, and five of them mean done.
+ */
+export function loadStored(storage: Pick<Storage, "getItem"> | undefined): FirstStepsState | null {
   try {
     const parsed: unknown = JSON.parse(storage?.getItem(STORAGE_KEY) ?? "null");
-    if (isState(parsed)) return parsed;
+    if (!isState(parsed)) return null;
+    const done = STEP_IDS.filter((id) => parsed.done.includes(id));
+    const status = parsed.status === "active" && done.length === STEP_IDS.length ? "done" : parsed.status;
+    return { ...parsed, done, status };
   } catch {
-    /* fall through */
+    return null;
   }
-  return createState(completedTopics);
+}
+
+/** Nothing usable in storage: start fresh from today's completions. */
+export function load(storage: Pick<Storage, "getItem"> | undefined, completedTopics: string[]): FirstStepsState {
+  return loadStored(storage) ?? createState(completedTopics);
 }
 
 export function save(storage: Pick<Storage, "setItem"> | undefined, state: FirstStepsState): void {
