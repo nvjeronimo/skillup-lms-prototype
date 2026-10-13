@@ -202,17 +202,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       onComplete={() => markComplete(topicId)}
       // On a partner lab that has not been opened yet, the launch button is the primary action.
       secondary={Boolean(partnerLab) && !labOpenedAt && !labInPage}
-      // Quiz, ORA and VILT have no manual completion, and Video completes on its own at 90%
-      // watched (reading-screen-matrix §4): their badge reads "Completed".
-      manual={
-        !(
-          family === "assessment" ||
-          family === "graded" ||
-          family === "ora" ||
-          family === "vilt" ||
-          family === "video"
-        )
-      }
     />
   );
   // The rule since 12 Oct 2026 (lab-third-party-platforms.md §4, after Navdeep's comments): on a
