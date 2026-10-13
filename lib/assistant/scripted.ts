@@ -1,4 +1,5 @@
 import { getKnowledge } from "./knowledge";
+import { STEPS, stepAction } from "@/lib/first-steps/steps";
 import { nextStep } from "./next-step";
 import type { ActionEntry, Answer, LearnerSnapshot } from "./types";
 
@@ -25,6 +26,22 @@ const fromKnowledge = (id: string, actionIds?: string[]): Reply => ({ text: getK
 
 /** In matching order: the first intent that matches the question and applies on this page answers it. */
 const INTENTS: Intent[] = [
+  {
+    suggestion: "How do I get started?",
+    keywords: /\b(get started|getting started|first steps?|where do i (start|begin))\b/,
+    reply: (snapshot) => {
+      const left = snapshot.firstSteps?.left;
+      if (!left?.length) return null;
+      // The button of the first step that has somewhere to go.
+      const target = STEPS.filter((step) => left.includes(step.label))
+        .map((step) => stepAction(step.id, snapshot))
+        .find((action): action is ActionEntry => action !== null && action !== "ask");
+      return {
+        text: `You have ${left.length} first ${left.length === 1 ? "step" : "steps"} left:\n${lines(left)}`,
+        actionIds: target ? [target.id] : [],
+      };
+    },
+  },
   {
     suggestion: "Summarise this topic",
     keywords: /\b(summar\w*|takeaways?|recap)\b/,

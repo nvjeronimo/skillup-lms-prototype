@@ -39,6 +39,16 @@ describe("answerScripted", () => {
     expect(answerScripted("Summarise this topic", player).text).toContain(player.topic!.takeaways[0]);
     expect(answerScripted("Summarise this topic", dash).text).toContain(FALLBACK_LEAD);
   });
+  it("lists the first steps that are left, while there are any", () => {
+    const fs = { status: "active" as const, done: ["program" as const], baseline: [], greeted: true };
+    const active = buildSnapshot(state, { kind: "dashboard" }, fs);
+    const a = answerScripted("How do I get started?", active);
+    expect(a.text).toContain("4 first steps left");
+    expect(a.text).toContain("Open a course");
+    expect(a.text).not.toContain("Open your program");
+    expect(a.actions).toHaveLength(1);
+    expect(answerScripted("How do I get started?", dash).text).toContain(FALLBACK_LEAD);
+  });
   it("only ever returns buttons that are in the snapshot", () => {
     const known = new Set(dash.actions.map((a) => a.id));
     for (const q of suggestionsFor(dash))
