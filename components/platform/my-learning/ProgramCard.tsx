@@ -11,7 +11,9 @@ import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import {
   myLearningProgramCertificateLabel,
   myLearningProgramCompletedLabel,
+  myLearningProgramNotStartedLabel,
   myLearningProgramProgressLabel,
+  myLearningProgramStartDateLabel,
   myLearningProgramUpNextLabel,
   type MyLearningProgram,
 } from "@/lib/platform/my-learning";
@@ -72,6 +74,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
   // DS, 10 Oct 2026: the action is Secondary in both states.
   const hierarchy = "secondary";
   const completed = program.progressPct >= 100;
+  // DS `State=Not started` (13 Oct 2026): the words take the place of "0%".
+  const notStarted = !completed && !program.upNext && Boolean(program.status);
   const footerLabel = completed ? myLearningProgramCertificateLabel : myLearningProgramUpNextLabel;
   const footerValue = completed ? program.certificateDate : program.upNext;
   const skin = useLmsStore((st) => st.skin);
@@ -171,10 +175,16 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
       <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-between" : "w-full")}>
         <div className="flex flex-col gap-2">
           <div className="flex items-baseline justify-between gap-3">
-            <span className="sk-text-headline-medium-bold text-sko-text-default">{program.progressPct}%</span>
+            <span className="sk-text-headline-medium-bold text-sko-text-default">
+              {notStarted ? myLearningProgramNotStartedLabel : `${program.progressPct}%`}
+            </span>
             <span className="sk-text-label-small-semibold inline-flex items-center gap-1.5 whitespace-nowrap text-sko-text-subtle">
               {completed ? <Icon icon={CheckCircle2} size={16} className="text-sko-icon-success" aria-hidden="true" /> : null}
-              {completed ? myLearningProgramCompletedLabel : myLearningProgramProgressLabel}
+              {completed
+                ? myLearningProgramCompletedLabel
+                : notStarted
+                  ? myLearningProgramStartDateLabel
+                  : myLearningProgramProgressLabel}
             </span>
           </div>
           {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
@@ -183,12 +193,14 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         {/* DS footer, 10 Oct 2026: a box 60 tall in both states, so every card has one height.
             In progress: on bg/subtle, "Up next" over the course name (Semibold) on one line, cut
             when longer.
-            Not started: a 1px border/subtle box with the status and Details. */}
+            Not started (DS, 13 Oct 2026): "Not started" stands where the percent was, over
+            the caption "START DATE"; the box is on bg/subtle with a 1px border/subtle and holds
+            the status badge and Details. */}
         <div
           className={cn(
             "flex min-h-[60px] items-center justify-between gap-4 rounded-lg",
             // The border is drawn inside the box: 1px less padding keeps both states 60 tall.
-            footerValue ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle px-[11px] py-[7px]",
+            footerValue ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle bg-sko-bg-subtle px-[11px] py-[7px]",
           )}
         >
           {footerValue ? (
