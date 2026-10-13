@@ -105,8 +105,8 @@ function Action({
  * Layout=Grid and Layout=List. bg/page, 1px border/subtle, radius 12, Shadows/shadow-card.
  * The DS stroke takes part in the layout, so the CSS border adds to the padding.
  *
- * Grid: padding 24 / 20 / 16 (desktop / tablet / mobile), gap 16: header (thumb 86 + Course
- * Type badge, title, provider), the Difficulty and Delivery badges, progress (gap 8), the
+ * Grid: padding 24 / 20 / 16 (desktop / tablet / mobile), gap 16: header (thumb 86 + a line
+ * with the Course Type badge on the left and the provider on the right, then the title), the Difficulty and Delivery badges, progress (gap 8), the
  * one-line up-next strip and a Buttons/Button lg.
  * List: one row, padding 16, gap 24: thumb 118, titles with the Meta-Row (provider, gap 16,
  * badges), progress 280 wide (gap 6), then the up-next block (overline, title, topic type)
@@ -194,12 +194,16 @@ export function MyLearningCourseCard({
     <article className={cn(surface, clickable, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
       <div className="flex w-full items-start gap-4">
         <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-[86px]" />
-        <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
-          <CourseTypeBadge value="Course" />
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          {/* DS Grid (Nelson, 13 Oct 2026): the provider or partner sits at the right end of the
+              Course Type line, not under the title. */}
+          <div className="flex w-full items-center justify-between gap-0.5">
+            <CourseTypeBadge value="Course" />
+            <ProviderBadge value={course.provider} />
+          </div>
           <h3 title={course.title} className={cn("sk-text-title-large-semibold min-h-[2lh] text-sko-text-default", TITLE_TWO_LINES)}>
             <CourseTitle course={course} />
           </h3>
-          <ProviderBadge value={course.provider} />
         </div>
       </div>
       <div className="flex flex-wrap items-start gap-2">
