@@ -101,6 +101,13 @@ transcript seek + line highlight, **note editor** anchored to transcript lines
 (mock), tab routing, Notifications + Saved overlay panels, mobile drawer, and the
 out-of-scope topbar actions (AI / Theme / Exit) surface a toast.
 
+## The assistant
+
+A floating chat on every platform page and in the player (`components/assistant`,
+`lib/assistant`): it answers questions about the platform and the learner's courses, with
+buttons to the right place, and never changes anything. Scripted by default; Claude when
+`ANTHROPIC_API_KEY` is set (see DEPLOY.md). Design: `docs/superpowers/specs/2026-10-13-assistant-design.md`.
+
 ## edX-parity additions (handoff v1.2 → v1.5)
 
 - **Video Chrome Footer** below the player — license/copyright, CC toggle, multi-language

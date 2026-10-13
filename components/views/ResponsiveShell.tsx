@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
+import { AssistantChat } from "@/components/assistant/AssistantChat";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
 const FRAME_WIDTH: Record<DeviceMode, number | null> = {
@@ -59,7 +60,14 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   React.useEffect(() => flag("data-underline-links", underlineLinks), [underlineLinks]);
   React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
 
-  if (!width) return <>{children}</>;
+  // The assistant is mounted once, for every page (it shows on platform and player pages only).
+  if (!width)
+    return (
+      <>
+        {children}
+        <AssistantChat />
+      </>
+    );
 
   return (
     <div className="flex min-h-[100dvh] justify-center bg-sko-bg-subtle">
@@ -68,6 +76,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
         className="w-full shrink-0 overflow-hidden border-x border-sko-border-subtle bg-sko-bg-page shadow-2xl"
       >
         {children}
+        <AssistantChat />
       </div>
     </div>
   );

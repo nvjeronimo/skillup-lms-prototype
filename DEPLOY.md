@@ -80,6 +80,24 @@ Both are **public** (no login needed) and live on Vercel.
   those native builds aren't needed for `next build`, so we skip them. This is the
   reliable cross-environment fix.
 
+## The assistant
+
+The floating chat answers from a script by default: nothing to configure, no cost. It uses a
+model only when the deployment has these environment variables (Vercel → Settings →
+Environment Variables):
+
+| Variable | Value |
+|---|---|
+| `ANTHROPIC_API_KEY` | A Claude API key. Server only: it never reaches the browser. |
+| `ASSISTANT_MODEL` | Optional. Default `claude-sonnet-5-5`. |
+
+Before adding the key to a public deployment, **set a spend limit on that key in the
+Anthropic console**. The route allows 20 questions per hour per visitor, but that counter is
+per serverless instance, so it slows a visitor down and no more; the spend limit is the
+real ceiling. Each answer is capped at 1,500 output tokens, the question at 500 characters.
+
+`pnpm test` runs the unit tests of `lib/assistant` (vitest).
+
 ## Redeploying
 
 ```bash
