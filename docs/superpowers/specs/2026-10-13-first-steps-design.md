@@ -1,6 +1,6 @@
 # First steps: the assistant shows a new learner how to start, and what to do next
 
-Date: 13 Oct 2026 · Status: draft for Nelson's review · Scope: prototype only (`skillup-lms-prototype`)
+Date: 13 Oct 2026 · Status: approved by Nelson on 13 Oct 2026 (proposals A to E accepted) · Scope: prototype only (`skillup-lms-prototype`)
 
 Spec 2 of 2. It builds on the assistant of spec 1
 (`2026-10-13-assistant-design.md`, merged in PR 127) and reuses its snapshot, its window and
