@@ -19,11 +19,21 @@ describe("parseModelReply", () => {
   it("has no buttons without the line", () => {
     expect(parseModelReply("Just text.", actions)).toEqual({ text: "Just text.", actions: [], source: "model" });
   });
-  it("ignores the marker anywhere but the last line", () => {
+  it("takes no buttons from a marker that is not the last line, and never shows it", () => {
     const a = parseModelReply("ACTIONS: dashboard\nand then more text.", actions);
     expect(a.actions).toEqual([]);
-    expect(a.text).toContain("and then more text.");
+    expect(a.text).toBe("and then more text.");
   });
+  it.each(["**ACTIONS:** dashboard", "Actions: dashboard", "- ACTIONS: dashboard"])(
+    "reads a decorated marker line: %s",
+    (line) => {
+      expect(parseModelReply(`Here.\n${line}`, actions)).toEqual({
+        text: "Here.",
+        actions: [actions[0]],
+        source: "model",
+      });
+    },
+  );
   it("caps at three and removes repeats", () => {
     const many = [...actions, { id: "c", label: "C", href: "/c" }, { id: "d", label: "D", href: "/d" }];
     expect(
@@ -47,6 +57,8 @@ describe("visibleText", () => {
     ["Two things.\nA", "Two things."],
     ["Two things.\nAnd a third", "Two things.\nAnd a third"],
     ["Two things.", "Two things."],
+    ["Two things.\nACTIONS: dashboard\n", "Two things."],
+    ["Two things.\n**ACTIONS:** dash", "Two things."],
   ])("%j", (partial, shown) => expect(visibleText(partial)).toBe(shown));
 });
 

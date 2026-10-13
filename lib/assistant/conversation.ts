@@ -1,4 +1,5 @@
 import { parseModelReply } from "./model-reply";
+import { isAction } from "./request";
 import { answerScripted } from "./scripted";
 import type { Answer, ChatMessage, LearnerSnapshot } from "./types";
 
@@ -8,7 +9,13 @@ export const STORAGE_KEY = "sk-assistant-chat";
 function isMessage(value: unknown): value is ChatMessage {
   if (typeof value !== "object" || value === null) return false;
   const m = value as Record<string, unknown>;
-  return typeof m.id === "string" && (m.role === "user" || m.role === "assistant") && typeof m.text === "string";
+  return (
+    typeof m.id === "string" &&
+    (m.role === "user" || m.role === "assistant") &&
+    typeof m.text === "string" &&
+    (m.actions === undefined || (Array.isArray(m.actions) && m.actions.every(isAction))) &&
+    (m.source === undefined || m.source === "script" || m.source === "model")
+  );
 }
 
 /** Blocked storage, nothing stored, or anything that is not a list of messages: start empty. */

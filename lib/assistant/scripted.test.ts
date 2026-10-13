@@ -44,7 +44,19 @@ describe("answerScripted", () => {
     for (const q of suggestionsFor(dash))
       for (const a of answerScripted(q, dash).actions) expect(known.has(a.id)).toBe(true);
   });
-  it.each(["", "   ", "Qual é a capital de Portugal?", "asdf qwer"])("falls back on %j", (q) => {
+  it("tries the next intent when the first one does not apply here", () => {
+    expect(answerScripted("Summarise my progress", dash).text).toContain("%");
+  });
+  it.each([
+    "",
+    "   ",
+    "Qual é a capital de Portugal?",
+    "asdf qwer",
+    "who is the next president",
+    "How do I stop email notifications?",
+    "Can I change the label colour?",
+    "is my laboratory booked?",
+  ])("falls back on %j", (q) => {
     const a = answerScripted(q, dash);
     expect(a.text).toContain(FALLBACK_LEAD);
     expect(a.actions).toEqual([]);

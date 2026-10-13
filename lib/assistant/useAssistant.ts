@@ -9,6 +9,8 @@ import type { ChatMessage, LearnerSnapshot } from "./types";
 const MAX_QUESTION = 500;
 const MAX_HISTORY = 10;
 const ENDPOINT = "/api/assistant";
+// Longer than the route's own limit: past this the model is taken as unreachable and the script answers.
+const ANSWER_MS = 25_000;
 
 const sessionStore = () => {
   try {
@@ -67,6 +69,17 @@ export function useAssistant(snapshot: LearnerSnapshot) {
       const controller = new AbortController();
       request.current = controller;
       const askModel = async (onDelta: (shown: string) => void) => {
+        const late = window.setTimeout(() => stalled.abort(), ANSWER_MS);
+        try {
+          return await readReply(onDelta);
+        } finally {
+          window.clearTimeout(late);
+        }
+      };
+      // Aborted by the learner (clear, unmount) or by the clock (a stalled answer).
+      const stalled = new AbortController();
+      controller.signal.addEventListener("abort", () => stalled.abort());
+      const readReply = async (onDelta: (shown: string) => void) => {
         const response = await fetch(ENDPOINT, {
           method: "POST",
           headers: { "content-type": "application/json" },
@@ -74,7 +87,7 @@ export function useAssistant(snapshot: LearnerSnapshot) {
             messages: asked.slice(-MAX_HISTORY).map((m) => ({ role: m.role, text: m.text })),
             snapshot,
           }),
-          signal: controller.signal,
+          signal: stalled.signal,
         });
         if (!response.ok || !response.body) throw new Error(`assistant: ${response.status}`);
         const reader = response.body.getReader();

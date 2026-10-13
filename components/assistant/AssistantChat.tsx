@@ -43,14 +43,15 @@ function Chat({ pathname }: { pathname: string }) {
   const [open, setOpen] = React.useState(false);
   const [phone, setPhone] = React.useState(false);
   React.useEffect(() => {
-    try {
-      setOpen(sessionStorage.getItem(OPEN_KEY) === "1");
-    } catch {
-      /* storage blocked: closed */
-    }
     const query = window.matchMedia(PHONE);
     const sync = () => setPhone(query.matches);
     sync();
+    // On a phone the chat is a full-screen sheet: a page never opens covered by it.
+    try {
+      setOpen(!query.matches && sessionStorage.getItem(OPEN_KEY) === "1");
+    } catch {
+      /* storage blocked: closed */
+    }
     query.addEventListener("change", sync);
     return () => query.removeEventListener("change", sync);
   }, []);
@@ -62,12 +63,27 @@ function Chat({ pathname }: { pathname: string }) {
       /* see above */
     }
   };
+  // Closing gives the focus back to the launcher. On a phone the launcher is not rendered
+  // under the sheet, so the focus moves once it is back (the effect below).
+  const refocus = React.useRef(false);
   const close = () => {
+    refocus.current = true;
     set(false);
-    launcherRef.current?.focus();
   };
+  React.useEffect(() => {
+    if (open || !refocus.current) return;
+    refocus.current = false;
+    launcherRef.current?.focus();
+  }, [open]);
 
   const isPhone = phone || previewPhone;
+  // On a phone, following a button of an answer goes to the page: the sheet gets out of the way.
+  const lastPath = React.useRef(pathname);
+  React.useEffect(() => {
+    if (lastPath.current === pathname) return;
+    lastPath.current = pathname;
+    if (isPhone) set(false);
+  });
   const edge = isPhone ? EDGE_PHONE : EDGE;
   const bottom = edge + useFooterHeight(pathname);
   const sheet = open && isPhone;
@@ -116,7 +132,10 @@ function Chat({ pathname }: { pathname: string }) {
  */
 function useFooterHeight(pathname: string): number {
   const [height, setHeight] = React.useState(0);
+  const inPlayer = pathname.startsWith("/course/");
   React.useEffect(() => {
+    // Only the player has a footer nav; the other pages pay nothing.
+    if (!inPlayer) return setHeight(0);
     const measure = () => {
       const footer = document.querySelector<HTMLElement>('nav[aria-label="Topic navigation"]');
       if (!footer) return setHeight(0);
@@ -141,6 +160,6 @@ function useFooterHeight(pathname: string): number {
       window.removeEventListener("resize", measure);
       window.removeEventListener("scroll", measure, true);
     };
-  }, [pathname]);
+  }, [pathname, inPlayer]);
   return height;
 }

@@ -250,3 +250,24 @@ line once it is merged.
 - **In the device-preview frame** the chat is fixed to the browser viewport, as toasts are.
 - **Model mode was not run**: no API key was available during the build. The route was
   checked without a key (`GET` → script, `POST` → 503) and its pure parts are unit-tested.
+
+## 11. After the independent review (13 Oct 2026)
+
+- **The route takes a sized request only** (`lib/assistant/request.ts`): every learner turn up
+  to 500 characters, every earlier answer up to 4,000, the snapshot up to 40 KB and of the
+  right shape. A stalled answer is cut at 20 s on the server and 25 s in the browser, and the
+  script answers instead.
+- **The `ACTIONS:` line never shows**, wherever the model puts it and however it decorates it;
+  only a last one gives buttons.
+- **The script matches whole words and phrases.** "Next", "stop" and "lab" inside another
+  question no longer trigger an answer; an intent that does not apply on the page hands over
+  to the next one.
+- **On a phone** the sheet closes when a button of an answer is followed, a page never opens
+  covered by it, and closing gives the focus back to the launcher.
+- **A stored conversation is checked field by field** before it is shown.
+- **Not done, known:** the chat's layer (45) is above the course drawer and the profile menu
+  (40); the rate limiter trusts `x-forwarded-for` and never evicts; an answer in flight is lost
+  if the learner leaves for a page without the assistant; the live region does not announce
+  the buttons; scripted fallback turns are sent to the model as history; answer buttons are
+  36 px (Button sm) against the 44 px target rule; `buildSnapshot` does not use bookmarks or
+  the store's resume position.

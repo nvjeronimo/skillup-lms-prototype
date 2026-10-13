@@ -8,7 +8,8 @@ import type { ActionEntry, Answer, LearnerSnapshot } from "./types";
  */
 
 const MARKER = "ACTIONS:";
-const ACTIONS_LINE = /^ACTIONS:\s*(.*)$/;
+// A marker line, however the model decorates it: "ACTIONS: a", "**Actions:** a", "- ACTIONS: a".
+const ACTIONS_LINE = /^\W*actions:\W*(.*)$/i;
 const MAX_ACTIONS = 3;
 
 export function buildSystemPrompt(snapshot: LearnerSnapshot): string {
@@ -28,23 +29,29 @@ export function buildSystemPrompt(snapshot: LearnerSnapshot): string {
   ].join("\n\n");
 }
 
-/** The model's whole reply, as an answer: the last line becomes buttons and leaves the text. */
+/** The model's whole reply, as an answer. Marker lines never show; only a last one gives buttons. */
 export function parseModelReply(raw: string, actions: ActionEntry[]): Answer {
   const rows = raw.trimEnd().split("\n");
   const match = ACTIONS_LINE.exec(rows[rows.length - 1].trim());
-  if (!match) return { text: raw.trim(), actions: [], source: "model" };
-  const ids = Array.from(new Set(match[1].split(",").map((id) => id.trim())));
+  const text = rows
+    .filter((row) => !ACTIONS_LINE.test(row.trim()))
+    .join("\n")
+    .trim();
+  if (!match) return { text, actions: [], source: "model" };
+  const ids = Array.from(new Set(match[1].split(",").map((id) => id.replace(/^[^\w]+|[^\w]+$/g, ""))));
   const picked = ids
     .map((id) => actions.find((a) => a.id === id))
     .filter((a): a is ActionEntry => Boolean(a))
     .slice(0, MAX_ACTIONS);
-  return { text: rows.slice(0, -1).join("\n").trim(), actions: picked, source: "model" };
+  return { text, actions: picked, source: "model" };
 }
 
-/** What to show of a reply still arriving: without a last line that is, or may become, the marker. */
+/** What to show of a reply still arriving: no marker line, and no last line that may become one. */
 export function visibleText(partial: string): string {
-  const cut = partial.lastIndexOf("\n");
-  const last = partial.slice(cut + 1).trim();
-  const mayBeMarker = last !== "" && (last.startsWith(MARKER) || MARKER.startsWith(last));
-  return (mayBeMarker ? partial.slice(0, Math.max(cut, 0)) : partial).trimEnd();
+  const rows = partial.split("\n");
+  const last = (rows.pop() ?? "").trim().replace(/^\W+/, "").toLowerCase();
+  const mayBeMarker = last !== "" && (last.startsWith("actions:") || "actions:".startsWith(last));
+  const shown = rows.filter((row) => !ACTIONS_LINE.test(row.trim()));
+  if (!mayBeMarker) shown.push(partial.slice(partial.lastIndexOf("\n") + 1));
+  return shown.join("\n").trimEnd();
 }

@@ -13,7 +13,8 @@ type Reply = { text: string; actionIds?: string[] } | null;
 
 interface Intent {
   suggestion: string;
-  keywords: string[];
+  /** Whole words or phrases; a plain word alone is not enough where it is common in other questions. */
+  keywords: RegExp;
   /** `null` when the intent does not apply here (a summary with no topic): the fallback answers. */
   reply: (snapshot: LearnerSnapshot) => Reply;
 }
@@ -22,11 +23,11 @@ const lines = (items: string[]) => items.map((item) => `• ${item}`).join("\n")
 const fromKnowledge = (id: string, actionIds?: string[]): Reply => ({ text: getKnowledge(id).answer, actionIds });
 const isToday = (when: string) => when === "Today" || when === "Tonight";
 
-/** In matching order: the first intent whose keyword the question contains answers it. */
+/** In matching order: the first intent that matches the question and applies on this page answers it. */
 const INTENTS: Intent[] = [
   {
     suggestion: "Summarise this topic",
-    keywords: ["summar", "takeaway", "recap"],
+    keywords: /\b(summar\w*|takeaways?|recap)\b/,
     reply: ({ topic }) =>
       topic && topic.takeaways.length
         ? { text: `The key points of "${topic.title}":\n${lines(topic.takeaways)}` }
@@ -34,7 +35,7 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "What is due this week?",
-    keywords: ["due", "deadline", "assignment"],
+    keywords: /\b(due|deadlines?|assignments?)\b/,
     reply: ({ due }) =>
       due.length
         ? {
@@ -47,7 +48,7 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "What should I do next?",
-    keywords: ["next", "what should", "what now"],
+    keywords: /\b(what (should|do|can) i do|what now|do next|next step)\b/,
     reply: ({ due, courses }) => {
       const urgent = due.find((d) => isToday(d.when));
       if (urgent) {
@@ -70,7 +71,7 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "Where did I stop?",
-    keywords: ["stop", "resume", "continue", "left off"],
+    keywords: /\b(where (did|was) i|resume|left off|pick up where)\b/,
     reply: ({ courses }) => {
       const current = courses.find((c) => c.status === "in-progress");
       if (!current) return { text: "You have no course in progress.", actionIds: ["my-learning"] };
@@ -84,7 +85,7 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "How far am I in my program?",
-    keywords: ["progress", "how far", "percent"],
+    keywords: /\b(progress|how far|percent\w*)\b/,
     reply: ({ programs }) =>
       programs.length
         ? {
@@ -95,7 +96,7 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "How do I get my certificate?",
-    keywords: ["certificate"],
+    keywords: /\bcertificates?\b/,
     reply: ({ actions }) =>
       fromKnowledge(
         "certificate",
@@ -104,12 +105,12 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "How do I complete this topic?",
-    keywords: ["complete", "mark as"],
+    keywords: /\b(complete|completed|completing|mark as)\b/,
     reply: ({ topic }) => fromKnowledge(topic?.completesByHand ? "completion-by-hand" : "completion"),
   },
   {
     suggestion: "Which courses am I enrolled in?",
-    keywords: ["enrol", "my courses", "which courses"],
+    keywords: /\b(enrolled|my courses|which courses)\b/,
     reply: ({ courses }) => ({
       text: `You are enrolled in ${courses.length} courses:\n${lines(
         courses.map((c) => `${c.title} (${statusLabel(c)})`),
@@ -119,14 +120,14 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "Where are my saved topics?",
-    keywords: ["saved", "bookmark"],
+    keywords: /\b(saved|bookmarks?|bookmarked)\b/,
     reply: () => fromKnowledge("saved"),
   },
-  { suggestion: "How do notes work?", keywords: ["note"], reply: () => fromKnowledge("notes") },
-  { suggestion: "Why is my lab not complete?", keywords: ["lab"], reply: () => fromKnowledge("lab") },
+  { suggestion: "How do notes work?", keywords: /\bnotes?\b/, reply: () => fromKnowledge("notes") },
+  { suggestion: "Why is my lab not complete?", keywords: /\blabs?\b/, reply: () => fromKnowledge("lab") },
   {
     suggestion: "What can you do?",
-    keywords: ["help", "what can you"],
+    keywords: /\b(help|what can you)\b/,
     reply: (snapshot) => ({
       text: `I can answer questions about the platform and your courses. For example:\n${lines(
         suggestionsFor(snapshot).filter((s) => s !== "What can you do?"),
@@ -140,16 +141,12 @@ function statusLabel(c: LearnerSnapshot["courses"][number]): string {
   return c.status === "in-progress" ? `${c.percent}%` : "not started";
 }
 
-const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-function findIntent(question: string): Intent | undefined {
+/** The intents a question may mean, best first: its exact suggestion, then every keyword match. */
+function findIntents(question: string): Intent[] {
   const q = question.trim().toLowerCase();
-  if (!q) return undefined;
-  return (
-    INTENTS.find((i) => i.suggestion.toLowerCase() === q) ??
-    // A keyword counts at the start of a word only: "lab" is not in "available".
-    INTENTS.find((i) => i.keywords.some((k) => new RegExp(`\\b${escapeRegExp(k)}`).test(q)))
-  );
+  if (!q) return [];
+  const exact = INTENTS.filter((i) => i.suggestion.toLowerCase() === q);
+  return exact.length ? exact : INTENTS.filter((i) => i.keywords.test(q));
 }
 
 /** Four questions for the page, each one the script can answer there. */
@@ -169,7 +166,12 @@ export function suggestionsFor(snapshot: LearnerSnapshot): string[] {
 }
 
 export function answerScripted(question: string, snapshot: LearnerSnapshot): Answer {
-  const reply = findIntent(question)?.reply(snapshot);
+  // An intent that does not apply here (a summary with no topic) hands over to the next match.
+  let reply: Reply = null;
+  for (const intent of findIntents(question)) {
+    reply = intent.reply(snapshot);
+    if (reply) break;
+  }
   if (!reply) {
     return { text: `${FALLBACK_LEAD}\n${lines(suggestionsFor(snapshot))}`, actions: [], source: "script" };
   }
