@@ -156,6 +156,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
                 type="button"
                 aria-pressed={status === item.id}
                 onClick={() => setStatus(item.id)}
+                // A segment reached with the keyboard comes into the track when it was cut off.
+                onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" })}
                 className={cn(
                   "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-md border px-4 transition-colors max-md:h-11",
                   status === item.id
