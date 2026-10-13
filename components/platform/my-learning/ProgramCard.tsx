@@ -53,7 +53,7 @@ const TARGET_44 =
  * look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Completed (DS `State=Completed`, v1.1, 13 Oct 2026): the label reads "Program completed"
  * after a check-circle in icon/success, the bar is full and green (bg/success), and the
- * footer, on bg/subtle, reads "Certificate issued" over the date with "View certificate".
+ * footer, on bg/subtle, reads "Certificate issued" over the date with "View Certificate".
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
  * Grid: stacked. The title keeps the height of three lines and is cut at the third (DS change
  * of 10 Oct 2026), so every hero is 248 tall on desktop. The footer has one height in both

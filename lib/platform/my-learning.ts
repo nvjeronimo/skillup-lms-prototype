@@ -171,7 +171,7 @@ export interface MyLearningProgram {
   status?: string;
   /** State=Completed: the date the program certificate was issued (Certificates API). */
   certificateDate?: string;
-  cta: "Continue" | "Details" | "View certificate";
+  cta: "Continue" | "Details" | "View Certificate";
   /** The program page: what the card and its title open. No href: no page in the prototype. */
   href?: string;
   /** What the button opens when it is not the program page: the player of the course in progress. */
@@ -222,7 +222,7 @@ export const myLearningPrograms: MyLearningProgram[] = [
     courses: "5 of 5 courses complete",
     progressPct: 100,
     certificateDate: "30 Sep 2026",
-    cta: "View certificate",
+    cta: "View Certificate",
   },
 ];
 
