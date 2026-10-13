@@ -22,13 +22,7 @@ export const MY_LEARNING_DEFAULT_VIEW: MyLearningView = "grid";
 
 export const myLearningHeading = { title: "Keep", emphasis: "going." } as const;
 
-export interface MyLearningStat {
-  label: string;
-  value: string;
-  detail: string;
-}
-
-/* The three stats are built at the end of this file: they also count the programs below. */
+/* The three header stats left the page on 13 Oct 2026: the Dashboard already shows them. */
 
 /* ── Toolbar ────────────────────────────────────────────────────────────────────────── */
 
@@ -262,32 +256,3 @@ export const myLearningProgramCompletedLabel = "Program completed";
 export const myLearningProgramNotStartedLabel = "Not started";
 export const myLearningProgramStartDateLabel = "Start date";
 export const myLearningProgramCertificateLabel = "Certificate issued";
-
-/* ── Header stats ───────────────────────────────────────────────────────────────────── */
-
-const plural = (n: number, one: string) => `${n} ${one}${n === 1 ? "" : "s"}`;
-/** "courses", or "courses · 1 program" when programs are in that state too. */
-const withPrograms = (programs: number) => (programs > 0 ? `courses · ${plural(programs, "program")}` : "courses");
-
-/**
- * Three DS `Stat`, Theme=Default: totals from Learner Home, the same as the Dashboard glance
- * card. The learner is enrolled in 17 courses (10 Oct 2026): the five single courses, the
- * seven of the AI program and the five of the Cybersecurity program. The Dashboard prints
- * that total ("of 17 enrolled"); 4 of the 17 are in progress and 2 are complete.
- * The figure counts courses; the line under it also counts the programs in that state
- * (Nelson, 13 Oct 2026), from the program cards below: `progress_details` gives each program
- * as in progress, not started or completed.
- */
-export const myLearningStats: MyLearningStat[] = [
-  {
-    label: "In progress",
-    value: "4",
-    detail: withPrograms(myLearningPrograms.filter((p) => p.progressPct > 0 && p.progressPct < 100).length),
-  },
-  {
-    label: "Completed",
-    value: "2",
-    detail: withPrograms(myLearningPrograms.filter((p) => p.progressPct >= 100).length),
-  },
-  { label: "Certificates", value: "2", detail: "earned" },
-];
