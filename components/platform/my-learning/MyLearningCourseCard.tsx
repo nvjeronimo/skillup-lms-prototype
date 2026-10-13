@@ -17,8 +17,7 @@ export interface MyLearningCourseCardProps {
   /**
    * `card` (My Learning): the card draws its own border, radius and shadow.
    * `row` (the Program page's `Course-Row`): the row's container draws them and the card is
-   * bare; in List the thumbnail is pinned at 86 and the up-next block fills the width left;
-   * in Grid the action fills the width.
+   * bare; List is the same row as on My Learning; in Grid the action fills the width.
    */
   context?: "card" | "row";
   /** Called by the action of a course without a page (`course.href` unset). */
@@ -143,16 +142,14 @@ export function MyLearningCourseCard({
           imageSrc={course.imageSrc}
           className="size-[86px]"
         />
-        <div className={cn("flex flex-col items-start gap-0.5", inRow ? "min-w-0 flex-1 basis-0" : "min-w-[200px] flex-1")}>
+        <div className="flex min-w-[200px] flex-1 flex-col items-start gap-0.5">
           <CourseTypeBadge value="Course" />
           <h3
             title={course.title}
-            className={cn(
-              "sk-text-title-large-semibold text-sko-text-default",
-              // DS List (10 Oct 2026): 120 tall with an 86 thumb, so the title is one line and a
-              // longer one is cut. In a course row of a program page it keeps two lines.
-              inRow ? cn(TITLE_TWO_LINES, "min-h-[2lh]") : "line-clamp-1",
-            )}
+            // DS List (10 Oct 2026): 120 tall with an 86 thumb, so the title is one line and a
+            // longer one is cut, in My Learning and in a course row alike (the screens nest the
+            // same Course-Card, 1198 × 118, in `Program-Detail/Course-Row`).
+            className="sk-text-title-large-semibold line-clamp-1 text-sko-text-default"
           >
             <CourseTitle course={course} />
           </h3>
@@ -164,31 +161,17 @@ export function MyLearningCourseCard({
             </div>
           </div>
         </div>
-        {/* DS List: the progress block hugs its line ("45% complete", 24, "8 hours total"); in a
-            course row of a program page it keeps the 280 the row was drawn with. */}
-        {inRow ? (
-          <Progress course={course} className="w-[280px] min-w-[180px] shrink gap-1.5" />
-        ) : (
-          <Progress course={course} hug className="shrink-0 gap-1.5" />
-        )}
+        {/* DS List: the progress block hugs its line ("45% complete", 24, "8 hours total"). */}
+        <Progress course={course} hug className="shrink-0 gap-1.5" />
         <div
-          className={cn(
-            "flex min-w-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2",
-            // In a course row the block keeps the height of a two-line title with its type badge,
-            // so every row is the same height.
-            // My Learning: the DS footer is 250 wide, the title takes what the action leaves.
-            inRow ? "min-h-[106px] flex-1 basis-0" : "w-[250px] shrink-0",
-          )}
+          // The DS footer is 250 wide and as tall as the thumb; the title takes what the action leaves.
+          className="flex w-[250px] min-w-0 shrink-0 items-center gap-4 self-stretch rounded-lg bg-sko-bg-subtle px-3 py-2"
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
             <span className={OVERLINE}>{overline}</span>
             <span
-              className={cn(
-                "sk-text-body-medium-medium text-sko-text-default",
-                // My Learning: one line, cut at the width the footer leaves. In a course row the
-                // block has the width and the title wraps, to two lines at most.
-                inRow ? "line-clamp-2" : "w-full truncate",
-              )}
+              // One line, cut at the width the footer leaves.
+              className="sk-text-body-medium-medium w-full truncate text-sko-text-default"
             >
               {nextTitle}
             </span>
