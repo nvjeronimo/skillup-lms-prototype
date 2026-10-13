@@ -35,7 +35,9 @@ export function PlatformStat({ label, value, detail, theme = "default", divider 
   return (
     <div
       className={cn(
-        "relative flex min-w-0 flex-col justify-end gap-2 p-4",
+        // Top-aligned: when one detail wraps to two lines (a phone), the labels and the figures of
+        // the stats beside it stay on the same lines.
+        "relative flex min-w-0 flex-col justify-start gap-2 p-4",
         divider && "border-l border-sko-border-subtle",
         className,
       )}
