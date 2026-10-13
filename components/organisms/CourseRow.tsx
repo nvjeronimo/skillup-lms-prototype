@@ -28,7 +28,7 @@ export interface CourseRowProps {
   /** The course's page: the title becomes a link to it. */
   homeHref?: string;
   onClick?: () => void;
-  /** Weight of the Resume action (Active). In a list only the first row is `primary`. Defaults to the DS look. */
+  /** Weight of the Resume action (Active). Secondary, as the DS Course-Row; `primary` only where a screen asks for it. */
   emphasis?: "primary" | "secondary";
   className?: string;
 }
@@ -57,7 +57,7 @@ export function CourseRow({
   href,
   homeHref,
   onClick,
-  emphasis = "primary",
+  emphasis = "secondary",
   className,
 }: CourseRowProps) {
   // What the controls name: the module and, with it, the course it belongs to.

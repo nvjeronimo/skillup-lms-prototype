@@ -17,7 +17,7 @@ export interface ResumeRowProps {
   href: string;
   /** The course's page: the title becomes a link to it. */
   homeHref?: string;
-  /** Weight of the action. In a list only the first row is `primary`. */
+  /** Weight of the action. Secondary, as the DS Resume-Row; `primary` only where a screen asks for it. */
   emphasis?: "primary" | "secondary";
   className?: string;
 }
@@ -33,7 +33,7 @@ export interface ResumeRowProps {
  * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
  * opens the course, so it is a link with the button look (atoms/ButtonLink).
  */
-export function ResumeRow({ title, context, next, progressPct, href, homeHref, emphasis = "primary", className }: ResumeRowProps) {
+export function ResumeRow({ title, context, next, progressPct, href, homeHref, emphasis = "secondary", className }: ResumeRowProps) {
   const subject = context ? `${title}, ${context}` : title;
   return (
     <div
