@@ -18,6 +18,7 @@ const config: Config = {
     extend: {
       boxShadow: {
         "sk-card": "var(--sk-shadow-card)",
+        "sk-elevation-3": "var(--sk-shadow-elevation-3)",
       },
       colors: {
         /* ── v4 element-first tokens, exported from the DS on 2026-09-23 ─────────
