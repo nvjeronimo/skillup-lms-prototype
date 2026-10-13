@@ -162,7 +162,8 @@ interface LmsState {
   saveNote: (note: NotePayload) => void;
   deleteNote: (id: string) => void;
   toggleBookmark: (topicId: string, opts?: { silent?: boolean }) => void;
-  markComplete: (topicId: string) => void;
+  /** `silent` completes without the toast: for a topic that completes by itself (an ORA). */
+  markComplete: (topicId: string, opts?: { silent?: boolean }) => void;
   submitForReview: (topicId: string) => void;
   /** Record a finished quiz attempt — stores the score, bumps the attempt count, completes the topic. */
   recordQuizResult: (topicId: string, score: number, total: number) => void;
@@ -418,7 +419,7 @@ export const useLmsStore = create<LmsState>()(
       return update;
     }),
 
-  markComplete: (topicId) =>
+  markComplete: (topicId, opts) =>
     set((state) => {
       if (state.completedTopics.has(topicId)) return state;
       const next = new Set(state.completedTopics);
@@ -431,7 +432,9 @@ export const useLmsStore = create<LmsState>()(
         topic?.type === "Lab"
           ? { ...state.labState, [topicId]: { ...state.labState[topicId], completedAt: Date.now() } }
           : state.labState;
-      return { completedTopics: next, labState, toast: { message: `Marked as complete · ${title}` } };
+      return opts?.silent
+        ? { completedTopics: next, labState }
+        : { completedTopics: next, labState, toast: { message: `Marked as complete · ${title}` } };
     }),
 
   // The date of the FIRST opening is the one kept: opening the lab again does not move it.

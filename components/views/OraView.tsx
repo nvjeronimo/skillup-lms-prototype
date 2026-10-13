@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, FileText, ShieldCheck } from "lucide-react";
+import { Check, FileText } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
@@ -17,6 +17,11 @@ import { cn } from "@/lib/utils";
  * Steps: Response → Review a peer → Your grade. The waiting and empty states
  * carry as much weight as the forms: the learner has done everything and now
  * depends on other people, so the UI has to show progress, not a spinner.
+ *
+ * Completion is the platform's, not the learner's: the topic completes by itself once the
+ * learner has submitted their response and given the required peer reviews
+ * (topic-types-inventory.md §5, footer-contract.md row 8). It does not wait for the grade,
+ * and there is no Mark as Complete button anywhere in the journey.
  */
 export function OraView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
@@ -26,7 +31,15 @@ export function OraView({ topicId }: { topicId: string }) {
   const oraGivePeerReview = useLmsStore((s) => s.oraGivePeerReview);
   const oraReceivePeerReview = useLmsStore((s) => s.oraReceivePeerReview);
   const markComplete = useLmsStore((s) => s.markComplete);
+  const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const showToast = useLmsStore((s) => s.showToast);
+
+  // Submitted and the review quota met: the topic is complete, whatever the grade does next.
+  const done =
+    Boolean(ora) && Boolean(state?.submitted) && (state?.reviewsGiven ?? 0) >= (ora?.requiredReviews ?? Infinity);
+  React.useEffect(() => {
+    if (done && !isCompleted) markComplete(topicId, { silent: true });
+  }, [done, isCompleted, markComplete, topicId]);
 
   if (!topic || !ora) return null;
 
@@ -56,7 +69,11 @@ export function OraView({ topicId }: { topicId: string }) {
           reviewsGiven={reviewsGiven}
           onSubmitReview={() => {
             oraGivePeerReview(topicId);
-            showToast("Review submitted. Thanks, that unlocks your own grade.");
+            showToast(
+              reviewsGiven + 1 >= ora.requiredReviews
+                ? "Review submitted. This topic is complete; your grade arrives once a peer has reviewed you."
+                : "Review submitted. Thanks, that unlocks your own grade.",
+            );
           }}
         />
       ) : graded ? (
@@ -64,7 +81,6 @@ export function OraView({ topicId }: { topicId: string }) {
           ora={ora}
           score={state!.score!}
           staffOverride={state?.staffOverride}
-          onContinue={() => markComplete(topicId)}
         />
       ) : (
         <WaitingStep
@@ -481,12 +497,10 @@ function GradeStep({
   ora,
   score,
   staffOverride,
-  onContinue,
 }: {
   ora: OraContent;
   score: number;
   staffOverride?: boolean;
-  onContinue: () => void;
 }) {
   const max = oraMaxPoints(ora);
   const pct = Math.round((score / max) * 100);
@@ -553,12 +567,6 @@ function GradeStep({
             ? "“Your response plan was stronger than the peer score reflected. Ownership was clearly assigned. Score adjusted.”"
             : "“Clear chart and well-structured limits. The response plan could name an owner for each trigger.”"}
         </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        <Button variant="primary" leftIcon={ShieldCheck} onClick={onContinue}>
-          Mark as complete
-        </Button>
       </div>
     </section>
   );
