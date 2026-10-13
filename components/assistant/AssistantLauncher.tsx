@@ -15,7 +15,7 @@ export interface AssistantLauncherProps {
 }
 
 /**
- * The button that opens the assistant: bottom right of every platform page and of the player.
+ * The button that opens the assistant: bottom left of every platform page and of the player.
  * Closed, it is the assistant mark: the SkillUp ball and paper plane with AI sparkles in place
  * of the trail lines (Nelson, 13 Oct 2026; DS `LMS/Platform/Assistant/Assistant-Launcher`).
  * Like the logo, the mark keeps its own colours and swaps its ink to white on a dark page

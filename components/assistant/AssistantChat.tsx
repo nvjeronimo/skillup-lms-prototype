@@ -18,7 +18,8 @@ const PHONE = "(max-width: 767px)";
 
 /**
  * The assistant, mounted once for the whole app (ResponsiveShell): a launcher in the bottom
- * right corner and the chat it opens. It knows where it is from the address, so no page
+ * left corner and the chat it opens (left since 13 Oct 2026: on the right it sat over Mark as
+ * Complete in the feedback row). It knows where it is from the address, so no page
  * hands it anything. Shown on the platform pages and in the player only.
  */
 export function AssistantChat() {
@@ -85,7 +86,7 @@ function Chat({ pathname }: { pathname: string }) {
     if (isPhone) set(false);
   });
   const edge = isPhone ? EDGE_PHONE : EDGE;
-  const bottom = edge + useFooterHeight(pathname);
+  const bottom = edge + useFooterHeight(pathname, edge + 56);
   const sheet = open && isPhone;
 
   return (
@@ -108,7 +109,7 @@ function Chat({ pathname }: { pathname: string }) {
           style={
             isPhone
               ? undefined
-              : { right: edge, bottom: bottom + 56 + GAP, height: `min(600px, calc(100dvh - ${bottom + 56 + GAP + 24}px))` }
+              : { left: edge, bottom: bottom + 56 + GAP, height: `min(600px, calc(100dvh - ${bottom + 56 + GAP + 24}px))` }
           }
         />
       ) : null}
@@ -119,7 +120,7 @@ function Chat({ pathname }: { pathname: string }) {
           onToggle={() => (open ? close() : set(true))}
           controls={windowId}
           className="fixed z-[45]"
-          style={{ right: edge, bottom }}
+          style={{ left: edge, bottom }}
         />
       )}
     </>
@@ -127,10 +128,12 @@ function Chat({ pathname }: { pathname: string }) {
 }
 
 /**
- * How much of the viewport's bottom the player's topic footer covers, so the launcher sits
- * above it and never over Next. 0 on a page with no footer nav.
+ * How much of the viewport's bottom the player's topic footer covers under the launcher, so
+ * the launcher sits above it and never over Previous. 0 on a page with no footer nav, and 0
+ * where the footer starts to the right of the launcher (the sidebar is in that corner).
+ * `reach` is how far from the left edge the launcher extends.
  */
-function useFooterHeight(pathname: string): number {
+function useFooterHeight(pathname: string, reach: number): number {
   const [height, setHeight] = React.useState(0);
   const inPlayer = pathname.startsWith("/course/");
   React.useEffect(() => {
@@ -139,8 +142,8 @@ function useFooterHeight(pathname: string): number {
     const measure = () => {
       const footer = document.querySelector<HTMLElement>('nav[aria-label="Topic navigation"]');
       if (!footer) return setHeight(0);
-      const { top, bottom } = footer.getBoundingClientRect();
-      const visible = top < window.innerHeight && bottom > 0;
+      const { top, bottom, left } = footer.getBoundingClientRect();
+      const visible = top < window.innerHeight && bottom > 0 && left < reach;
       setHeight(visible ? Math.max(0, Math.round(window.innerHeight - top)) : 0);
     };
     measure();
@@ -160,6 +163,6 @@ function useFooterHeight(pathname: string): number {
       window.removeEventListener("resize", measure);
       window.removeEventListener("scroll", measure, true);
     };
-  }, [pathname, inPlayer]);
+  }, [pathname, inPlayer, reach]);
   return height;
 }

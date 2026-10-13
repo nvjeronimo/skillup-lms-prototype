@@ -181,7 +181,7 @@ every page and the device preview contains it. It shows on `/platform/*` and `/c
 `CoursePlayerTopbar`'s `showAi` stays off.
 
 **Launcher: `components/assistant/AssistantLauncher.tsx`.** A round 56 px button with the
-Sparkles icon, fixed 24 px from the bottom and right edges (16 px on mobile), accessible name
+Sparkles icon, fixed 24 px from the bottom and left edges (16 px on mobile; see §10), accessible name
 "Ask the assistant", `aria-expanded`. In the player it sits above the topic footer nav, never
 over Next. It stays in place while the window is open and closes it.
 
@@ -257,6 +257,11 @@ line once it is merged.
   paper plane with AI sparkles in place of the trail lines, 56 × 56, no button ground. Two
   assets, as the logo: on a dark page the plane and the sparkles are white. Open, the launcher
   is still a round close button on bg/primary.
+- **The launcher is in the bottom left corner** (Nelson, 13 Oct 2026), and the window opens
+  above it, left aligned. On the right it sat over Mark as Complete in the feedback row. On
+  desktop and tablet it is over the foot of the sidebar; where the footer nav reaches the left
+  edge (phones, or no sidebar) it sits above the footer. On a phone it can still meet the
+  feedback row (Like, or a full-width Mark as Complete) when that row is at the bottom.
 
 ## 11. After the independent review (13 Oct 2026)
 
