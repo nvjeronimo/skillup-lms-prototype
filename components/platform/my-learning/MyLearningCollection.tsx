@@ -5,7 +5,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { CourseRowCard } from "@/components/platform/CourseRowCard";
-import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHeader";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { useLmsStore } from "@/lib/store";
 import {
@@ -13,8 +12,10 @@ import {
   MY_LEARNING_DEFAULT_VIEW,
   myLearningPrograms,
   myLearningSearch,
-  myLearningSections,
   myLearningStateOf,
+  myLearningStatusFilters,
+  myLearningStatusOrder,
+  type MyLearningStatusFilter,
   myLearningTabs,
   type MyLearningTab,
   type MyLearningView,
@@ -35,11 +36,6 @@ const LIST = "hidden flex-col gap-6 lg:flex";
 /* The row is the target of its card's title link: it shows it on hover, as the card did. */
 const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
 
-/* Sections: 32 / 24 / 20 apart (Spacing/4xl), as the sections of the Dashboard. */
-const SECTIONS = "flex flex-col gap-5 md:gap-6 lg:gap-8";
-
-const count = (n: number, one: string) => `${n} ${one}${n === 1 ? "" : "s"}`;
-
 const matches = (title: string, query: string) => title.toLowerCase().includes(query);
 
 /**
@@ -53,10 +49,12 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
  * Below desktop the collections are Grid only: the toggle is hidden, and a `?view=list`
  * URL still shows the grid there.
  *
- * Sections (decided by Nelson on 13 Oct 2026): both tabs are split in In progress, Not
- * started and Completed, each under a DS `Section-Header` with its count ("3 courses"), 16
- * above its cards and 32 / 24 / 20 between sections. A section without cards is not shown;
- * the Browse tile is hidden for now.
+ * Status filter (decided by Nelson on 13 Oct 2026; it replaced the three sections of the same
+ * day, which spread the cards and made the learner scroll): one list per tab, always ordered
+ * In progress, Not started, Completed, and a DS `Button group` under the toolbar that keeps
+ * the cards of one state (All by default). It works together with the search and the view.
+ * On mobile the four segments are wider than the screen: the group scrolls sideways.
+ * The Browse catalog tile is hidden for now.
  *
  * Courses (decided by Nelson on 11 Oct 2026): every course is a DS `Course-Row`, not the
  * course card on its own: `Breakpoint` Desktop in the list, Compact in the grid and at every
@@ -70,6 +68,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const params = useSearchParams();
   const showToast = useLmsStore((s) => s.showToast);
   const [query, setQuery] = React.useState("");
+  const [status, setStatus] = React.useState<MyLearningStatusFilter>("all");
   // The rows opened by the learner, by course id: the grid and the list show the same ones.
   const [openRows, setOpenRows] = React.useState<Set<string>>(() => new Set());
   const toggleRow = (id: string) =>
@@ -92,8 +91,17 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   };
 
   const needle = query.trim().toLowerCase();
-  const courses = courseRows.filter((row) => matches(row.card.title, needle));
-  const programs = myLearningPrograms.filter((p) => matches(p.title, needle));
+  const inStatus = (pct: number | null) => status === "all" || myLearningStateOf(pct) === status;
+  const byState = (a: number | null, b: number | null) =>
+    myLearningStatusOrder.indexOf(myLearningStateOf(a)) - myLearningStatusOrder.indexOf(myLearningStateOf(b));
+  // Always In progress, then Not started, then Completed; the data order holds inside a state.
+  const courses = courseRows
+    .filter((row) => matches(row.card.title, needle) && inStatus(row.card.progressPct))
+    .sort((a, b) => byState(a.card.progressPct, b.card.progressPct));
+  const programs = myLearningPrograms
+    .filter((p) => matches(p.title, needle) && inStatus(p.progressPct))
+    .sort((a, b) => byState(a.progressPct, b.progressPct));
+  const statusLabel = myLearningStatusFilters.find((f) => f.id === status)?.label ?? "";
   const shown = tab === "courses" ? courses.length : programs.length;
   const noun = tab === "courses" ? "courses" : "programs";
 
@@ -140,90 +148,102 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
         </div>
       </div>
 
+      {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
+          pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
+          The strip scrolls sideways when the group is wider than the screen. */}
+      <div className="overflow-x-auto">
+        <div role="group" aria-label={`Filter ${noun} by status`} className="inline-flex gap-0.5 rounded-lg bg-sko-bg-muted p-1">
+          {myLearningStatusFilters.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-pressed={status === item.id}
+              onClick={() => setStatus(item.id)}
+              className={cn(
+                "sk-text-body-medium-semibold h-8 whitespace-nowrap rounded-md border px-4 transition-colors max-md:h-11",
+                status === item.id
+                  ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
+                  : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+              )}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
-        {/* Tells assistive tech how many cards the search left. */}
+        {/* Tells assistive tech how many cards the search or the filter left. */}
         <p role="status" className="sr-only">
-          {needle ? `${shown} ${noun} match “${query.trim()}”` : ""}
+          {needle
+            ? `${shown} ${noun} match “${query.trim()}”`
+            : status !== "all"
+              ? `${shown} ${noun} · ${statusLabel}`
+              : ""}
         </p>
 
         {shown === 0 ? (
           <EmptyState
             icon={Search}
-            title={`No ${noun} match “${query.trim()}”`}
-            description="Check the spelling or search for another title."
+            title={needle ? `No ${noun} match “${query.trim()}”` : `No ${noun} here`}
+            description={
+              needle
+                ? "Check the spelling or search for another title."
+                : `None of your ${noun} is “${statusLabel}” right now. Choose All to see every one.`
+            }
           />
         ) : tab === "courses" ? (
-          <div className={SECTIONS}>
-            {myLearningSections.map((section) => {
-              const rows = courses.filter((row) => myLearningStateOf(row.card.progressPct) === section.id);
-              if (!rows.length) return null;
-              const headingId = `${ID_BASE}-courses-${section.id}`;
-              return (
-                <section key={section.id} aria-labelledby={headingId} className="flex flex-col gap-4">
-                  <PlatformSectionHeader id={headingId} title={section.title} emphasis={count(rows.length, "course")} />
-                  {/* items-start: an opened row does not stretch the rows of its line. */}
-                  <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
-                    {rows.map((row) => (
-                      <CourseRowCard
-                        key={row.card.id}
-                        {...row}
-                        breakpoint="compact"
-                        open={openRows.has(row.card.id)}
-                        onToggle={() => toggleRow(row.card.id)}
-                        className={ROW_HOVER}
-                      />
-                    ))}
-                  </ul>
-                  {listView ? (
-                    <ul className={LIST}>
-                      {rows.map((row) => (
-                        <CourseRowCard
-                          key={row.card.id}
-                          {...row}
-                          breakpoint="desktop"
-                          open={openRows.has(row.card.id)}
-                          onToggle={() => toggleRow(row.card.id)}
-                          className={ROW_HOVER}
-                        />
-                      ))}
-                    </ul>
-                  ) : null}
-                </section>
-              );
-            })}
+          <>
+            {/* items-start: an opened row does not stretch the rows of its line. */}
+            <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+              {courses.map((row) => (
+                <CourseRowCard
+                  key={row.card.id}
+                  {...row}
+                  breakpoint="compact"
+                  open={openRows.has(row.card.id)}
+                  onToggle={() => toggleRow(row.card.id)}
+                  className={ROW_HOVER}
+                />
+              ))}
+            </ul>
+            {listView ? (
+              <ul className={LIST}>
+                {courses.map((row) => (
+                  <CourseRowCard
+                    key={row.card.id}
+                    {...row}
+                    breakpoint="desktop"
+                    open={openRows.has(row.card.id)}
+                    onToggle={() => toggleRow(row.card.id)}
+                    className={ROW_HOVER}
+                  />
+                ))}
+              </ul>
+            ) : null}
             {/* The Browse catalog tile is hidden (Nelson, 13 Oct 2026): that way out has not been
                 discussed yet. `BrowseTile` and its copy stay in the code for when it is. */}
-          </div>
+          </>
         ) : (
-          <div className={SECTIONS}>
-            {myLearningSections.map((section) => {
-              const cards = programs.filter((program) => myLearningStateOf(program.progressPct) === section.id);
-              if (!cards.length) return null;
-              const headingId = `${ID_BASE}-programs-${section.id}`;
-              return (
-                <section key={section.id} aria-labelledby={headingId} className="flex flex-col gap-4">
-                  <PlatformSectionHeader id={headingId} title={section.title} emphasis={count(cards.length, "program")} />
-                  {/* Every program card has the same height, whatever its state or title. */}
-                  <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
-                    {cards.map((program) => (
-                      <li key={program.id} className="min-w-0">
-                        <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />
-                      </li>
-                    ))}
-                  </ul>
-                  {listView ? (
-                    <ul className={LIST}>
-                      {cards.map((program) => (
-                        <li key={program.id}>
-                          <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.cta)} />
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </section>
-              );
-            })}
-          </div>
+          <>
+            {/* Every program card has the same height, whatever its state or title. */}
+            <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+              {programs.map((program) => (
+                <li key={program.id} className="min-w-0">
+                  <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />
+                </li>
+              ))}
+            </ul>
+            {listView ? (
+              <ul className={LIST}>
+                {programs.map((program) => (
+                  <li key={program.id}>
+                    <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.cta)} />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </>
         )}
       </div>
     </section>

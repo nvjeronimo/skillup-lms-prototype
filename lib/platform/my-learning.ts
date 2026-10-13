@@ -232,19 +232,24 @@ export const myLearningPrograms: MyLearningProgram[] = [
   },
 ];
 
-/* ── Sections (13 Oct 2026) ─────────────────────────────────────────────────────────── */
+/* ── Status filter (13 Oct 2026) ────────────────────────────────────────────────────── */
 
 /**
- * Both tabs are split in three sections, in this order; a section without cards is not
- * shown. The state is the one Open edX gives: a course from `hasStarted` and
- * `certificate.isEarned`, a program from `progress_details`.
+ * The state of a course or a program, as Open edX gives it: a course from `hasStarted` and
+ * `certificate.isEarned`, a program from `progress_details`. Each tab is one list in this
+ * order, and a filter under the toolbar keeps the cards of one state (Nelson, 13 Oct 2026;
+ * it replaced the three sections tried the same day).
  */
 export type MyLearningState = "in-progress" | "not-started" | "completed";
+export type MyLearningStatusFilter = "all" | MyLearningState;
 
-export const myLearningSections: { id: MyLearningState; title: string }[] = [
-  { id: "in-progress", title: "In progress" },
-  { id: "not-started", title: "Not started" },
-  { id: "completed", title: "Completed" },
+export const myLearningStatusOrder: MyLearningState[] = ["in-progress", "not-started", "completed"];
+
+export const myLearningStatusFilters: { id: MyLearningStatusFilter; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "in-progress", label: "In progress" },
+  { id: "not-started", label: "Not started" },
+  { id: "completed", label: "Completed" },
 ];
 
 export const myLearningStateOf = (progressPct: number | null): MyLearningState =>
