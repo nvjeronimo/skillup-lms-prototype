@@ -83,7 +83,7 @@ Atoms: Avatar, Badge, CompletionStatus (apart from the noted P2), EmptyState, Le
 | G | Course End | ✅ (clean) | ❌ | `CertificateView`, `CourseCertificate`, `CourseCompleteModal` | PARTIAL | **Missing Playground board**; note P0 dark-mode bug in `CertificateView` |
 | H | Discovery & My Learning | ✅ | ❌ | `CourseHub`, `CourseCard`, `CourseRow`, `CourseHeader`, `FilterChip`, `EmptyState`, `SavedTopicItem` | DRIFT (DS-side) + Playground MISSING | 2nd-worst DS family (47 drift); decision pending on utility ramps → LMS status |
 | I | System Feedback | ✅ | partial | `Toast`, `InlineAlert`, `EmptyState`, `CompletionStatus`, `ContentFeedback` | DRIFT (DS-side) | DS only 1 drift (`fg-white`); near-match |
-| J | AI Assistant | ✅ | ✅ (hidden instance) | `AIPanel`, `OverlayPanel` | MATCH | DS 5 minor drift (`bg-primary`×4, `fg-quaternary`) |
+| J | AI Assistant | ✅ | ✅ (hidden instance) | `OverlayPanel`; `AIPanel` removed 13 Oct 2026, replaced by the floating chat (`components/assistant`) | REPLACED | The DS `LMS / AI Panel` has no counterpart in code any more |
 | K | Showcases & Diagrams | ✅ | ✅ (showcase surface) | composed views (`PlayerShell`, `ResponsiveShell`, `TopicBody`) + Storybook | PARTIAL / by-design | DS 7 raw + 25 drift = presentation furniture, not product components |
 
 **Top parity gaps:** (1) Playground is missing 4 product families (D, F, G, H) — visual parity can't be confirmed there; (2) DS still carries raw + UUI drift on 8 of 11 families that the prototype has already resolved — DS needs a rebind pass before it can serve as source of truth; (3) the prototype's own divergences are the dark-mode/skin token-role issues in §4, not structural mismatches.

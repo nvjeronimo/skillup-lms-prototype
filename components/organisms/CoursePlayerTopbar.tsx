@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sparkles, Sun, X } from "lucide-react";
+import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
@@ -16,7 +16,6 @@ export interface CoursePlayerTopbarProps {
   breadcrumb?: string[];
   userName?: string;
   userAvatarUrl?: string;
-  showAi?: boolean;
   showBookmark?: boolean;
   showNotifications?: boolean;
   showDiscussions?: boolean;
@@ -28,7 +27,6 @@ export interface CoursePlayerTopbarProps {
   menuExpanded?: boolean;
   /** Id of the course-menu drawer, for aria-controls on the trigger. */
   menuControls?: string;
-  onAi?: () => void;
   onDiscussions?: () => void;
   onBookmark?: () => void;
   onNotifications?: () => void;
@@ -108,7 +106,6 @@ export function CoursePlayerTopbar({
   breadcrumb = [],
   userName = "John Smith",
   userAvatarUrl,
-  showAi = false,
   showBookmark = true,
   showNotifications = true,
   showDiscussions = false,
@@ -118,7 +115,6 @@ export function CoursePlayerTopbar({
   onMenu,
   menuExpanded = false,
   menuControls,
-  onAi,
   onDiscussions,
   onBookmark,
   onNotifications,
@@ -232,11 +228,6 @@ export function CoursePlayerTopbar({
       </div>
 
       <div className="flex items-center gap-2">
-        {showAi ? (
-          <UtilityButton label="AI Assistant" onClick={onAi}>
-            <Icon icon={Sparkles} size={20} />
-          </UtilityButton>
-        ) : null}
         {showNotifications ? (
           <UtilityButton label={notificationsLabel} onClick={onNotifications}>
             {bell}
