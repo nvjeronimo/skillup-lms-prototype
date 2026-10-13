@@ -262,6 +262,9 @@ line once it is merged.
   desktop and tablet it is over the foot of the sidebar; where the footer nav reaches the left
   edge (phones, or no sidebar) it sits above the footer. On a phone it can still meet the
   feedback row (Like, or a full-width Mark as Complete) when that row is at the bottom.
+- **48 px, and on the right on a phone** (Nelson, 13 Oct 2026, later): the launcher is 48 × 48.
+  Desktop and tablet keep the left corner; on a phone it is on the right, 16 above the footer
+  nav, at the end of the feedback row.
 
 ## 11. After the independent review (13 Oct 2026)
 

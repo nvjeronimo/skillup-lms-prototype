@@ -14,12 +14,16 @@ const OPEN_KEY = "sk-assistant-open";
 const EDGE = 24;
 const EDGE_PHONE = 16;
 const GAP = 16;
+/** The launcher's size (DS `Assistant-Launcher`, 48 since 13 Oct 2026). */
+const SIZE = 48;
 const PHONE = "(max-width: 767px)";
 
 /**
  * The assistant, mounted once for the whole app (ResponsiveShell): a launcher in the bottom
- * left corner and the chat it opens (left since 13 Oct 2026: on the right it sat over Mark as
- * Complete in the feedback row). It knows where it is from the address, so no page
+ * left corner and the chat it opens. Left on desktop and tablet since 13 Oct 2026 (on the right
+ * it sat over Mark as Complete in the feedback row); on a phone it is on the right, above the
+ * footer nav, at the end of the feedback row.
+ * It knows where it is from the address, so no page
  * hands it anything. Shown on the platform pages and in the player only.
  */
 export function AssistantChat() {
@@ -86,7 +90,9 @@ function Chat({ pathname }: { pathname: string }) {
     if (isPhone) set(false);
   });
   const edge = isPhone ? EDGE_PHONE : EDGE;
-  const bottom = edge + useFooterHeight(pathname, edge + 56);
+  // Left, except on a phone. The footer lifts the launcher only where the two would meet.
+  const side = isPhone ? "right" : "left";
+  const bottom = edge + useFooterHeight(pathname, side, edge + SIZE);
   const sheet = open && isPhone;
 
   return (
@@ -109,7 +115,7 @@ function Chat({ pathname }: { pathname: string }) {
           style={
             isPhone
               ? undefined
-              : { left: edge, bottom: bottom + 56 + GAP, height: `min(600px, calc(100dvh - ${bottom + 56 + GAP + 24}px))` }
+              : { [side]: edge, bottom: bottom + SIZE + GAP, height: `min(600px, calc(100dvh - ${bottom + SIZE + GAP + 24}px))` }
           }
         />
       ) : null}
@@ -120,7 +126,7 @@ function Chat({ pathname }: { pathname: string }) {
           onToggle={() => (open ? close() : set(true))}
           controls={windowId}
           className="fixed z-[45]"
-          style={{ left: edge, bottom }}
+          style={{ [side]: edge, bottom }}
         />
       )}
     </>
@@ -129,11 +135,11 @@ function Chat({ pathname }: { pathname: string }) {
 
 /**
  * How much of the viewport's bottom the player's topic footer covers under the launcher, so
- * the launcher sits above it and never over Previous. 0 on a page with no footer nav, and 0
- * where the footer starts to the right of the launcher (the sidebar is in that corner).
- * `reach` is how far from the left edge the launcher extends.
+ * the launcher sits above it and never over Previous or Next. 0 on a page with no footer nav, and 0
+ * where the footer does not reach the launcher's column (on desktop the sidebar is there).
+ * `reach` is how far from its edge the launcher extends. On a phone the launcher is on the right.
  */
-function useFooterHeight(pathname: string, reach: number): number {
+function useFooterHeight(pathname: string, side: "left" | "right", reach: number): number {
   const [height, setHeight] = React.useState(0);
   const inPlayer = pathname.startsWith("/course/");
   React.useEffect(() => {
@@ -142,8 +148,9 @@ function useFooterHeight(pathname: string, reach: number): number {
     const measure = () => {
       const footer = document.querySelector<HTMLElement>('nav[aria-label="Topic navigation"]');
       if (!footer) return setHeight(0);
-      const { top, bottom, left } = footer.getBoundingClientRect();
-      const visible = top < window.innerHeight && bottom > 0 && left < reach;
+      const { top, bottom, left, right } = footer.getBoundingClientRect();
+      const meets = side === "left" ? left < reach : right > window.innerWidth - reach;
+      const visible = top < window.innerHeight && bottom > 0 && meets;
       setHeight(visible ? Math.max(0, Math.round(window.innerHeight - top)) : 0);
     };
     measure();
@@ -163,6 +170,6 @@ function useFooterHeight(pathname: string, reach: number): number {
       window.removeEventListener("resize", measure);
       window.removeEventListener("scroll", measure, true);
     };
-  }, [pathname, inPlayer, reach]);
+  }, [pathname, inPlayer, side, reach]);
   return height;
 }
