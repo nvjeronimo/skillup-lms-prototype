@@ -136,8 +136,10 @@ export function Sidebar({
     if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
   };
 
-  // Collapsed rail: a hover flyout surfaces the topic title + bookmark toggle
-  // (there's no room for them on the 72px rail itself).
+  // Collapsed rail: a flyout (DS: LMS/ICP/Sidebar/Topic-Flyout) surfaces the topic
+  // title + bookmark toggle; there's no room for them on the 72px rail itself.
+  // It opens on hover and on keyboard focus of a rail row. From the row, ArrowRight
+  // moves into the card; Escape or ArrowLeft goes back to the row.
   const [flyout, setFlyout] = React.useState<{ topic: Topic; top: number; left: number } | null>(
     null,
   );
@@ -154,6 +156,15 @@ export function Sidebar({
   const keepOpen = () => {
     if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
   };
+  const flyoutRef = React.useRef<HTMLDivElement | null>(null);
+  const flyoutRowRef = React.useRef<HTMLElement | null>(null);
+  const focusFlyout = () => {
+    keepOpen();
+    flyoutRef.current?.querySelector<HTMLElement>("button")?.focus();
+  };
+  const focusRailRow = () => {
+    flyoutRowRef.current?.querySelector<HTMLElement>("button")?.focus();
+  };
 
   // ── Collapsed rail (DS: LMS / Sidebar-ICP · State=Collapsed) ─────────────────
   // 72px rail: toggle + progress ring, then per-module groups separated by 40px
@@ -167,6 +178,19 @@ export function Sidebar({
         className="relative w-full"
         onMouseEnter={(e) => openFlyout(topic, e.currentTarget)}
         onMouseLeave={scheduleClose}
+        onFocus={(e) => {
+          flyoutRowRef.current = e.currentTarget;
+          openFlyout(topic, e.currentTarget);
+        }}
+        onBlur={scheduleClose}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight") {
+            e.preventDefault();
+            focusFlyout();
+          } else if (e.key === "Escape") {
+            setFlyout(null);
+          }
+        }}
       >
         <TopicRow
           collapsed
@@ -180,7 +204,7 @@ export function Sidebar({
         {/* Saved topics carry a small bookmark mark on the rail. */}
         {bookmarks.has(topic.id) ? (
           <span className="pointer-events-none absolute right-1.5 top-1 text-sko-text-primary">
-            <Bookmark size={11} fill="currentColor" strokeWidth={1} />
+            <Bookmark size={12} fill="currentColor" strokeWidth={1} />
           </span>
         ) : null}
       </div>
@@ -251,12 +275,21 @@ export function Sidebar({
       {/* Hover flyout — title + bookmark toggle for the rail's icon-only rows. */}
       {flyout ? (
         <div
+          ref={flyoutRef}
           className="fixed z-[70]"
           style={{ top: flyout.top, left: flyout.left + 6 }}
           onMouseEnter={keepOpen}
           onMouseLeave={scheduleClose}
+          onFocus={keepOpen}
+          onBlur={scheduleClose}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              focusRailRow();
+            }
+          }}
         >
-          <div className="flex items-center gap-2 rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-lg">
+          <div className="flex items-center gap-2 rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-sk-elevation-3">
             <button
               type="button"
               onClick={() => {

@@ -410,4 +410,6 @@
   --sk-text-brand-primary: var(--color-text-on-primary-soft);
   --sk-text-brand-secondary: var(--color-text-primary);
   --sk-shadow-card: 0 2px 6px -4px var(--color-shadow-default);
+  /* DS effect style Elevation/level3: cards that float over the page (the rail's topic flyout). */
+  --sk-shadow-elevation-3: 0 2px 4px -2px #0a0d120f, 0 4px 6px -1px #0a0d121a;
 }
