@@ -175,7 +175,9 @@ export interface MyLearningProgram {
   upNext?: string;
   /** State=Not started: the Badge Gray status, with a secondary "Details". */
   status?: string;
-  cta: "Continue" | "Details";
+  /** State=Completed: the date the program certificate was issued (Certificates API). */
+  certificateDate?: string;
+  cta: "Continue" | "Details" | "View certificate";
   /** The program page: what the card and its title open. No href: no page in the prototype. */
   href?: string;
   /** What the button opens when it is not the program page: the player of the course in progress. */
@@ -212,10 +214,46 @@ export const myLearningPrograms: MyLearningProgram[] = [
     cta: "Details",
     href: "/platform/program/cybersecurity-fundamentals",
   },
+  {
+    // The completed program (DS `State=Completed`, 13 Oct 2026). A sample: it has no program
+    // page and no certificate page in the prototype, so its action says so.
+    id: "data-analytics-foundations",
+    title: "Data Analytics Foundations Certificate",
+    delivery: "Flexible Learning",
+    difficulty: "Beginner",
+    partners: [
+      { name: "Microsoft", logoSrc: "/platform/partner-microsoft-dark.svg" },
+      { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
+    ],
+    courses: "5 of 5 courses complete",
+    progressPct: 100,
+    certificateDate: "30 Sep 2026",
+    cta: "View certificate",
+  },
 ];
+
+/* ── Sections (13 Oct 2026) ─────────────────────────────────────────────────────────── */
+
+/**
+ * Both tabs are split in three sections, in this order; a section without cards is not
+ * shown. The state is the one Open edX gives: a course from `hasStarted` and
+ * `certificate.isEarned`, a program from `progress_details`.
+ */
+export type MyLearningState = "in-progress" | "not-started" | "completed";
+
+export const myLearningSections: { id: MyLearningState; title: string }[] = [
+  { id: "in-progress", title: "In progress" },
+  { id: "not-started", title: "Not started" },
+  { id: "completed", title: "Completed" },
+];
+
+export const myLearningStateOf = (progressPct: number | null): MyLearningState =>
+  progressPct === null || progressPct <= 0 ? "not-started" : progressPct >= 100 ? "completed" : "in-progress";
 
 export const myLearningProgramProgressLabel = "of program complete";
 export const myLearningProgramUpNextLabel = "Up next";
+export const myLearningProgramCompletedLabel = "Program completed";
+export const myLearningProgramCertificateLabel = "Certificate issued";
 
 /* ── Header stats ───────────────────────────────────────────────────────────────────── */
 
