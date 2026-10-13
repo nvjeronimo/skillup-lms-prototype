@@ -10,6 +10,7 @@ import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
 import { TopicFooterMeta } from "@/components/molecules/TopicFooterMeta";
 import { TopicActionBar, type TopicActionState } from "@/components/molecules/TopicActionBar";
+import { TopicEndActionContext } from "@/lib/topicEndAction";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import type { Milestone } from "@/components/organisms/CourseProgressionButton";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
@@ -229,11 +230,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // The end-of-content action only belongs at the end of the CONTENT. The
   // Downloads and Notes tabs are short lists, so a second button there sits
   // in the same viewport as the header one and just reads as duplication.
-  const bottomAction = showAction && activeTab === "transcript" ? (
-    <div className="mt-6 flex justify-end border-t border-sko-border-subtle pt-5">
-      {renderAction()}
-    </div>
-  ) : null;
+  // Since 13 Oct 2026 (Figma `Feedback-Mark`) it sits in the feedback row, on the right, and
+  // drops under the feedback on a phone: no row of its own. Once the topic is completed the row
+  // is feedback only, because the status is in the header. The one exception is a video on a
+  // phone, where the header shows no status: the completed badge stays in the row there.
+  const endAction =
+    showAction && activeTab === "transcript" && (!isCompleted || (isVideo && bp === "mobile"))
+      ? renderAction()
+      : null;
 
   // Optional in-context discussion footer (Jul 29 decision): Discussion is no
   // longer a topic type — instead, a "Discuss this topic" region deep-links into
@@ -265,6 +269,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       <TopicFooterMeta
         byline={FOOTER_AUTHOR_FAMILIES.includes(family) ? getByline(topic) : undefined}
         onReport={() => showToast("Thanks, we'll take a look.")}
+        action={endAction ?? undefined}
       />
     ) : null;
 
@@ -475,9 +480,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                         variant={bp === "mobile" ? "select" : "tabs"}
                       />
                     ) : null}
-                    {children}
+                    {/* The transcript tab owns the feedback row, so it receives the action. */}
+                    <TopicEndActionContext.Provider value={endAction}>
+                      {children}
+                    </TopicEndActionContext.Provider>
                   </div>
-                  {bottomAction}
                   {discussFooter}
                 </div>
               </>
@@ -510,7 +517,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   {children}
                 </div>
                 {footerMeta}
-                {bottomAction}
                 {discussFooter}
               </div>
             )}

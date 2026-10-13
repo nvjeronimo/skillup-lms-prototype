@@ -12,6 +12,7 @@ import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
 import { scrollBehavior, tsToSeconds } from "@/lib/utils";
 import { track } from "@/lib/analytics";
+import { TopicEndActionContext } from "@/lib/topicEndAction";
 
 const PAUSE_MS = 8000;
 
@@ -24,6 +25,8 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
   const showToast = useLmsStore((s) => s.showToast);
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
+  // Mark as Complete, when the player shell shows it: it sits in the feedback row below.
+  const endAction = React.useContext(TopicEndActionContext);
   // DS Transcript Line `Device` variant: mobile stacks the active line's note pill.
   const lineDevice = useBreakpoint() === "mobile" ? "mobile" : "desktop";
 
@@ -182,9 +185,11 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       </div>
 
       {/* Feedback + license footer (ICP Phase 1). ContentFeedback carries its own DS
-          12/12 padding and right-aligned licence, so no wrapper padding here. */}
+          12/12 padding and right-aligned licence, so no wrapper padding here. With Mark as
+          Complete in the row, the licence follows the feedback and the button takes the right. */}
       <ContentFeedback
         className="mt-2 border-t border-sko-border-subtle"
+        action={endAction ?? undefined}
         value={feedback}
         onLike={() => setFeedback(feedback === "like" ? null : "like")}
         onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
