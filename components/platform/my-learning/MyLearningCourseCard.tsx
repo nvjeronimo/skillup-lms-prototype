@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 import { Button, type ButtonHierarchy } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
+import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { CourseThumb } from "./CourseThumb";
 
@@ -28,19 +30,24 @@ export interface MyLearningCourseCardProps {
 /* DS `Overline` ("UP NEXT"): body-small/Semibold in capitals, no letter spacing, text/subtle. */
 const OVERLINE = "sk-text-body-small-semibold uppercase text-sko-text-subtle";
 
-/* DS progress: "{n}% complete", "Complete" or "Not started" + the effort on the right, then
-   the 8px bar (bg/muted track, bg/info fill, both fully rounded). */
+/* DS progress: "{n}% complete" or "Not started" + the effort on the right, then the 8px bar
+   (bg/muted track, bg/info fill, straight ends). DS `State=Completed` (13 Oct 2026): a
+   check-circle in icon/success before "Completed" and the fill in bg/success. */
 function Progress({ course, hug = false, className }: { course: MyLearningCourse; hug?: boolean; className?: string }) {
   const pct = course.progressPct ?? 0;
-  const label = course.progressPct === null ? "Not started" : pct >= 100 ? "Complete" : `${pct}% complete`;
+  const complete = pct >= 100;
+  const label = course.progressPct === null ? "Not started" : complete ? "Completed" : `${pct}% complete`;
   return (
     <div className={cn("flex flex-col", className)}>
       {/* Grid: the label fills and the effort sits at the right end. List (`hug`): both hug, 24 apart. */}
       <div className={cn("flex items-center", hug ? "gap-6" : "justify-between gap-2")}>
-        <span className="sk-text-body-large-semibold whitespace-nowrap text-sko-text-default">{label}</span>
+        <span className="sk-text-body-large-semibold inline-flex items-center gap-1.5 whitespace-nowrap text-sko-text-default">
+          {complete ? <Icon icon={CheckCircle2} size={16} className="text-sko-icon-success" aria-hidden="true" /> : null}
+          {label}
+        </span>
         <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
       </div>
-      <PlatformProgressBar track="muted" value={pct} label={`${course.title} progress`} />
+      <PlatformProgressBar track="muted" tone={complete ? "complete" : "progress"} value={pct} label={`${course.title} progress`} />
     </div>
   );
 }
@@ -105,7 +112,7 @@ function Action({
  * badges), progress 280 wide (gap 6), then the up-next block (overline, title, topic type)
  * with a secondary Buttons/Button sm inside it. The progress block hugs its line and the
  * up-next block is 250 wide, so the titles take the rest of the row.
- * A complete course reads "Complete" over a full bar, and its strip carries the certificate
+ * A complete course (DS `State=Completed`) reads "Completed" with a check over a full green bar, and its strip carries the certificate
  * line ("CERTIFICATE · Issued …") instead of the next unit; the action is Review.
  * The thumbnail shows the course image over the initials (DS `Show image`).
  * The action opens the course, so it is a link with the button look (atoms/ButtonLink).

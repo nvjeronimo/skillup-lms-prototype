@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { CourseRowCard } from "@/components/platform/CourseRowCard";
+import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHeader";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { useLmsStore } from "@/lib/store";
 import {
@@ -13,6 +14,8 @@ import {
   myLearningBrowseTile,
   myLearningPrograms,
   myLearningSearch,
+  myLearningSections,
+  myLearningStateOf,
   myLearningTabs,
   type MyLearningTab,
   type MyLearningView,
@@ -34,6 +37,11 @@ const LIST = "hidden flex-col gap-6 lg:flex";
 /* The row is the target of its card's title link: it shows it on hover, as the card did. */
 const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
 
+/* Sections: 32 / 24 / 20 apart (Spacing/4xl), as the sections of the Dashboard. */
+const SECTIONS = "flex flex-col gap-5 md:gap-6 lg:gap-8";
+
+const count = (n: number, one: string) => `${n} ${one}${n === 1 ? "" : "s"}`;
+
 const matches = (title: string, query: string) => title.toLowerCase().includes(query);
 
 /**
@@ -46,6 +54,11 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
  * Courses and Grid, leave it clean). Search filters the cards of the selected tab by title.
  * Below desktop the collections are Grid only: the toggle is hidden, and a `?view=list`
  * URL still shows the grid there.
+ *
+ * Sections (decided by Nelson on 13 Oct 2026): both tabs are split in In progress, Not
+ * started and Completed, each under a DS `Section-Header` with its count ("3 courses"), 16
+ * above its cards and 32 / 24 / 20 between sections. A section without cards is not shown;
+ * the Browse tile closes the Courses grid in a line of its own.
  *
  * Courses (decided by Nelson on 11 Oct 2026): every course is a DS `Course-Row`, not the
  * course card on its own: `Breakpoint` Desktop in the list, Compact in the grid and at every
@@ -84,7 +97,6 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const courses = courseRows.filter((row) => matches(row.card.title, needle));
   const programs = myLearningPrograms.filter((p) => matches(p.title, needle));
   const shown = tab === "courses" ? courses.length : programs.length;
-  const tabLabel = myLearningTabs.find((t) => t.id === tab)?.label ?? "";
   const noun = tab === "courses" ? "courses" : "programs";
 
   const tabs = myLearningTabs.map((t) => ({
@@ -131,7 +143,6 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
       </div>
 
       <div role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
-        <h2 className="sr-only">{tabLabel}</h2>
         {/* Tells assistive tech how many cards the search left. */}
         <p role="status" className="sr-only">
           {needle ? `${shown} ${noun} match “${query.trim()}”` : ""}
@@ -144,63 +155,83 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             description="Check the spelling or search for another title."
           />
         ) : tab === "courses" ? (
-          <>
-            {/* items-start: an opened row does not stretch the rows of its line. */}
-            <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
-              {courses.map((row) => (
-                <CourseRowCard
-                  key={row.card.id}
-                  {...row}
-                  breakpoint="compact"
-                  open={openRows.has(row.card.id)}
-                  onToggle={() => toggleRow(row.card.id)}
-                  className={ROW_HOVER}
-                />
-              ))}
-              {/* The way out to the catalog closes the grid. It keeps the height of its line. */}
-              <li className="flex min-w-0 self-stretch">
-                <BrowseTile
-                  title={myLearningBrowseTile.title}
-                  subtitle={myLearningBrowseTile.subtitle}
-                  onClick={() => notInPrototype(myLearningBrowseTile.title)}
-                />
-              </li>
-            </ul>
-            {listView ? (
-              <ul className={LIST}>
-                {courses.map((row) => (
-                  <CourseRowCard
-                    key={row.card.id}
-                    {...row}
-                    breakpoint="desktop"
-                    open={openRows.has(row.card.id)}
-                    onToggle={() => toggleRow(row.card.id)}
-                    className={ROW_HOVER}
-                  />
-                ))}
-              </ul>
-            ) : null}
-          </>
+          <div className={SECTIONS}>
+            {myLearningSections.map((section) => {
+              const rows = courses.filter((row) => myLearningStateOf(row.card.progressPct) === section.id);
+              if (!rows.length) return null;
+              const headingId = `${ID_BASE}-courses-${section.id}`;
+              return (
+                <section key={section.id} aria-labelledby={headingId} className="flex flex-col gap-4">
+                  <PlatformSectionHeader id={headingId} title={section.title} emphasis={count(rows.length, "course")} />
+                  {/* items-start: an opened row does not stretch the rows of its line. */}
+                  <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+                    {rows.map((row) => (
+                      <CourseRowCard
+                        key={row.card.id}
+                        {...row}
+                        breakpoint="compact"
+                        open={openRows.has(row.card.id)}
+                        onToggle={() => toggleRow(row.card.id)}
+                        className={ROW_HOVER}
+                      />
+                    ))}
+                  </ul>
+                  {listView ? (
+                    <ul className={LIST}>
+                      {rows.map((row) => (
+                        <CourseRowCard
+                          key={row.card.id}
+                          {...row}
+                          breakpoint="desktop"
+                          open={openRows.has(row.card.id)}
+                          onToggle={() => toggleRow(row.card.id)}
+                          className={ROW_HOVER}
+                        />
+                      ))}
+                    </ul>
+                  ) : null}
+                </section>
+              );
+            })}
+            {/* The way out to the catalog closes the grid, in a line of its own. */}
+            <div className={cn(GRID, listView && "lg:hidden")}>
+              <BrowseTile
+                title={myLearningBrowseTile.title}
+                subtitle={myLearningBrowseTile.subtitle}
+                onClick={() => notInPrototype(myLearningBrowseTile.title)}
+              />
+            </div>
+          </div>
         ) : (
-          <>
-            {/* Every program card has the same height, whatever its state or title. */}
-            <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
-              {programs.map((program) => (
-                <li key={program.id} className="min-w-0">
-                  <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.title)} />
-                </li>
-              ))}
-            </ul>
-            {listView ? (
-              <ul className={LIST}>
-                {programs.map((program) => (
-                  <li key={program.id}>
-                    <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.title)} />
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </>
+          <div className={SECTIONS}>
+            {myLearningSections.map((section) => {
+              const cards = programs.filter((program) => myLearningStateOf(program.progressPct) === section.id);
+              if (!cards.length) return null;
+              const headingId = `${ID_BASE}-programs-${section.id}`;
+              return (
+                <section key={section.id} aria-labelledby={headingId} className="flex flex-col gap-4">
+                  <PlatformSectionHeader id={headingId} title={section.title} emphasis={count(cards.length, "program")} />
+                  {/* Every program card has the same height, whatever its state or title. */}
+                  <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+                    {cards.map((program) => (
+                      <li key={program.id} className="min-w-0">
+                        <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />
+                      </li>
+                    ))}
+                  </ul>
+                  {listView ? (
+                    <ul className={LIST}>
+                      {cards.map((program) => (
+                        <li key={program.id}>
+                          <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.cta)} />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </section>
+              );
+            })}
+          </div>
         )}
       </div>
     </section>

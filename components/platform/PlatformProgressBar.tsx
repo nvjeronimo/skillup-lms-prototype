@@ -12,6 +12,11 @@ export interface PlatformProgressBarProps {
   track?: "muted" | "strong";
   /** Bar height in px. */
   height?: 4 | 8;
+  /**
+   * `complete` paints the fill in bg/success: only for a finished course or program, and
+   * always beside a check icon and the word (colour is never the only sign).
+   */
+  tone?: "progress" | "complete";
   /** The DS Progress bar has steps of 10: the fill goes to the nearest one. */
   stepped?: boolean;
   /** DS Label=Right: the value in body-medium/Medium text/muted, 12 from the bar. */
@@ -21,7 +26,8 @@ export interface PlatformProgressBarProps {
 
 /**
  * DS `Progress bar` (6204:128904): an 8px track with the fill on bg/info — never bg/primary,
- * the product rule for every progress fill. A progress bar ends straight, track and fill
+ * the product rule for every progress fill while it runs; green (bg/success) only once the
+ * course or program is complete (`tone`, 13 Oct 2026). A progress bar ends straight, track and fill
  * (Nelson, 13 Oct 2026; the Course Card bar was rounded until then). One bar for the
  * platform pages, on the two track colours the DS draws (`track`). With `stepped` the fill is rounded to the nearest 10 as in
  * the DS component; assistive tech always gets the real value.
@@ -33,6 +39,7 @@ export function PlatformProgressBar({
   track = "strong",
   height = 8,
   stepped = false,
+  tone = "progress",
   showValue = false,
   className,
 }: PlatformProgressBarProps) {
@@ -52,7 +59,7 @@ export function PlatformProgressBar({
         showValue ? "min-w-0 flex-1" : className,
       )}
     >
-      <div className="h-full bg-sko-bg-info" style={{ width: `${fill}%` }} />
+      <div className={cn("h-full", tone === "complete" ? "bg-sko-bg-success" : "bg-sko-bg-info")} style={{ width: `${fill}%` }} />
     </div>
   );
 

@@ -2,16 +2,20 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import {
+  myLearningProgramCertificateLabel,
+  myLearningProgramCompletedLabel,
   myLearningProgramProgressLabel,
   myLearningProgramUpNextLabel,
   type MyLearningProgram,
 } from "@/lib/platform/my-learning";
+import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +49,9 @@ const TARGET_44 =
  * footer — In progress: "Up next" + a primary "Continue"; Not started: a Badge Gray
  * status + a secondary "Details" (Buttons/Button sm). The action is a link with the button
  * look (atoms/ButtonLink) when the program has a page, a button otherwise.
+ * Completed (DS `State=Completed`, v1.1, 13 Oct 2026): the label reads "Program completed"
+ * after a check-circle in icon/success, the bar is full and green (bg/success), and the
+ * footer, on bg/subtle, reads "Certificate issued" over the date with "View certificate".
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
  * Grid: stacked. The title keeps the height of three lines and is cut at the third (DS change
  * of 10 Oct 2026), so every hero is 248 tall on desktop. The footer has one height in both
@@ -64,6 +71,9 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
   const actionLabel = `${program.cta} ${program.title}`;
   // DS, 10 Oct 2026: the action is Secondary in both states.
   const hierarchy = "secondary";
+  const completed = program.progressPct >= 100;
+  const footerLabel = completed ? myLearningProgramCertificateLabel : myLearningProgramUpNextLabel;
+  const footerValue = completed ? program.certificateDate : program.upNext;
   const skin = useLmsStore((st) => st.skin);
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
@@ -162,12 +172,13 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         <div className="flex flex-col gap-2">
           <div className="flex items-baseline justify-between gap-3">
             <span className="sk-text-headline-medium-bold text-sko-text-default">{program.progressPct}%</span>
-            <span className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-subtle">
-              {myLearningProgramProgressLabel}
+            <span className="sk-text-label-small-semibold inline-flex items-center gap-1.5 whitespace-nowrap text-sko-text-subtle">
+              {completed ? <Icon icon={CheckCircle2} size={16} className="text-sko-icon-success" aria-hidden="true" /> : null}
+              {completed ? myLearningProgramCompletedLabel : myLearningProgramProgressLabel}
             </span>
           </div>
           {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
-          <PlatformProgressBar stepped value={program.progressPct} label={`${program.title} progress`} />
+          <PlatformProgressBar stepped tone={completed ? "complete" : "progress"} value={program.progressPct} label={`${program.title} progress`} />
         </div>
         {/* DS footer, 10 Oct 2026: a box 60 tall in both states, so every card has one height.
             In progress: on bg/subtle, "Up next" over the course name (Semibold) on one line, cut
@@ -177,14 +188,14 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           className={cn(
             "flex min-h-[60px] items-center justify-between gap-4 rounded-lg",
             // The border is drawn inside the box: 1px less padding keeps both states 60 tall.
-            program.upNext ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle px-[11px] py-[7px]",
+            footerValue ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle px-[11px] py-[7px]",
           )}
         >
-          {program.upNext ? (
+          {footerValue ? (
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span className="sk-text-body-small-semibold text-sko-text-subtle">{myLearningProgramUpNextLabel}</span>
-              <span title={program.upNext} className="sk-text-body-medium-semibold truncate text-sko-text-default">
-                {program.upNext}
+              <span className="sk-text-body-small-semibold text-sko-text-subtle">{footerLabel}</span>
+              <span title={footerValue} className="sk-text-body-medium-semibold truncate text-sko-text-default">
+                {footerValue}
               </span>
             </div>
           ) : program.status ? (
