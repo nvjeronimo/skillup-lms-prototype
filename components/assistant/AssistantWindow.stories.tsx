@@ -74,3 +74,28 @@ export const ScriptedNote: Story = {
 export const Mobile: Story = {
   args: { modal: true, className: "h-[640px] w-[375px]" },
 };
+
+const ROWS = [
+  { id: "program", label: "Open your program", why: "See the courses ahead and the certificate at the end.", cta: "Open your program", done: true, href: "/platform/program/x" },
+  { id: "course", label: "Open a course", why: "Its page has your progress, dates and grades.", cta: "Open a course", done: true, href: "/platform/course/x" },
+  { id: "topic", label: "Start a topic", why: "Learning happens in the player.", cta: "Start learning", done: false, href: "/course/x/topic/y" },
+  { id: "complete", label: "Complete a topic", why: "Completed topics move your progress.", cta: "Resume", done: false, href: "/course/x/topic/y" },
+  { id: "ask", label: "Ask the assistant", why: "Deadlines, certificates, where you stopped.", cta: "Ask a question", done: false, ask: true },
+];
+const NEXT = {
+  text: "\"Persona research draft\" is due tonight. Start there.",
+  action: { id: "due:1", label: "Open Persona research draft", href: "/platform/dashboard" },
+};
+
+export const FirstSteps: Story = {
+  args: { firstSteps: { rows: ROWS, finished: false, onSkip: () => {} }, next: NEXT },
+};
+
+export const FirstStepsFinished: Story = {
+  args: {
+    firstSteps: { rows: ROWS.map((row) => ({ ...row, done: true })), finished: true, onSkip: () => {} },
+    next: NEXT,
+  },
+};
+
+export const EmptyWithNext: Story = { args: { next: NEXT } };

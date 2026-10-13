@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bell, ChevronDown, Menu, Moon, Sun } from "lucide-react";
+import { Bell, ChevronDown, Menu, Moon, RotateCcw, Sun } from "lucide-react";
+import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { Icon } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { Badge } from "@/components/atoms/Badge";
@@ -131,6 +132,15 @@ function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclos
         >
           <Icon icon={theme === "dark" ? Sun : Moon} size={20} className="text-sko-icon-default" />
           {theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+        </button>
+        {/* Prototype only: brings the assistant's first steps back, as for a learner who has just arrived. */}
+        <button
+          type="button"
+          onClick={() => restartFirstSteps(Array.from(useLmsStore.getState().completedTopics))}
+          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default hover:bg-sko-bg-subtle"
+        >
+          <Icon icon={RotateCcw} size={20} className="text-sko-icon-default" />
+          Restart first steps
         </button>
         <div role="group" aria-label="Brand skin" className="flex gap-1">
           {SKINS.map((s) => (

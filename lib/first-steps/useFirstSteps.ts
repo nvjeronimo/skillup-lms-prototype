@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import type { PageContext } from "@/lib/assistant/types";
+import { useLmsStore } from "@/lib/store";
 import { createState, load, reduce, save, type FirstStepsEvent, type FirstStepsState } from "./progress";
 
 export const RESTART_EVENT = "sk-first-steps-restart";
@@ -29,8 +30,6 @@ export function useFirstSteps(page: PageContext, completedTopics: Set<string>) {
   const [state, setState] = React.useState<FirstStepsState | null>(null);
   const [justFinished, setJustFinished] = React.useState(false);
   const completed = React.useMemo(() => Array.from(completedTopics), [completedTopics]);
-  const completedRef = React.useRef(completed);
-  completedRef.current = completed;
 
   const dispatch = React.useCallback((event: FirstStepsEvent) => {
     setState((current) => {
@@ -46,7 +45,10 @@ export function useFirstSteps(page: PageContext, completedTopics: Set<string>) {
   React.useEffect(() => {
     const read = () => {
       setJustFinished(false);
-      setState(load(store(), completedRef.current));
+      // The baseline is read from the store itself, not from this render: the first client
+      // render still shows the seeded state (the persisted one arrives right after), and a
+      // baseline taken from it would tick "Complete a topic" for work done on an earlier visit.
+      setState(load(store(), Array.from(useLmsStore.getState().completedTopics)));
     };
     read();
     window.addEventListener(RESTART_EVENT, read);

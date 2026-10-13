@@ -10,6 +10,8 @@ export interface AssistantLauncherProps {
   onToggle: () => void;
   /** The id of the window it opens. */
   controls: string;
+  /** First steps still to do: shown as a count on the launcher and said in its name. */
+  badge?: number;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -23,18 +25,24 @@ export interface AssistantLauncherProps {
  * (two assets toggled by [data-theme], see SkillUpLogo). Open, it is a round close button.
  */
 export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLauncherProps>(
-  function AssistantLauncher({ open, onToggle, controls, className, style }, ref) {
+  function AssistantLauncher({ open, onToggle, controls, badge = 0, className, style }, ref) {
     return (
       <button
         ref={ref}
         type="button"
         onClick={onToggle}
-        aria-label={open ? "Close the assistant" : "Ask the assistant"}
+        aria-label={
+          open
+            ? "Close the assistant"
+            : badge > 0
+              ? `Ask the assistant, ${badge} first ${badge === 1 ? "step" : "steps"} left`
+              : "Ask the assistant"
+        }
         aria-expanded={open}
         aria-controls={controls}
         style={style}
         className={cn(
-          "inline-flex h-12 w-12 items-center justify-center rounded-full transition-transform",
+          "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-transform",
           open
             ? "bg-sko-bg-primary text-sko-text-on-primary shadow-lg hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
             : "drop-shadow-lg hover:scale-105",
@@ -51,6 +59,14 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
             <img src="/assistant-mark-dark.svg" alt="" aria-hidden className="sk-logo-dark h-12 w-12" />
           </>
         )}
+        {!open && badge > 0 ? (
+          <span
+            aria-hidden
+            className="sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-error px-1 text-sko-text-on-error"
+          >
+            {badge}
+          </span>
+        ) : null}
       </button>
     );
   },

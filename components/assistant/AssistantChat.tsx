@@ -3,8 +3,11 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import { isAssistantPath, pageContextFromPath } from "@/lib/assistant/page-context";
+import { nextStep } from "@/lib/assistant/next-step";
 import { buildSnapshot } from "@/lib/assistant/snapshot";
 import { useAssistant } from "@/lib/assistant/useAssistant";
+import { STEPS, stepAction } from "@/lib/first-steps/steps";
+import { useFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
 import { AssistantLauncher } from "./AssistantLauncher";
@@ -38,11 +41,48 @@ function Chat({ pathname }: { pathname: string }) {
   const completedTopics = useLmsStore((s) => s.completedTopics);
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const previewPhone = useLmsStore((s) => s.deviceMode === "mobile");
+  const page = React.useMemo(() => pageContextFromPath(pathname), [pathname]);
+  const firstSteps = useFirstSteps(page, completedTopics);
   const snapshot = React.useMemo(
-    () => buildSnapshot({ completedTopics, bookmarks }, pageContextFromPath(pathname)),
-    [completedTopics, bookmarks, pathname],
+    () => buildSnapshot({ completedTopics, bookmarks }, page, firstSteps.state ?? undefined),
+    [completedTopics, bookmarks, page, firstSteps.state],
   );
   const assistant = useAssistant(snapshot);
+  // A question is the fifth first step.
+  const ask = (question: string) => {
+    if (question.trim()) firstSteps.asked();
+    assistant.ask(question);
+  };
+
+  // The one next step, unless it is the page the learner is already on.
+  const next = React.useMemo(() => {
+    const step = nextStep(snapshot);
+    const action = step && snapshot.actions.find((a) => a.id === step.actionId);
+    return step && action && action.href !== pathname ? { text: step.text, action } : null;
+  }, [snapshot, pathname]);
+
+  // The First steps view: while they run, and once more when the fifth has just been done.
+  const stepsState = firstSteps.state;
+  const showSteps = stepsState?.status === "active" || firstSteps.justFinished;
+  const stepsView =
+    stepsState && showSteps
+      ? {
+          rows: STEPS.map((step) => {
+            const action = stepAction(step.id, snapshot);
+            return {
+              id: step.id,
+              label: step.label,
+              why: step.why,
+              cta: step.cta,
+              done: stepsState.done.includes(step.id),
+              href: action && action !== "ask" ? action.href : undefined,
+              ask: action === "ask",
+            };
+          }),
+          finished: stepsState.status === "done",
+          onSkip: firstSteps.dismiss,
+        }
+      : null;
 
   // Open or closed is remembered for the tab, so following a button keeps the chat open.
   const [open, setOpen] = React.useState(false);
@@ -60,8 +100,13 @@ function Chat({ pathname }: { pathname: string }) {
     query.addEventListener("change", sync);
     return () => query.removeEventListener("change", sync);
   }, []);
+  // The window opened by itself: it must not take the focus from the page.
+  const [selfOpened, setSelfOpened] = React.useState(false);
   const set = (next: boolean) => {
     setOpen(next);
+    setSelfOpened(false);
+    // Opened or closed by the learner: the window never opens by itself after that.
+    firstSteps.greeted();
     try {
       sessionStorage.setItem(OPEN_KEY, next ? "1" : "0");
     } catch {
@@ -89,6 +134,19 @@ function Chat({ pathname }: { pathname: string }) {
     lastPath.current = pathname;
     if (isPhone) set(false);
   });
+  // A new learner may never press the launcher: the window opens by itself, once, where it
+  // does not cover the page (not on a phone, where it is a full-screen sheet).
+  const greet = stepsState?.status === "active" && !stepsState.greeted && !isPhone && !open;
+  const greetedFn = firstSteps.greeted;
+  React.useEffect(() => {
+    if (!greet) return;
+    const timer = window.setTimeout(() => {
+      setOpen(true);
+      setSelfOpened(true);
+      greetedFn();
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [greet, greetedFn]);
   const edge = isPhone ? EDGE_PHONE : EDGE;
   // Left, except on a phone. The footer lifts the launcher only where the two would meet.
   const side = isPhone ? "right" : "left";
@@ -105,7 +163,10 @@ function Chat({ pathname }: { pathname: string }) {
           status={assistant.status}
           suggestions={assistant.suggestions}
           firstName={platformUser.firstName}
-          onAsk={assistant.ask}
+          onAsk={ask}
+          firstSteps={stepsView}
+          next={next}
+          takeFocus={!selfOpened}
           onClear={assistant.clear}
           onClose={close}
           modal={isPhone}
@@ -125,6 +186,7 @@ function Chat({ pathname }: { pathname: string }) {
           open={open}
           onToggle={() => (open ? close() : set(true))}
           controls={windowId}
+          badge={firstSteps.left}
           className="fixed z-[45]"
           style={{ [side]: edge, bottom }}
         />

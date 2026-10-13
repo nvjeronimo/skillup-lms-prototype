@@ -185,3 +185,15 @@ question for the vendor.
 
 One PR to `main`, squash-merged by Nelson. Then, if proposal E stands, the Figma block and the
 `Assistant-Chat` state in a second pass.
+
+## 11. What the build changed
+
+- **Restart first steps is in two menus**: the player's demo menu and the profile panel of the
+  platform top bar. The demo menu exists in the player only, and a new learner starts on a
+  platform page.
+- **Opening the window on the First steps tab puts the focus on that tab**; there is no input
+  on it. When the window opens by itself the focus stays on the page.
+- **The baseline is read from the stored progress**, not from the first render: otherwise a
+  topic completed on an earlier visit ticked "Complete a topic" at once.
+- **A fresh state is written only once something happens** (a step, the greeting, a skip).
+- **The Next card is not shown when the next step is the page the learner is on.**

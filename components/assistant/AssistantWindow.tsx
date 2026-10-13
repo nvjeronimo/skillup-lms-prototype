@@ -4,7 +4,10 @@ import * as React from "react";
 import { RotateCcw, Send, Sparkles, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import type { ChatMessage } from "@/lib/assistant/types";
+import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
+import type { ActionEntry, ChatMessage } from "@/lib/assistant/types";
+import { FirstStepsView, type FirstStepsViewProps } from "./FirstStepsView";
+import { NextStepCard } from "./NextStepCard";
 import { useDialog } from "@/lib/useDialog";
 import { cn } from "@/lib/utils";
 
@@ -22,9 +25,24 @@ export interface AssistantWindowProps {
   onClose: () => void;
   /** A full-screen sheet (phones): focus stays inside and the page behind is inert. */
   modal: boolean;
+  /**
+   * While the first steps are running: the window gets two tabs, First steps (shown first)
+   * and Ask. Absent: the window is the chat alone.
+   */
+  firstSteps?: Omit<FirstStepsViewProps, "firstName" | "next" | "onAsk"> | null;
+  /** The one thing to do next, shown above the suggestions of an empty chat. */
+  next?: { text: string; action: ActionEntry } | null;
+  /** False when the window opened by itself: it must not pull the focus from the page. */
+  takeFocus?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
+
+type View = "first-steps" | "ask";
+const VIEWS: { id: View; label: string }[] = [
+  { id: "first-steps", label: "First steps" },
+  { id: "ask", label: "Ask" },
+];
 
 const MAX_QUESTION = 500;
 const CAPTION = {
@@ -47,6 +65,9 @@ export function AssistantWindow({
   onClear,
   onClose,
   modal,
+  firstSteps = null,
+  next = null,
+  takeFocus = true,
   className,
   style,
 }: AssistantWindowProps) {
@@ -57,9 +78,36 @@ export function AssistantWindow({
   // Focus trap, inert page and Esc for the sheet. The floating card is not modal: the page
   // behind stays usable, so it only takes the focus on open and closes on its own Esc.
   const dialogRef = useDialog(modal, onClose, { initialFocusRef: inputRef });
+  const tabsId = React.useId();
+  // First steps come first while they run; the learner can go to the chat at any time.
+  const [view, setView] = React.useState<View>(firstSteps ? "first-steps" : "ask");
+  const showSteps = Boolean(firstSteps) && view === "first-steps";
   React.useEffect(() => {
-    if (!modal) inputRef.current?.focus();
+    if (modal || !takeFocus) return;
+    // The chat's input, or the selected tab when the First steps view is shown instead.
+    (inputRef.current ?? dialogRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]'))?.focus();
+    // Only when the window opens: switching tabs moves the focus itself (toAsk).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modal]);
+  const toAsk = () => {
+    setView("ask");
+    // The input is rendered with the Ask tab: focus it once it is there.
+    window.setTimeout(() => inputRef.current?.focus(), 0);
+  };
+  // A step that ticks while the window is open is said once.
+  const doneCount = firstSteps?.rows.filter((row) => row.done).length ?? 0;
+  const lastDone = React.useRef(doneCount);
+  const [ticked, setTicked] = React.useState("");
+  React.useEffect(() => {
+    if (!firstSteps || doneCount <= lastDone.current) {
+      lastDone.current = doneCount;
+      return;
+    }
+    lastDone.current = doneCount;
+    const row = [...firstSteps.rows].reverse().find((r) => r.done);
+    const left = firstSteps.rows.length - doneCount;
+    if (row) setTicked(`Done: ${row.label}. ${left} ${left === 1 ? "step" : "steps"} left.`);
+  }, [doneCount, firstSteps]);
 
   const answering = status === "answering";
   const last = messages[messages.length - 1];
@@ -100,7 +148,7 @@ export function AssistantWindow({
           SkillUp Assistant
         </h2>
         <div className="flex items-center">
-          {messages.length ? (
+          {messages.length && !showSteps ? (
             <button
               type="button"
               onClick={() => {
@@ -124,9 +172,40 @@ export function AssistantWindow({
         </div>
       </header>
 
+      {firstSteps ? (
+        <div className="px-5 pt-3">
+          <PlatformTabs
+            tabs={VIEWS}
+            value={view}
+            onChange={setView}
+            size="sm"
+            panels="selected"
+            idBase={tabsId}
+            ariaLabel="Assistant"
+          />
+        </div>
+      ) : null}
+
+      {showSteps && firstSteps ? (
+        <div
+          role="tabpanel"
+          id={platformPanelId(tabsId, "first-steps")}
+          aria-labelledby={platformTabId(tabsId, "first-steps")}
+          className="sk-scroll flex-1 overflow-y-auto p-5"
+        >
+          <FirstStepsView {...firstSteps} firstName={firstName} next={next} onAsk={toAsk} />
+        </div>
+      ) : (
+      <div
+        role={firstSteps ? "tabpanel" : undefined}
+        id={firstSteps ? platformPanelId(tabsId, "ask") : undefined}
+        aria-labelledby={firstSteps ? platformTabId(tabsId, "ask") : undefined}
+        className="flex min-h-0 flex-1 flex-col"
+      >
       <div role="log" aria-live="off" aria-label="Conversation" className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-5">
         {messages.length === 0 ? (
           <>
+            {next ? <NextStepCard text={next.text} action={next.action} /> : null}
             <p className="sk-text-body-medium-regular text-sko-text-default">
               Hi {firstName}. Ask me about the platform or your courses.
             </p>
@@ -166,7 +245,8 @@ export function AssistantWindow({
                 <ul className="flex flex-col items-start gap-2">
                   {m.actions.map((a) => (
                     <li key={a.id}>
-                      <ButtonLink href={a.href} hierarchy="secondary" size="sm">
+                      {/* A long label wraps: the button grows with it instead of keeping the 36px of Button sm. */}
+                      <ButtonLink href={a.href} hierarchy="secondary" size="sm" className="!h-auto min-h-9 py-1.5">
                         {a.label}
                       </ButtonLink>
                     </li>
@@ -214,6 +294,13 @@ export function AssistantWindow({
           <Icon icon={Send} size={20} />
         </button>
       </form>
+      </div>
+      )}
+
+      {/* A first step ticking, said once, whichever tab is shown. */}
+      <p aria-live="polite" className="sr-only">
+        {ticked}
+      </p>
     </div>
   );
 }
