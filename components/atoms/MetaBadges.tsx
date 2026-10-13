@@ -1,7 +1,6 @@
 import * as React from "react";
-import { BookOpen, CalendarCheck, Clock, Package, Video } from "lucide-react";
+import { CalendarCheck, Clock, Video } from "lucide-react";
 import type { LucideIcon, LucideProps } from "lucide-react";
-import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge } from "./Badge";
 
@@ -9,9 +8,31 @@ import { Badge } from "./Badge";
  * Course Type — Program / Course (DS `LMS / Course Type Badge`, 19975:538072).
  * No box: no fill, no stroke, no padding, 4px gap, 16px high. The label is Montserrat
  * SemiBold 12 in capitals with no text style (nearest: body-small/Semibold), text/primary
- * for Program and text/subtle for Course. The DS icons are custom 16px illustrations
- * (icon-program / icon-course); the lucide glyphs stand in, tinted to the label's role.
+ * for Program and text/subtle for Course. The icons are the DS's own 16px illustrations
+ * (icon-program: three stacked sheets on bg/strong, border/primary-soft and bg/info;
+ * icon-course: a sheet on border/primary-soft with three lines on bg/info), drawn here
+ * from the component's vectors with the same tokens.
  */
+function CourseTypeIcon({ program }: { program: boolean }) {
+  return program ? (
+    <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0">
+      <rect x="4.666" width="10" height="11.3333" rx="1.3333" className="fill-sko-bg-strong" />
+      <rect x="3.334" y="2" width="10" height="11.3333" rx="1.3333" className="fill-sko-border-primary-soft" />
+      <rect x="2" y="4" width="10" height="11.3333" rx="1.3333" className="fill-sko-bg-info" />
+    </svg>
+  ) : (
+    <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden="true" className="shrink-0">
+      <path
+        d="M2 3.5C2 2.39543 2.89543 1.5 4 1.5H12C13.1046 1.5 14 2.39543 14 3.5V12.5C14 13.6046 13.1046 14.5 12 14.5H4C2.89543 14.5 2 13.6046 2 12.5V3.5Z"
+        className="fill-sko-border-primary-soft"
+      />
+      <rect x="4" y="4.5" width="8" height="1" className="fill-sko-bg-info" />
+      <rect x="4" y="7.5" width="5" height="1" className="fill-sko-bg-info" />
+      <rect x="4" y="10.5" width="6" height="1" className="fill-sko-bg-info" />
+    </svg>
+  );
+}
+
 export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
   const program = value === "Program";
   return (
@@ -21,11 +42,7 @@ export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
         program ? "text-sko-text-primary" : "text-sko-text-subtle",
       )}
     >
-      <Icon
-        icon={program ? Package : BookOpen}
-        size={16}
-        className={program ? "text-sko-icon-primary" : "text-sko-icon-subtle"}
-      />
+      <CourseTypeIcon program={program} />
       {value}
     </span>
   );
@@ -115,12 +132,13 @@ const DELIVERY_ICON: Record<DeliveryMode, LucideIcon> = {
 };
 
 /**
- * Delivery Mode (DS `LMS / Delivery Mode Badge`, 19975:538084): Badge Style=Soft,
- * Size=sm, Color=Info — bg/info-soft pill, no stroke, label text/info, icon icon/info at 12px.
+ * Delivery Mode (DS `LMS/Platform/Discovery/Delivery-Mode-Badge`, 19975:538084): Badge
+ * Style=Modern, Size=sm, Color=Info on the three types — bg/page pill, 1px inside stroke
+ * border/info, label text/info, icon at 12px.
  */
 export function DeliveryModeBadge({ value }: { value: DeliveryMode }) {
   return (
-    <Badge color="info" leftIcon={DELIVERY_ICON[value]}>
+    <Badge variant="modern" color="info" leftIcon={DELIVERY_ICON[value]}>
       {value}
     </Badge>
   );

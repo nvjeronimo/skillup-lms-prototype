@@ -200,8 +200,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     delivery: "Flexible Learning",
     difficulty: "Beginner",
     partners: [
-      { name: "Microsoft", logoSrc: "/platform/partner-microsoft.jpg" },
-      { name: "IBM", logoSrc: "/platform/partner-ibm.jpg" },
+      { name: "Microsoft", logoSrc: "/platform/partner-microsoft-dark.svg" },
+      { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
     ],
     courses: "1 of 7 courses complete",
     progressPct: 14,

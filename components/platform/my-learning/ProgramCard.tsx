@@ -124,8 +124,9 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
                       key={partner.name}
                       className="flex h-9 w-[77px] items-center justify-center rounded border border-sko-text-on-primary bg-sko-bg-page p-[3px]"
                     >
+                      {/* The hero is always dark: the logos are the DS's light-on-dark drawings, at their own size. */}
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={partner.logoSrc} alt={partner.name} width={69} height={28} className="h-7 w-[69px] object-contain" />
+                      <img src={partner.logoSrc} alt={partner.name} className="max-h-7 max-w-[69px]" />
                     </li>
                   ))}
                 </ul>
