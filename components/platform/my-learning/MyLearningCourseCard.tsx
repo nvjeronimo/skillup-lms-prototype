@@ -66,9 +66,9 @@ function CourseTitle({ course }: { course: MyLearningCourse }) {
   );
 }
 
-/* The second action of a completed grid card (DS: "View Certificate"; sentence case here, as
-   on the program card). */
-const CERTIFICATE_CTA = "View certificate";
+/* The second action of a completed grid card. Written "View Certificate", as in the DS
+   (Nelson, 13 Oct 2026); the completed program card uses the same label. */
+const CERTIFICATE_CTA = "View Certificate";
 
 /* Every card has the same height whatever its title (asked by Nelson on 10 Oct 2026): the
    title keeps the height of two lines and is cut at the second. The full title stays in the
@@ -119,7 +119,7 @@ function Action({
  * up-next block is 250 wide, so the titles take the rest of the row.
  * A complete course (DS `State=Completed`) reads "Completed" with a check over a full green bar, and its strip carries the certificate
  * line ("CERTIFICATE · Issued …") instead of the next unit; the action is Review, and the grid
- * card adds a Primary "View certificate" beside it.
+ * card adds a Primary "View Certificate" beside it.
  * The thumbnail shows the course image over the initials (DS `Show image`).
  * The action opens the course, so it is a link with the button look (atoms/ButtonLink).
  *
