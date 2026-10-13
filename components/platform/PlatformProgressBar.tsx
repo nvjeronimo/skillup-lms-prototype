@@ -6,8 +6,8 @@ export interface PlatformProgressBarProps {
   /** Accessible name: what the bar measures. */
   label: string;
   /**
-   * `strong`: the DS Progress bar — square, on bg/strong.
-   * `muted`: the bar of the DS Course Card and Course Row — fully rounded, on bg/muted.
+   * The colour of the track: `strong` is the DS Progress bar (bg/strong), `muted` the bar of
+   * the DS Course Card (bg/muted). Both end straight.
    */
   track?: "muted" | "strong";
   /** Bar height in px. */
@@ -21,8 +21,9 @@ export interface PlatformProgressBarProps {
 
 /**
  * DS `Progress bar` (6204:128904): an 8px track with the fill on bg/info — never bg/primary,
- * the product rule for every progress fill. One bar for the platform pages, in the two
- * shapes the DS draws (`track`). With `stepped` the fill is rounded to the nearest 10 as in
+ * the product rule for every progress fill. A progress bar ends straight, track and fill
+ * (Nelson, 13 Oct 2026; the Course Card bar was rounded until then). One bar for the
+ * platform pages, on the two track colours the DS draws (`track`). With `stepped` the fill is rounded to the nearest 10 as in
  * the DS component; assistive tech always gets the real value.
  * `className` goes on the bar, or on the bar + value row when `showValue` is set.
  */
@@ -37,7 +38,6 @@ export function PlatformProgressBar({
 }: PlatformProgressBarProps) {
   const pct = Math.max(0, Math.min(100, value));
   const fill = stepped ? Math.round(pct / 10) * 10 : pct;
-  const pill = track === "muted";
 
   const bar = (
     <div
@@ -48,11 +48,11 @@ export function PlatformProgressBar({
       aria-valuemax={100}
       className={cn(
         height === 4 ? "h-1" : "h-2",
-        pill ? "overflow-hidden rounded-full bg-sko-bg-muted" : "bg-sko-bg-strong",
+        track === "muted" ? "bg-sko-bg-muted" : "bg-sko-bg-strong",
         showValue ? "min-w-0 flex-1" : className,
       )}
     >
-      <div className={cn("h-full bg-sko-bg-info", pill && "rounded-full")} style={{ width: `${fill}%` }} />
+      <div className="h-full bg-sko-bg-info" style={{ width: `${fill}%` }} />
     </div>
   );
 
