@@ -21,7 +21,7 @@ export interface PlatformSectionHeaderProps {
    drawn; the target grows to 44 on mobile, and the negative margin keeps the header at the
    title's height. */
 const ACTION =
-  "sk-text-body-medium-semibold inline-flex shrink-0 items-center justify-center gap-1 border-b border-sko-icon-subtle px-0.5 py-1 text-sko-text-subtle transition-colors hover:border-sko-text-default hover:text-sko-text-default max-md:-my-2 max-md:min-h-11";
+  "sk-text-body-medium-semibold inline-flex shrink-0 items-center justify-center gap-1 border-b border-sko-icon-subtle px-0.5 py-1 text-sko-text-subtle transition-colors md:h-7 hover:border-sko-text-default hover:text-sko-text-default max-md:-my-2 max-md:min-h-11";
 
 /**
  * DS `LMS / Platform / Section header` (6382:3172): section title for the platform pages.
