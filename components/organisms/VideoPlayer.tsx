@@ -122,12 +122,13 @@ const VOLUME_TONE_GROUP = "bg-sko-bg-overlay-soft text-sko-icon-on-media";
 const VOLUME_TONE_AUTO =
   "bg-sko-bg-overlay-soft text-sko-icon-on-media hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm [@container(min-width:40rem)]:hover:bg-sko-bg-overlay-soft [@container(min-width:40rem)]:hover:backdrop-blur-none";
 /**
- * DS `Progress slider`: no handle, the 8px bg/on-media line is its own end (an 8px dot at
- * 00:00). The thumb is that end: 8px, round, bg/on-media.
+ * DS `Progress slider`: no handle, the 8px bg/on-media line is its own end (an 8px square
+ * at 00:00). The thumb is that end: 8px, bg/on-media. Track, line and end are straight
+ * (DS, 13 Oct 2026: the video sliders end straight like every progress bar).
  */
 const SEEK_THUMB =
-  "[&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
-/** DS volume slider handle: 12px round bg/on-media thumb (WebKit + Firefox). */
+  "[&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
+/** DS volume slider handle: 12px round bg/on-media thumb (WebKit + Firefox). The 4px track under it is straight. */
 const VOLUME_THUMB =
   "[&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
 /**
@@ -490,7 +491,7 @@ export function VideoPlayer({
               aria-label="Volume"
               // 4px track inside a 24px hit area, as on Seek.
               className={cn(
-                "box-content h-1 w-10 cursor-pointer appearance-none rounded-full bg-transparent bg-clip-content py-2.5",
+                "box-content h-1 w-10 cursor-pointer appearance-none rounded-none bg-transparent bg-clip-content py-2.5",
                 VOLUME_THUMB,
                 pick("hidden", "", "hidden [@container(min-width:40rem)]:block"),
               )}
@@ -533,7 +534,7 @@ export function VideoPlayer({
               className={cn(
                 // bg-transparent: a range input is white by default, which hid the unplayed part
                 // of the track (bg/on-media-soft is translucent).
-                "box-content h-2 w-full min-w-0 cursor-pointer appearance-none rounded-full bg-transparent bg-clip-content",
+                "box-content h-2 w-full min-w-0 cursor-pointer appearance-none rounded-none bg-transparent bg-clip-content",
                 SEEK_THUMB,
                 pick(
                   "-mt-[26px] pb-[5px] pt-[31px]",
