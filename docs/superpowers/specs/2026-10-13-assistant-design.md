@@ -253,6 +253,10 @@ line once it is merged.
   grounded answer with three buttons from the list; a follow-up that used the conversation;
   "I don't have that information" for a question outside the platform; a refusal to mark a
   topic complete. The `ACTIONS:` line never showed while streaming.
+- **The launcher is the assistant mark** (Nelson's drawing, 13 Oct 2026): the SkillUp ball and
+  paper plane with AI sparkles in place of the trail lines, 56 × 56, no button ground. Two
+  assets, as the logo: on a dark page the plane and the sparkles are white. Open, the launcher
+  is still a round close button on bg/primary.
 
 ## 11. After the independent review (13 Oct 2026)
 
