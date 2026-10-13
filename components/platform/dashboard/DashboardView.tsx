@@ -80,10 +80,10 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
               action={{ label: "My learning", href: "/platform/my-learning" }}
             />
             <ul className="flex flex-col gap-4">
-              {resume.map((course, index) => (
+              {resume.map((course) => (
                 <li key={course.id} className="[container-type:inline-size]">
                   {/* A list narrower than 700: the Resume row. From 700: the DS Course Row.
-                      One primary action in the list: the course touched last; the rest are Secondary. */}
+                      Resume is Secondary on every row, as the DS Course-Row and Resume-Row (Nelson, 13 Oct 2026). */}
                   <ResumeRow
                     className="[@container_(min-width:700px)]:hidden"
                     title={course.headline}
@@ -92,7 +92,6 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
                     progressPct={course.progressPct}
                     href={course.href}
                     homeHref={course.homeHref}
-                    emphasis={index === 0 ? "primary" : "secondary"}
                   />
                   <div className="hidden [@container_(min-width:700px)]:block">
                     <CourseRow
@@ -103,8 +102,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
                       progressPct={course.progressPct}
                       href={course.href}
                     homeHref={course.homeHref}
-                      emphasis={index === 0 ? "primary" : "secondary"}
-                    />
+                      />
                   </div>
                 </li>
               ))}
