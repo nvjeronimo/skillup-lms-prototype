@@ -265,6 +265,8 @@ line once it is merged.
 - **48 px, and on the right on a phone** (Nelson, 13 Oct 2026, later): the launcher is 48 × 48.
   Desktop and tablet keep the left corner; on a phone it is on the right, 16 above the footer
   nav, at the end of the feedback row.
+- **The chat is titled "SkillUp Assistant"** (Nelson, 13 Oct 2026), as in the DS component;
+  it was "Assistant". The dialog's accessible name is the same.
 
 ## 11. After the independent review (13 Oct 2026)
 

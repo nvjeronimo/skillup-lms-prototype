@@ -79,7 +79,7 @@ export function AssistantWindow({
       ref={dialogRef}
       id={id}
       role="dialog"
-      aria-label="Assistant"
+      aria-label="SkillUp Assistant"
       aria-modal={modal || undefined}
       style={style}
       onKeyDown={(event) => {
@@ -97,7 +97,7 @@ export function AssistantWindow({
       <header className="flex items-center justify-between border-b border-sko-border-subtle py-3 pl-5 pr-3">
         <h2 className="sk-text-body-large-medium inline-flex items-center gap-2 text-sko-text-default">
           <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" />
-          Assistant
+          SkillUp Assistant
         </h2>
         <div className="flex items-center">
           {messages.length ? (
