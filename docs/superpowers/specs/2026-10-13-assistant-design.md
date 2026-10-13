@@ -248,8 +248,11 @@ line once it is merged.
 - **Layer:** the chat sits at z 45: above the page and the top bars, under the overlay
   panels (50), the dialogs (60) and the toasts (70).
 - **In the device-preview frame** the chat is fixed to the browser viewport, as toasts are.
-- **Model mode was not run**: no API key was available during the build. The route was
-  checked without a key (`GET` → script, `POST` → 503) and its pure parts are unit-tested.
+- **Model mode was run on 13 Oct 2026** on a local server with a test key (`claude-sonnet-5-5`):
+  four questions on the Dashboard. Answers in 1.6 to 3.7 s, first text after 1.3 to 2.7 s; a
+  grounded answer with three buttons from the list; a follow-up that used the conversation;
+  "I don't have that information" for a question outside the platform; a refusal to mark a
+  topic complete. The `ACTIONS:` line never showed while streaming.
 
 ## 11. After the independent review (13 Oct 2026)
 
