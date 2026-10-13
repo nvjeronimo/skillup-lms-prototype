@@ -178,7 +178,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           {needle
             ? `${shown} ${noun} match “${query.trim()}”`
             : status !== "all"
-              ? `${shown} ${noun} · ${statusLabel}`
+              ? `${statusLabel}: ${shown} ${shown === 1 ? noun.slice(0, -1) : noun}`
               : ""}
         </p>
 
