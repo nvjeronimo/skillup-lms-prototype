@@ -15,30 +15,32 @@ export interface PlatformSectionHeaderProps {
   className?: string;
 }
 
-/* DS Action: Buttons/Button sm · Link gray with arrow-right — body-medium/Semibold in
-   text/subtle, 4 gap, 20 icon, radius 4, no underline. 20px tall as drawn; the target grows
-   to 44px on mobile and to 24px from tablet up (WCAG 2.5.8), and the negative margin keeps
-   the header at the title's height. */
+/* DS Action (Nelson, 13 Oct 2026): DS `Link Button`, Type=Brand, Hierarchy=Secondary:
+   body-medium/Semibold in text/subtle with a 16 arrow-right, 4 apart, padding 4 / 2, on a 1px
+   icon/subtle rule under the whole button (the rule is the link's underline). 28 tall as
+   drawn; the target grows to 44 on mobile, and the negative margin keeps the header at the
+   title's height. */
 const ACTION =
-  "sk-text-body-medium-semibold inline-flex shrink-0 items-center justify-center gap-1 rounded text-sko-text-subtle transition-colors hover:text-sko-text-default max-md:-my-[7px] max-md:min-h-11 md:-my-0.5 md:min-h-6";
+  "sk-text-body-medium-semibold inline-flex shrink-0 items-center justify-center gap-1 border-b border-sko-icon-subtle px-0.5 py-1 text-sko-text-subtle transition-colors hover:border-sko-text-default hover:text-sko-text-default max-md:-my-2 max-md:min-h-11";
 
 /**
  * DS `LMS / Platform / Section header` (6382:3172): section title for the platform pages.
  * Title in text/default + Emphasis in text/subtle, both headline-small/Bold (24/32, 20/30 on
- * mobile), 6 between them; they wrap as two blocks. Optional Action on the right, gap 16.
- * Since 13 Oct 2026 (Nelson, in the DS) the header sits on a rule: 12 below the title
- * (Spacing/lg), then a 1px border/subtle line across its width.
+ * mobile), 6 between them; they wrap as two blocks. Optional Action on the right, gap 16,
+ * aligned with the top of the title.
+ * The rule under the header, tried on 13 Oct 2026, was withdrawn by Nelson the same day: the
+ * header has no padding and no line.
  */
 export function PlatformSectionHeader({ id, title, emphasis, action, className }: PlatformSectionHeaderProps) {
   const actionContent = action ? (
     <>
       {action.label}
-      <Icon icon={ArrowRight} size={20} className="text-sko-icon-subtle" aria-hidden="true" />
+      <Icon icon={ArrowRight} size={16} className="text-sko-icon-subtle" aria-hidden="true" />
     </>
   ) : null;
 
   return (
-    <div className={cn("flex items-center justify-between gap-4 border-b border-sko-border-subtle pb-3", className)}>
+    <div className={cn("flex items-start justify-between gap-4", className)}>
       <h2 id={id} className="sk-text-headline-small-bold flex min-w-0 flex-1 flex-wrap items-start gap-x-1.5">
         <span className="whitespace-nowrap text-sko-text-default">{title}</span>
         {emphasis ? (
