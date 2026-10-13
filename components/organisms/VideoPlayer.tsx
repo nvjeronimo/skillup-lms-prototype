@@ -300,13 +300,16 @@ export function VideoPlayer({
     <div
       ref={wrapRef}
       className={cn(
-        "relative w-full overflow-hidden bg-sko-bg-primary transition-[height,border-radius,box-shadow] duration-200 ease-out",
+        // The ground is bg/subtle, as the player on the Video screens: the picture is fitted
+        // inside it, so a player wider than 16:9 shows the ground on both sides.
+        "relative w-full overflow-hidden bg-sko-bg-subtle transition-[height,border-radius,box-shadow] duration-200 ease-out",
         (size === "auto" || size === "md") && "[container-type:inline-size]",
         // Explicit pixel height drives the sticky full→docked shrink; otherwise
         // fall back to a capped 16:9 band (Storybook / non-sticky usage).
         heightPx ? "" : "aspect-video max-h-[34vh]",
         // Docked treatment: square top, rounded bottom (it's flush to the top).
-        docked ? "rounded-b-xl rounded-t-none" : "rounded-xl",
+        // Radius as on the screens: 8 on a phone, 6 from tablet up (the DS component alone draws 12).
+        docked ? "rounded-b-lg rounded-t-none md:rounded-b-md" : "rounded-lg md:rounded-md",
         className,
       )}
       style={{
@@ -316,9 +319,10 @@ export function VideoPlayer({
           : undefined,
       }}
     >
-      {/* Placeholder visual — branded gradient so no real asset is required. */}
+      {/* The picture: a 16:9 frame fitted in the player's height and centred (Figma: image fill,
+          Fit). No real asset is required: a branded gradient stands in for the video frame. */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2"
         style={{
           background:
             "linear-gradient(135deg, var(--color-bg-primary), var(--color-text-on-primary-soft))",
@@ -328,7 +332,9 @@ export function VideoPlayer({
 
       {state === "ready" ? (
         // Full-size click layer toggles play/pause in both states. Only while paused does it
-        // carry the DS `_Video overlay action`: bg/overlay-soft scrim + centred 64px button.
+        // carry the DS `_Video overlay action`: a scrim (bg/overlay on the screens, where the
+        // component alone draws bg/overlay-soft) and the centred 64px button: bg/overlay-soft,
+        // background blur 16, a 1px light edge and the Solid play icon.
         <button
           type="button"
           onClick={togglePlay}
@@ -337,9 +343,9 @@ export function VideoPlayer({
         >
           {!playing ? (
             <>
-              <span className="absolute inset-0 bg-sko-bg-overlay-soft" aria-hidden />
-              <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-overlay-soft text-sko-icon-on-media backdrop-blur">
-                <Icon icon={Play} size={20} />
+              <span className="absolute inset-0 bg-sko-bg-overlay" aria-hidden />
+              <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-overlay-soft text-sko-icon-on-media shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--color-bg-on-media)_12%,transparent)] backdrop-blur-lg">
+                <Icon icon={Play} size={20} className={SOLID} />
               </span>
             </>
           ) : null}
@@ -540,7 +546,8 @@ export function VideoPlayer({
               }}
             />
             <span className="sk-text-body-small-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
-              {clock(durationSeconds)}
+              {/* DS `Timestamp end`: the time left, with a minus ("-08:24"). */}
+              {`-${clock(Math.max(0, durationSeconds - currentTime))}`}
             </span>
           </div>
 

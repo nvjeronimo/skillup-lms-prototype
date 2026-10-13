@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowRight, CircleCheck, PenLine } from "lucide-react";
+import { ArrowRight, PenLine } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
 
@@ -11,9 +11,8 @@ import { Badge } from "@/components/atoms/Badge";
  * - action     (quiz/assignment) → "Submit" + trailing arrow-right, Buttons/Button sm
  *   Primary (DS Milestone=Submit)
  * - review     (graded, submitted) → "Under Review", Badge Soft sm Warning
- * - completed  → "Marked as completed", Badge Soft sm Success. Types the learner cannot
- *   complete by hand (Quiz, ORA, VILT), and Video, which completes itself, read "Completed"
- *   instead (`manual={false}`).
+ * - completed  → "Marked as completed", Badge Soft sm Success, label only. The same label on
+ *   every type, also the ones that complete by themselves (Nelson, 13 Oct 2026).
  */
 export type TopicActionState = "incomplete" | "action" | "review" | "completed";
 
@@ -21,8 +20,6 @@ export interface TopicActionBarProps {
   state: TopicActionState;
   onComplete?: () => void;
   onSubmit?: () => void;
-  /** False for types with no manual completion: the completed badge then reads "Completed". */
-  manual?: boolean;
   /**
    * True while the page has another primary action the learner has not used yet: a partner
    * lab that has not been opened, where the launch button is the primary. Mark as Complete is
@@ -36,14 +33,15 @@ export function TopicActionBar({
   state,
   onComplete,
   onSubmit,
-  manual = true,
   secondary = false,
   className,
 }: TopicActionBarProps) {
   if (state === "completed") {
     return (
-      <Badge color="success" leftIcon={CircleCheck} className={className}>
-        {manual ? "Marked as completed" : "Completed"}
+      // DS `Topic-Status-Badge`, Completed: Badge Soft sm Success, label only, and always
+      // "Marked as completed", whatever completed the topic (Nelson, 13 Oct 2026).
+      <Badge color="success" className={className}>
+        Marked as completed
       </Badge>
     );
   }
