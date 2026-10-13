@@ -54,7 +54,8 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
  * day, which spread the cards and made the learner scroll): one list per tab, always ordered
  * In progress, Not started, Completed, and a DS `Button group` under the toolbar that keeps
  * the cards of one state (All by default). It works together with the search and the view.
- * On mobile the four segments are wider than the screen: the group scrolls sideways.
+ * On mobile the four segments are wider than the screen: the track fills the width and the
+ * segments scroll sideways inside it.
  * The Browse catalog tile is hidden for now.
  *
  * Courses (decided by Nelson on 11 Oct 2026): every course is a DS `Course-Row`, not the
@@ -140,17 +141,25 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
       <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
         {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
             pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
-            The strip scrolls sideways when the group is wider than the screen. */}
-        <div className="overflow-x-auto md:shrink-0">
-          <div role="group" aria-label={`Filter ${noun} by status`} className="inline-flex gap-0.5 rounded-lg bg-sko-bg-muted p-1">
+            Mobile (Nelson, 13 Oct 2026, Figma 7187:37067): the track fills the width and stays
+            put; the segments scroll sideways inside it and the last one is cut at its right edge,
+            which is the cue that there is more. No scrollbar is drawn. */}
+        <div className="min-w-0 md:shrink-0">
+          <div
+            role="group"
+            aria-label={`Filter ${noun} by status`}
+            className="flex w-full gap-0.5 overflow-x-auto rounded-lg bg-sko-bg-muted p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden"
+          >
             {myLearningStatusFilters.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 aria-pressed={status === item.id}
                 onClick={() => setStatus(item.id)}
+                // A segment reached with the keyboard comes into the track when it was cut off.
+                onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" })}
                 className={cn(
-                  "sk-text-body-medium-semibold h-8 whitespace-nowrap rounded-md border px-4 transition-colors max-md:h-11",
+                  "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-md border px-4 transition-colors max-md:h-11",
                   status === item.id
                     ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
                     : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
