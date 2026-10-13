@@ -258,6 +258,9 @@ export const myLearningStateOf = (progressPct: number | null): MyLearningState =
 export const myLearningProgramProgressLabel = "of program complete";
 export const myLearningProgramUpNextLabel = "Up next";
 export const myLearningProgramCompletedLabel = "Program completed";
+/** DS `State=Not started`, 13 Oct 2026: the words where the percent was, and their caption. */
+export const myLearningProgramNotStartedLabel = "Not started";
+export const myLearningProgramStartDateLabel = "Start date";
 export const myLearningProgramCertificateLabel = "Certificate issued";
 
 /* ── Header stats ───────────────────────────────────────────────────────────────────── */

@@ -26,6 +26,8 @@ const ACTION =
  * DS `LMS / Platform / Section header` (6382:3172): section title for the platform pages.
  * Title in text/default + Emphasis in text/subtle, both headline-small/Bold (24/32, 20/30 on
  * mobile), 6 between them; they wrap as two blocks. Optional Action on the right, gap 16.
+ * Since 13 Oct 2026 (Nelson, in the DS) the header sits on a rule: 12 below the title
+ * (Spacing/lg), then a 1px border/subtle line across its width.
  */
 export function PlatformSectionHeader({ id, title, emphasis, action, className }: PlatformSectionHeaderProps) {
   const actionContent = action ? (
@@ -36,7 +38,7 @@ export function PlatformSectionHeader({ id, title, emphasis, action, className }
   ) : null;
 
   return (
-    <div className={cn("flex items-center justify-between gap-4", className)}>
+    <div className={cn("flex items-center justify-between gap-4 border-b border-sko-border-subtle pb-3", className)}>
       <h2 id={id} className="sk-text-headline-small-bold flex min-w-0 flex-1 flex-wrap items-start gap-x-1.5">
         <span className="whitespace-nowrap text-sko-text-default">{title}</span>
         {emphasis ? (

@@ -41,9 +41,10 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
 /**
  * The Collection of My Learning (6394:16636 and siblings): Toolbar + the cards of the
  * selected tab, 24 / 20 / 16 apart (desktop / tablet / mobile).
- * Toolbar, tablet and desktop: Tabs on the left, Search (240) and the Grid / List toggle on
- * the right, 8 above, one 1px border/subtle rule under the whole row. Mobile: the tabs on
- * their rule, then the search at full width, 16 apart.
+ * Toolbar (Nelson, 13 Oct 2026): the Tabs alone on the first row, on a 1px border/subtle rule
+ * across the width, 8 above. Second row: the status filter on the left, Search (320 on
+ * desktop, 240 on tablet) and the Grid / List toggle on the right. Mobile: the tabs, the
+ * search at full width, then the filter, 16 apart.
  * The tab and the view live in the URL (`?tab=programs`, `?view=list`; the drawn defaults,
  * Courses and Grid, leave it clean). Search filters the cards of the selected tab by title.
  * Below desktop the collections are Grid only: the toggle is hidden, and a `?view=list`
@@ -116,59 +117,62 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
 
   return (
     <section aria-label="My courses and programs" className="flex flex-col gap-4 md:gap-5 lg:gap-6">
-      <div className="flex flex-col gap-4 pt-2 md:flex-row md:items-center md:justify-between md:border-b md:border-sko-border-subtle">
-        {/* The Size=sm tabs already grow their target to 44 upwards, so the "larger targets"
-            min-height is switched off on them: it would make the 32px row 44 tall. */}
-        <div className="border-b border-sko-border-subtle max-md:[&_[role=tab]]:min-h-0 md:min-w-0 md:flex-1 md:border-b-0">
-          {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
-              is the border of the toolbar, and only the selected panel is rendered. */}
-          <PlatformTabs
-            tabs={tabs}
-            value={tab}
-            onChange={(id) => setParam("tab", id, MY_LEARNING_DEFAULT_TAB)}
-            size="responsive"
-            rule="parent"
-            panels="selected"
-            idBase={ID_BASE}
-            ariaLabel="My learning"
-          />
+      {/* Row 1: the tabs on their 1px border/subtle rule, across the whole width.
+          The Size=sm tabs already grow their target to 44 upwards, so the "larger targets"
+          min-height is switched off on them: it would make the 32px row 44 tall. */}
+      <div className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0">
+        {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
+            is the border of this row, and only the selected panel is rendered. */}
+        <PlatformTabs
+          tabs={tabs}
+          value={tab}
+          onChange={(id) => setParam("tab", id, MY_LEARNING_DEFAULT_TAB)}
+          size="responsive"
+          rule="parent"
+          panels="selected"
+          idBase={ID_BASE}
+          ariaLabel="My learning"
+        />
+      </div>
+
+      {/* Row 2 (Nelson, 13 Oct 2026): the status filter on the left, the search and the Grid /
+          List toggle on the right, 24 apart. Mobile: the search at full width, then the filter. */}
+      <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
+        {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
+            pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
+            The strip scrolls sideways when the group is wider than the screen. */}
+        <div className="overflow-x-auto md:shrink-0">
+          <div role="group" aria-label={`Filter ${noun} by status`} className="inline-flex gap-0.5 rounded-lg bg-sko-bg-muted p-1">
+            {myLearningStatusFilters.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={status === item.id}
+                onClick={() => setStatus(item.id)}
+                className={cn(
+                  "sk-text-body-medium-semibold h-8 whitespace-nowrap rounded-md border px-4 transition-colors max-md:h-11",
+                  status === item.id
+                    ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
+                    : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+                )}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <SearchField
             value={query}
             onChange={setQuery}
             label={myLearningSearch.placeholder}
-            className="w-full md:w-[240px]"
+            className="w-full md:w-[240px] lg:w-[320px]"
           />
           <ViewToggle
             view={view}
             onChange={(next) => setParam("view", next, MY_LEARNING_DEFAULT_VIEW)}
             className="hidden shrink-0 lg:inline-flex"
           />
-        </div>
-      </div>
-
-      {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
-          pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
-          The strip scrolls sideways when the group is wider than the screen. */}
-      <div className="overflow-x-auto">
-        <div role="group" aria-label={`Filter ${noun} by status`} className="inline-flex gap-0.5 rounded-lg bg-sko-bg-muted p-1">
-          {myLearningStatusFilters.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              aria-pressed={status === item.id}
-              onClick={() => setStatus(item.id)}
-              className={cn(
-                "sk-text-body-medium-semibold h-8 whitespace-nowrap rounded-md border px-4 transition-colors max-md:h-11",
-                status === item.id
-                  ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
-                  : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
-              )}
-            >
-              {item.label}
-            </button>
-          ))}
         </div>
       </div>
 
