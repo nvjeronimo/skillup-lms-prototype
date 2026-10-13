@@ -108,8 +108,8 @@ function Action({
  * Grid: padding 24 / 20 / 16 (desktop / tablet / mobile), gap 16: header (thumb 86 + a line
  * with the Course Type badge on the left and the provider on the right, then the title), the Difficulty and Delivery badges, progress (gap 8), the
  * one-line up-next strip and a Buttons/Button lg.
- * List: one row, padding 16, gap 24: thumb 118, titles with the Meta-Row (provider, gap 16,
- * badges), progress 280 wide (gap 6), then the up-next block (overline, title, topic type)
+ * List: one row, padding 16, gap 24: thumb, titles (the Course Type line with the provider at
+ * its right end, the title, then the badges), progress 280 wide (gap 6), then the up-next block (overline, title, topic type)
  * with a secondary Buttons/Button sm inside it. The progress block hugs its line and the
  * up-next block is 250 wide, so the titles take the rest of the row.
  * A complete course (DS `State=Completed`) reads "Completed" with a check over a full green bar, and its strip carries the certificate
@@ -149,8 +149,13 @@ export function MyLearningCourseCard({
           imageSrc={course.imageSrc}
           className="size-[86px]"
         />
-        <div className="flex min-w-[200px] flex-1 flex-col items-start gap-0.5">
-          <CourseTypeBadge value="Course" />
+        <div className="flex min-w-[200px] flex-1 flex-col gap-0.5">
+          {/* DS List (Nelson, 13 Oct 2026): as in the grid card, the provider or partner sits at the
+              right end of the Course Type line; the badges keep the line under the title. */}
+          <div className="flex w-full items-center justify-between gap-0.5">
+            <CourseTypeBadge value="Course" />
+            <ProviderBadge value={course.provider} />
+          </div>
           <h3
             title={course.title}
             // DS List (10 Oct 2026): 120 tall with an 86 thumb, so the title is one line and a
@@ -160,12 +165,9 @@ export function MyLearningCourseCard({
           >
             <CourseTitle course={course} />
           </h3>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <ProviderBadge value={course.provider} />
-            <div className="flex items-start gap-2">
-              <DifficultyBadge value={course.difficulty} />
-              <DeliveryModeBadge value={course.delivery} />
-            </div>
+          <div className="flex items-start gap-2">
+            <DifficultyBadge value={course.difficulty} />
+            <DeliveryModeBadge value={course.delivery} />
           </div>
         </div>
         {/* DS List: the progress block hugs its line ("45% complete", 24, "8 hours total"). */}
