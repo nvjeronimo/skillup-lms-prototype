@@ -19,6 +19,12 @@ export interface ContentFeedbackProps {
   license?: string;
   /** Where the licence text links to. */
   licenseHref?: string;
+  /**
+   * The topic's end-of-content action: Mark as Complete (Figma `Feedback-Mark`, 13 Oct 2026).
+   * It sits in this row, at the right end, and the licence then follows the feedback items on
+   * the left. When the row is too narrow (a phone) the action drops under the feedback.
+   */
+  action?: React.ReactNode;
   className?: string;
 }
 
@@ -27,6 +33,10 @@ export interface ContentFeedbackProps {
  * the bottom of content blocks, with the optional licence at the right end.
  * Row: space-between, padding 12 top/bottom. Items: gap 16, no padding; each item
  * is a 16px icon/faint glyph (stroke 1.5) + a body-small/Medium label, gap 8.
+ *
+ * With `action` it is the Figma `Feedback-Mark` row: a rule above and below, feedback (and
+ * licence) on the left, the action on the right; wrapped, the rows are 16 apart on a phone
+ * and 24 above it.
  */
 export function ContentFeedback({
   value = null,
@@ -35,6 +45,7 @@ export function ContentFeedback({
   onReport,
   license,
   licenseHref = "#",
+  action,
   className,
 }: ContentFeedbackProps) {
   const [reportOpen, setReportOpen] = React.useState(false);
@@ -45,9 +56,20 @@ export function ContentFeedback({
   const btn =
     "sk-text-body-small-medium -mx-2 -my-1 inline-flex items-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-sko-bg-subtle";
   const glyph = { size: 16, strokeWidth: 1.5, absoluteStrokeWidth: true } as const;
+  const licence = license ? (
+    <a href={licenseHref} className="sk-text-body-small-medium shrink-0 text-sko-text-primary">
+      {license}
+    </a>
+  ) : null;
   return (
-    <div className={cn("flex flex-wrap items-center justify-between gap-4 py-3", className)}>
-      <div className="flex items-center gap-4">
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-between py-3",
+        action ? "gap-x-4 gap-y-4 border-y border-sko-border-subtle sm:gap-y-6" : "gap-4",
+        className,
+      )}
+    >
+      <div className={cn("flex items-center gap-4", action && "flex-wrap")}>
         <button
           type="button"
           onClick={onLike}
@@ -88,13 +110,10 @@ export function ContentFeedback({
           />
           Report an issue
         </button>
+        {action ? licence : null}
       </div>
 
-      {license ? (
-        <a href={licenseHref} className="sk-text-body-small-medium shrink-0 text-sko-text-primary">
-          {license}
-        </a>
-      ) : null}
+      {action ? <div className="shrink-0">{action}</div> : licence}
 
       <ReportIssueModal
         open={reportOpen}

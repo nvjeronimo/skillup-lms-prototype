@@ -4,11 +4,14 @@ import * as React from "react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import type { TopicByline } from "@/lib/content";
+import { cn } from "@/lib/utils";
 
 export interface TopicFooterMetaProps {
   /** Author & Updated Date row — present only on authored content types. */
   byline?: TopicByline;
   onReport?: () => void;
+  /** The end-of-content action (Mark as Complete): it sits in the feedback row, on the right. */
+  action?: React.ReactNode;
 }
 
 /**
@@ -17,11 +20,10 @@ export interface TopicFooterMetaProps {
  * gated by the caller to authored content types only. The license lives in the
  * video chrome footer for now — deliberately not shown here (pending edX docs).
  */
-export function TopicFooterMeta({ byline, onReport }: TopicFooterMetaProps) {
+export function TopicFooterMeta({ byline, onReport, action }: TopicFooterMetaProps) {
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
 
   return (
-    // No gap: ContentFeedback's own DS py-3 gives the 12px under the byline row.
     <div className="mt-6 flex flex-col">
       {byline ? (
         // DS `LMS / Topic · Author & Updated Date`: the row bottom-aligns the date (gap 16);
@@ -40,10 +42,12 @@ export function TopicFooterMeta({ byline, onReport }: TopicFooterMetaProps) {
         </div>
       ) : null}
 
-      {/* pt-4 replaces (does not add to) ContentFeedback's py-3 top, since Tailwind emits
-          pt-* after py-*: 16 under the rule, as on the byline row, and the DS 12 below. */}
+      {/* DS `Content-Feedback` and the Figma `Feedback-Mark` row: a rule above and below, 12 of
+          padding (the component's own py-3), and 12 between the byline and the rule. The rules
+          stay when the action goes (topic completed), so the row does not jump. */}
       <ContentFeedback
-        className={byline ? "" : "border-t border-sko-border-subtle pt-4"}
+        className={cn("border-y border-sko-border-subtle", byline && "mt-3")}
+        action={action}
         value={feedback}
         onLike={() => setFeedback((f) => (f === "like" ? null : "like"))}
         onDislike={() => setFeedback((f) => (f === "dislike" ? null : "dislike"))}
