@@ -11,7 +11,6 @@ import { useLmsStore } from "@/lib/store";
 import {
   MY_LEARNING_DEFAULT_TAB,
   MY_LEARNING_DEFAULT_VIEW,
-  myLearningBrowseTile,
   myLearningPrograms,
   myLearningSearch,
   myLearningSections,
@@ -22,7 +21,6 @@ import {
 } from "@/lib/platform/my-learning";
 import type { MyLearningCourseRow } from "@/lib/platform/my-learning-rows";
 import { cn } from "@/lib/utils";
-import { BrowseTile } from "./BrowseTile";
 import { ProgramCard } from "./ProgramCard";
 import { SearchField } from "./SearchField";
 import { ViewToggle } from "./ViewToggle";
@@ -58,7 +56,7 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
  * Sections (decided by Nelson on 13 Oct 2026): both tabs are split in In progress, Not
  * started and Completed, each under a DS `Section-Header` with its count ("3 courses"), 16
  * above its cards and 32 / 24 / 20 between sections. A section without cards is not shown;
- * the Browse tile closes the Courses grid in a line of its own.
+ * the Browse tile is hidden for now.
  *
  * Courses (decided by Nelson on 11 Oct 2026): every course is a DS `Course-Row`, not the
  * course card on its own: `Breakpoint` Desktop in the list, Compact in the grid and at every
@@ -193,14 +191,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
                 </section>
               );
             })}
-            {/* The way out to the catalog closes the grid, in a line of its own. */}
-            <div className={cn(GRID, listView && "lg:hidden")}>
-              <BrowseTile
-                title={myLearningBrowseTile.title}
-                subtitle={myLearningBrowseTile.subtitle}
-                onClick={() => notInPrototype(myLearningBrowseTile.title)}
-              />
-            </div>
+            {/* The Browse catalog tile is hidden (Nelson, 13 Oct 2026): that way out has not been
+                discussed yet. `BrowseTile` and its copy stay in the code for when it is. */}
           </div>
         ) : (
           <div className={SECTIONS}>
