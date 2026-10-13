@@ -5,6 +5,7 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
+import { certificatePageHref } from "@/lib/platform/hrefs";
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -65,6 +66,10 @@ function CourseTitle({ course }: { course: MyLearningCourse }) {
   );
 }
 
+/* The second action of a completed grid card (DS: "View Certificate"; sentence case here, as
+   on the program card). */
+const CERTIFICATE_CTA = "View certificate";
+
 /* Every card has the same height whatever its title (asked by Nelson on 10 Oct 2026): the
    title keeps the height of two lines and is cut at the second. The full title stays in the
    `title` attribute and in the link's name. */
@@ -113,7 +118,8 @@ function Action({
  * with a secondary Buttons/Button sm inside it. The progress block hugs its line and the
  * up-next block is 250 wide, so the titles take the rest of the row.
  * A complete course (DS `State=Completed`) reads "Completed" with a check over a full green bar, and its strip carries the certificate
- * line ("CERTIFICATE · Issued …") instead of the next unit; the action is Review.
+ * line ("CERTIFICATE · Issued …") instead of the next unit; the action is Review, and the grid
+ * card adds a Primary "View certificate" beside it.
  * The thumbnail shows the course image over the initials (DS `Show image`).
  * The action opens the course, so it is a link with the button look (atoms/ButtonLink).
  *
@@ -140,6 +146,8 @@ export function MyLearningCourseCard({
   const next = "certificate" in course.upNext ? null : course.upNext;
   const overline = next ? "Up next" : "Certificate";
   const nextTitle = "certificate" in course.upNext ? course.upNext.certificate : course.upNext.title;
+  // A completed course with a certificate: the grid card also offers the certificate page.
+  const certificateHref = "certificate" in course.upNext ? certificatePageHref(course.id) : null;
 
   if (layout === "list") {
     return (
@@ -150,9 +158,10 @@ export function MyLearningCourseCard({
           className="size-[86px]"
         />
         <div className="flex min-w-[200px] flex-1 flex-col gap-0.5">
-          {/* DS List (Nelson, 13 Oct 2026): as in the grid card, the provider or partner sits at the
-              right end of the Course Type line; the badges keep the line under the title. */}
-          <div className="flex w-full items-center justify-between gap-0.5">
+          {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
+              16 after the badge (in the grid card it goes to the right end of that line); the
+              badges keep the line under the title. */}
+          <div className="flex w-full items-center gap-4">
             <CourseTypeBadge value="Course" />
             <ProviderBadge value={course.provider} />
           </div>
@@ -173,8 +182,9 @@ export function MyLearningCourseCard({
         {/* DS List: the progress block hugs its line ("45% complete", 24, "8 hours total"). */}
         <Progress course={course} hug className="shrink-0 gap-1.5" />
         <div
-          // The DS footer is 250 wide and as tall as the thumb; the title takes what the action leaves.
-          className="flex w-[250px] min-w-0 shrink-0 items-center gap-4 self-stretch rounded-lg bg-sko-bg-subtle px-3 py-2"
+          // The DS footer is 250 wide and hugs its content (86 with the topic type, 60 for a
+          // completed course); the title takes what the action leaves.
+          className="flex w-[250px] min-w-0 shrink-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2"
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
             <span className={OVERLINE}>{overline}</span>
@@ -221,13 +231,30 @@ export function MyLearningCourseCard({
         {next ? <TopicTypeBadge type={next.type} className="shrink-0" /> : null}
       </div>
       {/* mt-auto: in a row of cards with titles of different length, the action stays at the bottom. */}
-      <Action
-        course={course}
-        hierarchy={emphasis}
-        label={actionLabel}
-        onAction={onAction}
-        className={cn("mt-auto", inRow && "w-full")}
-      />
+      {certificateHref ? (
+        // DS `State=Completed`, Grid (Nelson, 13 Oct 2026): Review (Secondary) and, 12 after it,
+        // a Primary that opens the certificate. Both hug their label.
+        <div className="mt-auto flex w-full flex-wrap items-center gap-3">
+          <Action course={course} hierarchy="secondary" label={actionLabel} onAction={onAction} />
+          <ButtonLink
+            href={certificateHref}
+            hierarchy="primary"
+            size="sm"
+            aria-label={`${CERTIFICATE_CTA} ${course.title}`}
+            className={cn("relative z-[1]", TARGET_44)}
+          >
+            {CERTIFICATE_CTA}
+          </ButtonLink>
+        </div>
+      ) : (
+        <Action
+          course={course}
+          hierarchy={emphasis}
+          label={actionLabel}
+          onAction={onAction}
+          className={cn("mt-auto", inRow && "w-full")}
+        />
+      )}
     </article>
   );
 }
