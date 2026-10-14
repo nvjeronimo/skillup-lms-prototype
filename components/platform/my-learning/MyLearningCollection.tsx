@@ -186,6 +186,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
       </div>
 
       <div role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
+        {/* The card titles are h3: this h2 (the tab's own name) keeps the outline h1 → h2 → h3. */}
+        <h2 className="sr-only">{myLearningTabs.find((t) => t.id === tab)?.label ?? noun}</h2>
         {/* Tells assistive tech how many cards the search or the filter left. */}
         <p role="status" className="sr-only">
           {needle
