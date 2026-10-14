@@ -124,7 +124,7 @@ export function NoteEditorModal({
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="-m-2.5 inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle md:-m-1 md:h-8 md:w-8"
+            className="-m-2.5 inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle md:-m-1 md:h-8 md:w-8"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -171,7 +171,7 @@ export function NoteEditorModal({
                     type="button"
                     onClick={() => setTags((prev) => prev.filter((x) => x !== t))}
                     aria-label={`Remove ${t}`}
-                    className="text-sko-icon-faint hover:text-sko-text-error"
+                    className="text-sko-icon-faint transition-colors hover:text-sko-text-error"
                   >
                     <Icon icon={X} size={12} />
                   </button>

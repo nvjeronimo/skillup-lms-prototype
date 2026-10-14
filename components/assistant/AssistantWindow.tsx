@@ -167,6 +167,7 @@ export function AssistantWindow({
     }
     lastTop.current = log.scrollTop;
   };
+  // "instant", not "auto": the log is an .sk-scroll region, where "auto" means its CSS glide.
   const toEnd = (behavior: ScrollBehavior) => endRef.current?.scrollIntoView({ block: "end", behavior });
   React.useEffect(() => {
     // The log is not rendered under the First steps tab: when it comes back it starts at the end.
@@ -179,11 +180,11 @@ export function AssistantWindow({
       // Opening on a conversation: it is already at its end, not scrolled there.
       firstScroll.current = false;
       following.current = true;
-      toEnd("auto");
+      toEnd("instant");
     } else if (following.current) {
       // A growing stream keeps up instantly (a glide per chunk lags and stutters); a new
       // message glides.
-      toEnd(streaming ? "auto" : scrollBehavior());
+      toEnd(streaming ? "instant" : scrollBehavior());
     } else {
       setPill(true);
     }
@@ -244,7 +245,7 @@ export function AssistantWindow({
                 inputRef.current?.focus();
               }}
               aria-label="Start a new conversation"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
             >
               <Icon icon={RotateCcw} size={20} />
             </button>
@@ -253,7 +254,7 @@ export function AssistantWindow({
             type="button"
             onClick={onClose}
             aria-label="Close the assistant"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -451,7 +452,7 @@ export function AssistantWindow({
           type="submit"
           aria-label="Send"
           disabled={answering || !draft.trim()}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary text-sko-text-on-primary transition-colors hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
         >
           <Icon icon={Send} size={20} />
         </button>

@@ -87,7 +87,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={20} />
           </button>

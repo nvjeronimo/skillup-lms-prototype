@@ -63,7 +63,7 @@ export function LabTopbar() {
               href={item.href === "/" ? item.href : `${item.href}?persona=${persona}`}
               aria-current={current ? "page" : undefined}
               className={cn(
-                "sk-text-body-medium-semibold inline-flex min-h-[44px] items-center rounded-md px-3",
+                "sk-text-body-medium-semibold inline-flex min-h-[44px] items-center rounded-md px-3 transition-colors",
                 current ? "bg-sko-bg-primary-soft text-sko-text-primary" : "text-sko-text-muted hover:bg-sko-bg-faint",
               )}
             >

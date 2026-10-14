@@ -194,7 +194,7 @@ export function DemoControlsMenu({
         {...triggerProps}
         aria-label="Account and demo settings"
         className={cn(
-          "flex items-center hover:bg-sko-bg-subtle",
+          "flex items-center transition-colors hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px round avatar. Desktop/Tablet keep a 32px square
           // avatar + name (PR #9 squares the profile avatar to match the topbar icon
           // buttons and CTAs; the DS "Avatar label group" draws a 24px circle).

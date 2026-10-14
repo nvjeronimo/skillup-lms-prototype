@@ -69,7 +69,7 @@ export function TranscriptControls({
           type="button"
           onClick={onDownload}
           aria-label="Download transcript"
-          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
         >
           <Icon icon={Download} size={16} className="text-sko-icon-primary" />
           <span className="hidden px-0.5 md:inline">Download transcript</span>
@@ -80,7 +80,7 @@ export function TranscriptControls({
         <button
           type="button"
           onClick={onAddNote}
-          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
         >
           <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Add Note</span>

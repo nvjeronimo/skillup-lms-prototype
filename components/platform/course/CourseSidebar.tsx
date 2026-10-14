@@ -97,7 +97,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
               <button
                 type="button"
                 onClick={() => notInPrototype(item)}
-                className="sk-text-body-medium-medium text-left text-sko-text-on-primary-soft underline underline-offset-2 hover:text-sko-text-primary max-md:min-h-11"
+                className="sk-text-body-medium-medium text-left text-sko-text-on-primary-soft underline underline-offset-2 transition-colors hover:text-sko-text-primary max-md:min-h-11"
               >
                 {item}
               </button>

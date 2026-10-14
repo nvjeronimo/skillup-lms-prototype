@@ -9,6 +9,7 @@ import { FilterChip } from "@/components/atoms/FilterChip";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { useLmsStore } from "@/lib/store";
 import { tsToSeconds } from "@/lib/utils";
+import { staggerStyle } from "@/lib/motion/stagger";
 
 export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug: string }) {
   const router = useRouter();
@@ -79,28 +80,32 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
         </div>
       ) : null}
 
-      {filtered.length ? (
-        filtered.map((note) => (
-          <NoteItem
-            key={note.id}
-            ts={note.ts}
-            anchorQuote={note.anchorQuote}
-            text={note.text}
-            tags={note.tags}
-            editedLabel="Edited recently"
-            onClick={() => goToLine(note.ts, note.transcriptLineId)}
-            onEdit={() => openNoteEditor({ noteId: note.id })}
-            onDelete={() => {
-              if (window.confirm("Delete this note?")) deleteNote(note.id);
-            }}
-            onTagClick={(t) => setActiveTag(t)}
-          />
-        ))
-      ) : (
-        <p className="sk-text-body-medium-regular py-6 text-center text-sko-text-subtle">
-          No notes match your filter.
-        </p>
-      )}
+      {/* A new tag cross-fades the list; the notes rise one after the other. */}
+      <div key={activeTag ?? ""} className="sk-animate-fade sk-enter-only flex flex-col gap-3">
+        {filtered.length ? (
+          filtered.map((note, i) => (
+            <div key={note.id} className="sk-animate-rise sk-enter-only" style={staggerStyle(i, filtered.length)}>
+              <NoteItem
+                ts={note.ts}
+                anchorQuote={note.anchorQuote}
+                text={note.text}
+                tags={note.tags}
+                editedLabel="Edited recently"
+                onClick={() => goToLine(note.ts, note.transcriptLineId)}
+                onEdit={() => openNoteEditor({ noteId: note.id })}
+                onDelete={() => {
+                  if (window.confirm("Delete this note?")) deleteNote(note.id);
+                }}
+                onTagClick={(t) => setActiveTag(t)}
+              />
+            </div>
+          ))
+        ) : (
+          <p className="sk-text-body-medium-regular py-6 text-center text-sko-text-subtle">
+            No notes match your filter.
+          </p>
+        )}
+      </div>
 
       <div className="mt-2 flex items-start gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2.5">
         <Icon icon={Info} size={16} className="mt-0.5 text-sko-icon-subtle" />

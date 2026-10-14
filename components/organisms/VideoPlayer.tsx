@@ -109,7 +109,7 @@ const ACTION_ICON = "bg-sko-bg-overlay-soft text-sko-icon-on-media";
 /** Colour, Type = Playback speed / Subtitles/CC: body-small/Semibold text/on-media. */
 const ACTION_LABEL = "bg-sko-bg-overlay-soft text-sko-text-on-media";
 /** State=Hover (only while the button is not active): bg/on-media-soft + backdrop-blur-sm. */
-const ACTION_HOVER = "hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm";
+const ACTION_HOVER = "transition-colors hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm";
 /**
  * DS `_Video volume slider` (9264:575621 rest / 9264:575737 hover), lg only: on hover the
  * whole group takes bg/on-media-soft and the inner volume button keeps bg/overlay-soft, so
@@ -120,7 +120,7 @@ const ACTION_HOVER = "hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm";
 const VOLUME_TONE_GROUP = "bg-sko-bg-overlay-soft text-sko-icon-on-media";
 /** The same button under a container query: its own hover below lg, the group's from lg. */
 const VOLUME_TONE_AUTO =
-  "bg-sko-bg-overlay-soft text-sko-icon-on-media hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm [@container(min-width:40rem)]:hover:bg-sko-bg-overlay-soft [@container(min-width:40rem)]:hover:backdrop-blur-none";
+  "bg-sko-bg-overlay-soft text-sko-icon-on-media transition-colors hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm [@container(min-width:40rem)]:hover:bg-sko-bg-overlay-soft [@container(min-width:40rem)]:hover:backdrop-blur-none";
 /**
  * DS `Progress slider`: no handle, the 8px bg/on-media line is its own end (an 8px square
  * at 00:00). The thumb is that end: 8px, bg/on-media. Track, line and end are straight
@@ -465,7 +465,7 @@ export function VideoPlayer({
               md and sm: the volume button alone (it mutes). */}
           <div
             className={cn(
-              "group/vol flex shrink-0 items-center rounded-md",
+              "group/vol flex shrink-0 items-center rounded-md transition-colors",
               pick(
                 "",
                 "gap-1 pr-2 hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm",

@@ -23,7 +23,7 @@ export default function LabIndex() {
           <li key={d.slug}>
             <Link
               href={`/lab/dashboard/${d.slug}`}
-              className="flex h-full flex-col gap-1 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 hover:border-sko-border-primary"
+              className="flex h-full flex-col gap-1 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-primary"
             >
               <span className="sk-text-body-large-semibold text-sko-text-default">{d.name}</span>
               <span className="sk-text-body-medium-regular text-sko-text-muted">{d.hero}</span>

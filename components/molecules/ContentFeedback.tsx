@@ -106,7 +106,7 @@ export function ContentFeedback({
           <Icon
             icon={AlertTriangle}
             {...glyph}
-            className="text-sko-icon-faint group-hover:text-sko-icon-warning"
+            className="text-sko-icon-faint transition-colors group-hover:text-sko-icon-warning"
           />
           Report an issue
         </button>

@@ -61,6 +61,10 @@ button {
 .sk-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-default) transparent;
+  /* Jumps inside a scroll region glide (an anchor, the transcript following its line).
+     Never on html/body. Under reduced motion the guard below turns it back to auto; code
+     that must jump at once (restoring a position) asks for behavior "instant". */
+  scroll-behavior: smooth;
 }
 .sk-scroll::-webkit-scrollbar {
   width: 6px;
@@ -200,6 +204,21 @@ button {
 }
 .sk-animate-sheet {
   animation: sk-sheet-in var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
+}
+/* A page or topic body coming in: a fade with a nudge up (4px). Entrance only: the old
+   page is replaced, not animated out. */
+@keyframes sk-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-nudge));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sk-animate-page {
+  animation: sk-page-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
 }
 /* A rise of the nudge distance (4px), not the enter distance: the assistant's action
    buttons, which come in one after the other under their answer. */
@@ -359,7 +378,8 @@ button {
   .sk-animate-rise,
   .sk-animate-sheet,
   .sk-animate-step-next,
-  .sk-animate-step-prev {
+  .sk-animate-step-prev,
+  .sk-animate-page {
     animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
   }
   [data-state="closed"].sk-animate-slide-right,
@@ -463,7 +483,8 @@ button {
 [data-reduce-motion] .sk-animate-rise,
 [data-reduce-motion] .sk-animate-sheet,
 [data-reduce-motion] .sk-animate-step-next,
-[data-reduce-motion] .sk-animate-step-prev {
+[data-reduce-motion] .sk-animate-step-prev,
+[data-reduce-motion] .sk-animate-page {
   animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
 }
 [data-reduce-motion] [data-state="closed"].sk-animate-slide-right,
@@ -556,4 +577,12 @@ button {
   text-align: left;
   white-space: nowrap;
   pointer-events: none;
+}
+
+/* Rows and lists that only enter (a filter's cross-fade, the rows rising after it). Inside
+   a surface that is closing they stay put: the surface's own exit is the only movement.
+   Last in the file so it outranks the closed-state rules above, reduced motion included. */
+[data-state="closed"] .sk-enter-only,
+[data-reduce-motion] [data-state="closed"] .sk-enter-only {
+  animation: none;
 }

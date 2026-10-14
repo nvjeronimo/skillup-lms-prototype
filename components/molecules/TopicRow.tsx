@@ -72,7 +72,7 @@ export function TopicRow({
         aria-label={`${title}, ${type}, ${STATUS_TEXT[status]}`}
         className={cn(
           // DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred.
-          "relative flex w-full items-start justify-center px-2 py-3",
+          "relative flex w-full items-start justify-center px-2 py-3 transition-colors",
           active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
           className,
         )}

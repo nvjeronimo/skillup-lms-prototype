@@ -128,7 +128,7 @@ function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclos
         <button
           type="button"
           onClick={toggleTheme}
-          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default hover:bg-sko-bg-subtle"
+          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
         >
           <Icon icon={theme === "dark" ? Sun : Moon} size={20} className="text-sko-icon-default" />
           {theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
@@ -137,7 +137,7 @@ function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclos
         <button
           type="button"
           onClick={() => restartFirstSteps(Array.from(useLmsStore.getState().completedTopics))}
-          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default hover:bg-sko-bg-subtle"
+          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
         >
           <Icon icon={RotateCcw} size={20} className="text-sko-icon-default" />
           Restart first steps
@@ -204,7 +204,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
       type="button"
       aria-label="Notifications, new"
       onClick={() => showToast("Notifications are not part of this prototype yet")}
-      className="relative inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default hover:bg-sko-bg-faint lg:size-8"
+      className="relative inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
     >
       <Icon icon={Bell} size={20} />
       <span aria-hidden className="absolute right-[11px] top-[10px] size-2 rounded-full bg-sko-bg-info ring-2 ring-sko-bg-page lg:right-[5px] lg:top-1" />
@@ -228,7 +228,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
               type="button"
               {...profile.triggerProps}
               aria-label={`${platformUser.name}, account`}
-              className="flex items-center gap-2 rounded-lg p-1 text-left hover:bg-sko-bg-faint"
+              className="flex items-center gap-2 rounded-lg p-1 text-left transition-colors hover:bg-sko-bg-faint"
             >
               <Initials />
               <span className="flex flex-col whitespace-nowrap">
@@ -255,7 +255,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
               type="button"
               {...profileCompact.triggerProps}
               aria-label={`${platformUser.name}, account`}
-              className="inline-flex size-11 items-center justify-center rounded-full hover:bg-sko-bg-faint"
+              className="inline-flex size-11 items-center justify-center rounded-full transition-colors hover:bg-sko-bg-faint"
             >
               <Initials />
             </button>
@@ -266,7 +266,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
               type="button"
               {...menu.triggerProps}
               aria-label="Platform sections"
-              className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default hover:bg-sko-bg-faint"
+              className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint"
             >
               <Icon icon={Menu} size={24} />
             </button>

@@ -129,7 +129,7 @@ export function FileUploadZone({
                 type="button"
                 onClick={() => onRemove?.(f.id)}
                 aria-label={`Remove ${f.name}`}
-                className="text-sko-text-subtle hover:text-sko-text-error"
+                className="text-sko-text-subtle transition-colors hover:text-sko-text-error"
               >
                 <Icon icon={X} size={16} />
               </button>
