@@ -49,7 +49,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
         <nav aria-label="Breadcrumb" className="relative">
           <ol className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
             <li className="flex items-center gap-1.5 md:gap-2">
-              <Link href="/platform/my-learning" className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}>
+              <Link href="/platform/my-learning" className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
                 My Learning
               </Link>
               <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
@@ -58,7 +58,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
               <>
                 {/* A course of a program is reached through it: My Learning › Programs › the program. */}
                 <li className="flex items-center gap-1.5 md:gap-2">
-                  <Link href={MY_LEARNING_PROGRAMS_HREF} className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}>
+                  <Link href={MY_LEARNING_PROGRAMS_HREF} className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
                     Programs
                   </Link>
                   <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
@@ -66,7 +66,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
                 <li className="flex min-w-0 items-center gap-1.5 md:gap-2">
                   <Link
                     href={programPageHref(course.program.slug)}
-                    className={`${CRUMB} min-w-0 text-sko-text-subtle hover:text-sko-text-default`}
+                    className={`${CRUMB} min-w-0 text-sko-text-subtle transition-colors hover:text-sko-text-default`}
                   >
                     {course.program.title}
                   </Link>
@@ -76,7 +76,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
             ) : (
               <li className="flex items-center gap-1.5 md:gap-2">
                 {/* The Courses tab of My Learning is its default view. */}
-                <Link href="/platform/my-learning" className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}>
+                <Link href="/platform/my-learning" className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
                   Courses
                 </Link>
                 <Icon icon={ChevronRight} size={16} aria-hidden className="hidden text-sko-icon-muted lg:block" />

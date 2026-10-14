@@ -408,7 +408,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page outline-none"
         >
           <div
-            className="sk-scroll flex-1 overflow-y-auto"
+            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto"
             onScroll={(e) => {
               const next = e.currentTarget.scrollTop > 8;
               setVideoDocked((prev) => (prev === next ? prev : next));

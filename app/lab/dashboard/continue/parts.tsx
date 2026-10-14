@@ -21,7 +21,7 @@ export const linkSecondary = cn(
 );
 
 export const linkText = cn(
-  "inline-flex min-h-[44px] items-center gap-1 rounded-md text-sko-text-primary underline underline-offset-4 hover:bg-sko-bg-faint",
+  "inline-flex min-h-[44px] items-center gap-1 rounded-md text-sko-text-primary underline underline-offset-4 transition-[color,background-color,border-color,box-shadow] hover:bg-sko-bg-faint",
   FOCUS,
 );
 

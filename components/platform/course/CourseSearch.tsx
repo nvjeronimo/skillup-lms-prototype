@@ -183,7 +183,7 @@ function ResultRow({
     <li>
       <Link
         href={href}
-        className="flex items-start gap-3 rounded-lg p-3 hover:bg-sko-bg-subtle focus-visible:bg-sko-bg-subtle"
+        className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-sko-bg-subtle focus-visible:bg-sko-bg-subtle"
       >
         <span className="flex w-[60px] shrink-0">
           <Badge color="gray" size="sm">
@@ -236,7 +236,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
               <button
                 type="button"
                 onClick={() => search.runSample(sample.query)}
-                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg px-3 text-left hover:bg-sko-bg-subtle md:min-h-9"
+                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg px-3 text-left transition-colors hover:bg-sko-bg-subtle md:min-h-9"
               >
                 <span className="sk-text-body-medium-semibold text-sko-text-primary">{sample.query}</span>
                 <span className="sk-text-body-small-regular text-sko-text-subtle">{sample.gives}</span>

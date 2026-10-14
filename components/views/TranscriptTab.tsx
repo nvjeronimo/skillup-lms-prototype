@@ -10,7 +10,8 @@ import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
-import { scrollBehavior, tsToSeconds } from "@/lib/utils";
+import { tsToSeconds } from "@/lib/utils";
+import { scrollToElement } from "@/lib/scrollToElement";
 import { track } from "@/lib/analytics";
 import { TopicEndActionContext } from "@/lib/topicEndAction";
 
@@ -41,10 +42,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   const scrollToActive = React.useCallback(() => {
     const el = activeLineId ? lineRefs.current[activeLineId] : null;
-    el?.scrollIntoView({
-      block: "center",
-      behavior: scrollBehavior(),
-    });
+    scrollToElement(el, "center");
   }, [activeLineId]);
 
   // Not on the first render: scrollIntoView also moves the page, so a topic would open
@@ -134,7 +132,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             })
           }
           // DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
-          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
         >
           <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Add Note</span>

@@ -35,7 +35,7 @@ export function CompletionStatus({ state, size = 18, animate = false, className 
         className={cn(
           base,
           "bg-sko-bg-success text-sko-icon-on-success",
-          animate && "sk-animate-fade",
+          animate && "sk-animate-fade sk-enter-only",
           className,
         )}
         style={dims}

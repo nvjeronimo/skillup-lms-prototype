@@ -128,7 +128,7 @@ export function InlineAlert({
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss"
-          className="shrink-0 text-sko-text-subtle hover:text-sko-text-default"
+          className="shrink-0 text-sko-text-subtle transition-colors hover:text-sko-text-default"
         >
           <Icon icon={X} size={18} />
         </button>

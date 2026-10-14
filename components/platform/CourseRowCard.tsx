@@ -78,6 +78,8 @@ export interface CourseRowCardProps extends Pick<ProgramCourse, "position" | "de
    */
   breakpoint?: "responsive" | "desktop" | "compact";
   className?: string;
+  /** On the row itself: a list that staggers its rows sets the entrance delay here. */
+  style?: React.CSSProperties;
 }
 
 /**
@@ -107,6 +109,7 @@ export function CourseRowCard({
   onToggle,
   breakpoint = "responsive",
   className,
+  style,
 }: CourseRowCardProps) {
   const showToast = useLmsStore((s) => s.showToast);
   const uid = React.useId();
@@ -117,7 +120,10 @@ export function CourseRowCard({
   const compact = breakpoint === "compact";
 
   return (
-    <li className={cn("overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card", className)}>
+    <li
+      className={cn("overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card", className)}
+      style={style}
+    >
       {!compact ? (
         <MyLearningCourseCard
           course={card}

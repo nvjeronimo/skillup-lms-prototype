@@ -103,7 +103,7 @@ export function CourseAlert({
           type="button"
           aria-label={`Dismiss: ${title}`}
           onClick={() => setOpen(false)}
-          className="absolute right-[7px] top-[7px] flex size-9 items-center justify-center rounded-lg text-sko-icon-muted hover:text-sko-icon-default max-md:right-[3px] max-md:top-[3px] max-md:size-11"
+          className="absolute right-[7px] top-[7px] flex size-9 items-center justify-center rounded-lg text-sko-icon-muted transition-colors hover:text-sko-icon-default max-md:right-[3px] max-md:top-[3px] max-md:size-11"
         >
           <Icon icon={X} size={20} />
         </button>

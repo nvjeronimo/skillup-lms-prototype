@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { PlatformTopbar } from "./PlatformTopbar";
 import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore } from "@/lib/store";
@@ -30,6 +31,7 @@ export function PlatformPage({
   children: React.ReactNode;
   className?: string;
 }) {
+  const pathname = usePathname();
   const toast = useLmsStore((s) => s.toast);
   const clearToast = useLmsStore((s) => s.clearToast);
   // Remembered per browser; read after mount so the server and first client render agree.
@@ -82,7 +84,8 @@ export function PlatformPage({
       window.clearTimeout(timer);
       observer.disconnect();
     };
-  }, [showMock]);
+    // The page's <main> is keyed on the route, so a new route is a new element to observe.
+  }, [showMock, pathname]);
   return (
     <div
       ref={rootRef}
@@ -118,7 +121,8 @@ export function PlatformPage({
           </ul>
         ) : null}
       </aside>
-      <main id="main" tabIndex={-1} className={cn("flex-1 outline-none", className)}>
+      {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
+      <main key={pathname} id="main" tabIndex={-1} className={cn("sk-animate-page flex-1 outline-none", className)}>
         {children}
       </main>
       <Toast toast={toast} onDone={clearToast} />

@@ -167,6 +167,7 @@ export function AssistantWindow({
     }
     lastTop.current = log.scrollTop;
   };
+  // "instant", not "auto": the log is an .sk-scroll region, where "auto" means its CSS glide.
   const toEnd = (behavior: ScrollBehavior) => endRef.current?.scrollIntoView({ block: "end", behavior });
   React.useEffect(() => {
     // The log is not rendered under the First steps tab: when it comes back it starts at the end.
@@ -179,11 +180,11 @@ export function AssistantWindow({
       // Opening on a conversation: it is already at its end, not scrolled there.
       firstScroll.current = false;
       following.current = true;
-      toEnd("auto");
+      toEnd("instant");
     } else if (following.current) {
       // A growing stream keeps up instantly (a glide per chunk lags and stutters); a new
       // message glides.
-      toEnd(streaming ? "auto" : scrollBehavior());
+      toEnd(streaming ? "instant" : scrollBehavior());
     } else {
       setPill(true);
     }
@@ -244,7 +245,7 @@ export function AssistantWindow({
                 inputRef.current?.focus();
               }}
               aria-label="Start a new conversation"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
             >
               <Icon icon={RotateCcw} size={20} />
             </button>
@@ -253,7 +254,7 @@ export function AssistantWindow({
             type="button"
             onClick={onClose}
             aria-label="Close the assistant"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -344,7 +345,7 @@ export function AssistantWindow({
               key={m.id}
               className={cn(
                 "sk-text-body-medium-regular max-w-[85%] self-end whitespace-pre-line rounded-lg bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default",
-                arrived(m.id) && "sk-animate-rise",
+                arrived(m.id) && "sk-animate-rise sk-enter-only",
               )}
             >
               <span className="sr-only">You: </span>
@@ -355,7 +356,7 @@ export function AssistantWindow({
               key={m.id}
               className={cn(
                 "flex max-w-[92%] flex-col gap-3 self-start",
-                arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise",
+                arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise sk-enter-only",
               )}
             >
               <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default">
@@ -368,7 +369,7 @@ export function AssistantWindow({
                     <li
                       key={a.id}
                       // The buttons follow the answer one after the other, half a short2 apart.
-                      className={cn(arrived(m.id) && "sk-animate-rise sk-rise-nudge")}
+                      className={cn(arrived(m.id) && "sk-animate-rise sk-rise-nudge sk-enter-only")}
                       style={
                         arrived(m.id)
                           ? {
@@ -394,7 +395,7 @@ export function AssistantWindow({
         {/* The answering bubble: mounted once per answer, it keeps its element while the
             streamed text grows into it (the text itself is never animated). */}
         {answering ? (
-          <p className="sk-animate-rise sk-text-body-medium-regular max-w-[92%] self-start whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-muted">
+          <p className="sk-animate-rise sk-enter-only sk-text-body-medium-regular max-w-[92%] self-start whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-muted">
             {streaming ? (
               streaming
             ) : (
@@ -415,7 +416,7 @@ export function AssistantWindow({
             hierarchy="secondary"
             size="sm"
             leftIcon={ArrowDown}
-            className="sk-animate-rise pointer-events-auto shadow-md"
+            className="sk-animate-rise sk-enter-only pointer-events-auto shadow-md"
             onClick={() => {
               following.current = true;
               setPill(false);
@@ -451,7 +452,7 @@ export function AssistantWindow({
           type="submit"
           aria-label="Send"
           disabled={answering || !draft.trim()}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary text-sko-text-on-primary transition-colors hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
         >
           <Icon icon={Send} size={20} />
         </button>

@@ -117,7 +117,7 @@ export function FirstStepsView({ firstName, rows, finished, next, onAsk, onSkip 
       <button
         type="button"
         onClick={onSkip}
-        className="sk-text-body-small-medium min-h-11 self-start text-sko-text-subtle underline hover:text-sko-text-default"
+        className="sk-text-body-small-medium min-h-11 self-start text-sko-text-subtle underline transition-colors hover:text-sko-text-default"
       >
         Skip first steps
       </button>

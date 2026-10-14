@@ -27,7 +27,8 @@ import { flatTopics, getAdjacentTopics, getCourseBySlug, getTopic } from "@/lib/
 import type { Course, FlatTopic } from "@/lib/types";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
-import { cn, scrollBehavior } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { scrollToElement } from "@/lib/scrollToElement";
 import { useCountUp } from "@/lib/useCountUp";
 
 export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId: string; courseSlug?: string }) {
@@ -166,7 +167,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
       mountedRef.current = true;
       return;
     }
-    stepRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+    scrollToElement(stepRef.current, "start");
   }, [index]);
 
   function startAttempt(indices?: number[]) {

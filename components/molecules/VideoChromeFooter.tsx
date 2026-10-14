@@ -82,7 +82,7 @@ export function VideoChromeFooter({
               setLangOpen((o) => !o);
               setDlOpen(false);
             }}
-            className="sk-text-body-medium-semibold inline-flex items-center gap-1 text-sko-text-muted hover:text-sko-text-default"
+            className="sk-text-body-medium-semibold inline-flex items-center gap-1 text-sko-text-muted transition-colors hover:text-sko-text-default"
           >
             {currentLanguage}
             <Icon icon={ChevronDown} size={14} />
@@ -101,7 +101,7 @@ export function VideoChromeFooter({
                       setLangOpen(false);
                     }}
                     className={cn(
-                      "sk-text-body-medium-medium flex w-full items-center justify-between px-3 py-2 text-left hover:bg-sko-bg-subtle",
+                      "sk-text-body-medium-medium flex w-full items-center justify-between px-3 py-2 text-left transition-colors hover:bg-sko-bg-subtle",
                       l.code === currentLanguage
                         ? "text-sko-text-primary"
                         : "text-sko-text-default",
@@ -126,7 +126,7 @@ export function VideoChromeFooter({
               setLangOpen(false);
             }}
             // DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
-            className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+            className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
           >
             <Icon icon={Download} size={16} className="text-sko-icon-primary" />
             <span className="px-0.5">Download transcript</span>
@@ -145,7 +145,7 @@ export function VideoChromeFooter({
                       onDownloadTranscript?.(fmt);
                       setDlOpen(false);
                     }}
-                    className="sk-text-body-medium-medium block w-full px-3 py-2 text-left text-sko-text-default hover:bg-sko-bg-subtle"
+                    className="sk-text-body-medium-medium block w-full px-3 py-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
                   >
                     .{fmt}
                   </button>

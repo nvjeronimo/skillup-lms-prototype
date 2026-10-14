@@ -22,6 +22,8 @@ import {
 } from "@/lib/platform/my-learning";
 import type { MyLearningCourseRow } from "@/lib/platform/my-learning-rows";
 import { cn } from "@/lib/utils";
+import { scrollToElement } from "@/lib/scrollToElement";
+import { staggerStyle } from "@/lib/motion/stagger";
 import { ProgramCard } from "./ProgramCard";
 import { SearchField } from "./SearchField";
 import { ViewToggle } from "./ViewToggle";
@@ -35,6 +37,8 @@ const LIST = "hidden flex-col gap-6 lg:flex";
 
 /* The row is the target of its card's title link: it shows it on hover, as the card did. */
 const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
+/* A card coming into the list rises a nudge (4px), one after the other (staggerStyle). */
+const ROW_ENTER = "sk-animate-rise sk-rise-nudge sk-enter-only";
 
 const matches = (title: string, query: string) => title.toLowerCase().includes(query);
 
@@ -157,7 +161,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
                 aria-pressed={status === item.id}
                 onClick={() => setStatus(item.id)}
                 // A segment reached with the keyboard comes into the track when it was cut off.
-                onFocus={(e) => e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" })}
+                onFocus={(e) => scrollToElement(e.currentTarget, "nearest")}
                 className={cn(
                   "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-md border px-4 transition-colors max-md:h-11",
                   status === item.id
@@ -197,69 +201,74 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
               : ""}
         </p>
 
-        {shown === 0 ? (
-          <EmptyState
-            icon={Search}
-            title={needle ? `No ${noun} match “${query.trim()}”` : `No ${noun} here`}
-            description={
-              needle
-                ? "Check the spelling or search for another title."
-                : `None of your ${noun} is “${statusLabel}” right now. Choose All to see every one.`
-            }
-          />
-        ) : tab === "courses" ? (
-          <>
-            {/* items-start: an opened row does not stretch the rows of its line. */}
-            <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
-              {courses.map((row) => (
-                <CourseRowCard
-                  key={row.card.id}
-                  {...row}
-                  breakpoint="compact"
-                  open={openRows.has(row.card.id)}
-                  onToggle={() => toggleRow(row.card.id)}
-                  className={ROW_HOVER}
-                />
-              ))}
-            </ul>
-            {listView ? (
-              <ul className={LIST}>
-                {courses.map((row) => (
+        {/* A new filter or tab cross-fades the cards; the cards rise one after the other. */}
+        <div key={`${tab}-${status}`} className="sk-animate-fade sk-enter-only">
+          {shown === 0 ? (
+            <EmptyState
+              icon={Search}
+              title={needle ? `No ${noun} match “${query.trim()}”` : `No ${noun} here`}
+              description={
+                needle
+                  ? "Check the spelling or search for another title."
+                  : `None of your ${noun} is “${statusLabel}” right now. Choose All to see every one.`
+              }
+            />
+          ) : tab === "courses" ? (
+            <>
+              {/* items-start: an opened row does not stretch the rows of its line. */}
+              <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+                {courses.map((row, i) => (
                   <CourseRowCard
                     key={row.card.id}
                     {...row}
-                    breakpoint="desktop"
+                    breakpoint="compact"
                     open={openRows.has(row.card.id)}
                     onToggle={() => toggleRow(row.card.id)}
-                    className={ROW_HOVER}
+                    className={cn(ROW_HOVER, ROW_ENTER)}
+                    style={staggerStyle(i, courses.length)}
                   />
                 ))}
               </ul>
-            ) : null}
-            {/* The Browse catalog tile is hidden (Nelson, 13 Oct 2026): that way out has not been
-                discussed yet. `BrowseTile` and its copy stay in the code for when it is. */}
-          </>
-        ) : (
-          <>
-            {/* Every program card has the same height, whatever its state or title. */}
-            <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
-              {programs.map((program) => (
-                <li key={program.id} className="min-w-0">
-                  <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />
-                </li>
-              ))}
-            </ul>
-            {listView ? (
-              <ul className={LIST}>
-                {programs.map((program) => (
-                  <li key={program.id}>
-                    <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.cta)} />
+              {listView ? (
+                <ul className={LIST}>
+                  {courses.map((row, i) => (
+                    <CourseRowCard
+                      key={row.card.id}
+                      {...row}
+                      breakpoint="desktop"
+                      open={openRows.has(row.card.id)}
+                      onToggle={() => toggleRow(row.card.id)}
+                      className={cn(ROW_HOVER, ROW_ENTER)}
+                      style={staggerStyle(i, courses.length)}
+                    />
+                  ))}
+                </ul>
+              ) : null}
+              {/* The Browse catalog tile is hidden (Nelson, 13 Oct 2026): that way out has not been
+                  discussed yet. `BrowseTile` and its copy stay in the code for when it is. */}
+            </>
+          ) : (
+            <>
+              {/* Every program card has the same height, whatever its state or title. */}
+              <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+                {programs.map((program, i) => (
+                  <li key={program.id} className={cn("min-w-0", ROW_ENTER)} style={staggerStyle(i, programs.length)}>
+                    <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />
                   </li>
                 ))}
               </ul>
-            ) : null}
-          </>
-        )}
+              {listView ? (
+                <ul className={LIST}>
+                  {programs.map((program, i) => (
+                    <li key={program.id} className={ROW_ENTER} style={staggerStyle(i, programs.length)}>
+                      <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.cta)} />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </>
+          )}
+        </div>
       </div>
     </section>
   );

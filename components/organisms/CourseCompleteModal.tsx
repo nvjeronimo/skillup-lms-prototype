@@ -66,7 +66,7 @@ export function CourseCompleteModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-sko-text-subtle hover:bg-sko-bg-subtle"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={24} />
           </button>

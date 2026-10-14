@@ -157,7 +157,7 @@ function LeavingDialog({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 inline-flex size-11 items-center justify-center rounded-lg text-sko-text-subtle hover:bg-sko-bg-subtle"
+          className="absolute right-3 top-3 inline-flex size-11 items-center justify-center rounded-lg text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
         >
           <Icon icon={X} size={24} />
         </button>

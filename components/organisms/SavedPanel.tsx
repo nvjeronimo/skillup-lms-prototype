@@ -6,6 +6,7 @@ import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { SavedTopicItem } from "@/components/molecules/SavedTopicItem";
 import { SavedNoteItem } from "@/components/molecules/SavedNoteItem";
 import type { SavedNoteModel, SavedTopicModel } from "@/lib/types";
+import { staggerStyle } from "@/lib/motion/stagger";
 
 export type SavedFilter = "all" | "topics" | "notes";
 
@@ -33,6 +34,9 @@ export function SavedPanel({
 }: SavedPanelProps) {
   const showTopics = filter === "all" || filter === "topics";
   const showNotes = filter === "all" || filter === "notes";
+  // The rows on screen, topics first: their order is the order they rise in.
+  const topicRows = showTopics ? savedTopics.length : 0;
+  const rowCount = topicRows + (showNotes ? savedNotes.length : 0);
 
   const tabs = [
     { value: "all", label: "All", count: savedTopics.length + savedNotes.length },
@@ -49,44 +53,49 @@ export function SavedPanel({
         ariaLabel="Saved filters"
       />
 
-      {showTopics && savedTopics.length ? (
-        <section>
-          <PanelSectionLabel>Bookmarked topics</PanelSectionLabel>
-          <div className="divide-y divide-sko-border-subtle">
-            {savedTopics.map((t) => (
-              <SavedTopicItem
-                key={t.id}
-                topicType={t.topicType}
-                duration={t.duration}
-                title={t.title}
-                path={t.path}
-                savedAt={t.savedAt}
-                onClick={() => onSelectTopic?.(t)}
-              />
-            ))}
-          </div>
-        </section>
-      ) : null}
+      {/* A new filter cross-fades the list; the rows rise one after the other. */}
+      <div key={filter} className="sk-animate-fade sk-enter-only">
+        {showTopics && savedTopics.length ? (
+          <section>
+            <PanelSectionLabel>Bookmarked topics</PanelSectionLabel>
+            <div className="divide-y divide-sko-border-subtle">
+              {savedTopics.map((t, i) => (
+                <div key={t.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(i, rowCount)}>
+                  <SavedTopicItem
+                    topicType={t.topicType}
+                    duration={t.duration}
+                    title={t.title}
+                    path={t.path}
+                    savedAt={t.savedAt}
+                    onClick={() => onSelectTopic?.(t)}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
-      {showNotes && savedNotes.length ? (
-        <section>
-          <PanelSectionLabel>Saved notes</PanelSectionLabel>
-          <div className="divide-y divide-sko-border-subtle">
-            {savedNotes.map((n) => (
-              <SavedNoteItem
-                key={n.id}
-                ts={n.ts}
-                topicTitle={n.topicTitle}
-                anchorQuote={n.anchorQuote}
-                text={n.text}
-                tags={n.tags}
-                savedAt={n.savedAt}
-                onClick={() => onSelectNote?.(n)}
-              />
-            ))}
-          </div>
-        </section>
-      ) : null}
+        {showNotes && savedNotes.length ? (
+          <section>
+            <PanelSectionLabel>Saved notes</PanelSectionLabel>
+            <div className="divide-y divide-sko-border-subtle">
+              {savedNotes.map((n, i) => (
+                <div key={n.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(topicRows + i, rowCount)}>
+                  <SavedNoteItem
+                    ts={n.ts}
+                    topicTitle={n.topicTitle}
+                    anchorQuote={n.anchorQuote}
+                    text={n.text}
+                    tags={n.tags}
+                    savedAt={n.savedAt}
+                    onClick={() => onSelectNote?.(n)}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+      </div>
     </OverlayPanel>
   );
 }

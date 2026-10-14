@@ -69,7 +69,7 @@ export function ProgramHeader({ program }: { program: Program }) {
             <li className="flex items-center gap-1.5 md:gap-2">
               <Link
                 href="/platform/my-learning"
-                className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}
+                className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}
               >
                 My Learning
               </Link>
@@ -79,7 +79,7 @@ export function ProgramHeader({ program }: { program: Program }) {
               {/* Programs is a tab of My Learning. */}
               <Link
                 href={MY_LEARNING_PROGRAMS_HREF}
-                className={`${CRUMB} text-sko-text-subtle hover:text-sko-text-default`}
+                className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}
               >
                 Programs
               </Link>

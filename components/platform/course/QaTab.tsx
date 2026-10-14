@@ -44,7 +44,7 @@ function ThreadRow({
         aria-current={selected ? "true" : undefined}
         className={cn(
           // The DS stroke is inside the card: the side padding gives the 1px back, so the text keeps its drawn width.
-          "flex items-start gap-2 px-[11px] py-3 focus-visible:-outline-offset-2",
+          "flex items-start gap-2 px-[11px] py-3 transition-colors focus-visible:-outline-offset-2",
           selected && "bg-sko-bg-primary-soft",
           selectedFromTablet && "md:bg-sko-bg-primary-soft",
           !selected && "hover:bg-sko-bg-faint",
@@ -140,7 +140,7 @@ function Message({ message, report, onReport }: { message: QaMessage; report: st
             type="button"
             onClick={onReport}
             // The target is grown by the ::before band, so the 44px minimum of the larger-targets setting is not needed on the box.
-            className="sk-text-body-small-regular relative text-sko-text-subtle underline underline-offset-2 hover:text-sko-text-default before:absolute before:-inset-x-2 before:-inset-y-3 before:content-[''] [[data-large-targets]_&]:min-h-0 [[data-large-targets]_&]:min-w-0"
+            className="sk-text-body-small-regular relative text-sko-text-subtle underline underline-offset-2 transition-colors hover:text-sko-text-default before:absolute before:-inset-x-2 before:-inset-y-3 before:content-[''] [[data-large-targets]_&]:min-h-0 [[data-large-targets]_&]:min-w-0"
           >
             {report}
           </button>

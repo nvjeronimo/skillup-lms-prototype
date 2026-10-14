@@ -120,7 +120,9 @@ export function Sidebar({
   useIsoLayoutEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
-    if (!isMobile) container.scrollTop = savedScrollTop; // restore persisted position
+    // The list is an .sk-scroll region, which glides: a restore is a jump, so it asks for "instant".
+    const jumpTo = (top: number) => container.scrollTo({ top, behavior: "instant" });
+    if (!isMobile) jumpTo(savedScrollTop); // restore persisted position
 
     // A collapsed module still renders its rows (zero height): skip them.
     const active = container.querySelector<HTMLElement>('[aria-current="page"]:not([data-collapse="closed"] *)');
@@ -129,9 +131,9 @@ export function Sidebar({
       const a = active.getBoundingClientRect();
       const margin = 8;
       if (a.top < c.top + margin) {
-        container.scrollTop -= c.top + margin - a.top;
+        jumpTo(container.scrollTop - (c.top + margin - a.top));
       } else if (a.bottom > c.bottom - margin) {
-        container.scrollTop += a.bottom - (c.bottom - margin);
+        jumpTo(container.scrollTop + (a.bottom - (c.bottom - margin)));
       }
     }
     if (!isMobile) savedScrollTop = container.scrollTop;
