@@ -54,7 +54,8 @@ function StandIn({ partner }: { partner: string }) {
 
   if (!topic || !lab || lab.partner !== partner) {
     return (
-      <main id="main" tabIndex={-1} className="p-6">
+      <main id="main" tabIndex={-1} className="flex flex-col gap-2 p-6 outline-none">
+        <h1 className="sk-text-title-large-bold text-sko-text-default">Lab not found</h1>
         <p className="sk-text-body-medium-regular text-sko-text-muted">This lab was not found.</p>
       </main>
     );

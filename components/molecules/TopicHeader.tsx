@@ -17,7 +17,7 @@ export interface TopicHeaderProps {
 
 /**
  * Content header above the player body. meta-row (badge · duration) + Title +
- * Description. The "approx." prefix is added for estimated topic types only —
+ * Description. The "approx." marker is added (at the end, Nelson 14 Oct 2026: "8 min read approx.") for estimated topic types only —
  * never for Video/Recording/Live/timed Quiz.
  */
 export function TopicHeader({
@@ -32,7 +32,7 @@ export function TopicHeader({
 }: TopicHeaderProps) {
   // If source data already carries "approx.", trust it; otherwise derive.
   const needsApprox = isEstimatedDuration(type) && !/approx\./i.test(duration);
-  const durationLabel = needsApprox ? `approx. ${duration}` : duration;
+  const durationLabel = needsApprox ? `${duration} approx.` : duration;
 
   return (
     // DS: root, Content Container and meta-row → title are 4px apart; meta-row items 8px.

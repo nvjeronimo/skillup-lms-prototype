@@ -28,7 +28,7 @@ export function secondsToTs(total: number): string {
 }
 
 /**
- * Duration "approx." rule. The estimated topic types require an "approx." prefix;
+ * Duration "approx." rule. The estimated topic types carry "approx." after the time ("8 min read approx.", 14 Oct 2026);
  * Video/Recording/Live/timed Quiz never do. Source data already encodes the prefix,
  * this helper is the canonical predicate used by stories + components.
  */
@@ -62,7 +62,7 @@ export function topicTypeShortLabel(type: string): string {
 }
 
 /**
- * Parse a human duration label ("58 min", "19m 04s", "1h 05m", "approx. 45 min")
+ * Parse a human duration label ("58 min", "19m 04s", "1h 05m", "45 min approx.")
  * into seconds, for feeding the VideoPlayer scrubber. Falls back to 200s.
  */
 export function durationToSeconds(label: string | undefined): number {
