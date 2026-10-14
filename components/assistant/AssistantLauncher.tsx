@@ -42,7 +42,11 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
         aria-controls={controls}
         style={style}
         className={cn(
-          "relative inline-flex h-12 w-12 items-center justify-center rounded-full transition-transform",
+          "inline-flex h-12 w-12 items-center justify-center rounded-full transition-transform",
+          // The badge needs a positioned button. "relative" only when the caller does not place it:
+          // with both, the stylesheet order made "relative" win over "fixed", and the launcher
+          // stopped following the viewport (14 Oct 2026).
+          !/\b(fixed|absolute|sticky)\b/.test(className ?? "") && "relative",
           open
             ? "bg-sko-bg-primary text-sko-text-on-primary shadow-lg hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
             : "drop-shadow-lg hover:scale-105",
