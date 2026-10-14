@@ -61,7 +61,7 @@ function TopicRow({ topic, href, last }: { topic: CourseTopic; href: string; las
           <span className="min-w-0 md:flex-1">
             <Link
               href={href}
-              className="sk-text-body-large-medium text-sko-text-on-primary-soft underline underline-offset-2 transition-colors hover:text-sko-text-primary"
+              className="sk-text-body-large-medium text-sko-text-on-primary-soft underline underline-offset-2 transition-colors after:absolute after:inset-0 after:content-[''] hover:text-sko-text-primary"
             >
               {topic.title}
             </Link>

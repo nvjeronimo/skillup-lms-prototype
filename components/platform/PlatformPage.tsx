@@ -120,7 +120,7 @@ export function PlatformPage({
             ))}
           </ul>
         ) : null}
-      </div>
+      </aside>
       {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
       <main key={pathname} id="main" tabIndex={-1} className={cn("sk-animate-page flex-1 outline-none", className)}>
         {children}
