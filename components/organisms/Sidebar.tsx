@@ -15,6 +15,7 @@ import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
 import { isFreshCompletion, type LastCompleted } from "@/lib/motion/completion";
 import { coursePartners, moduleTopics } from "@/lib/data";
+import { courseProgressPct } from "@/lib/courses/outline";
 import type { Course, CompletionState, Topic } from "@/lib/types";
 
 export type SidebarVariant = "Expanded" | "Collapsed" | "Mobile";
@@ -103,10 +104,7 @@ export function Sidebar({
     return { topicsCompleted: done, topicsTotal: tops.length, isCompleted: tops.length > 0 && done === tops.length };
   };
 
-  const allTopics = course.modules.flatMap(moduleTopics);
-  const overallPct = completed
-    ? Math.round((allTopics.filter((t) => completed.has(t.id)).length / Math.max(allTopics.length, 1)) * 100)
-    : course.overallProgressPct;
+  const overallPct = courseProgressPct(course, completed);
   const modulesDone = completed
     ? course.modules.filter((m) => moduleStats(m).isCompleted).length
     : course.modulesCompleted;

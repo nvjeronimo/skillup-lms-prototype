@@ -15,6 +15,17 @@ export function moduleTopics(mod: Module): Topic[] {
   return [];
 }
 
+/**
+ * The course's overall percentage: completed topics over all topics, rounded. Without a
+ * completed set it is the course's seeded percentage. The sidebar ring and the mobile topbar
+ * ring both read it, so they never disagree.
+ */
+export function courseProgressPct(c: Course, completed?: Set<string>): number {
+  if (!completed) return c.overallProgressPct;
+  const all = c.modules.flatMap(moduleTopics);
+  return Math.round((all.filter((t) => completed.has(t.id)).length / Math.max(all.length, 1)) * 100);
+}
+
 /** Flatten every topic in course order, with module/lesson context + index. */
 export function flattenOutline(c: Course): FlatTopic[] {
   const out: FlatTopic[] = [];
