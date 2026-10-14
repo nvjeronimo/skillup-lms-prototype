@@ -1,5 +1,6 @@
 @import "../tokens/colors.css";
 @import "../tokens/typography.css";
+@import "../tokens/motion.css";
 
 @tailwind base;
 @tailwind components;
@@ -99,13 +100,13 @@ button {
   }
 }
 .sk-animate-slide-right {
-  animation: sk-slide-in-right 200ms ease-out;
+  animation: sk-slide-in-right var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
 .sk-animate-slide-left {
-  animation: sk-slide-in-left 200ms ease-out;
+  animation: sk-slide-in-left var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
 .sk-animate-fade {
-  animation: sk-fade-in 200ms ease-out;
+  animation: sk-fade-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
 }
 
 /* Reduced motion (the OS setting here; the Accessibility panel's switch further down
@@ -134,7 +135,7 @@ button {
   /* Panels and the drawer still announce themselves: a short fade replaces the slide. */
   .sk-animate-slide-right,
   .sk-animate-slide-left {
-    animation: sk-fade-in 150ms ease-out;
+    animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
   }
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
   .animate-spin {
@@ -201,7 +202,7 @@ button {
 /* Panels and the drawer still announce themselves: a short fade replaces the slide. */
 [data-reduce-motion] .sk-animate-slide-right,
 [data-reduce-motion] .sk-animate-slide-left {
-  animation: sk-fade-in 150ms ease-out;
+  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
 }
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
 [data-reduce-motion] .animate-spin {
