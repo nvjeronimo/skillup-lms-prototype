@@ -33,6 +33,7 @@ import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
+import { isFreshCompletion } from "@/lib/motion/completion";
 import { inertProps } from "@/lib/inert";
 import {
   completesByHand,
@@ -99,6 +100,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
   const completedTopics = useLmsStore((s) => s.completedTopics);
+  const lastCompleted = useLmsStore((s) => s.lastCompleted);
   const submittedTopics = useLmsStore((s) => s.submittedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
   const theme = useLmsStore((s) => s.theme);
@@ -202,6 +204,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const renderAction = () => (
     <TopicActionBar
       state={actionState}
+      // The first beat of the completion chain: the badge pops when the topic was completed now.
+      fresh={isFreshCompletion(lastCompleted, topicId, Date.now())}
       onComplete={() => markComplete(topicId)}
       // On a partner lab that has not been opened yet, the launch button is the primary action.
       secondary={Boolean(partnerLab) && !labOpenedAt && !labInPage}
@@ -390,6 +394,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             collapsedModules={collapsedModules}
             bookmarks={bookmarks}
             completed={completedTopics}
+            lastCompleted={lastCompleted}
             onToggleSidebar={toggleSidebar}
             onToggleModule={toggleModule}
             onSelectTopic={navigateTopic}
@@ -549,6 +554,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             collapsedModules={collapsedModules}
             bookmarks={bookmarks}
             completed={completedTopics}
+            lastCompleted={lastCompleted}
             onToggleModule={toggleModule}
             onSelectTopic={navigateTopic}
             onToggleBookmark={toggleBookmark}

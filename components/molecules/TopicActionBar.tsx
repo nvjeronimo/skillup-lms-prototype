@@ -2,6 +2,7 @@ import * as React from "react";
 import { ArrowRight, PenLine } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Badge } from "@/components/atoms/Badge";
+import { cn } from "@/lib/utils";
 
 /**
  * Option A (Nav in footer · action in content): the topic's PRIMARY action lives
@@ -26,6 +27,11 @@ export interface TopicActionBarProps {
    * then Secondary, and turns Primary once the lab has been opened (Nelson, 12 Oct 2026).
    */
   secondary?: boolean;
+  /**
+   * The topic was completed just now: the completed badge pops in (the first beat of the
+   * completion chain). The toast announces it; the pop is visual only.
+   */
+  fresh?: boolean;
   className?: string;
 }
 
@@ -34,13 +40,14 @@ export function TopicActionBar({
   onComplete,
   onSubmit,
   secondary = false,
+  fresh = false,
   className,
 }: TopicActionBarProps) {
   if (state === "completed") {
     return (
       // DS `Topic-Status-Badge`, Completed: Badge Soft sm Success, label only, and always
       // "Marked as completed", whatever completed the topic (Nelson, 13 Oct 2026).
-      <Badge color="success" className={className}>
+      <Badge color="success" className={cn(fresh && "sk-animate-pop", className)}>
         Marked as completed
       </Badge>
     );

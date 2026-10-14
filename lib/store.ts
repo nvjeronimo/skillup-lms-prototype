@@ -7,6 +7,7 @@ import { notesSeed, allCourses, flatTopics, getTopic } from "./data";
 import { getTranscript } from "./content";
 import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
+import type { LastCompleted } from "./motion/completion";
 
 export type TabSlug = "transcript" | "notes" | "downloads";
 export type OverlayPanel = null | "notifications" | "saved" | "discussions";
@@ -81,6 +82,12 @@ interface LmsState {
   bookmarks: Set<string>;
   /** Topics the learner has explicitly completed (Option A: action in content). */
   completedTopics: Set<string>;
+  /**
+   * The topic `markComplete` completed last, and when: the completion chain (badge pop → rail
+   * check → ring) plays only while it is fresh (`isFreshCompletion`). Session-only, never
+   * persisted, so a reload or a later visit shows the finished state without replaying.
+   */
+  lastCompleted: LastCompleted;
   /**
    * The courses, by slug, whose seeded completion `completedTopics` already holds. A course
    * that is not listed is new to this browser: see `withNewCourses`.
@@ -275,6 +282,7 @@ export const useLmsStore = create<LmsState>()(
   noteEditor: { open: false },
   bookmarks: seedBookmarks(),
   completedTopics: seedCompleted(),
+  lastCompleted: null,
   seededCourses: seedCourses(),
   submittedTopics: new Set<string>(),
   quizResults: {},
@@ -432,9 +440,17 @@ export const useLmsStore = create<LmsState>()(
         topic?.type === "Lab"
           ? { ...state.labState, [topicId]: { ...state.labState[topicId], completedAt: Date.now() } }
           : state.labState;
+      // Silent or not, the chain plays: video auto-complete and the Next dialog show it too.
+      // The toast is the one announcement (spec §7.2); the chain is visual only.
+      const lastCompleted = { topicId, at: Date.now() };
       return opts?.silent
-        ? { completedTopics: next, labState }
-        : { completedTopics: next, labState, toast: { message: `Marked as complete · ${title}` } };
+        ? { completedTopics: next, labState, lastCompleted }
+        : {
+            completedTopics: next,
+            labState,
+            lastCompleted,
+            toast: { message: `Marked as complete · ${title}` },
+          };
     }),
 
   // The date of the FIRST opening is the one kept: opening the lab again does not move it.
@@ -548,6 +564,7 @@ export const useLmsStore = create<LmsState>()(
     track("demo_reset");
     set({
       completedTopics: seedCompleted(),
+      lastCompleted: null,
       seededCourses: seedCourses(),
       submittedTopics: new Set<string>(),
       quizResults: {},

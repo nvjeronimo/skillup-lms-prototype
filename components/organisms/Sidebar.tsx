@@ -13,6 +13,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
+import { isFreshCompletion, type LastCompleted } from "@/lib/motion/completion";
 import { coursePartners, moduleTopics } from "@/lib/data";
 import type { Course, CompletionState, Topic } from "@/lib/types";
 
@@ -35,6 +36,8 @@ export interface SidebarProps {
   /** Runtime completion (store). When provided, drives the row checks + progress
    *  live; when omitted (e.g. Storybook), the static `topic.completed` is used. */
   completed?: Set<string>;
+  /** The topic completed last (store): its row check draws itself while it is fresh. */
+  lastCompleted?: LastCompleted;
   onToggleSidebar?: () => void;
   onToggleModule?: (moduleId: string) => void;
   onSelectTopic?: (topicId: string) => void;
@@ -73,6 +76,7 @@ export function Sidebar({
   collapsedModules = new Set(),
   bookmarks = new Set(),
   completed,
+  lastCompleted = null,
   onToggleSidebar,
   onToggleModule,
   onSelectTopic,
@@ -200,6 +204,7 @@ export function Sidebar({
           title={topic.title}
           duration={topic.duration}
           status={topicStatus(topic, completed)}
+          animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
           active={topic.id === currentTopicId}
           onClick={() => onSelectTopic?.(topic.id)}
         />
@@ -402,6 +407,7 @@ export function Sidebar({
               title={topic.title}
               duration={topic.duration}
               status={topicStatus(topic, completed)}
+              animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
               active={topic.id === currentTopicId}
               showBookmark={bookmarks.has(topic.id)}
               bookmarked={bookmarks.has(topic.id)}
