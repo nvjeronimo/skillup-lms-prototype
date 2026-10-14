@@ -17,6 +17,15 @@ export default function LabIndex() {
       <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">
         Directions to compare before one is chosen and brought into Figma. Switch persona in the top bar.
       </p>
+      <Link
+        href="/lab/stripes"
+        className="mt-6 flex flex-col gap-1 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 hover:border-sko-border-primary"
+      >
+        <span className="sk-text-body-large-semibold text-sko-text-default">Side stripes: DS vs proposal</span>
+        <span className="sk-text-body-medium-regular text-sko-text-muted">
+          Live Now Banner, Reading pull quote and Inline Alert · Answer, each beside a version without the stripe.
+        </span>
+      </Link>
       <h2 className="sk-text-title-medium-semibold mt-8 text-sko-text-default">Dashboard / Home</h2>
       <ul className="mt-3 grid gap-3 md:grid-cols-2">
         {DASHBOARD.map((d) => (
