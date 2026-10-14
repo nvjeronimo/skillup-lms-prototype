@@ -33,7 +33,7 @@ export function SectionHeader({
         <span
           aria-hidden
           className={cn(
-            "sk-text-body-small-medium inline-block text-sko-text-subtle transition-transform duration-200",
+            "sk-text-body-small-medium inline-block text-sko-text-subtle transition-transform duration-short4 ease-standard",
             collapsed && "-rotate-90",
           )}
         >

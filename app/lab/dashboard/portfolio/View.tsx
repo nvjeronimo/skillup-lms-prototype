@@ -62,7 +62,7 @@ const FOCUS =
 /** A link dressed as DS Button Brand (md, 44px). Button renders a <button>, so links get this. */
 function linkButton(hierarchy: "primary" | "secondary") {
   return cn(
-    "sk-text-body-medium-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-md px-3 transition-colors duration-200",
+    "sk-text-body-medium-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-md px-3 transition-colors duration-short4",
     FOCUS,
     hierarchy === "primary"
       ? "bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
@@ -406,7 +406,7 @@ export function View() {
                   aria-pressed={on}
                   onClick={() => setFilter(f.id)}
                   className={cn(
-                    "sk-text-body-medium-semibold inline-flex h-11 items-center gap-1.5 rounded-full px-4 transition-colors duration-200",
+                    "sk-text-body-medium-semibold inline-flex h-11 items-center gap-1.5 rounded-full px-4 transition-colors duration-short4",
                     FOCUS,
                     on
                       ? "bg-sko-bg-primary text-sko-text-on-primary"

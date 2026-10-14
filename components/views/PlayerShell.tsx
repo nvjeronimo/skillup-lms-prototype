@@ -414,7 +414,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     docks (shrinks) once the content scrolls past the top. */}
                 <div
                   className={cn(
-                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-200 ease-out",
+                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate",
                     videoDocked ? "px-0 pb-2 pt-0" : "px-4 pb-3 pt-4",
                   )}
                 >

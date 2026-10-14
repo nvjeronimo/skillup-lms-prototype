@@ -7,6 +7,7 @@
  *                             (root cause of the dark-mode contrast breaks)
  *   3. Legacy colour names — the v3.2 sk-bg-/sk-text-/sk-fg-/sk-border- vocabulary
  *   4. Raw typography       — Tailwind text-size / font-weight utilities instead of `.sk-text-*`
+ *   5. Raw motion           — hand-typed durations / delays / curves, bare `transition` (use motion tokens)
  *
  * Escape hatch: append `// token-lint-disable-next-line <reason>` on the line above,
  * or add a path to ALLOW. Exits non-zero on any violation. Run: `npm run lint:tokens`.
@@ -16,8 +17,9 @@ import { join, relative } from "node:path";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const SCAN_DIRS = ["components", "app", "lib"];
-// Files intentionally exempt (none today — colours live only in tokens/*.css).
-const ALLOW = new Set([]);
+// Files intentionally exempt (colours live only in tokens/*.css).
+// The motion-token test asserts the raw token values, so it has to spell them out.
+const ALLOW = new Set(["lib/motion/tokens.test.ts"]);
 
 const RULES = [
   {
@@ -46,6 +48,14 @@ const RULES = [
     // Tailwind font-size or font-weight utilities (not the sk-text-* classes nor text-align/color)
     re: /(?<![\w-])text-(?:xs|sm|base|lg|xl|[2-9]xl)(?![\w-])|(?<![\w-])font-(?:thin|extralight|light|normal|medium|semibold|bold|extrabold|black)(?![\w-])/,
     msg: "raw Tailwind typography — use a .sk-text-* class",
+  },
+  {
+    id: "raw-motion",
+    // Tailwind duration-<n>/delay-<n>/duration-[…], ease-in|out|in-out|linear, cubic-bezier(),
+    // "<n>ms" (or a bare/eased "<n>s") inside a string literal, or a bare `transition` / `transition-all` class.
+    // Motion lives in tokens/motion.css; use duration-short*/ease-standard*/delay-* and name the property.
+    re: /(?<![\w-])(?:duration|delay)-(?:\d+|\[)|(?<![\w-])ease-(?:in|out|in-out|linear)(?![\w-])|cubic-bezier\(|["'`][^"'`]*\b\d*\.?\d+ms\b[^"'`]*["'`]|["'`]\s*\d*\.?\d+s\s*["'`]|["'`][^"'`]*\b\d*\.?\d+s (?:ease|linear|cubic)[^"'`]*["'`]|(?<![\w-])transition(?:-all)?(?=["'`\s])/,
+    msg: "raw motion — use a duration-/ease-/delay- motion token and name the transitioned property",
   },
 ];
 
@@ -78,6 +88,7 @@ for (const file of files) {
   const lines = readFileSync(file, "utf8").split("\n");
   lines.forEach((line, i) => {
     if (/token-lint-disable/.test(lines[i - 1] || "")) return;
+    if (/^(?:\/\/|\*|\/\*)/.test(line.trim())) return;
     for (const rule of RULES) {
       if (rule.re.test(line)) {
         violations.push({ rel, line: i + 1, id: rule.id, msg: rule.msg, src: line.trim().slice(0, 100) });

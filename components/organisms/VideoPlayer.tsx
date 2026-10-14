@@ -303,7 +303,7 @@ export function VideoPlayer({
       className={cn(
         // The ground is bg/subtle, as the player on the Video screens: the picture is fitted
         // inside it, so a player wider than 16:9 shows the ground on both sides.
-        "relative w-full overflow-hidden bg-sko-bg-subtle transition-[height,border-radius,box-shadow] duration-200 ease-out",
+        "relative w-full overflow-hidden bg-sko-bg-subtle transition-[height,border-radius,box-shadow] duration-short4 ease-standard-decelerate",
         (size === "auto" || size === "md") && "[container-type:inline-size]",
         // Explicit pixel height drives the sticky full→docked shrink; otherwise
         // fall back to a capped 16:9 band (Storybook / non-sticky usage).

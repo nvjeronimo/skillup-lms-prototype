@@ -98,7 +98,7 @@ function ModuleItem({ mod, open, onToggle }: { mod: PlanModule; open: boolean; o
             icon={ChevronDown}
             size={20}
             aria-hidden="true"
-            className={cn("tb-c-ink2 flex-none transition-transform motion-reduce:transition-none", open && "rotate-180")}
+            className={cn("tb-c-ink2 flex-none transition-transform duration-short4 ease-standard motion-reduce:transition-none", open && "rotate-180")}
           />
         </button>
       </h3>
