@@ -598,8 +598,8 @@ function QuizEntryHeader({
   const attempts = attemptsLabel(config);
   const facts = [
     `${questionCount} questions`,
-    // Decision 004: estimated durations take the "approx." prefix.
-    `approx. ${config.estMinutes} min`,
+    // Decision 004: estimated durations take "approx.", after the time (14 Oct 2026).
+    `${config.estMinutes} min approx.`,
     ...(attempts ? [attempts] : []),
     `Pass mark ${config.passThresholdPct}%`,
   ];

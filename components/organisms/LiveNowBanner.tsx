@@ -35,7 +35,10 @@ export function LiveNowBanner({
         isLive ? "border-sko-border-success" : "border-sko-border-warning",
         className,
       )}
-      role="alert"
+      // A named region, not an alert: the banner is on the page when it loads, and an alert would
+      // interrupt the screen reader with it on every visit.
+      role="region"
+      aria-label={`${isLive ? "Live now" : "Upcoming"}: ${title}`}
     >
       <div className="flex min-w-0 items-center gap-3">
         {/* Status pill: role-correct on-* pairs (text/on-success, text/on-warning) keep the
