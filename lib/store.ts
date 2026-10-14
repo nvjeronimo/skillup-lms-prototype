@@ -473,12 +473,16 @@ export const useLmsStore = create<LmsState>()(
   recordQuizResult: (topicId, score, total) =>
     set((state) => {
       const attempts = (state.quizResults[topicId]?.attempts ?? 0) + 1;
+      const firstCompletion = !state.completedTopics.has(topicId);
       const completed = new Set(state.completedTopics);
       completed.add(topicId);
       track("topic_complete", { topicId, kind: "quiz", score, total, attempts });
       return {
         quizResults: { ...state.quizResults, [topicId]: { score, total, attempts } },
         completedTopics: completed,
+        // The quiz completing the topic plays the completion chain (rail check → ring),
+        // as markComplete does. A retake of a completed quiz does not replay it.
+        ...(firstCompletion ? { lastCompleted: { topicId, at: Date.now() } } : {}),
       };
     }),
 

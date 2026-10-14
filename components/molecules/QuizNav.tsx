@@ -103,7 +103,8 @@ export function QuizNavStepper({
         </button>
 
         {/* Progress bar, Label=Top: the counter sits 8px above the track,
-            right-aligned. Fill bg/info, square ends. The track stays bg/muted:
+            right-aligned. Fill bg/info, square ends; it grows by scaleX from the
+            left edge (short4, standard), and jumps under reduced motion. The track stays bg/muted:
             DS track bg/strong fails 1.4.11 against bg/info (2.26:1 light,
             2.82:1 dark), and the bar is the only place the answered share
             shows. */}
@@ -119,7 +120,10 @@ export function QuizNavStepper({
             aria-valuemax={100}
             aria-label={`Quiz progress: ${value}% complete`}
           >
-            <div className="h-full bg-sko-bg-info" style={{ width: `${value}%` }} />
+            <div
+              className="h-full w-full origin-left bg-sko-bg-info transition-transform duration-short4 ease-standard"
+              style={{ transform: `scaleX(${value / 100})` }}
+            />
           </div>
         </div>
       </div>
