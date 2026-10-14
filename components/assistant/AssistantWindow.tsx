@@ -166,7 +166,8 @@ export function AssistantWindow({
                 <ul className="flex flex-col items-start gap-2">
                   {m.actions.map((a) => (
                     <li key={a.id}>
-                      <ButtonLink href={a.href} hierarchy="secondary" size="sm">
+                      {/* A long label wraps: the button grows with it instead of keeping the 36px of Button sm. */}
+                      <ButtonLink href={a.href} hierarchy="secondary" size="sm" className="!h-auto min-h-9 py-1.5">
                         {a.label}
                       </ButtonLink>
                     </li>
