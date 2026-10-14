@@ -4,7 +4,8 @@ import * as React from "react";
 import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { InlineAlert, type AlertTone } from "@/components/atoms/InlineAlert";
-import { cn } from "@/lib/utils";
+import { Collapse } from "@/components/atoms/Collapse";
+import { cn, iconStroke } from "@/lib/utils";
 import { useRovingRadio } from "@/lib/useRovingRadio";
 import type { QuizOption } from "@/lib/content";
 import {
@@ -78,6 +79,9 @@ const DEFAULT_OPTIONS: QuizOption[] = [
   { id: "d", label: "Replace all staff with automation" },
 ];
 
+/** The marker's dot or tick growing in from its centre. */
+const MARK_MOTION = "transition-transform duration-short3 ease-standard-decelerate";
+
 /**
  * The answer marker — DS Checkbox `Type=Radio` (circle) / `Type=Checkbox` (square).
  *
@@ -95,6 +99,11 @@ const DEFAULT_OPTIONS: QuizOption[] = [
  * Checkbox. Checked is bg/primary with no stroke and an icon/on-primary mark (a
  * 6×6 dot, or a 12px tick). Disabled is bg/faint on border/disabled at
  * opacity 40, as the DS draws it (and as LessonBlocks OptionRadio does).
+ *
+ * Motion: the box changes colour (short3, standard) and the dot or tick grows in
+ * from its centre (short3, standard-decelerate). Both are always rendered and
+ * scaled to 0 when unchecked, so un-picking shrinks them back. Reduced motion
+ * keeps transform out of the transitioned properties, so the mark just appears.
  */
 function OptionMarker({
   multiSelect,
@@ -109,7 +118,7 @@ function OptionMarker({
     <span
       aria-hidden
       className={cn(
-        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border transition-colors",
+        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border transition-colors duration-short3 ease-standard",
         multiSelect ? "rounded" : "rounded-full",
         checked
           ? "border-transparent bg-sko-bg-primary"
@@ -118,14 +127,18 @@ function OptionMarker({
             : "border-sko-border-default bg-sko-bg-page",
       )}
     >
-      {checked ? (
-        multiSelect ? (
-          <Icon icon={Check} size={12} className="text-sko-icon-on-primary" />
-        ) : (
-          // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
-          <span className="h-1.5 w-1.5 rounded-full bg-current text-sko-icon-on-primary" />
-        )
-      ) : null}
+      {multiSelect ? (
+        <Icon icon={Check} size={12} className={cn("text-sko-icon-on-primary", MARK_MOTION, checked ? "scale-100" : "scale-0")} />
+      ) : (
+        // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
+        <span
+          className={cn(
+            "h-1.5 w-1.5 rounded-full bg-current text-sko-icon-on-primary",
+            MARK_MOTION,
+            checked ? "scale-100" : "scale-0",
+          )}
+        />
+      )}
     </span>
   );
 }
@@ -269,6 +282,30 @@ const OPTION_ROW: Record<
 };
 
 /**
+ * The Correct row's tick: lucide's check at 24px, drawn as one path so its stroke
+ * can be animated (the CompletionStatus pattern). It draws at once, with no
+ * chain delay. Reduced motion shows it whole.
+ */
+function DrawnCheck() {
+  return (
+    <svg
+      aria-hidden
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={iconStroke(24)}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0 text-sko-icon-success"
+    >
+      <path className="sk-draw-check-immediate" d="M4 12l5 5L20 6" pathLength={1} />
+    </svg>
+  );
+}
+
+/**
  * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
  * question submits and scores independently.
  *
@@ -398,7 +435,7 @@ export function QuizCard({
                 aria-checked={isSelected}
                 data-option-state={rowState}
                 className={cn(
-                  "sk-text-body-medium-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
+                  "sk-text-body-medium-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors duration-short3 ease-standard",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   row.box,
                   plain && !revealed ? "hover:bg-sko-bg-subtle" : null,
@@ -414,15 +451,17 @@ export function QuizCard({
                 {showNote ? (
                   <span className={cn("sk-text-body-small-medium mt-0.5 shrink-0", row.noteTone)}>{row.note}</span>
                 ) : null}
+                {/* Onsets, no movement: the tick draws itself the moment the
+                    verdict lands; the cross only fades in. Nothing shakes. */}
                 {showMarker === "tick" ? (
                   <>
-                    <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" aria-hidden />
+                    <DrawnCheck />
                     <span className="sr-only">, correct</span>
                   </>
                 ) : null}
                 {showMarker === "cross" ? (
                   <>
-                    <Icon icon={X} size={24} className="shrink-0 text-sko-icon-error" aria-hidden />
+                    <Icon icon={X} size={24} className="sk-animate-fade shrink-0 text-sko-icon-error" aria-hidden />
                     <span className="sr-only">, incorrect</span>
                   </>
                 ) : null}
@@ -432,8 +471,12 @@ export function QuizCard({
         })}
       </div>
 
+      {/* Keyed on the title, so a new verdict or notice fades in rather than
+          the text changing under the learner. */}
       {alert ? (
         <InlineAlert
+          key={alert.title}
+          className="sk-animate-fade"
           tone={alert.tone}
           title={alert.title}
           description={
@@ -446,9 +489,21 @@ export function QuizCard({
         />
       ) : null}
 
-      {/* The <solution>, revealed only when Show answer is pressed. */}
-      {state === "Answer revealed" && solution ? (
-        <InlineAlert tone="answer" title="Answer" description={solution} />
+      {/* The <solution>, revealed only when Show answer is pressed. It opens
+          rather than appears (grid rows 0fr → 1fr, content fading in), and
+          closes the same way on Reset. The -mt-5/pt-5 pair cancels the card's
+          gap while it is closed, so a closed explanation takes no space. */}
+      {solution ? (
+        <Collapse open={state === "Answer revealed"} className="-mt-5">
+          <div
+            className={cn(
+              "pt-5 transition-opacity duration-medium2 ease-standard-decelerate",
+              state === "Answer revealed" ? "opacity-100" : "opacity-0",
+            )}
+          >
+            <InlineAlert tone="answer" title="Answer" description={solution} />
+          </div>
+        </Collapse>
       ) : null}
 
       {/* One alert that grows, not one per hint: `get_demand_hint` re-renders

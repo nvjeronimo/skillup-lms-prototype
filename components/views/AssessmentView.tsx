@@ -28,6 +28,7 @@ import type { Course, FlatTopic } from "@/lib/types";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
 import { cn, scrollBehavior } from "@/lib/utils";
+import { useCountUp } from "@/lib/useCountUp";
 
 export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
@@ -102,6 +103,12 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   // The step the learner is on — the equivalent of the sequence `position` the
   // platform persists per subsection.
   const [index, setIndex] = React.useState(0);
+  // Which way the learner last moved, so the next question comes in from that side.
+  const [direction, setDirection] = React.useState<"next" | "prev">("next");
+  const goTo = React.useCallback((n: number, dir: "next" | "prev") => {
+    setDirection(dir);
+    setIndex(n);
+  }, []);
   const recordedRef = React.useRef(false);
   const stepRef = React.useRef<HTMLDivElement>(null);
   const mountedRef = React.useRef(false);
@@ -118,6 +125,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     modeRef.current = config.mode;
     recordedRef.current = false;
     setAnswers(questions.map(freshAnswer));
+    setDirection("next");
     setIndex(0);
     setPhase(config.mode === "A" ? "quiz" : "intro");
   }, [config.mode, questions]);
@@ -166,6 +174,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     setAnswers((prev) =>
       questions.map((_, i) => (indices && !indices.includes(i) ? prev[i] : freshAnswer())),
     );
+    setDirection("next");
     setIndex(indices?.[0] ?? 0);
     setPhase("quiz");
   }
@@ -358,12 +367,12 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         // with nothing left open, Next goes to the results.
         onNext: () => {
           const n = nextUnanswered(i);
-          if (n >= 0) setIndex(n);
+          if (n >= 0) goTo(n, "next");
           else setPhase("completed");
         },
         onSkip: () => {
           const n = nextUnanswered(i);
-          if (n >= 0) setIndex(n);
+          if (n >= 0) goTo(n, "next");
         },
       },
     };
@@ -499,15 +508,19 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
       {/* DS: `Show progress` nests the Stepper Bar (Mode=With Back only) inside
           the card, after the Platform prompt and before the Question. */}
+      {/* Keyed on the step, so each question enters from the side the learner
+          moved toward: from the right on Next and Skip, from the left on Back. */}
       <QuizCard
+        key={index}
         {...stepProps}
+        className={direction === "next" ? "sk-animate-step-next" : "sk-animate-step-prev"}
         showProgress
         progress={
           <QuizNavStepper
             current={index + 1}
             total={total}
             pct={(answeredCount / total) * 100}
-            onBack={index > 0 ? () => setIndex((i) => Math.max(0, i - 1)) : undefined}
+            onBack={index > 0 ? () => goTo(Math.max(0, index - 1), "prev") : undefined}
           />
         }
         // The standalone primary below is mode B's forward action (and becomes
@@ -524,7 +537,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             variant="primary"
             size="md"
             onClick={
-              allAnswered ? () => setPhase("completed") : () => setIndex(nextUnanswered(index))
+              allAnswered ? () => setPhase("completed") : () => goTo(nextUnanswered(index), "next")
             }
           >
             {allAnswered ? "See results" : "Next question"}
@@ -675,6 +688,8 @@ function QuizSummary({
   onNextTopic?: () => void;
 }) {
   const pct = Math.round((result.score / result.total) * 100);
+  // The score counts up as the results land (long2, decelerating); reduced motion shows it at once.
+  const shownPct = useCountUp(pct);
   const passed = pct >= config.passThresholdPct;
   // DS Results=Withheld: `show_correctness: never` masks the score too, so the
   // summary says what was recorded and never prints a percentage.
@@ -713,7 +728,11 @@ function QuizSummary({
               passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
             )}
           >
-            <span className={cn("sk-text-headline-large-bold", tone)}>{pct}%</span>
+            {/* Screen readers get the final score once, not every step of the count. */}
+            <span className={cn("sk-text-headline-large-bold tabular-nums", tone)}>
+              <span aria-hidden>{shownPct}%</span>
+              <span className="sr-only">{pct}%</span>
+            </span>
             <div className="flex flex-col gap-1">
               <p className={cn("sk-text-body-large-semibold", tone)}>
                 You scored {result.score} / {result.total}

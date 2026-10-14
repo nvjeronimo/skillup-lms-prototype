@@ -218,6 +218,41 @@ button {
   animation: sk-draw-check var(--motion-duration-short4) var(--motion-easing-standard-decelerate)
     var(--motion-duration-short2) both;
 }
+/* The same draw with no chain delay: a quiz option's Correct tick, drawn as the verdict lands. */
+.sk-draw-check-immediate {
+  stroke-dasharray: 1;
+  animation: sk-draw-check var(--motion-duration-short4) var(--motion-easing-standard-decelerate) both;
+}
+
+/* Quiz question swap (mode B): the next question comes in from the side it lies on —
+   from the right going forward, from the left going back. Entrance only: the old
+   question is replaced, not animated out. */
+@keyframes sk-step-in-next {
+  from {
+    opacity: 0;
+    transform: translateX(var(--motion-distance-enter));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-step-in-prev {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--motion-distance-enter)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sk-animate-step-next {
+  animation: sk-step-in-next var(--motion-duration-short4) var(--motion-easing-standard);
+}
+.sk-animate-step-prev {
+  animation: sk-step-in-prev var(--motion-duration-short4) var(--motion-easing-standard);
+}
 
 [data-state="closed"].sk-animate-slide-right,
 [data-state="closed"] .sk-animate-slide-right {
@@ -272,7 +307,9 @@ button {
   .sk-animate-slide-left,
   .sk-animate-pop,
   .sk-animate-rise,
-  .sk-animate-sheet {
+  .sk-animate-sheet,
+  .sk-animate-step-next,
+  .sk-animate-step-prev {
     animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
   }
   [data-state="closed"].sk-animate-slide-right,
@@ -290,7 +327,8 @@ button {
     animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
   }
   /* The check is shown at once, not drawn (its disc still fades in). */
-  .sk-draw-check {
+  .sk-draw-check,
+  .sk-draw-check-immediate {
     animation: none;
   }
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
@@ -360,7 +398,9 @@ button {
 [data-reduce-motion] .sk-animate-slide-left,
 [data-reduce-motion] .sk-animate-pop,
 [data-reduce-motion] .sk-animate-rise,
-[data-reduce-motion] .sk-animate-sheet {
+[data-reduce-motion] .sk-animate-sheet,
+[data-reduce-motion] .sk-animate-step-next,
+[data-reduce-motion] .sk-animate-step-prev {
   animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
 }
 [data-reduce-motion] [data-state="closed"].sk-animate-slide-right,
@@ -378,7 +418,8 @@ button {
   animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
 }
 /* The check is shown at once, not drawn (its disc still fades in). */
-[data-reduce-motion] .sk-draw-check {
+[data-reduce-motion] .sk-draw-check,
+[data-reduce-motion] .sk-draw-check-immediate {
   animation: none;
 }
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
