@@ -1,4 +1,6 @@
 import { getKnowledge } from "./knowledge";
+import { STEPS, stepAction } from "@/lib/first-steps/steps";
+import { nextStep } from "./next-step";
 import type { ActionEntry, Answer, LearnerSnapshot } from "./types";
 
 /**
@@ -21,7 +23,6 @@ interface Intent {
 
 const lines = (items: string[]) => items.map((item) => `• ${item}`).join("\n");
 const fromKnowledge = (id: string, actionIds?: string[]): Reply => ({ text: getKnowledge(id).answer, actionIds });
-const isToday = (when: string) => when === "Today" || when === "Tonight";
 
 /** In matching order: the first intent that matches the question and applies on this page answers it. */
 const INTENTS: Intent[] = [
@@ -48,25 +49,12 @@ const INTENTS: Intent[] = [
   },
   {
     suggestion: "What should I do next?",
-    keywords: /\b(what (should|do|can) i do|what now|do next|next step)\b/,
-    reply: ({ due, courses }) => {
-      const urgent = due.find((d) => isToday(d.when));
-      if (urgent) {
-        return {
-          text: `"${urgent.title}" is due ${urgent.when.toLowerCase()}. Start there.`,
-          actionIds: [`due:${urgent.id}`],
-        };
-      }
-      const current = courses.find((c) => c.status === "in-progress");
-      if (current) {
-        return {
-          text: `Carry on with ${current.title}${current.upNext ? `: "${current.upNext}" is up next` : ""}.`,
-          actionIds: [`resume:${current.slug}`],
-        };
-      }
-      const fresh = courses.find((c) => c.status === "not-started");
-      if (fresh) return { text: `Start ${fresh.title}.`, actionIds: [`resume:${fresh.slug}`] };
-      return { text: "You are up to date: nothing is due and every course is complete.", actionIds: ["my-learning"] };
+    keywords: /\b(what (should|do|can) i do(?! first)|what now|do next|next step)\b/,
+    reply: (snapshot) => {
+      const next = nextStep(snapshot);
+      return next
+        ? { text: next.text, actionIds: [next.actionId] }
+        : { text: "You are up to date: nothing is due and every course is complete.", actionIds: ["my-learning"] };
     },
   },
   {
@@ -125,6 +113,22 @@ const INTENTS: Intent[] = [
   },
   { suggestion: "How do notes work?", keywords: /\bnotes?\b/, reply: () => fromKnowledge("notes") },
   { suggestion: "Why is my lab not complete?", keywords: /\blabs?\b/, reply: () => fromKnowledge("lab") },
+  {
+    suggestion: "How do I get started?",
+    keywords: /\b(get started|getting started|do first|where do i (start|begin))\b/,
+    reply: (snapshot) => {
+      const left = snapshot.firstSteps?.left;
+      if (!left?.length) return null;
+      // The button of the first step that has somewhere to go.
+      const target = STEPS.filter((step) => left.includes(step.label))
+        .map((step) => stepAction(step.id, snapshot))
+        .find((action): action is ActionEntry => action !== null && action !== "ask");
+      return {
+        text: `You have ${left.length} first ${left.length === 1 ? "step" : "steps"} left:\n${lines(left)}`,
+        actionIds: target ? [target.id] : [],
+      };
+    },
+  },
   {
     suggestion: "What can you do?",
     keywords: /\b(help|what can you)\b/,

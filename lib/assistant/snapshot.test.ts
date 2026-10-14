@@ -46,4 +46,13 @@ describe("buildSnapshot", () => {
     ).toBeUndefined();
     expect(() => buildSnapshot(empty, { kind: "course", slug: "no-such-course" })).not.toThrow();
   });
+  it("carries the first steps only while they are active", () => {
+    const fs = { status: "active" as const, done: ["program" as const], baseline: [], greeted: true };
+    expect(buildSnapshot(empty, { kind: "dashboard" }, fs).firstSteps).toEqual({
+      done: ["Open your program"],
+      left: ["Open a course", "Start a topic", "Complete a topic", "Ask the assistant"],
+    });
+    expect(buildSnapshot(empty, { kind: "dashboard" }, { ...fs, status: "dismissed" }).firstSteps).toBeUndefined();
+    expect(buildSnapshot(empty, { kind: "dashboard" }).firstSteps).toBeUndefined();
+  });
 });

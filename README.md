@@ -105,7 +105,7 @@ out-of-scope topbar actions (AI / Theme / Exit) surface a toast.
 
 A floating chat on every platform page and in the player (`components/assistant`,
 `lib/assistant`): it answers questions about the platform and the learner's courses, with
-buttons to the right place, and never changes anything. Scripted by default; Claude when
+buttons to the right place, and never changes anything. For a learner who has just arrived it opens once with five first steps that tick themselves (`lib/first-steps`), and it always shows the one thing to do next. Scripted by default; Claude when
 `ANTHROPIC_API_KEY` is set (see DEPLOY.md). Design: `docs/superpowers/specs/2026-10-13-assistant-design.md`.
 
 ## edX-parity additions (handoff v1.2 → v1.5)

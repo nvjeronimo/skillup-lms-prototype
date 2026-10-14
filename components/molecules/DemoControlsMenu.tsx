@@ -15,6 +15,7 @@ import {
   type LabLaunch,
   type Skin as SkinId,
 } from "@/lib/store";
+import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
@@ -478,12 +479,25 @@ export function DemoControlsMenu({
               type="button"
               onClick={() => {
                 resetDemo();
+                // Reset demo puts the seeded completion back: the first steps start from it.
+                restartFirstSteps(Array.from(useLmsStore.getState().completedTopics));
                 setOpen(false);
               }}
               className="sk-text-body-medium-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
             >
               <Icon icon={RotateCcw} size={16} />
               Reset demo
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                restartFirstSteps(Array.from(useLmsStore.getState().completedTopics));
+                setOpen(false);
+              }}
+              className="sk-text-body-medium-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
+            >
+              <Icon icon={RotateCcw} size={16} />
+              Restart first steps
             </button>
           </div>
         </div>

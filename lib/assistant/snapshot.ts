@@ -6,6 +6,8 @@ import { certificatePageHref } from "@/lib/platform/hrefs";
 import { myLearningCourses, myLearningPrograms } from "@/lib/platform/my-learning";
 import { DASHBOARD_HREF, MY_LEARNING_HREF, MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 import { platformUser } from "@/lib/platform/user";
+import type { FirstStepsState } from "@/lib/first-steps/progress";
+import { STEPS } from "@/lib/first-steps/steps";
 import type { ActionEntry, LearnerSnapshot, PageContext } from "./types";
 
 /**
@@ -21,6 +23,7 @@ import type { ActionEntry, LearnerSnapshot, PageContext } from "./types";
 export function buildSnapshot(
   state: { completedTopics: Set<string>; bookmarks: Set<string> },
   page: PageContext,
+  firstSteps?: FirstStepsState,
 ): LearnerSnapshot {
   const courses: LearnerSnapshot["courses"] = myLearningCourses.map((c) => ({
     slug: c.id,
@@ -77,6 +80,13 @@ export function buildSnapshot(
     programs,
     courses,
     due,
+    firstSteps:
+      firstSteps?.status === "active"
+        ? {
+            done: STEPS.filter((step) => firstSteps.done.includes(step.id)).map((step) => step.label),
+            left: STEPS.filter((step) => !firstSteps.done.includes(step.id)).map((step) => step.label),
+          }
+        : undefined,
     topic: page.kind === "player" ? topicOf(page.courseSlug, page.topicId, state.completedTopics) : undefined,
     actions,
   };

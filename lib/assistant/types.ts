@@ -52,6 +52,8 @@ export interface LearnerSnapshot {
     completesByHand: boolean;
     takeaways: string[];
   };
+  /** The first steps, by label, while they are still running (lib/first-steps). */
+  firstSteps?: { done: string[]; left: string[] };
   actions: ActionEntry[];
 }
 
