@@ -37,7 +37,7 @@ export const WithBookmark: Story = { args: { showBookmark: true, bookmarked: tru
 export const InSidebarContext: Story = {
   render: () => (
     <div>
-      <TopicRow type="Reading" title="What is Six Sigma?" duration="approx. 8 min read" status="Done" />
+      <TopicRow type="Reading" title="What is Six Sigma?" duration="8 min read approx." status="Done" />
       <TopicRow type="Video" title="History and origins" duration="5 min" status="Done" />
       <TopicRow
         type="Video"
@@ -46,8 +46,8 @@ export const InSidebarContext: Story = {
         status="In Progress"
         active
       />
-      <TopicRow type="Reading" title="The measure phase" duration="approx. 8 min read" status="Pending" showBookmark bookmarked />
-      <TopicRow type="Graded Assignment" title="The control phase" duration="approx. 20 min" status="Locked" />
+      <TopicRow type="Reading" title="The measure phase" duration="8 min read approx." status="Pending" showBookmark bookmarked />
+      <TopicRow type="Graded Assignment" title="The control phase" duration="20 min approx." status="Locked" />
     </div>
   ),
 };
