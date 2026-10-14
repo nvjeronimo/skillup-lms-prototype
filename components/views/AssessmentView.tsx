@@ -750,7 +750,7 @@ function QuizSummary({
                   ? ` · ${config.maxAttempts - result.attempts} left`
                   : ""}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 max-md:[&>*]:flex-1">
                 {incorrectIdx.length && !attemptsExhausted ? (
                   <Button variant="primary" onClick={() => onRetryIncorrect(incorrectIdx)}>
                     Retry incorrect ({incorrectIdx.length})

@@ -204,7 +204,7 @@ function PreLive({
       <SessionMeta session={session} />
       <Agenda items={session.agenda} />
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-sko-border-subtle pt-4">
+      <div className="flex flex-wrap items-center gap-2 border-t border-sko-border-subtle pt-4 max-md:[&>*]:flex-1">
         <Button variant="primary" size="lg" disabled={locked} onClick={onSimulateLive}>
           {locked ? "Join opens soon" : "Join session"}
         </Button>
