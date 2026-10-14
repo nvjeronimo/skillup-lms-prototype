@@ -50,6 +50,25 @@ function Signatory({ name, role, signatureSrc }: CertificateDocumentData["signat
   );
 }
 
+/* The seal's engraved ring, drawn rather than shipped as a raster (the PNG it replaced was never
+   committed): a fine outer and inner line with 60 radial ticks between them, in the seal's own
+   ink (`currentColor`, icon/on-primary), so it follows every skin and theme. Decorative. */
+const SEAL_TICKS = Array.from({ length: 60 }, (_, i) => (i * 360) / 60);
+
+function SealRing({ style }: { style: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false" className="absolute" style={style}>
+      <g fill="none" stroke="currentColor" opacity={0.6}>
+        <circle cx="36" cy="36" r="35" strokeWidth="1" />
+        <circle cx="36" cy="36" r="29.5" strokeWidth="0.75" />
+        {SEAL_TICKS.map((deg) => (
+          <line key={deg} x1="36" y1="2.5" x2="36" y2="5.5" strokeWidth="0.75" transform={`rotate(${deg} 36 36)`} />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
 /** The name on the sheet: the certificate's own or, left out, the signed-in learner (`user`). */
 export const certificateLearner = (data: CertificateDocumentData) => data.learner ?? platformUser.name;
 
@@ -128,13 +147,7 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
                 className="relative flex items-center justify-center rounded-full bg-sko-bg-primary text-sko-icon-on-primary"
                 style={{ width: u(88), height: u(88) }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/platform/certificate-seal-ring.png"
-                  alt=""
-                  className="absolute"
-                  style={{ inset: u(8), width: u(72), height: u(72) }}
-                />
+                <SealRing style={{ inset: u(8), width: u(72), height: u(72) }} />
                 <Check strokeWidth={2} style={{ width: u(44), height: u(44) }} />
               </span>
               <Line size={12} leading={18} className="sk-text-label-small-semibold text-sko-text-subtle">
