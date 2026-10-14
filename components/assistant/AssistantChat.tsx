@@ -11,6 +11,9 @@ import { restartFirstSteps, useFirstSteps } from "@/lib/first-steps/useFirstStep
 import { wantsRestart, withoutRestart } from "@/lib/first-steps/url";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
+import { cn } from "@/lib/utils";
 import { AssistantLauncher } from "./AssistantLauncher";
 import { AssistantWindow } from "./AssistantWindow";
 
@@ -172,6 +175,13 @@ function Chat({ pathname }: { pathname: string }) {
   const side = isPhone ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE);
   const sheet = open && isPhone;
+  // The window stays on screen while it leaves: it shrinks back into the launcher (short3),
+  // or the sheet slides down (short4). Pressing the launcher again mid-exit reopens it at once.
+  const presence = useExitTransition(open, isPhone ? MOTION_MS.short4 : MOTION_MS.short3);
+  // While it leaves, it shows what it showed: closing acknowledges "You're set.", which would
+  // otherwise swap the view under the exit.
+  const shownSteps = useFrozenWhileClosed(stepsView, open);
+  const shownNext = useFrozenWhileClosed(next, open);
 
   return (
     <>
@@ -179,23 +189,32 @@ function Chat({ pathname }: { pathname: string }) {
       <p role="status" className="sr-only">
         {open && selfOpened ? `SkillUp Assistant opened: ${firstSteps.left} first steps to get you started.` : ""}
       </p>
-      {open ? (
+      {presence.mounted ? (
         <AssistantWindow
           id={windowId}
+          open={open}
+          state={presence.state}
+          onAnimationEnd={presence.onAnimationEnd}
           messages={assistant.messages}
           streaming={assistant.streaming}
           status={assistant.status}
           suggestions={assistant.suggestions}
           firstName={platformUser.firstName}
           onAsk={ask}
-          firstSteps={stepsView}
-          next={next}
+          firstSteps={shownSteps}
+          next={shownNext}
           takeFocus={!selfOpened}
           onClear={assistant.clear}
           onClose={close}
           modal={isPhone}
           className={
-            isPhone ? "fixed inset-0 z-[45]" : "fixed z-[45] w-[380px] max-w-[calc(100vw-48px)]"
+            isPhone
+              ? "sk-animate-sheet fixed inset-0 z-[45]"
+              : cn(
+                  "sk-animate-pop fixed z-[45] w-[380px] max-w-[calc(100vw-48px)]",
+                  // It grows out of the launcher, so it scales from the launcher's corner.
+                  side === "left" ? "origin-bottom-left" : "origin-bottom-right",
+                )
           }
           style={
             isPhone

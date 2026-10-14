@@ -1,18 +1,29 @@
 "use client";
 
 import * as React from "react";
-import { RotateCcw, Send, Sparkles, X } from "lucide-react";
+import { ArrowDown, RotateCcw, Send, Sparkles, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import type { ActionEntry, ChatMessage } from "@/lib/assistant/types";
 import { FirstStepsView, type FirstStepsViewProps } from "./FirstStepsView";
 import { NextStepCard } from "./NextStepCard";
 import { useDialog } from "@/lib/useDialog";
-import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { isNearEnd } from "@/lib/motion/scroll";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { cn, scrollBehavior } from "@/lib/utils";
 
 export interface AssistantWindowProps {
   id: string;
+  /** False while the window is leaving (it stays mounted for its exit animation). */
+  open?: boolean;
+  /** The presence state of useExitTransition, set as data-state on the window. */
+  state?: "open" | "closed";
+  /** useExitTransition's handler: the window's own animation is the one that ends last. */
+  onAnimationEnd?: (event: React.AnimationEvent) => void;
   messages: ChatMessage[];
   /** The reply still arriving (model mode), or null. */
   streaming: string | null;
@@ -56,6 +67,9 @@ const CAPTION = {
  */
 export function AssistantWindow({
   id,
+  open = true,
+  state = "open",
+  onAnimationEnd,
   messages,
   streaming,
   status,
@@ -77,18 +91,19 @@ export function AssistantWindow({
   const [draft, setDraft] = React.useState("");
   // Focus trap, inert page and Esc for the sheet. The floating card is not modal: the page
   // behind stays usable, so it only takes the focus on open and closes on its own Esc.
-  const dialogRef = useDialog(modal, onClose, { initialFocusRef: inputRef });
+  const dialogRef = useDialog(modal && open, onClose, { initialFocusRef: inputRef });
   const tabsId = React.useId();
   // First steps come first while they run; the learner can go to the chat at any time.
   const [view, setView] = React.useState<View>(firstSteps ? "first-steps" : "ask");
   const showSteps = Boolean(firstSteps) && view === "first-steps";
   React.useEffect(() => {
-    if (modal || !takeFocus) return;
+    if (!open || modal || !takeFocus) return;
     // The chat's input, or the selected tab when the First steps view is shown instead.
     (inputRef.current ?? dialogRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]'))?.focus();
-    // Only when the window opens: switching tabs moves the focus itself (toAsk).
+    // Only when the window opens (also when it is reopened during its exit): switching tabs
+    // moves the focus itself (toAsk).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modal]);
+  }, [modal, open]);
   const toAsk = () => {
     setView("ask");
     // The input is rendered with the Ask tab: focus it once it is there.
@@ -112,16 +127,83 @@ export function AssistantWindow({
 
   const answering = status === "answering";
   const last = messages[messages.length - 1];
-  React.useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "end" });
-  }, [messages.length, streaming, answering]);
 
+  // Which messages rise in: the ones that arrive while the window is open. Those already there
+  // when it opens come with the window, and an answer that was streamed into the answering
+  // bubble takes that bubble's place without rising a second time.
+  const [openedWith] = React.useState(() => new Set(messages.map((m) => m.id)));
+  // Every answer streamed in place, not only the latest: an earlier one must not gain the
+  // rise class (and replay it) when the next one commits.
+  const [streamedIds, setStreamedIds] = React.useState<ReadonlySet<string>>(() => new Set());
+  const [wasStreaming, setWasStreaming] = React.useState(false);
+  const [prevLastId, setPrevLastId] = React.useState(last?.id);
+  if (streaming && !wasStreaming) setWasStreaming(true);
+  if (last?.id !== prevLastId) {
+    setPrevLastId(last?.id);
+    if (wasStreaming && last?.role === "assistant") {
+      const id = last.id;
+      setStreamedIds((ids) => new Set(ids).add(id));
+    }
+    setWasStreaming(false);
+  }
+  const arrived = (messageId: string) => !openedWith.has(messageId);
+
+  // The conversation follows a growing answer only while the learner is at its end. Once they
+  // scroll up to read, it stays where they are and a "New message" pill offers the way down.
+  const logRef = React.useRef<HTMLDivElement>(null);
+  const following = React.useRef(true);
+  const lastTop = React.useRef(0);
+  const firstScroll = React.useRef(true);
+  const [pill, setPill] = React.useState(false);
+  const onLogScroll = () => {
+    const log = logRef.current;
+    if (!log) return;
+    if (isNearEnd(log.scrollTop, log.clientHeight, log.scrollHeight)) {
+      following.current = true;
+      setPill(false);
+    } else if (log.scrollTop < lastTop.current) {
+      // Only the learner scrolls up: the glide to the end never unfollows.
+      following.current = false;
+    }
+    lastTop.current = log.scrollTop;
+  };
+  const toEnd = (behavior: ScrollBehavior) => endRef.current?.scrollIntoView({ block: "end", behavior });
+  React.useEffect(() => {
+    // The log is not rendered under the First steps tab: when it comes back it starts at the end.
+    if (showSteps) {
+      firstScroll.current = true;
+      return;
+    }
+    if (messages.length === 0) setPill(false);
+    if (firstScroll.current) {
+      // Opening on a conversation: it is already at its end, not scrolled there.
+      firstScroll.current = false;
+      following.current = true;
+      toEnd("auto");
+    } else if (following.current) {
+      // A growing stream keeps up instantly (a glide per chunk lags and stutters); a new
+      // message glides.
+      toEnd(streaming ? "auto" : scrollBehavior());
+    } else {
+      setPill(true);
+    }
+  }, [messages.length, streaming, answering, showSteps]);
+
+  // A question the learner sends takes them to the end, wherever they were.
+  const send = (question: string) => {
+    following.current = true;
+    setPill(false);
+    onAsk(question);
+  };
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     if (answering || !draft.trim()) return;
-    onAsk(draft);
+    send(draft);
     setDraft("");
   };
+
+  // The suggestions fade out when one is sent (or a question is typed), instead of vanishing.
+  const empty = useExitTransition(messages.length === 0, MOTION_MS.short4);
 
   return (
     <div
@@ -129,7 +211,11 @@ export function AssistantWindow({
       id={id}
       role="dialog"
       aria-label="SkillUp Assistant"
-      aria-modal={modal || undefined}
+      aria-modal={(modal && open) || undefined}
+      data-state={state}
+      aria-hidden={!open || undefined}
+      {...inertProps(!open)}
+      onAnimationEnd={onAnimationEnd}
       style={style}
       onKeyDown={(event) => {
         if (!modal && event.key === "Escape") {
@@ -138,8 +224,9 @@ export function AssistantWindow({
         }
       }}
       className={cn(
-        "sk-animate-fade flex flex-col overflow-hidden bg-sko-bg-page",
+        "flex flex-col overflow-hidden bg-sko-bg-page",
         modal ? "" : "rounded-xl border border-sko-border-subtle shadow-xl",
+        !open && "pointer-events-none",
         className,
       )}
     >
@@ -213,9 +300,23 @@ export function AssistantWindow({
         aria-labelledby={firstSteps ? platformTabId(tabsId, "ask") : undefined}
         className="flex min-h-0 flex-1 flex-col"
       >
-      <div role="log" aria-live="off" aria-label="Conversation" className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-5">
-        {messages.length === 0 ? (
-          <>
+      <div className="relative flex min-h-0 flex-1 flex-col">
+      <div
+        ref={logRef}
+        onScroll={onLogScroll}
+        role="log"
+        aria-live="off"
+        aria-label="Conversation"
+        className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-5"
+      >
+        {empty.mounted ? (
+          <div
+            data-state={empty.state}
+            aria-hidden={empty.state === "closed" || undefined}
+            {...inertProps(empty.state === "closed")}
+            onAnimationEnd={empty.onAnimationEnd}
+            className="sk-animate-fade flex flex-col gap-4"
+          >
             {next ? <NextStepCard text={next.text} action={next.action} /> : null}
             <p className="sk-text-body-medium-regular text-sko-text-default">
               Hi {firstName}. Ask me about the platform or your courses.
@@ -225,7 +326,7 @@ export function AssistantWindow({
                 <li key={s}>
                   <button
                     type="button"
-                    onClick={() => onAsk(s)}
+                    onClick={() => send(s)}
                     disabled={answering}
                     className="sk-text-body-small-medium min-h-11 rounded-full bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
                   >
@@ -234,28 +335,49 @@ export function AssistantWindow({
                 </li>
               ))}
             </ul>
-          </>
+          </div>
         ) : null}
 
         {messages.map((m) =>
           m.role === "user" ? (
             <p
               key={m.id}
-              className="sk-text-body-medium-regular max-w-[85%] self-end whitespace-pre-line rounded-lg bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default"
+              className={cn(
+                "sk-text-body-medium-regular max-w-[85%] self-end whitespace-pre-line rounded-lg bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default",
+                arrived(m.id) && "sk-animate-rise",
+              )}
             >
               <span className="sr-only">You: </span>
               {m.text}
             </p>
           ) : (
-            <div key={m.id} className="flex max-w-[92%] flex-col gap-3 self-start">
+            <div
+              key={m.id}
+              className={cn(
+                "flex max-w-[92%] flex-col gap-3 self-start",
+                arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise",
+              )}
+            >
               <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default">
                 <span className="sr-only">Assistant: </span>
                 {m.text}
               </p>
               {m.actions?.length ? (
                 <ul className="flex flex-col items-start gap-2">
-                  {m.actions.map((a) => (
-                    <li key={a.id}>
+                  {m.actions.map((a, i) => (
+                    <li
+                      key={a.id}
+                      // The buttons follow the answer one after the other, half a short2 apart.
+                      className={cn(arrived(m.id) && "sk-animate-rise sk-rise-nudge")}
+                      style={
+                        arrived(m.id)
+                          ? {
+                              animationDelay: `calc(var(--motion-duration-short2) / 2 * ${i})`,
+                              animationFillMode: "backwards",
+                            }
+                          : undefined
+                      }
+                    >
                       {/* A long label wraps: the button grows with it instead of keeping the 36px of Button sm. */}
                       <ButtonLink href={a.href} hierarchy="secondary" size="sm" className="!h-auto min-h-9 py-1.5">
                         {a.label}
@@ -269,12 +391,41 @@ export function AssistantWindow({
           ),
         )}
 
+        {/* The answering bubble: mounted once per answer, it keeps its element while the
+            streamed text grows into it (the text itself is never animated). */}
         {answering ? (
-          <p className="sk-text-body-medium-regular max-w-[92%] self-start whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-muted">
-            {streaming || "Thinking…"}
+          <p className="sk-animate-rise sk-text-body-medium-regular max-w-[92%] self-start whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-muted">
+            {streaming ? (
+              streaming
+            ) : (
+              <span className="sk-typing">
+                <span aria-hidden className="sk-typing__dot" />
+                <span aria-hidden className="sk-typing__dot" />
+                <span aria-hidden className="sk-typing__dot" />
+                <span className="sk-typing__word">Thinking…</span>
+              </span>
+            )}
           </p>
         ) : null}
         <div ref={endRef} />
+      </div>
+      {pill ? (
+        <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
+          <Button
+            hierarchy="secondary"
+            size="sm"
+            leftIcon={ArrowDown}
+            className="sk-animate-rise pointer-events-auto shadow-md"
+            onClick={() => {
+              following.current = true;
+              setPill(false);
+              toEnd(scrollBehavior());
+            }}
+          >
+            New message
+          </Button>
+        </div>
+      ) : null}
       </div>
 
       {/* What a screen reader hears: the status, then the finished answer once. */}
