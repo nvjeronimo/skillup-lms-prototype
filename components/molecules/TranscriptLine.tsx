@@ -52,15 +52,16 @@ export function TranscriptLine({
   const stacked = active && device === "mobile";
   if (readOnly)
     return (
-      <div
+      // A span (block), so the quote can also sit inside a button (the note item opens on click).
+      <span
         className={cn(
-          "sk-text-body-medium-regular px-4 py-3 text-sko-text-default",
+          "sk-text-body-medium-regular block px-4 py-3 text-sko-text-default",
           active ? "bg-sko-bg-primary-soft shadow-[inset_3px_0_0_var(--color-border-primary)]" : "",
           className,
         )}
       >
         {text}
-      </div>
+      </span>
     );
   return (
     <div
