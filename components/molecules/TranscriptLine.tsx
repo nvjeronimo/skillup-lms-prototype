@@ -16,6 +16,11 @@ export interface TranscriptLineProps {
    * (VERTICAL, gap 12) instead of placing it on the right.
    */
   device?: "desktop" | "mobile";
+  /**
+   * A quote of the line, not a control (the anchor of a note in the Note-Editor, 14 Oct 2026):
+   * no seek, no Note pill, no timecode. Same look as the line.
+   */
+  readOnly?: boolean;
   onSeek?: () => void;
   onAddNote?: () => void;
   onEditNote?: () => void;
@@ -38,12 +43,26 @@ export function TranscriptLine({
   showDuration = false,
   duration,
   device = "desktop",
+  readOnly = false,
   onSeek,
   onAddNote,
   onEditNote,
   className,
 }: TranscriptLineProps) {
   const stacked = active && device === "mobile";
+  if (readOnly)
+    return (
+      // A span (block), so the quote can also sit inside a button (the note item opens on click).
+      <span
+        className={cn(
+          "sk-text-body-medium-regular block px-4 py-3 text-sko-text-default",
+          active ? "bg-sko-bg-primary-soft shadow-[inset_3px_0_0_var(--color-border-primary)]" : "",
+          className,
+        )}
+      >
+        {text}
+      </span>
+    );
   return (
     <div
       className={cn(

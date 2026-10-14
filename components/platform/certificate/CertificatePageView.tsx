@@ -153,7 +153,13 @@ export function CertificatePageView({
             <ButtonLink href={back.href} hierarchy="secondary" size="lg">
               {back.label}
             </ButtonLink>
+            {/* The sheet is one image whose small print scales below 12 px: everything a learner
+                reads on it that is not in its label (learner, course) is listed here as text. */}
             <dl className="mt-2 flex flex-col gap-3">
+              <div className="flex flex-col gap-0.5">
+                <dt className="sk-text-body-small-regular text-sko-text-subtle">Issued</dt>
+                <dd className="sk-text-body-medium-semibold text-sko-text-default">{certificate.document.issuedOn}</dd>
+              </div>
               <div className="flex flex-col gap-0.5">
                 <dt className="sk-text-body-small-regular text-sko-text-subtle">Certificate ID</dt>
                 <dd className="sk-text-body-medium-semibold text-sko-text-default">{certificate.document.certificateId}</dd>

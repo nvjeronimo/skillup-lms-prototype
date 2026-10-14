@@ -45,8 +45,8 @@ export { moduleTopics, resumeTopicOf };
 export const playerHref = (outline: Course, topicId: string = resumeTopicOf(outline)) =>
   playerTopicHref(outline.slug, topicId);
 
-/** "approx. 15 min read" → "15 min": the page prints the bare effort. */
-export const effort = (duration: string) => duration.replace(/^approx\.\s*/, "").replace(/\s*read$/, "");
+/** "15 min read approx." → "15 min": the page prints the bare effort. */
+export const effort = (duration: string) => duration.replace(/^approx\.\s*|\s*approx\.$/g, "").replace(/\s*read$/, "");
 
 /**
  * The syllabus of a course, built from its player outline (./outline.ts of its folder): the same

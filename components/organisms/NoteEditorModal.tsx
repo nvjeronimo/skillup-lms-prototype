@@ -4,6 +4,7 @@ import * as React from "react";
 import { X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";

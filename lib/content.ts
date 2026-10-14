@@ -580,7 +580,7 @@ export function getActivity(topic: FlatTopic): ActivityContent {
     kind: isScorm ? "scorm" : "checklist",
     packageLabel: "Articulate Storyline package",
     packageSizeLabel: "8.4 MB",
-    intro: `Work through the steps below. Tick each one as you go and your progress is saved automatically. This activity should take about ${topic.duration.replace(/^approx\.\s*/, "")}.`,
+    intro: `Work through the steps below. Tick each one as you go and your progress is saved automatically. This activity should take about ${topic.duration.replace(/^approx\.\s*|\s*approx\.$/g, "")}.`,
     steps: [
       {
         title: "Map the process",
@@ -1399,7 +1399,7 @@ function plainOra(topic: FlatTopic): OraContent {
   };
 }
 
-/** "approx. 30 min" → 30, for the badge of a lab. */
+/** "30 min approx." → 30, for the badge of a lab. */
 const minutesOf = (topic: FlatTopic) => Math.max(1, Math.round(getMediaSeconds(topic) / 60));
 
 function plainLab(topic: FlatTopic): DownloadLabContent {

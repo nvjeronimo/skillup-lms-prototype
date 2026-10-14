@@ -89,14 +89,16 @@ export function PlatformPage({
   return (
     <div
       ref={rootRef}
-      className="flex min-h-[100dvh] flex-col bg-sko-bg-faint"
+      // max-md:pb-20: on a phone the assistant launcher floats over the bottom right (48 + 16 from
+      // the edge); 80px under the last card lets every page scroll clear of it.
+      className="flex min-h-[100dvh] flex-col bg-sko-bg-faint max-md:pb-20"
       data-show-mock={showMock ? "" : undefined}
     >
       <PlatformTopbar current={current} />
       {/* Test-build note. The same dashed warning treatment as the /lab note, so a
           screenshot of these pages is not read as a promise about the data. */}
-      <div
-        role="note"
+      <aside
+        aria-label="Test build"
         className="sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-1 text-sko-text-warning md:px-8 lg:px-10"
       >
         <p className="sk-text-body-medium-regular">
