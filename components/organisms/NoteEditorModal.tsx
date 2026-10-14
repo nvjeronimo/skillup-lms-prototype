@@ -6,7 +6,7 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
-import { useExitTransition } from "@/lib/useExitTransition";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { inertProps } from "@/lib/inert";
 import type { NotePayload } from "@/lib/types";
@@ -50,6 +50,8 @@ export function NoteEditorModal({
   const tagInputId = React.useId();
   const dialogRef = useDialog(open, onCancel, { initialFocusRef: textRef });
   const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+  // Closing clears the note from the store; keep the heading and anchor as they were for the exit.
+  const shown = useFrozenWhileClosed({ noteId, anchorTs, anchorQuote }, open);
 
   // Reset fields whenever the modal (re)opens with new content.
   React.useEffect(() => {
@@ -116,7 +118,7 @@ export function NoteEditorModal({
         {/* Padding is the DS Spacing/2xl and 3xl: 16 on mobile, 20 on tablet, 20/24 on desktop. */}
         <header className="flex items-center justify-between gap-3 p-4 md:p-5 lg:px-6">
           <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
-            {noteId ? "Edit note" : "Add note"}
+            {shown.noteId ? "Edit note" : "Add note"}
           </h2>
           <button
             type="button"
@@ -129,14 +131,14 @@ export function NoteEditorModal({
         </header>
 
         <div className="flex flex-col gap-4 p-4 md:gap-5 md:p-5 lg:p-6">
-          {anchorQuote ? (
+          {shown.anchorQuote ? (
             <div>
               <p className="sk-text-label-small-semibold mb-2 text-sko-text-subtle">
                 Anchored to{" "}
-                <span className="text-sko-text-primary">{anchorTs}</span>
+                <span className="text-sko-text-primary">{shown.anchorTs}</span>
               </p>
               <p className="sk-text-body-medium-regular rounded-md bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
-                {anchorQuote}
+                {shown.anchorQuote}
               </p>
             </div>
           ) : null}

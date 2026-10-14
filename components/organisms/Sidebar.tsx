@@ -118,8 +118,8 @@ export function Sidebar({
     if (!container) return;
     if (!isMobile) container.scrollTop = savedScrollTop; // restore persisted position
 
-    // A collapsed module still renders its rows (inert, zero height): skip them.
-    const active = container.querySelector<HTMLElement>('[aria-current="page"]:not([inert] *)');
+    // A collapsed module still renders its rows (zero height): skip them.
+    const active = container.querySelector<HTMLElement>('[aria-current="page"]:not([data-collapse="closed"] *)');
     if (active) {
       const c = container.getBoundingClientRect();
       const a = active.getBoundingClientRect();

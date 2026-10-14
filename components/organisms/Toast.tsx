@@ -6,7 +6,7 @@ import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import type { ToastModel } from "@/lib/store";
-import { useExitTransition } from "@/lib/useExitTransition";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { inertProps } from "@/lib/inert";
 
@@ -85,9 +85,7 @@ export function Toast({
   const { mounted, state, onAnimationEnd } = useExitTransition(!!incoming, MOTION_MS.short3);
   // The last toast shown, used only while `incoming` is null (the exit). A toast that arrives
   // during the exit is drawn at once: `incoming` wins whenever it is set.
-  const lastRef = React.useRef(incoming);
-  if (incoming) lastRef.current = incoming;
-  const toast = incoming ?? lastRef.current;
+  const toast = useFrozenWhileClosed(incoming, !!incoming);
 
   // A toast that leaves under the pointer never gets its mouseleave: do not carry the pause
   // over to the next toast.

@@ -12,12 +12,14 @@ export interface CollapseProps extends React.HTMLAttributes<HTMLDivElement> {
  * (grid rows 0fr ↔ 1fr, medium2, standard). Collapsed content is `inert` and `aria-hidden`,
  * so it is out of the tab order and the accessibility tree. Put padding on the children,
  * not on the Collapse: padding on the clipped row would stay visible when closed.
- * Extra props (id, role, aria-labelledby) go on the outer element.
+ * Extra props (id, role, aria-labelledby) go on the outer element. A closed body carries
+ * `data-collapse="closed"`, so callers can tell it from inert set elsewhere (useDialog).
  */
 export function Collapse({ open, children, className, ...rest }: CollapseProps) {
   return (
     <div
       {...rest}
+      data-collapse={open ? "open" : "closed"}
       aria-hidden={!open || undefined}
       {...inertProps(!open)}
       className={cn(

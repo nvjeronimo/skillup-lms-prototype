@@ -5,7 +5,7 @@ import { CircleHelp, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { useDialog } from "@/lib/useDialog";
-import { useExitTransition } from "@/lib/useExitTransition";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
@@ -50,6 +50,8 @@ export function CompletionQuestionModal({
   const dialogRef = useDialog(open, onClose);
 
   const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+  // "Yes" moves to the next topic, which changes these props: keep the question as it was for the exit.
+  const shown = useFrozenWhileClosed({ noun, reason, hasNext }, open);
 
   if (!mounted) return null;
   const closed = state === "closed";
@@ -84,14 +86,14 @@ export function CompletionQuestionModal({
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-1 pr-10">
             <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
-              Have you completed this {noun}?
+              Have you completed this {shown.noun}?
             </h2>
             <div id={descId} className="sk-text-body-medium-regular flex flex-col text-sko-text-muted">
-              <p>{reason}</p>
+              <p>{shown.reason}</p>
               <p>
-                {hasNext
-                  ? `You can move to the next topic either way and return to this ${noun} anytime.`
-                  : `You can return to this ${noun} anytime.`}
+                {shown.hasNext
+                  ? `You can move to the next topic either way and return to this ${shown.noun} anytime.`
+                  : `You can return to this ${shown.noun} anytime.`}
               </p>
             </div>
           </div>
