@@ -237,7 +237,7 @@ export function buttonClassName({
   const s = SIZE[size];
   const l = LINK_SIZE[size];
   return cn(
-    "inline-flex items-center justify-center transition-colors duration-200 disabled:pointer-events-none",
+    "inline-flex items-center justify-center transition-colors duration-short4 disabled:pointer-events-none",
     "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--btn-ring)]",
     FOCUS_RING[legacy === "destructive" ? "destructive" : legacy ? "brand" : t],
     isLink ? "rounded-none" : "rounded-md",

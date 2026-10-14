@@ -148,7 +148,7 @@ function ModuleRow({
               icon={ChevronDown}
               size={20}
               aria-hidden
-              className={cn("text-sko-icon-faint transition-transform", open && "rotate-180")}
+              className={cn("text-sko-icon-faint transition-transform duration-short4 ease-standard", open && "rotate-180")}
             />
           </span>
         </button>

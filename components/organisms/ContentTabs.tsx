@@ -76,7 +76,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                 strokeWidth={1.5}
                 aria-hidden
                 className={cn(
-                  "shrink-0 transition-transform",
+                  "shrink-0 transition-transform duration-short4 ease-standard",
                   open ? "rotate-180 text-sko-text-primary" : "text-sko-text-subtle",
                 )}
               />

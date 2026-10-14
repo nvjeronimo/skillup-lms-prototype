@@ -1,5 +1,6 @@
 @import "../tokens/colors.css";
 @import "../tokens/typography.css";
+@import "../tokens/motion.css";
 
 @tailwind base;
 @tailwind components;
@@ -99,13 +100,131 @@ button {
   }
 }
 .sk-animate-slide-right {
-  animation: sk-slide-in-right 200ms ease-out;
+  animation: sk-slide-in-right var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
 .sk-animate-slide-left {
-  animation: sk-slide-in-left 200ms ease-out;
+  animation: sk-slide-in-left var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
 .sk-animate-fade {
-  animation: sk-fade-in 200ms ease-out;
+  animation: sk-fade-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+
+/* Exit keyframes. Exits are shorter than their entrance, use standard-accelerate, and
+   leave toward where they came from. `data-state="closed"` comes from useExitTransition;
+   the class may sit on the root itself or on a descendant (backdrop + panel). */
+@keyframes sk-slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes sk-slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes sk-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes sk-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(var(--motion-distance-surface));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-pop-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(var(--motion-distance-surface));
+  }
+}
+@keyframes sk-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-enter));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-rise-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-enter));
+  }
+}
+@keyframes sk-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes sk-sheet-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+.sk-animate-pop {
+  animation: sk-pop-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-rise {
+  animation: sk-rise-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-sheet {
+  animation: sk-sheet-in var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
+}
+
+[data-state="closed"].sk-animate-slide-right,
+[data-state="closed"] .sk-animate-slide-right {
+  animation: sk-slide-out-right var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-slide-left,
+[data-state="closed"] .sk-animate-slide-left {
+  animation: sk-slide-out-left var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-fade,
+[data-state="closed"] .sk-animate-fade {
+  animation: sk-fade-out var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-pop,
+[data-state="closed"] .sk-animate-pop {
+  animation: sk-pop-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-rise,
+[data-state="closed"] .sk-animate-rise {
+  animation: sk-rise-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-sheet,
+[data-state="closed"] .sk-animate-sheet {
+  animation: sk-sheet-out var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
 }
 
 /* Reduced motion (the OS setting here; the Accessibility panel's switch further down
@@ -133,8 +252,25 @@ button {
   }
   /* Panels and the drawer still announce themselves: a short fade replaces the slide. */
   .sk-animate-slide-right,
-  .sk-animate-slide-left {
-    animation: sk-fade-in 150ms ease-out;
+  .sk-animate-slide-left,
+  .sk-animate-pop,
+  .sk-animate-rise,
+  .sk-animate-sheet {
+    animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+  }
+  [data-state="closed"].sk-animate-slide-right,
+  [data-state="closed"] .sk-animate-slide-right,
+  [data-state="closed"].sk-animate-slide-left,
+  [data-state="closed"] .sk-animate-slide-left,
+  [data-state="closed"].sk-animate-pop,
+  [data-state="closed"] .sk-animate-pop,
+  [data-state="closed"].sk-animate-rise,
+  [data-state="closed"] .sk-animate-rise,
+  [data-state="closed"].sk-animate-sheet,
+  [data-state="closed"] .sk-animate-sheet,
+  [data-state="closed"].sk-animate-fade,
+  [data-state="closed"] .sk-animate-fade {
+    animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
   }
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
   .animate-spin {
@@ -200,8 +336,25 @@ button {
 }
 /* Panels and the drawer still announce themselves: a short fade replaces the slide. */
 [data-reduce-motion] .sk-animate-slide-right,
-[data-reduce-motion] .sk-animate-slide-left {
-  animation: sk-fade-in 150ms ease-out;
+[data-reduce-motion] .sk-animate-slide-left,
+[data-reduce-motion] .sk-animate-pop,
+[data-reduce-motion] .sk-animate-rise,
+[data-reduce-motion] .sk-animate-sheet {
+  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+[data-reduce-motion] [data-state="closed"].sk-animate-slide-right,
+[data-reduce-motion] [data-state="closed"] .sk-animate-slide-right,
+[data-reduce-motion] [data-state="closed"].sk-animate-slide-left,
+[data-reduce-motion] [data-state="closed"] .sk-animate-slide-left,
+[data-reduce-motion] [data-state="closed"].sk-animate-pop,
+[data-reduce-motion] [data-state="closed"] .sk-animate-pop,
+[data-reduce-motion] [data-state="closed"].sk-animate-rise,
+[data-reduce-motion] [data-state="closed"] .sk-animate-rise,
+[data-reduce-motion] [data-state="closed"].sk-animate-sheet,
+[data-reduce-motion] [data-state="closed"] .sk-animate-sheet,
+[data-reduce-motion] [data-state="closed"].sk-animate-fade,
+[data-reduce-motion] [data-state="closed"] .sk-animate-fade {
+  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
 }
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
 [data-reduce-motion] .animate-spin {
