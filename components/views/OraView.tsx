@@ -277,7 +277,7 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
             After you submit, you cannot edit or replace your files. Your submission goes to a peer
             for review.
           </p>
-          <div className="flex flex-wrap gap-2 pt-1">
+          <div className="flex flex-wrap gap-2 pt-1 max-md:[&>*]:flex-1">
             <Button variant="primary" size="md" onClick={() => onSubmit(file!)}>
               Yes, submit
             </Button>

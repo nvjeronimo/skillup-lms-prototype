@@ -86,7 +86,7 @@ export function ScormContainer({
               Our activity server didn&rsquo;t respond. Your progress elsewhere is safe. This
               activity is ungraded.
             </span>
-            <div className="flex flex-wrap justify-center gap-2 pt-2">
+            <div className="flex flex-wrap justify-center gap-2 pt-2 max-md:w-full max-md:[&>*]:flex-1">
               <Button variant="primary" size="md" onClick={onRetry}>
                 Try again
               </Button>
