@@ -33,16 +33,15 @@ export interface ToastProps {
 }
 
 /**
- * DS `Toast` (node 21089-1214): per-tone soft surface + 1px soft border,
+ * DS `Toast` v1.1 (node 21089-1214): per-tone soft surface + 1px soft border,
  * radius 12, padding 16, Elevation/level2 (Tailwind `shadow`).
  */
 const TONE: Record<ToastTone, { box: string; icon: LucideIcon; fg: string }> = {
   success: {
     box: "bg-sko-bg-success-soft border-sko-border-success-soft",
     icon: CheckCircle2,
-    // Not the DS binding (icon/success-strong, 2.81:1 on bg/success-soft and
-    // not remapped by data-vision=cvd); icon/success passes 3:1 in both themes.
-    // DS rebind pending: toast-ds-icon-tokens.
+    // icon/success, as in the DS since Toast v1.1 (14 Oct 2026): it passes 3:1
+    // in both themes; icon/success-strong was 2.81:1 on bg/success-soft.
     fg: "text-sko-icon-success",
   },
   info: {
