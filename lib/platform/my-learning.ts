@@ -141,6 +141,8 @@ const COURSES: MyLearningCourse[] = [
 /**
  * Every course opens its own page (the title: `homeUrl`) and its own player (the button:
  * `resumeUrl`); the id is the course's slug. A finished course is reviewed from its page.
+ * Single courses only: a course of a program is reached through its program (decision 025,
+ * 14 Oct 2026; checked in my-learning.test.ts).
  */
 export const myLearningCourses: MyLearningCourse[] = COURSES.map((course) => ({
   ...course,
