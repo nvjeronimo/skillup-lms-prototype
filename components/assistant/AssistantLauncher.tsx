@@ -26,6 +26,14 @@ export interface AssistantLauncherProps {
  */
 export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLauncherProps>(
   function AssistantLauncher({ open, onToggle, controls, badge = 0, className, style }, ref) {
+    // The badge pops when its count changes (shown at once, or on the next close if the
+    // window was open), never merely because it is shown again when the window closes.
+    const [lastBadge, setLastBadge] = React.useState(badge);
+    const [popping, setPopping] = React.useState<number | null>(null);
+    if (badge !== lastBadge) {
+      setLastBadge(badge);
+      setPopping(badge);
+    }
     return (
       <button
         ref={ref}
@@ -79,11 +87,15 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
           <Icon icon={X} size={24} />
         </span>
         {!open && badge > 0 ? (
-          // Keyed on the count: a step done pops the new number in.
+          // Keyed on the count, so a change pops the new number in.
           <span
             key={badge}
             aria-hidden
-            className="sk-animate-pop sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-error px-1 text-sko-text-on-error"
+            onAnimationEnd={() => setPopping(null)}
+            className={cn(
+              popping === badge && "sk-animate-pop",
+              "sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-error px-1 text-sko-text-on-error",
+            )}
           >
             {badge}
           </span>

@@ -132,13 +132,18 @@ export function AssistantWindow({
   // when it opens come with the window, and an answer that was streamed into the answering
   // bubble takes that bubble's place without rising a second time.
   const [openedWith] = React.useState(() => new Set(messages.map((m) => m.id)));
-  const [streamedId, setStreamedId] = React.useState<string | null>(null);
+  // Every answer streamed in place, not only the latest: an earlier one must not gain the
+  // rise class (and replay it) when the next one commits.
+  const [streamedIds, setStreamedIds] = React.useState<ReadonlySet<string>>(() => new Set());
   const [wasStreaming, setWasStreaming] = React.useState(false);
   const [prevLastId, setPrevLastId] = React.useState(last?.id);
   if (streaming && !wasStreaming) setWasStreaming(true);
   if (last?.id !== prevLastId) {
     setPrevLastId(last?.id);
-    if (wasStreaming && last?.role === "assistant") setStreamedId(last.id);
+    if (wasStreaming && last?.role === "assistant") {
+      const id = last.id;
+      setStreamedIds((ids) => new Set(ids).add(id));
+    }
     setWasStreaming(false);
   }
   const arrived = (messageId: string) => !openedWith.has(messageId);
@@ -176,7 +181,9 @@ export function AssistantWindow({
       following.current = true;
       toEnd("auto");
     } else if (following.current) {
-      toEnd(scrollBehavior());
+      // A growing stream keeps up instantly (a glide per chunk lags and stutters); a new
+      // message glides.
+      toEnd(streaming ? "auto" : scrollBehavior());
     } else {
       setPill(true);
     }
@@ -348,7 +355,7 @@ export function AssistantWindow({
               key={m.id}
               className={cn(
                 "flex max-w-[92%] flex-col gap-3 self-start",
-                arrived(m.id) && m.id !== streamedId && "sk-animate-rise",
+                arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise",
               )}
             >
               <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default">

@@ -87,7 +87,7 @@ export function FirstStepsView({ firstName, rows, finished, next, onAsk, onSkip 
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path className="sk-draw-check" d="M4 12l5 5L20 6" pathLength={1} />
+                    <path className="sk-draw-check-immediate" d="M4 12l5 5L20 6" pathLength={1} />
                   </svg>
                 )}
               </span>
