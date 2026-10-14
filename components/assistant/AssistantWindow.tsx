@@ -345,7 +345,7 @@ export function AssistantWindow({
               key={m.id}
               className={cn(
                 "sk-text-body-medium-regular max-w-[85%] self-end whitespace-pre-line rounded-lg bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default",
-                arrived(m.id) && "sk-animate-rise",
+                arrived(m.id) && "sk-animate-rise sk-enter-only",
               )}
             >
               <span className="sr-only">You: </span>
@@ -356,7 +356,7 @@ export function AssistantWindow({
               key={m.id}
               className={cn(
                 "flex max-w-[92%] flex-col gap-3 self-start",
-                arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise",
+                arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise sk-enter-only",
               )}
             >
               <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default">
@@ -369,7 +369,7 @@ export function AssistantWindow({
                     <li
                       key={a.id}
                       // The buttons follow the answer one after the other, half a short2 apart.
-                      className={cn(arrived(m.id) && "sk-animate-rise sk-rise-nudge")}
+                      className={cn(arrived(m.id) && "sk-animate-rise sk-rise-nudge sk-enter-only")}
                       style={
                         arrived(m.id)
                           ? {
@@ -395,7 +395,7 @@ export function AssistantWindow({
         {/* The answering bubble: mounted once per answer, it keeps its element while the
             streamed text grows into it (the text itself is never animated). */}
         {answering ? (
-          <p className="sk-animate-rise sk-text-body-medium-regular max-w-[92%] self-start whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-muted">
+          <p className="sk-animate-rise sk-enter-only sk-text-body-medium-regular max-w-[92%] self-start whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-muted">
             {streaming ? (
               streaming
             ) : (
@@ -416,7 +416,7 @@ export function AssistantWindow({
             hierarchy="secondary"
             size="sm"
             leftIcon={ArrowDown}
-            className="sk-animate-rise pointer-events-auto shadow-md"
+            className="sk-animate-rise sk-enter-only pointer-events-auto shadow-md"
             onClick={() => {
               following.current = true;
               setPill(false);

@@ -60,7 +60,7 @@ export function SavedPanel({
             <PanelSectionLabel>Bookmarked topics</PanelSectionLabel>
             <div className="divide-y divide-sko-border-subtle">
               {savedTopics.map((t, i) => (
-                <div key={t.id} className="sk-animate-rise sk-enter-only" style={staggerStyle(i, rowCount)}>
+                <div key={t.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(i, rowCount)}>
                   <SavedTopicItem
                     topicType={t.topicType}
                     duration={t.duration}
@@ -80,7 +80,7 @@ export function SavedPanel({
             <PanelSectionLabel>Saved notes</PanelSectionLabel>
             <div className="divide-y divide-sko-border-subtle">
               {savedNotes.map((n, i) => (
-                <div key={n.id} className="sk-animate-rise sk-enter-only" style={staggerStyle(topicRows + i, rowCount)}>
+                <div key={n.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(topicRows + i, rowCount)}>
                   <SavedNoteItem
                     ts={n.ts}
                     topicTitle={n.topicTitle}

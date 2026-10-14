@@ -100,7 +100,7 @@ export function NotificationsPanel({
                   {items.map((n) => (
                     <div
                       key={n.id}
-                      className="sk-animate-rise sk-enter-only"
+                      className="sk-animate-rise sk-rise-nudge sk-enter-only"
                       style={staggerStyle(rowOrder.indexOf(n.id), rowOrder.length)}
                     >
                       <NotificationItem

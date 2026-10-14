@@ -21,6 +21,16 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
 
   const [query, setQuery] = React.useState("");
   const [activeTag, setActiveTag] = React.useState<string | null>(null);
+  const chipsRef = React.useRef<HTMLDivElement>(null);
+  // A #tag clicked inside a note remounts the list (it is keyed on the tag) and with it the
+  // focused button: focus moves to the tag's chip, which now shows the filter.
+  const focusChip = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!focusChip.current) return;
+    focusChip.current = false;
+    chipsRef.current?.querySelector<HTMLButtonElement>('button[aria-pressed="true"]')?.focus();
+  }, [activeTag]);
 
   const allTags = Array.from(new Set(notes.flatMap((n) => n.tags)));
 
@@ -67,7 +77,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
       </div>
 
       {allTags.length ? (
-        <div className="flex flex-wrap gap-1.5">
+        <div ref={chipsRef} className="flex flex-wrap gap-1.5">
           <FilterChip label="All" active={!activeTag} onClick={() => setActiveTag(null)} />
           {allTags.map((tag) => (
             <FilterChip
@@ -84,7 +94,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
       <div key={activeTag ?? ""} className="sk-animate-fade sk-enter-only flex flex-col gap-3">
         {filtered.length ? (
           filtered.map((note, i) => (
-            <div key={note.id} className="sk-animate-rise sk-enter-only" style={staggerStyle(i, filtered.length)}>
+            <div key={note.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(i, filtered.length)}>
               <NoteItem
                 ts={note.ts}
                 anchorQuote={note.anchorQuote}
@@ -96,7 +106,11 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
                 onDelete={() => {
                   if (window.confirm("Delete this note?")) deleteNote(note.id);
                 }}
-                onTagClick={(t) => setActiveTag(t)}
+                onTagClick={(t) => {
+                  if (t === activeTag) return;
+                  focusChip.current = true;
+                  setActiveTag(t);
+                }}
               />
             </div>
           ))

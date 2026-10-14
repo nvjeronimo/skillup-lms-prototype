@@ -37,8 +37,8 @@ const LIST = "hidden flex-col gap-6 lg:flex";
 
 /* The row is the target of its card's title link: it shows it on hover, as the card did. */
 const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
-/* A card coming into the list rises, one after the other (staggerStyle). */
-const ROW_ENTER = "sk-animate-rise sk-enter-only";
+/* A card coming into the list rises a nudge (4px), one after the other (staggerStyle). */
+const ROW_ENTER = "sk-animate-rise sk-rise-nudge sk-enter-only";
 
 const matches = (title: string, query: string) => title.toLowerCase().includes(query);
 

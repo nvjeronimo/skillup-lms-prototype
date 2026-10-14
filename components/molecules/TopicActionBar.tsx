@@ -47,7 +47,7 @@ export function TopicActionBar({
     return (
       // DS `Topic-Status-Badge`, Completed: Badge Soft sm Success, label only, and always
       // "Marked as completed", whatever completed the topic (Nelson, 13 Oct 2026).
-      <Badge color="success" className={cn(fresh && "sk-animate-pop", className)}>
+      <Badge color="success" className={cn(fresh && "sk-animate-badge-pop", className)}>
         Marked as completed
       </Badge>
     );
