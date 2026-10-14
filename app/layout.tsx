@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             renders <main id="main" tabIndex={-1}>. */}
         <a
           href="#main"
-          className="sk-text-body-medium-semibold sr-only rounded-lg border border-sko-border-primary bg-sko-bg-page px-4 py-3 text-sko-text-primary shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]"
+          className="sk-text-body-medium-semibold sr-only rounded-lg border border-sko-border-primary bg-sko-bg-page px-4 py-3 text-sko-text-primary shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:inline-flex focus:min-h-[44px] focus:items-center focus:px-4 focus:py-3"
         >
           Skip to content
         </a>
