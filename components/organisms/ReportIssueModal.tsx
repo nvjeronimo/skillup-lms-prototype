@@ -6,6 +6,9 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { inertProps } from "@/lib/inert";
 import { useRovingRadio } from "@/lib/useRovingRadio";
 
 export interface ReportIssuePayload {
@@ -50,16 +53,31 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
     onSubmit({ reason, details: details.trim() || undefined });
   }
 
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+
+  if (!mounted) return null;
+  const closed = state === "closed";
 
   return (
-    <div ref={dialogRef} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
+    <div
+      ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn("fixed inset-0 z-[60] flex items-center justify-center p-4", closed && "pointer-events-none")}
+    >
+      {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
+      <div
+        className="sk-backdrop sk-animate-fade absolute inset-0"
+        onClick={onCancel}
+        onAnimationEnd={onAnimationEnd}
+        aria-hidden
+      />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-[480px] overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[480px] origin-center overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
       >
         <header className="flex items-center justify-between border-b border-sko-border-subtle px-5 py-4">
           <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">

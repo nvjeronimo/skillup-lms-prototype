@@ -6,6 +6,9 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { inertProps } from "@/lib/inert";
 import type { NotePayload } from "@/lib/types";
 
 export interface NoteEditorModalProps {
@@ -46,6 +49,7 @@ export function NoteEditorModal({
   const titleId = React.useId();
   const tagInputId = React.useId();
   const dialogRef = useDialog(open, onCancel, { initialFocusRef: textRef });
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
 
   // Reset fields whenever the modal (re)opens with new content.
   React.useEffect(() => {
@@ -76,21 +80,34 @@ export function NoteEditorModal({
     setTagDraft("");
   }
 
-  if (!open) return null;
+  if (!mounted) return null;
+  const closed = state === "closed";
 
   return (
     <div
       ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
       // DS `LMS / Note Editor`: a bottom sheet on mobile, a centred 560 modal from tablet up.
-      className="fixed inset-0 z-[60] flex items-end justify-center md:items-center md:p-4"
+      className={cn(
+        "fixed inset-0 z-[60] flex items-end justify-center md:items-center md:p-4",
+        closed && "pointer-events-none",
+      )}
       onKeyDown={handleKeyDown}
     >
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
+      {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
+      <div
+        className="sk-backdrop sk-animate-fade absolute inset-0"
+        onClick={onCancel}
+        onAnimationEnd={onAnimationEnd}
+        aria-hidden
+      />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative max-h-[92dvh] w-full overflow-y-auto rounded-t-xl border-t border-sko-border-subtle bg-sko-bg-page shadow-xl md:max-w-[560px] md:rounded-lg md:border"
+        className="sk-animate-pop relative max-h-[92dvh] w-full origin-center overflow-y-auto rounded-t-xl border-t border-sko-border-subtle bg-sko-bg-page shadow-xl md:max-w-[560px] md:rounded-lg md:border"
       >
         {/* Mobile grabber (DS: 36 x 4, fully rounded). Decorative: the sheet closes with Cancel, X or Escape. */}
         <div aria-hidden className="flex justify-center pt-2 md:hidden">

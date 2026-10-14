@@ -31,6 +31,9 @@ import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { inertProps } from "@/lib/inert";
 import {
   completesByHand,
   completionNoun,
@@ -658,7 +661,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
 const COURSE_DRAWER_ID = "course-drawer";
 
-/** The mobile course drawer as a modal dialog (see useDialog). */
+/** The mobile course drawer as a modal dialog (see useDialog). It slides back out to the left on close. */
 function MobileCourseDrawer({
   open,
   onClose,
@@ -670,15 +673,24 @@ function MobileCourseDrawer({
 }) {
   const titleId = React.useId();
   const ref = useDialog(open, onClose);
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short4);
+  if (!mounted) return null;
+  const closed = state === "closed";
   return (
-    <div ref={ref} className="fixed inset-0 z-40">
+    <div
+      ref={ref}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn("fixed inset-0 z-40", closed && "pointer-events-none")}
+    >
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
       <div
         id={COURSE_DRAWER_ID}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onAnimationEnd={onAnimationEnd}
         className="sk-animate-slide-left absolute left-0 top-0 h-full"
       >
         {children(titleId)}

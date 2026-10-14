@@ -9,6 +9,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { CONTENT_PENDING } from "@/lib/platform/program";
 import type { CourseModule, CourseTopic } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
+import { Collapse } from "@/components/atoms/Collapse";
 
 /**
  * DS `LMS/Platform/Course-Detail/Module-Number`: a 32px circle with the position — bg/primary-soft
@@ -151,23 +152,25 @@ function ModuleRow({
           </span>
         </button>
       </h3>
-      <div id={panelId} role="region" aria-labelledby={buttonId} hidden={!open} className="px-[15px] py-1 md:px-[19px]">
-        {mod.lessons?.length ? (
-          mod.lessons.map((lesson) => (
-            <React.Fragment key={lesson.id}>
-              {/* DS `LMS / Lesson Header`: 26px on desktop and tablet, 34px on mobile. */}
-              <h4 className="sk-text-body-small-medium px-3 py-2 text-sko-text-muted md:pb-0 md:pr-0">{lesson.label}</h4>
-              <ul>
-                {lesson.topics.map((topic) => (
-                  <TopicRow key={topic.id} topic={topic} href={topicHref} last={topic.id === lastTopicId} />
-                ))}
-              </ul>
-            </React.Fragment>
-          ))
-        ) : (
-          <p className="sk-text-body-medium-regular py-3 text-sko-text-subtle">{CONTENT_PENDING}</p>
-        )}
-      </div>
+      <Collapse open={open} id={panelId} role="region" aria-labelledby={buttonId}>
+        <div className="px-[15px] py-1 md:px-[19px]">
+          {mod.lessons?.length ? (
+            mod.lessons.map((lesson) => (
+              <React.Fragment key={lesson.id}>
+                {/* DS `LMS / Lesson Header`: 26px on desktop and tablet, 34px on mobile. */}
+                <h4 className="sk-text-body-small-medium px-3 py-2 text-sko-text-muted md:pb-0 md:pr-0">{lesson.label}</h4>
+                <ul>
+                  {lesson.topics.map((topic) => (
+                    <TopicRow key={topic.id} topic={topic} href={topicHref} last={topic.id === lastTopicId} />
+                  ))}
+                </ul>
+              </React.Fragment>
+            ))
+          ) : (
+            <p className="sk-text-body-medium-regular py-3 text-sko-text-subtle">{CONTENT_PENDING}</p>
+          )}
+        </div>
+      </Collapse>
     </li>
   );
 }

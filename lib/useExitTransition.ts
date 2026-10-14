@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { armExitFallback, isOwnAnimationEnd, nextPresence } from "./motion/presence";
+import { armExitFallback, isOwnAnimationEnd, nextPresence, presenceView } from "./motion/presence";
 
 /**
  * Keeps a surface mounted while its exit animation plays.
@@ -32,9 +32,5 @@ export function useExitTransition(
     if (isOwnAnimationEnd(e.target, e.currentTarget)) dispatch("exited");
   }, []);
 
-  return {
-    mounted: presence !== "unmounted",
-    state: presence === "open" ? "open" : "closed",
-    onAnimationEnd,
-  };
+  return { ...presenceView(open, presence), onAnimationEnd };
 }
