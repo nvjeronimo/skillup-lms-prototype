@@ -226,22 +226,32 @@ export function MyLearningCourseCard({
       <div className="flex w-full items-center justify-between gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <span className={cn(OVERLINE, "shrink-0")}>{overline}</span>
-          <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-sko-text-default">{nextTitle}</span>
+          {/* A certificate date sits at the right end of the strip (DS State=Completed). */}
+          <span className={cn("sk-text-body-medium-medium min-w-0 flex-1 truncate text-sko-text-default", !next && "text-right")}>
+            {nextTitle}
+          </span>
         </div>
         {next ? <TopicTypeBadge type={next.type} className="shrink-0" /> : null}
       </div>
       {/* mt-auto: in a row of cards with titles of different length, the action stays at the bottom. */}
       {certificateHref ? (
         // DS `State=Completed`, Grid (Nelson, 13 Oct 2026): Review (Secondary) and, 12 after it,
-        // a Primary that opens the certificate. Both hug their label.
+        // a Primary that opens the certificate. Both hug their label; in a course row (the My
+        // Learning screens) they share the width, as the single action fills it there.
         <div className="mt-auto flex w-full flex-wrap items-center gap-3">
-          <Action course={course} hierarchy="secondary" label={actionLabel} onAction={onAction} />
+          <Action
+            course={course}
+            hierarchy="secondary"
+            label={actionLabel}
+            onAction={onAction}
+            className={cn(inRow && "flex-1")}
+          />
           <ButtonLink
             href={certificateHref}
             hierarchy="primary"
             size="sm"
             aria-label={`${CERTIFICATE_CTA} ${course.title}`}
-            className={cn("relative z-[1]", TARGET_44)}
+            className={cn("relative z-[1]", TARGET_44, inRow && "flex-1")}
           >
             {CERTIFICATE_CTA}
           </ButtonLink>
