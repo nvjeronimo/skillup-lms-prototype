@@ -1,7 +1,9 @@
 "use client";
 
+import * as React from "react";
 import { Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { iconStroke } from "@/lib/utils";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
@@ -36,6 +38,8 @@ export interface FirstStepsViewProps {
  */
 export function FirstStepsView({ firstName, rows, finished, next, onAsk, onSkip }: FirstStepsViewProps) {
   const done = rows.filter((row) => row.done).length;
+  // A step that ticks while the view is shown draws its check; those done before are still.
+  const [doneBefore] = React.useState(() => new Set(rows.filter((row) => row.done).map((row) => row.id)));
 
   if (finished) {
     return (
@@ -68,7 +72,24 @@ export function FirstStepsView({ firstName, rows, finished, next, onAsk, onSkip 
           >
             {row.done ? (
               <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sko-bg-success-soft text-sko-icon-success">
-                <Icon icon={Check} size={14} />
+                {doneBefore.has(row.id) ? (
+                  <Icon icon={Check} size={14} />
+                ) : (
+                  // The lucide check as one path, so its stroke draws itself (CompletionStatus).
+                  <svg
+                    aria-hidden
+                    width={14}
+                    height={14}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={iconStroke(14)}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path className="sk-draw-check" d="M4 12l5 5L20 6" pathLength={1} />
+                  </svg>
+                )}
               </span>
             ) : (
               <span aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded-full border border-sko-border-default" />

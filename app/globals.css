@@ -201,6 +201,56 @@ button {
 .sk-animate-sheet {
   animation: sk-sheet-in var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
+/* A rise of the nudge distance (4px), not the enter distance: the assistant's action
+   buttons, which come in one after the other under their answer. */
+.sk-rise-nudge {
+  --motion-distance-enter: var(--motion-distance-nudge);
+}
+
+/* The assistant thinking: three dots that brighten in turn, one short3 apart, on a loop of
+   eight short3. The word "Thinking…" is in the markup, visually hidden; under reduced
+   motion the dots go and the word is shown instead. */
+@keyframes sk-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+.sk-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 1.5em;
+}
+.sk-typing__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.3;
+  animation: sk-typing calc(var(--motion-duration-short3) * 8) var(--motion-easing-standard) infinite;
+}
+.sk-typing__dot:nth-child(2) {
+  animation-delay: var(--motion-duration-short3);
+}
+.sk-typing__dot:nth-child(3) {
+  animation-delay: calc(var(--motion-duration-short3) * 2);
+}
+.sk-typing__word {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 
 /* The completion chain's second beat: the rail check draws itself, one step (short2) after
    the completed badge pops. The path carries pathLength="1", so the dash is the whole
@@ -331,6 +381,19 @@ button {
   .sk-draw-check-immediate {
     animation: none;
   }
+  /* The assistant thinking: the word, not the dots. */
+  .sk-typing__dot {
+    display: none;
+  }
+  .sk-typing__word {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
   .animate-spin {
     animation: sk-pulse 1.2s ease-in-out infinite;
@@ -421,6 +484,19 @@ button {
 [data-reduce-motion] .sk-draw-check,
 [data-reduce-motion] .sk-draw-check-immediate {
   animation: none;
+}
+/* The assistant thinking: the word, not the dots. */
+[data-reduce-motion] .sk-typing__dot {
+  display: none;
+}
+[data-reduce-motion] .sk-typing__word {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
 }
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
 [data-reduce-motion] .animate-spin {

@@ -42,31 +42,48 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
         aria-controls={controls}
         style={style}
         className={cn(
-          "inline-flex h-12 w-12 items-center justify-center rounded-full transition-transform",
+          // Hover lifts it a little, a press pushes it in (faster); the colour of the open state
+          // eases with it. Reduced motion keeps only the colour (the transition guard).
+          "inline-flex h-12 w-12 items-center justify-center rounded-full transition-[transform,box-shadow,background-color,color] duration-short3 ease-standard hover:scale-[1.04] active:scale-[.96] active:duration-short2",
           // The badge needs a positioned button. "relative" only when the caller does not place it:
           // with both, the stylesheet order made "relative" win over "fixed", and the launcher
           // stopped following the viewport (14 Oct 2026).
           !/\b(fixed|absolute|sticky)\b/.test(className ?? "") && "relative",
           open
             ? "bg-sko-bg-primary text-sko-text-on-primary shadow-lg hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
-            : "drop-shadow-lg hover:scale-105",
+            : "drop-shadow-lg",
           className,
         )}
       >
-        {open ? (
+        {/* Both faces are always there: the mark and the close cross cross-fade and turn a
+            quarter, so the button reads as one thing changing, not two swapped. */}
+        <span
+          aria-hidden
+          className={cn(
+            "absolute inset-0 transition-[opacity,transform] duration-short4 ease-standard",
+            open ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
+          )}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assistant-mark.svg" alt="" className="sk-logo-light block h-12 w-12" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assistant-mark-dark.svg" alt="" className="sk-logo-dark h-12 w-12" />
+        </span>
+        <span
+          aria-hidden
+          className={cn(
+            "absolute inset-0 inline-flex items-center justify-center transition-[opacity,transform] duration-short4 ease-standard",
+            open ? "rotate-0 opacity-100" : "-rotate-90 opacity-0",
+          )}
+        >
           <Icon icon={X} size={24} />
-        ) : (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assistant-mark.svg" alt="" aria-hidden className="sk-logo-light block h-12 w-12" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assistant-mark-dark.svg" alt="" aria-hidden className="sk-logo-dark h-12 w-12" />
-          </>
-        )}
+        </span>
         {!open && badge > 0 ? (
+          // Keyed on the count: a step done pops the new number in.
           <span
+            key={badge}
             aria-hidden
-            className="sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-error px-1 text-sko-text-on-error"
+            className="sk-animate-pop sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-error px-1 text-sko-text-on-error"
           >
             {badge}
           </span>
