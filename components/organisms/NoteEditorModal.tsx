@@ -4,6 +4,7 @@ import * as React from "react";
 import { X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
 import type { NotePayload } from "@/lib/types";
@@ -118,9 +119,9 @@ export function NoteEditorModal({
                 Anchored to{" "}
                 <span className="text-sko-text-primary">{anchorTs}</span>
               </p>
-              <p className="sk-text-body-medium-regular rounded-md bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
-                {anchorQuote}
-              </p>
+              {/* DS: the anchor is the transcript line the note belongs to, shown as that line
+                  (Transcript-Line State=Active), read-only (Nelson, 14 Oct 2026). */}
+              <TranscriptLine ts={anchorTs ?? ""} text={anchorQuote} active readOnly />
             </div>
           ) : null}
 
