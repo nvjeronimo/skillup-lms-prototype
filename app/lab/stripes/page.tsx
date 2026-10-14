@@ -25,7 +25,7 @@ export default function StripesLab() {
       <Row
         stacked
         title="1 · Live Now Banner"
-        note="The state is already written in the badge, so the 4px stripe repeats it. The proposal tints the whole card instead, so the banner reads as one object."
+        note="The state is already written in the badge, so the 4px stripe repeats it. The proposal tints the whole card instead, so the banner reads as one object: soft green when live, a toasted yellow (background and border) when upcoming."
       >
         <div className="flex flex-col gap-3">
           <LiveNowBanner state="Live" title="Agile Coach Q&A with David Chen" subtitle="AI-Driven Digital Marketing Certificate" />
@@ -60,7 +60,7 @@ export default function StripesLab() {
 
       <Row
         title="3 · Inline Alert · Answer"
-        note="Here the stripe is the family's rule, not a one-off: every tone has a 2px top rule in its own colour (the verdict), and only Hint has none, because it decides nothing. Taking it off Answer (right) would make Answer the odd one. Recommendation: keep."
+        note="The 2px top rule is the family's rule: every tone has one in its own colour, and only Hint has none. Today Answer bends it round 8px corners in grey. Proposal (Nelson, 14 Oct): Answer's rule the way Correct and Not quite draw theirs — straight, square corners, on the faint surface — in primary instead of grey."
       >
         <div className="flex flex-col gap-3">
           <InlineAlert tone="success" title="Correct" description="Fewer defects follow from a more predictable process." />
@@ -72,7 +72,12 @@ export default function StripesLab() {
           <InlineAlert tone="success" title="Correct" description="Fewer defects follow from a more predictable process." />
           <InlineAlert tone="error" title="Not quite" description="Speed is an outcome of a stable process, not its goal." />
           <InlineAlert tone="hint" title="Hint (1 of 2):" description="Think about what varies from one unit to the next." />
-          <InlineAlert tone="answer" title="Answer" description={ANSWER} className="!border-t-0" />
+          <InlineAlert
+            tone="answer"
+            title="Answer"
+            description={ANSWER}
+            className="!rounded-none !border-sko-border-primary !bg-sko-bg-faint"
+          />
         </div>
       </Row>
     </main>
@@ -138,6 +143,14 @@ function ReadingContext({ children }: { children: React.ReactNode }) {
   );
 }
 
+/* Upcoming (Nelson, 14 Oct): a toasted yellow for the background and the border, deeper than
+   bg/warning-soft. No DS token holds it yet, so the lab derives it from bg/warning mixed into the
+   page — it follows light and dark. In the DS this needs a new token (e.g. bg/warning-muted). */
+const TOASTED_YELLOW: React.CSSProperties = {
+  background: "color-mix(in srgb, var(--color-bg-warning) 32%, var(--color-bg-page))",
+  borderColor: "var(--color-bg-warning)",
+};
+
 /** Proposal for the Live Now Banner: the whole card takes the soft tone, no side stripe. */
 function SoftLiveBanner({ live, title, subtitle }: { live: boolean; title: string; subtitle: string }) {
   return (
@@ -146,8 +159,9 @@ function SoftLiveBanner({ live, title, subtitle }: { live: boolean; title: strin
       aria-label={`${live ? "Live now" : "Upcoming"}: ${title}`}
       className={cn(
         "flex items-center justify-between gap-4 rounded-xl border px-4 py-4",
-        live ? "border-sko-border-success-soft bg-sko-bg-success-soft" : "border-sko-border-warning-soft bg-sko-bg-warning-soft",
+        live && "border-sko-border-success-soft bg-sko-bg-success-soft",
       )}
+      style={live ? undefined : TOASTED_YELLOW}
     >
       <div className="flex min-w-0 items-center gap-3">
         <span
@@ -161,11 +175,14 @@ function SoftLiveBanner({ live, title, subtitle }: { live: boolean; title: strin
         </span>
         <div className="flex min-w-0 flex-col gap-0.5">
           <p className="sk-text-body-medium-regular truncate text-sko-text-default">{title}</p>
-          <p className="sk-text-body-small-regular truncate text-sko-text-muted">{subtitle}</p>
+          {/* On the toasted yellow, text/muted drops to 4.26:1 in dark; the default ink holds AA in both. */}
+          <p className={cn("sk-text-body-small-regular truncate", live ? "text-sko-text-muted" : "text-sko-text-default")}>
+            {subtitle}
+          </p>
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-4">
-        <span className="sk-text-body-small-medium hidden text-sko-text-muted md:block">
+        <span className={cn("sk-text-body-small-medium hidden md:block", live ? "text-sko-text-muted" : "text-sko-text-default")}>
           {live ? "LIVE NOW · ENDS AT 4:30 PM" : "STARTS IN 12 MIN · 4:00 PM"}
         </span>
         <Button variant="primary" size="md">
