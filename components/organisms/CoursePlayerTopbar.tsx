@@ -174,7 +174,7 @@ export function CoursePlayerTopbar({
           <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
             <SkillUpLogo className="h-[33px]" />
           </Link>
-          {progressPct !== undefined ? <ProgressRing pct={progressPct} compact className="ml-1" /> : null}
+          {progressPct !== undefined ? <ProgressRing pct={progressPct} compact /> : null}
         </div>
         <div className="flex items-center gap-2">
           {showNotifications ? (
