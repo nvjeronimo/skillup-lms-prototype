@@ -7,7 +7,8 @@ import { nextStep } from "@/lib/assistant/next-step";
 import { buildSnapshot } from "@/lib/assistant/snapshot";
 import { useAssistant } from "@/lib/assistant/useAssistant";
 import { STEPS, stepAction } from "@/lib/first-steps/steps";
-import { useFirstSteps } from "@/lib/first-steps/useFirstSteps";
+import { restartFirstSteps, useFirstSteps } from "@/lib/first-steps/useFirstSteps";
+import { wantsRestart, withoutRestart } from "@/lib/first-steps/url";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
 import { AssistantLauncher } from "./AssistantLauncher";
@@ -48,6 +49,18 @@ function Chat({ pathname }: { pathname: string }) {
     [completedTopics, bookmarks, page, firstSteps.state],
   );
   const assistant = useAssistant(snapshot);
+
+  // The test link (prototype only): `?first-steps=restart` on any address starts the first
+  // steps again with an empty conversation, then leaves the address so a reload does not.
+  const clearChat = React.useRef(assistant.clear);
+  clearChat.current = assistant.clear;
+  React.useEffect(() => {
+    const { pathname: path, search } = window.location;
+    if (!wantsRestart(search)) return;
+    clearChat.current();
+    restartFirstSteps(Array.from(useLmsStore.getState().completedTopics));
+    window.history.replaceState(window.history.state, "", withoutRestart(path, search));
+  }, [pathname]);
   // A question is the fifth first step.
   const ask = (question: string) => {
     if (question.trim()) firstSteps.asked();
