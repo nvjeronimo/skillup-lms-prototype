@@ -10,6 +10,8 @@ export interface TopicRowProps {
   title: string;
   duration: string;
   status: CompletionState;
+  /** The topic was completed just now: its Done check draws itself (the completion chain). */
+  animateStatus?: boolean;
   /** Active (currently playing) topic — brand-section bg + 4px brand left rule. */
   active?: boolean;
   showBookmark?: boolean;
@@ -50,6 +52,7 @@ export function TopicRow({
   title,
   duration,
   status,
+  animateStatus = false,
   active = false,
   showBookmark = false,
   bookmarked = false,
@@ -76,7 +79,7 @@ export function TopicRow({
       >
         {active ? <ActiveRule /> : null}
         <span aria-hidden className="contents">
-          <CompletionStatus state={status} size={18} />
+          <CompletionStatus state={status} size={18} animate={animateStatus} />
         </span>
       </button>
     );
@@ -101,7 +104,7 @@ export function TopicRow({
             content column (row counter-axis alignment is MIN). Hidden from AT:
             the status is spoken last, after title · type · duration. */}
         <span aria-hidden className="contents">
-          <CompletionStatus state={status} size={18} />
+          <CompletionStatus state={status} size={18} animate={animateStatus} />
         </span>
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           {/* The topic title is text-primary in every state — it does not change

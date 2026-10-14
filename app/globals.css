@@ -202,6 +202,23 @@ button {
   animation: sk-sheet-in var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
 
+/* The completion chain's second beat: the rail check draws itself, one step (short2) after
+   the completed badge pops. The path carries pathLength="1", so the dash is the whole
+   stroke; `both` keeps it hidden through the delay. */
+@keyframes sk-draw-check {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.sk-draw-check {
+  stroke-dasharray: 1;
+  animation: sk-draw-check var(--motion-duration-short4) var(--motion-easing-standard-decelerate)
+    var(--motion-duration-short2) both;
+}
+
 [data-state="closed"].sk-animate-slide-right,
 [data-state="closed"] .sk-animate-slide-right {
   animation: sk-slide-out-right var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
@@ -271,6 +288,10 @@ button {
   [data-state="closed"].sk-animate-fade,
   [data-state="closed"] .sk-animate-fade {
     animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+  }
+  /* The check is shown at once, not drawn (its disc still fades in). */
+  .sk-draw-check {
+    animation: none;
   }
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
   .animate-spin {
@@ -355,6 +376,10 @@ button {
 [data-reduce-motion] [data-state="closed"].sk-animate-fade,
 [data-reduce-motion] [data-state="closed"] .sk-animate-fade {
   animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+}
+/* The check is shown at once, not drawn (its disc still fades in). */
+[data-reduce-motion] .sk-draw-check {
+  animation: none;
 }
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
 [data-reduce-motion] .animate-spin {

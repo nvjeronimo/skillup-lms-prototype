@@ -40,6 +40,10 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
           stroke={complete ? "var(--color-icon-success-strong)" : "var(--color-bg-info)"}
           strokeWidth="4.6"
           strokeLinecap="butt"
+          // The last beat of the completion chain: the arc advances 200ms after the badge pops.
+          // A transition runs only on change, so the first paint does not animate; reduced
+          // motion leaves stroke-dashoffset out of the transitioned properties, so it jumps.
+          className="transition-[stroke-dashoffset] delay-short4 duration-long2 ease-standard-decelerate"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
         />
