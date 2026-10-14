@@ -168,6 +168,27 @@
 
 ---
 
+## PR 6 · Smoothness (branch `feat/motion-smoothness`, added 14 Oct at Nelson's request; spec §7.5)
+
+### Task 7b: Pages, scroll, filters and the default transition
+
+**Files:**
+- Create: `lib/motion/stagger.ts`, `lib/motion/stagger.test.ts`, `lib/scrollToElement.ts`, `app/course/[courseSlug]/topic/[topicId]/template.tsx`
+- Modify: `tailwind.config.ts` (DEFAULT duration/easing), `app/globals.css` (`.sk-animate-page`, `.sk-scroll` smooth scroll, focus ring transition), `components/platform/PlatformPage.tsx` (main content entrance keyed on `usePathname()`), `components/atoms/FilterChip.tsx`, `components/platform/my-learning/MyLearningCollection.tsx`, `components/views/NotesTab.tsx`, `components/organisms/OverlayPanel.tsx` (filtered list), `components/assistant/AssistantWindow.tsx` + any other `scrollIntoView` caller (use the helper), interactive elements with `hover:` colour classes and no `transition-*`.
+
+**Interfaces:**
+- Produces: `staggerDelay(index: number, count: number): string | undefined` — `undefined` when `count > 8`, else `` `calc(var(--motion-duration-short2) / 2 * ${index})` ``; `scrollToElement(el: Element | null, block?: ScrollLogicalPosition): void` — `scrollIntoView({ block, behavior })` with `behavior: "auto"` under reduced motion (OS media query or `data-reduce-motion` on `<html>`), else `"smooth"`.
+
+- [ ] **Step 1: Failing tests** `stagger.test.ts`: `staggerDelay(0, 3)` → `calc(var(--motion-duration-short2) / 2 * 0)`; `(2, 8)` → `… * 2)`; `(0, 9)` → `undefined`.
+- [ ] **Step 2–4:** FAIL → implement `stagger.ts` + `scrollToElement.ts` → PASS.
+- [ ] **Step 5: Defaults** — Tailwind `transitionDuration.DEFAULT = var(--motion-duration-short3)`, `transitionTimingFunction.DEFAULT = var(--motion-easing-standard)`. Sweep `components/` + `app/` for elements with `hover:bg-`/`hover:text-`/`hover:border-` and no `transition-` class; add `transition-colors`. Focus ring: `outline-color`/`box-shadow` already in the reduced-motion safe list; add `transition-[color,background-color,border-color,box-shadow]` where a component draws its own ring.
+- [ ] **Step 6: Pages** — `.sk-animate-page` (opacity + `translateY(var(--motion-distance-nudge))`, short4 decel; in both reduced-motion lists as fade). Platform: in `PlatformPage` the main content wrapper (not the topbar) gets `key={pathname}` + the class. Player: the new `template.tsx` wraps `children` in a `div.sk-animate-page` so only the topic body re-enters; the shell (topbar, sidebar, footer) lives in the layout and must not remount — verify by checking the sidebar scroll position survives Next.
+- [ ] **Step 7: Scroll** — `.sk-scroll { scroll-behavior: smooth }` (the existing reduced-motion `scroll-behavior: auto !important` already overrides it); never on `html`/`body`. Replace every `scrollIntoView(...)` call with `scrollToElement` (the assistant's conditional scroll from Task 7 stays conditional).
+- [ ] **Step 8: Filters** — `FilterChip` colour change `transition-colors` (DEFAULT now short3 standard). Each filtered list (`MyLearningCollection`, `NotesTab`, `OverlayPanel` bodies) wraps its rows in a container keyed on the active filter value with `sk-animate-fade`; each row gets `sk-animate-rise` with `style={{ animationDelay: staggerDelay(i, rows.length) }}`, rows past the 8th get none. A result count in the same view swaps with `sk-animate-fade` keyed on the number.
+- [ ] **Step 9: Verify in the preview:** Dashboard → My Learning → Program → Course (content enters, topbar still); player Next/Previous and a rail row (only the body enters, sidebar keeps its scroll); an anchor/jump inside a panel glides; My Learning status filter and Notes filter cross-fade, rows rise; hover colours ease everywhere; reduced motion (both switches): fades only, scroll instant. **Step 10: Checks + commit + PR** "Pages, scrolling and filters now move as one product".
+
+---
+
 ## Documentation (docs repo branch `docs/program-page`, Figma, Hub)
 
 ### Task 8: Docs follow each PR
