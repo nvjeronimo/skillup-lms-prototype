@@ -508,12 +508,13 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
       {/* DS: `Show progress` nests the Stepper Bar (Mode=With Back only) inside
           the card, after the Platform prompt and before the Question. */}
-      {/* Keyed on the step, so each question enters from the side the learner
-          moved toward: from the right on Next and Skip, from the left on Back. */}
+      {/* The question body is keyed on the step inside the card, so each
+          question enters from the side the learner moved toward (right on Next
+          and Skip, left on Back) while the stepper and footer stay mounted. */}
       <QuizCard
-        key={index}
         {...stepProps}
-        className={direction === "next" ? "sk-animate-step-next" : "sk-animate-step-prev"}
+        stepKey={index}
+        stepDirection={direction}
         showProgress
         progress={
           <QuizNavStepper
@@ -689,7 +690,8 @@ function QuizSummary({
 }) {
   const pct = Math.round((result.score / result.total) * 100);
   // The score counts up as the results land (long2, decelerating); reduced motion shows it at once.
-  const shownPct = useCountUp(pct);
+  // Withheld results show no percentage, so there is nothing to count (target 0 runs no frames).
+  const shownPct = useCountUp(config.resultsWithheld ? 0 : pct);
   const passed = pct >= config.passThresholdPct;
   // DS Results=Withheld: `show_correctness: never` masks the score too, so the
   // summary says what was recorded and never prints a percentage.
