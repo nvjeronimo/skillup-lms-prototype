@@ -5,6 +5,10 @@ import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
 
 export interface CourseCompleteModalProps {
   open: boolean;
@@ -31,15 +35,30 @@ export function CourseCompleteModal({
   const primaryRef = React.useRef<HTMLButtonElement>(null);
   const dialogRef = useDialog(open, onClose, { initialFocusRef: primaryRef });
 
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+
+  if (!mounted) return null;
+  const closed = state === "closed";
   return (
-    <div ref={dialogRef} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
+    <div
+      ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn("fixed inset-0 z-[60] flex items-center justify-center p-4", closed && "pointer-events-none")}
+    >
+      {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
+      <div
+        className="sk-backdrop sk-animate-fade absolute inset-0"
+        onClick={onClose}
+        onAnimationEnd={onAnimationEnd}
+        aria-hidden
+      />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-[440px] overflow-hidden rounded-2xl border border-sko-border-subtle bg-sko-bg-page text-center shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[440px] origin-center overflow-hidden rounded-2xl border border-sko-border-subtle bg-sko-bg-page text-center shadow-xl"
       >
         {/* Close row: DS pt 16 / pr 16, right-aligned, 60 high (16 + 44). */}
         <div className="flex justify-end pr-4 pt-4">

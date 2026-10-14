@@ -5,6 +5,7 @@ import { Bookmark, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
+import { Collapse } from "@/components/atoms/Collapse";
 import { LessonHeader } from "@/components/atoms/LessonHeader";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { BookmarkButton } from "@/components/atoms/Bookmark";
@@ -117,7 +118,8 @@ export function Sidebar({
     if (!container) return;
     if (!isMobile) container.scrollTop = savedScrollTop; // restore persisted position
 
-    const active = container.querySelector<HTMLElement>('[aria-current="page"]');
+    // A collapsed module still renders its rows (zero height): skip them.
+    const active = container.querySelector<HTMLElement>('[aria-current="page"]:not([data-collapse="closed"] *)');
     if (active) {
       const c = container.getBoundingClientRect();
       const a = active.getBoundingClientRect();
@@ -426,18 +428,16 @@ export function Sidebar({
                 collapsed={moduleCollapsed}
                 onToggle={() => onToggleModule?.(module.id)}
               />
-              {!moduleCollapsed ? (
-                <div>
-                  {module.lessons
-                    ? module.lessons.map((lesson) => (
-                        <div key={lesson.id}>
-                          <LessonHeader label={lesson.label} />
-                          {lesson.topics.map(renderTopic)}
-                        </div>
-                      ))
-                    : moduleTopics(module).map(renderTopic)}
-                </div>
-              ) : null}
+              <Collapse open={!moduleCollapsed}>
+                {module.lessons
+                  ? module.lessons.map((lesson) => (
+                      <div key={lesson.id}>
+                        <LessonHeader label={lesson.label} />
+                        {lesson.topics.map(renderTopic)}
+                      </div>
+                    ))
+                  : moduleTopics(module).map(renderTopic)}
+              </Collapse>
             </div>
           );
         })}

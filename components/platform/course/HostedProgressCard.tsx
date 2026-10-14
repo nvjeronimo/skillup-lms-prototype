@@ -9,6 +9,10 @@ import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import type { CourseDetail, HostedCourse } from "@/lib/platform/course-detail";
 import { useLmsStore } from "@/lib/store";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
 
 /**
  * The Progress card of a course that runs on a partner's platform (Figma I1 6792:139729 and
@@ -107,16 +111,31 @@ function LeavingDialog({
   const confirmRef = React.useRef<HTMLAnchorElement>(null);
   const dialogRef = useDialog(open, onClose, { initialFocusRef: confirmRef });
 
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+
+  if (!mounted) return null;
+  const closed = state === "closed";
   return (
-    <div ref={dialogRef} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
+    <div
+      ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn("fixed inset-0 z-[60] flex items-center justify-center p-4", closed && "pointer-events-none")}
+    >
+      {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
+      <div
+        className="sk-backdrop sk-animate-fade absolute inset-0"
+        onClick={onClose}
+        onAnimationEnd={onAnimationEnd}
+        aria-hidden
+      />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={bodyId}
-        className="relative w-full max-w-[544px] overflow-hidden rounded-xl bg-sko-bg-page shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[544px] origin-center overflow-hidden rounded-xl bg-sko-bg-page shadow-xl"
       >
         <div className="flex flex-col gap-4 px-4 pt-4 md:flex-row md:px-6 md:pt-6">
           <span

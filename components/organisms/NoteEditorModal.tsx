@@ -7,6 +7,9 @@ import { Button } from "@/components/atoms/Button";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { inertProps } from "@/lib/inert";
 import type { NotePayload } from "@/lib/types";
 
 export interface NoteEditorModalProps {
@@ -47,6 +50,9 @@ export function NoteEditorModal({
   const titleId = React.useId();
   const tagInputId = React.useId();
   const dialogRef = useDialog(open, onCancel, { initialFocusRef: textRef });
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+  // Closing clears the note from the store; keep the heading and anchor as they were for the exit.
+  const shown = useFrozenWhileClosed({ noteId, anchorTs, anchorQuote }, open);
 
   // Reset fields whenever the modal (re)opens with new content.
   React.useEffect(() => {
@@ -77,21 +83,34 @@ export function NoteEditorModal({
     setTagDraft("");
   }
 
-  if (!open) return null;
+  if (!mounted) return null;
+  const closed = state === "closed";
 
   return (
     <div
       ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
       // DS `LMS / Note Editor`: a bottom sheet on mobile, a centred 560 modal from tablet up.
-      className="fixed inset-0 z-[60] flex items-end justify-center md:items-center md:p-4"
+      className={cn(
+        "fixed inset-0 z-[60] flex items-end justify-center md:items-center md:p-4",
+        closed && "pointer-events-none",
+      )}
       onKeyDown={handleKeyDown}
     >
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
+      {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
+      <div
+        className="sk-backdrop sk-animate-fade absolute inset-0"
+        onClick={onCancel}
+        onAnimationEnd={onAnimationEnd}
+        aria-hidden
+      />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative max-h-[92dvh] w-full overflow-y-auto rounded-t-xl border-t border-sko-border-subtle bg-sko-bg-page shadow-xl md:max-w-[560px] md:rounded-lg md:border"
+        className="sk-animate-pop relative max-h-[92dvh] w-full origin-center overflow-y-auto rounded-t-xl border-t border-sko-border-subtle bg-sko-bg-page shadow-xl md:max-w-[560px] md:rounded-lg md:border"
       >
         {/* Mobile grabber (DS: 36 x 4, fully rounded). Decorative: the sheet closes with Cancel, X or Escape. */}
         <div aria-hidden className="flex justify-center pt-2 md:hidden">
@@ -100,7 +119,7 @@ export function NoteEditorModal({
         {/* Padding is the DS Spacing/2xl and 3xl: 16 on mobile, 20 on tablet, 20/24 on desktop. */}
         <header className="flex items-center justify-between gap-3 p-4 md:p-5 lg:px-6">
           <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
-            {noteId ? "Edit note" : "Add note"}
+            {shown.noteId ? "Edit note" : "Add note"}
           </h2>
           <button
             type="button"
@@ -113,15 +132,15 @@ export function NoteEditorModal({
         </header>
 
         <div className="flex flex-col gap-4 p-4 md:gap-5 md:p-5 lg:p-6">
-          {anchorQuote ? (
+          {shown.anchorQuote ? (
             <div>
               <p className="sk-text-label-small-semibold mb-2 text-sko-text-subtle">
                 Anchored to{" "}
-                <span className="text-sko-text-primary">{anchorTs}</span>
+                <span className="text-sko-text-primary">{shown.anchorTs}</span>
               </p>
-              {/* DS: the anchor is the transcript line the note belongs to, shown as that line
-                  (Transcript-Line State=Active), read-only (Nelson, 14 Oct 2026). */}
-              <TranscriptLine ts={anchorTs ?? ""} text={anchorQuote} active readOnly />
+              <p className="sk-text-body-medium-regular rounded-md bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
+                {shown.anchorQuote}
+              </p>
             </div>
           ) : null}
 

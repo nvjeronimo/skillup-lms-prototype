@@ -5,6 +5,10 @@ import { CircleHelp, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
 
 export interface CompletionQuestionModalProps {
   open: boolean;
@@ -45,16 +49,36 @@ export function CompletionQuestionModal({
   // offered as the default, because one of them changes the learner's progress.
   const dialogRef = useDialog(open, onClose);
 
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+  // "Yes" moves to the next topic, which changes these props: keep the question as it was for the exit.
+  const shown = useFrozenWhileClosed({ noun, reason, hasNext }, open);
+
+  if (!mounted) return null;
+  const closed = state === "closed";
   return (
-    <div ref={dialogRef} className="fixed inset-0 z-[60] flex items-end justify-center p-4 sm:items-center">
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
+    <div
+      ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn(
+        "fixed inset-0 z-[60] flex items-end justify-center p-4 sm:items-center",
+        closed && "pointer-events-none",
+      )}
+    >
+      {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
+      <div
+        className="sk-backdrop sk-animate-fade absolute inset-0"
+        onClick={onClose}
+        onAnimationEnd={onAnimationEnd}
+        aria-hidden
+      />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative w-full max-w-[544px] rounded-2xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[544px] origin-center rounded-2xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
       >
         <div className="flex flex-col gap-4 p-6 pb-0 sm:flex-row">
           <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
@@ -62,14 +86,14 @@ export function CompletionQuestionModal({
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-1 pr-10">
             <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
-              Have you completed this {noun}?
+              Have you completed this {shown.noun}?
             </h2>
             <div id={descId} className="sk-text-body-medium-regular flex flex-col text-sko-text-muted">
-              <p>{reason}</p>
+              <p>{shown.reason}</p>
               <p>
-                {hasNext
-                  ? `You can move to the next topic either way and return to this ${noun} anytime.`
-                  : `You can return to this ${noun} anytime.`}
+                {shown.hasNext
+                  ? `You can move to the next topic either way and return to this ${shown.noun} anytime.`
+                  : `You can return to this ${shown.noun} anytime.`}
               </p>
             </div>
           </div>

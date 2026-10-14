@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { armExitFallback, isOwnAnimationEnd, nextPresence } from "./presence";
+import { armExitFallback, isOwnAnimationEnd, nextPresence, presenceView } from "./presence";
 
 describe("nextPresence", () => {
   it("mounts and opens", () => expect(nextPresence("unmounted", "open")).toBe("open"));
@@ -54,4 +54,19 @@ describe("isOwnAnimationEnd", () => {
     expect(isOwnAnimationEnd(root, root)).toBe(true);
     expect(isOwnAnimationEnd(child, root)).toBe(false);
   });
+});
+
+describe("presenceView", () => {
+  // The render where `open` turns true comes before the effect that moves presence to
+  // "open": the surface must already be in the DOM then, or useDialog finds no element.
+  it("renders open on the render where open turns true", () =>
+    expect(presenceView(true, "unmounted")).toEqual({ mounted: true, state: "open" }));
+  it("starts the exit on the render where open turns false", () =>
+    expect(presenceView(false, "open")).toEqual({ mounted: true, state: "closed" }));
+  it("stays mounted and closed while the exit plays", () =>
+    expect(presenceView(false, "closing")).toEqual({ mounted: true, state: "closed" }));
+  it("shows open again at once when reopened during the exit", () =>
+    expect(presenceView(true, "closing")).toEqual({ mounted: true, state: "open" }));
+  it("renders nothing once unmounted", () =>
+    expect(presenceView(false, "unmounted")).toEqual({ mounted: false, state: "closed" }));
 });

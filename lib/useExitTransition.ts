@@ -1,7 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { armExitFallback, isOwnAnimationEnd, nextPresence } from "./motion/presence";
+import { armExitFallback, isOwnAnimationEnd, nextPresence, presenceView } from "./motion/presence";
+
+/**
+ * What a leaving surface shows: `value` while `open`, and the last value it had while open
+ * once `open` is false, so the exit animation draws what was on screen even when the caller
+ * has already cleared or changed it. The ref is written in an effect, never during render.
+ */
+export function useFrozenWhileClosed<T>(value: T, open: boolean): T {
+  const lastOpen = React.useRef(value);
+  React.useEffect(() => {
+    if (open) lastOpen.current = value;
+  });
+  return open ? value : lastOpen.current;
+}
 
 /**
  * Keeps a surface mounted while its exit animation plays.
@@ -32,9 +45,5 @@ export function useExitTransition(
     if (isOwnAnimationEnd(e.target, e.currentTarget)) dispatch("exited");
   }, []);
 
-  return {
-    mounted: presence !== "unmounted",
-    state: presence === "open" ? "open" : "closed",
-    onAnimationEnd,
-  };
+  return { ...presenceView(open, presence), onAnimationEnd };
 }
