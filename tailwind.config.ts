@@ -150,6 +150,7 @@ const config: Config = {
         display: "var(--sk-font-display)",
       },
       transitionDuration: {
+        DEFAULT: "var(--motion-duration-short3)",
         short2: "var(--motion-duration-short2)",
         short3: "var(--motion-duration-short3)",
         short4: "var(--motion-duration-short4)",
@@ -164,6 +165,7 @@ const config: Config = {
         long2: "var(--motion-duration-long2)",
       },
       transitionTimingFunction: {
+        DEFAULT: "var(--motion-easing-standard)",
         standard: "var(--motion-easing-standard)",
         "standard-decelerate": "var(--motion-easing-standard-decelerate)",
         "standard-accelerate": "var(--motion-easing-standard-accelerate)",
