@@ -3,6 +3,7 @@
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
+import { courseProgressPct } from "@/lib/courses/outline";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
@@ -363,6 +364,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           setMobileDrawerOpen(true);
         }}
         menuExpanded={bp === "mobile" && mobileDrawerOpen}
+        progressPct={courseProgressPct(activeCourse, completedTopics)}
         menuControls={COURSE_DRAWER_ID}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}

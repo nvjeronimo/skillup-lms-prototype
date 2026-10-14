@@ -7,6 +7,7 @@ import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { cn } from "@/lib/utils";
+import { ProgressRing } from "@/components/molecules/OverallProgress";
 
 export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
 
@@ -32,6 +33,12 @@ export interface CoursePlayerTopbarProps {
   onNotifications?: () => void;
   onTheme?: () => void;
   onClose?: () => void;
+  /**
+   * Course percentage, shown on Mobile only as a 28px ring after the logo (Nelson, 14 Oct
+   * 2026): on a phone the sidebar ring sits in the drawer, so this is where a completion is
+   * seen to count. Omit it to hide the ring.
+   */
+  progressPct?: number;
   /** Replaces the default (inert) account button — e.g. the demo-settings menu. */
   accountMenu?: React.ReactNode;
   className?: string;
@@ -121,6 +128,7 @@ export function CoursePlayerTopbar({
   onTheme,
   onClose,
   accountMenu,
+  progressPct,
   className,
 }: CoursePlayerTopbarProps) {
   const isMobile = size === "Mobile";
@@ -166,6 +174,7 @@ export function CoursePlayerTopbar({
           <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
             <SkillUpLogo className="h-[33px]" />
           </Link>
+          {progressPct !== undefined ? <ProgressRing pct={progressPct} compact className="ml-1" /> : null}
         </div>
         <div className="flex items-center gap-2">
           {showNotifications ? (

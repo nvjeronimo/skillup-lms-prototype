@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface OverallProgressProps {
@@ -16,29 +17,43 @@ export interface OverallProgressProps {
  * innerRadius 0.8 on a 46px ellipse: a 4.6px band from r=18.4 to r=23, so the
  * stroke is centred on r=20.7.
  */
-function ProgressRing({ pct, className }: { pct: number; className?: string }) {
-  const radius = 20.7;
+export function ProgressRing({
+  pct,
+  compact = false,
+  className,
+}: {
+  pct: number;
+  /**
+   * 28px ring for the mobile topbar (Nelson, 14 Oct 2026). No number inside: at 28px it would
+   * be ~9px, below the DS's smallest text style; the percentage is in the accessible name and
+   * stays readable in the drawer. Completed shows the green arc with a check.
+   */
+  compact?: boolean;
+  className?: string;
+}) {
+  const box = compact ? 28 : 46;
+  // The DS arc: innerRadius 0.8, so the band is a fifth of the radius, stroke centred in it.
+  const band = (box / 2) * 0.2;
+  const radius = box / 2 - band / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (pct / 100) * circumference;
   const complete = pct >= 100;
   return (
     <div
-      className={cn(
-        "relative inline-flex h-[46px] w-[46px] shrink-0 items-center justify-center",
-        className,
-      )}
+      className={cn("relative inline-flex shrink-0 items-center justify-center", className)}
+      style={{ width: box, height: box }}
       role="img"
-      aria-label={`${pct}% complete`}
+      aria-label={compact ? (complete ? "Course completed" : `Course progress, ${pct}%`) : `${pct}% complete`}
     >
-      <svg className="h-[46px] w-[46px] -rotate-90" viewBox="0 0 46 46">
-        <circle cx="23" cy="23" r={radius} fill="none" stroke="var(--color-bg-muted)" strokeWidth="4.6" />
+      <svg className="-rotate-90" width={box} height={box} viewBox={`0 0 ${box} ${box}`} aria-hidden>
+        <circle cx={box / 2} cy={box / 2} r={radius} fill="none" stroke="var(--color-bg-muted)" strokeWidth={band} />
         <circle
-          cx="23"
-          cy="23"
+          cx={box / 2}
+          cy={box / 2}
           r={radius}
           fill="none"
           stroke={complete ? "var(--color-icon-success-strong)" : "var(--color-bg-info)"}
-          strokeWidth="4.6"
+          strokeWidth={band}
           strokeLinecap="butt"
           // The last beat of the completion chain: the arc advances 200ms after the badge pops.
           // A transition runs only on change, so the first paint does not animate; reduced
@@ -48,7 +63,13 @@ function ProgressRing({ pct, className }: { pct: number; className?: string }) {
           strokeDashoffset={offset}
         />
       </svg>
-      <span className="sk-text-body-small-semibold absolute text-sko-text-default">{pct}%</span>
+      {compact ? (
+        complete ? (
+          <Check size={14} strokeWidth={2} className="absolute text-sko-icon-success-strong" aria-hidden />
+        ) : null
+      ) : (
+        <span className="sk-text-body-small-semibold absolute text-sko-text-default">{pct}%</span>
+      )}
     </div>
   );
 }
