@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CalendarCheck, Clock, Video } from "lucide-react";
+import { CalendarCheck, Clock, Layers, Video } from "lucide-react";
 import type { LucideIcon, LucideProps } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./Badge";
@@ -95,6 +95,18 @@ export function DifficultyBadge({ value }: { value: Difficulty }) {
   return (
     <Badge variant="outline" color="gray" leftIcon={LEVEL_ICON[value]}>
       {value}
+    </Badge>
+  );
+}
+
+/**
+ * Course count of a program (DS Program-Card v1.7, 15 Oct 2026): the third hero tag, Badge
+ * Outline sm Gray with the Untitled `layers-three-01` icon (lucide Layers), e.g. "7 courses".
+ */
+export function CourseCountBadge({ count }: { count: number }) {
+  return (
+    <Badge variant="outline" color="gray" leftIcon={Layers}>
+      {count} {count === 1 ? "course" : "courses"}
     </Badge>
   );
 }
