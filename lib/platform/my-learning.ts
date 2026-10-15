@@ -165,6 +165,9 @@ export interface MyLearningProgram {
   partners: { name: string; logoSrc: string }[];
   /** "N of M courses complete": `progress_details`, completed ÷ all courses. */
   courses: string;
+  /** Number of courses in the program (programs API, length of `courses`). DS v1.7: a hero
+      tag in every state, and the right end of the progress row when not started or completed. */
+  courseCount: number;
   /** 0–100: the same ratio. */
   progressPct: number;
   /** State=In progress: the first course in progress, with a Primary "Resume". */
@@ -192,6 +195,7 @@ export const myLearningPrograms: MyLearningProgram[] = [
       { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
     ],
     courses: "1 of 7 courses complete",
+    courseCount: 7,
     progressPct: 14,
     upNext: "Course 2 · AI-Driven Content and Brand Communication",
     cta: "Resume",
@@ -205,6 +209,7 @@ export const myLearningPrograms: MyLearningProgram[] = [
     difficulty: "Beginner",
     partners: [],
     courses: "0 of 5 courses complete",
+    courseCount: 5,
     progressPct: 0,
     status: "Starts Oct 5",
     cta: "Start",
@@ -222,6 +227,7 @@ export const myLearningPrograms: MyLearningProgram[] = [
       { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
     ],
     courses: "5 of 5 courses complete",
+    courseCount: 5,
     progressPct: 100,
     certificateDate: "30 Sep 2026",
     cta: "View Certificate",

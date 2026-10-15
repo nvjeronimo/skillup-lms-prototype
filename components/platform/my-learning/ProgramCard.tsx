@@ -6,7 +6,7 @@ import { CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
+import { CourseCountBadge, CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import {
   myLearningProgramCertificateLabel,
@@ -166,6 +166,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           <div className="flex flex-wrap items-center gap-2">
             <DeliveryModeBadge value={program.delivery} />
             <DifficultyBadge value={program.difficulty} />
+            <CourseCountBadge count={program.courseCount} />
           </div>
         </div>
       </div>
@@ -173,10 +174,18 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
       <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-between" : "w-full")}>
         <div className="flex flex-col gap-2">
           {/* The DS sets these words in a raw 18 Semibold: title-medium/Semibold is that style. */}
-          <p className="sk-text-title-medium-semibold inline-flex items-center gap-1.5 text-sko-text-default">
-            {completed ? <Icon icon={CheckCircle2} size={20} className="text-sko-icon-success" aria-hidden="true" /> : null}
-            {completed ? myLearningProgramCompletedLabel : notStarted ? myLearningProgramNotStartedLabel : program.courses}
-          </p>
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="sk-text-title-medium-semibold inline-flex items-center gap-1.5 text-sko-text-default">
+              {completed ? <Icon icon={CheckCircle2} size={20} className="text-sko-icon-success" aria-hidden="true" /> : null}
+              {completed ? myLearningProgramCompletedLabel : notStarted ? myLearningProgramNotStartedLabel : program.courses}
+            </p>
+            {/* DS v1.7: the count at the right end, as the course card shows its hours; In progress already says it. */}
+            {completed || notStarted ? (
+              <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">
+                {program.courseCount} {program.courseCount === 1 ? "course" : "courses"}
+              </span>
+            ) : null}
+          </div>
           {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
           <PlatformProgressBar stepped tone={completed ? "complete" : "progress"} value={program.progressPct} label={`${program.title} progress`} />
         </div>
