@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { TranscriptLine } from "./TranscriptLine";
 
 export interface SavedNoteItemProps {
   ts: string;
@@ -13,7 +14,7 @@ export interface SavedNoteItemProps {
   className?: string;
 }
 
-/** Saved note in the Saved panel: ts·topic + anchor quote + note text + tags. */
+/** Saved note in the Saved panel: ts·topic + anchor line (Transcript-Line) + note text + tags. */
 export function SavedNoteItem({
   ts,
   topicTitle,
@@ -33,9 +34,8 @@ export function SavedNoteItem({
         </span>
         <span className="sk-text-body-small-regular shrink-0 text-sko-text-subtle">{savedAt}</span>
       </span>
-      <span className="sk-text-body-medium-regular mt-2 block border-l-[3px] border-sko-border-primary py-1.5 pl-3 text-sko-text-subtle">
-        {anchorQuote}
-      </span>
+      {/* The anchor is the transcript line, read-only, as in the DS Note-Item v1.1 (14 Oct 2026). */}
+      <TranscriptLine ts="" text={anchorQuote} active readOnly className="mt-2" />
       <span className="sk-text-body-medium-medium mt-2 block text-sko-text-default">{text}</span>
       {tags.length ? (
         <span className="mt-2 flex flex-wrap gap-1.5">
