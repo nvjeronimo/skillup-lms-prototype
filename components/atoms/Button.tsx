@@ -54,10 +54,17 @@ const GHOST_DISABLED = "disabled:text-sko-text-disabled";
    `:not(:disabled)` rather than `:enabled`: the same on a <button>, and it also matches the
    <a> of atoms/ButtonLink, which `:enabled` never does. */
 const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
-/* Link Button: a 1px bottom stroke in every state (tone colour, border/disabled when
-   Disabled), radius 0, radius 6 when Focused. */
+/* Link Button (DS 15 Oct 2026): a 1px bottom stroke in every state, on the icon token of
+   its tone (border/disabled when Disabled); radius 0. Hover has no fill: the label and the
+   stroke darken (LINK_TONE). Focused: bg/faint and radius 6. */
 const LINK =
-  "border-b bg-transparent hover:bg-sko-bg-faint focus-visible:rounded-md disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
+  "border-b bg-transparent focus-visible:rounded-md focus-visible:bg-sko-bg-faint disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
+const LINK_TONE = {
+  brand: "text-sko-text-primary border-sko-icon-primary hover:text-sko-text-on-primary-soft hover:border-sko-icon-default [&:not(:disabled):hover_svg]:text-sko-icon-default",
+  subtle: "text-sko-text-subtle border-sko-icon-subtle hover:text-sko-text-muted hover:border-sko-icon-muted",
+  destructive: "text-sko-text-error border-sko-icon-error hover:text-sko-text-accent-red hover:border-sko-icon-accent-red",
+  success: "text-sko-text-success border-sko-icon-success hover:text-sko-text-accent-green hover:border-sko-icon-accent-green",
+};
 
 /* The outline buttons on hover: every type fills with its own soft colour and keeps its text
    and icon colours (Nelson, 12 Oct 2026). The Icon Button does the same since that evening;
@@ -87,8 +94,8 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       OUTLINE_DISABLED,
     ),
     tertiary: cn("bg-sko-bg-page text-sko-text-primary hover:bg-sko-bg-faint", BRAND_ICON, GHOST_DISABLED),
-    link: cn(LINK, "text-sko-text-primary border-sko-border-primary", BRAND_ICON),
-    "link-subtle": cn(LINK, "text-sko-text-subtle border-current"),
+    link: cn(LINK, LINK_TONE.brand, BRAND_ICON),
+    "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
   destructive: {
     // Hover pending DS-03: the V2 hover binds border/error-soft as a fill; bg/error-soft is its role-correct match.
@@ -109,9 +116,9 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-error",
       OUTLINE_DISABLED,
     ),
-    link: cn(LINK, "text-sko-text-error border-sko-border-error"),
+    link: cn(LINK, LINK_TONE.destructive),
     // The grey link exists only as Brand/Secondary.
-    "link-subtle": cn(LINK, "text-sko-text-subtle border-current"),
+    "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
   success: {
     // Hover pending DS-03 (the V2 Success/Primary Hover is defective): bg/success-soft + text/success.
@@ -133,8 +140,8 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-success",
       OUTLINE_DISABLED,
     ),
-    link: cn(LINK, "text-sko-text-success border-sko-border-success"),
-    "link-subtle": cn(LINK, "text-sko-text-subtle border-current"),
+    link: cn(LINK, LINK_TONE.success),
+    "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
 };
 
