@@ -65,6 +65,15 @@ import {
 } from "@/lib/data";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 
+
+/* DS `Container/content-padding` (Nelson, 15 Oct 2026): the padding of a topic's content
+   section, 24 desktop / 20 tablet / 16 mobile (Spacing/3xl). Picked from useBreakpoint() so it
+   follows the forced device preview, which media queries do not. */
+const CONTENT_PAD = { desktop: "p-6", tablet: "p-5", mobile: "p-4" } as const;
+const CONTENT_PX = { desktop: "px-6", tablet: "px-5", mobile: "px-4" } as const;
+const CONTENT_PT = { desktop: "pt-6", tablet: "pt-5", mobile: "pt-4" } as const;
+const CONTENT_PB = { desktop: "pb-6", tablet: "pb-5", mobile: "pb-4" } as const;
+
 export interface PlayerShellProps {
   courseSlug: string;
   topicId: string;
@@ -417,7 +426,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             }}
           >
             {isLocked ? (
-              <div className="w-full p-4">{children}</div>
+              <div className={cn("w-full", CONTENT_PAD[bp])}>{children}</div>
             ) : isVideo ? (
               <>
                 {/* Sticky player band — the video stays visible at the top and
@@ -425,7 +434,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 <div
                   className={cn(
                     "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate",
-                    videoDocked ? "px-0 pb-2 pt-0" : "px-4 pb-3 pt-4",
+                    videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
                   )}
                 >
                   <VideoPlayer
@@ -442,7 +451,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   />
                 </div>
                 {showResume ? (
-                  <div className="px-4 pb-1 pt-1">
+                  <div className={cn(CONTENT_PX[bp], "pb-1 pt-1")}>
                     <ResumeBanner
                       seconds={storedResume}
                       onResume={() => {
@@ -459,7 +468,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     />
                   </div>
                 ) : null}
-                <div className="px-4 pb-4">
+                <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp])}>
                   {/* Topic title below the player (ICP Phase 1 canonical layout).
                       The top-right action is hidden on mobile — it lives only at
                       the end of the content there. */}
@@ -488,7 +497,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 </div>
               </>
             ) : (
-              <div className="w-full p-4">
+              <div className={cn("w-full", CONTENT_PAD[bp])}>
                 {/* Completion action lives on the meta row (right-aligned), so the
                     title keeps the full content width. */}
                 {/* Phase 1 quiz handoff §7: on a quiz the header carries title,

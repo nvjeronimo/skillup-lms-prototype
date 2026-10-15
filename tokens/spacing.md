@@ -43,13 +43,14 @@ The Tailwind column uses `p-`; the same step works for any spacing utility
 
 ## Container
 
-All three are mode-aware.
+All four are mode-aware.
 
 | DS token | Desktop / Tablet / Mobile (px) | Tailwind | Use |
 |----------|-------------------------------|----------|-----|
 | `Container/gutter` | 32 / 24 / 16 | `px-4 min-[769px]:px-6 min-[1025px]:px-8` | the container's own side inset (screen gutters) |
 | `Container/gap` | 24 / 16 / 12 | `gap-3 min-[769px]:gap-4 min-[1025px]:gap-6` | gap between items inside a container, one step below the gutter at every breakpoint |
 | `Container/max-width` | 1280 / 768 / 480 | `max-w-[480px] min-[769px]:max-w-[768px] min-[1025px]:max-w-[1280px]` | content column width |
+| `Container/content-padding` | 24 / 20 / 16 | `p-4 min-[769px]:p-5 min-[1025px]:p-6` (in the player: `CONTENT_PAD[bp]`, PlayerShell) | the padding of a topic's content section (Nelson, 15 Oct 2026); aliases `Spacing/3xl` in every mode |
 
 ## Component anchors
 
