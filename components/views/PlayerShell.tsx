@@ -31,6 +31,7 @@ import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
@@ -65,14 +66,6 @@ import {
 } from "@/lib/data";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 
-
-/* DS `Container/content-padding` (Nelson, 15 Oct 2026): the padding of a topic's content
-   section, 24 desktop / 20 tablet / 16 mobile (Spacing/3xl). Picked from useBreakpoint() so it
-   follows the forced device preview, which media queries do not. */
-const CONTENT_PAD = { desktop: "p-6", tablet: "p-5", mobile: "p-4" } as const;
-const CONTENT_PX = { desktop: "px-6", tablet: "px-5", mobile: "px-4" } as const;
-const CONTENT_PT = { desktop: "pt-6", tablet: "pt-5", mobile: "pt-4" } as const;
-const CONTENT_PB = { desktop: "pb-6", tablet: "pb-5", mobile: "pb-4" } as const;
 
 export interface PlayerShellProps {
   courseSlug: string;

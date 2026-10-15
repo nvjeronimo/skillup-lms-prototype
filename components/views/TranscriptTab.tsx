@@ -4,10 +4,12 @@ import * as React from "react";
 import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { cn } from "@/lib/utils";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
+import { CONTENT_BLEED, CONTENT_PX } from "@/lib/contentPadding";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
 import { tsToSeconds } from "@/lib/utils";
@@ -29,7 +31,8 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   // Mark as Complete, when the player shell shows it: it sits in the feedback row below.
   const endAction = React.useContext(TopicEndActionContext);
   // DS Transcript Line `Device` variant: mobile stacks the active line's note pill.
-  const lineDevice = useBreakpoint() === "mobile" ? "mobile" : "desktop";
+  const bp = useBreakpoint();
+  const lineDevice = bp === "mobile" ? "mobile" : "desktop";
 
   // Auto-follow the active line; pause when the user scrolls manually.
   const [following, setFollowing] = React.useState(true);
@@ -139,7 +142,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
         </button>
       </div>
 
-      <div className="relative flex flex-col py-2">
+      <div className={cn("relative flex flex-col py-2", CONTENT_BLEED[bp])}>
         {transcript.map((line) => {
           const note = notes.find((n) => n.transcriptLineId === line.id && n.topicId === topicId);
           const hasNote = Boolean(note);
@@ -156,6 +159,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 active={line.id === activeLineId}
                 hasNote={hasNote}
                 device={lineDevice}
+                padX={CONTENT_PX[bp]}
                 onSeek={() => {
                   seekVideoTo(tsToSeconds(line.ts), line.id);
                   track("transcript_line_click", { lineId: line.id, newTs: line.ts });
