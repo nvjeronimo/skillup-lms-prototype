@@ -138,7 +138,6 @@ export function CourseRowCard({
           course={card}
           layout="grid"
           context="row"
-          emphasis="secondary"
           onAction={notInPrototype}
           className={responsive ? "lg:hidden" : undefined}
         />

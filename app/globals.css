@@ -631,3 +631,37 @@ button {
 [data-reduce-motion] [data-state="closed"] .sk-enter-only {
   animation: none;
 }
+
+/* Assistant launcher ring (DS Assistant-Launcher, 15 Oct 2026): a 2px gradient ring round the
+   ball of the mark, in the logo's own blues (literal, like the mark's SVG: they are logo
+   colours, not roles). It turns slowly so the gradient moves round the ball (Nelson asked
+   for it). Geometry, from the 160 viewBox at 48px: ball centre 24.85/26.32, radius 20.84;
+   the ring is 2px wider all round. Reduced motion (OS or the Accessibility panel) holds it. */
+@property --sk-ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 135deg;
+}
+@keyframes sk-ring-turn {
+  to {
+    --sk-ring-angle: 495deg;
+  }
+}
+.sk-assistant-ring {
+  position: absolute;
+  left: 2.01px;
+  top: 3.48px;
+  width: 45.68px;
+  height: 45.68px;
+  border-radius: 9999px;
+  background: conic-gradient(from var(--sk-ring-angle), #0088d4, #85d3ff, #044150, #0088d4);
+  animation: sk-ring-turn calc(var(--motion-duration-short3) * 24) var(--motion-easing-linear) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-assistant-ring {
+    animation: none;
+  }
+}
+[data-reduce-motion] .sk-assistant-ring {
+  animation: none;
+}

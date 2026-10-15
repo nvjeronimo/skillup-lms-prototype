@@ -15,8 +15,6 @@ export interface MyLearningCourseCardProps {
   course: MyLearningCourse;
   /** DS `Layout`: Grid is the browsing card, List the scan row (desktop only). */
   layout: "grid" | "list";
-  /** Weight of the Grid action. In a collection only the first card is `primary`. Defaults to the DS look. */
-  emphasis?: "primary" | "secondary";
   /**
    * `card` (My Learning): the card draws its own border, radius and shadow.
    * `row` (the Program page's `Course-Row`): the row's container draws them and the card is
@@ -48,7 +46,10 @@ function Progress({ course, hug = false, className }: { course: MyLearningCourse
         </span>
         <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
       </div>
-      <PlatformProgressBar track="muted" tone={complete ? "complete" : "progress"} value={pct} label={`${course.title} progress`} />
+      {/* DS `State=Not started` (v1.4): no bar, a 0% bar says nothing. */}
+      {course.progressPct === null ? null : (
+        <PlatformProgressBar track="muted" tone={complete ? "complete" : "progress"} value={pct} label={`${course.title} progress`} />
+      )}
     </div>
   );
 }
@@ -65,6 +66,15 @@ function CourseTitle({ course }: { course: MyLearningCourse }) {
     <>{course.title}</>
   );
 }
+
+/* DS v1.6 (15 Oct 2026, Nelson): the hierarchy follows the action, not the card. Resume is
+   always Primary; Start, Review and View Certificate are Secondary. */
+const hierarchyOf = (course: MyLearningCourse): ButtonHierarchy => (course.cta === "Resume" ? "primary" : "secondary");
+
+/* DS v1.7 (15 Oct 2026, Nelson): the Grid strip is grey (bg/subtle) beside a Primary action and
+   white with a 1px border/subtle beside a Secondary one (Not started, Completed). The border is
+   drawn inside the box, so the padding loses its pixel. */
+const STRIP = { filled: "bg-sko-bg-subtle px-3 py-2", outlined: "border border-sko-border-subtle px-[11px] py-[7px]" };
 
 /* The second action of a completed grid card. Written "View Certificate", as in the DS
    (Nelson, 13 Oct 2026); the completed program card uses the same label. */
@@ -119,7 +129,8 @@ function Action({
  * up-next block is 250 wide, so the titles take the rest of the row.
  * A complete course (DS `State=Completed`) reads "Completed" with a check over a full green bar, and its strip carries the certificate
  * line ("CERTIFICATE · Issued …") instead of the next unit; the action is Review, and the grid
- * card adds a Primary "View Certificate" beside it.
+ * card adds a Secondary "View Certificate" beside it (v1.6).
+ * Not started (v1.4): no bar, "Starts with" + the first topic, Start.
  * The thumbnail shows the course image over the initials (DS `Show image`).
  * The action opens the course, so it is a link with the button look (atoms/ButtonLink).
  *
@@ -132,7 +143,6 @@ function Action({
 export function MyLearningCourseCard({
   course,
   layout,
-  emphasis = "secondary",
   context = "card",
   onAction,
   className,
@@ -148,6 +158,8 @@ export function MyLearningCourseCard({
   const nextTitle = "certificate" in course.upNext ? course.upNext.certificate : course.upNext.title;
   // A completed course with a certificate: the grid card also offers the certificate page.
   const certificateHref = "certificate" in course.upNext ? certificatePageHref(course.id) : null;
+  const hierarchy = hierarchyOf(course);
+  const overlineText = course.progressPct === null ? "Starts with" : overline;
 
   if (layout === "list") {
     return (
@@ -157,7 +169,7 @@ export function MyLearningCourseCard({
           imageSrc={course.imageSrc}
           className="size-[86px]"
         />
-        <div className="flex min-w-[200px] flex-1 flex-col gap-0.5">
+        <div className="flex min-w-[200px] flex-1 basis-0 flex-col gap-0.5">
           {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
               16 after the badge (in the grid card it goes to the right end of that line); the
               badges keep the line under the title. */}
@@ -182,12 +194,12 @@ export function MyLearningCourseCard({
         {/* DS List: the progress block hugs its line ("45% complete", 24, "8 hours total"). */}
         <Progress course={course} hug className="shrink-0 gap-1.5" />
         <div
-          // The DS footer is 250 wide and hugs its content (86 with the topic type, 60 for a
-          // completed course); the title takes what the action leaves.
-          className="flex w-[250px] min-w-0 shrink-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2"
+          // DS List (15 Oct 2026): the footer fills what the titles and the progress leave, on
+          // bg/subtle in every state; its height hugs (86 with the topic type, 60 when completed).
+          className="flex min-w-[250px] flex-1 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2"
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-            <span className={OVERLINE}>{overline}</span>
+            <span className={OVERLINE}>{overlineText}</span>
             <span
               // One line, cut at the width the footer leaves.
               className="sk-text-body-medium-medium w-full truncate text-sko-text-default"
@@ -196,7 +208,7 @@ export function MyLearningCourseCard({
             </span>
             {next ? <TopicTypeBadge type={next.type} /> : null}
           </div>
-          <Action course={course} hierarchy="secondary" label={actionLabel} onAction={onAction} className="shrink-0" />
+          <Action course={course} hierarchy={hierarchy} label={actionLabel} onAction={onAction} className="shrink-0" />
         </div>
       </article>
     );
@@ -223,35 +235,35 @@ export function MyLearningCourseCard({
         <DeliveryModeBadge value={course.delivery} />
       </div>
       <Progress course={course} className="w-full gap-2" />
-      <div className="flex w-full items-center justify-between gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2">
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <span className={cn(OVERLINE, "shrink-0")}>{overline}</span>
-          {/* A certificate date sits at the right end of the strip (DS State=Completed). */}
-          <span className={cn("sk-text-body-medium-medium min-w-0 flex-1 truncate text-sko-text-default", !next && "text-right")}>
-            {nextTitle}
-          </span>
+      {next ? (
+        // The next topic (or, not started, the first one): the overline over the title, which
+        // wraps to two lines before it is cut, and the topic type at the top right.
+        <div className={cn("flex w-full items-start justify-between gap-3 rounded-lg", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <span className={OVERLINE}>{overlineText}</span>
+            <span className="sk-text-body-medium-medium line-clamp-2 text-sko-text-default">{nextTitle}</span>
+          </div>
+          <TopicTypeBadge type={next.type} className="shrink-0" />
         </div>
-        {next ? <TopicTypeBadge type={next.type} className="shrink-0" /> : null}
-      </div>
+      ) : (
+        // The certificate: one line, the date at the right end (DS State=Completed).
+        <div className={cn("flex w-full items-center gap-3 rounded-lg", STRIP.outlined)}>
+          <span className={cn(OVERLINE, "shrink-0")}>{overline}</span>
+          <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-right text-sko-text-default">{nextTitle}</span>
+        </div>
+      )}
       {/* mt-auto: in a row of cards with titles of different length, the action stays at the bottom. */}
       {certificateHref ? (
-        // DS `State=Completed`, Grid (Nelson, 13 Oct 2026): Review (Secondary) and, 12 after it,
-        // a Primary that opens the certificate. Both hug their label; in a course row (the My
-        // Learning screens) they share the width, as the single action fills it there.
-        <div className="mt-auto flex w-full flex-wrap items-center gap-3">
-          <Action
-            course={course}
-            hierarchy="secondary"
-            label={actionLabel}
-            onAction={onAction}
-            className={cn(inRow && "flex-1")}
-          />
+        // DS `State=Completed`, Grid (v1.6, 15 Oct 2026): Review and View Certificate, both
+        // Secondary, 12 apart, sharing the width.
+        <div className="mt-auto flex w-full items-center gap-3">
+          <Action course={course} hierarchy="secondary" label={actionLabel} onAction={onAction} className="flex-1" />
           <ButtonLink
             href={certificateHref}
-            hierarchy="primary"
+            hierarchy="secondary"
             size="sm"
             aria-label={`${CERTIFICATE_CTA} ${course.title}`}
-            className={cn("relative z-[1]", TARGET_44, inRow && "flex-1")}
+            className={cn("relative z-[1] flex-1", TARGET_44)}
           >
             {CERTIFICATE_CTA}
           </ButtonLink>
@@ -259,7 +271,7 @@ export function MyLearningCourseCard({
       ) : (
         <Action
           course={course}
-          hierarchy={emphasis}
+          hierarchy={hierarchy}
           label={actionLabel}
           onAction={onAction}
           className={cn("mt-auto", inRow && "w-full")}

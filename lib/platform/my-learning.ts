@@ -167,13 +167,13 @@ export interface MyLearningProgram {
   courses: string;
   /** 0–100: the same ratio. */
   progressPct: number;
-  /** State=In progress: the first course in progress, with a primary "Continue". */
+  /** State=In progress: the first course in progress, with a Primary "Resume". */
   upNext?: string;
-  /** State=Not started: the Badge Gray status, with a secondary "Details". */
+  /** State=Not started: the Badge Gray start date ("Starts Oct 5"), with a Secondary "Start". */
   status?: string;
   /** State=Completed: the date the program certificate was issued (Certificates API). */
   certificateDate?: string;
-  cta: "Continue" | "Details" | "View Certificate";
+  cta: "Resume" | "Start" | "View Certificate";
   /** The program page: what the card and its title open. No href: no page in the prototype. */
   href?: string;
   /** What the button opens when it is not the program page: the player of the course in progress. */
@@ -194,7 +194,7 @@ export const myLearningPrograms: MyLearningProgram[] = [
     courses: "1 of 7 courses complete",
     progressPct: 14,
     upNext: "Course 2 · AI-Driven Content and Brand Communication",
-    cta: "Continue",
+    cta: "Resume",
     href: "/platform/program/ai-driven-digital-marketing",
     actionHref: coursePlayerHref("ai-driven-content-and-brand-communication"),
   },
@@ -206,8 +206,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     partners: [],
     courses: "0 of 5 courses complete",
     progressPct: 0,
-    status: "Not started · Starts Oct 5",
-    cta: "Details",
+    status: "Starts Oct 5",
+    cta: "Start",
     href: "/platform/program/cybersecurity-fundamentals",
   },
   {
@@ -251,10 +251,8 @@ export const myLearningStatusFilters: { id: MyLearningStatusFilter; label: strin
 export const myLearningStateOf = (progressPct: number | null): MyLearningState =>
   progressPct === null || progressPct <= 0 ? "not-started" : progressPct >= 100 ? "completed" : "in-progress";
 
-export const myLearningProgramProgressLabel = "of program complete";
 export const myLearningProgramUpNextLabel = "Up next";
 export const myLearningProgramCompletedLabel = "Program completed";
-/** DS `State=Not started`, 13 Oct 2026: the words where the percent was, and their caption. */
+/** DS `State=Not started`: the words where the courses line is. */
 export const myLearningProgramNotStartedLabel = "Not started";
-export const myLearningProgramStartDateLabel = "Start date";
 export const myLearningProgramCertificateLabel = "Certificate issued";
