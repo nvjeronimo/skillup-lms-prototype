@@ -23,6 +23,12 @@ export interface AssistantLauncherProps {
  * of the trail lines (Nelson, 13 Oct 2026; DS `LMS/Platform/Assistant/Assistant-Launcher`).
  * Like the logo, the mark keeps its own colours and swaps its ink to white on a dark page
  * (two assets toggled by [data-theme], see SkillUpLogo). Open, it is a round close button.
+ * Since 15 Oct 2026 the ball wears a 2px gradient ring in the logo's blues (DS: a linear
+ * gradient stroke outside the ball), and the gradient turns slowly round it (Nelson asked
+ * for it to move). Reduced motion holds it still (`.sk-assistant-ring`, globals.css).
+ * The count of first steps: the DS draws it on bg/info, but its 12px number on that blue is
+ * 4.0:1 (white) in light and 4.2:1 in dark, under AA; WCAG wins over the DS (PRODUCT.md), so
+ * it takes bg/primary, the nearest blue that holds AA, until the DS settles it.
  */
 export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLauncherProps>(
   function AssistantLauncher({ open, onToggle, controls, badge = 0, className, style }, ref) {
@@ -73,10 +79,12 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
             open ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
           )}
         >
+          {/* The ring sits under the mark: the ball covers its middle, so only its 2px edge shows. */}
+          <span className="sk-assistant-ring" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assistant-mark.svg" alt="" className="sk-logo-light block h-12 w-12" />
+          <img src="/assistant-mark.svg" alt="" className="sk-logo-light relative block h-12 w-12" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assistant-mark-dark.svg" alt="" className="sk-logo-dark h-12 w-12" />
+          <img src="/assistant-mark-dark.svg" alt="" className="sk-logo-dark relative h-12 w-12" />
         </span>
         <span
           aria-hidden
@@ -95,7 +103,7 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
             onAnimationEnd={() => setPopping(null)}
             className={cn(
               popping === badge && "sk-animate-badge-pop",
-              "sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-error px-1 text-sko-text-on-error",
+              "sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-primary px-1 text-sko-text-on-primary",
             )}
           >
             {badge}

@@ -56,10 +56,13 @@ const VIEWS: { id: View; label: string }[] = [
 ];
 
 const MAX_QUESTION = 500;
-const CAPTION = {
-  model: "AI-generated. Check important details.",
-  script: "Prototype: scripted answer.",
-} as const;
+/* DS Copy row (v1.2, 15 Oct 2026), under the input. The DS line ends with a "Privacy" link;
+   the prototype has no privacy page, so the link waits for one. */
+const AI_NOTICE = "AI-generated responses may contain errors. Do not write personal data.";
+const SCRIPTED_CAPTION = "Prototype: scripted answer.";
+
+/* Who speaks, above each message (DS v1.2). */
+const WHO = "sk-text-body-small-regular uppercase text-sko-text-subtle";
 
 /**
  * The assistant's chat: a floating card above its launcher, a full-screen sheet on a phone.
@@ -231,9 +234,13 @@ export function AssistantWindow({
         className,
       )}
     >
-      <header className="flex items-center justify-between border-b border-sko-border-subtle py-3 pl-5 pr-3">
+      {/* DS v1.2 (15 Oct 2026): the header sits on bg/subtle, and the sparkles in a 28px
+          bg/primary-soft tile (radius 6). */}
+      <header className="flex items-center justify-between border-b border-sko-border-subtle bg-sko-bg-subtle py-3 pl-5 pr-3">
         <h2 className="sk-text-body-large-medium inline-flex items-center gap-2 text-sko-text-default">
-          <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" />
+          <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-md bg-sko-bg-primary-soft">
+            <Icon icon={Sparkles} size={16} className="text-sko-icon-primary" />
+          </span>
           SkillUp Assistant
         </h2>
         <div className="flex items-center">
@@ -341,16 +348,19 @@ export function AssistantWindow({
 
         {messages.map((m) =>
           m.role === "user" ? (
-            <p
+            // DS v1.2 (15 Oct 2026): each message is named above it, ME on the right, ASSISTANT
+            // on the left (body-small, text/subtle, capitals).
+            <div
               key={m.id}
-              className={cn(
-                "sk-text-body-medium-regular max-w-[85%] self-end whitespace-pre-line rounded-lg bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default",
-                arrived(m.id) && "sk-animate-rise sk-enter-only",
-              )}
+              className={cn("flex max-w-[85%] flex-col items-end gap-1 self-end", arrived(m.id) && "sk-animate-rise sk-enter-only")}
             >
-              <span className="sr-only">You: </span>
-              {m.text}
-            </p>
+              <span className={WHO}>
+                Me<span className="sr-only">:</span>
+              </span>
+              <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default">
+                {m.text}
+              </p>
+            </div>
           ) : (
             <div
               key={m.id}
@@ -359,10 +369,15 @@ export function AssistantWindow({
                 arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise sk-enter-only",
               )}
             >
-              <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-default">
-                <span className="sr-only">Assistant: </span>
-                {m.text}
-              </p>
+              <div className="flex flex-col gap-1">
+                <span className={WHO}>
+                  Assistant<span className="sr-only">:</span>
+                </span>
+                {/* DS v1.2: the answer is on bg/primary, in text/on-primary. */}
+                <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
+                  {m.text}
+                </p>
+              </div>
               {m.actions?.length ? (
                 <ul className="flex flex-col items-start gap-2">
                   {m.actions.map((a, i) => (
@@ -387,7 +402,9 @@ export function AssistantWindow({
                   ))}
                 </ul>
               ) : null}
-              <p className="sk-text-body-small-regular text-sko-text-subtle">{CAPTION[m.source ?? "script"]}</p>
+              {/* The DS moved the AI notice under the input (Copy row). A scripted answer keeps
+                  its own line: a test participant must not take it for the model. */}
+              {m.source !== "model" ? <p className="sk-text-body-small-regular text-sko-text-subtle">{SCRIPTED_CAPTION}</p> : null}
             </div>
           ),
         )}
@@ -395,7 +412,9 @@ export function AssistantWindow({
         {/* The answering bubble: mounted once per answer, it keeps its element while the
             streamed text grows into it (the text itself is never animated). */}
         {answering ? (
-          <p className="sk-animate-rise sk-enter-only sk-text-body-medium-regular max-w-[92%] self-start whitespace-pre-line rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3 text-sko-text-muted">
+          <div className="sk-animate-rise sk-enter-only flex max-w-[92%] flex-col gap-1 self-start">
+          <span aria-hidden className={WHO}>Assistant</span>
+          <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
             {streaming ? (
               streaming
             ) : (
@@ -407,6 +426,7 @@ export function AssistantWindow({
               </span>
             )}
           </p>
+          </div>
         ) : null}
         <div ref={endRef} />
       </div>
@@ -434,7 +454,7 @@ export function AssistantWindow({
         {answering ? "Thinking…" : last?.role === "assistant" ? last.text : ""}
       </p>
 
-      <form onSubmit={submit} className="flex items-center gap-2 border-t border-sko-border-subtle p-3">
+      <form onSubmit={submit} className="flex items-center gap-2 border-t border-sko-border-subtle px-3 pb-2 pt-3">
         <label htmlFor={inputId} className="sr-only">
           Your question
         </label>
@@ -457,6 +477,8 @@ export function AssistantWindow({
           <Icon icon={Send} size={20} />
         </button>
       </form>
+      {/* DS Copy row (v1.2): the notice for every answer, under the input. */}
+      <p className="sk-text-body-small-regular px-3 pb-3 text-sko-text-subtle">{AI_NOTICE}</p>
       </div>
       )}
 

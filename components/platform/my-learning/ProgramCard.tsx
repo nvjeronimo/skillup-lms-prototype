@@ -12,8 +12,6 @@ import {
   myLearningProgramCertificateLabel,
   myLearningProgramCompletedLabel,
   myLearningProgramNotStartedLabel,
-  myLearningProgramProgressLabel,
-  myLearningProgramStartDateLabel,
   myLearningProgramUpNextLabel,
   type MyLearningProgram,
 } from "@/lib/platform/my-learning";
@@ -41,16 +39,19 @@ const TARGET_44 =
  * Hero (DS change of 10 Oct 2026, the same on the four variants): a dark surface, bg/subtle
  * with the Semantics collection pinned to Dark. Top row: the Course Type badge "Program" and
  * the partner logos (36 tall chips); the title (headline-medium/Semibold, text/default); the
- * Delivery Mode and Difficulty badges; the courses line ("1 of 7 courses complete",
- * body-small/Medium at 80 %). The eyebrow "Program · N courses" left the component with its
+ * Delivery Mode and Difficulty badges (the courses line moved to the body on 15 Oct 2026). The eyebrow "Program · N courses" left the component with its
  * property. Decoration: a 340 ring with a 56 stroke in bg/primary at 8 %, low on the left, and
  * a 207 circle of diagonal hatch (border/primary) at 35 %, high on the right; both are clipped
  * by the hero.
- * Body, gap 16: the percent (headline-medium/Bold) with its label, the DS Progress bar
- * (8 tall, square, bg/strong track, bg/info fill, stepped by 10: nearest step), then the
- * footer — In progress: "Up next" + a primary "Continue"; Not started: a Badge Gray
- * status + a secondary "Details" (Buttons/Button sm). The action is a link with the button
- * look (atoms/ButtonLink) when the program has a page, a button otherwise.
+ * Body, gap 16 (DS v1.4–1.5, 14–15 Oct 2026): progress said once — "1 of 7 courses complete"
+ * (18 Semibold) over the DS Progress bar (8 tall, square, bg/strong track, bg/info fill,
+ * stepped by 10: nearest step); no percent, and the courses line left the hero. Then the
+ * footer, 60 tall — In progress: on bg/subtle, "Up next" + a Primary "Resume"; Not started:
+ * "Not started" over an empty bar, and a white footer (1px border/subtle) with a Badge Gray
+ * start date + a Secondary "Start"; Completed: the same white footer with "Certificate
+ * issued", the date and a Secondary "View Certificate". The footer is grey beside a Primary
+ * action and white beside a Secondary one (Nelson, 15 Oct 2026). The action is a link with
+ * the button look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Completed (DS `State=Completed`, v1.1, 13 Oct 2026): the label reads "Program completed"
  * after a check-circle in icon/success, the bar is full and green (bg/success), and the
  * footer, on bg/subtle, reads "Certificate issued" over the date with "View Certificate".
@@ -64,15 +65,13 @@ const TARGET_44 =
  * was centred until 10 Oct 2026).
  * Everything on the card comes from `relatedPrograms` and `progress_details` (handoff map
  * §37.4), so it carries no sample-data mark.
- *
- * The courses line keeps the DS 80 % layer opacity: on the dark hero it stays well above AA.
  */
 export function ProgramCard({ program, layout, onAction, className }: ProgramCardProps) {
   const list = layout === "list";
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${program.cta} ${program.title}`;
-  // DS, 10 Oct 2026: the action is Secondary in both states.
-  const hierarchy = "secondary";
+  // DS (15 Oct 2026): Resume is Primary, Start and View Certificate are Secondary.
+  const hierarchy = program.cta === "Resume" ? "primary" : "secondary";
   const completed = program.progressPct >= 100;
   // DS `State=Not started` (13 Oct 2026): the words take the place of "0%".
   const notStarted = !completed && !program.upNext && Boolean(program.status);
@@ -169,38 +168,26 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             <DifficultyBadge value={program.difficulty} />
           </div>
         </div>
-        <p className="sk-text-body-small-medium relative text-sko-text-default opacity-80">{program.courses}</p>
       </div>
 
       <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-between" : "w-full")}>
         <div className="flex flex-col gap-2">
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="sk-text-headline-medium-bold text-sko-text-default">
-              {notStarted ? myLearningProgramNotStartedLabel : `${program.progressPct}%`}
-            </span>
-            <span className="sk-text-label-small-semibold inline-flex items-center gap-1.5 whitespace-nowrap text-sko-text-subtle">
-              {completed ? <Icon icon={CheckCircle2} size={16} className="text-sko-icon-success" aria-hidden="true" /> : null}
-              {completed
-                ? myLearningProgramCompletedLabel
-                : notStarted
-                  ? myLearningProgramStartDateLabel
-                  : myLearningProgramProgressLabel}
-            </span>
-          </div>
+          {/* The DS sets these words in a raw 18 Semibold: title-medium/Semibold is that style. */}
+          <p className="sk-text-title-medium-semibold inline-flex items-center gap-1.5 text-sko-text-default">
+            {completed ? <Icon icon={CheckCircle2} size={20} className="text-sko-icon-success" aria-hidden="true" /> : null}
+            {completed ? myLearningProgramCompletedLabel : notStarted ? myLearningProgramNotStartedLabel : program.courses}
+          </p>
           {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
           <PlatformProgressBar stepped tone={completed ? "complete" : "progress"} value={program.progressPct} label={`${program.title} progress`} />
         </div>
-        {/* DS footer, 10 Oct 2026: a box 60 tall in both states, so every card has one height.
-            In progress: on bg/subtle, "Up next" over the course name (Semibold) on one line, cut
-            when longer.
-            Not started (DS, 13 Oct 2026): "Not started" stands where the percent was, over
-            the caption "START DATE"; the box is on bg/subtle with a 1px border/subtle and holds
-            the status badge and Details. */}
+        {/* DS footer: a box 60 tall in every state, so every card has one height. Grey
+            (bg/subtle) beside the Primary Resume; white with a 1px border/subtle beside a
+            Secondary action (Nelson, 15 Oct 2026). */}
         <div
           className={cn(
             "flex min-h-[60px] items-center justify-between gap-4 rounded-lg",
-            // The border is drawn inside the box: 1px less padding keeps both states 60 tall.
-            footerValue ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle bg-sko-bg-subtle px-[11px] py-[7px]",
+            // The border is drawn inside the box: 1px less padding keeps every state 60 tall.
+            hierarchy === "primary" ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle px-[11px] py-[7px]",
           )}
         >
           {footerValue ? (
