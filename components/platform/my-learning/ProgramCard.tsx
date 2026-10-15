@@ -187,12 +187,18 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           className={cn(
             "flex min-h-[60px] items-center justify-between gap-4 rounded-lg",
             // The border is drawn inside the box: 1px less padding keeps every state 60 tall.
-            hierarchy === "primary" ? "bg-sko-bg-subtle px-3 py-2" : "border border-sko-border-subtle px-[11px] py-[7px]",
+            hierarchy === "primary"
+              ? "bg-sko-bg-subtle px-3 py-2"
+              : completed
+                ? // DS v1.6 (Nelson, 15 Oct 2026): the certificate footer is green.
+                  "border border-sko-border-success-soft bg-sko-bg-accent-green-soft px-[11px] py-[7px]"
+                : "border border-sko-border-subtle px-[11px] py-[7px]",
           )}
         >
           {footerValue ? (
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <span className="sk-text-body-small-semibold text-sko-text-subtle">{footerLabel}</span>
+              {/* On the green certificate footer text/subtle is 3.3:1 in dark: the default ink holds AA. */}
+              <span className={cn("sk-text-body-small-semibold", completed ? "text-sko-text-default" : "text-sko-text-subtle")}>{footerLabel}</span>
               <span title={footerValue} className="sk-text-body-medium-semibold truncate text-sko-text-default">
                 {footerValue}
               </span>
