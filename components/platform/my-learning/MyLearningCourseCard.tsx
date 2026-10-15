@@ -28,6 +28,9 @@ export interface MyLearningCourseCardProps {
 
 /* DS `Overline` ("UP NEXT"): body-small/Semibold in capitals, no letter spacing, text/subtle. */
 const OVERLINE = "sk-text-body-small-semibold uppercase text-sko-text-subtle";
+/* On the green certificate strip text/subtle drops to 3.3:1 in dark; the default ink holds AA
+   in both themes (WCAG wins over the DS, PRODUCT.md). */
+const OVERLINE_ON_GREEN = "sk-text-body-small-semibold uppercase text-sko-text-default";
 
 /* DS progress: "{n}% complete" or "Not started" + the effort on the right, then the 8px bar
    (bg/muted track, bg/info fill, straight ends). DS `State=Completed` (13 Oct 2026): a
@@ -74,11 +77,32 @@ const hierarchyOf = (course: MyLearningCourse): ButtonHierarchy => (course.cta =
 /* DS v1.7 (15 Oct 2026, Nelson): the Grid strip is grey (bg/subtle) beside a Primary action and
    white with a 1px border/subtle beside a Secondary one (Not started, Completed). The border is
    drawn inside the box, so the padding loses its pixel. */
-const STRIP = { filled: "bg-sko-bg-subtle px-3 py-2", outlined: "border border-sko-border-subtle px-[11px] py-[7px]" };
+const STRIP = {
+  filled: "bg-sko-bg-subtle px-3 py-2",
+  outlined: "border border-sko-border-subtle px-[11px] py-[7px]",
+  /* DS v1.8 (15 Oct 2026, Nelson): the certificate strip of a completed course is green. */
+  completed: "border border-sko-border-success-soft bg-sko-bg-accent-green-soft px-[11px] py-[7px]",
+};
+const stripOf = (course: MyLearningCourse, hierarchy: ButtonHierarchy) =>
+  "certificate" in course.upNext ? STRIP.completed : hierarchy === "primary" ? STRIP.filled : STRIP.outlined;
 
 /* The second action of a completed grid card. Written "View Certificate", as in the DS
    (Nelson, 13 Oct 2026); the completed program card uses the same label. */
 const CERTIFICATE_CTA = "View Certificate";
+
+function CertificateAction({ course, href, className }: { course: MyLearningCourse; href: string; className?: string }) {
+  return (
+    <ButtonLink
+      href={href}
+      hierarchy="secondary"
+      size="sm"
+      aria-label={`${CERTIFICATE_CTA} ${course.title}`}
+      className={cn("relative z-[1]", TARGET_44, className)}
+    >
+      {CERTIFICATE_CTA}
+    </ButtonLink>
+  );
+}
 
 /* Every card has the same height whatever its title (asked by Nelson on 10 Oct 2026): the
    title keeps the height of two lines and is cut at the second. The full title stays in the
@@ -164,12 +188,14 @@ export function MyLearningCourseCard({
   if (layout === "list") {
     return (
       <article className={cn(surface, clickable, "flex items-center gap-6 p-4", className)}>
+        {/* DS v1.8: thumb and titles are one group, 12 apart. */}
+        <div className="flex min-w-[298px] flex-1 basis-0 items-center gap-3">
         <CourseThumb
           initials={course.initials}
           imageSrc={course.imageSrc}
-          className="size-[86px]"
+          className="size-[86px] shrink-0"
         />
-        <div className="flex min-w-[200px] flex-1 basis-0 flex-col gap-0.5">
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
               16 after the badge (in the grid card it goes to the right end of that line); the
               badges keep the line under the title. */}
@@ -191,15 +217,16 @@ export function MyLearningCourseCard({
             <DeliveryModeBadge value={course.delivery} />
           </div>
         </div>
+        </div>
         {/* DS List: the progress block hugs its line ("45% complete", 24, "8 hours total"). */}
         <Progress course={course} hug className="shrink-0 gap-1.5" />
         <div
-          // DS List (15 Oct 2026): the footer fills what the titles and the progress leave, on
-          // bg/subtle in every state; its height hugs (86 with the topic type, 60 when completed).
-          className="flex min-w-[250px] flex-1 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2"
+          // DS List: the footer fills what the titles and the progress leave; grey beside Resume,
+          // white with a border beside Start, green when completed (v1.8). Its height hugs.
+          className={cn("flex min-w-[250px] flex-1 items-center gap-4 rounded-lg", stripOf(course, hierarchy))}
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-            <span className={OVERLINE}>{overlineText}</span>
+            <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
             <span
               // One line, cut at the width the footer leaves.
               className="sk-text-body-medium-medium w-full truncate text-sko-text-default"
@@ -208,7 +235,13 @@ export function MyLearningCourseCard({
             </span>
             {next ? <TopicTypeBadge type={next.type} /> : null}
           </div>
-          <Action course={course} hierarchy={hierarchy} label={actionLabel} onAction={onAction} className="shrink-0" />
+          {certificateHref ? (
+            // DS v1.8 (Nelson): a completed course in the list offers its certificate; the
+            // title still opens the course page to review it.
+            <CertificateAction course={course} href={certificateHref} className="shrink-0" />
+          ) : (
+            <Action course={course} hierarchy={hierarchy} label={actionLabel} onAction={onAction} className="shrink-0" />
+          )}
         </div>
       </article>
     );
@@ -216,23 +249,23 @@ export function MyLearningCourseCard({
 
   return (
     <article className={cn(surface, clickable, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
-      <div className="flex w-full items-start gap-4">
-        <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-[86px]" />
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          {/* DS Grid (Nelson, 13 Oct 2026): the provider or partner sits at the right end of the
-              Course Type line, not under the title. */}
-          <div className="flex w-full items-center justify-between gap-0.5">
-            <CourseTypeBadge value="Course" />
-            <ProviderBadge value={course.provider} />
-          </div>
-          <h3 title={course.title} className={cn("sk-text-title-large-semibold min-h-[2lh] text-sko-text-default", TITLE_TWO_LINES)}>
+      {/* DS v1.8 header (Nelson, 15 Oct 2026), gap 12: the Course Type line across the card
+          (provider at its right end), then the 64px thumb beside the title, then the badges. */}
+      <div className="flex w-full flex-col gap-3">
+        <div className="flex w-full flex-wrap items-center justify-between gap-0.5">
+          <CourseTypeBadge value="Course" />
+          <ProviderBadge value={course.provider} />
+        </div>
+        <div className="flex w-full items-start gap-3">
+          <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-16 shrink-0" />
+          <h3 title={course.title} className={cn("sk-text-title-large-semibold min-h-[2lh] min-w-0 flex-1 text-sko-text-default", TITLE_TWO_LINES)}>
             <CourseTitle course={course} />
           </h3>
         </div>
-      </div>
-      <div className="flex flex-wrap items-start gap-2">
-        <DifficultyBadge value={course.difficulty} />
-        <DeliveryModeBadge value={course.delivery} />
+        <div className="flex flex-wrap items-start gap-2">
+          <DifficultyBadge value={course.difficulty} />
+          <DeliveryModeBadge value={course.delivery} />
+        </div>
       </div>
       <Progress course={course} className="w-full gap-2" />
       {next ? (
@@ -240,15 +273,15 @@ export function MyLearningCourseCard({
         // wraps to two lines before it is cut, and the topic type at the top right.
         <div className={cn("flex w-full items-start justify-between gap-3 rounded-lg", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className={OVERLINE}>{overlineText}</span>
+            <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
             <span className="sk-text-body-medium-medium line-clamp-2 text-sko-text-default">{nextTitle}</span>
           </div>
           <TopicTypeBadge type={next.type} className="shrink-0" />
         </div>
       ) : (
         // The certificate: one line, the date at the right end (DS State=Completed).
-        <div className={cn("flex w-full items-center gap-3 rounded-lg", STRIP.outlined)}>
-          <span className={cn(OVERLINE, "shrink-0")}>{overline}</span>
+        <div className={cn("flex w-full items-center gap-3 rounded-lg", STRIP.completed)}>
+          <span className={cn(OVERLINE_ON_GREEN, "shrink-0")}>{overline}</span>
           <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-right text-sko-text-default">{nextTitle}</span>
         </div>
       )}
@@ -258,15 +291,7 @@ export function MyLearningCourseCard({
         // Secondary, 12 apart, sharing the width.
         <div className="mt-auto flex w-full items-center gap-3">
           <Action course={course} hierarchy="secondary" label={actionLabel} onAction={onAction} className="flex-1" />
-          <ButtonLink
-            href={certificateHref}
-            hierarchy="secondary"
-            size="sm"
-            aria-label={`${CERTIFICATE_CTA} ${course.title}`}
-            className={cn("relative z-[1] flex-1", TARGET_44)}
-          >
-            {CERTIFICATE_CTA}
-          </ButtonLink>
+          <CertificateAction course={course} href={certificateHref} className="flex-1" />
         </div>
       ) : (
         <Action
@@ -274,7 +299,8 @@ export function MyLearningCourseCard({
           hierarchy={hierarchy}
           label={actionLabel}
           onAction={onAction}
-          className={cn("mt-auto", inRow && "w-full")}
+          // DS v1.8: the action fills the card's width.
+          className="mt-auto w-full"
         />
       )}
     </article>
