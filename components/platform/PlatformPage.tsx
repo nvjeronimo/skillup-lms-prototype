@@ -17,7 +17,7 @@ const SHOW_MOCK_KEY = "sk-platform-show-mock";
  * The page sets its own padding: Dashboard and My Learning use 40 / 32 / 24
  * (desktop / tablet / mobile); Program Detail is full-bleed under the bar.
  *
- * Under the bar sits the test-build note with the "Show which" switch: it sets
+ * Under the page, in the footer, sits the test-build note with the "Show which" switch: it sets
  * `data-show-mock` here, and every block tagged `data-mock="<what has no API>"`
  * gets a dashed outline and a SAMPLE chip (styles in app/globals.css), while the note
  * lists what each one is missing.
@@ -89,17 +89,21 @@ export function PlatformPage({
   return (
     <div
       ref={rootRef}
-      // max-md:pb-20: on a phone the assistant launcher floats over the bottom right (48 + 16 from
-      // the edge); 80px under the last card lets every page scroll clear of it.
-      className="flex min-h-[100dvh] flex-col bg-sko-bg-faint max-md:pb-20"
+      className="flex min-h-[100dvh] flex-col bg-sko-bg-faint"
       data-show-mock={showMock ? "" : undefined}
     >
       <PlatformTopbar current={current} />
-      {/* Test-build note. The same dashed warning treatment as the /lab note, so a
-          screenshot of these pages is not read as a promise about the data. */}
-      <aside
+      {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
+      <main key={pathname} id="main" tabIndex={-1} className={cn("sk-animate-page flex-1 outline-none", className)}>
+        {children}
+      </main>
+      {/* Test-build note, in the footer (Nelson, 15 Oct 2026). The same dashed warning treatment
+          as the /lab note, so a screenshot of these pages is not read as a promise about the data.
+          max-md:pb-20: on a phone the assistant launcher floats over the bottom right (48 + 16 from
+          the edge); the footer, last on the page, keeps 80px under its text so it scrolls clear of it. */}
+      <footer
         aria-label="Test build"
-        className="sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-1 text-sko-text-warning md:px-8 lg:px-10"
+        className="sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-2 text-sko-text-warning max-md:pb-20 md:px-8 lg:px-10"
       >
         <p className="sk-text-body-medium-regular">
           <span className="sk-text-body-medium-semibold">Test build.</span> Most figures on this page are sample data: no
@@ -120,11 +124,7 @@ export function PlatformPage({
             ))}
           </ul>
         ) : null}
-      </aside>
-      {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
-      <main key={pathname} id="main" tabIndex={-1} className={cn("sk-animate-page flex-1 outline-none", className)}>
-        {children}
-      </main>
+      </footer>
       <Toast toast={toast} onDone={clearToast} />
     </div>
   );
