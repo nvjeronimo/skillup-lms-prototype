@@ -168,6 +168,17 @@ export interface MyLearningProgram {
   /** Number of courses in the program (programs API, length of `courses`). DS v1.7: a hero
       tag in every state, and the right end of the progress row when not started or completed. */
   courseCount: number;
+  /** DS v1.8 thumb: the program's card image (programs API); the initials show without it. */
+  imageSrc?: string;
+  initials: string;
+  /** DS v1.8, In progress: the earliest upcoming due date in the course in progress (dates API). */
+  nextDue?: string;
+  /** DS v1.8 details line, each part left out when there is no data: the latest last-accessed
+      date across the courses, the hours left (or in total, not started; the sum of course effort),
+      and the end of access (enrollment end). */
+  lastStudied?: string;
+  hours?: string;
+  accessUntil?: string;
   /** 0–100: the same ratio. */
   progressPct: number;
   /** State=In progress: the first course in progress, with a Primary "Resume". */
@@ -196,6 +207,12 @@ export const myLearningPrograms: MyLearningProgram[] = [
     ],
     courses: "1 of 7 courses complete",
     courseCount: 7,
+    imageSrc: `${COVERS}/program-ai-digital-marketing.jpg`,
+    initials: "AD",
+    nextDue: "Due Fri 17 Oct",
+    lastStudied: "Last studied 3 days ago",
+    hours: "18 h left",
+    accessUntil: "Access until 30 Jun 2027",
     progressPct: 14,
     upNext: "Course 2 · AI-Driven Content and Brand Communication",
     cta: "Resume",
@@ -210,6 +227,9 @@ export const myLearningPrograms: MyLearningProgram[] = [
     partners: [],
     courses: "0 of 5 courses complete",
     courseCount: 5,
+    initials: "CF",
+    hours: "42 h total",
+    accessUntil: "Access until 31 Mar 2027",
     progressPct: 0,
     status: "Starts Oct 5",
     cta: "Start",
@@ -228,6 +248,7 @@ export const myLearningPrograms: MyLearningProgram[] = [
     ],
     courses: "5 of 5 courses complete",
     courseCount: 5,
+    initials: "DA",
     progressPct: 100,
     certificateDate: "30 Sep 2026",
     cta: "View Certificate",

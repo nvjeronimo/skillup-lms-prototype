@@ -8,6 +8,7 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseCountBadge, CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
+import { CourseThumb } from "./CourseThumb";
 import {
   myLearningProgramCertificateLabel,
   myLearningProgramCompletedLabel,
@@ -77,6 +78,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
   const notStarted = !completed && !program.upNext && Boolean(program.status);
   const footerLabel = completed ? myLearningProgramCertificateLabel : myLearningProgramUpNextLabel;
   const footerValue = completed ? program.certificateDate : program.upNext;
+  const details = [program.lastStudied, program.hours, program.accessUntil].filter(Boolean);
   const skin = useLmsStore((st) => st.skin);
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
@@ -145,10 +147,13 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
                 </ul>
               ) : null}
             </div>
+            {/* DS v1.8: the program image, 64, beside the title (as on Course-Card 1.8). */}
+            <div className="flex w-full items-start gap-3">
+            <CourseThumb initials={program.initials} imageSrc={program.imageSrc} className="size-16" />
             <h3
               title={program.title}
               className={cn(
-                "sk-text-headline-medium-semibold text-sko-text-default",
+                "sk-text-headline-medium-semibold min-w-0 flex-1 text-sko-text-default",
                 // Grid keeps room for three lines and cuts a longer title there, so cards in a row
                 // have the same hero; List cuts at two.
                 list ? "line-clamp-2" : "line-clamp-3 min-h-[3lh]",
@@ -162,6 +167,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
                 program.title
               )}
             </h3>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <DeliveryModeBadge value={program.delivery} />
@@ -188,6 +194,10 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           </div>
           {/* Stepped by 10 as the DS Progress bar; the real value goes to assistive tech. */}
           <PlatformProgressBar stepped tone={completed ? "complete" : "progress"} value={program.progressPct} label={`${program.title} progress`} />
+          {/* DS v1.8 details line: one line, each part only when there is data; none when completed. */}
+          {!completed && details.length ? (
+            <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{details.join(" · ")}</p>
+          ) : null}
         </div>
         {/* DS footer: a box 60 tall in every state, so every card has one height. Grey
             (bg/subtle) beside the Primary Resume; white with a 1px border/subtle beside a
@@ -207,7 +217,15 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           {footerValue ? (
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               {/* On the green certificate footer text/subtle is 3.3:1 in dark: the default ink holds AA. */}
-              <span className={cn("sk-text-body-small-semibold", completed ? "text-sko-text-default" : "text-sko-text-subtle")}>{footerLabel}</span>
+              <span className="inline-flex items-center gap-2">
+                <span className={cn("sk-text-body-small-semibold", completed ? "text-sko-text-default" : "text-sko-text-subtle")}>{footerLabel}</span>
+                {/* DS v1.8: the next deadline, only when the next item has one. */}
+                {!completed && program.nextDue ? (
+                  <Badge variant="soft" color="yellow">
+                    {program.nextDue}
+                  </Badge>
+                ) : null}
+              </span>
               <span title={footerValue} className="sk-text-body-medium-semibold truncate text-sko-text-default">
                 {footerValue}
               </span>
