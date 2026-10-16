@@ -47,6 +47,7 @@ const config: Config = {
           "bg-primary-soft": "var(--color-bg-primary-soft)",
           "bg-primary": "var(--color-bg-primary)",
           "bg-warning-soft": "var(--color-bg-warning-soft)",
+          "bg-warning-muted": "var(--color-bg-warning-muted)",
           "bg-success-soft": "var(--color-bg-success-soft)",
           "bg-error-soft": "var(--color-bg-error-soft)",
           "border-default": "var(--color-border-default)",

@@ -49,6 +49,8 @@
   --color-bg-success-soft: #e4fced;
   --color-bg-warning: #f9c654;
   --color-bg-warning-soft: #fff9eb;
+  /* DS bg/warning-muted (14 Oct 2026): a "toasted" yellow, deeper than warning-soft; Yellow/100. Live-Now-Banner Upcoming. */
+  --color-bg-warning-muted: #ffebbd;
   --color-bg-error: #da3336;
   --color-bg-error-soft: #fce8e8;
   --color-bg-info: #0086c9;
@@ -64,7 +66,8 @@
   --color-text-default: #13282f;
   --color-text-muted: #39414c;
   --color-text-subtle: #4f5b69;
-  --color-text-placeholder: #677482;
+  /* DS 16 Oct 2026 (audit, D2): one step darker, Neutral/600 — 4.96:1 on bg/subtle (was 4.38). */
+  --color-text-placeholder: #606b7a;
   --color-text-disabled: #8995a6;
   --color-text-on-fixed: #13282f;
   --color-text-on-inverse: #ffffff;
@@ -210,6 +213,8 @@
   --color-bg-success-soft: #102b1d;
   --color-bg-warning: #f9c654;
   --color-bg-warning-soft: #2e2410;
+  /* DS bg/warning-muted, dark: Yellow/950. */
+  --color-bg-warning-muted: #85580e;
   --color-bg-error: #e26567;
   --color-bg-error-soft: #34191b;
   --color-bg-info: #0086c9;
@@ -225,7 +230,8 @@
   --color-text-default: #eaf1f4;
   --color-text-muted: #b3c0c7;
   --color-text-subtle: #93a3ab;
-  --color-text-placeholder: #73848c;
+  /* DS 16 Oct 2026 (audit, D2): Dark-Neutral/300 — 6.28:1 on bg/subtle (was 4.22); no step between 400 and 300. */
+  --color-text-placeholder: #93a3ab;
   --color-text-disabled: #53666e;
   --color-text-on-fixed: #13282f;
   --color-text-on-inverse: #0e1a1f;

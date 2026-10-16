@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { Quote } from "lucide-react";
 import { getArticle, getDownloads } from "@/lib/content";
+import { Icon } from "@/lib/icons";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 
@@ -27,12 +29,15 @@ export function ReadingView({ topicId }: { topicId: string }) {
         </section>
       ))}
 
-      {/* DS Lesson Block Kind=HTML (Blockquote), 21354:6807. */}
-      <blockquote className="flex flex-col gap-1.5 rounded-lg border-l-4 border-sko-border-primary bg-sko-bg-primary-soft px-5 py-[18px]">
-        <p className="sk-text-body-large-medium text-sko-text-primary">“{article.pullQuote.text}”</p>
-        <footer className="sk-text-body-medium-regular text-sko-text-primary">
-          {article.pullQuote.attribution}
-        </footer>
+      {/* DS Lesson Block Kind=HTML (Blockquote) v1.1, 21354:6807: a typographic pull quote, no box
+          and no stripe — the Quote mark (28, icon/primary), the quote in title-medium/Medium
+          text/primary, the attribution in body-medium text/muted. */}
+      <blockquote className="flex gap-3 py-2">
+        <Icon icon={Quote} size={28} aria-hidden="true" className="mt-0.5 shrink-0 text-sko-icon-primary" />
+        <div className="flex flex-col gap-2">
+          <p className="sk-text-title-medium-medium text-sko-text-primary">{article.pullQuote.text}</p>
+          <footer className="sk-text-body-medium-regular text-sko-text-muted">{article.pullQuote.attribution}</footer>
+        </div>
       </blockquote>
 
       {/* DS Lesson Block Kind=HTML (Key Takeaways), 21354:6808. */}

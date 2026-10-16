@@ -662,6 +662,9 @@ button {
     animation: none;
   }
 }
+.sk-assistant-ring--still {
+  animation: none;
+}
 [data-reduce-motion] .sk-assistant-ring {
   animation: none;
 }
