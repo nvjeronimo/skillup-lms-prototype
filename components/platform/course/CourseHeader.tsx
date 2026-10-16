@@ -3,7 +3,7 @@ import { BookOpen, ChevronRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
-import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
+import { PlatformProgressBar, ProgressCardLabel } from "@/components/platform/PlatformProgressBar";
 import type { CourseDetail } from "@/lib/platform/course-detail";
 import { programPageHref } from "@/lib/platform/hrefs";
 import { MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
@@ -158,9 +158,14 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
             >
               <div className="flex items-end justify-between gap-3">
                 <p className="sk-text-headline-medium-bold text-sko-text-default">{course.progress.percent}%</p>
-                <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.label}</p>
+                <ProgressCardLabel complete={course.progress.percent >= 100} label={course.progress.label} />
               </div>
-              <PlatformProgressBar value={course.progress.percent} label={course.progress.label} />
+              {/* Green only once complete, beside the check icon and the word (as on the cards). */}
+            <PlatformProgressBar
+              value={course.progress.percent}
+              label={course.progress.label}
+              tone={course.progress.percent >= 100 ? "complete" : "progress"}
+            />
               <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.eyebrow}</p>
               <ButtonLink href={course.progress.href} size="lg" className="w-full">
                 {course.progress.cta}
