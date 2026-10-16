@@ -47,8 +47,8 @@ function courseStatus(percent: number | null): { label: string; color: "success"
  *
  * Two kinds since 10 Oct 2026, both proposals:
  * - `course`: the certificate of a course (issued), as before;
- * - `program`: the certificate of a program. Issued, it is the same page. Not earned (every
- *   sample program today), there is no sheet to show: the page says what is missing instead,
+ * - `program`: the certificate of a program. Issued, it is the same page. Not earned (the
+ *   other two sample programs), there is no sheet to show: the page says what is missing instead,
  *   the requirement with its bar (courses complete of total) and the list of the program's
  *   courses, each with its state and a link to its page.
  * The trail goes through Programs for anything of a program, like the course page.
