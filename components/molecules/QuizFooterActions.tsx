@@ -211,7 +211,7 @@ export function QuizFooterActions({
             // A status, not an action: announced politely, never a disabled button
             // (unreadable at 1.8:1 and it reads as "unavailable"). It disappears as
             // soon as the answer changes — AssessmentView resets `saved` on edit.
-            <p role="status" className="sk-text-sm-medium inline-flex min-h-[44px] items-center gap-1.5 text-sko-text-success">
+            <p role="status" className="sk-text-body-medium-medium inline-flex min-h-[44px] items-center gap-1.5 text-sko-text-success">
               <Icon icon={CheckCircle2} size={16} aria-hidden="true" />
               Draft saved
             </p>
