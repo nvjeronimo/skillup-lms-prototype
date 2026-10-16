@@ -131,7 +131,7 @@ export interface Program {
   /**
    * PROPOSAL, NOT DESIGNED (10 Oct 2026). The certificate of the program itself, once issued.
    * Left out, the page derives the not-earned state from the courses (lib/platform/catalog,
-   * `getProgramCertificate`): no sample program is complete, so no program file sets it.
+   * `getProgramCertificate`). Only the completed sample program (data-analytics-foundations) sets it.
    */
   programCertificate?: Extract<ProgramCertificate, { status: "issued" }>;
   faqsIntro: { title: string };

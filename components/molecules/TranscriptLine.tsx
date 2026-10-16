@@ -21,6 +21,11 @@ export interface TranscriptLineProps {
    * no seek, no Note pill, no timecode. Same look as the line.
    */
   readOnly?: boolean;
+  /**
+   * Side padding of the row. DS Transcript-Line 1.1 (15 Oct 2026): Container/content-padding in the
+   * transcript (the tab passes it per breakpoint); 16 when the line is a quote (Note-Item, Note-Editor).
+   */
+  padX?: string;
   onSeek?: () => void;
   onAddNote?: () => void;
   onEditNote?: () => void;
@@ -44,6 +49,7 @@ export function TranscriptLine({
   duration,
   device = "desktop",
   readOnly = false,
+  padX = "px-4",
   onSeek,
   onAddNote,
   onEditNote,
@@ -66,7 +72,8 @@ export function TranscriptLine({
   return (
     <div
       className={cn(
-        "group flex items-start gap-3 px-4 py-3 transition-colors",
+        "group flex items-start gap-3 py-3 transition-colors",
+        padX,
         stacked && "flex-col",
         active
           ? "bg-sko-bg-primary-soft shadow-[inset_3px_0_0_var(--color-border-primary)]"

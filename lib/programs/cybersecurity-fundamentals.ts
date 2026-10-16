@@ -21,7 +21,7 @@ const program: Program = {
   slug: "cybersecurity-fundamentals",
   title: "Cybersecurity Fundamentals Certificate",
   // No picture was made for this program: it borrows one of the placeholder covers.
-  imageSrc: "/platform/covers/program-ai-digital-marketing.jpg",
+  imageSrc: "/platform/covers/intro-to-product-analytics.jpg",
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { courses: "5 courses", duration: "4 months", org: "SkillUp" },

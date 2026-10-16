@@ -236,6 +236,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     courses: "0 of 5 courses complete",
     courseCount: 5,
     initials: "CF",
+    // No picture was made for this program: a placeholder cover, the same as the Figma screens (16 Oct 2026).
+    imageSrc: `${COVERS}/intro-to-product-analytics.jpg`,
     hours: "42 h total",
     accessUntil: "Access until 31 Mar 2027",
     progressPct: 0,
@@ -244,8 +246,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     href: "/platform/program/cybersecurity-fundamentals",
   },
   {
-    // The completed program (DS `State=Completed`, 13 Oct 2026). A sample: it has no program
-    // page and no certificate page in the prototype, so its action says so.
+    // The completed program (DS `State=Completed`, 13 Oct 2026). Its page since 16 Oct 2026
+    // (lib/programs/data-analytics-foundations); View Certificate opens the program certificate.
     id: "data-analytics-foundations",
     title: "Data Analytics Foundations Certificate",
     delivery: "Flexible Learning",
@@ -257,9 +259,13 @@ export const myLearningPrograms: MyLearningProgram[] = [
     courses: "5 of 5 courses complete",
     courseCount: 5,
     initials: "DA",
+    // A placeholder cover, the same as the Figma screens (16 Oct 2026).
+    imageSrc: `${COVERS}/business-analytics-with-python.jpg`,
     progressPct: 100,
     certificateDate: "30 Sep 2026",
     cta: "View Certificate",
+    href: "/platform/program/data-analytics-foundations",
+    actionHref: "/platform/certificate/program/data-analytics-foundations",
   },
 ];
 
