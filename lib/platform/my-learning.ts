@@ -228,6 +228,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     courses: "0 of 5 courses complete",
     courseCount: 5,
     initials: "CF",
+    // No picture was made for this program: a placeholder cover, the same as the Figma screens (16 Oct 2026).
+    imageSrc: `${COVERS}/intro-to-product-analytics.jpg`,
     hours: "42 h total",
     accessUntil: "Access until 31 Mar 2027",
     progressPct: 0,
@@ -249,6 +251,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     courses: "5 of 5 courses complete",
     courseCount: 5,
     initials: "DA",
+    // A placeholder cover, the same as the Figma screens (16 Oct 2026).
+    imageSrc: `${COVERS}/business-analytics-with-python.jpg`,
     progressPct: 100,
     certificateDate: "30 Sep 2026",
     cta: "View Certificate",
