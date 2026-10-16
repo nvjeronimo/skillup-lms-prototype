@@ -201,7 +201,7 @@ export function MyLearningCourseCard({
               badges keep the line under the title. */}
           <div className="flex w-full items-center gap-4">
             <CourseTypeBadge value="Course" />
-            <ProviderBadge value={course.provider} />
+            <ProviderBadge value={course.provider} type="logo" />
           </div>
           <h3
             title={course.title}
@@ -254,7 +254,7 @@ export function MyLearningCourseCard({
       <div className="flex w-full flex-col gap-3">
         <div className="flex w-full flex-wrap items-center justify-between gap-0.5">
           <CourseTypeBadge value="Course" />
-          <ProviderBadge value={course.provider} />
+          <ProviderBadge value={course.provider} type="logo" />
         </div>
         <div className="flex w-full items-start gap-3">
           <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-16 shrink-0" />

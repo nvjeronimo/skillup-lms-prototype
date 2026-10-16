@@ -162,7 +162,8 @@ export interface MyLearningProgram {
   delivery: DeliveryMode;
   difficulty: Difficulty;
   /** Partner logos, as on the course and program headers. Sample: no field returns them. */
-  partners: { name: string; logoSrc: string }[];
+  /** Partner logos (DS Provider-Partner-Badge Type=Logo). */
+  partners: { name: Provider }[];
   /** "N of M courses complete": `progress_details`, completed ÷ all courses. */
   courses: string;
   /** Number of courses in the program (programs API, length of `courses`). DS v1.7: a hero
@@ -202,8 +203,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     delivery: "Flexible Learning",
     difficulty: "Beginner",
     partners: [
-      { name: "Microsoft", logoSrc: "/platform/partner-microsoft-dark.svg" },
-      { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
+      { name: "Microsoft" },
+      { name: "IBM" },
     ],
     courses: "1 of 7 courses complete",
     courseCount: 7,
@@ -243,8 +244,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     delivery: "Flexible Learning",
     difficulty: "Beginner",
     partners: [
-      { name: "Microsoft", logoSrc: "/platform/partner-microsoft-dark.svg" },
-      { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
+      { name: "Microsoft" },
+      { name: "IBM" },
     ],
     courses: "5 of 5 courses complete",
     courseCount: 5,
