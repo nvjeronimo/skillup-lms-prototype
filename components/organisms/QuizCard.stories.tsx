@@ -54,7 +54,7 @@ export const Selected: Story = {
   args: { state: "Selected", footer: { submitEnabled: true, showHint: true, showSave: true, showAnswer: true } },
 };
 
-/** Stored without grading. "Draft saved" is a disabled confirmation, not an action. */
+/** Stored without grading. "Draft saved" is a status (role="status"), not a disabled button. */
 export const Saved: Story = {
   args: {
     state: "Saved",
