@@ -38,18 +38,18 @@ export function ThreadItem({
       <Avatar name={author} src={avatarUrl} size="sm" />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="sk-text-sm-medium text-sko-text-default">{author}</span>
-          <span className="sk-text-xs-regular text-sko-text-subtle">{timestamp}</span>
+          <span className="sk-text-body-medium-medium text-sko-text-default">{author}</span>
+          <span className="sk-text-body-small-regular text-sko-text-subtle">{timestamp}</span>
         </div>
-        <p className="sk-text-sm-regular mt-2 text-sko-text-default">{content}</p>
+        <p className="sk-text-body-medium-regular mt-2 text-sko-text-default">{content}</p>
         <span className="mt-2 flex items-center gap-4">
           {/* DS `upvote-btn`: a pill. Display-only here, because the whole card is a
               <button> and interactive elements cannot be nested inside it. */}
           <span className="inline-flex items-center gap-1 rounded-full border border-sko-border-subtle px-2 py-1">
             <Icon icon={ArrowUp} size={14} className="text-sko-icon-muted" />
-            <span className="sk-text-xs-medium text-sko-text-default">{upvotes}</span>
+            <span className="sk-text-body-small-medium text-sko-text-default">{upvotes}</span>
           </span>
-          <span className="sk-text-xs-medium inline-flex items-center gap-1 text-sko-text-primary">
+          <span className="sk-text-body-small-medium inline-flex items-center gap-1 text-sko-text-primary">
             <Icon icon={MessageCircle} size={14} />
             {replies} {replies === 1 ? "reply" : "replies"}
           </span>

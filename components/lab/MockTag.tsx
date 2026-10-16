@@ -22,8 +22,8 @@ export function MockTag({ reason, layout = "inline", className }: MockTagProps) 
         className,
       )}
     >
-      <span className="sk-text-xs-semibold shrink-0 uppercase tracking-wide">Mock</span>
-      <span className="sk-text-xs-regular">{reason}</span>
+      <span className="sk-text-body-small-semibold shrink-0 uppercase tracking-wide">Mock</span>
+      <span className="sk-text-body-small-regular">{reason}</span>
     </span>
   );
 }

@@ -4,14 +4,18 @@ import * as React from "react";
 import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
+import { cn } from "@/lib/utils";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
+import { CONTENT_BLEED, CONTENT_PX } from "@/lib/contentPadding";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
-import { scrollBehavior, tsToSeconds } from "@/lib/utils";
+import { tsToSeconds } from "@/lib/utils";
+import { scrollToElement } from "@/lib/scrollToElement";
 import { track } from "@/lib/analytics";
+import { TopicEndActionContext } from "@/lib/topicEndAction";
 
 const PAUSE_MS = 8000;
 
@@ -24,8 +28,11 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const openNoteEditor = useLmsStore((s) => s.openNoteEditor);
   const showToast = useLmsStore((s) => s.showToast);
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
+  // Mark as Complete, when the player shell shows it: it sits in the feedback row below.
+  const endAction = React.useContext(TopicEndActionContext);
   // DS Transcript Line `Device` variant: mobile stacks the active line's note pill.
-  const lineDevice = useBreakpoint() === "mobile" ? "mobile" : "desktop";
+  const bp = useBreakpoint();
+  const lineDevice = bp === "mobile" ? "mobile" : "desktop";
 
   // Auto-follow the active line; pause when the user scrolls manually.
   const [following, setFollowing] = React.useState(true);
@@ -38,13 +45,15 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   const scrollToActive = React.useCallback(() => {
     const el = activeLineId ? lineRefs.current[activeLineId] : null;
-    el?.scrollIntoView({
-      block: "center",
-      behavior: scrollBehavior(),
-    });
+    scrollToElement(el, "center");
   }, [activeLineId]);
 
+  // Not on the first render: scrollIntoView also moves the page, so a topic would open
+  // with its title already scrolled under the player. Follow from the first line change on.
+  const mountedLineId = React.useRef(activeLineId);
   React.useEffect(() => {
+    if (mountedLineId.current === activeLineId) return;
+    mountedLineId.current = null;
     if (following) scrollToActive();
   }, [activeLineId, following, scrollToActive]);
 
@@ -81,7 +90,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   if (!topic || !transcript.length) {
     return (
-      <p className="sk-text-sm-regular px-1 py-8 text-center text-sko-text-subtle">
+      <p className="sk-text-body-medium-regular px-1 py-8 text-center text-sko-text-subtle">
         No transcript available for this topic.
       </p>
     );
@@ -97,13 +106,13 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
       <div className="flex flex-wrap items-center justify-between gap-3 py-2">
-        <label className="sk-text-sm-medium flex items-center gap-1.5 text-sko-text-muted">
+        <label className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-muted">
           Language:
           <span className="relative">
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="sk-text-sm-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
+              className="sk-text-body-medium-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -125,15 +134,15 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 : transcript[0]?.id,
             })
           }
-          // DS Link Button_def, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
-          className="sk-text-sm-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary hover:bg-sko-bg-faint"
+          // DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
+          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
         >
           <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Add Note</span>
         </button>
       </div>
 
-      <div className="relative flex flex-col py-2">
+      <div className={cn("relative flex flex-col py-2", CONTENT_BLEED[bp])}>
         {transcript.map((line) => {
           const note = notes.find((n) => n.transcriptLineId === line.id && n.topicId === topicId);
           const hasNote = Boolean(note);
@@ -150,6 +159,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 active={line.id === activeLineId}
                 hasNote={hasNote}
                 device={lineDevice}
+                padX={CONTENT_PX[bp]}
                 onSeek={() => {
                   seekVideoTo(tsToSeconds(line.ts), line.id);
                   track("transcript_line_click", { lineId: line.id, newTs: line.ts });
@@ -177,9 +187,11 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       </div>
 
       {/* Feedback + license footer (ICP Phase 1). ContentFeedback carries its own DS
-          12/12 padding and right-aligned licence, so no wrapper padding here. */}
+          12/12 padding and right-aligned licence, so no wrapper padding here. With Mark as
+          Complete in the row, the licence follows the feedback and the button takes the right. */}
       <ContentFeedback
         className="mt-2 border-t border-sko-border-subtle"
+        action={endAction ?? undefined}
         value={feedback}
         onLike={() => setFeedback(feedback === "like" ? null : "like")}
         onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}

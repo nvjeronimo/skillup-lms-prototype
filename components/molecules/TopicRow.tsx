@@ -10,6 +10,8 @@ export interface TopicRowProps {
   title: string;
   duration: string;
   status: CompletionState;
+  /** The topic was completed just now: its Done check draws itself (the completion chain). */
+  animateStatus?: boolean;
   /** Active (currently playing) topic — brand-section bg + 4px brand left rule. */
   active?: boolean;
   showBookmark?: boolean;
@@ -50,6 +52,7 @@ export function TopicRow({
   title,
   duration,
   status,
+  animateStatus = false,
   active = false,
   showBookmark = false,
   bookmarked = false,
@@ -69,14 +72,14 @@ export function TopicRow({
         aria-label={`${title}, ${type}, ${STATUS_TEXT[status]}`}
         className={cn(
           // DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred.
-          "relative flex w-full items-start justify-center px-2 py-3",
+          "relative flex w-full items-start justify-center px-2 py-3 transition-colors",
           active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
           className,
         )}
       >
         {active ? <ActiveRule /> : null}
         <span aria-hidden className="contents">
-          <CompletionStatus state={status} size={18} />
+          <CompletionStatus state={status} size={18} animate={animateStatus} />
         </span>
       </button>
     );
@@ -101,12 +104,12 @@ export function TopicRow({
             content column (row counter-axis alignment is MIN). Hidden from AT:
             the status is spoken last, after title · type · duration. */}
         <span aria-hidden className="contents">
-          <CompletionStatus state={status} size={18} />
+          <CompletionStatus state={status} size={18} animate={animateStatus} />
         </span>
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           {/* The topic title is text-primary in every state — it does not change
               colour when active or locked. */}
-          <span className="sk-text-sm-medium block text-sko-text-default">{title}</span>
+          <span className="sk-text-body-medium-medium block text-sko-text-default">{title}</span>
           {/* state-row: brand type badge · gray duration (Caption/Medium), 6px apart,
               on one line; the trailing duration truncates with an ellipsis. */}
           <span className="flex min-w-0 items-center gap-1.5">
@@ -114,16 +117,16 @@ export function TopicRow({
             {/* Duration is optional: render nothing rather than a dash placeholder. */}
             {duration ? (
               <>
-                <span className="sk-text-sm-medium shrink-0 text-sko-text-subtle" aria-hidden>
+                <span className="sk-text-body-medium-medium shrink-0 text-sko-text-subtle" aria-hidden>
                   ·
                 </span>
-                <span className="sk-text-xs-medium min-w-0 truncate text-sko-text-subtle">
+                <span className="sk-text-body-small-medium min-w-0 truncate text-sko-text-subtle">
                   {duration}
                 </span>
               </>
             ) : null}
             {optional ? (
-              <span className="sk-text-xs-medium shrink-0 text-sko-icon-faint">Optional</span>
+              <span className="sk-text-body-small-medium shrink-0 text-sko-icon-faint">Optional</span>
             ) : null}
             <span className="sr-only">, {STATUS_TEXT[status]}</span>
           </span>

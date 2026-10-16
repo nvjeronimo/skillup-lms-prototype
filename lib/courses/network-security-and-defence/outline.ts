@@ -1,0 +1,542 @@
+import type { Course } from "@/lib/courses/kit";
+
+/**
+ * "Network Security and Defence": course 2 of 5 of the Cybersecurity Fundamentals
+ * Certificate, not started. 39 topics in 4 modules, none done: the player opens on
+ * the first topic. Module 4 is locked until Module 3 is complete. Two hands-on topics
+ * are Labs on sample files (the packet capture summary, the rule base), "The TCP/IP model"
+ * is a Lesson Page and "Zero trust in plain terms" a Podcast: types changed on 9 Oct 2026,
+ * topic counts and durations kept.
+ */
+export const outline: Course = {
+  id: "sec2",
+  slug: "network-security-and-defence",
+  title: "Network Security and Defence",
+  provider: "SkillUp",
+  courseType: "Course",
+  difficulty: "Beginner",
+  deliveryMode: "Flexible Learning",
+  overallProgressPct: 0,
+  modulesCompleted: 0,
+  modulesTotal: 4,
+  modules: [
+    {
+      id: "sec2-m1",
+      label: "MODULE 01",
+      title: "How Networks Work",
+      topicsCompleted: 0,
+      topicsTotal: 9,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec2-m1-l1",
+          label: "Layers and addresses",
+          topics: [
+            {
+              id: "sec2-m1-t1",
+              type: "Video",
+              title: "Course Introduction",
+              duration: "6 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec2-m1-t1-ln1",
+                  ts: "0:00",
+                  text: "Welcome to Network Security and Defence, the second course of the Cybersecurity Fundamentals Certificate.",
+                },
+                {
+                  id: "sec2-m1-t1-ln2",
+                  ts: "0:20",
+                  text: "Almost every attack crosses a network at some point. If you can read what a network normally does, you can notice when it does something else.",
+                },
+                {
+                  id: "sec2-m1-t1-ln3",
+                  ts: "0:40",
+                  text: "Module 1 gives you the working model: layers, addresses, ports and the protocols that turn names into connections.",
+                },
+                {
+                  id: "sec2-m1-t1-ln4",
+                  ts: "0:55",
+                  text: "Module 2 looks at what goes wrong on a network and at segmentation, which limits how far a problem can spread.",
+                },
+                {
+                  id: "sec2-m1-t1-ln5",
+                  ts: "1:15",
+                  text: "Module 3 covers the controls and the sensors: firewalls, intrusion detection, and the logs that show you what happened.",
+                },
+                {
+                  id: "sec2-m1-t1-ln6",
+                  ts: "1:30",
+                  text: "Module 4 is about protecting data on the move: TLS, certificates, VPNs, email authentication and Wi-Fi.",
+                },
+                {
+                  id: "sec2-m1-t1-ln7",
+                  ts: "1:50",
+                  text: "You will design a segmentation plan for a two-site office and review a peer's hardening checklist. No lab equipment is needed: every exercise uses diagrams and sample data.",
+                },
+              ],
+            },
+            {
+              id: "sec2-m1-t2",
+              type: "Lesson Page",
+              title: "The TCP/IP model in four layers",
+              duration: "14 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m1-t3",
+              type: "Video",
+              title: "IP addresses, subnets and routing",
+              duration: "14 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec2-m1-t3-ln1",
+                  ts: "0:00",
+                  text: "Every device on a network needs an address, in the same way every building on a street needs a number.",
+                },
+                {
+                  id: "sec2-m1-t3-ln2",
+                  ts: "0:15",
+                  text: "An IPv4 address is four numbers from 0 to 255. Part of it names the network and the rest names the device on that network.",
+                },
+                {
+                  id: "sec2-m1-t3-ln3",
+                  ts: "0:32",
+                  text: "The subnet mask says where the split falls. With 255.255.255.0, the first three numbers are the network and the last is the device.",
+                },
+                {
+                  id: "sec2-m1-t3-ln4",
+                  ts: "0:50",
+                  text: "Devices on the same subnet talk to each other directly. For anything else they hand the packet to their default gateway, which is a router.",
+                },
+                {
+                  id: "sec2-m1-t3-ln5",
+                  ts: "1:08",
+                  text: "A router reads the destination, looks in its routing table and passes the packet one hop closer. No router knows the whole path.",
+                },
+                {
+                  id: "sec2-m1-t3-ln6",
+                  ts: "1:26",
+                  text: "Some ranges are private: 10, 172.16 to 172.31 and 192.168. They are reused in every office and never routed on the internet.",
+                },
+                {
+                  id: "sec2-m1-t3-ln7",
+                  ts: "1:44",
+                  text: "For a defender, the subnet is the first boundary. Traffic that crosses it passes a router or a firewall, and that is where it can be filtered and logged.",
+                },
+                {
+                  id: "sec2-m1-t3-ln8",
+                  ts: "2:03",
+                  text: "In the next reading you add ports to the picture, and write down what normal traffic looks like.",
+                },
+              ],
+            },
+            {
+              id: "sec2-m1-t4",
+              type: "Reading",
+              title: "Ports, protocols and what normal traffic looks like",
+              duration: "13 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m1-t5",
+              type: "Practice Assignment",
+              title: "Practice Quiz: Network basics",
+              duration: "8 min approx.",
+              completed: false,
+            },
+          ],
+        },
+        {
+          id: "sec2-m1-l2",
+          label: "Names and the local network",
+          topics: [
+            {
+              id: "sec2-m1-t6",
+              type: "Video",
+              title: "DNS: how names become addresses",
+              duration: "11 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec2-m1-t6-ln1",
+                  ts: "0:00",
+                  text: "People remember names; networks route by address. The Domain Name System is the service that translates one into the other.",
+                },
+                {
+                  id: "sec2-m1-t6-ln2",
+                  ts: "0:20",
+                  text: "When you open a site, your device asks a resolver for the address behind the name. The resolver asks other servers in turn, starting from the root, until one of them holds the answer.",
+                },
+                {
+                  id: "sec2-m1-t6-ln3",
+                  ts: "0:40",
+                  text: "Answers are cached for a set time, so the next request is quick. That time is called the time to live.",
+                },
+                {
+                  id: "sec2-m1-t6-ln4",
+                  ts: "0:55",
+                  text: "Defenders care about DNS for two reasons. First, almost every connection starts with a lookup, so DNS logs are a compact record of where devices tried to go.",
+                },
+                {
+                  id: "sec2-m1-t6-ln5",
+                  ts: "1:15",
+                  text: "Second, DNS is a control point. A filtering resolver can refuse to answer for names known to host malicious content, which stops many connections before they begin.",
+                },
+                {
+                  id: "sec2-m1-t6-ln6",
+                  ts: "1:30",
+                  text: "Things to watch for in DNS logs: a device that suddenly looks up many names that do not exist, names that look randomly generated, and lookups at hours when nobody is working.",
+                },
+                {
+                  id: "sec2-m1-t6-ln7",
+                  ts: "1:50",
+                  text: "In the next reading you meet the protocols of the local network, DHCP and ARP, and see what they tell you about which device is which.",
+                },
+              ],
+            },
+            {
+              id: "sec2-m1-t7",
+              type: "Reading",
+              title: "DHCP, ARP and the local network",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m1-t8",
+              type: "Lab",
+              title: "Label the layers in a packet capture summary",
+              duration: "15 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m1-t9",
+              type: "Quiz",
+              title: "Graded Quiz: How networks work",
+              duration: "12 min approx.",
+              completed: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "sec2-m2",
+      label: "MODULE 02",
+      title: "Network Threats and Segmentation",
+      topicsCompleted: 0,
+      topicsTotal: 10,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec2-m2-l1",
+          label: "What goes wrong on a network",
+          topics: [
+            {
+              id: "sec2-m2-t1",
+              type: "Video",
+              title: "Eavesdropping, spoofing and denial of service",
+              duration: "13 min",
+              completed: false,
+            },
+            {
+              id: "sec2-m2-t2",
+              type: "Reading",
+              title: "Why flat networks fail",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m2-t3",
+              type: "Video",
+              title: "Trust zones: users, servers, guests and devices",
+              duration: "12 min",
+              completed: false,
+            },
+            {
+              id: "sec2-m2-t4",
+              type: "Reading",
+              title: "VLANs, subnets and a DMZ",
+              duration: "14 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m2-t5",
+              type: "Practice Assignment",
+              title: "Practice Quiz: Threats and zones",
+              duration: "8 min approx.",
+              completed: false,
+            },
+          ],
+        },
+        {
+          id: "sec2-m2-l2",
+          label: "Designing the zones",
+          topics: [
+            { id: "sec2-m2-t6", type: "Podcast", title: "Zero trust in plain terms", duration: "11 min", completed: false },
+            {
+              id: "sec2-m2-t7",
+              type: "Reading",
+              title: "Securing network devices and their management",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m2-t8",
+              type: "Activity",
+              title: "Place twenty devices into zones",
+              duration: "20 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m2-t9",
+              type: "Graded Assignment",
+              title: "Assignment 01 · Segmentation plan for a two-site office",
+              duration: "60 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m2-t10",
+              type: "Quiz",
+              title: "Graded Quiz: Threats and segmentation",
+              duration: "12 min approx.",
+              completed: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "sec2-m3",
+      label: "MODULE 03",
+      title: "Firewalls, Detection and Monitoring",
+      topicsCompleted: 0,
+      topicsTotal: 10,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec2-m3-l1",
+          label: "Controlling traffic",
+          topics: [
+            {
+              id: "sec2-m3-t1",
+              type: "Video",
+              title: "How a firewall decides",
+              duration: "12 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec2-m3-t1-ln1",
+                  ts: "0:00",
+                  text: "A firewall sits where two zones meet and answers one question for every new connection: is this allowed?",
+                },
+                {
+                  id: "sec2-m3-t1-ln2",
+                  ts: "0:14",
+                  text: "It answers from a list of rules. Each rule names a source, a destination, a service and an action: allow or deny.",
+                },
+                {
+                  id: "sec2-m3-t1-ln3",
+                  ts: "0:30",
+                  text: "The firewall reads the list from the top and stops at the first rule that matches. Order is part of the policy.",
+                },
+                {
+                  id: "sec2-m3-t1-ln4",
+                  ts: "0:46",
+                  text: "That is why a broad rule near the top can hide a careful one below it. The careful rule is still there, and it never runs.",
+                },
+                {
+                  id: "sec2-m3-t1-ln5",
+                  ts: "1:03",
+                  text: "A stateful firewall remembers the connections it has allowed, so the replies come back without a rule of their own.",
+                },
+                {
+                  id: "sec2-m3-t1-ln6",
+                  ts: "1:20",
+                  text: "The last rule should deny everything else and log it. What you forgot to allow then fails safely, and the log tells you what was tried.",
+                },
+                {
+                  id: "sec2-m3-t1-ln7",
+                  ts: "1:38",
+                  text: "Next you write a small rule base yourself, starting from the flows the office really needs.",
+                },
+              ],
+            },
+            {
+              id: "sec2-m3-t2",
+              type: "Reading",
+              title: "Writing a rule base: default deny and rule order",
+              duration: "15 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m3-t3",
+              type: "Video",
+              title: "Stateful inspection and application-aware filtering",
+              duration: "12 min",
+              completed: false,
+            },
+            {
+              id: "sec2-m3-t4",
+              type: "Lab",
+              title: "Review a firewall rule base for gaps",
+              duration: "20 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m3-t5",
+              type: "Practice Assignment",
+              title: "Practice Quiz: Firewalls",
+              duration: "8 min approx.",
+              completed: false,
+            },
+          ],
+        },
+        {
+          id: "sec2-m3-l2",
+          label: "Seeing what happens",
+          topics: [
+            {
+              id: "sec2-m3-t6",
+              type: "Video",
+              title: "Intrusion detection and prevention systems",
+              duration: "12 min",
+              completed: false,
+            },
+            {
+              id: "sec2-m3-t7",
+              type: "Reading",
+              title: "Flow records, DNS logs and proxy logs",
+              duration: "13 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m3-t8",
+              type: "Reading",
+              title: "Tuning alerts: false positives and blind spots",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec2-m3-t9",
+              type: "Video",
+              title: "Baselines: knowing normal before spotting odd",
+              duration: "10 min",
+              completed: false,
+            },
+            {
+              id: "sec2-m3-t10",
+              type: "Quiz",
+              title: "Graded Quiz: Firewalls and monitoring",
+              duration: "12 min approx.",
+              completed: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "sec2-m4",
+      label: "MODULE 04",
+      title: "Secure Communication and Wireless",
+      topicsCompleted: 0,
+      topicsTotal: 10,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec2-m4-l1",
+          label: "Protecting data in transit",
+          topics: [
+            {
+              id: "sec2-m4-t1",
+              type: "Video",
+              title: "Encryption in transit: what TLS provides",
+              duration: "13 min",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t2",
+              type: "Reading",
+              title: "Certificates and the chain of trust",
+              duration: "14 min read approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t3",
+              type: "Video",
+              title: "VPNs and remote access",
+              duration: "12 min",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t4",
+              type: "Reading",
+              title: "Email authentication: SPF, DKIM and DMARC",
+              duration: "13 min read approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t5",
+              type: "Practice Assignment",
+              title: "Practice Quiz: Secure communication",
+              duration: "8 min approx.",
+              completed: false,
+              locked: true,
+            },
+          ],
+        },
+        {
+          id: "sec2-m4-l2",
+          label: "Wireless and wrap-up",
+          topics: [
+            {
+              id: "sec2-m4-t6",
+              type: "Video",
+              title: "Wi-Fi security: WPA3 and guest networks",
+              duration: "12 min",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t7",
+              type: "Reading",
+              title: "Hardening a small office network: a checklist",
+              duration: "12 min read approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t8",
+              type: "Peer-graded",
+              title: "Network hardening review",
+              duration: "45 min approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t9",
+              type: "Quiz",
+              title: "Graded Quiz: Secure communication and wireless",
+              duration: "15 min approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec2-m4-t10",
+              type: "Video",
+              title: "Course wrap-up and what comes next",
+              duration: "5 min",
+              completed: false,
+              locked: true,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};

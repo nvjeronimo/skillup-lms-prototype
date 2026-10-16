@@ -17,7 +17,7 @@ export interface TopicHeaderProps {
 
 /**
  * Content header above the player body. meta-row (badge · duration) + Title +
- * Description. The "approx." prefix is added for estimated topic types only —
+ * Description. The "approx." marker is added (at the end, Nelson 14 Oct 2026: "8 min read approx.") for estimated topic types only —
  * never for Video/Recording/Live/timed Quiz.
  */
 export function TopicHeader({
@@ -32,7 +32,7 @@ export function TopicHeader({
 }: TopicHeaderProps) {
   // If source data already carries "approx.", trust it; otherwise derive.
   const needsApprox = isEstimatedDuration(type) && !/approx\./i.test(duration);
-  const durationLabel = needsApprox ? `approx. ${duration}` : duration;
+  const durationLabel = needsApprox ? `${duration} approx.` : duration;
 
   return (
     // DS: root, Content Container and meta-row → title are 4px apart; meta-row items 8px.
@@ -44,17 +44,17 @@ export function TopicHeader({
             body-medium/Medium layers in text/subtle, as in the DS meta-row. */}
         {showDuration && duration ? (
           <>
-            <span aria-hidden className="sk-text-sm-medium text-sko-text-subtle">
+            <span aria-hidden className="sk-text-body-medium-medium text-sko-text-subtle">
               ·
             </span>
-            <span className="sk-text-sm-medium text-sko-text-subtle">{durationLabel}</span>
+            <span className="sk-text-body-medium-medium text-sko-text-subtle">{durationLabel}</span>
           </>
         ) : null}
         {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
       </div>
-      <h1 className="sk-text-display-xs-semibold text-sko-text-default">{title}</h1>
+      <h1 className="sk-text-headline-small-semibold text-sko-text-default">{title}</h1>
       {showDescription && description ? (
-        <p className="sk-text-md-medium text-sko-text-muted">{description}</p>
+        <p className="sk-text-body-large-medium text-sko-text-muted">{description}</p>
       ) : null}
     </header>
   );

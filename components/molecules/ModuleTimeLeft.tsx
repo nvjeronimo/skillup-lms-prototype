@@ -21,11 +21,11 @@ export function ModuleTimeLeft({ segments, className }: ModuleTimeLeftProps) {
       {segments.map((segment, i) => (
         <React.Fragment key={`${i}-${segment}`}>
           {i > 0 ? (
-            <span aria-hidden className="sk-text-xs-medium text-sko-icon-faint">
+            <span aria-hidden className="sk-text-body-small-medium text-sko-icon-faint">
               ·
             </span>
           ) : null}
-          <span className="sk-text-xs-medium text-sko-text-subtle">{segment}</span>
+          <span className="sk-text-body-small-medium text-sko-text-subtle">{segment}</span>
         </React.Fragment>
       ))}
     </div>

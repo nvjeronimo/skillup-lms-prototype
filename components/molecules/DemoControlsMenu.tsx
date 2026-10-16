@@ -6,8 +6,16 @@ import { Check, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
-import { topicFamily } from "@/lib/content";
-import { useLargeTargets, useLmsStore, type DeviceMode, type Skin as SkinId } from "@/lib/store";
+import { completesByHand, getPartnerLab, topicFamily } from "@/lib/content";
+import {
+  useLargeTargets,
+  useLmsStore,
+  type CompletionFlow,
+  type DeviceMode,
+  type LabLaunch,
+  type Skin as SkinId,
+} from "@/lib/store";
+import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
@@ -29,6 +37,17 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
 // Brand skins — one per skin in the DS "2. Skins" variable collection.
 // Label code = each skin's brand anchor (bg-brand-solid, light) in the DS ramp.
 // Only SKO carries a legacy brand code (P03); the rest are their own ramps.
+const LAB_LAUNCHES: { value: LabLaunch; label: string }[] = [
+  { value: "new-tab", label: "New tab" },
+  { value: "inline", label: "In the page" },
+  { value: "refused", label: "Not loading" },
+];
+
+const COMPLETION_FLOWS: { value: CompletionFlow; label: string }[] = [
+  { value: "ask-on-next", label: "Button + Next asks" },
+  { value: "mark-as-complete", label: "Button only" },
+];
+
 const SKINS: { skin: SkinId; label: string }[] = [
   { skin: "teal", label: "Teal · default (P03)" },
   { skin: "ink", label: "Ink (Ink/900)" },
@@ -41,7 +60,7 @@ const SKINS: { skin: SkinId; label: string }[] = [
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-t border-sko-border-subtle px-4 py-3">
-      <p className="sk-text-2xs-medium mb-2 text-sko-text-subtle">{title}</p>
+      <p className="sk-text-label-small-medium mb-2 text-sko-text-subtle">{title}</p>
       {children}
     </div>
   );
@@ -96,8 +115,8 @@ function ToggleRow({
         />
       </span>
       <span className="flex flex-col">
-        <span className="sk-text-sm-medium text-sko-text-muted">{label}</span>
-        {hint ? <span className="sk-text-sm-regular text-sko-text-subtle">{hint}</span> : null}
+        <span className="sk-text-body-medium-medium text-sko-text-muted">{label}</span>
+        {hint ? <span className="sk-text-body-medium-regular text-sko-text-subtle">{hint}</span> : null}
       </span>
     </button>
   );
@@ -120,7 +139,7 @@ export interface DemoControlsMenuProps {
  * it; Escape closes it and returns focus to the profile button (useDisclosure).
  */
 export function DemoControlsMenu({
-  userName = "Olivia Rhye",
+  userName = "John Smith",
   userAvatarUrl,
   compact = false,
 }: DemoControlsMenuProps) {
@@ -154,9 +173,17 @@ export function DemoControlsMenu({
   const activeTopicId = pathname?.match(/^\/course\/[^/]+\/topic\/([^/]+)/)?.[1];
   const activeTopic = activeTopicId ? getTopic(activeTopicId) : undefined;
   const onQuiz = activeTopic ? topicFamily(activeTopic.type) === "assessment" : false;
+  // Same rule for the lab launch: only a lab whose component can open inside the page has it.
+  const onLtiLab = activeTopic ? Boolean(getPartnerLab(activeTopic)?.inPage) : false;
+  const labLaunch = useLmsStore((s) => s.labLaunch);
+  const setLabLaunch = useLmsStore((s) => s.setLabLaunch);
+  // The completion test shows on the topics it changes: the ones the learner completes by hand.
+  const onHandCompleted = activeTopic ? completesByHand(activeTopic) : false;
+  const completionFlow = useLmsStore((s) => s.completionFlow);
+  const setCompletionFlow = useLmsStore((s) => s.setCompletionFlow);
 
   const pill =
-    "sk-text-xs-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
+    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
   const pillOn = "bg-sko-bg-primary text-sko-text-on-primary";
   const pillOff = "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
@@ -167,7 +194,7 @@ export function DemoControlsMenu({
         {...triggerProps}
         aria-label="Account and demo settings"
         className={cn(
-          "flex items-center hover:bg-sko-bg-subtle",
+          "flex items-center transition-colors hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px round avatar. Desktop/Tablet keep a 32px square
           // avatar + name (PR #9 squares the profile avatar to match the topbar icon
           // buttons and CTAs; the DS "Avatar label group" draws a 24px circle).
@@ -180,7 +207,7 @@ export function DemoControlsMenu({
           <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
         )}
         {!compact ? (
-          <span className="sk-text-sm-semibold pr-1 text-sko-text-default">{userName}</span>
+          <span className="sk-text-body-medium-semibold pr-1 text-sko-text-default">{userName}</span>
         ) : null}
       </button>
 
@@ -194,8 +221,8 @@ export function DemoControlsMenu({
           <div className="flex items-center gap-2.5 px-4 py-3">
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <div className="min-w-0">
-              <p className="sk-text-sm-semibold truncate text-sko-text-default">{userName}</p>
-              <p className="sk-text-xs-regular text-sko-text-subtle">Demo preview settings</p>
+              <p className="sk-text-body-medium-semibold truncate text-sko-text-default">{userName}</p>
+              <p className="sk-text-body-small-regular text-sko-text-subtle">Demo preview settings</p>
             </div>
           </div>
 
@@ -239,7 +266,7 @@ export function DemoControlsMenu({
                     aria-pressed={active}
                     title={s.title}
                     className={cn(
-                      "sk-text-sm-medium flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left transition-colors",
+                      "sk-text-body-medium-medium flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left transition-colors",
                       active
                         ? "bg-sko-bg-primary-soft text-sko-text-primary"
                         : "text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -275,7 +302,7 @@ export function DemoControlsMenu({
                     <span
                       data-skin={s.skin}
                       className={cn(
-                        "size-5 rounded-full bg-sko-bg-primary ring-offset-2 ring-offset-sko-bg-page transition-all",
+                        "size-5 rounded-full bg-sko-bg-primary ring-offset-2 ring-offset-sko-bg-page transition-shadow",
                         active ? "ring-2 ring-sko-border-strong" : "ring-1 ring-sko-border-subtle",
                       )}
                     />
@@ -289,7 +316,7 @@ export function DemoControlsMenu({
             <div className="flex flex-col gap-0.5">
               {/* Text size — segmented A / A+ / A++ */}
               <div className="mb-1 flex items-center gap-2 px-1">
-                <span className="sk-text-sm-medium flex-1 text-sko-text-muted">Text size</span>
+                <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">Text size</span>
                 <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
                   {(["md", "lg", "xl"] as const).map((sz, i) => (
                     <button
@@ -300,7 +327,7 @@ export function DemoControlsMenu({
                       onClick={() => setTextSize(sz)}
                       className={cn(
                         "px-2.5 py-1 transition-colors",
-                        ["sk-text-xs-semibold", "sk-text-sm-semibold", "sk-text-md-semibold"][i],
+                        ["sk-text-body-small-semibold", "sk-text-body-medium-semibold", "sk-text-body-large-semibold"][i],
                         textSize === sz
                           ? "bg-sko-bg-primary text-sko-text-on-primary"
                           : "text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -346,7 +373,7 @@ export function DemoControlsMenu({
             <Section title="Quiz mode">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 px-1">
-                  <span className="sk-text-sm-medium flex-1 text-sko-text-muted">
+                  <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">
                     Experience
                   </span>
                   <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
@@ -357,7 +384,7 @@ export function DemoControlsMenu({
                         aria-pressed={quizMode === value}
                         onClick={() => setQuizMode(value)}
                         className={cn(
-                          "sk-text-xs-semibold px-2.5 py-1 transition-colors",
+                          "sk-text-body-small-semibold px-2.5 py-1 transition-colors",
                           quizMode === value
                             ? "bg-sko-bg-primary text-sko-text-on-primary"
                             : "text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -368,9 +395,69 @@ export function DemoControlsMenu({
                     ))}
                   </div>
                 </div>
-                <p className="sk-text-xs-regular px-1 text-sko-text-subtle">
+                <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
                   A is how the platform behaves today, and where every quiz
                   starts. B is the proposal.
+                </p>
+              </div>
+            </Section>
+          ) : null}
+
+          {onLtiLab ? (
+            <Section title="Lab launch">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+                  {LAB_LAUNCHES.map((l) => (
+                    <button
+                      key={l.value}
+                      type="button"
+                      aria-pressed={labLaunch === l.value}
+                      onClick={() => setLabLaunch(l.value)}
+                      className={cn(
+                        "sk-text-body-small-semibold flex-1 px-2 py-1 transition-colors",
+                        labLaunch === l.value
+                          ? "bg-sko-bg-primary text-sko-text-on-primary"
+                          : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                      )}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                  New tab is the default for every lab. In the page is the option for the few
+                  courses whose lab already loads there (two Microsoft courses); Not loading
+                  is what those courses show today, with the way out to a new tab.
+                </p>
+              </div>
+            </Section>
+          ) : null}
+
+          {onHandCompleted ? (
+            <Section title="Completion">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+                  {COMPLETION_FLOWS.map((f) => (
+                    <button
+                      key={f.value}
+                      type="button"
+                      aria-pressed={completionFlow === f.value}
+                      onClick={() => setCompletionFlow(f.value)}
+                      className={cn(
+                        "sk-text-body-small-semibold flex-1 px-2 py-1 transition-colors",
+                        completionFlow === f.value
+                          ? "bg-sko-bg-primary text-sko-text-on-primary"
+                          : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                      )}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                  The rule since 12 Oct: Mark as Complete at the end of the content, and Next
+                  asks whether you have completed the topic if you move on without it. Button
+                  only switches the question off, as it was before.
                 </p>
               </div>
             </Section>
@@ -392,12 +479,25 @@ export function DemoControlsMenu({
               type="button"
               onClick={() => {
                 resetDemo();
+                // Reset demo puts the seeded completion back: the first steps start from it.
+                restartFirstSteps(Array.from(useLmsStore.getState().completedTopics));
                 setOpen(false);
               }}
-              className="sk-text-sm-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
+              className="sk-text-body-medium-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
             >
               <Icon icon={RotateCcw} size={16} />
               Reset demo
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                restartFirstSteps(Array.from(useLmsStore.getState().completedTopics));
+                setOpen(false);
+              }}
+              className="sk-text-body-medium-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
+            >
+              <Icon icon={RotateCcw} size={16} />
+              Restart first steps
             </button>
           </div>
         </div>

@@ -9,7 +9,6 @@ const meta: Meta<typeof CoursePlayerTopbar> = {
   args: {
     size: "Desktop",
     breadcrumb: ["Six Sigma", "DMAIC for process improvement", "Introduction to the DMAIC methodology"],
-    showAi: true,
     showBookmark: true,
     showNotifications: true,
     showTheme: true,
@@ -24,5 +23,5 @@ export const Desktop: Story = { args: { size: "Desktop" } };
 export const Tablet: Story = { args: { size: "Tablet" } };
 export const Mobile: Story = { args: { size: "Mobile" } };
 export const MinimalUtilities: Story = {
-  args: { showAi: false, showNotifications: false, showTheme: false },
+  args: { showNotifications: false, showTheme: false },
 };

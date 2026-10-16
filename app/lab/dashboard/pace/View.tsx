@@ -96,10 +96,10 @@ export function View() {
 
   return (
     <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-8 md:py-8">
-      <h1 className="sk-text-display-sm-semibold text-sko-text-default">
+      <h1 className="sk-text-headline-medium-semibold text-sko-text-default">
         {kind === "not-started" ? `Welcome, ${p.firstName}` : `Your week, ${p.firstName}`}
       </h1>
-      <p className="sk-text-md-regular mt-1 text-sko-text-muted">
+      <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">
         {kind === "not-started"
           ? "Here is where your courses stand and how to begin."
           : "Where you are against your cohort, and what to do this week."}
@@ -139,12 +139,12 @@ function PacePanel({ p, kind, next }: { p: Persona; kind: PaceKind; next?: Enrol
               <Icon icon={s.icon} size={24} aria-hidden="true" />
             </span>
             <div className="min-w-0">
-              <h2 id="pace-h" className="sk-text-sm-semibold text-sko-text-muted">
+              <h2 id="pace-h" className="sk-text-body-medium-semibold text-sko-text-muted">
                 Your pace{course ? ` · ${course}` : ""}
               </h2>
-              <p className={cn("sk-text-display-xs-semibold", s.label)}>{stateLabel}</p>
-              <p className="sk-text-md-regular mt-1 text-sko-text-default">{p.pace.value.detail}.</p>
-              <p className="sk-text-sm-regular mt-1 text-sko-text-muted">{message[kind]}</p>
+              <p className={cn("sk-text-headline-small-semibold", s.label)}>{stateLabel}</p>
+              <p className="sk-text-body-large-regular mt-1 text-sko-text-default">{p.pace.value.detail}.</p>
+              <p className="sk-text-body-medium-regular mt-1 text-sko-text-muted">{message[kind]}</p>
             </div>
           </div>
 
@@ -167,11 +167,11 @@ function UpNext({ kind, next }: { kind: PaceKind; next?: Enrolment }) {
   const ctaLabel = starting ? "Start course" : kind === "behind" ? "Resume where you left off" : "Resume";
   return (
     <div className="flex flex-col gap-3 rounded-lg bg-sko-bg-subtle p-4">
-      <h3 className="sk-text-sm-semibold text-sko-text-muted">{starting ? "Start here" : "Up next"}</h3>
+      <h3 className="sk-text-body-medium-semibold text-sko-text-muted">{starting ? "Start here" : "Up next"}</h3>
       <div className="flex flex-col gap-1">
         <TopicTypeBadge type={next.nextTopic.type as TopicType} />
-        <p className="sk-text-md-semibold text-sko-text-default">{next.nextTopic.title}</p>
-        <p className="sk-text-sm-regular text-sko-text-muted">{next.title}</p>
+        <p className="sk-text-body-large-semibold text-sko-text-default">{next.nextTopic.title}</p>
+        <p className="sk-text-body-medium-regular text-sko-text-muted">{next.title}</p>
       </div>
       {!starting ? (
         <Progress label={`${next.title} progress`} pct={next.pct} caption={`${next.topicsDone} of ${next.topicsTotal} topics`} />
@@ -180,7 +180,7 @@ function UpNext({ kind, next }: { kind: PaceKind; next?: Enrolment }) {
         {ctaLabel}
       </CtaLink>
       {starting ? (
-        <p className="sk-text-xs-regular text-sko-text-muted">The first topic is short. There is no deadline to beat.</p>
+        <p className="sk-text-body-small-regular text-sko-text-muted">The first topic is short. There is no deadline to beat.</p>
       ) : null}
     </div>
   );
@@ -195,27 +195,27 @@ function CatchUpPlan({ p }: { p: Persona }) {
 
   return (
     <div className="rounded-lg border border-sko-border-warning-soft bg-sko-bg-warning-soft p-4">
-      <h3 className="sk-text-md-semibold text-sko-text-default">Your catch-up plan</h3>
-      <p className="sk-text-sm-regular mt-0.5 text-sko-text-muted">
+      <h3 className="sk-text-body-large-semibold text-sko-text-default">Your catch-up plan</h3>
+      <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">
         Start with step 1. One step today is enough.
       </p>
       <ol className="mt-3 flex flex-col gap-3">
         {next?.nextTopic ? (
           <PlanStep n={1}>
-            <p className="sk-text-sm-semibold text-sko-text-default">
+            <p className="sk-text-body-medium-semibold text-sko-text-default">
               Finish {topics} topics to reach Module {track.you + 1}
             </p>
-            <p className="sk-text-sm-regular text-sko-text-muted">Start with “{next.nextTopic.title}”.</p>
+            <p className="sk-text-body-medium-regular text-sko-text-muted">Start with “{next.nextTopic.title}”.</p>
             <MockTag reason={MOCK.pace} className="mt-1" />
           </PlanStep>
         ) : null}
         {overdue ? (
           <PlanStep n={2}>
-            <p className="sk-text-sm-semibold text-sko-text-default">{overdue.title}</p>
-            <p className="sk-text-sm-regular text-sko-text-muted">{overdue.dueLabel}. It sits right after step 1.</p>
+            <p className="sk-text-body-medium-semibold text-sko-text-default">{overdue.title}</p>
+            <p className="sk-text-body-medium-regular text-sko-text-muted">{overdue.dueLabel}. It sits right after step 1.</p>
             <Link
               href={overdue.href}
-              className="sk-text-sm-semibold inline-flex min-h-[44px] items-center gap-1 text-sko-text-primary underline underline-offset-4"
+              className="sk-text-body-medium-semibold inline-flex min-h-[44px] items-center gap-1 text-sko-text-primary underline underline-offset-4"
             >
               {DUE_VERB[overdue.kind]}
               <span className="sr-only">: {overdue.title}</span>
@@ -224,13 +224,13 @@ function CatchUpPlan({ p }: { p: Persona }) {
         ) : null}
         {recording ? (
           <PlanStep n={3}>
-            <p className="sk-text-sm-semibold text-sko-text-default">Watch the session you missed</p>
-            <p className="sk-text-sm-regular text-sko-text-muted">
+            <p className="sk-text-body-medium-semibold text-sko-text-default">Watch the session you missed</p>
+            <p className="sk-text-body-medium-regular text-sko-text-muted">
               {recording.title} · Recording available · {recording.when.replace(/^Recorded [^·]+· /, "")}
             </p>
             <Link
               href="#"
-              className="sk-text-sm-semibold inline-flex min-h-[44px] items-center gap-1 text-sko-text-primary underline underline-offset-4"
+              className="sk-text-body-medium-semibold inline-flex min-h-[44px] items-center gap-1 text-sko-text-primary underline underline-offset-4"
             >
               Watch recording
               <span className="sr-only">: {recording.title}</span>
@@ -247,7 +247,7 @@ function PlanStep({ n, children }: { n: number; children: React.ReactNode }) {
     <li className="flex items-start gap-3">
       <span
         aria-hidden="true"
-        className="sk-text-sm-semibold inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-sko-bg-page text-sko-text-warning ring-1 ring-inset ring-sko-border-warning"
+        className="sk-text-body-medium-semibold inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-sko-bg-page text-sko-text-warning ring-1 ring-inset ring-sko-border-warning"
       >
         {n}
       </span>
@@ -264,7 +264,7 @@ function PlanStep({ n, children }: { n: number; children: React.ReactNode }) {
 function ThisWeek({ p, kind }: { p: Persona; kind: PaceKind }) {
   return (
     <section aria-labelledby="week-h" className="mt-10">
-      <h2 id="week-h" className="sk-text-lg-semibold text-sko-text-default">
+      <h2 id="week-h" className="sk-text-title-medium-semibold text-sko-text-default">
         This week
       </h2>
       <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
@@ -282,9 +282,9 @@ function DueList({ p }: { p: Persona }) {
   const items = [...p.due.value].sort((a, b) => DUE_ORDER[a.state] - DUE_ORDER[b.state]);
   return (
     <div className={card}>
-      <h3 className="sk-text-md-semibold text-sko-text-default">Due</h3>
+      <h3 className="sk-text-body-large-semibold text-sko-text-default">Due</h3>
       {items.length === 0 ? (
-        <p className="sk-text-sm-regular mt-2 text-sko-text-muted">
+        <p className="sk-text-body-medium-regular mt-2 text-sko-text-muted">
           Nothing is due this week. Deadlines will show here, soonest first.
         </p>
       ) : (
@@ -304,12 +304,12 @@ function DueList({ p }: { p: Persona }) {
                     <Badge color={b.color} variant="outline" leftIcon={b.icon}>
                       {b.label}
                     </Badge>
-                    <span className="sk-text-xs-medium text-sko-text-subtle">
+                    <span className="sk-text-body-small-medium text-sko-text-subtle">
                       {d.kind} · {d.course}
                     </span>
                   </div>
-                  <p className="sk-text-sm-semibold mt-1 text-sko-text-default">{d.title}</p>
-                  <p className={cn("sk-text-sm-regular", d.state === "overdue" ? "text-sko-text-warning" : "text-sko-text-muted")}>
+                  <p className="sk-text-body-medium-semibold mt-1 text-sko-text-default">{d.title}</p>
+                  <p className={cn("sk-text-body-medium-regular", d.state === "overdue" ? "text-sko-text-warning" : "text-sko-text-muted")}>
                     {d.state === "overdue" ? d.dueLabel : `Due ${d.dueLabel}`}
                   </p>
                 </div>
@@ -349,12 +349,12 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
   return (
     <div className={card}>
       <div className="flex items-baseline justify-between gap-2">
-        <h3 className="sk-text-md-semibold text-sko-text-default">Weekly goal</h3>
-        <span className="sk-text-sm-semibold text-sko-text-default">
+        <h3 className="sk-text-body-large-semibold text-sko-text-default">Weekly goal</h3>
+        <span className="sk-text-body-medium-semibold text-sko-text-default">
           {daysDone} of {daysTarget} days
         </span>
       </div>
-      <p className="sk-text-sm-regular mt-1 text-sko-text-muted">{line}</p>
+      <p className="sk-text-body-medium-regular mt-1 text-sko-text-muted">{line}</p>
 
       <div
         role="progressbar"
@@ -371,7 +371,7 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
         />
       </div>
 
-      <p className="sk-text-xs-medium mt-3 text-sko-text-subtle">Last 7 days</p>
+      <p className="sk-text-body-small-medium mt-3 text-sko-text-subtle">Last 7 days</p>
       <ul aria-label="Active days, last 7 days" className="mt-1 grid grid-cols-7 gap-1">
         {WEEK_DAYS.map((d, i) => {
           const on = active.has(i);
@@ -385,7 +385,7 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
                 today && "ring-1 ring-inset ring-sko-border-strong",
               )}
             >
-              <span className="sk-text-xs-medium" aria-hidden="true">
+              <span className="sk-text-body-small-medium" aria-hidden="true">
                 {d.short}
               </span>
               <span aria-hidden="true" className="inline-flex size-4 items-center justify-center">
@@ -422,9 +422,9 @@ function LiveList({ p }: { p: Persona }) {
 
   return (
     <div className={card}>
-      <h3 className="sk-text-md-semibold text-sko-text-default">Live sessions</h3>
+      <h3 className="sk-text-body-large-semibold text-sko-text-default">Live sessions</h3>
       {items.length === 0 ? (
-        <p className="sk-text-sm-regular mt-2 text-sko-text-muted">No live sessions are scheduled for your courses.</p>
+        <p className="sk-text-body-medium-regular mt-2 text-sko-text-muted">No live sessions are scheduled for your courses.</p>
       ) : (
         <ul className="mt-3 flex flex-col gap-4">
           {items.map((l) => {
@@ -441,8 +441,8 @@ function LiveList({ p }: { p: Persona }) {
                   <Badge color={b.color} variant={l.state === "live" ? "soft" : "outline"} leftIcon={b.icon}>
                     {b.label}
                   </Badge>
-                  <p className="sk-text-sm-semibold mt-1 text-sko-text-default">{l.title}</p>
-                  <p className="sk-text-sm-regular text-sko-text-muted">
+                  <p className="sk-text-body-medium-semibold mt-1 text-sko-text-default">{l.title}</p>
+                  <p className="sk-text-body-medium-regular text-sko-text-muted">
                     {l.when} · {l.course} · with {l.host}
                   </p>
                 </div>
@@ -471,7 +471,7 @@ const STATUS_BADGE: Record<Enrolment["status"], { color: BadgeColor; label: stri
 function YourCourses({ enrolments }: { enrolments: Enrolment[] }) {
   return (
     <section aria-labelledby="courses-h" className="mt-10">
-      <h2 id="courses-h" className="sk-text-lg-semibold text-sko-text-default">
+      <h2 id="courses-h" className="sk-text-title-medium-semibold text-sko-text-default">
         Your courses
       </h2>
       <ul className="mt-3 flex flex-col divide-y divide-sko-border-subtle rounded-xl border border-sko-border-subtle bg-sko-bg-page">
@@ -504,11 +504,11 @@ function CourseRow({ e }: { e: Enrolment }) {
             {s.label}
           </Badge>
           {e.cert === "generating" ? (
-            <span className="sk-text-xs-medium text-sko-text-subtle">Certificate being prepared</span>
+            <span className="sk-text-body-small-medium text-sko-text-subtle">Certificate being prepared</span>
           ) : null}
         </div>
-        <p className="sk-text-md-semibold mt-1 text-sko-text-default">{e.title}</p>
-        <p className="sk-text-sm-regular text-sko-text-muted">
+        <p className="sk-text-body-large-semibold mt-1 text-sko-text-default">{e.title}</p>
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
           {e.status === "locked" && e.lockedBy
             ? `Opens after you finish ${e.lockedBy}`
             : e.nextTopic && e.status !== "completed"
@@ -552,8 +552,8 @@ function Progress({
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between gap-2">
-        <span className="sk-text-xs-medium text-sko-text-muted">{caption}</span>
-        <span className="sk-text-xs-semibold text-sko-text-default">{v}%</span>
+        <span className="sk-text-body-small-medium text-sko-text-muted">{caption}</span>
+        <span className="sk-text-body-small-semibold text-sko-text-default">{v}%</span>
       </div>
       <div
         role="progressbar"

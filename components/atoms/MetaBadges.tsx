@@ -1,31 +1,25 @@
 import * as React from "react";
-import { BookOpen, CalendarCheck, Clock, Package, Video } from "lucide-react";
+import { CalendarCheck, Clock, Layers, Video } from "lucide-react";
 import type { LucideIcon, LucideProps } from "lucide-react";
-import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Badge } from "./Badge";
 
 /**
- * Course Type — Program / Course (DS `LMS / Course Type Badge`, 19975:538072).
- * No box: no fill, no stroke, no padding, 4px gap, 16px high. The label is Montserrat
- * SemiBold 12 in capitals with no text style (nearest: body-small/Semibold), text/primary
- * for Program and text/subtle for Course. The DS icons are custom 16px illustrations
- * (icon-program / icon-course); the lucide glyphs stand in, tinted to the label's role.
+ * Course Type — Program / Course (DS `LMS / Course Type Badge`, 19975:538072, v1.1).
+ * Words only: no box, no icon. The label is Montserrat SemiBold 12 in capitals with no text
+ * style (nearest: body-small/Semibold), text/primary for Program and text/subtle for Course.
+ * The icons were removed on 15 Oct 2026 (Nelson): the word and its colour say it as fast,
+ * and the two cards already differ in shape.
  */
 export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
   const program = value === "Program";
   return (
     <span
       className={cn(
-        "sk-text-xs-semibold inline-flex items-center gap-1 uppercase",
+        "sk-text-body-small-semibold inline-flex items-center uppercase",
         program ? "text-sko-text-primary" : "text-sko-text-subtle",
       )}
     >
-      <Icon
-        icon={program ? Package : BookOpen}
-        size={16}
-        className={program ? "text-sko-icon-primary" : "text-sko-icon-subtle"}
-      />
       {value}
     </span>
   );
@@ -93,7 +87,7 @@ const LEVEL_ICON: Record<Difficulty, LucideIcon> = {
 };
 
 /**
- * Difficulty (DS `LMS / Difficulty Badge`, 19975:538077): Badge v2 Style=Outline, Size=sm,
+ * Difficulty (DS `LMS / Difficulty Badge`, 19975:538077): Badge Style=Outline, Size=sm,
  * Color=Gray for every level — bg/faint pill, 1px inside stroke border/subtle (DS-D1), label
  * text/muted, level glyph icon/subtle at 12px.
  */
@@ -101,6 +95,18 @@ export function DifficultyBadge({ value }: { value: Difficulty }) {
   return (
     <Badge variant="outline" color="gray" leftIcon={LEVEL_ICON[value]}>
       {value}
+    </Badge>
+  );
+}
+
+/**
+ * Course count of a program (DS Program-Card v1.7, 15 Oct 2026): the third hero tag, Badge
+ * Outline sm Gray with the Untitled `layers-three-01` icon (lucide Layers), e.g. "7 courses".
+ */
+export function CourseCountBadge({ count }: { count: number }) {
+  return (
+    <Badge variant="outline" color="gray" leftIcon={Layers}>
+      {count} {count === 1 ? "course" : "courses"}
     </Badge>
   );
 }
@@ -115,12 +121,13 @@ const DELIVERY_ICON: Record<DeliveryMode, LucideIcon> = {
 };
 
 /**
- * Delivery Mode (DS `LMS / Delivery Mode Badge`, 19975:538084): Badge v2 Style=Soft,
- * Size=sm, Color=Info — bg/info-soft pill, no stroke, label text/info, icon icon/info at 12px.
+ * Delivery Mode (DS `LMS/Platform/Discovery/Delivery-Mode-Badge`, 19975:538084): Badge
+ * Style=Modern, Size=sm, Color=Info on the three types — bg/page pill, 1px inside stroke
+ * border/info, label text/info, icon at 12px.
  */
 export function DeliveryModeBadge({ value }: { value: DeliveryMode }) {
   return (
-    <Badge color="info" leftIcon={DELIVERY_ICON[value]}>
+    <Badge variant="modern" color="info" leftIcon={DELIVERY_ICON[value]}>
       {value}
     </Badge>
   );
@@ -134,14 +141,45 @@ export type Provider =
   | "FutureSkills"
   | "Pacific Lutheran University";
 
+/** The partner artwork of DS Provider-Partner-Badge Type=Logo (exported from the DS, 16 Oct 2026). */
+const PROVIDER_LOGO: Record<Provider, { light: string; dark?: string }> = {
+  SkillUp: { light: "/skillup-logo.svg", dark: "/skillup-logo-dark.svg" },
+  Microsoft: { light: "/platform/partners/microsoft-light.svg", dark: "/platform/partners/microsoft-dark.svg" },
+  IBM: { light: "/platform/partners/ibm-light.svg", dark: "/platform/partners/ibm-dark.svg" },
+  "Google Cloud": { light: "/platform/partners/google-cloud-light.svg", dark: "/platform/partners/google-cloud-dark.svg" },
+  // A dark bitmap only: it keeps a light chip on dark surfaces too (DS Theme=Dark does the same).
+  FutureSkills: { light: "/platform/partners/futureskills.png" },
+  "Pacific Lutheran University": { light: "/platform/partners/plu-light.svg", dark: "/platform/partners/plu-dark.svg" },
+};
+
 /**
- * Provider (DS `LMS / Provider-Partner Badge`, 19975:538091): Badge v2 Style=Plain, Size=sm,
- * Color=Gray — the provider name only (body-small/Medium, text/muted), no "by" prefix.
+ * Provider (DS `LMS/Platform/Discovery/Provider-Partner-Badge` 1.1, 19975:538091).
+ * Type=Text: Badge Style=Plain, Size=sm, Color=Gray, the name only (no "by" prefix).
+ * Type=Logo: the artwork, 16 tall, on a bg/subtle chip (padding 4, radius 4). The DS Theme
+ * (Light / Dark) follows the surface here: inside a `data-theme="dark"` band (the Program-Card
+ * hero) the dark drawing shows (`.sk-logo-light` / `.sk-logo-dark`, app/globals.css).
  */
-export function ProviderBadge({ value }: { value: Provider }) {
+export function ProviderBadge({ value, type = "text" }: { value: Provider; type?: "text" | "logo" }) {
+  if (type === "text")
+    return (
+      <Badge variant="plain" color="gray">
+        {value}
+      </Badge>
+    );
+  const logo = PROVIDER_LOGO[value];
   return (
-    <Badge variant="plain" color="gray">
-      {value}
-    </Badge>
+    <span
+      className={cn(
+        "inline-flex h-6 shrink-0 items-center rounded p-1",
+        logo.dark ? "bg-sko-bg-subtle" : "bg-sko-bg-fixed-subtle",
+      )}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={logo.light} alt={value} className={cn("h-4 w-auto", logo.dark && "sk-logo-light")} />
+      {logo.dark ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logo.dark} alt="" aria-hidden="true" className="sk-logo-dark h-4 w-auto" />
+      ) : null}
+    </span>
   );
 }

@@ -21,9 +21,9 @@
         "topicsTotal": 3,
         "isCompleted": true,
         "topics": [
-          { "id": "m1-t1", "type": "Reading", "title": "What is Six Sigma?", "duration": "approx. 8 min read", "completed": true },
+          { "id": "m1-t1", "type": "Reading", "title": "What is Six Sigma?", "duration": "8 min read approx.", "completed": true },
           { "id": "m1-t2", "type": "Video", "title": "History and origins", "duration": "5 min", "completed": true },
-          { "id": "m1-t3", "type": "Practice Assignment", "title": "Quick check", "duration": "approx. 8 min", "completed": true }
+          { "id": "m1-t3", "type": "Practice Assignment", "title": "Quick check", "duration": "8 min approx.", "completed": false }
         ]
       },
       {
@@ -35,8 +35,8 @@
         "isCompleted": true,
         "topics": [
           { "id": "m2-t1", "type": "Video", "title": "Lean principles overview", "duration": "12 min", "completed": true },
-          { "id": "m2-t2", "type": "Reading", "title": "DMAIC vs DMADV", "duration": "approx. 10 min read", "completed": true },
-          { "id": "m2-t3", "type": "Activity", "title": "Match the principles", "duration": "approx. 10 min", "completed": true }
+          { "id": "m2-t2", "type": "Reading", "title": "DMAIC vs DMADV", "duration": "10 min read approx.", "completed": true },
+          { "id": "m2-t3", "type": "Activity", "title": "Match the principles", "duration": "10 min approx.", "completed": true }
         ]
       },
       {
@@ -70,17 +70,19 @@
                 ]
               },
               { "id": "m3-t2", "type": "Video", "title": "The define phase", "duration": "5 min", "completed": false },
-              { "id": "m3-t3", "type": "Reading", "title": "The measure phase", "duration": "approx. 8 min read", "completed": false, "bookmarked": true },
-              { "id": "m3-t4", "type": "Practice Assignment", "title": "Practice Quiz: Define and measure", "duration": "approx. 6 min", "completed": false },
-              { "id": "m3-t4j", "type": "Practice Assignment", "title": "Graded Quiz: control charts", "duration": "approx. 10 min", "completed": false },
-              { "id": "m3-t4k", "type": "Practice Assignment", "title": "Final Exam: DMAIC end to end", "duration": "approx. 20 min", "completed": false },
+              { "id": "m3-t3", "type": "Reading", "title": "The measure phase", "duration": "8 min read approx.", "completed": false, "bookmarked": true },
+              { "id": "m3-t4", "type": "Practice Assignment", "title": "Practice Quiz: Define and measure", "duration": "6 min approx.", "completed": false },
+              { "id": "m3-t4j", "type": "Practice Assignment", "title": "Graded Quiz: control charts", "duration": "10 min approx.", "completed": false },
+              { "id": "m3-t4k", "type": "Practice Assignment", "title": "Final Exam: DMAIC end to end", "duration": "20 min approx.", "completed": false },
               { "id": "m3-t4b", "type": "VILT-Live Session", "title": "Live clinic: applying DMAIC to your own process", "duration": "Thu 24 Jul · 15:00", "completed": false },
               { "id": "m3-t4c", "type": "VILT-Recording", "title": "Recording: Measurement systems analysis Q&A", "duration": "58 min", "completed": false },
               { "id": "m3-t4d", "type": "Podcast", "title": "In practice: what changes on the shop floor", "duration": "19m 04s", "completed": false },
-              { "id": "m3-t4e", "type": "Lab", "title": "Lab: Process capability in Python", "duration": "approx. 45 min", "completed": false },
-              { "id": "m3-t4f", "type": "Peer-graded", "title": "Peer-Review: Design a control plan", "duration": "approx. 60 min", "completed": false },
-              { "id": "m3-t4g", "type": "Lesson Page", "title": "Control charts end to end", "duration": "approx. 15 min", "completed": false },
-              { "id": "m3-t4i", "type": "Project", "title": "Final Project: build your DMAIC control plan", "duration": "approx. 3 h", "completed": false }
+              { "id": "m3-t4e", "type": "Lab", "title": "Lab: Process capability in Python", "duration": "45 min approx.", "completed": false },
+              { "id": "m3-t4e2", "type": "Lab", "title": "Create a virtual machine on Compute Engine", "duration": "45 min approx.", "completed": false },
+              { "id": "m3-t4e3", "type": "Lab", "title": "Discover Azure message queues", "duration": "50 min approx.", "completed": false },
+              { "id": "m3-t4f", "type": "Peer-graded", "title": "Peer-Review: Design a control plan", "duration": "60 min approx.", "completed": false },
+              { "id": "m3-t4g", "type": "Lesson Page", "title": "Control charts end to end", "duration": "15 min approx.", "completed": false },
+              { "id": "m3-t4i", "type": "Project", "title": "Final Project: build your DMAIC control plan", "duration": "3 h approx.", "completed": false }
             ]
           },
           {
@@ -88,8 +90,8 @@
             "label": "Analyze, improve, and control",
             "topics": [
               { "id": "m3-t5", "type": "Video", "title": "The analyze phase", "duration": "6 min", "completed": false, "locked": true },
-              { "id": "m3-t6", "type": "Activity", "title": "The improve phase", "duration": "approx. 10 min", "completed": false, "locked": true },
-              { "id": "m3-t7", "type": "Graded Assignment", "title": "The control phase", "duration": "approx. 20 min", "completed": false, "locked": true },
+              { "id": "m3-t6", "type": "Activity", "title": "The improve phase", "duration": "10 min approx.", "completed": false, "locked": true },
+              { "id": "m3-t7", "type": "Graded Assignment", "title": "The control phase", "duration": "20 min approx.", "completed": false, "locked": true },
               { "id": "m3-t8", "type": "Programming Assignment", "title": "Programming Assignment: automate the control chart", "duration": "", "completed": false },
               { "id": "m3-t9", "type": "Role Play", "title": "Role Play: coach a resistant stakeholder", "duration": "", "completed": false },
               { "id": "m3-t10", "type": "Dialogue", "title": "Dialogue: practise explaining variation", "duration": "", "completed": false }
@@ -133,7 +135,7 @@
 
   "user": {
     "id": "u1",
-    "name": "Olivia Rhye",
+    "name": "John Smith",
     "avatarUrl": ""
   }
 }

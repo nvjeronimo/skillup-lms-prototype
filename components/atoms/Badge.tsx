@@ -4,7 +4,7 @@ import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 /**
- * Mirrors the DS `Badge v2` component (21889:541076): three axes, Style × Size × Color.
+ * Mirrors the DS `Badge` component (21889:541076): three axes, Style × Size × Color.
  * Color covers the ten production options (Gray, Brand, Info, Success, Warning, Error,
  * Teal, Green, Red, Yellow). The eight provisional hues (Cyan…Orange) and Style=Soft Light
  * (bound to primitives, not roles) have no code counterpart yet.
@@ -58,7 +58,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 
   eyebrow?: boolean;
 }
 
-/* ── Colour bindings, read from Badge v2 Size=sm on 28 Sep 2026 ─────────────────────────
+/* ── Colour bindings, read from Badge Size=sm on 28 Sep 2026 ─────────────────────────
    Every class below is the DS variable bound on that variant: base fill (bg-*), base
    stroke (ring-*; except the Outline stroke, see DS-D1), Text fill (text-sko-text-*) and
    icon vector (text-sko-icon-*). The Plain icon circle is PLAIN_CIRCLE. */
@@ -185,9 +185,9 @@ const PLAIN_CIRCLE: Record<BadgeColor, string> = {
    Pill lg: 28px, py 4, label 0/12, with a leading icon pl 10 · icon 12 · 4px gap · pr 12.
    Plain: no padding, 6px gap, the 12px icon centred in a 20×20 soft circle. */
 const PILL_SIZE: Record<BadgeSize, { label: string; icon: string; text: string }> = {
-  sm: { label: "py-0.5 px-2", icon: "py-0.5 pl-1.5 pr-2 gap-1.5", text: "sk-text-xs-medium" },
-  md: { label: "py-0.5 px-2.5", icon: "py-0.5 pl-2 pr-2.5 gap-1", text: "sk-text-sm-medium" },
-  lg: { label: "py-1 px-3", icon: "py-1 pl-2.5 pr-3 gap-1", text: "sk-text-sm-medium" },
+  sm: { label: "py-0.5 px-2", icon: "py-0.5 pl-1.5 pr-2 gap-1.5", text: "sk-text-body-small-medium" },
+  md: { label: "py-0.5 px-2.5", icon: "py-0.5 pl-2 pr-2.5 gap-1", text: "sk-text-body-medium-medium" },
+  lg: { label: "py-1 px-3", icon: "py-1 pl-2.5 pr-3 gap-1", text: "sk-text-body-medium-medium" },
 };
 
 function resolveTone(tone: BadgeTone | undefined): { color?: BadgeColor; variant?: BadgeVariant } {
@@ -197,7 +197,7 @@ function resolveTone(tone: BadgeTone | undefined): { color?: BadgeColor; variant
   return { color: tone };
 }
 
-/** Generic badge (DS Badge v2). The typed LMS badge families compose this. */
+/** Generic badge (DS Badge). The typed LMS badge families compose this. */
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   { color, variant, size = "sm", tone, leftIcon, eyebrow = false, className, children, ...rest },
   ref,
@@ -207,13 +207,14 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
   const v: BadgeVariant = variant ?? fromTone.variant ?? "soft";
   const plain = v === "plain";
   const geometry = PILL_SIZE[size];
-  const textStyle = eyebrow ? "sk-text-2xs-semibold" : geometry.text;
+  const textStyle = eyebrow ? "sk-text-label-small-semibold" : geometry.text;
 
   return (
     <span
       ref={ref}
       className={cn(
-        "inline-flex items-center",
+        // A badge never wraps its label; the row it sits in wraps instead.
+        "inline-flex items-center whitespace-nowrap",
         plain
           ? "gap-1.5"
           : cn("rounded-full", leftIcon ? geometry.icon : geometry.label),

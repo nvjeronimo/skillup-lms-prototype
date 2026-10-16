@@ -6,6 +6,7 @@ import { NotificationItem } from "@/components/molecules/NotificationItem";
 import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { notificationCategory } from "@/lib/data";
 import type { NotificationCategory, NotificationModel } from "@/lib/types";
+import { staggerStyle } from "@/lib/motion/stagger";
 
 export interface NotificationsPanelProps {
   open: boolean;
@@ -56,6 +57,9 @@ export function NotificationsPanel({
     (n) => tab === "all" || notificationCategory(n.type) === tab,
   );
 
+  // The rows in the order they are drawn (by group): the order they rise in.
+  const rowOrder = GROUP_ORDER.flatMap((group) => visible.filter((n) => n.group === group).map((n) => n.id));
+
   const tabs = TAB_DEFS.map((t) => ({
     ...t,
     count:
@@ -79,34 +83,42 @@ export function NotificationsPanel({
         ariaLabel="Notification categories"
       />
 
-      {visible.length === 0 ? (
-        <p className="sk-text-sm-regular px-4 py-8 text-center text-sko-text-subtle">
-          You are all caught up.
-        </p>
-      ) : (
-        GROUP_ORDER.map((group) => {
-          const items = visible.filter((n) => n.group === group);
-          if (!items.length) return null;
-          return (
-            <section key={group} className="mb-2">
-              <PanelSectionLabel>{GROUP_LABEL[group]}</PanelSectionLabel>
-              <div className="divide-y divide-sko-border-subtle">
-                {items.map((n) => (
-                  <NotificationItem
-                    key={n.id}
-                    type={n.type}
-                    title={n.title}
-                    body={n.body}
-                    timestamp={n.timestamp}
-                    unread={n.unread && !readIds.has(n.id)}
-                    onClick={() => onSelect?.(n)}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })
-      )}
+      {/* A new category cross-fades the list; the rows rise one after the other. */}
+      <div key={tab} className="sk-animate-fade sk-enter-only">
+        {visible.length === 0 ? (
+          <p className="sk-text-body-medium-regular px-4 py-8 text-center text-sko-text-subtle">
+            You are all caught up.
+          </p>
+        ) : (
+          GROUP_ORDER.map((group) => {
+            const items = visible.filter((n) => n.group === group);
+            if (!items.length) return null;
+            return (
+              <section key={group} className="mb-2">
+                <PanelSectionLabel>{GROUP_LABEL[group]}</PanelSectionLabel>
+                <div className="divide-y divide-sko-border-subtle">
+                  {items.map((n) => (
+                    <div
+                      key={n.id}
+                      className="sk-animate-rise sk-rise-nudge sk-enter-only"
+                      style={staggerStyle(rowOrder.indexOf(n.id), rowOrder.length)}
+                    >
+                      <NotificationItem
+                        type={n.type}
+                        title={n.title}
+                        body={n.body}
+                        timestamp={n.timestamp}
+                        unread={n.unread && !readIds.has(n.id)}
+                        onClick={() => onSelect?.(n)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })
+        )}
+      </div>
     </OverlayPanel>
   );
 }

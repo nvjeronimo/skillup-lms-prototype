@@ -5,7 +5,7 @@ import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 /**
- * A navigation CTA with Button V2 md styling (44px). The Button atom renders a <button>, and a
+ * A navigation CTA with Button md styling (44px). The Button atom renders a <button>, and a
  * link must stay a link, so this mirrors its Brand Primary / Brand Secondary / Success Primary
  * classes on a Next <Link>.
  */
@@ -36,7 +36,7 @@ export function CtaLink({ href, children, variant = "primary", icon, className, 
       href={href}
       aria-label={rest["aria-label"]}
       className={cn(
-        "sk-text-sm-semibold inline-flex min-h-[44px] items-center justify-center gap-1 rounded-md px-3 transition-colors duration-200",
+        "sk-text-body-medium-semibold inline-flex min-h-[44px] items-center justify-center gap-1 rounded-md px-3 transition-colors duration-short4",
         "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--btn-ring)]",
         STYLE[variant],
         className,

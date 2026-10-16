@@ -5,6 +5,7 @@ import { Bookmark, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
+import { Collapse } from "@/components/atoms/Collapse";
 import { LessonHeader } from "@/components/atoms/LessonHeader";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { BookmarkButton } from "@/components/atoms/Bookmark";
@@ -12,7 +13,9 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
+import { isFreshCompletion, type LastCompleted } from "@/lib/motion/completion";
 import { coursePartners, moduleTopics } from "@/lib/data";
+import { courseProgressPct } from "@/lib/courses/outline";
 import type { Course, CompletionState, Topic } from "@/lib/types";
 
 export type SidebarVariant = "Expanded" | "Collapsed" | "Mobile";
@@ -34,6 +37,8 @@ export interface SidebarProps {
   /** Runtime completion (store). When provided, drives the row checks + progress
    *  live; when omitted (e.g. Storybook), the static `topic.completed` is used. */
   completed?: Set<string>;
+  /** The topic completed last (store): its row check draws itself while it is fresh. */
+  lastCompleted?: LastCompleted;
   onToggleSidebar?: () => void;
   onToggleModule?: (moduleId: string) => void;
   onSelectTopic?: (topicId: string) => void;
@@ -72,6 +77,7 @@ export function Sidebar({
   collapsedModules = new Set(),
   bookmarks = new Set(),
   completed,
+  lastCompleted = null,
   onToggleSidebar,
   onToggleModule,
   onSelectTopic,
@@ -98,10 +104,7 @@ export function Sidebar({
     return { topicsCompleted: done, topicsTotal: tops.length, isCompleted: tops.length > 0 && done === tops.length };
   };
 
-  const allTopics = course.modules.flatMap(moduleTopics);
-  const overallPct = completed
-    ? Math.round((allTopics.filter((t) => completed.has(t.id)).length / Math.max(allTopics.length, 1)) * 100)
-    : course.overallProgressPct;
+  const overallPct = courseProgressPct(course, completed);
   const modulesDone = completed
     ? course.modules.filter((m) => moduleStats(m).isCompleted).length
     : course.modulesCompleted;
@@ -115,17 +118,20 @@ export function Sidebar({
   useIsoLayoutEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
-    if (!isMobile) container.scrollTop = savedScrollTop; // restore persisted position
+    // The list is an .sk-scroll region, which glides: a restore is a jump, so it asks for "instant".
+    const jumpTo = (top: number) => container.scrollTo({ top, behavior: "instant" });
+    if (!isMobile) jumpTo(savedScrollTop); // restore persisted position
 
-    const active = container.querySelector<HTMLElement>('[aria-current="page"]');
+    // A collapsed module still renders its rows (zero height): skip them.
+    const active = container.querySelector<HTMLElement>('[aria-current="page"]:not([data-collapse="closed"] *)');
     if (active) {
       const c = container.getBoundingClientRect();
       const a = active.getBoundingClientRect();
       const margin = 8;
       if (a.top < c.top + margin) {
-        container.scrollTop -= c.top + margin - a.top;
+        jumpTo(container.scrollTop - (c.top + margin - a.top));
       } else if (a.bottom > c.bottom - margin) {
-        container.scrollTop += a.bottom - (c.bottom - margin);
+        jumpTo(container.scrollTop + (a.bottom - (c.bottom - margin)));
       }
     }
     if (!isMobile) savedScrollTop = container.scrollTop;
@@ -136,8 +142,10 @@ export function Sidebar({
     if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
   };
 
-  // Collapsed rail: a hover flyout surfaces the topic title + bookmark toggle
-  // (there's no room for them on the 72px rail itself).
+  // Collapsed rail: a flyout (DS: LMS/ICP/Sidebar/Topic-Flyout) surfaces the topic
+  // title + bookmark toggle; there's no room for them on the 72px rail itself.
+  // It opens on hover and on keyboard focus of a rail row. From the row, ArrowRight
+  // moves into the card; Escape or ArrowLeft goes back to the row.
   const [flyout, setFlyout] = React.useState<{ topic: Topic; top: number; left: number } | null>(
     null,
   );
@@ -154,6 +162,15 @@ export function Sidebar({
   const keepOpen = () => {
     if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
   };
+  const flyoutRef = React.useRef<HTMLDivElement | null>(null);
+  const flyoutRowRef = React.useRef<HTMLElement | null>(null);
+  const focusFlyout = () => {
+    keepOpen();
+    flyoutRef.current?.querySelector<HTMLElement>("button")?.focus();
+  };
+  const focusRailRow = () => {
+    flyoutRowRef.current?.querySelector<HTMLElement>("button")?.focus();
+  };
 
   // ── Collapsed rail (DS: LMS / Sidebar-ICP · State=Collapsed) ─────────────────
   // 72px rail: toggle + progress ring, then per-module groups separated by 40px
@@ -167,6 +184,19 @@ export function Sidebar({
         className="relative w-full"
         onMouseEnter={(e) => openFlyout(topic, e.currentTarget)}
         onMouseLeave={scheduleClose}
+        onFocus={(e) => {
+          flyoutRowRef.current = e.currentTarget;
+          openFlyout(topic, e.currentTarget);
+        }}
+        onBlur={scheduleClose}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight") {
+            e.preventDefault();
+            focusFlyout();
+          } else if (e.key === "Escape") {
+            setFlyout(null);
+          }
+        }}
       >
         <TopicRow
           collapsed
@@ -174,13 +204,14 @@ export function Sidebar({
           title={topic.title}
           duration={topic.duration}
           status={topicStatus(topic, completed)}
+          animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
           active={topic.id === currentTopicId}
           onClick={() => onSelectTopic?.(topic.id)}
         />
         {/* Saved topics carry a small bookmark mark on the rail. */}
         {bookmarks.has(topic.id) ? (
           <span className="pointer-events-none absolute right-1.5 top-1 text-sko-text-primary">
-            <Bookmark size={11} fill="currentColor" strokeWidth={1} />
+            <Bookmark size={12} fill="currentColor" strokeWidth={1} />
           </span>
         ) : null}
       </div>
@@ -216,7 +247,7 @@ export function Sidebar({
                   {module.implicit ? null : (
                     <p
                       className={cn(
-                        "sk-text-xs-semibold",
+                        "sk-text-body-small-semibold",
                         moduleDone ? "text-sko-text-success" : "text-sko-text-subtle",
                       )}
                     >
@@ -230,7 +261,7 @@ export function Sidebar({
                           <React.Fragment key={lesson.id}>
                             <p
                               className={cn(
-                                "sk-text-xs-semibold",
+                                "sk-text-body-small-semibold",
                                 lessonActive ? "text-sko-text-on-primary-soft" : "text-sko-text-subtle",
                               )}
                             >
@@ -251,12 +282,21 @@ export function Sidebar({
       {/* Hover flyout — title + bookmark toggle for the rail's icon-only rows. */}
       {flyout ? (
         <div
+          ref={flyoutRef}
           className="fixed z-[70]"
           style={{ top: flyout.top, left: flyout.left + 6 }}
           onMouseEnter={keepOpen}
           onMouseLeave={scheduleClose}
+          onFocus={keepOpen}
+          onBlur={scheduleClose}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              focusRailRow();
+            }
+          }}
         >
-          <div className="flex items-center gap-2 rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-lg">
+          <div className="flex items-center gap-2 rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-sk-elevation-3">
             <button
               type="button"
               onClick={() => {
@@ -265,7 +305,7 @@ export function Sidebar({
               }}
               className="flex min-w-0 flex-col items-start text-left"
             >
-              <span className="sk-text-sm-medium whitespace-nowrap text-sko-text-default">
+              <span className="sk-text-body-medium-medium whitespace-nowrap text-sko-text-default">
                 {flyout.topic.title}
               </span>
               <TopicTypeBadge type={flyout.topic.type} />
@@ -299,7 +339,7 @@ export function Sidebar({
            needs a visible close control (WCAG 2.1.2 / 2.5.8) — Escape and the
            backdrop tap still work too. The title labels the dialog. */
         <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-sko-border-subtle pl-4 pr-2">
-          <h2 id={mobileTitleId} className="sk-text-md-semibold text-sko-text-default">
+          <h2 id={mobileTitleId} className="sk-text-body-large-semibold text-sko-text-default">
             Course menu
           </h2>
           <button
@@ -367,6 +407,7 @@ export function Sidebar({
               title={topic.title}
               duration={topic.duration}
               status={topicStatus(topic, completed)}
+              animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
               active={topic.id === currentTopicId}
               showBookmark={bookmarks.has(topic.id)}
               bookmarked={bookmarks.has(topic.id)}
@@ -393,18 +434,16 @@ export function Sidebar({
                 collapsed={moduleCollapsed}
                 onToggle={() => onToggleModule?.(module.id)}
               />
-              {!moduleCollapsed ? (
-                <div>
-                  {module.lessons
-                    ? module.lessons.map((lesson) => (
-                        <div key={lesson.id}>
-                          <LessonHeader label={lesson.label} />
-                          {lesson.topics.map(renderTopic)}
-                        </div>
-                      ))
-                    : moduleTopics(module).map(renderTopic)}
-                </div>
-              ) : null}
+              <Collapse open={!moduleCollapsed}>
+                {module.lessons
+                  ? module.lessons.map((lesson) => (
+                      <div key={lesson.id}>
+                        <LessonHeader label={lesson.label} />
+                        {lesson.topics.map(renderTopic)}
+                      </div>
+                    ))
+                  : moduleTopics(module).map(renderTopic)}
+              </Collapse>
             </div>
           );
         })}

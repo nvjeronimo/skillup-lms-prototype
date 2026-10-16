@@ -10,7 +10,7 @@ const meta: Meta<typeof VideoPlayer> = {
   args: { durationSeconds: 200, currentTime: 48, state: "ready" },
   argTypes: {
     state: { control: "select", options: ["ready", "loading", "error", "ended"] },
-    size: { control: "select", options: ["auto", "lg", "md"] },
+    size: { control: "select", options: ["auto", "lg", "md", "sm"] },
   },
   decorators: [
     (Story) => (
@@ -31,19 +31,34 @@ export const Ended: Story = { args: { state: "ended" } };
 
 /**
  * DS `_Video actions bar` Size=lg (what `auto`, the default, picks from 640px of player
- * width): the volume slider joins the row, and
- * skip back/forward (±10s) render because `onSeek` is set (without it they are left out).
+ * width): Play, Skip back, Skip forward, the volume slider, the progress, Speed, CC and
+ * Maximize on one row, padding 24/16/16/16, gap 4.
  */
 export const SizeLarge: Story = { args: { state: "ready", size: "lg", onSeek: fn() } };
 /**
- * Size=md padding and gap (24/12/8/12, gap 2), no skip or volume. `auto` picks it below
- * 640px of player width; pass `size="md"` to force it.
+ * Size=md (`auto` picks it from 480 to 639px of player width): the same row with padding
+ * 24/12/8/12 and gap 2, and the volume is a button without the slider.
  */
 export const SizeMedium: Story = {
   args: { state: "ready", size: "md" },
   decorators: [
     (Story) => (
-      <div className="max-w-sm">
+      <div className="max-w-xl">
+        <Story />
+      </div>
+    ),
+  ],
+};
+/**
+ * Size=sm (`auto` picks it below 480px of player width): padding 8/4/4/4, gap 2, Play and
+ * Volume on the left, Skip back, Skip forward, Speed, CC and Maximize on the right. The
+ * progress keeps a row of its own above the buttons (the DS sm variant has none).
+ */
+export const SizeSmall: Story = {
+  args: { state: "ready", size: "sm" },
+  decorators: [
+    (Story) => (
+      <div className="max-w-[343px]">
         <Story />
       </div>
     ),

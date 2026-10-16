@@ -31,10 +31,10 @@ export function ResumeBanner({ seconds, onResume, onStartOver, className }: Resu
       <div className="flex items-center gap-2.5">
         <Icon icon={Play} size={16} className="text-sko-text-primary" />
         <div className="flex flex-col">
-          <span className="sk-text-sm-semibold text-sko-text-primary">
+          <span className="sk-text-body-medium-semibold text-sko-text-primary">
             Pick up where you left off
           </span>
-          <span className="sk-text-xs-regular text-sko-text-primary">
+          <span className="sk-text-body-small-regular text-sko-text-primary">
             You stopped at {secondsToTs(seconds)}
           </span>
         </div>

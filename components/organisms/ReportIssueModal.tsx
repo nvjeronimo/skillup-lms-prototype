@@ -6,6 +6,9 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { inertProps } from "@/lib/inert";
 import { useRovingRadio } from "@/lib/useRovingRadio";
 
 export interface ReportIssuePayload {
@@ -50,26 +53,41 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
     onSubmit({ reason, details: details.trim() || undefined });
   }
 
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
+
+  if (!mounted) return null;
+  const closed = state === "closed";
 
   return (
-    <div ref={dialogRef} className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onCancel} aria-hidden />
+    <div
+      ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn("fixed inset-0 z-[60] flex items-center justify-center p-4", closed && "pointer-events-none")}
+    >
+      {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
+      <div
+        className="sk-backdrop sk-animate-fade absolute inset-0"
+        onClick={onCancel}
+        onAnimationEnd={onAnimationEnd}
+        aria-hidden
+      />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative w-full max-w-[480px] overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[480px] origin-center overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
       >
         <header className="flex items-center justify-between border-b border-sko-border-subtle px-5 py-4">
-          <h2 id={titleId} className="sk-text-md-semibold text-sko-text-default">
+          <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
             Report an issue
           </h2>
           <button
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -77,7 +95,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
 
         <div className="flex flex-col gap-5 px-6 py-5">
           <fieldset>
-            <legend id={legendId} className="sk-text-sm-medium mb-2.5 block text-sko-text-muted">
+            <legend id={legendId} className="sk-text-body-medium-medium mb-2.5 block text-sko-text-muted">
               What’s wrong with this content?
             </legend>
             <div className="flex flex-col gap-1.5" role="radiogroup" aria-labelledby={legendId}>
@@ -92,7 +110,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
                     {...roving.itemProps(i)}
                     onClick={() => setReason(r)}
                     className={cn(
-                      "sk-text-sm-medium flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
+                      "sk-text-body-medium-medium flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
                       selected
                         ? "border-sko-border-primary bg-sko-bg-primary-soft text-sko-text-default"
                         : "border-sko-border-subtle text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -109,7 +127,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
           </fieldset>
 
           <label className="block">
-            <span className="sk-text-sm-medium mb-1.5 block text-sko-text-muted">
+            <span className="sk-text-body-medium-medium mb-1.5 block text-sko-text-muted">
               Details <span className="text-sko-text-subtle">(optional)</span>
             </span>
             <textarea
@@ -117,7 +135,7 @@ export function ReportIssueModal({ open, onCancel, onSubmit }: ReportIssueModalP
               onChange={(e) => setDetails(e.target.value)}
               rows={3}
               placeholder="Tell us more…"
-              className="sk-text-sm-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
+              className="sk-text-body-medium-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
             />
           </label>
         </div>

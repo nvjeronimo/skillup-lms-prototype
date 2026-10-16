@@ -58,7 +58,7 @@ function ParticipantsStrip({ participants, joined }: { participants: LivePartici
         />
       ))}
       {extra > 0 ? (
-        <span className="sk-text-sm-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle ring-[1.5px] ring-sko-bg-page">
+        <span className="sk-text-body-medium-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle ring-[1.5px] ring-sko-bg-page">
           +{extra}
         </span>
       ) : null}
@@ -92,11 +92,11 @@ export function LiveControlBar({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
             <ParticipantsStrip participants={participants} joined={joined} />
-            <span className="sk-text-sm-semibold text-sko-text-default">
+            <span className="sk-text-body-medium-semibold text-sko-text-default">
               {joined} of {total} participants joined
             </span>
           </div>
-          <p className="sk-text-xs-regular text-sko-text-default">
+          <p className="sk-text-body-small-regular text-sko-text-default">
             Mute yourself by default · You can leave anytime
           </p>
         </div>

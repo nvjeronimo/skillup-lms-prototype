@@ -33,12 +33,12 @@ export function ModuleInfo({
     // 18px row: pinned to the Overline height (label-small, 12/18 since the
     // no-text-below-12 decision) so the Caption separator dot centres inside it.
     <span className={cn("flex h-[18px] items-center gap-2", className)}>
-      <span className={cn("sk-text-2xs-medium", tone)}>{label}</span>
+      <span className={cn("sk-text-label-small-medium", tone)}>{label}</span>
       {showTopicProgress ? (
         <>
           <span
             className={cn(
-              "sk-text-xs-medium",
+              "sk-text-body-small-medium",
               isCompleted ? "text-sko-text-success" : "text-sko-text-disabled",
             )}
             aria-hidden
@@ -46,7 +46,7 @@ export function ModuleInfo({
             ·
           </span>
           <span className="flex items-center gap-1">
-            <span className={cn("sk-text-2xs-medium", tone)}>
+            <span className={cn("sk-text-label-small-medium", tone)}>
               {topicsCompleted} of {topicsTotal}
             </span>
             {isCompleted ? (

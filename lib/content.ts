@@ -1,10 +1,17 @@
-import { topicDownloads as seedDownloads } from "./data";
+import { COURSES } from "./courses";
+import type { CourseContent } from "./courses/types";
+import { getCourseForTopic, topicDownloads as seedDownloads } from "./data";
 import type { DownloadFile, FlatTopic, TopicType, TranscriptLine } from "./types";
+import { durationToSeconds } from "./utils";
 
 /**
  * Dummy content for every topic type so the prototype feels complete when you
  * navigate the whole course. Deterministic, Six-Sigma-themed, derived from the
  * topic's title/type. The Video topic keeps its real transcript (lib/data).
+ *
+ * The two platform courses with an outline of their own never print the Six Sigma
+ * sample: a few of their topics have a body written for them and the rest get
+ * wording that names no subject (see "Courses with their own content" at the end).
  */
 
 export interface ArticleContent {
@@ -107,6 +114,8 @@ export interface ActivityContent {
   /** SCORM only — shown so the learner knows what they are about to open. */
   packageLabel?: string;
   packageSizeLabel?: string;
+  /** The worksheet the steps refer to, as the Downloads tab lists it. Without one, the plain worksheet. */
+  file?: { name: string; size: string };
 }
 
 export interface DiscussionThread {
@@ -222,7 +231,10 @@ export function topicDescription(topic: FlatTopic): string {
     case "lessonPage":
       return `A guided page that brings together everything on this topic: video, notes, diagrams and downloads.`;
     case "lab":
-      return `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`;
+      return (
+        getPartnerLab(topic)?.description ??
+        `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`
+      );
     case "podcast":
       return `A conversation you can listen to on the move, with transcript and chapters included.`;
     case "vilt":
@@ -250,7 +262,9 @@ export interface TopicByline {
   updated: string;
 }
 
-export function getByline(_topic: FlatTopic): TopicByline {
+export function getByline(topic: FlatTopic): TopicByline {
+  const own = ownContent(topic);
+  if (own) return own.byline;
   return {
     author: "Dr. Sarah Chen",
     role: "Lead instructor · ASQ-Certified Six Sigma Black Belt",
@@ -324,10 +338,41 @@ export function getTranscript(topic: FlatTopic): TranscriptLine[] {
     `That's the essence of ${subject}. In the next topic we build on it, so jot down anything you want to revisit.`,
   ];
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  return lines.map((text, i) => ({ id: `${topic.id}-l${i + 1}`, ts: fmt(i * 18), text }));
+  const spoken = ownContent(topic) ? plainTranscript(subject, mod) : lines;
+  return spoken.map((text, i) => ({ id: `${topic.id}-l${i + 1}`, ts: fmt(i * 18), text }));
+}
+
+/**
+ * The caption cues of a video topic: the lines the player prints over the picture, one at
+ * a time. They are the topic's transcript. A course with its own content shows captions
+ * only on a video whose transcript is written (the plain wording that fills its
+ * Transcript tab is not a caption); the sample courses caption every video.
+ */
+export function getCaptions(topic: FlatTopic): TranscriptLine[] {
+  if (topic.transcript && topic.transcript.length) return topic.transcript;
+  return ownContent(topic) ? [] : getTranscript(topic);
+}
+
+/**
+ * One timed line of a video embedded in another topic (a Lesson Page video block, a session
+ * recording): what the player captions. Optional where it is written, 10 Oct 2026: an
+ * embedded video with no transcript has no caption, as a video topic.
+ */
+export type TranscriptCue = Pick<TranscriptLine, "ts" | "text">;
+
+/** The length of a video or audio topic in seconds, read from its `duration` ("12 min", "3m 20s"). */
+export function getMediaSeconds(topic: FlatTopic): number {
+  return durationToSeconds(topic.duration);
 }
 
 export function getArticle(topic: FlatTopic): ArticleContent {
+  const own = ownContent(topic);
+  if (own) {
+    return {
+      byline: { author: own.byline.author, date: `Updated ${own.byline.updated}`, readingTime: topic.duration },
+      ...(own.articles[topic.id] ?? plainArticle(topic)),
+    };
+  }
   return {
     byline: { author: "Dr. Sarah Chen", date: "Updated May 2026", readingTime: topic.duration },
     lede: `${topic.title} is a cornerstone of the ${topic.moduleTitle} module. This reading distils the essentials so you can apply them with confidence in the assignments that follow.`,
@@ -361,6 +406,8 @@ export function getArticle(topic: FlatTopic): ArticleContent {
 }
 
 export function getQuiz(topic: FlatTopic): QuizQuestion[] {
+  const own = ownContent(topic);
+  if (own) return own.quizzes[topic.id] ?? own.quiz;
   return [
     {
       question: "What is the primary goal of Six Sigma?",
@@ -529,11 +576,11 @@ export function attemptsLabel(config: QuizConfig): string | undefined {
 export function getActivity(topic: FlatTopic): ActivityContent {
   // Branching / scenario activities are authored as SCORM packages.
   const isScorm = /scenario|match|connect|simulat/i.test(topic.title);
-  return {
+  const activity: ActivityContent = {
     kind: isScorm ? "scorm" : "checklist",
     packageLabel: "Articulate Storyline package",
     packageSizeLabel: "8.4 MB",
-    intro: `Work through the steps below. Tick each one as you go and your progress is saved automatically. This activity should take about ${topic.duration.replace(/^approx\.\s*/, "")}.`,
+    intro: `Work through the steps below. Tick each one as you go and your progress is saved automatically. This activity should take about ${topic.duration.replace(/^approx\.\s*|\s*approx\.$/g, "")}.`,
     steps: [
       {
         title: "Map the process",
@@ -553,9 +600,15 @@ export function getActivity(topic: FlatTopic): ActivityContent {
       },
     ],
   };
+  const own = ownContent(topic);
+  if (!own) return activity;
+  // A course's own activity is a checklist unless it says otherwise: its steps are the exercise.
+  const written = own.activities?.[topic.id];
+  return written ? { kind: "checklist", ...written } : { ...activity, steps: PLAIN_ACTIVITY_STEPS };
 }
 
 export function getDiscussionThreads(topic: FlatTopic): DiscussionThread[] {
+  if (ownContent(topic)) return PLAIN_DISCUSSION_THREADS;
   return [
     {
       author: "Carlos M.",
@@ -637,9 +690,12 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
         make("DOCX", "submission-template.docx", "54 KB"),
       ];
       break;
-    case "activity":
-      files = [make("XLSX", "activity-worksheet.xlsx", "32 KB")];
+    case "activity": {
+      // The worksheet a course named for this activity, so the steps and the tab agree.
+      const file = getActivity(topic).file;
+      files = [file ? make(extType(file.name), file.name, file.size) : make("XLSX", "activity-worksheet.xlsx", "32 KB")];
       break;
+    }
     case "lessonPage": {
       // Derive from the page's own file blocks, so the Downloads tab and the
       // content agree instead of advertising a file that isn't on the page.
@@ -650,7 +706,11 @@ export function getDownloads(topic: FlatTopic): DownloadFile[] {
     }
     case "lab":
       // Same principle: the lab's own assets are what the learner needs.
-      files = getLab(topic).files.map((f) => make(extType(f.name), f.name, f.size));
+      // A partner lab has no files of ours: everything is on the partner's platform.
+      {
+        const lab = getLab(topic);
+        files = lab.kind === "download" ? lab.files.map((f) => make(extType(f.name), f.name, f.size)) : [];
+      }
       break;
     case "ora":
       files = [
@@ -696,10 +756,14 @@ export interface ViltSession {
   attendees: { live: number; total: number };
   /** Completion rule differs per stage — attendance vs watched. */
   completionRule: string;
+  /** Recording only: the lines its player captions, as on a Video topic. None: no caption. */
+  transcript?: TranscriptCue[];
 }
 
 export function getViltSession(topic: FlatTopic): ViltSession {
   const isRecording = topic.type === "VILT-Recording";
+  const own = ownContent(topic);
+  if (own) return { ...plainSession(topic, own), ...own.sessions?.[topic.id] };
   if (isRecording) {
     return {
       stage: "recording",
@@ -717,6 +781,17 @@ export function getViltSession(topic: FlatTopic): ViltSession {
       ],
       attendees: { live: 0, total: 30 },
       completionRule: "Completes automatically once you have watched 90%.",
+      // 10 Oct 2026: the recording has a transcript of its own, so its player is captioned.
+      transcript: [
+        { ts: "0:00", text: "Welcome, everyone. Today is all questions on measurement systems." },
+        { ts: "3:40", text: "First, the Gauge R&R study: ten parts, three operators, two trials." },
+        { ts: "11:15", text: "Repeatability is the gauge itself; reproducibility is the operators." },
+        { ts: "19:30", text: "Under 10% of total variation the system is fine; over 30% it is not." },
+        { ts: "27:45", text: "A common pitfall: picking parts that do not span the process range." },
+        { ts: "36:10", text: "Another one: operators who know which part they are measuring." },
+        { ts: "44:20", text: "On to your questions. Carlos asks what to do with attribute data." },
+        { ts: "53:05", text: "To close: fix the measurement system before you trust the baseline." },
+      ],
     };
   }
   return {
@@ -740,7 +815,9 @@ export function getViltSession(topic: FlatTopic): ViltSession {
 
 /* ----------------------------------------------------------------- Lab --- */
 
-export interface LabContent {
+/** The download lab: a notebook the learner runs on their own machine. */
+export interface DownloadLabContent {
+  kind: "download";
   intro: string;
   /** What the learner needs before starting. */
   prerequisites: string[];
@@ -750,12 +827,106 @@ export interface LabContent {
 }
 
 /**
- * A Lab is authored as an HTML block plus downloadable assets — the learner
+ * The partner lab (lab-third-party-platforms.md): it runs on the partner's own platform
+ * and the learner leaves ours to do it. What differs per partner is what comes back.
+ *
+ * - Google is an LTI component (`lti_consumer`) with a score: the topic completes when
+ *   Google sends the score, so there is no manual action.
+ * - Microsoft is a link in a Text component: nothing comes back, so the learner marks
+ *   the topic complete.
+ */
+export interface PartnerLabContent {
+  kind: "partner";
+  partner: "google" | "microsoft";
+  /** DS `Provider-Partner Badge` on the launch card. */
+  provider: "Google Cloud" | "Microsoft";
+  /** The partner's lab platform, as the learner knows it. */
+  platform: string;
+  /** The launch button, as on the Lab screens of 12 Oct 2026. */
+  launchLabel: string;
+  /** The line under the title on the launch card: where the lab opens and what it shares. */
+  cardLine: string;
+  /**
+   * True when the lab's component can be set to open inside the page. Two Microsoft courses do
+   * today (lab-third-party-platforms.md §8); every other lab opens in a new tab.
+   */
+  inPage?: boolean;
+  description: string;
+  intro: string;
+  prerequisites: string[];
+  /** "How this lab works", when the lab opens in a new tab. */
+  steps: [string, string, string];
+  /** The note under the steps once the topic is completed. */
+  afterCompletion: string;
+}
+
+export type LabContent = DownloadLabContent | PartnerLabContent;
+
+// Nothing comes back from a partner (9 Oct 2026): no score, no completion. The learner
+// completes the topic with Mark as Complete, and Next asks if they move on without it.
+const PARTNER_LABS: Record<string, PartnerLabContent> = {
+  "m3-t4e2": {
+    kind: "partner",
+    partner: "google",
+    provider: "Google Cloud",
+    platform: "Google Skills",
+    launchLabel: "Open Lab",
+    cardLine: "Google Skills · opens in a new tab · shares your username and email",
+    description:
+      "A hands-on lab on Google Cloud: create a virtual machine, connect to it and deploy a web server.",
+    intro:
+      "This lab runs on Google Skills, Google's own lab platform. You sign in with a Google account and work in a real Google Cloud project.",
+    prerequisites: [
+      "A Google account, to sign in to Google Skills and accept its terms",
+      "A desktop or laptop with Chrome: Google doesn't recommend phones or tablets for its labs",
+      "Time to finish in one sitting: some labs are timed and close by themselves",
+    ],
+    steps: [
+      "Open the lab. It starts in a new tab and this page stays open.",
+      "Sign in to Google Skills, start the lab and follow its instructions.",
+      "Come back to this page and select Mark as Complete.",
+    ],
+    afterCompletion: "Open it whenever you want to practise. The topic stays complete.",
+  },
+  "m3-t4e3": {
+    kind: "partner",
+    partner: "microsoft",
+    provider: "Microsoft",
+    platform: "Microsoft Learn",
+    launchLabel: "Open on Microsoft Learn",
+    cardLine: "Microsoft Learn · opens in a new tab",
+    inPage: true,
+    description:
+      "A Microsoft Learn module with hands-on exercises on Azure Service Bus and Queue Storage.",
+    intro:
+      "This lab is a module on Microsoft Learn. You read the units and do the exercises on Microsoft's site, then come back here to complete the topic.",
+    prerequisites: [
+      "A Microsoft account, to sign in to Microsoft Learn and save your progress there",
+      "A desktop or laptop is recommended for the exercises",
+      "About 50 minutes",
+    ],
+    steps: [
+      "Open the module. It starts in a new tab and this page stays open.",
+      "Work through the units and exercises on Microsoft Learn.",
+      "Come back to this page and select Mark as Complete.",
+    ],
+    afterCompletion:
+      "Open the module on Microsoft Learn whenever you want to review it. The topic stays complete.",
+  },
+};
+
+/**
+ * A download Lab is authored as an HTML block plus downloadable assets — the learner
  * runs it offline in their own Jupyter install, so there is no grading and
  * completion is manual. That is why it is not an Activity (SCORM).
  */
 export function getLab(topic: FlatTopic): LabContent {
+  const partner = PARTNER_LABS[topic.id];
+  if (partner) return partner;
+  const own = ownContent(topic);
+  if (own) return own.labs?.[topic.id] ?? plainLab(topic);
   return {
+    kind: "download",
     intro:
       "In this lab you'll run pre-written Python against a sample process dataset to calculate capability indices and spot the drivers of variation. Everything runs locally and nothing is submitted.",
     prerequisites: [
@@ -777,6 +948,60 @@ export function getLab(topic: FlatTopic): LabContent {
   };
 }
 
+/** The partner lab behind a topic, or null for every other topic (download labs included). */
+export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
+  return PARTNER_LABS[topic.id] ?? null;
+}
+
+/**
+ * Topics the platform cannot measure (lab-third-party-platforms.md §4): a Reading, a Lesson Page,
+ * an Activity, a lab the learner downloads and a partner lab that sends nothing back. They keep
+ * their Mark as Complete button, and Next asks the learner whether they have completed the topic
+ * when they move on without it.
+ *
+ * Video and Podcast are in the list here for one reason: the prototype does not measure
+ * playback. In the product they complete by themselves at 90% played, and Next asks only when
+ * playback cannot be measured. The prototype is always in that case.
+ *
+ * Left out: the types with their own submission (quiz, assignment, ORA) and VILT (attendance).
+ */
+export function completesByHand(topic: FlatTopic): boolean {
+  const family = topicFamily(topic.type);
+  return (
+    family === "lab" ||
+    family === "reading" ||
+    family === "lessonPage" ||
+    family === "activity" ||
+    family === "video" ||
+    family === "podcast"
+  );
+}
+
+/** The word the completion question uses for the topic: "Have you finished this lab?" */
+export function completionNoun(topic: FlatTopic): string {
+  switch (topicFamily(topic.type)) {
+    case "lab":
+      return "lab";
+    case "lessonPage":
+      return "lesson";
+    case "activity":
+      return "activity";
+    case "video":
+      return "video";
+    case "podcast":
+      return "podcast";
+    default:
+      return "reading";
+  }
+}
+
+/** Why Next has to ask, in one sentence for the dialog (copy by Navdeep, 12 Oct 2026). */
+export function completionReason(topic: FlatTopic): string {
+  const noun = completionNoun(topic);
+  const where = getPartnerLab(topic)?.platform ?? `this ${noun}`;
+  return `Your progress on ${where} isn't tracked automatically. Please confirm whether you've completed this ${noun}.`;
+}
+
 /* ------------------------------------------------------------- Podcast --- */
 
 export interface PodcastContent {
@@ -785,11 +1010,17 @@ export interface PodcastContent {
   episodeLabel: string;
   summary: string;
   chapters: { ts: string; label: string }[];
+  /** Length of the episode, from the topic's `duration`. */
+  durationSeconds: number;
 }
 
 /** Podcast uses an audio asset — same player chrome as Video, audio surface. */
 export function getPodcast(topic: FlatTopic): PodcastContent {
+  const durationSeconds = getMediaSeconds(topic);
+  const own = ownContent(topic);
+  if (own) return { ...(own.podcasts?.[topic.id] ?? plainPodcast(topic, own, durationSeconds)), durationSeconds };
   return {
+    durationSeconds,
     host: "Dr. Marta Silva",
     guest: "Ana Ferreira, Head of Quality at Northwind",
     episodeLabel: "Episode 4",
@@ -834,6 +1065,8 @@ export interface OraContent {
 }
 
 export function getOra(topic: FlatTopic): OraContent {
+  const own = ownContent(topic);
+  if (own) return own.ora[topic.id] ?? plainOra(topic);
   return {
     brief:
       "Define a control plan for a process of your choice. Identify the critical-to-quality characteristics, the metrics you'll monitor, the control limits, and the response plan when a measurement falls out of range.",
@@ -894,6 +1127,24 @@ export function oraMaxPoints(content: OraContent): number {
   return content.criteria.reduce((sum, c) => sum + c.maxPoints, 0);
 }
 
+/* --------------------------------------------------- Graded assignment --- */
+
+/** The brief of a Graded Assignment (a file submission): a paragraph and its short list. */
+export interface AssignmentBrief {
+  brief: string;
+  requirements: string[];
+}
+
+export function getAssignmentBrief(topic: FlatTopic): AssignmentBrief {
+  const own = ownContent(topic);
+  if (own) return own.assignments[topic.id] ?? plainAssignmentBrief(topic);
+  return {
+    brief:
+      "Define a control plan for a process of your choice. Identify the critical-to-quality characteristics, the metrics you’ll monitor, the control limits, and the response plan when a measurement falls out of range. Submit your plan as a PDF or DOCX.",
+    requirements: ["1–2 pages", "Include at least one control chart sketch", "Counts toward your final grade"],
+  };
+}
+
 /* --------------------------------------------------------- Lesson Page --- */
 
 /**
@@ -908,7 +1159,7 @@ export function oraMaxPoints(content: OraContent): number {
  */
 export type LessonBlock =
   | { kind: "text"; heading?: string; paragraphs: string[] }
-  | { kind: "video"; title: string; durationLabel: string }
+  | { kind: "video"; title: string; durationLabel: string; transcript?: TranscriptCue[] }
   | { kind: "image"; caption: string; alt: string }
   | { kind: "file"; name: string; fileKind: "pdf" | "doc" | "data"; size: string }
   | { kind: "callout"; tone: "info" | "warning"; title: string; body: string }
@@ -920,6 +1171,8 @@ export interface LessonPageContent {
 }
 
 export function getLessonPage(topic: FlatTopic): LessonPageContent {
+  const own = ownContent(topic);
+  if (own) return own.lessonPages?.[topic.id] ?? plainLessonPage(topic);
   return {
     intro:
       "This page pulls together everything you need on control charts: the theory, a worked example, the template you'll use, and a quick check before you move on.",
@@ -936,6 +1189,16 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
         kind: "video",
         title: "Reading a control chart in 4 minutes",
         durationLabel: "4m 12s",
+        // 10 Oct 2026: the embedded video has a transcript of its own, so its player is captioned.
+        transcript: [
+          { ts: "0:00", text: "A control chart answers one question: has the process changed?" },
+          { ts: "0:28", text: "Start with the centre line. It is the mean of the process." },
+          { ts: "0:58", text: "The control limits sit three standard deviations either side." },
+          { ts: "1:32", text: "Points that bounce around inside the limits are common-cause noise." },
+          { ts: "2:06", text: "One point beyond a limit is a signal. Look for what changed." },
+          { ts: "2:44", text: "Seven points in a row on one side mean the average has shifted." },
+          { ts: "3:25", text: "Remember: the limits come from the process, not from the customer." },
+        ],
       },
       {
         kind: "image",
@@ -984,5 +1247,253 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
         ],
       },
     ],
+  };
+}
+
+/* ------------------------------------------- Courses with their own content --- */
+
+/*
+ * What a platform course with its own outline says in place of the Six Sigma sample is
+ * written in its folder (lib/courses/<slug>/content.ts, shape `CourseContent` in
+ * lib/courses/types). Every topic of such a course that has no body there gets the plain
+ * wording below, which names no subject.
+ */
+
+const OWN_CONTENT: Record<string, CourseContent> = Object.fromEntries(
+  COURSES.map((c) => [c.outline.slug, c.content]),
+);
+
+/** The content of the topic's course, when that course has its own; undefined for the sample courses. */
+function ownContent(topic: FlatTopic): CourseContent | undefined {
+  return OWN_CONTENT[getCourseForTopic(topic.id).slug];
+}
+
+/* Plain wording for the topics of those courses that have no body of their own. */
+
+function plainTranscript(subject: string, mod: string): string[] {
+  return [
+    `Welcome back. In this lesson we work through ${subject} and where it fits within ${mod}.`,
+    `Let's start with why it matters, and with what tends to go wrong when this step is skipped.`,
+    `Here's the core idea in plain terms, before we look at how it works in practice.`,
+    `A common mistake is to rush to the result. We'll slow down and look at the decisions behind it.`,
+    `Let's walk through a short example, so you can see each step before you try it yourself.`,
+    `Pause here if you want to take a note. The next part builds on this example.`,
+    `That's the essence of ${subject}. The next topic builds on it, so note anything you want to revisit.`,
+  ];
+}
+
+function plainArticle(topic: FlatTopic): Omit<ArticleContent, "byline"> {
+  return {
+    lede: `${topic.title} is part of ${topic.moduleTitle}. This reading sets out the main ideas and how to use them in the work that follows.`,
+    sections: [
+      {
+        heading: "Why it matters",
+        paragraphs: [
+          "This topic is here because the later work depends on it. The practice tasks and the graded work of this module assume you can apply it, not only define it.",
+          "Read it once for the overall argument, then go back to the parts you would have done differently.",
+        ],
+      },
+      {
+        heading: "How to use it",
+        paragraphs: [
+          "Take one example from your own work and try each idea on it as you read. An idea you have applied once is easier to recall than one you have only read.",
+          "Keep a short note of what changed in your example. You can reuse it in the next assignment.",
+        ],
+      },
+    ],
+    pullQuote: {
+      text: "An idea you have applied once is easier to recall than one you have only read.",
+      attribution: "Course notes",
+    },
+    takeaways: [
+      "Read for the decisions each idea helps you make.",
+      "Try each idea on one example from your own work.",
+      "Note what changed, and bring it to the next assignment.",
+    ],
+  };
+}
+
+const PLAIN_ACTIVITY_STEPS: ActivityContent["steps"] = [
+  { title: "Read the task", detail: "Open the worksheet in the Downloads tab and read the task and the example." },
+  { title: "Do a first pass", detail: "Work through the task once, without stopping to polish." },
+  { title: "Compare with the example", detail: "Check your result against the worked example and note where it differs." },
+  { title: "Note one change", detail: "Write down the one thing you would do differently next time." },
+];
+
+const PLAIN_DISCUSSION_THREADS: DiscussionThread[] = [
+  {
+    author: "Carlos M.",
+    timestamp: "2 hours ago",
+    content:
+      "The example in this topic helped. I tried it on my own project and my first version was too broad; narrowing it to one audience fixed it.",
+    replies: 3,
+    upvotes: 12,
+  },
+  {
+    author: "Aisha R.",
+    timestamp: "Yesterday",
+    content: "Useful to see the reasoning and not only the result. I am keeping the checklist from this one.",
+    replies: 1,
+    upvotes: 8,
+  },
+];
+
+function plainAssignmentBrief(topic: FlatTopic): AssignmentBrief {
+  return {
+    brief: `Complete the task set out in “${topic.title}” and submit your work as a PDF or DOCX. The full brief and the submission template are in the Downloads tab.`,
+    requirements: ["1–2 pages", "Use the submission template", "Counts toward your final grade"],
+  };
+}
+
+function plainOra(topic: FlatTopic): OraContent {
+  return {
+    brief: `Complete “${topic.title}” as set out in the project brief in the Downloads tab, then submit your work for review by a peer.`,
+    deliverable: "Submit a PDF or DOCX. Say what you decided and why, not only what you made.",
+    dueLabel: "Due date on the Dates tab",
+    requiredReviews: 1,
+    acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
+    overallCommentPrompt: "What did you like most about your peer's submission?",
+    criteria: [
+      {
+        id: "c1",
+        label: "Task 1 · Meet the brief",
+        maxPoints: 6,
+        options: [
+          { points: 6, label: "Every part of the brief is covered" },
+          { points: 4, label: "Most of the brief is covered" },
+          { points: 2, label: "Parts of the brief are missing" },
+          { points: 0, label: "Not attempted" },
+        ],
+      },
+      {
+        id: "c2",
+        label: "Task 2 · Support the decisions",
+        maxPoints: 5,
+        options: [
+          { points: 5, label: "Each decision is explained and supported" },
+          { points: 3, label: "Decisions are stated but not supported" },
+          { points: 0, label: "No reasoning given" },
+        ],
+      },
+      {
+        id: "c3",
+        label: "Task 3 · Present the work clearly",
+        maxPoints: 5,
+        options: [
+          { points: 5, label: "Clear structure, easy to follow" },
+          { points: 3, label: "Complete but hard to follow" },
+          { points: 0, label: "Not attempted" },
+        ],
+      },
+      {
+        id: "c4",
+        label: "Task 4 · Say what you would change",
+        maxPoints: 4,
+        options: [
+          { points: 4, label: "A specific change, with the reason for it" },
+          { points: 2, label: "A general remark" },
+          { points: 0, label: "Not attempted" },
+        ],
+      },
+    ],
+  };
+}
+
+/** "30 min approx." → 30, for the badge of a lab. */
+const minutesOf = (topic: FlatTopic) => Math.max(1, Math.round(getMediaSeconds(topic) / 60));
+
+function plainLab(topic: FlatTopic): DownloadLabContent {
+  return {
+    kind: "download",
+    intro: `In this lab you work through “${topic.title}” on your own machine, with the lab files. Nothing is submitted and it isn't graded.`,
+    prerequisites: ["A desktop or laptop", "The lab files, saved in one folder"],
+    steps: [
+      "Download the lab files.",
+      "Read the instructions once before you start.",
+      "Work through the tasks in order and keep your results.",
+      "Compare your results with the worked example at the end of the instructions.",
+    ],
+    files: [
+      { name: "lab-instructions.pdf", kind: "pdf", size: "240 KB" },
+      { name: "lab-files.zip", kind: "data", size: "96 KB" },
+    ],
+    estimatedMinutes: minutesOf(topic),
+  };
+}
+
+function plainPodcast(topic: FlatTopic, own: CourseContent, seconds: number): Omit<PodcastContent, "durationSeconds"> {
+  const at = (share: number) => {
+    const s = Math.floor(seconds * share);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  };
+  return {
+    host: own.byline.author,
+    episodeLabel: "Audio episode",
+    summary: `A conversation about “${topic.title}”: why it matters in ${topic.moduleTitle}, an example from practice and what to take from it into the work that follows.`,
+    chapters: [
+      { ts: at(0), label: "Introduction" },
+      { ts: at(0.2), label: "The main idea" },
+      { ts: at(0.55), label: "An example from practice" },
+      { ts: at(0.85), label: "What to take away" },
+    ],
+  };
+}
+
+function plainLessonPage(topic: FlatTopic): LessonPageContent {
+  return {
+    intro: `This page brings together what you need on “${topic.title}”: the main ideas, a point to watch and the notes to keep.`,
+    blocks: [
+      {
+        kind: "text",
+        heading: "Why it matters",
+        paragraphs: [
+          `This topic is part of ${topic.moduleTitle}. The practice tasks and the graded work of this module assume you can apply it, not only define it.`,
+          "Read the page once from top to bottom, then go back to the parts you would have done differently.",
+        ],
+      },
+      {
+        kind: "callout",
+        tone: "info",
+        title: "Before you move on",
+        body: "Try each idea on one example from your own work. An idea you have applied once is easier to recall than one you have only read.",
+      },
+      {
+        kind: "text",
+        heading: "How to use it",
+        paragraphs: ["Keep a short note of what changed in your example. You can reuse it in the next assignment."],
+      },
+      { kind: "file", name: "lesson-notes.pdf", fileKind: "pdf", size: "120 KB" },
+    ],
+  };
+}
+
+function plainSession(topic: FlatTopic, own: CourseContent): ViltSession {
+  const shared = {
+    title: topic.title,
+    host: own.byline.author,
+    platform: "Zoom" as const,
+    joinUnlocksMinutesBefore: 15,
+  };
+  if (topic.type === "VILT-Recording") {
+    return {
+      ...shared,
+      stage: "recording",
+      whenLabel: "Recorded last week",
+      durationLabel: topic.duration,
+      minutesUntilStart: 0,
+      agenda: ["Recap of the module so far", "A worked example", "Open Q&A from the cohort"],
+      attendees: { live: 0, total: 30 },
+      completionRule: "Completes automatically once you have watched 90%.",
+    };
+  }
+  return {
+    ...shared,
+    stage: "pre-live",
+    whenLabel: "Today · 15:00–16:00, your time",
+    durationLabel: "60 min",
+    minutesUntilStart: 12,
+    agenda: ["Bring one example from your own work", "Work on it in breakout groups", "Feedback round with the cohort"],
+    attendees: { live: 24, total: 30 },
+    completionRule: "Attend live (join + at least 50% of the session) or watch the recording to 90%.",
   };
 }

@@ -2,6 +2,7 @@ import * as React from "react";
 import { Edit3, Trash2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { TranscriptLine } from "./TranscriptLine";
 
 export interface NoteItemProps {
   ts: string;
@@ -40,13 +41,13 @@ export function NoteItem({
         <button
           type="button"
           onClick={onClick}
-          className="sk-text-xs-medium text-sko-text-primary"
+          className="sk-text-body-small-medium text-sko-text-primary"
         >
           {ts}
         </button>
         <div className="flex items-center gap-2">
           {editedLabel ? (
-            <span className="sk-text-xs-medium text-sko-text-subtle">{editedLabel}</span>
+            <span className="sk-text-body-small-medium text-sko-text-subtle">{editedLabel}</span>
           ) : null}
           <button
             type="button"
@@ -68,10 +69,9 @@ export function NoteItem({
       </div>
 
       <button type="button" onClick={onClick} className="mt-1.5 block w-full text-left">
-        <p className="sk-text-sm-regular border-l-[3px] border-sko-border-primary py-1.5 pl-3 text-sko-text-subtle">
-          {anchorQuote}
-        </p>
-        <p className="sk-text-sm-regular mt-1.5 text-sko-text-default">{text}</p>
+        {/* DS Note-Item v1.1 (14 Oct 2026): the anchor is the transcript line, read-only. */}
+        <TranscriptLine ts="" text={anchorQuote} active readOnly />
+        <p className="sk-text-body-medium-regular mt-1.5 text-sko-text-default">{text}</p>
       </button>
 
       {tags.length ? (
@@ -81,7 +81,7 @@ export function NoteItem({
               key={tag}
               type="button"
               onClick={() => onTagClick?.(tag)}
-              className="sk-text-xs-medium rounded-full bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle hover:text-sko-text-primary"
+              className="sk-text-body-small-medium rounded-full bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle transition-colors hover:text-sko-text-primary"
             >
               #{tag}
             </button>

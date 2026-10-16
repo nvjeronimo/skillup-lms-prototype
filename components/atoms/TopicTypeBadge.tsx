@@ -31,7 +31,7 @@ export const ALL_TOPIC_TYPES: TopicType[] = [
 ];
 
 /**
- * Identifies a topic's type (DS `LMS / Topic-Types Badge`, 19975:536800): Badge v2
+ * Identifies a topic's type (DS `LMS / Topic-Types Badge`, 19975:536800): Badge
  * Style=Plain, Size=sm, Color=Brand with the label overridden to text/subtle. The 12px icon
  * (icon/primary) sits in a 20×20 container (its bg/primary-soft fill is hidden in the DS),
  * 6px before the label (body-small/Medium). 20px high with the icon, 18px without.
@@ -40,7 +40,7 @@ export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBa
   return (
     <span
       className={cn(
-        "sk-text-xs-medium inline-flex items-center gap-1.5 text-sko-text-subtle",
+        "sk-text-body-small-medium inline-flex items-center gap-1.5 text-sko-text-subtle",
         className,
       )}
     >

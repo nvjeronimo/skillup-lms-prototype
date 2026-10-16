@@ -14,6 +14,8 @@ export interface ScormContainerProps {
   packageLabel?: string;
   packageSizeLabel?: string;
   state?: ScormState;
+  /** The topic is already complete: launching again is a Secondary action, a review. */
+  completed?: boolean;
   onLaunch?: () => void;
   onRetry?: () => void;
   onSkip?: () => void;
@@ -32,6 +34,7 @@ export function ScormContainer({
   packageLabel,
   packageSizeLabel,
   state = "idle",
+  completed = false,
   onLaunch,
   onRetry,
   onSkip,
@@ -54,7 +57,7 @@ export function ScormContainer({
 
       {/* DS LMS / Activity · SCORM Frame (20328:3488): centred column, p 0/40,
           gap 8, r12, shadow-card, no icon in any state. Title body-large/Bold
-          (semibold until .sk-text-md-bold exists, CT-22), description
+          (semibold until .sk-text-body-large-bold exists, CT-22), description
           body-medium/Regular, both in the state's colour. */}
       <div
         className={cn(
@@ -69,21 +72,21 @@ export function ScormContainer({
       >
         {state === "loading" ? (
           <>
-            <span className="sk-text-md-semibold text-sko-text-muted">Loading activity…</span>
-            <span className="sk-text-sm-regular text-sko-text-muted">
+            <span className="sk-text-body-large-semibold text-sko-text-muted">Loading activity…</span>
+            <span className="sk-text-body-medium-regular text-sko-text-muted">
               Interactive packages can take a few seconds to start.
             </span>
           </>
         ) : state === "error" ? (
           <>
-            <span className="sk-text-md-semibold text-sko-text-error">
+            <span className="sk-text-body-large-semibold text-sko-text-error">
               This activity couldn&rsquo;t load
             </span>
-            <span className="sk-text-sm-regular max-w-md text-sko-text-error">
+            <span className="sk-text-body-medium-regular max-w-md text-sko-text-error">
               Our activity server didn&rsquo;t respond. Your progress elsewhere is safe. This
               activity is ungraded.
             </span>
-            <div className="flex flex-wrap justify-center gap-2 pt-2">
+            <div className="flex flex-wrap justify-center gap-2 pt-2 max-md:w-full max-md:[&>*]:flex-1">
               <Button variant="primary" size="md" onClick={onRetry}>
                 Try again
               </Button>
@@ -94,25 +97,26 @@ export function ScormContainer({
           </>
         ) : state === "ready" ? (
           <>
-            <span className="sk-text-md-semibold text-sko-text-muted">
+            <span className="sk-text-body-large-semibold text-sko-text-muted">
               Activity running. Interact in the frame above
             </span>
-            <span className="sk-text-sm-regular text-sko-text-muted">
+            <span className="sk-text-body-medium-regular text-sko-text-muted">
               Your progress and score are saved automatically and resume next time.
             </span>
           </>
         ) : (
           <>
-            <span className="sk-text-md-semibold text-sko-text-default">{title}</span>
+            <span className="sk-text-body-large-semibold text-sko-text-default">{title}</span>
             {packageLabel ? (
-              <span className="sk-text-sm-regular text-sko-text-default">
+              <span className="sk-text-body-medium-regular text-sko-text-default">
                 {packageLabel}
                 {packageSizeLabel ? ` · ${packageSizeLabel}` : ""}
               </span>
             ) : null}
             <div className="flex justify-center gap-2 pt-2">
-              <Button variant="primary" size="md" onClick={onLaunch}>
-                Start activity
+              {/* Once the topic is complete the footer carries the one Primary (Next). */}
+              <Button variant={completed ? "secondary" : "primary"} size="md" onClick={onLaunch}>
+                {completed ? "Open activity again" : "Start activity"}
               </Button>
             </div>
           </>

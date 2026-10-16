@@ -18,6 +18,7 @@ const config: Config = {
     extend: {
       boxShadow: {
         "sk-card": "var(--sk-shadow-card)",
+        "sk-elevation-3": "var(--sk-shadow-elevation-3)",
       },
       colors: {
         /* ── v4 element-first tokens, exported from the DS on 2026-09-23 ─────────
@@ -149,7 +150,31 @@ const config: Config = {
         display: "var(--sk-font-display)",
       },
       transitionDuration: {
-        "200": "200ms",
+        DEFAULT: "var(--motion-duration-short3)",
+        short2: "var(--motion-duration-short2)",
+        short3: "var(--motion-duration-short3)",
+        short4: "var(--motion-duration-short4)",
+        medium2: "var(--motion-duration-medium2)",
+        long2: "var(--motion-duration-long2)",
+      },
+      transitionDelay: {
+        short2: "var(--motion-duration-short2)",
+        short3: "var(--motion-duration-short3)",
+        short4: "var(--motion-duration-short4)",
+        medium2: "var(--motion-duration-medium2)",
+        long2: "var(--motion-duration-long2)",
+      },
+      transitionTimingFunction: {
+        DEFAULT: "var(--motion-easing-standard)",
+        standard: "var(--motion-easing-standard)",
+        "standard-decelerate": "var(--motion-easing-standard-decelerate)",
+        "standard-accelerate": "var(--motion-easing-standard-accelerate)",
+        emphasized: "var(--motion-easing-emphasized)",
+      },
+      translate: {
+        nudge: "var(--motion-distance-nudge)",
+        enter: "var(--motion-distance-enter)",
+        surface: "var(--motion-distance-surface)",
       },
     },
   },

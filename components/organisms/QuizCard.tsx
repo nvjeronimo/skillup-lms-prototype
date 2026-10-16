@@ -4,7 +4,8 @@ import * as React from "react";
 import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { InlineAlert, type AlertTone } from "@/components/atoms/InlineAlert";
-import { cn } from "@/lib/utils";
+import { Collapse } from "@/components/atoms/Collapse";
+import { cn, iconStroke } from "@/lib/utils";
 import { useRovingRadio } from "@/lib/useRovingRadio";
 import type { QuizOption } from "@/lib/content";
 import {
@@ -68,6 +69,13 @@ export interface QuizCardProps {
   onToggleOption?: (id: string) => void;
   /** Anchor the platform's Review control returns focus to. */
   id?: string;
+  /**
+   * Mode B: which question is on screen. The question body (question, options,
+   * alerts, hints) is keyed on it and enters from `stepDirection`'s side; the
+   * stepper and the footer stay mounted, so Back and Skip keep keyboard focus.
+   */
+  stepKey?: React.Key;
+  stepDirection?: "next" | "prev";
   className?: string;
 }
 
@@ -77,6 +85,9 @@ const DEFAULT_OPTIONS: QuizOption[] = [
   { id: "c", label: "Eliminate all documentation" },
   { id: "d", label: "Replace all staff with automation" },
 ];
+
+/** The marker's dot or tick growing in from its centre. */
+const MARK_MOTION = "transition-transform duration-short3 ease-standard-decelerate";
 
 /**
  * The answer marker — DS Checkbox `Type=Radio` (circle) / `Type=Checkbox` (square).
@@ -95,6 +106,11 @@ const DEFAULT_OPTIONS: QuizOption[] = [
  * Checkbox. Checked is bg/primary with no stroke and an icon/on-primary mark (a
  * 6×6 dot, or a 12px tick). Disabled is bg/faint on border/disabled at
  * opacity 40, as the DS draws it (and as LessonBlocks OptionRadio does).
+ *
+ * Motion: the box changes colour (short3, standard) and the dot or tick grows in
+ * from its centre (short3, standard-decelerate). Both are always rendered and
+ * scaled to 0 when unchecked, so un-picking shrinks them back. Reduced motion
+ * keeps transform out of the transitioned properties, so the mark just appears.
  */
 function OptionMarker({
   multiSelect,
@@ -109,7 +125,7 @@ function OptionMarker({
     <span
       aria-hidden
       className={cn(
-        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border transition-colors",
+        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border transition-colors duration-short3 ease-standard",
         multiSelect ? "rounded" : "rounded-full",
         checked
           ? "border-transparent bg-sko-bg-primary"
@@ -118,14 +134,22 @@ function OptionMarker({
             : "border-sko-border-default bg-sko-bg-page",
       )}
     >
-      {checked ? (
-        multiSelect ? (
-          <Icon icon={Check} size={12} className="text-sko-icon-on-primary" />
-        ) : (
-          // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
-          <span className="h-1.5 w-1.5 rounded-full bg-current text-sko-icon-on-primary" />
-        )
-      ) : null}
+      {multiSelect ? (
+        <Icon
+          icon={Check}
+          size={12}
+          className={cn("text-sko-icon-on-primary", MARK_MOTION, checked ? "scale-100" : "scale-0")}
+        />
+      ) : (
+        // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
+        <span
+          className={cn(
+            "h-1.5 w-1.5 rounded-full bg-current text-sko-icon-on-primary",
+            MARK_MOTION,
+            checked ? "scale-100" : "scale-0",
+          )}
+        />
+      )}
     </span>
   );
 }
@@ -175,7 +199,8 @@ function verdictAlert(
         tone: "warning",
         title: "Saved, not submitted",
         notice: true,
-        description: "Your answer is stored, but it has not been graded and scores nothing until you submit it.",
+        description:
+          "Your answer is stored, but it has not been graded and scores nothing until you submit it.",
       };
     case "Results withheld":
       return { tone: "info", title: "Answer submitted", notice: true };
@@ -269,6 +294,32 @@ const OPTION_ROW: Record<
 };
 
 /**
+ * The Correct row's tick: lucide's check at 24px, drawn as one path so its stroke
+ * can be animated (the CompletionStatus pattern). It draws at once, with no
+ * chain delay. Reduced motion shows it whole. Not animated: lucide's own check.
+ */
+function DrawnCheck({ animate }: { animate: boolean }) {
+  if (!animate)
+    return <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" aria-hidden />;
+  return (
+    <svg
+      aria-hidden
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={iconStroke(24)}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0 text-sko-icon-success"
+    >
+      <path className="sk-draw-check-immediate" d="M4 12l5 5L20 6" pathLength={1} />
+    </svg>
+  );
+}
+
+/**
  * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
  * question submits and scores independently.
  *
@@ -302,10 +353,24 @@ export function QuizCard({
   selectedIds = [],
   onToggleOption,
   id,
+  stepKey,
+  stepDirection = "next",
   className,
 }: QuizCardProps) {
   const revealed = RESULT_STATES.includes(state);
-  const earned = state === "Correct" ? points : state === "Partially correct" ? Math.max(1, points - 1) : 0;
+  // The verdict onsets (tick draw, cross fade, alert fade) play only when the state
+  // changes while this question is on screen. A question shown again with its answer
+  // already in (Back, Retry) renders still. The ref is reset on each new step and only
+  // ever flips to true, so a repeated render (StrictMode) gives the same answer.
+  const onsetRef = React.useRef({ stepKey, state, live: false });
+  if (onsetRef.current.stepKey !== stepKey) {
+    onsetRef.current = { stepKey, state, live: false };
+  } else if (onsetRef.current.state !== state) {
+    onsetRef.current = { stepKey, state, live: true };
+  }
+  const animateVerdict = onsetRef.current.live;
+  const earned =
+    state === "Correct" ? points : state === "Partially correct" ? Math.max(1, points - 1) : 0;
   // The card owns a footer only when it is the problem — that is exactly the
   // A-1/A-2 split, so it also decides whether the verdict carries a score. No
   // new property: the contract has six and this is derived from one of them.
@@ -345,13 +410,15 @@ export function QuizCard({
           {/* The block's display_name. Authored text — it differs per course,
               and in ours it is the same generic line above every question. */}
           {showPlatformPrompt ? (
-            <span className="sk-text-md-semibold text-sko-text-default">{platformPrompt}</span>
+            <span className="sk-text-body-large-semibold text-sko-text-default">
+              {platformPrompt}
+            </span>
           ) : null}
 
           {/* `.problem-progress`. Empty in every course we can read, so off in
               A-1. In the bucket it carries the score for the whole set. */}
           {showPoints ? (
-            <span className="sk-text-xs-medium text-sko-text-subtle">
+            <span className="sk-text-body-small-medium text-sko-text-subtle">
               {typeof pointsEarned === "number"
                 ? `${pointsEarned}/${points} points (${graded ? "graded" : "ungraded"})`
                 : `${points} point${points === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -364,94 +431,140 @@ export function QuizCard({
           the Question. */}
       {showProgress ? progress : null}
 
-      {/* body-large/Medium in text/default in all nine states, prompt or not. */}
-      <h3 id={questionId} className="sk-text-md-medium text-sko-text-default">{question}</h3>
-
-      {multiSelect ? (
-        <span id={hintId} className="sk-text-2xs-medium -mt-2 uppercase tracking-wide text-sko-text-subtle">
-          Select all that apply
-        </span>
-      ) : null}
-
+      {/* The question body. In mode B it is keyed on the step and enters from
+          the side the learner moved toward; elsewhere it is a plain wrapper. */}
       <div
-        role={multiSelect ? "group" : "radiogroup"}
-        aria-labelledby={questionId}
-        aria-describedby={multiSelect ? hintId : undefined}
-        className="flex flex-col gap-2"
+        key={stepKey}
+        className={cn(
+          "flex flex-col gap-5",
+          stepKey !== undefined &&
+            (stepDirection === "next" ? "sk-animate-step-next" : "sk-animate-step-prev"),
+        )}
       >
-        {options.map((opt, i) => {
-          const isSelected = selectedIds.includes(opt.id);
-          const rowState = optionState(state, isSelected, Boolean(opt.correct), multiSelect);
-          const row = OPTION_ROW[rowState];
-          const plain = rowState === "Unanswered";
-          // `Show state-check-icon` hides the ✓, the ✗ and the Correctly-unselected note.
-          const showNote = row.note && (showStateIcon || rowState !== "Correctly unselected");
-          const showMarker = showStateIcon ? row.marker : undefined;
-          return (
-            <div key={opt.id}>
-              <button
-                type="button"
-                {...(multiSelect ? {} : roving.itemProps(i))}
-                onClick={() => !revealed && onToggleOption?.(opt.id)}
-                disabled={revealed}
-                role={multiSelect ? "checkbox" : "radio"}
-                aria-checked={isSelected}
-                data-option-state={rowState}
-                className={cn(
-                  "sk-text-sm-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
-                  row.box,
-                  plain && !revealed ? "hover:bg-sko-bg-subtle" : null,
-                )}
-              >
-                <OptionMarker
-                  multiSelect={multiSelect}
-                  checked={isSelected}
-                  disabled={rowState === "Disabled"}
-                />
-                <span className="flex-1">{opt.label}</span>
-                {/* A text marker where a tick would mislead. */}
-                {showNote ? (
-                  <span className={cn("sk-text-xs-medium mt-0.5 shrink-0", row.noteTone)}>{row.note}</span>
-                ) : null}
-                {showMarker === "tick" ? (
-                  <>
-                    <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" aria-hidden />
-                    <span className="sr-only">, correct</span>
-                  </>
-                ) : null}
-                {showMarker === "cross" ? (
-                  <>
-                    <Icon icon={X} size={24} className="shrink-0 text-sko-icon-error" aria-hidden />
-                    <span className="sr-only">, incorrect</span>
-                  </>
-                ) : null}
-              </button>
+        {/* body-large/Medium in text/default in all nine states, prompt or not. */}
+        <h3 id={questionId} className="sk-text-body-large-medium text-sko-text-default">
+          {question}
+        </h3>
+
+        {multiSelect ? (
+          <span
+            id={hintId}
+            className="sk-text-label-small-medium -mt-2 uppercase tracking-wide text-sko-text-subtle"
+          >
+            Select all that apply
+          </span>
+        ) : null}
+
+        <div
+          role={multiSelect ? "group" : "radiogroup"}
+          aria-labelledby={questionId}
+          aria-describedby={multiSelect ? hintId : undefined}
+          className="flex flex-col gap-2"
+        >
+          {options.map((opt, i) => {
+            const isSelected = selectedIds.includes(opt.id);
+            const rowState = optionState(state, isSelected, Boolean(opt.correct), multiSelect);
+            const row = OPTION_ROW[rowState];
+            const plain = rowState === "Unanswered";
+            // `Show state-check-icon` hides the ✓, the ✗ and the Correctly-unselected note.
+            const showNote = row.note && (showStateIcon || rowState !== "Correctly unselected");
+            const showMarker = showStateIcon ? row.marker : undefined;
+            return (
+              <div key={opt.id}>
+                <button
+                  type="button"
+                  {...(multiSelect ? {} : roving.itemProps(i))}
+                  onClick={() => !revealed && onToggleOption?.(opt.id)}
+                  disabled={revealed}
+                  role={multiSelect ? "checkbox" : "radio"}
+                  aria-checked={isSelected}
+                  data-option-state={rowState}
+                  className={cn(
+                    "sk-text-body-medium-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors duration-short3 ease-standard",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
+                    row.box,
+                    plain && !revealed ? "hover:bg-sko-bg-subtle" : null,
+                  )}
+                >
+                  <OptionMarker
+                    multiSelect={multiSelect}
+                    checked={isSelected}
+                    disabled={rowState === "Disabled"}
+                  />
+                  <span className="flex-1">{opt.label}</span>
+                  {/* A text marker where a tick would mislead. */}
+                  {showNote ? (
+                    <span className={cn("sk-text-body-small-medium mt-0.5 shrink-0", row.noteTone)}>
+                      {row.note}
+                    </span>
+                  ) : null}
+                  {/* Onsets, no movement: the tick draws itself the moment the
+                    verdict lands; the cross only fades in. Nothing shakes. */}
+                  {showMarker === "tick" ? (
+                    <>
+                      <DrawnCheck animate={animateVerdict} />
+                      <span className="sr-only">, correct</span>
+                    </>
+                  ) : null}
+                  {showMarker === "cross" ? (
+                    <>
+                      <Icon
+                        icon={X}
+                        size={24}
+                        className={cn(
+                          "shrink-0 text-sko-icon-error",
+                          animateVerdict && "sk-animate-fade",
+                        )}
+                        aria-hidden
+                      />
+                      <span className="sr-only">, incorrect</span>
+                    </>
+                  ) : null}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Keyed on the title, so a new verdict or notice fades in rather than
+          the text changing under the learner (only when it lands in view). */}
+        {alert ? (
+          <InlineAlert
+            key={alert.title}
+            className={animateVerdict ? "sk-animate-fade" : undefined}
+            tone={alert.tone}
+            title={alert.title}
+            description={
+              alert.notice
+                ? alert.description
+                : showExplanation
+                  ? chosen
+                      .filter((o) => o.feedback)
+                      .map((o) => o.feedback)
+                      .join(" ")
+                  : undefined
+            }
+          />
+        ) : null}
+
+        {/* The <solution>, revealed only when Show answer is pressed. It opens
+          rather than appears (grid rows 0fr → 1fr, content fading in), and
+          closes the same way on Reset. The -mt-5/pt-5 pair cancels the card's
+          gap while it is closed, so a closed explanation takes no space. */}
+        {solution ? (
+          <Collapse open={state === "Answer revealed"} className="-mt-5">
+            <div
+              className={cn(
+                "pt-5 transition-opacity duration-medium2 ease-standard-decelerate",
+                state === "Answer revealed" ? "opacity-100" : "opacity-0",
+              )}
+            >
+              <InlineAlert tone="answer" title="Answer" description={solution} />
             </div>
-          );
-        })}
-      </div>
+          </Collapse>
+        ) : null}
 
-      {alert ? (
-        <InlineAlert
-          tone={alert.tone}
-          title={alert.title}
-          description={
-            alert.notice
-              ? alert.description
-              : showExplanation
-                ? chosen.filter((o) => o.feedback).map((o) => o.feedback).join(" ")
-                : undefined
-          }
-        />
-      ) : null}
-
-      {/* The <solution>, revealed only when Show answer is pressed. */}
-      {state === "Answer revealed" && solution ? (
-        <InlineAlert tone="answer" title="Answer" description={solution} />
-      ) : null}
-
-      {/* One alert that grows, not one per hint: `get_demand_hint` re-renders
+        {/* One alert that grows, not one per hint: `get_demand_hint` re-renders
           every hint from the first to the current one into a single list, so
           hint 1 is still on screen when hint 3 arrives. There is no Previous —
           nothing has been taken away to go back to.
@@ -460,40 +573,41 @@ export function QuizCard({
           `Next Hint` lives in here once the first hint shows. It disables on
           exhaustion, never on first use — with three hints authored it stays
           live after the first press. */}
-      {showHint && hints.length > 0 && hintIndex >= 0 ? (
-        <InlineAlert
-          tone="hint"
-          title=""
-          action={
-            <button
-              type="button"
-              onClick={onNextHint}
-              disabled={hintIndex + 1 >= hints.length}
-              // DS Next Hint: a link button with a 1px bottom stroke in every
-              // state (border/disabled once the hints run out).
-              className={cn(
-                "sk-text-sm-semibold border-b px-0.5 py-1",
-                hintIndex + 1 >= hints.length
-                  ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
-                  : "border-sko-border-primary text-sko-text-primary",
-              )}
-            >
-              Next Hint
-            </button>
-          }
-        >
-          <ol className="flex flex-col gap-1">
-            {hints.slice(0, hintIndex + 1).map((h, i) => (
-              <li key={i} className="sk-text-sm-regular text-sko-text-default">
-                <span className="sk-text-sm-semibold text-sko-text-default">
-                  Hint ({i + 1} of {hints.length}):{" "}
-                </span>
-                {h}
-              </li>
-            ))}
-          </ol>
-        </InlineAlert>
-      ) : null}
+        {showHint && hints.length > 0 && hintIndex >= 0 ? (
+          <InlineAlert
+            tone="hint"
+            title=""
+            action={
+              <button
+                type="button"
+                onClick={onNextHint}
+                disabled={hintIndex + 1 >= hints.length}
+                // DS Next Hint: a link button with a 1px bottom stroke in every
+                // state (border/disabled once the hints run out).
+                className={cn(
+                  "sk-text-body-medium-semibold border-b px-0.5 py-1",
+                  hintIndex + 1 >= hints.length
+                    ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
+                    : "border-sko-border-primary text-sko-text-primary",
+                )}
+              >
+                Next Hint
+              </button>
+            }
+          >
+            <ol className="flex flex-col gap-1">
+              {hints.slice(0, hintIndex + 1).map((h, i) => (
+                <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
+                  <span className="sk-text-body-medium-semibold text-sko-text-default">
+                    Hint ({i + 1} of {hints.length}):{" "}
+                  </span>
+                  {h}
+                </li>
+              ))}
+            </ol>
+          </InlineAlert>
+        ) : null}
+      </div>
 
       {showFooterQuestions && footer ? <QuizFooterActions {...footer} /> : null}
     </div>

@@ -9,6 +9,7 @@ import { FilterChip } from "@/components/atoms/FilterChip";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { useLmsStore } from "@/lib/store";
 import { tsToSeconds } from "@/lib/utils";
+import { staggerStyle } from "@/lib/motion/stagger";
 
 export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug: string }) {
   const router = useRouter();
@@ -20,6 +21,16 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
 
   const [query, setQuery] = React.useState("");
   const [activeTag, setActiveTag] = React.useState<string | null>(null);
+  const chipsRef = React.useRef<HTMLDivElement>(null);
+  // A #tag clicked inside a note remounts the list (it is keyed on the tag) and with it the
+  // focused button: focus moves to the tag's chip, which now shows the filter.
+  const focusChip = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!focusChip.current) return;
+    focusChip.current = false;
+    chipsRef.current?.querySelector<HTMLButtonElement>('button[aria-pressed="true"]')?.focus();
+  }, [activeTag]);
 
   const allTags = Array.from(new Set(notes.flatMap((n) => n.tags)));
 
@@ -60,13 +71,13 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search notes…"
-          className="sk-text-md-regular flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder"
+          className="sk-text-body-large-regular flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder"
           aria-label="Search notes"
         />
       </div>
 
       {allTags.length ? (
-        <div className="flex flex-wrap gap-1.5">
+        <div ref={chipsRef} className="flex flex-wrap gap-1.5">
           <FilterChip label="All" active={!activeTag} onClick={() => setActiveTag(null)} />
           {allTags.map((tag) => (
             <FilterChip
@@ -79,33 +90,41 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
         </div>
       ) : null}
 
-      {filtered.length ? (
-        filtered.map((note) => (
-          <NoteItem
-            key={note.id}
-            ts={note.ts}
-            anchorQuote={note.anchorQuote}
-            text={note.text}
-            tags={note.tags}
-            editedLabel="Edited recently"
-            onClick={() => goToLine(note.ts, note.transcriptLineId)}
-            onEdit={() => openNoteEditor({ noteId: note.id })}
-            onDelete={() => {
-              if (window.confirm("Delete this note?")) deleteNote(note.id);
-            }}
-            onTagClick={(t) => setActiveTag(t)}
-          />
-        ))
-      ) : (
-        <p className="sk-text-sm-regular py-6 text-center text-sko-text-subtle">
-          No notes match your filter.
-        </p>
-      )}
+      {/* A new tag cross-fades the list; the notes rise one after the other. */}
+      <div key={activeTag ?? ""} className="sk-animate-fade sk-enter-only flex flex-col gap-3">
+        {filtered.length ? (
+          filtered.map((note, i) => (
+            <div key={note.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(i, filtered.length)}>
+              <NoteItem
+                ts={note.ts}
+                anchorQuote={note.anchorQuote}
+                text={note.text}
+                tags={note.tags}
+                editedLabel="Edited recently"
+                onClick={() => goToLine(note.ts, note.transcriptLineId)}
+                onEdit={() => openNoteEditor({ noteId: note.id })}
+                onDelete={() => {
+                  if (window.confirm("Delete this note?")) deleteNote(note.id);
+                }}
+                onTagClick={(t) => {
+                  if (t === activeTag) return;
+                  focusChip.current = true;
+                  setActiveTag(t);
+                }}
+              />
+            </div>
+          ))
+        ) : (
+          <p className="sk-text-body-medium-regular py-6 text-center text-sko-text-subtle">
+            No notes match your filter.
+          </p>
+        )}
+      </div>
 
       <div className="mt-2 flex items-start gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2.5">
         <Icon icon={Info} size={16} className="mt-0.5 text-sko-icon-subtle" />
-        <p className="sk-text-sm-regular text-sko-text-muted">
-          Create notes from the Transcript tab: click <span className="sk-text-sm-semibold">+ Note</span> on any line.
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
+          Create notes from the Transcript tab: click <span className="sk-text-body-medium-semibold">+ Note</span> on any line.
         </p>
       </div>
     </div>

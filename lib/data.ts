@@ -1,16 +1,16 @@
 import raw from "./data-model.json";
+import { COURSES } from "./courses";
+import { DEFAULT_TOPIC_ID, flattenOutline, moduleTopics, resumeTopicOf } from "./courses/outline";
 import type {
   Course,
   DataModel,
   DownloadFile,
   FlatTopic,
-  Module,
   Note,
   NotificationModel,
   Partner,
   SavedNoteModel,
   SavedTopicModel,
-  Topic,
   User,
 } from "./types";
 
@@ -112,53 +112,28 @@ export const threeLevelCourse: Course = {
   ],
 };
 
-/** A module's topics whether stored flat or grouped under lessons. */
+/* ----------------------------------------------------------------------------
+ * Platform courses with an outline of their own (asked by Nelson on 9 Oct 2026).
+ * Each one lives in its folder under lib/courses and is listed in lib/courses/index
+ * (how to add one: lib/courses/README.md). Every other course of the catalogue still
+ * plays `course` above under its own title (lib/platform/catalog). Ids are prefixed so
+ * they stay unique across courses: `getCourseForTopic` finds a course by topic id alone.
+ * ---------------------------------------------------------------------------- */
+
 /** Partners for the Course Header: the explicit list, else the provider alone. */
 export function coursePartners(c: Course): Partner[] {
   return c.partners ?? [{ name: c.provider }];
 }
 
-export function moduleTopics(mod: Module): Topic[] {
-  if (mod.topics) return mod.topics;
-  if (mod.lessons) return mod.lessons.flatMap((l) => l.topics);
-  return [];
-}
+export { moduleTopics };
 
 /** Flatten every topic in course order, with module/lesson context + index. */
 export function flatTopics(c: Course = course): FlatTopic[] {
-  const out: FlatTopic[] = [];
-  let index = 0;
-  for (const mod of c.modules) {
-    if (mod.lessons) {
-      for (const lesson of mod.lessons) {
-        for (const topic of lesson.topics) {
-          out.push({
-            ...topic,
-            moduleId: mod.id,
-            moduleLabel: mod.label,
-            moduleTitle: mod.title,
-            lessonLabel: lesson.label,
-            index: index++,
-          });
-        }
-      }
-    } else if (mod.topics) {
-      for (const topic of mod.topics) {
-        out.push({
-          ...topic,
-          moduleId: mod.id,
-          moduleLabel: mod.label,
-          moduleTitle: mod.title,
-          index: index++,
-        });
-      }
-    }
-  }
-  return out;
+  return flattenOutline(c);
 }
 
 /** Every course the app can render, addressable by slug. */
-export const allCourses: Course[] = [course, fourLevelCourse, threeLevelCourse];
+export const allCourses: Course[] = [course, fourLevelCourse, threeLevelCourse, ...COURSES.map((c) => c.outline)];
 export const coursesBySlug: Record<string, Course> = Object.fromEntries(
   allCourses.map((c) => [c.slug, c]),
 );
@@ -205,8 +180,18 @@ export function topicPath(topicId: string, c: Course = course): string {
 }
 
 /* ---- Default topic the app redirects to (the Active video) ---- */
-export const DEFAULT_TOPIC_ID = "m3-t1";
+export { DEFAULT_TOPIC_ID };
 export const DEFAULT_COURSE_SLUG = course.slug;
+
+/**
+ * The topic a course's player opens on (`resumeUrl`): the one its outline flags `active`,
+ * else its first topic still to do. A slug with no outline of its own plays the sample
+ * course, so it opens where the sample does.
+ */
+export function resumeTopicId(slug: string): string {
+  const own = coursesBySlug[slug];
+  return own ? resumeTopicOf(own) : DEFAULT_TOPIC_ID;
+}
 
 /* ---- Certificate (Section 07) ---- */
 export const certificate = {
@@ -308,7 +293,7 @@ export const savedTopics: SavedTopicModel[] = [
     id: "st1",
     topicId: "m3-t3",
     topicType: "Reading",
-    duration: "approx. 8 min read",
+    duration: "8 min read approx.",
     title: "The measure phase",
     path: "Six Sigma · DMAIC for process improvement · Define and measure",
     savedAt: "2 days ago",
@@ -326,7 +311,7 @@ export const savedTopics: SavedTopicModel[] = [
     id: "st3",
     topicId: "m3-t7",
     topicType: "Graded Assignment",
-    duration: "approx. 20 min",
+    duration: "20 min approx.",
     title: "The control phase",
     path: "Six Sigma · DMAIC for process improvement · Analyze, improve, and control",
     savedAt: "1 week ago",

@@ -25,5 +25,5 @@ figma.connect(Avatar, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?node-
       False: "none",
     }),
   },
-  example: ({ size, status }) => <Avatar name="Olivia Rhye" size={size} status={status} />,
+  example: ({ size, status }) => <Avatar name="John Smith" size={size} status={status} />,
 });

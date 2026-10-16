@@ -3,6 +3,7 @@
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
+import { courseProgressPct } from "@/lib/courses/outline";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
@@ -10,6 +11,7 @@ import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
 import { TopicFooterMeta } from "@/components/molecules/TopicFooterMeta";
 import { TopicActionBar, type TopicActionState } from "@/components/molecules/TopicActionBar";
+import { TopicEndActionContext } from "@/lib/topicEndAction";
 import { TopicFooterNav } from "@/components/organisms/TopicFooterNav";
 import type { Milestone } from "@/components/organisms/CourseProgressionButton";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
@@ -20,16 +22,31 @@ import { Icon } from "@/lib/icons";
 import { MessagesSquare } from "lucide-react";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
 import { CourseCompleteModal } from "@/components/organisms/CourseCompleteModal";
+import { CompletionQuestionModal } from "@/components/organisms/CompletionQuestionModal";
 import { Toast } from "@/components/organisms/Toast";
+import { nextCourseInProgram, playerCourse } from "@/lib/platform/catalog";
+import { coursePageHref } from "@/lib/platform/hrefs";
+import { MY_LEARNING_HREF, courseHomeHref } from "@/lib/platform/routes";
 import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { isFreshCompletion } from "@/lib/motion/completion";
+import { inertProps } from "@/lib/inert";
 import {
+  completesByHand,
+  completionNoun,
+  completionReason,
+  getPartnerLab,
   topicFamily,
   topicDescription,
   getDownloads,
+  getCaptions,
+  getMediaSeconds,
   getTranscript,
   getDiscussionThreads,
   getByline,
@@ -39,6 +56,8 @@ import {
   getCourseBySlug,
   getTopic,
   getAdjacentTopics,
+  getCourseForTopic,
+  flatTopics,
   notifications,
   savedNotes,
   savedTopics,
@@ -46,6 +65,7 @@ import {
   user,
 } from "@/lib/data";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
+
 
 export interface PlayerShellProps {
   courseSlug: string;
@@ -83,11 +103,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
   const completedTopics = useLmsStore((s) => s.completedTopics);
+  const lastCompleted = useLmsStore((s) => s.lastCompleted);
+  const submittedTopics = useLmsStore((s) => s.submittedTopics);
   const markComplete = useLmsStore((s) => s.markComplete);
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
-  const activeCourse = getCourseBySlug(courseSlug);
+  // A catalogue course plays the sample content under its own slug and title.
+  const activeCourse = playerCourse(courseSlug);
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
   const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
@@ -104,12 +127,18 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
   const [completeOpen, setCompleteOpen] = React.useState(false);
+  const completionFlow = useLmsStore((s) => s.completionFlow);
+  const labProgress = useLmsStore((s) => s.labState[topicId]);
+  const labLaunch = useLmsStore((s) => s.labLaunch);
+  /** The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026). */
+  const [askOpen, setAskOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
   const [videoDocked, setVideoDocked] = React.useState(false);
 
   // Keep currentTopicId in sync with the route + emit topic_enter.
   React.useEffect(() => {
     setCurrentTopic(topicId);
+    setAskOpen(false);
     track("topic_enter", { topicId });
   }, [topicId, setCurrentTopic]);
 
@@ -151,11 +180,18 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // lab, finish the ORA journey), so they get no Mark-as-Complete bar — it would
   // duplicate the action they already own. Passive content (video / reading /
   // podcast / discussion) gets the completion action in the FOOTER only.
+  // A partner lab (Google, Microsoft) is the exception among labs: its content has no
+  // action of its own and nothing comes back from the partner, so the learner marks it
+  // complete here, like a Reading.
+  const partnerLab = getPartnerLab(topic);
+  const labOpenedAt = labProgress?.openedAt;
+  // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
+  const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
     family === "activity" ||
-    family === "lab" ||
+    (family === "lab" && !partnerLab) ||
     family === "ora";
   // VILT never exposes a manual "Mark as complete". Completion comes from one of
   // two paths, whichever happens first: attendance on the live (join + ≥50%,
@@ -169,9 +205,22 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const isCompleted = completedTopics.has(topicId);
   const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (
-    <TopicActionBar state={actionState} onComplete={() => markComplete(topicId)} />
+    <TopicActionBar
+      state={actionState}
+      // The first beat of the completion chain: the badge pops when the topic was completed now.
+      fresh={isFreshCompletion(lastCompleted, topicId, Date.now())}
+      onComplete={() => markComplete(topicId)}
+      // On a partner lab that has not been opened yet, the launch button is the primary action.
+      secondary={Boolean(partnerLab) && !labOpenedAt && !labInPage}
+    />
   );
-  const showAction = !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
+  // The rule since 12 Oct 2026 (lab-third-party-platforms.md §4, after Navdeep's comments): on a
+  // topic the platform cannot measure, Mark as Complete stays at the end of the content, and Next
+  // asks whether the learner has completed it when they move on without the button. The demo
+  // menu can switch the question off, which leaves the button alone as it was before.
+  const asksOnNext = completionFlow === "ask-on-next" && completesByHand(topic) && !isLocked;
+  const showAction =
+    !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
   // in the footer, never in the header — a header CTA invites premature
   // completion. The header's top-right slot carries the ✓ "Marked as completed"
@@ -180,11 +229,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // The end-of-content action only belongs at the end of the CONTENT. The
   // Downloads and Notes tabs are short lists, so a second button there sits
   // in the same viewport as the header one and just reads as duplication.
-  const bottomAction = showAction && activeTab === "transcript" ? (
-    <div className="mt-6 flex justify-end border-t border-sko-border-subtle pt-5">
-      {renderAction()}
-    </div>
-  ) : null;
+  // Since 13 Oct 2026 (Figma `Feedback-Mark`) it sits in the feedback row, on the right, and
+  // drops under the feedback on a phone: no row of its own. Once the topic is completed the row
+  // is feedback only, because the status is in the header. The one exception is a video on a
+  // phone, where the header shows no status: the completed badge stays in the row there.
+  const endAction =
+    showAction && activeTab === "transcript" && (!isCompleted || (isVideo && bp === "mobile"))
+      ? renderAction()
+      : null;
 
   // Optional in-context discussion footer (Jul 29 decision): Discussion is no
   // longer a topic type — instead, a "Discuss this topic" region deep-links into
@@ -196,8 +248,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         <div className="flex items-center gap-2.5">
           <Icon icon={MessagesSquare} size={18} className="text-sko-text-primary" />
           <div className="flex flex-col">
-            <span className="sk-text-sm-semibold text-sko-text-default">Discuss this topic</span>
-            <span className="sk-text-xs-regular text-sko-text-subtle">
+            <span className="sk-text-body-medium-semibold text-sko-text-default">Discuss this topic</span>
+            <span className="sk-text-body-small-regular text-sko-text-subtle">
               Join the conversation with your cohort.
             </span>
           </div>
@@ -216,14 +268,38 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       <TopicFooterMeta
         byline={FOOTER_AUTHOR_FAMILIES.includes(family) ? getByline(topic) : undefined}
         onReport={() => showToast("Thanks, we'll take a look.")}
+        action={endAction ?? undefined}
       />
     ) : null;
 
   // Footer progression: Next normally, but "Go to next Module" at a module boundary
-  // and "Go to next Course" at the final topic.
+  // and "Go to next Course" at the final topic. The milestone ("MODULE COMPLETED") only
+  // shows once this topic is done: on an unfinished last topic the footer stays a plain Next.
+  // The course counts as complete when every topic the learner can finish in the prototype
+  // is finished. Left out: locked topics, types not available yet and VILT (completes by
+  // attendance). A quiz completes when it is submitted; a graded assignment counts once it
+  // is submitted, since its review happens outside the prototype.
+  const courseTopics = flatTopics(getCourseForTopic(topicId));
+  const countsAsDone = (t: (typeof courseTopics)[number]) => {
+    const f = topicFamily(t.type);
+    return (
+      t.locked ||
+      f === "blocked" ||
+      f === "vilt" ||
+      completedTopics.has(t.id) ||
+      (f === "graded" && submittedTopics.has(t.id))
+    );
+  };
+  const courseDone = courseTopics.every(countsAsDone);
+  // What the course would be once this topic is completed: on the last topic, "Yes, I've
+  // finished" can be the answer that finishes the course.
+  const courseDoneAfterThis = courseTopics.every((t) => t.id === topicId || countsAsDone(t));
+  const asksNow = asksOnNext && !isCompleted;
   const milestone: Milestone = !next
-    ? "Course"
-    : next.moduleId !== topic.moduleId
+    ? courseDone
+      ? "Course"
+      : "Topic"
+    : isCompleted && next.moduleId !== topic.moduleId
       ? "Module"
       : "Topic";
 
@@ -254,9 +330,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     blocked: "About",
   };
 
+  // Reading has no Downloads tab (17 Sep decision): its files are linked in the body, and
+  // with one option left the tab bar is hidden.
   const tabs = isVideo
     ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
-    : [{ ...transcriptTab, label: PRIMARY_LABEL[family] }, downloadsTab];
+    : family === "reading" || partnerLab
+      ? // Same rule for a partner lab: it has no files of ours, so no Downloads tab.
+        [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
+      : [{ ...transcriptTab, label: PRIMARY_LABEL[family] }, downloadsTab];
+  const showTabs = tabs.length > 1;
 
   function navigateTopic(id: string) {
     setCurrentTopic(id);
@@ -271,7 +353,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     ? getTranscript(topic).find((l) => l.id === noteEditor.lineId)
     : undefined;
 
-  const durationSeconds = 200;
+  const durationSeconds = getMediaSeconds(topic);
 
   return (
     <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
@@ -284,6 +366,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           setMobileDrawerOpen(true);
         }}
         menuExpanded={bp === "mobile" && mobileDrawerOpen}
+        progressPct={courseProgressPct(activeCourse, completedTopics)}
         menuControls={COURSE_DRAWER_ID}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
@@ -292,7 +375,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         showTheme
         theme={theme === "dark" ? "Dark" : "Light"}
         onTheme={toggleTheme}
-        onClose={() => router.push("/")}
+        // Leaving the player goes back to the page of the course it was opened for.
+        onClose={() => router.push(courseHomeHref(courseSlug))}
         accountMenu={
           <DemoControlsMenu
             userName={user.name}
@@ -314,6 +398,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             collapsedModules={collapsedModules}
             bookmarks={bookmarks}
             completed={completedTopics}
+            lastCompleted={lastCompleted}
             onToggleSidebar={toggleSidebar}
             onToggleModule={toggleModule}
             onSelectTopic={navigateTopic}
@@ -327,26 +412,27 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page outline-none"
         >
           <div
-            className="sk-scroll flex-1 overflow-y-auto"
+            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto"
             onScroll={(e) => {
               const next = e.currentTarget.scrollTop > 8;
               setVideoDocked((prev) => (prev === next ? prev : next));
             }}
           >
             {isLocked ? (
-              <div className="w-full p-4">{children}</div>
+              <div className={cn("w-full", CONTENT_PAD[bp])}>{children}</div>
             ) : isVideo ? (
               <>
                 {/* Sticky player band — the video stays visible at the top and
                     docks (shrinks) once the content scrolls past the top. */}
                 <div
                   className={cn(
-                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-200 ease-out",
-                    videoDocked ? "px-0 pb-2 pt-0" : "px-4 pb-3 pt-4",
+                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate",
+                    videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
                   )}
                 >
                   <VideoPlayer
                     durationSeconds={durationSeconds}
+                    captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
                     heightPx={videoHeight}
                     docked={videoDocked}
@@ -358,7 +444,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   />
                 </div>
                 {showResume ? (
-                  <div className="px-4 pb-1 pt-1">
+                  <div className={cn(CONTENT_PX[bp], "pb-1 pt-1")}>
                     <ResumeBanner
                       seconds={storedResume}
                       onResume={() => {
@@ -375,12 +461,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     />
                   </div>
                 ) : null}
-                <div className="px-4 pb-4">
+                <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp])}>
                   {/* Topic title below the player (ICP Phase 1 canonical layout).
                       The top-right action is hidden on mobile — it lives only at
                       the end of the content there. */}
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <h1 className="sk-text-display-xs-semibold min-w-0 text-sko-text-default">
+                    <h1 className="sk-text-headline-small-semibold min-w-0 text-sko-text-default">
                       {topic.title}
                     </h1>
                     {headerStatus && bp !== "mobile" ? (
@@ -388,19 +474,23 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     ) : null}
                   </div>
                   <div className="mt-4">
-                    <ContentTabs
-                      tabs={tabs}
-                      active={activeTab}
-                      variant={bp === "mobile" ? "select" : "tabs"}
-                    />
-                    {children}
+                    {showTabs ? (
+                      <ContentTabs
+                        tabs={tabs}
+                        active={activeTab}
+                        variant={bp === "mobile" ? "select" : "tabs"}
+                      />
+                    ) : null}
+                    {/* The transcript tab owns the feedback row, so it receives the action. */}
+                    <TopicEndActionContext.Provider value={endAction}>
+                      {children}
+                    </TopicEndActionContext.Provider>
                   </div>
-                  {bottomAction}
                   {discussFooter}
                 </div>
               </>
             ) : (
-              <div className="w-full p-4">
+              <div className={cn("w-full", CONTENT_PAD[bp])}>
                 {/* Completion action lives on the meta row (right-aligned), so the
                     title keeps the full content width. */}
                 {/* Phase 1 quiz handoff §7: on a quiz the header carries title,
@@ -416,12 +506,18 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   description={topicDescription(topic)}
                   rightSlot={headerStatus ?? undefined}
                 />
-                <div className="mt-5">
-                  <ContentTabs tabs={tabs} active={activeTab} />
+                {/* A partner lab opens with the divider Reading uses, 12 under the header. */}
+                <div className={partnerLab ? "mt-3" : "mt-5"}>
+                  {showTabs ? (
+                    <ContentTabs
+                      tabs={tabs}
+                      active={activeTab}
+                      variant={bp === "mobile" ? "select" : "tabs"}
+                    />
+                  ) : null}
                   {children}
                 </div>
                 {footerMeta}
-                {bottomAction}
                 {discussFooter}
               </div>
             )}
@@ -433,10 +529,16 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             title={topic.title}
             milestone={milestone}
             previousDisabled={!previous}
-            nextDisabled={false}
+            // On the last topic, Next opens the course-complete dialog: only once the course is done.
+            // A topic that asks keeps Next enabled on the last topic too: the answer may finish the course.
+            nextDisabled={!next && !courseDone && !asksNow}
             compact={bp === "mobile"}
             onPrevious={() => previous && navigateTopic(previous.id)}
-            onNext={() => (next ? navigateTopic(next.id) : setCompleteOpen(true))}
+            onNext={() => {
+              if (asksNow) setAskOpen(true);
+              else if (next) navigateTopic(next.id);
+              else if (courseDone) setCompleteOpen(true);
+            }}
           />
         </main>
       </div>
@@ -456,6 +558,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             collapsedModules={collapsedModules}
             bookmarks={bookmarks}
             completed={completedTopics}
+            lastCompleted={lastCompleted}
             onToggleModule={toggleModule}
             onSelectTopic={navigateTopic}
             onToggleBookmark={toggleBookmark}
@@ -519,20 +622,46 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onSave={saveNote}
       />
 
+      <CompletionQuestionModal
+        open={askOpen}
+        noun={completionNoun(topic)}
+        reason={completionReason(topic)}
+        hasNext={Boolean(next)}
+        onYes={() => {
+          setAskOpen(false);
+          track("completion_question", { topicId, answer: "yes" });
+          markComplete(topicId);
+          if (next) navigateTopic(next.id);
+          else if (courseDoneAfterThis) setCompleteOpen(true);
+        }}
+        onNotYet={() => {
+          setAskOpen(false);
+          track("completion_question", { topicId, answer: "not_yet" });
+          if (next) navigateTopic(next.id);
+        }}
+        onClose={() => setAskOpen(false)}
+      />
+
       <CourseCompleteModal
         open={completeOpen}
         courseTitle={activeCourse.title}
         onClose={() => setCompleteOpen(false)}
         onNextCourse={() => {
           setCompleteOpen(false);
-          router.push("/");
+          // The next course of the program, on its page; a course of no program, or the last
+          // one, goes back to My Learning.
+          const nextCourse = nextCourseInProgram(courseSlug);
+          router.push(nextCourse ? coursePageHref(nextCourse.slug) : MY_LEARNING_HREF);
         }}
         onViewCertificate={() => {
           setCompleteOpen(false);
           track("certificate_view", { from: "complete_modal" });
           router.push(`/course/${courseSlug}/certificate`);
         }}
-        onBackToCourse={() => setCompleteOpen(false)}
+        onBackToCourse={() => {
+          setCompleteOpen(false);
+          router.push(courseHomeHref(courseSlug));
+        }}
       />
 
       <Toast toast={toast} onDone={clearToast} />
@@ -542,7 +671,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
 const COURSE_DRAWER_ID = "course-drawer";
 
-/** The mobile course drawer as a modal dialog (see useDialog). */
+/** The mobile course drawer as a modal dialog (see useDialog). It slides back out to the left on close. */
 function MobileCourseDrawer({
   open,
   onClose,
@@ -554,15 +683,24 @@ function MobileCourseDrawer({
 }) {
   const titleId = React.useId();
   const ref = useDialog(open, onClose);
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short4);
+  if (!mounted) return null;
+  const closed = state === "closed";
   return (
-    <div ref={ref} className="fixed inset-0 z-40">
+    <div
+      ref={ref}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn("fixed inset-0 z-40", closed && "pointer-events-none")}
+    >
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
       <div
         id={COURSE_DRAWER_ID}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onAnimationEnd={onAnimationEnd}
         className="sk-animate-slide-left absolute left-0 top-0 h-full"
       >
         {children(titleId)}

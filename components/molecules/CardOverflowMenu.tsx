@@ -47,7 +47,7 @@ export function CardOverflowMenu({
         type="button"
         {...triggerProps}
         aria-label={itemLabel ? `More actions, ${itemLabel}` : "More actions"}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle hover:bg-sko-bg-subtle"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
       >
         <Icon icon={MoreHorizontal} size={20} />
       </button>
@@ -65,7 +65,7 @@ export function CardOverflowMenu({
                   setOpen(false);
                 }}
                 className={cn(
-                  "sk-text-sm-medium block w-full p-3 text-left hover:bg-sko-bg-subtle",
+                  "sk-text-body-medium-medium block w-full p-3 text-left transition-colors hover:bg-sko-bg-subtle",
                   item.destructive ? "text-sko-text-error" : "text-sko-text-default",
                 )}
               >

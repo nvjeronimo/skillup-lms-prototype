@@ -36,7 +36,7 @@
   --color-bg-muted: #e1e7ec;
   --color-bg-strong: #b9c4ce;
   --color-bg-inverse: #13282f;
-  --color-bg-overlay: #0e1a1f80;
+  --color-bg-overlay: #0e1a1fb3;
   --color-bg-overlay-soft: #0e1a1f33;
   --color-bg-fixed: #ffffff;
   --color-bg-fixed-subtle: #f8f9fa;
@@ -197,7 +197,7 @@
   --color-bg-muted: #25383f;
   --color-bg-strong: #2c3d45;
   --color-bg-inverse: #eaf1f4;
-  --color-bg-overlay: #0e1a1f80;
+  --color-bg-overlay: #0e1a1fb3;
   --color-bg-overlay-soft: #0e1a1f33;
   --color-bg-fixed: #ffffff;
   --color-bg-fixed-subtle: #f8f9fa;
@@ -410,4 +410,6 @@
   --sk-text-brand-primary: var(--color-text-on-primary-soft);
   --sk-text-brand-secondary: var(--color-text-primary);
   --sk-shadow-card: 0 2px 6px -4px var(--color-shadow-default);
+  /* DS effect style Elevation/level3: cards that float over the page (the rail's topic flyout). */
+  --sk-shadow-elevation-3: 0 2px 4px -2px #0a0d120f, 0 4px 6px -1px #0a0d121a;
 }

@@ -26,10 +26,10 @@ export interface AvatarProps {
 // - border: the Text=True stroke width (border/subtle, drawn inside): 0.5 / 0.75 / 1 / 1 px.
 // - dot: the _Avatar online indicator, 6 / 8 / 10 / 12 px.
 const SIZE: Record<AvatarSize, { box: string; text: string; border: string; dot: string }> = {
-  xs: { box: "h-6 w-6", text: "sk-text-xs-semibold", border: "border-[0.5px]", dot: "h-1.5 w-1.5" },
-  sm: { box: "h-8 w-8", text: "sk-text-sm-semibold", border: "border-[0.75px]", dot: "h-2 w-2" },
-  md: { box: "h-10 w-10", text: "sk-text-md-semibold", border: "border", dot: "h-2.5 w-2.5" },
-  lg: { box: "h-12 w-12", text: "sk-text-lg-semibold", border: "border", dot: "h-3 w-3" },
+  xs: { box: "h-6 w-6", text: "sk-text-body-small-semibold", border: "border-[0.5px]", dot: "h-1.5 w-1.5" },
+  sm: { box: "h-8 w-8", text: "sk-text-body-medium-semibold", border: "border-[0.75px]", dot: "h-2 w-2" },
+  md: { box: "h-10 w-10", text: "sk-text-body-large-semibold", border: "border", dot: "h-2.5 w-2.5" },
+  lg: { box: "h-12 w-12", text: "sk-text-title-medium-semibold", border: "border", dot: "h-3 w-3" },
 };
 
 const DOT_COLOR: Record<"online" | "offline", string> = {

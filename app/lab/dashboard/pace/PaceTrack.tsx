@@ -37,7 +37,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
           {modules.map((m) => (
             <div key={m} className="flex justify-center">
               {m === youCol ? (
-                <span className="sk-text-xs-semibold inline-flex flex-col items-center text-sko-text-primary">
+                <span className="sk-text-body-small-semibold inline-flex flex-col items-center text-sko-text-primary">
                   <span className="rounded-full bg-sko-bg-primary px-2 text-sko-text-on-primary">You</span>
                   <span className="h-1.5 w-0.5 bg-sko-bg-primary" />
                 </span>
@@ -70,7 +70,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
         {/* Module numbers */}
         <div className="grid gap-1" style={cols}>
           {modules.map((m) => (
-            <span key={m} className="sk-text-xs-medium text-center text-sko-text-subtle">
+            <span key={m} className="sk-text-body-small-medium text-center text-sko-text-subtle">
               M{m}
             </span>
           ))}
@@ -81,7 +81,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
           {modules.map((m) => (
             <div key={m} className="flex justify-center">
               {m === cohort ? (
-                <span className="sk-text-xs-semibold inline-flex flex-col items-center text-sko-text-muted">
+                <span className="sk-text-body-small-semibold inline-flex flex-col items-center text-sko-text-muted">
                   <span className="h-1.5 w-0.5 bg-sko-bg-strong" />
                   <span className="rounded-full bg-sko-bg-page px-2 ring-1 ring-inset ring-sko-border-strong">
                     Cohort
@@ -93,8 +93,8 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
         </div>
       </div>
 
-      <figcaption className="sk-text-sm-regular text-sko-text-muted">
-        <span className="sk-text-sm-semibold text-sko-text-default">{youText}</span>
+      <figcaption className="sk-text-body-medium-regular text-sko-text-muted">
+        <span className="sk-text-body-medium-semibold text-sko-text-default">{youText}</span>
         {" · "}
         {cohortText}. {gapText}
       </figcaption>

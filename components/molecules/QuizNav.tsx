@@ -85,15 +85,15 @@ export function QuizNavStepper({
     // 1px border/subtle rule, 12px apart.
     <div className={cn("flex flex-col gap-3", className)}>
       <div className="flex items-end gap-4">
-        {/* A link button (Link Button_def Brand/Secondary): visible "Back"
+        {/* A link button (Link Button Brand/Secondary): visible "Back"
             label, 20px chevron in icon/faint, no box. Disabled follows the
-            Link Button_def Disabled state (text/disabled). */}
+            Link Button Disabled state (text/disabled). */}
         <button
           type="button"
           onClick={onBack}
           disabled={!onBack}
           className={cn(
-            "sk-text-sm-semibold inline-flex h-5 shrink-0 items-center gap-1 rounded",
+            "sk-text-body-medium-semibold inline-flex h-5 shrink-0 items-center gap-1 rounded",
             "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
             onBack ? "text-sko-text-subtle" : "cursor-not-allowed text-sko-text-disabled",
           )}
@@ -103,12 +103,13 @@ export function QuizNavStepper({
         </button>
 
         {/* Progress bar, Label=Top: the counter sits 8px above the track,
-            right-aligned. Fill bg/info, square ends. The track stays bg/muted:
+            right-aligned. Fill bg/info, square ends; it grows by scaleX from the
+            left edge (short4, standard), and jumps under reduced motion. The track stays bg/muted:
             DS track bg/strong fails 1.4.11 against bg/info (2.26:1 light,
             2.82:1 dark), and the bar is the only place the answered share
             shows. */}
         <div className="flex min-w-0 flex-1 flex-col items-end gap-2">
-          <span className="sk-text-xs-medium text-sko-text-muted">
+          <span className="sk-text-body-small-medium text-sko-text-muted">
             Question {current} of {total}
           </span>
           <div
@@ -119,7 +120,10 @@ export function QuizNavStepper({
             aria-valuemax={100}
             aria-label={`Quiz progress: ${value}% complete`}
           >
-            <div className="h-full bg-sko-bg-info" style={{ width: `${value}%` }} />
+            <div
+              className="h-full w-full origin-left bg-sko-bg-info transition-transform duration-short4 ease-standard"
+              style={{ transform: `scaleX(${value / 100})` }}
+            />
           </div>
         </div>
       </div>

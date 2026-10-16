@@ -1,0 +1,238 @@
+import type { Course } from "@/lib/courses/kit";
+
+/**
+ * "Intro to Product Analytics": a stand-alone course on My Learning, completed, with its
+ * certificate issued on 12 Sep 2026. 32 topics, all done. No topic is flagged `active`:
+ * a learner who reopens the course starts again from the first topic.
+ */
+export const outline: Course = {
+  id: "ipa",
+  slug: "intro-to-product-analytics",
+  title: "Intro to Product Analytics",
+  provider: "SkillUp",
+  courseType: "Course",
+  difficulty: "Beginner",
+  deliveryMode: "Flexible Learning",
+  overallProgressPct: 100,
+  modulesCompleted: 4,
+  modulesTotal: 4,
+  modules: [
+    {
+      id: "ipa-m1",
+      label: "MODULE 01",
+      title: "What Product Analytics Is For",
+      topicsCompleted: 8,
+      topicsTotal: 8,
+      isCompleted: true,
+      lessons: [
+        {
+          id: "ipa-m1-l1",
+          label: "Questions before dashboards",
+          topics: [
+            {
+              id: "ipa-m1-t1",
+              type: "Video",
+              title: "Course Introduction",
+              duration: "5 min",
+              completed: true,
+              transcript: [
+                { id: "ipa-m1-t1-ln1", ts: "0:00", text: "Welcome to Intro to Product Analytics. This course is about one skill: answering a question about a product with the record of what people did in it." },
+                { id: "ipa-m1-t1-ln2", ts: "0:14", text: "You do not need to write code. You need to read tables and charts carefully, and to ask what each number counts." },
+                { id: "ipa-m1-t1-ln3", ts: "0:28", text: "Module 1 covers how product data is recorded and how to choose a metric. Module 2 follows people through a funnel, from first visit to first value." },
+                { id: "ipa-m1-t1-ln4", ts: "0:46", text: "Module 3 asks who comes back, with retention curves and cohort tables. Module 4 covers A/B tests and how to write up what you found." },
+                { id: "ipa-m1-t1-ln5", ts: "1:03", text: "There are two graded quizzes, one assignment and a final project: a product health report on a sample dataset, reviewed by two peers." },
+                { id: "ipa-m1-t1-ln6", ts: "1:19", text: "The same sample product runs through the whole course, a subscription app for planning meals, so each module adds to what you know about it." },
+                { id: "ipa-m1-t1-ln7", ts: "1:34", text: "Start with the next reading, on turning a business question into a metric. Everything else in the course builds on it." },
+              ],
+            },
+            { id: "ipa-m1-t2", type: "Reading", title: "From business question to metric", duration: "12 min read approx.", completed: true },
+            {
+              id: "ipa-m1-t3",
+              type: "Video",
+              title: "Events, users and sessions: how product data is recorded",
+              duration: "14 min",
+              completed: true,
+              transcript: [
+                { id: "ipa-m1-t3-ln1", ts: "0:00", text: "Almost everything in product analytics is built from one kind of record: an event. Someone did something, at a time." },
+                { id: "ipa-m1-t3-ln2", ts: "0:13", text: "An event has a name, such as “signup_completed”, a timestamp, the user it belongs to, and properties that describe it: the plan, the device, the screen." },
+                { id: "ipa-m1-t3-ln3", ts: "0:31", text: "A user is the person behind the events. The hard part is identity: the same person on a phone and on a laptop is two visitors until they log in on both." },
+                { id: "ipa-m1-t3-ln4", ts: "0:50", text: "A session is a group of events close together in time. It is a convention, often thirty minutes without activity, and each tool draws the line a little differently." },
+                { id: "ipa-m1-t3-ln5", ts: "1:09", text: "This matters when two reports disagree. Before you ask which one is right, ask what each one counts: events, sessions or users." },
+                { id: "ipa-m1-t3-ln6", ts: "1:26", text: "Name events for what the person did, in the past tense, and keep one name for one action. “Clicked button” tells nobody anything six months later." },
+                { id: "ipa-m1-t3-ln7", ts: "1:44", text: "In the next reading you write a tracking plan: the list of events and properties a team agrees on before anyone builds a chart." },
+              ],
+            },
+            { id: "ipa-m1-t4", type: "Reading", title: "Writing a tracking plan", duration: "15 min read approx.", completed: true },
+          ],
+        },
+        {
+          id: "ipa-m1-l2",
+          label: "Metrics worth watching",
+          topics: [
+            {
+              id: "ipa-m1-t5",
+              type: "Video",
+              title: "North star metrics and the inputs that move them",
+              duration: "13 min",
+              completed: true,
+              transcript: [
+                { id: "ipa-m1-t5-ln1", ts: "0:00", text: "A team that watches forty metrics is steering by none of them. A north star metric is the one number that best shows whether users are getting the value the product promises." },
+                { id: "ipa-m1-t5-ln2", ts: "0:17", text: "For the meal-planning app in this course, a candidate is the number of households that saved a meal plan this week. Call it weekly active planners." },
+                { id: "ipa-m1-t5-ln3", ts: "0:31", text: "Test it with three questions. Does it rise when users get more value? Can it fall? Can the team influence it through the product?" },
+                { id: "ipa-m1-t5-ln4", ts: "0:45", text: "Revenue fails the first test on its own. It follows value with a delay, and it can be pushed up for a while by a price change that users dislike." },
+                { id: "ipa-m1-t5-ln5", ts: "0:59", text: "A north star is an outcome, so you cannot work on it directly. You work on its inputs: the few smaller metrics that multiply or add up to it." },
+                { id: "ipa-m1-t5-ln6", ts: "1:13", text: "Weekly active planners depends on how many new users save a first plan, how many of last week's planners come back, and how many lapsed users return." },
+                { id: "ipa-m1-t5-ln7", ts: "1:29", text: "Each input belongs to a part of the product a team can change: onboarding for the first, reminders and recipe quality for the second, re-engagement emails for the third." },
+                { id: "ipa-m1-t5-ln8", ts: "1:45", text: "Add one or two guardrail metrics, things that must not get worse while you push the north star: the unsubscribe rate, for example, or support contacts per user." },
+                { id: "ipa-m1-t5-ln9", ts: "2:00", text: "In the activity that follows you name the events a sign-up flow needs, the raw material for every one of these metrics." },
+              ],
+            },
+            { id: "ipa-m1-t6", type: "Activity", title: "Name the events for a sign-up flow", duration: "20 min approx.", completed: true },
+            { id: "ipa-m1-t7", type: "Practice Assignment", title: "Practice Quiz: Events and metrics", duration: "8 min approx.", completed: true },
+            { id: "ipa-m1-t8", type: "Quiz", title: "Graded Quiz: Analytics foundations", duration: "10 min approx.", completed: true },
+          ],
+        },
+      ],
+    },
+    {
+      id: "ipa-m2",
+      label: "MODULE 02",
+      title: "Acquisition, Activation and Funnels",
+      topicsCompleted: 8,
+      topicsTotal: 8,
+      isCompleted: true,
+      lessons: [
+        {
+          id: "ipa-m2-l1",
+          label: "Funnels",
+          topics: [
+            {
+              id: "ipa-m2-t1",
+              type: "Video",
+              title: "The funnel: where people drop out",
+              duration: "14 min",
+              completed: true,
+              transcript: [
+                { id: "ipa-m2-t1-ln1", ts: "0:00", text: "A funnel is a sequence of steps that leads to an outcome, with a count of how many people reach each step. It shows you where people drop out." },
+                { id: "ipa-m2-t1-ln2", ts: "0:15", text: "For the meal-planning app the steps are: visited the site, signed up, added a first recipe, saved a first plan." },
+                { id: "ipa-m2-t1-ln3", ts: "0:27", text: "Say ten thousand people visit in a month. Two thousand sign up, twelve hundred add a recipe and six hundred save a plan." },
+                { id: "ipa-m2-t1-ln4", ts: "0:40", text: "There are two ways to read that. Step conversion compares each step with the one before: twenty percent, then sixty, then fifty." },
+                { id: "ipa-m2-t1-ln5", ts: "0:53", text: "Overall conversion compares the last step with the first: six hundred of ten thousand, which is six percent." },
+                { id: "ipa-m2-t1-ln6", ts: "1:04", text: "The biggest drop is at sign-up, where eight thousand people leave. It is tempting to say “fix that first”, and that is not always right." },
+                { id: "ipa-m2-t1-ln7", ts: "1:18", text: "Many visitors were never going to sign up. They were curious or arrived by mistake. A loss of half at the last step, among people who have already added recipes, may be easier to recover." },
+                { id: "ipa-m2-t1-ln8", ts: "1:35", text: "Three definitions change every number in a funnel. Do you count unique users or events? Must the steps happen in order? And within what time: an hour, a day, a month?" },
+                { id: "ipa-m2-t1-ln9", ts: "1:52", text: "Write those definitions next to the chart. The next reading defines the step that matters most in this funnel: activation." },
+              ],
+            },
+            { id: "ipa-m2-t2", type: "Reading", title: "Defining activation: the first moment of value", duration: "12 min read approx.", completed: true },
+            { id: "ipa-m2-t3", type: "Video", title: "Reading a funnel chart without fooling yourself", duration: "15 min", completed: true },
+            { id: "ipa-m2-t4", type: "Activity", title: "Build a four-step funnel from an event table", duration: "25 min approx.", completed: true },
+          ],
+        },
+        {
+          id: "ipa-m2-l2",
+          label: "Segments",
+          topics: [
+            { id: "ipa-m2-t5", type: "Reading", title: "Segmentation: who behaves differently, and why it matters", duration: "13 min read approx.", completed: true },
+            { id: "ipa-m2-t6", type: "Video", title: "What averages hide: medians, percentiles and distributions", duration: "14 min", completed: true },
+            { id: "ipa-m2-t7", type: "Practice Assignment", title: "Practice Quiz: Funnels and segments", duration: "8 min approx.", completed: true },
+            { id: "ipa-m2-t8", type: "Graded Assignment", title: "Assignment 01 · Funnel analysis", duration: "40 min approx.", completed: true },
+          ],
+        },
+      ],
+    },
+    {
+      id: "ipa-m3",
+      label: "MODULE 03",
+      title: "Retention and Engagement",
+      topicsCompleted: 8,
+      topicsTotal: 8,
+      isCompleted: true,
+      lessons: [
+        {
+          id: "ipa-m3-l1",
+          label: "Retention",
+          topics: [
+            {
+              id: "ipa-m3-t1",
+              type: "Video",
+              title: "Retention curves and what a flat one tells you",
+              duration: "14 min",
+              completed: true,
+              transcript: [
+                { id: "ipa-m3-t1-ln1", ts: "0:00", text: "Acquisition tells you who arrived. Retention tells you who stayed, and for a subscription product that decides whether the business works." },
+                { id: "ipa-m3-t1-ln2", ts: "0:14", text: "To draw a retention curve, take a group of users who started in the same week. For each week after that, plot the percentage who were active." },
+                { id: "ipa-m3-t1-ln3", ts: "0:28", text: "Week zero is one hundred percent by definition. Then the line falls, steeply at first. Every product loses people in the first days. What matters is what the line does next." },
+                { id: "ipa-m3-t1-ln4", ts: "0:45", text: "In the first shape the line keeps falling until it reaches zero. However many users you add, they all leave in the end. Marketing spend only fills a leaking bucket." },
+                { id: "ipa-m3-t1-ln5", ts: "1:01", text: "In the second shape the line flattens, say at twenty-five percent from week eight. A quarter of each group has made the product a habit. This is the sign that the product has found lasting value for someone." },
+                { id: "ipa-m3-t1-ln6", ts: "1:20", text: "The level of the plateau matters, and so does when it begins. Flat at five percent supports a much smaller business than flat at forty." },
+                { id: "ipa-m3-t1-ln7", ts: "1:34", text: "Sometimes the line turns up again, when lapsed users return after a new feature or a reminder. That is rare and worth understanding when you see it." },
+                { id: "ipa-m3-t1-ln8", ts: "1:47", text: "Be exact about “active”. Opening the app is a weak definition. For a meal planner, saving or cooking from a plan that week is the action that counts." },
+                { id: "ipa-m3-t1-ln9", ts: "2:01", text: "A single curve mixes old and new users. The next reading separates them, with cohort analysis." },
+              ],
+            },
+            { id: "ipa-m3-t2", type: "Reading", title: "Cohort analysis step by step", duration: "15 min read approx.", completed: true },
+            { id: "ipa-m3-t3", type: "Activity", title: "Read a cohort table", duration: "20 min approx.", completed: true },
+            { id: "ipa-m3-t4", type: "Video", title: "Engagement: DAU, WAU, MAU and stickiness", duration: "12 min", completed: true },
+          ],
+        },
+        {
+          id: "ipa-m3-l2",
+          label: "Churn and adoption",
+          topics: [
+            { id: "ipa-m3-t5", type: "Reading", title: "Churn: defining it before you measure it", duration: "12 min read approx.", completed: true },
+            { id: "ipa-m3-t6", type: "Video", title: "Feature adoption and depth of use", duration: "13 min", completed: true },
+            { id: "ipa-m3-t7", type: "Practice Assignment", title: "Practice Quiz: Retention", duration: "8 min approx.", completed: true },
+            { id: "ipa-m3-t8", type: "Quiz", title: "Graded Quiz: Retention and engagement", duration: "12 min approx.", completed: true },
+          ],
+        },
+      ],
+    },
+    {
+      id: "ipa-m4",
+      label: "MODULE 04",
+      title: "Experiments and Telling the Story",
+      topicsCompleted: 8,
+      topicsTotal: 8,
+      isCompleted: true,
+      lessons: [
+        {
+          id: "ipa-m4-l1",
+          label: "A/B tests",
+          topics: [
+            {
+              id: "ipa-m4-t1",
+              type: "Video",
+              title: "A/B tests: hypothesis, sample and duration",
+              duration: "15 min",
+              completed: true,
+              transcript: [
+                { id: "ipa-m4-t1-ln1", ts: "0:00", text: "An A/B test shows one version of something to half your users and another version to the other half, chosen at random, and compares what they do." },
+                { id: "ipa-m4-t1-ln2", ts: "0:15", text: "Random assignment is the whole point. It makes the two groups alike in everything except the change, so a difference in the result can be put down to the change." },
+                { id: "ipa-m4-t1-ln3", ts: "0:30", text: "Start with a hypothesis that names the change, the metric and the reason. “Showing three suggested recipes after sign-up will raise the share of new users who save a plan, because they will not start from an empty page.”" },
+                { id: "ipa-m4-t1-ln4", ts: "0:51", text: "Pick one primary metric before the test begins. If you pick it afterwards, you will find something that went up, by chance." },
+                { id: "ipa-m4-t1-ln5", ts: "1:04", text: "Then work out the sample you need. It depends on the current rate, the smallest improvement worth detecting, and how sure you want to be. A sample size calculator does the sums." },
+                { id: "ipa-m4-t1-ln6", ts: "1:20", text: "A small effect needs a lot of people. To see a move from thirty to thirty-three percent you need a few thousand users in each group. A few hundred will not do." },
+                { id: "ipa-m4-t1-ln7", ts: "1:36", text: "Divide the sample by your weekly traffic to get the duration, and round up to whole weeks. Behaviour on a Monday differs from behaviour on a Saturday." },
+                { id: "ipa-m4-t1-ln8", ts: "1:50", text: "Fix the duration in advance and do not stop early because the numbers look good on day three. The next reading explains why, and how to read the result." },
+              ],
+            },
+            { id: "ipa-m4-t2", type: "Reading", title: "Reading a test result: significance, effect size and patience", duration: "15 min read approx.", completed: true },
+            { id: "ipa-m4-t3", type: "Video", title: "Correlation, causation and the questions data cannot answer", duration: "12 min", completed: true },
+            { id: "ipa-m4-t4", type: "Practice Assignment", title: "Practice Quiz: Experiments", duration: "8 min approx.", completed: true },
+          ],
+        },
+        {
+          id: "ipa-m4-l2",
+          label: "Final project",
+          topics: [
+            { id: "ipa-m4-t5", type: "Reading", title: "Writing an analysis people act on", duration: "12 min read approx.", completed: true },
+            { id: "ipa-m4-t6", type: "Project", title: "Final Project: Product health report", duration: "50 min approx.", completed: true },
+            { id: "ipa-m4-t7", type: "Peer Review", title: "Review two product health reports", duration: "18 min approx.", completed: true },
+            { id: "ipa-m4-t8", type: "Video", title: "Course wrap-up and next steps", duration: "6 min", completed: true },
+          ],
+        },
+      ],
+    },
+  ],
+};

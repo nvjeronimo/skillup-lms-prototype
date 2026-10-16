@@ -47,11 +47,11 @@ export function NotificationItem({
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="sk-text-sm-semibold block text-sko-text-default">{title}</span>
+        <span className="sk-text-body-medium-semibold block text-sko-text-default">{title}</span>
         {body ? (
-          <span className="sk-text-sm-regular mt-0.5 block text-sko-text-muted">{body}</span>
+          <span className="sk-text-body-medium-regular mt-0.5 block text-sko-text-muted">{body}</span>
         ) : null}
-        <span className="sk-text-xs-regular mt-1 block text-sko-text-subtle">{timestamp}</span>
+        <span className="sk-text-body-small-regular mt-1 block text-sko-text-subtle">{timestamp}</span>
       </span>
 
       {/* Unread dot — right side (matches Final Screens). */}

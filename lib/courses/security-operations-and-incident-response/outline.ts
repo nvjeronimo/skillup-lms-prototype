@@ -1,0 +1,670 @@
+import type { Course } from "@/lib/courses/kit";
+
+/**
+ * "Security Operations and Incident Response": course 4 of 5 of the Cybersecurity Fundamentals
+ * Certificate, not started. 39 topics in 4 modules, none done: the player opens on
+ * the first topic. Module 4 is locked until Module 3 is complete.
+ */
+export const outline: Course = {
+  id: "sec4",
+  slug: "security-operations-and-incident-response",
+  title: "Security Operations and Incident Response",
+  provider: "SkillUp",
+  courseType: "Course",
+  difficulty: "Beginner",
+  deliveryMode: "Flexible Learning",
+  overallProgressPct: 0,
+  modulesCompleted: 0,
+  modulesTotal: 4,
+  modules: [
+    {
+      id: "sec4-m1",
+      label: "MODULE 01",
+      title: "Inside Security Operations",
+      topicsCompleted: 0,
+      topicsTotal: 9,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec4-m1-l1",
+          label: "What a security operations team does",
+          topics: [
+            {
+              id: "sec4-m1-t1",
+              type: "Video",
+              title: "Course Introduction",
+              duration: "6 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec4-m1-t1-ln1",
+                  ts: "0:00",
+                  text: "Welcome to Security Operations and Incident Response, the fourth course of the Cybersecurity Fundamentals Certificate.",
+                },
+                {
+                  id: "sec4-m1-t1-ln2",
+                  ts: "0:20",
+                  text: "The first three courses were about building defences. This one is about the moment a defence is tested: noticing it, deciding what it means, and responding.",
+                },
+                {
+                  id: "sec4-m1-t1-ln3",
+                  ts: "0:40",
+                  text: "Module 1 shows how a security operations team works and where its evidence comes from: logs from endpoints, identity systems, the network and the cloud.",
+                },
+                {
+                  id: "sec4-m1-t1-ln4",
+                  ts: "0:55",
+                  text: "Module 2 is detection and triage: how alerts are produced, and how an analyst decides in minutes whether one is real and how much it matters.",
+                },
+                {
+                  id: "sec4-m1-t1-ln5",
+                  ts: "1:15",
+                  text: "Module 3 follows the incident response lifecycle, from preparation through containment and recovery, with two worked playbooks.",
+                },
+                {
+                  id: "sec4-m1-t1-ln6",
+                  ts: "1:30",
+                  text: "Module 4 covers evidence, communication and the review that turns an incident into an improvement.",
+                },
+                {
+                  id: "sec4-m1-t1-ln7",
+                  ts: "1:50",
+                  text: "You will write a triage report on three sample alerts and summarise a tabletop exercise. Everything uses prepared data; you will not need access to a live system.",
+                },
+              ],
+            },
+            {
+              id: "sec4-m1-t2",
+              type: "Reading",
+              title: "Roles, tiers and handovers in a SOC",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m1-t3",
+              type: "Video",
+              title: "Log sources: endpoints, identity, network and cloud",
+              duration: "13 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec4-m1-t3-ln1",
+                  ts: "0:00",
+                  text: "A security operations team sees an organisation through its logs. Four groups of sources give most of the picture, and each one answers a different question.",
+                },
+                {
+                  id: "sec4-m1-t3-ln2",
+                  ts: "0:20",
+                  text: "Endpoints are laptops, servers and phones. Their logs say what ran: which program started, which program launched it, under which account, and which files it touched.",
+                },
+                {
+                  id: "sec4-m1-t3-ln3",
+                  ts: "0:40",
+                  text: "Identity sources are the directory and the identity provider. They say who signed in, from where, by which method and whether it worked, and they record changes such as a new administrator or a reset password.",
+                },
+                {
+                  id: "sec4-m1-t3-ln4",
+                  ts: "0:55",
+                  text: "Network sources are firewalls, DNS resolvers, proxies and VPN gateways. They say which device talked to which address, when, and how much data moved. They usually do not see the content.",
+                },
+                {
+                  id: "sec4-m1-t3-ln5",
+                  ts: "1:15",
+                  text: "Cloud and SaaS sources are audit logs. They record actions inside a service: a file shared with an outside address, a mail forwarding rule created, a storage setting changed.",
+                },
+                {
+                  id: "sec4-m1-t3-ln6",
+                  ts: "1:30",
+                  text: "No single source tells the story. A sign-in from an unusual place is an identity event. The forwarding rule created two minutes later is a SaaS event. The link between them is the account name and the time.",
+                },
+                {
+                  id: "sec4-m1-t3-ln7",
+                  ts: "1:50",
+                  text: "That is why analysts pivot from one source to another using what the events share: the account, the device, the address and the time.",
+                },
+                {
+                  id: "sec4-m1-t3-ln8",
+                  ts: "2:10",
+                  text: "When you take on a new environment, list the sources under these four headings and mark which ones are switched on and collected. The empty headings are your blind spots. The next reading looks at what a single event must contain.",
+                },
+              ],
+            },
+            {
+              id: "sec4-m1-t4",
+              type: "Reading",
+              title: "What makes a log useful: time, identity, action",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m1-t5",
+              type: "Practice Assignment",
+              title: "Practice Quiz: Logs and telemetry",
+              duration: "8 min approx.",
+              completed: false,
+            },
+          ],
+        },
+        {
+          id: "sec4-m1-l2",
+          label: "Collecting the evidence",
+          topics: [
+            {
+              id: "sec4-m1-t6",
+              type: "Video",
+              title: "How a SIEM collects, normalises and correlates",
+              duration: "13 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec4-m1-t6-ln1",
+                  ts: "0:00",
+                  text: "A SIEM, which stands for security information and event management, is where the logs of an organisation come together. It does three jobs: it collects, it normalises and it correlates.",
+                },
+                {
+                  id: "sec4-m1-t6-ln2",
+                  ts: "0:20",
+                  text: "Collection brings events in. Agents on endpoints forward them, network devices send them, and cloud services are read through their interfaces. The first check on any SIEM is whether every expected source is still sending.",
+                },
+                {
+                  id: "sec4-m1-t6-ln3",
+                  ts: "0:40",
+                  text: "Each product writes events in its own way. One calls the account “user”, another “subject”, a third “actor”. Timestamps arrive in different formats and time zones.",
+                },
+                {
+                  id: "sec4-m1-t6-ln4",
+                  ts: "0:55",
+                  text: "Normalisation maps them onto common fields: one name for the account, one for the source address, and one time format in UTC. After that, a single search covers every source.",
+                },
+                {
+                  id: "sec4-m1-t6-ln5",
+                  ts: "1:15",
+                  text: "Enrichment adds what the event does not say about itself: the owner of the device, the department of the user, whether the address belongs to the company.",
+                },
+                {
+                  id: "sec4-m1-t6-ln6",
+                  ts: "1:30",
+                  text: "Correlation joins events that mean little apart. Ten failed sign-ins are routine. Ten failures followed by a success from a new country, and then a new forwarding rule on the same account, are worth an alert.",
+                },
+                {
+                  id: "sec4-m1-t6-ln7",
+                  ts: "1:50",
+                  text: "The result is an alert in a queue, with the underlying events attached, for an analyst to triage.",
+                },
+                {
+                  id: "sec4-m1-t6-ln8",
+                  ts: "2:10",
+                  text: "A SIEM does not find anything by itself. It applies the rules it has been given to the data it has been sent. A missing source or a badly written rule produces silence, and silence looks exactly like safety.",
+                },
+              ],
+            },
+            {
+              id: "sec4-m1-t7",
+              type: "Reading",
+              title: "Time synchronisation and log retention",
+              duration: "10 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m1-t8",
+              type: "Activity",
+              title: "Match eight events to their log source",
+              duration: "15 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m1-t9",
+              type: "Quiz",
+              title: "Graded Quiz: Security operations",
+              duration: "12 min approx.",
+              completed: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "sec4-m2",
+      label: "MODULE 02",
+      title: "Detection and Triage",
+      topicsCompleted: 0,
+      topicsTotal: 10,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec4-m2-l1",
+          label: "From event to alert",
+          topics: [
+            {
+              id: "sec4-m2-t1",
+              type: "Video",
+              title: "Detection rules: signatures, thresholds and behaviour",
+              duration: "13 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec4-m2-t1-ln1",
+                  ts: "0:00",
+                  text: "A detection rule is a question asked of the logs over and over. There are three broad ways to write one, and each has its own strength and its own blind spot.",
+                },
+                {
+                  id: "sec4-m2-t1-ln2",
+                  ts: "0:20",
+                  text: "A signature matches something already known to be bad: the hash of a file, a domain name, a specific pattern in a request. It is precise and cheap. It is also blind to anything new, and attackers can change a file or a domain in minutes.",
+                },
+                {
+                  id: "sec4-m2-t1-ln3",
+                  ts: "0:40",
+                  text: "A threshold counts. More than twenty failed sign-ins for one account in five minutes. More than a gigabyte sent to one outside address in an hour.",
+                },
+                {
+                  id: "sec4-m2-t1-ln4",
+                  ts: "0:55",
+                  text: "Thresholds catch noisy activity. They miss the patient attacker who stays below the number, and they fire on the member of staff who really did forget a password.",
+                },
+                {
+                  id: "sec4-m2-t1-ln5",
+                  ts: "1:15",
+                  text: "A behavioural rule compares activity with a baseline, either the user's own history or what is normal for the role. An accounts clerk who starts running administration tools at three in the morning stands out without any signature.",
+                },
+                {
+                  id: "sec4-m2-t1-ln6",
+                  ts: "1:30",
+                  text: "Behavioural rules can catch what nobody has seen before. Their cost is false positives, because people change their habits for ordinary reasons.",
+                },
+                {
+                  id: "sec4-m2-t1-ln7",
+                  ts: "1:50",
+                  text: "Good coverage layers the three, and every rule is tuned. Tuning means reading the alerts a rule produced last month and adjusting it so that more of them are worth an analyst's time.",
+                },
+                {
+                  id: "sec4-m2-t1-ln8",
+                  ts: "2:10",
+                  text: "Each rule should carry a note saying what it looks for, why that matters and what the analyst should check first. An alert that nobody understands gets closed, whatever it found.",
+                },
+              ],
+            },
+            {
+              id: "sec4-m2-t2",
+              type: "Reading",
+              title: "Indicators of compromise and indicators of attack",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m2-t3",
+              type: "Video",
+              title: "Triage: is this alert real, and does it matter?",
+              duration: "12 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec4-m2-t3-ln1",
+                  ts: "0:00",
+                  text: "Triage is the first decision on an alert. You are answering two questions: is this real, and how much does it matter?",
+                },
+                {
+                  id: "sec4-m2-t3-ln2",
+                  ts: "0:20",
+                  text: "Start with what fired. Read the rule, not only its name. An alert called “impossible travel” might mean a stolen account, or an employee who switched on a VPN.",
+                },
+                {
+                  id: "sec4-m2-t3-ln3",
+                  ts: "0:40",
+                  text: "Then add context. Whose account is it, and what can it reach? Which device, and is it managed? Has this happened before for this user?",
+                },
+                {
+                  id: "sec4-m2-t3-ln4",
+                  ts: "0:55",
+                  text: "Look either side of the event. What happened in the ten minutes before and after: a password reset, a new mail forwarding rule, a large download?",
+                },
+                {
+                  id: "sec4-m2-t3-ln5",
+                  ts: "1:15",
+                  text: "Now decide. A false positive is closed with a note saying why. A true positive gets a severity, based on what is affected and whether the activity is still going on.",
+                },
+                {
+                  id: "sec4-m2-t3-ln6",
+                  ts: "1:30",
+                  text: "Escalate early when the account is privileged, when data is leaving, or when you see the same pattern on more than one machine. Waiting to be certain costs more than a careful false alarm.",
+                },
+                {
+                  id: "sec4-m2-t3-ln7",
+                  ts: "1:50",
+                  text: "Write the note as you go: what you saw, what you checked, what you concluded. The next analyst should not have to repeat your work.",
+                },
+              ],
+            },
+            {
+              id: "sec4-m2-t4",
+              type: "Reading",
+              title: "Severity, priority and escalation",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m2-t5",
+              type: "Practice Assignment",
+              title: "Practice Quiz: Detection and triage",
+              duration: "8 min approx.",
+              completed: false,
+            },
+          ],
+        },
+        {
+          id: "sec4-m2-l2",
+          label: "Working an alert",
+          topics: [
+            {
+              id: "sec4-m2-t6",
+              type: "Video",
+              title: "Mapping detections to attacker techniques",
+              duration: "12 min",
+              completed: false,
+            },
+            {
+              id: "sec4-m2-t7",
+              type: "Reading",
+              title: "Writing a clear alert note",
+              duration: "10 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m2-t8",
+              type: "Activity",
+              title: "Triage ten alerts from a sample queue",
+              duration: "25 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m2-t9",
+              type: "Graded Assignment",
+              title: "Assignment 01 · Triage report for three alerts",
+              duration: "75 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m2-t10",
+              type: "Quiz",
+              title: "Graded Quiz: Detection and triage",
+              duration: "12 min approx.",
+              completed: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "sec4-m3",
+      label: "MODULE 03",
+      title: "The Incident Response Lifecycle",
+      topicsCompleted: 0,
+      topicsTotal: 10,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec4-m3-l1",
+          label: "Before and during",
+          topics: [
+            {
+              id: "sec4-m3-t1",
+              type: "Video",
+              title: "Preparation: plans, roles and contact lists",
+              duration: "12 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec4-m3-t1-ln1",
+                  ts: "0:00",
+                  text: "The outcome of an incident is largely decided before it starts. Preparation is the phase in which you have time to think, so it is where the thinking should be done.",
+                },
+                {
+                  id: "sec4-m3-t1-ln2",
+                  ts: "0:20",
+                  text: "Start with a plan of a few pages. It says what counts as an incident, who declares one, who leads the response and who may take decisions such as shutting down a service.",
+                },
+                {
+                  id: "sec4-m3-t1-ln3",
+                  ts: "0:40",
+                  text: "Name roles, not only people. An incident lead who coordinates. A technical lead who investigates. Someone who handles communication. Someone who keeps the log. Each role has a deputy, because incidents do not avoid holidays.",
+                },
+                {
+                  id: "sec4-m3-t1-ln4",
+                  ts: "0:55",
+                  text: "Build the contact list: the response team, senior management, the IT supplier, the insurer, legal advice, and the regulator's reporting line. Include telephone numbers.",
+                },
+                {
+                  id: "sec4-m3-t1-ln5",
+                  ts: "1:15",
+                  text: "Keep a copy of the plan and the list outside the systems they describe, printed or on a separate service. If email is the thing that has been compromised, a plan stored in email is out of reach and may be read by the intruder.",
+                },
+                {
+                  id: "sec4-m3-t1-ln6",
+                  ts: "1:30",
+                  text: "Agree a second channel for the team to talk on, for the same reason.",
+                },
+                {
+                  id: "sec4-m3-t1-ln7",
+                  ts: "1:50",
+                  text: "Prepare the practical things: logging switched on and retained, backups tested, administrator access to the key services confirmed, and the authority to isolate a device given in advance.",
+                },
+                {
+                  id: "sec4-m3-t1-ln8",
+                  ts: "2:10",
+                  text: "Then rehearse. A tabletop exercise, one hour around a table with a scenario, shows where the plan is wrong while being wrong costs nothing. Run one at least once a year and correct the plan afterwards.",
+                },
+              ],
+            },
+            {
+              id: "sec4-m3-t2",
+              type: "Reading",
+              title: "The incident response lifecycle, phase by phase",
+              duration: "14 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m3-t3",
+              type: "Video",
+              title: "Containment: stop the spread, keep the evidence",
+              duration: "13 min",
+              completed: false,
+              transcript: [
+                {
+                  id: "sec4-m3-t3-ln1",
+                  ts: "0:00",
+                  text: "Containment means stopping an incident from getting worse while you are still working out what it is. It comes with a tension: act fast, but do not destroy what you will need in order to understand what happened.",
+                },
+                {
+                  id: "sec4-m3-t3-ln2",
+                  ts: "0:20",
+                  text: "Think of it in two steps. Short-term containment happens in minutes: isolate the affected device from the network, disable or reset the affected account, block the address or the domain.",
+                },
+                {
+                  id: "sec4-m3-t3-ln3",
+                  ts: "0:40",
+                  text: "Isolate a device. Do not switch it off. A running machine holds evidence in memory that is lost when the power goes: the processes, the connections, sometimes the encryption keys. Most endpoint tools can cut a device off from the network and keep it reachable for the investigator.",
+                },
+                {
+                  id: "sec4-m3-t3-ln4",
+                  ts: "0:55",
+                  text: "For an account, change the password, end its active sessions and check the sign-in methods registered on it. A password reset alone can leave an intruder's session open, or their own device registered as a second factor.",
+                },
+                {
+                  id: "sec4-m3-t3-ln5",
+                  ts: "1:15",
+                  text: "Longer-term containment keeps the business running while you prepare a clean fix: a temporary firewall rule, moving a service to a rebuilt server, closer monitoring of the accounts involved.",
+                },
+                {
+                  id: "sec4-m3-t3-ln6",
+                  ts: "1:30",
+                  text: "Before you change anything, record its state: a screenshot, an export of the relevant logs, a note of the time. Then write down each action, who took it and when.",
+                },
+                {
+                  id: "sec4-m3-t3-ln7",
+                  ts: "1:50",
+                  text: "Scope before you declare victory. If one laptop was affected, search for the same indicators on the others. Containing one machine out of three only tells the intruder that you have noticed.",
+                },
+                {
+                  id: "sec4-m3-t3-ln8",
+                  ts: "2:10",
+                  text: "And decide in advance who may authorise a disruptive step, such as taking the booking system offline. At two in the morning there should be no doubt whose decision that is.",
+                },
+              ],
+            },
+            {
+              id: "sec4-m3-t4",
+              type: "Reading",
+              title: "Eradication and recovery: back to a known good state",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m3-t5",
+              type: "Practice Assignment",
+              title: "Practice Quiz: The response lifecycle",
+              duration: "8 min approx.",
+              completed: false,
+            },
+          ],
+        },
+        {
+          id: "sec4-m3-l2",
+          label: "Playbooks",
+          topics: [
+            { id: "sec4-m3-t6", type: "Video", title: "Anatomy of a playbook", duration: "10 min", completed: false },
+            {
+              id: "sec4-m3-t7",
+              type: "Reading",
+              title: "Playbook: a reported phishing message",
+              duration: "12 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m3-t8",
+              type: "Reading",
+              title: "Playbook: ransomware on one workstation",
+              duration: "13 min read approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m3-t9",
+              type: "Activity",
+              title: "Order the steps of a containment plan",
+              duration: "15 min approx.",
+              completed: false,
+            },
+            {
+              id: "sec4-m3-t10",
+              type: "Quiz",
+              title: "Graded Quiz: Incident response",
+              duration: "12 min approx.",
+              completed: false,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "sec4-m4",
+      label: "MODULE 04",
+      title: "Evidence, Communication and Learning",
+      topicsCompleted: 0,
+      topicsTotal: 10,
+      isCompleted: false,
+      lessons: [
+        {
+          id: "sec4-m4-l1",
+          label: "Handling evidence",
+          topics: [
+            {
+              id: "sec4-m4-t1",
+              type: "Video",
+              title: "Order of volatility and preserving evidence",
+              duration: "12 min",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t2",
+              type: "Reading",
+              title: "Chain of custody and incident notes",
+              duration: "12 min read approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t3",
+              type: "Video",
+              title: "Building an incident timeline",
+              duration: "12 min",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t4",
+              type: "Practice Assignment",
+              title: "Practice Quiz: Evidence handling",
+              duration: "8 min approx.",
+              completed: false,
+              locked: true,
+            },
+          ],
+        },
+        {
+          id: "sec4-m4-l2",
+          label: "Telling people and improving",
+          topics: [
+            {
+              id: "sec4-m4-t5",
+              type: "Reading",
+              title: "Who to tell, and when: staff, customers, regulators",
+              duration: "13 min read approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t6",
+              type: "Video",
+              title: "Running a blameless post-incident review",
+              duration: "12 min",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t7",
+              type: "Reading",
+              title: "Metrics that help: time to detect, time to contain",
+              duration: "10 min read approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t8",
+              type: "Peer-graded",
+              title: "Tabletop exercise: incident summary",
+              duration: "60 min approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t9",
+              type: "Quiz",
+              title: "Graded Quiz: Evidence and communication",
+              duration: "15 min approx.",
+              completed: false,
+              locked: true,
+            },
+            {
+              id: "sec4-m4-t10",
+              type: "Video",
+              title: "Course wrap-up and what comes next",
+              duration: "5 min",
+              completed: false,
+              locked: true,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};

@@ -2,11 +2,12 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sparkles, Sun, X } from "lucide-react";
+import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { cn } from "@/lib/utils";
+import { ProgressRing } from "@/components/molecules/OverallProgress";
 
 export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
 
@@ -16,7 +17,6 @@ export interface CoursePlayerTopbarProps {
   breadcrumb?: string[];
   userName?: string;
   userAvatarUrl?: string;
-  showAi?: boolean;
   showBookmark?: boolean;
   showNotifications?: boolean;
   showDiscussions?: boolean;
@@ -28,12 +28,17 @@ export interface CoursePlayerTopbarProps {
   menuExpanded?: boolean;
   /** Id of the course-menu drawer, for aria-controls on the trigger. */
   menuControls?: string;
-  onAi?: () => void;
   onDiscussions?: () => void;
   onBookmark?: () => void;
   onNotifications?: () => void;
   onTheme?: () => void;
   onClose?: () => void;
+  /**
+   * Course percentage, shown on Mobile only as a 28px ring after the logo (Nelson, 14 Oct
+   * 2026): on a phone the sidebar ring sits in the drawer, so this is where a completion is
+   * seen to count. Omit it to hide the ring.
+   */
+  progressPct?: number;
   /** Replaces the default (inert) account button — e.g. the demo-settings menu. */
   accountMenu?: React.ReactNode;
   className?: string;
@@ -106,9 +111,8 @@ function UtilityButton({
 export function CoursePlayerTopbar({
   size = "Desktop",
   breadcrumb = [],
-  userName = "Olivia Rhye",
+  userName = "John Smith",
   userAvatarUrl,
-  showAi = false,
   showBookmark = true,
   showNotifications = true,
   showDiscussions = false,
@@ -118,13 +122,13 @@ export function CoursePlayerTopbar({
   onMenu,
   menuExpanded = false,
   menuControls,
-  onAi,
   onDiscussions,
   onBookmark,
   onNotifications,
   onTheme,
   onClose,
   accountMenu,
+  progressPct,
   className,
 }: CoursePlayerTopbarProps) {
   const isMobile = size === "Mobile";
@@ -166,9 +170,11 @@ export function CoursePlayerTopbar({
           >
             <Icon icon={List} size={20} />
           </UtilityButton>
-          <Link href="/" aria-label="SkillUp, My Learning" className="flex items-center">
+          {/* 44px target on mobile; the mark itself stays 33px. */}
+          <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
             <SkillUpLogo className="h-[33px]" />
           </Link>
+          {progressPct !== undefined ? <ProgressRing pct={progressPct} compact /> : null}
         </div>
         <div className="flex items-center gap-2">
           {showNotifications ? (
@@ -205,7 +211,7 @@ export function CoursePlayerTopbar({
       )}
     >
       <div className={cn("flex min-w-0 flex-1 items-center", isDesktop ? "gap-8" : "gap-6")}>
-        <Link href="/" aria-label="SkillUp, My Learning" className="flex shrink-0 items-center">
+        <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex shrink-0 items-center">
           <SkillUpLogo className="h-[33px]" />
         </Link>
 
@@ -218,7 +224,7 @@ export function CoursePlayerTopbar({
                 ) : null}
                 <span
                   className={cn(
-                    "sk-text-sm-semibold truncate",
+                    "sk-text-body-medium-semibold truncate",
                     i === breadcrumb.length - 1 ? "text-sko-text-primary" : "text-sko-text-subtle",
                   )}
                 >
@@ -231,11 +237,6 @@ export function CoursePlayerTopbar({
       </div>
 
       <div className="flex items-center gap-2">
-        {showAi ? (
-          <UtilityButton label="AI Assistant" onClick={onAi}>
-            <Icon icon={Sparkles} size={20} />
-          </UtilityButton>
-        ) : null}
         {showNotifications ? (
           <UtilityButton label={notificationsLabel} onClick={onNotifications}>
             {bell}
@@ -266,7 +267,7 @@ export function CoursePlayerTopbar({
           // 24px circle), 8px gap, name in body-medium/Semibold.
           <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-md">
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
-            <span className="sk-text-sm-semibold text-sko-text-default">{userName}</span>
+            <span className="sk-text-body-medium-semibold text-sko-text-default">{userName}</span>
           </button>
         )}
 

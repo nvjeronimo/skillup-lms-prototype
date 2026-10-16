@@ -1,5 +1,6 @@
 @import "../tokens/colors.css";
 @import "../tokens/typography.css";
+@import "../tokens/motion.css";
 
 @tailwind base;
 @tailwind components;
@@ -60,6 +61,16 @@ button {
 .sk-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-default) transparent;
+  /* Jumps inside a scroll region glide (an anchor, the transcript following its line).
+     Never on html/body. Under reduced motion the guard below turns it back to auto; code
+     that must jump at once (restoring a position) asks for behavior "instant". */
+  scroll-behavior: smooth;
+}
+/* A scroll region that a route change scrolls (the player's content box: Next's router calls
+   scrollIntoView() with no options on the new page). Route changes land at once (spec §7.5);
+   the glides inside it go through scrollToElement, which passes its own behaviour. */
+.sk-scroll.sk-scroll-instant {
+  scroll-behavior: auto;
 }
 .sk-scroll::-webkit-scrollbar {
   width: 6px;
@@ -99,24 +110,347 @@ button {
   }
 }
 .sk-animate-slide-right {
-  animation: sk-slide-in-right 200ms ease-out;
+  animation: sk-slide-in-right var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
 .sk-animate-slide-left {
-  animation: sk-slide-in-left 200ms ease-out;
+  animation: sk-slide-in-left var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
 }
 .sk-animate-fade {
-  animation: sk-fade-in 200ms ease-out;
+  animation: sk-fade-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
 }
 
-/* Respect reduced-motion: disable panel/drawer/toast animations + smooth scroll. */
+/* Exit keyframes. Exits are shorter than their entrance, use standard-accelerate, and
+   leave toward where they came from. `data-state="closed"` comes from useExitTransition;
+   the class may sit on the root itself or on a descendant (backdrop + panel). */
+@keyframes sk-slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes sk-slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes sk-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes sk-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(var(--motion-distance-surface));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-pop-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(var(--motion-distance-surface));
+  }
+}
+@keyframes sk-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-enter));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-rise-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-enter));
+  }
+}
+@keyframes sk-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes sk-sheet-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+/* A count badge popping in on a change: a scale from 0.6 and a fade, in place (no travel). */
+@keyframes sk-badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sk-animate-badge-pop {
+  animation: sk-badge-pop var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-pop {
+  animation: sk-pop-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-rise {
+  animation: sk-rise-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-sheet {
+  animation: sk-sheet-in var(--motion-duration-medium2) var(--motion-easing-standard-decelerate);
+}
+/* A page or topic body coming in: a fade with a nudge up (4px). Entrance only: the old
+   page is replaced, not animated out. */
+@keyframes sk-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-nudge));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* While it runs (short4) the transform makes the page a containing block for any
+   position:fixed descendant: a fixed element inside it is placed against the page, not the
+   viewport, until the animation ends. Keep fixed overlays outside, or portal them. */
+.sk-animate-page {
+  animation: sk-page-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+/* A rise of the nudge distance (4px), not the enter distance: rows that come in one after
+   the other (the assistant's action buttons under their answer, a filtered list's rows). */
+.sk-rise-nudge {
+  --motion-distance-enter: var(--motion-distance-nudge);
+}
+
+/* The assistant thinking: three dots that brighten in turn, one short3 apart, on a loop of
+   eight short3. The word "Thinking…" is in the markup, visually hidden; under reduced
+   motion the dots go and the word is shown instead. */
+@keyframes sk-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+.sk-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 1.5em;
+}
+.sk-typing__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.3;
+  animation: sk-typing calc(var(--motion-duration-short3) * 8) var(--motion-easing-linear) infinite;
+}
+.sk-typing__dot:nth-child(2) {
+  animation-delay: var(--motion-duration-short3);
+}
+.sk-typing__dot:nth-child(3) {
+  animation-delay: calc(var(--motion-duration-short3) * 2);
+}
+.sk-typing__word {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* The completion chain's second beat: the rail check draws itself, one step (short2) after
+   the completed badge pops. The path carries pathLength="1", so the dash is the whole
+   stroke; `both` keeps it hidden through the delay. */
+@keyframes sk-draw-check {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.sk-draw-check {
+  stroke-dasharray: 1;
+  animation: sk-draw-check var(--motion-duration-short4) var(--motion-easing-standard-decelerate)
+    var(--motion-duration-short2) both;
+}
+/* The same draw with no chain delay: a quiz option's Correct tick, drawn as the verdict lands. */
+.sk-draw-check-immediate {
+  stroke-dasharray: 1;
+  animation: sk-draw-check var(--motion-duration-short4) var(--motion-easing-standard-decelerate) both;
+}
+
+/* Quiz question swap (mode B): the next question comes in from the side it lies on —
+   from the right going forward, from the left going back. Entrance only: the old
+   question is replaced, not animated out. */
+@keyframes sk-step-in-next {
+  from {
+    opacity: 0;
+    transform: translateX(var(--motion-distance-enter));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-step-in-prev {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--motion-distance-enter)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sk-animate-step-next {
+  animation: sk-step-in-next var(--motion-duration-short4) var(--motion-easing-standard);
+}
+.sk-animate-step-prev {
+  animation: sk-step-in-prev var(--motion-duration-short4) var(--motion-easing-standard);
+}
+
+[data-state="closed"].sk-animate-slide-right,
+[data-state="closed"] .sk-animate-slide-right {
+  animation: sk-slide-out-right var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-slide-left,
+[data-state="closed"] .sk-animate-slide-left {
+  animation: sk-slide-out-left var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-fade,
+[data-state="closed"] .sk-animate-fade {
+  animation: sk-fade-out var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-pop,
+[data-state="closed"] .sk-animate-pop {
+  animation: sk-pop-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-rise,
+[data-state="closed"] .sk-animate-rise {
+  animation: sk-rise-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-sheet,
+[data-state="closed"] .sk-animate-sheet {
+  animation: sk-sheet-out var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+}
+
+/* Reduced motion (the OS setting here; the Accessibility panel's switch further down
+   applies the same rules). Movement is removed, feedback is kept: colour and opacity
+   changes still ease, sliding surfaces fade in, and the spinner pulses. A blanket
+   "0.001ms on everything" would also freeze the spinner and drop every hover cue. */
+@keyframes sk-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
+  /* Movement goes: no smooth scroll, and only non-moving properties may transition
+     (so slides, the docking video and rotating chevrons snap). */
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+    transition-property: color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke, opacity, box-shadow !important;
+  }
+  /* Panels and the drawer still announce themselves: a short fade replaces the slide. */
+  .sk-animate-slide-right,
+  .sk-animate-slide-left,
+  .sk-animate-pop,
+  .sk-animate-rise,
+  .sk-animate-sheet,
+  .sk-animate-step-next,
+  .sk-animate-step-prev,
+  .sk-animate-page,
+  .sk-animate-badge-pop,
+  .sk-animate-fade {
+    animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+  }
+  /* Fade, no stagger: the rows' inline delays go. */
+  .sk-animate-rise {
+    animation-delay: 0s !important;
+  }
+  /* The launcher's hover lift and press would snap (transform is not transitioned here). */
+  .sk-press-scale {
+    --tw-scale-x: 1 !important;
+    --tw-scale-y: 1 !important;
+  }
+  [data-state="closed"].sk-animate-slide-right,
+  [data-state="closed"] .sk-animate-slide-right,
+  [data-state="closed"].sk-animate-slide-left,
+  [data-state="closed"] .sk-animate-slide-left,
+  [data-state="closed"].sk-animate-pop,
+  [data-state="closed"] .sk-animate-pop,
+  [data-state="closed"].sk-animate-rise,
+  [data-state="closed"] .sk-animate-rise,
+  [data-state="closed"].sk-animate-sheet,
+  [data-state="closed"] .sk-animate-sheet,
+  [data-state="closed"].sk-animate-fade,
+  [data-state="closed"] .sk-animate-fade {
+    animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+  }
+  /* The check is shown at once, not drawn (its disc still fades in). */
+  .sk-draw-check,
+  .sk-draw-check-immediate {
+    animation: none;
+  }
+  /* The assistant thinking: the word, not the dots. */
+  .sk-typing__dot {
+    display: none;
+  }
+  .sk-typing__word {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+  /* A spinner that stops looks like a hang: it breathes instead of turning. */
+  .animate-spin {
+    animation: sk-pulse 1.2s ease-in-out infinite;
   }
 }
 
@@ -127,7 +461,7 @@ button {
   }
 }
 
-/* Overlay backdrop — the DS dim is bg/overlay (#0e1a1f at 50% in all 6 modes:
+/* Overlay backdrop — the DS dim is bg/overlay (#0e1a1f at 70% in all 6 modes since 12 Oct 2026, 50% before:
    "the dim layer behind a modal or over a video"), a dark dim in light and dark
    themes alike, plus Backdrop blurs/backdrop-blur-sm. Figma's background-blur
    radius 8 exports as CSS blur(4px) (= Tailwind backdrop-blur-sm), not 8px. */
@@ -165,14 +499,74 @@ button {
 [data-text-size="lg"] { --sk-font-scale: 1.15; }
 [data-text-size="xl"] { --sk-font-scale: 1.30; }
 
-/* Reduzir movimento — força-o em todo o lado (WCAG 2.3.3). */
+/* Reduzir movimento: o interruptor do painel aplica as mesmas regras que a
+   preferência do sistema (ver "Reduced motion" acima) (WCAG 2.3.3). */
+/* Movement goes: no smooth scroll, and only non-moving properties may transition
+   (so slides, the docking video and rotating chevrons snap). */
 [data-reduce-motion] *,
 [data-reduce-motion] *::before,
 [data-reduce-motion] *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow !important;
+}
+/* Panels and the drawer still announce themselves: a short fade replaces the slide. */
+[data-reduce-motion] .sk-animate-slide-right,
+[data-reduce-motion] .sk-animate-slide-left,
+[data-reduce-motion] .sk-animate-pop,
+[data-reduce-motion] .sk-animate-rise,
+[data-reduce-motion] .sk-animate-sheet,
+[data-reduce-motion] .sk-animate-step-next,
+[data-reduce-motion] .sk-animate-step-prev,
+[data-reduce-motion] .sk-animate-page,
+[data-reduce-motion] .sk-animate-badge-pop,
+[data-reduce-motion] .sk-animate-fade {
+  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+/* Fade, no stagger: the rows' inline delays go. */
+[data-reduce-motion] .sk-animate-rise {
+  animation-delay: 0s !important;
+}
+/* The launcher's hover lift and press would snap (transform is not transitioned here). */
+[data-reduce-motion] .sk-press-scale {
+  --tw-scale-x: 1 !important;
+  --tw-scale-y: 1 !important;
+}
+[data-reduce-motion] [data-state="closed"].sk-animate-slide-right,
+[data-reduce-motion] [data-state="closed"] .sk-animate-slide-right,
+[data-reduce-motion] [data-state="closed"].sk-animate-slide-left,
+[data-reduce-motion] [data-state="closed"] .sk-animate-slide-left,
+[data-reduce-motion] [data-state="closed"].sk-animate-pop,
+[data-reduce-motion] [data-state="closed"] .sk-animate-pop,
+[data-reduce-motion] [data-state="closed"].sk-animate-rise,
+[data-reduce-motion] [data-state="closed"] .sk-animate-rise,
+[data-reduce-motion] [data-state="closed"].sk-animate-sheet,
+[data-reduce-motion] [data-state="closed"] .sk-animate-sheet,
+[data-reduce-motion] [data-state="closed"].sk-animate-fade,
+[data-reduce-motion] [data-state="closed"] .sk-animate-fade {
+  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+}
+/* The check is shown at once, not drawn (its disc still fades in). */
+[data-reduce-motion] .sk-draw-check,
+[data-reduce-motion] .sk-draw-check-immediate {
+  animation: none;
+}
+/* The assistant thinking: the word, not the dots. */
+[data-reduce-motion] .sk-typing__dot {
+  display: none;
+}
+[data-reduce-motion] .sk-typing__word {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+/* A spinner that stops looks like a hang: it breathes instead of turning. */
+[data-reduce-motion] .animate-spin {
+  animation: sk-pulse 1.2s ease-in-out infinite;
 }
 
 /* Sublinhar sempre os links — não depender da cor para os distinguir. */
@@ -190,4 +584,84 @@ button {
 [data-large-targets] select {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* ============================================================================
+   Platform pages: sample-data marks. The pages under /platform are a test build
+   and most of their figures have no API yet. The note under the top bar has a
+   switch that sets [data-show-mock] on the page; every block tagged
+   data-mock="<what is missing>" then gets a dashed outline and a short SAMPLE
+   chip; the reasons are listed in full in the note (never hover-only). The chip
+   stays short so it does not cover the content it marks. Off by default so the screens can be compared
+   with the Figma frames.
+   ============================================================================ */
+[data-show-mock] [data-mock] {
+  outline: 1px dashed var(--color-border-warning);
+  outline-offset: 3px;
+}
+[data-show-mock] [data-mock]:not(.absolute, .fixed, .sticky) {
+  position: relative;
+}
+[data-show-mock] [data-mock]::after {
+  content: "SAMPLE";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 5;
+  padding: 0 6px;
+  border: 1px dashed var(--color-border-warning);
+  border-radius: 6px;
+  background: var(--color-bg-warning-soft);
+  color: var(--color-text-warning);
+  font-family: var(--sk-font-body);
+  font-weight: 600;
+  font-size: calc(12px * var(--sk-font-scale, 1));
+  line-height: calc(18px * var(--sk-font-scale, 1));
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: left;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Rows and lists that only enter (a filter's cross-fade, the rows rising after it). Inside
+   a surface that is closing they stay put: the surface's own exit is the only movement.
+   Last in the file so it outranks the closed-state rules above, reduced motion included. */
+[data-state="closed"] .sk-enter-only,
+[data-reduce-motion] [data-state="closed"] .sk-enter-only {
+  animation: none;
+}
+
+/* Assistant launcher ring (DS Assistant-Launcher, 15 Oct 2026): a 2px gradient ring round the
+   ball of the mark, in the logo's own blues (literal, like the mark's SVG: they are logo
+   colours, not roles). It turns slowly so the gradient moves round the ball (Nelson asked
+   for it). Geometry, from the 160 viewBox at 48px: ball centre 24.85/26.32, radius 20.84;
+   the ring is 2px wider all round. Reduced motion (OS or the Accessibility panel) holds it. */
+@property --sk-ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 135deg;
+}
+@keyframes sk-ring-turn {
+  to {
+    --sk-ring-angle: 495deg;
+  }
+}
+.sk-assistant-ring {
+  position: absolute;
+  left: 2.01px;
+  top: 3.48px;
+  width: 45.68px;
+  height: 45.68px;
+  border-radius: 9999px;
+  background: conic-gradient(from var(--sk-ring-angle), #0088d4, #85d3ff, #044150, #0088d4);
+  animation: sk-ring-turn calc(var(--motion-duration-short3) * 24) var(--motion-easing-linear) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-assistant-ring {
+    animation: none;
+  }
+}
+[data-reduce-motion] .sk-assistant-ring {
+  animation: none;
 }

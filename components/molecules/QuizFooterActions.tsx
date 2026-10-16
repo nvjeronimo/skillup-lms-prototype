@@ -190,7 +190,7 @@ export function QuizFooterActions({
     <div className={cn("flex flex-wrap items-end justify-between gap-2", className)}>
       {/* DS order: Hint, Skip question, Save draft / Draft saved, Show answer,
           Next question, Reset. Hint, Show answer, Next question and Reset are
-          Link buttons (Link Button_def Brand/Primary); Skip and Save are
+          Link buttons (Link Button Brand/Primary); Skip and Save are
           Secondary. */}
       <div className="flex flex-wrap items-center gap-2">
         {secondary && showHint ? (
@@ -249,7 +249,7 @@ export function QuizFooterActions({
           <a
             href={`#${reviewTargetId}`}
             className={cn(
-              "sk-text-sm-semibold rounded-md text-sko-text-primary",
+              "sk-text-body-medium-semibold rounded-md text-sko-text-primary",
               "sr-only focus:not-sr-only focus:px-3 focus:py-2",
               "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
             )}
@@ -266,7 +266,7 @@ export function QuizFooterActions({
           {/* Unlimited attempts print no line at all — that is the platform's
               behaviour, not a hidden count. */}
           {showAttempts && typeof attemptsUsed === "number" && typeof maxAttempts === "number" ? (
-            <span className="sk-text-xs-medium text-sko-text-subtle">
+            <span className="sk-text-body-small-medium text-sko-text-subtle">
               You have used {attemptsUsed} of {maxAttempts} attempt{maxAttempts === 1 ? "" : "s"}
             </span>
           ) : null}

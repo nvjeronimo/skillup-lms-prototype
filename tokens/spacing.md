@@ -43,13 +43,14 @@ The Tailwind column uses `p-`; the same step works for any spacing utility
 
 ## Container
 
-All three are mode-aware.
+All four are mode-aware.
 
 | DS token | Desktop / Tablet / Mobile (px) | Tailwind | Use |
 |----------|-------------------------------|----------|-----|
 | `Container/gutter` | 32 / 24 / 16 | `px-4 min-[769px]:px-6 min-[1025px]:px-8` | the container's own side inset (screen gutters) |
 | `Container/gap` | 24 / 16 / 12 | `gap-3 min-[769px]:gap-4 min-[1025px]:gap-6` | gap between items inside a container, one step below the gutter at every breakpoint |
 | `Container/max-width` | 1280 / 768 / 480 | `max-w-[480px] min-[769px]:max-w-[768px] min-[1025px]:max-w-[1280px]` | content column width |
+| `Container/content-padding` | 24 / 20 / 16 | `p-4 min-[769px]:p-5 min-[1025px]:p-6` (in the player: `CONTENT_PAD[bp]`, PlayerShell) | the padding of a topic's content section (Nelson, 15 Oct 2026); aliases `Spacing/3xl` in every mode |
 
 ## Component anchors
 
@@ -69,14 +70,14 @@ All three are mode-aware.
 | `rounded-none` | 0 | `Radius/fixed-none` | |
 | `rounded-sm` | 2 | `Radius/fixed-xxs` | |
 | `rounded` | 4 | `Radius/fixed-xs` | small chips |
-| `rounded-md` | 6 | `Radius/fixed-sm` | buttons (Button V2, all sizes) |
+| `rounded-md` | 6 | `Radius/fixed-sm` | buttons (Button, all sizes) |
 | `rounded-lg` | 8 | `Radius/fixed-md` | inputs, menus, certificate |
 | `rounded-[10px]` | 10 | `Radius/fixed-lg` | (no Tailwind step) |
 | `rounded-xl` | 12 | `Radius/fixed-xl` | cards, panels, video frame |
 | `rounded-2xl` | 16 | `Radius/fixed-2xl` | modals |
 | `rounded-[20px]` | 20 | `Radius/fixed-3xl` | (no Tailwind step) |
 | `rounded-3xl` | 24 | `Radius/fixed-4xl` | |
-| `rounded-full` | 9999 | `Radius/fixed-full` | Badge v2 (Shape=Pill), avatars, rings |
+| `rounded-full` | 9999 | `Radius/fixed-full` | Badge (Shape=Pill), avatars, rings |
 
 `Radius/flex-*` matches `fixed-*` from `none` to `xl` (and `full`); the three
 largest steps are mode-aware:

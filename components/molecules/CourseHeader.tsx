@@ -69,12 +69,12 @@ export function CourseHeader({
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-center gap-1">
-          <p className="sk-text-xs-medium min-w-0 flex-1 uppercase text-sko-text-subtle">{eyebrow}</p>
+          <p className="sk-text-body-small-medium min-w-0 flex-1 uppercase text-sko-text-subtle">{eyebrow}</p>
           {rowTrailing}
         </div>
-        <p className="sk-text-lg-semibold text-sko-text-default">{title}</p>
+        <p className="sk-text-title-medium-semibold text-sko-text-default">{title}</p>
         {partnerList.length ? (
-          <p className="sk-text-xs-medium text-sko-text-muted">
+          <p className="sk-text-body-small-medium text-sko-text-muted">
             {partnerList.map((p) => p.name).join(" · ")}
           </p>
         ) : null}

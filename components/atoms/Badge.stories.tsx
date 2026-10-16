@@ -38,7 +38,7 @@ export const Default: Story = {};
 
 export const WithLeadingIcon: Story = { args: { leftIcon: Check } };
 
-/** Badge v2 Style × Color at Size=sm, label only and with a leading icon. */
+/** Badge Style × Color at Size=sm, label only and with a leading icon. */
 export const Matrix: Story = {
   render: () => (
     <div className="flex flex-col gap-3">

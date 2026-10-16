@@ -13,6 +13,7 @@ export function LockedView({ topicId }: { topicId: string }) {
       <EmptyState
         className="rounded-none border-0"
         icon={Lock}
+        titleAs="h1"
         title="This topic is locked"
         description={
           topic

@@ -6,6 +6,9 @@ import { Icon } from "@/lib/icons";
 import { FilterChip } from "@/components/atoms/FilterChip";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
+import { useExitTransition } from "@/lib/useExitTransition";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { inertProps } from "@/lib/inert";
 
 export interface OverlayPanelFilter {
   label: string;
@@ -29,7 +32,8 @@ export interface OverlayPanelProps {
  * Shared right-overlay chrome: backdrop + slide-in panel + header + scroll body +
  * footer. Esc + backdrop close. Focus is trapped while open, the page behind is
  * inert, first focus = close X, and focus returns to the trigger on close
- * (useDialog).
+ * (useDialog). Closing plays the slide back out before the panel leaves the DOM; focus
+ * returns and the page wakes up at the start of that exit.
  */
 export function OverlayPanel({
   open,
@@ -45,10 +49,19 @@ export function OverlayPanel({
   const titleId = React.useId();
   const dialogRef = useDialog(open, onClose, { initialFocusRef: closeRef });
 
-  if (!open) return null;
+  const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short4);
+
+  if (!mounted) return null;
+  const closed = state === "closed";
 
   return (
-    <div ref={dialogRef} className="fixed inset-0 z-50">
+    <div
+      ref={dialogRef}
+      data-state={state}
+      aria-hidden={closed || undefined}
+      {...inertProps(closed)}
+      className={cn("fixed inset-0 z-50", closed && "pointer-events-none")}
+    >
       {/* Backdrop — SKO DS light dim + blur (token-bound via .sk-backdrop). */}
       <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
 
@@ -56,10 +69,11 @@ export function OverlayPanel({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onAnimationEnd={onAnimationEnd}
         className="sk-animate-slide-right absolute right-0 top-0 flex h-full w-full flex-col border-l border-sko-border-subtle bg-sko-bg-page md:w-[480px]"
       >
         <header className="flex items-center justify-between gap-2 border-b border-sko-border-subtle px-6 py-5">
-          <h2 id={titleId} className="sk-text-lg-semibold text-sko-text-default">
+          <h2 id={titleId} className="sk-text-title-medium-semibold text-sko-text-default">
             {title}
           </h2>
           <div className="flex items-center gap-2">
@@ -67,8 +81,8 @@ export function OverlayPanel({
               <button
                 type="button"
                 onClick={headerAction.onClick}
-                // DS Link Button_def Brand/Primary (text-only: px-1 = structure 2 + label 2).
-                className="sk-text-sm-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
+                // DS Link Button Brand/Primary (text-only: px-1 = structure 2 + label 2).
+                className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
               >
                 {headerAction.label}
               </button>
@@ -78,7 +92,7 @@ export function OverlayPanel({
               type="button"
               onClick={onClose}
               aria-label="Close panel"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-icon-subtle hover:bg-sko-bg-subtle"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle"
             >
               <Icon icon={X} size={20} />
             </button>
@@ -103,7 +117,7 @@ export function OverlayPanel({
 
         {footer ? (
           <footer className="border-t border-sko-border-subtle px-6 py-4 text-center">
-            <a href={footer.href} className="sk-text-sm-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint">
+            <a href={footer.href} className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint">
               {footer.label}
             </a>
           </footer>
@@ -116,7 +130,7 @@ export function OverlayPanel({
 /** Sticky section label inside a panel body (semantic heading, eyebrow style). */
 export function PanelSectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="sk-text-2xs-medium bg-sko-bg-subtle px-4 py-2.5 text-sko-text-subtle">
+    <h3 className="sk-text-label-small-medium bg-sko-bg-subtle px-4 py-2.5 text-sko-text-subtle">
       {children}
     </h3>
   );

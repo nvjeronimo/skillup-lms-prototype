@@ -32,12 +32,12 @@ export function SavedTopicItem({
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1.5">
-          <span className="sk-text-xs-semibold text-sko-text-primary">{topicType}</span>
-          <span className="sk-text-xs-regular text-sko-text-subtle">· {duration}</span>
+          <span className="sk-text-body-small-semibold text-sko-text-primary">{topicType}</span>
+          <span className="sk-text-body-small-regular text-sko-text-subtle">· {duration}</span>
         </span>
-        <span className="sk-text-sm-semibold mt-0.5 block text-sko-text-default">{title}</span>
-        <span className="sk-text-xs-regular mt-0.5 block text-sko-text-subtle">{path}</span>
-        <span className="sk-text-xs-regular mt-1 block text-sko-text-subtle">
+        <span className="sk-text-body-medium-semibold mt-0.5 block text-sko-text-default">{title}</span>
+        <span className="sk-text-body-small-regular mt-0.5 block text-sko-text-subtle">{path}</span>
+        <span className="sk-text-body-small-regular mt-1 block text-sko-text-subtle">
           Saved {savedAt}
         </span>
       </span>

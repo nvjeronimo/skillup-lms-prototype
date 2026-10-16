@@ -38,10 +38,10 @@ export function DiscussionPrompt({
         className,
       )}
     >
-      <span className="sk-text-xs-medium text-sko-text-subtle">{duration}</span>
+      <span className="sk-text-body-small-medium text-sko-text-subtle">{duration}</span>
 
-      <h3 className="sk-text-md-semibold text-sko-text-default">{prompt}</h3>
-      <p className="sk-text-sm-regular text-sko-text-muted">{helper}</p>
+      <h3 className="sk-text-body-large-semibold text-sko-text-default">{prompt}</h3>
+      <p className="sk-text-body-medium-regular text-sko-text-muted">{helper}</p>
 
       <label htmlFor={replyId} className="sr-only">
         Your reply
@@ -53,11 +53,11 @@ export function DiscussionPrompt({
         onChange={(e) => setText(e.target.value.slice(0, maxChars))}
         rows={4}
         placeholder="Write your reply…"
-        className="sk-text-sm-regular min-h-[120px] w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-subtle p-3 text-sko-text-default outline-none placeholder:text-sko-text-subtle focus:border-sko-border-primary"
+        className="sk-text-body-medium-regular min-h-[120px] w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-subtle p-3 text-sko-text-default outline-none placeholder:text-sko-text-subtle focus:border-sko-border-primary"
       />
 
       <div className="flex items-center justify-between">
-        <span id={countId} className="sk-text-xs-medium text-sko-text-subtle">
+        <span id={countId} className="sk-text-body-small-medium text-sko-text-subtle">
           {text.length} / {maxChars} characters
         </span>
         <Button variant="primary" size="sm" disabled={!text.trim()} onClick={() => onSubmit?.(text)}>

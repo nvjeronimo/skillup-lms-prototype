@@ -25,7 +25,6 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const saveResumePosition = useLmsStore((s) => s.saveResumePosition);
   const clearResumePosition = useLmsStore((s) => s.clearResumePosition);
 
-  const durationSeconds = 1144; // 19:04
   const [playing, setPlaying] = React.useState(false);
   const [speedIdx, setSpeedIdx] = React.useState(1);
   // Start at zero and OFFER the stored position, rather than silently jumping —
@@ -36,6 +35,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
 
   if (!topic || !podcast) return null;
+  const durationSeconds = podcast.durationSeconds;
   const pct = Math.min(100, (t / durationSeconds) * 100);
 
   function seek(next: number) {
@@ -89,7 +89,8 @@ export function PodcastView({ topicId }: { topicId: string }) {
           onChange={(e) => seek(Number(e.target.value))}
           aria-label="Seek"
           aria-valuetext={`${secondsToTs(t)} of ${secondsToTs(durationSeconds)}`}
-          className="w-full accent-[var(--color-bg-info)]"
+          // With larger touch targets on (the mobile default) the slider is 44 high.
+          className="w-full accent-[var(--color-bg-info)] [[data-large-targets]_&]:min-h-[44px]"
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -121,7 +122,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
             >
               15s
             </Button>
-            <span className="sk-text-xs-regular ml-1 text-sko-text-subtle">
+            <span className="sk-text-body-small-regular ml-1 text-sko-text-subtle">
               {secondsToTs(t)} / {secondsToTs(durationSeconds)}
             </span>
           </div>
@@ -163,16 +164,16 @@ export function PodcastView({ topicId }: { topicId: string }) {
       ) : null}
 
       <div className="flex flex-col gap-1">
-        <span className="sk-text-sm-medium text-sko-text-muted">
+        <span className="sk-text-body-medium-medium text-sko-text-muted">
           {podcast.host}
           {podcast.guest ? ` with ${podcast.guest}` : ""}
         </span>
-        <p className="sk-text-md-regular text-sko-text-muted">{podcast.summary}</p>
+        <p className="sk-text-body-large-regular text-sko-text-muted">{podcast.summary}</p>
       </div>
 
       {/* Chapters behave like transcript lines: click to seek. */}
       <section className="flex flex-col gap-2">
-        <h2 className="sk-text-md-semibold text-sko-text-default">Chapters</h2>
+        <h2 className="sk-text-body-large-semibold text-sko-text-default">Chapters</h2>
         <ul className="flex flex-col gap-1">
           {podcast.chapters.map((c) => {
             const [m, sec] = c.ts.split(":").map(Number);
@@ -191,7 +192,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
                 >
                   <span
                     className={cn(
-                      "sk-text-xs-medium tabular-nums",
+                      "sk-text-body-small-medium tabular-nums",
                       active ? "text-sko-text-primary" : "text-sko-text-subtle",
                     )}
                   >
@@ -199,7 +200,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
                   </span>
                   <span
                     className={cn(
-                      "sk-text-sm-regular",
+                      "sk-text-body-medium-regular",
                       active ? "text-sko-text-primary" : "text-sko-text-default",
                     )}
                   >
@@ -212,7 +213,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
         </ul>
       </section>
 
-      <p className="sk-text-xs-regular text-sko-text-subtle">
+      <p className="sk-text-body-small-regular text-sko-text-subtle">
         Completes automatically once you have listened to 90%.
       </p>
     </div>

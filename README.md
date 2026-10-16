@@ -101,6 +101,19 @@ transcript seek + line highlight, **note editor** anchored to transcript lines
 (mock), tab routing, Notifications + Saved overlay panels, mobile drawer, and the
 out-of-scope topbar actions (AI / Theme / Exit) surface a toast.
 
+## The assistant
+
+A floating chat on every platform page and in the player (`components/assistant`,
+`lib/assistant`): it answers questions about the platform and the learner's courses, with
+buttons to the right place, and never changes anything. For a learner who has just arrived it opens once with five first steps that tick themselves (`lib/first-steps`), and it always shows the one thing to do next.
+
+**Testing first steps at any moment.** Add `?first-steps=restart` to any prototype address, for example
+`https://lms-prototype-mu.vercel.app/platform/dashboard?first-steps=restart`: the first steps start again with an
+empty conversation, the window opens by itself after a moment (desktop and tablet; on a phone the launcher shows
+5), and the parameter leaves the address so a reload does not restart again. The same reset is in the menus:
+*Restart first steps* in the profile panel of the platform pages and in the player's demo menu. Scripted by default; Claude when
+`ANTHROPIC_API_KEY` is set (see DEPLOY.md). Design: `docs/superpowers/specs/2026-10-13-assistant-design.md`.
+
 ## edX-parity additions (handoff v1.2 → v1.5)
 
 - **Video Chrome Footer** below the player — license/copyright, CC toggle, multi-language

@@ -8,7 +8,9 @@ import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
-import { certificate, DEFAULT_TOPIC_ID } from "@/lib/data";
+import { certificate } from "@/lib/data";
+import { playerCourse } from "@/lib/platform/catalog";
+import { courseHomeHref } from "@/lib/platform/routes";
 
 export function CertificateView({ courseSlug }: { courseSlug: string }) {
   const router = useRouter();
@@ -18,7 +20,8 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
   const clearToast = useLmsStore((s) => s.clearToast);
 
   const topbarSize: TopbarSize = bp === "mobile" ? "Mobile" : bp === "tablet" ? "Tablet" : "Desktop";
-  const backToCourse = () => router.push(`/course/${courseSlug}/topic/${DEFAULT_TOPIC_ID}`);
+  // Back from the certificate is the course page, where the certificate card lives.
+  const backToCourse = () => router.push(courseHomeHref(courseSlug));
 
   React.useEffect(() => {
     track("certificate_view");
@@ -28,13 +31,13 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
     <div className="flex min-h-[100dvh] flex-col bg-sko-bg-subtle">
       <CoursePlayerTopbar size={topbarSize} showBookmark showNotifications onClose={backToCourse} />
 
-      {/* Deep brand stage (theme- + skin-stable; never inverts) */}
-      {/* token-lint-disable-next-line no DS token for a fixed deep-teal stage; kept on the v4 alias of the old brand-stage token (see PR notes: it inverts in Dark) */}
-      <main id="main" tabIndex={-1} className="flex flex-1 flex-col items-center justify-center gap-6 bg-sko-text-on-primary-soft px-4 py-12 outline-none">
-        <h1 className="sk-text-2xs-medium text-sko-text-on-media">Certificate of Completion</h1>
+      {/* Brand stage: bg/primary with its own text pair, so the overline holds AA in every
+          theme and skin (the old stage sat on a text token that turned pale in Dark). */}
+      <main id="main" tabIndex={-1} className="flex flex-1 flex-col items-center justify-center gap-6 bg-sko-bg-primary px-4 py-12 outline-none">
+        <h1 className="sk-text-label-small-medium text-sko-text-on-primary">Certificate of Completion</h1>
         <CourseCertificate
           learnerName={certificate.learnerName}
-          courseTitle={certificate.courseTitle}
+          courseTitle={playerCourse(courseSlug).title}
           provider={certificate.provider}
           dateLabel={certificate.dateLabel}
           certificateId={certificate.certificateId}

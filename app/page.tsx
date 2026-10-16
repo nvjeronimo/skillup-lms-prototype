@@ -1,9 +1,7 @@
-import type { Metadata } from "next";
-import { CourseHub } from "@/components/views/CourseHub";
-import { pageTitle } from "@/lib/utils";
+import { redirect } from "next/navigation";
+import { DASHBOARD_HREF } from "@/lib/platform/routes";
 
-export const metadata: Metadata = { title: pageTitle("My Learning") };
-
+/** The site opens on the Dashboard, the learner's home (platform-navigation-flow.md). */
 export default function Home() {
-  return <CourseHub />;
+  redirect(DASHBOARD_HREF);
 }

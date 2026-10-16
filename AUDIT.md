@@ -50,7 +50,7 @@ All prototype findings below were verified against the cited files and `tokens/c
 - **(P2) No solid status-bg token** — `LiveNowBanner.tsx:42-45`, `LiveControlBar.tsx:67-68`, `CourseCertificate.tsx:82`, `CourseCompleteModal.tsx:56`, `QuizCard.tsx:118-120`, and `ActivityView` express solid status fills/borders by reusing **text** tokens (`bg-/border-sk-text-success|error|warning-primary`). Theme-adaptive and internally consistent, but a role gap that will mislead future authors.
 - **(P2) Divergent success-check motif** — `CourseCompleteModal.tsx:56` renders a green disc + white check (`bg-sk-text-success-primary text-sk-fg-white`); `CourseCertificate.tsx:82-83` renders an inverted disc (`bg-sk-bg-primary text-sk-text-success-primary`). Same concept, two recipes.
 - **(P3) Off-scale border width** — `NoteEditorModal.tsx:109` uses `border-l-[3px]` where the equivalent accent elsewhere uses `border-l-4` (`LiveNowBanner.tsx:32`).
-- **(P3) Redundant utility** — `DemoControlsMenu.tsx:39` applies `uppercase` on top of `.sk-text-2xs-medium`, which already sets `text-transform: uppercase` (`typography.css:51`).
+- **(P3) Redundant utility** — `DemoControlsMenu.tsx:39` applies `uppercase` on top of `.sk-text-label-small-medium`, which already sets `text-transform: uppercase` (`typography.css:51`).
 - **(P3) Touch targets** — `Bookmark.tsx:35-39` (~26px), `FilterChip` (px-3 py-1), `SidebarToggle` (32px) sit below the ~44px touch recommendation. Tokenization/focus are fine; either bump to ~40–44px or document desktop-density intent.
 
 #### Clean (verified, no findings)
@@ -83,7 +83,7 @@ Atoms: Avatar, Badge, CompletionStatus (apart from the noted P2), EmptyState, Le
 | G | Course End | ✅ (clean) | ❌ | `CertificateView`, `CourseCertificate`, `CourseCompleteModal` | PARTIAL | **Missing Playground board**; note P0 dark-mode bug in `CertificateView` |
 | H | Discovery & My Learning | ✅ | ❌ | `CourseHub`, `CourseCard`, `CourseRow`, `CourseHeader`, `FilterChip`, `EmptyState`, `SavedTopicItem` | DRIFT (DS-side) + Playground MISSING | 2nd-worst DS family (47 drift); decision pending on utility ramps → LMS status |
 | I | System Feedback | ✅ | partial | `Toast`, `InlineAlert`, `EmptyState`, `CompletionStatus`, `ContentFeedback` | DRIFT (DS-side) | DS only 1 drift (`fg-white`); near-match |
-| J | AI Assistant | ✅ | ✅ (hidden instance) | `AIPanel`, `OverlayPanel` | MATCH | DS 5 minor drift (`bg-primary`×4, `fg-quaternary`) |
+| J | AI Assistant | ✅ | ✅ (hidden instance) | `OverlayPanel`; `AIPanel` removed 13 Oct 2026, replaced by the floating chat (`components/assistant`) | REPLACED | The DS `LMS / AI Panel` has no counterpart in code any more |
 | K | Showcases & Diagrams | ✅ | ✅ (showcase surface) | composed views (`PlayerShell`, `ResponsiveShell`, `TopicBody`) + Storybook | PARTIAL / by-design | DS 7 raw + 25 drift = presentation furniture, not product components |
 
 **Top parity gaps:** (1) Playground is missing 4 product families (D, F, G, H) — visual parity can't be confirmed there; (2) DS still carries raw + UUI drift on 8 of 11 families that the prototype has already resolved — DS needs a rebind pass before it can serve as source of truth; (3) the prototype's own divergences are the dark-mode/skin token-role issues in §4, not structural mismatches.
@@ -109,7 +109,7 @@ Atoms: Avatar, Badge, CompletionStatus (apart from the noted P2), EmptyState, Le
 | R13 | **P2** | Prototype | `CourseCompleteModal.tsx:56` / `CourseCertificate.tsx:82` | Divergent success-check recipes | Pick one canonical disc+icon treatment; extract a shared atom |
 | R14 | **P2** | Prototype | `CompletionStatus.tsx:58,64` | In-Progress ring uses fixed `fg-progress` (doesn't skin) | Confirm with design: keep as progress semantic, or switch to brand token if "active brand" intended |
 | R15 | **P3** | Prototype | `NoteEditorModal.tsx:109` | Off-scale `border-l-[3px]` | Use `border-l-2`/`border-l-4` scale value |
-| R16 | **P3** | Prototype | `DemoControlsMenu.tsx:39` | Redundant `uppercase` on `.sk-text-2xs-medium` | Drop the utility |
+| R16 | **P3** | Prototype | `DemoControlsMenu.tsx:39` | Redundant `uppercase` on `.sk-text-label-small-medium` | Drop the utility |
 | R17 | **P3** | Prototype | `Bookmark` / `FilterChip` / `SidebarToggle` | Touch targets < ~44px | Bump to ~40–44px or document desktop-density |
 
 **Count:** P0 = 3 · P1 = 5 · P2 = 4 · P3 = 3 (plus R9/R10 DS/Playground P1s = 2). Total 17.

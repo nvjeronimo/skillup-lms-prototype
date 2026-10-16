@@ -16,6 +16,7 @@ import { Button } from "@/components/atoms/Button";
 import {
   ATTEMPTS_DISPLAY_CEILING,
   attemptsLabel,
+  getAssignmentBrief,
   getQuiz,
   getQuizConfig,
   topicFamily,
@@ -26,7 +27,9 @@ import { flatTopics, getAdjacentTopics, getCourseBySlug, getTopic } from "@/lib/
 import type { Course, FlatTopic } from "@/lib/types";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
-import { cn, scrollBehavior } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { scrollToElement } from "@/lib/scrollToElement";
+import { useCountUp } from "@/lib/useCountUp";
 
 export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
@@ -101,6 +104,12 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   // The step the learner is on — the equivalent of the sequence `position` the
   // platform persists per subsection.
   const [index, setIndex] = React.useState(0);
+  // Which way the learner last moved, so the next question comes in from that side.
+  const [direction, setDirection] = React.useState<"next" | "prev">("next");
+  const goTo = React.useCallback((n: number, dir: "next" | "prev") => {
+    setDirection(dir);
+    setIndex(n);
+  }, []);
   const recordedRef = React.useRef(false);
   const stepRef = React.useRef<HTMLDivElement>(null);
   const mountedRef = React.useRef(false);
@@ -117,6 +126,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     modeRef.current = config.mode;
     recordedRef.current = false;
     setAnswers(questions.map(freshAnswer));
+    setDirection("next");
     setIndex(0);
     setPhase(config.mode === "A" ? "quiz" : "intro");
   }, [config.mode, questions]);
@@ -157,7 +167,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
       mountedRef.current = true;
       return;
     }
-    stepRef.current?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+    scrollToElement(stepRef.current, "start");
   }, [index]);
 
   function startAttempt(indices?: number[]) {
@@ -165,6 +175,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     setAnswers((prev) =>
       questions.map((_, i) => (indices && !indices.includes(i) ? prev[i] : freshAnswer())),
     );
+    setDirection("next");
     setIndex(indices?.[0] ?? 0);
     setPhase("quiz");
   }
@@ -357,12 +368,12 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         // with nothing left open, Next goes to the results.
         onNext: () => {
           const n = nextUnanswered(i);
-          if (n >= 0) setIndex(n);
+          if (n >= 0) goTo(n, "next");
           else setPhase("completed");
         },
         onSkip: () => {
           const n = nextUnanswered(i);
-          if (n >= 0) setIndex(n);
+          if (n >= 0) goTo(n, "next");
         },
       },
     };
@@ -394,10 +405,10 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         {/* The problem's own header, printed once for the whole set. The points
             line carries the score after submitting. */}
         <div className="flex flex-col gap-1">
-          <span className="sk-text-md-semibold text-sko-text-default">
+          <span className="sk-text-body-large-semibold text-sko-text-default">
             {config.bucketPrompt}
           </span>
-          <span className="sk-text-xs-medium text-sko-text-subtle">
+          <span className="sk-text-body-small-medium text-sko-text-subtle">
             {submitted
               ? `${earned}/${total} points (${graded ? "graded" : "ungraded"})`
               : `${total} point${total === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -430,7 +441,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
                 // DS Next Hint: a link button with a 1px bottom stroke in every
                 // state (border/disabled once the hints run out).
                 className={cn(
-                  "sk-text-sm-semibold border-b px-0.5 py-1",
+                  "sk-text-body-medium-semibold border-b px-0.5 py-1",
                   bucketHintIndex + 1 >= bucketHints.length
                     ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
                     : "border-sko-border-primary text-sko-text-primary",
@@ -442,8 +453,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           >
             <ol className="flex flex-col gap-1">
               {bucketHints.slice(0, bucketHintIndex + 1).map((h, i) => (
-                <li key={i} className="sk-text-sm-regular text-sko-text-default">
-                  <span className="sk-text-sm-semibold text-sko-text-default">
+                <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
+                  <span className="sk-text-body-medium-semibold text-sko-text-default">
                     Hint ({i + 1} of {bucketHints.length}):{" "}
                   </span>
                   {h}
@@ -498,15 +509,20 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
       {/* DS: `Show progress` nests the Stepper Bar (Mode=With Back only) inside
           the card, after the Platform prompt and before the Question. */}
+      {/* The question body is keyed on the step inside the card, so each
+          question enters from the side the learner moved toward (right on Next
+          and Skip, left on Back) while the stepper and footer stay mounted. */}
       <QuizCard
         {...stepProps}
+        stepKey={index}
+        stepDirection={direction}
         showProgress
         progress={
           <QuizNavStepper
             current={index + 1}
             total={total}
             pct={(answeredCount / total) * 100}
-            onBack={index > 0 ? () => setIndex((i) => Math.max(0, i - 1)) : undefined}
+            onBack={index > 0 ? () => goTo(Math.max(0, index - 1), "prev") : undefined}
           />
         }
         // The standalone primary below is mode B's forward action (and becomes
@@ -523,7 +539,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             variant="primary"
             size="md"
             onClick={
-              allAnswered ? () => setPhase("completed") : () => setIndex(nextUnanswered(index))
+              allAnswered ? () => setPhase("completed") : () => goTo(nextUnanswered(index), "next")
             }
           >
             {allAnswered ? "See results" : "Next question"}
@@ -536,7 +552,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           nothing. The count comes from submitted answers only. Framed as what
           is still to come rather than what is missing. */}
       {!allAnswered ? (
-        <p className="sk-text-xs-regular text-center text-sko-text-subtle">
+        <p className="sk-text-body-small-regular text-center text-sko-text-subtle">
           {total - answeredCount} of {total} still to submit. Each answer counts once you submit it.
         </p>
       ) : null}
@@ -583,8 +599,8 @@ function QuizEntryHeader({
   const attempts = attemptsLabel(config);
   const facts = [
     `${questionCount} questions`,
-    // Decision 004: estimated durations take the "approx." prefix.
-    `approx. ${config.estMinutes} min`,
+    // Decision 004: estimated durations take "approx.", after the time (14 Oct 2026).
+    `${config.estMinutes} min approx.`,
     ...(attempts ? [attempts] : []),
     `Pass mark ${config.passThresholdPct}%`,
   ];
@@ -610,9 +626,9 @@ function QuizEntryHeader({
         {weight ? <Badge color={weight.color}>{weight.label}</Badge> : null}
       </div>
 
-      <h3 className="sk-text-lg-semibold text-sko-text-default">{topic.title}</h3>
+      <h3 className="sk-text-title-medium-semibold text-sko-text-default">{topic.title}</h3>
 
-      {/* Meta facts: Badge v2 Soft sm Gray. */}
+      {/* Meta facts: Badge Soft sm Gray. */}
       <ul className="flex flex-wrap gap-2">
         {facts.map((f) => (
           <li key={f}>
@@ -628,7 +644,7 @@ function QuizEntryHeader({
           description="Each answer is locked in for that attempt once you submit it."
         />
       ) : (
-        <p className="sk-text-sm-regular text-sko-text-muted">
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
           Check your understanding before moving on. You can retake this as many times as you like.
         </p>
       )}
@@ -674,6 +690,9 @@ function QuizSummary({
   onNextTopic?: () => void;
 }) {
   const pct = Math.round((result.score / result.total) * 100);
+  // The score counts up as the results land (long2, decelerating); reduced motion shows it at once.
+  // Withheld results show no percentage, so there is nothing to count (target 0 runs no frames).
+  const shownPct = useCountUp(config.resultsWithheld ? 0 : pct);
   const passed = pct >= config.passThresholdPct;
   // DS Results=Withheld: `show_correctness: never` masks the score too, so the
   // summary says what was recorded and never prints a percentage.
@@ -688,8 +707,8 @@ function QuizSummary({
       <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="sk-text-xs-semibold uppercase text-sko-text-primary">{config.label}</p>
-            <h3 className="sk-text-md-semibold mt-1 text-sko-text-default">{topic.title}</h3>
+            <p className="sk-text-body-small-semibold uppercase text-sko-text-primary">{config.label}</p>
+            <h3 className="sk-text-body-large-semibold mt-1 text-sko-text-default">{topic.title}</h3>
           </div>
           <Badge size="md" color={withheld ? "gray" : passed ? "success" : "warning"}>
             {withheld ? "Recorded" : passed ? "Passed" : "Not passed"}
@@ -701,7 +720,7 @@ function QuizSummary({
           <div className="flex items-center gap-5 rounded-[10px] bg-sko-bg-subtle px-6 py-5">
             {/* No release line: resultsWithheld is `show_correctness: never`,
                 so the results are never released. */}
-            <p className="sk-text-md-semibold text-sko-text-subtle">
+            <p className="sk-text-body-large-semibold text-sko-text-subtle">
               {result.total} of {result.total} answered
             </p>
           </div>
@@ -712,12 +731,16 @@ function QuizSummary({
               passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
             )}
           >
-            <span className={cn("sk-text-display-md-bold", tone)}>{pct}%</span>
+            {/* Screen readers get the final score once, not every step of the count. */}
+            <span className={cn("sk-text-headline-large-bold tabular-nums", tone)}>
+              <span aria-hidden>{shownPct}%</span>
+              <span className="sr-only">{pct}%</span>
+            </span>
             <div className="flex flex-col gap-1">
-              <p className={cn("sk-text-md-semibold", tone)}>
+              <p className={cn("sk-text-body-large-semibold", tone)}>
                 You scored {result.score} / {result.total}
               </p>
-              <p className={cn("sk-text-sm-medium", tone)}>
+              <p className={cn("sk-text-body-medium-medium", tone)}>
                 Pass mark {config.passThresholdPct}%
                 {config.weightPct ? ` · counts ${config.weightPct}% of your final grade` : ""}
               </p>
@@ -733,7 +756,7 @@ function QuizSummary({
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-sko-border-subtle pt-4">
           {withheld ? (
             <>
-              <p className="sk-text-sm-medium text-sko-text-subtle">Your answers are saved</p>
+              <p className="sk-text-body-medium-medium text-sko-text-subtle">Your answers are saved</p>
               {onNextTopic ? (
                 <Button variant="primary" onClick={onNextTopic}>
                   Next topic
@@ -742,14 +765,14 @@ function QuizSummary({
             </>
           ) : (
             <>
-              <p className="sk-text-sm-medium text-sko-text-subtle">
+              <p className="sk-text-body-medium-medium text-sko-text-subtle">
                 {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"}
                 {typeof config.maxAttempts === "number" &&
                 config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
                   ? ` · ${config.maxAttempts - result.attempts} left`
                   : ""}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 max-md:[&>*]:flex-1">
                 {incorrectIdx.length && !attemptsExhausted ? (
                   <Button variant="primary" onClick={() => onRetryIncorrect(incorrectIdx)}>
                     Retry incorrect ({incorrectIdx.length})
@@ -770,19 +793,16 @@ function QuizSummary({
 /* ---- Graded assignment: brief + file upload + submit ---- */
 function GradedSubmission({ topicId }: { topicId: string }) {
   const [submitted, setSubmitted] = React.useState(false);
+  // The brief is the course's own when it has one (lib/content).
+  const topic = getTopic(topicId);
+  const assignment = topic ? getAssignmentBrief(topic) : null;
   return (
     <div className="flex flex-col gap-5 py-4">
       <section className="rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-        <p className="sk-text-2xs-medium mb-2 text-sko-text-primary">Assignment brief</p>
-        <p className="sk-text-md-regular text-sko-text-muted">
-          Define a control plan for a process of your choice. Identify the critical-to-quality
-          characteristics, the metrics you&rsquo;ll monitor, the control limits, and the response
-          plan when a measurement falls out of range. Submit your plan as a PDF or DOCX.
-        </p>
-        <ul className="sk-text-sm-regular mt-3 list-disc pl-5 text-sko-text-muted">
-          <li>1–2 pages</li>
-          <li>Include at least one control chart sketch</li>
-          <li>Counts toward your final grade</li>
+        <p className="sk-text-label-small-medium mb-2 text-sko-text-primary">Assignment brief</p>
+        <p className="sk-text-body-large-regular text-sko-text-muted">{assignment?.brief}</p>
+        <ul className="sk-text-body-medium-regular mt-3 list-disc pl-5 text-sko-text-muted">
+          {assignment?.requirements.map((requirement) => <li key={requirement}>{requirement}</li>)}
         </ul>
       </section>
 

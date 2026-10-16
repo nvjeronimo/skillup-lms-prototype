@@ -91,7 +91,7 @@ figma.connect(InlineAlert, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?
     hint3: figma.boolean("Show hint 3", { true: figma.textContent("Hint 3"), false: undefined }),
     nextHint: figma.boolean("Show hint nav", {
       true: (
-        <button type="button" className="sk-text-sm-semibold text-sko-text-primary underline">
+        <button type="button" className="sk-text-body-medium-semibold text-sko-text-primary underline">
           Next Hint
         </button>
       ),
@@ -101,9 +101,9 @@ figma.connect(InlineAlert, "https://www.figma.com/design/c7EUDrQwP8si08aPipDSIV?
   example: ({ hint1, hint2, hint3, nextHint }) => (
     <InlineAlert tone="hint" title="" action={nextHint}>
       <ol className="flex flex-col gap-0.5">
-        <li className="sk-text-sm-regular text-sko-text-default">{hint1}</li>
-        <li className="sk-text-sm-regular text-sko-text-default">{hint2}</li>
-        <li className="sk-text-sm-regular text-sko-text-default">{hint3}</li>
+        <li className="sk-text-body-medium-regular text-sko-text-default">{hint1}</li>
+        <li className="sk-text-body-medium-regular text-sko-text-default">{hint2}</li>
+        <li className="sk-text-body-medium-regular text-sko-text-default">{hint3}</li>
       </ol>
     </InlineAlert>
   ),

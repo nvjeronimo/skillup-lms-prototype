@@ -61,14 +61,14 @@ export function ModuleHeader({
           isCompleted={isCompleted}
         />
         {/* DS name is auto-height with truncation off — long names wrap, never clip. */}
-        <span className="sk-text-sm-semibold text-sko-text-default">{title}</span>
+        <span className="sk-text-body-medium-semibold text-sko-text-default">{title}</span>
       </span>
       <ChevronDown
         size={24}
         /* Decision 013: 24px icons use a 2px stroke (DS draws 1.5px — DS fix pending). */
         strokeWidth={iconStroke(24)}
         className={cn(
-          "shrink-0 text-sko-border-default transition-transform duration-200",
+          "shrink-0 text-sko-border-default transition-transform duration-short4 ease-standard",
           !collapsed && "rotate-180",
         )}
         aria-hidden
