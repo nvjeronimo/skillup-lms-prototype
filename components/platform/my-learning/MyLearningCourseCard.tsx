@@ -164,6 +164,21 @@ function Action({
  *
  * "UP NEXT" is body-small/Semibold in capitals (DS `Overline`), as on the program card.
  */
+
+/** DS Course-Card 1.10: the provider and partners as logo badges, 8 apart (Partner 1, Partner 2). */
+function CoursePartners({ course }: { course: MyLearningCourse }) {
+  const list = course.partners?.length ? course.partners : [course.provider];
+  return (
+    <ul aria-label="Provider and partners" className="flex items-center gap-2">
+      {list.map((p) => (
+        <li key={p} className="flex">
+          <ProviderBadge value={p} type="logo" />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function MyLearningCourseCard({
   course,
   layout,
@@ -201,7 +216,7 @@ export function MyLearningCourseCard({
               badges keep the line under the title. */}
           <div className="flex w-full items-center gap-4">
             <CourseTypeBadge value="Course" />
-            <ProviderBadge value={course.provider} type="logo" />
+            <CoursePartners course={course} />
           </div>
           <h3
             title={course.title}
@@ -254,7 +269,7 @@ export function MyLearningCourseCard({
       <div className="flex w-full flex-col gap-3">
         <div className="flex w-full flex-wrap items-center justify-between gap-0.5">
           <CourseTypeBadge value="Course" />
-          <ProviderBadge value={course.provider} type="logo" />
+          <CoursePartners course={course} />
         </div>
         <div className="flex w-full items-start gap-3">
           <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-16 shrink-0" />

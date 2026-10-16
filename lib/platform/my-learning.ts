@@ -51,6 +51,11 @@ export interface MyLearningCourse {
    */
   imageSrc?: string;
   provider: Provider;
+  /**
+   * More than one provider or partner (DS Course-Card 1.10, 16 Oct 2026: a second badge, as on a
+   * program). When set it replaces `provider` on the card, in this order. Sample data.
+   */
+  partners?: Provider[];
   difficulty: Difficulty;
   /** Open edX `pacing` gives one value today: Flexible Learning. */
   delivery: DeliveryMode;
@@ -129,6 +134,8 @@ const COURSES: MyLearningCourse[] = [
     initials: "BA",
     imageSrc: `${COVERS}/business-analytics-with-python.jpg`,
     provider: "SkillUp",
+    // Sample of a course with two partners (DS Course-Card 1.10).
+    partners: ["SkillUp", "IBM"],
     difficulty: "Advanced",
     delivery: "Flexible Learning",
     progressPct: null,
