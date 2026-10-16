@@ -51,6 +51,11 @@ export interface MyLearningCourse {
    */
   imageSrc?: string;
   provider: Provider;
+  /**
+   * More than one provider or partner (DS Course-Card 1.10, 16 Oct 2026: a second badge, as on a
+   * program). When set it replaces `provider` on the card, in this order. Sample data.
+   */
+  partners?: Provider[];
   difficulty: Difficulty;
   /** Open edX `pacing` gives one value today: Flexible Learning. */
   delivery: DeliveryMode;
@@ -129,6 +134,8 @@ const COURSES: MyLearningCourse[] = [
     initials: "BA",
     imageSrc: `${COVERS}/business-analytics-with-python.jpg`,
     provider: "SkillUp",
+    // Sample of a course with two partners (DS Course-Card 1.10).
+    partners: ["SkillUp", "IBM"],
     difficulty: "Advanced",
     delivery: "Flexible Learning",
     progressPct: null,
@@ -162,7 +169,8 @@ export interface MyLearningProgram {
   delivery: DeliveryMode;
   difficulty: Difficulty;
   /** Partner logos, as on the course and program headers. Sample: no field returns them. */
-  partners: { name: string; logoSrc: string }[];
+  /** Partner logos (DS Provider-Partner-Badge Type=Logo). */
+  partners: { name: Provider }[];
   /** "N of M courses complete": `progress_details`, completed ÷ all courses. */
   courses: string;
   /** Number of courses in the program (programs API, length of `courses`). DS v1.7: a hero
@@ -202,8 +210,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     delivery: "Flexible Learning",
     difficulty: "Beginner",
     partners: [
-      { name: "Microsoft", logoSrc: "/platform/partner-microsoft-dark.svg" },
-      { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
+      { name: "Microsoft" },
+      { name: "IBM" },
     ],
     courses: "1 of 7 courses complete",
     courseCount: 7,
@@ -245,8 +253,8 @@ export const myLearningPrograms: MyLearningProgram[] = [
     delivery: "Flexible Learning",
     difficulty: "Beginner",
     partners: [
-      { name: "Microsoft", logoSrc: "/platform/partner-microsoft-dark.svg" },
-      { name: "IBM", logoSrc: "/platform/partner-ibm-dark.svg" },
+      { name: "Microsoft" },
+      { name: "IBM" },
     ],
     courses: "5 of 5 courses complete",
     courseCount: 5,

@@ -6,7 +6,7 @@ import { CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { CourseCountBadge, CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
+import { CourseCountBadge, CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CourseThumb } from "./CourseThumb";
 import {
@@ -39,7 +39,7 @@ const TARGET_44 =
  * 1px border/subtle, radius 8, no shadow.
  * Hero (DS change of 10 Oct 2026, the same on the four variants): a dark surface, bg/subtle
  * with the Semantics collection pinned to Dark. Top row: the Course Type badge "Program" and
- * the partner logos (36 tall chips); the title (title-large/Semibold since DS v1.9, text/default); the
+ * the partner logos (Provider-Partner-Badge Type=Logo, Theme=Dark, 24 tall); the title (title-large/Semibold since DS v1.9, text/default); the
  * Delivery Mode and Difficulty badges (the courses line moved to the body on 15 Oct 2026). The eyebrow "Program · N courses" left the component with its
  * property. Decoration: a 340 ring with a 56 stroke in bg/primary at 8 %, low on the left, and
  * a 207 circle of diagonal hatch (border/primary) at 35 %, high on the right; both are clipped
@@ -134,14 +134,11 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
                   data-mock="Partner logos have no field: org is the platform's own key"
                   className="flex items-center gap-3"
                 >
+                  {/* DS Program-Card 1.10 (16 Oct 2026): Provider-Partner-Badge Type=Logo, Theme=Dark;
+                      the hero's data-theme="dark" shows the light-on-dark drawing. */}
                   {program.partners.map((partner) => (
-                    <li
-                      key={partner.name}
-                      className="flex h-9 w-[77px] items-center justify-center rounded border border-sko-text-on-primary bg-sko-bg-page p-[3px]"
-                    >
-                      {/* The hero is always dark: the logos are the DS's light-on-dark drawings, at their own size. */}
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={partner.logoSrc} alt={partner.name} className="max-h-7 max-w-[69px]" />
+                    <li key={partner.name} className="flex">
+                      <ProviderBadge value={partner.name} type="logo" />
                     </li>
                   ))}
                 </ul>

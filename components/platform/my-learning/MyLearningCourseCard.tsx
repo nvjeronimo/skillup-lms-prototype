@@ -164,6 +164,21 @@ function Action({
  *
  * "UP NEXT" is body-small/Semibold in capitals (DS `Overline`), as on the program card.
  */
+
+/** DS Course-Card 1.10: the provider and partners as logo badges, 8 apart (Partner 1, Partner 2). */
+function CoursePartners({ course }: { course: MyLearningCourse }) {
+  const list = course.partners?.length ? course.partners : [course.provider];
+  return (
+    <ul aria-label="Provider and partners" className="flex items-center gap-2">
+      {list.map((p) => (
+        <li key={p} className="flex">
+          <ProviderBadge value={p} type="logo" />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function MyLearningCourseCard({
   course,
   layout,
@@ -193,7 +208,7 @@ export function MyLearningCourseCard({
         <CourseThumb
           initials={course.initials}
           imageSrc={course.imageSrc}
-          className="size-[86px] shrink-0"
+          className="size-[84px] shrink-0"
         />
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
@@ -201,11 +216,11 @@ export function MyLearningCourseCard({
               badges keep the line under the title. */}
           <div className="flex w-full items-center gap-4">
             <CourseTypeBadge value="Course" />
-            <ProviderBadge value={course.provider} />
+            <CoursePartners course={course} />
           </div>
           <h3
             title={course.title}
-            // DS List (10 Oct 2026): 120 tall with an 86 thumb, so the title is one line and a
+            // DS List (10 Oct 2026; thumb 84 since 16 Oct): 118 tall with an 84 thumb, so the title is one line and a
             // longer one is cut, in My Learning and in a course row alike (the screens nest the
             // same Course-Card, 1198 × 118, in `Program-Detail/Course-Row`).
             className="sk-text-title-large-semibold line-clamp-1 text-sko-text-default"
@@ -226,14 +241,13 @@ export function MyLearningCourseCard({
           className={cn("flex min-w-[250px] flex-1 items-center gap-4 rounded-lg", stripOf(course, hierarchy))}
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-            <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
-            <span
-              // One line, cut at the width the footer leaves.
-              className="sk-text-body-medium-medium w-full truncate text-sko-text-default"
-            >
-              {nextTitle}
-            </span>
-            {next ? <TopicTypeBadge type={next.type} /> : null}
+            {/* DS v1.11 (Nelson, 16 Oct 2026): the overline and the topic type share one row, 16
+                apart, so the title below has the footer's full width (two lines, then cut). */}
+            <div className="flex items-center gap-4">
+              <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
+              {next ? <TopicTypeBadge type={next.type} /> : null}
+            </div>
+            <span className="sk-text-body-medium-medium line-clamp-2 w-full text-sko-text-default">{nextTitle}</span>
           </div>
           {certificateHref ? (
             // DS v1.8 (Nelson): a completed course in the list offers its certificate; the
@@ -254,7 +268,7 @@ export function MyLearningCourseCard({
       <div className="flex w-full flex-col gap-3">
         <div className="flex w-full flex-wrap items-center justify-between gap-0.5">
           <CourseTypeBadge value="Course" />
-          <ProviderBadge value={course.provider} />
+          <CoursePartners course={course} />
         </div>
         <div className="flex w-full items-start gap-3">
           <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-16 shrink-0" />
@@ -269,14 +283,15 @@ export function MyLearningCourseCard({
       </div>
       <Progress course={course} className="w-full gap-2" />
       {next ? (
-        // The next topic (or, not started, the first one): the overline over the title, which
-        // wraps to two lines before it is cut, and the topic type at the top right.
-        <div className={cn("flex w-full items-start justify-between gap-3 rounded-lg", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        // The next topic (or, not started, the first one). DS v1.11 (Nelson, 16 Oct 2026): the
+        // overline and the topic type share the top row (type at the right end), so the title
+        // below has the strip's full width; it wraps to two lines before it is cut.
+        <div className={cn("flex w-full flex-col gap-0.5 rounded-lg", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
+          <div className="flex w-full items-center justify-between gap-0.5">
             <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
-            <span className="sk-text-body-medium-medium line-clamp-2 text-sko-text-default">{nextTitle}</span>
+            <TopicTypeBadge type={next.type} className="shrink-0" />
           </div>
-          <TopicTypeBadge type={next.type} className="shrink-0" />
+          <span className="sk-text-body-medium-medium line-clamp-2 text-sko-text-default">{nextTitle}</span>
         </div>
       ) : (
         // The certificate: one line, the date at the right end (DS State=Completed).

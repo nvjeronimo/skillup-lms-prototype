@@ -141,14 +141,45 @@ export type Provider =
   | "FutureSkills"
   | "Pacific Lutheran University";
 
+/** The partner artwork of DS Provider-Partner-Badge Type=Logo (exported from the DS, 16 Oct 2026). */
+const PROVIDER_LOGO: Record<Provider, { light: string; dark?: string }> = {
+  SkillUp: { light: "/skillup-logo.svg", dark: "/skillup-logo-dark.svg" },
+  Microsoft: { light: "/platform/partners/microsoft-light.svg", dark: "/platform/partners/microsoft-dark.svg" },
+  IBM: { light: "/platform/partners/ibm-light.svg", dark: "/platform/partners/ibm-dark.svg" },
+  "Google Cloud": { light: "/platform/partners/google-cloud-light.svg", dark: "/platform/partners/google-cloud-dark.svg" },
+  // A dark bitmap only: it keeps a light chip on dark surfaces too (DS Theme=Dark does the same).
+  FutureSkills: { light: "/platform/partners/futureskills.png" },
+  "Pacific Lutheran University": { light: "/platform/partners/plu-light.svg", dark: "/platform/partners/plu-dark.svg" },
+};
+
 /**
- * Provider (DS `LMS / Provider-Partner Badge`, 19975:538091): Badge Style=Plain, Size=sm,
- * Color=Gray — the provider name only (body-small/Medium, text/muted), no "by" prefix.
+ * Provider (DS `LMS/Platform/Discovery/Provider-Partner-Badge` 1.1, 19975:538091).
+ * Type=Text: Badge Style=Plain, Size=sm, Color=Gray, the name only (no "by" prefix).
+ * Type=Logo: the artwork, 16 tall, on a bg/subtle chip (padding 4, radius 4). The DS Theme
+ * (Light / Dark) follows the surface here: inside a `data-theme="dark"` band (the Program-Card
+ * hero) the dark drawing shows (`.sk-logo-light` / `.sk-logo-dark`, app/globals.css).
  */
-export function ProviderBadge({ value }: { value: Provider }) {
+export function ProviderBadge({ value, type = "text" }: { value: Provider; type?: "text" | "logo" }) {
+  if (type === "text")
+    return (
+      <Badge variant="plain" color="gray">
+        {value}
+      </Badge>
+    );
+  const logo = PROVIDER_LOGO[value];
   return (
-    <Badge variant="plain" color="gray">
-      {value}
-    </Badge>
+    <span
+      className={cn(
+        "inline-flex h-6 shrink-0 items-center rounded p-1",
+        logo.dark ? "bg-sko-bg-subtle" : "bg-sko-bg-fixed-subtle",
+      )}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={logo.light} alt={value} className={cn("h-4 w-auto", logo.dark && "sk-logo-light")} />
+      {logo.dark ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logo.dark} alt="" aria-hidden="true" className="sk-logo-dark h-4 w-auto" />
+      ) : null}
+    </span>
   );
 }
