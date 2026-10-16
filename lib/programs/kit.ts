@@ -9,7 +9,13 @@ import type { ProgramCourse } from "./types";
  */
 
 export { user } from "@/lib/data";
-export { certificatePageHref, coursePageHref, coursePlayerHref, slugify } from "@/lib/platform/hrefs";
+export {
+  certificatePageHref,
+  coursePageHref,
+  coursePlayerHref,
+  programCertificatePageHref,
+  slugify,
+} from "@/lib/platform/hrefs";
 export type * from "./types";
 
 /**

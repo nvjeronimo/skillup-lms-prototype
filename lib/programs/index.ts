@@ -1,6 +1,7 @@
 import type { Program } from "./types";
 import aiDrivenDigitalMarketing from "./ai-driven-digital-marketing";
 import cybersecurityFundamentals from "./cybersecurity-fundamentals";
+import dataAnalyticsFoundations from "./data-analytics-foundations";
 
 /**
  * The registry of programs: every program that has a page (/platform/program/<slug>).
@@ -10,6 +11,7 @@ import cybersecurityFundamentals from "./cybersecurity-fundamentals";
 export const PROGRAMS: Program[] = [
   aiDrivenDigitalMarketing,
   cybersecurityFundamentals,
+  dataAnalyticsFoundations,
 ];
 
 export function getProgramBySlug(slug: string): Program | undefined {

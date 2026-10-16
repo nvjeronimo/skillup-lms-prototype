@@ -14,8 +14,9 @@ export function generateMetadata({ params }: Params): Metadata {
 
 /**
  * The certificate of a program, on a page of its own. A PROPOSAL: no Figma screen exists for
- * it (asked for by Nelson on 10 Oct 2026); the page says so itself. No sample program is
- * complete, so both programs show the not-earned state with what is missing. The static
+ * it (asked for by Nelson on 10 Oct 2026); the page says so itself. The completed sample
+ * program (data-analytics-foundations) shows its issued certificate; the others show the
+ * not-earned state with what is missing. The static
  * `program` segment sits beside `[courseSlug]`: no course is called "program".
  */
 export default function ProgramCertificatePage({ params }: Params) {
