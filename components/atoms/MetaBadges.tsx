@@ -143,7 +143,8 @@ export type Provider =
 
 /** The partner artwork of DS Provider-Partner-Badge Type=Logo (exported from the DS, 16 Oct 2026). */
 const PROVIDER_LOGO: Record<Provider, { light: string; dark?: string }> = {
-  SkillUp: { light: "/skillup-logo.svg", dark: "/skillup-logo-dark.svg" },
+  // The partner badge uses the monochrome SkillUp wordmark of the DS (Nelson, 16 Oct 2026), not the colour brand logo.
+  SkillUp: { light: "/platform/partners/skillup-light.svg", dark: "/platform/partners/skillup-dark.svg" },
   Microsoft: { light: "/platform/partners/microsoft-light.svg", dark: "/platform/partners/microsoft-dark.svg" },
   IBM: { light: "/platform/partners/ibm-light.svg", dark: "/platform/partners/ibm-dark.svg" },
   "Google Cloud": { light: "/platform/partners/google-cloud-light.svg", dark: "/platform/partners/google-cloud-dark.svg" },
