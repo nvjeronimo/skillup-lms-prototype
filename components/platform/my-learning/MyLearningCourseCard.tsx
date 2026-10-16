@@ -241,14 +241,13 @@ export function MyLearningCourseCard({
           className={cn("flex min-w-[250px] flex-1 items-center gap-4 rounded-lg", stripOf(course, hierarchy))}
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-            <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
-            <span
-              // One line, cut at the width the footer leaves.
-              className="sk-text-body-medium-medium w-full truncate text-sko-text-default"
-            >
-              {nextTitle}
-            </span>
-            {next ? <TopicTypeBadge type={next.type} /> : null}
+            {/* DS v1.11 (Nelson, 16 Oct 2026): the overline and the topic type share one row, 16
+                apart, so the title below has the footer's full width (two lines, then cut). */}
+            <div className="flex items-center gap-4">
+              <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
+              {next ? <TopicTypeBadge type={next.type} /> : null}
+            </div>
+            <span className="sk-text-body-medium-medium line-clamp-2 w-full text-sko-text-default">{nextTitle}</span>
           </div>
           {certificateHref ? (
             // DS v1.8 (Nelson): a completed course in the list offers its certificate; the
@@ -284,14 +283,15 @@ export function MyLearningCourseCard({
       </div>
       <Progress course={course} className="w-full gap-2" />
       {next ? (
-        // The next topic (or, not started, the first one): the overline over the title, which
-        // wraps to two lines before it is cut, and the topic type at the top right.
-        <div className={cn("flex w-full items-start justify-between gap-3 rounded-lg", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        // The next topic (or, not started, the first one). DS v1.11 (Nelson, 16 Oct 2026): the
+        // overline and the topic type share the top row (type at the right end), so the title
+        // below has the strip's full width; it wraps to two lines before it is cut.
+        <div className={cn("flex w-full flex-col gap-0.5 rounded-lg", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
+          <div className="flex w-full items-center justify-between gap-0.5">
             <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
-            <span className="sk-text-body-medium-medium line-clamp-2 text-sko-text-default">{nextTitle}</span>
+            <TopicTypeBadge type={next.type} className="shrink-0" />
           </div>
-          <TopicTypeBadge type={next.type} className="shrink-0" />
+          <span className="sk-text-body-medium-medium line-clamp-2 text-sko-text-default">{nextTitle}</span>
         </div>
       ) : (
         // The certificate: one line, the date at the right end (DS State=Completed).
