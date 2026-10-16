@@ -8,8 +8,9 @@ import { CourseRowCard } from "@/components/platform/CourseRowCard";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { useLmsStore } from "@/lib/store";
 import {
-  MY_LEARNING_DEFAULT_TAB,
   MY_LEARNING_DEFAULT_VIEW,
+  MY_LEARNING_TAB_KEY,
+  myLearningFirstTab,
   myLearningPrograms,
   myLearningSearch,
   myLearningStateOf,
@@ -24,6 +25,7 @@ import type { MyLearningCourseRow } from "@/lib/platform/my-learning-rows";
 import { cn } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { staggerStyle } from "@/lib/motion/stagger";
+import { useEqualHeights } from "@/lib/useEqualHeights";
 import { ProgramCard } from "./ProgramCard";
 import { SearchField } from "./SearchField";
 import { ViewToggle } from "./ViewToggle";
@@ -85,7 +87,31 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
       return next;
     });
 
-  const tab: MyLearningTab = params.get("tab") === "programs" ? "programs" : MY_LEARNING_DEFAULT_TAB;
+  // The tab: `?tab=` when the link says one; otherwise the one the learner last opened (kept in
+  // this browser); the first time, Programs when they are enrolled in one (Nelson, 16 Oct 2026).
+  const paramTab = params.get("tab");
+  const linkedTab: MyLearningTab | null = paramTab === "programs" || paramTab === "courses" ? paramTab : null;
+  const [storedTab, setStoredTab] = React.useState<MyLearningTab | null>(null);
+  React.useEffect(() => {
+    try {
+      const v = localStorage.getItem(MY_LEARNING_TAB_KEY);
+      if (v === "programs" || v === "courses") setStoredTab(v);
+    } catch {
+      /* storage blocked: the first-time rule applies */
+    }
+  }, []);
+  const tab: MyLearningTab = linkedTab ?? storedTab ?? myLearningFirstTab(myLearningPrograms.length);
+  const rememberTab = (t: MyLearningTab) => {
+    setStoredTab(t);
+    try {
+      localStorage.setItem(MY_LEARNING_TAB_KEY, t);
+    } catch {
+      /* see above */
+    }
+  };
+  React.useEffect(() => {
+    if (linkedTab) rememberTab(linkedTab);
+  }, [linkedTab]);
   const view: MyLearningView = params.get("view") === "list" ? "list" : MY_LEARNING_DEFAULT_VIEW;
 
   const setParam = (key: "tab" | "view", value: string, fallback: string) => {
@@ -119,6 +145,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
   const listView = view === "list";
+  // Every card of the grid has the height of the tallest one (the list rows already match).
+  const gridRef = useEqualHeights<HTMLDivElement>('[data-card-grid]', [tab, status, needle, view, courses.length, programs.length]);
 
   return (
     <section aria-label="My courses and programs" className="flex flex-col gap-4 md:gap-5 lg:gap-6">
@@ -131,7 +159,10 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
         <PlatformTabs
           tabs={tabs}
           value={tab}
-          onChange={(id) => setParam("tab", id, MY_LEARNING_DEFAULT_TAB)}
+          onChange={(id) => {
+            rememberTab(id as MyLearningTab);
+            setParam("tab", id, "");
+          }}
           size="responsive"
           rule="parent"
           panels="selected"
@@ -202,7 +233,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
         </p>
 
         {/* A new filter or tab cross-fades the cards; the cards rise one after the other. */}
-        <div key={`${tab}-${status}`} className="sk-animate-fade sk-enter-only">
+        <div key={`${tab}-${status}`} ref={gridRef} className="sk-animate-fade sk-enter-only">
           {shown === 0 ? (
             <EmptyState
               icon={Search}
@@ -249,7 +280,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             </>
           ) : (
             <>
-              {/* Every program card has the same height, whatever its state or title. */}
+              {/* Every program card has the same height, whatever its state or title (useEqualHeights). */}
               <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
                 {programs.map((program, i) => (
                   <li key={program.id} className={cn("min-w-0", ROW_ENTER)} style={staggerStyle(i, programs.length)}>
