@@ -39,7 +39,7 @@ const TARGET_44 =
  * 1px border/subtle, radius 8, no shadow.
  * Hero (DS change of 10 Oct 2026, the same on the four variants): a dark surface, bg/subtle
  * with the Semantics collection pinned to Dark. Top row: the Course Type badge "Program" and
- * the partner logos (36 tall chips); the title (headline-medium/Semibold, text/default); the
+ * the partner logos (36 tall chips); the title (title-large/Semibold since DS v1.9, text/default); the
  * Delivery Mode and Difficulty badges (the courses line moved to the body on 15 Oct 2026). The eyebrow "Program · N courses" left the component with its
  * property. Decoration: a 340 ring with a 56 stroke in bg/primary at 8 %, low on the left, and
  * a 207 circle of diagonal hatch (border/primary) at 35 %, high on the right; both are clipped
@@ -153,7 +153,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             <h3
               title={program.title}
               className={cn(
-                "sk-text-headline-medium-semibold min-w-0 flex-1 text-sko-text-default",
+                "sk-text-title-large-semibold min-w-0 flex-1 text-sko-text-default",
                 // Grid keeps room for three lines and cuts a longer title there, so cards in a row
                 // have the same hero; List cuts at two.
                 list ? "line-clamp-2" : "line-clamp-3 min-h-[3lh]",
