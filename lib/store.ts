@@ -15,7 +15,8 @@ export type OverlayPanel = null | "notifications" | "saved" | "discussions";
 export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
 export type Theme = "light" | "dark";
 /** Brand skin — recombinations within the SkillUp palette. */
-export type Skin = "teal" | "ink" | "sky" | "violet" | "gold" | "red";
+/** The brand skins the tokens define (tokens/colors.css). Ink, Sky and Violet had no tokens and went on 16 Oct 2026. */
+export type Skin = "teal" | "gold" | "red";
 
 /** Vision mode — "cvd" = red-green colourblind-safe state colours (deuter + protan). */
 export type Vision = "default" | "cvd";
@@ -590,7 +591,7 @@ export const useLmsStore = create<LmsState>()(
     }),
     {
       name: "sk-lms-demo",
-      version: 4,
+      version: 5,
       storage: skStorage,
       // v2 dropped the third "Default" quiz mode. Anyone carrying the stored
       // `null` from v1 lands on A, which is what Default resolved to anyway.
@@ -600,6 +601,7 @@ export const useLmsStore = create<LmsState>()(
       // v4 added two courses with an outline of their own: a stored set of completed
       // topics predates them. Their seeded completion is added by `withNewCourses`, as for
       // any course added since; the step here only says which courses that state knew.
+      // v5 kept only the skins the tokens define: a stored Ink, Sky or Violet goes back to SKO.
       migrate: (state, from) => {
         let s = (state ?? {}) as Partial<LmsState> & { largeTargets?: boolean };
         if (from < 2 && !s.quizMode) s = { ...s, quizMode: "A" as const };
@@ -608,6 +610,7 @@ export const useLmsStore = create<LmsState>()(
           s = { ...rest, largeTargetsChoice: largeTargets ? true : null };
         }
         if (from < 4) s = { ...s, seededCourses: COURSES_BEFORE_V4 };
+        if (from < 5 && s.skin && !["teal", "gold", "red"].includes(s.skin)) s = { ...s, skin: "teal" };
         return s;
       },
       // Runs on every read of the stored state, after `migrate`: the default shallow merge,

@@ -2,20 +2,22 @@
 
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, Monitor, MonitorSmartphone, RotateCcw, Smartphone, Tablet } from "lucide-react";
+import { Check, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
 import { completesByHand, getPartnerLab, topicFamily } from "@/lib/content";
+import { useLmsStore, type CompletionFlow, type DeviceMode, type LabLaunch } from "@/lib/store";
+import { platformUser } from "@/lib/platform/user";
 import {
-  useLargeTargets,
-  useLmsStore,
-  type CompletionFlow,
-  type DeviceMode,
-  type LabLaunch,
-  type Skin as SkinId,
-} from "@/lib/store";
-import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
+  AccessibilitySection,
+  AppearanceSection,
+  PROFILE_PANEL,
+  ProfileFooter,
+  ProfileHeader,
+  ProfileSection as Section,
+  ToggleRow,
+} from "@/components/molecules/ProfileSettings";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
@@ -34,9 +36,6 @@ const SHAPES: { id: string; slug: string; topicId: string; label: string; title:
   { id: "3", slug: "quick-start", topicId: "qs-t2", label: "3-level · no Module, no Lesson", title: "3-level course (Course → Topics, no Module, no Lesson)" },
 ];
 
-// Brand skins — one per skin in the DS "2. Skins" variable collection.
-// Label code = each skin's brand anchor (bg-brand-solid, light) in the DS ramp.
-// Only SKO carries a legacy brand code (P03); the rest are their own ramps.
 const LAB_LAUNCHES: { value: LabLaunch; label: string }[] = [
   { value: "new-tab", label: "New tab" },
   { value: "inline", label: "In the page" },
@@ -48,80 +47,6 @@ const COMPLETION_FLOWS: { value: CompletionFlow; label: string }[] = [
   { value: "mark-as-complete", label: "Button only" },
 ];
 
-const SKINS: { skin: SkinId; label: string }[] = [
-  { skin: "teal", label: "Teal · default (P03)" },
-  { skin: "ink", label: "Ink (Ink/900)" },
-  { skin: "sky", label: "Sky (Sky/600)" },
-  { skin: "violet", label: "Violet (Violet/600)" },
-  { skin: "gold", label: "Gold (Gold/600)" },
-  { skin: "red", label: "Red (Red/600)" },
-];
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="border-t border-sko-border-subtle px-4 py-3">
-      <p className="sk-text-label-small-medium mb-2 text-sko-text-subtle">{title}</p>
-      {children}
-    </div>
-  );
-}
-
-/**
- * A labelled on/off row rendered as an accessible switch. Mirrors the DS Toggle
- * (1102:4208) Type=Default, Size=sm, Text=True: a 36×20 track (padding 2) with a
- * 16px knob, gap 8 to the label, top-aligned.
- */
-function ToggleRow({
-  label,
-  hint,
-  checked,
-  onChange,
-}: {
-  label: string;
-  hint?: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="flex w-full items-start gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
-    >
-      {/* Track: bg/primary on, bg/muted off; the knob sits right when on. The off track
-          adds a 1px inset border/default ring: the DS bg/muted track and white knob are
-          about 1.25:1 against bg/page, below WCAG 1.4.11's 3:1 (DS defect BA-11 on the
-          Accessibility Standards switches). The ring is inset, so the box stays 36×20. */}
-      <span
-        aria-hidden
-        className={cn(
-          "inline-flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors",
-          checked
-            ? "justify-end bg-sko-bg-primary"
-            : "justify-start bg-sko-bg-muted ring-1 ring-inset ring-sko-border-default",
-        )}
-      >
-        {/* Knob: 16px, Elevation/level2 (= Tailwind `shadow`). */}
-        <span
-          className={cn(
-            "size-4 rounded-full shadow",
-            checked
-              ? // token-lint-disable-next-line DS toggle knob binds icon/on-primary
-                "bg-sko-icon-on-primary"
-              : "bg-sko-bg-on-media",
-          )}
-        />
-      </span>
-      <span className="flex flex-col">
-        <span className="sk-text-body-medium-medium text-sko-text-muted">{label}</span>
-        {hint ? <span className="sk-text-body-medium-regular text-sko-text-subtle">{hint}</span> : null}
-      </span>
-    </button>
-  );
-}
-
 export interface DemoControlsMenuProps {
   userName?: string;
   userAvatarUrl?: string;
@@ -130,8 +55,8 @@ export interface DemoControlsMenuProps {
 }
 
 /**
- * Profile button that opens a demo-settings menu (preview device · content shape
- * · brand skin). Replaces the old floating widget — same controls, tucked into
+ * Profile button that opens the standard profile menu plus the player's demo settings
+ * (preview device · content shape). Replaces the old floating widget — same controls, tucked into
  * the top-bar account menu so it no longer crowds the viewport.
  *
  * A disclosure panel, not an ARIA menu: it holds switches, pressed buttons and
@@ -146,23 +71,10 @@ export function DemoControlsMenu({
   const { open, setOpen, containerRef, triggerProps, panelProps } = useDisclosure();
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
-  const skin = useLmsStore((s) => s.skin);
-  const setSkin = useLmsStore((s) => s.setSkin);
-  const vision = useLmsStore((s) => s.vision);
-  const setVision = useLmsStore((s) => s.setVision);
-  const textSize = useLmsStore((s) => s.textSize);
-  const setTextSize = useLmsStore((s) => s.setTextSize);
-  const reduceMotion = useLmsStore((s) => s.reduceMotion);
-  const setReduceMotion = useLmsStore((s) => s.setReduceMotion);
-  const underlineLinks = useLmsStore((s) => s.underlineLinks);
-  const setUnderlineLinks = useLmsStore((s) => s.setUnderlineLinks);
-  const largeTargets = useLargeTargets();
-  const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
   const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
   const setDiscussionsPreview = useLmsStore((s) => s.setDiscussionsPreview);
   const quizMode = useLmsStore((s) => s.quizMode);
   const setQuizMode = useLmsStore((s) => s.setQuizMode);
-  const resetDemo = useLmsStore((s) => s.resetDemo);
   const router = useRouter();
   const pathname = usePathname();
   const activeSlug = pathname?.match(/^\/course\/([^/]+)/)?.[1];
@@ -216,15 +128,13 @@ export function DemoControlsMenu({
           {...panelProps}
           role="group"
           aria-label="Account and demo settings"
-          className="absolute right-0 top-[calc(100%+8px)] z-50 w-72 overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+          className={PROFILE_PANEL}
         >
-          <div className="flex items-center gap-2.5 px-4 py-3">
-            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
-            <div className="min-w-0">
-              <p className="sk-text-body-medium-semibold truncate text-sko-text-default">{userName}</p>
-              <p className="sk-text-body-small-regular text-sko-text-subtle">Demo preview settings</p>
-            </div>
-          </div>
+          {/* The standard profile menu (DS LMS / Profile Menu): header, Appearance, Accessibility;
+              then the player's preview sections; the footer last. */}
+          <ProfileHeader name={userName} role={platformUser.role} avatarUrl={userAvatarUrl} />
+          <AppearanceSection />
+          <AccessibilitySection />
 
           <Section title="Preview device">
             <div className="flex gap-1">
@@ -277,92 +187,6 @@ export function DemoControlsMenu({
                   </button>
                 );
               })}
-            </div>
-          </Section>
-
-          <Section title="Brand skin">
-            <div className="flex items-center gap-2.5">
-              {SKINS.map((s) => {
-                const active = skin === s.skin;
-                return (
-                  <button
-                    key={s.skin}
-                    type="button"
-                    onClick={() => setSkin(s.skin)}
-                    aria-pressed={active}
-                    aria-label={`Skin: ${s.label}`}
-                    title={`Skin: ${s.label}`}
-                    className="inline-flex h-7 w-7 items-center justify-center rounded-full"
-                  >
-                    {/* Swatch reads the live brand-solid token for this skin (no hardcoded hex):
-                        data-skin re-resolves --color-bg-primary to the skin's value.
-                        Always set data-skin — including "teal" — so the swatch shows its
-                        own skin regardless of the document's active skin. Without this,
-                        the teal swatch (no attribute) inherited the active skin's colour. */}
-                    <span
-                      data-skin={s.skin}
-                      className={cn(
-                        "size-5 rounded-full bg-sko-bg-primary ring-offset-2 ring-offset-sko-bg-page transition-shadow",
-                        active ? "ring-2 ring-sko-border-strong" : "ring-1 ring-sko-border-subtle",
-                      )}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </Section>
-
-          <Section title="Accessibility Standards">
-            <div className="flex flex-col gap-0.5">
-              {/* Text size — segmented A / A+ / A++ */}
-              <div className="mb-1 flex items-center gap-2 px-1">
-                <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">Text size</span>
-                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
-                  {(["md", "lg", "xl"] as const).map((sz, i) => (
-                    <button
-                      key={sz}
-                      type="button"
-                      aria-pressed={textSize === sz}
-                      aria-label={`Text size ${["normal", "large", "extra large"][i]}`}
-                      onClick={() => setTextSize(sz)}
-                      className={cn(
-                        "px-2.5 py-1 transition-colors",
-                        ["sk-text-body-small-semibold", "sk-text-body-medium-semibold", "sk-text-body-large-semibold"][i],
-                        textSize === sz
-                          ? "bg-sko-bg-primary text-sko-text-on-primary"
-                          : "text-sko-text-muted hover:bg-sko-bg-subtle",
-                      )}
-                    >
-                      A
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <ToggleRow
-                label="Colourblind-safe states"
-                hint="Red–green safe (deuter + protan)"
-                checked={vision === "cvd"}
-                onChange={(v) => setVision(v ? "cvd" : "default")}
-              />
-              <ToggleRow
-                label="Reduce motion"
-                hint="Turn off animations and transitions"
-                checked={reduceMotion}
-                onChange={setReduceMotion}
-              />
-              <ToggleRow
-                label="Underline links"
-                hint="Don’t rely on colour alone"
-                checked={underlineLinks}
-                onChange={setUnderlineLinks}
-              />
-              <ToggleRow
-                label="Larger touch targets"
-                hint="Minimum 44×44 px controls · on by default on mobile"
-                checked={largeTargets}
-                onChange={setLargeTargets}
-              />
             </div>
           </Section>
 
@@ -474,32 +298,7 @@ export function DemoControlsMenu({
             </div>
           </Section>
 
-          <div className="border-t border-sko-border-subtle p-1.5">
-            <button
-              type="button"
-              onClick={() => {
-                resetDemo();
-                // Reset demo puts the seeded completion back: the first steps start from it.
-                restartFirstSteps(Array.from(useLmsStore.getState().completedTopics));
-                setOpen(false);
-              }}
-              className="sk-text-body-medium-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
-            >
-              <Icon icon={RotateCcw} size={16} />
-              Reset demo
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                restartFirstSteps(Array.from(useLmsStore.getState().completedTopics));
-                setOpen(false);
-              }}
-              className="sk-text-body-medium-medium flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default"
-            >
-              <Icon icon={RotateCcw} size={16} />
-              Restart first steps
-            </button>
-          </div>
+          <ProfileFooter onDone={() => setOpen(false)} />
         </div>
       ) : null}
     </div>
