@@ -104,7 +104,11 @@ export function ToggleRow({
   );
 }
 
-/** A segmented choice (DS Button group look): the current option filled. */
+/**
+ * DS `Button group` (1046:10171), as in the My Learning status filter: a bg/muted track
+ * (padding 4, gap 2, radius 8); the pressed segment is a pill on bg/page with 1px
+ * border/subtle and text/primary, the others text/subtle.
+ */
 export function Segmented<T extends string>({
   label,
   options,
@@ -117,7 +121,7 @@ export function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div role="group" aria-label={label} className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+    <div role="group" aria-label={label} className="flex gap-0.5 rounded-lg bg-sko-bg-muted p-1">
       {options.map((o) => (
         <button
           key={o.value}
@@ -126,9 +130,11 @@ export function Segmented<T extends string>({
           aria-label={o.aria}
           onClick={() => onChange(o.value)}
           className={cn(
-            "flex-1 px-2.5 py-1 transition-colors",
-            o.className ?? "sk-text-body-small-semibold",
-            value === o.value ? "bg-sko-bg-primary text-sko-text-on-primary" : "text-sko-text-muted hover:bg-sko-bg-subtle",
+            "h-8 flex-1 rounded-md border px-2.5 transition-colors",
+            o.className ?? "sk-text-body-medium-semibold",
+            value === o.value
+              ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
+              : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
           )}
         >
           {o.label}
@@ -146,18 +152,16 @@ export function AppearanceSection() {
   const setSkin = useLmsStore((s) => s.setSkin);
   return (
     <ProfileSection title="Appearance">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1">
         <ToggleRow label="Dark theme" checked={theme === "dark"} onChange={() => toggleTheme()} />
-        <div className="flex items-center gap-2 px-1">
-          <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">Brand skin</span>
-          <div className="w-40">
-            <Segmented
-              label="Brand skin"
-              options={PROFILE_SKINS.map((s) => ({ value: s.skin, label: s.label }))}
-              value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
-              onChange={setSkin}
-            />
-          </div>
+        <div className="flex flex-col gap-1.5 px-1">
+          <span className="sk-text-body-medium-medium text-sko-text-muted">Brand skin</span>
+          <Segmented
+            label="Brand skin"
+            options={PROFILE_SKINS.map((s) => ({ value: s.skin, label: s.label }))}
+            value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
+            onChange={setSkin}
+          />
         </div>
       </div>
     </ProfileSection>
@@ -180,8 +184,8 @@ export function AccessibilitySection() {
   return (
     <ProfileSection title="Accessibility standards">
       <div className="flex flex-col gap-0.5">
-        <div className="mb-1 flex items-center gap-2 px-1">
-          <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">Text size</span>
+        <div className="mb-1 flex flex-col gap-1.5 px-1">
+          <span className="sk-text-body-medium-medium text-sko-text-muted">Text size</span>
           <Segmented
             label="Text size"
             options={sizes.map((sz, i) => ({
