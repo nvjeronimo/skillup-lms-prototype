@@ -147,15 +147,15 @@ const PROVIDER_LOGO: Record<Provider, { light: string; dark?: string }> = {
   Microsoft: { light: "/platform/partners/microsoft-light.svg", dark: "/platform/partners/microsoft-dark.svg" },
   IBM: { light: "/platform/partners/ibm-light.svg", dark: "/platform/partners/ibm-dark.svg" },
   "Google Cloud": { light: "/platform/partners/google-cloud-light.svg", dark: "/platform/partners/google-cloud-dark.svg" },
-  // A dark bitmap only: it keeps a light chip on dark surfaces too (DS Theme=Dark does the same).
-  FutureSkills: { light: "/platform/partners/futureskills.png" },
+  // The dark drawing is the same bitmap through image filters in the DS (v1.2, Nelson), exported.
+  FutureSkills: { light: "/platform/partners/futureskills.png", dark: "/platform/partners/futureskills-dark.png" },
   "Pacific Lutheran University": { light: "/platform/partners/plu-light.svg", dark: "/platform/partners/plu-dark.svg" },
 };
 
 /**
- * Provider (DS `LMS/Platform/Discovery/Provider-Partner-Badge` 1.1, 19975:538091).
+ * Provider (DS `LMS/Platform/Discovery/Provider-Partner-Badge` 1.2, 19975:538091).
  * Type=Text: Badge Style=Plain, Size=sm, Color=Gray, the name only (no "by" prefix).
- * Type=Logo: the artwork, 16 tall, on a bg/subtle chip (padding 4, radius 4). The DS Theme
+ * Type=Logo: the artwork, 16 tall, on a bg/subtle chip (padding 6, radius 4: 28 tall). The DS Theme
  * (Light / Dark) follows the surface here: inside a `data-theme="dark"` band (the Program-Card
  * hero) the dark drawing shows (`.sk-logo-light` / `.sk-logo-dark`, app/globals.css).
  */
@@ -168,12 +168,8 @@ export function ProviderBadge({ value, type = "text" }: { value: Provider; type?
     );
   const logo = PROVIDER_LOGO[value];
   return (
-    <span
-      className={cn(
-        "inline-flex h-6 shrink-0 items-center rounded p-1",
-        logo.dark ? "bg-sko-bg-subtle" : "bg-sko-bg-fixed-subtle",
-      )}
-    >
+    // DS 1.2 (16 Oct 2026): padding Spacing/sm (6), so 28 tall; radius 4.
+    <span className="inline-flex h-7 shrink-0 items-center rounded bg-sko-bg-subtle p-1.5">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={logo.light} alt={value} className={cn("h-4 w-auto", logo.dark && "sk-logo-light")} />
       {logo.dark ? (

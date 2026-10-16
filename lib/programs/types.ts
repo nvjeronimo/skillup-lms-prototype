@@ -77,6 +77,8 @@ export interface CertificateDocumentData {
   /** A certificate without a partner prints the SkillUp logo alone (both optional since 10 Oct 2026). */
   partnerLogoSrc?: string;
   partnerName?: string;
+  /** Further partners, printed after the first one (a program with two partners, 16 Oct 2026). */
+  morePartners?: { logoSrc: string; name: string }[];
   signatories: { name: string; role: string; signatureSrc: string }[];
 }
 
