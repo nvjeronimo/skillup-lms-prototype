@@ -2,21 +2,21 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bell, ChevronDown, Menu, Moon, RotateCcw, Sun } from "lucide-react";
-import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
+import { Bell, ChevronDown, Menu } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { Badge } from "@/components/atoms/Badge";
-import { useLmsStore, type Skin } from "@/lib/store";
+import { useLmsStore } from "@/lib/store";
+import {
+  AccessibilitySection,
+  AppearanceSection,
+  PROFILE_PANEL,
+  ProfileFooter,
+  ProfileHeader,
+} from "@/components/molecules/ProfileSettings";
 import { useDisclosure } from "@/lib/useDisclosure";
 import { PLATFORM_SECTIONS, platformUser, type PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
-
-const SKINS: { skin: Skin; label: string }[] = [
-  { skin: "teal", label: "SKO" },
-  { skin: "gold", label: "Gold" },
-  { skin: "red", label: "Red" },
-];
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
@@ -111,56 +111,14 @@ function SectionLinks({
   );
 }
 
-/** Profile panel: the learner, plus the theme and skin switches used to test the screens. */
-function ProfilePanel({ panelProps }: { panelProps: ReturnType<typeof useDisclosure>["panelProps"] }) {
-  const theme = useLmsStore((s) => s.theme);
-  const toggleTheme = useLmsStore((s) => s.toggleTheme);
-  const skin = useLmsStore((s) => s.skin);
-  const setSkin = useLmsStore((s) => s.setSkin);
+/** Profile panel: the standard profile menu (DS LMS / Profile Menu), as in the player minus its preview sections. */
+function ProfilePanel({ panelProps, onDone }: { panelProps: ReturnType<typeof useDisclosure>["panelProps"]; onDone: () => void }) {
   return (
-    <div
-      {...panelProps}
-      className="absolute right-0 top-[calc(100%+8px)] z-40 w-64 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-3 shadow-lg"
-    >
-      <p className="sk-text-body-medium-semibold text-sko-text-default">{platformUser.name}</p>
-      <p className="sk-text-label-small-regular text-sko-text-subtle">{platformUser.role}</p>
-      <div className="mt-3 flex flex-col gap-2 border-t border-sko-border-subtle pt-3">
-        <button
-          type="button"
-          onClick={toggleTheme}
-          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
-        >
-          <Icon icon={theme === "dark" ? Sun : Moon} size={20} className="text-sko-icon-default" />
-          {theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-        </button>
-        {/* Prototype only: brings the assistant's first steps back, as for a learner who has just arrived. */}
-        <button
-          type="button"
-          onClick={() => restartFirstSteps(Array.from(useLmsStore.getState().completedTopics))}
-          className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 rounded-md px-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
-        >
-          <Icon icon={RotateCcw} size={20} className="text-sko-icon-default" />
-          Restart first steps
-        </button>
-        <div role="group" aria-label="Brand skin" className="flex gap-1">
-          {SKINS.map((s) => (
-            <button
-              key={s.skin}
-              type="button"
-              aria-pressed={skin === s.skin}
-              onClick={() => setSkin(s.skin)}
-              className={cn(
-                "sk-text-body-small-semibold inline-flex min-h-11 flex-1 items-center justify-center rounded-md transition-colors",
-                skin === s.skin
-                  ? "bg-sko-bg-primary text-sko-text-on-primary"
-                  : "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
-              )}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-      </div>
+    <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
+      <ProfileHeader name={platformUser.name} role={platformUser.role} />
+      <AppearanceSection />
+      <AccessibilitySection />
+      <ProfileFooter onDone={onDone} />
     </div>
   );
 }
@@ -237,7 +195,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
               </span>
               <Icon icon={ChevronDown} size={16} className="text-sko-icon-default" />
             </button>
-            {profile.open ? <ProfilePanel panelProps={profile.panelProps} /> : null}
+            {profile.open ? <ProfilePanel panelProps={profile.panelProps} onDone={profile.close} /> : null}
           </div>
         </div>
       </div>
@@ -259,7 +217,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
             >
               <Initials />
             </button>
-            {profileCompact.open ? <ProfilePanel panelProps={profileCompact.panelProps} /> : null}
+            {profileCompact.open ? <ProfilePanel panelProps={profileCompact.panelProps} onDone={profileCompact.close} /> : null}
           </div>
           <div ref={menu.containerRef}>
             <button
