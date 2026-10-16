@@ -110,6 +110,12 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={data.partnerLogoSrc} alt="" style={{ width: u(75), height: u(28) }} />
               </span>
+              {(data.morePartners ?? []).map((p) => (
+                <span key={p.name} className="flex items-center justify-center" style={{ width: u(104), height: u(41) }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.logoSrc} alt="" style={{ width: u(75), height: u(28), objectFit: "contain" }} />
+                </span>
+              ))}
             </div>
           ) : null}
         </div>

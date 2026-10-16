@@ -25,7 +25,8 @@ const SIGNATORIES = [
     signatureSrc: "/platform/certificate-signature-1.svg",
   },
   {
-    name: "Signatory name",
+    // A sample name (the real signatory is not known): the AI program still prints the placeholder.
+    name: "Daniel Moreau",
     role: "Programme lead, IBM",
     signatureSrc: "/platform/certificate-signature-2.svg",
   },
@@ -58,6 +59,8 @@ function courseCertificate(
       verifyUrl: `skillup.online/certificates/${verifyCode}`,
       partnerLogoSrc: "/platform/certificate-partner-ibm.svg",
       partnerName: "IBM",
+      // The program's second partner, as on its card (16 Oct 2026).
+      morePartners: [{ logoSrc: "/platform/partners/microsoft-light.svg", name: "Microsoft" }],
       signatories: SIGNATORIES,
     },
   };
@@ -217,6 +220,8 @@ const program: Program = {
       verifyUrl: "skillup.online/certificates/4qn8d6a3",
       partnerLogoSrc: "/platform/certificate-partner-ibm.svg",
       partnerName: "IBM",
+      // The program's second partner, as on its card (16 Oct 2026).
+      morePartners: [{ logoSrc: "/platform/partners/microsoft-light.svg", name: "Microsoft" }],
       signatories: SIGNATORIES,
     },
   },
