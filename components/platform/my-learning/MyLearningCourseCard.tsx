@@ -208,7 +208,7 @@ export function MyLearningCourseCard({
         <CourseThumb
           initials={course.initials}
           imageSrc={course.imageSrc}
-          className="size-[86px] shrink-0"
+          className="size-[84px] shrink-0"
         />
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
@@ -220,7 +220,7 @@ export function MyLearningCourseCard({
           </div>
           <h3
             title={course.title}
-            // DS List (10 Oct 2026): 120 tall with an 86 thumb, so the title is one line and a
+            // DS List (10 Oct 2026; thumb 84 since 16 Oct): 118 tall with an 84 thumb, so the title is one line and a
             // longer one is cut, in My Learning and in a course row alike (the screens nest the
             // same Course-Card, 1198 × 118, in `Program-Detail/Course-Row`).
             className="sk-text-title-large-semibold line-clamp-1 text-sko-text-default"
