@@ -262,7 +262,7 @@ export function MyLearningCourseCard({
   }
 
   return (
-    <article className={cn(surface, clickable, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
+    <article data-card-grid="" className={cn(surface, clickable, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
       {/* DS v1.8 header (Nelson, 15 Oct 2026), gap 12: the Course Type line across the card
           (provider at its right end), then the 64px thumb beside the title, then the badges. */}
       <div className="flex w-full flex-col gap-3">

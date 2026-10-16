@@ -13,8 +13,17 @@ import { coursePageHref, coursePlayerHref } from "./hrefs";
 export type MyLearningTab = "programs" | "courses";
 export type MyLearningView = "grid" | "list";
 
-/** The tab and the view drawn in the default frame (Courses · Grid). */
+/** The tab drawn in the default frame (Courses). */
 export const MY_LEARNING_DEFAULT_TAB: MyLearningTab = "courses";
+/**
+ * The tab My Learning opens on (Nelson, 16 Oct 2026): the one the learner last opened; the first
+ * time, Programs when they are enrolled in one, otherwise Courses. A `?tab=` in the link wins.
+ */
+export const MY_LEARNING_TAB_KEY = "sk-my-learning-tab";
+export function myLearningFirstTab(programCount: number): MyLearningTab {
+  return programCount > 0 ? "programs" : MY_LEARNING_DEFAULT_TAB;
+}
+/** The view drawn in the default frame (Grid). */
 export const MY_LEARNING_DEFAULT_VIEW: MyLearningView = "grid";
 
 

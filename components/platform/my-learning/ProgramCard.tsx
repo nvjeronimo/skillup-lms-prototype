@@ -85,6 +85,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
 
   return (
     <article
+      data-card-grid={list ? undefined : ""}
       className={cn(
         // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
         // so the desktop side padding is 23 (+1 border = the DS 24 inset). The height already matches with 24.
