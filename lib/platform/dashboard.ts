@@ -1,4 +1,5 @@
 import { Award, MessagesSquare, User, type LucideIcon } from "lucide-react";
+import { discussionHref, discussionUnread } from "./discussion";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
 import { coursePageHref, coursePlayerHref, slugify } from "./hrefs";
@@ -70,13 +71,25 @@ export const dashboardDue: DashboardDueItem[] = [
   {
     id: "assignment-02-audience-segmentation",
     day: "26",
-    when: "Sat",
+    // 26 October 2026 is a Monday (the sample week: today is Saturday the 24th).
+    when: "Mon",
     urgency: "upcoming",
     title: "Assignment 02 · Audience segmentation",
     meta: "AI-Driven Content and Brand Communication · Homework",
-    status: { label: "Due Sat", color: "warning" },
+    status: { label: "Due Mon", color: "warning" },
     // "Assignment 02 · Audience segmentation", the homework that closes Module 2 of the course.
     href: coursePlayerHref(slugify("AI-Driven Content and Brand Communication"), "acb-m2-t10"),
+  },
+  {
+    // The third deadline of the week, as the Calendar lists it (17 Oct 2026).
+    id: "lrt-quiz-module-3",
+    day: "28",
+    when: "Wed",
+    urgency: "upcoming",
+    title: "Module 3 quiz · Meetings and rituals",
+    meta: "Leadership in Remote Teams · Graded quiz",
+    status: { label: "Due Wed", color: "warning" },
+    href: coursePlayerHref("leadership-in-remote-teams"),
   },
 ];
 
@@ -117,7 +130,13 @@ export interface DashboardJumpTile {
 }
 
 export const dashboardJump: DashboardJumpTile[] = [
-  { id: "discussion", icon: MessagesSquare, title: "Discussion", description: "12 unread updates in your courses" },
+  {
+    id: "discussion",
+    icon: MessagesSquare,
+    title: "Discussion",
+    description: `${discussionUnread} unread replies in your courses`,
+    href: discussionHref(),
+  },
   {
     id: "certificates",
     icon: Award,
