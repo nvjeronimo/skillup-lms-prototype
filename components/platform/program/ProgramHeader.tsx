@@ -5,7 +5,8 @@ import Link from "next/link";
 import { BookOpen, ChevronRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
+import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
+import { programPartnersOf } from "@/lib/platform/my-learning";
 import { PlatformProgressBar, ProgressCardLabel } from "@/components/platform/PlatformProgressBar";
 import { useLmsStore } from "@/lib/store";
 import type { Program } from "@/lib/platform/program";
@@ -36,6 +37,7 @@ const CRUMB = "sk-text-body-medium-semibold -my-3 inline-flex min-h-11 items-cen
  */
 export function ProgramHeader({ program }: { program: Program }) {
   const showToast = useLmsStore((s) => s.showToast);
+  const partners = programPartnersOf(program.slug);
   // The brand skin lives on <html>; a nested dark band needs it repeated to pick the
   // matching dark brand ramp. Read after mount so the server markup stays skin-neutral.
   const skin = useLmsStore((s) => s.skin);
@@ -97,8 +99,24 @@ export function ProgramHeader({ program }: { program: Program }) {
         <div className="relative mt-4 flex flex-col gap-4 md:flex-row md:items-start md:gap-6 lg:mt-[18.75px] lg:gap-10 lg:pt-6">
           <div className="flex min-w-0 flex-1 flex-col gap-4 lg:min-h-[228.75px] lg:gap-0">
             {/* Below desktop the row is 36 tall: it is where the partner logos sit on a course. */}
-            <div className="flex h-9 items-center gap-2 lg:h-auto lg:py-3">
+            <div className="flex h-9 items-center justify-between gap-2 lg:h-auto lg:py-3">
               <CourseTypeBadge value="Program" />
+              {/* DS Course-Header Kind=Program (1.1): the partner logos at the end of the row,
+                  Provider-Partner-Badge Type=Logo, Theme=Dark (the band is data-theme="dark"); the
+                  same list as the program card. */}
+              {partners.length ? (
+                <ul
+                  aria-label="Partners"
+                  data-mock="Partner logos have no field: org is the platform's own key"
+                  className="flex items-center gap-2"
+                >
+                  {partners.map((partner) => (
+                    <li key={partner} className="flex">
+                      <ProviderBadge value={partner} type="logo" chip="page" />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </div>
 
             <div className="flex items-start gap-4">
