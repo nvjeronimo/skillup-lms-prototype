@@ -99,7 +99,7 @@ export function ProgramHeader({ program }: { program: Program }) {
         <div className="relative mt-4 flex flex-col gap-4 md:flex-row md:items-start md:gap-6 lg:mt-[18.75px] lg:gap-10 lg:pt-6">
           <div className="flex min-w-0 flex-1 flex-col gap-4 lg:min-h-[228.75px] lg:gap-0">
             {/* Below desktop the row is 36 tall: it is where the partner logos sit on a course. */}
-            <div className="flex h-9 items-center justify-between gap-2 lg:h-auto lg:max-w-[560px] lg:py-3">
+            <div className="flex h-9 items-center justify-between gap-2 lg:h-auto lg:py-3">
               <CourseTypeBadge value="Program" />
               {/* DS Course-Header Kind=Program (1.1): the partner logos at the end of the row,
                   Provider-Partner-Badge Type=Logo, Theme=Dark (the band is data-theme="dark"); the
