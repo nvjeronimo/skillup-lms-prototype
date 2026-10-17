@@ -272,7 +272,8 @@ export function CalendarView() {
 
         {missed.length ? (
           // Open edX: `dates_banner_info.missed_deadlines`; a self-paced course can shift its dates.
-          <section aria-labelledby="calendar-missed" className="flex flex-col gap-3 border-t-2 border-sko-border-error bg-sko-bg-faint p-4 md:flex-row md:items-center md:justify-between">
+          // DS Inline Alert 1.2, Tone=Error, Surface=Subtle: on the grey page the alert fill is bg/page.
+          <section aria-labelledby="calendar-missed" className="flex flex-col gap-3 border-t-2 border-sko-border-error bg-sko-bg-page p-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-3">
               <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-error" />
               <div className="flex flex-col gap-0.5">
