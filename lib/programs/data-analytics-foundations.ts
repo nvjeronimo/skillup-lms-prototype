@@ -77,7 +77,7 @@ const program: Program = {
   progress: {
     percent: 100,
     label: "Program progress",
-    status: "Completed · certificate issued 30 Sep 2026",
+    status: "Certificate issued 30 Sep 2026",
     cta: "View certificate",
     href: programCertificatePageHref(SLUG),
     footer: "5 of 5 courses complete",
