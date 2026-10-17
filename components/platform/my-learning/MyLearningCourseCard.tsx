@@ -202,7 +202,8 @@ export function MyLearningCourseCard({
 
   if (layout === "list") {
     return (
-      <article className={cn(surface, clickable, "flex items-center gap-6 p-4", className)}>
+      // The list rows match too (a title can take two lines since 1.14): useEqualHeights.
+      <article data-card-grid="" className={cn(surface, clickable, "flex items-center gap-6 p-4", className)}>
         {/* DS v1.8: thumb and titles are one group, 12 apart. */}
         <div className="flex min-w-[298px] flex-1 basis-0 items-center gap-3">
         <CourseThumb
@@ -220,10 +221,10 @@ export function MyLearningCourseCard({
           </div>
           <h3
             title={course.title}
-            // DS List (10 Oct 2026; thumb 84 since 16 Oct): 118 tall with an 84 thumb, so the title is one line and a
-            // longer one is cut, in My Learning and in a course row alike (the screens nest the
-            // same Course-Card, 1198 × 118, in `Program-Detail/Course-Row`).
-            className="sk-text-title-large-semibold line-clamp-1 text-sko-text-default"
+            // DS Course-Card 1.14 (Nelson, 17 Oct 2026): the title takes up to two lines, then an
+            // ellipsis, in every variant. List was one line (118 tall); a two-line title makes the row
+            // taller, in My Learning and in a course row alike (`Program-Detail/Course-Row` nests it).
+            className={cn("sk-text-title-large-semibold text-sko-text-default", TITLE_TWO_LINES)}
           >
             <CourseTitle course={course} />
           </h3>
