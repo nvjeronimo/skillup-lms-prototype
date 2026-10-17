@@ -1,4 +1,5 @@
 import { user } from "@/lib/data";
+import { deadlinesThisWeek } from "./calendar";
 
 const [firstName = user.name] = user.name.split(" ");
 
@@ -20,11 +21,12 @@ export const platformUser = {
 
 export type PlatformSection = "dashboard" | "my-learning" | "calendar" | "discussion" | "services";
 
-/** The five sections of `LMS / Platform / Topbar`. Only the first two have pages in the prototype. */
+/** The five sections of `LMS / Platform / Topbar`. Calendar, Discussion and Services are proposals (17 Oct 2026). */
 export const PLATFORM_SECTIONS: { id: PlatformSection; label: string; href?: string; count?: number }[] = [
   { id: "dashboard", label: "Dashboard", href: "/platform/dashboard" },
   { id: "my-learning", label: "My Learning", href: "/platform/my-learning", count: 4 },
-  { id: "calendar", label: "Calendar", count: 3 },
-  { id: "discussion", label: "Discussion" },
-  { id: "services", label: "Services" },
+  // The count: deadlines in the next seven days, as the Calendar shows them.
+  { id: "calendar", label: "Calendar", href: "/platform/calendar", count: deadlinesThisWeek },
+  { id: "discussion", label: "Discussion", href: "/platform/discussion" },
+  { id: "services", label: "Services", href: "/platform/services" },
 ];

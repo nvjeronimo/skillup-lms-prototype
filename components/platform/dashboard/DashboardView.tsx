@@ -60,7 +60,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
               id="dashboard-due-title"
               title="Due"
               emphasis="this week"
-              action={{ label: "View calendar", onClick: () => notInPrototype("Calendar") }}
+              action={{ label: "View calendar", href: "/platform/calendar" }}
             />
             <ul
               data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"

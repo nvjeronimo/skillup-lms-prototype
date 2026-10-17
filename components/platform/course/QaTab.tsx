@@ -102,7 +102,7 @@ function ThreadRow({
  * as Badge Outline — over a bg/subtle bubble (radius 10, 2 on the bottom left), the time
  * and "Report". Bubbles hug their text up to 420px; on mobile they fill the column.
  */
-function Message({ message, report, onReport }: { message: QaMessage; report: string; onReport: () => void }) {
+export function Message({ message, report, onReport }: { message: QaMessage; report: string; onReport: () => void }) {
   if (message.from === "learner") {
     return (
       <li className="flex flex-col items-end gap-1">
