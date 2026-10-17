@@ -112,7 +112,7 @@ export function ProgramHeader({ program }: { program: Program }) {
                 >
                   {partners.map((partner) => (
                     <li key={partner} className="flex">
-                      <ProviderBadge value={partner} type="logo" />
+                      <ProviderBadge value={partner} type="logo" chip="page" />
                     </li>
                   ))}
                 </ul>

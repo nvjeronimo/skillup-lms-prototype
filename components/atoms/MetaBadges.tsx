@@ -160,7 +160,20 @@ const PROVIDER_LOGO: Record<Provider, { light: string; dark?: string }> = {
  * (Light / Dark) follows the surface here: inside a `data-theme="dark"` band (the Program-Card
  * hero) the dark drawing shows (`.sk-logo-light` / `.sk-logo-dark`, app/globals.css).
  */
-export function ProviderBadge({ value, type = "text" }: { value: Provider; type?: "text" | "logo" }) {
+export function ProviderBadge({
+  value,
+  type = "text",
+  chip = "subtle",
+}: {
+  value: Provider;
+  type?: "text" | "logo";
+  /**
+   * The logo chip's fill: `subtle` (bg/subtle) on a card; `page` (bg/page) in a page header,
+   * white on the light course band and the dark page colour on the dark program band
+   * (DS Course-Header 1.1, Nelson 17 Oct 2026).
+   */
+  chip?: "subtle" | "page";
+}) {
   if (type === "text")
     return (
       <Badge variant="plain" color="gray">
@@ -170,7 +183,7 @@ export function ProviderBadge({ value, type = "text" }: { value: Provider; type?
   const logo = PROVIDER_LOGO[value];
   return (
     // DS 1.2 (16 Oct 2026): padding Spacing/sm (6), so 28 tall; radius 4.
-    <span className="inline-flex h-7 shrink-0 items-center rounded bg-sko-bg-subtle p-1.5">
+    <span className={cn("inline-flex h-7 shrink-0 items-center rounded p-1.5", chip === "page" ? "bg-sko-bg-page" : "bg-sko-bg-subtle")}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={logo.light} alt={value} className={cn("h-4 w-auto", logo.dark && "sk-logo-light")} />
       {logo.dark ? (
