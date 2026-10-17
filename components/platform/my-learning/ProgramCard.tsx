@@ -217,9 +217,10 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
               {/* On the green certificate footer text/subtle is 3.3:1 in dark: the default ink holds AA. */}
               <span className="inline-flex items-center gap-2">
                 <span className={cn("sk-text-body-small-semibold", completed ? "text-sko-text-default" : "text-sko-text-subtle")}>{footerLabel}</span>
-                {/* DS v1.8: the next deadline, only when the next item has one. */}
+                {/* DS v1.8: the next deadline, only when the next item has one. DS v1.12 (Nelson,
+                    17 Oct 2026): Soft Warning, as the Dashboard Due-Item, not the accent yellow. */}
                 {!completed && program.nextDue ? (
-                  <Badge variant="soft" color="yellow">
+                  <Badge variant="soft" color="warning">
                     {program.nextDue}
                   </Badge>
                 ) : null}
