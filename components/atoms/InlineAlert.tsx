@@ -48,6 +48,12 @@ export interface InlineAlertProps {
    */
   children?: React.ReactNode;
   onDismiss?: () => void;
+  /**
+   * DS `Surface` (v1.2, Nelson 17 Oct 2026): `page` on a white page (the alert on bg/faint);
+   * `subtle` on a grey bg/subtle surface, where bg/faint disappears, so the alert is white
+   * (bg/page). Hint keeps its own fill on both.
+   */
+  surface?: "page" | "subtle";
   className?: string;
 }
 
@@ -92,14 +98,16 @@ export function InlineAlert({
   action,
   children,
   onDismiss,
+  surface = "page",
   className,
 }: InlineAlertProps) {
   const t = TONE[tone];
+  const box = surface === "subtle" && tone !== "hint" ? t.box.replace(/bg-sko-bg-(faint|subtle)/, "bg-sko-bg-page") : t.box;
   // A hint reads as one sentence: the counter is a bold lead-in, not a heading.
   const inlineTitle = tone === "hint";
 
   return (
-    <div role="status" className={cn("flex items-start gap-3", t.box, className)}>
+    <div role="status" className={cn("flex items-start gap-3", box, className)}>
       <Icon icon={t.icon} size={20} className={cn("shrink-0", t.fg)} />
 
       <div className="min-w-0 flex-1">
