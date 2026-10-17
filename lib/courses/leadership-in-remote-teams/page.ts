@@ -24,7 +24,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/leadership-in-remote-teams.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Intermediate",
   stats: { structure: "4 modules · 25 topics", duration: "~ 6 hours", org: "SkillUp · LRT-01" },

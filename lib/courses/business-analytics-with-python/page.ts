@@ -25,7 +25,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/business-analytics-with-python.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Advanced",
   stats: { structure: "5 modules · 44 topics", duration: "~ 15 hours", org: "SkillUp · BAP-01" },

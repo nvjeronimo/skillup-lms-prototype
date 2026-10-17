@@ -24,7 +24,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/program-course-3-seo-geo-organic-growth.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 43 topics", duration: "~ 13 hours", org: "SkillUp · ADM-03" },

@@ -24,7 +24,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/project-management-with-ai-tools.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Intermediate",
   stats: { structure: "5 modules · 40 topics", duration: "~ 12 hours", org: "SkillUp · PMA-01" },

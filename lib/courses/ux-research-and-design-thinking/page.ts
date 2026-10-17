@@ -24,7 +24,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/ux-research-and-design-thinking.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 40 topics", duration: "~ 10 hours", org: "SkillUp · UXR-01" },

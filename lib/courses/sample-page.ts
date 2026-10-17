@@ -30,10 +30,7 @@ export const SIX_SIGMA: CourseDetail = {
   slug: "six-sigma",
   title: "Six Sigma for process improvement",
   imageSrc: "/platform/course-six-sigma.jpg",
-  partners: [
-    { name: "Microsoft", logoSrc: "/platform/partner-microsoft.jpg" },
-    { name: "IBM", logoSrc: "/platform/partner-ibm.jpg" },
-  ],
+  partners: ["Microsoft", "IBM"],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 42 topics", duration: "~ 14 hours", org: "SkillUp · SIXSIGMA-01" },
@@ -468,7 +465,7 @@ export const CLOUD_COMPUTING: CourseDetail = {
   ...SIX_SIGMA,
   slug: "introduction-to-cloud-computing",
   title: "Introduction to Cloud Computing",
-  partners: [{ name: "IBM", logoSrc: "/platform/partner-ibm.jpg" }],
+  partners: ["IBM"],
   stats: { structure: "4 modules · 42 topics", duration: "~ 14 hours", org: "IBM · CC0101EN" },
   progress: { ...SIX_SIGMA.progress, percent: 0 },
   hosted: {

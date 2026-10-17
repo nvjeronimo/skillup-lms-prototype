@@ -25,7 +25,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/program-course-7-capstone.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 25 topics", duration: "~ 12 hours", org: "SkillUp · SEC-05" },
