@@ -138,11 +138,11 @@ function Initials() {
 /**
  * DS `LMS / Platform / Topbar` (6374:3608), on every platform page while the LMS sidebar
  * is in development. Light: bg/page with a 1px border/subtle rule below.
- * - Desktop (≥1025): 72px with the rule, padding 16/24 — logo · the five sections · notifications · learner.
+ * - Desktop (≥1025): 72px with the rule, padding 16/24 — logo · the five sections · notifications · theme · learner.
  *   The sections are five DS `Topbar-Item` (v2.0, Nelson, 12 Oct 2026): underline tabs that fill
  *   the height of the bar, 24 apart (12 until 12 Oct), with no rule of their own. The page sets which one is current;
  *   in Figma that is `Current=On` on the item, there is no property for it on the Topbar.
- * - Compact (tablet and mobile): padding 8/16 — logo · notifications · avatar · menu.
+ * - Compact (tablet and mobile): 64 tall, padding 8/16 — logo · notifications · theme · avatar · menu.
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
  *   disclosure list under the bar.
  * Calendar, Discussion and Services have no page in the prototype.
@@ -217,8 +217,9 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
       </div>
 
       {/* Compact */}
-      {/* 49px as drawn (8 + 32 + 8 + rule): the controls are 44px targets, so the bar pads 2px. */}
-      <div className="flex items-center justify-between px-4 py-0.5 lg:hidden">
+      {/* DS Compact (Topbar 1.3, Nelson 17 Oct 2026): 64 with the rule, padding 8 / 16; the controls are
+          44px targets, centred. Notifications · Theme · learner · Menu. */}
+      <div className="flex h-[63px] items-center justify-between px-4 lg:hidden">
         <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
           <SkillUpLogo className="h-[30px]" />
         </Link>
