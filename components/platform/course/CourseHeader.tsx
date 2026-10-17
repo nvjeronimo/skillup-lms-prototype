@@ -95,7 +95,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
         <div className="relative flex flex-col gap-4 md:flex-row md:items-start md:gap-6 lg:mt-[18.75px] lg:gap-10 lg:pt-6">
           {/* Desktop: the four rows are 237 tall in a 229 column, centred, as in the DS component. */}
           <div className="flex min-w-0 flex-1 flex-col gap-4 lg:-my-1 lg:gap-0">
-            <div className="flex items-center justify-between gap-2 lg:max-w-[560px] lg:py-3">
+            <div className="flex items-center justify-between gap-2 lg:py-3">
               <CourseTypeBadge value="Course" />
               {/* DS Course-Header: the Partners logos at the end of the type row, as Provider-Partner-Badge
                   Type=Logo (Theme=Light), the same list as the course card (provider, or its partners). */}
