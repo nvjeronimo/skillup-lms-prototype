@@ -84,7 +84,8 @@ const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
     fg: "text-sko-text-primary",
   },
   answer: {
-    box: "rounded-lg border-t-2 border-sko-border-default bg-sko-bg-subtle p-4",
+    // DS v1.1 (14 Oct 2026): the 2px rule drawn like Success and Error — square, bg/faint — in primary.
+    box: "border-t-2 border-sko-border-primary bg-sko-bg-faint p-4",
     icon: KeyRound,
     fg: "text-sko-icon-muted",
   },

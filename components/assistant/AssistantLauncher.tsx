@@ -80,7 +80,9 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
           )}
         >
           {/* The ring sits under the mark: the ball covers its middle, so only its 2px edge shows. */}
-          <span className="sk-assistant-ring" />
+          {/* The ring turns only while first steps are left (audit 16 Oct 2026, D3): with nothing to
+              do, a moving ring would pull the eye from the page for no reason. */}
+          <span className={cn("sk-assistant-ring", badge === 0 && "sk-assistant-ring--still")} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assistant-mark.svg" alt="" className="sk-logo-light relative block h-12 w-12" />
           {/* eslint-disable-next-line @next/next/no-img-element */}

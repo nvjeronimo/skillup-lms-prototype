@@ -35,6 +35,9 @@ export function CourseThumb({
         <img
           src={imageSrc}
           alt=""
+          // Covers sit below the fold in long lists: load them as they come near (audit 16 Oct 2026).
+          loading="lazy"
+          decoding="async"
           onError={() => setFailed(true)}
           className="absolute inset-0 size-full object-cover"
         />

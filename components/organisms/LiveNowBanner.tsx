@@ -29,10 +29,11 @@ export function LiveNowBanner({
   return (
     <div
       className={cn(
-        // DS: pad 16/16/16/24 with a 4px inside stroke on the left (4 + 20 = 24), no effect.
-        // Live = success (green), Upcoming = warning (ADR 012: live is green, not red).
-        "flex items-center justify-between gap-4 rounded-xl border-l-4 bg-sko-bg-page py-4 pl-5 pr-4",
-        isLive ? "border-sko-border-success" : "border-sko-border-warning",
+        // DS v1.1 (14 Oct 2026): no side stripe — the whole card carries the state. Padding 16 all
+        // round, 1px border. Live = bg/success-soft + border/success-soft; Upcoming = the "toasted"
+        // bg/warning-muted + border/accent-yellow (ADR 012: live is green, not red).
+        "flex items-center justify-between gap-4 rounded-xl border p-4",
+        isLive ? "border-sko-border-success-soft bg-sko-bg-success-soft" : "border-sko-border-accent-yellow bg-sko-bg-warning-muted",
         className,
       )}
       // A named region, not an alert: the banner is on the page when it loads, and an alert would
@@ -55,13 +56,14 @@ export function LiveNowBanner({
         <div className="flex min-w-0 flex-col gap-0.5">
           <p className="sk-text-body-medium-regular truncate text-sko-text-default">{title}</p>
           {subtitle ? (
-            <p className="sk-text-body-small-regular truncate text-sko-text-muted">{subtitle}</p>
+            // On the toasted yellow, text/muted drops to 4.26:1 in dark: Upcoming uses the default ink.
+            <p className={cn("sk-text-body-small-regular truncate", isLive ? "text-sko-text-muted" : "text-sko-text-default")}>{subtitle}</p>
           ) : null}
         </div>
       </div>
 
       <div className="flex shrink-0 items-center gap-4">
-        <span className="sk-text-body-small-medium hidden text-sko-text-subtle md:block">{status}</span>
+        <span className={cn("sk-text-body-small-medium hidden md:block", isLive ? "text-sko-text-subtle" : "text-sko-text-default")}>{status}</span>
         <Button variant="primary" size="md" onClick={onAction}>
           {isLive ? "Join Live Now" : "Set reminder"}
         </Button>
