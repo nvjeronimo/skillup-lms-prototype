@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
- * DS `LMS / Profile Menu`). Same header, same Appearance (theme + brand skin), same
+ * DS `LMS / Profile Menu`). Same header, same Appearance (brand skin), same
  * Accessibility standards and the same footer everywhere; the player adds its preview
  * sections between Accessibility and the footer.
  */
@@ -144,25 +144,23 @@ export function Segmented<T extends string>({
   );
 }
 
-/** Appearance: the dark theme switch and the brand skin (the same three skins everywhere). */
+/**
+ * Appearance: the brand skin (the same three skins everywhere). The light / dark switch is in
+ * the top bar of both shells since 17 Oct 2026 (Nelson; DS Topbar), not here.
+ */
 export function AppearanceSection() {
-  const theme = useLmsStore((s) => s.theme);
-  const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const skin = useLmsStore((s) => s.skin);
   const setSkin = useLmsStore((s) => s.setSkin);
   return (
     <ProfileSection title="Appearance">
-      <div className="flex flex-col gap-1">
-        <ToggleRow label="Dark theme" checked={theme === "dark"} onChange={() => toggleTheme()} />
-        <div className="flex flex-col gap-1.5 px-1">
-          <span className="sk-text-body-medium-medium text-sko-text-muted">Brand skin</span>
-          <Segmented
-            label="Brand skin"
-            options={PROFILE_SKINS.map((s) => ({ value: s.skin, label: s.label }))}
-            value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
-            onChange={setSkin}
-          />
-        </div>
+      <div className="flex flex-col gap-1.5 px-1">
+        <span className="sk-text-body-medium-medium text-sko-text-muted">Brand skin</span>
+        <Segmented
+          label="Brand skin"
+          options={PROFILE_SKINS.map((s) => ({ value: s.skin, label: s.label }))}
+          value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
+          onChange={setSkin}
+        />
       </div>
     </ProfileSection>
   );
