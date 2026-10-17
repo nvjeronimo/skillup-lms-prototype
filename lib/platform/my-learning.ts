@@ -289,6 +289,14 @@ export const myLearningPrograms: MyLearningProgram[] = [
 export type MyLearningState = "in-progress" | "not-started" | "completed";
 export type MyLearningStatusFilter = "all" | MyLearningState;
 
+/**
+ * The partners of a program, as its card shows them (Program-Card 1.10). The program page header
+ * uses the same list, so the two never differ. A program without partners shows none, as its card.
+ */
+export function programPartnersOf(id: string): Provider[] {
+  return myLearningPrograms.find((p) => p.id === id)?.partners.map((p) => p.name) ?? [];
+}
+
 export const myLearningStatusOrder: MyLearningState[] = ["in-progress", "not-started", "completed"];
 
 export const myLearningStatusFilters: { id: MyLearningStatusFilter; label: string }[] = [
