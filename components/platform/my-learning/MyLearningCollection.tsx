@@ -145,7 +145,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
   const listView = view === "list";
-  // Every card of the grid has the height of the tallest one (the list rows already match).
+  // Every card has the height of the tallest one, in the grid and in the list (course rows; a title can take two lines).
   const gridRef = useEqualHeights<HTMLDivElement>('[data-card-grid]', [tab, status, needle, view, courses.length, programs.length]);
 
   return (
