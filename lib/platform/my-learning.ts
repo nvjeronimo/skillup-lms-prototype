@@ -168,6 +168,17 @@ export const myLearningCourses: MyLearningCourse[] = COURSES.map((course) => ({
 
 /* ── Browse tile (LMS / Platform / Browse tile, 6388:116426) ────────────────────────── */
 
+/**
+ * The provider and partners of a course, as its card shows them (Course-Card 1.10): the partners
+ * when set, else the provider. The course page header uses the same list, so the two never differ.
+ * A course outside My Learning uses its own list (`own`), else SkillUp.
+ */
+export function coursePartnersOf(slug: string, own?: Provider[]): Provider[] {
+  const course = myLearningCourses.find((c) => c.id === slug);
+  if (!course) return own?.length ? own : ["SkillUp"];
+  return course.partners?.length ? course.partners : [course.provider];
+}
+
 export const myLearningBrowseTile = { title: "Browse catalog", subtitle: "Add a new course" } as const;
 
 /* ── Programs (DS `LMS/Platform/My-Learning/Program-Card`) ──────────────────────────── */

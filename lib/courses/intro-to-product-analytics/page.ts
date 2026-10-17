@@ -19,7 +19,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/intro-to-product-analytics.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 32 topics", duration: "~ 8 hours", org: "SkillUp · IPA-01" },

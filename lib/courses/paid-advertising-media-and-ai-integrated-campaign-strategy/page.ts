@@ -25,7 +25,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/program-course-4-paid-advertising.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 54 topics", duration: "~ 15 hours", org: "SkillUp · ADM-04" },

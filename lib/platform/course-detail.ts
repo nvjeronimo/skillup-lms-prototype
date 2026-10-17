@@ -1,5 +1,5 @@
 import type { BadgeColor } from "@/components/atoms/Badge";
-import type { DeliveryMode, Difficulty } from "@/components/atoms/MetaBadges";
+import type { DeliveryMode, Difficulty, Provider } from "@/components/atoms/MetaBadges";
 import { COURSES as OWN_COURSES } from "@/lib/courses";
 import { CLOUD_COMPUTING, SIX_SIGMA } from "@/lib/courses/sample-page";
 import type { TopicType } from "@/lib/types";
@@ -203,7 +203,11 @@ export interface CourseDetail {
   slug: string;
   title: string;
   imageSrc: string;
-  partners: { name: string; logoSrc: string }[];
+  /**
+   * Provider and partners for a course outside My Learning (the two sample courses). A course in
+   * My Learning takes the list of its card (`coursePartnersOf`), so the two never differ.
+   */
+  partners?: Provider[];
   deliveryMode: DeliveryMode;
   difficulty: Difficulty;
   stats: { structure: string; duration: string; org: string };
@@ -326,7 +330,6 @@ export function getCourseDetailBySlug(slug: string): CourseDetail | undefined {
     slug,
     title: entry.title,
     imageSrc: entry.imageSrc ?? SIX_SIGMA.imageSrc,
-    partners: [],
     stats: { ...SIX_SIGMA.stats, org: "SkillUp" },
     progress: {
       ...SIX_SIGMA.progress,

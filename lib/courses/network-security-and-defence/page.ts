@@ -25,7 +25,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/program-ai-digital-marketing.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 39 topics", duration: "~ 9 hours", org: "SkillUp · SEC-02" },

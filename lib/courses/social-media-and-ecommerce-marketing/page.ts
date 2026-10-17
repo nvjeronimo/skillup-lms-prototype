@@ -25,7 +25,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/program-course-5-social-media-ecommerce.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "5 modules · 64 topics", duration: "~ 16 hours", org: "SkillUp · ADM-05" },

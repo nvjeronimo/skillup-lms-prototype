@@ -24,7 +24,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/program-course-2-ai-driven-content.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 38 topics", duration: "~ 13 hours", org: "SkillUp · ADM-02" },

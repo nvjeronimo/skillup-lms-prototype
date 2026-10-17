@@ -2,9 +2,10 @@ import Link from "next/link";
 import { BookOpen, ChevronRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge } from "@/components/atoms/MetaBadges";
+import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar, ProgressCardLabel } from "@/components/platform/PlatformProgressBar";
 import type { CourseDetail } from "@/lib/platform/course-detail";
+import { coursePartnersOf } from "@/lib/platform/my-learning";
 import { programPageHref } from "@/lib/platform/hrefs";
 import { MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 import { HostedProgressCard } from "./HostedProgressCard";
@@ -96,18 +97,16 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
           <div className="flex min-w-0 flex-1 flex-col gap-4 lg:-my-1 lg:gap-0">
             <div className="flex items-center justify-between gap-2 lg:max-w-[560px] lg:py-3">
               <CourseTypeBadge value="Course" />
+              {/* DS Course-Header: the Partners logos at the end of the type row, as Provider-Partner-Badge
+                  Type=Logo (Theme=Light), the same list as the course card (provider, or its partners). */}
               <ul
-                aria-label="Partners"
+                aria-label="Provider and partners"
                 data-mock="Partner logos have no field: org is the platform's own key"
-                className="flex items-center gap-3"
+                className="flex items-center gap-2"
               >
-                {course.partners.map((partner) => (
-                  <li
-                    key={partner.name}
-                    className="flex h-9 w-[77px] items-center justify-center rounded border border-sko-text-on-primary bg-sko-bg-page p-[3px]"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={partner.logoSrc} alt={partner.name} width={69} height={28} className="h-7 w-[69px] object-contain" />
+                {coursePartnersOf(course.slug, course.partners).map((partner) => (
+                  <li key={partner} className="flex">
+                    <ProviderBadge value={partner} type="logo" />
                   </li>
                 ))}
               </ul>

@@ -19,7 +19,6 @@ export const page: CourseDetail = {
   slug: outline.slug,
   title: outline.title,
   imageSrc: "/platform/covers/program-course-1-digital-marketing-fundamentals.jpg",
-  partners: [],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: { structure: "4 modules · 36 topics", duration: "~ 12 hours", org: "SkillUp · ADM-01" },
