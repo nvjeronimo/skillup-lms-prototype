@@ -187,6 +187,15 @@ export function CoursePlayerTopbar({
               <Icon icon={Bookmark} size={20} />
             </UtilityButton>
           ) : null}
+          {/* DS Topbar v1.2: the theme button on Mobile too (Notifications · Bookmark · Theme · avatar · Close). */}
+          {showTheme ? (
+            <UtilityButton
+              label={theme === "Dark" ? "Switch to light theme" : "Switch to dark theme"}
+              onClick={onTheme}
+            >
+              <Icon icon={theme === "Dark" ? Sun : Moon} size={20} />
+            </UtilityButton>
+          ) : null}
           {accountMenu ?? (
             <button type="button" aria-label="Account" className="flex items-center rounded-full">
               <Avatar name={userName} src={userAvatarUrl} size="xs" />

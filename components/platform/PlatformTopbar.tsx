@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bell, ChevronDown, Menu } from "lucide-react";
+import { Bell, ChevronDown, Menu, Moon, Sun } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { Badge } from "@/components/atoms/Badge";
@@ -153,6 +153,8 @@ function Initials() {
  */
 export function PlatformTopbar({ current }: { current: PlatformSection }) {
   const showToast = useLmsStore((s) => s.showToast);
+  const theme = useLmsStore((s) => s.theme);
+  const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const profile = useDisclosure();
   const profileCompact = useDisclosure();
   const menu = useDisclosure();
@@ -169,6 +171,19 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
     </button>
   );
 
+  // DS Topbar v1.3 (Nelson, 17 Oct 2026): the light / dark switch is in the bar, not in the
+  // profile menu: a Utility Button (sm, Tertiary) after the notifications, moon-01 in light, sun in dark.
+  const themeButton = (
+    <button
+      type="button"
+      aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+      onClick={() => toggleTheme()}
+      className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
+    >
+      <Icon icon={theme === "dark" ? Sun : Moon} size={20} />
+    </button>
+  );
+
   return (
     <header className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
       {/* Desktop */}
@@ -181,6 +196,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
         </nav>
         <div className="flex items-center gap-3">
           {bell}
+          {themeButton}
           <div ref={profile.containerRef} className="relative">
             <button
               type="button"
@@ -208,6 +224,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
         </Link>
         <div className="flex items-center gap-1">
           {bell}
+          {themeButton}
           <div ref={profileCompact.containerRef} className="relative">
             <button
               type="button"
