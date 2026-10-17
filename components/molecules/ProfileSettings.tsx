@@ -16,11 +16,31 @@ import { cn } from "@/lib/utils";
  */
 
 /** The three brand skins the tokens define (tokens/colors.css): SKO, Gold, Red. */
-export const PROFILE_SKINS: { skin: Skin; label: string }[] = [
-  { skin: "teal", label: "SKO" },
-  { skin: "gold", label: "Gold" },
-  { skin: "red", label: "Red" },
+export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
+  // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/primary
+  { skin: "teal", label: "SKO", dot: "bg-sko-icon-primary" },
+  // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-yellow
+  { skin: "gold", label: "Gold", dot: "bg-sko-icon-accent-yellow" },
+  // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-red
+  { skin: "red", label: "Red", dot: "bg-sko-icon-accent-red" },
 ];
+
+/**
+ * DS Profile Menu 1.2 (Nelson, 17 Oct 2026): each Brand skin segment is the Button group base
+ * Icon=Dot, a 10px dot in the skin's colour before the name. SKO is icon/primary held on the SKO
+ * skin (`data-skin="teal"`), so it stays blue whichever skin is on; Gold and Red are the accent icons.
+ */
+function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
+  const theme = useLmsStore((s) => s.theme);
+  return (
+    <span
+      aria-hidden
+      data-skin={skin === "teal" ? "teal" : undefined}
+      data-theme={skin === "teal" && theme === "dark" ? "dark" : undefined}
+      className={cn("size-2.5 shrink-0 rounded-full", dot)}
+    />
+  );
+}
 
 /** The menu's panel: 288 wide, scrolls inside when the window is short. */
 export const PROFILE_PANEL =
@@ -130,7 +150,7 @@ export function Segmented<T extends string>({
           aria-label={o.aria}
           onClick={() => onChange(o.value)}
           className={cn(
-            "h-8 flex-1 rounded-md border px-2.5 transition-colors",
+            "inline-flex h-8 flex-1 items-center justify-center gap-2 rounded-md border px-2.5 transition-colors",
             o.className ?? "sk-text-body-medium-semibold",
             value === o.value
               ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
@@ -157,7 +177,15 @@ export function AppearanceSection() {
         <span className="sk-text-body-medium-medium text-sko-text-muted">Brand skin</span>
         <Segmented
           label="Brand skin"
-          options={PROFILE_SKINS.map((s) => ({ value: s.skin, label: s.label }))}
+          options={PROFILE_SKINS.map((s) => ({
+            value: s.skin,
+            label: (
+              <>
+                <SkinDot skin={s.skin} dot={s.dot} />
+                {s.label}
+              </>
+            ),
+          }))}
           value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
           onChange={setSkin}
         />
