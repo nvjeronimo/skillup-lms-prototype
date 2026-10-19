@@ -181,10 +181,10 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   const notificationsRead = useLmsStore((s) => s.notificationsRead);
   const markAllNotificationsRead = useLmsStore((s) => s.markAllNotificationsRead);
   const unread = notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length;
-  // Maré skin (proposal, 19 Oct 2026): the bar's own controls take the dark-mode tokens so they
+  // Sea skin (proposal, 19 Oct 2026; first called Maré): the bar's own controls take the dark-mode tokens so they
   // read on the deep-teal bar; the panels that open from it keep the page's theme.
   const skin = useLmsStore((st) => st.skin);
-  const ink = skin === "mare" ? { "data-theme": "dark", "data-chrome-ink": "" } : {};
+  const ink = skin === "sea" ? { "data-theme": "dark", "data-chrome-ink": "" } : {};
 
   // The bell opens the same Notifications panel as the player (DS LMS / Notifications Panel):
   // hybrid tabs All · Discussions · Grading · Updates with date sections, Mark all read (Nelson, 19 Oct 2026).
