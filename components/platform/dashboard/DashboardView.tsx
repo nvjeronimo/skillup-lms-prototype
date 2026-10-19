@@ -49,7 +49,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           {dashboardGreeting.salutation}{" "}
           {/* One line from tablet up; on mobile the name takes the second line, as drawn. */}
           <br className="md:hidden" />
-          <span data-greeting-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
+          <span data-heading-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
         </h1>
 
         <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />

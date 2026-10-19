@@ -106,6 +106,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         // The DS hero pins the Semantics collection to Dark: every token below resolves dark in
         // both app themes. The brand skin lives on <html>, so a nested dark band repeats it.
         data-theme="dark"
+        data-band=""
         data-skin={mounted && skin !== "teal" ? skin : undefined}
         className={cn(
           // The badges sit at the bottom of the hero (justify-between) in both layouts.

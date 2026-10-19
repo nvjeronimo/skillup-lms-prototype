@@ -58,17 +58,21 @@ function ServiceRow({ item, onAction }: { item: ServiceItem; onAction: (what: st
 export function ServicesView() {
   const showToast = useLmsStore((s) => s.showToast);
   const notInPrototype = (what: string) => showToast(`${what} is not part of this prototype yet`);
+  // Sea skin: the mentor card becomes a deep-teal band (its contents take the dark-mode tokens).
+  const sea = useLmsStore((s) => s.skin) === "sea";
 
   return (
     <PlatformPage current="services" className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         <h1 className="sk-text-headline-large-bold text-sko-text-default">
-          Here <span className="text-sko-text-subtle">to help.</span>
+          Here <span data-heading-em="" className="text-sko-text-subtle">to help.</span>
         </h1>
 
         <section
           aria-labelledby="services-mentor"
           data-mock={servicesMentor.mock}
+          data-theme={sea ? "dark" : undefined}
+          data-band={sea ? "" : undefined}
           className="flex flex-col gap-4 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:flex-row lg:items-center lg:justify-between lg:p-6"
         >
           <div className="flex items-start gap-4">
