@@ -24,8 +24,8 @@ export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   { skin: "gold", label: "Gold", dot: "bg-sko-icon-accent-yellow" },
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-red
   { skin: "red", label: "Red", dot: "bg-sko-icon-accent-red" },
-  // Maré (proposal, Nelson 19 Oct 2026): the SKO brand with a deep-teal chrome and a yellow spark.
-  { skin: "mare", label: "Maré", dot: "bg-sko-bg-chrome" },
+  // Sea (proposal, Nelson 19 Oct 2026; first called Maré): the SKO brand with a deep-teal chrome and a yellow spark.
+  { skin: "sea", label: "Sea", dot: "bg-sko-bg-chrome" },
 ];
 
 /**

@@ -9,7 +9,7 @@ export interface JumpTileProps {
   /** A link when set; otherwise the tile is a button that calls `onClick`. */
   href?: string;
   onClick?: () => void;
-  /** Maré skin: the icon box takes a foundation tone by position (0 sky, 1 mint, 2 sun). */
+  /** Sea skin: the icon box takes a foundation tone by position (0 sky, 1 mint, 2 sun). */
   tone?: number;
 }
 
