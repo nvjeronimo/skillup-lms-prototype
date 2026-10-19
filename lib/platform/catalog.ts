@@ -41,7 +41,8 @@ const fromMyLearning: CatalogCourse[] = myLearningCourses.map((c) => ({
   percent: c.progressPct,
 }));
 
-const CATALOG: CatalogCourse[] = [...fromPrograms, ...fromMyLearning];
+/** Every course, programs first; exported for the Certificates page (19 Oct 2026). */
+export const CATALOG: CatalogCourse[] = [...fromPrograms, ...fromMyLearning];
 
 export function getCatalogCourse(slug: string): CatalogCourse | undefined {
   return CATALOG.find((c) => c.slug === slug);
