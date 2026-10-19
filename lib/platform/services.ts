@@ -71,7 +71,7 @@ export const serviceSections: ServiceSection[] = [
       { id: "azure", icon: Cloud, title: "Microsoft Azure credits", description: "USD 100 of Azure credit for the labs of your Microsoft courses.", action: "View your code", status: { label: "Claimed", color: "success" } },
       { id: "ibm", icon: BadgeCheck, title: "IBM SkillsBuild badge", description: "A digital badge from IBM when you finish the program.", action: "How to earn it", status: { label: "In progress", color: "info" } },
       { id: "sandbox", icon: Terminal, title: "Python sandbox", description: "A ready-to-use notebook for Business Analytics with Python, no install needed.", action: "Open the sandbox", external: true },
-      { id: "certs", icon: Award, title: "Certificates", description: "Your course and program certificates, ready to download and share.", action: "See certificates", href: "/course/six-sigma/certificate" },
+      { id: "certs", icon: Award, title: "Certificates", description: "Your course and program certificates, ready to download and share.", action: "See certificates", href: "/platform/certificates" },
     ],
   },
 ];

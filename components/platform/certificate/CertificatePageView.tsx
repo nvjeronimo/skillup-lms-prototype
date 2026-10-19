@@ -6,7 +6,6 @@ import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CertificateDocument, certificateLearner } from "@/components/platform/program/CertificateDocument";
 import type { ProgramCertificateCourse } from "@/lib/platform/catalog";
@@ -17,18 +16,6 @@ import { useLmsStore } from "@/lib/store";
 
 const CRUMB = "sk-text-body-medium-semibold inline-flex min-h-11 items-center lg:min-h-6";
 
-const NOTE = {
-  course: {
-    title: "Sample page: not designed yet",
-    description:
-      "This page has no Figma screen. It is a proposal so that View certificate has somewhere to go, built from parts that already exist.",
-  },
-  program: {
-    title: "Sample page: not designed yet",
-    description:
-      "The program certificate has no Figma screen. This page is a proposal built from parts that already exist; whether a program issues a certificate of its own, and what it looks like, is still to be designed.",
-  },
-} as const;
 
 /** The state of one course on the program certificate page, in the words of the course cards. */
 function courseStatus(percent: number | null): { label: string; color: "success" | "gray" } {
@@ -40,10 +27,9 @@ function courseStatus(percent: number | null): { label: string; color: "success"
 /**
  * A certificate on its own page: where *View* on a Certificate card leads.
  *
- * PROPOSAL, NOT DESIGNED. There is no Figma screen for this page: it is assembled from what
- * exists (the platform shell, the breadcrumb of the course and program pages, the certificate
- * document of the Certificate card, DS buttons) so the flow has somewhere to land. The note
- * at the top of the page says the same to whoever is looking at it.
+ * Drawn in Figma on 19 Oct 2026 with the Certificates page (in review), from what exists: the
+ * platform shell, the breadcrumb of the course and program pages, the certificate document of
+ * the Certificate card, DS buttons. Until then it was a proposal with a "not designed yet" note.
  *
  * Two kinds since 10 Oct 2026, both proposals:
  * - `course`: the certificate of a course (issued), as before;
@@ -72,7 +58,6 @@ export function CertificatePageView({
   complete?: number;
 }) {
   const showToast = useLmsStore((s) => s.showToast);
-  const note = NOTE[kind];
   const heading = kind === "program" && program ? program.title : certificate.title;
   const back =
     kind === "course" && courseSlug
@@ -117,8 +102,6 @@ export function CertificatePageView({
           </li>
         </ol>
       </nav>
-
-      <InlineAlert tone="info" title={note.title} description={note.description} />
 
       <div className="flex flex-col gap-1">
         <h1 className="sk-text-headline-small-semibold text-sko-text-default">{heading}</h1>

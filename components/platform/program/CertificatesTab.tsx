@@ -31,8 +31,11 @@ export function CertificateCard({
   labelAs = "p",
   label = "Certificate",
   detailsHref,
+  className,
 }: {
   certificate: ProgramCertificate;
+  /** On the card: the Certificates page stretches it to the row (cards in a row, one height). */
+  className?: string;
   /** The eyebrow is a plain line under a course title (Program) and a heading when the card stands alone (Course Detail). */
   labelAs?: "h2" | "h3" | "p";
   label?: string;
@@ -43,7 +46,7 @@ export function CertificateCard({
 
   if (certificate.status === "not-earned") {
     return (
-      <CardShell label={label} labelAs={labelAs} gap="lg">
+      <CardShell label={label} labelAs={labelAs} gap="lg" className={className}>
         <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
         <ul className="flex flex-col gap-4">
           {certificate.requirements.map((req) => (
@@ -70,7 +73,7 @@ export function CertificateCard({
   }
 
   return (
-    <CardShell label={label} labelAs={labelAs} gap="lg">
+    <CardShell label={label} labelAs={labelAs} gap="lg" className={className}>
       <div className="relative aspect-[1123/794] w-full overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
         <div className="absolute inset-0">
           <CertificateDocument
@@ -81,7 +84,8 @@ export function CertificateCard({
       </div>
       <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
       <p className="sk-text-body-medium-regular text-sko-text-subtle">{certificate.issuedLine}</p>
-      <div className="flex items-start gap-1.5">
+      {/* mt-auto: in a stretched card the actions sit on the bottom edge, level across the row. */}
+      <div className="mt-auto flex items-start gap-1.5">
         {certificate.viewHref ? (
           <ButtonLink
             href={certificate.viewHref}

@@ -142,7 +142,8 @@ export const dashboardJump: DashboardJumpTile[] = [
     icon: Award,
     title: "Certificates",
     description: "4 in progress · 2 to download",
-    href: "/course/six-sigma/certificate",
+    // The Certificates page (19 Oct 2026); it opened the Six Sigma certificate until then.
+    href: "/platform/certificates",
   },
   { id: "profile", icon: User, title: "Profile", description: "Your details · Account settings" },
 ];

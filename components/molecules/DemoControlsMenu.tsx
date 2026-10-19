@@ -14,7 +14,7 @@ import {
   AppearanceSection,
   PROFILE_PANEL,
   ProfileFooter,
-  EditProfileLink,
+  ProfileLinks,
   SkillUpOnlineLink,
   ProfileSection as Section,
   ToggleRow,
@@ -131,10 +131,10 @@ export function DemoControlsMenu({
           aria-label="Account and demo settings"
           className={PROFILE_PANEL}
         >
-          {/* The standard profile menu (DS LMS / Profile Menu): Edit profile, Appearance, Accessibility,
+          {/* The standard profile menu (DS LMS / Profile Menu): Edit profile, Certificates, Appearance, Accessibility,
               SkillUp Online;
               then the player's preview sections; the footer last. */}
-          <EditProfileLink onDone={() => setOpen(false)} />
+          <ProfileLinks onDone={() => setOpen(false)} />
           <AppearanceSection />
           <AccessibilitySection />
           <SkillUpOnlineLink onDone={() => setOpen(false)} />
