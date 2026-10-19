@@ -24,6 +24,8 @@ export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   { skin: "gold", label: "Gold", dot: "bg-sko-icon-accent-yellow" },
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-red
   { skin: "red", label: "Red", dot: "bg-sko-icon-accent-red" },
+  // Maré (proposal, Nelson 19 Oct 2026): the SKO brand with a deep-teal chrome and a yellow spark.
+  { skin: "mare", label: "Maré", dot: "bg-sko-bg-chrome" },
 ];
 
 /**
@@ -173,7 +175,9 @@ export function Segmented<T extends string>({
           aria-label={o.aria}
           onClick={() => onChange(o.value)}
           className={cn(
-            "inline-flex h-8 flex-1 items-center justify-center gap-2 rounded-md border px-2.5 transition-colors",
+            "inline-flex h-8 flex-1 items-center justify-center rounded-md border transition-colors",
+            // An option can set its own padding and gap (the four brand skins need tighter ones).
+            o.className?.includes("px-") ? null : "gap-2 px-2.5",
             o.className ?? "sk-text-body-medium-semibold",
             value === o.value
               ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
@@ -202,6 +206,8 @@ export function AppearanceSection() {
           label="Brand skin"
           options={PROFILE_SKINS.map((s) => ({
             value: s.skin,
+            // Four skins in the 288 panel: tighter segments so none is cut.
+            className: "sk-text-body-medium-semibold gap-1.5 px-1.5",
             label: (
               <>
                 <SkinDot skin={s.skin} dot={s.dot} />

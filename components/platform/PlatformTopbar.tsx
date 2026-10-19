@@ -144,6 +144,7 @@ function Initials() {
   return (
     <span
       aria-hidden
+      data-chrome-avatar=""
       className="sk-text-body-medium-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
     >
       {platformUser.initials}
@@ -180,6 +181,10 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   const notificationsRead = useLmsStore((s) => s.notificationsRead);
   const markAllNotificationsRead = useLmsStore((s) => s.markAllNotificationsRead);
   const unread = notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length;
+  // Maré skin (proposal, 19 Oct 2026): the bar's own controls take the dark-mode tokens so they
+  // read on the deep-teal bar; the panels that open from it keep the page's theme.
+  const skin = useLmsStore((st) => st.skin);
+  const ink = skin === "mare" ? { "data-theme": "dark", "data-chrome-ink": "" } : {};
 
   // The bell opens the same Notifications panel as the player (DS LMS / Notifications Panel):
   // hybrid tabs All · Discussions · Grading · Updates with date sections, Mark all read (Nelson, 19 Oct 2026).
@@ -216,17 +221,18 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
 
   return (
     <>
-      <header className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
+      <header data-chrome="" className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
         {/* Desktop */}
         <div className="hidden h-[71px] items-center justify-between px-6 lg:flex">
           <Link
             href="/platform/dashboard"
             aria-label="SkillUp, Dashboard"
+            {...ink}
             className="flex min-h-11 items-center"
           >
             <SkillUpLogo className="h-[30px]" />
           </Link>
-          <nav aria-label="Platform" className="self-stretch">
+          <nav aria-label="Platform" {...ink} className="self-stretch">
             <SectionLinks
               current={current}
               look="tabs"
@@ -234,11 +240,14 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
             />
           </nav>
           <div className="flex items-center gap-3">
-            {bell}
-            {themeButton}
+            <span {...ink} className="flex items-center gap-3">
+              {bell}
+              {themeButton}
+            </span>
             <div ref={profile.containerRef} className="relative">
               <button
                 type="button"
+                {...ink}
                 {...profile.triggerProps}
                 aria-label={`${platformUser.name}, account`}
                 className="flex items-center gap-2 rounded-lg p-1 text-left transition-colors hover:bg-sko-bg-faint"
@@ -268,16 +277,20 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           <Link
             href="/platform/dashboard"
             aria-label="SkillUp, Dashboard"
+            {...ink}
             className="flex min-h-11 items-center"
           >
             <SkillUpLogo className="h-[30px]" />
           </Link>
           <div className="flex items-center gap-1">
-            {bell}
-            {themeButton}
+            <span {...ink} className="flex items-center gap-1">
+              {bell}
+              {themeButton}
+            </span>
             <div ref={profileCompact.containerRef} className="relative">
               <button
                 type="button"
+                {...ink}
                 {...profileCompact.triggerProps}
                 aria-label={`${platformUser.name}, account`}
                 className="inline-flex size-11 items-center justify-center rounded-full transition-colors hover:bg-sko-bg-faint"
@@ -294,6 +307,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
             <div ref={menu.containerRef}>
               <button
                 type="button"
+                {...ink}
                 {...menu.triggerProps}
                 aria-label="Platform sections"
                 className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint"

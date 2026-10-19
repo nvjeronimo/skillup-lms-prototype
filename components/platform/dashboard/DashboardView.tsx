@@ -49,7 +49,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           {dashboardGreeting.salutation}{" "}
           {/* One line from tablet up; on mobile the name takes the second line, as drawn. */}
           <br className="md:hidden" />
-          <span className="text-sko-text-subtle">{platformUser.firstName}.</span>
+          <span data-greeting-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
         </h1>
 
         <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />
@@ -116,9 +116,10 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             data-mock="The Discussion count needs the notifications flag switched on"
             className="grid grid-cols-2 gap-4 md:grid-cols-3"
           >
-            {dashboardJump.map((tile) => (
+            {dashboardJump.map((tile, i) => (
               <li key={tile.id} className="min-w-0">
                 <JumpTile
+                  tone={i}
                   icon={tile.icon}
                   title={tile.title}
                   description={tile.description}

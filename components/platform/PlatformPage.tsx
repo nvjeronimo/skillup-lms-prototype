@@ -90,6 +90,7 @@ export function PlatformPage({
   return (
     <div
       ref={rootRef}
+      data-platform-page=""
       className="flex min-h-[100dvh] flex-col bg-sko-bg-faint"
       data-show-mock={showMock ? "" : undefined}
     >

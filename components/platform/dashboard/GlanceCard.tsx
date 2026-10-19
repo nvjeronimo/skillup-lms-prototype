@@ -24,6 +24,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
   return (
     <section
       aria-labelledby="dashboard-glance-title"
+      data-glance=""
       className={cn(
         "relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-lg bg-sko-bg-inverse p-4 md:gap-5 md:p-5 lg:p-6",
         className,
@@ -31,10 +32,12 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
     >
       <div
         aria-hidden="true"
+        data-glow=""
         className="pointer-events-none absolute right-[18px] top-[calc(50%+146px)] size-[200px] -translate-y-1/2 rounded-full bg-sko-bg-info opacity-[0.12]"
       />
       <div
         aria-hidden="true"
+        data-glow=""
         className="pointer-events-none absolute -right-[102px] top-[calc(50%-76px)] size-[320px] -translate-y-1/2 rounded-full bg-sko-bg-primary opacity-[0.12]"
       />
       <h2 id="dashboard-glance-title" className="sk-text-label-small-semibold relative text-sko-text-on-inverse">
