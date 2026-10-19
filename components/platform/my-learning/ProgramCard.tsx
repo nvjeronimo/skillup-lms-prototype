@@ -108,8 +108,9 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         data-theme="dark"
         data-skin={mounted && skin !== "teal" ? skin : undefined}
         className={cn(
-          "relative flex flex-col items-start gap-3 overflow-hidden bg-sko-bg-subtle p-4 md:p-5 lg:px-[23px] lg:py-6",
-          list ? "w-[42%] shrink-0 justify-between xl:w-[502px]" : "w-full",
+          // The badges sit at the bottom of the hero (justify-between) in both layouts.
+          "relative flex flex-col items-start justify-between gap-3 overflow-hidden bg-sko-bg-subtle p-4 md:p-5 lg:px-[23px] lg:py-6",
+          list ? "w-[42%] shrink-0 xl:w-[502px]" : "w-full",
         )}
       >
         {/* Decoration: a ring low on the left, a hatched circle high on the right. */}
@@ -175,7 +176,10 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         </div>
       </div>
 
-      <div className={cn("flex min-w-0 flex-col gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", list ? "flex-1 justify-between" : "w-full")}>
+      {/* The body takes the rest of the card and spreads: progress at the top, the footer (Up next,
+          the start date, the certificate) at the bottom, in the grid too, so in a row of cards
+          stretched to one height every footer sits on the card's bottom edge (Nelson, 19 Oct 2026). */}
+      <div className={cn("flex min-w-0 flex-1 flex-col justify-between gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", !list && "w-full")}>
         <div className="flex flex-col gap-2">
           {/* The DS sets these words in a raw 18 Semibold: title-medium/Semibold is that style. */}
           <div className="flex items-baseline justify-between gap-3">
