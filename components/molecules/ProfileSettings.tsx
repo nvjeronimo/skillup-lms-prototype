@@ -10,9 +10,9 @@ import { cn } from "@/lib/utils";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
- * DS `LMS / Profile Menu`). Same links, same Appearance (brand skin), same
- * Accessibility standards and the same footer everywhere; the player adds its preview
- * sections between Accessibility and the footer. No learner header since 19 Oct 2026
+ * DS `LMS / Profile Menu`). Same Edit profile link, same Appearance (brand skin), same
+ * Accessibility standards, SkillUp Online and the same footer everywhere; the player adds its
+ * preview sections between SkillUp Online and the footer. No learner header since 19 Oct 2026
  * (Nelson): the trigger already shows who is signed in.
  */
 
@@ -64,16 +64,24 @@ const MENU_ROW =
   "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
 /**
- * The first group of the menu (Nelson, 19 Oct 2026): Edit profile (the profile and account
- * page) and SkillUp Online, the public site, in a new tab.
+ * DS Profile Menu 1.3 (Nelson, 19 Oct 2026): Edit profile opens the menu, on its own, with no rule
+ * above it; SkillUp Online, the public site in a new tab, is its own group after Accessibility
+ * standards (rule above), before the demo footer.
  */
-export function ProfileLinks({ onDone }: { onDone?: () => void }) {
+export function EditProfileLink({ onDone }: { onDone?: () => void }) {
   return (
-    <div className="p-1.5">
+    <div className="p-1">
       <Link href="/platform/profile" className={MENU_ROW} onClick={onDone}>
         <Icon icon={UserPen} size={16} />
         Edit profile
       </Link>
+    </div>
+  );
+}
+
+export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
+  return (
+    <div className="border-t border-sko-border-subtle p-1">
       <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
         <Icon icon={ExternalLink} size={16} />
         SkillUp Online
@@ -258,12 +266,12 @@ export function AccessibilitySection() {
   );
 }
 
-/** The footer: Reset demo and Restart first steps (prototype only). */
+/** The footer (DS "Footer demo purposes only"): Reset demo and Restart first steps, prototype only. */
 export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const resetDemo = useLmsStore((s) => s.resetDemo);
   const row = MENU_ROW;
   return (
-    <div className="border-t border-sko-border-subtle p-1.5">
+    <div className="border-t border-sko-border-subtle p-1">
       <button
         type="button"
         className={row}

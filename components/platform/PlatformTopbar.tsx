@@ -13,7 +13,8 @@ import {
   AppearanceSection,
   PROFILE_PANEL,
   ProfileFooter,
-  ProfileLinks,
+  EditProfileLink,
+  SkillUpOnlineLink,
 } from "@/components/molecules/ProfileSettings";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { notifications } from "@/lib/data";
@@ -129,9 +130,10 @@ function ProfilePanel({
 }) {
   return (
     <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
-      <ProfileLinks onDone={onDone} />
+      <EditProfileLink onDone={onDone} />
       <AppearanceSection />
       <AccessibilitySection />
+      <SkillUpOnlineLink onDone={onDone} />
       <ProfileFooter onDone={onDone} />
     </div>
   );
