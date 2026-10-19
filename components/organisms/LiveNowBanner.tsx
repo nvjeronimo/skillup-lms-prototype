@@ -50,7 +50,8 @@ export function LiveNowBanner({
             isLive ? "bg-sko-bg-success text-sko-text-on-success" : "bg-sko-bg-warning text-sko-text-on-warning",
           )}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
+          {/* Live: the dot pulses (sk-live-dot, still under reduced motion); "Live now" stays. */}
+          <span className={cn("h-1.5 w-1.5 rounded-full bg-current", isLive && "sk-live-dot")} aria-hidden />
           {isLive ? "Live now" : "Upcoming"}
         </span>
         <div className="flex min-w-0 flex-col gap-0.5">
