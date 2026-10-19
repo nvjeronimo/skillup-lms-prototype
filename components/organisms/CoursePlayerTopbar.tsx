@@ -197,8 +197,8 @@ export function CoursePlayerTopbar({
             </UtilityButton>
           ) : null}
           {accountMenu ?? (
-            <button type="button" aria-label="Account" className="flex items-center rounded-full">
-              <Avatar name={userName} src={userAvatarUrl} size="xs" />
+            <button type="button" aria-label="Account" className="flex items-center rounded-lg">
+              <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />
             </button>
           )}
           <UtilityButton label="Exit course player" onClick={onClose} large>

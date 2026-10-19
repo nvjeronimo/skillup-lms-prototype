@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
- * DS `LMS / Profile Menu`). Same Edit profile link, same Appearance (brand skin), same
- * Accessibility standards, SkillUp Online and the same footer everywhere; the player adds its
+ * DS `LMS / Profile Menu`). Same Appearance (brand skin), same Accessibility standards, same
+ * Profile section (Edit profile, Certificates), SkillUp Online and the same footer everywhere; the player adds its
  * preview sections between SkillUp Online and the footer. No learner header since 19 Oct 2026
  * (Nelson): the trigger already shows who is signed in.
  */
@@ -51,7 +51,7 @@ export const PROFILE_PANEL =
 
 export function ProfileSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border-t border-sko-border-subtle px-4 py-3">
+    <div className="border-t border-sko-border-subtle px-4 py-3 first:border-t-0">
       <p className="sk-text-label-small-medium mb-2 text-sko-text-subtle">{title}</p>
       {children}
     </div>
@@ -66,28 +66,31 @@ const MENU_ROW =
   "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
 /**
- * DS Profile Menu 1.3 (Nelson, 19 Oct 2026): Edit profile opens the menu, with no rule above it;
- * 1.4 (same day) adds Certificates under it, the page of every certificate; SkillUp Online, the public site in a new tab, is its own group after Accessibility
- * standards (rule above), before the demo footer.
+ * DS Profile Menu 1.5 (Nelson, 19 Oct 2026): Appearance and Accessibility standards open the
+ * menu; then a Profile section (title as the others) with Edit profile and Certificates; then
+ * SkillUp Online, the public site in a new tab; then the demo footer. Every group has the
+ * section padding (12 / 16) and a rule above; the rows keep their own 12 inside.
  */
 export function ProfileLinks({ onDone }: { onDone?: () => void }) {
   return (
-    <div className="p-1">
-      <Link href="/platform/profile" className={MENU_ROW} onClick={onDone}>
-        <Icon icon={UserPen} size={16} />
-        Edit profile
-      </Link>
-      <Link href="/platform/certificates" className={MENU_ROW} onClick={onDone}>
-        <Icon icon={Award} size={16} />
-        Certificates
-      </Link>
-    </div>
+    <ProfileSection title="Profile">
+      <div className="flex flex-col gap-2">
+        <Link href="/platform/profile" className={MENU_ROW} onClick={onDone}>
+          <Icon icon={UserPen} size={16} />
+          Edit profile
+        </Link>
+        <Link href="/platform/certificates" className={MENU_ROW} onClick={onDone}>
+          <Icon icon={Award} size={16} />
+          Certificates
+        </Link>
+      </div>
+    </ProfileSection>
   );
 }
 
 export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
   return (
-    <div className="border-t border-sko-border-subtle p-1">
+    <div className="border-t border-sko-border-subtle px-4 py-3">
       <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
         <Icon icon={ExternalLink} size={16} />
         SkillUp Online
@@ -281,7 +284,7 @@ export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const resetDemo = useLmsStore((s) => s.resetDemo);
   const row = MENU_ROW;
   return (
-    <div className="border-t border-sko-border-subtle p-1">
+    <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
       <button
         type="button"
         className={row}
