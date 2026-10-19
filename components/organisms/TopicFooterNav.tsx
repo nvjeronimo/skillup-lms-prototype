@@ -1,7 +1,14 @@
+"use client";
+
 import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { CourseProgressionButton, type Milestone } from "./CourseProgressionButton";
 import { cn } from "@/lib/utils";
+
+/* The player lives in [topicId]/layout, so moving to another topic remounts this footer.
+   The number last shown survives here (module level, like the sidebar's scroll), so a new
+   number cross-fades in while the first paint of a session stays still. */
+let lastShownPosition: number | null = null;
 
 export interface TopicFooterNavProps {
   position: number;
@@ -43,6 +50,20 @@ export function TopicFooterNav({
   compact = false,
   className,
 }: TopicFooterNavProps) {
+  // Decided once per mount: did the number change since the footer last showed one?
+  const [fromPosition] = React.useState(() => lastShownPosition);
+  React.useEffect(() => {
+    lastShownPosition = position;
+  }, [position]);
+  // A change while mounted is caught during render, so the new number never paints unfaded.
+  const [seenPosition, setSeenPosition] = React.useState(position);
+  const [changedInPlace, setChangedInPlace] = React.useState(false);
+  if (seenPosition !== position) {
+    setSeenPosition(position);
+    setChangedInPlace(true);
+  }
+  const fade = changedInPlace || (fromPosition !== null && fromPosition !== position);
+
   return (
     <nav
       aria-label="Topic navigation"
@@ -67,7 +88,14 @@ export function TopicFooterNav({
       {/* Mobile: the paginator never wraps ("3 of 25" on one line); the Next side gives way. */}
       <div className={cn("text-center", compact ? "min-w-max flex-1 whitespace-nowrap" : "min-w-0")}>
         <p className="sk-text-body-medium-semibold text-sko-text-subtle">
-          {position} of {total}
+          {/* A new number cross-fades in (short3); not a digit roll, and not on first paint. */}
+          <span
+            key={position}
+            className={cn("inline-block", fade && "sk-animate-fade-short3")}
+          >
+            {position}
+          </span>{" "}
+          of {total}
         </p>
         {!compact ? (
           <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{title}</p>
