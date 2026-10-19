@@ -27,7 +27,8 @@ export function PlatformPage({
   children,
   className,
 }: {
-  current: PlatformSection;
+  /** The section tab to mark current; null on pages outside the five (Edit profile). */
+  current: PlatformSection | null;
   children: React.ReactNode;
   className?: string;
 }) {

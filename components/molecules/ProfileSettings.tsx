@@ -1,18 +1,19 @@
 "use client";
 
 import * as React from "react";
-import { RotateCcw } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, RotateCcw, UserPen } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { Avatar } from "@/components/atoms/Avatar";
 import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";
 import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { cn } from "@/lib/utils";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
- * DS `LMS / Profile Menu`). Same header, same Appearance (brand skin), same
- * Accessibility standards and the same footer everywhere; the player adds its preview
- * sections between Accessibility and the footer.
+ * DS `LMS / Profile Menu`). Same Edit profile link, same Appearance (brand skin), same
+ * Accessibility standards, SkillUp Online and the same footer everywhere; the player adds its
+ * preview sections between SkillUp Online and the footer. No learner header since 19 Oct 2026
+ * (Nelson): the trigger already shows who is signed in.
  */
 
 /** The three brand skins the tokens define (tokens/colors.css): SKO, Gold, Red. */
@@ -57,15 +58,37 @@ export function ProfileSection({ title, children }: { title: string; children: R
   );
 }
 
-/** The learner: avatar, name and role. */
-export function ProfileHeader({ name, role, avatarUrl }: { name: string; role: string; avatarUrl?: string }) {
+/** The public site of SkillUp Online, opened in a new tab from the profile menu. */
+export const SKILLUP_ONLINE_URL = "https://skillup.online";
+
+/** A menu row: 44 tall, 16px icon, body-medium/Medium text/muted (as the footer rows). */
+const MENU_ROW =
+  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
+
+/**
+ * DS Profile Menu 1.3 (Nelson, 19 Oct 2026): Edit profile opens the menu, on its own, with no rule
+ * above it; SkillUp Online, the public site in a new tab, is its own group after Accessibility
+ * standards (rule above), before the demo footer.
+ */
+export function EditProfileLink({ onDone }: { onDone?: () => void }) {
   return (
-    <div className="flex items-center gap-2.5 px-4 py-3">
-      <Avatar name={name} src={avatarUrl} size="sm" shape="square" />
-      <div className="min-w-0">
-        <p className="sk-text-body-medium-semibold truncate text-sko-text-default">{name}</p>
-        <p className="sk-text-label-small-regular text-sko-text-subtle">{role}</p>
-      </div>
+    <div className="p-1">
+      <Link href="/platform/profile" className={MENU_ROW} onClick={onDone}>
+        <Icon icon={UserPen} size={16} />
+        Edit profile
+      </Link>
+    </div>
+  );
+}
+
+export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
+  return (
+    <div className="border-t border-sko-border-subtle p-1">
+      <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
+        <Icon icon={ExternalLink} size={16} />
+        SkillUp Online
+        <span className="sr-only"> (opens in a new tab)</span>
+      </a>
     </div>
   );
 }
@@ -249,13 +272,12 @@ export function AccessibilitySection() {
   );
 }
 
-/** The footer: Reset demo and Restart first steps (prototype only). */
+/** The footer (DS "Footer demo purposes only"): Reset demo and Restart first steps, prototype only. */
 export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const resetDemo = useLmsStore((s) => s.resetDemo);
-  const row =
-    "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
+  const row = MENU_ROW;
   return (
-    <div className="border-t border-sko-border-subtle p-1.5">
+    <div className="border-t border-sko-border-subtle p-1">
       <button
         type="button"
         className={row}

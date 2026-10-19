@@ -14,7 +14,8 @@ import {
   AppearanceSection,
   PROFILE_PANEL,
   ProfileFooter,
-  ProfileHeader,
+  EditProfileLink,
+  SkillUpOnlineLink,
   ProfileSection as Section,
   ToggleRow,
 } from "@/components/molecules/ProfileSettings";
@@ -130,11 +131,13 @@ export function DemoControlsMenu({
           aria-label="Account and demo settings"
           className={PROFILE_PANEL}
         >
-          {/* The standard profile menu (DS LMS / Profile Menu): header, Appearance, Accessibility;
+          {/* The standard profile menu (DS LMS / Profile Menu): Edit profile, Appearance, Accessibility,
+              SkillUp Online;
               then the player's preview sections; the footer last. */}
-          <ProfileHeader name={userName} role={platformUser.role} avatarUrl={userAvatarUrl} />
+          <EditProfileLink onDone={() => setOpen(false)} />
           <AppearanceSection />
           <AccessibilitySection />
+          <SkillUpOnlineLink onDone={() => setOpen(false)} />
 
           <Section title="Preview device">
             <div className="flex gap-1">
