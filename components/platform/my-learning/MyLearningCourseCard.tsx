@@ -202,8 +202,9 @@ export function MyLearningCourseCard({
 
   if (layout === "list") {
     return (
-      // The list rows match too (a title can take two lines since 1.14): useEqualHeights.
-      <article data-card-grid="" className={cn(surface, clickable, "flex items-center gap-6 p-4", className)}>
+      // DS Course-Card 1.15 (Nelson, 19 Oct 2026): List min height 146, the height with a two-line title,
+      // so a list of one-line titles keeps the same height; the rows of a collection match (useEqualHeights).
+      <article data-card-grid="" className={cn(surface, clickable, "flex min-h-[146px] items-center gap-6 p-4", className)}>
         {/* DS v1.8: thumb and titles are one group, 12 apart. */}
         <div className="flex min-w-[298px] flex-1 basis-0 items-center gap-3">
         <CourseThumb
