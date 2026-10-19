@@ -1,274 +1,20 @@
+"use client";
+
 import * as React from "react";
-import { Loader2, type LucideIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { cn } from "@/lib/utils";
+import { BUTTON_DONE_MS, showsDoneCheck } from "@/lib/motion/feedback";
+import { buttonClassName, buttonIconSize, type ButtonProps } from "./buttonStyles";
 
-/** DS Button `Type` (Button / Link Button / Icon Button). */
-export type ButtonTone = "brand" | "destructive" | "success";
-/**
- * DS Button `Hierarchy`. Primary/Secondary/Tertiary are Button; `link` and
- * `link-subtle` are Link Button Hierarchy=Primary and Hierarchy=Secondary (the grey link).
- */
-export type ButtonHierarchy = "primary" | "secondary" | "tertiary" | "link" | "link-subtle";
-/**
- * @deprecated Use `tone` + `hierarchy`. Kept so existing call sites keep working:
- * primary/secondary/tertiary → Brand. `neutral`, `destructive` and `utility` keep their own
- * styles: `neutral` has no Button equivalent yet, and destructive + utility stay UUI
- * gray-neutral by design (decision 003). `tone="destructive"` gives the V2 Destructive styles.
- */
-export type ButtonVariant = "primary" | "secondary" | "tertiary" | "neutral" | "destructive" | "utility";
-export type ButtonSize = "sm" | "md" | "lg" | "xl";
-
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /** DS `Type`. Defaults to `brand`. */
-  tone?: ButtonTone;
-  /** DS `Hierarchy`. Defaults to `primary`. Wins over `variant` when both are set. */
-  hierarchy?: ButtonHierarchy;
-  /** @deprecated Use `tone` + `hierarchy`. */
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  leftIcon?: LucideIcon;
-  rightIcon?: LucideIcon;
-  /** Render an icon-only square button (DS Icon Button): 20px icon at sm/md, 24px at lg/xl. */
-  iconOnly?: boolean;
-  /**
-   * DS State=Loading: a spinner takes the leading-icon slot and the label stays visible.
-   * The button keeps its tone colours (no native `disabled`), is marked aria-busy and
-   * aria-disabled, and ignores clicks.
-   */
-  loading?: boolean;
-}
-
-/* Colour per Type × Hierarchy, as bound in Button 21851:7608 and Link Button 21851:7679.
-   Strokes are INSIDE in the DS, so they are drawn as inset rings and add no width.
-   Forced colors (Windows High Contrast) drops box-shadows, so every ring also gets a real
-   1px border there (the forced-colors:border* classes), or outline buttons lose their edge. */
-const PRIMARY_DISABLED = cn(
-  "disabled:bg-sko-bg-muted disabled:text-sko-text-disabled disabled:ring-1 disabled:ring-inset disabled:ring-sko-border-subtle",
-  "disabled:forced-colors:border disabled:forced-colors:border-solid disabled:forced-colors:border-sko-border-subtle",
-);
-const OUTLINE_DISABLED =
-  "disabled:ring-sko-border-subtle disabled:forced-colors:border-sko-border-subtle disabled:text-sko-text-disabled";
-const GHOST_DISABLED = "disabled:text-sko-text-disabled";
-/* Brand icons take icon/primary while enabled; disabled icons inherit the label colour.
-   `:not(:disabled)` rather than `:enabled`: the same on a <button>, and it also matches the
-   <a> of atoms/ButtonLink, which `:enabled` never does. */
-const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
-/* Link Button (DS 15 Oct 2026): a 1px bottom stroke in every state, on the icon token of
-   its tone (border/disabled when Disabled); radius 0. Hover has no fill: the label and the
-   stroke darken (LINK_TONE). Focused: bg/faint and radius 6. */
-const LINK =
-  "border-b bg-transparent focus-visible:rounded-md focus-visible:bg-sko-bg-faint disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
-const LINK_TONE = {
-  brand: "text-sko-text-primary border-sko-icon-primary hover:text-sko-text-on-primary-soft hover:border-sko-icon-default [&:not(:disabled):hover_svg]:text-sko-icon-default",
-  subtle: "text-sko-text-subtle border-sko-icon-subtle hover:text-sko-text-muted hover:border-sko-icon-muted",
-  destructive: "text-sko-text-error border-sko-icon-error hover:text-sko-text-accent-red hover:border-sko-icon-accent-red",
-  success: "text-sko-text-success border-sko-icon-success hover:text-sko-text-accent-green hover:border-sko-icon-accent-green",
-};
-
-/* The outline buttons on hover: every type fills with its own soft colour and keeps its text
-   and icon colours (Nelson, 12 Oct 2026). The Icon Button does the same since that evening;
-   before, it hovered on a faint grey. Applied in buttonClassName, not in VARIANT: `cn` does
-   not merge Tailwind classes, so only one hover fill may be emitted. */
-const OUTLINE_HOVER: Record<ButtonTone, string> = {
-  brand: "hover:bg-sko-bg-primary-soft",
-  destructive: "hover:bg-sko-bg-error-soft",
-  success: "hover:bg-sko-bg-success-soft",
-};
-/* The icons of the Destructive and Success outline buttons take their icon token, as the
-   Brand ones do (DS, 12 Oct 2026; they were bound to bg/error and bg/success). */
-const ERROR_ICON = "[&:not(:disabled)_svg]:text-sko-icon-error";
-const SUCCESS_ICON = "[&:not(:disabled)_svg]:text-sko-icon-success";
-
-const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
-  brand: {
-    // Teal fill → yellow hover, dark text on hover (handoff brand-aware rule).
-    primary: cn(
-      "bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover",
-      PRIMARY_DISABLED,
-    ),
-    secondary: cn(
-      "bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary",
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-primary",
-      BRAND_ICON,
-      OUTLINE_DISABLED,
-    ),
-    tertiary: cn("bg-sko-bg-page text-sko-text-primary hover:bg-sko-bg-faint", BRAND_ICON, GHOST_DISABLED),
-    link: cn(LINK, LINK_TONE.brand, BRAND_ICON),
-    "link-subtle": cn(LINK, LINK_TONE.subtle),
-  },
-  destructive: {
-    // Hover pending DS-03: the V2 hover binds border/error-soft as a fill; bg/error-soft is its role-correct match.
-    primary: cn(
-      "bg-sko-bg-error text-sko-text-on-error hover:bg-sko-bg-error-soft hover:text-sko-text-error",
-      PRIMARY_DISABLED,
-    ),
-    secondary: cn(
-      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error",
-      ERROR_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-error",
-      OUTLINE_DISABLED,
-    ),
-    // No Destructive/Tertiary in the DS: falls back to Destructive/Secondary.
-    tertiary: cn(
-      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error",
-      ERROR_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-error",
-      OUTLINE_DISABLED,
-    ),
-    link: cn(LINK, LINK_TONE.destructive),
-    // The grey link exists only as Brand/Secondary.
-    "link-subtle": cn(LINK, LINK_TONE.subtle),
-  },
-  success: {
-    // Hover pending DS-03 (the V2 Success/Primary Hover is defective): bg/success-soft + text/success.
-    primary: cn(
-      "bg-sko-bg-success text-sko-text-on-success [&:not(:disabled)_svg]:text-sko-icon-on-success",
-      "hover:bg-sko-bg-success-soft hover:text-sko-text-success [&:not(:disabled):hover_svg]:text-sko-icon-success",
-      PRIMARY_DISABLED,
-    ),
-    secondary: cn(
-      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success",
-      SUCCESS_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-success",
-      OUTLINE_DISABLED,
-    ),
-    // No Success/Tertiary in the DS: falls back to Success/Secondary.
-    tertiary: cn(
-      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success",
-      SUCCESS_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-success",
-      OUTLINE_DISABLED,
-    ),
-    link: cn(LINK, LINK_TONE.success),
-    "link-subtle": cn(LINK, LINK_TONE.subtle),
-  },
-};
-
-/* Styles kept outside Button: `neutral` has no equivalent in it yet (the ICP cases it misses);
-   `destructive` and `utility` stay UUI gray-neutral by design (decision 003). No DS disabled
-   state exists for them, so they keep the 50% opacity. */
-type LegacyStyle = "neutral" | "destructive" | "utility";
-const isLegacyStyle = (v: ButtonVariant | undefined): v is LegacyStyle =>
-  v === "neutral" || v === "destructive" || v === "utility";
-const LEGACY: Record<LegacyStyle, string> = {
-  // Neutral grey outline, e.g. the footer "Previous".
-  neutral: cn(
-    "bg-transparent text-sko-text-subtle ring-1 ring-inset ring-sko-border-default hover:bg-sko-bg-subtle disabled:opacity-50",
-    "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-default",
-  ),
-  // Grey stroke, red label, error-soft hover, e.g. LiveControlBar "Leave session".
-  destructive: cn(
-    "bg-transparent text-sko-text-error ring-1 ring-inset ring-sko-border-default hover:bg-sko-bg-error-soft disabled:opacity-50",
-    "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-default",
-  ),
-  utility: "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-muted disabled:opacity-50",
-};
-
-const VARIANT_ALIAS: Record<Exclude<ButtonVariant, LegacyStyle>, { tone: ButtonTone; hierarchy: ButtonHierarchy }> = {
-  primary: { tone: "brand", hierarchy: "primary" },
-  secondary: { tone: "brand", hierarchy: "secondary" },
-  tertiary: { tone: "brand", hierarchy: "tertiary" },
-};
-
-/* DS State=Focused: a 2px border/focus-gap, then a 2px ring in the tone colour. */
-const FOCUS_RING: Record<ButtonTone, string> = {
-  brand: "[--btn-ring:var(--color-border-primary)]",
-  destructive: "[--btn-ring:var(--color-border-error)]",
-  success: "[--btn-ring:var(--color-border-success)]",
-};
-
-/* ._Button_Structure 21851:7567 and ._Icon Button_Structure 21851:7599.
-   The label sits in a 2px "Text padding" frame, rendered as the px-0.5 span below. */
-const SIZE: Record<
+export { buttonClassName, buttonIconSize } from "./buttonStyles";
+export type {
+  ButtonHierarchy,
+  ButtonProps,
   ButtonSize,
-  { pad: string; text: string; icon: number; square: string; squareIcon: number; squareSvg: string }
-> = {
-  // 36 tall, 8/12 padding, 4 gap, body-medium/Semibold, 20 icon.
-  sm: { pad: "h-9 px-3 gap-1", text: "sk-text-body-medium-semibold", icon: 20, square: "h-9 w-9", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
-  // 44 tall, 12/12 padding, 4 gap, body-medium/Semibold, 20 icon.
-  md: { pad: "h-11 px-3 gap-1", text: "sk-text-body-medium-semibold", icon: 20, square: "h-11 w-11", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
-  // 48 tall, 12/16 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only).
-  lg: { pad: "h-12 px-4 gap-1.5", text: "sk-text-body-large-semibold", icon: 20, square: "h-12 w-12", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
-  // 56 tall, 16/20 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only).
-  xl: { pad: "h-14 px-5 gap-1.5", text: "sk-text-body-large-semibold", icon: 20, square: "h-14 w-14", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
-};
-
-/* ._Link Button_Structure 21851:7588 has md and lg only: sm maps to md, xl to lg.
-   4/2 padding, 4 gap, radius 0, 1px bottom stroke (the LINK border-b). The bottom padding
-   is 3px so the stroke keeps the 28/32 heights. */
-const LINK_SIZE: Record<ButtonSize, { pad: string; text: string; icon: number }> = {
-  sm: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-medium-semibold", icon: 16 },
-  md: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-medium-semibold", icon: 16 },
-  lg: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
-  xl: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
-};
-
-export interface ButtonStyleProps {
-  tone?: ButtonTone;
-  hierarchy?: ButtonHierarchy;
-  /** @deprecated Use `tone` + `hierarchy`. */
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  iconOnly?: boolean;
-  loading?: boolean;
-  className?: string;
-}
-
-/* Resolves the deprecated `variant` against tone + hierarchy: what both exports below read. */
-function resolveButton({ tone, hierarchy, variant }: Pick<ButtonStyleProps, "tone" | "hierarchy" | "variant">) {
-  const legacy: LegacyStyle | null =
-    hierarchy === undefined && tone === undefined && isLegacyStyle(variant) ? variant : null;
-  const alias = variant && !isLegacyStyle(variant) ? VARIANT_ALIAS[variant] : undefined;
-  // A legacy `destructive` mixed with tone/hierarchy props falls back to the V2 Destructive tone.
-  const t: ButtonTone = tone ?? alias?.tone ?? (variant === "destructive" ? "destructive" : "brand");
-  const h: ButtonHierarchy = hierarchy ?? alias?.hierarchy ?? "primary";
-  const isLink = legacy === null && (h === "link" || h === "link-subtle");
-  return { legacy, t, h, isLink };
-}
-
-/**
- * The classes of a DS Button for a set of visual props. Pure, so anything that must look
- * like a button without being a <button> (atoms/ButtonLink) renders the same classes.
- */
-export function buttonClassName({
-  tone,
-  hierarchy,
-  variant,
-  size = "md",
-  iconOnly = false,
-  loading = false,
-  className,
-}: ButtonStyleProps = {}): string {
-  const { legacy, t, h, isLink } = resolveButton({ tone, hierarchy, variant });
-  const s = SIZE[size];
-  const l = LINK_SIZE[size];
-  return cn(
-    "inline-flex items-center justify-center transition-colors duration-short4 disabled:pointer-events-none",
-    "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--btn-ring)]",
-    FOCUS_RING[legacy === "destructive" ? "destructive" : legacy ? "brand" : t],
-    isLink ? "rounded-none" : "rounded-md",
-    iconOnly ? cn(s.square, s.squareSvg) : isLink ? l.pad : s.pad,
-    isLink ? l.text : s.text,
-    legacy ? LEGACY[legacy] : VARIANT[t][h],
-    // Secondary, and the Destructive / Success Tertiary that fall back to it.
-    !legacy && (h === "secondary" || (h === "tertiary" && t !== "brand")) && OUTLINE_HOVER[t],
-    loading && "pointer-events-none",
-    className,
-  );
-}
-
-/** The icon size that goes with `buttonClassName` for the same props. */
-export function buttonIconSize({
-  tone,
-  hierarchy,
-  variant,
-  size = "md",
-  iconOnly = false,
-}: Pick<ButtonStyleProps, "tone" | "hierarchy" | "variant" | "size" | "iconOnly"> = {}): number {
-  const { isLink } = resolveButton({ tone, hierarchy, variant });
-  return iconOnly ? SIZE[size].squareIcon : isLink ? LINK_SIZE[size].icon : SIZE[size].icon;
-}
+  ButtonStyleProps,
+  ButtonTone,
+  ButtonVariant,
+} from "./buttonStyles";
 
 /**
  * DS Button: Button (Type × Hierarchy), Link Button (`hierarchy="link" | "link-subtle"`)
@@ -286,31 +32,86 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     rightIcon,
     iconOnly = false,
     loading = false,
+    done,
     className,
     children,
     disabled,
     onClick,
+    style,
     ...rest
   },
   ref,
 ) {
   const iconSize = buttonIconSize({ tone, hierarchy, variant, size, iconOnly });
   const hasLabel = !iconOnly && children !== undefined && children !== null && children !== false && children !== "";
+
+  // Loading keeps the width the button had when it started; a Done check may follow.
+  const innerRef = React.useRef<HTMLButtonElement | null>(null);
+  const setRefs = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      innerRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+  const [minWidth, setMinWidth] = React.useState<number | undefined>(undefined);
+  const [showCheck, setShowCheck] = React.useState(false);
+  const wasLoading = React.useRef(loading);
+  React.useLayoutEffect(() => {
+    const prev = wasLoading.current;
+    wasLoading.current = loading;
+    if (loading && !prev) {
+      setShowCheck(false);
+      setMinWidth(innerRef.current?.offsetWidth);
+      return;
+    }
+    if (!loading && prev) {
+      if (showsDoneCheck(prev, loading, done)) setShowCheck(true);
+      else setMinWidth(undefined);
+    }
+  }, [loading, done]);
+  React.useEffect(() => {
+    if (!showCheck) return;
+    const t = window.setTimeout(() => {
+      setShowCheck(false);
+      setMinWidth(undefined);
+    }, BUTTON_DONE_MS);
+    return () => window.clearTimeout(t);
+  }, [showCheck]);
+
   const spinner = loading ? (
     <Icon icon={Loader2} size={iconSize} className="animate-spin" aria-hidden="true" />
+  ) : showCheck ? (
+    // Lucide's Check, drawn: pathLength 1 lets sk-draw-check-immediate dash the whole stroke.
+    <svg
+      width={iconSize}
+      height={iconSize}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <path d="M20 6 9 17l-5-5" pathLength={1} className="sk-draw-check-immediate" />
+    </svg>
   ) : null;
 
   return (
     <button
-      ref={ref}
+      ref={setRefs}
       disabled={disabled}
       aria-busy={loading || undefined}
       aria-disabled={loading || undefined}
       className={buttonClassName({ tone, hierarchy, variant, size, iconOnly, loading, className })}
+      style={minWidth !== undefined ? { ...style, minWidth } : style}
       {...rest}
       onClick={loading ? (e) => e.preventDefault() : onClick}
     >
-      {iconOnly && loading ? (
+      {iconOnly && spinner ? (
         spinner
       ) : (
         <>
