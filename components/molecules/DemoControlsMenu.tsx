@@ -108,14 +108,13 @@ export function DemoControlsMenu({
         aria-label="Account and demo settings"
         className={cn(
           "flex items-center transition-colors hover:bg-sko-bg-subtle",
-          // DS topbar Mobile: a bare 24px round avatar. Desktop/Tablet keep a 32px square
-          // avatar + name (PR #9 squares the profile avatar to match the topbar icon
-          // buttons and CTAs; the DS "Avatar label group" draws a 24px circle).
-          compact ? "rounded-full" : "ml-1 gap-2 rounded-lg p-1",
+          // DS topbar Mobile: a bare 24px avatar. Desktop/Tablet: a 32px avatar + name. Every
+          // learner avatar is a rounded square, never a circle (Nelson, 19 Oct 2026).
+          compact ? "rounded-lg" : "ml-1 gap-2 rounded-lg p-1",
         )}
       >
         {compact ? (
-          <Avatar name={userName} src={userAvatarUrl} size="xs" />
+          <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />
         ) : (
           <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
         )}
@@ -131,12 +130,12 @@ export function DemoControlsMenu({
           aria-label="Account and demo settings"
           className={PROFILE_PANEL}
         >
-          {/* The standard profile menu (DS LMS / Profile Menu): Edit profile, Certificates, Appearance, Accessibility,
+          {/* The standard profile menu (DS LMS / Profile Menu 1.5): Appearance, Accessibility, Profile,
               SkillUp Online;
               then the player's preview sections; the footer last. */}
-          <ProfileLinks onDone={() => setOpen(false)} />
           <AppearanceSection />
           <AccessibilitySection />
+          <ProfileLinks onDone={() => setOpen(false)} />
           <SkillUpOnlineLink onDone={() => setOpen(false)} />
 
           <Section title="Preview device">

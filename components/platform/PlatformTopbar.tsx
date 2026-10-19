@@ -130,22 +130,22 @@ function ProfilePanel({
 }) {
   return (
     <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
-      <ProfileLinks onDone={onDone} />
       <AppearanceSection />
       <AccessibilitySection />
+      <ProfileLinks onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
       <ProfileFooter onDone={onDone} />
     </div>
   );
 }
 
-/** DS Avatar sm (32px circle, initials body-medium/Semibold text/subtle on bg/muted, 0.75px border/subtle). */
+/** DS Avatar sm (32px, a rounded square: radius 8, Nelson 19 Oct 2026, not a circle; initials body-medium/Semibold text/subtle on bg/muted, 0.75px border/subtle). */
 function Initials() {
   return (
     <span
       aria-hidden
       data-chrome-avatar=""
-      className="sk-text-body-medium-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
+      className="sk-text-body-medium-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-lg border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
     >
       {platformUser.initials}
     </span>
@@ -293,7 +293,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 {...ink}
                 {...profileCompact.triggerProps}
                 aria-label={`${platformUser.name}, account`}
-                className="inline-flex size-11 items-center justify-center rounded-full transition-colors hover:bg-sko-bg-faint"
+                className="inline-flex size-11 items-center justify-center rounded-lg transition-colors hover:bg-sko-bg-faint"
               >
                 <Initials />
               </button>
