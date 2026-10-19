@@ -462,7 +462,7 @@
 [data-skin="sea"] [data-glance] [data-glow] {
   opacity: 0.3;
 }
-[data-skin="sea"]:not([data-theme="dark"]) [data-greeting-em] {
+[data-skin="sea"]:not([data-theme="dark"]) [data-heading-em] {
   color: var(--color-text-primary);
 }
 [data-skin="sea"] [data-tone="1"] {
@@ -472,4 +472,15 @@
 [data-skin="sea"] [data-tone="2"] {
   --color-bg-primary-soft: var(--color-bg-warning-soft);
   --color-icon-primary: var(--color-icon-accent-yellow);
+}
+
+/* Sea, more screens (19 Oct 2026): the dark bands (Program header, Program-Card hero, the course
+   page's mentor card, the Services mentor card) become deep-teal bands with the glance card's
+   gradient; their contents already read on dark (data-theme="dark"). Page headings: the second
+   half in text/primary (light). */
+[data-skin="sea"] [data-band],
+[data-band][data-skin="sea"] {
+  background-color: var(--color-bg-chrome);
+  background-image: linear-gradient(120deg, var(--color-bg-chrome) 0%, #0a5a70 55%, #26708e 100%);
+  border-color: transparent;
 }

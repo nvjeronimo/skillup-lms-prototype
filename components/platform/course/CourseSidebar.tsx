@@ -48,6 +48,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
     <aside aria-label="Course details" className={cn("flex flex-col gap-4", className)}>
       <section
         data-theme="dark"
+        data-band=""
         data-skin={mounted && skin !== "teal" ? skin : undefined}
         data-mock="No mentor field on the Course Home APIs"
         className="flex flex-col gap-3 rounded-[10px] border border-sko-border-subtle bg-sko-bg-primary-soft p-[15px]"

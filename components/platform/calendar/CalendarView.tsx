@@ -267,7 +267,7 @@ export function CalendarView() {
     <PlatformPage current="calendar" className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         <h1 className="sk-text-headline-large-bold text-sko-text-default">
-          What&rsquo;s <span className="text-sko-text-subtle">coming up.</span>
+          What&rsquo;s <span data-heading-em="" className="text-sko-text-subtle">coming up.</span>
         </h1>
 
         {missed.length ? (

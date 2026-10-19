@@ -49,6 +49,7 @@ export function ProgramHeader({ program }: { program: Program }) {
   return (
     <header
       data-theme="dark"
+      data-band=""
       data-skin={mounted && skin !== "teal" ? skin : undefined}
       className="relative overflow-hidden bg-sko-bg-subtle"
     >

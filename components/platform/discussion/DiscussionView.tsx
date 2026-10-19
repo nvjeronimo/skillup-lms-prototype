@@ -115,7 +115,7 @@ export function DiscussionView() {
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
           <h1 className="sk-text-headline-large-bold text-sko-text-default">
-            Discussion <span className="text-sko-text-subtle">across your courses.</span>
+            Discussion <span data-heading-em="" className="text-sko-text-subtle">across your courses.</span>
           </h1>
           <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => notInPrototype("New post (choose a course, then a topic)")} className="max-md:h-11">
             New post
