@@ -63,9 +63,11 @@ export function CourseCertificate({
   ];
 
   return (
+    // Reveal on first mount (sk-animate-reveal: fade + .98 → 1, medium2, emphasized); a CSS
+    // animation does not replay on re-render. Reduced motion: the fade only.
     <div
       className={cn(
-        "sk-certificate mx-auto w-full max-w-[720px] overflow-hidden rounded-lg bg-sko-bg-page shadow-sk-card shadow-lg",
+        "sk-certificate sk-animate-reveal mx-auto w-full max-w-[720px] overflow-hidden rounded-lg bg-sko-bg-page shadow-sk-card shadow-lg",
         className,
       )}
     >
