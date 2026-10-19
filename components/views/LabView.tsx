@@ -49,29 +49,14 @@ function Prerequisites({ items }: { items: string[] }) {
 }
 
 /**
- * DS `LMS / Numbered Step` (20328:3297): 22px circle, body-small/Bold (semibold until
- * .sk-text-body-small-bold exists, CT-22), gap 12.
- */
-function NumberedStep({ n, children }: { n: number; children: React.ReactNode }) {
-  return (
-    <li className="flex gap-3">
-      <span className="sk-text-body-small-semibold inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
-        {n}
-      </span>
-      <span className="sk-text-body-medium-regular text-sko-text-muted">{children}</span>
-    </li>
-  );
-}
-
-const DAY = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
-
-/**
  * Partner lab (Figma `Lab · Third-party platforms`, 6789:325; lab-third-party-platforms.md §4).
  *
- * Nothing comes back from the partner, Google or Microsoft: no score, no completion. The
- * launch card only knows that the lab was opened, and when for the first time. The learner
- * completes the topic with Mark as Complete (the shell renders it under the content), and
- * Next asks if they move on without it.
+ * Nothing comes back from the partner, Google or Microsoft: no score, no completion. Since
+ * 19 Oct 2026 SkillUp does not see the click on the launch button either (Komal), so there is
+ * no Opened state for now: the card stays Ready, its button stays the primary action, and
+ * Before you start stays until the topic is completed. The learner completes the topic with
+ * Mark as Complete (the shell renders it in the feedback row, Secondary), and Next asks if they
+ * move on without it. How this lab works and the author row are not shown (19 Oct 2026).
  *
  * `labLaunch` (demo menu) only applies to a lab whose component can open inside the page: it
  * shows the lab in the inline frame, or the frame not loading with the way out to a new tab.
@@ -80,19 +65,16 @@ const DAY = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", y
 function PartnerLabView({ topicId, title, lab }: { topicId: string; title: string; lab: PartnerLabContent }) {
   const bp = useBreakpoint();
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
-  const progress = useLmsStore((s) => s.labState[topicId]);
   const labLaunch = useLmsStore((s) => s.labLaunch);
-  const labOpened = useLmsStore((s) => s.labOpened);
 
   // A setting stored by an earlier version ("modal") falls back to the new tab.
   const launch = lab.inPage && (labLaunch === "inline" || labLaunch === "refused") ? labLaunch : "new-tab";
-  const opened = Boolean(progress?.openedAt);
   const href = `/partner/${lab.partner}?topic=${topicId}`;
-  // The lab runs in the page until the learner sends it to a new tab; from then on it is "opened".
-  const inline = launch === "inline" && !opened;
-  const refused = launch === "refused" && !opened;
+  const inline = launch === "inline";
+  const refused = launch === "refused";
 
-  const cardState: LabLaunchState = opened ? "opened" : refused ? "unavailable" : "ready";
+  // No Opened state for now (19 Oct 2026): SkillUp cannot tell whether the lab was opened.
+  const cardState: LabLaunchState = refused ? "unavailable" : "ready";
   const card =
     cardState === "unavailable"
       ? {
@@ -102,20 +84,6 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
           action: "Open in a new tab",
         }
       : { title, description: lab.cardLine, action: lab.launchLabel };
-
-  const steps = inline
-    ? [
-        "Start the lab in the frame below this list.",
-        "Follow the instructions inside the frame.",
-        "When you finish, select Mark as Complete at the end of this page.",
-      ]
-    : refused
-      ? [
-          "Open the lab. It starts in a new tab and this page stays open.",
-          "Follow the instructions in the lab.",
-          "Come back to this page and select Mark as Complete.",
-        ]
-      : lab.steps;
 
   const alert: { tone: "info" | "success"; title: string; description: string } = isCompleted
     ? { tone: "success", title: "You can do this lab again", description: lab.afterCompletion }
@@ -129,37 +97,24 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
           "Nothing is sent back when you finish. Select Mark as Complete when you are done; if you select Next first, we ask you.",
       };
 
-  // Shown only until the lab has been opened, like the Before you start block (12 Oct 2026).
-  // Google's own help does not recommend phones or tablets for its labs; a lab inside the
-  // page is a third-party frame 800 px high, which is hard to use on a phone.
-  const neverOpened = !opened && !isCompleted;
+  // Shown until the topic is completed, like the Before you start block: the opening of the lab
+  // is not seen (19 Oct 2026). Google's own help does not recommend phones or tablets for its
+  // labs; a lab inside the page is a third-party frame 800 px high, which is hard to use on a phone.
+  const notCompleted = !isCompleted;
   const needsComputer =
-    neverOpened && lab.partner === "google" && bp !== "desktop" ? (
+    notCompleted && lab.partner === "google" && bp !== "desktop" ? (
       <InlineAlert
         tone="warning"
         title="This lab needs a computer"
         description="Google doesn't recommend phones or tablets for its labs, and this one may not work here. You can read the instructions now and do the lab later on a desktop or laptop."
       />
-    ) : neverOpened && (inline || refused) && bp === "mobile" ? (
+    ) : notCompleted && (inline || refused) && bp === "mobile" ? (
       <InlineAlert
         tone="warning"
         title="This lab works best on a computer"
         description="The lab is built for a wide screen and a keyboard. You can read the instructions now and do the lab later on a desktop or laptop."
       />
     ) : null;
-
-  const stepList = (
-    <>
-      <h2 className="sk-text-title-large-bold text-sko-text-default">How this lab works</h2>
-      <ol className="flex flex-col gap-3">
-        {steps.map((s, i) => (
-          <NumberedStep key={i} n={i + 1}>
-            {s}
-          </NumberedStep>
-        ))}
-      </ol>
-    </>
-  );
 
   return (
     <div className="flex flex-col gap-3 border-t border-sko-border-subtle pt-3">
@@ -171,13 +126,11 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
             : lab.intro}
       </p>
 
-      {/* Once the lab has been opened the learner has seen what it needs: the block goes, like
-          the computer warning (Nelson, 12 Oct 2026). */}
-      {neverOpened ? <Prerequisites items={lab.prerequisites} /> : null}
+      {/* Until the topic is completed, like the computer warning (19 Oct 2026). */}
+      {notCompleted ? <Prerequisites items={lab.prerequisites} /> : null}
 
       {inline ? (
         <>
-          {stepList}
           {needsComputer}
           {/* LTI "Open tool in: Inline": 800 px high by default (`inline_height`). A sketch,
               like its Figma source (card E1): no DS component for the frame. */}
@@ -196,7 +149,6 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
                 hierarchy="tertiary"
                 size="sm"
                 rightIcon={ExternalLink}
-                onClick={() => labOpened(topicId)}
               >
                 Open in a new tab
               </ButtonLink>
@@ -212,24 +164,20 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
             provider={lab.provider}
             title={card.title}
             description={card.description}
-            openedOn={progress?.openedAt ? `First opened on ${DAY.format(progress.openedAt)}` : undefined}
           >
-            {/* The card's action is 36 high in the DS (`Button` md), which is Button sm here.
-                Primary until the lab has been opened, Secondary after: Mark as Complete is the
-                reverse, so the page has one primary action at a time. */}
+            {/* The card's action is 36 high in the DS (`Button` md), which is Button sm here. It is
+                the primary action of the page: Mark as Complete stays Secondary (19 Oct 2026). */}
             <ButtonLink
               href={href}
               target="_blank"
               rel="noopener"
-              hierarchy={cardState === "opened" ? "secondary" : "primary"}
+              hierarchy="primary"
               size="sm"
               rightIcon={ExternalLink}
-              onClick={() => labOpened(topicId)}
             >
               {card.action}
             </ButtonLink>
           </LabLaunchCard>
-          {stepList}
         </>
       )}
 
