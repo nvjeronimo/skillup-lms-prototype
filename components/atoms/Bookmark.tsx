@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Bookmark as BookmarkIcon } from "lucide-react";
 import { iconStroke, cn } from "@/lib/utils";
@@ -26,6 +28,13 @@ export function BookmarkButton({
     : bookmarked
       ? "Remove bookmark"
       : "Add bookmark";
+  // Off → on swells the icon once; not on first paint (a row that mounts bookmarked stays
+  // still). The class leaves when the bookmark goes off, so the next on replays it.
+  const [toggled, setToggled] = React.useState(false);
+  const first = React.useRef(bookmarked);
+  React.useEffect(() => {
+    if (bookmarked !== first.current) setToggled(true);
+  }, [bookmarked]);
   return (
     <button
       type="button"
@@ -33,15 +42,20 @@ export function BookmarkButton({
       aria-pressed={bookmarked}
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex items-center justify-center rounded-md p-1 transition-colors duration-short4 hover:bg-sko-bg-primary-soft",
+        "inline-flex items-center justify-center rounded-md p-1 transition-[color,background-color] duration-short3 hover:bg-sko-bg-primary-soft",
         bookmarked ? "text-sko-icon-primary" : "text-sko-text-subtle",
         className,
       )}
     >
+      {/* The fill is a colour (transparent ↔ currentColor), so it eases with the stroke. */}
       <BookmarkIcon
         size={size}
         strokeWidth={iconStroke(size)}
-        fill={bookmarked ? "currentColor" : "none"}
+        className={cn(
+          "transition-[fill] duration-short3",
+          bookmarked ? "fill-current" : "fill-transparent",
+          toggled && bookmarked && "sk-animate-bookmark",
+        )}
       />
     </button>
   );
