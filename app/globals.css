@@ -249,6 +249,46 @@ button {
   --motion-distance-enter: var(--motion-distance-nudge);
 }
 
+/* A value swapping in place (the footer's "n of N"): the fade at short3. Opacity only, so
+   reduced motion keeps it as is. */
+.sk-animate-fade-short3 {
+  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+/* Bookmark on (motion-matrix §7.6): the icon swells once, 1 → 1.08 → 1, on the standard
+   curve (no overshoot: R9 keeps that for the certificate). Off is the fill fading only. */
+@keyframes sk-bookmark-pop {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+.sk-animate-bookmark {
+  animation: sk-bookmark-pop var(--motion-duration-short3) var(--motion-easing-standard);
+}
+/* The live dot before "Live": opacity 1 → .35 → 1 on a 1.2 s loop (short3 × 8), linear.
+   The word stays; under reduced motion the dot holds still. */
+.sk-live-dot {
+  animation: sk-pulse calc(var(--motion-duration-short3) * 8) var(--motion-easing-linear) infinite;
+}
+/* The certificate arriving: a fade with a scale from .98, medium2, on the emphasized curve,
+   the product's only overshoot (R9). A CSS animation runs once, on mount; re-renders keep it. */
+@keyframes sk-reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.sk-animate-reveal {
+  animation: sk-reveal var(--motion-duration-medium2) var(--motion-easing-emphasized);
+}
+
 /* The assistant thinking: three dots that brighten in turn, one short3 apart, on a loop of
    eight short3. The word "Thinking…" is in the markup, visually hidden; under reduced
    motion the dots go and the word is shown instead. */
@@ -404,8 +444,14 @@ button {
   .sk-animate-step-prev,
   .sk-animate-page,
   .sk-animate-badge-pop,
+  .sk-animate-reveal,
   .sk-animate-fade {
     animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+  }
+  /* The bookmark only fills; the live dot holds still beside its word. */
+  .sk-animate-bookmark,
+  .sk-live-dot {
+    animation: none;
   }
   /* Fade, no stagger: the rows' inline delays go. */
   .sk-animate-rise {
@@ -458,6 +504,10 @@ button {
 @media print {
   .sk-no-print {
     display: none !important;
+  }
+  /* Printed at rest, never mid-reveal. */
+  .sk-animate-reveal {
+    animation: none;
   }
 }
 
@@ -520,8 +570,14 @@ button {
 [data-reduce-motion] .sk-animate-step-prev,
 [data-reduce-motion] .sk-animate-page,
 [data-reduce-motion] .sk-animate-badge-pop,
+[data-reduce-motion] .sk-animate-reveal,
 [data-reduce-motion] .sk-animate-fade {
   animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+/* The bookmark only fills; the live dot holds still beside its word. */
+[data-reduce-motion] .sk-animate-bookmark,
+[data-reduce-motion] .sk-live-dot {
+  animation: none;
 }
 /* Fade, no stagger: the rows' inline delays go. */
 [data-reduce-motion] .sk-animate-rise {

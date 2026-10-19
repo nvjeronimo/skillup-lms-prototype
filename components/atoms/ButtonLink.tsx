@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
-import { buttonClassName, buttonIconSize, type ButtonHierarchy, type ButtonSize, type ButtonTone } from "./Button";
+import { buttonClassName, buttonIconSize, type ButtonHierarchy, type ButtonSize, type ButtonTone } from "./buttonStyles";
 
 /* What a <button> gets from the browser or from globals.css and an <a> does not: the centred
    label, and the 44px minimum of the "larger targets" setting (on by default on mobile),

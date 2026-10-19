@@ -1,9 +1,14 @@
+"use client";
+
 import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { CourseProgressionButton, type Milestone } from "./CourseProgressionButton";
 import { cn } from "@/lib/utils";
+import { fadesOnMount, rememberFooterPosition } from "@/lib/motion/footerPosition";
 
 export interface TopicFooterNavProps {
+  /** The course the player shows: "n of N" only cross-fades between topics of one course. */
+  courseSlug?: string;
   position: number;
   total: number;
   title: string;
@@ -32,6 +37,7 @@ export interface TopicFooterNavProps {
  * Previous is disabled on the first topic, never hidden; Next is never hidden.
  */
 export function TopicFooterNav({
+  courseSlug = "",
   position,
   total,
   title,
@@ -43,6 +49,21 @@ export function TopicFooterNav({
   compact = false,
   className,
 }: TopicFooterNavProps) {
+  // Decided once per mount: did this course's footer show another number just before?
+  // (The player remounts the footer on every topic; lib/motion/footerPosition remembers.)
+  const [fadeOnMount] = React.useState(() => fadesOnMount(courseSlug, position));
+  React.useEffect(() => {
+    rememberFooterPosition(courseSlug, position);
+  }, [courseSlug, position]);
+  // A change while mounted is caught during render, so the new number never paints unfaded.
+  const [seenPosition, setSeenPosition] = React.useState(position);
+  const [changedInPlace, setChangedInPlace] = React.useState(false);
+  if (seenPosition !== position) {
+    setSeenPosition(position);
+    setChangedInPlace(true);
+  }
+  const fade = changedInPlace || fadeOnMount;
+
   return (
     <nav
       aria-label="Topic navigation"
@@ -67,7 +88,14 @@ export function TopicFooterNav({
       {/* Mobile: the paginator never wraps ("3 of 25" on one line); the Next side gives way. */}
       <div className={cn("text-center", compact ? "min-w-max flex-1 whitespace-nowrap" : "min-w-0")}>
         <p className="sk-text-body-medium-semibold text-sko-text-subtle">
-          {position} of {total}
+          {/* A new number cross-fades in (short3); not a digit roll, and not on first paint. */}
+          <span
+            key={position}
+            className={cn("inline-block", fade && "sk-animate-fade-short3")}
+          >
+            {position}
+          </span>{" "}
+          of {total}
         </p>
         {!compact ? (
           <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{title}</p>

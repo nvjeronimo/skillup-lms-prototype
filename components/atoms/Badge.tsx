@@ -56,6 +56,12 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 
   leftIcon?: LucideIcon;
   /** 2xs uppercase eyebrow styling when true; otherwise the DS Medium label style. */
   eyebrow?: boolean;
+  /**
+   * A live session: a dot before the label that pulses (opacity, 1.2 s loop; still under
+   * reduced motion). The label carries the state, so keep the word ("Live"). Use with
+   * `color="success"`: live is green (decision 012).
+   */
+  live?: boolean;
 }
 
 /* ── Colour bindings, read from Badge Size=sm on 28 Sep 2026 ─────────────────────────
@@ -199,7 +205,7 @@ function resolveTone(tone: BadgeTone | undefined): { color?: BadgeColor; variant
 
 /** Generic badge (DS Badge). The typed LMS badge families compose this. */
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
-  { color, variant, size = "sm", tone, leftIcon, eyebrow = false, className, children, ...rest },
+  { color, variant, size = "sm", tone, leftIcon, eyebrow = false, live = false, className, children, ...rest },
   ref,
 ) {
   const fromTone = resolveTone(tone);
@@ -240,6 +246,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
           <Icon icon={leftIcon} size={12} className={cn("shrink-0", ICON[v][c])} />
         )
       ) : null}
+      {live ? <span aria-hidden className={cn("sk-live-dot size-1.5 shrink-0 rounded-full bg-current", !plain && !leftIcon && "mr-1.5")} /> : null}
       {children}
     </span>
   );

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
+import { useTabIndicator } from "@/lib/useTabIndicator";
 import type { TabSlug } from "@/lib/store";
 
 export interface ContentTab {
@@ -48,6 +49,7 @@ function CountBadge({ n }: { n: number }) {
 export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", className }: ContentTabsProps) {
   const { open, close, containerRef, triggerProps, panelProps } = useDisclosure();
   const current = tabs.find((t) => t.slug === active) ?? tabs[0];
+  const indicator = useTabIndicator(active, tabs.length);
 
   const heading = <h2 className="sr-only">{current.label}</h2>;
 
@@ -127,7 +129,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
         )}
       >
         <nav aria-label="Topic content" className="overflow-x-auto overflow-y-hidden">
-          <ul className="flex items-center gap-3">
+          <ul ref={indicator.rowRef} className="relative flex items-center gap-3">
             {tabs.map((tab) => {
               const isActive = tab.slug === active;
               return (
@@ -135,6 +137,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                   <Link
                     href={tab.href}
                     aria-current={isActive ? "page" : undefined}
+                    data-tab-active={isActive}
                     className={cn(
                       "sk-text-body-medium-semibold relative flex shrink-0 items-center gap-2 px-1 pb-3 pt-0 transition-colors",
                       isActive
@@ -157,8 +160,9 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                       </span>
                     ) : null}
                     {/* DS `tab-selected`: a 2px brand bar with rounded top corners,
-                        sitting on the tab-row baseline. */}
-                    {isActive ? (
+                        sitting on the tab-row baseline. Drawn per tab only until the
+                        sliding bar below has measured (server render, first paint). */}
+                    {isActive && !indicator.box ? (
                       <span
                         aria-hidden
                         className="absolute inset-x-0 -bottom-px h-0.5 rounded-t-[2px] bg-sko-bg-primary"
@@ -168,6 +172,16 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                 </li>
               );
             })}
+            {indicator.box ? (
+              <li
+                aria-hidden
+                className={cn(
+                  "pointer-events-none absolute -bottom-px left-0 h-0.5 rounded-t-[2px] bg-sko-bg-primary",
+                  indicator.animate && "transition-[transform,width] duration-short4 ease-standard",
+                )}
+                style={indicator.style}
+              />
+            ) : null}
           </ul>
         </nav>
         {rightSlot ? <div className="flex shrink-0 items-center gap-3 pr-1">{rightSlot}</div> : null}

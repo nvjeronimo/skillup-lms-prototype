@@ -72,7 +72,8 @@ export function TranscriptLine({
   return (
     <div
       className={cn(
-        "group flex items-start gap-3 py-3 transition-colors",
+        // The active fill and its 3px bar ease in and out together (short3, standard).
+        "group flex items-start gap-3 py-3 transition-[background-color,box-shadow] duration-short3 ease-standard",
         padX,
         stacked && "flex-col",
         active

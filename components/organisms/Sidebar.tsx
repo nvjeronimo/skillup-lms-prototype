@@ -104,6 +104,26 @@ export function Sidebar({
     return { topicsCompleted: done, topicsTotal: tops.length, isCompleted: tops.length > 0 && done === tops.length };
   };
 
+  // A locked row says what opens it: the nearest unlocked topic before it in course order,
+  // or, with none, LockedView's sentence about the earlier topics of its module.
+  const lockedHints = React.useMemo(() => {
+    const hints = new Map<string, string>();
+    let prevUnlocked: Topic | null = null;
+    for (const m of course.modules) {
+      for (const t of moduleTopics(m)) {
+        if (t.locked) {
+          hints.set(
+            t.id,
+            prevUnlocked
+              ? `Complete ${prevUnlocked.title} first`
+              : `“${t.title}” unlocks once you complete the earlier topics in ${m.title}.`,
+          );
+        } else prevUnlocked = t;
+      }
+    }
+    return hints;
+  }, [course]);
+
   const overallPct = courseProgressPct(course, completed);
   const modulesDone = completed
     ? course.modules.filter((m) => moduleStats(m).isCompleted).length
@@ -206,6 +226,7 @@ export function Sidebar({
           status={topicStatus(topic, completed)}
           animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
           active={topic.id === currentTopicId}
+          lockedHint={lockedHints.get(topic.id)}
           onClick={() => onSelectTopic?.(topic.id)}
         />
         {/* Saved topics carry a small bookmark mark on the rail. */}
@@ -411,6 +432,7 @@ export function Sidebar({
               active={topic.id === currentTopicId}
               showBookmark={bookmarks.has(topic.id)}
               bookmarked={bookmarks.has(topic.id)}
+              lockedHint={lockedHints.get(topic.id)}
               onClick={() => onSelectTopic?.(topic.id)}
               onToggleBookmark={() => onToggleBookmark?.(topic.id)}
             />
