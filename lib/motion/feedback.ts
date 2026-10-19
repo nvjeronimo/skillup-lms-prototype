@@ -9,8 +9,8 @@ export const BUTTON_DONE_MS = 1200;
 /** How long the locked-topic tooltip stays when nothing dismisses it first. */
 export const LOCK_TOOLTIP_MS = 3000;
 
-/** How long the transcript stops following the video after the learner scrolls it. */
-export const TRANSCRIPT_FOLLOW_PAUSE_MS = 4000;
+/** How long the transcript stops following (unchanged from before the motion block) the video after the learner scrolls it. */
+export const TRANSCRIPT_FOLLOW_PAUSE_MS = 8000;
 
 /**
  * True when a Button should show its Done check: it was loading, it no longer is, and the

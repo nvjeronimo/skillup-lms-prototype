@@ -49,7 +49,7 @@ function CountBadge({ n }: { n: number }) {
 export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", className }: ContentTabsProps) {
   const { open, close, containerRef, triggerProps, panelProps } = useDisclosure();
   const current = tabs.find((t) => t.slug === active) ?? tabs[0];
-  const indicator = useTabIndicator(active);
+  const indicator = useTabIndicator(active, tabs.length);
 
   const heading = <h2 className="sr-only">{current.label}</h2>;
 

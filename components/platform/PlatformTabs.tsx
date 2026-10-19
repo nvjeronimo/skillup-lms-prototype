@@ -72,7 +72,7 @@ export function PlatformTabs<T extends string>({
   const responsive = size === "responsive";
   const small = size === "sm";
   const ownRule = rule === "own";
-  const indicator = useTabIndicator(value);
+  const indicator = useTabIndicator(value, tabs.length);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     const last = tabs.length - 1;

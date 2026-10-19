@@ -100,7 +100,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     </svg>
   ) : null;
 
-  return (
+  const button = (
     <button
       ref={setRefs}
       disabled={disabled}
@@ -112,7 +112,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       onClick={loading ? (e) => e.preventDefault() : onClick}
     >
       {iconOnly && spinner ? (
-        spinner
+        <>
+          {spinner}
+          {/* The icon gives way to the spinner or check; what it carried stays for assistive tech. */}
+          <span className="sr-only">{children}</span>
+        </>
       ) : (
         <>
           {spinner ?? (leftIcon ? <Icon icon={leftIcon} size={iconSize} /> : null)}
@@ -122,5 +126,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         </>
       )}
     </button>
+  );
+  // A caller that reports `done` gets the check announced politely. The region sits beside
+  // the button (it must exist before it speaks) and only for those callers.
+  if (done === undefined) return button;
+  return (
+    <>
+      {button}
+      <span className="sr-only" aria-live="polite">
+        {showCheck ? "Done" : ""}
+      </span>
+    </>
   );
 });

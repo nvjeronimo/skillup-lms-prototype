@@ -10,10 +10,10 @@ import {
 } from "./feedback";
 
 describe("timings", () => {
-  it("match the brief", () => {
+  it("match the brief (the transcript pause keeps its 8 s)", () => {
     expect(BUTTON_DONE_MS).toBe(1200);
     expect(LOCK_TOOLTIP_MS).toBe(3000);
-    expect(TRANSCRIPT_FOLLOW_PAUSE_MS).toBe(4000);
+    expect(TRANSCRIPT_FOLLOW_PAUSE_MS).toBe(8000);
   });
 });
 

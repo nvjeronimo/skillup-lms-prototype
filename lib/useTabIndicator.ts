@@ -12,12 +12,14 @@ import { indicatorMoved, measureIndicator, type IndicatorBox } from "./motion/in
  * is null and the caller draws the old per-tab bar, so the server render and first paint look
  * the same. The first measurement of a row and every resize place the bar without animating;
  * only a change of `activeKey` slides it. Reduced motion: the global transition guard drops
- * transform and width, so the bar jumps.
+ * transform and width, so the bar jumps. `tabCount` is the number of tabs, so a tab added or
+ * removed is observed for resizes too.
  */
-export function useTabIndicator(activeKey: string) {
+export function useTabIndicator(activeKey: string, tabCount: number) {
   const [row, setRow] = React.useState<HTMLElement | null>(null);
   const rowRef = React.useCallback((node: HTMLElement | null) => setRow(node), []);
   const [box, setBox] = React.useState<IndicatorBox | null>(null);
+  const boxRef = React.useRef<IndicatorBox | null>(null);
   const [animate, setAnimate] = React.useState(false);
   // The key the bar was last placed for, on the current row: a new key slides, the same jumps.
   const placedFor = React.useRef<string | null>(null);
@@ -27,8 +29,12 @@ export function useTabIndicator(activeKey: string) {
       const tab = row?.querySelector<HTMLElement>('[data-tab-active="true"]');
       if (!row || !tab) return false;
       const next = measureIndicator(tab.getBoundingClientRect(), row.getBoundingClientRect());
+      // A measurement that finds the bar where it is changes nothing: a resize tick in the
+      // middle of a slide must not drop the transition.
+      if (!indicatorMoved(boxRef.current, next)) return true;
+      boxRef.current = next;
       setAnimate(slide);
-      setBox((prev) => (indicatorMoved(prev, next) ? next : prev));
+      setBox(next);
       return true;
     },
     [row],
@@ -37,7 +43,10 @@ export function useTabIndicator(activeKey: string) {
   // A new row (first mount, or the select turning back into tabs) is placed, not slid.
   React.useLayoutEffect(() => {
     placedFor.current = null;
-    if (!row) setBox(null);
+    if (!row) {
+      boxRef.current = null;
+      setBox(null);
+    }
   }, [row]);
 
   React.useLayoutEffect(() => {
@@ -52,7 +61,8 @@ export function useTabIndicator(activeKey: string) {
     // A tab can change width without the row doing so (a web font arriving, a count changing).
     row.querySelectorAll<HTMLElement>("[data-tab-active]").forEach((el) => ro.observe(el));
     return () => ro.disconnect();
-  }, [row, measure]);
+    // tabCount: a tab added or removed is observed too.
+  }, [row, measure, tabCount]);
 
   const style: React.CSSProperties | undefined = box
     ? { width: box.width, transform: `translateX(${box.x}px)` }

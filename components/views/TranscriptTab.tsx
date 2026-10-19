@@ -16,7 +16,7 @@ import { tsToSeconds } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { track } from "@/lib/analytics";
 import { TopicEndActionContext } from "@/lib/topicEndAction";
-import { TRANSCRIPT_FOLLOW_PAUSE_MS, intersectSpans, isOutOfView, isScrollKey } from "@/lib/motion/feedback";
+import { TRANSCRIPT_FOLLOW_PAUSE_MS, isOutOfView, isScrollKey } from "@/lib/motion/feedback";
 
 /** The nearest ancestor that scrolls vertically, or null for the page itself. */
 function scrollParent(el: HTMLElement): HTMLElement | null {
@@ -27,12 +27,15 @@ function scrollParent(el: HTMLElement): HTMLElement | null {
   return null;
 }
 
-/** True when the line is not wholly visible in its scroll box (and the window). */
+/**
+ * True when the line is not wholly visible in the transcript's scroll box. With no box there
+ * is nothing to test against: the page is never scrolled for the transcript (a box below the
+ * fold stays below the fold).
+ */
 function lineOutOfView(el: HTMLElement): boolean {
   const box = scrollParent(el);
-  const viewport = { top: 0, bottom: window.innerHeight };
-  const view = box ? intersectSpans(box.getBoundingClientRect(), viewport) : viewport;
-  return isOutOfView(el.getBoundingClientRect(), view);
+  if (!box) return false;
+  return isOutOfView(el.getBoundingClientRect(), box.getBoundingClientRect());
 }
 
 export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: string }) {

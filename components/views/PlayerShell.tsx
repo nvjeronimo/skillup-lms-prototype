@@ -524,6 +524,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           </div>
 
           <TopicFooterNav
+            courseSlug={courseSlug}
             position={position}
             total={total}
             title={topic.title}

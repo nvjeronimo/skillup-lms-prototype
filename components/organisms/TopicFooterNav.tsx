@@ -4,13 +4,11 @@ import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { CourseProgressionButton, type Milestone } from "./CourseProgressionButton";
 import { cn } from "@/lib/utils";
-
-/* The player lives in [topicId]/layout, so moving to another topic remounts this footer.
-   The number last shown survives here (module level, like the sidebar's scroll), so a new
-   number cross-fades in while the first paint of a session stays still. */
-let lastShownPosition: number | null = null;
+import { fadesOnMount, rememberFooterPosition } from "@/lib/motion/footerPosition";
 
 export interface TopicFooterNavProps {
+  /** The course the player shows: "n of N" only cross-fades between topics of one course. */
+  courseSlug?: string;
   position: number;
   total: number;
   title: string;
@@ -39,6 +37,7 @@ export interface TopicFooterNavProps {
  * Previous is disabled on the first topic, never hidden; Next is never hidden.
  */
 export function TopicFooterNav({
+  courseSlug = "",
   position,
   total,
   title,
@@ -50,11 +49,12 @@ export function TopicFooterNav({
   compact = false,
   className,
 }: TopicFooterNavProps) {
-  // Decided once per mount: did the number change since the footer last showed one?
-  const [fromPosition] = React.useState(() => lastShownPosition);
+  // Decided once per mount: did this course's footer show another number just before?
+  // (The player remounts the footer on every topic; lib/motion/footerPosition remembers.)
+  const [fadeOnMount] = React.useState(() => fadesOnMount(courseSlug, position));
   React.useEffect(() => {
-    lastShownPosition = position;
-  }, [position]);
+    rememberFooterPosition(courseSlug, position);
+  }, [courseSlug, position]);
   // A change while mounted is caught during render, so the new number never paints unfaded.
   const [seenPosition, setSeenPosition] = React.useState(position);
   const [changedInPlace, setChangedInPlace] = React.useState(false);
@@ -62,7 +62,7 @@ export function TopicFooterNav({
     setSeenPosition(position);
     setChangedInPlace(true);
   }
-  const fade = changedInPlace || (fromPosition !== null && fromPosition !== position);
+  const fade = changedInPlace || fadeOnMount;
 
   return (
     <nav
