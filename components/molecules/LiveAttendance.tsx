@@ -12,9 +12,11 @@ export interface LiveAttendanceProps {
 export function LiveAttendance({ live, total, recording = false, className }: LiveAttendanceProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-sko-bg-error-soft px-2 py-0.5">
-        <span className="h-2 w-2 rounded-full bg-sko-bg-error" aria-hidden />
-        <span className="sk-text-body-small-semibold text-sko-text-error">LIVE</span>
+      {/* Decision 012: LIVE is green, never red (red is for errors). Badge Soft Success pair; the dot
+          pulses (sk-live-dot) and stops under reduced motion, the word stays. */}
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-sko-bg-success-soft px-2 py-0.5">
+        <span className="sk-live-dot h-2 w-2 rounded-full bg-sko-bg-success" aria-hidden />
+        <span className="sk-text-body-small-semibold text-sko-text-success">LIVE</span>
       </span>
       <span className="sk-text-body-small-regular text-sko-text-muted">
         {live} of {total} participants
