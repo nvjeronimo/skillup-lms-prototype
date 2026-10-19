@@ -3,6 +3,7 @@ import { discussionHref, discussionUnread } from "./discussion";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
 import { coursePageHref, coursePlayerHref, slugify } from "./hrefs";
+import { certificatesInProgress, earnedCertificates } from "./certificates";
 
 /**
  * Mock data of the platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop
@@ -32,7 +33,8 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
   stats: [
     { label: "Courses in progress", value: "4", detail: "of 17 enrolled" },
     { label: "Courses completed", value: "2", detail: "of 17 enrolled" },
-    { label: "Certificates", value: "2", detail: "ready to download" },
+    // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
+    { label: "Certificates", value: String(earnedCertificates.length), detail: "ready to download" },
     { label: "Programs", value: "2", detail: "1 in progress" },
   ],
 };
@@ -141,7 +143,7 @@ export const dashboardJump: DashboardJumpTile[] = [
     id: "certificates",
     icon: Award,
     title: "Certificates",
-    description: "4 in progress · 2 to download",
+    description: `${certificatesInProgress.length} in progress · ${earnedCertificates.length} to download`,
     // The Certificates page (19 Oct 2026); it opened the Six Sigma certificate until then.
     href: "/platform/certificates",
   },
