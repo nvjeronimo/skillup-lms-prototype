@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { cn } from "@/lib/utils";
+import { useTabIndicator } from "@/lib/useTabIndicator";
 
 export interface PlatformTab<T extends string> {
   id: T;
@@ -71,6 +72,7 @@ export function PlatformTabs<T extends string>({
   const responsive = size === "responsive";
   const small = size === "sm";
   const ownRule = rule === "own";
+  const indicator = useTabIndicator(value);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     const last = tabs.length - 1;
@@ -88,9 +90,10 @@ export function PlatformTabs<T extends string>({
 
   const tablist = (
     <div
+      ref={indicator.rowRef}
       role="tablist"
       aria-label={ariaLabel}
-      className={cn("flex items-start gap-3", !ownRule && className)}
+      className={cn("relative flex items-start gap-3", !ownRule && className)}
     >
       {tabs.map((tab, index) => {
         const selected = tab.id === value;
@@ -105,6 +108,7 @@ export function PlatformTabs<T extends string>({
             role="tab"
             id={platformTabId(idBase, tab.id)}
             aria-selected={selected}
+            data-tab-active={selected}
             aria-controls={panels === "all" || selected ? platformPanelId(idBase, tab.id) : undefined}
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.id)}
@@ -141,7 +145,8 @@ export function PlatformTabs<T extends string>({
                 {tab.count}
               </Badge>
             ) : null}
-            {selected ? (
+            {/* Per tab only until the sliding bar below has measured (server render, first paint). */}
+            {selected && !indicator.box ? (
               <span
                 aria-hidden="true"
                 className={cn(
@@ -153,6 +158,18 @@ export function PlatformTabs<T extends string>({
           </button>
         );
       })}
+      {/* DS `tab-selected`, one bar for the row: it slides to the selected tab (§7.6). */}
+      {indicator.box ? (
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute left-0 h-0.5 rounded-t-[2px] bg-sko-bg-primary",
+            ownRule ? "bottom-0" : "-bottom-px",
+            indicator.animate && "transition-[transform,width] duration-short4 ease-standard",
+          )}
+          style={indicator.style}
+        />
+      ) : null}
     </div>
   );
 
