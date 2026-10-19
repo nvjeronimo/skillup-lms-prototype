@@ -16,8 +16,24 @@ import { tsToSeconds } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { track } from "@/lib/analytics";
 import { TopicEndActionContext } from "@/lib/topicEndAction";
+import { TRANSCRIPT_FOLLOW_PAUSE_MS, intersectSpans, isOutOfView, isScrollKey } from "@/lib/motion/feedback";
 
-const PAUSE_MS = 8000;
+/** The nearest ancestor that scrolls vertically, or null for the page itself. */
+function scrollParent(el: HTMLElement): HTMLElement | null {
+  for (let p = el.parentElement; p; p = p.parentElement) {
+    const { overflowY } = window.getComputedStyle(p);
+    if ((overflowY === "auto" || overflowY === "scroll") && p.scrollHeight > p.clientHeight) return p;
+  }
+  return null;
+}
+
+/** True when the line is not wholly visible in its scroll box (and the window). */
+function lineOutOfView(el: HTMLElement): boolean {
+  const box = scrollParent(el);
+  const viewport = { top: 0, bottom: window.innerHeight };
+  const view = box ? intersectSpans(box.getBoundingClientRect(), viewport) : viewport;
+  return isOutOfView(el.getBoundingClientRect(), view);
+}
 
 export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
@@ -49,19 +65,23 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   }, [activeLineId]);
 
   // Not on the first render: scrollIntoView also moves the page, so a topic would open
-  // with its title already scrolled under the player. Follow from the first line change on.
+  // with its title already scrolled under the player. Follow from the first line change on,
+  // and only when the active line has left the view: a line on screen stays where the
+  // learner is reading it, and one off screen comes in by the shortest way ("nearest").
   const mountedLineId = React.useRef(activeLineId);
   React.useEffect(() => {
     if (mountedLineId.current === activeLineId) return;
     mountedLineId.current = null;
-    if (following) scrollToActive();
-  }, [activeLineId, following, scrollToActive]);
+    if (!following) return;
+    const el = activeLineId ? lineRefs.current[activeLineId] : null;
+    if (el && lineOutOfView(el)) scrollToElement(el, "nearest");
+  }, [activeLineId, following]);
 
   function pauseFollow(direction: "up" | "down") {
     setScrollDirection(direction);
     setFollowing(false);
     if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
-    pauseTimer.current = window.setTimeout(() => setFollowing(true), PAUSE_MS);
+    pauseTimer.current = window.setTimeout(() => setFollowing(true), TRANSCRIPT_FOLLOW_PAUSE_MS);
   }
 
   function handleWheel(e: React.WheelEvent) {
@@ -88,6 +108,23 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     lastTouchY.current = e.touches[0]?.clientY ?? null;
   }
 
+  // Keys that scroll, pressed in the transcript: the learner is moving it themselves. Not in
+  // the language select, and not Space on a control (it presses the control).
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (!isScrollKey(e.key)) return;
+    const t = e.target as HTMLElement;
+    if (t.closest("select, input, textarea")) return;
+    if (e.key === " " && t.closest("button, a")) return;
+    pauseFollow(e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home" ? "up" : "down");
+  }
+
+  React.useEffect(
+    () => () => {
+      if (pauseTimer.current) window.clearTimeout(pauseTimer.current);
+    },
+    [],
+  );
+
   if (!topic || !transcript.length) {
     return (
       <p className="sk-text-body-medium-regular px-1 py-8 text-center text-sko-text-subtle">
@@ -102,6 +139,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
+      onKeyDown={handleKeyDown}
     >
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
