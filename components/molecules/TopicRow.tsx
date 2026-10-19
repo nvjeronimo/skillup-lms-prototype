@@ -1,8 +1,11 @@
+"use client";
+
 import * as React from "react";
 import { CompletionStatus } from "@/components/atoms/CompletionStatus";
 import { BookmarkButton } from "@/components/atoms/Bookmark";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { cn } from "@/lib/utils";
+import { LOCK_TOOLTIP_MS } from "@/lib/motion/feedback";
 import type { CompletionState, TopicType } from "@/lib/types";
 
 export interface TopicRowProps {
@@ -17,6 +20,11 @@ export interface TopicRowProps {
   showBookmark?: boolean;
   bookmarked?: boolean;
   optional?: boolean;
+  /**
+   * Why a Locked row cannot open, e.g. "Complete Review 2 peer submissions first". Shown in a
+   * small tooltip when the learner activates the row (it does not navigate) and announced politely.
+   */
+  lockedHint?: string;
   onClick?: () => void;
   onToggleBookmark?: () => void;
   /** Collapsed sidebar shows only the status dot + active indicator. */
@@ -47,6 +55,28 @@ function ActiveRule() {
  * 12/8/12/12 padding, 8px gap, an 18px Completion Status, then a state column
  * (title Body/Small/Medium, 4px, then badge · duration on one 20px line).
  */
+/**
+ * The locked row's tooltip: open on activation, closed on blur, Escape or after 3 s.
+ * No shake of the row (motion-matrix §7.6): the hint enters with a fade and a 4px rise.
+ */
+function useLockedHint() {
+  const [open, setOpen] = React.useState(false);
+  const [shown, setShown] = React.useState(0);
+  React.useEffect(() => {
+    if (!open) return;
+    const t = window.setTimeout(() => setOpen(false), LOCK_TOOLTIP_MS);
+    return () => window.clearTimeout(t);
+  }, [open, shown]);
+  return {
+    open,
+    show: () => {
+      setOpen(true);
+      setShown((n) => n + 1);
+    },
+    hide: () => setOpen(false),
+  };
+}
+
 export function TopicRow({
   type,
   title,
@@ -57,16 +87,23 @@ export function TopicRow({
   showBookmark = false,
   bookmarked = false,
   optional = false,
+  lockedHint,
   onClick,
   onToggleBookmark,
   collapsed = false,
   className,
 }: TopicRowProps) {
+  const locked = status === "Locked";
+  const hint = useLockedHint();
+  const hintId = React.useId();
+
   if (collapsed) {
     return (
       <button
         type="button"
-        onClick={onClick}
+        // A locked topic does not open, here as in the expanded row.
+        onClick={locked ? undefined : onClick}
+        aria-disabled={locked || undefined}
         aria-current={active ? "page" : undefined}
         // Icon-only rail row: the name carries what the ring and badge show.
         aria-label={`${title}, ${type}, ${STATUS_TEXT[status]}`}
@@ -96,8 +133,21 @@ export function TopicRow({
       {active ? <ActiveRule /> : null}
       <button
         type="button"
-        onClick={onClick}
+        onClick={locked ? (lockedHint ? hint.show : undefined) : onClick}
+        onBlur={locked ? hint.hide : undefined}
+        onKeyDown={
+          locked
+            ? (e) => {
+                if (e.key === "Escape" && hint.open) {
+                  e.stopPropagation();
+                  hint.hide();
+                }
+              }
+            : undefined
+        }
         aria-current={active ? "page" : undefined}
+        aria-disabled={locked || undefined}
+        aria-describedby={locked && lockedHint ? hintId : undefined}
         className="flex min-w-0 flex-1 items-start gap-2 text-left"
       >
         {/* DS: the 18px status sits flush with the top padding, level with the
@@ -132,6 +182,27 @@ export function TopicRow({
           </span>
         </span>
       </button>
+      {locked && lockedHint ? (
+        <>
+          {/* The reason, for assistive tech: the button's description, and a polite
+              announcement when the learner tries the row. */}
+          <span id={hintId} className="sr-only">
+            {lockedHint}
+          </span>
+          <span className="sr-only" aria-live="polite">
+            {hint.open ? lockedHint : ""}
+          </span>
+          {hint.open ? (
+            <span
+              aria-hidden
+              className="sk-animate-rise sk-rise-nudge sk-text-body-small-semibold pointer-events-none absolute left-3 top-full z-20 -mt-1 w-max max-w-[240px] rounded-lg bg-sko-bg-inverse px-3 py-2 text-sko-text-on-inverse"
+            >
+              <span className="absolute -top-1 left-3 size-2.5 rotate-45 rounded-[1px] bg-sko-bg-inverse" />
+              {lockedHint}
+            </span>
+          ) : null}
+        </>
+      ) : null}
       {/* Trailing bookmark — hidden by default, shown when Show bookmark=true
           (the active row sets it on; see Sidebar). */}
       {showBookmark || active ? (
