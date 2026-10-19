@@ -126,7 +126,9 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
               "repeating-linear-gradient(45deg, var(--color-border-primary) 0 1px, transparent 1px 7.07px)",
           }}
         />
-        <div className="relative flex w-full flex-col gap-3">
+        {/* flex-1 + justify-between: the title block at the top, the badges at the bottom of the hero
+            (in the list the hero is as tall as the card). */}
+        <div className="relative flex w-full flex-1 flex-col justify-between gap-3">
           {/* Title block: the type line, then the thumb and title; gap 12 in every variant (DS, Nelson, 19 Oct 2026). */}
           <div className="flex w-full flex-col gap-3">
             <div className="flex min-h-9 w-full items-center justify-between gap-2">
