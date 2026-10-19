@@ -128,7 +128,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const [savedFilter, setSavedFilter] = React.useState<SavedFilter>("all");
   const [completeOpen, setCompleteOpen] = React.useState(false);
   const completionFlow = useLmsStore((s) => s.completionFlow);
-  const labProgress = useLmsStore((s) => s.labState[topicId]);
   const labLaunch = useLmsStore((s) => s.labLaunch);
   /** The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026). */
   const [askOpen, setAskOpen] = React.useState(false);
@@ -184,7 +183,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // action of its own and nothing comes back from the partner, so the learner marks it
   // complete here, like a Reading.
   const partnerLab = getPartnerLab(topic);
-  const labOpenedAt = labProgress?.openedAt;
   // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
   const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   const hasInFrameAction =
@@ -210,8 +208,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       // The first beat of the completion chain: the badge pops when the topic was completed now.
       fresh={isFreshCompletion(lastCompleted, topicId, Date.now())}
       onComplete={() => markComplete(topicId)}
-      // On a partner lab that has not been opened yet, the launch button is the primary action.
-      secondary={Boolean(partnerLab) && !labOpenedAt && !labInPage}
+      // On a partner lab the launch button is the primary action. SkillUp cannot tell whether the
+      // lab has been opened, so Mark as Complete stays Secondary (19 Oct 2026).
+      secondary={Boolean(partnerLab) && !labInPage}
     />
   );
   // The rule since 12 Oct 2026 (lab-third-party-platforms.md §4, after Navdeep's comments): on a
@@ -266,7 +265,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const footerMeta =
     !isLocked && !isBlocked && family !== "video" && activeTab === "transcript" ? (
       <TopicFooterMeta
-        byline={FOOTER_AUTHOR_FAMILIES.includes(family) ? getByline(topic) : undefined}
+        // No author on a partner lab (Lab screens, 19 Oct 2026).
+        byline={FOOTER_AUTHOR_FAMILIES.includes(family) && !partnerLab ? getByline(topic) : undefined}
         onReport={() => showToast("Thanks, we'll take a look.")}
         action={endAction ?? undefined}
       />
