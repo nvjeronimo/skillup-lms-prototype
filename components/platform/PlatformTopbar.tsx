@@ -13,7 +13,7 @@ import {
   AppearanceSection,
   PROFILE_PANEL,
   ProfileFooter,
-  ProfileHeader,
+  ProfileLinks,
 } from "@/components/molecules/ProfileSettings";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { notifications } from "@/lib/data";
@@ -52,7 +52,8 @@ function SectionLinks({
   className,
   itemClassName,
 }: {
-  current: PlatformSection;
+  /** The section tab to mark current; null on pages outside the five (Edit profile). */
+  current: PlatformSection | null;
   /** `tabs`: the desktop bar. `menu`: the rows of the compact menu. */
   look?: "tabs" | "menu";
   onPick?: () => void;
@@ -128,7 +129,7 @@ function ProfilePanel({
 }) {
   return (
     <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
-      <ProfileHeader name={platformUser.name} role={platformUser.role} />
+      <ProfileLinks onDone={onDone} />
       <AppearanceSection />
       <AccessibilitySection />
       <ProfileFooter onDone={onDone} />
@@ -164,7 +165,7 @@ function Initials() {
  * 2026): both render `PLATFORM_SECTIONS` through `SectionLinks`, so the order cannot differ.
  * Do not give the menu a list of its own.
  */
-export function PlatformTopbar({ current }: { current: PlatformSection }) {
+export function PlatformTopbar({ current }: { current: PlatformSection | null }) {
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const profile = useDisclosure();

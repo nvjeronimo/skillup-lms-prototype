@@ -14,7 +14,7 @@ import {
   AppearanceSection,
   PROFILE_PANEL,
   ProfileFooter,
-  ProfileHeader,
+  ProfileLinks,
   ProfileSection as Section,
   ToggleRow,
 } from "@/components/molecules/ProfileSettings";
@@ -130,9 +130,9 @@ export function DemoControlsMenu({
           aria-label="Account and demo settings"
           className={PROFILE_PANEL}
         >
-          {/* The standard profile menu (DS LMS / Profile Menu): header, Appearance, Accessibility;
+          {/* The standard profile menu (DS LMS / Profile Menu): links, Appearance, Accessibility;
               then the player's preview sections; the footer last. */}
-          <ProfileHeader name={userName} role={platformUser.role} avatarUrl={userAvatarUrl} />
+          <ProfileLinks onDone={() => setOpen(false)} />
           <AppearanceSection />
           <AccessibilitySection />
 
