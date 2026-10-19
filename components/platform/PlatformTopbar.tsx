@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Bell, ChevronDown, Menu, Moon, Sun } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
@@ -14,6 +15,9 @@ import {
   ProfileFooter,
   ProfileHeader,
 } from "@/components/molecules/ProfileSettings";
+import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
+import { notifications } from "@/lib/data";
+import { track } from "@/lib/analytics";
 import { useDisclosure } from "@/lib/useDisclosure";
 import { PLATFORM_SECTIONS, platformUser, type PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
@@ -76,7 +80,10 @@ function SectionLinks({
               </Badge>
             ) : null}
             {tabs && isCurrent ? (
-              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] rounded-t-[2px] bg-sko-bg-primary" />
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-[3px] rounded-t-[2px] bg-sko-bg-primary"
+              />
             ) : null}
           </>
         );
@@ -112,7 +119,13 @@ function SectionLinks({
 }
 
 /** Profile panel: the standard profile menu (DS LMS / Profile Menu), as in the player minus its preview sections. */
-function ProfilePanel({ panelProps, onDone }: { panelProps: ReturnType<typeof useDisclosure>["panelProps"]; onDone: () => void }) {
+function ProfilePanel({
+  panelProps,
+  onDone,
+}: {
+  panelProps: ReturnType<typeof useDisclosure>["panelProps"];
+  onDone: () => void;
+}) {
   return (
     <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
       <ProfileHeader name={platformUser.name} role={platformUser.role} />
@@ -152,22 +165,36 @@ function Initials() {
  * Do not give the menu a list of its own.
  */
 export function PlatformTopbar({ current }: { current: PlatformSection }) {
-  const showToast = useLmsStore((s) => s.showToast);
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const profile = useDisclosure();
   const profileCompact = useDisclosure();
   const menu = useDisclosure();
+  const router = useRouter();
+  const openPanel = useLmsStore((s) => s.openPanel);
+  const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
+  const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
+  const notificationsRead = useLmsStore((s) => s.notificationsRead);
+  const markAllNotificationsRead = useLmsStore((s) => s.markAllNotificationsRead);
+  const unread = notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length;
 
+  // The bell opens the same Notifications panel as the player (DS LMS / Notifications Panel):
+  // hybrid tabs All · Discussions · Grading · Updates with date sections, Mark all read (Nelson, 19 Oct 2026).
   const bell = (
     <button
       type="button"
-      aria-label="Notifications, new"
-      onClick={() => showToast("Notifications are not part of this prototype yet")}
+      aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}
+      aria-haspopup="dialog"
+      onClick={() => openOverlayPanel("notifications")}
       className="relative inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
     >
       <Icon icon={Bell} size={20} />
-      <span aria-hidden className="absolute right-[11px] top-[10px] size-2 rounded-full bg-sko-bg-info ring-2 ring-sko-bg-page lg:right-[5px] lg:top-1" />
+      {unread ? (
+        <span
+          aria-hidden
+          className="absolute right-[11px] top-[10px] size-2 rounded-full bg-sko-bg-info ring-2 ring-sko-bg-page lg:right-[5px] lg:top-1"
+        />
+      ) : null}
     </button>
   );
 
@@ -185,84 +212,123 @@ export function PlatformTopbar({ current }: { current: PlatformSection }) {
   );
 
   return (
-    <header className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
-      {/* Desktop */}
-      <div className="hidden h-[71px] items-center justify-between px-6 lg:flex">
-        <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
-          <SkillUpLogo className="h-[30px]" />
-        </Link>
-        <nav aria-label="Platform" className="self-stretch">
-          <SectionLinks current={current} look="tabs" className="flex h-full items-stretch gap-6" />
-        </nav>
-        <div className="flex items-center gap-3">
-          {bell}
-          {themeButton}
-          <div ref={profile.containerRef} className="relative">
-            <button
-              type="button"
-              {...profile.triggerProps}
-              aria-label={`${platformUser.name}, account`}
-              className="flex items-center gap-2 rounded-lg p-1 text-left transition-colors hover:bg-sko-bg-faint"
-            >
-              <Initials />
-              <span className="flex flex-col whitespace-nowrap">
-                <span className="sk-text-body-small-semibold text-sko-text-default">{platformUser.name}</span>
-                <span className="sk-text-label-small-regular text-sko-text-subtle">{platformUser.role}</span>
-              </span>
-              <Icon icon={ChevronDown} size={16} className="text-sko-icon-default" />
-            </button>
-            {profile.open ? <ProfilePanel panelProps={profile.panelProps} onDone={profile.close} /> : null}
-          </div>
-        </div>
-      </div>
-
-      {/* Compact */}
-      {/* DS Compact (Topbar 1.3, Nelson 17 Oct 2026): 64 with the rule, padding 8 / 16; the controls are
-          44px targets, centred. Notifications · Theme · learner · Menu. */}
-      <div className="flex h-[63px] items-center justify-between px-4 lg:hidden">
-        <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
-          <SkillUpLogo className="h-[30px]" />
-        </Link>
-        <div className="flex items-center gap-1">
-          {bell}
-          {themeButton}
-          <div ref={profileCompact.containerRef} className="relative">
-            <button
-              type="button"
-              {...profileCompact.triggerProps}
-              aria-label={`${platformUser.name}, account`}
-              className="inline-flex size-11 items-center justify-center rounded-full transition-colors hover:bg-sko-bg-faint"
-            >
-              <Initials />
-            </button>
-            {profileCompact.open ? <ProfilePanel panelProps={profileCompact.panelProps} onDone={profileCompact.close} /> : null}
-          </div>
-          <div ref={menu.containerRef}>
-            <button
-              type="button"
-              {...menu.triggerProps}
-              aria-label="Platform sections"
-              className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint"
-            >
-              <Icon icon={Menu} size={24} />
-            </button>
-            {menu.open ? (
-              <nav
-                {...menu.panelProps}
-                aria-label="Platform"
-                className="absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
+    <>
+      <header className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
+        {/* Desktop */}
+        <div className="hidden h-[71px] items-center justify-between px-6 lg:flex">
+          <Link
+            href="/platform/dashboard"
+            aria-label="SkillUp, Dashboard"
+            className="flex min-h-11 items-center"
+          >
+            <SkillUpLogo className="h-[30px]" />
+          </Link>
+          <nav aria-label="Platform" className="self-stretch">
+            <SectionLinks
+              current={current}
+              look="tabs"
+              className="flex h-full items-stretch gap-6"
+            />
+          </nav>
+          <div className="flex items-center gap-3">
+            {bell}
+            {themeButton}
+            <div ref={profile.containerRef} className="relative">
+              <button
+                type="button"
+                {...profile.triggerProps}
+                aria-label={`${platformUser.name}, account`}
+                className="flex items-center gap-2 rounded-lg p-1 text-left transition-colors hover:bg-sko-bg-faint"
               >
-                <SectionLinks
-                  current={current}
-                  onPick={menu.close}
-                  className="flex flex-col gap-1"
-                  itemClassName="min-h-11 w-full"
-                />
-              </nav>
-            ) : null}
+                <Initials />
+                <span className="flex flex-col whitespace-nowrap">
+                  <span className="sk-text-body-small-semibold text-sko-text-default">
+                    {platformUser.name}
+                  </span>
+                  <span className="sk-text-label-small-regular text-sko-text-subtle">
+                    {platformUser.role}
+                  </span>
+                </span>
+                <Icon icon={ChevronDown} size={16} className="text-sko-icon-default" />
+              </button>
+              {profile.open ? (
+                <ProfilePanel panelProps={profile.panelProps} onDone={profile.close} />
+              ) : null}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+
+        {/* Compact */}
+        {/* DS Compact (Topbar 1.3, Nelson 17 Oct 2026): 64 with the rule, padding 8 / 16; the controls are
+          44px targets, centred. Notifications · Theme · learner · Menu. */}
+        <div className="flex h-[63px] items-center justify-between px-4 lg:hidden">
+          <Link
+            href="/platform/dashboard"
+            aria-label="SkillUp, Dashboard"
+            className="flex min-h-11 items-center"
+          >
+            <SkillUpLogo className="h-[30px]" />
+          </Link>
+          <div className="flex items-center gap-1">
+            {bell}
+            {themeButton}
+            <div ref={profileCompact.containerRef} className="relative">
+              <button
+                type="button"
+                {...profileCompact.triggerProps}
+                aria-label={`${platformUser.name}, account`}
+                className="inline-flex size-11 items-center justify-center rounded-full transition-colors hover:bg-sko-bg-faint"
+              >
+                <Initials />
+              </button>
+              {profileCompact.open ? (
+                <ProfilePanel
+                  panelProps={profileCompact.panelProps}
+                  onDone={profileCompact.close}
+                />
+              ) : null}
+            </div>
+            <div ref={menu.containerRef}>
+              <button
+                type="button"
+                {...menu.triggerProps}
+                aria-label="Platform sections"
+                className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint"
+              >
+                <Icon icon={Menu} size={24} />
+              </button>
+              {menu.open ? (
+                <nav
+                  {...menu.panelProps}
+                  aria-label="Platform"
+                  className="absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
+                >
+                  <SectionLinks
+                    current={current}
+                    onPick={menu.close}
+                    className="flex flex-col gap-1"
+                    itemClassName="min-h-11 w-full"
+                  />
+                </nav>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Outside the header: its z-30 stacking context would cap the panel. */}
+      <NotificationsPanel
+        open={openPanel === "notifications"}
+        onClose={closeOverlayPanel}
+        notifications={notifications}
+        readIds={notificationsRead}
+        onMarkAllRead={() => markAllNotificationsRead(notifications.map((n) => n.id))}
+        onSelect={(n) => {
+          closeOverlayPanel();
+          track("notification_click", { notifId: n.id, type: n.type });
+          router.push(n.href);
+        }}
+      />
+    </>
   );
 }
