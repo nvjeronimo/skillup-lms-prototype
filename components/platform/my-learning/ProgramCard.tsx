@@ -127,7 +127,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           }}
         />
         <div className="relative flex w-full flex-col gap-3">
-          <div className="flex w-full flex-col gap-1">
+          {/* Title block: the type line, then the thumb and title; gap 12 in every variant (DS, Nelson, 19 Oct 2026). */}
+          <div className="flex w-full flex-col gap-3">
             <div className="flex min-h-9 w-full items-center justify-between gap-2">
               <CourseTypeBadge value="Program" />
               {program.partners.length ? (
