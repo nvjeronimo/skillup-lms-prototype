@@ -419,3 +419,57 @@
   /* DS effect style Elevation/level3: cards that float over the page (the rail's topic flyout). */
   --sk-shadow-elevation-3: 0 2px 4px -2px #0a0d120f, 0 4px 6px -1px #0a0d121a;
 }
+
+/* --- Maré skin (proposal, Nelson 19 Oct 2026) -------------------------------------------------
+   The SKO brand tokens (no override: Maré inherits SKO in light and dark), plus a deep-teal
+   chrome. One new token, --color-bg-chrome (#044150, the SkillUp deep teal of the logo and the
+   certificate), to become a DS token if Maré is approved; #0a5266 / #0a5a70 are steps between it
+   and bg/primary (hover and gradient), to be named with it. Everything else reuses tokens: the
+   bar's controls take the dark-mode tokens (data-theme="dark" on them, as the Program-Card hero),
+   the current-page marker and the avatar take the yellow spark (bg/warning), the glance card runs
+   deep teal → teal, the page gets a breath of bg/primary-soft, the Jump tiles take sky, mint and
+   sun. Rules kept: progress in bg/info, green only when completed, AA everywhere. */
+:root {
+  --color-bg-chrome: #044150;
+}
+[data-skin="mare"] [data-chrome] {
+  background-color: var(--color-bg-chrome);
+  border-bottom-color: var(--color-bg-chrome);
+}
+[data-skin="mare"] [data-chrome-ink] {
+  --color-bg-page: var(--color-bg-chrome);
+  --color-bg-faint: #0a5266;
+  --color-bg-primary: var(--color-bg-warning);
+  --color-text-primary: #ffffff;
+  --color-text-subtle: #acd5f4;
+  --color-text-default: #ffffff;
+  --color-icon-default: #ffffff;
+}
+[data-skin="mare"] [data-chrome-ink] [data-chrome-avatar],
+[data-skin="mare"] [data-chrome-ink][data-chrome-avatar] {
+  background-color: var(--color-bg-warning);
+  border-color: var(--color-bg-warning);
+  color: var(--color-text-on-warning);
+}
+[data-skin="mare"]:not([data-theme="dark"]) [data-platform-page] {
+  background-color: color-mix(in srgb, var(--color-bg-primary-soft) 55%, var(--color-bg-faint));
+}
+[data-skin="mare"] [data-glance] {
+  /* The deep-teal card in both themes: its text stays white (in Dark, bg/inverse is light). */
+  --color-text-on-inverse: #ffffff;
+  background-image: linear-gradient(120deg, var(--color-bg-chrome) 0%, #0a5a70 55%, #26708e 100%);
+}
+[data-skin="mare"] [data-glance] [data-glow] {
+  opacity: 0.3;
+}
+[data-skin="mare"]:not([data-theme="dark"]) [data-greeting-em] {
+  color: var(--color-text-primary);
+}
+[data-skin="mare"] [data-tone="1"] {
+  --color-bg-primary-soft: var(--color-bg-accent-teal-soft);
+  --color-icon-primary: var(--color-icon-accent-teal);
+}
+[data-skin="mare"] [data-tone="2"] {
+  --color-bg-primary-soft: var(--color-bg-warning-soft);
+  --color-icon-primary: var(--color-icon-accent-yellow);
+}

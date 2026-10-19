@@ -16,7 +16,7 @@ export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
 export type Theme = "light" | "dark";
 /** Brand skin — recombinations within the SkillUp palette. */
 /** The brand skins the tokens define (tokens/colors.css). Ink, Sky and Violet had no tokens and went on 16 Oct 2026. */
-export type Skin = "teal" | "gold" | "red";
+export type Skin = "teal" | "gold" | "red" | "mare";
 
 /** Vision mode — "cvd" = red-green colourblind-safe state colours (deuter + protan). */
 export type Vision = "default" | "cvd";
@@ -610,7 +610,7 @@ export const useLmsStore = create<LmsState>()(
           s = { ...rest, largeTargetsChoice: largeTargets ? true : null };
         }
         if (from < 4) s = { ...s, seededCourses: COURSES_BEFORE_V4 };
-        if (from < 5 && s.skin && !["teal", "gold", "red"].includes(s.skin)) s = { ...s, skin: "teal" };
+        if (from < 5 && s.skin && !["teal", "gold", "red", "mare"].includes(s.skin)) s = { ...s, skin: "teal" };
         return s;
       },
       // Runs on every read of the stored state, after `migrate`: the default shallow merge,

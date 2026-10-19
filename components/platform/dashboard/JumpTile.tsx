@@ -9,6 +9,8 @@ export interface JumpTileProps {
   /** A link when set; otherwise the tile is a button that calls `onClick`. */
   href?: string;
   onClick?: () => void;
+  /** Maré skin: the icon box takes a foundation tone by position (0 sky, 1 mint, 2 sun). */
+  tone?: number;
 }
 
 const TILE =
@@ -20,10 +22,10 @@ const TILE =
  * Description body-small/Regular text/subtle. bg/page, 1px border/subtle, radius 8,
  * padding 16, gap 8. The whole tile is the link target.
  */
-export function JumpTile({ icon, title, description, href, onClick }: JumpTileProps) {
+export function JumpTile({ icon, title, description, href, onClick, tone }: JumpTileProps) {
   const content = (
     <>
-      <span className="flex rounded-lg bg-sko-bg-primary-soft p-2">
+      <span data-tone={tone === undefined ? undefined : tone % 3} className="flex rounded-lg bg-sko-bg-primary-soft p-2">
         <Icon icon={icon} size={20} className="text-sko-icon-primary" aria-hidden="true" />
       </span>
       <span className="sk-text-body-medium-semibold w-full text-sko-text-default">{title}</span>
