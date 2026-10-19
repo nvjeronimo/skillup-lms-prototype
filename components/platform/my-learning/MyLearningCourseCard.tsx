@@ -266,8 +266,11 @@ export function MyLearningCourseCard({
   return (
     <article data-card-grid="" className={cn(surface, clickable, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
       {/* DS v1.8 header (Nelson, 15 Oct 2026), gap 12: the Course Type line across the card
-          (provider at its right end), then the 64px thumb beside the title, then the badges. */}
-      <div className="flex w-full flex-col gap-3">
+          (provider at its right end), then the 64px thumb beside the title, then the badges.
+          In a row of cards stretched to one height, the header takes the extra space and the
+          badges sit at its bottom, so badges, progress, footer and action line up at the bottom
+          of every card (Nelson, 19 Oct 2026). */}
+      <div className="flex w-full flex-1 flex-col gap-3">
         <div className="flex w-full flex-wrap items-center justify-between gap-0.5">
           <CourseTypeBadge value="Course" />
           <CoursePartners course={course} />
@@ -278,7 +281,7 @@ export function MyLearningCourseCard({
             <CourseTitle course={course} />
           </h3>
         </div>
-        <div className="flex flex-wrap items-start gap-2">
+        <div className="mt-auto flex flex-wrap items-start gap-2">
           <DifficultyBadge value={course.difficulty} />
           <DeliveryModeBadge value={course.delivery} />
         </div>
@@ -302,11 +305,10 @@ export function MyLearningCourseCard({
           <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-right text-sko-text-default">{nextTitle}</span>
         </div>
       )}
-      {/* mt-auto: in a row of cards with titles of different length, the action stays at the bottom. */}
       {certificateHref ? (
         // DS `State=Completed`, Grid (v1.6, 15 Oct 2026): Review and View Certificate, both
         // Secondary, 12 apart, sharing the width.
-        <div className="mt-auto flex w-full items-center gap-3">
+        <div className="flex w-full items-center gap-3">
           <Action course={course} hierarchy="secondary" label={actionLabel} onAction={onAction} className="flex-1" />
           <CertificateAction course={course} href={certificateHref} className="flex-1" />
         </div>
@@ -317,7 +319,7 @@ export function MyLearningCourseCard({
           label={actionLabel}
           onAction={onAction}
           // DS v1.8: the action fills the card's width.
-          className="mt-auto w-full"
+          className="w-full"
         />
       )}
     </article>
