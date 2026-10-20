@@ -33,7 +33,7 @@ export function FileTypeChip({
     // DS body-small/Bold — sk-text-body-small-semibold until .sk-text-body-small-bold exists (CT-22).
     <span
       className={cn(
-        "sk-text-body-small-semibold shrink-0 rounded-md border px-1.5 py-1",
+        "sk-text-body-small-semibold shrink-0 rounded-control border px-1.5 py-1",
         tone === "success"
           ? "border-sko-border-success text-sko-text-success"
           : tone === "subtle"
@@ -57,7 +57,7 @@ export function OptionRadio({ checked, disabled = false }: { checked: boolean; d
     <span
       aria-hidden
       className={cn(
-        "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full",
+        "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-pill",
         checked
           ? "bg-sko-bg-primary"
           : disabled
@@ -66,7 +66,7 @@ export function OptionRadio({ checked, disabled = false }: { checked: boolean; d
       )}
     >
       {/* The dot is a glyph, so it takes the icon token through currentColor. */}
-      {checked ? <span className="h-1.5 w-1.5 rounded-full bg-current text-sko-icon-on-primary" /> : null}
+      {checked ? <span className="h-1.5 w-1.5 rounded-pill bg-current text-sko-icon-on-primary" /> : null}
     </span>
   );
 }
@@ -119,7 +119,7 @@ function Block({ block }: { block: LessonBlock }) {
       return (
         <figure className="flex flex-col gap-2">
           <div
-            className="flex aspect-[16/7] w-full items-center justify-center rounded-xl bg-sko-bg-subtle"
+            className="flex aspect-[16/7] w-full items-center justify-center rounded-card bg-sko-bg-subtle"
             role="img"
             aria-label={block.alt}
           >
@@ -133,7 +133,7 @@ function Block({ block }: { block: LessonBlock }) {
 
     case "file":
       return (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-sko-border-subtle bg-sko-bg-page px-3 py-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-sko-border-subtle bg-sko-bg-page px-3 py-2">
           <div className="flex min-w-0 items-center gap-3">
             <FileTypeChip label={fileExtension(block.name, block.fileKind)} tone="primary" />
             <div className="flex min-w-0 flex-col gap-0.5">
@@ -196,7 +196,7 @@ function KnowledgeCheck({
   const isCorrect = Boolean(chosen?.correct);
 
   return (
-    <section className="flex flex-col gap-2 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-5 shadow-sk-card">
+    <section className="flex flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-5 shadow-sk-card">
       <span className="sk-text-body-small-medium uppercase text-sko-text-primary">
         Quick check · not graded
       </span>
@@ -221,7 +221,7 @@ function KnowledgeCheck({
                 disabled={answered}
                 aria-pressed={isPicked}
                 className={cn(
-                  "sk-text-body-medium-regular flex w-full items-center gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
+                  "sk-text-body-medium-regular flex w-full items-center gap-3 rounded-control border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   markRight
                     ? "bg-sko-bg-success-soft text-sko-text-success"

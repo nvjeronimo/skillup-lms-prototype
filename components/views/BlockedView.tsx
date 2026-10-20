@@ -21,7 +21,7 @@ export function BlockedView({ topicId }: { topicId: string }) {
 
   return (
     <div className="flex flex-col gap-5 py-4">
-      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+      <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="warning" leftIcon={Lock}>
             Not available yet
