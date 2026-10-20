@@ -17,7 +17,7 @@ export function MockTag({ reason, layout = "inline", className }: MockTagProps) 
   return (
     <span
       className={cn(
-        "inline-flex max-w-full items-start gap-1.5 rounded-md border border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-2 py-0.5 text-sko-text-warning",
+        "inline-flex max-w-full items-start gap-1.5 rounded-control border border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-2 py-0.5 text-sko-text-warning",
         layout === "block" && "flex w-full",
         className,
       )}

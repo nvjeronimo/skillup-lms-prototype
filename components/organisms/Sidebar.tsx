@@ -241,7 +241,7 @@ export function Sidebar({
       <>
       <nav
         className={cn(
-          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-4",
+          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-4",
           className,
         )}
         aria-label="Course"
@@ -317,7 +317,7 @@ export function Sidebar({
             }
           }}
         >
-          <div className="flex items-center gap-2 rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-sk-elevation-3">
+          <div className="flex items-center gap-2 rounded-control border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-sk-elevation-3">
             <button
               type="button"
               onClick={() => {
@@ -349,7 +349,7 @@ export function Sidebar({
       className={cn(
         "flex h-full flex-col overflow-hidden bg-sko-bg-page",
         // Floating card on desktop/tablet; Mobile drawer fills its container.
-        isMobile ? "" : "rounded-lg border border-sko-border-subtle",
+        isMobile ? "" : "rounded-control border border-sko-border-subtle",
         WIDTH[variant],
         className,
       )}
@@ -367,7 +367,7 @@ export function Sidebar({
             type="button"
             onClick={onCloseMobile}
             aria-label="Close course menu"
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-sko-icon-subtle transition-colors hover:bg-sko-bg-faint"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-faint"
           >
             <Icon icon={X} size={24} />
           </button>

@@ -183,7 +183,7 @@ export function ProviderBadge({
   const logo = PROVIDER_LOGO[value];
   return (
     // DS 1.2 (16 Oct 2026): padding Spacing/sm (6), so 28 tall; radius 4.
-    <span className={cn("inline-flex h-7 shrink-0 items-center rounded p-1.5", chip === "page" ? "bg-sko-bg-page" : "bg-sko-bg-subtle")}>
+    <span className={cn("inline-flex h-7 shrink-0 items-center rounded-inner p-1.5", chip === "page" ? "bg-sko-bg-page" : "bg-sko-bg-subtle")}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={logo.light} alt={value} className={cn("h-4 w-auto", logo.dark && "sk-logo-light")} />
       {logo.dark ? (

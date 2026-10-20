@@ -54,9 +54,9 @@ export function PodcastView({ topicId }: { topicId: string }) {
       </div>
 
       {/* Audio surface — a waveform stands in for the video frame. */}
-      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+      <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <div
-          className="flex h-24 items-end gap-[3px] overflow-hidden rounded-lg px-4 py-3"
+          className="flex h-24 items-end gap-[3px] overflow-hidden rounded-control px-4 py-3"
           style={{
             background: "linear-gradient(135deg, var(--color-bg-primary-soft), var(--color-bg-subtle))",
           }}
@@ -70,7 +70,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
               <span
                 key={i}
                 className={cn(
-                  "flex-1 rounded-sm",
+                  "flex-1 rounded-inner",
                   // Progress fill is bg/info, never bg/primary; the unplayed track is bg/muted.
                   played ? "bg-sko-bg-info" : "bg-sko-bg-muted",
                 )}
@@ -185,7 +185,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
                   type="button"
                   onClick={() => seek(at)}
                   className={cn(
-                    "flex w-full items-baseline gap-3 rounded-lg px-3 py-2 text-left transition-colors",
+                    "flex w-full items-baseline gap-3 rounded-control px-3 py-2 text-left transition-colors",
                     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                     active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
                   )}

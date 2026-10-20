@@ -85,7 +85,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
                 onClick={() => toggle(i)}
                 aria-pressed={isDone}
                 className={cn(
-                  "flex w-full items-start gap-3 rounded-lg border p-4 text-left transition-colors",
+                  "flex w-full items-start gap-3 rounded-card border p-4 text-left transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   isDone
                     ? "border-sko-border-success bg-sko-bg-success-soft"
@@ -94,7 +94,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
               >
                 <span
                   className={cn(
-                    "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+                    "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill",
                     isDone
                       ? "bg-sko-bg-success text-sko-text-on-media"
                       : "border-2 border-sko-border-default",

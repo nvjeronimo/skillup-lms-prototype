@@ -136,7 +136,7 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
               like its Figma source (card E1): no DS component for the frame. */}
           <section
             aria-label={`${lab.provider} lab`}
-            className="overflow-hidden rounded-lg border border-sko-border-default bg-sko-bg-page"
+            className="overflow-hidden rounded-card border border-sko-border-default bg-sko-bg-page"
           >
             <div className="flex flex-wrap items-center justify-between gap-3 bg-sko-bg-faint py-2 pl-4 pr-2">
               <span className="sk-text-body-medium-semibold min-w-0 text-sko-text-default">
@@ -241,7 +241,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
                 {/* DS LMS / Lab · File Row (20328:3330): p 8/12, file-type chip, meta gap 2. */}
                 <div
                   className={cn(
-                    "flex flex-wrap items-center justify-between gap-3 rounded-lg border px-3 py-2",
+                    "flex flex-wrap items-center justify-between gap-3 rounded-control border px-3 py-2",
                     got
                       ? "border-sko-border-success bg-sko-bg-success-soft"
                       : "border-sko-border-subtle bg-sko-bg-page",
@@ -283,7 +283,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
             <li key={i} className="flex gap-3">
               {/* DS LMS / Numbered Step (20328:3297): 22px circle, body-small/Bold
                   (semibold until .sk-text-body-small-bold exists, CT-22). */}
-              <span className="sk-text-body-small-semibold inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
+              <span className="sk-text-body-small-semibold inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-text-primary">
                 {i + 1}
               </span>
               <span className="sk-text-body-medium-regular text-sko-text-muted">{s}</span>

@@ -68,7 +68,7 @@ export function Avatar({
       <span
         className={cn(
           "inline-flex items-center justify-center overflow-hidden text-sko-text-primary",
-          shape === "square" ? "rounded-lg" : "rounded-full",
+          shape === "square" ? "rounded-control" : "rounded-pill",
           s.box,
           s.text,
           // Initials (DS Text=True): bg/muted fill with a border/subtle stroke inside.
@@ -93,7 +93,7 @@ export function Avatar({
           className={cn(
             // DS _Avatar online indicator: 1.5px bg/page stroke drawn OUTSIDE the dot,
             // so a ring (outside the box) rather than a border (inside it).
-            "absolute bottom-0 right-0 rounded-full ring-[1.5px] ring-sko-bg-page",
+            "absolute bottom-0 right-0 rounded-pill ring-[1.5px] ring-sko-bg-page",
             s.dot,
             DOT_COLOR[status],
           )}

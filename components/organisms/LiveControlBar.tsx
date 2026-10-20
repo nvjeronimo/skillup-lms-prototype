@@ -54,11 +54,11 @@ function ParticipantsStrip({ participants, joined }: { participants: LivePartici
           name={p.name}
           src={p.src}
           size="sm"
-          className="rounded-full ring-[1.5px] ring-sko-bg-page"
+          className="rounded-pill ring-[1.5px] ring-sko-bg-page"
         />
       ))}
       {extra > 0 ? (
-        <span className="sk-text-body-medium-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle ring-[1.5px] ring-sko-bg-page">
+        <span className="sk-text-body-medium-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle ring-[1.5px] ring-sko-bg-page">
           +{extra}
         </span>
       ) : null}
@@ -85,7 +85,7 @@ export function LiveControlBar({
     return (
       <div
         className={cn(
-          "flex flex-wrap items-center justify-between gap-4 rounded-xl bg-sko-bg-subtle px-4 py-3",
+          "flex flex-wrap items-center justify-between gap-4 rounded-card bg-sko-bg-subtle px-4 py-3",
           className,
         )}
       >
@@ -117,7 +117,7 @@ export function LiveControlBar({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-y-3 rounded-xl bg-sko-bg-subtle px-4 py-3",
+        "flex flex-wrap items-center justify-between gap-y-3 rounded-card bg-sko-bg-subtle px-4 py-3",
         className,
       )}
     >

@@ -39,7 +39,7 @@ export function ProgressRail({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page px-4 py-3",
+        "flex flex-wrap items-center justify-between gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page px-4 py-3",
         className,
       )}
       role="group"
@@ -57,7 +57,7 @@ export function ProgressRail({
                 aria-label={`${itemLabel} ${i + 1}: ${s}`}
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
-                  "sk-text-body-small-medium flex h-7 w-7 items-center justify-center rounded-full border transition-colors",
+                  "sk-text-body-small-medium flex h-7 w-7 items-center justify-center rounded-pill border transition-colors",
                   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                   s === "done"
                     ? "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success"

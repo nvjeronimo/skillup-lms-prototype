@@ -40,7 +40,7 @@ function WeekDay({ day }: { day: WeeklyGoal["days"][number] }) {
       <span
         aria-hidden
         className={cn(
-          "flex size-7 items-center justify-center rounded-full text-sko-icon-success",
+          "flex size-7 items-center justify-center rounded-pill text-sko-icon-success",
           day.state === "done" && "border border-sko-border-subtle bg-sko-bg-page",
           day.state === "missed" && "border border-sko-border-subtle bg-sko-bg-subtle",
           today && "border-2 border-sko-border-primary bg-sko-bg-page",
@@ -100,7 +100,7 @@ export function WeeklyGoalCard({
 
       {met ? (
         <>
-          <div className="flex flex-col gap-2 rounded-lg bg-sko-bg-success-soft p-3">
+          <div className="flex flex-col gap-2 rounded-control bg-sko-bg-success-soft p-3">
             <p className="sk-text-body-small-medium text-sko-text-subtle">{goal.week}</p>
             {days}
             <div className="flex flex-col">

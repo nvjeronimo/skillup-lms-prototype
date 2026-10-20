@@ -19,7 +19,7 @@ function ModuleNumber({ module }: { module: ProgramModule }) {
     <span
       aria-hidden
       className={cn(
-        "sk-text-body-medium-semibold flex size-8 shrink-0 items-center justify-center rounded-full",
+        "sk-text-body-medium-semibold flex size-8 shrink-0 items-center justify-center rounded-pill",
         module.complete ? "bg-sko-bg-success text-sko-icon-on-success" : "bg-sko-bg-primary-soft text-sko-text-on-primary-soft",
       )}
     >
@@ -42,7 +42,7 @@ function ModuleRow({ module }: { module: ProgramModule }) {
       // "You left off here" badge was until 7 Oct); kept so the open row is as tall as drawn.
       className={cn(module.current && "pt-1")}
     >
-      <div className="flex items-center gap-3 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px]">
+      <div className="flex items-center gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]">
         <ModuleNumber module={module} />
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <p className="sk-text-body-large-semibold text-sko-text-default">
@@ -64,7 +64,7 @@ function ModuleRow({ module }: { module: ProgramModule }) {
    header's action). 20px tall as drawn; the target is 44px and the negative margin keeps the
    bar at its drawn height. */
 const TOGGLE =
-  "sk-text-body-medium-semibold -my-3 inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded text-sko-text-subtle transition-colors hover:text-sko-text-default";
+  "sk-text-body-medium-semibold -my-3 inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-control text-sko-text-subtle transition-colors hover:text-sko-text-default";
 
 export interface CourseRowCardProps extends Pick<ProgramCourse, "position" | "detail" | "modules"> {
   /** What the DS `LMS / Course Card` on top shows. */
@@ -121,7 +121,7 @@ export function CourseRowCard({
 
   return (
     <li
-      className={cn("overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card", className)}
+      className={cn("overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card", className)}
       style={style}
     >
       {!compact ? (

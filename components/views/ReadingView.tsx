@@ -41,7 +41,7 @@ export function ReadingView({ topicId }: { topicId: string }) {
       </blockquote>
 
       {/* DS Lesson Block Kind=HTML (Key Takeaways), 21354:6808. */}
-      <section className="flex flex-col gap-3 rounded-xl bg-sko-bg-muted px-6 py-[22px]">
+      <section className="flex flex-col gap-3 rounded-card bg-sko-bg-muted px-6 py-[22px]">
         <p className="sk-text-body-small-medium uppercase text-sko-text-subtle">Key takeaways</p>
         <ul className="flex flex-col gap-3">
           {article.takeaways.map((t, i) => (

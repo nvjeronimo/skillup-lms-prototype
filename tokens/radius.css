@@ -1,0 +1,23 @@
+/*
+ * Corner radius — six role tokens, mirrored from the DS (collection "3. Responsive 📐",
+ * Radius/none · inner · control · card · surface · pill, 20 Oct 2026).
+ * A radius is chosen by what the element IS, never by its size:
+ *   none     0     full-width bars and bands, progress bars
+ *   inner    2     inside a control or track (control 6 − padding 4): segments, checkboxes, tiny chips
+ *   control  6     buttons, inputs, selects, menu items, tooltips, icon tiles, avatars, rows,
+ *                  and anything nested inside a card
+ *   card     12    cards and containers, boxed lists, alerts, toasts, menus and popovers
+ *   surface  16    modals and sheets
+ *   pill     full  badges, tags, round dots, toggles, counters
+ * Nested elements take one step down (surface → card → control → inner);
+ * an element flush with its parent's corner takes the parent's role.
+ * Tailwind: rounded-none / rounded-inner / rounded-control / rounded-card / rounded-surface / rounded-pill.
+ */
+:root {
+  --sk-radius-none: 0px;
+  --sk-radius-inner: 2px;
+  --sk-radius-control: 6px;
+  --sk-radius-card: 12px;
+  --sk-radius-surface: 16px;
+  --sk-radius-pill: 9999px;
+}

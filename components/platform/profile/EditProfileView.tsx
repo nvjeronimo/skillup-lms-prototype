@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
    the field bg/page, 1px border/default, radius 8, padding 10/12, body-large/Regular, 44 tall.
    Focus: border/primary. Read-only: bg/muted, text/subtle. */
 const FIELD =
-  "sk-text-body-large-regular min-h-11 w-full rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default shadow-sm placeholder:text-sko-text-placeholder focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
+  "sk-text-body-large-regular min-h-11 w-full rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default shadow-sm placeholder:text-sko-text-placeholder focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
 const READ_ONLY = "bg-sko-bg-muted text-sko-text-subtle shadow-none";
 
 function Field({
@@ -93,7 +93,7 @@ function Section({
   return (
     <section
       aria-labelledby={id}
-      className="rounded-xl border border-sko-border-subtle bg-sko-bg-page"
+      className="rounded-card border border-sko-border-subtle bg-sko-bg-page"
     >
       <header className="flex flex-col gap-1 border-b border-sko-border-subtle px-4 py-4 md:px-6 md:py-5">
         <h2 id={id} className="sk-text-title-medium-semibold text-sko-text-default">

@@ -126,7 +126,7 @@ function OptionMarker({
       aria-hidden
       className={cn(
         "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border transition-colors duration-short3 ease-standard",
-        multiSelect ? "rounded" : "rounded-full",
+        multiSelect ? "rounded-inner" : "rounded-pill",
         checked
           ? "border-transparent bg-sko-bg-primary"
           : disabled
@@ -144,7 +144,7 @@ function OptionMarker({
         // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
         <span
           className={cn(
-            "h-1.5 w-1.5 rounded-full bg-current text-sko-icon-on-primary",
+            "h-1.5 w-1.5 rounded-pill bg-current text-sko-icon-on-primary",
             MARK_MOTION,
             checked ? "scale-100" : "scale-0",
           )}
@@ -399,7 +399,7 @@ export function QuizCard({
     <div
       id={id}
       className={cn(
-        "flex flex-col gap-5 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-6 shadow-sk-card",
+        "flex flex-col gap-5 rounded-card border border-sko-border-subtle bg-sko-bg-page p-6 shadow-sk-card",
         className,
       )}
     >
@@ -480,7 +480,7 @@ export function QuizCard({
                   aria-checked={isSelected}
                   data-option-state={rowState}
                   className={cn(
-                    "sk-text-body-medium-regular flex w-full items-start gap-3 rounded-lg border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors duration-short3 ease-standard",
+                    "sk-text-body-medium-regular flex w-full items-start gap-3 rounded-control border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors duration-short3 ease-standard",
                     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
                     row.box,
                     plain && !revealed ? "hover:bg-sko-bg-subtle" : null,

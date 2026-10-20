@@ -85,7 +85,7 @@ function paceKind(p: Persona): PaceKind {
   return p.pace.value.state;
 }
 
-const card = "rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6";
+const card = "rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6";
 
 /* ── Page ─────────────────────────────────────────────────────────────────────────────── */
 
@@ -135,7 +135,7 @@ function PacePanel({ p, kind, next }: { p: Persona; kind: PaceKind; next?: Enrol
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="flex min-w-0 flex-col gap-5">
           <div className="flex items-start gap-3">
-            <span className={cn("inline-flex size-12 shrink-0 items-center justify-center rounded-full", s.circle)}>
+            <span className={cn("inline-flex size-12 shrink-0 items-center justify-center rounded-pill", s.circle)}>
               <Icon icon={s.icon} size={24} aria-hidden="true" />
             </span>
             <div className="min-w-0">
@@ -166,7 +166,7 @@ function UpNext({ kind, next }: { kind: PaceKind; next?: Enrolment }) {
   const starting = next.status === "not-started";
   const ctaLabel = starting ? "Start course" : kind === "behind" ? "Resume where you left off" : "Resume";
   return (
-    <div className="flex flex-col gap-3 rounded-lg bg-sko-bg-subtle p-4">
+    <div className="flex flex-col gap-3 rounded-control bg-sko-bg-subtle p-4">
       <h3 className="sk-text-body-medium-semibold text-sko-text-muted">{starting ? "Start here" : "Up next"}</h3>
       <div className="flex flex-col gap-1">
         <TopicTypeBadge type={next.nextTopic.type as TopicType} />
@@ -194,7 +194,7 @@ function CatchUpPlan({ p }: { p: Persona }) {
   const recording = p.live.value.find((l) => l.state === "recording");
 
   return (
-    <div className="rounded-lg border border-sko-border-warning-soft bg-sko-bg-warning-soft p-4">
+    <div className="rounded-card border border-sko-border-warning-soft bg-sko-bg-warning-soft p-4">
       <h3 className="sk-text-body-large-semibold text-sko-text-default">Your catch-up plan</h3>
       <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">
         Start with step 1. One step today is enough.
@@ -247,7 +247,7 @@ function PlanStep({ n, children }: { n: number; children: React.ReactNode }) {
     <li className="flex items-start gap-3">
       <span
         aria-hidden="true"
-        className="sk-text-body-medium-semibold inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-sko-bg-page text-sko-text-warning ring-1 ring-inset ring-sko-border-warning"
+        className="sk-text-body-medium-semibold inline-flex size-7 shrink-0 items-center justify-center rounded-pill bg-sko-bg-page text-sko-text-warning ring-1 ring-inset ring-sko-border-warning"
       >
         {n}
       </span>
@@ -296,7 +296,7 @@ function DueList({ p }: { p: Persona }) {
                 key={d.id}
                 className={cn(
                   "flex flex-col gap-3 py-3 first:pt-0 last:pb-0 md:flex-row md:items-center md:justify-between",
-                  d.state === "overdue" && "-mx-2 rounded-lg border-l-4 border-sko-border-warning bg-sko-bg-warning-soft px-3 first:pt-3 last:pb-3",
+                  d.state === "overdue" && "-mx-2 rounded-control border-l-4 border-sko-border-warning bg-sko-bg-warning-soft px-3 first:pt-3 last:pb-3",
                 )}
               >
                 <div className="min-w-0">
@@ -363,10 +363,10 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
         aria-valuemax={daysTarget}
         aria-valuenow={Math.min(daysDone, daysTarget)}
         aria-valuetext={`${daysDone} of ${daysTarget} days`}
-        className="mt-3 h-2 overflow-hidden rounded-full bg-sko-bg-muted"
+        className="mt-3 h-2 overflow-hidden rounded-pill bg-sko-bg-muted"
       >
         <div
-          className={cn("h-full rounded-full", met ? "bg-sko-bg-success" : "bg-sko-bg-info")}
+          className={cn("h-full rounded-pill", met ? "bg-sko-bg-success" : "bg-sko-bg-info")}
           style={{ width: `${Math.min(100, (daysDone / Math.max(daysTarget, 1)) * 100)}%` }}
         />
       </div>
@@ -380,7 +380,7 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
             <li
               key={d.short}
               className={cn(
-                "flex flex-col items-center gap-0.5 rounded-md py-1.5",
+                "flex flex-col items-center gap-0.5 rounded-control py-1.5",
                 on ? "bg-sko-bg-success-soft text-sko-text-success" : "bg-sko-bg-faint text-sko-text-subtle",
                 today && "ring-1 ring-inset ring-sko-border-strong",
               )}
@@ -389,7 +389,7 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
                 {d.short}
               </span>
               <span aria-hidden="true" className="inline-flex size-4 items-center justify-center">
-                {on ? <Icon icon={Check} size={14} /> : <span className="size-1.5 rounded-full bg-sko-bg-strong" />}
+                {on ? <Icon icon={Check} size={14} /> : <span className="size-1.5 rounded-pill bg-sko-bg-strong" />}
               </span>
               <span className="sr-only">
                 {d.long}: {on ? "learned" : "no activity"}
@@ -474,7 +474,7 @@ function YourCourses({ enrolments }: { enrolments: Enrolment[] }) {
       <h2 id="courses-h" className="sk-text-title-medium-semibold text-sko-text-default">
         Your courses
       </h2>
-      <ul className="mt-3 flex flex-col divide-y divide-sko-border-subtle rounded-xl border border-sko-border-subtle bg-sko-bg-page">
+      <ul className="mt-3 flex flex-col divide-y divide-sko-border-subtle rounded-card border border-sko-border-subtle bg-sko-bg-page">
         {enrolments.map((e) => (
           <CourseRow key={e.id} e={e} />
         ))}
@@ -561,10 +561,10 @@ function Progress({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={v}
-        className="h-2 overflow-hidden rounded-full bg-sko-bg-muted"
+        className="h-2 overflow-hidden rounded-pill bg-sko-bg-muted"
       >
         <div
-          className={cn("h-full rounded-full", complete ? "bg-sko-bg-success" : "bg-sko-bg-info")}
+          className={cn("h-full rounded-pill", complete ? "bg-sko-bg-success" : "bg-sko-bg-info")}
           style={{ width: `${v}%` }}
         />
       </div>

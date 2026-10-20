@@ -66,7 +66,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
       className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5"
       data-mock={event.outOfMvp ? "Live sessions are not in Open edX, and VILT is out of the MVP" : undefined}
     >
-      <span aria-hidden className={cn("inline-flex size-10 shrink-0 items-center justify-center rounded-lg", k.tile)}>
+      <span aria-hidden className={cn("inline-flex size-10 shrink-0 items-center justify-center rounded-control", k.tile)}>
         <Icon icon={k.icon} size={20} />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -108,7 +108,7 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
   const days = [...new Set(upcoming.map((e) => e.date))].sort();
   if (!days.length) {
     return (
-      <p role="status" className="sk-text-body-medium-regular rounded-lg border border-sko-border-subtle bg-sko-bg-page p-5 text-sko-text-subtle">
+      <p role="status" className="sk-text-body-medium-regular rounded-card border border-sko-border-subtle bg-sko-bg-page p-5 text-sko-text-subtle">
         Nothing coming up for this filter.
       </p>
     );
@@ -122,7 +122,7 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
             <h3 className="sk-text-title-medium-semibold text-sko-text-default">
               {h.lead} {h.rest ? <span className="text-sko-text-subtle">{h.rest}</span> : null}
             </h3>
-            <ul className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page">
+            <ul className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
               {upcoming
                 .filter((e) => e.date === day)
                 .map((e) => (
@@ -150,16 +150,16 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
   const heads = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
-    <div className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page">
+    <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
       <div className="flex items-center justify-between gap-2 border-b border-sko-border-subtle px-4 py-3">
         <h3 className="sk-text-title-medium-semibold text-sko-text-default" aria-live="polite">
           {MONTH.format(first)}
         </h3>
         <div className="flex gap-1">
-          <button type="button" aria-label="Previous month" onClick={() => onMonth(-1)} className="inline-flex size-9 items-center justify-center rounded-md text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle">
+          <button type="button" aria-label="Previous month" onClick={() => onMonth(-1)} className="inline-flex size-9 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle">
             <Icon icon={ChevronLeft} size={20} />
           </button>
-          <button type="button" aria-label="Next month" onClick={() => onMonth(1)} className="inline-flex size-9 items-center justify-center rounded-md text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle">
+          <button type="button" aria-label="Next month" onClick={() => onMonth(1)} className="inline-flex size-9 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle">
             <Icon icon={ChevronRight} size={20} />
           </button>
         </div>
@@ -187,7 +187,7 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
                         <span
                           aria-current={today ? "date" : undefined}
                           className={cn(
-                            "sk-text-body-small-semibold inline-flex size-6 items-center justify-center rounded-full",
+                            "sk-text-body-small-semibold inline-flex size-6 items-center justify-center rounded-pill",
                             today ? "bg-sko-bg-primary text-sko-text-on-primary" : "text-sko-text-subtle",
                           )}
                         >
@@ -199,13 +199,13 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
                             href={e.href}
                             title={`${e.label}: ${e.title}`}
                             className={cn(
-                              "sk-text-body-small-medium flex items-center gap-1 truncate rounded px-1 py-0.5 text-sko-text-default hover:bg-sko-bg-subtle",
+                              "sk-text-body-small-medium flex items-center gap-1 truncate rounded-inner px-1 py-0.5 text-sko-text-default hover:bg-sko-bg-subtle",
                               // Done: struck through. Missed: in the error ink, not struck — it still needs doing.
                               e.complete && "text-sko-text-subtle line-through",
                               isMissed(e) && "text-sko-text-error",
                             )}
                           >
-                            <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", KIND[e.kind].dot)} />
+                            <span aria-hidden className={cn("size-1.5 shrink-0 rounded-pill", KIND[e.kind].dot)} />
                             <span className="truncate">{e.title}</span>
                           </Link>
                         ))}
@@ -232,12 +232,12 @@ function WeekStrip({ events }: { events: CalendarEvent[] }) {
         const kinds = [...new Set(events.filter((e) => e.date === day && !e.complete).map((e) => e.kind))];
         const today = day === CALENDAR_TODAY;
         return (
-          <li key={day} className={cn("flex flex-col items-center gap-1 rounded-md py-2", today && "bg-sko-bg-primary-soft")}>
+          <li key={day} className={cn("flex flex-col items-center gap-1 rounded-control py-2", today && "bg-sko-bg-primary-soft")}>
             <span className="sk-text-body-small-medium text-sko-text-subtle">{WEEKDAY.format(parseDay(day))}</span>
             <span className={cn("sk-text-title-medium-semibold", today ? "text-sko-text-primary" : "text-sko-text-default")}>{Number(day.slice(8))}</span>
             <span className="flex h-1.5 gap-0.5" aria-hidden>
               {kinds.map((k) => (
-                <span key={k} className={cn("size-1.5 rounded-full", KIND[k].dot)} />
+                <span key={k} className={cn("size-1.5 rounded-pill", KIND[k].dot)} />
               ))}
             </span>
             <span className="sr-only">{kinds.length ? `${kinds.length} kind${kinds.length > 1 ? "s" : ""} of date` : "Nothing"}</span>
@@ -307,7 +307,7 @@ export function CalendarView() {
                 <p className="sk-text-body-medium-regular text-sko-text-muted">{SHIFT_DATES.body}</p>
               </div>
             </div>
-            <ul className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page">
+            <ul className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
               {visibleMissed.map(({ course, items }) => (
                 <li key={course} className="flex flex-col gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:flex-row md:items-center">
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -357,7 +357,7 @@ export function CalendarView() {
           </section>
 
           <aside aria-label="This week and calendar sync" className="flex flex-col gap-4 lg:w-[320px] lg:shrink-0">
-            <section aria-labelledby="calendar-week" className="flex flex-col gap-3 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4">
+            <section aria-labelledby="calendar-week" className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
               <h2 id="calendar-week" className="sk-text-title-medium-semibold text-sko-text-default">
                 Next 7 days
               </h2>
@@ -369,7 +369,7 @@ export function CalendarView() {
               <ul className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
                 {(["deadline", "live", "course"] as const).map((k) => (
                   <li key={k} className="sk-text-body-small-regular inline-flex items-center gap-1.5 text-sko-text-subtle">
-                    <span aria-hidden className={cn("size-2 rounded-full", KIND[k].dot)} />
+                    <span aria-hidden className={cn("size-2 rounded-pill", KIND[k].dot)} />
                     {k === "deadline" ? "Deadline" : k === "live" ? "Live session" : "Course date"}
                   </li>
                 ))}
@@ -378,7 +378,7 @@ export function CalendarView() {
             <section
               aria-labelledby="calendar-sync"
               data-mock="Calendar sync is Phase 3 (feature deltas)"
-              className="flex flex-col gap-3 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4"
+              className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4"
             >
               <div className="flex items-start gap-3">
                 <Icon icon={CalendarPlus} size={20} className="mt-0.5 shrink-0 text-sko-icon-primary" />

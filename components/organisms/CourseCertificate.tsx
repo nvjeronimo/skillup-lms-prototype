@@ -67,13 +67,13 @@ export function CourseCertificate({
     // animation does not replay on re-render. Reduced motion: the fade only.
     <div
       className={cn(
-        "sk-certificate sk-animate-reveal mx-auto w-full max-w-[720px] overflow-hidden rounded-lg bg-sko-bg-page shadow-sk-card shadow-lg",
+        "sk-certificate sk-animate-reveal mx-auto w-full max-w-[720px] overflow-hidden rounded-card bg-sko-bg-page shadow-sk-card shadow-lg",
         className,
       )}
     >
       {/* Green header band + check */}
       <div className="flex h-24 items-center justify-center bg-sko-bg-success">
-        <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-page text-sko-icon-success">
+        <span className="inline-flex h-16 w-16 items-center justify-center rounded-pill bg-sko-bg-page text-sko-icon-success">
           <Icon icon={Check} size={32} />
         </span>
       </div>

@@ -31,7 +31,7 @@ export function ThreadItem({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full gap-3 rounded-lg border border-sko-border-subtle p-4 text-left transition-colors hover:border-sko-border-default",
+        "flex w-full gap-3 rounded-card border border-sko-border-subtle p-4 text-left transition-colors hover:border-sko-border-default",
         className,
       )}
     >
@@ -45,7 +45,7 @@ export function ThreadItem({
         <span className="mt-2 flex items-center gap-4">
           {/* DS `upvote-btn`: a pill. Display-only here, because the whole card is a
               <button> and interactive elements cannot be nested inside it. */}
-          <span className="inline-flex items-center gap-1 rounded-full border border-sko-border-subtle px-2 py-1">
+          <span className="inline-flex items-center gap-1 rounded-pill border border-sko-border-subtle px-2 py-1">
             <Icon icon={ArrowUp} size={14} className="text-sko-icon-muted" />
             <span className="sk-text-body-small-medium text-sko-text-default">{upvotes}</span>
           </span>

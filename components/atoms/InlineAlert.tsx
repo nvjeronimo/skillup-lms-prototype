@@ -79,7 +79,7 @@ const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
     fg: "text-sko-icon-error",
   },
   hint: {
-    box: "rounded-lg bg-sko-bg-primary-soft p-4",
+    box: "rounded-card bg-sko-bg-primary-soft p-4",
     icon: Lightbulb,
     fg: "text-sko-text-primary",
   },

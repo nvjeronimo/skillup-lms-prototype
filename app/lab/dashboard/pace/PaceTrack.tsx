@@ -38,7 +38,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
             <div key={m} className="flex justify-center">
               {m === youCol ? (
                 <span className="sk-text-body-small-semibold inline-flex flex-col items-center text-sko-text-primary">
-                  <span className="rounded-full bg-sko-bg-primary px-2 text-sko-text-on-primary">You</span>
+                  <span className="rounded-pill bg-sko-bg-primary px-2 text-sko-text-on-primary">You</span>
                   <span className="h-1.5 w-0.5 bg-sko-bg-primary" />
                 </span>
               ) : null}
@@ -56,7 +56,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
               <span
                 key={m}
                 className={cn(
-                  "h-3 rounded-sm",
+                  "h-3 rounded-inner",
                   done && "bg-sko-bg-primary",
                   current && "bg-sko-bg-primary-soft ring-2 ring-inset ring-sko-border-primary",
                   gap && "border border-dashed border-sko-border-warning bg-sko-bg-warning-soft",
@@ -83,7 +83,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
               {m === cohort ? (
                 <span className="sk-text-body-small-semibold inline-flex flex-col items-center text-sko-text-muted">
                   <span className="h-1.5 w-0.5 bg-sko-bg-strong" />
-                  <span className="rounded-full bg-sko-bg-page px-2 ring-1 ring-inset ring-sko-border-strong">
+                  <span className="rounded-pill bg-sko-bg-page px-2 ring-1 ring-inset ring-sko-border-strong">
                     Cohort
                   </span>
                 </span>

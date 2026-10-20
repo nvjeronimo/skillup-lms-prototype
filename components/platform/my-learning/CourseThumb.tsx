@@ -25,7 +25,7 @@ export function CourseThumb({
     <span
       aria-hidden="true"
       className={cn(
-        "sk-text-title-large-bold relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-sko-bg-primary-soft text-sko-text-primary",
+        "sk-text-title-large-bold relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-control bg-sko-bg-primary-soft text-sko-text-primary",
         className,
       )}
     >

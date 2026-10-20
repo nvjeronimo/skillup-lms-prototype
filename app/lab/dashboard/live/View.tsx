@@ -150,12 +150,12 @@ function PickUp({ enrolment, onGo }: { enrolment?: Enrolment; onGo: (href: strin
   return (
     <section
       aria-labelledby="pickup-h"
-      className="mt-6 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-3 md:p-4"
+      className="mt-6 rounded-card border border-sko-border-subtle bg-sko-bg-page p-3 md:p-4"
     >
       {enrolment && topic ? (
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
-            <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary-soft">
+            <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft">
               <Icon icon={topicTypeIcon(topic.type as TopicType)} size={20} className="text-sko-icon-primary" />
             </span>
             <div className="min-w-0">
@@ -203,7 +203,7 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
   return (
     <section
       aria-labelledby="strip-h"
-      className={cn("rounded-xl border border-sko-border-subtle bg-sko-bg-page p-3 md:p-4", className)}
+      className={cn("rounded-card border border-sko-border-subtle bg-sko-bg-page p-3 md:p-4", className)}
     >
       <h3 id="strip-h" className="sk-text-body-medium-semibold text-sko-text-default">
         This week at a glance
@@ -213,7 +213,7 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
           <li
             key={d.date}
             className={cn(
-              "flex min-w-0 flex-col items-center gap-0.5 rounded-lg py-2",
+              "flex min-w-0 flex-col items-center gap-0.5 rounded-control py-2",
               d.isToday ? "bg-sko-bg-primary-soft ring-2 ring-inset ring-sko-border-primary" : "bg-sko-bg-subtle",
             )}
           >
@@ -223,7 +223,7 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
             <span className="sk-text-body-medium-semibold text-sko-text-default">{d.dayOfMonth}</span>
             <span
               className={cn(
-                "sk-text-body-small-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1",
+                "sk-text-body-small-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-pill px-1",
                 d.count > 0 ? "bg-sko-bg-primary text-sko-text-on-primary" : "text-sko-text-disabled",
               )}
             >
@@ -392,7 +392,7 @@ function AgendaRow({ item, added, onAdd, onGo }: { item: AgendaItem; added: bool
   return (
     <li
       className={cn(
-        "flex flex-col gap-3 rounded-xl border p-4 md:flex-row md:items-center md:gap-4",
+        "flex flex-col gap-3 rounded-card border p-4 md:flex-row md:items-center md:gap-4",
         live
           ? "border-sko-border-success bg-sko-bg-success-soft"
           : overdue
@@ -428,8 +428,8 @@ function AgendaRow({ item, added, onAdd, onGo }: { item: AgendaItem; added: bool
 
 function NothingScheduled({ added, onAdd }: { added: boolean; onAdd: () => void }) {
   return (
-    <div className="mt-6 flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 md:flex-row md:items-center md:gap-4">
-      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-sko-bg-faint">
+    <div className="mt-6 flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:flex-row md:items-center md:gap-4">
+      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-faint">
         <Icon icon={CalendarPlus} size={20} className="text-sko-icon-subtle" />
       </span>
       <div className="min-w-0 flex-1">

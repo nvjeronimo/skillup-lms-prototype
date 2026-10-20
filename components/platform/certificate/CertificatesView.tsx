@@ -67,7 +67,7 @@ export function CertificatesView() {
 
         <section aria-labelledby="progress-title" className="flex flex-col gap-4 md:gap-5">
           <SectionTitle id="progress-title" title="In progress" count={certificatesInProgress.length} />
-          <ul className="flex flex-col overflow-hidden rounded-[10px] border border-sko-border-subtle bg-sko-bg-page">
+          <ul className="flex flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
             {certificatesInProgress.map((c) => (
               <li key={c.id} className="border-b border-sko-border-subtle last:border-b-0">
                 <Link

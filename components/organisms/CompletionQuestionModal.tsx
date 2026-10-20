@@ -78,10 +78,10 @@ export function CompletionQuestionModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="sk-animate-pop relative w-full max-w-[544px] origin-center rounded-2xl border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[544px] origin-center rounded-surface border border-sko-border-subtle bg-sko-bg-page shadow-xl"
       >
         <div className="flex flex-col gap-4 p-6 pb-0 sm:flex-row">
-          <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-text-primary">
+          <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-text-primary">
             <Icon icon={CircleHelp} size={24} />
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-1 pr-10">
@@ -101,7 +101,7 @@ export function CompletionQuestionModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="absolute right-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-lg text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+            className="absolute right-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={24} />
           </button>

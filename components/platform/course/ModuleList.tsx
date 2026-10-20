@@ -21,7 +21,7 @@ function ModuleNumber({ mod }: { mod: CourseModule }) {
     <span
       aria-hidden
       className={cn(
-        "sk-text-body-medium-semibold flex size-8 shrink-0 items-center justify-center rounded-full",
+        "sk-text-body-medium-semibold flex size-8 shrink-0 items-center justify-center rounded-pill",
         mod.state === "complete" && "bg-sko-bg-success text-sko-icon-on-success",
         mod.state === "incomplete" && "bg-sko-bg-primary-soft text-sko-text-on-primary-soft",
         mod.state === "locked" && "bg-sko-bg-subtle text-sko-text-subtle",
@@ -104,7 +104,7 @@ function ModuleRow({
   const lastTopicId = topics[topics.length - 1]?.id;
 
   return (
-    <li className="rounded-[10px] border border-sko-border-subtle bg-sko-bg-page">
+    <li className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
       <h3>
         <button
           type="button"
@@ -114,7 +114,7 @@ function ModuleRow({
           onClick={onToggle}
           className={cn(
             // The DS stroke is inside the row and the CSS border is outside the padding: 15 + 1 = the DS 16.
-            "group flex w-full items-center gap-3 rounded-[9px] p-[15px] text-left focus-visible:-outline-offset-2",
+            "group flex w-full items-center gap-3 rounded-card p-[15px] text-left focus-visible:-outline-offset-2",
             open && "rounded-b-none border-b border-sko-border-subtle",
           )}
         >
@@ -132,14 +132,14 @@ function ModuleRow({
           </span>
           <span className="flex shrink-0 items-center gap-0.5">
             {locked ? (
-              <span className="relative flex size-8 items-center justify-center rounded-full bg-sko-bg-muted text-sko-icon-muted">
+              <span className="relative flex size-8 items-center justify-center rounded-pill bg-sko-bg-muted text-sko-icon-muted">
                 <Icon icon={Lock} size={13} aria-hidden />
                 {mod.lockReason ? (
                   <span
                     aria-hidden
-                    className="sk-text-body-small-semibold pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden w-max max-w-[300px] -translate-x-1/2 rounded-lg bg-sko-bg-inverse px-3 py-2 text-center text-sko-text-on-inverse lg:group-hover:block lg:group-focus-visible:block"
+                    className="sk-text-body-small-semibold pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden w-max max-w-[300px] -translate-x-1/2 rounded-control bg-sko-bg-inverse px-3 py-2 text-center text-sko-text-on-inverse lg:group-hover:block lg:group-focus-visible:block"
                   >
-                    <span className="absolute -top-1 left-1/2 size-2.5 -translate-x-1/2 rotate-45 rounded-[1px] bg-sko-bg-inverse" />
+                    <span className="absolute -top-1 left-1/2 size-2.5 -translate-x-1/2 rotate-45 rounded-inner bg-sko-bg-inverse" />
                     {mod.lockReason}
                   </span>
                 ) : null}

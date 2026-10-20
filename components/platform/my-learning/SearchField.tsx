@@ -27,7 +27,7 @@ export function SearchField({ value, onChange, label, className, inputRef, input
   return (
     <label
       className={cn(
-        "flex h-11 items-center gap-2 rounded-lg border border-sko-border-default bg-sko-bg-page px-3 shadow-sm md:h-10",
+        "flex h-11 items-center gap-2 rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm md:h-10",
         "focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary",
         className,
       )}

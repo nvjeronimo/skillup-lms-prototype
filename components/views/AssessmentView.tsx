@@ -620,7 +620,7 @@ function QuizEntryHeader({
       : null;
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
+    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
       <div className="flex flex-wrap items-center gap-2">
         <Badge color="brand">{config.label}</Badge>
         {weight ? <Badge color={weight.color}>{weight.label}</Badge> : null}
@@ -704,7 +704,7 @@ function QuizSummary({
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
+      <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="sk-text-body-small-semibold uppercase text-sko-text-primary">{config.label}</p>
@@ -717,7 +717,7 @@ function QuizSummary({
 
         {/* Score-Group: 20/24 padding, 20 gap, Radius/fixed-lg (10). */}
         {withheld ? (
-          <div className="flex items-center gap-5 rounded-[10px] bg-sko-bg-subtle px-6 py-5">
+          <div className="flex items-center gap-5 rounded-control bg-sko-bg-subtle px-6 py-5">
             {/* No release line: resultsWithheld is `show_correctness: never`,
                 so the results are never released. */}
             <p className="sk-text-body-large-semibold text-sko-text-subtle">
@@ -727,7 +727,7 @@ function QuizSummary({
         ) : (
           <div
             className={cn(
-              "flex items-center gap-5 rounded-[10px] px-6 py-5",
+              "flex items-center gap-5 rounded-control px-6 py-5",
               passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
             )}
           >
@@ -798,7 +798,7 @@ function GradedSubmission({ topicId }: { topicId: string }) {
   const assignment = topic ? getAssignmentBrief(topic) : null;
   return (
     <div className="flex flex-col gap-5 py-4">
-      <section className="rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+      <section className="rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <p className="sk-text-label-small-medium mb-2 text-sko-text-primary">Assignment brief</p>
         <p className="sk-text-body-large-regular text-sko-text-muted">{assignment?.brief}</p>
         <ul className="sk-text-body-medium-regular mt-3 list-disc pl-5 text-sko-text-muted">

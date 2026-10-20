@@ -243,7 +243,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // blocked topics, and only on the primary tab.
   const discussFooter =
     discussionsPreview && !isLocked && !isBlocked && activeTab === "transcript" ? (
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3">
         <div className="flex items-center gap-2.5">
           <Icon icon={MessagesSquare} size={18} className="text-sko-text-primary" />
           <div className="flex flex-col">
@@ -409,7 +409,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         <main
           id="main"
           tabIndex={-1}
-          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page outline-none"
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page outline-none"
         >
           <div
             className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto"

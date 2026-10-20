@@ -42,7 +42,7 @@ export function NotificationItem({
 
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={IconCmp} size={18} />
       </span>
 
@@ -58,7 +58,7 @@ export function NotificationItem({
       <span className="flex w-2 shrink-0 justify-center pt-1.5">
         {unread ? (
           <span
-            className="h-2 w-2 rounded-full bg-sko-bg-primary"
+            className="h-2 w-2 rounded-pill bg-sko-bg-primary"
             aria-label="Unread"
             role="img"
           />

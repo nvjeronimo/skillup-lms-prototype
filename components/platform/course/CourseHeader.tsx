@@ -36,7 +36,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-4 pb-6 pt-4 md:px-6 md:pb-8 lg:gap-0 lg:px-10 lg:pb-10 lg:pt-5">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-[103px] -top-[100px] size-[273px] rounded-full opacity-[0.35] md:-right-[73px] md:-top-[110px] lg:-right-[100px] lg:-top-[100px] lg:size-[360px]"
+          className="pointer-events-none absolute -right-[103px] -top-[100px] size-[273px] rounded-pill opacity-[0.35] md:-right-[73px] md:-top-[110px] lg:-right-[100px] lg:-top-[100px] lg:size-[360px]"
           style={{
             backgroundImage:
               "repeating-linear-gradient(45deg, var(--color-border-primary) 0 1px, transparent 1px 7.07px)",
@@ -44,7 +44,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-[56px] top-[256px] size-[147px] rounded-full bg-sko-bg-primary opacity-[0.12] md:left-auto md:right-[205px] md:top-[29px] md:size-[220px] lg:right-[280px] lg:top-[60px]"
+          className="pointer-events-none absolute -left-[56px] top-[256px] size-[147px] rounded-pill bg-sko-bg-primary opacity-[0.12] md:left-auto md:right-[205px] md:top-[29px] md:size-[220px] lg:right-[280px] lg:top-[60px]"
         />
 
         <nav aria-label="Breadcrumb" className="relative">
@@ -117,7 +117,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
               <img
                 src={course.imageSrc}
                 alt=""
-                className="hidden size-[88px] shrink-0 rounded-lg bg-sko-bg-muted object-cover md:block"
+                className="hidden size-[88px] shrink-0 rounded-card bg-sko-bg-muted object-cover md:block"
               />
               <h1 className="sk-text-headline-large-semibold min-w-0 flex-1 text-sko-text-default">{course.title}</h1>
             </div>
@@ -153,7 +153,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
           ) : (
             <section
               aria-label={course.progress.label}
-              className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
+              className="flex w-full shrink-0 flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
             >
               <div className="flex items-end justify-between gap-3">
                 <p className="sk-text-headline-medium-bold text-sko-text-default">{course.progress.percent}%</p>
@@ -179,7 +179,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
               >
                 <span
                   aria-hidden
-                  className={cn("size-[7px] shrink-0 rounded-full", course.passed ? "bg-sko-bg-success" : "bg-sko-bg-warning")}
+                  className={cn("size-[7px] shrink-0 rounded-pill", course.passed ? "bg-sko-bg-success" : "bg-sko-bg-warning")}
                 />
                 {course.progress.notPassing}
               </p>

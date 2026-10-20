@@ -249,7 +249,7 @@ export function QuizFooterActions({
           <a
             href={`#${reviewTargetId}`}
             className={cn(
-              "sk-text-body-medium-semibold rounded-md text-sko-text-primary",
+              "sk-text-body-medium-semibold rounded-control text-sko-text-primary",
               "sr-only focus:not-sr-only focus:px-3 focus:py-2",
               "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
             )}

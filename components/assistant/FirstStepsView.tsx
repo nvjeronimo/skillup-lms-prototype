@@ -71,7 +71,7 @@ export function FirstStepsView({ firstName, rows, finished, next, onAsk, onSkip 
             className="flex min-h-11 items-start gap-3 border-b border-sko-border-subtle py-3 last:border-b-0"
           >
             {row.done ? (
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sko-bg-success-soft text-sko-icon-success">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-sko-bg-success-soft text-sko-icon-success">
                 {doneBefore.has(row.id) ? (
                   <Icon icon={Check} size={14} />
                 ) : (
@@ -92,7 +92,7 @@ export function FirstStepsView({ firstName, rows, finished, next, onAsk, onSkip 
                 )}
               </span>
             ) : (
-              <span aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded-full border border-sko-border-default" />
+              <span aria-hidden className="mt-0.5 h-5 w-5 shrink-0 rounded-pill border border-sko-border-default" />
             )}
             <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
               <div>

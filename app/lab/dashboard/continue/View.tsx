@@ -97,7 +97,7 @@ function ResumeCard({ enrolment, away }: { enrolment: Enrolment; away?: string }
   return (
     <section
       aria-labelledby="resume-heading"
-      className="rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6 lg:p-8"
+      className="rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6 lg:p-8"
     >
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:gap-10">
         <div className="flex min-w-0 flex-1 flex-col gap-4">
@@ -113,7 +113,7 @@ function ResumeCard({ enrolment, away }: { enrolment: Enrolment; away?: string }
           </div>
 
           {away && !notStarted ? (
-            <p className="sk-text-body-medium-medium flex items-start gap-2 rounded-lg border border-sko-border-warning-soft bg-sko-bg-warning-soft px-3 py-2 text-sko-text-warning">
+            <p className="sk-text-body-medium-medium flex items-start gap-2 rounded-control border border-sko-border-warning-soft bg-sko-bg-warning-soft px-3 py-2 text-sko-text-warning">
               <Icon icon={Clock} size={16} className="mt-0.5 shrink-0 text-sko-icon-warning" aria-hidden="true" />
               <span>
                 Last visit {away}. That is fine. A few minutes today is enough to get the thread back.
@@ -122,7 +122,7 @@ function ResumeCard({ enrolment, away }: { enrolment: Enrolment; away?: string }
           ) : null}
 
           {next ? (
-            <div className="rounded-lg bg-sko-bg-subtle p-4">
+            <div className="rounded-control bg-sko-bg-subtle p-4">
               <p className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-subtle">
                 {notStarted ? "First topic" : "Up next"}
               </p>
@@ -155,7 +155,7 @@ function AlsoInProgress({ enrolments }: { enrolments: Enrolment[] }) {
       <h2 id="also-heading" className="sk-text-title-medium-semibold text-sko-text-default">
         Also in progress
       </h2>
-      <ul className="mt-3 divide-y divide-sko-border-subtle overflow-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page">
+      <ul className="mt-3 divide-y divide-sko-border-subtle overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
         {enrolments.map((e) => (
           <li key={e.id} className="flex flex-col gap-3 p-4 md:flex-row md:items-center md:gap-6">
             <div className="min-w-0 flex-1">
@@ -220,7 +220,7 @@ function AroundStrip({ persona, hero }: { persona: Persona; hero?: Enrolment }) 
   );
 }
 
-const CARD = "flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4";
+const CARD = "flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4";
 
 function CertificateCard({ persona, hero }: { persona: Persona; hero: Enrolment }) {
   const copy = certCopy(hero.cert, hero.status === "not-started");
@@ -275,7 +275,7 @@ function WeeklyGoalCard({ persona }: { persona: Persona }) {
           {Array.from({ length: daysTarget }, (_, i) => (
             <span
               key={i}
-              className={cn("h-2 flex-1 rounded-full", i < daysDone ? "bg-sko-bg-primary" : "bg-sko-bg-muted")}
+              className={cn("h-2 flex-1 rounded-pill", i < daysDone ? "bg-sko-bg-primary" : "bg-sko-bg-muted")}
             />
           ))}
         </div>

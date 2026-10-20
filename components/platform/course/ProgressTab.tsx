@@ -61,7 +61,7 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
   return (
     <section
       aria-labelledby="course-grade-title"
-      className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-[15px] shadow-sm md:p-[19px] lg:p-[23px]"
+      className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] shadow-sm md:p-[19px] lg:p-[23px]"
     >
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
         <h3 id="course-grade-title" className="sk-text-headline-small-bold text-sko-text-default">
@@ -100,7 +100,7 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
         <thead>
           {/* DS body-small/Bold: semibold until .sk-text-body-small-bold exists (CT-22). */}
           <tr className="sk-text-body-small-semibold h-9 text-sko-text-subtle">
-            <th scope="col" className="rounded-l-lg bg-sko-bg-subtle py-2 pl-3 pr-1 md:w-[170px] md:pl-4">
+            <th scope="col" className="rounded-l-control bg-sko-bg-subtle py-2 pl-3 pr-1 md:w-[170px] md:pl-4">
               {grade.columns.type}
             </th>
             <th scope="col" className={`${head} hidden bg-sko-bg-subtle md:table-cell`}>
@@ -109,7 +109,7 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
             <th scope="col" className={`${head} hidden bg-sko-bg-subtle md:table-cell`}>
               {grade.columns.grade}
             </th>
-            <th scope="col" className="rounded-r-lg bg-sko-bg-subtle py-2 pl-1 pr-2 text-right md:pr-3">
+            <th scope="col" className="rounded-r-control bg-sko-bg-subtle py-2 pl-1 pr-2 text-right md:pr-3">
               {grade.columns.weighted}
             </th>
           </tr>
@@ -194,7 +194,7 @@ export function ProgressTab({ course }: { course: CourseDetail }) {
 
         <section
           aria-labelledby="course-completion-title"
-          className="flex items-center gap-4 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px] md:gap-5 md:p-[19px] lg:gap-6 lg:p-[23px]"
+          className="flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:gap-5 md:p-[19px] lg:gap-6 lg:p-[23px]"
         >
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <h3 id="course-completion-title" className="sk-text-headline-small-bold text-sko-text-default">

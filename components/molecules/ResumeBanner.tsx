@@ -24,7 +24,7 @@ export function ResumeBanner({ seconds, onResume, onStartOver, className }: Resu
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-lg border border-sko-border-primary bg-sko-bg-primary-soft px-4 py-3",
+        "flex flex-wrap items-center justify-between gap-3 rounded-card border border-sko-border-primary bg-sko-bg-primary-soft px-4 py-3",
         className,
       )}
     >

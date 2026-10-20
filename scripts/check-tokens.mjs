@@ -8,6 +8,8 @@
  *   3. Legacy colour names — the v3.2 sk-bg-/sk-text-/sk-fg-/sk-border- vocabulary
  *   4. Raw typography       — Tailwind text-size / font-weight utilities instead of `.sk-text-*`
  *   5. Raw motion           — hand-typed durations / delays / curves, bare `transition` (use motion tokens)
+ *   6. Raw radius           — Tailwind size radii (rounded-sm/md/lg/xl/…, rounded-[Npx], bare `rounded`)
+ *                             instead of the six role radii in tokens/radius.css
  *
  * Escape hatch: append `// token-lint-disable-next-line <reason>` on the line above,
  * or add a path to ALLOW. Exits non-zero on any violation. Run: `npm run lint:tokens`.
@@ -57,6 +59,14 @@ const RULES = [
     re: /(?<![\w-])(?:duration|delay)-(?:\d+|\[)|(?<![\w-])ease-(?:in|out|in-out|linear)(?![\w-])|cubic-bezier\(|["'`][^"'`]*\b\d*\.?\d+ms\b[^"'`]*["'`]|["'`]\s*\d*\.?\d+s\s*["'`]|["'`][^"'`]*\b\d*\.?\d+s (?:ease|linear|cubic)[^"'`]*["'`]|(?<![\w-])transition(?:-all)?(?=["'`\s])/,
     msg: "raw motion — use a duration-/ease-/delay- motion token and name the transitioned property",
   },
+  {
+    id: "raw-radius",
+    // rounded-sm|md|lg|xl|2xl|3xl|full|[…] (any side), or a bare `rounded` class inside a string literal.
+    // The lab "training" world has its own radius tokens (tokens/lab-training.css) and course copy is prose.
+    re: /(?<![\w-])rounded(?:-(?:t|b|l|r|s|e|tl|tr|br|bl))?-(?:sm|md|lg|xl|2xl|3xl|full|\[[^\]]+\])(?![\w-])|["'`][^"'`]*(?<![\w-])rounded(?=[\s"'`])[^"'`]*["'`]/,
+    skip: /^(?:app\/lab\/training\/|components\/lab\/training\/|lib\/courses\/)/,
+    msg: "raw radius — use a role radius: rounded-none / -inner / -control / -card / -surface / -pill (tokens/radius.css)",
+  },
 ];
 
 function walk(dir, out) {
@@ -90,6 +100,7 @@ for (const file of files) {
     if (/token-lint-disable/.test(lines[i - 1] || "")) return;
     if (/^(?:\/\/|\*|\/\*)/.test(line.trim())) return;
     for (const rule of RULES) {
+      if (rule.skip && rule.skip.test(rel)) continue;
       if (rule.re.test(line)) {
         violations.push({ rel, line: i + 1, id: rule.id, msg: rule.msg, src: line.trim().slice(0, 100) });
       }

@@ -26,7 +26,7 @@ function ServiceRow({ item, onAction }: { item: ServiceItem; onAction: (what: st
   );
   return (
     <li className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0">
-      <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={item.icon} size={20} />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -73,7 +73,7 @@ export function ServicesView() {
           data-mock={servicesMentor.mock}
           data-theme={sea ? "dark" : undefined}
           data-band={sea ? "" : undefined}
-          className="flex flex-col gap-4 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:flex-row lg:items-center lg:justify-between lg:p-6"
+          className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:flex-row lg:items-center lg:justify-between lg:p-6"
         >
           <div className="flex items-start gap-4">
             <Avatar name={servicesMentor.name} size="lg" />
@@ -107,7 +107,7 @@ export function ServicesView() {
           {serviceSections.map((section) => (
             <section key={section.id} aria-labelledby={`services-${section.id}`} className="flex min-w-0 flex-col gap-4">
               <PlatformSectionHeader id={`services-${section.id}`} title={section.title} emphasis={section.emphasis} />
-              <ul data-mock={section.mock} className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page">
+              <ul data-mock={section.mock} className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
                 {section.items.map((item) => (
                   <ServiceRow key={item.id} item={item} onAction={notInPrototype} />
                 ))}

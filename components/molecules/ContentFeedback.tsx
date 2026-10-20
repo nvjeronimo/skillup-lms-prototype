@@ -54,7 +54,7 @@ export function ContentFeedback({
   // Hover pad: px-2/py-1 cancelled by -mx-2/-my-1, so the DS geometry (no item padding,
   // gap 16 = 2 × 8) is unchanged while the hover fill and hit area come back (18 + 8 = 26px tall).
   const btn =
-    "sk-text-body-small-medium -mx-2 -my-1 inline-flex items-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-sko-bg-subtle";
+    "sk-text-body-small-medium -mx-2 -my-1 inline-flex items-center gap-2 rounded-control px-2 py-1 transition-colors hover:bg-sko-bg-subtle";
   const glyph = { size: 16, strokeWidth: 1.5, absoluteStrokeWidth: true } as const;
   const licence = license ? (
     <a href={licenseHref} className="sk-text-body-small-medium shrink-0 text-sko-text-primary">

@@ -40,7 +40,7 @@ export const LabLaunchCard = React.forwardRef<HTMLElement, LabLaunchCardProps>(f
       ref={ref}
       aria-label="Lab"
       className={cn(
-        "flex flex-col items-center justify-center gap-2 rounded-xl border p-6 text-center md:p-8 lg:p-10",
+        "flex flex-col items-center justify-center gap-2 rounded-card border p-6 text-center md:p-8 lg:p-10",
         unavailable
           ? "border-sko-border-error bg-sko-bg-error-soft"
           : "border-sko-border-subtle bg-sko-bg-subtle",

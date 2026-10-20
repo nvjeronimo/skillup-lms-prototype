@@ -47,14 +47,14 @@ export function CardOverflowMenu({
         type="button"
         {...triggerProps}
         aria-label={itemLabel ? `More actions, ${itemLabel}` : "More actions"}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
       >
         <Icon icon={MoreHorizontal} size={20} />
       </button>
       {open ? (
         <ul
           {...panelProps}
-          className="absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-sk-card"
+          className="absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-sk-card"
         >
           {items.map((item) => (
             <li key={item.label}>

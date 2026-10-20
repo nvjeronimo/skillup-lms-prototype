@@ -26,13 +26,13 @@ export function Alert({ title, children, className }: AlertProps) {
     <section
       aria-labelledby={id}
       className={cn(
-        "flex items-start gap-4 rounded-xl border border-sko-border-primary-muted bg-sko-bg-primary-soft p-4 shadow-sm",
+        "flex items-start gap-4 rounded-card border border-sko-border-primary-muted bg-sko-bg-primary-soft p-4 shadow-sm",
         className,
       )}
     >
       <span aria-hidden="true" className="relative inline-flex size-5 shrink-0 items-center justify-center">
-        <span className="absolute -inset-1 rounded-full border-2 border-sko-border-primary opacity-30" />
-        <span className="absolute -inset-[9px] rounded-full border-2 border-sko-border-primary opacity-10" />
+        <span className="absolute -inset-1 rounded-pill border-2 border-sko-border-primary opacity-30" />
+        <span className="absolute -inset-[9px] rounded-pill border-2 border-sko-border-primary opacity-10" />
         <Icon icon={Info} size={20} className="relative text-sko-icon-primary" />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-1">

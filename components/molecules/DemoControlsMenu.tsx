@@ -96,7 +96,7 @@ export function DemoControlsMenu({
   const setCompletionFlow = useLmsStore((s) => s.setCompletionFlow);
 
   const pill =
-    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-md transition-colors";
+    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-inner transition-colors";
   const pillOn = "bg-sko-bg-primary text-sko-text-on-primary";
   const pillOff = "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
@@ -110,7 +110,7 @@ export function DemoControlsMenu({
           "flex items-center transition-colors hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px avatar. Desktop/Tablet: a 32px avatar + name. Every
           // learner avatar is a rounded square, never a circle (Nelson, 19 Oct 2026).
-          compact ? "rounded-lg" : "ml-1 gap-2 rounded-lg p-1",
+          compact ? "rounded-control" : "ml-1 gap-2 rounded-control p-1",
         )}
       >
         {compact ? (
@@ -178,7 +178,7 @@ export function DemoControlsMenu({
                     aria-pressed={active}
                     title={s.title}
                     className={cn(
-                      "sk-text-body-medium-medium flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left transition-colors",
+                      "sk-text-body-medium-medium flex w-full items-center justify-between gap-2 rounded-control px-3 py-2 text-left transition-colors",
                       active
                         ? "bg-sko-bg-primary-soft text-sko-text-primary"
                         : "text-sko-text-muted hover:bg-sko-bg-subtle",
@@ -202,7 +202,7 @@ export function DemoControlsMenu({
                   <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">
                     Experience
                   </span>
-                  <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+                  <div className="flex overflow-hidden rounded-control border border-sko-border-subtle">
                     {(["A", "B"] as const).map((value) => (
                       <button
                         key={value}
@@ -232,7 +232,7 @@ export function DemoControlsMenu({
           {onLtiLab ? (
             <Section title="Lab launch">
               <div className="flex flex-col gap-1.5">
-                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+                <div className="flex overflow-hidden rounded-control border border-sko-border-subtle">
                   {LAB_LAUNCHES.map((l) => (
                     <button
                       key={l.value}
@@ -262,7 +262,7 @@ export function DemoControlsMenu({
           {onHandCompleted ? (
             <Section title="Completion">
               <div className="flex flex-col gap-1.5">
-                <div className="flex overflow-hidden rounded-md border border-sko-border-subtle">
+                <div className="flex overflow-hidden rounded-control border border-sko-border-subtle">
                   {COMPLETION_FLOWS.map((f) => (
                     <button
                       key={f.value}

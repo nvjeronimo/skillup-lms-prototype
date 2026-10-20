@@ -51,14 +51,14 @@ export function CourseCard({
   return (
     <div
       className={cn(
-        "relative flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-4 xl:flex-row xl:items-center xl:gap-6",
+        "relative flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-4 xl:flex-row xl:items-center xl:gap-6",
         className,
       )}
     >
       {/* Stacked: pr-10 keeps the titles clear of the pinned 32px overflow trigger. */}
       <div className="flex min-w-0 flex-1 gap-4 pr-10 xl:gap-6 xl:pr-0">
         {/* DS thumb: bg/primary-soft, Initials text/primary. List 79px (Grid 86px). */}
-        <span className="sk-text-headline-small-semibold inline-flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary-soft text-sko-text-primary">
+        <span className="sk-text-headline-small-semibold inline-flex h-20 w-20 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-text-primary">
           {initials}
         </span>
         {/* DS titles: vertical, gap 2 — Course Type badge, Title, Meta-Row. */}
@@ -90,7 +90,7 @@ export function CourseCard({
       {upNext ? (
         /* DS up-next: horizontal, centred, padding 8/12, gap 16, radius 8, bg/subtle.
            xl:max-w-[320px] is a guard, no DS value. */
-        <div className="flex min-w-0 items-center gap-4 rounded-lg bg-sko-bg-subtle px-3 py-2 xl:max-w-[320px]">
+        <div className="flex min-w-0 items-center gap-4 rounded-control bg-sko-bg-subtle px-3 py-2 xl:max-w-[320px]">
           {/* DS Next-Content: vertical, gap 6 — Overline, Next-Title (1 line), Topic-Types badge. */}
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
             <span className="sk-text-label-small-semibold text-sko-text-subtle">Up next</span>

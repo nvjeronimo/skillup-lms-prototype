@@ -43,7 +43,7 @@ export function CardShell({
       data-mock={mock}
       className={cn(
         // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
-        "flex flex-col rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px]",
+        "flex flex-col rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]",
         gap === "lg" ? "gap-3" : "gap-2",
         className,
       )}
@@ -86,7 +86,7 @@ export function SidebarDateList({ dates }: { dates: SidebarDate[] }) {
         >
           <span
             aria-hidden
-            className="flex h-12 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-sko-bg-subtle"
+            className="flex h-12 w-11 shrink-0 flex-col items-center justify-center rounded-control bg-sko-bg-subtle"
           >
             <span className="sk-text-body-large-semibold text-sko-text-default">{date.day}</span>
             <span className="sk-text-body-small-semibold text-sko-text-subtle">{date.month}</span>

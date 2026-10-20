@@ -51,7 +51,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
         data-band=""
         data-skin={mounted && skin !== "teal" ? skin : undefined}
         data-mock="No mentor field on the Course Home APIs"
-        className="flex flex-col gap-3 rounded-[10px] border border-sko-border-subtle bg-sko-bg-primary-soft p-[15px]"
+        className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-primary-soft p-[15px]"
       >
         <h2 className="sk-text-label-small-medium text-sko-text-default">{course.mentor.label}</h2>
         <p className="sk-text-body-large-semibold text-sko-text-default">{course.mentor.title}</p>
@@ -132,7 +132,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
               >
                 <span
                   aria-hidden
-                  className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-sko-bg-subtle text-sko-icon-default"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-control bg-sko-bg-subtle text-sko-icon-default"
                 >
                   <Icon icon={TOOL_ICON[tool.id]} size={18} />
                 </span>

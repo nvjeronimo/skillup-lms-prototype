@@ -187,7 +187,7 @@ export function MyLearningCourseCard({
   className,
 }: MyLearningCourseCardProps) {
   const inRow = context === "row";
-  const surface = inRow ? "" : "rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
+  const surface = inRow ? "" : "rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
   // The card is the target of its title link; a card of its own shows it on hover.
   const clickable = cn("relative", course.detailHref && !inRow && "transition-colors has-[h3_a:hover]:border-sko-border-default");
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
@@ -240,7 +240,7 @@ export function MyLearningCourseCard({
         <div
           // DS List: the footer fills what the titles and the progress leave; grey beside Resume,
           // white with a border beside Start, green when completed (v1.8). Its height hugs.
-          className={cn("flex min-w-[250px] flex-1 items-center gap-4 rounded-lg", stripOf(course, hierarchy))}
+          className={cn("flex min-w-[250px] flex-1 items-center gap-4 rounded-control", stripOf(course, hierarchy))}
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
             {/* DS v1.11 (Nelson, 16 Oct 2026): the overline and the topic type share one row, 16
@@ -291,7 +291,7 @@ export function MyLearningCourseCard({
         // The next topic (or, not started, the first one). DS v1.11 (Nelson, 16 Oct 2026): the
         // overline and the topic type share the top row (type at the right end), so the title
         // below has the strip's full width; it wraps to two lines before it is cut.
-        <div className={cn("flex w-full flex-col gap-0.5 rounded-lg", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
+        <div className={cn("flex w-full flex-col gap-0.5 rounded-control", hierarchy === "primary" ? STRIP.filled : STRIP.outlined)}>
           <div className="flex w-full items-center justify-between gap-0.5">
             <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
             <TopicTypeBadge type={next.type} className="shrink-0" />
@@ -300,7 +300,7 @@ export function MyLearningCourseCard({
         </div>
       ) : (
         // The certificate: one line, the date at the right end (DS State=Completed).
-        <div className={cn("flex w-full items-center gap-3 rounded-lg", STRIP.completed)}>
+        <div className={cn("flex w-full items-center gap-3 rounded-control", STRIP.completed)}>
           <span className={cn(OVERLINE_ON_GREEN, "shrink-0")}>{overline}</span>
           <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-right text-sko-text-default">{nextTitle}</span>
         </div>

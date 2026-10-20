@@ -33,7 +33,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
             >
               <span
                 aria-hidden
-                className="flex h-12 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-sko-bg-subtle"
+                className="flex h-12 w-11 shrink-0 flex-col items-center justify-center rounded-control bg-sko-bg-subtle"
               >
                 <span className="sk-text-body-large-semibold text-sko-text-default">{date.day}</span>
                 <span className="sk-text-body-small-semibold text-sko-text-subtle">{date.month}</span>

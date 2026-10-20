@@ -86,7 +86,7 @@ function ThreadRow({
         </span>
         {thread.unread ? (
           <span className="pt-2">
-            <span className="block size-2 rounded-full bg-sko-bg-primary" />
+            <span className="block size-2 rounded-pill bg-sko-bg-primary" />
             <span className="sr-only">Unread</span>
           </span>
         ) : null}
@@ -107,7 +107,7 @@ export function Message({ message, report, onReport }: { message: QaMessage; rep
     return (
       <li className="flex flex-col items-end gap-1">
         <p className="sk-text-body-small-medium text-sko-text-default">{message.author}</p>
-        <p className="sk-text-body-medium-regular rounded-[10px] rounded-br-sm bg-sko-bg-primary px-3 py-2 text-sko-text-on-primary max-md:self-stretch md:max-w-[420px]">
+        <p className="sk-text-body-medium-regular rounded-control rounded-br-inner bg-sko-bg-primary px-3 py-2 text-sko-text-on-primary max-md:self-stretch md:max-w-[420px]">
           {message.body}
         </p>
         <p className="sk-text-body-small-regular text-sko-text-subtle">{message.time}</p>
@@ -131,7 +131,7 @@ export function Message({ message, report, onReport }: { message: QaMessage; rep
             </Badge>
           ) : null}
         </p>
-        <p className="sk-text-body-medium-regular rounded-[10px] rounded-bl-sm bg-sko-bg-subtle px-3 py-2 text-sko-text-default max-md:self-stretch md:max-w-[420px]">
+        <p className="sk-text-body-medium-regular rounded-control rounded-bl-inner bg-sko-bg-subtle px-3 py-2 text-sko-text-default max-md:self-stretch md:max-w-[420px]">
           {message.body}
         </p>
         <p className="flex items-center gap-2">
@@ -189,7 +189,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
         <section
           aria-labelledby="qa-list-title"
           className={cn(
-            "overflow-hidden rounded-[10px] border border-sko-border-subtle bg-sko-bg-page md:w-[320px] md:shrink-0 lg:w-[360px]",
+            "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[320px] md:shrink-0 lg:w-[360px]",
             explicit && "max-md:hidden",
           )}
         >
@@ -211,7 +211,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             <div
               role="group"
               aria-label="Filter questions"
-              className="inline-flex gap-0.5 rounded-lg bg-sko-bg-muted p-1"
+              className="inline-flex gap-0.5 rounded-control bg-sko-bg-muted p-1"
             >
               {tab.filters.map((item) => (
                 <button
@@ -220,7 +220,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                   aria-pressed={filter === item.id}
                   onClick={() => setFilter(item.id)}
                   className={cn(
-                    "sk-text-body-medium-semibold h-8 rounded-md border px-4 transition-colors max-md:h-11",
+                    "sk-text-body-medium-semibold h-8 rounded-inner border px-4 transition-colors max-md:h-11",
                     filter === item.id
                       ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
                       : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
@@ -264,7 +264,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
 
           <section
             aria-labelledby="qa-thread-title"
-            className="overflow-hidden rounded-[10px] border border-sko-border-subtle bg-sko-bg-page"
+            className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
           >
             <div className="flex items-start gap-2 bg-sko-bg-subtle p-3 md:items-center">
               <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -318,7 +318,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
               }}
             >
               <div className="flex items-center gap-2">
-                <label className="flex h-11 min-w-0 flex-1 items-center rounded-lg border border-sko-border-default bg-sko-bg-page px-3 shadow-sm focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
+                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
                   <span className="sr-only">{tab.replyPlaceholder}</span>
                   <input
                     type="text"
@@ -334,7 +334,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                 </Button>
               </div>
               <label className="sk-text-body-small-regular flex items-center gap-1 self-start text-sko-text-subtle max-md:min-h-11">
-                <input type="checkbox" className="size-[13px] rounded-sm accent-[var(--color-bg-primary)]" />
+                <input type="checkbox" className="size-[13px] rounded-inner accent-[var(--color-bg-primary)]" />
                 {tab.anonymous}
               </label>
             </form>
