@@ -211,7 +211,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             <div
               role="group"
               aria-label="Filter questions"
-              className="inline-flex gap-0.5 rounded-control bg-sko-bg-muted p-1"
+              className="inline-flex gap-0.5 rounded-track bg-sko-bg-muted p-1"
             >
               {tab.filters.map((item) => (
                 <button
@@ -220,7 +220,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                   aria-pressed={filter === item.id}
                   onClick={() => setFilter(item.id)}
                   className={cn(
-                    "sk-text-body-medium-semibold h-8 rounded-inner border px-4 transition-colors max-md:h-11",
+                    "sk-text-body-medium-semibold h-8 rounded-control border px-4 transition-colors max-md:h-11",
                     filter === item.id
                       ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
                       : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",

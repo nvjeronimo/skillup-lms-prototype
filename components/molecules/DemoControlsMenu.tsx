@@ -96,7 +96,7 @@ export function DemoControlsMenu({
   const setCompletionFlow = useLmsStore((s) => s.setCompletionFlow);
 
   const pill =
-    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-inner transition-colors";
+    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-control transition-colors";
   const pillOn = "bg-sko-bg-primary text-sko-text-on-primary";
   const pillOff = "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
@@ -110,7 +110,7 @@ export function DemoControlsMenu({
           "flex items-center transition-colors hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px avatar. Desktop/Tablet: a 32px avatar + name. Every
           // learner avatar is a rounded square, never a circle (Nelson, 19 Oct 2026).
-          compact ? "rounded-control" : "ml-1 gap-2 rounded-control p-1",
+          compact ? "rounded-control" : "ml-1 gap-2 rounded-track p-1",
         )}
       >
         {compact ? (

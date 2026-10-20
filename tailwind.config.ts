@@ -23,6 +23,7 @@ const config: Config = {
         control: "var(--sk-radius-control)",
         card: "var(--sk-radius-card)",
         "card-inset": "var(--sk-radius-card-inset)",
+        track: "var(--sk-radius-track)",
         surface: "var(--sk-radius-surface)",
         pill: "var(--sk-radius-pill)",
       },
