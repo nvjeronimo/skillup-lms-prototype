@@ -89,6 +89,8 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
     <div
       role="img"
       aria-label={label}
+      // The sheet is a printed document: it keeps its light colours in dark mode (Nelson, 20 Oct 2026).
+      data-theme="light"
       className="flex size-full flex-col bg-sko-bg-page"
       style={{ fontSize: SHEET_FONT_SIZE, padding: u(24) }}
     >

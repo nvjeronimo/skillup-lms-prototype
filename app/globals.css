@@ -539,6 +539,13 @@ button {
 [data-theme="dark"] .sk-logo-dark {
   display: block;
 }
+/* A light island inside the dark theme (the certificate sheet): the light asset again. */
+[data-theme="dark"] [data-theme="light"] .sk-logo-light {
+  display: block;
+}
+[data-theme="dark"] [data-theme="light"] .sk-logo-dark {
+  display: none;
+}
 
 /* ============================================================================
    Accessibility Standards — controlados pelo painel (data-attributes em <html>).

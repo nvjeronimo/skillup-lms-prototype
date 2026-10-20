@@ -4,6 +4,8 @@ import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
 import { coursePageHref, coursePlayerHref, slugify } from "./hrefs";
 import { certificatesInProgress, earnedCertificates } from "./certificates";
+import { CATALOG } from "./catalog";
+import { PROGRAMS } from "./program";
 
 /**
  * Mock data of the platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop
@@ -25,17 +27,29 @@ export interface DashboardStat {
  * Totals Open edX can serve (handoff map §37.4): the first three come from Learner Home in
  * one call; Programs needs `progress_details` once per program for "in progress".
  * The streak card and the "today" figures left the screens on 7 Oct: nothing returns them.
- * "of 17 enrolled" (10 Oct 2026) counts every course the learner is enrolled in: the five
- * single courses, the seven of the AI program and the five of the Cybersecurity program.
+ * Since 20 Oct 2026 every figure is counted from the sample data (Nelson): every course the
+ * learner is enrolled in (the single courses and the courses of the three programs), how many
+ * are started and not complete, how many are complete, and the programs by state.
  */
+const enrolled = CATALOG.length;
+const coursesInProgress = CATALOG.filter((c) => c.percent !== null && c.percent > 0 && c.percent < 100).length;
+const coursesCompleted = CATALOG.filter((c) => c.percent === 100).length;
+const programPercents = PROGRAMS.map((p) => p.courses.map((c) => c.card.progressPct ?? 0));
+const programsCompleted = programPercents.filter((ps) => ps.every((x) => x === 100)).length;
+const programsInProgress = programPercents.filter((ps) => ps.some((x) => x > 0) && !ps.every((x) => x === 100)).length;
+
 export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
   title: "Your learning at a glance",
   stats: [
-    { label: "Courses in progress", value: "4", detail: "of 17 enrolled" },
-    { label: "Courses completed", value: "2", detail: "of 17 enrolled" },
+    { label: "Courses in progress", value: String(coursesInProgress), detail: `of ${enrolled} enrolled` },
+    { label: "Courses completed", value: String(coursesCompleted), detail: `of ${enrolled} enrolled` },
     // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
     { label: "Certificates", value: String(earnedCertificates.length), detail: "ready to download" },
-    { label: "Programs", value: "2", detail: "1 in progress" },
+    {
+      label: "Programs",
+      value: String(PROGRAMS.length),
+      detail: `${programsInProgress} in progress · ${programsCompleted} completed`,
+    },
   ],
 };
 
