@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Facebook, Link2, Linkedin, Mail, Twitter } from "lucide-react";
+import { Award, Facebook, Link2, Linkedin, Mail, Twitter } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
-export type ShareChannel = "linkedin" | "twitter" | "facebook" | "copy" | "email";
+export type ShareChannel = "linkedin-profile" | "linkedin" | "twitter" | "facebook" | "copy" | "email";
 
 export interface ShareMenuProps {
   /** Controls the open menu — when omitted, the trigger manages its own state. */
@@ -17,6 +17,8 @@ export interface ShareMenuProps {
 }
 
 const ITEMS: { channel: ShareChannel; label: string; icon: LucideIcon }[] = [
+  // LinkedIn's "Add licence or certification" form, pre-filled (20 Oct 2026).
+  { channel: "linkedin-profile", label: "Add to LinkedIn profile", icon: Award },
   { channel: "linkedin", label: "Share to LinkedIn", icon: Linkedin },
   { channel: "twitter", label: "Share to X", icon: Twitter },
   { channel: "facebook", label: "Share to Facebook", icon: Facebook },
@@ -42,7 +44,7 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
   return (
     <ul
       className={cn(
-        "w-48 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg",
+        "w-56 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg",
         className,
       )}
     >
