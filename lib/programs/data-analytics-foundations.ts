@@ -25,7 +25,7 @@ const SIGNATORIES = [
     signatureSrc: "/platform/certificate-signature-1.svg",
   },
   {
-    // A sample name (the real signatory is not known): the AI program still prints the placeholder.
+    // A sample name (the real signatory is not known); the AI program uses the same one.
     name: "Daniel Moreau",
     role: "Programme lead, IBM",
     signatureSrc: "/platform/certificate-signature-2.svg",

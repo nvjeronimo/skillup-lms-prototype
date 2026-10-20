@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Award, ExternalLink, RotateCcw, UserPen } from "lucide-react";
+import { Award, ExternalLink, LogOut, RotateCcw, UserPen } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";
 import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
@@ -89,13 +89,26 @@ export function ProfileLinks({ onDone }: { onDone?: () => void }) {
 }
 
 export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
+  const showToast = useLmsStore((s) => s.showToast);
   return (
-    <div className="border-t border-sko-border-subtle px-4 py-3">
+    <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
       <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
         <Icon icon={ExternalLink} size={16} />
         SkillUp Online
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
+      {/* Open edX's user menu ends with Sign out (/logout); the learner must always find it here. */}
+      <button
+        type="button"
+        className={MENU_ROW}
+        onClick={() => {
+          showToast("Signed out. In this prototype you stay signed in.");
+          onDone?.();
+        }}
+      >
+        <Icon icon={LogOut} size={16} />
+        Sign out
+      </button>
     </div>
   );
 }

@@ -18,6 +18,7 @@ import { ShiftDatesAlert } from "./ShiftDatesAlert";
 import { CourseHeader } from "./CourseHeader";
 import { CourseSearch } from "./CourseSearch";
 import { CourseSidebar } from "./CourseSidebar";
+import { topicLinks } from "@/lib/platform/topic-links";
 import { DatesTab } from "./DatesTab";
 import { ModuleList } from "./ModuleList";
 import { ProgressTab } from "./ProgressTab";
@@ -67,6 +68,8 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }
 
+  const links = React.useMemo(() => topicLinks(course.slug, course.progress.href), [course.slug, course.progress.href]);
+
   const panels: Record<CourseTabId, React.ReactNode> = {
     course: (
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-8 lg:gap-10">
@@ -75,7 +78,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
           {course.datesTab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
           <CourseAlert tone="brand" layout="stacked" title={course.update.title} body={course.update.body} dismissible />
           <SectionIntro title={course.intro.title} lead={course.intro.lead} />
-          <ModuleList modules={course.modules} topicHref={course.progress.href} />
+          <ModuleList modules={course.modules} topicHref={links.byId} />
         </div>
         <CourseSidebar course={course} className="md:w-[320px] md:shrink-0" />
       </div>

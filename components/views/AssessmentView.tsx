@@ -282,7 +282,11 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const ctaCtx = {
     mode: config.mode,
     resetAvailable: true,
-    answerAvailable: true,
+    // Open edX `showanswer`: a practice quiz shows the answer at any time; a graded one only
+    // once the learner has used every attempt (`finished`) — never before the first try.
+    answerAvailable:
+      config.variant === "practice" ||
+      (typeof config.maxAttempts === "number" && attemptsUsed >= config.maxAttempts),
     // Save is hidden when attempts are unlimited: submitting costs nothing, so
     // the platform judges a save button pointless. Verified on dev.
     saveAvailable: typeof config.maxAttempts === "number",

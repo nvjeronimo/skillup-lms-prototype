@@ -236,7 +236,7 @@ export function topicDescription(topic: FlatTopic): string {
         `A hands-on lab you run on your own machine. Nothing is submitted and it isn't graded.`
       );
     case "podcast":
-      return `A conversation you can listen to on the move, with transcript and chapters included.`;
+      return `A conversation you can listen to on the move, with chapters to jump between.`;
     case "vilt":
       return `A live, instructor-led session with your cohort.`;
     case "blocked":

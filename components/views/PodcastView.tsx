@@ -213,9 +213,8 @@ export function PodcastView({ topicId }: { topicId: string }) {
         </ul>
       </section>
 
-      <p className="sk-text-body-small-regular text-sko-text-subtle">
-        Completes automatically once you have listened to 90%.
-      </p>
+      {/* No "completes at 90%" line: this player can't report playback, so the podcast completes
+          with Mark as Complete (rule of 12 Oct 2026: the button only when playback isn't measured). */}
     </div>
   );
 }
