@@ -8,8 +8,8 @@ export interface PlatformProgressBarProps {
   /** Accessible name: what the bar measures. */
   label: string;
   /**
-   * The colour of the track: `strong` is the DS Progress bar (bg/strong), `muted` the bar of
-   * the DS Course Card (bg/muted). Both end straight.
+   * @deprecated Every track is bg/track (alias of bg/muted) since 20 Oct 2026 (Bruno, WCAG 1.4.11: the bg/info fill
+   * on bg/strong was 2.26:1; on bg/muted it is 3.21:1, 3.06:1 in dark). Kept so call sites compile.
    */
   track?: "muted" | "strong";
   /** Bar height in px. */
@@ -31,14 +31,13 @@ export interface PlatformProgressBarProps {
  * the product rule for every progress fill while it runs; green (bg/success) only once the
  * course or program is complete (`tone`, 13 Oct 2026). A progress bar ends straight, track and fill
  * (Nelson, 13 Oct 2026; the Course Card bar was rounded until then). One bar for the
- * platform pages, on the two track colours the DS draws (`track`). With `stepped` the fill is rounded to the nearest 10 as in
+ * platform pages, on a bg/track track (alias of bg/muted; 20 Oct 2026, contrast). With `stepped` the fill is rounded to the nearest 10 as in
  * the DS component; assistive tech always gets the real value.
  * `className` goes on the bar, or on the bar + value row when `showValue` is set.
  */
 export function PlatformProgressBar({
   value,
   label,
-  track = "strong",
   height = 8,
   stepped = false,
   tone = "progress",
@@ -57,7 +56,7 @@ export function PlatformProgressBar({
       aria-valuemax={100}
       className={cn(
         height === 4 ? "h-1" : "h-2",
-        track === "muted" ? "bg-sko-bg-muted" : "bg-sko-bg-strong",
+        "bg-sko-bg-track",
         showValue ? "min-w-0 flex-1" : className,
       )}
     >

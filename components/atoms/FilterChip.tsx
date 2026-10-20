@@ -23,7 +23,7 @@ export function FilterChip({ label, count, active = false, onClick, className }:
         "sk-text-body-medium-medium inline-flex items-center gap-1.5 rounded-pill px-3 py-1 transition-colors",
         active
           ? "bg-sko-bg-primary-soft text-sko-text-primary"
-          : "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-muted",
+          : "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-hover",
         className,
       )}
     >

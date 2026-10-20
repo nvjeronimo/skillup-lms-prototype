@@ -245,7 +245,7 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuetext={`${e.pct}% complete, ${e.topicsDone} of ${e.topicsTotal} topics`}
-              className="h-2 overflow-hidden rounded-pill bg-sko-bg-muted"
+              className="h-2 overflow-hidden rounded-pill bg-sko-bg-track"
             >
               <div className="h-full rounded-pill bg-sko-bg-info" style={{ width: `${e.pct}%` }} />
             </div>

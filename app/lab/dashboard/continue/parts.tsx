@@ -48,7 +48,7 @@ export function TopicProgress({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuetext={label}
-        className={cn("overflow-hidden rounded-pill bg-sko-bg-muted", size === "md" ? "h-2.5" : "h-1.5")}
+        className={cn("overflow-hidden rounded-pill bg-sko-bg-track", size === "md" ? "h-2.5" : "h-1.5")}
       >
         {/* DS rule: progress bars fill with bg/info. */}
         <div className="h-full rounded-pill bg-sko-bg-info" style={{ width: `${pct}%` }} />

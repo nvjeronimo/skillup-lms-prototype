@@ -113,7 +113,7 @@ export function QuizNavStepper({
             Question {current} of {total}
           </span>
           <div
-            className="h-2 w-full bg-sko-bg-muted"
+            className="h-2 w-full bg-sko-bg-track"
             role="progressbar"
             aria-valuenow={value}
             aria-valuemin={0}

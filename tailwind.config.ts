@@ -56,6 +56,8 @@ const config: Config = {
           "bg-subtle": "var(--color-bg-subtle)",
           "bg-faint": "var(--color-bg-faint)",
           "bg-muted": "var(--color-bg-muted)",
+          "bg-track": "var(--color-bg-track)",
+          "bg-hover": "var(--color-bg-hover)",
           "bg-primary-soft": "var(--color-bg-primary-soft)",
           "bg-primary": "var(--color-bg-primary)",
           "bg-warning-soft": "var(--color-bg-warning-soft)",

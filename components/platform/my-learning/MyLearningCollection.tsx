@@ -183,7 +183,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           <div
             role="group"
             aria-label={`Filter ${noun} by status`}
-            className="flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-muted p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden"
+            className="flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden"
           >
             {myLearningStatusFilters.map((item) => (
               <button

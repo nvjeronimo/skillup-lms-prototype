@@ -72,7 +72,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
                 className={cn(
                   "flex-1 rounded-inner",
                   // Progress fill is bg/info, never bg/primary; the unplayed track is bg/muted.
-                  played ? "bg-sko-bg-info" : "bg-sko-bg-muted",
+                  played ? "bg-sko-bg-info" : "bg-sko-bg-track",
                 )}
                 style={{ height: `${h}%` }}
               />

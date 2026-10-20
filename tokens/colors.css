@@ -38,6 +38,10 @@
   --color-bg-faint: #f8f9fa;
   --color-bg-subtle: #f3f5fa;
   --color-bg-muted: #e1e7ec;
+  /* Role aliases of bg/muted (Nelson, 20 Oct 2026): the track behind a progress fill or a segmented
+     control, and the neutral hover of icon / tertiary buttons. Same hex as bg/muted; the role says what it is. */
+  --color-bg-track: var(--color-bg-muted);
+  --color-bg-hover: var(--color-bg-muted);
   --color-bg-strong: #b9c4ce;
   --color-bg-inverse: #13282f;
   --color-bg-overlay: #0e1a1fb3;
@@ -202,6 +206,8 @@
   --color-bg-faint: #16282f;
   --color-bg-subtle: #122228;
   --color-bg-muted: #25383f;
+  --color-bg-track: var(--color-bg-muted);
+  --color-bg-hover: var(--color-bg-muted);
   --color-bg-strong: #2c3d45;
   --color-bg-inverse: #eaf1f4;
   --color-bg-overlay: #0e1a1fb3;

@@ -100,7 +100,7 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       BRAND_ICON,
       OUTLINE_DISABLED,
     ),
-    tertiary: cn("bg-sko-bg-page text-sko-text-primary hover:bg-sko-bg-muted", BRAND_ICON, GHOST_DISABLED),
+    tertiary: cn("bg-sko-bg-page text-sko-text-primary hover:bg-sko-bg-hover", BRAND_ICON, GHOST_DISABLED),
     link: cn(LINK, LINK_TONE.brand, BRAND_ICON),
     "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
@@ -169,7 +169,7 @@ const LEGACY: Record<LegacyStyle, string> = {
     "bg-transparent text-sko-text-error ring-1 ring-inset ring-sko-border-default hover:bg-sko-bg-error-soft disabled:opacity-50",
     "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-default",
   ),
-  utility: "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-muted disabled:opacity-50",
+  utility: "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-hover disabled:opacity-50",
 };
 
 const VARIANT_ALIAS: Record<Exclude<ButtonVariant, LegacyStyle>, { tone: ButtonTone; hierarchy: ButtonHierarchy }> = {
