@@ -46,7 +46,7 @@ export function PlatformSectionHeader({ id, title, emphasis, action, className }
         {emphasis ? (
           <>
             {" "}
-            <span className="whitespace-nowrap text-sko-text-subtle">{emphasis}</span>
+            <span data-heading-em="" className="whitespace-nowrap text-sko-text-subtle">{emphasis}</span>
           </>
         ) : null}
       </h2>
