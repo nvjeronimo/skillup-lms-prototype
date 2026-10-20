@@ -90,7 +90,7 @@ export function VideoChromeFooter({
           {langOpen ? (
             <ul
               role="listbox"
-              className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg"
+              className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
             >
               {availableLanguages.map((l) => (
                 <li key={l.code} role="option" aria-selected={l.code === currentLanguage}>
@@ -101,7 +101,7 @@ export function VideoChromeFooter({
                       setLangOpen(false);
                     }}
                     className={cn(
-                      "sk-text-body-medium-medium flex w-full items-center justify-between px-3 py-2 text-left transition-colors hover:bg-sko-bg-subtle",
+                      "sk-text-body-medium-medium flex w-full items-center justify-between rounded-card-inset px-3 py-2 text-left transition-colors hover:bg-sko-bg-subtle",
                       l.code === currentLanguage
                         ? "text-sko-text-primary"
                         : "text-sko-text-default",
@@ -134,7 +134,7 @@ export function VideoChromeFooter({
           {dlOpen ? (
             <ul
               role="menu"
-              className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg"
+              className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
             >
               {(["srt", "txt"] as const).map((fmt) => (
                 <li key={fmt} role="none">
@@ -145,7 +145,7 @@ export function VideoChromeFooter({
                       onDownloadTranscript?.(fmt);
                       setDlOpen(false);
                     }}
-                    className="sk-text-body-medium-medium block w-full px-3 py-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
+                    className="sk-text-body-medium-medium block w-full rounded-card-inset px-3 py-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
                   >
                     .{fmt}
                   </button>
