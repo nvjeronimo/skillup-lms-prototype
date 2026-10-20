@@ -1,5 +1,6 @@
 import { coursePlayerHref, programCourse, slugify } from "./kit";
 import type { Program } from "./kit";
+import { relativeLabel } from "@/lib/sample-time";
 
 /**
  * "Cybersecurity Fundamentals Certificate": the second program of My Learning, enrolled and
@@ -7,7 +8,7 @@ import type { Program } from "./kit";
  * page is the Program page of the first program with this content. Every FAQ and About
  * section has its body, so nothing here prints CONTENT_PENDING.
  *
- * Today is 24 Sep 2026 and the program starts on 5 Oct 2026, the date the card in
+ * Today is 24 Oct 2026 and the program starts on 4 Nov 2026, the date the card in
  * lib/platform/my-learning shows. No course is started: no certificate card is listed (the
  * Certificates tab shows its note alone) and the header's action starts course 1. Each course
  * row agrees with the outline of its folder under lib/courses: module titles, topic counts
@@ -28,7 +29,7 @@ const program: Program = {
   progress: {
     percent: 0,
     label: "Program progress",
-    status: "Not started · starts 5 Oct 2026",
+    status: "Not started · starts 4 Nov 2026",
     cta: "Start course",
     href: COURSE_PLAYER_HREF,
     footer: "0 of 5 courses complete",
@@ -170,8 +171,8 @@ const program: Program = {
       id: "faq-4",
       title: "When does the program start, and how is it paced?",
       body: [
-        "The program starts on 5 Oct 2026. It is Flexible Learning: there are no live sessions, and you study when it suits you.",
-        "Each course has a suggested schedule of three to five weeks with due dates for its graded work, and the courses follow one another until mid February 2027. Plan for three to four hours a week. Access to all five courses stays open until 30 Sep 2027.",
+        "The program starts on 4 Nov 2026. It is Flexible Learning: there are no live sessions, and you study when it suits you.",
+        "Each course has a suggested schedule of three to five weeks with due dates for its graded work, and the courses follow one another until mid March 2027. Plan for three to four hours a week. Access to all five courses stays open until 30 Sep 2027.",
       ],
     },
     {
@@ -295,12 +296,12 @@ const program: Program = {
   dates: [
     {
       id: "starts",
-      iso: "2026-10-05",
-      day: "05",
-      month: "OCT",
+      iso: "2026-11-04",
+      day: "04",
+      month: "NOV",
       title: "Program starts",
-      detail: "5 Oct 2026 · Course 1 begins",
-      relative: "In 11 days",
+      detail: "4 Nov 2026 · Course 1 begins",
+      relative: relativeLabel("2026-11-04"),
     },
     {
       id: "ends",
@@ -309,7 +310,7 @@ const program: Program = {
       month: "SEP",
       title: "Program ends",
       detail: "30 Sep 2027 · access to all courses closes",
-      relative: "In 12 months",
+      relative: relativeLabel("2027-09-30"),
     },
   ],
   included: [

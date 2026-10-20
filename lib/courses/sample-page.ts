@@ -1,6 +1,7 @@
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { CourseDetail, WeekDayState, WeeklyGoal } from "@/lib/platform/course-detail";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, thisWeekLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * The Six Sigma course page, the original sample, and the IBM course built on it. They sit
@@ -133,8 +134,8 @@ export const SIX_SIGMA: CourseDetail = {
     state: "met",
     title: "You met your goal this week",
     body: "Take a moment to celebrate your progress.",
-    week: "This week · 15–21 Sep",
-    days: week(["done", "missed", "done", "today-done", "upcoming", "upcoming", "upcoming"]),
+    week: thisWeekLabel(),
+    days: week(["done", "missed", "done", "missed", "missed", "today-done", "upcoming"]),
     count: "3 of 3 days this week",
     lastWeek: "Last week: 2 of 3",
     plan: "Regular · 3 days a week.",
@@ -158,23 +159,23 @@ export const SIX_SIGMA: CourseDetail = {
     items: [
       {
         id: "final-project",
-        iso: "2026-09-19",
-        day: "19",
-        month: "SEP",
+        iso: "2026-10-25",
+        day: "25",
+        month: "OCT",
         title: "Module 4 · Final project",
         detail: "Assignment due · 23:59 your time",
-        relative: "Tomorrow",
-        relativeColor: "yellow",
+        relative: relativeLabel("2026-10-25"),
+        relativeColor: relativeColor("2026-10-25"),
       },
       {
         id: "certificate",
-        iso: "2026-10-03",
-        day: "03",
-        month: "OCT",
+        iso: "2026-11-08",
+        day: "08",
+        month: "NOV",
         title: "Certificate available",
         detail: "Certificate · 09:00 your time",
-        relative: "In 15 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-08"),
+        relativeColor: relativeColor("2026-11-08"),
       },
     ],
     cta: "All dates",
@@ -231,8 +232,8 @@ export const SIX_SIGMA: CourseDetail = {
       state: "set",
       title: "Your weekly goal",
       body: "A day counts when you open any lesson in this course.",
-      week: "This week · 15–21 Sep",
-      days: week(["done", "missed", "done", "today", "upcoming", "upcoming", "upcoming"]),
+      week: thisWeekLabel(),
+      days: week(["done", "missed", "done", "missed", "missed", "today", "upcoming"]),
       count: "2 of 3 days this week",
       lastWeek: "Last week: 3 of 3",
       plan: "Regular · 3 days a week.",
@@ -251,8 +252,8 @@ export const SIX_SIGMA: CourseDetail = {
     past: [
       {
         id: "course-starts",
-        iso: "2026-07-28T00:00",
-        date: "28 Jul 2026",
+        iso: "2026-09-02T00:00",
+        date: "02 Sep 2026",
         time: "00:00 · your time",
         state: "complete",
         badges: [{ label: "COURSE", color: GRAY }],
@@ -261,8 +262,8 @@ export const SIX_SIGMA: CourseDetail = {
       },
       {
         id: "channel-selection",
-        iso: "2026-08-14T23:59",
-        date: "14 Aug 2026",
+        iso: "2026-09-19T23:59",
+        date: "19 Sep 2026",
         time: "23:59 · your time",
         state: "complete",
         badges: [
@@ -276,8 +277,8 @@ export const SIX_SIGMA: CourseDetail = {
       },
       {
         id: "audience-mapping",
-        iso: "2026-08-21T23:59",
-        date: "21 Aug 2026",
+        iso: "2026-09-26T23:59",
+        date: "26 Sep 2026",
         time: "23:59 · your time",
         state: "overdue",
         badges: [
@@ -291,8 +292,8 @@ export const SIX_SIGMA: CourseDetail = {
       },
       {
         id: "upgrade-deadline",
-        iso: "2026-08-30T23:59",
-        date: "30 Aug 2026",
+        iso: "2026-10-05T23:59",
+        date: "05 Oct 2026",
         time: "23:59 · your time",
         state: "complete",
         badges: [{ label: "UPGRADE", color: GRAY }],
@@ -300,14 +301,14 @@ export const SIX_SIGMA: CourseDetail = {
         description: "The last day to upgrade to the verified track for this run.",
       },
     ],
-    todayLabel: "Today · 18 Sep 2026",
-    todayIso: "2026-09-18",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "final-project",
-        iso: "2026-09-19T23:59",
-        date: "19 Sep 2026",
+        iso: "2026-10-25T23:59",
+        date: "25 Oct 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -321,8 +322,8 @@ export const SIX_SIGMA: CourseDetail = {
       },
       {
         id: "wrap-up",
-        iso: "2026-09-26T23:59",
-        date: "26 Sep 2026",
+        iso: "2026-11-01T23:59",
+        date: "01 Nov 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -335,8 +336,8 @@ export const SIX_SIGMA: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2026-10-03T09:00",
-        date: "03 Oct 2026",
+        iso: "2026-11-08T09:00",
+        date: "08 Nov 2026",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],
@@ -345,8 +346,8 @@ export const SIX_SIGMA: CourseDetail = {
       },
       {
         id: "audit-access-ends",
-        iso: "2026-10-31T23:59",
-        date: "31 Oct 2026",
+        iso: "2026-12-06T23:59",
+        date: "06 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "ACCESS", color: GRAY }],

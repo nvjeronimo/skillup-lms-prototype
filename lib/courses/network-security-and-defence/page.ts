@@ -1,13 +1,14 @@
 import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
 import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
 import { outline } from "./outline";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "Network Security and Defence":
  * course 2 of 5 of the Cybersecurity Fundamentals Certificate, not started. Its figures follow
  * the course row of the Program page (lib/programs/cybersecurity-fundamentals): 39 topics
  * in 4 modules, about 9 hours, nothing completed and nothing graded. Today is
- * 24 Sep 2026 and the suggested schedule of the course starts on 26 Oct 2026, so every
+ * 24 Oct 2026 and the suggested schedule of the course starts on 25 Nov 2026, so every
  * due date is still to come and none is missed.
  */
 const WEEKLY_GOAL: WeeklyGoal = {
@@ -15,7 +16,7 @@ const WEEKLY_GOAL: WeeklyGoal = {
   title: "Your weekly goal",
   body: "A day counts when you open any lesson in this course.",
   week: THIS_WEEK,
-  days: week(["missed", "missed", "missed", "today", "upcoming", "upcoming", "upcoming"]),
+  days: week(["missed", "missed", "missed", "missed", "missed", "today", "upcoming"]),
   count: "0 of 3 days this week",
   lastWeek: "Last week: 0 of 3",
   plan: "Regular · 3 days a week.",
@@ -43,7 +44,7 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The suggested schedule of this course starts on 26 Oct 2026, after Course 1. The Larchfield Architects case file for the segmentation plan is in Handouts, with a reference sheet of common ports.",
+    body: "The suggested schedule of this course starts on 25 Nov 2026, after Course 1. The Larchfield Architects case file for the segmentation plan is in Handouts, with a reference sheet of common ports.",
   },
   intro: {
     title: "What you'll learn",
@@ -86,23 +87,23 @@ export const page: CourseDetail = {
     items: [
       {
         id: "course-starts",
-        iso: "2026-10-26",
-        day: "26",
-        month: "OCT",
+        iso: "2026-11-25",
+        day: "25",
+        month: "NOV",
         title: "Course starts",
         detail: "Suggested schedule begins",
-        relative: "In 4 weeks",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-25"),
+        relativeColor: relativeColor("2026-11-25"),
       },
       {
         id: "graded-quiz-how-networks-work",
-        iso: "2026-11-01",
+        iso: "2026-12-01",
         day: "01",
-        month: "NOV",
+        month: "DEC",
         title: "Graded Quiz: How networks work",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 5 weeks",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-12-01"),
+        relativeColor: relativeColor("2026-12-01"),
       },
     ],
     cta: "All dates",
@@ -169,17 +170,17 @@ export const page: CourseDetail = {
         state: "complete",
         badges: [{ label: "PROGRAM", color: GRAY }],
         title: "Enrolled in the program",
-        description: "You joined the Cybersecurity Fundamentals Certificate. Its five courses follow one another from 5 Oct 2026.",
+        description: "You joined the Cybersecurity Fundamentals Certificate. Its five courses follow one another from 4 Nov 2026.",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "course-starts",
-        iso: "2026-10-26T00:00",
-        date: "26 Oct 2026",
+        iso: "2026-11-25T00:00",
+        date: "25 Nov 2026",
         time: "00:00 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -188,8 +189,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-how-networks-work",
-        iso: "2026-11-01T23:59",
-        date: "01 Nov 2026",
+        iso: "2026-12-01T23:59",
+        date: "01 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -198,8 +199,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-01-segmentation-plan-for-a-two-site-office",
-        iso: "2026-11-06T23:59",
-        date: "06 Nov 2026",
+        iso: "2026-12-06T23:59",
+        date: "06 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "ASSIGNMENT", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -208,8 +209,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-threats-and-segmentation",
-        iso: "2026-11-08T23:59",
-        date: "08 Nov 2026",
+        iso: "2026-12-08T23:59",
+        date: "08 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -218,8 +219,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-firewalls-and-monitoring",
-        iso: "2026-11-12T23:59",
-        date: "12 Nov 2026",
+        iso: "2026-12-12T23:59",
+        date: "12 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -228,8 +229,8 @@ export const page: CourseDetail = {
       },
       {
         id: "network-hardening-review",
-        iso: "2026-11-15T23:59",
-        date: "15 Nov 2026",
+        iso: "2026-12-15T23:59",
+        date: "15 Dec 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "PEER ASSESSMENT", color: GRAY }, { label: "LOCKED", color: GRAY }],
@@ -238,8 +239,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-secure-communication-and-wireless",
-        iso: "2026-11-15T23:59",
-        date: "15 Nov 2026",
+        iso: "2026-12-15T23:59",
+        date: "15 Dec 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "LOCKED", color: GRAY }],
@@ -248,8 +249,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2026-11-23T09:00",
-        date: "23 Nov 2026",
+        iso: "2026-12-23T09:00",
+        date: "23 Dec 2026",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],

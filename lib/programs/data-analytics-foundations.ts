@@ -1,5 +1,6 @@
 import { certificatePageHref, programCertificatePageHref, programCourse, slugify, user } from "./kit";
 import type { Program, ProgramCertificate } from "./kit";
+import { relativeLabel } from "@/lib/sample-time";
 
 /**
  * "Data Analytics Foundations Certificate": the third program of My Learning, and the
@@ -403,7 +404,7 @@ const program: Program = {
       month: "JUN",
       title: "Access ends",
       detail: "30 Jun 2027 · access to all courses closes",
-      relative: "In 8 months",
+      relative: relativeLabel("2027-06-30"),
     },
   ],
   included: [

@@ -24,6 +24,7 @@ import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
+import { YOUR_TIME, dueBadgeLabel, formatDay } from "@/lib/sample-time";
 import { coursePageHref, slugify } from "@/lib/platform/hrefs";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +53,7 @@ function statusBadge(e: CalendarEvent) {
   if (e.kind === "deadline") {
     if (e.complete) return <Badge color="success">Done</Badge>;
     if (isMissed(e)) return <Badge color="error">Missed</Badge>;
-    return <Badge color="warning">{e.date === CALENDAR_TODAY ? `Due ${e.time ?? "today"}` : `Due ${e.time ?? ""}`.trim()}</Badge>;
+    return <Badge color="warning">{dueBadgeLabel(e.date, e.time)}</Badge>;
   }
   if (e.kind === "live") return <Badge color="success">{`Live · ${e.time}`}</Badge>;
   return <Badge color="info">{e.label}</Badge>;
@@ -72,7 +73,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className="sk-text-body-small-semibold uppercase text-sko-text-subtle">
           {event.label}
-          {event.time ? <span className="normal-case"> · {event.time}</span> : null}
+          {event.time ? <span className="normal-case"> · {event.time} · {YOUR_TIME}</span> : null}
         </p>
         <p className="sk-text-body-medium-semibold text-sko-text-default">
           <Link href={event.href} className="hover:underline">
@@ -277,7 +278,6 @@ export function CalendarView() {
       onAction: () => router.push(`${coursePageHref(slugify(course))}?tab=dates`),
     });
   };
-  const due = (iso: string) => new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short" }).format(parseDay(iso));
   const thisWeek = calendarEvents.filter((e) => e.date >= CALENDAR_TODAY && e.date <= addDays(CALENDAR_TODAY, 6) && !e.complete);
   const shiftMonth = (delta: number) => {
     const d = parseDay(`${month}-01`);
@@ -313,7 +313,7 @@ export function CalendarView() {
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <p className="sk-text-body-medium-semibold text-sko-text-default">{course}</p>
                     <p className="sk-text-body-small-regular text-sko-text-subtle">
-                      {items.map((e) => `${e.title} · was due ${due(e.date)}`).join(" · ")}
+                      {items.map((e) => `${e.title} · was due ${formatDay(e.date)}`).join(" · ")}
                     </p>
                   </div>
                   <Button size="sm" className="shrink-0 max-md:h-11 max-md:w-full" onClick={() => shift(course)}>

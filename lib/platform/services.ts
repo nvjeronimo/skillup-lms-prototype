@@ -1,6 +1,7 @@
 import { Award, BadgeCheck, Briefcase, Cloud, FileText, Headphones, LifeBuoy, Linkedin, MessagesSquare, Terminal } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { BadgeColor } from "@/components/atoms/Badge";
+import { MENTOR } from "@/lib/courses/ai-driven-content-and-brand-communication/page";
 
 /**
  * Services (proposal, 17 Oct 2026): what SkillUp gives the learner besides the courses —
@@ -9,10 +10,11 @@ import type { BadgeColor } from "@/components/atoms/Badge";
  */
 
 export const servicesMentor = {
-  name: "Ana Costa",
-  role: "Your mentor · Brand and content strategy",
+  // The mentor of AI-Driven Content and Brand Communication, the course in progress of the program.
+  name: MENTOR.name,
+  role: `Your mentor · ${MENTOR.role}`,
   promise: "Typically replies within 1 day",
-  last: { from: "Ana Costa", text: "Aim for one page people will actually read: three traits, a do/don't for each…", when: "Fri 9:30 AM" },
+  last: { from: MENTOR.name, text: "Aim for one page people will actually read: three traits, a do/don't for each…", when: "Fri 9:30 AM" },
   /** ADR 007: 1:1 asynchronous messages. Phase 2; who the mentor is per learner is still open. */
   mock: "Mentor messaging is Phase 2, and who mentors whom is not decided yet",
 } as const;

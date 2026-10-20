@@ -1,13 +1,14 @@
 import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
 import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
 import { outline } from "./outline";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "Security Foundations and the Threat Landscape":
  * course 1 of 5 of the Cybersecurity Fundamentals Certificate, not started. Its figures follow
  * the course row of the Program page (lib/programs/cybersecurity-fundamentals): 39 topics
  * in 4 modules, about 9 hours, nothing completed and nothing graded. Today is
- * 24 Sep 2026 and the suggested schedule of the course starts on 5 Oct 2026, so every
+ * 24 Oct 2026 and the suggested schedule of the course starts on 4 Nov 2026, so every
  * due date is still to come and none is missed.
  */
 const WEEKLY_GOAL: WeeklyGoal = {
@@ -15,7 +16,7 @@ const WEEKLY_GOAL: WeeklyGoal = {
   title: "Your weekly goal",
   body: "A day counts when you open any lesson in this course.",
   week: THIS_WEEK,
-  days: week(["missed", "missed", "missed", "today", "upcoming", "upcoming", "upcoming"]),
+  days: week(["missed", "missed", "missed", "missed", "missed", "today", "upcoming"]),
   count: "0 of 3 days this week",
   lastWeek: "Last week: 0 of 3",
   plan: "Regular · 3 days a week.",
@@ -43,7 +44,7 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The suggested schedule of this course starts on 5 Oct 2026, with the program; you can open the first topics before then. The risk register template and the Fernhill Bakery case file for Assignment 01 are in Handouts.",
+    body: "The suggested schedule of this course starts on 4 Nov 2026, with the program; you can open the first topics before then. The risk register template and the Fernhill Bakery case file for Assignment 01 are in Handouts.",
   },
   intro: {
     title: "What you'll learn",
@@ -86,23 +87,23 @@ export const page: CourseDetail = {
     items: [
       {
         id: "course-starts",
-        iso: "2026-10-05",
-        day: "05",
-        month: "OCT",
+        iso: "2026-11-04",
+        day: "04",
+        month: "NOV",
         title: "Course starts",
         detail: "Suggested schedule begins",
-        relative: "In 11 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-04"),
+        relativeColor: relativeColor("2026-11-04"),
       },
       {
         id: "graded-quiz-principles-and-risk",
-        iso: "2026-10-11",
-        day: "11",
-        month: "OCT",
+        iso: "2026-11-10",
+        day: "10",
+        month: "NOV",
         title: "Graded Quiz: Principles and risk",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 2 weeks",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-10"),
+        relativeColor: relativeColor("2026-11-10"),
       },
     ],
     cta: "All dates",
@@ -169,17 +170,17 @@ export const page: CourseDetail = {
         state: "complete",
         badges: [{ label: "PROGRAM", color: GRAY }],
         title: "Enrolled in the program",
-        description: "You joined the Cybersecurity Fundamentals Certificate. Its five courses follow one another from 5 Oct 2026.",
+        description: "You joined the Cybersecurity Fundamentals Certificate. Its five courses follow one another from 4 Nov 2026.",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "course-starts",
-        iso: "2026-10-05T00:00",
-        date: "05 Oct 2026",
+        iso: "2026-11-04T00:00",
+        date: "04 Nov 2026",
         time: "00:00 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -188,8 +189,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-principles-and-risk",
-        iso: "2026-10-11T23:59",
-        date: "11 Oct 2026",
+        iso: "2026-11-10T23:59",
+        date: "10 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -198,8 +199,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-01-risk-register-for-a-small-business",
-        iso: "2026-10-16T23:59",
-        date: "16 Oct 2026",
+        iso: "2026-11-15T23:59",
+        date: "15 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "ASSIGNMENT", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -208,8 +209,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-the-threat-landscape",
-        iso: "2026-10-18T23:59",
-        date: "18 Oct 2026",
+        iso: "2026-11-17T23:59",
+        date: "17 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -218,8 +219,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-the-human-factor",
-        iso: "2026-10-22T23:59",
-        date: "22 Oct 2026",
+        iso: "2026-11-21T23:59",
+        date: "21 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -228,8 +229,8 @@ export const page: CourseDetail = {
       },
       {
         id: "acceptable-use-policy-draft",
-        iso: "2026-10-25T23:59",
-        date: "25 Oct 2026",
+        iso: "2026-11-24T23:59",
+        date: "24 Nov 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "PEER ASSESSMENT", color: GRAY }, { label: "LOCKED", color: GRAY }],
@@ -238,8 +239,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-frameworks-law-and-ethics",
-        iso: "2026-10-25T23:59",
-        date: "25 Oct 2026",
+        iso: "2026-11-24T23:59",
+        date: "24 Nov 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "GRADED QUIZ", color: GRAY }, { label: "LOCKED", color: GRAY }],
@@ -248,8 +249,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2026-11-02T09:00",
-        date: "02 Nov 2026",
+        iso: "2026-12-02T09:00",
+        date: "02 Dec 2026",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],
@@ -286,7 +287,7 @@ export const page: CourseDetail = {
             id: "m1",
             from: "learner",
             author: "You",
-            body: "I work in office administration and have never done IT work. The program starts on 5 Oct. Is there anything I should study first?",
+            body: "I work in office administration and have never done IT work. The program starts on 4 Nov. Is there anything I should study first?",
             time: "3 days ago",
           },
           {
@@ -318,7 +319,7 @@ export const page: CourseDetail = {
       },
       {
         id: "due-dates",
-        title: "Do the due dates move if I start after 5 Oct?",
+        title: "Do the due dates move if I start after 4 Nov?",
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,

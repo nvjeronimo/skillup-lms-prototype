@@ -1,20 +1,21 @@
 import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
 import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
 import { outline } from "./outline";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "Leadership in Remote Teams": a stand-alone course of My Learning, in progress, also on
  * the Dashboard's resume list. Its figures follow both: 52% (13 of 25 topics), 6 hours in
  * all, next up "Async standups". One graded quiz of two and the one homework are done,
- * which is the 39% of the grade. Today is 24 Sep 2026, the day of the Dashboard: it lists
- * nothing of this course as due this week, so the next deadline here falls on 4 Oct.
+ * which is the 39% of the grade. Today is 24 Oct 2026, the day of the Dashboard: it lists
+ * nothing of this course as due this week, so the next deadline here falls on 3 Nov.
  */
 const WEEKLY_GOAL: WeeklyGoal = {
   state: "met",
   title: "You met your goal this week",
   body: "Take a moment to celebrate your progress.",
   week: THIS_WEEK,
-  days: week(["done", "missed", "done", "today-done", "upcoming", "upcoming", "upcoming"]),
+  days: week(["done", "missed", "done", "missed", "missed", "today-done", "upcoming"]),
   count: "3 of 3 days this week",
   lastWeek: "Last week: 2 of 3",
   plan: "Regular · 3 days a week.",
@@ -86,23 +87,23 @@ export const page: CourseDetail = {
     items: [
       {
         id: "graded-quiz-meetings",
-        iso: "2026-10-04",
-        day: "04",
-        month: "OCT",
+        iso: "2026-11-03",
+        day: "03",
+        month: "NOV",
         title: "Graded Quiz: Meetings and rituals",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 10 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-03"),
+        relativeColor: relativeColor("2026-11-03"),
       },
       {
         id: "final-project",
-        iso: "2026-10-18",
-        day: "18",
-        month: "OCT",
+        iso: "2026-11-17",
+        day: "17",
+        month: "NOV",
         title: "Final Project: 30-day plan for a remote team",
         detail: "Project due · 23:59 your time",
-        relative: "In 24 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-17"),
+        relativeColor: relativeColor("2026-11-17"),
       },
     ],
     cta: "All dates",
@@ -176,8 +177,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-trust",
-        iso: "2026-09-06T23:59",
-        date: "06 Sep 2026",
+        iso: "2026-10-06T23:59",
+        date: "06 Oct 2026",
         time: "23:59 · your time",
         state: "complete",
         badges: [
@@ -191,8 +192,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-01",
-        iso: "2026-09-20T23:59",
-        date: "20 Sep 2026",
+        iso: "2026-10-20T23:59",
+        date: "20 Oct 2026",
         time: "23:59 · your time",
         state: "complete",
         badges: [
@@ -205,14 +206,14 @@ export const page: CourseDetail = {
         link: "Open the assignment",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "graded-quiz-meetings",
-        iso: "2026-10-04T23:59",
-        date: "04 Oct 2026",
+        iso: "2026-11-03T23:59",
+        date: "03 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -226,8 +227,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-project",
-        iso: "2026-10-18T23:59",
-        date: "18 Oct 2026",
+        iso: "2026-11-17T23:59",
+        date: "17 Nov 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -240,8 +241,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2026-10-21T09:00",
-        date: "21 Oct 2026",
+        iso: "2026-11-20T09:00",
+        date: "20 Nov 2026",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],

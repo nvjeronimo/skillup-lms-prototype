@@ -1,11 +1,12 @@
 import { GRAY, SIX_SIGMA, modulesFromOutline, playerHref } from "@/lib/courses/kit";
 import type { CourseDetail } from "@/lib/courses/kit";
 import { outline } from "./outline";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "Intro to Product Analytics": a stand-alone course of My Learning, completed. Its figures
  * follow the My Learning card: 100% (32 of 32 topics), 8 hours in all, certificate issued on
- * 12 Sep 2026. The weighted grade is 88% against the 70% needed. Today is 24 Sep 2026, the
+ * 12 Sep 2026. The weighted grade is 88% against the 70% needed. Today is 24 Oct 2026, the
  * day of the Dashboard: every deadline of the course is in the past.
  *
  * The page has no drawn state for a passed course. Since 10 Oct 2026 it shows a PROPOSAL of
@@ -104,8 +105,8 @@ export const page: CourseDetail = {
         month: "DEC",
         title: "Course ends",
         detail: "Content stays readable · 23:59 your time",
-        relative: "In 15 months",
-        relativeColor: "gray",
+        relative: relativeLabel("2027-12-31"),
+        relativeColor: relativeColor("2027-12-31"),
       },
     ],
     cta: "All dates",
@@ -250,8 +251,8 @@ export const page: CourseDetail = {
         description: "You passed with a weighted grade of 88%.",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {

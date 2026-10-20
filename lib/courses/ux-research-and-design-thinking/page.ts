@@ -1,11 +1,23 @@
 import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
 import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
 import { outline } from "./outline";
+/**
+ * The mentor of this course, in one place (UX audit, 20 Oct 2026): the Q&A tab, the Discussion
+ * inbox and the Services page all read it, so the same course never shows two mentors.
+ */
+export const MENTOR = {
+  name: "David Chen",
+  firstName: "David",
+  role: "UX research and design",
+  responds: "typically responds within 1 day",
+} as const;
+
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "UX Research and Design Thinking": a stand-alone course of My Learning, just started.
  * Its figures follow the My Learning card: 5% (2 of 40 topics), 10 hours in all, next up
- * "Discovery interview techniques". Nothing is graded yet. Today is 24 Sep 2026, the day of
+ * "Discovery interview techniques". Nothing is graded yet. Today is 24 Oct 2026, the day of
  * the Dashboard, whose due item is the persona research draft, due tonight; the graded quiz
  * before it is overdue, which is what the missed-deadline alert is about.
  */
@@ -14,7 +26,7 @@ const WEEKLY_GOAL: WeeklyGoal = {
   title: "Your weekly goal",
   body: "A day counts when you open any lesson in this course.",
   week: THIS_WEEK,
-  days: week(["missed", "done", "missed", "today", "upcoming", "upcoming", "upcoming"]),
+  days: week(["missed", "done", "missed", "missed", "missed", "today", "upcoming"]),
   count: "1 of 3 days this week",
   lastWeek: "Last week: 1 of 3",
   plan: "Regular · 3 days a week.",
@@ -86,23 +98,23 @@ export const page: CourseDetail = {
     items: [
       {
         id: "persona-research-draft",
-        iso: "2026-09-24",
+        iso: "2026-10-24",
         day: "24",
-        month: "SEP",
+        month: "OCT",
         title: "Persona research draft",
         detail: "Peer assessment due · 23:59 your time",
-        relative: "Today",
-        relativeColor: "yellow",
+        relative: relativeLabel("2026-10-24"),
+        relativeColor: relativeColor("2026-10-24"),
       },
       {
         id: "graded-quiz-define",
-        iso: "2026-10-05",
-        day: "05",
-        month: "OCT",
+        iso: "2026-11-04",
+        day: "04",
+        month: "NOV",
         title: "Graded Quiz: Synthesis and problem framing",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 11 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-04"),
+        relativeColor: relativeColor("2026-11-04"),
       },
     ],
     cta: "All dates",
@@ -170,8 +182,8 @@ export const page: CourseDetail = {
     past: [
       {
         id: "course-starts",
-        iso: "2026-09-07T00:00",
-        date: "07 Sep 2026",
+        iso: "2026-10-07T00:00",
+        date: "07 Oct 2026",
         time: "00:00 · your time",
         state: "complete",
         badges: [{ label: "COURSE", color: GRAY }],
@@ -180,8 +192,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-foundations",
-        iso: "2026-09-21T23:59",
-        date: "21 Sep 2026",
+        iso: "2026-10-21T23:59",
+        date: "21 Oct 2026",
         time: "23:59 · your time",
         state: "overdue",
         badges: [
@@ -194,14 +206,14 @@ export const page: CourseDetail = {
         link: "Open the assignment",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "persona-research-draft",
-        iso: "2026-09-24T23:59",
-        date: "24 Sep 2026",
+        iso: "2026-10-24T23:59",
+        date: "24 Oct 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -215,8 +227,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-define",
-        iso: "2026-10-05T23:59",
-        date: "05 Oct 2026",
+        iso: "2026-11-04T23:59",
+        date: "04 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -229,8 +241,8 @@ export const page: CourseDetail = {
       },
       {
         id: "prototype-critique",
-        iso: "2026-10-16T23:59",
-        date: "16 Oct 2026",
+        iso: "2026-11-15T23:59",
+        date: "15 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -243,8 +255,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-prototype",
-        iso: "2026-10-18T23:59",
-        date: "18 Oct 2026",
+        iso: "2026-11-17T23:59",
+        date: "17 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -257,8 +269,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-project",
-        iso: "2026-10-30T23:59",
-        date: "30 Oct 2026",
+        iso: "2026-11-29T23:59",
+        date: "29 Nov 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -271,8 +283,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2026-11-06T09:00",
-        date: "06 Nov 2026",
+        iso: "2026-12-06T09:00",
+        date: "06 Dec 2026",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],
@@ -295,11 +307,12 @@ export const page: CourseDetail = {
 
   qaTab: {
     ...SIX_SIGMA.qaTab,
+    mentorLine: `${MENTOR.name} · your mentor · ${MENTOR.responds}`,
     threads: [
       {
         id: "interview-count",
         title: "How many interviews do I need for a first persona?",
-        preview: "David: Stop when new interviews stop adding new themes.",
+        preview: `${MENTOR.firstName}: Stop when new interviews stop adding new themes.`,
         meta: "yesterday  ·  4 replies",
         answered: true,
         following: true,
@@ -315,7 +328,7 @@ export const page: CourseDetail = {
           {
             id: "m2",
             from: "mentor",
-            author: "David Chen",
+            author: MENTOR.name,
             label: "STAFF",
             accepted: true,
             body: "For a draft, yes. The number matters less than the pattern: you stop when new interviews stop adding new themes. With three you will see the start of a pattern, and the draft should say so.",
@@ -331,7 +344,7 @@ export const page: CourseDetail = {
           {
             id: "m4",
             from: "mentor",
-            author: "David Chen",
+            author: MENTOR.name,
             label: "STAFF",
             body: "Say it in the evidence table. A persona that is open about a narrow sample is more useful than one that hides it. If you can, add one person in a different role before the final version.",
             time: "today",
@@ -341,7 +354,7 @@ export const page: CourseDetail = {
       {
         id: "interview-friends",
         title: "Can I interview friends or colleagues for the draft?",
-        preview: "David: Yes, if they really do the activity you are studying.",
+        preview: `${MENTOR.firstName}: Yes, if they really do the activity you are studying.`,
         meta: "3 days ago  ·  2 replies  ·  1 unread",
         answered: true,
         following: false,
