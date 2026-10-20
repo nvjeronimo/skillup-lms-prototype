@@ -169,6 +169,28 @@ export const addDays = (iso: string, n: number) => {
 /** Overdue: a deadline before today, not done. */
 export const isMissed = (e: CalendarEvent) => e.kind === "deadline" && !e.complete && e.date < CALENDAR_TODAY;
 
+/**
+ * A second missed deadline, in another course, shown only with `?missed=2` on the Calendar: the
+ * two-course case of the Figma cards 01b / 03b (Nelson, 20 Oct 2026). The default sample keeps one.
+ */
+export const secondMissedEvent: CalendarEvent = {
+  id: "acb-m1-quiz",
+  date: "2026-10-21",
+  time: "11:59 PM",
+  kind: "deadline",
+  label: "Graded quiz",
+  title: "Module 1 quiz · Brand foundations",
+  course: "AI-Driven Content and Brand Communication",
+  href: coursePlayerHref(ACB),
+};
+
+/** Missed deadlines grouped by course: "Shift due dates" resets one course at a time. */
+export function missedByCourse(events: CalendarEvent[]) {
+  const map = new Map<string, CalendarEvent[]>();
+  for (const e of events.filter(isMissed)) map.set(e.course, [...(map.get(e.course) ?? []), e]);
+  return [...map.entries()].map(([course, items]) => ({ course, items }));
+}
+
 /** The deadlines of the next seven days, today included: the count on the top bar. */
 export const deadlinesThisWeek = calendarEvents.filter(
   (e) => e.kind === "deadline" && !e.complete && e.date >= CALENDAR_TODAY && e.date <= addDays(CALENDAR_TODAY, 6),

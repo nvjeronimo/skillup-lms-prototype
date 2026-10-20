@@ -1,3 +1,4 @@
+import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { CourseDetail, WeekDayState, WeeklyGoal } from "@/lib/platform/course-detail";
 
@@ -241,9 +242,10 @@ export const SIX_SIGMA: CourseDetail = {
   datesTab: {
     title: "Important Dates",
     missedAlert: {
-      title: "You missed a deadline on your schedule",
-      body: "Your due dates are a suggested schedule, counted from the day you enrolled. Shift them forward to get back on track — the work you have done stays.",
-      cta: "Shift due dates",
+      // The copy shown is Open edX's own (lib/platform/shift-dates); this object only says the learner is behind.
+      title: SHIFT_DATES.title,
+      body: SHIFT_DATES.body,
+      cta: SHIFT_DATES.button,
     },
     pastLabel: "Past",
     past: [
