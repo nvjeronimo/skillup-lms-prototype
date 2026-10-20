@@ -10,6 +10,7 @@ import { programCertificatePageHref } from "@/lib/platform/hrefs";
 import { useLmsStore } from "@/lib/store";
 import type { Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
+import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import { CardShell, SectionIntro } from "./parts";
 
 /**
@@ -116,6 +117,8 @@ export function CertificateCard({
         >
           Download
         </Button>
+        {/* Share (20 Oct 2026): icon-only, the menu opens above the card's bottom edge. */}
+        <CertificateShare target={{ title: certificate.title, document: certificate.document }} look="icon" up />
       </div>
     </CardShell>
   );

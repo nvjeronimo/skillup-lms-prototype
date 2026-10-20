@@ -8,6 +8,7 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CertificateDocument, certificateLearner } from "@/components/platform/program/CertificateDocument";
+import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import type { ProgramCertificateCourse } from "@/lib/platform/catalog";
 import { coursePageHref, programPageHref } from "@/lib/platform/hrefs";
 import type { ProgramCertificate } from "@/lib/platform/program";
@@ -133,6 +134,7 @@ export function CertificatePageView({
             >
               Download certificate
             </Button>
+            <CertificateShare target={{ title: certificate.title, document: certificate.document }} size="lg" />
             <ButtonLink href={back.href} hierarchy="secondary" size="lg">
               {back.label}
             </ButtonLink>
