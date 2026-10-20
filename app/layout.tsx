@@ -8,6 +8,8 @@ import { ResponsiveShell } from "@/components/views/ResponsiveShell";
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
+  // Italic too: the Sea skin sets the second half of headings in Montserrat Italic (19–20 Oct 2026).
+  style: ["normal", "italic"],
   display: "swap",
 });
 

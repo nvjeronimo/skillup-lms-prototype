@@ -466,8 +466,12 @@
 [data-skin="sea"] [data-glance] [data-glow] {
   opacity: 0.3;
 }
-[data-skin="sea"]:not([data-theme="dark"]) [data-heading-em] {
-  color: var(--color-text-primary);
+/* Sea v2 (Nelson, 20 Oct 2026, after his "v4 (Brand)" reference): the second half of page and
+   section headings in Montserrat Italic, lighter and grey, as an aside to the bold first half. */
+[data-skin="sea"] [data-heading-em] {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-text-subtle);
 }
 [data-skin="sea"] [data-tone="1"] {
   --color-bg-primary-soft: var(--color-bg-accent-teal-soft);
@@ -487,4 +491,27 @@
   background-color: var(--color-bg-chrome);
   background-image: linear-gradient(120deg, var(--color-bg-chrome) 0%, #0a5a70 55%, #26708e 100%);
   border-color: transparent;
+}
+
+/* Sea v2 — the glance card as in the reference: the title in the sky blue of the logo, caps and
+   tracked; the figures larger (display-md, the headline-large size); labels tracked caps in white;
+   details in a light sky tint. */
+[data-skin="sea"] [data-glance] [data-glance-title] {
+  color: #51bffc;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+[data-skin="sea"] [data-glance] [data-stat-value] {
+  font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1));
+  line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1));
+  letter-spacing: -0.02em;
+}
+[data-skin="sea"] [data-glance] [data-stat-label] {
+  opacity: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+[data-skin="sea"] [data-glance] [data-stat-detail] {
+  opacity: 1;
+  color: #acd5f4;
 }
