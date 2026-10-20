@@ -363,7 +363,7 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
         aria-valuemax={daysTarget}
         aria-valuenow={Math.min(daysDone, daysTarget)}
         aria-valuetext={`${daysDone} of ${daysTarget} days`}
-        className="mt-3 h-2 overflow-hidden rounded-pill bg-sko-bg-muted"
+        className="mt-3 h-2 overflow-hidden rounded-pill bg-sko-bg-track"
       >
         <div
           className={cn("h-full rounded-pill", met ? "bg-sko-bg-success" : "bg-sko-bg-info")}
@@ -561,7 +561,7 @@ function Progress({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={v}
-        className="h-2 overflow-hidden rounded-pill bg-sko-bg-muted"
+        className="h-2 overflow-hidden rounded-pill bg-sko-bg-track"
       >
         <div
           className={cn("h-full rounded-pill", complete ? "bg-sko-bg-success" : "bg-sko-bg-info")}

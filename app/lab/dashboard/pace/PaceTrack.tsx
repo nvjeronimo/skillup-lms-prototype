@@ -60,7 +60,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
                   done && "bg-sko-bg-primary",
                   current && "bg-sko-bg-primary-soft ring-2 ring-inset ring-sko-border-primary",
                   gap && "border border-dashed border-sko-border-warning bg-sko-bg-warning-soft",
-                  !done && !current && !gap && "bg-sko-bg-muted",
+                  !done && !current && !gap && "bg-sko-bg-track",
                 )}
               />
             );

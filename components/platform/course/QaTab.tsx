@@ -211,7 +211,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             <div
               role="group"
               aria-label="Filter questions"
-              className="inline-flex gap-0.5 rounded-track bg-sko-bg-muted p-1"
+              className="inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1"
             >
               {tab.filters.map((item) => (
                 <button

@@ -32,7 +32,7 @@ export function ViewToggle({ view, onChange, className }: ViewToggleProps) {
     <div
       role="group"
       aria-label="View"
-      className={cn("inline-flex gap-0.5 rounded-track bg-sko-bg-muted p-1", className)}
+      className={cn("inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1", className)}
     >
       {OPTIONS.map((option) => {
         const pressed = option.view === view;

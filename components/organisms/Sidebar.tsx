@@ -367,7 +367,7 @@ export function Sidebar({
             type="button"
             onClick={onCloseMobile}
             aria-label="Close course menu"
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-muted"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-hover"
           >
             <Icon icon={X} size={24} />
           </button>

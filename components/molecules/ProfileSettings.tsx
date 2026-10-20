@@ -173,7 +173,7 @@ export function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div role="group" aria-label={label} className="flex gap-0.5 rounded-track bg-sko-bg-muted p-1">
+    <div role="group" aria-label={label} className="flex gap-0.5 rounded-track bg-sko-bg-track p-1">
       {options.map((o) => (
         <button
           key={o.value}

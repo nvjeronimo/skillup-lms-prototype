@@ -275,7 +275,7 @@ function WeeklyGoalCard({ persona }: { persona: Persona }) {
           {Array.from({ length: daysTarget }, (_, i) => (
             <span
               key={i}
-              className={cn("h-2 flex-1 rounded-pill", i < daysDone ? "bg-sko-bg-primary" : "bg-sko-bg-muted")}
+              className={cn("h-2 flex-1 rounded-pill", i < daysDone ? "bg-sko-bg-primary" : "bg-sko-bg-track")}
             />
           ))}
         </div>
