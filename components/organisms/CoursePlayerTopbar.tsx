@@ -82,7 +82,7 @@ function UtilityButton({
       aria-label={label}
       {...aria}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center text-sko-icon-subtle transition-colors hover:bg-sko-bg-faint",
+        "inline-flex shrink-0 items-center justify-center text-sko-icon-subtle transition-colors hover:bg-sko-bg-muted",
         large ? "h-11 w-11 rounded-control" : "h-8 w-8 rounded-control",
         hierarchy === "secondary" && "border border-sko-border-default bg-sko-bg-page",
         className,

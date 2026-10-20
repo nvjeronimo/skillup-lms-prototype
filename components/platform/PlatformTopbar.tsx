@@ -194,13 +194,13 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
       aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}
       aria-haspopup="dialog"
       onClick={() => openOverlayPanel("notifications")}
-      className="relative inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
+      className="group relative inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-muted lg:size-8"
     >
       <Icon icon={Bell} size={20} />
       {unread ? (
         <span
           aria-hidden
-          className="absolute right-[11px] top-[10px] size-2 rounded-pill bg-sko-bg-info ring-2 ring-sko-bg-page lg:right-[5px] lg:top-1"
+          className="absolute right-[11px] top-[10px] size-2 rounded-pill bg-sko-bg-info ring-2 ring-sko-bg-page transition-colors group-hover:ring-sko-bg-muted lg:right-[5px] lg:top-1"
         />
       ) : null}
     </button>
@@ -213,7 +213,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
       type="button"
       aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
       onClick={() => toggleTheme()}
-      className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
+      className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-muted lg:size-8"
     >
       <Icon icon={theme === "dark" ? Sun : Moon} size={20} />
     </button>
@@ -250,7 +250,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 {...ink}
                 {...profile.triggerProps}
                 aria-label={`${platformUser.name}, account`}
-                className="flex items-center gap-2 rounded-control p-1 text-left transition-colors hover:bg-sko-bg-faint"
+                className="flex items-center gap-2 rounded-control p-1 text-left transition-colors hover:bg-sko-bg-muted"
               >
                 <Initials />
                 <span className="flex flex-col whitespace-nowrap">
@@ -293,7 +293,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 {...ink}
                 {...profileCompact.triggerProps}
                 aria-label={`${platformUser.name}, account`}
-                className="inline-flex size-11 items-center justify-center rounded-control transition-colors hover:bg-sko-bg-faint"
+                className="inline-flex size-11 items-center justify-center rounded-control transition-colors hover:bg-sko-bg-muted"
               >
                 <Initials />
               </button>
@@ -310,7 +310,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 {...ink}
                 {...menu.triggerProps}
                 aria-label="Platform sections"
-                className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-faint"
+                className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-muted"
               >
                 <Icon icon={Menu} size={24} />
               </button>
