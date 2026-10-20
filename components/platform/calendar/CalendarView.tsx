@@ -22,6 +22,9 @@ import {
 } from "@/lib/platform/calendar";
 import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
+import { useRouter } from "next/navigation";
+import { SHIFT_DATES } from "@/lib/platform/shift-dates";
+import { coursePageHref, slugify } from "@/lib/platform/hrefs";
 import { cn } from "@/lib/utils";
 
 type Filter = (typeof calendarFilters)[number]["id"];
@@ -253,6 +256,7 @@ function WeekStrip({ events }: { events: CalendarEvent[] }) {
  */
 export function CalendarView() {
   const showToast = useLmsStore((s) => s.showToast);
+  const router = useRouter();
   const [filter, setFilter] = React.useState<Filter>("all");
   const [view, setView] = React.useState<View>("agenda");
   const [month, setMonth] = React.useState(CALENDAR_TODAY.slice(0, 7));
@@ -263,7 +267,16 @@ export function CalendarView() {
   const events = all.filter((e) => filter === "all" || e.kind === filter);
   const missed = all.filter(isMissed);
   const missedCourses = missedByCourse(all);
-  const shift = (course: string) => showToast(`Shift due dates (${course}) is not part of this prototype yet`);
+  // Shifted courses leave the alert (the platform reloads their dates).
+  const [shifted, setShifted] = React.useState<string[]>([]);
+  const visibleMissed = missedCourses.filter((c) => !shifted.includes(c.course));
+  const shift = (course: string) => {
+    setShifted((list) => [...list, course]);
+    showToast(SHIFT_DATES.toast, {
+      actionLabel: SHIFT_DATES.toastLink,
+      onAction: () => router.push(`${coursePageHref(slugify(course))}?tab=dates`),
+    });
+  };
   const due = (iso: string) => new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short" }).format(parseDay(iso));
   const thisWeek = calendarEvents.filter((e) => e.date >= CALENDAR_TODAY && e.date <= addDays(CALENDAR_TODAY, 6) && !e.complete);
   const shiftMonth = (delta: number) => {
@@ -279,46 +292,23 @@ export function CalendarView() {
           What&rsquo;s <span data-heading-em="" className="text-sko-text-subtle">coming up.</span>
         </h1>
 
-        {missedCourses.length === 1 ? (
-          // Open edX "Shift due dates" (label as Open edX writes it, Nelson 20 Oct 2026): a self-paced course
-          // with missed deadlines (`dates_banner_info.missed_deadlines`) can move them into the future;
-          // POST /api/course_experience/v1/reset_course_deadlines, one course at a time.
-          // DS Inline Alert 1.2, Tone=Error, Surface=Subtle: on the grey page the alert fill is bg/page.
-          <section aria-labelledby="calendar-missed" className="flex flex-col gap-3 border-t-2 border-sko-border-error bg-sko-bg-page p-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3">
-              <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-error" />
-              <div className="flex flex-col gap-0.5">
-                <h2 id="calendar-missed" className="sk-text-body-medium-semibold text-sko-text-default">
-                  You missed {missed.length === 1 ? "a deadline" : `${missed.length} deadlines`}
-                </h2>
-                <p className="sk-text-body-medium-regular text-sko-text-muted">
-                  {missed.map((e) => `${e.title} (${e.course})`).join(" · ")}. In a self-paced course you can move your
-                  dates and keep going.
-                </p>
-              </div>
-            </div>
-            <Button hierarchy="secondary" size="sm" className="shrink-0 max-md:h-11" onClick={() => shift(missedCourses[0].course)}>
-              Shift due dates
-            </Button>
-          </section>
-        ) : missedCourses.length > 1 ? (
-          // Several courses (Figma cards 01b / 03b): the alert says how many, then one row per course with
-          // its own "Shift due dates" (the reset is one call per course).
+        {visibleMissed.length ? (
+          // Open edX "Shift due dates", as the platform does it (lib/platform/shift-dates): its warning
+          // alert and copy, then one row per self-paced course with missed deadlines, each with its own
+          // Primary "Shift due dates" (reset_course_deadlines is one course per call, no confirmation).
+          // After a shift: the platform's toast with "View all dates" (that course's Dates tab), and the row goes.
           <section aria-labelledby="calendar-missed" className="flex flex-col gap-3">
-            <div className="flex items-start gap-3 border-t-2 border-sko-border-error bg-sko-bg-page p-4">
-              <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-error" />
+            <div className="flex items-start gap-3 border-t-2 border-sko-border-warning bg-sko-bg-page p-4">
+              <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-warning" />
               <div className="flex flex-col gap-0.5">
                 <h2 id="calendar-missed" className="sk-text-body-medium-semibold text-sko-text-default">
-                  You missed {missed.length} deadlines in {missedCourses.length} courses
+                  {SHIFT_DATES.title}
                 </h2>
-                <p className="sk-text-body-medium-regular text-sko-text-muted">
-                  These courses are self-paced: shift the past-due work into the future, one course at a time, and keep
-                  going. You keep everything you have done.
-                </p>
+                <p className="sk-text-body-medium-regular text-sko-text-muted">{SHIFT_DATES.body}</p>
               </div>
             </div>
             <ul className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page">
-              {missedCourses.map(({ course, items }) => (
+              {visibleMissed.map(({ course, items }) => (
                 <li key={course} className="flex flex-col gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:flex-row md:items-center">
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <p className="sk-text-body-medium-semibold text-sko-text-default">{course}</p>
@@ -326,8 +316,8 @@ export function CalendarView() {
                       {items.map((e) => `${e.title} · was due ${due(e.date)}`).join(" · ")}
                     </p>
                   </div>
-                  <Button hierarchy="secondary" size="sm" className="shrink-0 max-md:h-11 max-md:w-full" onClick={() => shift(course)}>
-                    Shift due dates
+                  <Button size="sm" className="shrink-0 max-md:h-11 max-md:w-full" onClick={() => shift(course)}>
+                    {SHIFT_DATES.button}
                   </Button>
                 </li>
               ))}

@@ -14,6 +14,7 @@ import {
 } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
 import { CourseAlert } from "./CourseAlert";
+import { ShiftDatesAlert } from "./ShiftDatesAlert";
 import { CourseHeader } from "./CourseHeader";
 import { CourseSearch } from "./CourseSearch";
 import { CourseSidebar } from "./CourseSidebar";
@@ -70,6 +71,8 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
     course: (
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-8 lg:gap-10">
         <div className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
+          {/* Open edX shows Shift due dates on the course outline as on the Dates tab. */}
+          {course.datesTab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
           <CourseAlert tone="brand" layout="stacked" title={course.update.title} body={course.update.body} dismissible />
           <SectionIntro title={course.intro.title} lead={course.intro.lead} />
           <ModuleList modules={course.modules} topicHref={course.progress.href} />

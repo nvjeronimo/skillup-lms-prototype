@@ -3,12 +3,11 @@
 import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
-import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { useLmsStore } from "@/lib/store";
 import type { CourseDate, CourseDateState, CourseDetail } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
-import { CourseAlert } from "./CourseAlert";
+import { ShiftDatesAlert } from "./ShiftDatesAlert";
 
 /* The 12px dot of the spine. The DS binds icon/success and icon/error as its fill; the bg
    roles of the same colours stand in, since an icon token is not a fill here. */
@@ -122,24 +121,7 @@ export function DatesTab({ course }: { course: CourseDetail }) {
       <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
 
       {/* Only for a learner who is behind the suggested schedule. */}
-      {tab.missedAlert ? (
-        <CourseAlert
-          tone="warning"
-          title={tab.missedAlert.title}
-          body={tab.missedAlert.body}
-          dismissible
-          action={
-            <Button
-              hierarchy="secondary"
-              size="sm"
-              onClick={() => showToast("Shift due dates is not part of this prototype yet")}
-              className="max-md:h-11"
-            >
-              {tab.missedAlert.cta}
-            </Button>
-          }
-        />
-      ) : null}
+      {tab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
 
       <div className="flex flex-col gap-3">
         <Divider as="h3">{tab.pastLabel}</Divider>
