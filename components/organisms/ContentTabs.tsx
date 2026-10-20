@@ -87,7 +87,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
             {open ? (
               <ul
                 {...panelProps}
-                className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-card border border-sko-border-primary bg-sko-bg-page shadow-lg"
+                className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-card border border-sko-border-primary bg-sko-bg-page p-1 shadow-lg"
               >
                 {tabs.map((t) => {
                   const selected = t.slug === active;
@@ -98,7 +98,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                         aria-current={selected ? "page" : undefined}
                         onClick={close}
                         className={cn(
-                          "sk-text-body-medium-semibold flex w-full items-center gap-2 px-3 py-2.5 text-left transition-colors",
+                          "sk-text-body-medium-semibold flex w-full items-center gap-2 rounded-card-inset px-3 py-2.5 text-left transition-colors",
                           selected
                             ? "bg-sko-bg-primary-soft text-sko-text-primary"
                             : "text-sko-text-on-primary-soft hover:bg-sko-bg-subtle",

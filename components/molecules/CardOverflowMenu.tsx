@@ -54,7 +54,7 @@ export function CardOverflowMenu({
       {open ? (
         <ul
           {...panelProps}
-          className="absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-sk-card"
+          className="absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-sk-card"
         >
           {items.map((item) => (
             <li key={item.label}>
@@ -65,7 +65,7 @@ export function CardOverflowMenu({
                   setOpen(false);
                 }}
                 className={cn(
-                  "sk-text-body-medium-medium block w-full p-3 text-left transition-colors hover:bg-sko-bg-subtle",
+                  "sk-text-body-medium-medium block w-full rounded-card-inset p-3 text-left transition-colors hover:bg-sko-bg-subtle",
                   item.destructive ? "text-sko-text-error" : "text-sko-text-default",
                 )}
               >

@@ -44,7 +44,7 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
   return (
     <ul
       className={cn(
-        "w-56 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg",
+        "w-56 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg",
         className,
       )}
     >
@@ -53,7 +53,7 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
           <button
             type="button"
             onClick={() => onSelect?.(item.channel)}
-            className="sk-text-body-medium-medium flex w-full items-center gap-2.5 px-4 py-3 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
+            className="sk-text-body-medium-medium flex w-full items-center gap-2.5 rounded-card-inset px-3 py-3 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={item.icon} size={16} className="text-sko-text-subtle" aria-hidden />
             {item.label}

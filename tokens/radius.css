@@ -5,19 +5,25 @@
  *   none     0     full-width bars and bands, progress bars
  *   inner    2     inside a control or track (control 6 − padding 4): segments, checkboxes, tiny chips
  *   control  6     buttons, inputs, selects, menu items, tooltips, icon tiles, avatars, rows,
- *                  and anything nested inside a card
+ *                  and anything nested inside a card (unless the nesting rule below gives more)
  *   card     12    cards and containers, boxed lists, alerts, toasts, menus and popovers
  *   surface  16    modals and sheets
  *   pill     full  badges, tags, round dots, toggles, counters
- * Nested elements take one step down (surface → card → control → inner);
- * an element flush with its parent's corner takes the parent's role.
- * Tailwind: rounded-none / rounded-inner / rounded-control / rounded-card / rounded-surface / rounded-pill.
+ * Nesting rule — inner radius + padding = outer radius (Nelson, 20 Oct 2026):
+ *   an element inside a rounded container, closer to its edge than the container's radius,
+ *   gets  outer − padding  (menu 12 with 4 padding → rows 8 = card-inset; track 6 with
+ *   padding 4 → segments 2 = inner). Never below the element's own role, never below 0.
+ *   Elements further in than the outer radius keep their own role (a button 16 inside a card
+ *   stays control); an element flush with its parent's corner takes the parent's radius.
+ *   card-inset  8   rows and items inside a card or menu with 4 px padding (card − 4)
+ * Tailwind: rounded-none / -inner / -control / -card / -card-inset / -surface / -pill.
  */
 :root {
   --sk-radius-none: 0px;
   --sk-radius-inner: 2px;
   --sk-radius-control: 6px;
   --sk-radius-card: 12px;
+  --sk-radius-card-inset: calc(var(--sk-radius-card) - 4px);
   --sk-radius-surface: 16px;
   --sk-radius-pill: 9999px;
 }
