@@ -14,6 +14,8 @@ import {
   calendarEvents,
   calendarFilters,
   isMissed,
+  missedByCourse,
+  secondMissedEvent,
   parseDay,
   type CalendarEvent,
   type CalendarKind,
@@ -254,8 +256,15 @@ export function CalendarView() {
   const [filter, setFilter] = React.useState<Filter>("all");
   const [view, setView] = React.useState<View>("agenda");
   const [month, setMonth] = React.useState(CALENDAR_TODAY.slice(0, 7));
-  const events = calendarEvents.filter((e) => filter === "all" || e.kind === filter);
-  const missed = calendarEvents.filter(isMissed);
+  // `?missed=2` shows the two-course case (Figma cards 01b / 03b).
+  const [twoCourses, setTwoCourses] = React.useState(false);
+  React.useEffect(() => setTwoCourses(new URLSearchParams(window.location.search).get("missed") === "2"), []);
+  const all = twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents;
+  const events = all.filter((e) => filter === "all" || e.kind === filter);
+  const missed = all.filter(isMissed);
+  const missedCourses = missedByCourse(all);
+  const shift = (course: string) => showToast(`Shift due dates (${course}) is not part of this prototype yet`);
+  const due = (iso: string) => new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short" }).format(parseDay(iso));
   const thisWeek = calendarEvents.filter((e) => e.date >= CALENDAR_TODAY && e.date <= addDays(CALENDAR_TODAY, 6) && !e.complete);
   const shiftMonth = (delta: number) => {
     const d = parseDay(`${month}-01`);
@@ -270,8 +279,10 @@ export function CalendarView() {
           What&rsquo;s <span data-heading-em="" className="text-sko-text-subtle">coming up.</span>
         </h1>
 
-        {missed.length ? (
-          // Open edX: `dates_banner_info.missed_deadlines`; a self-paced course can shift its dates.
+        {missedCourses.length === 1 ? (
+          // Open edX "Shift due dates" (label as Open edX writes it, Nelson 20 Oct 2026): a self-paced course
+          // with missed deadlines (`dates_banner_info.missed_deadlines`) can move them into the future;
+          // POST /api/course_experience/v1/reset_course_deadlines, one course at a time.
           // DS Inline Alert 1.2, Tone=Error, Surface=Subtle: on the grey page the alert fill is bg/page.
           <section aria-labelledby="calendar-missed" className="flex flex-col gap-3 border-t-2 border-sko-border-error bg-sko-bg-page p-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-3">
@@ -286,9 +297,41 @@ export function CalendarView() {
                 </p>
               </div>
             </div>
-            <Button hierarchy="secondary" size="sm" className="shrink-0 max-md:h-11" onClick={() => showToast("Shift due dates is not part of this prototype yet")}>
-              Shift my dates
+            <Button hierarchy="secondary" size="sm" className="shrink-0 max-md:h-11" onClick={() => shift(missedCourses[0].course)}>
+              Shift due dates
             </Button>
+          </section>
+        ) : missedCourses.length > 1 ? (
+          // Several courses (Figma cards 01b / 03b): the alert says how many, then one row per course with
+          // its own "Shift due dates" (the reset is one call per course).
+          <section aria-labelledby="calendar-missed" className="flex flex-col gap-3">
+            <div className="flex items-start gap-3 border-t-2 border-sko-border-error bg-sko-bg-page p-4">
+              <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-error" />
+              <div className="flex flex-col gap-0.5">
+                <h2 id="calendar-missed" className="sk-text-body-medium-semibold text-sko-text-default">
+                  You missed {missed.length} deadlines in {missedCourses.length} courses
+                </h2>
+                <p className="sk-text-body-medium-regular text-sko-text-muted">
+                  These courses are self-paced: shift the past-due work into the future, one course at a time, and keep
+                  going. You keep everything you have done.
+                </p>
+              </div>
+            </div>
+            <ul className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page">
+              {missedCourses.map(({ course, items }) => (
+                <li key={course} className="flex flex-col gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:flex-row md:items-center">
+                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <p className="sk-text-body-medium-semibold text-sko-text-default">{course}</p>
+                    <p className="sk-text-body-small-regular text-sko-text-subtle">
+                      {items.map((e) => `${e.title} · was due ${due(e.date)}`).join(" · ")}
+                    </p>
+                  </div>
+                  <Button hierarchy="secondary" size="sm" className="shrink-0 max-md:h-11 max-md:w-full" onClick={() => shift(course)}>
+                    Shift due dates
+                  </Button>
+                </li>
+              ))}
+            </ul>
           </section>
         ) : null}
 
