@@ -173,7 +173,7 @@ export function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div role="group" aria-label={label} className="flex gap-0.5 rounded-control bg-sko-bg-muted p-1">
+    <div role="group" aria-label={label} className="flex gap-0.5 rounded-track bg-sko-bg-muted p-1">
       {options.map((o) => (
         <button
           key={o.value}
@@ -182,7 +182,7 @@ export function Segmented<T extends string>({
           aria-label={o.aria}
           onClick={() => onChange(o.value)}
           className={cn(
-            "inline-flex h-8 flex-1 items-center justify-center rounded-inner border transition-colors",
+            "inline-flex h-8 flex-1 items-center justify-center rounded-control border transition-colors",
             // An option can set its own padding and gap (the four brand skins need tighter ones).
             o.className?.includes("px-") ? null : "gap-2 px-2.5",
             o.className ?? "sk-text-body-medium-semibold",

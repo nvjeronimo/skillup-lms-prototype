@@ -183,7 +183,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           <div
             role="group"
             aria-label={`Filter ${noun} by status`}
-            className="flex w-full gap-0.5 overflow-x-auto rounded-control bg-sko-bg-muted p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden"
+            className="flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-muted p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden"
           >
             {myLearningStatusFilters.map((item) => (
               <button
@@ -194,7 +194,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
                 // A segment reached with the keyboard comes into the track when it was cut off.
                 onFocus={(e) => scrollToElement(e.currentTarget, "nearest")}
                 className={cn(
-                  "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-inner border px-4 transition-colors max-md:h-11",
+                  "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-control border px-4 transition-colors max-md:h-11",
                   status === item.id
                     ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
                     : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",

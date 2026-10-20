@@ -22,7 +22,7 @@ export function PlatformSegmented<T extends string>({
   className?: string;
 }) {
   return (
-    <div role="group" aria-label={label} className={cn("inline-flex max-w-full gap-0.5 overflow-x-auto rounded-control bg-sko-bg-muted p-1", className)}>
+    <div role="group" aria-label={label} className={cn("inline-flex max-w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-muted p-1", className)}>
       {options.map((item) => (
         <button
           key={item.id}
@@ -30,7 +30,7 @@ export function PlatformSegmented<T extends string>({
           aria-pressed={value === item.id}
           onClick={() => onChange(item.id)}
           className={cn(
-            "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-inner border px-4 transition-colors max-md:h-11",
+            "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-control border px-4 transition-colors max-md:h-11",
             value === item.id
               ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
               : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",

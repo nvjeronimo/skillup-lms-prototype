@@ -65,7 +65,7 @@ const RULES = [
     // The lab "training" world has its own radius tokens (tokens/lab-training.css) and course copy is prose.
     re: /(?<![\w-])rounded(?:-(?:t|b|l|r|s|e|tl|tr|br|bl))?-(?:sm|md|lg|xl|2xl|3xl|full|\[[^\]]+\])(?![\w-])|["'`][^"'`]*(?<![\w-])rounded(?=[\s"'`])[^"'`]*["'`]/,
     skip: /^(?:app\/lab\/training\/|components\/lab\/training\/|lib\/courses\/)/,
-    msg: "raw radius — use a role radius: rounded-none / -inner / -control / -card / -card-inset / -surface / -pill (tokens/radius.css)",
+    msg: "raw radius — use a role radius: rounded-none / -inner / -control / -card / -card-inset / -track / -surface / -pill (tokens/radius.css)",
   },
 ];
 
