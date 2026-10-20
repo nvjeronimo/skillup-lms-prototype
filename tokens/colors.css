@@ -21,6 +21,7 @@
      [data-skin="gold"|"red"]                 Gold / Red Light  (only the brand tokens + bg/accent-teal-soft change)
      [data-skin="…"][data-theme="dark"]       Gold / Red Dark
      [data-skin="teal"]                       explicit SKO alias (forces SKO in a nested context)
+     [data-theme="light"]                     SKO Light in a nested context (the certificate sheet)
    The DS no longer carries violet / sky / ink skins: those attributes now fall back to SKO.
    The [data-vision="cvd"] axis is kept and re-expressed on the new status tokens.
 
@@ -29,7 +30,10 @@
    ============================================================================ */
 
 /* --- SKO Light ------------------------------------------------------------ */
-:root {
+/* [data-theme="light"]: a light island inside the dark theme. The certificate sheet keeps its
+   printed colours in dark mode (Nelson, 20 Oct 2026). */
+:root,
+[data-theme="light"] {
   --color-bg-page: #ffffff;
   --color-bg-faint: #f8f9fa;
   --color-bg-subtle: #f3f5fa;
