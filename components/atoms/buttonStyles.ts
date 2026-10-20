@@ -100,7 +100,7 @@ const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
       BRAND_ICON,
       OUTLINE_DISABLED,
     ),
-    tertiary: cn("bg-sko-bg-page text-sko-text-primary hover:bg-sko-bg-faint", BRAND_ICON, GHOST_DISABLED),
+    tertiary: cn("bg-sko-bg-page text-sko-text-primary hover:bg-sko-bg-muted", BRAND_ICON, GHOST_DISABLED),
     link: cn(LINK, LINK_TONE.brand, BRAND_ICON),
     "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
