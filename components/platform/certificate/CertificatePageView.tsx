@@ -115,7 +115,7 @@ export function CertificatePageView({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
           <div
             data-mock="Certificate artwork, ID and verification address are sample data"
-            className="relative aspect-[1123/794] w-full min-w-0 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-subtle shadow-sk-card [container-type:inline-size] lg:flex-1"
+            className="relative aspect-[1123/794] w-full min-w-0 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle shadow-sk-card [container-type:inline-size] lg:flex-1"
           >
             <div className="absolute inset-0">
               <CertificateDocument
@@ -175,7 +175,7 @@ export function CertificatePageView({
           <section
             aria-labelledby="certificate-missing-title"
             data-mock="No API says whether a program certificate is earned: counted here from the course rows"
-            className="flex min-w-0 flex-col gap-4 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px] md:p-[19px] lg:flex-1 lg:p-[23px]"
+            className="flex min-w-0 flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:p-[19px] lg:flex-1 lg:p-[23px]"
           >
             <h2 id="certificate-missing-title" className="sk-text-headline-small-bold text-sko-text-default">
               What is missing

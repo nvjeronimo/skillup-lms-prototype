@@ -44,7 +44,7 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
   return (
     <ul
       className={cn(
-        "w-56 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg",
+        "w-56 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg",
         className,
       )}
     >

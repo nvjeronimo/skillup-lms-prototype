@@ -32,7 +32,7 @@ export function ViewToggle({ view, onChange, className }: ViewToggleProps) {
     <div
       role="group"
       aria-label="View"
-      className={cn("inline-flex gap-0.5 rounded-lg bg-sko-bg-muted p-1", className)}
+      className={cn("inline-flex gap-0.5 rounded-control bg-sko-bg-muted p-1", className)}
     >
       {OPTIONS.map((option) => {
         const pressed = option.view === view;
@@ -44,7 +44,7 @@ export function ViewToggle({ view, onChange, className }: ViewToggleProps) {
             aria-label={option.label}
             onClick={() => onChange(option.view)}
             className={cn(
-              "inline-flex h-8 w-11 items-center justify-center rounded-md border transition-colors",
+              "inline-flex h-8 w-11 items-center justify-center rounded-inner border transition-colors",
               pressed
                 ? "border-sko-border-subtle bg-sko-bg-page text-sko-icon-primary"
                 : "border-transparent text-sko-icon-subtle hover:bg-sko-bg-subtle",

@@ -1,6 +1,7 @@
 @import "../tokens/colors.css";
 @import "../tokens/typography.css";
 @import "../tokens/motion.css";
+@import "../tokens/radius.css";
 
 @tailwind base;
 @tailwind components;
@@ -673,7 +674,7 @@ button {
   z-index: 5;
   padding: 0 6px;
   border: 1px dashed var(--color-border-warning);
-  border-radius: 6px;
+  border-radius: var(--sk-radius-control);
   background: var(--color-bg-warning-soft);
   color: var(--color-text-warning);
   font-family: var(--sk-font-body);

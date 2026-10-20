@@ -67,7 +67,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
               <span
                 className={cn(
                   // DS Badge Soft sm: Brand on the current tab, Gray on the others.
-                  "sk-text-body-small-medium inline-flex items-center rounded-full px-2 py-0.5",
+                  "sk-text-body-small-medium inline-flex items-center rounded-pill px-2 py-0.5",
                   isActive
                     ? "bg-sko-bg-primary-soft text-sko-text-primary"
                     : "bg-sko-bg-faint text-sko-text-muted",

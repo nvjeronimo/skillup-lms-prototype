@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
   return cn(
-    "flex items-center gap-1.5 rounded-lg px-3 py-2 transition-colors",
+    "flex items-center gap-1.5 rounded-control px-3 py-2 transition-colors",
     current
       ? "sk-text-body-medium-semibold bg-sko-bg-primary-soft text-sko-text-primary"
       : "sk-text-body-medium-medium text-sko-text-subtle hover:bg-sko-bg-faint hover:text-sko-text-default",
@@ -84,7 +84,7 @@ function SectionLinks({
             {tabs && isCurrent ? (
               <span
                 aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-[3px] rounded-t-[2px] bg-sko-bg-primary"
+                className="absolute inset-x-0 bottom-0 h-[3px] rounded-t-inner bg-sko-bg-primary"
               />
             ) : null}
           </>
@@ -139,13 +139,13 @@ function ProfilePanel({
   );
 }
 
-/** DS Avatar sm (32px, a rounded square: radius 8, Nelson 19 Oct 2026, not a circle; initials body-medium/Semibold text/subtle on bg/muted, 0.75px border/subtle). */
+/** DS Avatar sm (32px, a rounded square: Radius/control, Nelson 19 Oct 2026, not a circle; initials body-medium/Semibold text/subtle on bg/muted, 0.75px border/subtle). */
 function Initials() {
   return (
     <span
       aria-hidden
       data-chrome-avatar=""
-      className="sk-text-body-medium-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-lg border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
+      className="sk-text-body-medium-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-control border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
     >
       {platformUser.initials}
     </span>
@@ -194,13 +194,13 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
       aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}
       aria-haspopup="dialog"
       onClick={() => openOverlayPanel("notifications")}
-      className="relative inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
+      className="relative inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
     >
       <Icon icon={Bell} size={20} />
       {unread ? (
         <span
           aria-hidden
-          className="absolute right-[11px] top-[10px] size-2 rounded-full bg-sko-bg-info ring-2 ring-sko-bg-page lg:right-[5px] lg:top-1"
+          className="absolute right-[11px] top-[10px] size-2 rounded-pill bg-sko-bg-info ring-2 ring-sko-bg-page lg:right-[5px] lg:top-1"
         />
       ) : null}
     </button>
@@ -213,7 +213,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
       type="button"
       aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
       onClick={() => toggleTheme()}
-      className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
+      className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-faint lg:size-8"
     >
       <Icon icon={theme === "dark" ? Sun : Moon} size={20} />
     </button>
@@ -250,7 +250,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 {...ink}
                 {...profile.triggerProps}
                 aria-label={`${platformUser.name}, account`}
-                className="flex items-center gap-2 rounded-lg p-1 text-left transition-colors hover:bg-sko-bg-faint"
+                className="flex items-center gap-2 rounded-control p-1 text-left transition-colors hover:bg-sko-bg-faint"
               >
                 <Initials />
                 <span className="flex flex-col whitespace-nowrap">
@@ -293,7 +293,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 {...ink}
                 {...profileCompact.triggerProps}
                 aria-label={`${platformUser.name}, account`}
-                className="inline-flex size-11 items-center justify-center rounded-lg transition-colors hover:bg-sko-bg-faint"
+                className="inline-flex size-11 items-center justify-center rounded-control transition-colors hover:bg-sko-bg-faint"
               >
                 <Initials />
               </button>
@@ -310,7 +310,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 {...ink}
                 {...menu.triggerProps}
                 aria-label="Platform sections"
-                className="inline-flex size-11 items-center justify-center rounded-lg text-sko-icon-default transition-colors hover:bg-sko-bg-faint"
+                className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-faint"
               >
                 <Icon icon={Menu} size={24} />
               </button>

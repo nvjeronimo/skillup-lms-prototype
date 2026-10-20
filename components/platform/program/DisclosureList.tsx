@@ -89,7 +89,7 @@ export function DisclosureList({ items, mock, className }: { items: ProgramDiscl
     <ul
       data-mock={mock}
       className={cn(
-        "flex flex-col gap-4 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 md:gap-5 md:p-5 lg:p-6",
+        "flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:gap-5 md:p-5 lg:p-6",
         className,
       )}
     >

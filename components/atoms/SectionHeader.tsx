@@ -43,7 +43,7 @@ export function SectionHeader({
     </>
   );
 
-  const row = "flex min-h-10 items-center justify-start gap-2 rounded-md bg-sko-bg-subtle px-4 py-[11px]";
+  const row = "flex min-h-10 items-center justify-start gap-2 rounded-control bg-sko-bg-subtle px-4 py-[11px]";
 
   if (collapsible) {
     return (

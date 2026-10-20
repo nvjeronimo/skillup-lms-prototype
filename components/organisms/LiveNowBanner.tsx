@@ -32,7 +32,7 @@ export function LiveNowBanner({
         // DS v1.1 (14 Oct 2026): no side stripe — the whole card carries the state. Padding 16 all
         // round, 1px border. Live = bg/success-soft + border/success-soft; Upcoming = the "toasted"
         // bg/warning-muted + border/accent-yellow (ADR 012: live is green, not red).
-        "flex items-center justify-between gap-4 rounded-xl border p-4",
+        "flex items-center justify-between gap-4 rounded-card border p-4",
         isLive ? "border-sko-border-success-soft bg-sko-bg-success-soft" : "border-sko-border-accent-yellow bg-sko-bg-warning-muted",
         className,
       )}
@@ -46,12 +46,12 @@ export function LiveNowBanner({
             label at 4.5:1+ in every mode; the dot follows the label colour. */}
         <span
           className={cn(
-            "sk-text-body-small-medium inline-flex shrink-0 items-center gap-1.5 rounded-full py-1 pl-2 pr-3 uppercase",
+            "sk-text-body-small-medium inline-flex shrink-0 items-center gap-1.5 rounded-pill py-1 pl-2 pr-3 uppercase",
             isLive ? "bg-sko-bg-success text-sko-text-on-success" : "bg-sko-bg-warning text-sko-text-on-warning",
           )}
         >
           {/* Live: the dot pulses (sk-live-dot, still under reduced motion); "Live now" stays. */}
-          <span className={cn("h-1.5 w-1.5 rounded-full bg-current", isLive && "sk-live-dot")} aria-hidden />
+          <span className={cn("h-1.5 w-1.5 rounded-pill bg-current", isLive && "sk-live-dot")} aria-hidden />
           {isLive ? "Live now" : "Upcoming"}
         </span>
         <div className="flex min-w-0 flex-col gap-0.5">

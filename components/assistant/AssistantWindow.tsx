@@ -229,7 +229,7 @@ export function AssistantWindow({
       }}
       className={cn(
         "flex flex-col overflow-hidden bg-sko-bg-page",
-        modal ? "" : "rounded-xl border border-sko-border-subtle shadow-xl",
+        modal ? "" : "rounded-card border border-sko-border-subtle shadow-xl",
         !open && "pointer-events-none",
         className,
       )}
@@ -238,7 +238,7 @@ export function AssistantWindow({
           bg/primary-soft tile (radius 6). */}
       <header className="flex items-center justify-between border-b border-sko-border-subtle bg-sko-bg-subtle py-3 pl-5 pr-3">
         <h2 className="sk-text-body-large-medium inline-flex items-center gap-2 text-sko-text-default">
-          <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-md bg-sko-bg-primary-soft">
+          <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-control bg-sko-bg-primary-soft">
             <Icon icon={Sparkles} size={16} className="text-sko-icon-primary" />
           </span>
           SkillUp Assistant
@@ -252,7 +252,7 @@ export function AssistantWindow({
                 inputRef.current?.focus();
               }}
               aria-label="Start a new conversation"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
             >
               <Icon icon={RotateCcw} size={20} />
             </button>
@@ -261,7 +261,7 @@ export function AssistantWindow({
             type="button"
             onClick={onClose}
             aria-label="Close the assistant"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -336,7 +336,7 @@ export function AssistantWindow({
                     type="button"
                     onClick={() => send(s)}
                     disabled={answering}
-                    className="sk-text-body-small-medium min-h-11 rounded-full bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
+                    className="sk-text-body-small-medium min-h-11 rounded-pill bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
                   >
                     {s}
                   </button>
@@ -357,7 +357,7 @@ export function AssistantWindow({
               <span className={WHO}>
                 Me<span className="sr-only">:</span>
               </span>
-              <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default">
+              <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default">
                 {m.text}
               </p>
             </div>
@@ -374,7 +374,7 @@ export function AssistantWindow({
                   Assistant<span className="sr-only">:</span>
                 </span>
                 {/* DS v1.2: the answer is on bg/primary, in text/on-primary. */}
-                <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
+                <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
                   {m.text}
                 </p>
               </div>
@@ -414,7 +414,7 @@ export function AssistantWindow({
         {answering ? (
           <div className="sk-animate-rise sk-enter-only flex max-w-[92%] flex-col gap-1 self-start">
           <span aria-hidden className={WHO}>Assistant</span>
-          <p className="sk-text-body-medium-regular whitespace-pre-line rounded-lg bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
+          <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
             {streaming ? (
               streaming
             ) : (
@@ -466,13 +466,13 @@ export function AssistantWindow({
           maxLength={MAX_QUESTION}
           autoComplete="off"
           placeholder="Ask about the platform or your courses…"
-          className="sk-text-body-medium-regular h-11 min-w-0 flex-1 rounded-lg border border-sko-border-subtle bg-sko-bg-subtle px-4 text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
+          className="sk-text-body-medium-regular h-11 min-w-0 flex-1 rounded-control border border-sko-border-subtle bg-sko-bg-subtle px-4 text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
         />
         <button
           type="submit"
           aria-label="Send"
           disabled={answering || !draft.trim()}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary text-sko-text-on-primary transition-colors hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary text-sko-text-on-primary transition-colors hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
         >
           <Icon icon={Send} size={20} />
         </button>

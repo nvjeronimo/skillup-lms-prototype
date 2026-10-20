@@ -9,7 +9,7 @@ export function NextStepCard({ text, action }: { text: string; action: ActionEnt
   return (
     <section
       aria-label="Next step"
-      className="flex flex-col items-start gap-3 rounded-lg border border-sko-border-subtle bg-sko-bg-faint p-4"
+      className="flex flex-col items-start gap-3 rounded-control border border-sko-border-subtle bg-sko-bg-faint p-4"
     >
       <p className="sk-text-body-medium-regular text-sko-text-default">
         <span className="sk-text-body-small-medium mr-1 uppercase text-sko-text-subtle">Next:</span>

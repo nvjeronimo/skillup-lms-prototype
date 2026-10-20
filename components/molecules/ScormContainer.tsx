@@ -61,7 +61,7 @@ export function ScormContainer({
           body-medium/Regular, both in the state's colour. */}
       <div
         className={cn(
-          "flex aspect-video max-h-[52vh] w-full flex-col items-center justify-center gap-2 rounded-xl border px-10 text-center shadow-sk-card",
+          "flex aspect-video max-h-[52vh] w-full flex-col items-center justify-center gap-2 rounded-card border px-10 text-center shadow-sk-card",
           state === "error"
             ? "border-sko-border-error bg-sko-bg-error-soft"
             : "border-sko-border-subtle bg-sko-bg-subtle",

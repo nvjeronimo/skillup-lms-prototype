@@ -83,7 +83,7 @@ function UtilityButton({
       {...aria}
       className={cn(
         "inline-flex shrink-0 items-center justify-center text-sko-icon-subtle transition-colors hover:bg-sko-bg-faint",
-        large ? "h-11 w-11 rounded-lg" : "h-8 w-8 rounded-md",
+        large ? "h-11 w-11 rounded-control" : "h-8 w-8 rounded-control",
         hierarchy === "secondary" && "border border-sko-border-default bg-sko-bg-page",
         className,
       )}
@@ -141,7 +141,7 @@ export function CoursePlayerTopbar({
       <Icon icon={Bell} size={20} />
       {notificationsCount > 0 ? (
         <span
-          className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-sko-bg-primary"
+          className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-pill bg-sko-bg-primary"
           aria-hidden
         />
       ) : null}
@@ -197,7 +197,7 @@ export function CoursePlayerTopbar({
             </UtilityButton>
           ) : null}
           {accountMenu ?? (
-            <button type="button" aria-label="Account" className="flex items-center rounded-lg">
+            <button type="button" aria-label="Account" className="flex items-center rounded-control">
               <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />
             </button>
           )}
@@ -274,7 +274,7 @@ export function CoursePlayerTopbar({
           // Account button: 32px square avatar (PR #9 squares the profile avatar to
           // match the topbar icon buttons and CTAs; the DS `Avatar label group` draws a
           // 24px circle), 8px gap, name in body-medium/Semibold.
-          <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-md">
+          <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-control">
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <span className="sk-text-body-medium-semibold text-sko-text-default">{userName}</span>
           </button>

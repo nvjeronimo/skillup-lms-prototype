@@ -54,7 +54,7 @@ function DateRow({ item, href, first }: { item: CourseDate; href: string; first:
       <span
         aria-hidden
         className={cn(
-          "absolute left-0.5 top-4 size-3 rounded-full ring-2 ring-sko-bg-page md:left-[118px]",
+          "absolute left-0.5 top-4 size-3 rounded-pill ring-2 ring-sko-bg-page md:left-[118px]",
           DOT[item.state],
         )}
       />
@@ -98,7 +98,7 @@ function DateCard({ items, href, label }: { items: CourseDate[]; href: string; l
     <ol
       aria-label={label}
       // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
-      className="rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px]"
+      className="rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]"
     >
       {items.map((item, index) => (
         <DateRow key={item.id} item={item} href={href} first={index === 0} />

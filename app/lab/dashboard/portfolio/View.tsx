@@ -62,7 +62,7 @@ const FOCUS =
 /** A link dressed as DS Button Brand (md, 44px). Button renders a <button>, so links get this. */
 function linkButton(hierarchy: "primary" | "secondary") {
   return cn(
-    "sk-text-body-medium-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-md px-3 transition-colors duration-short4",
+    "sk-text-body-medium-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-control px-3 transition-colors duration-short4",
     FOCUS,
     hierarchy === "primary"
       ? "bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
@@ -78,7 +78,7 @@ function PickUp({ e }: { e: Enrolment }) {
   return (
     <section
       aria-labelledby="pickup-h"
-      className="flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 shadow-sk-card md:flex-row md:items-center md:gap-6"
+      className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 shadow-sk-card md:flex-row md:items-center md:gap-6"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <h2 id="pickup-h" className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-subtle">
@@ -210,7 +210,7 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
     <li className="flex">
       <article
         aria-labelledby={headingId}
-        className="flex w-full flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4 shadow-sk-card"
+        className="flex w-full flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 shadow-sk-card"
       >
         <div className="flex flex-col items-start gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -245,15 +245,15 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuetext={`${e.pct}% complete, ${e.topicsDone} of ${e.topicsTotal} topics`}
-              className="h-2 overflow-hidden rounded-full bg-sko-bg-muted"
+              className="h-2 overflow-hidden rounded-pill bg-sko-bg-muted"
             >
-              <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${e.pct}%` }} />
+              <div className="h-full rounded-pill bg-sko-bg-info" style={{ width: `${e.pct}%` }} />
             </div>
           </div>
         ) : null}
 
         {e.status === "locked" && e.lockedBy ? (
-          <div className="flex items-start gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2">
+          <div className="flex items-start gap-2 rounded-control bg-sko-bg-subtle px-3 py-2">
             <Icon icon={Lock} size={16} className="mt-0.5 shrink-0 text-sko-icon-muted" aria-hidden="true" />
             <p className="sk-text-body-medium-regular text-sko-text-muted">
               <span className="sk-text-body-medium-semibold text-sko-text-default">Unlocks after {e.lockedBy}.</span> Finish that
@@ -261,7 +261,7 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
             </p>
           </div>
         ) : e.nextTopic && e.status !== "completed" ? (
-          <div className="flex min-w-0 flex-col items-start gap-1 rounded-lg bg-sko-bg-subtle px-3 py-2">
+          <div className="flex min-w-0 flex-col items-start gap-1 rounded-control bg-sko-bg-subtle px-3 py-2">
             <span className="sk-text-body-small-semibold text-sko-text-subtle">
               {e.status === "not-started" ? "First topic" : "Up next"}
             </span>
@@ -312,9 +312,9 @@ function Certificates({ enrolments }: { enrolments: Enrolment[] }) {
           {earned.map((e) => (
             <li
               key={e.id}
-              className="flex items-start gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4"
+              className="flex items-start gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4"
             >
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sko-bg-primary-soft text-sko-icon-primary">
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
                 <Icon icon={Award} size={20} aria-hidden="true" />
               </span>
               <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
@@ -406,7 +406,7 @@ export function View() {
                   aria-pressed={on}
                   onClick={() => setFilter(f.id)}
                   className={cn(
-                    "sk-text-body-medium-semibold inline-flex h-11 items-center gap-1.5 rounded-full px-4 transition-colors duration-short4",
+                    "sk-text-body-medium-semibold inline-flex h-11 items-center gap-1.5 rounded-pill px-4 transition-colors duration-short4",
                     FOCUS,
                     on
                       ? "bg-sko-bg-primary text-sko-text-on-primary"
@@ -437,7 +437,7 @@ export function View() {
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed border-sko-border-default p-6">
+          <div className="flex flex-col items-start gap-3 rounded-card border border-dashed border-sko-border-default p-6">
             <p className="sk-text-body-large-medium text-sko-text-default">No {filterLabel.toLowerCase()} courses right now.</p>
             <Button hierarchy="secondary" size="md" onClick={() => setFilter("all")}>
               Show all courses

@@ -59,7 +59,7 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
           // Hover lifts it a little, a press pushes it in (faster); the colour of the open state
           // eases with it. Reduced motion keeps only the colour (the transition guard; sk-press-scale
           // drops the scale itself, which would otherwise snap).
-          "sk-press-scale inline-flex h-12 w-12 items-center justify-center rounded-full transition-[transform,box-shadow,background-color,color] duration-short3 ease-standard hover:scale-[1.04] active:scale-[.96] active:duration-short2",
+          "sk-press-scale inline-flex h-12 w-12 items-center justify-center rounded-pill transition-[transform,box-shadow,background-color,color] duration-short3 ease-standard hover:scale-[1.04] active:scale-[.96] active:duration-short2",
           // The badge needs a positioned button. "relative" only when the caller does not place it:
           // with both, the stylesheet order made "relative" win over "fixed", and the launcher
           // stopped following the viewport (14 Oct 2026).
@@ -105,7 +105,7 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
             onAnimationEnd={() => setPopping(null)}
             className={cn(
               popping === badge && "sk-animate-badge-pop",
-              "sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-primary px-1 text-sko-text-on-primary",
+              "sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-pill bg-sko-bg-primary px-1 text-sko-text-on-primary",
             )}
           >
             {badge}

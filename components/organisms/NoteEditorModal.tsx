@@ -110,11 +110,11 @@ export function NoteEditorModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="sk-animate-pop relative max-h-[92dvh] w-full origin-center overflow-y-auto rounded-t-xl border-t border-sko-border-subtle bg-sko-bg-page shadow-xl md:max-w-[560px] md:rounded-lg md:border"
+        className="sk-animate-pop relative max-h-[92dvh] w-full origin-center overflow-y-auto rounded-t-surface border-t border-sko-border-subtle bg-sko-bg-page shadow-xl md:max-w-[560px] md:rounded-surface md:border"
       >
         {/* Mobile grabber (DS: 36 x 4, fully rounded). Decorative: the sheet closes with Cancel, X or Escape. */}
         <div aria-hidden className="flex justify-center pt-2 md:hidden">
-          <span className="h-1 w-9 rounded-full bg-sko-bg-strong" />
+          <span className="h-1 w-9 rounded-pill bg-sko-bg-strong" />
         </div>
         {/* Padding is the DS Spacing/2xl and 3xl: 16 on mobile, 20 on tablet, 20/24 on desktop. */}
         <header className="flex items-center justify-between gap-3 p-4 md:p-5 lg:px-6">
@@ -125,7 +125,7 @@ export function NoteEditorModal({
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="-m-2.5 inline-flex h-11 w-11 items-center justify-center rounded-md text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle md:-m-1 md:h-8 md:w-8"
+            className="-m-2.5 inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle md:-m-1 md:h-8 md:w-8"
           >
             <Icon icon={X} size={20} />
           </button>
@@ -138,7 +138,7 @@ export function NoteEditorModal({
                 Anchored to{" "}
                 <span className="text-sko-text-primary">{shown.anchorTs}</span>
               </p>
-              <p className="sk-text-body-medium-regular rounded-md bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
+              <p className="sk-text-body-medium-regular rounded-control bg-sko-bg-subtle border-l-[3px] border-sko-border-primary px-4 py-3 text-sko-text-subtle">
                 {shown.anchorQuote}
               </p>
             </div>
@@ -152,7 +152,7 @@ export function NoteEditorModal({
               onChange={(e) => setText(e.target.value)}
               rows={4}
               placeholder="Write your note…"
-              className="sk-text-body-medium-regular w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
+              className="sk-text-body-medium-regular w-full resize-none rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
             />
           </label>
 
@@ -160,12 +160,12 @@ export function NoteEditorModal({
             <label htmlFor={tagInputId} className="sk-text-body-medium-medium mb-1.5 block text-sko-text-muted">
               Tags (optional)
             </label>
-            <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-sko-border-default px-2 py-1.5">
+            <div className="flex flex-wrap items-center gap-1.5 rounded-control border border-sko-border-default px-2 py-1.5">
               {tags.map((t) => (
                 // DS Input field Type=Tags chip = `Tag` md Gray (r6, border/default, bg/page, X in icon-faint).
                 <span
                   key={t}
-                  className="sk-text-body-medium-medium inline-flex items-center gap-1 rounded-md border border-sko-border-default bg-sko-bg-page py-0.5 pl-[5px] pr-1 text-sko-text-muted"
+                  className="sk-text-body-medium-medium inline-flex items-center gap-1 rounded-control border border-sko-border-default bg-sko-bg-page py-0.5 pl-[5px] pr-1 text-sko-text-muted"
                 >
                   #{t}
                   <button

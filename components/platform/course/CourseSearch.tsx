@@ -183,7 +183,7 @@ function ResultRow({
     <li>
       <Link
         href={href}
-        className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-sko-bg-subtle focus-visible:bg-sko-bg-subtle"
+        className="flex items-start gap-3 rounded-control p-3 transition-colors hover:bg-sko-bg-subtle focus-visible:bg-sko-bg-subtle"
       >
         <span className="flex w-[60px] shrink-0">
           <Badge color="gray" size="sm">
@@ -236,7 +236,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
               <button
                 type="button"
                 onClick={() => search.runSample(sample.query)}
-                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg px-3 text-left transition-colors hover:bg-sko-bg-subtle md:min-h-9"
+                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-control px-3 text-left transition-colors hover:bg-sko-bg-subtle md:min-h-9"
               >
                 <span className="sk-text-body-medium-semibold text-sko-text-primary">{sample.query}</span>
                 <span className="sk-text-body-small-regular text-sko-text-subtle">{sample.gives}</span>
@@ -335,7 +335,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
             <select
               value={current}
               onChange={(event) => search.selectFilter(event.target.value as Filter)}
-              className="sk-text-body-medium-semibold h-11 rounded-lg border border-sko-border-primary bg-sko-bg-page px-3 text-sko-text-primary"
+              className="sk-text-body-medium-semibold h-11 rounded-control border border-sko-border-primary bg-sko-bg-page px-3 text-sko-text-primary"
             >
               {tabs.map((tab) => (
                 <option key={tab.id} value={tab.id}>
@@ -515,7 +515,7 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
       {showPopup ? (
         <section
           aria-label="Search results"
-          className="absolute right-0 top-full z-30 mt-2 flex w-[560px] max-w-[calc(100vw-48px)] flex-col gap-3 rounded-lg border border-sko-border-default bg-sko-bg-page p-4 shadow-2xl"
+          className="absolute right-0 top-full z-30 mt-2 flex w-[560px] max-w-[calc(100vw-48px)] flex-col gap-3 rounded-card border border-sko-border-default bg-sko-bg-page p-4 shadow-2xl"
         >
           <SearchPanel search={search} topicHref={topicHref} />
         </section>

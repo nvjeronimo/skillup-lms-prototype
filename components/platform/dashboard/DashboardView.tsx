@@ -64,7 +64,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             />
             <ul
               data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
-              className="overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page"
+              className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
             >
               {dashboardDue.map(({ id, ...item }) => (
                 <DueItem key={id} {...item} />

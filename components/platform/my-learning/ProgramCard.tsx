@@ -89,7 +89,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
       className={cn(
         // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
         // so the desktop side padding is 23 (+1 border = the DS 24 inset). The height already matches with 24.
-        "relative flex overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page",
+        "relative flex overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page",
         program.href && "transition-colors has-[a:hover]:border-sko-border-default",
         list ? "min-h-[280px] items-stretch" : "flex-col",
         className,
@@ -117,11 +117,11 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         {/* Decoration: a ring low on the left, a hatched circle high on the right. */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-[170px] -left-[170px] size-[340px] rounded-full border-[56px] border-sko-bg-primary opacity-[0.08]"
+          className="pointer-events-none absolute -bottom-[170px] -left-[170px] size-[340px] rounded-pill border-[56px] border-sko-bg-primary opacity-[0.08]"
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -right-[79px] -top-1 size-[207px] rounded-full opacity-[0.35]"
+          className="pointer-events-none absolute -right-[79px] -top-1 size-[207px] rounded-pill opacity-[0.35]"
           style={{
             backgroundImage:
               "repeating-linear-gradient(45deg, var(--color-border-primary) 0 1px, transparent 1px 7.07px)",
@@ -210,7 +210,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             Secondary action (Nelson, 15 Oct 2026). */}
         <div
           className={cn(
-            "flex min-h-[60px] items-center justify-between gap-4 rounded-lg",
+            "flex min-h-[60px] items-center justify-between gap-4 rounded-control",
             // The border is drawn inside the box: 1px less padding keeps every state 60 tall.
             hierarchy === "primary"
               ? "bg-sko-bg-subtle px-3 py-2"

@@ -35,7 +35,7 @@ export function HostedProgressCard({ course, hosted }: { course: CourseDetail; h
   return (
     <section
       aria-label={course.progress.label}
-      className="flex w-full shrink-0 flex-col gap-2 rounded-[10px] border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
+      className="flex w-full shrink-0 flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
     >
       <div className="flex items-end justify-between gap-3">
         <p className="sk-text-headline-medium-bold text-sko-text-default">
@@ -135,12 +135,12 @@ function LeavingDialog({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={bodyId}
-        className="sk-animate-pop relative w-full max-w-[544px] origin-center overflow-hidden rounded-xl bg-sko-bg-page shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[544px] origin-center overflow-hidden rounded-surface bg-sko-bg-page shadow-xl"
       >
         <div className="flex flex-col gap-4 px-4 pt-4 md:flex-row md:px-6 md:pt-6">
           <span
             aria-hidden
-            className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-sko-bg-primary-soft text-sko-icon-primary"
+            className="inline-flex size-12 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-icon-primary"
           >
             <Icon icon={ExternalLink} size={24} />
           </span>
@@ -157,7 +157,7 @@ function LeavingDialog({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 inline-flex size-11 items-center justify-center rounded-lg text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+          className="absolute right-3 top-3 inline-flex size-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
         >
           <Icon icon={X} size={24} />
         </button>

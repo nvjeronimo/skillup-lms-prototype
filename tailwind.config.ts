@@ -16,6 +16,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      /* Corner radius roles (tokens/radius.css, DS Radius/* role tokens, 20 Oct 2026). */
+      borderRadius: {
+        none: "var(--sk-radius-none)",
+        inner: "var(--sk-radius-inner)",
+        control: "var(--sk-radius-control)",
+        card: "var(--sk-radius-card)",
+        surface: "var(--sk-radius-surface)",
+        pill: "var(--sk-radius-pill)",
+      },
       boxShadow: {
         "sk-card": "var(--sk-shadow-card)",
         "sk-elevation-3": "var(--sk-shadow-elevation-3)",

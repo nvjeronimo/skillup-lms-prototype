@@ -123,7 +123,7 @@ export function Toast({
         onMouseLeave={() => setHover(false)}
         onAnimationEnd={onAnimationEnd}
         className={cn(
-          "sk-animate-rise flex w-full items-start gap-5 rounded-xl border p-4 shadow",
+          "sk-animate-rise flex w-full items-start gap-5 rounded-card border p-4 shadow",
           tone.box,
           className,
         )}

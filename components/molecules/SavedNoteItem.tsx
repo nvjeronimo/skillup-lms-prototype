@@ -42,7 +42,7 @@ export function SavedNoteItem({
           {tags.map((t) => (
             <span
               key={t}
-              className="sk-text-body-small-medium rounded-full bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
+              className="sk-text-body-small-medium rounded-pill bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
             >
               #{t}
             </span>

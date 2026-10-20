@@ -24,11 +24,11 @@ export function EmptyState({ icon, title, description, action, titleAs: Title = 
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-4 rounded-xl border border-sko-border-subtle px-8 py-12 text-center",
+        "flex flex-col items-center justify-center gap-4 rounded-card border border-sko-border-subtle px-8 py-12 text-center",
         className,
       )}
     >
-      <span className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span className="inline-flex h-14 w-14 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={icon} size={28} strokeWidth={iconStroke(28)} />
       </span>
       <Title className="sk-text-body-large-medium text-sko-text-default">{title}</Title>

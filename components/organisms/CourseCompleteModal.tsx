@@ -58,7 +58,7 @@ export function CourseCompleteModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="sk-animate-pop relative w-full max-w-[440px] origin-center overflow-hidden rounded-2xl border border-sko-border-subtle bg-sko-bg-page text-center shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[440px] origin-center overflow-hidden rounded-surface border border-sko-border-subtle bg-sko-bg-page text-center shadow-xl"
       >
         {/* Close row: DS pt 16 / pr 16, right-aligned, 60 high (16 + 44). */}
         <div className="flex justify-end pr-4 pt-4">
@@ -66,7 +66,7 @@ export function CourseCompleteModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
           >
             <Icon icon={X} size={24} />
           </button>
@@ -74,7 +74,7 @@ export function CourseCompleteModal({
 
         {/* Content: DS padding 4/32/24/32, gap 12, centred. */}
         <div className="flex flex-col items-center gap-3 px-8 pb-6 pt-1">
-          <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-success text-sko-icon-on-media">
+          <span className="inline-flex h-16 w-16 items-center justify-center rounded-pill bg-sko-bg-success text-sko-icon-on-media">
             <Icon icon={Check} size={32} />
           </span>
           <h2 id={titleId} className="sk-text-headline-small-semibold text-sko-text-default">

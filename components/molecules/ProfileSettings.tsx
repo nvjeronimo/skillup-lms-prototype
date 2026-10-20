@@ -40,14 +40,14 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
       aria-hidden
       data-skin={skin === "teal" ? "teal" : undefined}
       data-theme={skin === "teal" && theme === "dark" ? "dark" : undefined}
-      className={cn("size-2.5 shrink-0 rounded-full", dot)}
+      className={cn("size-2.5 shrink-0 rounded-pill", dot)}
     />
   );
 }
 
 /** The menu's panel: 288 wide, scrolls inside when the window is short. */
 export const PROFILE_PANEL =
-  "absolute right-0 top-[calc(100%+8px)] z-50 flex max-h-[calc(100dvh-88px)] w-72 flex-col overflow-y-auto overflow-x-hidden rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-xl";
+  "absolute right-0 top-[calc(100%+8px)] z-50 flex max-h-[calc(100dvh-88px)] w-72 flex-col overflow-y-auto overflow-x-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-xl";
 
 export function ProfileSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -63,7 +63,7 @@ export const SKILLUP_ONLINE_URL = "https://skillup.online";
 
 /** A menu row: 44 tall, 16px icon, body-medium/Medium text/muted (as the footer rows). */
 const MENU_ROW =
-  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-md px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
+  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-control px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
 /**
  * DS Profile Menu 1.5 (Nelson, 19 Oct 2026): Appearance and Accessibility standards open the
@@ -122,7 +122,7 @@ export function ToggleRow({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-start gap-2 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
+      className="flex w-full items-start gap-2 rounded-control px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
     >
       {/* Track: bg/primary on, bg/muted off; the knob sits right when on. The off track
           adds a 1px inset border/default ring: the DS bg/muted track and white knob are
@@ -131,7 +131,7 @@ export function ToggleRow({
       <span
         aria-hidden
         className={cn(
-          "inline-flex h-5 w-9 shrink-0 items-center rounded-full p-0.5 transition-colors",
+          "inline-flex h-5 w-9 shrink-0 items-center rounded-pill p-0.5 transition-colors",
           checked
             ? "justify-end bg-sko-bg-primary"
             : "justify-start bg-sko-bg-muted ring-1 ring-inset ring-sko-border-default",
@@ -140,7 +140,7 @@ export function ToggleRow({
         {/* Knob: 16px, Elevation/level2 (= Tailwind `shadow`). */}
         <span
           className={cn(
-            "size-4 rounded-full shadow",
+            "size-4 rounded-pill shadow",
             checked
               ? // token-lint-disable-next-line DS toggle knob binds icon/on-primary
                 "bg-sko-icon-on-primary"
@@ -173,7 +173,7 @@ export function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div role="group" aria-label={label} className="flex gap-0.5 rounded-lg bg-sko-bg-muted p-1">
+    <div role="group" aria-label={label} className="flex gap-0.5 rounded-control bg-sko-bg-muted p-1">
       {options.map((o) => (
         <button
           key={o.value}
@@ -182,7 +182,7 @@ export function Segmented<T extends string>({
           aria-label={o.aria}
           onClick={() => onChange(o.value)}
           className={cn(
-            "inline-flex h-8 flex-1 items-center justify-center rounded-md border transition-colors",
+            "inline-flex h-8 flex-1 items-center justify-center rounded-inner border transition-colors",
             // An option can set its own padding and gap (the four brand skins need tighter ones).
             o.className?.includes("px-") ? null : "gap-2 px-2.5",
             o.className ?? "sk-text-body-medium-semibold",

@@ -38,7 +38,7 @@ export function ResumeRow({ title, context, next, progressPct, href, homeHref, e
   return (
     <div
       className={cn(
-        "relative flex flex-col gap-3 rounded-xl border border-sko-border-subtle bg-sko-bg-page p-4",
+        "relative flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4",
         homeHref && "transition-colors has-[p_a:hover]:border-sko-border-default",
         className,
       )}

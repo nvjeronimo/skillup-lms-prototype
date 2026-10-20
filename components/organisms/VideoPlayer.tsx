@@ -98,7 +98,7 @@ function captionAt(cues: Pick<TranscriptLine, "ts" | "text">[], seconds: number)
  * two neighbours never overlap.
  */
 const ACTION_LAYOUT =
-  "peer relative inline-flex h-8 min-w-8 items-center justify-center rounded-md p-2 [[data-large-targets]_&]:min-h-8 [[data-large-targets]_&]:min-w-8 [[data-large-targets]_&]:before:absolute [[data-large-targets]_&]:before:-inset-x-px [[data-large-targets]_&]:before:-bottom-1 [[data-large-targets]_&]:before:-top-2 [[data-large-targets]_&]:before:content-['']";
+  "peer relative inline-flex h-8 min-w-8 items-center justify-center rounded-control p-2 [[data-large-targets]_&]:min-h-8 [[data-large-targets]_&]:min-w-8 [[data-large-targets]_&]:before:absolute [[data-large-targets]_&]:before:-inset-x-px [[data-large-targets]_&]:before:-bottom-1 [[data-large-targets]_&]:before:-top-2 [[data-large-targets]_&]:before:content-['']";
 /**
  * The DS bar uses the Solid icons (play, pause, skip-back, skip-forward, volume-max): the
  * closed shape of the lucide glyph is filled, the open strokes (volume waves) stay lines.
@@ -130,7 +130,7 @@ const SEEK_THUMB =
   "[&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
 /** DS volume slider handle: 12px round bg/on-media thumb (WebKit + Firefox). The 4px track under it is straight. */
 const VOLUME_THUMB =
-  "[&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
+  "[&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
 /**
  * DS Elevation/level4 geometry (2/2/-1, 4/6/-2, 12/16/-4) on the DS shadow colour.
  * The prototype has no elevation tokens yet, so the three layers share --color-shadow-default.
@@ -199,7 +199,7 @@ function ActionButton({
       <span
         aria-hidden
         className={cn(
-          "sk-text-body-medium-semibold pointer-events-none invisible absolute bottom-full mb-2 whitespace-nowrap rounded-lg bg-sko-bg-inverse px-2 py-1 text-sko-text-on-inverse opacity-0 transition-opacity",
+          "sk-text-body-medium-semibold pointer-events-none invisible absolute bottom-full mb-2 whitespace-nowrap rounded-control bg-sko-bg-inverse px-2 py-1 text-sko-text-on-inverse opacity-0 transition-opacity",
           "peer-hover:visible peer-hover:opacity-100 peer-focus-visible:visible peer-focus-visible:opacity-100",
           ELEVATION_LEVEL4,
           TOOLTIP_ALIGN[align],
@@ -310,7 +310,7 @@ export function VideoPlayer({
         heightPx ? "" : "aspect-video max-h-[34vh]",
         // Docked treatment: square top, rounded bottom (it's flush to the top).
         // Radius as on the screens: 8 on a phone, 6 from tablet up (the DS component alone draws 12).
-        docked ? "rounded-b-lg rounded-t-none md:rounded-b-md" : "rounded-lg md:rounded-md",
+        docked ? "rounded-b-card rounded-t-none md:rounded-b-card" : "rounded-card md:rounded-card",
         className,
       )}
       style={{
@@ -345,7 +345,7 @@ export function VideoPlayer({
           {!playing ? (
             <>
               <span className="absolute inset-0 bg-sko-bg-overlay" aria-hidden />
-              <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-full bg-sko-bg-overlay-soft text-sko-icon-on-media shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--color-bg-on-media)_12%,transparent)] backdrop-blur-lg">
+              <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-pill bg-sko-bg-overlay-soft text-sko-icon-on-media shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--color-bg-on-media)_12%,transparent)] backdrop-blur-lg">
                 <Icon icon={Play} size={20} className={SOLID} />
               </span>
             </>
@@ -372,7 +372,7 @@ export function VideoPlayer({
               <button
                 type="button"
                 onClick={onRetry}
-                className="sk-text-body-medium-semibold rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
+                className="sk-text-body-medium-semibold rounded-control bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
               >
                 Retry
               </button>
@@ -384,7 +384,7 @@ export function VideoPlayer({
               <button
                 type="button"
                 onClick={onReplay}
-                className="sk-text-body-medium-semibold inline-flex items-center gap-1.5 rounded-md bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
+                className="sk-text-body-medium-semibold inline-flex items-center gap-1.5 rounded-control bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
               >
                 <Icon icon={RotateCcw} size={16} className="text-sko-icon-on-fixed" /> Replay
               </button>
@@ -399,7 +399,7 @@ export function VideoPlayer({
             // Centred with auto margins, not left-1/2: that halves the width the text can
             // use and wraps the caption into a column that a short player clips.
             // pointer-events-none: on sm the caption sits over the seek slider's taller touch area.
-            "pointer-events-none absolute inset-x-0 z-10 mx-auto w-fit max-w-[94%] overflow-hidden rounded bg-sko-bg-overlay text-center",
+            "pointer-events-none absolute inset-x-0 z-10 mx-auto w-fit max-w-[94%] overflow-hidden rounded-control bg-sko-bg-overlay text-center",
             // Sits just above the action bar: 70 tall on sm, at most 72 on md and lg since the bar
             // follows the DS. At the old 112 a wrapped caption left the top of a short phone player.
             pick("bottom-[74px]", "bottom-20", "bottom-[74px] [@container(min-width:30rem)]:bottom-20"),
@@ -465,7 +465,7 @@ export function VideoPlayer({
               md and sm: the volume button alone (it mutes). */}
           <div
             className={cn(
-              "group/vol flex shrink-0 items-center rounded-md transition-colors",
+              "group/vol flex shrink-0 items-center rounded-control transition-colors",
               pick(
                 "",
                 "gap-1 pr-2 hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm",

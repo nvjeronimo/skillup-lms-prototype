@@ -32,13 +32,13 @@ export function VerticalScroll({
   const top = (position / 100) * travel;
   return (
     <div
-      className={cn("relative w-1.5 rounded-full", className)}
+      className={cn("relative w-1.5 rounded-pill", className)}
       style={{ height }}
       role="presentation"
     >
       <div
         className={cn(
-          "absolute left-0 w-1.5 rounded-full transition-colors",
+          "absolute left-0 w-1.5 rounded-pill transition-colors",
           // thumb colour pending DS rebind (FND-18)
           dragging ? "bg-sko-bg-primary" : "bg-sko-border-default",
         )}

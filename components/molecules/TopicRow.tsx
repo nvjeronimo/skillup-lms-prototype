@@ -237,13 +237,13 @@ export function TopicRow({
         <span
           aria-hidden
           className={cn(
-            "sk-animate-rise sk-rise-nudge sk-text-body-small-semibold pointer-events-none absolute left-3 z-20 w-max max-w-[240px] rounded-lg bg-sko-bg-inverse px-3 py-2 text-sko-text-on-inverse",
+            "sk-animate-rise sk-rise-nudge sk-text-body-small-semibold pointer-events-none absolute left-3 z-20 w-max max-w-[240px] rounded-control bg-sko-bg-inverse px-3 py-2 text-sko-text-on-inverse",
             hint.above ? "bottom-full -mb-1" : "top-full -mt-1",
           )}
         >
           <span
             className={cn(
-              "absolute left-3 size-2.5 rotate-45 rounded-[1px] bg-sko-bg-inverse",
+              "absolute left-3 size-2.5 rotate-45 rounded-inner bg-sko-bg-inverse",
               hint.above ? "-bottom-1" : "-top-1",
             )}
           />

@@ -152,7 +152,7 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
             {data.signatories[0] ? <Signatory {...data.signatories[0]} /> : null}
             <div className="flex flex-col items-center text-center" style={{ gap: u(8) }}>
               <span
-                className="relative flex items-center justify-center rounded-full bg-sko-bg-primary text-sko-icon-on-primary"
+                className="relative flex items-center justify-center rounded-pill bg-sko-bg-primary text-sko-icon-on-primary"
                 style={{ width: u(88), height: u(88) }}
               >
                 <SealRing style={{ inset: u(8), width: u(72), height: u(72) }} />

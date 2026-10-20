@@ -75,7 +75,7 @@ export function CertificateCard({
 
   return (
     <CardShell label={label} labelAs={labelAs} gap="lg" className={className}>
-      <div className="relative aspect-[1123/794] w-full overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
+      <div className="relative aspect-[1123/794] w-full overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
         <div className="absolute inset-0">
           <CertificateDocument
             data={certificate.document}

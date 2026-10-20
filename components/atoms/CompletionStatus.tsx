@@ -22,7 +22,7 @@ export interface CompletionStatusProps {
  */
 export function CompletionStatus({ state, size = 18, animate = false, className }: CompletionStatusProps) {
   const stroke = iconStroke(size);
-  const base = "inline-flex items-center justify-center rounded-full shrink-0";
+  const base = "inline-flex items-center justify-center rounded-pill shrink-0";
   const dims = { width: size, height: size };
 
   if (state === "Done") {
@@ -93,7 +93,7 @@ export function CompletionStatus({ state, size = 18, animate = false, className 
       style={dims}
     >
       {state === "In Progress" ? (
-        <span className="h-1/2 w-1/2 rounded-full bg-sko-bg-info" />
+        <span className="h-1/2 w-1/2 rounded-pill bg-sko-bg-info" />
       ) : null}
     </span>
   );

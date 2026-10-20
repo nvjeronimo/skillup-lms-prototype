@@ -92,7 +92,7 @@ export function OverlayPanel({
               type="button"
               onClick={onClose}
               aria-label="Close panel"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle"
             >
               <Icon icon={X} size={20} />
             </button>

@@ -8,20 +8,20 @@ const FOCUS =
   "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]";
 
 export const linkPrimary = cn(
-  "inline-flex min-h-[44px] h-12 items-center justify-center gap-1.5 rounded-md px-5 transition-colors",
+  "inline-flex min-h-[44px] h-12 items-center justify-center gap-1.5 rounded-control px-5 transition-colors",
   "sk-text-body-large-semibold bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover",
   FOCUS,
 );
 
 export const linkSecondary = cn(
-  "inline-flex min-h-[44px] items-center justify-center gap-1 rounded-md px-4 transition-colors",
+  "inline-flex min-h-[44px] items-center justify-center gap-1 rounded-control px-4 transition-colors",
   "sk-text-body-medium-semibold bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary hover:bg-sko-bg-faint",
   "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-primary",
   FOCUS,
 );
 
 export const linkText = cn(
-  "inline-flex min-h-[44px] items-center gap-1 rounded-md text-sko-text-primary underline underline-offset-4 transition-[color,background-color,border-color,box-shadow] hover:bg-sko-bg-faint",
+  "inline-flex min-h-[44px] items-center gap-1 rounded-control text-sko-text-primary underline underline-offset-4 transition-[color,background-color,border-color,box-shadow] hover:bg-sko-bg-faint",
   FOCUS,
 );
 
@@ -48,10 +48,10 @@ export function TopicProgress({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuetext={label}
-        className={cn("overflow-hidden rounded-full bg-sko-bg-muted", size === "md" ? "h-2.5" : "h-1.5")}
+        className={cn("overflow-hidden rounded-pill bg-sko-bg-muted", size === "md" ? "h-2.5" : "h-1.5")}
       >
         {/* DS rule: progress bars fill with bg/info. */}
-        <div className="h-full rounded-full bg-sko-bg-info" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-pill bg-sko-bg-info" style={{ width: `${pct}%` }} />
       </div>
       <p className={cn(size === "md" ? "sk-text-body-medium-medium" : "sk-text-body-small-medium", "text-sko-text-muted")}>{label}</p>
     </div>

@@ -14,7 +14,7 @@ export interface JumpTileProps {
 }
 
 const TILE =
-  "flex h-full w-full flex-col items-start gap-2 rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 text-left transition-colors hover:border-sko-border-primary";
+  "flex h-full w-full flex-col items-start gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 text-left transition-colors hover:border-sko-border-primary";
 
 /**
  * DS `LMS / Platform / Jump tile` (6382:3302): a shortcut tile ("Jump somewhere"). Icon 20
@@ -25,7 +25,7 @@ const TILE =
 export function JumpTile({ icon, title, description, href, onClick, tone }: JumpTileProps) {
   const content = (
     <>
-      <span data-tone={tone === undefined ? undefined : tone % 3} className="flex rounded-lg bg-sko-bg-primary-soft p-2">
+      <span data-tone={tone === undefined ? undefined : tone % 3} className="flex rounded-control bg-sko-bg-primary-soft p-2">
         <Icon icon={icon} size={20} className="text-sko-icon-primary" aria-hidden="true" />
       </span>
       <span className="sk-text-body-medium-semibold w-full text-sko-text-default">{title}</span>

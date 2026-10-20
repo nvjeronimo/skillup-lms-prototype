@@ -150,7 +150,7 @@ export function PlatformTabs<T extends string>({
               <span
                 aria-hidden="true"
                 className={cn(
-                  "absolute inset-x-0 h-0.5 rounded-t-[2px] bg-sko-bg-primary",
+                  "absolute inset-x-0 h-0.5 rounded-t-inner bg-sko-bg-primary",
                   ownRule ? "bottom-0" : "-bottom-px",
                 )}
               />
@@ -163,7 +163,7 @@ export function PlatformTabs<T extends string>({
         <span
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute left-0 h-0.5 rounded-t-[2px] bg-sko-bg-primary",
+            "pointer-events-none absolute left-0 h-0.5 rounded-t-inner bg-sko-bg-primary",
             ownRule ? "bottom-0" : "-bottom-px",
             indicator.animate && "transition-[transform,width] duration-short4 ease-standard",
           )}

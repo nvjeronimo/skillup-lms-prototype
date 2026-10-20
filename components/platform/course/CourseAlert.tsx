@@ -80,15 +80,15 @@ export function CourseAlert({
       data-mock={mock}
       className={cn(
         // The DS stroke is inside the alert and the CSS border is outside the padding: 15 + 1 = the DS 16.
-        "relative flex flex-col gap-4 rounded-xl border p-[15px] shadow-sm",
+        "relative flex flex-col gap-4 rounded-card border p-[15px] shadow-sm",
         layout === "responsive" && "md:flex-row",
         t.box,
         className,
       )}
     >
       <span aria-hidden className={cn("relative flex size-5 shrink-0 items-center justify-center", t.iconColor)}>
-        <span className="absolute size-7 rounded-full border-2 border-current opacity-30" />
-        <span className="absolute size-[38px] rounded-full border-2 border-current opacity-10" />
+        <span className="absolute size-7 rounded-pill border-2 border-current opacity-30" />
+        <span className="absolute size-[38px] rounded-pill border-2 border-current opacity-10" />
         <Icon icon={t.icon} size={20} />
       </span>
       <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
@@ -103,7 +103,7 @@ export function CourseAlert({
           type="button"
           aria-label={`Dismiss: ${title}`}
           onClick={() => setOpen(false)}
-          className="absolute right-[7px] top-[7px] flex size-9 items-center justify-center rounded-lg text-sko-icon-muted transition-colors hover:text-sko-icon-default max-md:right-[3px] max-md:top-[3px] max-md:size-11"
+          className="absolute right-[7px] top-[7px] flex size-9 items-center justify-center rounded-control text-sko-icon-muted transition-colors hover:text-sko-icon-default max-md:right-[3px] max-md:top-[3px] max-md:size-11"
         >
           <Icon icon={X} size={20} />
         </button>

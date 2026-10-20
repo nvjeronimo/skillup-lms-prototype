@@ -68,7 +68,7 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "items-center rounded-b-lg border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3 [container-type:inline-size]",
+        "items-center rounded-b-card border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3 [container-type:inline-size]",
         // Desktop/tablet: equal side columns keep the unit info centred, but a side never
         // shrinks below its content, so "Module completed" + "Go to next Module" pushes
         // the centre over instead of wrapping inside a 36px button.

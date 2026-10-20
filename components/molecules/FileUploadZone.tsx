@@ -71,13 +71,13 @@ export function FileUploadZone({
           }
         }}
         className={cn(
-          "flex flex-col items-center gap-3 rounded-xl border-2 border-dashed px-8 py-6 text-center transition-colors",
+          "flex flex-col items-center gap-3 rounded-card border-2 border-dashed px-8 py-6 text-center transition-colors",
           dragOver
             ? "border-sko-border-primary bg-sko-bg-primary-soft"
             : "border-sko-border-primary bg-sko-bg-primary-soft",
         )}
       >
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-sko-border-subtle bg-sko-bg-page text-sko-icon-primary">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-pill border border-sko-border-subtle bg-sko-bg-page text-sko-icon-primary">
           <Icon icon={UploadCloud} size={22} />
         </span>
         <p className="sk-text-body-medium-medium text-sko-text-muted">
@@ -107,9 +107,9 @@ export function FileUploadZone({
           {uploadedFiles.map((f) => (
             <div
               key={f.id}
-              className="flex items-center gap-3 rounded-lg border border-sko-border-subtle p-3"
+              className="flex items-center gap-3 rounded-control border border-sko-border-subtle p-3"
             >
-              <span className="sk-text-label-small-semibold inline-flex h-8 min-w-8 shrink-0 px-1 items-center justify-center rounded bg-sko-bg-primary-soft text-sko-text-primary">
+              <span className="sk-text-label-small-semibold inline-flex h-8 min-w-8 shrink-0 px-1 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-text-primary">
                 {f.type}
               </span>
               <div className="min-w-0 flex-1">

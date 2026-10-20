@@ -90,7 +90,7 @@ function StageStepper({ current }: { current: ViltStage }) {
             <li
               aria-current={isCurrent ? "step" : undefined}
               className={cn(
-                "sk-text-body-small-medium inline-flex items-center rounded-full px-2 py-1 ring-1 ring-inset",
+                "sk-text-body-small-medium inline-flex items-center rounded-pill px-2 py-1 ring-1 ring-inset",
                 isCurrent
                   ? s.stage === "live"
                     ? // Green is the LIVE NOW colour (decision 012); red stays for errors and
@@ -147,7 +147,7 @@ function SessionMeta({ session }: { session: ViltSession }) {
 
 function Agenda({ items }: { items: string[] }) {
   return (
-    <div className="flex flex-col gap-1.5 rounded-lg border border-sko-border-subtle px-4 py-6">
+    <div className="flex flex-col gap-1.5 rounded-card border border-sko-border-subtle px-4 py-6">
       <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
         What we&rsquo;ll cover
       </span>
@@ -173,7 +173,7 @@ function PreLive({
   const locked = session.minutesUntilStart > session.joinUnlocksMinutesBefore;
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
+    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone="brand">Live session</Badge>
         <Badge tone="neutral">Scheduled</Badge>
@@ -182,7 +182,7 @@ function PreLive({
       <h3 className="sk-text-title-medium-semibold text-sko-text-default">{session.title}</h3>
 
       {/* Countdown — the learner's primary orientation before the session. */}
-      <div className="flex flex-col items-center gap-1 rounded-lg bg-sko-bg-primary-soft px-4 py-6">
+      <div className="flex flex-col items-center gap-1 rounded-control bg-sko-bg-primary-soft px-4 py-6">
         <span className="sk-text-headline-small-semibold text-sko-text-primary">
           Your class starts in {session.minutesUntilStart} minutes
         </span>
@@ -235,7 +235,7 @@ function LiveStage({
   return (
     <section className="flex flex-col gap-4">
       {/* DS VILT · Stage Surface, Stage=Live: solid bg/primary, pad 0/32, gap 6. */}
-      <div className="relative flex aspect-video max-h-[42vh] w-full items-center justify-center overflow-hidden rounded-xl bg-sko-bg-primary px-8">
+      <div className="relative flex aspect-video max-h-[42vh] w-full items-center justify-center overflow-hidden rounded-card bg-sko-bg-primary px-8">
         <div className="flex flex-col items-center gap-1.5 text-center">
           <Icon icon={Users} size={28} className="text-sko-text-on-primary" />
           <div className="flex flex-col items-center gap-1.5">
@@ -279,7 +279,7 @@ function RecordingStage({ session }: { session: ViltSession }) {
           surface up; below that the player drops under the pill (pt-14, pb-8) instead of
           being covered by it. A container query, since the column width depends on the
           sidebar and side panel, not the viewport. */}
-      <div className="relative flex justify-center rounded-xl bg-sko-bg-muted px-8 [container-type:inline-size]">
+      <div className="relative flex justify-center rounded-card bg-sko-bg-muted px-8 [container-type:inline-size]">
         <div className="w-full max-w-[640px] pb-8 pt-14 [@container(min-width:55rem)]:py-0">
           <VideoPlayer
             durationSeconds={durationToSeconds(session.durationLabel)}
@@ -289,7 +289,7 @@ function RecordingStage({ session }: { session: ViltSession }) {
             size="md"
           />
         </div>
-        <span className="sk-text-body-small-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-full bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
+        <span className="sk-text-body-small-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-pill bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
           Recording
         </span>
       </div>

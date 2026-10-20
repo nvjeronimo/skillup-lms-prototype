@@ -70,7 +70,7 @@ function InboxRow({ thread, selected, selectedFromTablet }: { thread: Discussion
           </span>
         </span>
         {unread ? (
-          <span className="sk-text-body-small-semibold mt-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sko-bg-primary px-1.5 text-sko-text-on-primary">
+          <span className="sk-text-body-small-semibold mt-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-pill bg-sko-bg-primary px-1.5 text-sko-text-on-primary">
             {thread.unread}
             <span className="sr-only"> unread</span>
           </span>
@@ -126,7 +126,7 @@ export function DiscussionView() {
           <section
             aria-labelledby="discussion-list-title"
             className={cn(
-              "overflow-hidden rounded-[10px] border border-sko-border-subtle bg-sko-bg-page md:w-[340px] md:shrink-0 lg:w-[380px]",
+              "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[340px] md:shrink-0 lg:w-[380px]",
               explicit && "max-md:hidden",
             )}
           >
@@ -140,7 +140,7 @@ export function DiscussionView() {
                 <select
                   value={course}
                   onChange={(e) => setCourse(e.target.value)}
-                  className="sk-text-body-medium-regular h-11 rounded-lg border border-sko-border-default bg-sko-bg-page px-3 text-sko-text-default focus:border-sko-border-primary focus:outline-none md:h-10"
+                  className="sk-text-body-medium-regular h-11 rounded-control border border-sko-border-default bg-sko-bg-page px-3 text-sko-text-default focus:border-sko-border-primary focus:outline-none md:h-10"
                 >
                   <option value="all">All courses</option>
                   {COURSES.map(([slug, title]) => (
@@ -176,7 +176,7 @@ export function DiscussionView() {
             >
               All conversations
             </ButtonLink>
-            <section aria-labelledby="discussion-thread-title" className="overflow-hidden rounded-[10px] border border-sko-border-subtle bg-sko-bg-page">
+            <section aria-labelledby="discussion-thread-title" className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
               <div className="flex flex-col gap-3 bg-sko-bg-subtle p-3 md:flex-row md:items-start md:justify-between">
                 <div className="flex min-w-0 flex-col gap-1">
                   <p className="sk-text-body-small-medium text-sko-text-subtle">
@@ -219,7 +219,7 @@ export function DiscussionView() {
                   notInPrototype("Sending a reply");
                 }}
               >
-                <label className="flex h-11 min-w-0 flex-1 items-center rounded-lg border border-sko-border-default bg-sko-bg-page px-3 shadow-sm focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
+                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
                   <span className="sr-only">Write a reply</span>
                   <input
                     type="text"

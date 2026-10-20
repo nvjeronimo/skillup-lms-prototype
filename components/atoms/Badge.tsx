@@ -223,7 +223,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
         "inline-flex items-center whitespace-nowrap",
         plain
           ? "gap-1.5"
-          : cn("rounded-full", leftIcon ? geometry.icon : geometry.label),
+          : cn("rounded-pill", leftIcon ? geometry.icon : geometry.label),
         // Outline and Modern: 1px inside stroke (ring-inset keeps the DS height).
         (v === "outline" || v === "modern") && "ring-1 ring-inset",
         textStyle,
@@ -236,7 +236,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
         plain ? (
           <span
             className={cn(
-              "inline-flex size-5 shrink-0 items-center justify-center rounded-full",
+              "inline-flex size-5 shrink-0 items-center justify-center rounded-pill",
               PLAIN_CIRCLE[c],
             )}
           >
@@ -246,7 +246,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
           <Icon icon={leftIcon} size={12} className={cn("shrink-0", ICON[v][c])} />
         )
       ) : null}
-      {live ? <span aria-hidden className={cn("sk-live-dot size-1.5 shrink-0 rounded-full bg-current", !plain && !leftIcon && "mr-1.5")} /> : null}
+      {live ? <span aria-hidden className={cn("sk-live-dot size-1.5 shrink-0 rounded-pill bg-current", !plain && !leftIcon && "mr-1.5")} /> : null}
       {children}
     </span>
   );

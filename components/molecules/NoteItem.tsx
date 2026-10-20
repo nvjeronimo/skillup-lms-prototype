@@ -33,7 +33,7 @@ export function NoteItem({
   return (
     <div
       className={cn(
-        "rounded-lg border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default",
+        "rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default",
         className,
       )}
     >
@@ -81,7 +81,7 @@ export function NoteItem({
               key={tag}
               type="button"
               onClick={() => onTagClick?.(tag)}
-              className="sk-text-body-small-medium rounded-full bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle transition-colors hover:text-sko-text-primary"
+              className="sk-text-body-small-medium rounded-pill bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle transition-colors hover:text-sko-text-primary"
             >
               #{tag}
             </button>

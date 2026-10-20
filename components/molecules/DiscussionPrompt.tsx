@@ -34,7 +34,7 @@ export function DiscussionPrompt({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-xl border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6",
+        "flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6",
         className,
       )}
     >
@@ -53,7 +53,7 @@ export function DiscussionPrompt({
         onChange={(e) => setText(e.target.value.slice(0, maxChars))}
         rows={4}
         placeholder="Write your reply…"
-        className="sk-text-body-medium-regular min-h-[120px] w-full resize-none rounded-lg border border-sko-border-default bg-sko-bg-subtle p-3 text-sko-text-default outline-none placeholder:text-sko-text-subtle focus:border-sko-border-primary"
+        className="sk-text-body-medium-regular min-h-[120px] w-full resize-none rounded-control border border-sko-border-default bg-sko-bg-subtle p-3 text-sko-text-default outline-none placeholder:text-sko-text-subtle focus:border-sko-border-primary"
       />
 
       <div className="flex items-center justify-between">

@@ -28,7 +28,7 @@ export interface ContentTabsProps {
 /** Count pill (DS Mobile Tab Select › Count badge): bg/primary-soft + text/primary in every row. */
 function CountBadge({ n }: { n: number }) {
   return (
-    <span className="sk-text-body-small-medium inline-flex items-center rounded-full bg-sko-bg-primary-soft px-2 py-0.5 text-sko-text-primary">
+    <span className="sk-text-body-small-medium inline-flex items-center rounded-pill bg-sko-bg-primary-soft px-2 py-0.5 text-sko-text-primary">
       {n}
     </span>
   );
@@ -62,7 +62,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               type="button"
               {...triggerProps}
               className={cn(
-                "sk-text-body-medium-semibold flex w-full items-center justify-between gap-2 rounded-lg border bg-sko-bg-page px-3 py-2.5 transition-colors",
+                "sk-text-body-medium-semibold flex w-full items-center justify-between gap-2 rounded-control border bg-sko-bg-page px-3 py-2.5 transition-colors",
                 open
                   ? "border-sko-border-primary text-sko-text-primary"
                   : "border-sko-border-default text-sko-text-default",
@@ -87,7 +87,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
             {open ? (
               <ul
                 {...panelProps}
-                className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-lg border border-sko-border-primary bg-sko-bg-page shadow-lg"
+                className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-card border border-sko-border-primary bg-sko-bg-page shadow-lg"
               >
                 {tabs.map((t) => {
                   const selected = t.slug === active;
@@ -150,7 +150,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                       <span
                         className={cn(
                           // DS Badge Soft sm: Brand on the current tab, Gray on the others.
-                          "sk-text-body-small-medium inline-flex items-center rounded-full px-2 py-0.5",
+                          "sk-text-body-small-medium inline-flex items-center rounded-pill px-2 py-0.5",
                           isActive
                             ? "bg-sko-bg-primary-soft text-sko-text-primary"
                             : "bg-sko-bg-faint text-sko-text-muted",
@@ -165,7 +165,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                     {isActive && !indicator.box ? (
                       <span
                         aria-hidden
-                        className="absolute inset-x-0 -bottom-px h-0.5 rounded-t-[2px] bg-sko-bg-primary"
+                        className="absolute inset-x-0 -bottom-px h-0.5 rounded-t-inner bg-sko-bg-primary"
                       />
                     ) : null}
                   </Link>
@@ -176,7 +176,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               <li
                 aria-hidden
                 className={cn(
-                  "pointer-events-none absolute -bottom-px left-0 h-0.5 rounded-t-[2px] bg-sko-bg-primary",
+                  "pointer-events-none absolute -bottom-px left-0 h-0.5 rounded-t-inner bg-sko-bg-primary",
                   indicator.animate && "transition-[transform,width] duration-short4 ease-standard",
                 )}
                 style={indicator.style}

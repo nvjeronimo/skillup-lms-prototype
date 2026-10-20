@@ -65,7 +65,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
   return (
     <div className="flex flex-col gap-3 py-3">
       {/* DS Input field Size=sm, Type=Search (Focused: 2px border/primary). */}
-      <div className="flex items-center gap-2 rounded-lg border border-sko-border-default bg-sko-bg-page px-3 py-2 focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary">
+      <div className="flex items-center gap-2 rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary">
         <Icon icon={Search} size={20} className="text-sko-icon-faint" />
         <input
           value={query}
@@ -121,7 +121,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
         )}
       </div>
 
-      <div className="mt-2 flex items-start gap-2 rounded-lg bg-sko-bg-subtle px-3 py-2.5">
+      <div className="mt-2 flex items-start gap-2 rounded-control bg-sko-bg-subtle px-3 py-2.5">
         <Icon icon={Info} size={16} className="mt-0.5 text-sko-icon-subtle" />
         <p className="sk-text-body-medium-regular text-sko-text-muted">
           Create notes from the Transcript tab: click <span className="sk-text-body-medium-semibold">+ Note</span> on any line.

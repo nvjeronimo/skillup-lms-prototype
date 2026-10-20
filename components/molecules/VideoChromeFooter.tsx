@@ -90,7 +90,7 @@ export function VideoChromeFooter({
           {langOpen ? (
             <ul
               role="listbox"
-              className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg"
+              className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg"
             >
               {availableLanguages.map((l) => (
                 <li key={l.code} role="option" aria-selected={l.code === currentLanguage}>
@@ -134,7 +134,7 @@ export function VideoChromeFooter({
           {dlOpen ? (
             <ul
               role="menu"
-              className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-lg border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg"
+              className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-1 shadow-lg"
             >
               {(["srt", "txt"] as const).map((fmt) => (
                 <li key={fmt} role="none">

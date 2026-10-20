@@ -24,7 +24,7 @@ export function BrowseTile({ title, subtitle, onClick, className }: BrowseTilePr
       className={cn(
         // h-40 on mobile, not min-height: the "larger targets" rule in globals.css sets a 44px
         // min-height on every button and would win over a min-h class.
-        "flex h-40 w-full flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-sko-border-default bg-sko-bg-faint p-4 text-center transition-colors hover:bg-sko-bg-subtle md:h-full md:p-5 lg:p-6",
+        "flex h-40 w-full flex-col items-center justify-center gap-1 rounded-card border border-dashed border-sko-border-default bg-sko-bg-faint p-4 text-center transition-colors hover:bg-sko-bg-subtle md:h-full md:p-5 lg:p-6",
         className,
       )}
     >
