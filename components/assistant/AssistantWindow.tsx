@@ -234,9 +234,13 @@ export function AssistantWindow({
         className,
       )}
     >
-      {/* DS v1.2 (15 Oct 2026): the header sits on bg/subtle, and the sparkles in a 28px
-          bg/primary-soft tile (radius 6). */}
-      <header className="flex items-center justify-between border-b border-sko-border-subtle bg-sko-bg-subtle py-3 pl-5 pr-3">
+      {/* DS v1.3 (Nelson, 21 Oct 2026): the header is a dark band in both themes — the frame
+          carries SKO Dark, so here `data-theme="dark"` (as the Program header): bg/subtle, the
+          sparkles in a 28px bg/primary-soft tile (radius 6), all resolved dark. */}
+      <header
+        data-theme="dark"
+        className="flex items-center justify-between border-b border-sko-border-subtle bg-sko-bg-subtle py-3 pl-5 pr-3"
+      >
         <h2 className="sk-text-body-large-medium inline-flex items-center gap-2 text-sko-text-default">
           <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-control bg-sko-bg-primary-soft">
             <Icon icon={Sparkles} size={16} className="text-sko-icon-primary" />
@@ -252,7 +256,7 @@ export function AssistantWindow({
                 inputRef.current?.focus();
               }}
               aria-label="Start a new conversation"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-hover"
             >
               <Icon icon={RotateCcw} size={20} />
             </button>
@@ -261,7 +265,7 @@ export function AssistantWindow({
             type="button"
             onClick={onClose}
             aria-label="Close the assistant"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-hover"
           >
             <Icon icon={X} size={20} />
           </button>
