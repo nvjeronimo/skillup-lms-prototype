@@ -3,6 +3,9 @@
 import * as React from "react";
 import { ChevronDown, Download } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { inertProps } from "@/lib/inert";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
 
 export interface VideoLicense {
@@ -46,6 +49,9 @@ export function VideoChromeFooter({
   const [langOpen, setLangOpen] = React.useState(false);
   const [dlOpen, setDlOpen] = React.useState(false);
   const wrapRef = React.useRef<HTMLDivElement>(null);
+  // Both menus drop down under their trigger (right-aligned) and leave the way they came.
+  const lang = useExitTransition(langOpen, MOTION_MS.short2);
+  const dl = useExitTransition(dlOpen, MOTION_MS.short2);
 
   React.useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -87,10 +93,14 @@ export function VideoChromeFooter({
             {currentLanguage}
             <Icon icon={ChevronDown} size={14} />
           </button>
-          {langOpen ? (
+          {lang.mounted ? (
             <ul
               role="listbox"
-              className="absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
+              data-state={lang.state}
+              onAnimationEnd={lang.onAnimationEnd}
+              aria-hidden={!langOpen || undefined}
+              {...inertProps(!langOpen)}
+              className="sk-animate-menu origin-top-right absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
             >
               {availableLanguages.map((l) => (
                 <li key={l.code} role="option" aria-selected={l.code === currentLanguage}>
@@ -131,10 +141,14 @@ export function VideoChromeFooter({
             <Icon icon={Download} size={16} className="text-sko-icon-primary" />
             <span className="px-0.5">Download transcript</span>
           </button>
-          {dlOpen ? (
+          {dl.mounted ? (
             <ul
               role="menu"
-              className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
+              data-state={dl.state}
+              onAnimationEnd={dl.onAnimationEnd}
+              aria-hidden={!dlOpen || undefined}
+              {...inertProps(!dlOpen)}
+              className="sk-animate-menu origin-top-right absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
             >
               {(["srt", "txt"] as const).map((fmt) => (
                 <li key={fmt} role="none">

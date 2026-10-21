@@ -113,8 +113,11 @@ export function CourseCertificate({
           <Button variant="secondary" size="md" rightIcon={Share2} {...share.triggerProps}>
             Share
           </Button>
-          {share.open ? (
-            <div {...share.panelProps} className="absolute bottom-full right-0 z-20 mb-1">
+          {share.mounted ? (
+            <div
+              {...share.panelProps}
+              className="sk-animate-menu-up origin-bottom-right absolute bottom-full right-0 z-20 mb-1"
+            >
               <ShareMenu
                 onSelect={(c) => {
                   onShare?.(c);

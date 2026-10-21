@@ -13,6 +13,9 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { isFreshCompletion, type LastCompleted } from "@/lib/motion/completion";
 import { coursePartners, moduleTopics } from "@/lib/data";
 import { courseProgressPct } from "@/lib/courses/outline";
@@ -170,6 +173,11 @@ export function Sidebar({
     null,
   );
   const flyoutTimer = React.useRef<number | null>(null);
+  // The flyout fades in (short3) and out (short2), in place: no travel. While it fades out it
+  // keeps the topic and position it had, and is inert, so it takes no hover, click or focus.
+  const flyoutPresence = useExitTransition(flyout !== null, MOTION_MS.short2);
+  const shownFlyout = useFrozenWhileClosed(flyout, flyout !== null);
+  const flyoutClosing = flyout === null;
   const openFlyout = (topic: Topic, el: HTMLElement) => {
     if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
     const r = el.getBoundingClientRect();
@@ -300,11 +308,15 @@ export function Sidebar({
       </nav>
 
       {/* Hover flyout — title + bookmark toggle for the rail's icon-only rows. */}
-      {flyout ? (
+      {flyoutPresence.mounted && shownFlyout ? (
         <div
           ref={flyoutRef}
-          className="fixed z-[70]"
-          style={{ top: flyout.top, left: flyout.left + 6 }}
+          data-state={flyoutPresence.state}
+          onAnimationEnd={flyoutPresence.onAnimationEnd}
+          aria-hidden={flyoutClosing || undefined}
+          {...inertProps(flyoutClosing)}
+          className="sk-animate-flyout fixed z-[70]"
+          style={{ top: shownFlyout.top, left: shownFlyout.left + 6 }}
           onMouseEnter={keepOpen}
           onMouseLeave={scheduleClose}
           onFocus={keepOpen}
@@ -320,20 +332,20 @@ export function Sidebar({
             <button
               type="button"
               onClick={() => {
-                onSelectTopic?.(flyout.topic.id);
+                onSelectTopic?.(shownFlyout.topic.id);
                 setFlyout(null);
               }}
               className="flex min-w-0 flex-col items-start text-left"
             >
               <span className="sk-text-body-medium-medium whitespace-nowrap text-sko-text-default">
-                {flyout.topic.title}
+                {shownFlyout.topic.title}
               </span>
-              <TopicTypeBadge type={flyout.topic.type} />
+              <TopicTypeBadge type={shownFlyout.topic.type} />
             </button>
             <BookmarkButton
-              bookmarked={bookmarks.has(flyout.topic.id)}
-              onToggle={() => onToggleBookmark?.(flyout.topic.id)}
-              itemLabel={flyout.topic.title}
+              bookmarked={bookmarks.has(shownFlyout.topic.id)}
+              onToggle={() => onToggleBookmark?.(shownFlyout.topic.id)}
+              itemLabel={shownFlyout.topic.title}
               size={16}
             />
           </div>

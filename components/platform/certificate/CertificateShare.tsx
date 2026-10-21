@@ -61,10 +61,18 @@ export function CertificateShare({
       >
         {look === "icon" ? null : "Share certificate"}
       </Button>
-      {share.open ? (
+      {share.mounted ? (
         <div
           {...share.panelProps}
-          className={cn("absolute right-0 z-20", look === "button" && "left-0", up ? "bottom-full mb-1" : "top-full mt-1")}
+          className={cn(
+            "absolute right-0 z-20",
+            look === "button" && "left-0",
+            // Grows out of the button: upward from its top edge, or down from its bottom edge.
+            up ? "sk-animate-menu-up bottom-full mb-1" : "sk-animate-menu top-full mt-1",
+            look === "button"
+              ? up ? "origin-bottom" : "origin-top"
+              : up ? "origin-bottom-right" : "origin-top-right",
+          )}
         >
           <ShareMenu onSelect={onSelect} onClose={share.close} className={look === "button" ? "w-full" : undefined} />
         </div>

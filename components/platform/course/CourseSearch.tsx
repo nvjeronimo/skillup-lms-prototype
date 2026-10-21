@@ -21,6 +21,9 @@ import {
   type SearchResult,
 } from "@/lib/platform/course-search";
 import { useDialog } from "@/lib/useDialog";
+import { inertProps } from "@/lib/inert";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
 
 type Filter = "all" | SearchContentType;
@@ -429,6 +432,12 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
   const sheetOpen = variant === "sheet" && search.open;
   const closeSheet = React.useCallback(() => setOpen(false), [setOpen]);
   const sheetRef = useDialog(sheetOpen, closeSheet, { initialFocusRef: sheetInputRef });
+  // Motion: the sheet rises from the bottom (medium2) and leaves downward (short4); the popup
+  // grows out of the field (short3) and leaves the way it came (short2). Each stays mounted
+  // while it leaves, inert and click-through. The panel's content is not keyed, so a new
+  // result list does not replay the entrance.
+  const sheet = useExitTransition(sheetOpen, MOTION_MS.short4);
+  const popup = useExitTransition(variant === "popup" && search.open, MOTION_MS.short2);
 
   // Popup: a click outside closes it. The text stays in the field.
   React.useEffect(() => {
@@ -455,13 +464,17 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
           label={label}
           inputProps={{ readOnly: true, onFocus: () => setOpen(true), onClick: () => setOpen(true), "aria-haspopup": "dialog" }}
         />
-        {sheetOpen ? (
+        {sheet.mounted ? (
           <div
             ref={sheetRef}
             role="dialog"
             aria-modal="true"
             aria-label={label}
-            className="fixed inset-0 z-[60] flex flex-col bg-sko-bg-page"
+            data-state={sheet.state}
+            onAnimationEnd={sheet.onAnimationEnd}
+            aria-hidden={!sheetOpen || undefined}
+            {...inertProps(!sheetOpen)}
+            className="sk-animate-sheet fixed inset-0 z-[60] flex flex-col bg-sko-bg-page"
           >
             <form role="search" onSubmit={onSubmit} className="flex items-center gap-3 border-b border-sko-border-subtle p-4">
               <SearchField
@@ -512,10 +525,14 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
           inputProps={{ name: "q", onFocus: () => setOpen(true), enterKeyHint: "search" }}
         />
       </form>
-      {showPopup ? (
+      {popup.mounted ? (
         <section
           aria-label="Search results"
-          className="absolute right-0 top-full z-30 mt-2 flex w-[560px] max-w-[calc(100vw-48px)] flex-col gap-3 rounded-card border border-sko-border-default bg-sko-bg-page p-4 shadow-2xl"
+          data-state={popup.state}
+          onAnimationEnd={popup.onAnimationEnd}
+          aria-hidden={!showPopup || undefined}
+          {...inertProps(!showPopup)}
+          className="sk-animate-menu origin-top-right absolute right-0 top-full z-30 mt-2 flex w-[560px] max-w-[calc(100vw-48px)] flex-col gap-3 rounded-card border border-sko-border-default bg-sko-bg-page p-4 shadow-2xl"
         >
           <SearchPanel search={search} topicHref={topicHref} />
         </section>
