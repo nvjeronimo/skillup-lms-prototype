@@ -27,6 +27,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const textSize = useLmsStore((s) => s.textSize);
   const reduceMotion = useLmsStore((s) => s.reduceMotion);
   const underlineLinks = useLmsStore((s) => s.underlineLinks);
+  const squareCorners = useLmsStore((s) => s.squareCorners);
   const largeTargets = useLargeTargets();
   const width = FRAME_WIDTH[mode];
 
@@ -58,6 +59,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   }, [textSize]);
   React.useEffect(() => flag("data-reduce-motion", reduceMotion), [reduceMotion]);
   React.useEffect(() => flag("data-underline-links", underlineLinks), [underlineLinks]);
+  React.useEffect(() => flag("data-square-corners", squareCorners), [squareCorners]);
   React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
 
   // The assistant is mounted once, for every page (it shows on platform and player pages only).

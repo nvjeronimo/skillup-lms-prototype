@@ -231,6 +231,8 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   const setSkin = useLmsStore((s) => s.setSkin);
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
+  const squareCorners = useLmsStore((s) => s.squareCorners);
+  const setSquareCorners = useLmsStore((s) => s.setSquareCorners);
   return (
     <ProfileSection title="Appearance">
       <div className="flex flex-col gap-1.5 px-1">
@@ -252,6 +254,13 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
           onChange={setSkin}
         />
       </div>
+      {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
+      <ToggleRow
+        label="Square corners"
+        hint="Experimental · buttons keep their corners"
+        checked={squareCorners}
+        onChange={setSquareCorners}
+      />
       {/* The player's phone top bar has no theme button: the switch is here instead. */}
       {showTheme ? (
         <ToggleRow label="Dark theme" hint="Easier on the eyes at night" checked={theme === "dark"} onChange={() => toggleTheme()} />

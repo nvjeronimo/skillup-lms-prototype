@@ -255,7 +255,8 @@ export function buttonClassName({
     "sk-press-scale inline-flex items-center justify-center transition-[color,background-color,border-color,text-decoration-color,fill,stroke,transform] duration-short4 active:scale-[.98] active:duration-short2 disabled:pointer-events-none",
     "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--btn-ring)]",
     FOCUS_RING[legacy === "destructive" ? "destructive" : legacy ? "brand" : t],
-    isLink ? "rounded-none" : "rounded-control",
+    // sk-button: the Square corners experiment keeps the radius of every button.
+    isLink ? "rounded-none" : "sk-button rounded-control",
     iconOnly ? cn(s.square, s.squareSvg) : isLink ? l.pad : s.pad,
     isLink ? l.text : s.text,
     legacy ? LEGACY[legacy] : VARIANT[t][h],
