@@ -6,6 +6,17 @@
 /** How long a Button's Done check stays before the label returns. */
 export const BUTTON_DONE_MS = 1200;
 
+/** How long Copy link / Share shows its check and says "Copied" before it reverts (§7.9). */
+export const COPIED_MS = 1500;
+
+/**
+ * The label of a share trigger: "Copied" while the copy confirmation shows, its own label
+ * otherwise (the visible word on a labelled button, the aria-label on an icon-only one).
+ */
+export function copiedLabel(copied: boolean, label: string): string {
+  return copied ? "Copied" : label;
+}
+
 /** How long the locked-topic tooltip stays when nothing dismisses it first. */
 export const LOCK_TOOLTIP_MS = 3000;
 

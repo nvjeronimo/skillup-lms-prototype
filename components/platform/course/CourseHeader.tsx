@@ -10,6 +10,7 @@ import { programPageHref } from "@/lib/platform/hrefs";
 import { MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 import { HostedProgressCard } from "./HostedProgressCard";
 import { cn } from "@/lib/utils";
+import { FadeImage } from "@/components/atoms/FadeImage";
 
 /* Breadcrumb item, as on the Program header: body-medium/Semibold, 44px tall below desktop,
    20px as drawn on desktop with the target grown to 24px. */
@@ -113,12 +114,13 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
             </div>
 
             <div className="flex items-center gap-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={course.imageSrc}
-                alt=""
-                className="hidden size-[88px] shrink-0 rounded-card bg-sko-bg-muted object-cover md:block"
-              />
+              {/* The cover fades in over its bg/muted placeholder once loaded (motion-matrix §7.9): the
+                  placeholder is the frame, so it stays behind the image and if the image fails. */}
+              <span
+                className="hidden size-[88px] shrink-0 overflow-hidden rounded-card bg-sko-bg-muted md:block"
+              >
+                <FadeImage src={course.imageSrc} alt="" className="block size-full object-cover" />
+              </span>
               <h1 className="sk-text-headline-large-semibold min-w-0 flex-1 text-sko-text-default">{course.title}</h1>
             </div>
 

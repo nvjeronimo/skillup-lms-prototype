@@ -2,10 +2,13 @@
 
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
+import { DrawnCheck } from "@/components/atoms/DrawnCheck";
 import { ShareMenu, type ShareChannel } from "@/components/molecules/ShareMenu";
 import { certificateUrl, shareHref, type ShareTarget } from "@/lib/platform/certificate-share";
 import { useLmsStore } from "@/lib/store";
 import { useDisclosure } from "@/lib/useDisclosure";
+import { copiedLabel } from "@/lib/motion/feedback";
+import { useCopiedFlash } from "@/lib/motion/useCopiedFlash";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,6 +18,10 @@ import { cn } from "@/lib/utils";
  * - `look="button"`: Button Secondary with the share icon and the word, on the certificate page.
  * - `look="icon"`: an icon-only Button Secondary next to View and Download, on the Certificate card.
  * `up` opens the menu above the trigger (the card's actions sit at the bottom of the card).
+ * After a successful Copy link the trigger's icon turns into a check that draws and its label
+ * (the word, or the icon button's aria-label) says "Copied" for COPIED_MS (motion-matrix §7.9).
+ * The toast says "Link copied" once (its polite status region): no second live region here.
+ * A failed copy keeps the old behaviour: the toast shows the link to copy by hand.
  */
 export function CertificateShare({
   target,
@@ -31,13 +38,17 @@ export function CertificateShare({
 }) {
   const share = useDisclosure();
   const showToast = useLmsStore((s) => s.showToast);
+  const { copied, flash } = useCopiedFlash();
 
   const onSelect = (channel: ShareChannel) => {
     share.close();
     if (channel === "copy") {
       const url = certificateUrl(target.document);
       navigator.clipboard?.writeText(url).then(
-        () => showToast("Link copied"),
+        () => {
+          flash();
+          showToast("Link copied");
+        },
         () => showToast(url),
       );
       return;
@@ -53,13 +64,13 @@ export function CertificateShare({
       <Button
         hierarchy="secondary"
         size={size}
-        leftIcon={Share2}
+        leftIcon={copied ? DrawnCheck : Share2}
         iconOnly={look === "icon"}
-        aria-label={look === "icon" ? `Share certificate: ${target.title}` : undefined}
+        aria-label={look === "icon" ? copiedLabel(copied, `Share certificate: ${target.title}`) : undefined}
         className={cn(look === "icon" ? "max-md:size-11" : "w-full")}
         {...share.triggerProps}
       >
-        {look === "icon" ? null : "Share certificate"}
+        {look === "icon" ? null : copiedLabel(copied, "Share certificate")}
       </Button>
       {share.mounted ? (
         <div

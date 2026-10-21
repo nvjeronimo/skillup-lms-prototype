@@ -11,6 +11,7 @@ import { PlatformProgressBar, ProgressCardLabel } from "@/components/platform/Pl
 import { useLmsStore } from "@/lib/store";
 import type { Program } from "@/lib/platform/program";
 import { MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
+import { FadeImage } from "@/components/atoms/FadeImage";
 
 /* Breadcrumb item (DS `_Breadcrumb button base`): body-medium/Semibold, text/subtle; the
    current page is text/primary. 20px tall as drawn. The target is 44px below desktop and
@@ -121,12 +122,13 @@ export function ProgramHeader({ program }: { program: Program }) {
             </div>
 
             <div className="flex items-start gap-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={program.imageSrc}
-                alt=""
-                className="hidden size-[88px] shrink-0 rounded-card bg-sko-bg-muted object-cover md:block"
-              />
+              {/* The cover fades in over its bg/muted placeholder once loaded (motion-matrix §7.9): the
+                  placeholder is the frame, so it stays behind the image and if the image fails. */}
+              <span
+                className="hidden size-[88px] shrink-0 overflow-hidden rounded-card bg-sko-bg-muted md:block"
+              >
+                <FadeImage src={program.imageSrc} alt="" className="block size-full object-cover" />
+              </span>
               <h1 className="sk-text-headline-large-semibold min-w-0 flex-1 text-sko-text-default">
                 {program.title}
               </h1>
