@@ -1,25 +1,79 @@
-import { PlatformStat } from "@/components/platform/PlatformStat";
+import { ArrowDown, ArrowUp, Minus } from "lucide-react";
+import { ArrivalCount } from "@/components/atoms/ArrivalCount";
+import { Badge } from "@/components/atoms/Badge";
 import type { DashboardStat } from "@/lib/platform/dashboard";
 import { cn } from "@/lib/utils";
 
 export interface GlanceCardProps {
   title: string;
-  /** Four stats in one line on every breakpoint (the phone's line uses short words). */
   stats: DashboardStat[];
   className?: string;
 }
 
+const TREND = {
+  up: { color: "success", icon: ArrowUp },
+  down: { color: "error", icon: ArrowDown },
+  level: { color: "gray", icon: Minus },
+} as const;
+
+/** The phone shows the short words, tablet up the full ones; only one is displayed (and read). */
+function Both({ full, short }: { full: string; short?: string }) {
+  if (!short) return <>{full}</>;
+  return (
+    <>
+      <span className="md:hidden">{short}</span>
+      <span className="max-md:hidden">{full}</span>
+    </>
+  );
+}
+
 /**
- * DS `LMS/Platform/Dashboard/Today-at-a-glance`: the Dashboard hero card, full width since
- * the streak card left (7 Oct). Title (label-small/Semibold, text/on-inverse) and four
- * `Stat` · Inverse on bg/inverse. Four in a line on every breakpoint: on a phone too since
- * Nelson, 21 Oct 2026 (it was 2 × 2 and pushed "Pick up where you left off" below the fold),
- * with short labels and details there. Padding 24 / 20 / 16, title-to-stats gap 20 / 20 / 16
- * and the gap between stats 24 / 20 / 16 (desktop / tablet / mobile): 1200 × 168, 896 × 160,
- * 327 × 252. The two circles are decoration only: bg/info (200) and bg/primary (320) at
- * 12% layer opacity, clipped by the card.
- * The totals come from Learner Home (handoff map §37.4), so the card is not marked as sample
- * data; only "1 in progress" under Programs costs a call per program.
+ * One figure on its own card (proposal, Nelson 21 Oct 2026: "seta + meta = contexto"): label,
+ * value, detail, then the arrow (this month against last month: green up, red down, gray level)
+ * and the goal, each a DS Badge Soft sm. The badges carry a spoken sentence; their short text
+ * is hidden from assistive tech.
+ */
+function StatCard({ stat }: { stat: DashboardStat }) {
+  const trend = stat.trend ? TREND[stat.trend.direction] : null;
+  return (
+    <div className="flex h-full flex-col gap-1 rounded-card-inset bg-sko-bg-page p-3 md:gap-2 md:p-4">
+      <p className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-muted">
+        <Both full={stat.label} short={stat.shortLabel} />
+      </p>
+      <p className="sk-text-headline-medium-bold text-sko-text-default">
+        <ArrivalCount value={stat.value} />
+      </p>
+      <p className="sk-text-body-small-medium text-sko-text-subtle">
+        <Both full={stat.detail} short={stat.shortDetail} />
+      </p>
+      {stat.trend || stat.goal ? (
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
+          {stat.trend && trend ? (
+            <Badge color={trend.color} size="sm" leftIcon={trend.icon}>
+              <span aria-hidden="true">{stat.trend.label}</span>
+              <span className="sr-only">{stat.trend.spoken}</span>
+            </Badge>
+          ) : null}
+          {stat.goal ? (
+            <Badge color="gray" size="sm">
+              <span aria-hidden="true">{stat.goal.label}</span>
+              <span className="sr-only">{stat.goal.spoken}</span>
+            </Badge>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * DS `LMS/Platform/Dashboard/Today-at-a-glance`: the Dashboard hero card, full width.
+ * Title (label-small/Semibold, text/on-inverse) on bg/inverse, then the four figures, each on
+ * its own card (bg/page, Radius/card-inset) with an arrow and a goal (proposal of 21 Oct 2026).
+ * Four in a row from tablet up (gap 20 / 24); on a phone the row scrolls sideways, the cards
+ * 148 wide and snapping, so the card keeps one line and "Pick up where you left off" stays up.
+ * Padding 24 / 20 / 16. The two circles are decoration only: bg/info (200) and bg/primary
+ * (320) at 12% layer opacity, clipped by the card.
  */
 export function GlanceCard({ title, stats, className }: GlanceCardProps) {
   return (
@@ -27,7 +81,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       aria-labelledby="dashboard-glance-title"
       data-glance=""
       className={cn(
-        "relative flex min-w-0 flex-col gap-4 overflow-hidden rounded-card bg-sko-bg-inverse p-4 md:gap-5 md:p-5 lg:p-6",
+        "relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-card bg-sko-bg-inverse p-4 md:gap-4 md:p-5 lg:p-6",
         className,
       )}
     >
@@ -44,17 +98,10 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-inverse">
         {title}
       </h2>
-      <ul className="relative flex justify-between gap-2 md:grid md:grid-cols-4 md:gap-5 lg:gap-6">
+      <ul className="relative -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden">
         {stats.map((stat) => (
-          <li key={stat.label} className="w-min md:w-auto md:min-w-0">
-            <PlatformStat
-              theme="inverse"
-              label={stat.label}
-              value={stat.value}
-              detail={stat.detail}
-              shortLabel={stat.shortLabel}
-              shortDetail={stat.shortDetail}
-            />
+          <li key={stat.label} className="w-[148px] shrink-0 snap-start md:w-auto md:min-w-0">
+            <StatCard stat={stat} />
           </li>
         ))}
       </ul>

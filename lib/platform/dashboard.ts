@@ -23,9 +23,17 @@ export interface DashboardStat {
   label: string;
   value: string;
   detail: string;
-  /** The phone's one-line card (Nelson, 21 Oct 2026): shorter words, same facts. */
+  /** The phone's line uses shorter words, same facts. */
   shortLabel?: string;
   shortDetail?: string;
+  /**
+   * The arrow (Nelson, 21 Oct 2026: "seta + meta = contexto"): this month so far against the
+   * same days of last month. Up is green, down is red, level is gray. Only on a figure that
+   * has a history in the data (certificate issue dates).
+   */
+  trend?: { direction: "up" | "down" | "level"; label: string; spoken: string };
+  /** The goal beside the figure, only when a real fact sets it (a program end, the deadlines). */
+  goal?: { label: string; spoken: string };
 }
 
 /**
@@ -35,6 +43,12 @@ export interface DashboardStat {
  * Since 20 Oct 2026 every figure is counted from the sample data (Nelson): every course the
  * learner is enrolled in (the single courses and the courses of the three programs), how many
  * are started and not complete, how many are complete, and the programs by state.
+ *
+ * Arrows and goals (Nelson, 21 Oct 2026): a figure alone says nothing, it needs a comparison and
+ * a goal. Only real facts: the arrows count certificate issue dates (Open edX `created_date`);
+ * the goals come from the programs' end dates, the enrolments and the deadlines. In progress
+ * gets no arrow: fewer courses in progress can mean more completed, so up and down are not
+ * good or bad there.
  */
 const enrolled = CATALOG.length;
 const coursesInProgress = CATALOG.filter((c) => c.percent !== null && c.percent > 0 && c.percent < 100).length;
@@ -43,18 +57,83 @@ const programPercents = PROGRAMS.map((p) => p.courses.map((c) => c.card.progress
 const programsCompleted = programPercents.filter((ps) => ps.every((x) => x === 100)).length;
 const programsInProgress = programPercents.filter((ps) => ps.some((x) => x > 0) && !ps.every((x) => x === 100)).length;
 
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const shortMonth = (d: Date) => MONTH_NAMES[d.getMonth()].slice(0, 3);
+
+/** "30 September 2026" → the day. */
+function parseIssued(text: string): Date | null {
+  const m = /^(\d{1,2}) ([A-Za-z]+) (\d{4})$/.exec(text.trim());
+  if (!m) return null;
+  const month = MONTH_NAMES.findIndex((n) => n.toLowerCase().startsWith(m[2].toLowerCase().slice(0, 3)));
+  return month < 0 ? null : new Date(Number(m[3]), month, Number(m[1]));
+}
+
+/** This month up to today against the same days of last month. */
+function monthTrend(dates: (Date | null)[], noun: string) {
+  const today = parseDay(SAMPLE_TODAY);
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+  const inWindow = (d: Date, first: Date) =>
+    d.getFullYear() === first.getFullYear() && d.getMonth() === first.getMonth() && d.getDate() <= today.getDate();
+  const now = dates.filter((d): d is Date => !!d && inWindow(d, new Date(today.getFullYear(), today.getMonth(), 1))).length;
+  const before = dates.filter((d): d is Date => !!d && inWindow(d, lastMonth)).length;
+  const delta = now - before;
+  const prev = shortMonth(lastMonth);
+  const direction = delta > 0 ? "up" : delta < 0 ? "down" : "level";
+  return {
+    direction,
+    label: delta === 0 ? `Same as ${prev}` : `${Math.abs(delta)} vs ${prev}`,
+    spoken: `${now} ${noun} this month so far, ${before} by the same day of ${MONTH_NAMES[lastMonth.getMonth()]}`,
+  } as const;
+}
+
+const issuedDates = earnedCertificates.map((e) => parseIssued(e.certificate.document.issuedOn));
+const courseIssuedDates = earnedCertificates.filter((e) => e.kind === "course").map((e) => parseIssued(e.certificate.document.issuedOn));
+const programEnd = (p: (typeof PROGRAMS)[number]) => p.dates.find((d) => d.id === "ends")?.iso;
+const lastEnd = PROGRAMS.map(programEnd).filter((iso): iso is string => !!iso).sort().at(-1);
+const lastEndLabel = lastEnd ? `${shortMonth(parseDay(lastEnd))} ${lastEnd.slice(0, 4)}` : "";
+const activeProgram = PROGRAMS.find((_, i) => programPercents[i].some((x) => x > 0) && !programPercents[i].every((x) => x === 100));
+const activeEnd = activeProgram ? programEnd(activeProgram) : undefined;
+const possibleCertificates = enrolled + PROGRAMS.length;
+const dueThisWeek = calendarEvents.filter(isDueThisWeek).length;
+const pct = (a: number, b: number) => `${Math.round((a / b) * 100)}%`;
+
 export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
   title: "Your learning at a glance",
   stats: [
-    { label: "Courses in progress", value: String(coursesInProgress), detail: `of ${enrolled} enrolled`, shortLabel: "In progress", shortDetail: `of ${enrolled} courses` },
-    { label: "Courses completed", value: String(coursesCompleted), detail: `of ${enrolled} enrolled`, shortLabel: "Completed", shortDetail: `of ${enrolled} courses` },
+    {
+      label: "Courses in progress",
+      value: String(coursesInProgress),
+      detail: `of ${enrolled} enrolled`,
+      shortLabel: "In progress",
+      shortDetail: `of ${enrolled} courses`,
+      goal: { label: `${dueThisWeek} due this week`, spoken: `${dueThisWeek} deadlines in the next seven days` },
+    },
+    {
+      label: "Courses completed",
+      value: String(coursesCompleted),
+      detail: `Goal: all ${enrolled} by ${lastEndLabel}`,
+      shortLabel: "Completed",
+      shortDetail: `of ${enrolled} courses`,
+      trend: monthTrend(courseIssuedDates, "courses completed"),
+      goal: { label: `${pct(coursesCompleted, enrolled)} of goal`, spoken: `${pct(coursesCompleted, enrolled)} of the goal: all ${enrolled} enrolled courses by ${lastEndLabel}` },
+    },
     // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
-    { label: "Certificates", value: String(earnedCertificates.length), detail: "ready to download", shortDetail: "to download" },
+    {
+      label: "Certificates",
+      value: String(earnedCertificates.length),
+      detail: "ready to download",
+      shortDetail: "to download",
+      trend: monthTrend(issuedDates, "certificates issued"),
+      goal: { label: `of ${possibleCertificates} possible`, spoken: `${earnedCertificates.length} of the ${possibleCertificates} certificates your courses and programs can give` },
+    },
     {
       label: "Programs",
       value: String(PROGRAMS.length),
       detail: `${programsInProgress} in progress · ${programsCompleted} completed`,
       shortDetail: `${programsInProgress} active · ${programsCompleted} done`,
+      goal: activeEnd
+        ? { label: `Ends ${shortMonth(parseDay(activeEnd))} ${activeEnd.slice(0, 4)}`, spoken: `${activeProgram?.title} ends on ${activeEnd}` }
+        : undefined,
     },
   ],
 };
