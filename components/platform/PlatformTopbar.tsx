@@ -3,8 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, ChevronDown, Menu, Moon, Sun } from "lucide-react";
-import { Icon } from "@/lib/icons";
+import { Bell, ChevronDown, Moon, Sun } from "lucide-react";
+import { Icon, Menu02 } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { Badge } from "@/components/atoms/Badge";
 import { useLmsStore } from "@/lib/store";
@@ -159,7 +159,8 @@ function Initials() {
  *   The sections are five DS `Topbar-Item` (v2.0, Nelson, 12 Oct 2026): underline tabs that fill
  *   the height of the bar, 24 apart (12 until 12 Oct), with no rule of their own. The page sets which one is current;
  *   in Figma that is `Current=On` on the item, there is no property for it on the Topbar.
- * - Compact (tablet and mobile): 64 tall, padding 8/16 — logo · notifications · theme · avatar · menu.
+ * - Compact (tablet and mobile): 64 tall, padding 8/16 — menu · logo, then notifications · theme · avatar
+ *   (the menu on the left since 21 Oct 2026, as in the player bar).
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
  *   disclosure list under the bar.
  * Calendar, Discussion and Services have no page in the prototype.
@@ -271,17 +272,45 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
         </div>
 
         {/* Compact */}
-        {/* DS Compact (Topbar 1.3, Nelson 17 Oct 2026): 64 with the rule, padding 8 / 16; the controls are
-          44px targets, centred. Notifications · Theme · learner · Menu. */}
+        {/* DS Compact (Topbar 1.8, Nelson 21 Oct 2026): 64 with the rule, padding 8 / 16; the controls are
+          44px targets, centred. Menu · logo on the left (as the player bar), Notifications · Theme ·
+          learner on the right. The menu's icon sits on the 16px edge, the logo 8 after it. */}
         <div className="flex h-[63px] items-center justify-between px-4 lg:hidden">
-          <Link
-            href="/platform/dashboard"
-            aria-label="SkillUp, Dashboard"
-            {...ink}
-            className="flex min-h-11 items-center"
-          >
-            <SkillUpLogo className="h-[30px]" />
-          </Link>
+          <div className="flex items-center">
+            <div ref={menu.containerRef}>
+              <button
+                type="button"
+                {...ink}
+                {...menu.triggerProps}
+                aria-label="Platform sections"
+                className="-ml-2.5 inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover"
+              >
+                <Icon icon={Menu02} size={24} />
+              </button>
+              {menu.open ? (
+                <nav
+                  {...menu.panelProps}
+                  aria-label="Platform"
+                  className="absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
+                >
+                  <SectionLinks
+                    current={current}
+                    onPick={menu.close}
+                    className="flex flex-col gap-1"
+                    itemClassName="min-h-11 w-full"
+                  />
+                </nav>
+              ) : null}
+            </div>
+            <Link
+              href="/platform/dashboard"
+              aria-label="SkillUp, Dashboard"
+              {...ink}
+              className="-ml-0.5 flex min-h-11 items-center"
+            >
+              <SkillUpLogo className="h-[30px]" />
+            </Link>
+          </div>
           <div className="flex items-center gap-1">
             <span {...ink} className="flex items-center gap-1">
               {bell}
@@ -302,31 +331,6 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                   panelProps={profileCompact.panelProps}
                   onDone={profileCompact.close}
                 />
-              ) : null}
-            </div>
-            <div ref={menu.containerRef}>
-              <button
-                type="button"
-                {...ink}
-                {...menu.triggerProps}
-                aria-label="Platform sections"
-                className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover"
-              >
-                <Icon icon={Menu} size={24} />
-              </button>
-              {menu.open ? (
-                <nav
-                  {...menu.panelProps}
-                  aria-label="Platform"
-                  className="absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
-                >
-                  <SectionLinks
-                    current={current}
-                    onPick={menu.close}
-                    className="flex flex-col gap-1"
-                    itemClassName="min-h-11 w-full"
-                  />
-                </nav>
               ) : null}
             </div>
           </div>
