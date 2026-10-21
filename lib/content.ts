@@ -956,8 +956,9 @@ export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
 /**
  * A video or podcast whose playback the platform measures: it completes by itself once 90% of
  * it has been played, in one session or across sessions (BR-01, P1-46; `lib/playback/coverage`).
- * In the prototype that is every video and podcast with a duration, since the simulated players
- * report the time played. A topic can say otherwise with `playbackMeasurable: false`.
+ * In the prototype that is every video and podcast (a missing duration falls back to 200 s, so the
+ * duration check only guards a zero), since the simulated players report the time played. A
+ * topic can say otherwise with `playbackMeasurable: false`.
  */
 export function isPlaybackMeasured(topic: FlatTopic): boolean {
   const family = topicFamily(topic.type);

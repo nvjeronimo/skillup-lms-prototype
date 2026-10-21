@@ -26,23 +26,38 @@ import type { TranscriptLine, VideoState } from "@/lib/types";
 /** DS `_Video actions bar` Size. Set by the caller; the bar never re-sizes itself. */
 export type VideoPlayerSize = "sm" | "md" | "lg";
 
+/** Why playback stopped. */
+export type PauseReason = "pause" | "end" | "hidden" | "unmount";
+
 export interface VideoPlayerProps {
   src?: string;
   /** Total duration in seconds (for the placeholder scrubber). */
   durationSeconds?: number;
-  /** Controlled current time. */
+  /**
+   * Controlled current time: the player jumps to it whenever it (or `seekKey`) changes. While
+   * playing, the player keeps the running time itself, so a controlled player never freezes
+   * and its caller is not re-rendered on every tick.
+   */
   currentTime?: number;
-  /** A jump by the learner (slider, skip buttons). Set, the player is controlled. */
+  /**
+   * Changes when the caller sets `currentTime` from outside (a transcript line, the demo menu),
+   * so a jump to the value it already had still applies.
+   */
+  seekKey?: number;
+  /** A jump by the learner (slider, skip buttons). */
   onSeek?: (seconds: number) => void;
   /**
    * Time PLAYED, not seeked: called on every tick of the simulated clock while playing, with the
-   * stretch played. A controlled player moves its time through this, not through `onSeek`, so a
-   * caller can count coverage (BR-01) and keep seek analytics for real seeks. Without it, a
-   * controlled player's time stands still while playing.
+   * stretch played, so a caller can count coverage (BR-01). Optional: the player's own time
+   * moves either way.
    */
   onPlaybackAdvance?: (from: number, to: number) => void;
-  /** Playback stopped (Pause, the end, the tab hidden, the player gone), at `seconds`. */
-  onPause?: (seconds: number) => void;
+  /** Playback started, at `seconds`. */
+  onPlay?: (seconds: number) => void;
+  /** Playback stopped at `seconds`: Pause, the end, the tab hidden, or the player gone. */
+  onPause?: (seconds: number, reason: PauseReason) => void;
+  /** Play at the end: playback starts again from 00:00 (not a seek). */
+  onRestart?: () => void;
   /**
    * Caption cues: the transcript lines of the topic. The overlay prints the line for the
    * current time (the first line before it starts). None, or left out: no caption overlay.
@@ -234,9 +249,12 @@ function ActionButton({
 export function VideoPlayer({
   durationSeconds = 200,
   currentTime: controlledTime = 0,
+  seekKey,
   onSeek,
   onPlaybackAdvance,
+  onPlay,
   onPause,
+  onRestart,
   captions: cues,
   state = "ready",
   onRetry,
@@ -252,10 +270,13 @@ export function VideoPlayer({
   const [volume, setVolume] = React.useState(75);
   const [muted, setMuted] = React.useState(false);
   const [fullscreen, setFullscreen] = React.useState(false);
-  // Without `onSeek` the player keeps its own position, so the slider and the skip buttons
-  // (which the DS bar shows at every size) work wherever the player is dropped in.
-  const [ownTime, setOwnTime] = React.useState(controlledTime);
-  const currentTime = onSeek ? controlledTime : ownTime;
+  // The player always keeps its own position: the slider and the skip buttons (which the DS bar
+  // shows at every size) work wherever it is dropped in, and playback moves it without a round
+  // trip through the caller. A new `currentTime` (or `seekKey`) from the caller moves it there.
+  const [currentTime, setOwnTime] = React.useState(controlledTime);
+  React.useEffect(() => {
+    setOwnTime(controlledTime);
+  }, [controlledTime, seekKey]);
   const wrapRef = React.useRef<HTMLDivElement>(null);
 
   // Classes per size of the action bar, which has three. `auto` is written sm first, then md
@@ -281,9 +302,9 @@ export function VideoPlayer({
   }, []);
 
   // The simulated clock (no media file): advances while playing, at the selected speed.
-  function stop(seconds: number) {
+  function stop(seconds: number, reason: PauseReason) {
     setPlaying(false);
-    onPause?.(seconds);
+    onPause?.(seconds, reason);
   }
   usePlaybackClock({
     playing: playing && state === "ready",
@@ -291,32 +312,37 @@ export function VideoPlayer({
     duration: durationSeconds,
     speed: SPEEDS[speedIdx],
     onAdvance: (from, to) => {
-      if (!onSeek) setOwnTime(to);
+      setOwnTime(to);
       onPlaybackAdvance?.(from, to);
     },
-    onEnd: () => stop(durationSeconds),
-    onHidden: () => stop(currentTime),
+    onEnd: () => stop(durationSeconds, "end"),
+    onHidden: () => stop(currentTime, "hidden"),
   });
   // Leaving while playing (another topic, another page) stops playback where it was.
   const stopOnUnmount = React.useRef<() => void>(() => {});
   stopOnUnmount.current = () => {
-    if (playing) onPause?.(currentTime);
+    if (playing) onPause?.(currentTime, "unmount");
   };
   React.useEffect(() => () => stopOnUnmount.current(), []);
 
   function togglePlay() {
     if (playing) {
-      stop(currentTime);
+      stop(currentTime, "pause");
       return;
     }
-    // Play at the end starts again from the top.
-    if (currentTime >= durationSeconds) seekTo(0);
+    // Play at the end starts again from the top: a restart, not a seek.
+    const restart = currentTime >= durationSeconds;
+    if (restart) {
+      setOwnTime(0);
+      onRestart?.();
+    }
     setPlaying(true);
+    onPlay?.(restart ? 0 : currentTime);
   }
 
   function seekTo(seconds: number) {
-    if (onSeek) onSeek(seconds);
-    else setOwnTime(seconds);
+    setOwnTime(seconds);
+    onSeek?.(seconds);
   }
 
   function handleScrub(e: React.ChangeEvent<HTMLInputElement>) {

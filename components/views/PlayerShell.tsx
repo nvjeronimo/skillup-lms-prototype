@@ -67,7 +67,7 @@ import {
 } from "@/lib/data";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { lineAt } from "@/lib/playback/lineAt";
-import { RESUME_SAVE_EVERY_SECONDS } from "@/lib/playback/coverage";
+import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
 
 
 export interface PlayerShellProps {
@@ -100,9 +100,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const storedResume = resumePositions[topicId];
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
-  const recordPlayback = useLmsStore((s) => s.recordPlayback);
-  /** Where playback last saved the resume position: it saves every few seconds, not every tick. */
-  const lastResumeSave = React.useRef(0);
+  const syncPlayhead = useLmsStore((s) => s.syncPlayhead);
+  const setActiveLine = useLmsStore((s) => s.setActiveLine);
+  const seekSeq = useLmsStore((s) => s.seekSeq);
+  // Played time goes to the store in a few writes, not on every tick (usePlaybackRecorder).
+  const playback = usePlaybackRecorder(topicId, topic ? getMediaSeconds(topic) : 0);
   const activeLineId = useLmsStore((s) => s.activeLineId);
   const collapsedModules = useLmsStore((s) => s.collapsedModules);
   const toggleModule = useLmsStore((s) => s.toggleModule);
@@ -448,6 +450,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
+                    seekKey={seekSeq}
                     heightPx={videoHeight}
                     docked={videoDocked}
                     onSeek={(s) => {
@@ -455,22 +458,31 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       saveResumePosition(topicId, s);
                       track("video_seek", { to: s });
                     }}
-                    // Played time: the same playhead as a seek, but no seek event, and the resume
-                    // position saved every few seconds and on pause, not on every tick.
+                    // Played time: no seek event. The player shows the running time itself; the
+                    // store gets the coverage and resume position every few seconds, and the
+                    // transcript line only when it changes.
                     onPlaybackAdvance={(from, to) => {
-                      seekVideoTo(to, lineAt(getTranscript(topic), to));
-                      recordPlayback(topicId, from, to);
+                      playback.advance(from, to);
+                      const line = lineAt(getTranscript(topic), to);
+                      if (line && line !== useLmsStore.getState().activeLineId) setActiveLine(line);
+                    }}
+                    onPlay={(at) => {
                       // Pressing Play answers the resume banner: it must not reappear as the position saves.
                       setResumeHandled(true);
-                      if (Math.abs(to - lastResumeSave.current) >= RESUME_SAVE_EVERY_SECONDS) {
-                        lastResumeSave.current = to;
-                        saveResumePosition(topicId, to);
-                      }
+                      track("video_play", { topicId, topicType: family, at });
                     }}
-                    // At the end there is nothing to resume: the next visit starts at 00:00.
-                    onPause={(s) =>
-                      s >= durationSeconds ? clearResumePosition(topicId) : saveResumePosition(topicId, s)
-                    }
+                    onPause={(at, reason) => {
+                      playback.flush();
+                      syncPlayhead(at);
+                      // At the end there is nothing to resume: the next visit starts at 00:00.
+                      if (reason === "end") clearResumePosition(topicId);
+                      else saveResumePosition(topicId, at);
+                      track(reason === "end" ? "video_complete" : "video_pause", { topicId, topicType: family, at });
+                    }}
+                    onRestart={() => {
+                      syncPlayhead(0);
+                      track("video_restart", { topicId, from: durationSeconds });
+                    }}
                   />
                 </div>
                 {showResume ? (

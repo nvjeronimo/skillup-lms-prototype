@@ -179,6 +179,7 @@ function EmbeddedVideo({ block }: { block: Extract<LessonBlock, { kind: "video" 
       captions={block.transcript}
       currentTime={time}
       onSeek={setTime}
+      onPlaybackAdvance={(_, to) => setTime(to)}
     />
   );
 }

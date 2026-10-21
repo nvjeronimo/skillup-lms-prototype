@@ -10,7 +10,8 @@ import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn, secondsToTs } from "@/lib/utils";
 import { usePlaybackClock } from "@/lib/playback/usePlaybackClock";
-import { RESUME_SAVE_EVERY_SECONDS } from "@/lib/playback/coverage";
+import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
+import { track } from "@/lib/analytics";
 
 const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
 
@@ -27,12 +28,12 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const resumePositions = useLmsStore((s) => s.resumePositions);
   const saveResumePosition = useLmsStore((s) => s.saveResumePosition);
   const clearResumePosition = useLmsStore((s) => s.clearResumePosition);
-  const recordPlayback = useLmsStore((s) => s.recordPlayback);
   // The demo menu ("Mark 85% watched") moves the playhead through the store's timestamp; the
-  // podcast keeps its own time otherwise, so only a change after mount is followed.
+  // podcast keeps its own time otherwise, so only a jump after mount is followed. `seekSeq`
+  // changes on every jump, so the same 85% pressed twice applies twice.
   const storePlayhead = useLmsStore((s) => s.currentVideoTimestamp);
-  const mountedPlayhead = React.useRef<number | null>(storePlayhead);
-  const lastResumeSave = React.useRef(0);
+  const seekSeq = useLmsStore((s) => s.seekSeq);
+  const mountedSeq = React.useRef<number | null>(seekSeq);
 
   const [playing, setPlaying] = React.useState(false);
   const [speedIdx, setSpeedIdx] = React.useState(1);
@@ -43,18 +44,23 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const storedResume = resumePositions[topicId];
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
   const durationSeconds = podcast?.durationSeconds ?? 0;
+  // Played time goes to the store in a few writes, not on every tick.
+  const playback = usePlaybackRecorder(topicId, durationSeconds);
+  const playEvent = { topicId, topicType: "podcast" };
 
   React.useEffect(() => {
-    if (mountedPlayhead.current === storePlayhead) return;
-    mountedPlayhead.current = null;
+    if (mountedSeq.current === seekSeq) return;
+    mountedSeq.current = null;
     setT(Math.max(0, Math.min(durationSeconds, storePlayhead)));
-  }, [storePlayhead, durationSeconds]);
+  }, [seekSeq, storePlayhead, durationSeconds]);
 
-  function stop(seconds: number) {
+  function stop(seconds: number, ended = false) {
     setPlaying(false);
+    playback.flush();
     // At the end there is nothing to resume: the next visit starts at 00:00.
-    if (seconds >= durationSeconds) clearResumePosition(topicId);
+    if (ended) clearResumePosition(topicId);
     else saveResumePosition(topicId, seconds);
+    track(ended ? "video_complete" : "video_pause", { ...playEvent, at: seconds });
   }
   // The simulated clock (no audio file): advances while playing, at the selected speed. Played
   // time counts towards the 90% (recordPlayback); a seek does not.
@@ -65,19 +71,16 @@ export function PodcastView({ topicId }: { topicId: string }) {
     speed: SPEEDS[speedIdx],
     onAdvance: (from, to) => {
       setT(to);
-      recordPlayback(topicId, from, to);
-      setResumeHandled(true);
-      if (Math.abs(to - lastResumeSave.current) >= RESUME_SAVE_EVERY_SECONDS) {
-        lastResumeSave.current = to;
-        saveResumePosition(topicId, to);
-      }
+      playback.advance(from, to);
     },
-    onEnd: () => stop(durationSeconds),
+    onEnd: () => stop(durationSeconds, true),
     onHidden: () => stop(t),
   });
   const stopOnUnmount = React.useRef<() => void>(() => {});
   stopOnUnmount.current = () => {
-    if (playing) saveResumePosition(topicId, t);
+    if (!playing) return;
+    playback.flush();
+    saveResumePosition(topicId, t);
   };
   React.useEffect(() => () => stopOnUnmount.current(), []);
 
@@ -89,8 +92,16 @@ export function PodcastView({ topicId }: { topicId: string }) {
       stop(t);
       return;
     }
-    if (t >= durationSeconds) setT(0);
+    // Play at the end starts again from the top: a restart, not a seek.
+    const restart = t >= durationSeconds;
+    if (restart) {
+      setT(0);
+      track("video_restart", { topicId, from: durationSeconds });
+    }
+    // Pressing Play answers the resume banner: it must not reappear as the position saves.
+    setResumeHandled(true);
     setPlaying(true);
+    track("video_play", { ...playEvent, at: restart ? 0 : t });
   }
 
   function seek(next: number) {

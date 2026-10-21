@@ -286,6 +286,7 @@ function RecordingStage({ session }: { session: ViltSession }) {
             captions={session.transcript}
             currentTime={time}
             onSeek={setTime}
+            onPlaybackAdvance={(_, to) => setTime(to)}
             size="md"
           />
         </div>
