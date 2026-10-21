@@ -291,13 +291,13 @@ export function AccessibilitySection() {
           />
         </div>
         <ToggleRow
-          label="Colourblind-safe states"
+          label="Colorblind-safe states"
           hint="Red–green safe (deuter + protan)"
           checked={vision === "cvd"}
           onChange={(v) => setVision(v ? "cvd" : "default")}
         />
         <ToggleRow label="Reduce motion" hint="Turn off animations and transitions" checked={reduceMotion} onChange={setReduceMotion} />
-        <ToggleRow label="Underline links" hint="Don’t rely on colour alone" checked={underlineLinks} onChange={setUnderlineLinks} />
+        <ToggleRow label="Underline links" hint="Don’t rely on color alone" checked={underlineLinks} onChange={setUnderlineLinks} />
         <ToggleRow
           label="Larger touch targets"
           hint="Minimum 44×44 px controls · on by default on mobile"

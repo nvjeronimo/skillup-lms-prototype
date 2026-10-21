@@ -10,8 +10,8 @@ export const activities: Record<string, CourseActivity> = {
       { title: "Read the team profile", detail: "Open the file in the Downloads tab and read the profile: six people, their roles, their working hours, and the three frictions they reported last month." },
       { title: "Write one rule per friction", detail: "For each of the three frictions, write a rule that would have prevented it. Say who does what and by when: “We answer a direct question within one working day.”" },
       { title: "Cover the basics", detail: "Add a line each for core hours, where decisions are written down, how to signal that you are unavailable, and what counts as urgent." },
-      { title: "Remove what you cannot observe", detail: "Delete any rule you could not check from the outside, such as “be respectful” or “stay engaged”. Replace it with a behaviour or drop it." },
-      { title: "Check the result", detail: "A good agreement has six to eight rules on one page, each one a behaviour someone could notice, and a date on which the team reviews it. It is written as “we”, not as instructions from the manager." },
+      { title: "Remove what you cannot observe", detail: "Delete any rule you could not check from the outside, such as “be respectful” or “stay engaged”. Replace it with a behavior or drop it." },
+      { title: "Check the result", detail: "A good agreement has six to eight rules on one page, each one a behavior someone could notice, and a date on which the team reviews it. It is written as “we”, not as instructions from the manager." },
     ],
   },
   "lrt-m3-t3": {

@@ -47,7 +47,7 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The case-study shop used in the examples is in Handouts, with its product catalogue and one month of sample store data. Choose the business you will work on before Assignment 01: the four assignments and the final project all use the same one.",
+    body: "The case-study shop used in the examples is in Handouts, with its product catalog and one month of sample store data. Choose the business you will work on before Assignment 01: the four assignments and the final project all use the same one.",
   },
   intro: {
     title: "What you'll learn",
@@ -85,7 +85,7 @@ export const page: CourseDetail = {
     items: [
       "Social audit template (XLSX)",
       "Content calendar template (XLSX)",
-      "Case study: shop catalogue and store data (ZIP)",
+      "Case study: shop catalog and store data (ZIP)",
       "Launch plan template (DOCX)",
     ],
   },
@@ -372,7 +372,7 @@ export const page: CourseDetail = {
             author: "Marcus Lee",
             label: "STAFF",
             accepted: true,
-            body: "Yes. Handouts has a case-study shop with a product catalogue and a month of sample store data, and every assignment can be done with it. If you do have a real business in mind, use it for the social modules and the case-study data for the funnel analysis in Module 4.",
+            body: "Yes. Handouts has a case-study shop with a product catalog and a month of sample store data, and every assignment can be done with it. If you do have a real business in mind, use it for the social modules and the case-study data for the funnel analysis in Module 4.",
             time: "yesterday",
           },
           {

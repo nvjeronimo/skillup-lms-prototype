@@ -17,7 +17,7 @@ export const activities: Record<string, CourseActivity> = {
   "dmf-m2-t4": {
     file: { name: "funnel-rates-worksheet.xlsx", size: "27 KB" },
     intro:
-      "You work out the conversion rates of a five-step funnel and choose the step to fix first. The numbers are simple; the judgement is in deciding which rate matters.",
+      "You work out the conversion rates of a five-step funnel and choose the step to fix first. The numbers are simple; the judgment is in deciding which rate matters.",
     steps: [
       { title: "Read the funnel", detail: "Open the worksheet in the Downloads tab. It gives one month of counts for five steps: visits, product views, baskets, checkouts started and orders." },
       { title: "Work out each step rate", detail: "Divide each step by the step before it and write the result as a percentage with one decimal." },

@@ -11,7 +11,7 @@ import type { Course } from "@/lib/courses/kit";
 export const outline: Course = {
   id: "sec2",
   slug: "network-security-and-defence",
-  title: "Network Security and Defence",
+  title: "Network Security and Defense",
   provider: "SkillUp",
   courseType: "Course",
   difficulty: "Beginner",
@@ -42,7 +42,7 @@ export const outline: Course = {
                 {
                   id: "sec2-m1-t1-ln1",
                   ts: "0:00",
-                  text: "Welcome to Network Security and Defence, the second course of the Cybersecurity Fundamentals Certificate.",
+                  text: "Welcome to Network Security and Defense, the second course of the Cybersecurity Fundamentals Certificate.",
                 },
                 {
                   id: "sec2-m1-t1-ln2",

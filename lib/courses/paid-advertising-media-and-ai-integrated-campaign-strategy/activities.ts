@@ -65,7 +65,7 @@ export const activities: Record<string, CourseActivity> = {
   "paid-m3-t15": {
     file: { name: "automation-guardrails.docx", size: "32 KB" },
     intro:
-      "You write the guardrails for a campaign that sets its own bids and chooses its own placements. Automation does what the goal says, so the limits you set are where your judgement goes.",
+      "You write the guardrails for a campaign that sets its own bids and chooses its own placements. Automation does what the goal says, so the limits you set are where your judgment goes.",
     steps: [
       { title: "Read the campaign set-up", detail: "Open the file in the Downloads tab. Read what the automated campaign is allowed to decide: bids, audiences, placements and which creative to show." },
       { title: "Set the spending limits", detail: "Write the daily budget cap, the highest acceptable cost per order, and the point at which the campaign pauses itself." },

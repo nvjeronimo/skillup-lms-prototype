@@ -21,7 +21,7 @@ export const activities: Record<string, CourseActivity> = {
     steps: [
       { title: "List the fixed facts", detail: "Open the worksheet in the Downloads tab. From the base message, copy out the facts that may not change: the product, the price, the date and the offer. You will check each version against this list." },
       { title: "Write one line per segment", detail: "For each of the three segments in the worksheet, write what that reader cares about most and the one objection they are likely to raise. This line is the context you give the assistant." },
-      { title: "Prompt for three versions", detail: "Give the assistant the base message, your voice chart from Module 1, the segment lines and a length limit of 60 words each. Ask for three versions and for a note saying what it emphasised in each." },
+      { title: "Prompt for three versions", detail: "Give the assistant the base message, your voice chart from Module 1, the segment lines and a length limit of 60 words each. Ask for three versions and for a note saying what it emphasized in each." },
       { title: "Edit and mark your changes", detail: "Correct each version by hand. Remove any claim that is not in your list of facts, and restore the voice where it drifted. Highlight every sentence you changed." },
       { title: "Check the result", detail: "A good result is three versions that open differently, carry exactly the same facts, and still sound like one brand. If you can swap two versions between segments and nobody would notice, the emphasis is not specific enough." },
     ],
@@ -31,7 +31,7 @@ export const activities: Record<string, CourseActivity> = {
     intro:
       "You review four AI-generated images against the visual section of the Brightwell Refill brand guide and decide which can be used. The skill is giving a reason someone else can act on, not a like or a dislike.",
     steps: [
-      { title: "Read the visual rules", detail: "Open the check sheet in the Downloads tab. Read the five visual rules on the first page: colour palette, lighting, how the product is shown, how people are shown, and what never appears." },
+      { title: "Read the visual rules", detail: "Open the check sheet in the Downloads tab. Read the five visual rules on the first page: color palette, lighting, how the product is shown, how people are shown, and what never appears." },
       { title: "Score each image against each rule", detail: "For each of the four images, mark every rule as met, not met or cannot tell. Look at the details generated images often get wrong: text on labels, hands, and the shape of the bottle." },
       { title: "Decide: use, fix or reject", detail: "Give each image one verdict. Use means no rule is broken. Fix means one rule is broken and a new prompt could correct it. Reject means the product is misrepresented or the image could mislead a customer." },
       { title: "Write the fix as a prompt change", detail: "For each image marked fix, write the one sentence you would add to or remove from the prompt. Name the rule it answers." },

@@ -173,7 +173,7 @@ export const page: CourseDetail = {
         state: "complete",
         badges: [{ label: "COURSE", color: GRAY }],
         title: "Course starts",
-        description: "Enrolment opened and all module content became available.",
+        description: "Enrollment opened and all module content became available.",
       },
       {
         id: "graded-quiz-trust",

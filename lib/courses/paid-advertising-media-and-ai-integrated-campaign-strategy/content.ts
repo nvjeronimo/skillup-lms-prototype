@@ -200,7 +200,7 @@ export const content: CourseContent = {
           heading: "Reasons to believe",
           paragraphs: [
             "A stranger who clicked an ad owes you no trust. Give evidence near the action: reviews with a number and a rating, the price with delivery costs included, the returns policy in one line, and a way to reach a person.",
-            "Keep forms short. Each field you add is a reason to leave. Ask only for what you need to fulfil this request. The rest can wait until the person is a customer.",
+            "Keep forms short. Each field you add is a reason to leave. Ask only for what you need to fulfill this request. The rest can wait until the person is a customer.",
           ],
         },
         {
@@ -269,7 +269,7 @@ export const content: CourseContent = {
       lede: "In search advertising you choose keywords and the person finds you. In paid social nobody is searching, so you choose people. Platforms offer three main ways to do it: by what people seem interested in, by lists you already hold, and by resemblance to your best customers. This reading compares them.",
       sections: [
         {
-          heading: "Interest and behaviour audiences",
+          heading: "Interest and behavior audiences",
           paragraphs: [
             "The platform sorts its users by what they follow, watch, click and buy, and lets you select groups: people interested in trail running, new parents, people who shop online often. You can narrow by place, age range and language.",
             "These audiences are the place to start when you have no data of your own. They are also guesses made by the platform. “Interested in running” includes someone who watched one marathon clip. Expect to test several against each other and keep the one or two that convert.",
@@ -417,7 +417,7 @@ export const content: CourseContent = {
           },
           {
             id: "c",
-            label: "Maximise clicks with a bid limit, until there are enough conversions to learn from",
+            label: "Maximize clicks with a bid limit, until there are enough conversions to learn from",
             correct: true,
             feedback: "Correct. Start simple, keep tracking, and move to a conversion goal when the data allows.",
           },

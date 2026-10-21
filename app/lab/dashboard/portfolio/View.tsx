@@ -218,7 +218,7 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
               {s.label}
             </Badge>
             {e.program ? (
-              <span className="sk-text-body-small-medium text-sko-text-subtle">Programme · {e.program.value}</span>
+              <span className="sk-text-body-small-medium text-sko-text-subtle">Program · {e.program.value}</span>
             ) : null}
           </div>
           {e.program?.mock ? <MockTag reason={e.program.mock} /> : null}

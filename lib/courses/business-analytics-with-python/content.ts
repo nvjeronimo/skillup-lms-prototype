@@ -97,7 +97,7 @@ export const content: CourseContent = {
         {
           heading: "The types that matter",
           paragraphs: [
-            "Numbers come as int and float. Money held as a float shows rounding artefacts (0.1 + 0.2 is not exactly 0.3), so round at the point of reporting, not in the middle of a calculation. Text is str; dates should become datetime values as early as possible, because text that looks like a date sorts alphabetically, not by time.",
+            "Numbers come as int and float. Money held as a float shows rounding artifacts (0.1 + 0.2 is not exactly 0.3), so round at the point of reporting, not in the middle of a calculation. Text is str; dates should become datetime values as early as possible, because text that looks like a date sorts alphabetically, not by time.",
             "A list keeps items in order: the months of a quarter. A dict maps keys to values: a product code to its price. Most of what you pass to pandas is one of these two. A DataFrame, which you meet in the next lesson, behaves much like a dict of columns.",
           ],
         },
@@ -226,7 +226,7 @@ export const content: CourseContent = {
         ],
       },
       {
-        question: "A CSV of orders has a column order_date. After pd.read_csv, its dtype is object. What should you do before analysing by month?",
+        question: "A CSV of orders has a column order_date. After pd.read_csv, its dtype is object. What should you do before analyzing by month?",
         platformPrompt: "Choose the correct option",
         explanation:
           "A dtype of object means the dates were read as text. Convert them with pd.to_datetime, or with parse_dates when reading, so that sorting, resampling and month extraction work on time, not on characters.",

@@ -37,7 +37,7 @@ const program: Program = {
 
   coursesIntro: {
     title: "Courses in this program",
-    lead: "This Certificate Program comprises 5 courses that take you from the principles of security to a complete security plan for a small organisation. Take them in order: each one builds on the one before.",
+    lead: "This Certificate Program comprises 5 courses that take you from the principles of security to a complete security plan for a small organization. Take them in order: each one builds on the one before.",
   },
   courses: [
     programCourse(1, "Security Foundations and the Threat Landscape", "SF", "business-analytics-with-python", {
@@ -53,7 +53,7 @@ const program: Program = {
       ],
       defaultOpen: true,
     }),
-    programCourse(2, "Network Security and Defence", "NS", "program-ai-digital-marketing", {
+    programCourse(2, "Network Security and Defense", "NS", "program-ai-digital-marketing", {
       progressMeta: "9 hours total",
       upNext: { title: "Course Introduction", type: "Video" },
       position: "4 modules",
@@ -119,7 +119,7 @@ const program: Program = {
         },
       ],
     }),
-    programCourse(5, "Capstone: Securing a Small Organisation", "CP", "program-course-7-capstone", {
+    programCourse(5, "Capstone: Securing a Small Organization", "CP", "program-course-7-capstone", {
       progressMeta: "12 hours total",
       upNext: { title: "Capstone Kickoff", type: "Video" },
       position: "4 modules",
@@ -148,7 +148,7 @@ const program: Program = {
       id: "faq-1",
       title: "What will I learn in the Cybersecurity Fundamentals Certificate?",
       body: [
-        "You learn how organisations protect their information and systems, and how they notice and handle an incident. The five courses cover security principles and risk, network defence, identity and cloud security, security operations and incident response, and a capstone in which you write a security plan for a small organisation.",
+        "You learn how organizations protect their information and systems, and how they notice and handle an incident. The five courses cover security principles and risk, network defense, identity and cloud security, security operations and incident response, and a capstone in which you write a security plan for a small organization.",
         "The program is defensive throughout. Attacks are studied so that you can prevent, detect and respond to them.",
       ],
       defaultOpen: true,
@@ -157,7 +157,7 @@ const program: Program = {
       id: "faq-2",
       title: "Who is this program for?",
       body: [
-        "People who want a first role in security, IT staff who have been handed security duties, and managers of small organisations who need to make informed decisions about risk. It also suits career changers from office, support or operations roles.",
+        "People who want a first role in security, IT staff who have been handed security duties, and managers of small organizations who need to make informed decisions about risk. It also suits career changers from office, support or operations roles.",
       ],
     },
     {
@@ -177,16 +177,16 @@ const program: Program = {
     },
     {
       id: "faq-5",
-      title: "Will I practise attacking systems?",
+      title: "Will I practice attacking systems?",
       body: [
-        "No. This is a defensive program. You analyse how attacks work at the level a defender needs, using diagrams, sample logs and case files, and you never test or scan a real system.",
+        "No. This is a defensive program. You analyze how attacks work at the level a defender needs, using diagrams, sample logs and case files, and you never test or scan a real system.",
       ],
     },
     {
       id: "faq-6",
       title: "What software or equipment do I need?",
       body: [
-        "A computer with a current browser, and a program that opens spreadsheets and documents. Every exercise uses prepared material: packet capture summaries, firewall rule tables, exported cloud settings and a sample alert queue. You do not need lab hardware, a cloud subscription or a licence for a security tool.",
+        "A computer with a current browser, and a program that opens spreadsheets and documents. Every exercise uses prepared material: packet capture summaries, firewall rule tables, exported cloud settings and a sample alert queue. You do not need lab hardware, a cloud subscription or a license for a security tool.",
       ],
     },
     {
@@ -222,16 +222,16 @@ const program: Program = {
 
   aboutIntro: {
     title: "About this program",
-    lead: "Build a working foundation in defensive security: how risk is assessed, how networks, identities and cloud services are protected, and how incidents are detected and handled. Finish with a security plan for a small organisation that you can show to an employer.",
+    lead: "Build a working foundation in defensive security: how risk is assessed, how networks, identities and cloud services are protected, and how incidents are detected and handled. Finish with a security plan for a small organization that you can show to an employer.",
   },
   about: [
     {
       id: "about-1",
       title: "Program Overview",
       body: [
-        "The Cybersecurity Fundamentals Certificate prepares you to take part in the security work of an organisation, from the first risk conversation to the review after an incident.",
-        "Across five courses you build the vocabulary of the field, learn how a network is defended, see how identity has become the main boundary in cloud services, and follow an alert from detection to recovery. Each course ends in written work on a fictional organisation, so that you practise the decisions and not only the definitions.",
-        "The capstone brings the four subjects together. You assess one small organisation and write the security plan its owner will act on.",
+        "The Cybersecurity Fundamentals Certificate prepares you to take part in the security work of an organization, from the first risk conversation to the review after an incident.",
+        "Across five courses you build the vocabulary of the field, learn how a network is defended, see how identity has become the main boundary in cloud services, and follow an alert from detection to recovery. Each course ends in written work on a fictional organization, so that you practice the decisions and not only the definitions.",
+        "The capstone brings the four subjects together. You assess one small organization and write the security plan its owner will act on.",
       ],
       defaultOpen: true,
     },
@@ -240,10 +240,10 @@ const program: Program = {
       title: "What You Will Learn",
       body: [
         "Course 1, Security Foundations and the Threat Landscape: confidentiality, integrity and availability; assets, threats and risk; how intrusions unfold; social engineering; frameworks, law and ethics.",
-        "Course 2, Network Security and Defence: how networks carry data; segmentation and trust zones; firewalls, intrusion detection and network logs; TLS, VPNs, email authentication and Wi-Fi.",
+        "Course 2, Network Security and Defense: how networks carry data; segmentation and trust zones; firewalls, intrusion detection and network logs; TLS, VPNs, email authentication and Wi-Fi.",
         "Course 3, Identity, Access and Cloud Security: authentication and phishing-resistant sign-in; least privilege and access reviews; the shared responsibility model; encryption, keys and backups.",
         "Course 4, Security Operations and Incident Response: log sources and the SIEM; detection and triage; containment, eradication and recovery; evidence, communication and the post-incident review.",
-        "Course 5, Capstone: a complete security plan for a small organisation, built in three milestones and reviewed by peers.",
+        "Course 5, Capstone: a complete security plan for a small organization, built in three milestones and reviewed by peers.",
       ],
     },
     {
@@ -266,7 +266,7 @@ const program: Program = {
       id: "about-5",
       title: "Who Should Enroll",
       body: [
-        "Career starters and career changers aiming at roles such as security analyst, IT support with security duties or compliance assistant. IT generalists in small organisations. Team leads and owners who are accountable for security and want to understand what they are asked to approve.",
+        "Career starters and career changers aiming at roles such as security analyst, IT support with security duties or compliance assistant. IT generalists in small organizations. Team leads and owners who are accountable for security and want to understand what they are asked to approve.",
       ],
     },
     {

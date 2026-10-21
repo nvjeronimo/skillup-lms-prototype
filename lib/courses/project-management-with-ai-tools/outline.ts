@@ -200,7 +200,7 @@ export const outline: Course = {
                 { id: "pma-m3-t1-ln4", ts: "0:49", text: "Compare that with “supplier risk”. The long version tells you what to watch and what to do. The short one tells you nothing." },
                 { id: "pma-m3-t1-ln5", ts: "1:02", text: "Second, score probability and impact, each on a simple scale from one to five. The score is for ranking. Do not pretend it is precise." },
                 { id: "pma-m3-t1-ln6", ts: "1:17", text: "Third, give every risk one owner by name and a response: avoid it, reduce it, transfer it or accept it. Add a trigger, the early sign that it is starting to happen." },
-                { id: "pma-m3-t1-ln7", ts: "1:35", text: "Fourth, keep it short. Ten to fifteen live risks that the team recognises are better than sixty that nobody reads." },
+                { id: "pma-m3-t1-ln7", ts: "1:35", text: "Fourth, keep it short. Ten to fifteen live risks that the team recognizes are better than sixty that nobody reads." },
                 { id: "pma-m3-t1-ln8", ts: "1:49", text: "And review it on a rhythm: five minutes in the weekly meeting, top five only. Close what has passed, add what is new and move what has changed." },
                 { id: "pma-m3-t1-ln9", ts: "2:05", text: "The next reading uses an assistant to find the risks your team has not thought of." },
               ],

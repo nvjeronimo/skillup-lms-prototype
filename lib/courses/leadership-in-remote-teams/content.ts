@@ -31,7 +31,7 @@ export const content: CourseContent = {
       explanation:
         "Information that people need to read, think about and refer back to belongs in writing. Disagreement, bad news and anything personal are handled better live.",
       options: [
-        { id: "a", label: "Feedback on a colleague's behaviour in a meeting", feedback: "Personal feedback needs tone and a chance to respond. Do it on a call." },
+        { id: "a", label: "Feedback on a colleague's behavior in a meeting", feedback: "Personal feedback needs tone and a chance to respond. Do it on a call." },
         { id: "b", label: "A disagreement between two people about priorities", feedback: "Disagreement escalates in text. Talk first, then write down what was agreed." },
         {
           id: "c",
@@ -39,7 +39,7 @@ export const content: CourseContent = {
           correct: true,
           feedback: "Correct. People can read it in their own hours and answer with thought.",
         },
-        { id: "d", label: "News that a project has been cancelled", feedback: "Bad news that affects people's work should be heard, with room for questions." },
+        { id: "d", label: "News that a project has been canceled", feedback: "Bad news that affects people's work should be heard, with room for questions." },
       ],
     },
     {
@@ -99,7 +99,7 @@ export const content: CourseContent = {
           heading: "What disappears",
           paragraphs: [
             "The first loss is ambient information. In an office you overhear that a client is unhappy, you see that a colleague looks stuck, and you learn who knows what by watching. None of it is scheduled, and all of it stops.",
-            "The second is the quick repair. A misread message in an office is corrected by a glance or a word at the next desk. In a remote team it can sit for a day and harden into a grievance. The third is chance contact: the conversations with people outside your immediate work that build wider trust and carry ideas across the organisation.",
+            "The second is the quick repair. A misread message in an office is corrected by a glance or a word at the next desk. In a remote team it can sit for a day and harden into a grievance. The third is chance contact: the conversations with people outside your immediate work that build wider trust and carry ideas across the organization.",
           ],
         },
         {
@@ -141,7 +141,7 @@ export const content: CourseContent = {
           heading: "What it covers",
           paragraphs: [
             "Keep it to one or two pages under a few headings. Availability: core hours, how to signal that you are away, what counts as urgent. Communication: which channel for what, and the expected response times. Meetings: which exist, who must attend, whether cameras are expected.",
-            "Then decisions: who decides what, and where decisions are recorded. Work: where tasks live and what “done” means. And conflict: what a person should do when something bothers them. Write behaviour, not values. “We respect each other's time” cannot be checked. “We do not expect replies outside the recipient's working hours” can.",
+            "Then decisions: who decides what, and where decisions are recorded. Work: where tasks live and what “done” means. And conflict: what a person should do when something bothers them. Write behavior, not values. “We respect each other's time” cannot be checked. “We do not expect replies outside the recipient's working hours” can.",
           ],
         },
         {
@@ -172,7 +172,7 @@ export const content: CourseContent = {
       takeaways: [
         "Cover availability, channels, meetings, decisions, work and conflict in one or two pages.",
         "The team writes it together; the lead contributes last.",
-        "Each line describes a behaviour that someone could check.",
+        "Each line describes a behavior that someone could check.",
         "Review it every quarter and when the team changes.",
       ],
     },
@@ -255,7 +255,7 @@ export const content: CourseContent = {
       },
       takeaways: [
         "Document what is asked often, costly to get wrong, or known by one person.",
-        "Keep one home for documentation, organised by task and easy to search.",
+        "Keep one home for documentation, organized by task and easy to search.",
         "Prefer short and current to complete and stale; give pages an owner and a date.",
         "Leaders set the habit by answering with links and writing the missing pages.",
       ],
@@ -399,12 +399,12 @@ export const content: CourseContent = {
         question: "Which line belongs in a team working agreement?",
         platformPrompt: "Choose the correct option",
         explanation:
-          "A working agreement describes behaviour that a person could check. Values and slogans cannot be checked, so they do not guide anyone.",
+          "A working agreement describes behavior that a person could check. Values and slogans cannot be checked, so they do not guide anyone.",
         reviewTopicId: "lrt-m1-t4",
         reviewTopicTitle: "Writing a team working agreement",
         options: [
           { id: "a", label: "We value respect and transparency.", feedback: "A value. Nobody can tell whether it was followed." },
-          { id: "b", label: "We reply in the team channel within four working hours, or say that we need longer.", correct: true, feedback: "Correct. A behaviour, with a measure." },
+          { id: "b", label: "We reply in the team channel within four working hours, or say that we need longer.", correct: true, feedback: "Correct. A behavior, with a measure." },
           { id: "c", label: "Communication is important to us.", feedback: "True of every team, and no help to a new joiner." },
           { id: "d", label: "Everyone should try their best.", feedback: "Not something a person can act on." },
         ],

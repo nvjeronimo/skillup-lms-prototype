@@ -27,7 +27,7 @@ const fromKnowledge = (id: string, actionIds?: string[]): Reply => ({ text: getK
 /** In matching order: the first intent that matches the question and applies on this page answers it. */
 const INTENTS: Intent[] = [
   {
-    suggestion: "Summarise this topic",
+    suggestion: "Summarize this topic",
     keywords: /\b(summar\w*|takeaways?|recap)\b/,
     reply: ({ topic }) =>
       topic && topic.takeaways.length
@@ -156,7 +156,7 @@ function findIntents(question: string): Intent[] {
 /** Four questions for the page, each one the script can answer there. */
 export function suggestionsFor(snapshot: LearnerSnapshot): string[] {
   if (snapshot.topic) {
-    return ["Summarise this topic", "How do I complete this topic?", "What is due this week?", "What can you do?"];
+    return ["Summarize this topic", "How do I complete this topic?", "What is due this week?", "What can you do?"];
   }
   if (snapshot.page.kind === "program") {
     return [

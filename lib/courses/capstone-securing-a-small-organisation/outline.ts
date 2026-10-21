@@ -8,7 +8,7 @@ import type { Course } from "@/lib/courses/kit";
 export const outline: Course = {
   id: "sec5",
   slug: "capstone-securing-a-small-organisation",
-  title: "Capstone: Securing a Small Organisation",
+  title: "Capstone: Securing a Small Organization",
   provider: "SkillUp",
   courseType: "Course",
   difficulty: "Beginner",
@@ -27,7 +27,7 @@ export const outline: Course = {
       lessons: [
         {
           id: "sec5-m1-l1",
-          label: "Meet the organisation",
+          label: "Meet the organization",
           topics: [
             {
               id: "sec5-m1-t1",
@@ -39,7 +39,7 @@ export const outline: Course = {
                 {
                   id: "sec5-m1-t1-ln1",
                   ts: "0:00",
-                  text: "Welcome to the capstone of the Cybersecurity Fundamentals Certificate. In this course you act as the security adviser to one small organisation.",
+                  text: "Welcome to the capstone of the Cybersecurity Fundamentals Certificate. In this course you act as the security adviser to one small organization.",
                 },
                 {
                   id: "sec5-m1-t1-ln2",
@@ -290,7 +290,7 @@ export const outline: Course = {
             {
               id: "sec5-m3-t1",
               type: "Video",
-              title: "A monitoring plan sized for a small organisation",
+              title: "A monitoring plan sized for a small organization",
               duration: "10 min",
               completed: false,
               transcript: [
@@ -332,7 +332,7 @@ export const outline: Course = {
                 {
                   id: "sec5-m3-t1-ln8",
                   ts: "2:10",
-                  text: "Write all of this as one table: the signal, where it comes from, who sees it, the first action and when to escalate. That table is the centre of Milestone 3.",
+                  text: "Write all of this as one table: the signal, where it comes from, who sees it, the first action and when to escalate. That table is the center of Milestone 3.",
                 },
               ],
             },

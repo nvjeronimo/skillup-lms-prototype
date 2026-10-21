@@ -20,7 +20,7 @@ export const content: CourseContent = {
           correct: true,
           feedback: "Correct. The guide is what a writer, or a prompt, is checked against.",
         },
-        { id: "b", label: "Listing the brand's colours and logo sizes", feedback: "That is the visual identity guide. The voice guide is about words." },
+        { id: "b", label: "Listing the brand's colors and logo sizes", feedback: "That is the visual identity guide. The voice guide is about words." },
         { id: "c", label: "Removing the need to edit AI drafts", feedback: "A guide improves the first draft. Someone still has to check and edit it." },
         { id: "d", label: "Describing the target audience", feedback: "The audience belongs in the content brief. The voice guide describes how the brand speaks." },
       ],
@@ -45,7 +45,7 @@ export const content: CourseContent = {
         { id: "a", label: "The assistant", feedback: "An assistant can state things that are not true of your product. It cannot answer for them." },
         { id: "b", label: "The provider of the tool", feedback: "The provider supplies the tool. What you publish with it is yours." },
         { id: "c", label: "The person or team that publishes it", correct: true, feedback: "Correct. Publishing a claim makes it yours to support." },
-        { id: "d", label: "Nobody, if the copy is labelled as AI-assisted", feedback: "A label tells the reader how the copy was made. It does not make a claim true." },
+        { id: "d", label: "Nobody, if the copy is labeled as AI-assisted", feedback: "A label tells the reader how the copy was made. It does not make a claim true." },
       ],
     },
   ],
@@ -63,7 +63,7 @@ export const content: CourseContent = {
         {
           heading: "Give the assistant the limits of the format",
           paragraphs: [
-            "Every ad placement has limits: a headline of a few words, a description of one or two lines, a call to action chosen from a short list. Put the limits in the prompt as numbers, and ask for the output in a labelled layout (Headline, Description, Call to action) so you can compare variants line by line.",
+            "Every ad placement has limits: a headline of a few words, a description of one or two lines, a call to action chosen from a short list. Put the limits in the prompt as numbers, and ask for the output in a labeled layout (Headline, Description, Call to action) so you can compare variants line by line.",
             "Add the voice traits from your voice guide, with one example of copy that is on voice and one that is not. Examples steer an assistant further than adjectives do: “friendly” says little, a sentence you would actually publish says a lot.",
           ],
         },
@@ -81,7 +81,7 @@ export const content: CourseContent = {
       },
       takeaways: [
         "Decide one reader, one action and one message before you prompt.",
-        "State the format limits as numbers and ask for a labelled layout.",
+        "State the format limits as numbers and ask for a labeled layout.",
         "Show the voice with one on-voice and one off-voice example.",
         "Ask for variants that differ in angle, then check every claim yourself.",
       ],
@@ -171,7 +171,7 @@ export const content: CourseContent = {
       ],
     },
     "acb-m1-t7": {
-      lede: "Voice guidelines written for people leave a lot unsaid, because people fill the gaps with judgement and with what they already know about the brand. An AI assistant has neither. Guidelines an assistant can follow are more explicit and more concrete, and they are built around examples.",
+      lede: "Voice guidelines written for people leave a lot unsaid, because people fill the gaps with judgment and with what they already know about the brand. An AI assistant has neither. Guidelines an assistant can follow are more explicit and more concrete, and they are built around examples.",
       sections: [
         {
           heading: "Say it as an instruction",
@@ -239,7 +239,7 @@ export const content: CourseContent = {
         {
           heading: "A review step with a name on it",
           paragraphs: [
-            "Responsibility needs an owner. For each piece of content, one named person checks the claims against the approved list, the facts against their sources and the text against the voice guide, then approves it. Also keep customer data and confidential plans out of prompts unless your organisation has approved the tool for that use.",
+            "Responsibility needs an owner. For each piece of content, one named person checks the claims against the approved list, the facts against their sources and the text against the voice guide, then approves it. Also keep customer data and confidential plans out of prompts unless your organization has approved the tool for that use.",
           ],
         },
       ],

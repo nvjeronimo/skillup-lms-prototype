@@ -17,7 +17,7 @@ const FINAL_PROJECT: OraContent = {
       label: "Task 1 · Map the lifecycle and the segments",
       maxPoints: 6,
       options: [
-        { points: 6, label: "Each stage has a segment defined by behaviour, and a clear rule for entering and leaving it" },
+        { points: 6, label: "Each stage has a segment defined by behavior, and a clear rule for entering and leaving it" },
         { points: 4, label: "Stages and segments are named; the rules are vague" },
         { points: 2, label: "One list for everyone, split by stage in name only" },
         { points: 0, label: "Not attempted" },
@@ -81,13 +81,13 @@ export const content: CourseContent = {
       ],
     },
     {
-      question: "Which of these is a behavioural segment?",
+      question: "Which of these is a behavioral segment?",
       platformPrompt: "Choose the correct option",
       explanation:
-        "A behavioural segment is defined by what people did: bought, opened, browsed, stopped. It changes as they act, which is why it suits automated flows.",
+        "A behavioral segment is defined by what people did: bought, opened, browsed, stopped. It changes as they act, which is why it suits automated flows.",
       options: [
         { id: "a", label: "Subscribers aged 25 to 34", feedback: "That is a demographic. It does not say what they did." },
-        { id: "b", label: "Subscribers in one city", feedback: "That is a location. Useful for an event, but not behaviour." },
+        { id: "b", label: "Subscribers in one city", feedback: "That is a location. Useful for an event, but not behavior." },
         {
           id: "c",
           label: "Customers who bought once, more than 90 days ago, and not since",
@@ -136,7 +136,7 @@ export const content: CourseContent = {
           heading: "Low cost, so the limit is attention",
           paragraphs: [
             "Sending one more email costs almost nothing, which is the channel's strength and its trap. Because another send is nearly free, the temptation is to send more. The real cost is paid by the reader, in attention, and it comes back to you as unsubscribes.",
-            "An AI assistant makes this sharper. It can draft ten emails in the time it took to write one. The question is no longer whether you can produce the message but whether this person, at this point in their relationship with you, has a reason to open it. The rest of the course is about answering that question: with segments in Module 2, and with personalisation and testing in Module 3.",
+            "An AI assistant makes this sharper. It can draft ten emails in the time it took to write one. The question is no longer whether you can produce the message but whether this person, at this point in their relationship with you, has a reason to open it. The rest of the course is about answering that question: with segments in Module 2, and with personalization and testing in Module 3.",
           ],
         },
       ],
@@ -188,7 +188,7 @@ export const content: CourseContent = {
       ],
     },
     "crm-m1-t4": {
-      lede: "Email marketing is regulated almost everywhere, and the rules differ from one country to the next. This reading is not legal advice. It sets out the principles that the main laws share, so that you know what to ask before a list is used and can recognise a practice that will cause trouble.",
+      lede: "Email marketing is regulated almost everywhere, and the rules differ from one country to the next. This reading is not legal advice. It sets out the principles that the main laws share, so that you know what to ask before a list is used and can recognize a practice that will cause trouble.",
       sections: [
         {
           heading: "Consent, and what counts as it",
@@ -207,7 +207,7 @@ export const content: CourseContent = {
         {
           heading: "Unsubscribes",
           paragraphs: [
-            "Every marketing email needs a working way to stop that is easy to find and takes one or two clicks. Do not ask for a login, a reason or a password. Honour the request quickly: the law allows a set number of days in some countries, and good systems do it at once.",
+            "Every marketing email needs a working way to stop that is easy to find and takes one or two clicks. Do not ask for a login, a reason or a password. Honor the request quickly: the law allows a set number of days in some countries, and good systems do it at once.",
             "Large mailbox providers also expect bulk senders to support one-click unsubscribe in the message header, which shows as an unsubscribe link beside the sender's name. An unsubscribe is a better outcome than a spam complaint. Make it the easier of the two.",
           ],
         },
@@ -227,7 +227,7 @@ export const content: CourseContent = {
       takeaways: [
         "Rules differ by country; when unsure, work to the stricter one and take advice.",
         "Consent is a clear action for a stated purpose, and you keep the proof.",
-        "Every marketing email carries an easy unsubscribe, honoured promptly.",
+        "Every marketing email carries an easy unsubscribe, honored promptly.",
         "Identify the sender honestly and keep promotion out of transactional mail.",
       ],
     },
@@ -237,7 +237,7 @@ export const content: CourseContent = {
         {
           heading: "The sender name",
           paragraphs: [
-            "People look at the sender first, and open mail from names they recognise. Use the name subscribers know you by, and keep it the same from one send to the next. “Green Corner” or “Maya at Green Corner” works. A bare “noreply” does not, and it also tells the reader that nobody will see a reply.",
+            "People look at the sender first, and open mail from names they recognize. Use the name subscribers know you by, and keep it the same from one send to the next. “Green Corner” or “Maya at Green Corner” works. A bare “noreply” does not, and it also tells the reader that nobody will see a reply.",
             "Send from an address on your own domain that accepts replies. Replies are a strong positive signal to mailbox providers, and some of the most useful customer feedback arrives that way.",
           ],
         },
@@ -251,7 +251,7 @@ export const content: CourseContent = {
         {
           heading: "The preview text",
           paragraphs: [
-            "The preview is the grey line after the subject. If you do not set it, the mail app fills it with whatever comes first in the message, which is often “View this email in your browser”.",
+            "The preview is the gray line after the subject. If you do not set it, the mail app fills it with whatever comes first in the message, which is often “View this email in your browser”.",
             "Write it as the second half of the subject line. If the subject is “Three plants that survive a dark hallway”, the preview might be “And the one mistake that kills all of them”. Do not repeat the subject, and do not waste the space on housekeeping.",
           ],
         },
@@ -275,7 +275,7 @@ export const content: CourseContent = {
       ],
     },
     "crm-m1-t10": {
-      lede: "Your email will be opened on a phone more often than on a computer, sometimes with the colours inverted, sometimes read aloud by software, and often with images switched off. A design that only works in the preview window of your email tool will fail many of its readers. This reading covers the three conditions to design for.",
+      lede: "Your email will be opened on a phone more often than on a computer, sometimes with the colors inverted, sometimes read aloud by software, and often with images switched off. A design that only works in the preview window of your email tool will fail many of its readers. This reading covers the three conditions to design for.",
       sections: [
         {
           heading: "Small screens",
@@ -287,7 +287,7 @@ export const content: CourseContent = {
         {
           heading: "Dark mode",
           paragraphs: [
-            "Many readers set their mail app to a dark theme, and the app may then change your colours for you. Black text on a transparent background can become black on black. A logo with dark lettering can vanish.",
+            "Many readers set their mail app to a dark theme, and the app may then change your colors for you. Black text on a transparent background can become black on black. A logo with dark lettering can vanish.",
             "A few habits prevent most of this. Use real text, not text inside images. Give logos a transparent background and make sure they are readable on both light and dark, or add a light outline. Avoid pure white and pure black blocks, which invert harshly. Then test in both modes before sending.",
           ],
         },
@@ -296,7 +296,7 @@ export const content: CourseContent = {
           paragraphs: [
             "A screen reader reads the email aloud in the order of its code. Use real headings, write link text that makes sense out of context, and give every meaningful image a short description in its alternative text. Decorative images get an empty one, so that the software skips them.",
             "The same alternative text is what readers see when images are blocked, which some work mail systems do by default. An email that is one large picture then shows as an empty box. Keep the message in text, and let images support it.",
-            "Contrast matters to everyone reading in sunlight. Aim for a ratio of at least 4.5 to 1 between text and its background, and do not rely on colour alone to mark a link.",
+            "Contrast matters to everyone reading in sunlight. Aim for a ratio of at least 4.5 to 1 between text and its background, and do not rely on color alone to mark a link.",
           ],
         },
         {
@@ -339,7 +339,7 @@ export const content: CourseContent = {
           heading: "The question at each stage",
           paragraphs: [
             "A subscriber is asking whether to trust you with a first order: show what you sell, proof from other customers, and a reason to try. A first-time customer is asking whether they chose well: help them use the product, then suggest the natural next one.",
-            "A repeat customer wants to be recognised, not treated like a stranger: early access, a restock reminder, fewer generic promotions. An at-risk customer needs a reason to return and a simple way to say what went wrong. A lapsed customer gets one last invitation, and then silence.",
+            "A repeat customer wants to be recognized, not treated like a stranger: early access, a restock reminder, fewer generic promotions. An at-risk customer needs a reason to return and a simple way to say what went wrong. A lapsed customer gets one last invitation, and then silence.",
           ],
         },
         {
@@ -409,7 +409,7 @@ export const content: CourseContent = {
       {
         question: "A subscriber clicks Unsubscribe. What must happen?",
         explanation:
-          "Unsubscribing has to be easy and has to be honoured promptly, without asking the person to log in or explain. Making it hard turns an unsubscribe into a spam complaint, which costs far more.",
+          "Unsubscribing has to be easy and has to be honored promptly, without asking the person to log in or explain. Making it hard turns an unsubscribe into a spam complaint, which costs far more.",
         reviewTopicId: "crm-m1-t4",
         reviewTopicTitle: "Consent, unsubscribes and the rules you must follow",
         options: [
@@ -477,7 +477,7 @@ export const content: CourseContent = {
         options: [
           { id: "a", label: "Only people on slow connections", feedback: "They wait longer. Others get nothing at all." },
           { id: "b", label: "Nobody: all mail apps show images", feedback: "Some block images by default, especially at work." },
-          { id: "c", label: "Only people using dark mode", feedback: "Dark mode may alter colours, but the bigger failures are blocked images and screen readers." },
+          { id: "c", label: "Only people using dark mode", feedback: "Dark mode may alter colors, but the bigger failures are blocked images and screen readers." },
           {
             id: "d",
             label: "People whose mail app blocks images, and people using a screen reader",
@@ -512,7 +512,7 @@ export const content: CourseContent = {
         explanation:
           "Recency is time since the last order, frequency the number of orders, value the amount spent. Someone who used to buy often and has stopped is high on frequency and value and low on recency.",
         reviewTopicId: "crm-m2-t3",
-        reviewTopicTitle: "Segmenting by behaviour: recency, frequency and value",
+        reviewTopicTitle: "Segmenting by behavior: recency, frequency and value",
         options: [
           {
             id: "a",
@@ -562,10 +562,10 @@ export const content: CourseContent = {
     },
     "crm-m2-t11": {
       brief:
-        "Draw the lifecycle of one customer journey on the lifecycle map template: the stages a person passes through, from new subscriber to repeat customer and to lapsed. Using the sample contact list, define one segment for each stage by behaviour (what the person did, and when), and count how many of the 500 contacts fall into it. For each stage, name the flow that serves the segment. Submit the completed template as a PDF or DOCX.",
+        "Draw the lifecycle of one customer journey on the lifecycle map template: the stages a person passes through, from new subscriber to repeat customer and to lapsed. Using the sample contact list, define one segment for each stage by behavior (what the person did, and when), and count how many of the 500 contacts fall into it. For each stage, name the flow that serves the segment. Submit the completed template as a PDF or DOCX.",
       requirements: [
         "At least four lifecycle stages, each with the rule for entering and leaving it",
-        "One behavioural segment per stage, with the number of sample contacts in it",
+        "One behavioral segment per stage, with the number of sample contacts in it",
         "The flow for each stage: trigger, first message and exit",
         "Counts toward your final grade",
       ],

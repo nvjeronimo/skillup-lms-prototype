@@ -54,7 +54,7 @@ export const outline: Course = {
                 {
                   id: "sec1-m1-t1-ln4",
                   ts: "0:55",
-                  text: "Module 2 looks at who attacks organisations and how an intrusion usually unfolds, so that controls are placed where they interrupt it.",
+                  text: "Module 2 looks at who attacks organizations and how an intrusion usually unfolds, so that controls are placed where they interrupt it.",
                 },
                 {
                   id: "sec1-m1-t1-ln5",
@@ -95,7 +95,7 @@ export const outline: Course = {
                 {
                   id: "sec1-m1-t3-ln2",
                   ts: "0:20",
-                  text: "An asset is anything of value to the organisation: customer records, the booking system, a laptop, the ability to take payments, its reputation.",
+                  text: "An asset is anything of value to the organization: customer records, the booking system, a laptop, the ability to take payments, its reputation.",
                 },
                 {
                   id: "sec1-m1-t3-ln3",
@@ -189,14 +189,14 @@ export const outline: Course = {
                 {
                   id: "sec1-m1-t6-ln8",
                   ts: "2:10",
-                  text: "When you review a risk, ask three questions: what stops it, what would tell us, and what would we do then. An empty answer to any of them is the gap to fix first. You will practise this in the activity that follows.",
+                  text: "When you review a risk, ask three questions: what stops it, what would tell us, and what would we do then. An empty answer to any of them is the gap to fix first. You will practice this in the activity that follows.",
                 },
               ],
             },
             {
               id: "sec1-m1-t7",
               type: "Reading",
-              title: "Defence in depth and least privilege",
+              title: "Defense in depth and least privilege",
               duration: "12 min read approx.",
               completed: false,
             },
@@ -250,7 +250,7 @@ export const outline: Course = {
                 {
                   id: "sec1-m2-t1-ln3",
                   ts: "0:40",
-                  text: "State-backed groups have longer goals, such as intelligence or disruption. They are patient and well resourced. Most small organisations meet them only indirectly, as a supplier or a customer of the real target.",
+                  text: "State-backed groups have longer goals, such as intelligence or disruption. They are patient and well resourced. Most small organizations meet them only indirectly, as a supplier or a customer of the real target.",
                 },
                 {
                   id: "sec1-m2-t1-ln4",
@@ -321,12 +321,12 @@ export const outline: Course = {
                 {
                   id: "sec1-m2-t3-ln6",
                   ts: "1:30",
-                  text: "Some malware leaves almost nothing on disk. It misuses tools that are already part of the operating system, which is why modern protection watches behaviour and not only files.",
+                  text: "Some malware leaves almost nothing on disk. It misuses tools that are already part of the operating system, which is why modern protection watches behavior and not only files.",
                 },
                 {
                   id: "sec1-m2-t3-ln7",
                   ts: "1:50",
-                  text: "The defences are much the same for every family. Keep systems patched. Do not work day to day with administrator rights. Let only approved software run. Use endpoint protection that reports to someone. Keep backups that the infected machine cannot reach.",
+                  text: "The defenses are much the same for every family. Keep systems patched. Do not work day to day with administrator rights. Let only approved software run. Use endpoint protection that reports to someone. Keep backups that the infected machine cannot reach.",
                 },
                 {
                   id: "sec1-m2-t3-ln8",
@@ -446,7 +446,7 @@ export const outline: Course = {
                 {
                   id: "sec1-m3-t1-ln7",
                   ts: "1:50",
-                  text: "So the defence is not to tell people to be more careful. It is to give them a pause and a second channel: for any request that moves money, changes payment details or shares a password, confirm it by a route you already trust.",
+                  text: "So the defense is not to tell people to be more careful. It is to give them a pause and a second channel: for any request that moves money, changes payment details or shares a password, confirm it by a route you already trust.",
                 },
                 {
                   id: "sec1-m3-t1-ln8",
@@ -458,7 +458,7 @@ export const outline: Course = {
             {
               id: "sec1-m3-t2",
               type: "Reading",
-              title: "Recognising phishing: seven signals",
+              title: "Recognizing phishing: seven signals",
               duration: "12 min read approx.",
               completed: false,
             },
@@ -625,7 +625,7 @@ export const outline: Course = {
             {
               id: "sec1-m4-t6",
               type: "Reading",
-              title: "Authorisation, scope and professional ethics",
+              title: "Authorization, scope and professional ethics",
               duration: "10 min read approx.",
               completed: false,
               locked: true,

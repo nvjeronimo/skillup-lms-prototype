@@ -35,9 +35,9 @@ describe("answerScripted", () => {
   it("answers the certificate from the knowledge", () => {
     expect(answerScripted("How do I get my certificate?", dash).text).toContain(getKnowledge("certificate").answer);
   });
-  it("summarises only where there is a topic", () => {
-    expect(answerScripted("Summarise this topic", player).text).toContain(player.topic!.takeaways[0]);
-    expect(answerScripted("Summarise this topic", dash).text).toContain(FALLBACK_LEAD);
+  it("summarizes only where there is a topic", () => {
+    expect(answerScripted("Summarize this topic", player).text).toContain(player.topic!.takeaways[0]);
+    expect(answerScripted("Summarize this topic", dash).text).toContain(FALLBACK_LEAD);
   });
   it("lists the first steps that are left, while there are any", () => {
     const fs = { status: "active" as const, done: ["program" as const], baseline: [], greeted: true };
@@ -65,7 +65,7 @@ describe("answerScripted", () => {
       for (const a of answerScripted(q, dash).actions) expect(known.has(a.id)).toBe(true);
   });
   it("tries the next intent when the first one does not apply here", () => {
-    expect(answerScripted("Summarise my progress", dash).text).toContain("%");
+    expect(answerScripted("Summarize my progress", dash).text).toContain("%");
   });
   it.each([
     "",
@@ -74,7 +74,7 @@ describe("answerScripted", () => {
     "asdf qwer",
     "who is the next president",
     "How do I stop email notifications?",
-    "Can I change the label colour?",
+    "Can I change the label color?",
     "is my laboratory booked?",
   ])("falls back on %j", (q) => {
     const a = answerScripted(q, dash);
@@ -91,5 +91,5 @@ describe("suggestionsFor", () => {
       for (const q of s) expect(answerScripted(q, snap).text).not.toContain(FALLBACK_LEAD);
     }
   });
-  it("is about the topic in the player", () => expect(suggestionsFor(player)[0]).toBe("Summarise this topic"));
+  it("is about the topic in the player", () => expect(suggestionsFor(player)[0]).toBe("Summarize this topic"));
 });

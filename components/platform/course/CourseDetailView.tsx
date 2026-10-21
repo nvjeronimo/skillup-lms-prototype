@@ -147,7 +147,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
           <InlineAlert
             tone="info"
             title="Proposal: the passed course is not designed yet"
-            description="No Figma screen shows a completed course. The success colours of the grade, the issued certificate with View and Download, and the missing weekly goal are a proposal built from parts that already exist."
+            description="No Figma screen shows a completed course. The success colors of the grade, the issued certificate with View and Download, and the missing weekly goal are a proposal built from parts that already exist."
             className="mb-4 md:mb-5 lg:mb-6"
           />
         ) : null}

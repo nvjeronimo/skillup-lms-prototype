@@ -219,7 +219,7 @@ export const content: CourseContent = {
           heading: "Ways to split",
           paragraphs: [
             "Segments come from four kinds of information. Who the user is: plan type, country, household size. How they arrived: search, an advertisement, a friend's invitation. What they use: phone or laptop, app version. And what they have done: saved more than three plans, used the shopping list, never opened a reminder.",
-            "Behavioural segments are usually the most revealing, because they describe what people do with the product, not who they are on paper.",
+            "Behavioral segments are usually the most revealing, because they describe what people do with the product, not who they are on paper.",
           ],
         },
         {
@@ -244,13 +244,13 @@ export const content: CourseContent = {
         },
       ],
       pullQuote: {
-        text: "When the overall number moves, ask first whether the users changed or their behaviour did.",
+        text: "When the overall number moves, ask first whether the users changed or their behavior did.",
         attribution: "Course notes, Module 2",
       },
       takeaways: [
         "Segment by who users are, how they arrived, what they use and what they do.",
         "Compare both the rate and the size of each segment.",
-        "A change in the mix of segments can move the overall rate with no change in behaviour.",
+        "A change in the mix of segments can move the overall rate with no change in behavior.",
         "Choose segments for a reason; confirm surprising gaps on new data.",
       ],
     },
@@ -267,7 +267,7 @@ export const content: CourseContent = {
         {
           heading: "Churn without a cancel button",
           paragraphs: [
-            "Many users leave without cancelling anything. They just stop coming. For them you need an inactivity rule: a user has churned after a set number of days with no meaningful activity.",
+            "Many users leave without canceling anything. They just stop coming. For them you need an inactivity rule: a user has churned after a set number of days with no meaningful activity.",
             "Set the threshold from the product's natural rhythm. A meal planner is used weekly, so someone absent for four weeks has probably gone. A tax tool is used once a year, so four weeks of silence means nothing. Look at the gaps between visits of users who did return, and choose a threshold that few of them exceeded.",
           ],
         },
@@ -339,7 +339,7 @@ export const content: CourseContent = {
       ],
     },
     "ipa-m4-t5": {
-      lede: "An analysis has done its job when someone decides something because of it. Most analyses never get that far. They are correct and thorough, and they are organised in the order the analyst did the work, which is the opposite of the order a reader needs.",
+      lede: "An analysis has done its job when someone decides something because of it. Most analyses never get that far. They are correct and thorough, and they are organized in the order the analyst did the work, which is the opposite of the order a reader needs.",
       sections: [
         {
           heading: "Conclusion first",
@@ -397,7 +397,7 @@ export const content: CourseContent = {
         options: [
           { id: "a", label: "button_click_3", feedback: "Which button, and what did it do? The name does not say." },
           { id: "b", label: "meal_plan_saved", correct: true, feedback: "Correct. An object and what happened to it." },
-          { id: "c", label: "new_flow_v2", feedback: "Version names describe the build, not the behaviour." },
+          { id: "c", label: "new_flow_v2", feedback: "Version names describe the build, not the behavior." },
           { id: "d", label: "event_tuesday_release", feedback: "A release date is not an action." },
         ],
       },
@@ -431,7 +431,7 @@ export const content: CourseContent = {
             id: "a",
             label: "Each event, when it fires, its properties and who owns it",
             correct: true,
-            feedback: "Correct. It is the contract between the people who build and the people who analyse.",
+            feedback: "Correct. It is the contract between the people who build and the people who analyze.",
           },
           { id: "b", label: "The dashboards the team wants", feedback: "Dashboards are built from the events. They are not the plan." },
           { id: "c", label: "The quarterly targets", feedback: "Targets are set on metrics. The plan defines the events behind them." },
@@ -492,7 +492,7 @@ export const content: CourseContent = {
         options: [
           { id: "a", label: "Total app downloads", feedback: "Cumulative, and a download is not use." },
           { id: "b", label: "Households that saved a meal plan this week", correct: true, feedback: "Correct. It rises and falls with the value delivered." },
-          { id: "c", label: "Number of recipes in the database", feedback: "That measures the catalogue, not what users get from it." },
+          { id: "c", label: "Number of recipes in the database", feedback: "That measures the catalog, not what users get from it." },
           { id: "d", label: "Advertising spend", feedback: "That is a cost the company controls, not an outcome for users." },
         ],
       },
@@ -535,7 +535,7 @@ export const content: CourseContent = {
         reviewTopicTitle: "Segmentation: who behaves differently, and why it matters",
         options: [
           { id: "a", label: "The product got worse for everyone", feedback: "Then the rate inside the segments would have fallen too." },
-          { id: "b", label: "The mix shifted towards the segment with the lower rate", correct: true, feedback: "Correct. Behaviour held steady. The population changed." },
+          { id: "b", label: "The mix shifted towards the segment with the lower rate", correct: true, feedback: "Correct. Behavior held steady. The population changed." },
           { id: "c", label: "The tracking is broken", feedback: "Nothing here points to that. Check the mix first." },
           { id: "d", label: "It is random noise", feedback: "A four-point move with steady segments has a clear explanation." },
         ],
@@ -592,7 +592,7 @@ export const content: CourseContent = {
         },
         {
           id: "c2",
-          label: "Task 2 · Analyse activation and retention",
+          label: "Task 2 · Analyze activation and retention",
           maxPoints: 6,
           options: [
             { points: 6, label: "Funnel and cohort view are correct and read in the text" },

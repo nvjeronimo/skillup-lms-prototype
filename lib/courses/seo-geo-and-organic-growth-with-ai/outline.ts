@@ -97,7 +97,7 @@ export const outline: Course = {
               completed: false,
               transcript: [
                 { id: "seo-m1-t7-ln1", ts: "0:00", text: "Keyword research starts with a seed list: ten or so phrases that describe what you sell in the words a customer would use. In this video we build one and then expand it with an AI assistant." },
-                { id: "seo-m1-t7-ln2", ts: "0:25", text: "Our example is the small online plant shop from the Handouts. Do not start from the product catalogue. Start from customers: what do they ask in emails, in reviews, at the counter?" },
+                { id: "seo-m1-t7-ln2", ts: "0:25", text: "Our example is the small online plant shop from the Handouts. Do not start from the product catalog. Start from customers: what do they ask in emails, in reviews, at the counter?" },
                 { id: "seo-m1-t7-ln3", ts: "0:46", text: "That gives seeds such as indoor plants for low light, plants safe for cats, how to repot a plant, and plant gift delivery. Ten phrases, each a different need." },
                 { id: "seo-m1-t7-ln4", ts: "1:05", text: "Now the assistant. Give it the role, the business and one seed, and ask for thirty phrases a real person might type, grouped by what the person is trying to do." },
                 { id: "seo-m1-t7-ln5", ts: "1:26", text: "Ask for variety by name: questions, comparisons, problems, phrases with a place or a season. Otherwise you get thirty versions of the same three words." },
@@ -167,7 +167,7 @@ export const outline: Course = {
                 { id: "seo-m2-t7-ln3", ts: "0:51", text: "It is a blunt tool. One short rule can block the whole site. That rule is common on test versions of a site, and it sometimes goes live with the launch. Check it first when a site vanishes from search." },
                 { id: "seo-m2-t7-ln4", ts: "1:18", text: "Robots rules stop crawling, not indexing. To keep a page out of the index, let the crawler in and put a noindex tag on the page itself." },
                 { id: "seo-m2-t7-ln5", ts: "1:36", text: "The second is the sitemap: a list of the addresses you want indexed. It is an invitation, not a command. List only pages that work, that are not blocked, and that are the main version." },
-                { id: "seo-m2-t7-ln6", ts: "1:59", text: "The third is the canonical tag. A shop often shows one product at several addresses: with a colour filter, with a tracking code, in two categories. The tag names the address that should rank." },
+                { id: "seo-m2-t7-ln6", ts: "1:59", text: "The third is the canonical tag. A shop often shows one product at several addresses: with a color filter, with a tracking code, in two categories. The tag names the address that should rank." },
                 { id: "seo-m2-t7-ln7", ts: "2:22", text: "Without it, the search engine picks for you, and links to the other versions are split. With it, they count toward one page." },
                 { id: "seo-m2-t7-ln8", ts: "2:37", text: "The three must agree. A page in the sitemap that is blocked by robots, or that points its canonical somewhere else, sends mixed signals. In the audit video you will learn to find those." },
               ],

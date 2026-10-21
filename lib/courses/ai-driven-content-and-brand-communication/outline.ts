@@ -73,7 +73,7 @@ export const outline: Course = {
               transcript: [
                 { id: "acb-m1-t5-ln1", ts: "0:00", text: "In the last reading you described a voice with three traits. A list of traits is a start. To be used, it has to become a tool, and the most practical one is the voice chart." },
                 { id: "acb-m1-t5-ln2", ts: "0:17", text: "A voice chart is a table with one row per trait and four columns: the trait, what it means for this brand, what to do, and what to avoid." },
-                { id: "acb-m1-t5-ln3", ts: "0:31", text: "Take “plain-spoken” for Brightwell Refill. Meaning: we explain things the way you would to a neighbour. Do: use short sentences, everyday words and concrete numbers." },
+                { id: "acb-m1-t5-ln3", ts: "0:31", text: "Take “plain-spoken” for Brightwell Refill. Meaning: we explain things the way you would to a neighbor. Do: use short sentences, everyday words and concrete numbers." },
                 { id: "acb-m1-t5-ln4", ts: "0:48", text: "Do not: use jargon such as “eco-conscious solutions”, or vague claims such as “better for the planet” with no figure attached." },
                 { id: "acb-m1-t5-ln5", ts: "1:01", text: "The “do not” column does the most work. It marks where the trait tips over. Plain-spoken should never turn blunt. Warm should never turn gushing." },
                 { id: "acb-m1-t5-ln6", ts: "1:16", text: "Add a fifth column with an example: one sentence written in the voice next to the same sentence written badly. People copy examples far more readily than they follow rules." },

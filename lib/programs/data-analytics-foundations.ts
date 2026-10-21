@@ -28,7 +28,7 @@ const SIGNATORIES = [
   {
     // A sample name (the real signatory is not known); the AI program uses the same one.
     name: "Daniel Moreau",
-    role: "Programme lead, IBM",
+    role: "Program lead, IBM",
     signatureSrc: "/platform/certificate-signature-2.svg",
   },
 ];
@@ -131,7 +131,7 @@ const program: Program = {
         { number: 4, title: "Module 4 · Correlation, Regression and Review", complete: true, topics: "8 topics", duration: "1h 58m" },
       ],
     }),
-    programCourse(4, "Data Visualisation and Dashboards", "DV", "leadership-in-remote-teams", {
+    programCourse(4, "Data Visualization and Dashboards", "DV", "leadership-in-remote-teams", {
       progressPct: 100,
       progressMeta: "9 hours total",
       upNext: { certificate: "Issued 13 Aug 2026" },
@@ -185,7 +185,7 @@ const program: Program = {
     ),
     courseCertificate(
       4,
-      "Data Visualisation and Dashboards",
+      "Data Visualization and Dashboards",
       "4 modules  ·  about 9 hours",
       "13 August 2026",
       "SKL-DAF04-2608-2PW6",
@@ -233,7 +233,7 @@ const program: Program = {
       id: "faq-1",
       title: "What will I learn in the Data Analytics Foundations Certificate?",
       body: [
-        "You learn to turn raw data into answers that a team can act on. The five courses cover data literacy and spreadsheets, SQL, statistics for decisions, visualisation and dashboards, and a capstone in which you carry out one analysis from the first question to the final presentation.",
+        "You learn to turn raw data into answers that a team can act on. The five courses cover data literacy and spreadsheets, SQL, statistics for decisions, visualization and dashboards, and a capstone in which you carry out one analysis from the first question to the final presentation.",
         "The program is practical throughout: every module ends with work on a real-looking data set, not only with definitions.",
       ],
       defaultOpen: true,
@@ -264,14 +264,14 @@ const program: Program = {
       id: "faq-5",
       title: "What software do I need?",
       body: [
-        "A computer with a current browser and a spreadsheet program. SQL is practised in a database that runs in the browser, and the dashboards in Course 4 are built in a free tool that the course walks you through. You do not need a paid licence for anything.",
+        "A computer with a current browser and a spreadsheet program. SQL is practiced in a database that runs in the browser, and the dashboards in Course 4 are built in a free tool that the course walks you through. You do not need a paid license for anything.",
       ],
     },
     {
       id: "faq-6",
       title: "What data do I work with?",
       body: [
-        "Prepared sample data sets: the sales records of a small chain of bike shops, the bookings of a community leisure centre and the support tickets of an online retailer. They are realistic in size and in their mistakes, so you also practise cleaning them. No personal data is used.",
+        "Prepared sample data sets: the sales records of a small chain of bike shops, the bookings of a community leisure center and the support tickets of an online retailer. They are realistic in size and in their mistakes, so you also practice cleaning them. No personal data is used.",
       ],
     },
     {
@@ -286,7 +286,7 @@ const program: Program = {
       id: "faq-8",
       title: "How does the capstone work?",
       body: [
-        "You act as the analyst for Northfield Leisure, a fictional leisure centre that wants to know why weekday bookings have fallen. You frame the questions, prepare and explore the data, build a dashboard and present your findings and recommendations in a short report and a five-minute recorded talk.",
+        "You act as the analyst for Northfield Leisure, a fictional leisure center that wants to know why weekday bookings have fallen. You frame the questions, prepare and explore the data, build a dashboard and present your findings and recommendations in a short report and a five-minute recorded talk.",
       ],
     },
     {
@@ -315,7 +315,7 @@ const program: Program = {
       title: "Program Overview",
       body: [
         "The Data Analytics Foundations Certificate prepares you to answer business questions with data, from the first conversation about what someone needs to know to the chart that answers it.",
-        "Across five courses you learn to read and clean data in a spreadsheet, query a database, judge whether a difference is real or noise, and design charts and dashboards that people understand at a glance. Each course ends in written work on a sample organisation, so that you practise the decisions as well as the techniques.",
+        "Across five courses you learn to read and clean data in a spreadsheet, query a database, judge whether a difference is real or noise, and design charts and dashboards that people understand at a glance. Each course ends in written work on a sample organization, so that you practice the decisions as well as the techniques.",
         "The capstone brings the four subjects together in one analysis, presented as you would present it at work.",
       ],
       defaultOpen: true,
@@ -325,9 +325,9 @@ const program: Program = {
       title: "What You Will Learn",
       body: [
         "Course 1, Data Literacy and Spreadsheet Analysis: types of data and where they come from; formulas, lookups and tables; cleaning and preparing data; summaries and pivot tables.",
-        "Course 2, SQL for Data Analysis: how relational databases are organised; selecting, filtering and aggregating; joining tables; subqueries and common table expressions.",
+        "Course 2, SQL for Data Analysis: how relational databases are organized; selecting, filtering and aggregating; joining tables; subqueries and common table expressions.",
         "Course 3, Statistics for Business Decisions: averages, spread and distributions; probability and sampling; confidence intervals and simple tests; correlation and linear regression.",
-        "Course 4, Data Visualisation and Dashboards: principles of visual design; choosing a chart for a question; building an interactive dashboard; telling a story with data.",
+        "Course 4, Data Visualization and Dashboards: principles of visual design; choosing a chart for a question; building an interactive dashboard; telling a story with data.",
         "Course 5, Capstone: one complete analysis, built in three milestones and reviewed by peers.",
       ],
     },

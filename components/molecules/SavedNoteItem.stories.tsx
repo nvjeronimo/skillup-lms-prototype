@@ -30,7 +30,7 @@ export const Default: Story = {};
 export const LongAnchorQuote: Story = {
   args: {
     anchorQuote:
-      "This is exactly where AI tools can dramatically compress the research phase: turning 50 interviews into structured themes in minutes, freeing the team to focus on judgement.",
+      "This is exactly where AI tools can dramatically compress the research phase: turning 50 interviews into structured themes in minutes, freeing the team to focus on judgment.",
   },
 };
 export const ManyTags: Story = {

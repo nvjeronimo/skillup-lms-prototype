@@ -94,7 +94,7 @@
               { "id": "m3-t7", "type": "Graded Assignment", "title": "The control phase", "duration": "20 min approx.", "completed": false, "locked": true },
               { "id": "m3-t8", "type": "Programming Assignment", "title": "Programming Assignment: automate the control chart", "duration": "", "completed": false },
               { "id": "m3-t9", "type": "Role Play", "title": "Role Play: coach a resistant stakeholder", "duration": "", "completed": false },
-              { "id": "m3-t10", "type": "Dialogue", "title": "Dialogue: practise explaining variation", "duration": "", "completed": false }
+              { "id": "m3-t10", "type": "Dialogue", "title": "Dialogue: practice explaining variation", "duration": "", "completed": false }
             ]
           }
         ]

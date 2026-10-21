@@ -185,7 +185,7 @@ export const content: CourseContent = {
           heading: "What a feed is trying to do",
           paragraphs: [
             "A platform earns money when people stay and come back. So its feed predicts, for each person and each post, how likely that person is to watch, read, reply, share or save, and it shows the posts with the best predictions first.",
-            "This means a post is not ranked once. It is ranked separately for every viewer. The same video can be at the top for one person and never shown to their neighbour.",
+            "This means a post is not ranked once. It is ranked separately for every viewer. The same video can be at the top for one person and never shown to their neighbor.",
           ],
         },
         {
@@ -293,7 +293,7 @@ export const content: CourseContent = {
           heading: "Using an AI assistant, and the limits",
           paragraphs: [
             "Sorting is the slow part, and an assistant does it well. Paste in a hundred comments with usernames removed and ask for the recurring questions, with a count and two example quotes for each. Check the quotes against the originals: an assistant will sometimes tidy a quote, or write one that nobody said.",
-            "Respect the setting. Public comments can be read and summarised. Private groups have their own rules, and people's names and profiles do not belong in your notes. And remember who is missing: people who post are a loud minority. Listening tells you what to test, not what everyone thinks.",
+            "Respect the setting. Public comments can be read and summarized. Private groups have their own rules, and people's names and profiles do not belong in your notes. And remember who is missing: people who post are a loud minority. Listening tells you what to test, not what everyone thinks.",
           ],
         },
       ],
@@ -305,7 +305,7 @@ export const content: CourseContent = {
         "Monitoring answers mentions; listening studies the wider conversation.",
         "Search for the problem in the audience's words, not for the product.",
         "Record the exact words, the place and how often a theme returns.",
-        "Let an assistant sort anonymised comments, and verify every quote.",
+        "Let an assistant sort anonymized comments, and verify every quote.",
       ],
     },
     "smec-m2-t2": {
@@ -315,7 +315,7 @@ export const content: CourseContent = {
           heading: "The hook",
           paragraphs: [
             "The hook is the first line of text, the first frame, the first words spoken. It should tell the right viewer “this is for you” before they have decided to stay. Four kinds work reliably: a problem (“Rice always sticky?”), a result (“Dinner in twelve minutes, one pan”), a surprising claim you can support (“You are adding your garlic too early”), and a question people already ask.",
-            "Avoid openings that delay: greetings, the brand name, “in today's video”. And avoid hooks the post cannot honour. A viewer who feels tricked leaves, and the platform notices how quickly.",
+            "Avoid openings that delay: greetings, the brand name, “in today's video”. And avoid hooks the post cannot honor. A viewer who feels tricked leaves, and the platform notices how quickly.",
           ],
         },
         {
@@ -348,7 +348,7 @@ export const content: CourseContent = {
         "Open with the viewer's problem, a result, a supportable surprise or their own question.",
         "Put the main point in the first line of the caption; add what the visual cannot say.",
         "One call to action per post, matched to the post's job.",
-        "Ask an assistant for many hooks, then cut what exaggerates or cannot be honoured.",
+        "Ask an assistant for many hooks, then cut what exaggerates or cannot be honored.",
       ],
     },
   },
@@ -473,14 +473,14 @@ export const content: CourseContent = {
     ],
     "smec-m3-t6": [
       {
-        question: "What does a product catalogue hold?",
+        question: "What does a product catalog hold?",
         platformPrompt: "Choose the correct option",
         hints: [
           "Think of what a product card shows when someone taps a tag.",
           "It has to stay in step with the store.",
         ],
         explanation:
-          "The catalogue is the platform's copy of your product data. Shops and product tags are built from it, so it has to match the store's prices and stock.",
+          "The catalog is the platform's copy of your product data. Shops and product tags are built from it, so it has to match the store's prices and stock.",
         reviewTopicId: "smec-m3-t1",
         reviewTopicTitle: "From post to purchase: how social commerce works",
         options: [
@@ -492,14 +492,14 @@ export const content: CourseContent = {
             feedback: "Correct. Shops and product tags both draw on it.",
           },
           { id: "c", label: "A list of followers who have bought before", feedback: "That would be a customer list, which lives in the store or the CRM." },
-          { id: "d", label: "The comments left under product posts", feedback: "Comments belong to posts. The catalogue describes products." },
+          { id: "d", label: "The comments left under product posts", feedback: "Comments belong to posts. The catalog describes products." },
         ],
       },
       {
         question: "A shop tags a product in a video. The product sold out yesterday, and the tag still shows it as available. What is the underlying problem?",
         platformPrompt: "Choose the correct option",
         explanation:
-          "Tags and shops show what the catalogue says. If the catalogue is not updated from the store, shoppers see prices and stock that are no longer true.",
+          "Tags and shops show what the catalog says. If the catalog is not updated from the store, shoppers see prices and stock that are no longer true.",
         reviewTopicId: "smec-m3-t1",
         reviewTopicTitle: "From post to purchase: how social commerce works",
         options: [
@@ -509,7 +509,7 @@ export const content: CourseContent = {
             label: "The tag was placed too early in the video",
             feedback: "Placement affects whether people notice the tag, not whether the stock figure is right.",
           },
-          { id: "c", label: "The catalogue is not in sync with the store's stock", correct: true, feedback: "Correct. The tag repeats whatever the catalogue holds." },
+          { id: "c", label: "The catalog is not in sync with the store's stock", correct: true, feedback: "Correct. The tag repeats whatever the catalog holds." },
           { id: "d", label: "The shop has too few followers", feedback: "Follower count has nothing to do with stock data." },
         ],
       },
@@ -540,7 +540,7 @@ export const content: CourseContent = {
   assignments: {
     "smec-m1-t13": {
       brief:
-        "Choose the business you will work on for the whole course: your own, your employer's, or the case-study shop in Handouts. Audit its presence on two social platforms with the audit template: who each profile reaches, what it posts, what earns a response and what does not. Use an AI assistant to summarise the last 20 posts on each platform, then check the summary against the posts yourself. End with the one job (reach, relationship or revenue) that should lead the plan, written as one sentence, and the two metrics you would follow. Submit your work as a PDF or DOCX.",
+        "Choose the business you will work on for the whole course: your own, your employer's, or the case-study shop in Handouts. Audit its presence on two social platforms with the audit template: who each profile reaches, what it posts, what earns a response and what does not. Use an AI assistant to summarize the last 20 posts on each platform, then check the summary against the posts yourself. End with the one job (reach, relationship or revenue) that should lead the plan, written as one sentence, and the two metrics you would follow. Submit your work as a PDF or DOCX.",
       requirements: [
         "The completed audit template for two platforms, with one audience described for each",
         "The prompt you gave the assistant and two corrections you made to its summary",
@@ -562,7 +562,7 @@ export const content: CourseContent = {
       brief:
         "Plan two weeks of social content for the business you chose in Assignment 01, on the platforms you audited there. For every post give the date, the platform, the content pillar, the format, the hook, a one-line summary of the caption and the call to action. Write two of the posts in full, with the caption and any on-screen text. Show who approves each post before it goes out, and name the person who answers comments in the first hours after publishing. Add a note on where an AI assistant drafted or sorted anything, and what you changed. Submit the calendar as a PDF or DOCX.",
       requirements: [
-        "At least eight posts over fourteen days, each labelled with its pillar and format",
+        "At least eight posts over fourteen days, each labeled with its pillar and format",
         "A hook and one call to action for every post",
         "Two posts written in full",
         "The approval step and the person responsible for replies",
