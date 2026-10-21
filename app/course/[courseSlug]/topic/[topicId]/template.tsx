@@ -13,6 +13,9 @@ import { useArrival } from "@/lib/arrival/useArrival";
  */
 export default function TopicTemplate({ children }: { children: React.ReactNode }) {
   const { decided, released, first } = useArrival();
+  // Read on the template's first render: before PlayerShell's controller has decided (it
+  // decides in a layout effect). That effect's state update re-renders this template before the
+  // browser paints, so the class below is settled (no fade on a first visit) by the first paint.
   const withTopic = React.useRef(!decided || !released).current;
   return <div className={withTopic && first ? undefined : "sk-animate-page"}>{children}</div>;
 }

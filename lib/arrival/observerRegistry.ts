@@ -1,7 +1,7 @@
 /**
  * One IntersectionObserver per page for the arrival (motion-matrix §7.9, review M2): the
  * cascade's sections and every counter, bar and ring register here instead of each making
- * its own observer. Each element has one callback (a WeakMap), fired once, on the first round
+ * its own observer. Each element has its callbacks (one or more), fired once, on the first round
  * it intersects, with every element that came into view in that round (the cascade ranks a
  * batch by it); the element is unobserved before its callback runs.
  * The observer is made on the first `observe` (never on the server) by `make`, so tests pass
@@ -25,17 +25,18 @@ export type ObserverRegistry = {
 export function createObserverRegistry(
   make: (onEntries: (entries: { target: Element; isIntersecting: boolean }[]) => void) => ObserverLike | null,
 ): ObserverRegistry {
-  let callbacks = new WeakMap<Element, InViewCallback>();
+  // Several callbacks may watch one element (a section that is also a counter's own box).
+  let callbacks = new Map<Element, Set<InViewCallback>>();
   let observer: ObserverLike | null | undefined;
 
   const onEntries = (entries: { target: Element; isIntersecting: boolean }[]) => {
     const batch = entries.filter((e) => e.isIntersecting && callbacks.has(e.target)).map((e) => e.target);
-    const due = batch.map((el) => [el, callbacks.get(el)!] as const);
+    const due = batch.map((el) => [el, [...callbacks.get(el)!]] as const);
     due.forEach(([el]) => {
       callbacks.delete(el);
       observer?.unobserve(el);
     });
-    due.forEach(([, cb]) => cb(batch));
+    due.forEach(([, cbs]) => cbs.forEach((cb) => cb(batch)));
   };
 
   return {
@@ -46,10 +47,15 @@ export function createObserverRegistry(
         cb([el]);
         return () => {};
       }
-      callbacks.set(el, cb);
-      observer.observe(el);
+      const set = callbacks.get(el);
+      if (set) set.add(cb);
+      else {
+        callbacks.set(el, new Set([cb]));
+        observer.observe(el);
+      }
       return () => {
-        if (callbacks.get(el) !== cb) return;
+        const current = callbacks.get(el);
+        if (!current?.delete(cb) || current.size) return;
         callbacks.delete(el);
         observer?.unobserve(el);
       };
@@ -57,7 +63,7 @@ export function createObserverRegistry(
     disconnect() {
       observer?.disconnect();
       observer = undefined;
-      callbacks = new WeakMap();
+      callbacks = new Map();
     },
   };
 }

@@ -51,6 +51,26 @@ describe("createObserverRegistry", () => {
     expect(ca).toHaveBeenCalledTimes(1);
   });
 
+  it("several callbacks on one element: one observe, each fires once, each unregisters alone", () => {
+    const f = fake();
+    const r = createObserverRegistry(f.make);
+    const a = el();
+    const one = vi.fn();
+    const two = vi.fn();
+    const three = vi.fn();
+    r.observe(a, one);
+    const offTwo = r.observe(a, two);
+    r.observe(a, three);
+    expect(f.observed.size).toBe(1);
+    offTwo();
+    expect(f.observed.has(a)).toBe(true);
+    f.fire([a, true]);
+    expect(one).toHaveBeenCalledTimes(1);
+    expect(two).not.toHaveBeenCalled();
+    expect(three).toHaveBeenCalledTimes(1);
+    expect(f.observed.has(a)).toBe(false);
+  });
+
   it("an unregistered element is not called", () => {
     const f = fake();
     const r = createObserverRegistry(f.make);

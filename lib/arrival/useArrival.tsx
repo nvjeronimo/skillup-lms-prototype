@@ -168,7 +168,9 @@ function startCascade(
   );
   if (!sections.length) return () => {};
   const step = (el: Element) => Number((el as HTMLElement).dataset.arrive);
-  const fold = window.innerHeight;
+  // The fold: the window's bottom, or the root's when it scrolls itself and ends above it (the
+  // player body, over its footer nav).
+  const fold = Math.min(window.innerHeight, root.getBoundingClientRect().bottom);
   const plan = planArrival(
     sections.map((el) => ({ step: step(el), inView: !resume && el.getBoundingClientRect().top < fold })),
   );
