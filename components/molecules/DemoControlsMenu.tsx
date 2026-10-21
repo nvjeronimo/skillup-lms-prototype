@@ -341,7 +341,7 @@ export function DemoControlsMenu({
                       {
                         label: "Mark 85% watched",
                         run: () => {
-                          // Coverage and playhead at 85%: a few seconds of Play reach the 90%.
+                          // Coverage and playhead at 85%: a short play (5% of the length) reaches the 90%.
                           const at = 0.85 * mediaSeconds;
                           setWatched(activeTopic.id, [[0, at]]);
                           seekVideoTo(at, lineAt(getTranscript(activeTopic), at));
@@ -363,7 +363,7 @@ export function DemoControlsMenu({
                       </button>
                     ))}
                     <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
-                      {`Watched ${watchedPct}%. This topic completes by itself once 90% has been played; a seek does not count. Mark 85% watched, then press Play for a few seconds.`}
+                      {`Watched ${watchedPct}%. This topic completes by itself once 90% has been played; a seek does not count. Mark 85% watched, then press Play: the last 5% takes under a minute, less at 2×.`}
                     </p>
                   </div>
                 </Section>
