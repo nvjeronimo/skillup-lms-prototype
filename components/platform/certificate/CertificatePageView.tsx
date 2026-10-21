@@ -69,7 +69,7 @@ export function CertificatePageView({
 
   return (
     <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-4 pb-8 pt-4 md:gap-5 md:px-6 md:pb-12 lg:gap-6 lg:px-10 lg:pb-20 lg:pt-5">
-      <nav aria-label="Breadcrumb">
+      <nav data-arrive={0} aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
           <li className="flex items-center gap-1.5 md:gap-2">
             <Link href={MY_LEARNING_HREF} className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
@@ -104,7 +104,7 @@ export function CertificatePageView({
         </ol>
       </nav>
 
-      <div className="flex flex-col gap-1">
+      <div data-arrive={1} className="flex flex-col gap-1">
         <h1 className="sk-text-headline-small-semibold text-sko-text-default">{heading}</h1>
         <p className="sk-text-body-medium-regular text-sko-text-subtle">
           {certificate.status === "issued" ? certificate.issuedLine : `Program certificate · ${certificate.title}`}
@@ -114,6 +114,7 @@ export function CertificatePageView({
       {certificate.status === "issued" ? (
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
           <div
+            data-arrive={2}
             data-mock="Certificate artwork, ID and verification address are sample data"
             className="relative aspect-[1123/794] w-full min-w-0 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle shadow-sk-card [container-type:inline-size] lg:flex-1"
           >
@@ -125,7 +126,7 @@ export function CertificatePageView({
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
+          <div data-arrive={3} className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
             <Button
               hierarchy="primary"
               size="lg"
@@ -173,6 +174,7 @@ export function CertificatePageView({
         /* Not earned: no sheet and nothing to download. What is missing, then the way back. */
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
           <section
+            data-arrive={2}
             aria-labelledby="certificate-missing-title"
             data-mock="No API says whether a program certificate is earned: counted here from the course rows"
             className="flex min-w-0 flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:p-[19px] lg:flex-1 lg:p-[23px]"
@@ -214,7 +216,7 @@ export function CertificatePageView({
             ) : null}
           </section>
 
-          <div className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
+          <div data-arrive={3} className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
             <ButtonLink href={back.href} hierarchy="primary" size="lg">
               {back.label}
             </ButtonLink>
