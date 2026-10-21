@@ -451,6 +451,10 @@
 [data-skin="sea"] [data-chrome-ink] {
   --color-bg-page: var(--color-bg-chrome);
   --color-bg-faint: #0a5266;
+  /* The dark theme's muted grey (#25383f) is for the neutral dark page: on deep teal it reads as a
+     grey patch (the hover behind the bar's icons, Nelson 21 Oct 2026). A teal step instead; the
+     white icon on it reads 8.7:1. bg/hover and bg/track alias it. */
+  --color-bg-muted: #0a5266;
   --color-bg-primary: var(--color-bg-warning);
   --color-text-primary: #ffffff;
   --color-text-subtle: #acd5f4;
@@ -501,6 +505,10 @@
      (Services mentor card, Nelson 21 Oct 2026). The bar's light sky (#acd5f4) reads 7.0:1. */
   --color-text-subtle: #acd5f4;
   --color-icon-subtle: #acd5f4;
+  /* The same teal step for muted fills (the mentor's initials avatar was a grey disc, Nelson
+     21 Oct 2026), and the light sky for text/primary so the initials read 5.6:1 on it. */
+  --color-bg-muted: #0a5266;
+  --color-text-primary: #acd5f4;
 }
 
 /* Sea, 21 Oct 2026 (Nelson): no borders on cards, panels, menus and modals; a smooth, soft drop
