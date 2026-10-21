@@ -584,6 +584,10 @@ button {
 [data-arrive-state="wait"] {
   opacity: 0;
 }
+/* A waiting section that takes focus (Tab, find) is never invisible. */
+[data-arrive-state="wait"]:focus-within {
+  opacity: 1;
+}
 [data-arrive-state="run"] {
   animation: sk-rise-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate) backwards;
   animation-delay: var(--sk-arrive-delay, 0s);
@@ -709,6 +713,9 @@ button {
   [data-arrive-state="run"] {
     animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate) backwards;
     animation-delay: 0s;
+  }
+  [data-arrive-state="wait"]:focus-within {
+    opacity: 1;
   }
 }
 
@@ -876,6 +883,9 @@ button {
 [data-reduce-motion] [data-arrive-state="run"] {
   animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate) backwards;
   animation-delay: 0s;
+}
+[data-reduce-motion] [data-arrive-state="wait"]:focus-within {
+  opacity: 1;
 }
 
 /* Sublinhar sempre os links — não depender da cor para os distinguir. */

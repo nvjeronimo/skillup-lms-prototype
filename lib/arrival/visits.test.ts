@@ -5,6 +5,10 @@ describe("arrivalKey", () => {
   it("is the pathname without query or hash", () => {
     expect(arrivalKey("/platform/dashboard?demo=1#x")).toBe("/platform/dashboard");
   });
+  it("decodes an encoded slug (and keeps a malformed one as it is)", () => {
+    expect(arrivalKey("/platform/course/caf%C3%A9")).toBe("/platform/course/café");
+    expect(arrivalKey("/platform/course/caf%E9%")).toBe("/platform/course/caf%E9%");
+  });
   it("drops a trailing slash but keeps the root", () => {
     expect(arrivalKey("/platform/dashboard/")).toBe("/platform/dashboard");
     expect(arrivalKey("/")).toBe("/");

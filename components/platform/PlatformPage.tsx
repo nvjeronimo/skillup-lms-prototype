@@ -9,7 +9,7 @@ import type { PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
 import { useDemoMode } from "@/lib/demo";
 import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
-import { PageSkeleton, SkeletonStatus } from "./PageSkeleton";
+import { PageSkeleton } from "./PageSkeleton";
 
 const SHOW_MOCK_KEY = "sk-platform-show-mock";
 
@@ -125,7 +125,7 @@ export function PlatformPage({
               data-arrival="pending"), then dropped once the content is in. */}
           {!arrival.decided || !arrival.released ? (
             <div className="sk-arrival-skeleton">
-              <SkeletonStatus>{skeleton ?? <PageSkeleton />}</SkeletonStatus>
+              {skeleton ?? <PageSkeleton />}
             </div>
           ) : null}
           <div data-arrival-content="">{children}</div>
@@ -161,6 +161,11 @@ export function PlatformPage({
         ) : null}
       </footer>
       ) : null}
+      {/* One persistent live region for the load (outside the keyed <main>, so it is in the page
+          before its text changes): "Loading…" while the skeleton shows, empty after. */}
+      <p role="status" className="sr-only">
+        {arrival.decided && arrival.first && !arrival.released ? "Loading…" : ""}
+      </p>
       <Toast toast={toast} onDone={clearToast} />
     </div>
   );

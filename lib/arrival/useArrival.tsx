@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { MOTION_MS } from "@/lib/motion/tokens";
+import { ARMING_WINDOW_MS, canArm, parseCssTimeMs } from "./arming";
 import { arriveDelay, batchSteps, planArrival } from "./cascade";
 import { countText } from "./count";
 import { LOAD_MODE_KEY, loadDelayMs, parseLoadMode, shouldShowSkeleton, type LoadMode } from "./loadMode";
@@ -30,9 +31,18 @@ export type ArrivalState = {
   first: boolean;
   /** The simulated load is over; the content shows. */
   released: boolean;
+  /** Just after the load (ARMING_WINDOW_MS): counters and fills mounting now still count. */
+  arming: boolean;
 };
 
-const SETTLED: ArrivalState = { decided: false, first: false, released: true };
+const SETTLED: ArrivalState = { decided: false, first: false, released: true, arming: false };
+
+declare global {
+  interface Window {
+    /** The pre-paint script's failsafe timer (lib/arrival/prepaint). */
+    __skArrivalFs?: number;
+  }
+}
 
 export const ArrivalContext = React.createContext<ArrivalState>(SETTLED);
 
@@ -154,6 +164,11 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
   const decision = React.useRef<{ key: string; first: boolean; mode: LoadMode; released: boolean } | null>(null);
 
   useIsoLayoutEffect(() => {
+    // The page has taken over: the pre-paint failsafe is no longer needed.
+    if (window.__skArrivalFs !== undefined) {
+      window.clearTimeout(window.__skArrivalFs);
+      window.__skArrivalFs = undefined;
+    }
     const key = arrivalKey(pathname);
     if (decision.current?.key !== key) {
       const visited = readVisited();
@@ -165,28 +180,35 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
     const html = document.documentElement;
     let stopCascade = () => {};
     let timer = 0;
+    let armTimer = 0;
+    // Counters and fills that mount in the window after the load still count; later ones do not.
+    const openArming = () => {
+      armTimer = window.setTimeout(() => setState((s) => ({ ...s, arming: false })), ARMING_WINDOW_MS);
+      setState({ decided: true, first: true, released: true, arming: true });
+    };
     const release = () => {
       d.released = true;
       html.removeAttribute("data-arrival");
       if (rootRef.current) stopCascade = startCascade(rootRef.current);
-      setState({ decided: true, first: true, released: true });
+      openArming();
     };
 
     if (!d.first) {
       html.removeAttribute("data-arrival");
-      setState({ decided: true, first: false, released: true });
+      setState({ decided: true, first: false, released: true, arming: false });
     } else if (d.released) {
       if (rootRef.current) stopCascade = startCascade(rootRef.current, true);
-      setState({ decided: true, first: true, released: true });
+      openArming();
     } else if (shouldShowSkeleton(d.first, d.mode)) {
       html.setAttribute("data-arrival", "pending");
-      setState({ decided: true, first: true, released: false });
+      setState({ decided: true, first: true, released: false, arming: false });
       timer = window.setTimeout(release, loadDelayMs(d.mode));
     } else {
       release();
     }
     return () => {
       window.clearTimeout(timer);
+      window.clearTimeout(armTimer);
       stopCascade();
       if (!d.released) html.removeAttribute("data-arrival");
     };
@@ -196,21 +218,23 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
 }
 
 /**
- * Fires once, the first time `ref`'s element is in view after the load of a first visit.
+ * Fires once, the first time `ref`'s element is in view after the load of a first visit,
+ * after its section's cascade delay (so the count is seen, not run under an invisible section).
  * `armed` is true from the decision until then: the value should show empty / 0.
- * Never armed on a revisit, under reduced motion, or outside a platform page.
+ * Never armed on a revisit, under reduced motion, outside a platform page, or when the element
+ * mounts after the arming window (a tab panel, a filtered card: no replay).
  */
 function useArrivalTrigger(ref: React.RefObject<Element>): { armed: boolean; go: boolean } {
-  const { first, released, decided } = useArrival();
+  const { first, released, decided, arming } = useArrival();
   const [phase, setPhase] = React.useState<"idle" | "armed" | "go" | "done">("idle");
   const used = React.useRef(false);
 
   useIsoLayoutEffect(() => {
     if (used.current || !decided) return;
     used.current = true;
-    if (first && !prefersReducedMotion()) setPhase("armed");
+    if (canArm({ first, released, arming }) && !prefersReducedMotion()) setPhase("armed");
     else setPhase("done");
-  }, [decided, first]);
+  }, [decided, first, released, arming]);
 
   React.useEffect(() => {
     const el = ref.current;
@@ -219,14 +243,25 @@ function useArrivalTrigger(ref: React.RefObject<Element>): { armed: boolean; go:
       setPhase("go");
       return;
     }
+    let next = 0;
+    let wait = 0;
     const observer = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        observer.disconnect();
-        setPhase("go");
-      }
+      if (!entries.some((e) => e.isIntersecting)) return;
+      observer.disconnect();
+      // Next task: the section around it has been set rising by then (if it was waiting below
+      // the fold, its own observer fires in the same round); start when its delay is over.
+      next = window.setTimeout(() => {
+        const section = el.closest('[data-arrive-state="run"]');
+        const delay = section ? parseCssTimeMs(getComputedStyle(section).animationDelay) : 0;
+        wait = window.setTimeout(() => setPhase("go"), delay);
+      }, 0);
     });
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(next);
+      window.clearTimeout(wait);
+    };
   }, [phase, released, ref]);
 
   return { armed: phase === "armed", go: phase === "go" };

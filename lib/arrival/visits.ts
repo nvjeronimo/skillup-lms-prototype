@@ -6,9 +6,15 @@
  */
 export const VISITED_KEY = "sk-arrival-visited";
 
-/** The page a path belongs to: no query, no hash, no trailing slash ("/" stays). */
+/** The page a path belongs to: decoded, no query, no hash, no trailing slash ("/" stays). */
 export function arrivalKey(path: string): string {
-  const bare = path.split(/[?#]/)[0].replace(/\/+$/, "");
+  let bare = path.split(/[?#]/)[0].replace(/\/+$/, "");
+  // Decoded, so "/caf%C3%A9" and "/café" are one page (the pre-paint script decodes too).
+  try {
+    bare = decodeURI(bare);
+  } catch {
+    /* malformed escape: keep the path as written */
+  }
   return bare || "/";
 }
 
