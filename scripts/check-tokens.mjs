@@ -23,6 +23,10 @@
  *                             value is not a literal "dialog" (dialogs themselves are covered by
  *                             useDialog/OverlayPanel and skipped). Silence one with the escape
  *                             hatch below on the line above the reported line.
+ *                             The comment stripper is not string-aware: a `//` or `/*` inside a
+ *                             string literal (other than right after `:`, a quote, a backtick or
+ *                             a backslash) is treated as a comment. If that ever hides or fakes a
+ *                             popup-motion hit, use the escape hatch.
  *
  * Escape hatch: append `// token-lint-disable-next-line <reason>` on the line above,
  * or add a path to ALLOW. Exits non-zero on any violation. Run: `npm run lint:tokens`.

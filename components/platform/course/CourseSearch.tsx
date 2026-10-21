@@ -437,6 +437,7 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
   // while it leaves, inert and click-through. The panel's content is not keyed, so a new
   // result list does not replay the entrance.
   const sheet = useExitTransition(sheetOpen, MOTION_MS.short4);
+  const sheetId = React.useId();
   const popup = useExitTransition(variant === "popup" && search.open, MOTION_MS.short2);
   // While it leaves, the popup draws what it showed when it was open, whatever the close path did.
   const shownSearch = useFrozenWhileClosed(search, variant === "popup" && search.open);
@@ -477,11 +478,14 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
               }
             },
             "aria-haspopup": "dialog",
+            "aria-expanded": sheetOpen,
+            "aria-controls": sheet.mounted ? sheetId : undefined,
           }}
         />
         {sheet.mounted ? (
           <div
             ref={sheetRef}
+            id={sheetId}
             role="dialog"
             aria-modal="true"
             aria-label={label}
