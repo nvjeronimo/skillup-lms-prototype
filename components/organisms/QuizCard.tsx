@@ -578,7 +578,7 @@ export function QuizCard({
           `Next Hint` lives in here once the first hint shows. It disables on
           exhaustion, never on first use — with three hints authored it stays
           live after the first press. */}
-        {showHint && hints.length > 0 ? (
+        {hints.length > 0 ? (
           <Collapse open={hintOpen} className="-mt-5">
             <div className="pt-5">
               <InlineAlert
