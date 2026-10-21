@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
+import { AssistantMark } from "./AssistantMark";
 
 export interface AssistantLauncherProps {
   open: boolean;
@@ -28,7 +29,8 @@ export interface AssistantLauncherProps {
  * Closed, it is the assistant mark: the SkillUp ball and paper plane with AI sparkles in place
  * of the trail lines (Nelson, 13 Oct 2026; DS `LMS/Platform/Assistant/Assistant-Launcher`).
  * Like the logo, the mark keeps its own colours and swaps its ink to white on a dark page
- * (two assets toggled by [data-theme], see SkillUpLogo). Open, it is a round close button.
+ * (inline since 21 Oct 2026, see AssistantMark: its three sparkles each turn a quarter now and
+ * then). Open, it is a round close button.
  * Since 15 Oct 2026 the ball wears a 2px gradient ring in the logo's blues (DS: a linear
  * gradient stroke outside the ball), and the gradient turns slowly round it (Nelson asked
  * for it to move). Reduced motion holds it still (`.sk-assistant-ring`, globals.css).
@@ -91,10 +93,8 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
           {/* The ring turns only while first steps are left (audit 16 Oct 2026, D3): with nothing to
               do, a moving ring would pull the eye from the page for no reason. */}
           <span className={cn("sk-assistant-ring", badge === 0 && "sk-assistant-ring--still")} />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assistant-mark.svg" alt="" className="sk-logo-light relative block h-12 w-12" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assistant-mark-dark.svg" alt="" className="sk-logo-dark relative h-12 w-12" />
+          {/* Inline, so its sparkles can turn (21 Oct 2026); it swaps its own ink in dark. */}
+          <AssistantMark className="relative block h-12 w-12" />
         </span>
         <span
           aria-hidden
