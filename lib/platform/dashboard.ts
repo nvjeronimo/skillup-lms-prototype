@@ -32,7 +32,7 @@ export interface DashboardStat {
    * has a history in the data (certificate issue dates).
    */
   trend?: { direction: "up" | "down" | "level"; label: string; spoken: string };
-  /** The goal beside the figure, only when a real fact sets it (a program end, the deadlines). */
+  /** The goal beside the figure, only when Open edX serves the fact behind it. */
   goal?: { label: string; spoken: string };
 }
 
@@ -45,10 +45,14 @@ export interface DashboardStat {
  * are started and not complete, how many are complete, and the programs by state.
  *
  * Arrows and goals (Nelson, 21 Oct 2026): a figure alone says nothing, it needs a comparison and
- * a goal. Only real facts: the arrows count certificate issue dates (Open edX `created_date`);
- * the goals come from the programs' end dates, the enrolments and the deadlines. In progress
- * gets no arrow: fewer courses in progress can mean more completed, so up and down are not
- * good or bad there.
+ * a goal. Only what Open edX already serves (Nelson, 22 Oct 2026): the arrows count certificate
+ * issue dates (Certificates API `created_date`); the goals come from the enrolments (Learner
+ * Home), the deadlines (Dates API, one call per course) and the program's courses
+ * (`progress_details`). No date goals: programs have no end date in Open edX. No goal on
+ * Certificates: program certificates need Credentials, not configured. In progress gets no
+ * arrow: fewer courses in progress can mean more completed, so up and down are not good or bad
+ * there. The Completed arrow counts course certificates, so a course completed without one
+ * (audit) is not in it.
  */
 const enrolled = CATALOG.length;
 const coursesInProgress = CATALOG.filter((c) => c.percent !== null && c.percent > 0 && c.percent < 100).length;
@@ -88,12 +92,10 @@ function monthTrend(dates: (Date | null)[], noun: string) {
 
 const issuedDates = earnedCertificates.map((e) => parseIssued(e.certificate.document.issuedOn));
 const courseIssuedDates = earnedCertificates.filter((e) => e.kind === "course").map((e) => parseIssued(e.certificate.document.issuedOn));
-const programEnd = (p: (typeof PROGRAMS)[number]) => p.dates.find((d) => d.id === "ends")?.iso;
-const lastEnd = PROGRAMS.map(programEnd).filter((iso): iso is string => !!iso).sort().at(-1);
-const lastEndLabel = lastEnd ? `${shortMonth(parseDay(lastEnd))} ${lastEnd.slice(0, 4)}` : "";
-const activeProgram = PROGRAMS.find((_, i) => programPercents[i].some((x) => x > 0) && !programPercents[i].every((x) => x === 100));
-const activeEnd = activeProgram ? programEnd(activeProgram) : undefined;
-const possibleCertificates = enrolled + PROGRAMS.length;
+const activeIndex = programPercents.findIndex((ps) => ps.some((x) => x > 0) && !ps.every((x) => x === 100));
+const activeProgram = activeIndex >= 0 ? PROGRAMS[activeIndex] : undefined;
+const activeDone = activeIndex >= 0 ? programPercents[activeIndex].filter((x) => x === 100).length : 0;
+const activeTotal = activeIndex >= 0 ? programPercents[activeIndex].length : 0;
 const dueThisWeek = calendarEvents.filter(isDueThisWeek).length;
 const pct = (a: number, b: number) => `${Math.round((a / b) * 100)}%`;
 
@@ -111,11 +113,11 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
     {
       label: "Courses completed",
       value: String(coursesCompleted),
-      detail: `Goal: all ${enrolled} by ${lastEndLabel}`,
+      detail: `of ${enrolled} enrolled`,
       shortLabel: "Completed",
       shortDetail: `of ${enrolled} courses`,
       trend: monthTrend(courseIssuedDates, "courses completed"),
-      goal: { label: `${pct(coursesCompleted, enrolled)} of goal`, spoken: `${pct(coursesCompleted, enrolled)} of the goal: all ${enrolled} enrolled courses by ${lastEndLabel}` },
+      goal: { label: `${pct(coursesCompleted, enrolled)} of ${enrolled}`, spoken: `${pct(coursesCompleted, enrolled)} of your ${enrolled} enrolled courses complete` },
     },
     // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
     {
@@ -124,15 +126,14 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       detail: "ready to download",
       shortDetail: "to download",
       trend: monthTrend(issuedDates, "certificates issued"),
-      goal: { label: `of ${possibleCertificates} possible`, spoken: `${earnedCertificates.length} of the ${possibleCertificates} certificates your courses and programs can give` },
     },
     {
       label: "Programs",
       value: String(PROGRAMS.length),
       detail: `${programsInProgress} in progress · ${programsCompleted} completed`,
       shortDetail: `${programsInProgress} active · ${programsCompleted} done`,
-      goal: activeEnd
-        ? { label: `Ends ${shortMonth(parseDay(activeEnd))} ${activeEnd.slice(0, 4)}`, spoken: `${activeProgram?.title} ends on ${activeEnd}` }
+      goal: activeProgram
+        ? { label: `${activeDone} of ${activeTotal} courses`, spoken: `${activeProgram.title}: ${activeDone} of ${activeTotal} courses complete` }
         : undefined,
     },
   ],
