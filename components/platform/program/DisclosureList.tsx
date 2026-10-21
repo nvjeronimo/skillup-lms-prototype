@@ -43,13 +43,28 @@ function DisclosureRow({
           className="-my-2.5 flex w-full items-start gap-2 py-2.5 text-left md:gap-4"
         >
           <span className="sk-text-body-large-semibold min-w-0 flex-1 text-sko-text-default">{item.title}</span>
-          <Icon
-            icon={open ? CircleMinus : CirclePlus}
-            size={24}
-            strokeWidth={1.5}
-            aria-hidden
-            className="shrink-0 text-sko-icon-faint"
-          />
+          {/* Plus and minus are both there and cross-fade with a quarter turn (short4, standard),
+              so the icon reads as one thing changing. The state stays on aria-expanded. */}
+          <span aria-hidden className="relative size-6 shrink-0 text-sko-icon-faint">
+            <Icon
+              icon={CirclePlus}
+              size={24}
+              strokeWidth={1.5}
+              className={cn(
+                "absolute inset-0 transition-[opacity,transform] duration-short4 ease-standard",
+                open ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
+              )}
+            />
+            <Icon
+              icon={CircleMinus}
+              size={24}
+              strokeWidth={1.5}
+              className={cn(
+                "absolute inset-0 transition-[opacity,transform] duration-short4 ease-standard",
+                open ? "rotate-0 opacity-100" : "-rotate-90 opacity-0",
+              )}
+            />
+          </span>
         </button>
       </h3>
       {/* Grows open (Collapse, medium2); the 4 above the body is padding inside the clipped row. */}

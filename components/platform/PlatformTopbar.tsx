@@ -22,6 +22,7 @@ import { track } from "@/lib/analytics";
 import { useDisclosure } from "@/lib/useDisclosure";
 import { PLATFORM_SECTIONS, platformUser, type PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
+import { useHasChanged } from "@/lib/motion/useHasChanged";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
@@ -182,6 +183,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   const notificationsRead = useLmsStore((s) => s.notificationsRead);
   const markAllNotificationsRead = useLmsStore((s) => s.markAllNotificationsRead);
   const unread = notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length;
+  // The unread dot pops when it appears (a new notification), not when the bar first paints.
+  const dotPop = useHasChanged(unread > 0) ? "sk-animate-badge-pop" : undefined;
   // Sea skin (proposal, 19 Oct 2026; first called Maré): the bar's own controls take the dark-mode tokens so they
   // read on the deep-teal bar; the panels that open from it keep the page's theme.
   const skin = useLmsStore((st) => st.skin);
@@ -201,7 +204,10 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
       {unread ? (
         <span
           aria-hidden
-          className="absolute right-[11px] top-[10px] size-2 rounded-pill bg-sko-bg-info ring-2 ring-sko-bg-page transition-colors group-hover:ring-sko-bg-muted lg:right-[5px] lg:top-1"
+          className={cn(
+            dotPop,
+            "absolute right-[11px] top-[10px] size-2 rounded-pill bg-sko-bg-info ring-2 ring-sko-bg-page transition-colors group-hover:ring-sko-bg-muted lg:right-[5px] lg:top-1",
+          )}
         />
       ) : null}
     </button>

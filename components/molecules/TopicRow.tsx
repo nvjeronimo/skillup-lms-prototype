@@ -7,6 +7,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { cn } from "@/lib/utils";
 import { LOCK_TOOLTIP_MS } from "@/lib/motion/feedback";
 import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition } from "@/lib/useExitTransition";
 import type { CompletionState, TopicType } from "@/lib/types";
 
 export interface TopicRowProps {
@@ -127,6 +128,8 @@ export function TopicRow({
   const hint = useLockedHint(lockedHint);
   const hintId = React.useId();
   const rowRef = React.useRef<HTMLDivElement>(null);
+  // The tooltip leaves as it came (fade + sink by the nudge), faster than it entered: short2.
+  const hintPresence = useExitTransition(Boolean(locked && lockedHint && hint.open), MOTION_MS.short2);
   /* The reason, for assistive tech: the button's description, and a polite announcement
      when the learner tries the row. */
   const lockedA11y =
@@ -233,9 +236,12 @@ export function TopicRow({
         </span>
       </button>
       {lockedA11y}
-      {locked && lockedHint && hint.open ? (
+      {locked && lockedHint && hintPresence.mounted ? (
         <span
           aria-hidden
+          data-state={hintPresence.state}
+          onAnimationEnd={hintPresence.onAnimationEnd}
+          style={hintPresence.state === "closed" ? { animationDuration: "var(--motion-duration-short2)" } : undefined}
           className={cn(
             "sk-animate-rise sk-rise-nudge sk-text-body-small-semibold pointer-events-none absolute left-3 z-20 w-max max-w-[240px] rounded-control bg-sko-bg-inverse px-3 py-2 text-sko-text-on-inverse",
             hint.above ? "bottom-full -mb-1" : "top-full -mt-1",

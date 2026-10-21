@@ -7,6 +7,7 @@ import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { cn } from "@/lib/utils";
+import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { ProgressRing } from "@/components/molecules/OverallProgress";
 
 export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
@@ -136,12 +137,14 @@ export function CoursePlayerTopbar({
 
   const notificationsLabel =
     notificationsCount > 0 ? `Notifications, ${notificationsCount} unread` : "Notifications";
+  // The unread dot pops when it appears (a new notification), not when the bar first paints.
+  const dotPop = useHasChanged(notificationsCount > 0) ? "sk-animate-badge-pop" : undefined;
   const bell = (
     <span className="relative">
       <Icon icon={Bell} size={20} />
       {notificationsCount > 0 ? (
         <span
-          className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-pill bg-sko-bg-primary"
+          className={cn(dotPop, "absolute -right-0.5 -top-0.5 h-2 w-2 rounded-pill bg-sko-bg-primary")}
           aria-hidden
         />
       ) : null}

@@ -4,6 +4,9 @@ import * as React from "react";
 import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition } from "@/lib/useExitTransition";
 
 export interface CourseAlertProps {
   /**
@@ -25,6 +28,11 @@ export interface CourseAlertProps {
   dismissible?: boolean;
   /** What on this alert has no API yet (shown when the sample-data marks are on). */
   mock?: string;
+  /**
+   * False makes the alert leave (ShiftDatesAlert after the shift). A dismissed or closed alert
+   * fades and sinks out (short3, standard-accelerate), inert while it goes, then unmounts.
+   */
+  open?: boolean;
   className?: string;
 }
 
@@ -68,17 +76,25 @@ export function CourseAlert({
   action,
   dismissible = false,
   mock,
+  open = true,
   className,
 }: CourseAlertProps) {
-  const [open, setOpen] = React.useState(true);
-  if (!open) return null;
+  const [dismissed, setDismissed] = React.useState(false);
+  // Exit only: the alert is page content, so it does not rise in on every page load.
+  const presence = useExitTransition(open && !dismissed, MOTION_MS.short3);
+  if (!presence.mounted) return null;
   const t = TONE[tone];
+  const leaving = presence.state === "closed";
 
   return (
     <div
       role="note"
       data-mock={mock}
+      data-state={presence.state}
+      onAnimationEnd={presence.onAnimationEnd}
+      {...inertProps(leaving)}
       className={cn(
+        leaving && "sk-animate-rise pointer-events-none",
         // The DS stroke is inside the alert and the CSS border is outside the padding: 15 + 1 = the DS 16.
         "relative flex flex-col gap-4 rounded-card border p-[15px] shadow-sm",
         layout === "responsive" && "md:flex-row",
@@ -102,7 +118,7 @@ export function CourseAlert({
         <button
           type="button"
           aria-label={`Dismiss: ${title}`}
-          onClick={() => setOpen(false)}
+          onClick={() => setDismissed(true)}
           className="absolute right-[7px] top-[7px] flex size-9 items-center justify-center rounded-control text-sko-icon-muted transition-colors hover:text-sko-icon-default max-md:right-[3px] max-md:top-[3px] max-md:size-11"
         >
           <Icon icon={X} size={20} />

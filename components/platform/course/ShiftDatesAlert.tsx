@@ -17,9 +17,10 @@ export function ShiftDatesAlert({ courseSlug, className }: { courseSlug: string;
   const router = useRouter();
   const showToast = useLmsStore((s) => s.showToast);
   const [shifted, setShifted] = React.useState(false);
-  if (shifted) return null;
+  // After the shift the alert leaves with its own exit (CourseAlert `open`), not in one frame.
   return (
     <CourseAlert
+      open={!shifted}
       tone="warning"
       title={SHIFT_DATES.title}
       body={SHIFT_DATES.body}

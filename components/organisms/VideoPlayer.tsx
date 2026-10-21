@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn, secondsToTs, tsToSeconds } from "@/lib/utils";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import type { TranscriptLine, VideoState } from "@/lib/types";
 
 /** DS `_Video actions bar` Size. Set by the caller; the bar never re-sizes itself. */
@@ -251,6 +253,11 @@ export function VideoPlayer({
   const pct = durationSeconds > 0 ? Math.min(100, (currentTime / durationSeconds) * 100) : 0;
   const audible = muted ? 0 : volume;
   const caption = cues ? captionAt(cues, currentTime) : null;
+  // The caption overlay fades in when CC turns on (short3) and out when it turns off (short2),
+  // keeping its last line while it goes. The line itself is content: a new line swaps in place.
+  const captionShown = Boolean(captions && caption && state === "ready");
+  const captionPresence = useExitTransition(captionShown, MOTION_MS.short2);
+  const shownCaption = useFrozenWhileClosed(caption, captionShown);
 
   React.useEffect(() => {
     function onChange() {
@@ -387,9 +394,13 @@ export function VideoPlayer({
         </div>
       )}
 
-      {captions && caption && state === "ready" ? (
+      {captionPresence.mounted ? (
         <div
+          data-state={captionPresence.state}
+          onAnimationEnd={captionPresence.onAnimationEnd}
+          aria-hidden={captionPresence.state === "closed" || undefined}
           className={cn(
+            "sk-animate-fade-short3",
             // Centred with auto margins, not left-1/2: that halves the width the text can
             // use and wraps the caption into a column that a short player clips.
             // pointer-events-none: on sm the caption sits over the seek slider's taller touch area.
@@ -402,7 +413,7 @@ export function VideoPlayer({
           {/* One bg/overlay layer, on the wrapper. At 70% (12 Oct 2026) it keeps white text at
               6.56:1 over a white frame; at 50% it took two layers to stay above 4.5:1. */}
           <span className="sk-text-body-medium-medium block px-3 py-1 text-sko-text-on-media">
-            {caption}
+            {shownCaption}
           </span>
         </div>
       ) : null}
