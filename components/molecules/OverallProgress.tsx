@@ -24,16 +24,17 @@ export function ProgressRing({
 }: {
   pct: number;
   /**
-   * 28px ring for the mobile topbar (Nelson, 14 Oct 2026). No number inside: at 28px it would
-   * be ~9px, below the DS's smallest text style; the percentage is in the accessible name and
-   * stays readable in the drawer. Completed shows the green arc with a check.
+   * 32px ring for the mobile topbar: DS Progress circle Size=xxxxs (Nelson, 21 Oct 2026; was 28
+   * since 14 Oct). No number inside: the DS's smallest text style (12px) does not fit a 32px
+   * ring; the percentage is in the accessible name and stays readable in the drawer. Completed
+   * shows the green arc with a check.
    */
   compact?: boolean;
   className?: string;
 }) {
-  const box = compact ? 28 : 46;
-  // The DS arc: innerRadius 0.8, so the band is a fifth of the radius, stroke centred in it.
-  const band = (box / 2) * 0.2;
+  // DS Progress circle: xxxxs 32 with a 3px band, xxxs 46 with a 4px band, stroke centred.
+  const box = compact ? 32 : 46;
+  const band = compact ? 3 : 4;
   const radius = box / 2 - band / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (pct / 100) * circumference;
@@ -46,7 +47,7 @@ export function ProgressRing({
       aria-label={compact ? (complete ? "Course completed" : `Course progress, ${pct}%`) : `${pct}% complete`}
     >
       <svg className="-rotate-90" width={box} height={box} viewBox={`0 0 ${box} ${box}`} aria-hidden>
-        <circle cx={box / 2} cy={box / 2} r={radius} fill="none" stroke="var(--color-bg-muted)" strokeWidth={band} />
+        <circle cx={box / 2} cy={box / 2} r={radius} fill="none" stroke="var(--color-bg-track)" strokeWidth={band} />
         <circle
           cx={box / 2}
           cy={box / 2}

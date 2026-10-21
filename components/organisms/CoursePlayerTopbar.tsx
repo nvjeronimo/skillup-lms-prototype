@@ -34,9 +34,9 @@ export interface CoursePlayerTopbarProps {
   onTheme?: () => void;
   onClose?: () => void;
   /**
-   * Course percentage, shown on Mobile only as a 28px ring after the logo (Nelson, 14 Oct
-   * 2026): on a phone the sidebar ring sits in the drawer, so this is where a completion is
-   * seen to count. Omit it to hide the ring.
+   * Course percentage, shown on Mobile only as a ring after the logo (Nelson, 14 Oct 2026;
+   * 32px, the DS Progress circle xxxxs, since 21 Oct): on a phone the sidebar ring sits in the
+   * drawer, so this is where a completion is seen to count. Omit it to hide the ring.
    */
   progressPct?: number;
   /** Replaces the default (inert) account button — e.g. the demo-settings menu. */
