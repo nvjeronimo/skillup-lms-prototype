@@ -10,6 +10,7 @@ import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHeader";
 import { discussionHref } from "@/lib/platform/discussion";
 import { serviceSections, servicesMentor, type ServiceItem } from "@/lib/platform/services";
+import { coursePageHref } from "@/lib/platform/hrefs";
 import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
 
@@ -94,9 +95,10 @@ export function ServicesView() {
             </div>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row lg:shrink-0">
-            <Button size="md" onClick={() => notInPrototype("Messaging your mentor")} className="max-md:h-11">
+            {/* Nelson, 21 Oct 2026: messaging the mentor is the course's private Mentorship Q&A. */}
+            <ButtonLink href={`${coursePageHref("ai-driven-content-and-brand-communication")}?tab=qa`} size="md" className="max-md:h-11">
               Message your mentor
-            </Button>
+            </ButtonLink>
             <ButtonLink href={discussionHref()} hierarchy="secondary" size="md" className="max-md:h-11">
               Your discussions
             </ButtonLink>

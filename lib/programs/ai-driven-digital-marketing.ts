@@ -161,7 +161,7 @@ const program: Program = {
             signatureSrc: "/platform/certificate-signature-1.svg",
           },
           {
-            name: "Signatory name",
+            name: "Daniel Moreau", // sample name, as on the Data Analytics certificates (the real IBM signatory is not known)
             role: "Programme lead, IBM",
             signatureSrc: "/platform/certificate-signature-2.svg",
           },

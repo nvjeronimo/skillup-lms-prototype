@@ -12,6 +12,7 @@ import type { Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import { CardShell, SectionIntro } from "./parts";
+import { DemoOnly } from "@/lib/demo";
 
 /**
  * DS `LMS / Course Detail / Certificate card` (5425:566), the two states the page draws.
@@ -149,11 +150,13 @@ export function CertificatesTab({ program }: { program: Program }) {
             <h3 id="program-certificate-title" className="sk-text-body-large-semibold text-sko-text-default">
               Program certificate
             </h3>
-            <InlineAlert
-              tone="info"
-              title="Proposal: not designed yet"
-              description="The program certificate has no Figma screen. This card and the page it opens are a proposal built from parts that already exist."
-            />
+            <DemoOnly>
+              <InlineAlert
+                tone="info"
+                title="Proposal: not designed yet"
+                description="The program certificate has no Figma screen. This card and the page it opens are a proposal built from parts that already exist."
+              />
+            </DemoOnly>
             <div
               data-mock="No API says whether a program certificate is earned: counted here from the course rows"
               className="w-full md:w-[320px]"

@@ -123,12 +123,15 @@ export function ScormContainer({
         )}
       </div>
 
+      {/* Only where it is true: on a small screen (it read as noise on desktop). */}
       {state !== "error" ? (
-        <InlineAlert
-          tone="info"
-          title="Best viewed on a larger screen"
-          description="Interactive activities work best on a larger screen and may not be fully supported in the mobile app. Open this one on desktop or the web."
-        />
+        <div className="md:hidden">
+          <InlineAlert
+            tone="info"
+            title="Best viewed on a larger screen"
+            description="Interactive activities work best on a larger screen and may not be fully supported in the mobile app. Open this one on desktop or the web."
+          />
+        </div>
       ) : null}
     </section>
   );

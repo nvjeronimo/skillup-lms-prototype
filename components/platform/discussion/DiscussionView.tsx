@@ -114,9 +114,15 @@ export function DiscussionView() {
     <div className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
-          <h1 className="sk-text-headline-large-bold text-sko-text-default">
-            Discussion <span data-heading-em="" className="text-sko-text-subtle">across your courses.</span>
-          </h1>
+          <div className="flex flex-col gap-1">
+            <h1 className="sk-text-headline-large-bold text-sko-text-default">
+              Discussion <span data-heading-em="" className="text-sko-text-subtle">across your courses.</span>
+            </h1>
+            {/* Nelson, 21 Oct 2026: Discussion is the cohort's forum; Mentorship Q&A is private. */}
+            <p className="sk-text-body-medium-regular text-sko-text-muted">
+              Talk with your cohort. For a private question to your mentor, use Mentorship Q&amp;A in the course.
+            </p>
+          </div>
           <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => notInPrototype("New post (choose a course, then a topic)")} className="max-md:h-11">
             New post
           </Button>

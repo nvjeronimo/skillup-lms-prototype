@@ -246,7 +246,6 @@ export function Sidebar({
         )}
         aria-label="Course"
       >
-        <h2 className="sr-only">Course navigation</h2>
         <div className="flex flex-col items-center gap-2 pb-3">
           <SidebarToggle expanded={false} onToggle={onToggleSidebar} />
           <OverallProgress
@@ -372,9 +371,7 @@ export function Sidebar({
             <Icon icon={X} size={24} />
           </button>
         </div>
-      ) : (
-        <h2 className="sr-only">Course navigation</h2>
-      )}
+      ) : null}
       {isMobile ? (
         /* Mobile (DS Sidebar-ICP · Mobile): the course header keeps its own
            hairline, the toggle is hidden and there is no Overall Progress block —

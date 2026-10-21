@@ -92,7 +92,7 @@ function ModuleRow({
   onToggle,
 }: {
   mod: CourseModule;
-  topicHref: string;
+  topicHref: (topicId: string) => string;
   open: boolean;
   onToggle: () => void;
 }) {
@@ -163,7 +163,7 @@ function ModuleRow({
                 <h4 className="sk-text-body-small-medium px-3 py-2 text-sko-text-muted md:pb-0 md:pr-0">{lesson.label}</h4>
                 <ul>
                   {lesson.topics.map((topic) => (
-                    <TopicRow key={topic.id} topic={topic} href={topicHref} last={topic.id === lastTopicId} />
+                    <TopicRow key={topic.id} topic={topic} href={topicHref(topic.id)} last={topic.id === lastTopicId} />
                   ))}
                 </ul>
               </React.Fragment>
@@ -182,7 +182,14 @@ function ModuleRow({
  * ordered list. Each row is an independent accordion; the module in progress opens with the
  * page, as drawn. The screens draw the other three closed and give them no topics.
  */
-export function ModuleList({ modules, topicHref }: { modules: CourseModule[]; topicHref: string }) {
+export function ModuleList({
+  modules,
+  topicHref,
+}: {
+  modules: CourseModule[];
+  /** The player address of a topic (each row opens its own topic). */
+  topicHref: (topicId: string) => string;
+}) {
   const [open, setOpen] = React.useState<Set<string>>(
     () => new Set(modules.filter((m) => m.defaultOpen).map((m) => m.id)),
   );

@@ -7,6 +7,7 @@ import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore } from "@/lib/store";
 import type { PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
+import { useDemoMode } from "@/lib/demo";
 
 const SHOW_MOCK_KEY = "sk-platform-show-mock";
 
@@ -34,6 +35,7 @@ export function PlatformPage({
 }) {
   const pathname = usePathname();
   const toast = useLmsStore((s) => s.toast);
+  const demo = useDemoMode();
   const clearToast = useLmsStore((s) => s.clearToast);
   // Remembered per browser; read after mount so the server and first client render agree.
   const [showMock, setShowMock] = React.useState(false);
@@ -103,6 +105,7 @@ export function PlatformPage({
           as the /lab note, so a screenshot of these pages is not read as a promise about the data.
           max-md:pb-20: on a phone the assistant launcher floats over the bottom right (48 + 16 from
           the edge); the footer, last on the page, keeps 80px under its text so it scrolls clear of it. */}
+      {demo ? (
       <footer
         aria-label="Test build"
         className="sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-2 text-sko-text-warning max-md:pb-20 md:px-8 lg:px-10"
@@ -127,6 +130,7 @@ export function PlatformPage({
           </ul>
         ) : null}
       </footer>
+      ) : null}
       <Toast toast={toast} onDone={clearToast} />
     </div>
   );

@@ -181,9 +181,17 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
 
   return (
     <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
-      <h2 className={cn("sk-text-headline-medium-bold text-sko-text-default", explicit && "max-md:sr-only")}>
-        {tab.title}
-      </h2>
+      <div className={cn("flex flex-col gap-1", explicit && "max-md:sr-only")}>
+        <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
+        {/* Nelson, 21 Oct 2026: Q&A is private with the mentor; Discussion is the cohort's forum. */}
+        <p className="sk-text-body-medium-regular text-sko-text-muted">
+          Private between you and your mentor. To talk with the whole cohort, use{" "}
+          <Link href="/platform/discussion" className="text-sko-text-primary underline underline-offset-2">
+            Discussion
+          </Link>
+          .
+        </p>
+      </div>
 
       <div className="flex flex-col gap-4 md:flex-row md:items-start">
         <section

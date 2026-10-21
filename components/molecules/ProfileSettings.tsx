@@ -2,11 +2,12 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Award, ExternalLink, RotateCcw, UserPen } from "lucide-react";
+import { Award, ExternalLink, LogOut, RotateCcw, UserPen } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";
 import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { cn } from "@/lib/utils";
+import { useDemoMode } from "@/lib/demo";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
@@ -89,13 +90,26 @@ export function ProfileLinks({ onDone }: { onDone?: () => void }) {
 }
 
 export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
+  const showToast = useLmsStore((s) => s.showToast);
   return (
-    <div className="border-t border-sko-border-subtle px-4 py-3">
+    <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
       <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
         <Icon icon={ExternalLink} size={16} />
         SkillUp Online
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
+      {/* Open edX's user menu ends with Sign out (/logout); the learner must always find it here. */}
+      <button
+        type="button"
+        className={MENU_ROW}
+        onClick={() => {
+          showToast("Signed out. In this prototype you stay signed in.");
+          onDone?.();
+        }}
+      >
+        <Icon icon={LogOut} size={16} />
+        Sign out
+      </button>
     </div>
   );
 }
@@ -202,9 +216,11 @@ export function Segmented<T extends string>({
  * Appearance: the brand skin (the same three skins everywhere). The light / dark switch is in
  * the top bar of both shells since 17 Oct 2026 (Nelson; DS Topbar), not here.
  */
-export function AppearanceSection() {
+export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }) {
   const skin = useLmsStore((s) => s.skin);
   const setSkin = useLmsStore((s) => s.setSkin);
+  const theme = useLmsStore((s) => s.theme);
+  const toggleTheme = useLmsStore((s) => s.toggleTheme);
   return (
     <ProfileSection title="Appearance">
       <div className="flex flex-col gap-1.5 px-1">
@@ -226,6 +242,10 @@ export function AppearanceSection() {
           onChange={setSkin}
         />
       </div>
+      {/* The player's phone top bar has no theme button: the switch is here instead. */}
+      {showTheme ? (
+        <ToggleRow label="Dark theme" hint="Easier on the eyes at night" checked={theme === "dark"} onChange={() => toggleTheme()} />
+      ) : null}
     </ProfileSection>
   );
 }
@@ -282,7 +302,9 @@ export function AccessibilitySection() {
 /** The footer (DS "Footer demo purposes only"): Reset demo and Restart first steps, prototype only. */
 export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const resetDemo = useLmsStore((s) => s.resetDemo);
+  const demo = useDemoMode();
   const row = MENU_ROW;
+  if (!demo) return null;
   return (
     <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
       <button

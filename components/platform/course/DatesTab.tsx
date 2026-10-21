@@ -7,6 +7,7 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { useLmsStore } from "@/lib/store";
 import type { CourseDate, CourseDateState, CourseDetail } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
+import { topicLinks } from "@/lib/platform/topic-links";
 import { ShiftDatesAlert } from "./ShiftDatesAlert";
 
 /* The 12px dot of the spine. The DS binds icon/success and icon/error as its fill; the bg
@@ -93,7 +94,7 @@ function DateRow({ item, href, first }: { item: CourseDate; href: string; first:
   );
 }
 
-function DateCard({ items, href, label }: { items: CourseDate[]; href: string; label: string }) {
+function DateCard({ items, href, label }: { items: CourseDate[]; href: (title: string) => string; label: string }) {
   return (
     <ol
       aria-label={label}
@@ -101,7 +102,7 @@ function DateCard({ items, href, label }: { items: CourseDate[]; href: string; l
       className="rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]"
     >
       {items.map((item, index) => (
-        <DateRow key={item.id} item={item} href={href} first={index === 0} />
+        <DateRow key={item.id} item={item} href={href(item.title)} first={index === 0} />
       ))}
     </ol>
   );
@@ -116,6 +117,7 @@ function DateCard({ items, href, label }: { items: CourseDate[]; href: string; l
 export function DatesTab({ course }: { course: CourseDetail }) {
   const showToast = useLmsStore((s) => s.showToast);
   const tab = course.datesTab;
+  const links = React.useMemo(() => topicLinks(course.slug, course.progress.href), [course.slug, course.progress.href]);
   return (
     <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
       <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
@@ -125,12 +127,12 @@ export function DatesTab({ course }: { course: CourseDetail }) {
 
       <div className="flex flex-col gap-3">
         <Divider as="h3">{tab.pastLabel}</Divider>
-        <DateCard items={tab.past} href={course.progress.href} label={tab.pastLabel} />
+        <DateCard items={tab.past} href={links.byTitle} label={tab.pastLabel} />
         <Divider>
           <time dateTime={tab.todayIso}>{tab.todayLabel}</time>
         </Divider>
         <Divider as="h3">{tab.upcomingLabel}</Divider>
-        <DateCard items={tab.upcoming} href={course.progress.href} label={tab.upcomingLabel} />
+        <DateCard items={tab.upcoming} href={links.byTitle} label={tab.upcomingLabel} />
       </div>
 
       <p className="sk-text-body-small-regular text-sko-text-subtle">{tab.timezoneNote}</p>

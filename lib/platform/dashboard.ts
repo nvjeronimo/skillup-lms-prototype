@@ -161,5 +161,5 @@ export const dashboardJump: DashboardJumpTile[] = [
     // The Certificates page (19 Oct 2026); it opened the Six Sigma certificate until then.
     href: "/platform/certificates",
   },
-  { id: "profile", icon: User, title: "Profile", description: "Your details · Account settings" },
+  { id: "profile", icon: User, title: "Profile", description: "Your details · Account settings", href: "/platform/profile" },
 ];
