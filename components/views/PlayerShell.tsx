@@ -48,6 +48,7 @@ import {
   getCaptions,
   getMediaSeconds,
   getTranscript,
+  isPlaybackMeasured,
   getDiscussionThreads,
   getByline,
   FOOTER_AUTHOR_FAMILIES,
@@ -65,6 +66,8 @@ import {
   user,
 } from "@/lib/data";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
+import { lineAt } from "@/lib/playback/lineAt";
+import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
 
 
 export interface PlayerShellProps {
@@ -97,6 +100,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const storedResume = resumePositions[topicId];
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
+  const syncPlayhead = useLmsStore((s) => s.syncPlayhead);
+  const setActiveLine = useLmsStore((s) => s.setActiveLine);
+  const seekSeq = useLmsStore((s) => s.seekSeq);
+  // Played time goes to the store in a few writes, not on every tick (usePlaybackRecorder).
+  const playback = usePlaybackRecorder(topicId, topic ? getMediaSeconds(topic) : 0);
   const activeLineId = useLmsStore((s) => s.activeLineId);
   const collapsedModules = useLmsStore((s) => s.collapsedModules);
   const toggleModule = useLmsStore((s) => s.toggleModule);
@@ -138,8 +146,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   React.useEffect(() => {
     setCurrentTopic(topicId);
     setAskOpen(false);
+    // A topic opens at 00:00 (the resume banner offers the stored position): the playhead of the
+    // previous video must not carry over, or its time would count as played here.
+    seekVideoTo(0);
     track("topic_enter", { topicId });
-  }, [topicId, setCurrentTopic]);
+  }, [topicId, setCurrentTopic, seekVideoTo]);
 
   // Derive active tab from the URL.
   const activeTab: TabSlug = pathname.endsWith("/notes")
@@ -201,6 +212,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Blocked types can't be completed — no manual action, ever.
   const isBlocked = family === "blocked";
   const isCompleted = completedTopics.has(topicId);
+  // A video or podcast whose playback is measured completes by itself at 90% (BR-01, P1-46):
+  // no Mark as Complete for it, and Next does not ask (Nelson, 21 Oct 2026). Once it is
+  // completed, the status badge shows as for any topic.
+  const measuredMedia = isPlaybackMeasured(topic);
   const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (
     <TopicActionBar
@@ -233,7 +248,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // is feedback only, because the status is in the header. The one exception is a video on a
   // phone, where the header shows no status: the completed badge stays in the row there.
   const endAction =
-    showAction && activeTab === "transcript" && (!isCompleted || (isVideo && bp === "mobile"))
+    showAction && activeTab === "transcript" && (isCompleted ? isVideo && bp === "mobile" : !measuredMedia)
       ? renderAction()
       : null;
 
@@ -431,15 +446,42 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   )}
                 >
                   <VideoPlayer
+                    key={topicId}
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
+                    seekKey={seekSeq}
                     heightPx={videoHeight}
                     docked={videoDocked}
                     onSeek={(s) => {
                       seekVideoTo(s);
                       saveResumePosition(topicId, s);
                       track("video_seek", { to: s });
+                    }}
+                    // Played time: no seek event. The player shows the running time itself; the
+                    // store gets the coverage and resume position every few seconds, and the
+                    // transcript line only when it changes.
+                    onPlaybackAdvance={(from, to) => {
+                      playback.advance(from, to);
+                      const line = lineAt(getTranscript(topic), to);
+                      if (line && line !== useLmsStore.getState().activeLineId) setActiveLine(line);
+                    }}
+                    onPlay={(at) => {
+                      // Pressing Play answers the resume banner: it must not reappear as the position saves.
+                      setResumeHandled(true);
+                      track("video_play", { topicId, topicType: family, at });
+                    }}
+                    onPause={(at, reason) => {
+                      playback.flush();
+                      syncPlayhead(at);
+                      // At the end there is nothing to resume: the next visit starts at 00:00.
+                      if (reason === "end") clearResumePosition(topicId);
+                      else saveResumePosition(topicId, at);
+                      track(reason === "end" ? "video_complete" : "video_pause", { topicId, topicType: family, at });
+                    }}
+                    onRestart={() => {
+                      syncPlayhead(0);
+                      track("video_restart", { topicId, from: durationSeconds });
                     }}
                   />
                 </div>

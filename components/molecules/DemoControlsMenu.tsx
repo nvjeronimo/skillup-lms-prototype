@@ -6,7 +6,16 @@ import { Check, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-re
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
-import { completesByHand, getPartnerLab, topicFamily } from "@/lib/content";
+import {
+  completesByHand,
+  getMediaSeconds,
+  getPartnerLab,
+  getTranscript,
+  isPlaybackMeasured,
+  topicFamily,
+} from "@/lib/content";
+import { watchedFraction } from "@/lib/playback/coverage";
+import { lineAt } from "@/lib/playback/lineAt";
 import { useLmsStore, type CompletionFlow, type DeviceMode, type LabLaunch } from "@/lib/store";
 import { platformUser } from "@/lib/platform/user";
 import {
@@ -117,6 +126,14 @@ export function DemoControlsMenu({
   const onHandCompleted = activeTopic ? completesByHand(activeTopic) : false;
   const completionFlow = useLmsStore((s) => s.completionFlow);
   const setCompletionFlow = useLmsStore((s) => s.setCompletionFlow);
+  // A video or podcast that completes at 90% played (BR-01): the shortcuts to test it.
+  const onMeasuredMedia = activeTopic ? isPlaybackMeasured(activeTopic) : false;
+  const watched = useLmsStore((s) => (activeTopicId ? s.watched[activeTopicId] : undefined));
+  const setWatched = useLmsStore((s) => s.setWatched);
+  const resetWatched = useLmsStore((s) => s.resetWatched);
+  const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
+  const mediaSeconds = activeTopic ? getMediaSeconds(activeTopic) : 0;
+  const watchedPct = Math.floor(watchedFraction(watched ?? [], mediaSeconds) * 100);
 
   const pill =
     "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-control transition-colors";
@@ -312,6 +329,41 @@ export function DemoControlsMenu({
                       The rule since 12 Oct: Mark as Complete at the end of the content, and Next
                       asks whether you have completed the topic if you move on without it. Button
                       only switches the question off, as it was before.
+                    </p>
+                  </div>
+                </Section>
+              ) : null}
+
+              {onMeasuredMedia && activeTopic ? (
+                <Section title="Playback">
+                  <div className="flex flex-col gap-1">
+                    {[
+                      {
+                        label: "Mark 85% watched",
+                        run: () => {
+                          // Coverage and playhead at 85%: a short play (5% of the length) reaches the 90%.
+                          const at = 0.85 * mediaSeconds;
+                          setWatched(activeTopic.id, [[0, at]]);
+                          seekVideoTo(at, lineAt(getTranscript(activeTopic), at));
+                        },
+                      },
+                      { label: "Reset watched", run: () => resetWatched(activeTopic.id) },
+                    ].map((item) => (
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() => {
+                          track("preview_toggle", { feature: "playback", value: item.label });
+                          item.run();
+                          setOpen(false);
+                        }}
+                        className="sk-text-body-medium-medium flex w-full items-center justify-between gap-2 rounded-control px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle"
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                    <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                      {`Watched ${watchedPct}%. This topic completes by itself once 90% has been played; a seek does not count. Mark 85% watched, then press Play: the last 5% takes under a minute, less at 2×.`}
                     </p>
                   </div>
                 </Section>

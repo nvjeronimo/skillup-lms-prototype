@@ -4,7 +4,8 @@ import * as React from "react";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { notesSeed, allCourses, flatTopics, getTopic } from "./data";
-import { getTranscript } from "./content";
+import { getMediaSeconds, getTranscript, isPlaybackMeasured, topicFamily } from "./content";
+import { addPlayed, reachedAutoComplete, type Interval } from "./playback/coverage";
 import { track } from "./analytics";
 import type { Note, NotePayload } from "./types";
 import type { LastCompleted } from "./motion/completion";
@@ -51,8 +52,18 @@ interface LmsState {
   currentTopicId: string;
   currentTabSlug: TabSlug;
   currentVideoTimestamp: number;
+  /**
+   * Bumped by every `seekVideoTo`, so a player re-applies a jump to the time it already had (the
+   * demo's 85% twice, a line clicked again). Session-only.
+   */
+  seekSeq: number;
   /** Last playback position per video topic, so the learner can resume. */
   resumePositions: Record<string, number>;
+  /**
+   * Played stretches per video / podcast topic, in seconds (lib/playback/coverage). Persisted, so
+   * the 90% of BR-01 is cumulative across sessions. Seeks add nothing; only playback does.
+   */
+  watched: Record<string, Interval[]>;
   /**
    * ORA progress per topic. The learner returns over days or weeks, so this is
    * persisted: submitted → reviews given → grade released.
@@ -156,11 +167,26 @@ interface LmsState {
   setCurrentTopic: (id: string) => void;
   setCurrentTab: (slug: TabSlug) => void;
   seekVideoTo: (ts: number, lineId?: string) => void;
+  /**
+   * Record where playback stopped (on pause), without it counting as a jump: the player already
+   * shows that time. Playback itself keeps the running time in the player, not here.
+   */
+  syncPlayhead: (ts: number) => void;
   setActiveLine: (lineId: string | null) => void;
   /** Remember where playback stopped for a topic (ignored below 15s). */
   saveResumePosition: (topicId: string, seconds: number) => void;
   /** Forget a stored position — used when the learner restarts from the top. */
   clearResumePosition: (topicId: string) => void;
+  /**
+   * The player played `topicId` from `from` to `to` (seconds). Adds the stretch to its coverage
+   * and, on a measured video or podcast, completes the topic the moment coverage reaches 90%
+   * (BR-01, P1-46). Never completes a topic twice. A seek is not reported here.
+   */
+  recordPlayback: (topicId: string, from: number, to: number) => void;
+  /** Demo menu: replace a topic's coverage (e.g. 85% watched). Never completes the topic. */
+  setWatched: (topicId: string, intervals: Interval[]) => void;
+  /** Demo menu: forget a topic's coverage. Its completion, if any, stays. */
+  resetWatched: (topicId: string) => void;
   /** Submit the learner's own ORA response. */
   oraSubmit: (topicId: string, fileName: string) => void;
   /** Record one completed peer review; releases the grade once the quota is met. */
@@ -278,7 +304,9 @@ export const useLmsStore = create<LmsState>()(
   currentTopicId: "m3-t1",
   currentTabSlug: "transcript",
   currentVideoTimestamp: 0,
+  seekSeq: 0,
   resumePositions: {},
+  watched: {},
   oraState: {},
   labState: {},
   activeLineId: "ln-3",
@@ -320,7 +348,8 @@ export const useLmsStore = create<LmsState>()(
   setCurrentTopic: (id) => set({ currentTopicId: id, mobileDrawerOpen: false }),
   setCurrentTab: (slug) => set({ currentTabSlug: slug }),
   seekVideoTo: (ts, lineId) =>
-    set((s) => ({ currentVideoTimestamp: ts, activeLineId: lineId ?? s.activeLineId })),
+    set((s) => ({ currentVideoTimestamp: ts, activeLineId: lineId ?? s.activeLineId, seekSeq: s.seekSeq + 1 })),
+  syncPlayhead: (ts) => set((s) => (s.currentVideoTimestamp === ts ? s : { currentVideoTimestamp: ts })),
   setActiveLine: (lineId) => set({ activeLineId: lineId }),
 
   saveResumePosition: (topicId, seconds) =>
@@ -330,6 +359,27 @@ export const useLmsStore = create<LmsState>()(
         ? s
         : { resumePositions: { ...s.resumePositions, [topicId]: Math.round(seconds) } },
     ),
+  recordPlayback: (topicId, from, to) => {
+    const before = get().watched[topicId] ?? [];
+    const after = addPlayed(before, from, to);
+    const completed = get().completedTopics.has(topicId);
+    const changed = JSON.stringify(after) !== JSON.stringify(before);
+    // Nothing new on a completed topic (a rewatch): no write, so persist does not re-serialise.
+    if (completed && !changed) return;
+    if (changed) set((s) => ({ watched: { ...s.watched, [topicId]: after } }));
+    const topic = getTopic(topicId);
+    if (!topic || !isPlaybackMeasured(topic) || completed) return;
+    // P1-46: at 90% the topic completes, once, with the chain and the toast of markComplete.
+    if (reachedAutoComplete(after, getMediaSeconds(topic))) get().markComplete(topicId);
+  },
+  setWatched: (topicId, intervals) =>
+    set((s) => ({ watched: { ...s.watched, [topicId]: intervals } })),
+  resetWatched: (topicId) =>
+    set((s) => {
+      const next = { ...s.watched };
+      delete next[topicId];
+      return { watched: next };
+    }),
   oraSubmit: (topicId, fileName) =>
     set((s) => ({
       oraState: {
@@ -437,8 +487,10 @@ export const useLmsStore = create<LmsState>()(
       if (state.completedTopics.has(topicId)) return state;
       const next = new Set(state.completedTopics);
       next.add(topicId);
-      track("topic_complete", { topicId });
       const topic = getTopic(topicId);
+      // `topicType` (the family: video, podcast, reading…) since 21 Oct 2026, P1-46; added, so
+      // a reader of the old shape still finds `topicId`.
+      track("topic_complete", { topicId, ...(topic ? { topicType: topicFamily(topic.type) } : {}) });
       const title = topic?.title ?? "topic";
       // A lab remembers the day it was completed.
       const labState =
@@ -481,7 +533,15 @@ export const useLmsStore = create<LmsState>()(
       const firstCompletion = !state.completedTopics.has(topicId);
       const completed = new Set(state.completedTopics);
       completed.add(topicId);
-      track("topic_complete", { topicId, kind: "quiz", score, total, attempts });
+      const type = getTopic(topicId)?.type;
+      track("topic_complete", {
+        topicId,
+        ...(type ? { topicType: topicFamily(type) } : {}),
+        kind: "quiz",
+        score,
+        total,
+        attempts,
+      });
       return {
         quizResults: { ...state.quizResults, [topicId]: { score, total, attempts } },
         completedTopics: completed,
@@ -585,6 +645,7 @@ export const useLmsStore = create<LmsState>()(
       noteEditor: { open: false },
       currentVideoTimestamp: 0,
       resumePositions: {},
+      watched: {},
       oraState: {},
       labState: {},
       hostedCoursesStarted: {},
@@ -634,6 +695,7 @@ export const useLmsStore = create<LmsState>()(
         submittedTopics: s.submittedTopics,
         quizResults: s.quizResults,
         resumePositions: s.resumePositions,
+        watched: s.watched,
         oraState: s.oraState,
         labState: s.labState,
         hostedCoursesStarted: s.hostedCoursesStarted,
