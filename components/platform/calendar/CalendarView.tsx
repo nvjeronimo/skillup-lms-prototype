@@ -66,7 +66,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
   const k = KIND[event.kind];
   return (
     <li
-      className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5"
+      className="relative flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5"
       data-mock={event.outOfMvp ? "Live sessions are not in Open edX, and VILT is out of the MVP" : undefined}
     >
       <span aria-hidden className={cn("inline-flex size-10 shrink-0 items-center justify-center rounded-control", k.tile)}>
@@ -78,7 +78,8 @@ function EventRow({ event }: { event: CalendarEvent }) {
           {event.time ? <span className="normal-case"> · {event.time} · {YOUR_TIME}</span> : null}
         </p>
         <p className="sk-text-body-medium-semibold text-sko-text-default">
-          <Link href={event.href} className="hover:underline">
+          {/* The whole row is the title's target (44 at least), as the Dashboard rows. */}
+          <Link href={event.href} className="hover:underline after:absolute after:inset-0 after:content-['']">
             {event.title}
           </Link>
         </p>

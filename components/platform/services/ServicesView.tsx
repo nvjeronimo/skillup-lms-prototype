@@ -17,7 +17,7 @@ import { useLmsStore } from "@/lib/store";
 /** One service: icon tile, title and status, a line on what it gives, the action as a link-looking button. */
 function ServiceRow({ item, onAction }: { item: ServiceItem; onAction: (what: string) => void }) {
   const actionClass =
-    "sk-text-body-medium-semibold relative inline-flex items-center gap-1 self-start text-sko-text-primary underline-offset-4 hover:underline max-md:min-h-11";
+    "sk-text-body-medium-semibold relative inline-flex items-center gap-1 self-start text-sko-text-primary underline-offset-4 hover:underline min-h-6 max-md:min-h-11";
   const label = (
     <>
       {item.action}

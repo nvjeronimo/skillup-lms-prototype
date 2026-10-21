@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  */
 export function DueItem({ day, when, urgency, title, meta, status, href }: Omit<DashboardDueItem, "id">) {
   return (
-    <li className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5">
+    <li className="relative flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5">
       <div className="flex w-[60px] shrink-0 flex-col">
         <span
           className={cn(
@@ -28,8 +28,8 @@ export function DueItem({ day, when, urgency, title, meta, status, href }: Omit<
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className="sk-text-body-medium-semibold text-sko-text-default">
-          {/* The title opens the assignment in the player. */}
-          <Link href={href} className="hover:underline">
+          {/* The title opens the assignment in the player; the whole row is its target (44 at least). */}
+          <Link href={href} className="hover:underline after:absolute after:inset-0 after:content-['']">
             {title}
           </Link>
         </p>
