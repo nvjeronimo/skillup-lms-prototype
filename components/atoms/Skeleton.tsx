@@ -95,16 +95,20 @@ export function Skeleton(props: SkeletonProps) {
 }
 
 /**
- * A pill (a Badge, a segment) whose width is its own label: the label invisible on bg/muted,
- * with the Badge's padding and height (sm 22, md 24), or a segment's (32, 44 on a phone).
+ * A pill (a Badge, a segment, a button) whose width is its own label: the label invisible on
+ * bg/muted, with the Badge's padding and height (sm 22, md 24), a segment's (32, 44 on a
+ * phone) or a Button's (sm 36, md 44; buttonStyles).
  */
 export function SkeletonPill({
   children,
   size = "sm",
+  icon = false,
   className,
 }: {
   children: React.ReactNode;
-  size?: "sm" | "md" | "segment";
+  size?: "sm" | "md" | "segment" | "button-sm" | "button-md";
+  /** A button's leading 20px icon. */
+  icon?: boolean;
   className?: string;
 }) {
   return (
@@ -115,9 +119,12 @@ export function SkeletonPill({
         size === "sm" && "sk-text-body-small-medium h-[22px] rounded-pill px-2",
         size === "md" && "sk-text-body-medium-medium h-6 rounded-pill px-2.5",
         size === "segment" && "sk-text-body-medium-semibold h-8 rounded-control border border-transparent px-4 max-md:h-11",
+        size === "button-sm" && "sk-text-body-medium-semibold h-9 gap-1 rounded-control px-3",
+        size === "button-md" && "sk-text-body-medium-semibold h-11 gap-1 rounded-control px-3",
         className,
       )}
     >
+      {icon ? <span className="size-5" /> : null}
       {children}
     </span>
   );
