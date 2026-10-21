@@ -69,9 +69,11 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 
    stroke (ring-*; except the Outline stroke, see DS-D1), Text fill (text-sko-text-*) and
    icon vector (text-sko-icon-*). The Plain icon circle is PLAIN_CIRCLE. */
 
-/* Style=Soft: fill + text, no stroke. Accents are the STRONG fills with on-accent text. */
+/* Style=Soft: fill + text, no stroke. Accents are the STRONG fills with on-accent text.
+   Gray is on bg/muted since 21 Oct 2026 (Nelson): on bg/faint it vanished on the platform
+   pages (their ground is bg/faint) and on white cards (1.05:1). */
 const SOFT: Record<BadgeColor, string> = {
-  gray: "bg-sko-bg-faint text-sko-text-muted",
+  gray: "bg-sko-bg-muted text-sko-text-muted",
   brand: "bg-sko-bg-primary-soft text-sko-text-primary",
   info: "bg-sko-bg-info-soft text-sko-text-info",
   success: "bg-sko-bg-success-soft text-sko-text-success",
@@ -173,7 +175,7 @@ const ICON: Record<BadgeVariant, Record<BadgeColor, string>> = {
 /* Style=Plain with a leading icon: the 12px icon sits in a 20×20 rounded-full circle filled
    with the colour's Soft-style fill ("icon in a soft circle", e.g. 21889:539962). */
 const PLAIN_CIRCLE: Record<BadgeColor, string> = {
-  gray: "bg-sko-bg-faint",
+  gray: "bg-sko-bg-muted",
   brand: "bg-sko-bg-primary-soft",
   info: "bg-sko-bg-info-soft",
   success: "bg-sko-bg-success-soft",
