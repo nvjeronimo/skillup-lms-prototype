@@ -459,6 +459,31 @@ button {
     transform: translateY(var(--motion-distance-nudge)) scale(0.96);
   }
 }
+/* A full-width dropdown (the compact top bar's section menu): no horizontal scale, which would
+   pull its edges in from the screen sides; it settles down by the nudge with a 96% vertical scale. */
+@keyframes sk-menu-y-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-menu-y-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
+  }
+}
+.sk-animate-menu-y {
+  animation: sk-menu-y-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
 .sk-animate-menu {
   animation: sk-menu-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
 }
@@ -472,6 +497,10 @@ button {
 [data-state="closed"] .sk-animate-menu {
   animation: sk-menu-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
 }
+[data-state="closed"].sk-animate-menu-y,
+[data-state="closed"] .sk-animate-menu-y {
+  animation: sk-menu-y-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+}
 [data-state="closed"].sk-animate-menu-up,
 [data-state="closed"] .sk-animate-menu-up {
   animation: sk-menu-up-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
@@ -481,9 +510,15 @@ button {
   animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
 }
 [data-state="closed"].sk-animate-menu,
+[data-state="closed"] .sk-animate-menu,
+[data-state="closed"].sk-animate-menu-y,
+[data-state="closed"] .sk-animate-menu-y,
 [data-state="closed"].sk-animate-menu-up,
+[data-state="closed"] .sk-animate-menu-up,
 [data-state="closed"].sk-animate-flyout,
-[data-state="closed"].sk-animate-sheet {
+[data-state="closed"] .sk-animate-flyout,
+[data-state="closed"].sk-animate-sheet,
+[data-state="closed"] .sk-animate-sheet {
   pointer-events: none;
 }
 
@@ -526,14 +561,28 @@ button {
   }
   /* Menus: the fade alone, short3 in / short2 out (the exits below). */
   .sk-animate-menu,
+  .sk-animate-menu-y,
   .sk-animate-menu-up {
     animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
   }
   [data-state="closed"].sk-animate-menu,
   [data-state="closed"] .sk-animate-menu,
+  [data-state="closed"].sk-animate-menu-y,
+  [data-state="closed"] .sk-animate-menu-y,
   [data-state="closed"].sk-animate-menu-up,
   [data-state="closed"] .sk-animate-menu-up {
     animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+  }
+  /* Collapse snaps open and shut (no height travel, spec §6); its content fades in (short3). */
+  [data-collapse] {
+    transition-property: none !important;
+  }
+  .sk-collapse-body {
+    transition-duration: var(--motion-duration-short3);
+    transition-timing-function: var(--motion-easing-standard-decelerate);
+  }
+  [data-collapse="closed"] > .sk-collapse-body {
+    opacity: 0;
   }
   /* The bookmark only fills; the live dot holds still beside its word. */
   .sk-animate-bookmark,
@@ -670,14 +719,28 @@ button {
 }
 /* Menus: the fade alone, short3 in / short2 out. */
 [data-reduce-motion] .sk-animate-menu,
+[data-reduce-motion] .sk-animate-menu-y,
 [data-reduce-motion] .sk-animate-menu-up {
   animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
 }
 [data-reduce-motion] [data-state="closed"].sk-animate-menu,
 [data-reduce-motion] [data-state="closed"] .sk-animate-menu,
+[data-reduce-motion] [data-state="closed"].sk-animate-menu-y,
+[data-reduce-motion] [data-state="closed"] .sk-animate-menu-y,
 [data-reduce-motion] [data-state="closed"].sk-animate-menu-up,
 [data-reduce-motion] [data-state="closed"] .sk-animate-menu-up {
   animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+}
+/* Collapse snaps open and shut (no height travel, spec §6); its content fades in (short3). */
+[data-reduce-motion] [data-collapse] {
+  transition-property: none !important;
+}
+[data-reduce-motion] .sk-collapse-body {
+  transition-duration: var(--motion-duration-short3);
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+}
+[data-reduce-motion] [data-collapse="closed"] > .sk-collapse-body {
+  opacity: 0;
 }
 /* The bookmark only fills; the live dot holds still beside its word. */
 [data-reduce-motion] .sk-animate-bookmark,

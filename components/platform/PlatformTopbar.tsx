@@ -287,12 +287,13 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               >
                 <Icon icon={Menu02} size={24} />
               </button>
-              {/* A full-width dropdown under the bar (not a drawer): the menu motion, from the top. */}
+              {/* A full-width dropdown under the bar (not a drawer): the menu motion without the
+                  horizontal scale (menu-y), settling from the top. */}
               {menu.mounted ? (
                 <nav
                   {...menu.panelProps}
                   aria-label="Platform"
-                  className="sk-animate-menu origin-top absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
+                  className="sk-animate-menu-y origin-top absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
                 >
                   <SectionLinks
                     current={current}

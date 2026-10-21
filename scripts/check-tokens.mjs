@@ -10,12 +10,19 @@
  *   5. Raw motion           — hand-typed durations / delays / curves, bare `transition` (use motion tokens)
  *   6. Raw radius           — Tailwind size radii (rounded-sm/md/lg/xl/…, rounded-[Npx], bare `rounded`)
  *                             instead of the six role radii in tokens/radius.css
- *   7. Popup without motion — a file-level rule (FILE_RULES): a file that opens a popup panel
- *                             (calls useDisclosure, renders role="menu"/"listbox", or an
- *                             aria-haspopup trigger other than "dialog") must give it the motion
- *                             system (a menu/sheet/pop/flyout class, useExitTransition, or the
- *                             `mounted` presence useDisclosure returns). Dialogs are covered by
- *                             useDialog/OverlayPanel and are not checked here.
+ *   7. Popup without motion — a file-level rule (FILE_RULES), read with comments stripped:
+ *                             a file that opens a popup panel (calls useDisclosure, renders
+ *                             role="menu"/"listbox", or an aria-haspopup trigger other than
+ *                             "dialog") must give it the motion system (a menu/sheet/pop/flyout
+ *                             class, useExitTransition, or the `mounted` presence useDisclosure
+ *                             returns), AND, if it has `panelProps` or a menu/listbox role, must
+ *                             not render a panel on a raw guard `{open ? (` / `{x.open ? (` /
+ *                             `{langOpen ? (` (a second menu reverted next to a converted one).
+ *                             Known false positives: a static role="listbox" that is never
+ *                             mounted conditionally, or an aria-haspopup="dialog" trigger whose
+ *                             value is not a literal "dialog" (dialogs themselves are covered by
+ *                             useDialog/OverlayPanel and skipped). Silence one with the escape
+ *                             hatch below on the line above the reported line.
  *
  * Escape hatch: append `// token-lint-disable-next-line <reason>` on the line above,
  * or add a path to ALLOW. Exits non-zero on any violation. Run: `npm run lint:tokens`.
@@ -86,10 +93,20 @@ const FILE_RULES = [
     trigger:
       /(?<!function\s)\buseDisclosure\(|role=["'](?:menu|listbox)["']|["']?aria-haspopup["']?\s*[=:]\s*(?!["']dialog["'])/,
     requires:
-      /sk-animate-(?:menu|menu-up|sheet|pop|flyout)\b|\buseExitTransition\(|\.mounted\b|\bmounted\b[^}]*\}\s*=\s*useDisclosure\(/,
-    msg: "popup panel without motion — render it on useDisclosure's `mounted` with .sk-animate-menu (or -menu-up / -sheet / -pop / -flyout), or use useExitTransition (motion-matrix R8, R10)",
+      /sk-animate-(?:menu|menu-y|menu-up|sheet|pop|flyout)\b|\buseExitTransition\(|\.mounted\b|\bmounted\b[^}]*\}\s*=\s*useDisclosure\(/,
+    // A panel mounted on the raw open flag skips its exit, even when the file passes `requires`.
+    forbidsWhen: /\bpanelProps\b|role=["'](?:menu|listbox)["']/,
+    forbids: /\{\s*(?:\w+\.)?(?:open|[a-z]\w*Open)\s*\?\s*\(/,
+    msg: "popup panel without motion — render it on useDisclosure's `mounted` with .sk-animate-menu (or -menu-y / -menu-up / -sheet / -pop / -flyout), or on useExitTransition's `mounted` (motion-matrix R8, R10)",
   },
 ];
+
+/** Blanks out // and /* *\/ comments (JSX ones too), keeping line breaks so line numbers hold. */
+function stripComments(src) {
+  return src
+    .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "))
+    .replace(/(^|[^:"'`\\])\/\/.*$/gm, "$1");
+}
 
 function walk(dir, out) {
   for (const name of readdirSync(dir)) {
@@ -128,12 +145,23 @@ for (const file of files) {
       }
     }
   });
-  const text = lines.join("\n");
+  const code = stripComments(lines.join("\n"));
+  const codeLines = code.split("\n");
+  const silenced = (at) => /token-lint-disable/.test(lines[at - 1] || "");
   for (const rule of FILE_RULES) {
-    const at = lines.findIndex((line) => !/^(?:\/\/|\*|\/\*)/.test(line.trim()) && rule.trigger.test(line));
-    if (at < 0 || rule.requires.test(text)) continue;
-    if (/token-lint-disable/.test(lines[at - 1] || "")) continue;
-    violations.push({ rel, line: at + 1, id: rule.id, msg: rule.msg, src: lines[at].trim().slice(0, 100) });
+    const at = codeLines.findIndex((line) => rule.trigger.test(line));
+    if (at < 0) continue;
+    if (!rule.requires.test(code) && !silenced(at)) {
+      violations.push({ rel, line: at + 1, id: rule.id, msg: rule.msg, src: lines[at].trim().slice(0, 100) });
+      continue;
+    }
+    if (rule.forbids && rule.forbidsWhen.test(code)) {
+      codeLines.forEach((line, i) => {
+        if (rule.forbids.test(line) && !silenced(i)) {
+          violations.push({ rel, line: i + 1, id: rule.id, msg: rule.msg, src: lines[i].trim().slice(0, 100) });
+        }
+      });
+    }
   }
 }
 

@@ -23,7 +23,7 @@ import {
 import { useDialog } from "@/lib/useDialog";
 import { inertProps } from "@/lib/inert";
 import { MOTION_MS } from "@/lib/motion/tokens";
-import { useExitTransition } from "@/lib/useExitTransition";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
 
 type Filter = "all" | SearchContentType;
@@ -438,6 +438,8 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
   // result list does not replay the entrance.
   const sheet = useExitTransition(sheetOpen, MOTION_MS.short4);
   const popup = useExitTransition(variant === "popup" && search.open, MOTION_MS.short2);
+  // While it leaves, the popup draws what it showed when it was open, whatever the close path did.
+  const shownSearch = useFrozenWhileClosed(search, variant === "popup" && search.open);
 
   // Popup: a click outside closes it. The text stays in the field.
   React.useEffect(() => {
@@ -462,7 +464,20 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
           value={search.text}
           onChange={() => {}}
           label={label}
-          inputProps={{ readOnly: true, onFocus: () => setOpen(true), onClick: () => setOpen(true), "aria-haspopup": "dialog" }}
+          // It opens on a tap or Enter / Space, not on focus: closing the sheet puts focus back
+          // here, and opening on focus would reopen it at once (and a dialog opening on focus
+          // alone breaks WCAG 3.2.1).
+          inputProps={{
+            readOnly: true,
+            onClick: () => setOpen(true),
+            onKeyDown: (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                setOpen(true);
+              }
+            },
+            "aria-haspopup": "dialog",
+          }}
         />
         {sheet.mounted ? (
           <div
@@ -534,7 +549,7 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
           {...inertProps(!showPopup)}
           className="sk-animate-menu origin-top-right absolute right-0 top-full z-30 mt-2 flex w-[560px] max-w-[calc(100vw-48px)] flex-col gap-3 rounded-card border border-sko-border-default bg-sko-bg-page p-4 shadow-2xl"
         >
-          <SearchPanel search={search} topicHref={topicHref} />
+          <SearchPanel search={shownSearch} topicHref={topicHref} />
         </section>
       ) : null}
      </div>
