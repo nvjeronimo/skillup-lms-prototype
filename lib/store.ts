@@ -52,6 +52,11 @@ interface LmsState {
   currentTopicId: string;
   currentTabSlug: TabSlug;
   currentVideoTimestamp: number;
+  /**
+   * Bumped by every `seekVideoTo`, so a player re-applies a jump to the time it already had (the
+   * demo's 85% twice, a line clicked again). Session-only.
+   */
+  seekSeq: number;
   /** Last playback position per video topic, so the learner can resume. */
   resumePositions: Record<string, number>;
   /**
@@ -160,6 +165,11 @@ interface LmsState {
   setCurrentTopic: (id: string) => void;
   setCurrentTab: (slug: TabSlug) => void;
   seekVideoTo: (ts: number, lineId?: string) => void;
+  /**
+   * Record where playback stopped (on pause), without it counting as a jump: the player already
+   * shows that time. Playback itself keeps the running time in the player, not here.
+   */
+  syncPlayhead: (ts: number) => void;
   setActiveLine: (lineId: string | null) => void;
   /** Remember where playback stopped for a topic (ignored below 15s). */
   saveResumePosition: (topicId: string, seconds: number) => void;
@@ -291,6 +301,7 @@ export const useLmsStore = create<LmsState>()(
   currentTopicId: "m3-t1",
   currentTabSlug: "transcript",
   currentVideoTimestamp: 0,
+  seekSeq: 0,
   resumePositions: {},
   watched: {},
   oraState: {},
@@ -333,7 +344,8 @@ export const useLmsStore = create<LmsState>()(
   setCurrentTopic: (id) => set({ currentTopicId: id, mobileDrawerOpen: false }),
   setCurrentTab: (slug) => set({ currentTabSlug: slug }),
   seekVideoTo: (ts, lineId) =>
-    set((s) => ({ currentVideoTimestamp: ts, activeLineId: lineId ?? s.activeLineId })),
+    set((s) => ({ currentVideoTimestamp: ts, activeLineId: lineId ?? s.activeLineId, seekSeq: s.seekSeq + 1 })),
+  syncPlayhead: (ts) => set((s) => (s.currentVideoTimestamp === ts ? s : { currentVideoTimestamp: ts })),
   setActiveLine: (lineId) => set({ activeLineId: lineId }),
 
   saveResumePosition: (topicId, seconds) =>
@@ -346,9 +358,13 @@ export const useLmsStore = create<LmsState>()(
   recordPlayback: (topicId, from, to) => {
     const before = get().watched[topicId] ?? [];
     const after = addPlayed(before, from, to);
-    set((s) => ({ watched: { ...s.watched, [topicId]: after } }));
+    const completed = get().completedTopics.has(topicId);
+    const changed = JSON.stringify(after) !== JSON.stringify(before);
+    // Nothing new on a completed topic (a rewatch): no write, so persist does not re-serialise.
+    if (completed && !changed) return;
+    if (changed) set((s) => ({ watched: { ...s.watched, [topicId]: after } }));
     const topic = getTopic(topicId);
-    if (!topic || !isPlaybackMeasured(topic) || get().completedTopics.has(topicId)) return;
+    if (!topic || !isPlaybackMeasured(topic) || completed) return;
     // P1-46: at 90% the topic completes, once, with the chain and the toast of markComplete.
     if (reachedAutoComplete(after, getMediaSeconds(topic))) get().markComplete(topicId);
   },

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { PLAYBACK_TICK_MS, advancePlayback } from "./coverage";
+import { startPlaybackClock, type ClockState } from "./clock";
 
 export interface PlaybackClockOptions {
   playing: boolean;
@@ -19,38 +19,34 @@ export interface PlaybackClockOptions {
 }
 
 /**
- * The simulated clock of the prototype's players (they have no media file). While `playing`, every
- * PLAYBACK_TICK_MS it advances the time by the wall time elapsed times `speed` and reports the
+ * The simulated clock of the prototype's players (they have no media file), on `startPlaybackClock`.
+ * While `playing`, every PLAYBACK_TICK_MS it advances the time by the wall time elapsed times `speed` and reports the
  * stretch with `onAdvance`, which is how the players tell played time from a seek (BR-01: only
  * played time counts towards the 90%). It stops at the end and when the tab is hidden.
  */
 export function usePlaybackClock({ playing, time, duration, speed, onAdvance, onEnd, onHidden }: PlaybackClockOptions) {
-  const latest = React.useRef({ time, duration, speed, onAdvance, onEnd, onHidden });
-  latest.current = { ...latest.current, time, duration, speed, onAdvance, onEnd, onHidden };
+  // The clock reads and writes this on every tick; a render carries the caller's time back in
+  // (the tick's own value, or a seek).
+  const state = React.useRef<ClockState>({ time, speed, duration });
+  state.current.time = time;
+  state.current.speed = speed;
+  state.current.duration = duration;
+  const handlers = React.useRef({ onAdvance, onEnd, onHidden });
+  handlers.current = { onAdvance, onEnd, onHidden };
 
   React.useEffect(() => {
     if (!playing) return;
-    let last = performance.now();
-    const id = window.setInterval(() => {
-      const now = performance.now();
-      const elapsed = (now - last) / 1000;
-      last = now;
-      const cur = latest.current;
-      const next = advancePlayback(cur.time, elapsed, cur.speed, cur.duration);
-      if (next.time > cur.time) {
-        const from = cur.time;
-        // Ahead of the re-render, so a second tick before it never counts the stretch twice.
-        cur.time = next.time;
-        cur.onAdvance(from, next.time);
-      }
-      if (next.ended) cur.onEnd();
-    }, PLAYBACK_TICK_MS);
+    const stop = startPlaybackClock(
+      state.current,
+      (from, to) => handlers.current.onAdvance(from, to),
+      () => handlers.current.onEnd(),
+    );
     function onVisibility() {
-      if (document.hidden) latest.current.onHidden();
+      if (document.hidden) handlers.current.onHidden();
     }
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
-      window.clearInterval(id);
+      stop();
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [playing]);

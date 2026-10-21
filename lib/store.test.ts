@@ -113,6 +113,15 @@ describe("recordPlayback (auto-complete at 90%)", () => {
     expect(useLmsStore.getState().completedTopics.has(video)).toBe(true);
   });
 
+  it("a rewatch of a completed topic writes nothing to the store", () => {
+    useLmsStore.getState().recordPlayback(video, 0, 800);
+    const writes = vi.fn();
+    const unsubscribe = useLmsStore.subscribe(writes);
+    useLmsStore.getState().recordPlayback(video, 100, 200);
+    unsubscribe();
+    expect(writes).not.toHaveBeenCalled();
+  });
+
   it("a podcast completes the same way", () => {
     useLmsStore.getState().recordPlayback(podcast, 0, 760);
     expect(useLmsStore.getState().completedTopics.has(podcast)).toBe(true);
