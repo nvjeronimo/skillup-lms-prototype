@@ -48,7 +48,7 @@ export const page: CourseDetail = {
   },
   intro: {
     title: "What you'll learn",
-    lead: "Four modules that build the vocabulary of the field: what security protects and how risk is weighed, who attacks organisations and how, the human side of defence, and the frameworks and laws that shape the work. Work through them at your own pace.",
+    lead: "Four modules that build the vocabulary of the field: what security protects and how risk is weighed, who attacks organizations and how, the human side of defense, and the frameworks and laws that shape the work. Work through them at your own pace.",
   },
   modules: modulesFromOutline(outline, [
     { duration: "1h 42m", defaultOpen: true },

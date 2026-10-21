@@ -213,7 +213,7 @@ export const outline: Course = {
                 { id: "ipa-m4-t1-ln4", ts: "0:51", text: "Pick one primary metric before the test begins. If you pick it afterwards, you will find something that went up, by chance." },
                 { id: "ipa-m4-t1-ln5", ts: "1:04", text: "Then work out the sample you need. It depends on the current rate, the smallest improvement worth detecting, and how sure you want to be. A sample size calculator does the sums." },
                 { id: "ipa-m4-t1-ln6", ts: "1:20", text: "A small effect needs a lot of people. To see a move from thirty to thirty-three percent you need a few thousand users in each group. A few hundred will not do." },
-                { id: "ipa-m4-t1-ln7", ts: "1:36", text: "Divide the sample by your weekly traffic to get the duration, and round up to whole weeks. Behaviour on a Monday differs from behaviour on a Saturday." },
+                { id: "ipa-m4-t1-ln7", ts: "1:36", text: "Divide the sample by your weekly traffic to get the duration, and round up to whole weeks. Behavior on a Monday differs from behavior on a Saturday." },
                 { id: "ipa-m4-t1-ln8", ts: "1:50", text: "Fix the duration in advance and do not stop early because the numbers look good on day three. The next reading explains why, and how to read the result." },
               ],
             },

@@ -76,7 +76,7 @@ export const outline: Course = {
             {
               id: "sec3-m1-t2",
               type: "Reading",
-              title: "Identification, authentication and authorisation",
+              title: "Identification, authentication and authorization",
               duration: "12 min read approx.",
               completed: false,
             },
@@ -169,7 +169,7 @@ export const outline: Course = {
                 {
                   id: "sec3-m1-t6-ln4",
                   ts: "0:55",
-                  text: "Federation is the same arrangement across organisations. Your identity provider vouches for your staff to a supplier's service, so the supplier does not need to hold passwords for them.",
+                  text: "Federation is the same arrangement across organizations. Your identity provider vouches for your staff to a supplier's service, so the supplier does not need to hold passwords for them.",
                 },
                 {
                   id: "sec3-m1-t6-ln5",
@@ -296,7 +296,7 @@ export const outline: Course = {
                 {
                   id: "sec3-m2-t3-ln1",
                   ts: "0:00",
-                  text: "A privileged account can change how a system works: create users, read every mailbox, switch off logging, delete backups. Whoever controls it controls the organisation's data.",
+                  text: "A privileged account can change how a system works: create users, read every mailbox, switch off logging, delete backups. Whoever controls it controls the organization's data.",
                 },
                 {
                   id: "sec3-m2-t3-ln2",

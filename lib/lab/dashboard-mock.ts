@@ -18,7 +18,7 @@ export const MOCK = {
   pace: "Cohort pace has no API yet — mocked in Phase 1 (ADR 010)",
   due: "edX returns no due dates today (`due` is null on every block)",
   live: "VILT is outside the MVP and there is no session-schedule endpoint",
-  program: "No API groups courses into programmes",
+  program: "No API groups courses into programs",
   timeLeft: "`effort_time` is null — no time-left estimate exists",
   weeklyGoal: "The edX weekly goal exists but is switched off on SkillUp courses",
   streak: "No days-active data exists",
@@ -228,7 +228,7 @@ export const personas: Record<PersonaId, Persona> = {
     id: "priya",
     name: "Priya Nair",
     firstName: "Priya",
-    blurb: "Credential collector · ahead of cohort · six enrolments",
+    blurb: "Credential collector · ahead of cohort · six enrollments",
     enrolments: [
       sixSigma({ pct: 71, topicsDone: 30, nextTopic: { type: "Quiz", title: "Practice Quiz: Analyze", href: "#" }, cert: "audit_passing" }),
       { id: "remote-teams", title: "Leadership in Remote Teams", provider: "SkillUp", selfPaced: true, status: "completed", pct: 100, topicsDone: 24, topicsTotal: 24, cert: "downloadable", lastActive: "2 months ago" },

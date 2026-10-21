@@ -51,7 +51,7 @@ export const page: CourseDetail = {
   },
   intro: {
     title: "What you'll learn",
-    lead: "Three modules on the messages you send to people who asked for them: how email reaches the inbox and gets opened, how a CRM lets you segment and automate, and how AI helps you personalise and test. The course ends with a lifecycle email plan of your own. Work through it at your own pace.",
+    lead: "Three modules on the messages you send to people who asked for them: how email reaches the inbox and gets opened, how a CRM lets you segment and automate, and how AI helps you personalize and test. The course ends with a lifecycle email plan of your own. Work through it at your own pace.",
   },
   modules: modulesFromOutline(outline, [
     { duration: "3h 07m", defaultOpen: true },
@@ -159,7 +159,7 @@ export const page: CourseDetail = {
           ],
         },
         {
-          title: "Module 3 · AI Personalisation, Final Project, and Wrap-Up",
+          title: "Module 3 · AI Personalization, Final Project, and Wrap-Up",
           items: [
             { title: "Final Project: Lifecycle email plan", score: "0/20 · 0%" },
             { title: "Final Assessment", score: "0/3 · 0%" },
@@ -334,7 +334,7 @@ export const page: CourseDetail = {
             author: "Marcus Lee",
             label: "STAFF",
             accepted: true,
-            body: "There is no need. The course teaches the ideas that every tool shares: contacts and properties, segments, triggers, delays and exits. You build segments from a sample contact list in a spreadsheet and you draw flows on a template. If you later use a real platform, you will recognise each part.",
+            body: "There is no need. The course teaches the ideas that every tool shares: contacts and properties, segments, triggers, delays and exits. You build segments from a sample contact list in a spreadsheet and you draw flows on a template. If you later use a real platform, you will recognize each part.",
             time: "2 days ago",
           },
           {

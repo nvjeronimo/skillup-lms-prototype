@@ -67,7 +67,7 @@ export const content: CourseContent = {
         {
           heading: "The four things every event needs",
           paragraphs: [
-            "When: a timestamp with its time zone, from a clock that is synchronised. Who: the account, and the device or address it acted from. What: the action, and whether it succeeded. Where: the system and the object the action touched.",
+            "When: a timestamp with its time zone, from a clock that is synchronized. Who: the account, and the device or address it acted from. What: the action, and whether it succeeded. Where: the system and the object the action touched.",
             "An event that says “login failed” is noise. An event that says which account failed to sign in, from which address, to which service, at which second, can be joined to the firewall record and the identity record of the same moment.",
           ],
         },
@@ -82,7 +82,7 @@ export const content: CourseContent = {
           heading: "Keeping logs trustworthy",
           paragraphs: [
             "Send copies to a place that the monitored systems cannot change. If the only record of an administrator's actions sits on a server that the same administrator controls, it proves little.",
-            "Synchronise the clocks of every system. A timeline built from machines that disagree by four minutes will put effects before their causes. And set retention from the question you need to answer: intrusions are often found weeks after they begin, so a week of history is rarely enough.",
+            "Synchronize the clocks of every system. A timeline built from machines that disagree by four minutes will put effects before their causes. And set retention from the question you need to answer: intrusions are often found weeks after they begin, so a week of history is rarely enough.",
           ],
         },
       ],
@@ -94,11 +94,11 @@ export const content: CourseContent = {
         "A useful event states when, who, what and where.",
         "Collect identity, endpoint, DNS and firewall, and email and file audit logs first.",
         "Check that auditing is on, how long records are kept and who can delete them.",
-        "Synchronised clocks and a protected copy make logs usable as evidence.",
+        "Synchronized clocks and a protected copy make logs usable as evidence.",
       ],
     },
     "sec4-m1-t2": {
-      lede: "A security operations centre, or SOC, is a team and a set of routines more than it is a room. Its work is arranged so that every alert is looked at by someone, hard cases reach people with more experience, and nothing is lost when a shift ends.",
+      lede: "A security operations center, or SOC, is a team and a set of routines more than it is a room. Its work is arranged so that every alert is looked at by someone, hard cases reach people with more experience, and nothing is lost when a shift ends.",
       sections: [
         {
           heading: "The tiers",
@@ -122,7 +122,7 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "The same functions in a small organisation",
+          heading: "The same functions in a small organization",
           paragraphs: [
             "A firm of forty people has no tiers. The functions still exist: someone must look at alerts, someone must be able to investigate, and someone must have the authority to act. Often the first is an IT generalist, the second is a managed detection and response provider on contract, and the third is a director.",
             "What matters is that each function has a name next to it, a deputy, and a way to be reached out of hours. An alert that reaches nobody is the same as no alert.",
@@ -137,7 +137,7 @@ export const content: CourseContent = {
         "Tier 1 triages, tier 2 investigates, tier 3 hunts and takes the hardest incidents.",
         "Detection engineers tune the rules, and need feedback from the queue.",
         "A handover says what was seen, checked, concluded and left open.",
-        "A small organisation needs the same functions, each with a named owner.",
+        "A small organization needs the same functions, each with a named owner.",
       ],
     },
     "sec4-m1-t7": {
@@ -151,7 +151,7 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "Synchronising in practice",
+          heading: "Synchronizing in practice",
           paragraphs: [
             "Systems keep time by asking a time server at regular intervals, using the Network Time Protocol, NTP. Point every server, network device and workstation at the same trusted time sources, and include the devices that are easy to forget: cameras, door controllers, printers.",
             "Record events in Coordinated Universal Time, UTC, or with the offset written into the timestamp. A log that says 02:30 with no zone is ambiguous twice a year, when the clocks change, and whenever staff work across countries. Check for drift from time to time: a device that has lost contact with its time source gives no warning.",
@@ -184,7 +184,7 @@ export const content: CourseContent = {
       ],
     },
     "sec4-m2-t2": {
-      lede: "Analysts look for two kinds of evidence. An indicator of compromise is a trace that an intrusion has left behind. An indicator of attack is behaviour that shows one in progress. They answer different questions, and they age very differently.",
+      lede: "Analysts look for two kinds of evidence. An indicator of compromise is a trace that an intrusion has left behind. An indicator of attack is behavior that shows one in progress. They answer different questions, and they age very differently.",
       sections: [
         {
           heading: "Indicators of compromise",
@@ -196,7 +196,7 @@ export const content: CourseContent = {
         {
           heading: "Their short life",
           paragraphs: [
-            "The weakness of an IoC is how cheaply it can be changed. A file can be rebuilt with a new hash in seconds. Domains and addresses are replaced within days. An indicator is also backward-looking: it tells you about activity that someone has already seen and analysed.",
+            "The weakness of an IoC is how cheaply it can be changed. A file can be rebuilt with a new hash in seconds. Domains and addresses are replaced within days. An indicator is also backward-looking: it tells you about activity that someone has already seen and analyzed.",
             "Treat each one as perishable. Record where it came from, when it was first seen and how far you trust the source, and retire it after a set period. A blocklist that only grows fills with addresses that now belong to someone harmless, and produces false positives.",
           ],
         },
@@ -204,14 +204,14 @@ export const content: CourseContent = {
           heading: "Indicators of attack",
           paragraphs: [
             "An indicator of attack, or IoA, describes what is being done, whatever tool is used to do it. A document viewer that starts a command shell. An account that signs in from a new country and creates a mail forwarding rule within minutes. A workstation that connects to forty others in an hour.",
-            "Behaviour is much harder for an attacker to change than a file or a domain, because it is tied to what they are trying to achieve. The cost for the defender is that behaviour is harder to describe precisely, and legitimate work sometimes looks the same.",
+            "Behavior is much harder for an attacker to change than a file or a domain, because it is tied to what they are trying to achieve. The cost for the defender is that behavior is harder to describe precisely, and legitimate work sometimes looks the same.",
           ],
         },
         {
           heading: "Using both",
           paragraphs: [
             "Use IoCs for two jobs: blocking what is known to be bad, and searching back through your logs when a new indicator is published. The second job is why log retention matters. An indicator released today may match an event from six weeks ago.",
-            "Use IoAs for the detections you expect to last. When an incident is over, write down both: the specific indicators you found, for searching and for sharing, and the behaviour that would have revealed the intrusion earlier, as a candidate for a new rule.",
+            "Use IoAs for the detections you expect to last. When an incident is over, write down both: the specific indicators you found, for searching and for sharing, and the behavior that would have revealed the intrusion earlier, as a candidate for a new rule.",
           ],
         },
       ],
@@ -221,9 +221,9 @@ export const content: CourseContent = {
       },
       takeaways: [
         "An IoC is a trace such as a hash, a domain or an address. It is precise, shareable and short-lived.",
-        "An IoA is a behaviour. It lasts longer and needs more tuning.",
+        "An IoA is a behavior. It lasts longer and needs more tuning.",
         "Give every indicator a source, a date and an expiry.",
-        "Search past logs when new indicators arrive, and turn behaviours into rules.",
+        "Search past logs when new indicators arrive, and turn behaviors into rules.",
       ],
     },
     "sec4-m2-t4": {
@@ -233,7 +233,7 @@ export const content: CourseContent = {
           heading: "Severity: how bad",
           paragraphs: [
             "Severity measures the harm, done or likely. It depends on what is affected and how: the sensitivity of the data, how critical the system is, how many people or devices are involved, and whether the activity succeeded.",
-            "A four-level scale is enough for most teams. Low: blocked or contained, with no sign of success. Medium: one ordinary account or device affected. High: a privileged account, sensitive data or several systems. Critical: the business cannot operate, or harm is spreading now. Write one example beside each level, taken from your own organisation.",
+            "A four-level scale is enough for most teams. Low: blocked or contained, with no sign of success. Medium: one ordinary account or device affected. High: a privileged account, sensitive data or several systems. Critical: the business cannot operate, or harm is spreading now. Write one example beside each level, taken from your own organization.",
           ],
         },
         {
@@ -339,12 +339,12 @@ export const content: CourseContent = {
         ],
       },
       {
-        question: "Why must clocks be synchronised across the systems that send logs?",
+        question: "Why must clocks be synchronized across the systems that send logs?",
         platformPrompt: "Choose the correct option",
         explanation:
           "An investigation is a timeline assembled from several sources. If their clocks disagree, the order of events is wrong, and so are the conclusions drawn from it.",
         reviewTopicId: "sec4-m1-t7",
-        reviewTopicTitle: "Time synchronisation and log retention",
+        reviewTopicTitle: "Time synchronization and log retention",
         options: [
           { id: "a", label: "So that logs take up less storage", feedback: "Clock accuracy has no effect on size." },
           {
@@ -395,13 +395,13 @@ export const content: CourseContent = {
         question: "One product records the account as “user”, another as “subject” and a third as “actor”. Which SIEM step makes a single search cover all three?",
         platformPrompt: "Choose the correct option",
         explanation:
-          "Normalisation maps the different field names and formats of each source onto one common set, so that an analyst can ask one question of all the data.",
+          "Normalization maps the different field names and formats of each source onto one common set, so that an analyst can ask one question of all the data.",
         reviewTopicId: "sec4-m1-t6",
-        reviewTopicTitle: "How a SIEM collects, normalises and correlates",
+        reviewTopicTitle: "How a SIEM collects, normalizes and correlates",
         options: [
           { id: "a", label: "Collection", feedback: "Collection brings the events in, still in their own formats." },
-          { id: "b", label: "Normalisation", correct: true, feedback: "Correct. The three names become one field." },
-          { id: "c", label: "Correlation", feedback: "Correlation joins related events. It relies on normalisation having been done." },
+          { id: "b", label: "Normalization", correct: true, feedback: "Correct. The three names become one field." },
+          { id: "c", label: "Correlation", feedback: "Correlation joins related events. It relies on normalization having been done." },
           { id: "d", label: "Retention", feedback: "Retention is how long the events are kept." },
         ],
       },
@@ -423,7 +423,7 @@ export const content: CourseContent = {
         explanation:
           "The first sign-in, which would show how and from where the intruder entered, was deleted before anyone looked. Retention should be set from how late incidents are found, which is often months.",
         reviewTopicId: "sec4-m1-t7",
-        reviewTopicTitle: "Time synchronisation and log retention",
+        reviewTopicTitle: "Time synchronization and log retention",
         options: [
           { id: "a", label: "None: thirty days is always enough", feedback: "Here it ended almost three weeks too early." },
           {
@@ -432,7 +432,7 @@ export const content: CourseContent = {
             correct: true,
             feedback: "Correct. The start of the timeline cannot be rebuilt.",
           },
-          { id: "c", label: "The clocks of the systems drift apart", feedback: "Drift is a separate problem, solved by time synchronisation." },
+          { id: "c", label: "The clocks of the systems drift apart", feedback: "Drift is a separate problem, solved by time synchronization." },
           { id: "d", label: "The SIEM stops collecting new events", feedback: "Collection continues. It is the old events that are gone." },
         ],
       },
@@ -448,11 +448,11 @@ export const content: CourseContent = {
         explanation:
           "A threshold rule counts events and fires above a limit. It catches noisy activity and misses an attacker who stays below the number.",
         reviewTopicId: "sec4-m2-t1",
-        reviewTopicTitle: "Detection rules: signatures, thresholds and behaviour",
+        reviewTopicTitle: "Detection rules: signatures, thresholds and behavior",
         options: [
           { id: "a", label: "A signature", feedback: "A signature matches a known bad value, such as a file hash." },
           { id: "b", label: "A threshold", correct: true, feedback: "Correct. It counts events against a limit." },
-          { id: "c", label: "A behavioural rule", feedback: "A behavioural rule compares activity with a baseline of what is normal." },
+          { id: "c", label: "A behavioral rule", feedback: "A behavioral rule compares activity with a baseline of what is normal." },
           { id: "d", label: "An indicator of compromise", feedback: "An indicator is a piece of evidence, not a type of rule." },
         ],
       },
@@ -460,7 +460,7 @@ export const content: CourseContent = {
         question: "Which of these is an indicator of attack and not an indicator of compromise?",
         platformPrompt: "Choose the correct option",
         explanation:
-          "An indicator of attack describes behaviour, whatever tool is used. The other three are traces: specific values that an attacker can change cheaply.",
+          "An indicator of attack describes behavior, whatever tool is used. The other three are traces: specific values that an attacker can change cheaply.",
         reviewTopicId: "sec4-m2-t2",
         reviewTopicTitle: "Indicators of compromise and indicators of attack",
         options: [
@@ -470,7 +470,7 @@ export const content: CourseContent = {
             id: "c",
             label: "An account signs in from a new country and creates a mail forwarding rule within minutes",
             correct: true,
-            feedback: "Correct. This is a pattern of behaviour, independent of any one tool or address.",
+            feedback: "Correct. This is a pattern of behavior, independent of any one tool or address.",
           },
           { id: "d", label: "The address 198.51.100.7 on a blocklist", feedback: "An address is a trace, and may be reassigned." },
         ],

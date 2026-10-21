@@ -5,7 +5,7 @@ export const activities: Record<string, CourseActivity> = {
   "sec1-m1-t8": {
     file: { name: "ten-controls-to-classify.xlsx", size: "21 KB" },
     intro:
-      "You classify ten security controls by what they are and by what they do. Seeing both shows where an organisation relies on a single kind of protection.",
+      "You classify ten security controls by what they are and by what they do. Seeing both shows where an organization relies on a single kind of protection.",
     steps: [
       { title: "Read the ten controls", detail: "Open the worksheet in the Downloads tab. Each row describes one control in a sentence, such as a door lock, a backup, a training session or a log review." },
       { title: "Say what kind it is", detail: "Mark each control as technical, administrative or physical. Ask what it is made of: a setting, a rule for people, or an object." },

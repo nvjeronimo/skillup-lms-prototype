@@ -69,7 +69,7 @@ export const content: CourseContent = {
         {
           heading: "Indexing: understanding the page",
           paragraphs: [
-            "Once fetched, the page is read: its title, its headings, its text, its images and the links on it. The search engine works out what the page is about and stores it in its index, a very large catalogue of pages.",
+            "Once fetched, the page is read: its title, its headings, its text, its images and the links on it. The search engine works out what the page is about and stores it in its index, a very large catalog of pages.",
             "Not every crawled page is indexed. A page that copies another, says very little, or asks not to be indexed is left out. A page that is not in the index cannot appear for any search, however good it is. So the first question about a page that gets no visits is not “why does it rank badly?” but “is it indexed?”",
           ],
         },
@@ -94,7 +94,7 @@ export const content: CourseContent = {
       ],
     },
     "seo-m1-t4": {
-      lede: "Two people can type nearly the same words and want different things. One wants to learn, one wants to find a site, one is comparing, one is ready to pay. Search engines try to work out which, and they rank pages that match. This reading describes the four kinds of intent and how to recognise each.",
+      lede: "Two people can type nearly the same words and want different things. One wants to learn, one wants to find a site, one is comparing, one is ready to pay. Search engines try to work out which, and they rank pages that match. This reading describes the four kinds of intent and how to recognize each.",
       sections: [
         {
           heading: "Informational and navigational",
@@ -185,7 +185,7 @@ export const content: CourseContent = {
         {
           heading: "One page per need, not per keyword",
           paragraphs: [
-            "“How often to water a snake plant”, “snake plant watering schedule” and “when to water snake plant” are one question. One good page can rank for all three. Three separate pages would compete with each other and split whatever links and visits they earn. This is called cannibalisation.",
+            "“How often to water a snake plant”, “snake plant watering schedule” and “when to water snake plant” are one question. One good page can rank for all three. Three separate pages would compete with each other and split whatever links and visits they earn. This is called cannibalization.",
             "The test is the results page. Search two phrases. If mostly the same pages rank for both, the search engine treats them as one need, and so should you. If the results differ, they deserve separate pages.",
           ],
         },

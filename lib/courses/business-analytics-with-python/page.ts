@@ -147,11 +147,11 @@ export const page: CourseDetail = {
         },
         {
           title: "Module 2 · Cleaning and Reshaping Business Data",
-          items: [{ title: "Assignment 01 · Clean and summarise a sales dataset", score: "0/100 · 0%" }],
+          items: [{ title: "Assignment 01 · Clean and summarize a sales dataset", score: "0/100 · 0%" }],
         },
         {
-          title: "Module 3 · Exploring and Visualising",
-          items: [{ title: "Graded Quiz: Exploration and visualisation", score: "0/3 · 0%" }],
+          title: "Module 3 · Exploring and Visualizing",
+          items: [{ title: "Graded Quiz: Exploration and visualization", score: "0/3 · 0%" }],
         },
         {
           title: "Module 4 · Models for Business Decisions",
@@ -225,7 +225,7 @@ export const page: CourseDetail = {
           { label: "HOMEWORK", color: GRAY },
           { label: "UPCOMING", color: GRAY },
         ],
-        title: "Module 2 · Assignment 01 · Clean and summarise a sales dataset",
+        title: "Module 2 · Assignment 01 · Clean and summarize a sales dataset",
         description: "A notebook that cleans the orders export and answers three questions about it.",
       },
       {
@@ -239,7 +239,7 @@ export const page: CourseDetail = {
           { label: "GRADED QUIZ", color: GRAY },
           { label: "UPCOMING", color: GRAY },
         ],
-        title: "Module 3 · Graded Quiz: Exploration and visualisation",
+        title: "Module 3 · Graded Quiz: Exploration and visualization",
         description: "Two attempts. The best one counts.",
       },
       {

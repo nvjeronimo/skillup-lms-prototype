@@ -40,7 +40,7 @@ export const outline: Course = {
                 { id: "crm-m1-t1-ln2", ts: "0:20", text: "Email is the main one. It is the only large channel where you own the audience: a list of people who gave you their address and can take it back at any time." },
                 { id: "crm-m1-t1-ln3", ts: "0:37", text: "Module 1 covers the foundations: permission, how a message reaches the inbox or fails to, and how to write an email that gets opened." },
                 { id: "crm-m1-t1-ln4", ts: "0:52", text: "Module 2 adds the customer record. A CRM stores who each person is and what they have done, and that is what lets you send different messages to different people, automatically." },
-                { id: "crm-m1-t1-ln5", ts: "1:10", text: "Module 3 is where AI does the most work: personalisation, send times, subject lines and testing. It ends with your final project, a lifecycle email plan for one customer journey." },
+                { id: "crm-m1-t1-ln5", ts: "1:10", text: "Module 3 is where AI does the most work: personalization, send times, subject lines and testing. It ends with your final project, a lifecycle email plan for one customer journey." },
                 { id: "crm-m1-t1-ln6", ts: "1:29", text: "One rule runs through the course. An AI assistant can draft an email in seconds, but it cannot tell you whether the person agreed to receive it. Permission is always your job." },
                 { id: "crm-m1-t1-ln7", ts: "1:47", text: "You do not need an email platform to follow along. The sample contact list and the flow templates are in Handouts. Let's begin with why email still pays." },
               ],
@@ -147,7 +147,7 @@ export const outline: Course = {
             {
               id: "crm-m2-t3",
               type: "Video",
-              title: "Segmenting by behaviour: recency, frequency and value",
+              title: "Segmenting by behavior: recency, frequency and value",
               duration: "16 min",
               completed: false,
               transcript: [
@@ -199,16 +199,16 @@ export const outline: Course = {
     {
       id: "crm-m3",
       label: "MODULE 03",
-      title: "AI Personalisation, Final Project, and Wrap-Up",
+      title: "AI Personalization, Final Project, and Wrap-Up",
       topicsCompleted: 0,
       topicsTotal: 10,
       isCompleted: false,
       lessons: [
         {
           id: "crm-m3-l1",
-          label: "Personalisation and testing with AI",
+          label: "Personalization and testing with AI",
           topics: [
-            { id: "crm-m3-t1", type: "Video", title: "Personalisation beyond the first name", duration: "14 min", completed: false, locked: true },
+            { id: "crm-m3-t1", type: "Video", title: "Personalization beyond the first name", duration: "14 min", completed: false, locked: true },
             { id: "crm-m3-t2", type: "Reading", title: "Using AI for send times, subject lines and product picks", duration: "15 min read approx.", completed: false, locked: true },
             { id: "crm-m3-t3", type: "Video", title: "Testing an email: one variable, enough recipients, a clear winner", duration: "15 min", completed: false, locked: true },
             { id: "crm-m3-t4", type: "Reading", title: "Measuring email when open rates cannot be trusted", duration: "12 min read approx.", completed: false, locked: true },

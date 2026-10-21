@@ -48,7 +48,7 @@ export const serviceSections: ServiceSection[] = [
     mock: "Career services are SkillUp's own; none of them has a system behind it yet",
     items: [
       { id: "cv", icon: FileText, title: "CV review", description: "A career coach reviews your CV and LinkedIn profile. One review is included with your program.", action: "Request a review", status: { label: "1 included", color: "info" } },
-      { id: "interview", icon: MessagesSquare, title: "Interview practice", description: "Practise common questions for your field with the assistant, and get feedback on your answers.", action: "Start practising" },
+      { id: "interview", icon: MessagesSquare, title: "Interview practice", description: "Practice common questions for your field with the assistant, and get feedback on your answers.", action: "Start practicing" },
       { id: "jobs", icon: Briefcase, title: "Job board", description: "Roles from SkillUp's hiring partners that match your programs.", action: "Browse jobs", external: true },
       { id: "linkedin", icon: Linkedin, title: "Share your certificates", description: "Add your certificates to LinkedIn in one step.", action: "Add to LinkedIn", external: true },
     ],
@@ -59,7 +59,7 @@ export const serviceSections: ServiceSection[] = [
     emphasis: "and help",
     mock: "Support requests need a help-desk integration (not chosen yet)",
     items: [
-      { id: "help", icon: LifeBuoy, title: "Help centre", description: "Answers about your account, payments, certificates and the platform.", action: "Open the help centre", external: true },
+      { id: "help", icon: LifeBuoy, title: "Help center", description: "Answers about your account, payments, certificates and the platform.", action: "Open the help center", external: true },
       { id: "contact", icon: Headphones, title: "Contact support", description: "Tell us what's wrong. We reply within one business day.", action: "Write to us" },
       { id: "request", icon: FileText, title: "Video won't load in Module 2", description: "Request 4821 · opened Thu · AI-Driven Content and Brand Communication", action: "View request", status: { label: "In progress", color: "warning" } },
     ],

@@ -92,7 +92,7 @@ export const content: CourseContent = {
       ],
     },
     "pma-m1-t2": {
-      lede: "Every project is bounded by what it must deliver, by when, with what money and to what standard. These four are tied together: move one and at least one other moves with it. Managing that link, and making the choice visible to the people who own it, is the centre of the project manager's job.",
+      lede: "Every project is bounded by what it must deliver, by when, with what money and to what standard. These four are tied together: move one and at least one other moves with it. Managing that link, and making the choice visible to the people who own it, is the center of the project manager's job.",
       sections: [
         {
           heading: "Four constraints, one system",
@@ -134,7 +134,7 @@ export const content: CourseContent = {
       ],
     },
     "pma-m1-t4": {
-      lede: "An AI assistant is a fast drafter and a tireless summariser. It is also confident when it is wrong and knows nothing about your project beyond what you paste in. Knowing where that line runs is what makes it save time instead of creating risk.",
+      lede: "An AI assistant is a fast drafter and a tireless summarizer. It is also confident when it is wrong and knows nothing about your project beyond what you paste in. Knowing where that line runs is what makes it save time instead of creating risk.",
       sections: [
         {
           heading: "Where it helps",
@@ -153,7 +153,7 @@ export const content: CourseContent = {
         {
           heading: "What stays with you",
           paragraphs: [
-            "Three things cannot be delegated. Judgement: deciding which trade-off is right for this sponsor. Commitment: only the team can say what it will deliver. Accountability: if the report is wrong, the person who sent it answers for it, whoever drafted it.",
+            "Three things cannot be delegated. Judgment: deciding which trade-off is right for this sponsor. Commitment: only the team can say what it will deliver. Accountability: if the report is wrong, the person who sent it answers for it, whoever drafted it.",
             "This gives a working rule for the course. The assistant drafts. You check every fact, figure and date against a source. The team commits. If you could not explain a line of the plan without the assistant, the line is not ready.",
           ],
         },
@@ -172,7 +172,7 @@ export const content: CourseContent = {
         "Use an assistant for first drafts, summaries, reformatting and checklists.",
         "Expect confident errors: verify every fact, figure and date.",
         "Ask what could go wrong, not whether the plan is good.",
-        "Judgement, commitment and accountability stay with people.",
+        "Judgment, commitment and accountability stay with people.",
       ],
     },
     "pma-m2-t5": {
@@ -202,7 +202,7 @@ export const content: CourseContent = {
         {
           heading: "Checking a schedule drafted by an assistant",
           paragraphs: [
-            "An assistant can propose dependencies and calculate a path from a task list. Check three things in its draft: links it invented from general knowledge, links it missed because they exist only in your organisation, and people booked on two tasks at the same time. A critical path that ignores who is available is a path on paper only.",
+            "An assistant can propose dependencies and calculate a path from a task list. Check three things in its draft: links it invented from general knowledge, links it missed because they exist only in your organization, and people booked on two tasks at the same time. A critical path that ignores who is available is a path on paper only.",
           ],
         },
       ],
@@ -244,7 +244,7 @@ export const content: CourseContent = {
         {
           heading: "What the assistant cannot give you",
           paragraphs: [
-            "It cannot give you probability. It has no information about how likely something is in your organisation, so any figure it offers is a guess. Score the risks with the team. It also cannot own a risk. Every item that enters the register needs a named person who will watch its trigger and act on it.",
+            "It cannot give you probability. It has no information about how likely something is in your organization, so any figure it offers is a guess. Score the risks with the team. It also cannot own a risk. Every item that enters the register needs a named person who will watch its trigger and act on it.",
           ],
         },
       ],
@@ -286,7 +286,7 @@ export const content: CourseContent = {
         {
           heading: "Drafting with an assistant",
           paragraphs: [
-            "An assistant can turn your board export and your notes into this structure in seconds, and it can produce a shorter version for executives. It will also smooth bad news into something pleasant and may fill a gap with a figure that looks right. Check every number and date against the source, and read the status line last: it has to be your judgement.",
+            "An assistant can turn your board export and your notes into this structure in seconds, and it can produce a shorter version for executives. It will also smooth bad news into something pleasant and may fill a gap with a figure that looks right. Check every number and date against the source, and read the status line last: it has to be your judgment.",
           ],
         },
       ],
@@ -512,11 +512,11 @@ export const content: CourseContent = {
         question: "Which task should stay with the project manager and not be handed to an assistant?",
         platformPrompt: "Choose the correct option",
         explanation:
-          "Drafting, summarising and reformatting can be checked afterwards. Committing to a date on behalf of the team is a decision with accountability, and only people can make it.",
+          "Drafting, summarizing and reformatting can be checked afterwards. Committing to a date on behalf of the team is a decision with accountability, and only people can make it.",
         reviewTopicId: "pma-m1-t4",
         reviewTopicTitle: "What AI assistants can and cannot do for a project manager",
         options: [
-          { id: "a", label: "Summarising a long meeting transcript", feedback: "A good use, with a check of the decisions against your notes." },
+          { id: "a", label: "Summarizing a long meeting transcript", feedback: "A good use, with a check of the decisions against your notes." },
           { id: "b", label: "Rewriting a status update for executives", feedback: "A good use: you can verify it against the original." },
           { id: "c", label: "Telling the client which date the team commits to", correct: true, feedback: "Correct. Commitment and accountability stay with people." },
           { id: "d", label: "Listing questions for a kickoff meeting", feedback: "A good use: a list to choose from." },
@@ -549,7 +549,7 @@ export const content: CourseContent = {
           { id: "a", label: "Add all forty to the register", feedback: "A register nobody can read is a register nobody uses." },
           { id: "b", label: "Ignore it: the team knows the project better", feedback: "The team knows the project. The list may still show a blind spot." },
           { id: "c", label: "Filter with the team and keep those with a real cause here", correct: true, feedback: "Correct. Expect to keep a handful." },
-          { id: "d", label: "Ask the assistant to score their probability", feedback: "It has no information about likelihood in your organisation." },
+          { id: "d", label: "Ask the assistant to score their probability", feedback: "It has no information about likelihood in your organization." },
         ],
       },
       {

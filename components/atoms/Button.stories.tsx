@@ -36,7 +36,7 @@ export const Link: Story = { args: { hierarchy: "link", rightIcon: ArrowRight, c
 export const Utility: Story = { args: { variant: "utility", children: "Filter" } };
 /** Legacy `variant="destructive"`: UUI grey stroke, red label, error-soft hover (decision 003). */
 export const LegacyDestructive: Story = {
-  name: "Destructive (legacy, UUI grey)",
+  name: "Destructive (legacy, UUI gray)",
   args: { variant: "destructive", size: "sm", children: "Leave session" },
 };
 export const Disabled: Story = { args: { hierarchy: "primary", disabled: true } };

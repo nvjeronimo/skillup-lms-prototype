@@ -46,7 +46,7 @@ export const page: CourseDetail = {
   },
   intro: {
     title: "What you learned",
-    lead: "Four modules that take you from how digital marketing works to using AI with judgement: the channels and the customer journey, goals and measurement, the AI mindset and a one-page marketing plan. All of them stay open for review.",
+    lead: "Four modules that take you from how digital marketing works to using AI with judgment: the channels and the customer journey, goals and measurement, the AI mindset and a one-page marketing plan. All of them stay open for review.",
   },
   modules: modulesFromOutline(outline, [
     { duration: "2h 53m", defaultOpen: true },
@@ -88,7 +88,7 @@ export const page: CourseDetail = {
         },
         {
           name: "Daniel Moreau", // sample name, as on the Data Analytics certificates (the real IBM signatory is not known)
-          role: "Programme lead, IBM",
+          role: "Program lead, IBM",
           signatureSrc: "/platform/certificate-signature-2.svg",
         },
       ],

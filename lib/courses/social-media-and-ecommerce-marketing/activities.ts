@@ -45,7 +45,7 @@ export const activities: Record<string, CourseActivity> = {
     steps: [
       { title: "State the goal and the audience", detail: "Open the template in the Downloads tab. Write what the collaboration should achieve, in one sentence, and who should see it." },
       { title: "List the must-haves", detail: "Write the three facts about the product that have to be right, the one action viewers should take, and the link or code to use." },
-      { title: "List the must-nots", detail: "Write what the creator may not claim, for example health benefits or comparisons with named competitors. Add that the post must be clearly labelled as a paid partnership." },
+      { title: "List the must-nots", detail: "Write what the creator may not claim, for example health benefits or comparisons with named competitors. Add that the post must be clearly labeled as a paid partnership." },
       { title: "Set deliverables and dates", detail: "Say how many pieces, in which format, the date for the draft, the date for posting, and how long the business may reuse the content." },
       { title: "Check the result", detail: "A good brief fits on one page, has at most three required messages, includes the disclosure rule, and does not contain a script. A creator could start work without asking a question." },
     ],
@@ -53,13 +53,13 @@ export const activities: Record<string, CourseActivity> = {
   "smec-m3-t5": {
     file: { name: "three-posts-to-tag.docx", size: "1.8 MB" },
     intro:
-      "You tag products in three sample posts of the case-study shop, using its catalogue. A tag is only useful if it leads to the exact product in the picture and that product can be bought.",
+      "You tag products in three sample posts of the case-study shop, using its catalog. A tag is only useful if it leads to the exact product in the picture and that product can be bought.",
     steps: [
-      { title: "Open the posts and the catalogue", detail: "Open the file in the Downloads tab for the three posts, and the shop catalogue from Handouts. For each post list every product you can see." },
-      { title: "Match each product to a catalogue line", detail: "Find the exact line in the catalogue: the right variant, size and colour. Write its product id next to the item." },
-      { title: "Check that it can be sold", detail: "Look at the stock and price columns. Do not tag a product that is out of stock or whose price in the post differs from the catalogue." },
+      { title: "Open the posts and the catalog", detail: "Open the file in the Downloads tab for the three posts, and the shop catalog from Handouts. For each post list every product you can see." },
+      { title: "Match each product to a catalog line", detail: "Find the exact line in the catalog: the right variant, size and color. Write its product id next to the item." },
+      { title: "Check that it can be sold", detail: "Look at the stock and price columns. Do not tag a product that is out of stock or whose price in the post differs from the catalog." },
       { title: "Place the tags", detail: "Mark on each post where the tag sits. Keep to five tags or fewer per post, and do not cover a face or the product itself." },
-      { title: "Check the result", detail: "A good result has every tag pointing to one catalogue id in stock, the right variant for what is shown, and a note on anything you chose not to tag and why." },
+      { title: "Check the result", detail: "A good result has every tag pointing to one catalog id in stock, the right variant for what is shown, and a note on anything you chose not to tag and why." },
     ],
   },
   "smec-m3-t11": {

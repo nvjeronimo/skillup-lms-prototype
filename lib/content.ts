@@ -224,8 +224,8 @@ export function topicDescription(topic: FlatTopic): string {
       return `Apply what you've learned and submit your work. This assignment counts toward your final grade.`;
     case "activity":
       return topic.moduleTitle
-        ? `An interactive exercise to practise the concepts from ${topic.moduleTitle}.`
-        : `An interactive exercise to practise the concepts from this course.`;
+        ? `An interactive exercise to practice the concepts from ${topic.moduleTitle}.`
+        : `An interactive exercise to practice the concepts from this course.`;
     case "ora":
       return `A peer-reviewed project. You'll submit your work, review a peer, and receive a grade.`;
     case "lessonPage":
@@ -380,7 +380,7 @@ export function getArticle(topic: FlatTopic): ArticleContent {
       {
         heading: "Why it matters",
         paragraphs: [
-          "In process improvement, clarity beats cleverness. Before optimising anything, you need a shared, measurable definition of the problem, otherwise teams optimise different things and progress stalls.",
+          "In process improvement, clarity beats cleverness. Before optimizing anything, you need a shared, measurable definition of the problem, otherwise teams optimize different things and progress stalls.",
           "Six Sigma gives us a disciplined way to define, measure and reduce variation. The goal is not perfection; it is predictability: outcomes you can rely on, batch after batch.",
         ],
       },
@@ -886,7 +886,7 @@ const PARTNER_LABS: Record<string, PartnerLabContent> = {
       "Sign in to Google Skills, start the lab and follow its instructions.",
       "Come back to this page and select Mark as Complete.",
     ],
-    afterCompletion: "Open it whenever you want to practise. The topic stays complete.",
+    afterCompletion: "Open it whenever you want to practice. The topic stays complete.",
   },
   "m3-t4e3": {
     kind: "partner",
@@ -1025,9 +1025,9 @@ export function getPodcast(topic: FlatTopic): PodcastContent {
     guest: "Ana Ferreira, Head of Quality at Northwind",
     episodeLabel: "Episode 4",
     summary:
-      "A conversation about what actually changes on the shop floor when a Six Sigma programme lands, and the three mistakes that stall most rollouts in the first ninety days.",
+      "A conversation about what actually changes on the shop floor when a Six Sigma program lands, and the three mistakes that stall most rollouts in the first ninety days.",
     chapters: [
-      { ts: "0:00", label: "Why most programmes stall early" },
+      { ts: "0:00", label: "Why most programs stall early" },
       { ts: "4:12", label: "Getting operators to trust the data" },
       { ts: "11:40", label: "Choosing the first project" },
       { ts: "18:05", label: "What good sponsorship looks like" },
@@ -1103,8 +1103,8 @@ export function getOra(topic: FlatTopic): OraContent {
         label: "Task 3 · Include a control chart",
         maxPoints: 5,
         options: [
-          { points: 5, label: "Correct chart type with limits drawn and labelled" },
-          { points: 3, label: "Chart present but limits missing or mislabelled" },
+          { points: 5, label: "Correct chart type with limits drawn and labeled" },
+          { points: 3, label: "Chart present but limits missing or mislabeled" },
           { points: 0, label: "No chart" },
         ],
       },
@@ -1182,7 +1182,7 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
         heading: "Why control charts matter",
         paragraphs: [
           "A control chart separates the variation that is inherent to a process from the variation that signals something has changed. Without that distinction, teams react to noise and make the process worse.",
-          "The chart itself is simple: a centre line at the process mean, and control limits three standard deviations either side. What takes practice is reading it.",
+          "The chart itself is simple: a center line at the process mean, and control limits three standard deviations either side. What takes practice is reading it.",
         ],
       },
       {
@@ -1192,7 +1192,7 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
         // 10 Oct 2026: the embedded video has a transcript of its own, so its player is captioned.
         transcript: [
           { ts: "0:00", text: "A control chart answers one question: has the process changed?" },
-          { ts: "0:28", text: "Start with the centre line. It is the mean of the process." },
+          { ts: "0:28", text: "Start with the center line. It is the mean of the process." },
           { ts: "0:58", text: "The control limits sit three standard deviations either side." },
           { ts: "1:32", text: "Points that bounce around inside the limits are common-cause noise." },
           { ts: "2:06", text: "One point beyond a limit is a signal. Look for what changed." },
@@ -1203,7 +1203,7 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
       {
         kind: "image",
         caption: "An in-control process (left) versus one showing a shift in the mean (right).",
-        alt: "Two control charts side by side, the second showing seven consecutive points above the centre line",
+        alt: "Two control charts side by side, the second showing seven consecutive points above the center line",
       },
       {
         kind: "callout",
@@ -1215,7 +1215,7 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
         kind: "text",
         heading: "The rules you'll actually use",
         paragraphs: [
-          "Most teams need only three: a single point beyond the limits, seven consecutive points on one side of the centre line, and a run of seven rising or falling. Each points to a different kind of cause.",
+          "Most teams need only three: a single point beyond the limits, seven consecutive points on one side of the center line, and a run of seven rising or falling. Each points to a different kind of cause.",
         ],
       },
       {
@@ -1226,7 +1226,7 @@ export function getLessonPage(topic: FlatTopic): LessonPageContent {
       },
       {
         kind: "knowledge-check",
-        question: "Seven consecutive points above the centre line most likely indicates…",
+        question: "Seven consecutive points above the center line most likely indicates…",
         options: [
           {
             id: "a",

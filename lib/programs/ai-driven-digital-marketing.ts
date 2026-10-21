@@ -118,7 +118,7 @@ const program: Program = {
       modules: [
         { number: 1, title: "Module 1 · Email Foundations & Deliverability", complete: false, topics: "12 topics", duration: "3h 07m" },
         { number: 2, title: "Module 2 · CRM, Segmentation & Lifecycle Automation", complete: false, topics: "12 topics", duration: "3h 25m" },
-        { number: 3, title: "Module 3 · AI Personalisation, Final Project, and Wrap-Up", complete: false, topics: "10 topics", duration: "3h 38m" },
+        { number: 3, title: "Module 3 · AI Personalization, Final Project, and Wrap-Up", complete: false, topics: "10 topics", duration: "3h 38m" },
       ],
     }),
     programCourse(7, "Capstone Project: AI-First Marketing System", "CP", "program-course-7-capstone", {
@@ -163,7 +163,7 @@ const program: Program = {
           },
           {
             name: "Daniel Moreau", // sample name, as on the Data Analytics certificates (the real IBM signatory is not known)
-            role: "Programme lead, IBM",
+            role: "Program lead, IBM",
             signatureSrc: "/platform/certificate-signature-2.svg",
           },
         ],
@@ -326,7 +326,7 @@ const program: Program = {
       id: "about-7",
       title: "Career & Placement Services",
       body: [
-        "You can ask for a review of your CV and portfolio, and practise interview questions for entry-level marketing roles. These services support your job search; they are not a guarantee of placement.",
+        "You can ask for a review of your CV and portfolio, and practice interview questions for entry-level marketing roles. These services support your job search; they are not a guarantee of placement.",
       ],
     },
     {
@@ -352,7 +352,7 @@ const program: Program = {
       id: "about-10",
       title: "Exercises to Explore",
       body: [
-        "Each module includes ungraded activities you can repeat as often as you like: labelling search intent, calculating funnel conversion rates, rewriting AI drafts in a brand voice, and comparing ad variations. They prepare you for the graded work that follows.",
+        "Each module includes ungraded activities you can repeat as often as you like: labeling search intent, calculating funnel conversion rates, rewriting AI drafts in a brand voice, and comparing ad variations. They prepare you for the graded work that follows.",
       ],
     },
   ],

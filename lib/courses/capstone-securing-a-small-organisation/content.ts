@@ -11,7 +11,7 @@ import { activities } from "./activities";
 export const content: CourseContent = {
   byline: {
     author: "Dr. Amara Okafor",
-    role: "Lead instructor · Capstone: Securing a Small Organisation",
+    role: "Lead instructor · Capstone: Securing a Small Organization",
     updated: "September 2026",
   },
   quiz: [
@@ -24,7 +24,7 @@ export const content: CourseContent = {
         { id: "a", label: "A product the adviser knows well", feedback: "Familiarity is not a reason the client can weigh." },
         { id: "b", label: "A risk in the register that it reduces", correct: true, feedback: "Correct. No risk, no reason for the control." },
         { id: "c", label: "The longest list of controls available", feedback: "A small team cannot run a long list. Relevance comes first." },
-        { id: "d", label: "What a larger organisation does", feedback: "Another organisation's controls answer its risks and its resources." },
+        { id: "d", label: "What a larger organization does", feedback: "Another organization's controls answer its risks and its resources." },
       ],
     },
     {
@@ -61,9 +61,9 @@ export const content: CourseContent = {
       lede: "Tidewater Veterinary Group is a fictional practice created for this course. Its owner has asked for a security plan that she can understand, afford and hand to the people who will carry it out. This page is your brief.",
       sections: [
         {
-          heading: "The organisation",
+          heading: "The organization",
           paragraphs: [
-            "Tidewater runs two clinics twelve kilometres apart, with twenty-eight staff: vets, nurses, receptionists, an office manager and the owner. Client and patient records are held in a cloud practice management service. Email and shared files are in a cloud office suite.",
+            "Tidewater runs two clinics twelve kilometers apart, with twenty-eight staff: vets, nurses, receptionists, an office manager and the owner. Client and patient records are held in a cloud practice management service. Email and shared files are in a cloud office suite.",
             "Each clinic has one network that carries everything: reception computers, consulting room tablets, the imaging workstation, card terminals, printers and the Wi-Fi offered to clients in the waiting room. An outside IT contractor visits once a month and has an administrator account on every system.",
           ],
         },
@@ -142,7 +142,7 @@ export const content: CourseContent = {
         {
           heading: "Four questions for every control",
           paragraphs: [
-            "Who operates it, by name or role? How many hours does it take each month once it is installed? What happens when it fails: does it fail safely and visibly, or silently? And does it rely on something the practice already has, or on a new product with its own licence and its own learning curve?",
+            "Who operates it, by name or role? How many hours does it take each month once it is installed? What happens when it fails: does it fail safely and visibly, or silently? And does it rely on something the practice already has, or on a new product with its own license and its own learning curve?",
             "A control with good answers to all four will still be working in a year. A control that needs a daily review by someone with security training will be abandoned by the third week, however good it looked in the design.",
           ],
         },
@@ -192,7 +192,7 @@ export const content: CourseContent = {
         {
           heading: "Make the diagram readable",
           paragraphs: [
-            "Draw one diagram per clinic with four or five zones, named for what is in them: Reception and consulting, Payments, Imaging, Guest Wi-Fi. Avoid addresses and device model numbers on the main diagram. Show what may talk to what with a few labelled arrows, and state in a sentence that everything else is blocked.",
+            "Draw one diagram per clinic with four or five zones, named for what is in them: Reception and consulting, Payments, Imaging, Guest Wi-Fi. Avoid addresses and device model numbers on the main diagram. Show what may talk to what with a few labeled arrows, and state in a sentence that everything else is blocked.",
             "Add a legend, and a caption that says what the diagram proves: “A phone on the waiting-room Wi-Fi cannot reach the reception computers or the card terminals.” A reader who understands the caption has understood the design.",
           ],
         },
@@ -235,7 +235,7 @@ export const content: CourseContent = {
         {
           heading: "The first three sources",
           paragraphs: [
-            "First, the audit log of the office suite. It records sign-ins, mailbox rules, file sharing and administrator actions, and it covers the incident that actually happened. Check that it is switched on, how many days it keeps, and whether the practice's licence allows longer.",
+            "First, the audit log of the office suite. It records sign-ins, mailbox rules, file sharing and administrator actions, and it covers the incident that actually happened. Check that it is switched on, how many days it keeps, and whether the practice's license allows longer.",
             "Second, the audit log of the practice management service: who opened, changed or exported client and patient records. Third, the backup reports. They are not a security log in the usual sense, but a failed backup is the signal with the largest consequence if it is missed.",
           ],
         },
@@ -292,7 +292,7 @@ export const content: CourseContent = {
         {
           heading: "Write it so that someone else can do it",
           paragraphs: [
-            "The recovery plan should be usable by a person who did not write it, on a day when the contractor cannot be reached. Give the steps in order, where the credentials for the backup service are held, who may authorise a restore, and which system comes back first.",
+            "The recovery plan should be usable by a person who did not write it, on a day when the contractor cannot be reached. Give the steps in order, where the credentials for the backup service are held, who may authorize a restore, and which system comes back first.",
             "Keep a printed copy at each clinic. A recovery plan stored only on the system that has failed is the most common flaw in plans of this kind, and the easiest one to avoid.",
           ],
         },
@@ -366,7 +366,7 @@ export const content: CourseContent = {
         reviewTopicId: "sec5-m1-t3",
         reviewTopicTitle: "Scoping an assessment and agreeing its limits",
         options: [
-          { id: "a", label: "The software supplier's own data centres", feedback: "Out of scope: the practice neither owns nor controls them." },
+          { id: "a", label: "The software supplier's own data centers", feedback: "Out of scope: the practice neither owns nor controls them." },
           {
             id: "b",
             label: "The practice's settings in its cloud practice management service",
@@ -588,7 +588,7 @@ export const content: CourseContent = {
         },
         {
           id: "c4",
-          label: "Task 4 · Fit the plan to the organisation",
+          label: "Task 4 · Fit the plan to the organization",
           maxPoints: 6,
           options: [
             { points: 6, label: "The roadmap fits the staff, time and budget in the case file" },

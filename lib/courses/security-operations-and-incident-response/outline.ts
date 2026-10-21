@@ -44,7 +44,7 @@ export const outline: Course = {
                 {
                   id: "sec4-m1-t1-ln2",
                   ts: "0:20",
-                  text: "The first three courses were about building defences. This one is about the moment a defence is tested: noticing it, deciding what it means, and responding.",
+                  text: "The first three courses were about building defenses. This one is about the moment a defense is tested: noticing it, deciding what it means, and responding.",
                 },
                 {
                   id: "sec4-m1-t1-ln3",
@@ -69,7 +69,7 @@ export const outline: Course = {
                 {
                   id: "sec4-m1-t1-ln7",
                   ts: "1:50",
-                  text: "You will write a triage report on three sample alerts and summarise a tabletop exercise. Everything uses prepared data; you will not need access to a live system.",
+                  text: "You will write a triage report on three sample alerts and summarize a tabletop exercise. Everything uses prepared data; you will not need access to a live system.",
                 },
               ],
             },
@@ -90,7 +90,7 @@ export const outline: Course = {
                 {
                   id: "sec4-m1-t3-ln1",
                   ts: "0:00",
-                  text: "A security operations team sees an organisation through its logs. Four groups of sources give most of the picture, and each one answers a different question.",
+                  text: "A security operations team sees an organization through its logs. Four groups of sources give most of the picture, and each one answers a different question.",
                 },
                 {
                   id: "sec4-m1-t3-ln2",
@@ -152,14 +152,14 @@ export const outline: Course = {
             {
               id: "sec4-m1-t6",
               type: "Video",
-              title: "How a SIEM collects, normalises and correlates",
+              title: "How a SIEM collects, normalizes and correlates",
               duration: "13 min",
               completed: false,
               transcript: [
                 {
                   id: "sec4-m1-t6-ln1",
                   ts: "0:00",
-                  text: "A SIEM, which stands for security information and event management, is where the logs of an organisation come together. It does three jobs: it collects, it normalises and it correlates.",
+                  text: "A SIEM, which stands for security information and event management, is where the logs of an organization come together. It does three jobs: it collects, it normalizes and it correlates.",
                 },
                 {
                   id: "sec4-m1-t6-ln2",
@@ -174,7 +174,7 @@ export const outline: Course = {
                 {
                   id: "sec4-m1-t6-ln4",
                   ts: "0:55",
-                  text: "Normalisation maps them onto common fields: one name for the account, one for the source address, and one time format in UTC. After that, a single search covers every source.",
+                  text: "Normalization maps them onto common fields: one name for the account, one for the source address, and one time format in UTC. After that, a single search covers every source.",
                 },
                 {
                   id: "sec4-m1-t6-ln5",
@@ -201,7 +201,7 @@ export const outline: Course = {
             {
               id: "sec4-m1-t7",
               type: "Reading",
-              title: "Time synchronisation and log retention",
+              title: "Time synchronization and log retention",
               duration: "10 min read approx.",
               completed: false,
             },
@@ -238,7 +238,7 @@ export const outline: Course = {
             {
               id: "sec4-m2-t1",
               type: "Video",
-              title: "Detection rules: signatures, thresholds and behaviour",
+              title: "Detection rules: signatures, thresholds and behavior",
               duration: "13 min",
               completed: false,
               transcript: [
@@ -265,12 +265,12 @@ export const outline: Course = {
                 {
                   id: "sec4-m2-t1-ln5",
                   ts: "1:15",
-                  text: "A behavioural rule compares activity with a baseline, either the user's own history or what is normal for the role. An accounts clerk who starts running administration tools at three in the morning stands out without any signature.",
+                  text: "A behavioral rule compares activity with a baseline, either the user's own history or what is normal for the role. An accounts clerk who starts running administration tools at three in the morning stands out without any signature.",
                 },
                 {
                   id: "sec4-m2-t1-ln6",
                   ts: "1:30",
-                  text: "Behavioural rules can catch what nobody has seen before. Their cost is false positives, because people change their habits for ordinary reasons.",
+                  text: "Behavioral rules can catch what nobody has seen before. Their cost is false positives, because people change their habits for ordinary reasons.",
                 },
                 {
                   id: "sec4-m2-t1-ln7",
@@ -507,7 +507,7 @@ export const outline: Course = {
                 {
                   id: "sec4-m3-t3-ln8",
                   ts: "2:10",
-                  text: "And decide in advance who may authorise a disruptive step, such as taking the booking system offline. At two in the morning there should be no doubt whose decision that is.",
+                  text: "And decide in advance who may authorize a disruptive step, such as taking the booking system offline. At two in the morning there should be no doubt whose decision that is.",
                 },
               ],
             },

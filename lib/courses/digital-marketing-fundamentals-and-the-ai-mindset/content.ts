@@ -78,7 +78,7 @@ export const content: CourseContent = {
           paragraphs: [
             "It is not the same as being present everywhere. A brand with five neglected social accounts does worse than a brand with one that it looks after. Choose channels by where your customers are, not by what is new.",
             "It is not free. Organic channels cost time and skill instead of media budget, and that time has to be planned for.",
-            "And it is not automatic. AI assistants now draft copy, sort audiences and summarise reports in seconds. They do not know your customer and they do not answer for the result. Deciding what to ask for, and checking what comes back, stays with you. The course calls this the AI mindset, and Module 3 returns to it.",
+            "And it is not automatic. AI assistants now draft copy, sort audiences and summarize reports in seconds. They do not know your customer and they do not answer for the result. Deciding what to ask for, and checking what comes back, stays with you. The course calls this the AI mindset, and Module 3 returns to it.",
           ],
         },
       ],
@@ -107,7 +107,7 @@ export const content: CourseContent = {
           heading: "Social: a place in someone's feed",
           paragraphs: [
             "On social platforms people are not looking for you. They are scrolling, and you either interrupt or earn a moment of interest. That makes social good at discovery, at showing what a product looks like in use, and at conversation with people who already follow you.",
-            "It also comes in two halves. Organic posts reach your followers and whoever the feed decides to show them to. Paid social buys reach among people chosen by interest or behaviour. Neither works with copy written for a brochure. A post has about two seconds to earn the third.",
+            "It also comes in two halves. Organic posts reach your followers and whoever the feed decides to show them to. Paid social buys reach among people chosen by interest or behavior. Neither works with copy written for a brochure. A post has about two seconds to earn the third.",
           ],
         },
         {
@@ -234,14 +234,14 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "Where it helps: sorting and summarising",
+          heading: "Where it helps: sorting and summarizing",
           paragraphs: [
             "Give it a pile of text and a question, and it will find the pattern. Two hundred survey answers grouped by theme. A month of support messages sorted into complaints, questions and praise. A long report reduced to the five points a manager needs.",
             "Check a sample of what it sorted. It will sometimes place a sarcastic comment under praise, or merge two themes that you would keep apart. Ten minutes of checking tells you how far to trust the rest.",
           ],
         },
         {
-          heading: "Where it does not help: facts, judgement and your customer",
+          heading: "Where it does not help: facts, judgment and your customer",
           paragraphs: [
             "The assistant does not know your product, your prices or your stock unless you tell it. Asked for a detail it was not given, it will often supply one that sounds right. Every figure, date, name and claim in a draft is unverified until you check it against a source.",
             "It does not know your customer either. It knows how people in general write about running shoes. It has not read your reviews or sat in on your customer calls. And it cannot decide what the brand should say no to: which joke is off-tone, which claim a regulator would question, which offer the business cannot afford.",
@@ -280,7 +280,7 @@ export const content: CourseContent = {
           heading: "Choosing the business",
           paragraphs: [
             "Use the business from Assignments 01 and 02 if you can. You already have its persona, its journey map and its measurement plan, and the project is largely a matter of making them agree with one another. You may also choose a new one, as long as you can describe its customers from what you know and not from guesswork.",
-            "Small and specific works best. A plan for a neighbourhood bakery with one objective can be judged. A plan for a global brand you know only from its ads cannot.",
+            "Small and specific works best. A plan for a neighborhood bakery with one objective can be judged. A plan for a global brand you know only from its ads cannot.",
           ],
         },
         {
@@ -374,7 +374,7 @@ export const content: CourseContent = {
         options: [
           { id: "a", label: "Owned media", feedback: "The bakery does not control the blog. It bought a place on it." },
           { id: "b", label: "Paid media", correct: true, feedback: "Correct. The placement was bought, so it is paid media even though it sits on someone else's site." },
-          { id: "c", label: "Earned media", feedback: "Earned media is given freely. A post that was paid for is labelled as sponsored and counts as paid." },
+          { id: "c", label: "Earned media", feedback: "Earned media is given freely. A post that was paid for is labeled as sponsored and counts as paid." },
           { id: "d", label: "Both owned and earned", feedback: "Neither applies: the space belongs to the blogger and the post was bought." },
         ],
       },

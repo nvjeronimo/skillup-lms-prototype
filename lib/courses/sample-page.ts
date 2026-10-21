@@ -97,7 +97,7 @@ export const SIX_SIGMA: CourseDetail = {
           id: "analyze-and-interpret",
           label: "Analyze and interpret",
           topics: [
-            { id: "m3-t6", title: "Running the analyse phase", type: "Reading", duration: "45 min", state: "Pending" },
+            { id: "m3-t6", title: "Running the analyze phase", type: "Reading", duration: "45 min", state: "Pending" },
             { id: "m3-t7", title: "Designing the prototype", type: "Video", duration: "30 min", state: "Pending" },
             { id: "m3-t8", title: "Conducting user testing", type: "Project", duration: "25 min", state: "Pending" },
             { id: "m3-t9", title: "Implementing feedback", type: "Peer Review", duration: "50 min", state: "Locked" },
@@ -258,7 +258,7 @@ export const SIX_SIGMA: CourseDetail = {
         state: "complete",
         badges: [{ label: "COURSE", color: GRAY }],
         title: "Course starts",
-        description: "Enrolment opened and all module content became available.",
+        description: "Enrollment opened and all module content became available.",
       },
       {
         id: "channel-selection",
@@ -478,7 +478,7 @@ export const CLOUD_COMPUTING: CourseDetail = {
     started: { eyebrow: "Progress is tracked on IBM", cta: "Continue on IBM" },
     dialog: {
       title: "This course continues on IBM",
-      body: "IBM hosts the lessons and labs for this course. It opens in a new tab and you sign in with your IBM account. Your enrolment on SkillUp stays active.",
+      body: "IBM hosts the lessons and labs for this course. It opens in a new tab and you sign in with your IBM account. Your enrollment on SkillUp stays active.",
       dontShowAgain: "Don’t show again",
       cancel: "Cancel",
       confirm: "Continue to IBM",

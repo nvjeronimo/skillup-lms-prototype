@@ -6,8 +6,8 @@ export const metadata: Metadata = { title: "Explorations" };
 const DASHBOARD = [
   { slug: "continue", name: "A · Continue first", hero: "One dominant resume card; everything else below it.", serves: "Maya, Sara, Noah" },
   { slug: "pace", name: "B · Pace + this week", hero: "On track or behind, and what is due this week.", serves: "Dev, Maya, Helena" },
-  { slug: "live", name: "C · Live + today", hero: "Organised by time: now, today, this week.", serves: "Sara, Leo, Maya" },
-  { slug: "portfolio", name: "D · Portfolio overview", hero: "Every enrolment and certificate at a glance.", serves: "Priya, Noah" },
+  { slug: "live", name: "C · Live + today", hero: "Organized by time: now, today, this week.", serves: "Sara, Leo, Maya" },
+  { slug: "portfolio", name: "D · Portfolio overview", hero: "Every enrollment and certificate at a glance.", serves: "Priya, Noah" },
 ];
 
 export default function LabIndex() {

@@ -48,7 +48,7 @@ export const page: CourseDetail = {
   },
   intro: {
     title: "What you'll learn",
-    lead: "Four modules on what happens when a defence is tested: how a security operations team works, how alerts are triaged, how an incident is contained and recovered from, and how evidence and communication are handled.",
+    lead: "Four modules on what happens when a defense is tested: how a security operations team works, how alerts are triaged, how an incident is contained and recovered from, and how evidence and communication are handled.",
   },
   modules: modulesFromOutline(outline, [
     { duration: "1h 41m", defaultOpen: true },
@@ -299,7 +299,7 @@ export const page: CourseDetail = {
             author: "David Chen",
             label: "STAFF",
             accepted: true,
-            body: "No. You work on exported log extracts and a sample alert queue in a spreadsheet, so no tool licence is needed. The aim is the reasoning: what fired, what you checked, what you concluded. That carries over to whichever product you meet later.",
+            body: "No. You work on exported log extracts and a sample alert queue in a spreadsheet, so no tool license is needed. The aim is the reasoning: what fired, what you checked, what you concluded. That carries over to whichever product you meet later.",
             time: "2 days ago",
           },
         ],

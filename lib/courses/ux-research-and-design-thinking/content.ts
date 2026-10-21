@@ -29,21 +29,21 @@ export const content: CourseContent = {
       question: "Which of these is the strongest evidence for a design decision?",
       platformPrompt: "Choose the correct option",
       explanation:
-        "Observed behaviour across several participants is stronger than opinion, prediction or what another product does.",
+        "Observed behavior across several participants is stronger than opinion, prediction or what another product does.",
       options: [
         { id: "a", label: "What one stakeholder believes users want", feedback: "A belief is a hypothesis to test, not evidence." },
-        { id: "b", label: "What participants say they would do in future", feedback: "People are poor at predicting their own behaviour." },
-        { id: "c", label: "What several participants were observed doing", correct: true, feedback: "Correct. Behaviour, seen more than once, is the firmest ground." },
+        { id: "b", label: "What participants say they would do in future", feedback: "People are poor at predicting their own behavior." },
+        { id: "c", label: "What several participants were observed doing", correct: true, feedback: "Correct. Behavior, seen more than once, is the firmest ground." },
         { id: "d", label: "What a competitor has launched", feedback: "A competitor's choice tells you about their users and constraints, not yours." },
       ],
     },
     {
       question: "A persona should be based on…",
       explanation:
-        "A persona summarises patterns found across research participants. Without that link to evidence it is a character the team invented.",
+        "A persona summarizes patterns found across research participants. Without that link to evidence it is a character the team invented.",
       options: [
         { id: "a", label: "The team's ideal customer", feedback: "That describes who the team hopes for, not who was found." },
-        { id: "b", label: "Demographic data alone", feedback: "Age and location say little about goals and behaviour." },
+        { id: "b", label: "Demographic data alone", feedback: "Age and location say little about goals and behavior." },
         { id: "c", label: "Patterns found in research with real users", correct: true, feedback: "Correct. Each trait should trace back to participants." },
         { id: "d", label: "A single memorable interview", feedback: "One person is a case, not a pattern." },
       ],
@@ -56,14 +56,14 @@ export const content: CourseContent = {
         {
           heading: "Start from what you need to learn",
           paragraphs: [
-            "Write the research question at the top of the page: the thing the team does not know and has to decide on. “How do people choose where to book a table for a group?” is a research question. “Would people use our group-booking feature?” is not: it asks for a prediction, and people are poor at predicting their own behaviour.",
+            "Write the research question at the top of the page: the thing the team does not know and has to decide on. “How do people choose where to book a table for a group?” is a research question. “Would people use our group-booking feature?” is not: it asks for a prediction, and people are poor at predicting their own behavior.",
             "Under it, list three or four topics you need to cover. Topics, not questions: how they do it today, what goes wrong, what they have tried, who else is involved.",
           ],
         },
         {
           heading: "Write questions that ask for stories",
           paragraphs: [
-            "For each topic, write one opening question about a specific past occasion: “Tell me about the last time you organised a dinner for more than four people.” Then note two or three follow-ups to use if the story stalls: what happened next, what was hard about that, how they decided.",
+            "For each topic, write one opening question about a specific past occasion: “Tell me about the last time you organized a dinner for more than four people.” Then note two or three follow-ups to use if the story stalls: what happened next, what was hard about that, how they decided.",
             "Check each question against three rules. It is open, so it cannot be answered with yes or no. It is neutral, so it does not suggest the answer. It asks one thing at a time.",
           ],
         },
@@ -99,7 +99,7 @@ export const content: CourseContent = {
         {
           heading: "What it is not",
           paragraphs: [
-            "It is not asking people what they want. People describe solutions they have seen before, and they are unreliable about their own future behaviour. Research asks what they did, and watches what they do.",
+            "It is not asking people what they want. People describe solutions they have seen before, and they are unreliable about their own future behavior. Research asks what they did, and watches what they do.",
             "It is not market research, which estimates how many people might buy and at what price. It is not a satisfaction survey, which tells you that people are unhappy and rarely why. And it is not validation: a study designed to confirm a decision already taken cannot surprise you, so it cannot teach you anything.",
           ],
         },
@@ -107,7 +107,7 @@ export const content: CourseContent = {
           heading: "Two questions that sort the methods",
           paragraphs: [
             "The first question is whether you need to know why or how many. Interviews and observation are qualitative: a handful of people, studied closely, explain reasons. Surveys and analytics are quantitative: many people, measured lightly, show how common something is.",
-            "The second is whether you are studying what people say or what they do. An interview records attitudes and memories. A usability test or a usage log records behaviour. Strong research plans combine both, because each covers the other's blind spot.",
+            "The second is whether you are studying what people say or what they do. An interview records attitudes and memories. A usability test or a usage log records behavior. Strong research plans combine both, because each covers the other's blind spot.",
           ],
         },
         {
@@ -123,7 +123,7 @@ export const content: CourseContent = {
       },
       takeaways: [
         "Start from the decision the research has to inform.",
-        "Ask about and observe past and present behaviour, not wishes and predictions.",
+        "Ask about and observe past and present behavior, not wishes and predictions.",
         "Qualitative methods explain why; quantitative methods show how many.",
         "A study that cannot change the team's mind is not research.",
       ],
@@ -135,14 +135,14 @@ export const content: CourseContent = {
           heading: "Start from patterns, not from a template",
           paragraphs: [
             "Most persona templates begin with a name, a photo and an age. Leave those until last. Begin with your interview notes and look for the ways participants differ in what they do: how often they do the task, how they prepare, which tools they use, what they do when it goes wrong.",
-            "Place each participant along those differences. People who sit together on several of them form a group, and each group is a candidate persona. In the case study, three of the five organisers plan weeks ahead and confirm everything twice. The other two decide on the day. That is two patterns of behaviour, and age has nothing to do with either.",
+            "Place each participant along those differences. People who sit together on several of them form a group, and each group is a candidate persona. In the case study, three of the five organizers plan weeks ahead and confirm everything twice. The other two decide on the day. That is two patterns of behavior, and age has nothing to do with either.",
           ],
         },
         {
           heading: "What goes on the page",
           paragraphs: [
-            "A useful persona holds four things: the goals the person is trying to reach, the behaviours you observed, the pain points with the situation in which each one occurs, and the context of use. Add one or two direct quotes that carry the tone.",
-            "Give the persona a name and a short description so that the team can refer to it. Keep demographic detail to what affects the design. A hobby, a pet or a favourite brand that nobody observed is decoration, and it invites the team to design for a stereotype.",
+            "A useful persona holds four things: the goals the person is trying to reach, the behaviors you observed, the pain points with the situation in which each one occurs, and the context of use. Add one or two direct quotes that carry the tone.",
+            "Give the persona a name and a short description so that the team can refer to it. Keep demographic detail to what affects the design. A hobby, a pet or a favorite brand that nobody observed is decoration, and it invites the team to design for a stereotype.",
           ],
         },
         {
@@ -164,8 +164,8 @@ export const content: CourseContent = {
         attribution: "Course notes, Module 1",
       },
       takeaways: [
-        "Group participants by behaviour and goals before you think about demographics.",
-        "Include goals, behaviours, pain points in context and a quote; leave out invented detail.",
+        "Group participants by behavior and goals before you think about demographics.",
+        "Include goals, behaviors, pain points in context and a quote; leave out invented detail.",
         "Link every trait to at least two participants, and mark the rest as hypotheses.",
         "Date the persona and revisit it when the evidence changes.",
       ],
@@ -177,20 +177,20 @@ export const content: CourseContent = {
           heading: "Prepare the notes",
           paragraphs: [
             "Write one observation per sticky note: a quote, an action or a fact, in the participant's words where you can. Add a code for the participant, such as P3, in the corner. One idea per note matters, because a note that holds two ideas cannot be placed in two groups.",
-            "Expect thirty to fifty notes per interview. Use one colour for all of them, or one colour per participant. Do not colour by topic: that sorts the wall before you have looked at it.",
+            "Expect thirty to fifty notes per interview. Use one color for all of them, or one color per participant. Do not color by topic: that sorts the wall before you have looked at it.",
           ],
         },
         {
           heading: "Group from the bottom up",
           paragraphs: [
-            "Put the notes on a wall in no order. Then, in silence, each person moves notes that seem related next to each other. Anyone may move any note. If a note keeps travelling between two groups, copy it and place it in both.",
+            "Put the notes on a wall in no order. Then, in silence, each person moves notes that seem related next to each other. Anyone may move any note. If a note keeps traveling between two groups, copy it and place it in both.",
             "Resist the obvious headings such as “booking”, “payment” and “communication”. Those describe the product, and they hide what you learned. Group by what the notes say about people: “does not trust the headcount until the day”, “pays first and chases friends later”.",
           ],
         },
         {
           heading: "Name the groups",
           paragraphs: [
-            "When movement slows, give each group a label that is a full sentence stating what the notes in it have in common. “Reminders” is a topic. “Organisers send reminders by hand because they fear seeming pushy” is a finding you can use.",
+            "When movement slows, give each group a label that is a full sentence stating what the notes in it have in common. “Reminders” is a topic. “Organizers send reminders by hand because they fear seeming pushy” is a finding you can use.",
             "Then look at the groups themselves. Some belong together under a larger theme. Others turn out to be one participant's story told in six notes: check the participant codes. A theme that rests on a single person is a question for the next round of research.",
           ],
         },
@@ -218,7 +218,7 @@ export const content: CourseContent = {
         {
           heading: "Choose one persona and one goal",
           paragraphs: [
-            "A journey map has a single subject and a single scenario, with a clear start and end. “The planner organises a birthday dinner for eight, from the first message to the moment the bill is split” is a scenario. “Using the app” is not.",
+            "A journey map has a single subject and a single scenario, with a clear start and end. “The planner organizes a birthday dinner for eight, from the first message to the moment the bill is split” is a scenario. “Using the app” is not.",
             "Draw the journey as it is today, including the parts that happen outside your product: the group chat, the phone call to the restaurant, the bank transfer. Most of what you can improve sits in those gaps.",
           ],
         },
@@ -232,14 +232,14 @@ export const content: CourseContent = {
         {
           heading: "Pain points and opportunities",
           paragraphs: [
-            "Mark a pain point wherever the feeling line drops, and write what causes it and what it costs the person. “Confirm: two guests have not replied, the restaurant needs a number by six, and the organiser guesses.” A pain point with a cause and a consequence can be prioritised. A vague one cannot.",
+            "Mark a pain point wherever the feeling line drops, and write what causes it and what it costs the person. “Confirm: two guests have not replied, the restaurant needs a number by six, and the organizer guesses.” A pain point with a cause and a consequence can be prioritized. A vague one cannot.",
             "In the last row, write an opportunity for each pain point as a question, not as a feature. You will turn these into How Might We questions later in this module.",
           ],
         },
         {
           heading: "Keep it honest",
           paragraphs: [
-            "Every cell should trace back to research. Where you had to guess, mark the cell as an assumption in a different colour. A map with visible gaps is more useful than a complete one that the team cannot trust, because the gaps tell you what to ask next.",
+            "Every cell should trace back to research. Where you had to guess, mark the cell as an assumption in a different color. A map with visible gaps is more useful than a complete one that the team cannot trust, because the gaps tell you what to ask next.",
           ],
         },
       ],
@@ -260,14 +260,14 @@ export const content: CourseContent = {
         {
           heading: "Why these three words",
           paragraphs: [
-            "“How” assumes that an answer exists. “Might” says that an idea may or may not work, which makes it safe to suggest one. “We” makes the question a shared one. The form is a small device for moving a team from analysing the problem to generating ideas.",
+            "“How” assumes that an answer exists. “Might” says that an idea may or may not work, which makes it safe to suggest one. “We” makes the question a shared one. The form is a small device for moving a team from analyzing the problem to generating ideas.",
           ],
         },
         {
           heading: "From a problem statement to several questions",
           paragraphs: [
-            "Take the statement from the previous video: an organiser needs to know who is coming before the booking deadline, because the restaurant holds the table only until then. One statement gives several questions, each looking at a different part of it.",
-            "How might we make replying easier for a guest than staying silent? How might we give the organiser a number they can trust a day earlier? How might we make an uncertain headcount acceptable to the restaurant? Each one will lead a group to different ideas. Write five to ten, then choose two or three to take into ideation.",
+            "Take the statement from the previous video: an organizer needs to know who is coming before the booking deadline, because the restaurant holds the table only until then. One statement gives several questions, each looking at a different part of it.",
+            "How might we make replying easier for a guest than staying silent? How might we give the organizer a number they can trust a day earlier? How might we make an uncertain headcount acceptable to the restaurant? Each one will lead a group to different ideas. Write five to ten, then choose two or three to take into ideation.",
           ],
         },
         {
@@ -343,14 +343,14 @@ export const content: CourseContent = {
         {
           heading: "Write the question first",
           paragraphs: [
-            "Before you draw anything, write down what you need to learn and what result would change your mind. “Can a first-time organiser send an invitation without help?” is a question a prototype can answer. “Do people like it?” is not, because almost any reaction can be read as a yes.",
+            "Before you draw anything, write down what you need to learn and what result would change your mind. “Can a first-time organizer send an invitation without help?” is a question a prototype can answer. “Do people like it?” is not, because almost any reaction can be read as a yes.",
             "The question decides what to build. If it is about whether people understand a concept, a storyboard may be enough. If it is about finding a function, you need the navigation and little else. Everything outside the question can stay rough or be left out.",
           ],
         },
         {
           heading: "The cost of polish",
           paragraphs: [
-            "A polished prototype changes the feedback you get. People comment on colours and wording, or they hold back because the work looks finished and criticism feels rude. A sketch invites them to redraw it.",
+            "A polished prototype changes the feedback you get. People comment on colors and wording, or they hold back because the work looks finished and criticism feels rude. A sketch invites them to redraw it.",
             "Polish also changes you. After three days on a prototype you will defend it. After an hour you will throw it away as soon as it fails, which is the right response. Keep the effort in proportion to how sure you are: the less you know, the rougher the prototype should be.",
           ],
         },
@@ -481,7 +481,7 @@ export const content: CourseContent = {
         reviewTopicTitle: "Observing users in context",
         options: [
           { id: "a", label: "So that the notes are shorter", feedback: "Two columns are usually longer. The gain is that others can check the facts." },
-          { id: "b", label: "Because interpretations are never useful", feedback: "They are useful, as long as they are labelled as interpretations." },
+          { id: "b", label: "Because interpretations are never useful", feedback: "They are useful, as long as they are labeled as interpretations." },
           { id: "c", label: "So that the team can test the interpretation against the facts", correct: true, feedback: "Correct. The observation stays fixed while the reading of it is discussed." },
           { id: "d", label: "Because participants ask to read the notes", feedback: "That is rare, and it is not the reason." },
         ],
@@ -490,13 +490,13 @@ export const content: CourseContent = {
         question: "Which statement belongs on a persona that comes from evidence?",
         platformPrompt: "Choose the correct option",
         explanation:
-          "A persona trait should describe a goal, a behaviour or a pain point seen in several participants. Invented detail and bare demographics do not help a design decision.",
+          "A persona trait should describe a goal, a behavior or a pain point seen in several participants. Invented detail and bare demographics do not help a design decision.",
         reviewTopicId: "uxr-m1-t8",
         reviewTopicTitle: "Personas that come from evidence",
         options: [
           { id: "a", label: "Loves yoga and owns a golden retriever", feedback: "Unless the research found it and it affects the design, it is decoration." },
           { id: "b", label: "Is 34 years old and lives in a large city", feedback: "Demographics alone say little about what the person does or needs." },
-          { id: "c", label: "Confirms the headcount twice before booking, as three of five organisers did", correct: true, feedback: "Correct. It is a behaviour, and it is tied to the participants who showed it." },
+          { id: "c", label: "Confirms the headcount twice before booking, as three of five organizers did", correct: true, feedback: "Correct. It is a behavior, and it is tied to the participants who showed it." },
           { id: "d", label: "Would pay for a premium version", feedback: "That is a prediction, not something that was observed." },
         ],
       },
@@ -510,8 +510,8 @@ export const content: CourseContent = {
         reviewTopicId: "uxr-m2-t1",
         reviewTopicTitle: "From findings to insights",
         options: [
-          { id: "a", label: "Four of five organisers counted replies by hand.", feedback: "That is a finding: it reports what was seen." },
-          { id: "b", label: "Organisers keep the headcount in their heads because they do not trust any tool to hold the final number.", correct: true, feedback: "Correct. It gives the behaviour and the reason behind it." },
+          { id: "a", label: "Four of five organizers counted replies by hand.", feedback: "That is a finding: it reports what was seen." },
+          { id: "b", label: "Organizers keep the headcount in their heads because they do not trust any tool to hold the final number.", correct: true, feedback: "Correct. It gives the behavior and the reason behind it." },
           { id: "c", label: "Users need a headcount widget on the home screen.", feedback: "That is a solution dressed as an insight." },
           { id: "d", label: "One participant said the app was confusing.", feedback: "One comment from one person is a lead to follow up." },
         ],
@@ -526,8 +526,8 @@ export const content: CourseContent = {
         options: [
           { id: "a", label: "Reminders", feedback: "A topic. It does not say what you learned about reminders." },
           { id: "b", label: "Notifications and messaging", feedback: "Still a topic, and one that mirrors the product." },
-          { id: "c", label: "Organisers send reminders by hand because they fear seeming pushy", correct: true, feedback: "Correct. A full sentence that states the pattern and its reason." },
-          { id: "d", label: "Miscellaneous", feedback: "A group with this label has not been analysed yet." },
+          { id: "c", label: "Organizers send reminders by hand because they fear seeming pushy", correct: true, feedback: "Correct. A full sentence that states the pattern and its reason." },
+          { id: "d", label: "Miscellaneous", feedback: "A group with this label has not been analyzed yet." },
         ],
       },
       {
@@ -540,7 +540,7 @@ export const content: CourseContent = {
         options: [
           { id: "a", label: "Users need a reminder button on the invitation screen.", feedback: "It names a feature, so it is a solution." },
           { id: "b", label: "We should make group dining better for everyone.", feedback: "Too broad: no idea could be ruled out." },
-          { id: "c", label: "An organiser of a group meal needs to know who is coming before the booking deadline, because the table is held only until then.", correct: true, feedback: "Correct. A user, a need and a reason, with no solution in it." },
+          { id: "c", label: "An organizer of a group meal needs to know who is coming before the booking deadline, because the table is held only until then.", correct: true, feedback: "Correct. A user, a need and a reason, with no solution in it." },
           { id: "d", label: "Our booking conversion is lower than last quarter.", feedback: "That is a business metric, not a user's problem." },
         ],
       },
@@ -566,7 +566,7 @@ export const content: CourseContent = {
       brief:
         "Using the five interview transcripts of the case study (or your own interviews, if you have run at least three), draft one persona. Show the evidence behind it: the patterns you found across participants, and the quotes or observations that support each one.",
       deliverable:
-        "Submit a PDF or DOCX of 1–2 pages: the persona (goals, behaviours, pain points, context) and an evidence table that links each trait to at least two participants.",
+        "Submit a PDF or DOCX of 1–2 pages: the persona (goals, behaviors, pain points, context) and an evidence table that links each trait to at least two participants.",
       dueLabel: "Due 24 Oct 2026",
       requiredReviews: 1,
       acceptedTypes: [".pdf", ".docx"],
@@ -585,11 +585,11 @@ export const content: CourseContent = {
         },
         {
           id: "c2",
-          label: "Task 2 · Describe goals and behaviours",
+          label: "Task 2 · Describe goals and behaviors",
           maxPoints: 5,
           options: [
-            { points: 5, label: "Goals and behaviours are specific and come from the interviews" },
-            { points: 3, label: "Goals are clear; behaviours are generic" },
+            { points: 5, label: "Goals and behaviors are specific and come from the interviews" },
+            { points: 3, label: "Goals are clear; behaviors are generic" },
             { points: 0, label: "Missing or invented" },
           ],
         },
@@ -653,7 +653,7 @@ export const content: CourseContent = {
           options: [
             { points: 6, label: "Describes what each tester did and said, kept apart from interpretation" },
             { points: 4, label: "Reports results in general terms, without the individual sessions" },
-            { points: 2, label: "Reports opinions about the prototype, not behaviour" },
+            { points: 2, label: "Reports opinions about the prototype, not behavior" },
             { points: 0, label: "Not attempted" },
           ],
         },

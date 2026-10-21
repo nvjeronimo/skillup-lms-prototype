@@ -125,7 +125,7 @@ export const content: CourseContent = {
           heading: "What you are building",
           paragraphs: [
             "You will design an AI-first marketing system for one business. A system is more than a campaign. A campaign has a start and an end; a system is what the business would keep running: who it is trying to reach and why, which channels carry the message, what is published, how a new contact becomes a repeat customer, and how anyone would know whether it is working.",
-            "AI-first means you design the system around what AI tools do well, such as drafting, summarising, sorting and suggesting, and that you say who checks each result. For every part, the project should answer three questions: what does a tool do here, what does a person check, and what is never handed over?",
+            "AI-first means you design the system around what AI tools do well, such as drafting, summarizing, sorting and suggesting, and that you say who checks each result. For every part, the project should answer three questions: what does a tool do here, what does a person check, and what is never handed over?",
             "Choose a business you can describe from the inside: your own, your employer's with their agreement, or one of the three scenarios in Handouts. A small, specific business makes a better project than a famous one you know only from outside.",
           ],
         },
@@ -163,7 +163,7 @@ export const content: CourseContent = {
         {
           heading: "Strategy and channel plan",
           paragraphs: [
-            "Full marks go to a plan with one objective, a specific audience, and a reason for every channel chosen and every channel left out. The objective is a sentence with a person and an action: “Parents of children aged four to eight who live within five kilometres book a trial swimming lesson: 60 bookings by the end of June.”",
+            "Full marks go to a plan with one objective, a specific audience, and a reason for every channel chosen and every channel left out. The objective is a sentence with a person and an action: “Parents of children aged four to eight who live within five kilometers book a trial swimming lesson: 60 bookings by the end of June.”",
             "A weaker version reads: “Increase awareness and grow our social following.” It names no person and no action, and nobody could say in June whether it had been met. A list of channels with no reasons scores in the middle. A list of tactics with no objective behind it scores near the bottom.",
             "Reasons can be brief. “Search ads: parents look for lessons by town name, and intent is high.” “No short-video platform this quarter: nobody on the team can film weekly.” The second line earns as much credit as the first.",
           ],
@@ -171,7 +171,7 @@ export const content: CourseContent = {
         {
           heading: "Content, campaign and lifecycle assets",
           paragraphs: [
-            "The rubric asks for one finished asset per channel, on voice, each traceable to the objective. Finished means it could be published as it stands: a real headline, real copy, a real call to action. An outline labelled “post about lessons” is not an asset.",
+            "The rubric asks for one finished asset per channel, on voice, each traceable to the objective. Finished means it could be published as it stands: a real headline, real copy, a real call to action. An outline labeled “post about lessons” is not an asset.",
             "The test a grader applies is whether the asset could belong to another brand. “Summer is here! Book now and make a splash” could be any swimming school anywhere. “Mia put her face in the water in week two. Trial lessons at the Elm Street pool, Saturdays at nine” could only be this one.",
           ],
         },
@@ -186,7 +186,7 @@ export const content: CourseContent = {
           heading: "AI workflow log and responsible use",
           paragraphs: [
             "Each AI-assisted step is one row: the step, the tool, the prompt or a summary of it, what was checked, and who checked it. “Search ad headlines: drafted with a writing assistant from brief B1; character counts and the price checked against the booking page by me; two headlines removed for unsupported claims.”",
-            "“Used AI to help with the ads” records nothing a reader could repeat or trust, and scores accordingly. The log is also where you show judgement: the three things you would never hand over in this business, and why.",
+            "“Used AI to help with the ads” records nothing a reader could repeat or trust, and scores accordingly. The log is also where you show judgment: the three things you would never hand over in this business, and why.",
             "Across all four parts the pattern is the same. The rubric rewards a decision you can explain over a quantity of material.",
           ],
         },
@@ -255,7 +255,7 @@ export const content: CourseContent = {
         reviewTopicTitle: "Writing a measurement plan and an AI workflow log",
         options: [
           { id: "a", label: "A list of twenty metrics the tools can report", feedback: "Nothing says which matter, or what you would do about them." },
-          { id: "b", label: "“We will track performance and optimise.”", feedback: "No metric, no source, no decision." },
+          { id: "b", label: "“We will track performance and optimize.”", feedback: "No metric, no source, no decision." },
           {
             id: "c",
             label: "One metric per objective, where it is read, and the result that would make you change the plan",

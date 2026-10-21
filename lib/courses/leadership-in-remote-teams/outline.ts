@@ -204,7 +204,7 @@ export const outline: Course = {
                 { id: "lrt-m3-t4-ln5", ts: "1:02", text: "Over a month, cover four things: how the work is going, what is in their way, how they are developing, and how they are doing as a person." },
                 { id: "lrt-m3-t4-ln6", ts: "1:17", text: "Ask for feedback on yourself, and ask specifically: “What is one thing I could do differently that would make your work easier?” A general invitation gets a polite “nothing”." },
                 { id: "lrt-m3-t4-ln7", ts: "1:34", text: "Hold it weekly or every two weeks, thirty minutes, with the camera on if they are comfortable. Do not cancel it. Move it if you must." },
-                { id: "lrt-m3-t4-ln8", ts: "1:48", text: "A cancelled one-to-one tells a remote team member that everything else came first. For some of them it is the only conversation they have with you all week." },
+                { id: "lrt-m3-t4-ln8", ts: "1:48", text: "A canceled one-to-one tells a remote team member that everything else came first. For some of them it is the only conversation they have with you all week." },
               ],
             },
             { id: "lrt-m3-t5", type: "Reading", title: "Belonging and informal contact at a distance", duration: "10 min read approx.", completed: false },

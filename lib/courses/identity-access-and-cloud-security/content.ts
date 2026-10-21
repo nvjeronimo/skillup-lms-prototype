@@ -40,7 +40,7 @@ export const content: CourseContent = {
           feedback: "Correct. Whatever is no longer needed is removed.",
         },
         { id: "c", label: "To add access before people ask for it", feedback: "That would work against least privilege." },
-        { id: "d", label: "To count the licences in use", feedback: "A licence count may fall out of the review, but it is not the purpose." },
+        { id: "d", label: "To count the licenses in use", feedback: "A license count may fall out of the review, but it is not the purpose." },
       ],
     },
     {
@@ -74,7 +74,7 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "Rolling it out in a small organisation",
+          heading: "Rolling it out in a small organization",
           paragraphs: [
             "Start with the accounts that can do the most damage: the administrators of the email system, the identity provider and the finance tools. Give each of them two keys, one to carry and one stored safely, so that a lost key does not lock them out.",
             "Then plan recovery before anyone needs it. A reset process that hands a new sign-in method to whoever phones the help desk undoes the whole design. Decide how identity is checked before a reset, and write it down.",
@@ -93,7 +93,7 @@ export const content: CourseContent = {
       ],
     },
     "sec3-m1-t2": {
-      lede: "Three words describe what happens between a person arriving at a system and that person opening a file: identification, authentication and authorisation. They are separate steps, and a failure in each one looks different.",
+      lede: "Three words describe what happens between a person arriving at a system and that person opening a file: identification, authentication and authorization. They are separate steps, and a failure in each one looks different.",
       sections: [
         {
           heading: "Identification: a claim",
@@ -110,10 +110,10 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "Authorisation: what this identity may do",
+          heading: "Authorization: what this identity may do",
           paragraphs: [
-            "Authorisation is the decision about what an authenticated identity is allowed to do. It is checked on each request: may this account read this folder, approve this payment, delete this user?",
-            "Strong authentication does not repair weak authorisation. An intern at Quillhaven Publishing who signs in with a security key and can then open every author contract in the company has been authenticated very well and authorised very badly.",
+            "Authorization is the decision about what an authenticated identity is allowed to do. It is checked on each request: may this account read this folder, approve this payment, delete this user?",
+            "Strong authentication does not repair weak authorization. An intern at Quillhaven Publishing who signs in with a security key and can then open every author contract in the company has been authenticated very well and authorized very badly.",
           ],
         },
         {
@@ -125,18 +125,18 @@ export const content: CourseContent = {
         },
       ],
       pullQuote: {
-        text: "Authentication tells you who is at the door. Authorisation decides which rooms they may enter.",
+        text: "Authentication tells you who is at the door. Authorization decides which rooms they may enter.",
         attribution: "Course notes, Module 1",
       },
       takeaways: [
-        "Identification is a claim, authentication proves it, authorisation decides what it may do.",
+        "Identification is a claim, authentication proves it, authorization decides what it may do.",
         "One identifier per person: shared accounts make the audit record meaningless.",
         "A session token is as valuable as the password while it lasts.",
         "Strong sign-in does not make up for access that is too wide.",
       ],
     },
     "sec3-m1-t7": {
-      lede: "A directory is the organisation's list of who exists: every person, group, device and service that can sign in. If the list is accurate, access can be managed. If it is not, nothing built on top of it can be trusted.",
+      lede: "A directory is the organization's list of who exists: every person, group, device and service that can sign in. If the list is accurate, access can be managed. If it is not, nothing built on top of it can be trusted.",
       sections: [
         {
           heading: "What a directory holds",
@@ -160,7 +160,7 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "Good practice for a small organisation",
+          heading: "Good practice for a small organization",
           paragraphs: [
             "Give every person exactly one everyday account, named in a consistent way. Give access through groups, never to individuals directly, so that changing someone's role means changing their group membership.",
             "Disable an account on the person's last day and delete it after a set period, once files and mail have been handed over. Record who asked for each account and who approved it. These habits take minutes, and they are what an auditor or an insurer will ask to see.",
@@ -179,7 +179,7 @@ export const content: CourseContent = {
       ],
     },
     "sec3-m2-t2": {
-      lede: "An access control model is the method an organisation uses to decide who can do what. Two models cover most of what you will meet: access by role, and access by attributes. Most organisations end up using both.",
+      lede: "An access control model is the method an organization uses to decide who can do what. Two models cover most of what you will meet: access by role, and access by attributes. Most organizations end up using both.",
       sections: [
         {
           heading: "Role-based access control",
@@ -203,7 +203,7 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "Choosing for a small organisation",
+          heading: "Choosing for a small organization",
           paragraphs: [
             "Start with a handful of roles drawn from real jobs, between five and eight for a company the size of Quillhaven Publishing. Write down for each role what it can reach and why.",
             "Then add a few attribute conditions where they earn their place: an end date for contractors, a managed device for sensitive systems, multi-factor authentication for anything administrative. Whatever the model, apply it through groups in the directory, so that there is one place to look and one place to change.",
@@ -222,12 +222,12 @@ export const content: CourseContent = {
       ],
     },
     "sec3-m3-t2": {
-      lede: "When an organisation moves to the cloud, security does not move with it as a whole. The provider takes over some duties and the customer keeps others. The shared responsibility model is the name for where that line falls, and most cloud incidents happen on the customer's side of it.",
+      lede: "When an organization moves to the cloud, security does not move with it as a whole. The provider takes over some duties and the customer keeps others. The shared responsibility model is the name for where that line falls, and most cloud incidents happen on the customer's side of it.",
       sections: [
         {
           heading: "What the provider secures",
           paragraphs: [
-            "The provider is responsible for the security of the cloud: the buildings, the hardware, the network between its data centres and the software that keeps one customer apart from another. You cannot inspect these yourself, so you rely on the provider's independent audit reports and certifications.",
+            "The provider is responsible for the security of the cloud: the buildings, the hardware, the network between its data centers and the software that keeps one customer apart from another. You cannot inspect these yourself, so you rely on the provider's independent audit reports and certifications.",
             "How much more the provider does depends on the service model. In IaaS it stops at the virtual machine. In PaaS it also runs the operating system and the runtime. In SaaS it runs the whole application.",
           ],
         },
@@ -378,11 +378,11 @@ export const content: CourseContent = {
         explanation:
           "An email address is a claim about who you are. It is not secret and proves nothing until the user supplies evidence, which is authentication.",
         reviewTopicId: "sec3-m1-t2",
-        reviewTopicTitle: "Identification, authentication and authorisation",
+        reviewTopicTitle: "Identification, authentication and authorization",
         options: [
           { id: "a", label: "Identification", correct: true, feedback: "Correct. The user has claimed an identity and not yet proved it." },
           { id: "b", label: "Authentication", feedback: "Authentication is the proof, such as a password or a security key." },
-          { id: "c", label: "Authorisation", feedback: "Authorisation is decided after the identity is proven." },
+          { id: "c", label: "Authorization", feedback: "Authorization is decided after the identity is proven." },
           { id: "d", label: "Accounting", feedback: "Accounting is the record of what an identity did." },
         ],
       },
@@ -471,7 +471,7 @@ export const content: CourseContent = {
             correct: true,
             feedback: "Correct. Conditions carry the exceptions, and roles go back to describing jobs.",
           },
-          { id: "c", label: "Federation, eased by removing single sign-on", feedback: "Federation is trust between organisations and is unrelated here." },
+          { id: "c", label: "Federation, eased by removing single sign-on", feedback: "Federation is trust between organizations and is unrelated here." },
           { id: "d", label: "Shared responsibility, eased by changing provider", feedback: "That model describes cloud duties, not roles." },
         ],
       },
@@ -482,7 +482,7 @@ export const content: CourseContent = {
         reviewTopicId: "sec3-m2-t3",
         reviewTopicTitle: "Privileged accounts and how to contain them",
         options: [
-          { id: "a", label: "Because licences are cheaper that way", feedback: "Cost is not the reason, and a second account may cost more." },
+          { id: "a", label: "Because licenses are cheaper that way", feedback: "Cost is not the reason, and a second account may cost more." },
           {
             id: "b",
             label: "So that a phishing message or a malicious page reaches an account with no administrative rights",
@@ -521,7 +521,7 @@ export const content: CourseContent = {
           "In that model the provider's duties stop below the operating system.",
         ],
         explanation:
-          "In IaaS, the provider runs the hardware and the virtualisation layer. The operating system, and everything installed on it, belongs to the customer.",
+          "In IaaS, the provider runs the hardware and the virtualization layer. The operating system, and everything installed on it, belongs to the customer.",
         reviewTopicId: "sec3-m3-t2",
         reviewTopicTitle: "The shared responsibility model",
         options: [

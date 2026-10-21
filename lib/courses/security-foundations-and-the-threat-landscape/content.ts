@@ -49,7 +49,7 @@ export const content: CourseContent = {
       ],
     },
     {
-      question: "Why does defence in depth use several layers of control?",
+      question: "Why does defense in depth use several layers of control?",
       explanation:
         "Every control fails sometimes. Layers are chosen so that a different kind of control stands behind each one.",
       options: [
@@ -79,7 +79,7 @@ export const content: CourseContent = {
         {
           heading: "Rate likelihood and impact",
           paragraphs: [
-            "Likelihood is how probable the event is over a set period, usually a year. Impact is the harm if it happens: money, downtime, legal exposure, harm to people. A small organisation does well with a three-point scale for each (low, medium, high) and one line of text saying what each level means for it.",
+            "Likelihood is how probable the event is over a set period, usually a year. Impact is the harm if it happens: money, downtime, legal exposure, harm to people. A small organization does well with a three-point scale for each (low, medium, high) and one line of text saying what each level means for it.",
             "Combine the two ratings to rank the list. The result is not a measurement. It is a way to agree which five risks get attention first. Write the reasoning next to the rating, so that the next reviewer can disagree with it.",
           ],
         },
@@ -87,7 +87,7 @@ export const content: CourseContent = {
           heading: "Decide the treatment and the owner",
           paragraphs: [
             "Each risk gets one of four treatments. Reduce it with a control. Avoid it by stopping the activity. Transfer part of it, for example through insurance or a supplier contract. Or accept it, in writing, when treatment would cost more than the harm.",
-            "Every row needs a named owner and a review date. A register without owners is only a list, and a register that is never reviewed describes last year's organisation.",
+            "Every row needs a named owner and a review date. A register without owners is only a list, and a register that is never reviewed describes last year's organization.",
           ],
         },
       ],
@@ -113,7 +113,7 @@ export const content: CourseContent = {
           ],
         },
         {
-          heading: "Integrity: it is correct, and changes are authorised",
+          heading: "Integrity: it is correct, and changes are authorized",
           paragraphs: [
             "Integrity means that information is accurate and has been changed only by people and processes allowed to change it. A recipe database in which an allergen flag has been cleared by mistake is an integrity failure, and nobody has to have attacked anything for it to happen.",
             "The controls here limit who may write and make changes visible: edit permissions, approval steps, version history, checksums that show whether a file has changed, and logs that record who changed what.",
@@ -146,12 +146,12 @@ export const content: CourseContent = {
       ],
     },
     "sec1-m1-t7": {
-      lede: "No control works every time. Two design principles accept that fact and plan for it: defence in depth puts a second control behind the first, and least privilege limits what is lost when both fail.",
+      lede: "No control works every time. Two design principles accept that fact and plan for it: defense in depth puts a second control behind the first, and least privilege limits what is lost when both fail.",
       sections: [
         {
           heading: "Layers that fail differently",
           paragraphs: [
-            "Defence in depth means that an asset is protected by several controls, so that one failure does not expose it. The layers are usually described from the outside in: the people, the network, the device, the application, the account and the data itself.",
+            "Defense in depth means that an asset is protected by several controls, so that one failure does not expose it. The layers are usually described from the outside in: the people, the network, the device, the application, the account and the data itself.",
             "The layers must be of different kinds. Two spam filters from two vendors fail in much the same way. A spam filter, a member of staff who knows how to report a suspicious message, and a sign-in that needs a second factor fail for three unrelated reasons, and it is unlikely that all three fail on the same day.",
           ],
         },
@@ -194,8 +194,8 @@ export const content: CourseContent = {
         {
           heading: "Before entry: looking and getting in",
           paragraphs: [
-            "Most intrusions begin with reconnaissance. The attacker learns what the organisation exposes: its website, its staff names and email format, the remote access services visible from the internet. Much of this is automated and aimed at thousands of organisations at once. The defence is to know your own exposure first: keep a list of what faces the internet and remove what does not need to.",
-            "Initial access is the first foothold. For small organisations three routes account for most cases: a stolen or guessed password, a phishing message, and an internet-facing system that has not been patched. Multi-factor authentication, staff who report suspicious messages and prompt patching each close one of these doors.",
+            "Most intrusions begin with reconnaissance. The attacker learns what the organization exposes: its website, its staff names and email format, the remote access services visible from the internet. Much of this is automated and aimed at thousands of organizations at once. The defense is to know your own exposure first: keep a list of what faces the internet and remove what does not need to.",
+            "Initial access is the first foothold. For small organizations three routes account for most cases: a stolen or guessed password, a phishing message, and an internet-facing system that has not been patched. Multi-factor authentication, staff who report suspicious messages and prompt patching each close one of these doors.",
           ],
         },
         {
@@ -216,7 +216,7 @@ export const content: CourseContent = {
           heading: "Why defenders study the sequence",
           paragraphs: [
             "The attacker has to succeed at every stage. The defender has to break the chain only once. Mapping your controls to the stages shows where you have several and where you have none.",
-            "Many small organisations find the same picture: plenty at the entrance, and almost nothing that would notice an intruder who is already inside. That gap is usually cheaper to close than it looks, and you will look for it when you map threats to the assets of Fernhill Bakery.",
+            "Many small organizations find the same picture: plenty at the entrance, and almost nothing that would notice an intruder who is already inside. That gap is usually cheaper to close than it looks, and you will look for it when you map threats to the assets of Fernhill Bakery.",
           ],
         },
       ],
@@ -259,7 +259,7 @@ export const content: CourseContent = {
           heading: "What to do with a suspicious message",
           paragraphs: [
             "Do not use anything inside the message to check it. Do not reply, do not call the number in the signature, do not follow the link “to verify”. Reach the sender by a route you already have: the supplier's number in your records, or the website you type in yourself.",
-            "Then report it in the way your organisation asks, even if you are not sure, and even if you have already clicked. A report made in the first few minutes lets the message be removed from other mailboxes, and lets a password be changed before it is used.",
+            "Then report it in the way your organization asks, even if you are not sure, and even if you have already clicked. A report made in the first few minutes lets the message be removed from other mailboxes, and lets a password be changed before it is used.",
           ],
         },
       ],
@@ -302,7 +302,7 @@ export const content: CourseContent = {
           heading: "Security keys and passkeys",
           paragraphs: [
             "A hardware security key, or a passkey held on a phone or a laptop, proves possession with cryptography and checks the address of the site before it answers. A look-alike page receives nothing it can reuse. These are the methods described as phishing-resistant.",
-            "They cost more to introduce: keys must be bought, spares issued and a recovery process agreed. A sensible order for a small organisation is to switch on some form of multi-factor authentication for every account this month, then move the accounts with the most power to phishing-resistant methods: administrators, finance and the owner.",
+            "They cost more to introduce: keys must be bought, spares issued and a recovery process agreed. A sensible order for a small organization is to switch on some form of multi-factor authentication for every account this month, then move the accounts with the most power to phishing-resistant methods: administrators, finance and the owner.",
           ],
         },
       ],
@@ -328,7 +328,7 @@ export const content: CourseContent = {
           "Ask whether the data can still be trusted to be correct.",
         ],
         explanation:
-          "Integrity means that data is accurate and has only been changed in authorised ways. No attacker is needed for it to be lost: a faulty migration is enough.",
+          "Integrity means that data is accurate and has only been changed in authorized ways. No attacker is needed for it to be lost: a faulty migration is enough.",
         reviewTopicId: "sec1-m1-t2",
         reviewTopicTitle: "Confidentiality, integrity and availability",
         options: [
@@ -410,9 +410,9 @@ export const content: CourseContent = {
         explanation:
           "Least privilege gives an account only what its task needs, for as long as the task lasts. Copying a senior person's permissions hands over access to payroll, suppliers and settings that taking orders never requires.",
         reviewTopicId: "sec1-m1-t7",
-        reviewTopicTitle: "Defence in depth and least privilege",
+        reviewTopicTitle: "Defense in depth and least privilege",
         options: [
-          { id: "a", label: "Defence in depth", feedback: "Defence in depth is about layering controls. The problem here is the size of one account's access." },
+          { id: "a", label: "Defense in depth", feedback: "Defense in depth is about layering controls. The problem here is the size of one account's access." },
           { id: "b", label: "Least privilege", correct: true, feedback: "Correct. The account can reach far more than the task needs." },
           { id: "c", label: "Availability", feedback: "The assistant can work. The access is too wide, not too narrow." },
           { id: "d", label: "Risk transfer", feedback: "Transfer is a way to treat a risk, for example through insurance." },
@@ -491,7 +491,7 @@ export const content: CourseContent = {
       {
         question: "Which control most limits the harm once ransomware has already encrypted a file server?",
         explanation:
-          "After encryption, prevention has failed. What decides the outcome is whether clean copies exist that the ransomware could not reach, and whether anyone has practised restoring them.",
+          "After encryption, prevention has failed. What decides the outcome is whether clean copies exist that the ransomware could not reach, and whether anyone has practiced restoring them.",
         reviewTopicId: "sec1-m2-t2",
         reviewTopicTitle: "How an intrusion unfolds, stage by stage",
         options: [
@@ -522,7 +522,7 @@ export const content: CourseContent = {
         options: [
           { id: "a", label: "Authority and urgency", correct: true, feedback: "Correct. A senior name and a short deadline, together." },
           { id: "b", label: "Curiosity and reward", feedback: "Nothing is offered to the reader." },
-          { id: "c", label: "Familiarity and humour", feedback: "The message relies on rank and time pressure." },
+          { id: "c", label: "Familiarity and humor", feedback: "The message relies on rank and time pressure." },
           { id: "d", label: "None: it is an ordinary request", feedback: "A payment request that forbids verification is never ordinary." },
         ],
       },
@@ -550,7 +550,7 @@ export const content: CourseContent = {
         explanation:
           "Layout, grammar and logos are easy to copy. Where a link really leads is much harder to disguise, and a sign-in link that goes to a different site has no innocent explanation.",
         reviewTopicId: "sec1-m3-t2",
-        reviewTopicTitle: "Recognising phishing: seven signals",
+        reviewTopicTitle: "Recognizing phishing: seven signals",
         options: [
           { id: "a", label: "It contains a spelling mistake", feedback: "Genuine messages contain mistakes, and many false ones contain none." },
           {
@@ -564,11 +564,11 @@ export const content: CourseContent = {
         ],
       },
       {
-        question: "A colleague realises that five minutes ago they entered their password on a page that was not the real sign-in. What should they do first?",
+        question: "A colleague realizes that five minutes ago they entered their password on a page that was not the real sign-in. What should they do first?",
         explanation:
           "Speed matters more than certainty. An early report lets the password be changed and the sessions ended before the account is used, and lets the same message be removed from other mailboxes.",
         reviewTopicId: "sec1-m3-t2",
-        reviewTopicTitle: "Recognising phishing: seven signals",
+        reviewTopicTitle: "Recognizing phishing: seven signals",
         options: [
           { id: "a", label: "Wait and see whether anything unusual happens", feedback: "Waiting gives the criminal the time they need." },
           { id: "b", label: "Delete the email so that nobody finds out", feedback: "The message is evidence, and others may have received it." },

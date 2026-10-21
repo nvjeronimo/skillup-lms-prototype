@@ -50,7 +50,7 @@ export function TrainingPlans() {
       <h1 className="tb-h1">Plans</h1>
 
       {all.length === 0 ? (
-        <p className="tb-body tb-c-ink2 mt-6">No plans yet. When you enrol in a course, its plan appears here.</p>
+        <p className="tb-body tb-c-ink2 mt-6">No plans yet. When you enroll in a course, its plan appears here.</p>
       ) : grouped ? (
         groups.map((g) => (
           <section key={g.key} aria-labelledby={`${g.key}-h`} className="mt-10">

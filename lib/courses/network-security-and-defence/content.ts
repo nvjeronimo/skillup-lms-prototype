@@ -13,7 +13,7 @@ import { activities } from "./activities";
 export const content: CourseContent = {
   byline: {
     author: "Dr. Amara Okafor",
-    role: "Lead instructor · Network Security and Defence",
+    role: "Lead instructor · Network Security and Defense",
     updated: "September 2026",
   },
   quiz: [
@@ -121,7 +121,7 @@ export const content: CourseContent = {
           heading: "What a defender takes from this",
           paragraphs: [
             "Keep the DHCP logs, and keep them for long enough: weeks, not hours. Give servers, printers and network devices reserved addresses, so that they are always found at the same place and stand out if they move.",
-            "Then read the tables from time to time. A device name nobody recognises, a second DHCP server answering on the network, or one MAC address claiming the address of the gateway are all worth a question on the same day.",
+            "Then read the tables from time to time. A device name nobody recognizes, a second DHCP server answering on the network, or one MAC address claiming the address of the gateway are all worth a question on the same day.",
           ],
         },
       ],
@@ -193,7 +193,7 @@ export const content: CourseContent = {
           heading: "Order: first match wins",
           paragraphs: [
             "The firewall reads from the top and stops at the first rule that matches. Put specific rules above general ones. If rule 3 allows the whole staff zone to reach the server zone on any service, a rule 9 that denies staff access to the database port never runs: it is shadowed.",
-            "Review the rule base on a schedule. Look for rules with any as the source, destination or service, rules that have matched nothing for months, rules with no owner or reason in their comment, and temporary rules that outlived the work they were for. You practise exactly this in the lab that follows.",
+            "Review the rule base on a schedule. Look for rules with any as the source, destination or service, rules that have matched nothing for months, rules with no owner or reason in their comment, and temporary rules that outlived the work they were for. You practice exactly this in the lab that follows.",
           ],
         },
       ],
