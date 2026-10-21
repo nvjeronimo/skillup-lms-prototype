@@ -55,13 +55,8 @@ export function PodcastView({ topicId }: { topicId: string }) {
 
       {/* Audio surface — a waveform stands in for the video frame. */}
       <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-        <div
-          className="flex h-24 items-end gap-[3px] overflow-hidden rounded-control px-4 py-3"
-          style={{
-            background: "linear-gradient(135deg, var(--color-bg-primary-soft), var(--color-bg-subtle))",
-          }}
-          aria-hidden
-        >
+        {/* A flat brand tint (no gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
+        <div className="flex h-24 items-end gap-[3px] overflow-hidden rounded-control bg-sko-bg-primary-soft px-4 py-3" aria-hidden>
           {Array.from({ length: 64 }).map((_, i) => {
             // Deterministic pseudo-waveform so it never shifts between renders.
             const h = 20 + ((i * 37) % 60);
