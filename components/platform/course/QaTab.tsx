@@ -11,6 +11,7 @@ import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { CONTENT_PENDING } from "@/lib/platform/program";
 import { useLmsStore } from "@/lib/store";
 import { courseDetailHref, type CourseDetail, type QaMessage, type QaThread } from "@/lib/platform/course-detail";
+import { staggerStyle } from "@/lib/motion/stagger";
 import { cn } from "@/lib/utils";
 
 type QaFilter = CourseDetail["qaTab"]["filters"][number]["id"];
@@ -27,6 +28,8 @@ function ThreadRow({
   href,
   selected,
   selectedFromTablet,
+  className,
+  style,
 }: {
   thread: QaThread;
   href: string;
@@ -34,10 +37,12 @@ function ThreadRow({
   selected: boolean;
   /** Shown by default beside the list: selected from tablet up only (mobile shows the list alone). */
   selectedFromTablet: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }) {
   const strong = selected || thread.unread;
   return (
-    <li className="border-b border-sko-border-subtle last:border-b-0">
+    <li className={cn("border-b border-sko-border-subtle last:border-b-0", className)} style={style}>
       <Link
         href={href}
         scroll={false}
@@ -239,23 +244,28 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
               ))}
             </div>
           </div>
-          {threads.length ? (
-            <ul className="border-t border-sko-border-subtle">
-              {threads.map((thread) => (
-                <ThreadRow
-                  key={thread.id}
-                  thread={thread}
-                  href={courseDetailHref(course.slug, "qa", thread.id)}
-                  selected={explicit?.id === thread.id}
-                  selectedFromTablet={!explicit && current.id === thread.id}
-                />
-              ))}
-            </ul>
-          ) : (
-            <p role="status" className="sk-text-body-medium-regular border-t border-sko-border-subtle p-3 text-sko-text-subtle">
-              No questions match.
-            </p>
-          )}
+          {/* A new filter cross-fades the list; up to eight rows rise one after the other (as My Learning). */}
+          <div key={filter} className="sk-animate-fade sk-enter-only">
+            {threads.length ? (
+              <ul className="border-t border-sko-border-subtle">
+                {threads.map((thread, i) => (
+                  <ThreadRow
+                    key={thread.id}
+                    thread={thread}
+                    href={courseDetailHref(course.slug, "qa", thread.id)}
+                    selected={explicit?.id === thread.id}
+                    selectedFromTablet={!explicit && current.id === thread.id}
+                    className="sk-animate-rise sk-rise-nudge sk-enter-only"
+                    style={staggerStyle(i, threads.length)}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <p role="status" className="sk-text-body-medium-regular border-t border-sko-border-subtle p-3 text-sko-text-subtle">
+                No questions match.
+              </p>
+            )}
+          </div>
         </section>
 
         <div className={cn("min-w-0 flex-1 flex-col gap-4", explicit ? "flex" : "hidden md:flex")}>
@@ -326,7 +336,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
               }}
             >
               <div className="flex items-center gap-2">
-                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
+                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm transition-[border-color,box-shadow] focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
                   <span className="sr-only">{tab.replyPlaceholder}</span>
                   <input
                     type="text"

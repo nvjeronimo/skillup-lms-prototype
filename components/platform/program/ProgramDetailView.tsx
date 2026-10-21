@@ -15,6 +15,8 @@ import { CoursesTab } from "./CoursesTab";
 import { DisclosureList } from "./DisclosureList";
 import { ProgramHeader } from "./ProgramHeader";
 import { ProgramSidebar } from "./ProgramSidebar";
+import { useHasChanged } from "@/lib/motion/useHasChanged";
+import { cn } from "@/lib/utils";
 import { SectionIntro } from "./parts";
 
 /**
@@ -47,6 +49,9 @@ export function ProgramDetailView({ program }: { program: Program }) {
   const urlTab: ProgramTabId = isProgramTab(param) ? param : DEFAULT_PROGRAM_TAB;
   const [active, setActive] = React.useState<ProgramTabId>(urlTab);
   React.useEffect(() => setActive(urlTab), [urlTab]);
+  // After the first tab change, a panel fades in as it is shown (display: none → shown restarts
+  // the animation); on the page's first paint the page entrance is the only movement.
+  const fadeIn = useHasChanged(active) ? "sk-animate-fade sk-enter-only" : undefined;
 
   function selectTab(tab: ProgramTabId) {
     if (tab === active) return;
@@ -107,13 +112,17 @@ export function ProgramDetailView({ program }: { program: Program }) {
               aria-labelledby={platformTabId(baseId, tab.id)}
               tabIndex={0}
               hidden={tab.id !== active}
+              className={fadeIn}
             >
               {panels[tab.id]}
             </div>
           ))}
         </div>
-        {/* The Courses tab has no sidebar; the other three share it. */}
-        {active === "courses" ? null : <ProgramSidebar program={program} className="md:w-[320px] md:shrink-0" />}
+        {/* The Courses tab has no sidebar; the other three share it. It stays mounted (hidden on
+            Courses) and fades in with the panel when it comes back. */}
+        <div hidden={active === "courses"} className={cn("md:w-[320px] md:shrink-0", fadeIn)}>
+          <ProgramSidebar program={program} />
+        </div>
       </div>
     </>
   );

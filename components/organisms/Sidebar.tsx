@@ -14,7 +14,8 @@ import { TopicRow } from "@/components/molecules/TopicRow";
 import { OverallProgress } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
-import { MOTION_MS } from "@/lib/motion/tokens";
+import { HOVER_CLOSE_GRACE_MS, MOTION_MS } from "@/lib/motion/tokens";
+import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { isFreshCompletion, type LastCompleted } from "@/lib/motion/completion";
 import { coursePartners, moduleTopics } from "@/lib/data";
@@ -185,7 +186,7 @@ export function Sidebar({
   };
   const scheduleClose = () => {
     if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
-    flyoutTimer.current = window.setTimeout(() => setFlyout(null), 140);
+    flyoutTimer.current = window.setTimeout(() => setFlyout(null), HOVER_CLOSE_GRACE_MS);
   };
   const keepOpen = () => {
     if (flyoutTimer.current) window.clearTimeout(flyoutTimer.current);
@@ -204,6 +205,11 @@ export function Sidebar({
   // 72px rail: toggle + progress ring, then per-module groups separated by 40px
   // dividers — module number (green when complete), lesson labels (L1/L2, brand on
   // the active lesson) and status dots, with the active topic highlighted.
+  // Collapse / expand swaps the rail for the full sidebar (two different trees, so the new one
+  // mounts): the incoming one fades in. Not on the first paint, and never on a topic change
+  // (the same tree stays mounted then); the width itself snaps.
+  const variantFade = useHasChanged(collapsed) ? "sk-animate-fade sk-enter-only" : undefined;
+
   if (collapsed) {
     const Divider = () => <div className="h-px w-10 bg-sko-border-subtle" />;
     const Dot = (topic: Topic) => (
@@ -250,6 +256,7 @@ export function Sidebar({
       <nav
         className={cn(
           "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-4",
+          variantFade,
           className,
         )}
         aria-label="Course"
@@ -362,6 +369,7 @@ export function Sidebar({
         // Floating card on desktop/tablet; Mobile drawer fills its container.
         isMobile ? "" : "rounded-control border border-sko-border-subtle",
         WIDTH[variant],
+        variantFade,
         className,
       )}
       aria-label="Course"
