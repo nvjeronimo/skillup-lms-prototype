@@ -11,6 +11,8 @@ import {
 import { QuizNavStepper } from "@/components/molecules/QuizNav";
 import { FileUploadZone } from "@/components/molecules/FileUploadZone";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
+import { Collapse } from "@/components/atoms/Collapse";
+import { useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { Badge, type BadgeColor } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import {
@@ -117,6 +119,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   // The bucket's demand hints belong to the problem, so the counter is
   // quiz-level rather than one per card. -1 = none requested yet.
   const [bucketHintIndex, setBucketHintIndex] = React.useState(-1);
+  // The set's hint opens as a Collapse and keeps its hints while it closes (Reset).
+  const bucketHintShown = useFrozenWhileClosed(bucketHintIndex, bucketHintIndex >= 0);
 
   // Switching mode starts the quiz over. The two experiences are different
   // runs, not two skins on one — carrying answers across would leave the
@@ -433,39 +437,43 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
 
         {/* One hint for the whole set, not one per question: in the bucket the
             demand hints belong to the problem, and the problem is the quiz. */}
-        {bucketHintIndex >= 0 && bucketHints.length ? (
-          <InlineAlert
-            tone="hint"
-            title=""
-            action={
-              <button
-                type="button"
-                onClick={() => setBucketHintIndex((i) => Math.min(bucketHints.length - 1, i + 1))}
-                disabled={bucketHintIndex + 1 >= bucketHints.length}
-                // DS Next Hint: a link button with a 1px bottom stroke in every
-                // state (border/disabled once the hints run out).
-                className={cn(
-                  "sk-text-body-medium-semibold border-b px-0.5 py-1",
-                  bucketHintIndex + 1 >= bucketHints.length
-                    ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
-                    : "border-sko-border-primary text-sko-text-primary",
-                )}
+        {bucketHints.length ? (
+          <Collapse open={bucketHintIndex >= 0} className="-mt-4">
+            <div className="pt-4">
+              <InlineAlert
+                tone="hint"
+                title=""
+                action={
+                  <button
+                    type="button"
+                    onClick={() => setBucketHintIndex((i) => Math.min(bucketHints.length - 1, i + 1))}
+                    disabled={bucketHintShown + 1 >= bucketHints.length}
+                    // DS Next Hint: a link button with a 1px bottom stroke in every
+                    // state (border/disabled once the hints run out).
+                    className={cn(
+                      "sk-text-body-medium-semibold border-b px-0.5 py-1",
+                      bucketHintShown + 1 >= bucketHints.length
+                        ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
+                        : "border-sko-border-primary text-sko-text-primary",
+                    )}
+                  >
+                    Next Hint
+                  </button>
+                }
               >
-                Next Hint
-              </button>
-            }
-          >
-            <ol className="flex flex-col gap-1">
-              {bucketHints.slice(0, bucketHintIndex + 1).map((h, i) => (
-                <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
-                  <span className="sk-text-body-medium-semibold text-sko-text-default">
-                    Hint ({i + 1} of {bucketHints.length}):{" "}
-                  </span>
-                  {h}
-                </li>
-              ))}
-            </ol>
-          </InlineAlert>
+                <ol className="flex flex-col gap-1">
+                  {bucketHints.slice(0, bucketHintShown + 1).map((h, i) => (
+                    <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
+                      <span className="sk-text-body-medium-semibold text-sko-text-default">
+                        Hint ({i + 1} of {bucketHints.length}):{" "}
+                      </span>
+                      {h}
+                    </li>
+                  ))}
+                </ol>
+              </InlineAlert>
+            </div>
+          </Collapse>
         ) : null}
 
         {/* One Footer Actions, under the last question — the problem's footer.
@@ -537,8 +545,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
 
       {/* Mode B's forward action. It is not a card property: the card's footer
           is the problem's, and `Show next` is mode B chrome that ships off. */}
+      {/* It fades in once the answer is checked (short3, opacity only), mounted on the change. */}
       {answers[index].revealed ? (
-        <div className="flex justify-end">
+        <div className="sk-animate-fade-short3 sk-enter-only flex justify-end">
           <Button
             variant="primary"
             size="md"

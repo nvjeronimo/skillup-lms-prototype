@@ -211,7 +211,9 @@ export function QuizFooterActions({
             // A status, not an action: announced politely, never a disabled button
             // (unreadable at 1.8:1 and it reads as "unavailable"). It disappears as
             // soon as the answer changes — AssessmentView resets `saved` on edit.
-            <p role="status" className="sk-text-body-medium-medium inline-flex min-h-[44px] items-center gap-1.5 text-sko-text-success">
+            // It fades in where Save draft was (short3, opacity only); mounted on the change, so it
+            // plays once per save and never on an unrelated re-render.
+            <p role="status" className="sk-animate-fade-short3 sk-enter-only sk-text-body-medium-medium inline-flex min-h-[44px] items-center gap-1.5 text-sko-text-success">
               <Icon icon={CheckCircle2} size={16} aria-hidden="true" />
               Draft saved
             </p>
@@ -238,7 +240,7 @@ export function QuizFooterActions({
         {/* Reset deletes the answer and publishes a zero without refunding the
             attempt. Never relabel it: "Try again" would hide that cost. */}
         {secondary && showReset ? (
-          <Button hierarchy="link" size="md" onClick={onReset}>
+          <Button hierarchy="link" size="md" onClick={onReset} className="sk-animate-fade-short3 sk-enter-only">
             Reset
           </Button>
         ) : null}
