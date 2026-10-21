@@ -25,9 +25,8 @@ export function ProgressRing({
   pct: number;
   /**
    * 32px ring for the mobile topbar: DS Progress circle Size=xxxxs (Nelson, 21 Oct 2026; was 28
-   * since 14 Oct). No number inside: the DS's smallest text style (12px) does not fit a 32px
-   * ring; the percentage is in the accessible name and stays readable in the drawer. Completed
-   * shows the green arc with a check.
+   * since 14 Oct). The percentage shows inside in body-small/Semibold, the DS's smallest style
+   * (Nelson, 21 Oct). Completed shows the green arc with a check instead of 100%.
    */
   compact?: boolean;
   className?: string;
@@ -64,10 +63,8 @@ export function ProgressRing({
           strokeDashoffset={offset}
         />
       </svg>
-      {compact ? (
-        complete ? (
-          <Check size={14} strokeWidth={2} className="absolute text-sko-icon-success-strong" aria-hidden />
-        ) : null
+      {compact && complete ? (
+        <Check size={14} strokeWidth={2} className="absolute text-sko-icon-success-strong" aria-hidden />
       ) : (
         <span className="sk-text-body-small-semibold absolute text-sko-text-default">{pct}%</span>
       )}
