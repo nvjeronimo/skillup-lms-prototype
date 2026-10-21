@@ -69,6 +69,10 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
  * width below desktop. All rows start closed and each opens on its own; the grid aligns its
  * rows at the top, so an opened row grows alone and the rows beside it keep their height.
  * The rows come from the page (lib/platform/my-learning-rows, read on the server).
+ *
+ * Arrival (motion-matrix §7.9): on the page's first visit the tabs, the toolbar and the panel
+ * rise after the title (`data-arrive` 1–3); a filter, a search or a tab change later only
+ * cross-fades the cards, as before.
  */
 export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCourseRow[] }) {
   const router = useRouter();
@@ -153,7 +157,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
       {/* Row 1: the tabs on their 1px border/subtle rule, across the whole width.
           The Size=sm tabs already grow their target to 44 upwards, so the "larger targets"
           min-height is switched off on them: it would make the 32px row 44 tall. */}
-      <div className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0">
+      <div data-arrive={1} className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0">
         {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
             is the border of this row, and only the selected panel is rendered. */}
         <PlatformTabs
@@ -173,7 +177,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
 
       {/* Row 2 (Nelson, 13 Oct 2026): the status filter on the left, the search and the Grid /
           List toggle on the right, 24 apart. Mobile: the search at full width, then the filter. */}
-      <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
+      <div data-arrive={2} className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
         {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
             pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
             Mobile (Nelson, 13 Oct 2026, Figma 7187:37067): the track fills the width and stays
@@ -220,7 +224,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
         </div>
       </div>
 
-      <div role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
+      <div data-arrive={3} role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
         {/* The card titles are h3: this h2 (the tab's own name) keeps the outline h1 → h2 → h3. */}
         <h2 className="sr-only">{myLearningTabs.find((t) => t.id === tab)?.label ?? noun}</h2>
         {/* Tells assistive tech how many cards the search or the filter left. */}

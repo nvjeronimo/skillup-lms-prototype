@@ -7,7 +7,7 @@ import { myLearningHeading } from "@/lib/platform/my-learning";
  */
 export function MyLearningHeader() {
   return (
-    <header>
+    <header data-arrive={0}>
       {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
       <h1 className="sk-text-headline-large-bold text-sko-text-default">
         {myLearningHeading.title} <span data-heading-em="" className="text-sko-text-subtle">{myLearningHeading.emphasis}</span>

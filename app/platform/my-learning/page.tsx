@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { MyLearningCollection } from "@/components/platform/my-learning/MyLearningCollection";
 import { MyLearningHeader } from "@/components/platform/my-learning/MyLearningHeader";
+import { MyLearningSkeleton } from "@/components/platform/my-learning/MyLearningSkeleton";
+import { myLearningPrograms } from "@/lib/platform/my-learning";
 import { myLearningCourseRows } from "@/lib/platform/my-learning-rows";
 import { pageTitle } from "@/lib/utils";
 
@@ -16,10 +18,16 @@ export const metadata = { title: pageTitle("My Learning") };
  * Suspense boundary.
  * The course rows are read here, on the server (11 Oct 2026): their modules come from each
  * course's own page data, which stays out of the browser bundle.
+ * Arrival (motion-matrix §7.9): MyLearningSkeleton during the simulated load of a first visit,
+ * then the title, the tabs, the toolbar and the cards rise in that order.
  */
 export default function MyLearningPage() {
   return (
-    <PlatformPage current="my-learning" className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
+    <PlatformPage
+      current="my-learning"
+      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      skeleton={<MyLearningSkeleton courses={myLearningCourseRows.length} programs={myLearningPrograms.length} />}
+    >
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         <MyLearningHeader />
         <Suspense fallback={null}>
