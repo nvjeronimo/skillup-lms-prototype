@@ -12,7 +12,7 @@
  *                             instead of the six role radii in tokens/radius.css
  *   5b. Raw motion in CSS  — the same rule over the stylesheets (every .css under app/ and
  *                             components/, not app/lab/**; tokens/*.css are not scanned): a raw
- *                             non-zero `<n>s` / `<n>ms`, `cubic-bezier(` or an ease-in / ease-out /
+ *                             non-zero `<n>s` / `<n>ms` (negative too), `cubic-bezier(` or an ease-in / ease-out /
  *                             ease-in-out keyword, outside @keyframes blocks, comments and
  *                             `var(--motion-…)`. Keyframe percentages are fine; so is a zero (0s).
  *   7. Popup without motion — a file-level rule (FILE_RULES), read with comments stripped:
@@ -223,7 +223,7 @@ function cssMotionCode(src) {
 }
 
 const CSS_RAW_MOTION =
-  /(?<![\w.#-])(?!0+(?:\.0+)?m?s\b)\d*\.?\d+m?s(?![\w-])|cubic-bezier\(|(?<![\w-])ease-(?:in-out|in|out)(?![\w-])/;
+  /(?<![\w.#])(?!-?0+(?:\.0+)?m?s\b)-?\d*\.?\d+m?s(?![\w-])|cubic-bezier\(|(?<![\w-])ease-(?:in-out|in|out)(?![\w-])/;
 for (const file of cssFiles) {
   const rel = relative(ROOT, file);
   if (CSS_SKIP.test(rel) || ALLOW.has(rel)) continue;

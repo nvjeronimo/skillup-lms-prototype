@@ -206,23 +206,27 @@ export function QuizFooterActions({
           </Button>
         ) : null}
 
-        {secondary && showSave ? (
-          saved ? (
-            // A status, not an action: announced politely, never a disabled button
-            // (unreadable at 1.8:1 and it reads as "unavailable"). It disappears as
-            // soon as the answer changes — AssessmentView resets `saved` on edit.
-            // It fades in where Save draft was (short3, opacity only); mounted on the change, so it
-            // plays once per save and never on an unrelated re-render.
-            <p role="status" className="sk-animate-fade-short3 sk-enter-only sk-text-body-medium-medium inline-flex min-h-[44px] items-center gap-1.5 text-sko-text-success">
+        {secondary && showSave && !saved ? (
+          <Button variant="secondary" size="md" onClick={onSave}>
+            Save draft
+          </Button>
+        ) : null}
+        {/* "Draft saved" is a status, not an action: announced politely, never a disabled button
+            (unreadable at 1.8:1 and it reads as "unavailable"). The live region is always mounted
+            (empty, and out of the row, when there is nothing to say) so screen readers announce the
+            text when it arrives; the text fades in where Save draft was (short3, opacity only), once
+            per save. It goes as soon as the answer changes: AssessmentView resets `saved` on edit. */}
+        <p
+          role="status"
+          className={secondary && showSave && saved ? "inline-flex min-h-[44px] items-center" : "sr-only"}
+        >
+          {secondary && showSave && saved ? (
+            <span className="sk-animate-fade-short3 sk-enter-only sk-text-body-medium-medium inline-flex items-center gap-1.5 text-sko-text-success">
               <Icon icon={CheckCircle2} size={16} aria-hidden="true" />
               Draft saved
-            </p>
-          ) : (
-            <Button variant="secondary" size="md" onClick={onSave}>
-              Save draft
-            </Button>
-          )
-        ) : null}
+            </span>
+          ) : null}
+        </p>
 
         {secondary && showAnswer ? (
           <Button hierarchy="link" size="md" onClick={onShowAnswer}>

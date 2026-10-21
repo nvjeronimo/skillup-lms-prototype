@@ -172,6 +172,10 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
   const tab = course.qaTab;
   const [query, setQuery] = React.useState("");
   const [filter, setFilter] = React.useState<QaFilter>("all");
+  // The list animates only right after the learner changes the filter, and the classes come off
+  // when its last row has risen: showing the tab again, or coming back from a thread on mobile
+  // (the list is display:none meanwhile, which would restart an animation), never replays it.
+  const [filterChanged, setFilterChanged] = React.useState(false);
   const [reply, setReply] = React.useState("");
   const notInPrototype = (what: string) => showToast(`${what} is not part of this prototype yet`);
 
@@ -231,7 +235,10 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                   key={item.id}
                   type="button"
                   aria-pressed={filter === item.id}
-                  onClick={() => setFilter(item.id)}
+                  onClick={() => {
+                    if (item.id !== filter) setFilterChanged(true);
+                    setFilter(item.id);
+                  }}
                   className={cn(
                     "sk-text-body-medium-semibold h-8 rounded-control border px-4 transition-colors max-md:h-11",
                     filter === item.id
@@ -245,7 +252,14 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             </div>
           </div>
           {/* A new filter cross-fades the list; up to eight rows rise one after the other (as My Learning). */}
-          <div key={filter} className="sk-animate-fade sk-enter-only">
+          <div
+            key={filter}
+            className={filterChanged ? "sk-animate-fade sk-enter-only" : undefined}
+            onAnimationEnd={(e) => {
+              const last = e.currentTarget.querySelector("li:last-child");
+              if (e.target === (last ?? e.currentTarget)) setFilterChanged(false);
+            }}
+          >
             {threads.length ? (
               <ul className="border-t border-sko-border-subtle">
                 {threads.map((thread, i) => (
@@ -255,8 +269,8 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                     href={courseDetailHref(course.slug, "qa", thread.id)}
                     selected={explicit?.id === thread.id}
                     selectedFromTablet={!explicit && current.id === thread.id}
-                    className="sk-animate-rise sk-rise-nudge sk-enter-only"
-                    style={staggerStyle(i, threads.length)}
+                    className={filterChanged ? "sk-animate-rise sk-rise-nudge sk-enter-only" : undefined}
+                    style={filterChanged ? staggerStyle(i, threads.length) : undefined}
                   />
                 ))}
               </ul>
