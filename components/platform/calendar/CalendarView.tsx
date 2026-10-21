@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import { coursePageHref, slugify } from "@/lib/platform/hrefs";
 import { cn } from "@/lib/utils";
+import { useDemoMode } from "@/lib/demo";
 
 type Filter = (typeof calendarFilters)[number]["id"];
 type View = "agenda" | "month";
@@ -60,6 +61,7 @@ function statusBadge(e: CalendarEvent) {
 
 /** One date: kind tile, the label and time over the title (a link) and its course, the status on the right. */
 function EventRow({ event }: { event: CalendarEvent }) {
+  const demo = useDemoMode();
   const k = KIND[event.kind];
   return (
     <li
@@ -83,7 +85,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
         {/* Mobile: the status sits under the text, so the title keeps the width. */}
         <span className="mt-1 flex flex-wrap gap-1 md:hidden">
           {statusBadge(event)}
-          {event.outOfMvp ? (
+          {event.outOfMvp && demo ? (
             <Badge variant="outline" color="gray">
               Not in MVP
             </Badge>
@@ -92,7 +94,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
       </div>
       <span className="flex shrink-0 flex-col items-end gap-1 max-md:hidden">
         {statusBadge(event)}
-        {event.outOfMvp ? (
+        {event.outOfMvp && demo ? (
           <Badge variant="outline" color="gray">
             Not in MVP
           </Badge>

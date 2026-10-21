@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
-import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
+import { SkillUpLogo, SkillUpMark } from "@/components/atoms/SkillUpLogo";
 import { cn } from "@/lib/utils";
 import { ProgressRing } from "@/components/molecules/OverallProgress";
 
@@ -170,9 +170,10 @@ export function CoursePlayerTopbar({
           >
             <Icon icon={List} size={20} />
           </UtilityButton>
-          {/* 44px target on mobile; the mark itself stays 33px. */}
-          <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
-            <SkillUpLogo className="h-[33px]" />
+          {/* The mark only on a phone: the wordmark does not fit next to eight controls (audit,
+              21 Oct 2026). 44px target; the mark itself 32 tall. */}
+          <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 min-w-11 shrink-0 items-center justify-center">
+            <SkillUpMark className="h-8 shrink-0" />
           </Link>
           {progressPct !== undefined ? <ProgressRing pct={progressPct} compact /> : null}
         </div>
@@ -187,15 +188,7 @@ export function CoursePlayerTopbar({
               <Icon icon={Bookmark} size={20} />
             </UtilityButton>
           ) : null}
-          {/* DS Topbar v1.2: the theme button on Mobile too (Notifications · Bookmark · Theme · avatar · Close). */}
-          {showTheme ? (
-            <UtilityButton
-              label={theme === "Dark" ? "Switch to light theme" : "Switch to dark theme"}
-              onClick={onTheme}
-            >
-              <Icon icon={theme === "Dark" ? Sun : Moon} size={20} />
-            </UtilityButton>
-          ) : null}
+          {/* No theme button on a phone (audit, 21 Oct 2026): it is in the profile menu. */}
           {accountMenu ?? (
             <button type="button" aria-label="Account" className="flex items-center rounded-control">
               <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />

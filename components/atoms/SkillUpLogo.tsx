@@ -19,3 +19,18 @@ export function SkillUpLogo({ className }: { className?: string }) {
     </span>
   );
 }
+
+/**
+ * The SkillUp mark alone (the rocket in its circle), for the player's phone top bar where the
+ * wordmark does not fit (audit, 21 Oct 2026). Same light/dark swap as the wordmark.
+ */
+export function SkillUpMark({ className }: { className?: string }) {
+  return (
+    <span className={cn("inline-block", className)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/skillup-mark.svg" alt="SkillUp" className="sk-logo-light block h-full w-auto" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/skillup-mark-dark.svg" alt="" aria-hidden className="sk-logo-dark h-full w-auto" />
+    </span>
+  );
+}

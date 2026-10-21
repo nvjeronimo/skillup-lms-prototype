@@ -11,6 +11,7 @@ import { getActivity } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { DemoOnly } from "@/lib/demo";
 
 export function ActivityView({ topicId }: { topicId: string }) {
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
@@ -160,11 +161,13 @@ function ScormActivity({
 
       {/* Demo affordance: the error state is the one worth showing people. */}
       {state !== "error" ? (
-        <div>
-          <Button variant="secondary" size="sm" onClick={() => setState("error")}>
-            Simulate load failure
-          </Button>
-        </div>
+        <DemoOnly>
+          <div>
+            <Button variant="secondary" size="sm" onClick={() => setState("error")}>
+              Simulate load failure
+            </Button>
+          </div>
+        </DemoOnly>
       ) : null}
 
       {isCompleted ? (
