@@ -6,6 +6,7 @@ import { KeyRound, Trash2, Upload } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Button } from "@/components/atoms/Button";
 import { SelectField } from "@/components/atoms/SelectField";
+import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSegmented } from "@/components/platform/PlatformSegmented";
 import {
@@ -77,17 +78,21 @@ function Select({
 /** One section of the page: a card on bg/page with its title and a line on what it holds. */
 function Section({
   id,
+  step,
   title,
   lead,
   children,
 }: {
   id: string;
+  /** Its place in the first-visit cascade (motion-matrix §7.9). */
+  step: number;
   title: string;
   lead: string;
   children: React.ReactNode;
 }) {
   return (
     <section
+      data-arrive={step}
       aria-labelledby={id}
       className="rounded-card border border-sko-border-subtle bg-sko-bg-page"
     >
@@ -101,6 +106,90 @@ function Section({
         {children}
       </div>
     </section>
+  );
+}
+
+/** A labelled field while it loads: the ghost label, the field's box (46 tall, as FIELD), the hint. */
+function FieldSkeleton({ label, hint, rows, className }: { label: string; hint?: string; rows?: number; className?: string }) {
+  return (
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      <Skeleton variant="ghost" text="body-medium-medium">{label}</Skeleton>
+      <Skeleton variant="block" radius="control" height={rows ? rows * 24 + 22 : 46} />
+      {hint ? <Skeleton variant="ghost" text="body-small-regular">{hint}</Skeleton> : null}
+    </div>
+  );
+}
+
+function SectionSkeleton({ title, lead, children }: { title: string; lead: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
+      <div className="flex flex-col gap-1 border-b border-sko-border-subtle px-4 py-4 md:px-6 md:py-5">
+        <Skeleton variant="ghost" text="title-medium-semibold">{title}</Skeleton>
+        <Skeleton variant="ghost" text="body-medium-regular">{lead}</Skeleton>
+      </div>
+      <div className="grid grid-cols-1 gap-5 px-4 py-5 md:grid-cols-2 md:px-6 md:py-6">{children}</div>
+    </div>
+  );
+}
+
+/**
+ * Edit profile while it loads (motion-matrix §7.9): the form's column, its two sections and their
+ * fields at the fields' own heights, the labels and hints as ghost lines, and the actions.
+ */
+function EditProfileSkeleton() {
+  const f = editProfileSeed;
+  return (
+    <div className="mx-auto flex w-full max-w-[880px] flex-col gap-5 md:gap-6 lg:gap-8">
+      <div className="flex flex-col gap-2">
+        <Skeleton variant="ghost" text="headline-large-bold">Edit profile</Skeleton>
+        <Skeleton variant="ghost" text="body-large-regular">
+          What other learners and your instructors see, and how you sign in.
+        </Skeleton>
+      </div>
+      <SectionSkeleton title="Your profile" lead="Shown next to your posts, answers and certificates.">
+        <div className="flex flex-wrap items-center gap-4 md:col-span-2">
+          <Skeleton variant="block" width={48} height={48} radius="control" />
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap gap-2">
+              <SkeletonPill size="button-sm" icon className="max-md:h-11">Upload photo</SkeletonPill>
+              <SkeletonPill size="button-sm" icon className="max-md:h-11">Remove</SkeletonPill>
+            </div>
+            <Skeleton variant="ghost" text="body-small-regular">JPG or PNG, up to 1 MB.</Skeleton>
+          </div>
+        </div>
+        <FieldSkeleton label="Username" hint="Your username can't be changed." />
+        <FieldSkeleton label="Country" />
+        <FieldSkeleton label="Spoken language" />
+        <FieldSkeleton label="Education" />
+        <FieldSkeleton label="About me" rows={4} hint={`${f.bio.length} / ${BIO_MAX} characters`} className="md:col-span-2" />
+        <FieldSkeleton label="LinkedIn" className="md:col-span-2" />
+        <div className="flex flex-col items-start gap-1.5 md:col-span-2">
+          <Skeleton variant="ghost" text="body-medium-medium">Who can see your profile</Skeleton>
+          <div className="inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1">
+            <SkeletonPill size="segment" className="bg-transparent">Full profile</SkeletonPill>
+            <SkeletonPill size="segment" className="bg-transparent">Limited</SkeletonPill>
+          </div>
+          <Skeleton variant="ghost" text="body-small-regular">
+            {f.visibility === "all_users" ? "Learners on SkillUp see everything above." : "Learners see only your username and photo."}
+          </Skeleton>
+        </div>
+      </SectionSkeleton>
+      <SectionSkeleton title="Account" lead="How you sign in and how we reach you.">
+        <FieldSkeleton label="Full name" hint="As it appears on your certificates." />
+        <FieldSkeleton label="Email" hint="We send a link to the new address before it changes." />
+        <FieldSkeleton label="Site language" />
+        <FieldSkeleton label="Time zone" hint="Deadlines and live sessions show in this time zone." />
+        <div className="flex flex-col items-start gap-1.5 md:col-span-2">
+          <Skeleton variant="ghost" text="body-medium-medium">Password</Skeleton>
+          <SkeletonPill size="button-sm" icon className="max-md:h-11">Reset password</SkeletonPill>
+          <Skeleton variant="ghost" text="body-small-regular">We email you a link to choose a new one.</Skeleton>
+        </div>
+      </SectionSkeleton>
+      <div className="flex gap-3 md:justify-end">
+        <SkeletonPill size="button-md" className="flex-1 justify-center md:flex-none">Cancel</SkeletonPill>
+        <SkeletonPill size="button-md" className="flex-1 justify-center md:flex-none">Save changes</SkeletonPill>
+      </div>
+    </div>
   );
 }
 
@@ -138,12 +227,13 @@ export function EditProfileView() {
     <PlatformPage
       current={null}
       className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      skeleton={<EditProfileSkeleton />}
     >
       <form
         onSubmit={onSubmit}
         className="mx-auto flex w-full max-w-[880px] flex-col gap-5 md:gap-6 lg:gap-8"
       >
-        <div className="flex flex-col gap-2">
+        <div data-arrive={0} className="flex flex-col gap-2">
           <h1 className="sk-text-headline-large-bold text-sko-text-default">Edit profile</h1>
           <p className="sk-text-body-large-regular text-sko-text-subtle">
             What other learners and your instructors see, and how you sign in.
@@ -152,6 +242,7 @@ export function EditProfileView() {
 
         <Section
           id="profile-title"
+          step={1}
           title="Your profile"
           lead="Shown next to your posts, answers and certificates."
         >
@@ -260,7 +351,7 @@ export function EditProfileView() {
           </div>
         </Section>
 
-        <Section id="account-title" title="Account" lead="How you sign in and how we reach you.">
+        <Section id="account-title" step={2} title="Account" lead="How you sign in and how we reach you.">
           <Field id="full-name" label="Full name" hint="As it appears on your certificates.">
             <input
               id="full-name"
@@ -326,7 +417,7 @@ export function EditProfileView() {
         </Section>
 
         {/* The actions: on the right on desktop, both filling on mobile (two buttons side by side fill). */}
-        <div className="flex gap-3 md:justify-end">
+        <div data-arrive={3} className="flex gap-3 md:justify-end">
           <Button
             type="button"
             hierarchy="secondary"
