@@ -240,7 +240,8 @@ function useArrivalTrigger(ref: React.RefObject<Element>): { armed: boolean; go:
 export function useArrivalCount<T extends Element>(value: string): { ref: React.RefObject<T>; text: string; counting: boolean } {
   const ref = React.useRef<T>(null);
   const { armed, go } = useArrivalTrigger(ref);
-  const [text, setText] = React.useState(value);
+  // Starts on the count's first step, so the frame between "in view" and the first tick is 0, not the figure.
+  const [text, setText] = React.useState(() => countText(value, 0, MOTION_MS.long2));
 
   React.useEffect(() => {
     if (!go) return;
