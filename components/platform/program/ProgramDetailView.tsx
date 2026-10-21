@@ -82,11 +82,13 @@ export function ProgramDetailView({ program }: { program: Program }) {
 
   return (
     <>
-      <ProgramHeader program={program} />
+      <div data-arrive={0}>
+        <ProgramHeader program={program} />
+      </div>
 
       {/* The bar is bg/page across the page, on a 1px border/subtle rule (an inset shadow, as the
           tabs' own rule, so the bar keeps its height: 48, and 44 on mobile). */}
-      <div className="bg-sko-bg-page shadow-[inset_0_-1px_0_0_var(--color-border-subtle)] forced-colors:border-b forced-colors:border-sko-border-subtle">
+      <div data-arrive={1} className="bg-sko-bg-page shadow-[inset_0_-1px_0_0_var(--color-border-subtle)] forced-colors:border-b forced-colors:border-sko-border-subtle">
         {/* Mobile: 12 above the 32px tabs (44 in all). The tabs already grow their target to 44
             upwards, so the "larger targets" min-height is switched off here: it would make the bar 56. */}
         <div className="mx-auto w-full max-w-[1280px] pl-4 pt-3 max-md:[&_[role=tab]]:min-h-0 md:px-6 md:pt-0 lg:px-10">
@@ -103,7 +105,7 @@ export function ProgramDetailView({ program }: { program: Program }) {
       </div>
 
       <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-4 pb-8 pt-4 md:flex-row md:items-start md:gap-8 md:px-6 md:pb-12 md:pt-6 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-8">
-        <div className="min-w-0 flex-1">
+        <div data-arrive={2} className="min-w-0 flex-1">
           {PROGRAM_TABS.map((tab) => (
             <div
               key={tab.id}
@@ -120,7 +122,7 @@ export function ProgramDetailView({ program }: { program: Program }) {
         </div>
         {/* The Courses tab has no sidebar; the other three share it. It stays mounted (hidden on
             Courses) and fades in with the panel when it comes back. */}
-        <div hidden={active === "courses"} className={cn("md:w-[320px] md:shrink-0", fadeIn)}>
+        <div data-arrive={3} hidden={active === "courses"} className={cn("md:w-[320px] md:shrink-0", fadeIn)}>
           <ProgramSidebar program={program} />
         </div>
       </div>

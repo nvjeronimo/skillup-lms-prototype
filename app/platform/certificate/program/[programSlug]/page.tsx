@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlatformPage } from "@/components/platform/PlatformPage";
+import { CertificatePageSkeleton } from "@/components/platform/certificate/CertificatePageSkeleton";
 import { CertificatePageView } from "@/components/platform/certificate/CertificatePageView";
 import { getProgramCertificate } from "@/lib/platform/catalog";
 import { pageTitle } from "@/lib/utils";
@@ -23,7 +24,17 @@ export default function ProgramCertificatePage({ params }: Params) {
   const found = getProgramCertificate(params.programSlug);
   if (!found) notFound();
   return (
-    <PlatformPage current="my-learning">
+    <PlatformPage
+      current="my-learning"
+      skeleton={
+        <CertificatePageSkeleton
+          kind="program"
+          certificate={found.certificate}
+          program={{ slug: found.program.slug, title: found.program.title }}
+          courses={found.courses}
+        />
+      }
+    >
       <CertificatePageView
         kind="program"
         certificate={found.certificate}

@@ -62,8 +62,23 @@ describe("ARRIVAL_INIT_SCRIPT", () => {
     r.timers.forEach((fn) => fn());
     expect(r.attrs).toEqual({});
   });
-  it("does nothing outside the platform pages", () => {
-    expect(run({ path: "/course/six-sigma/topic/m3-t1" }).attrs).toEqual({});
+  it("does nothing outside the platform pages and the player topics", () => {
+    expect(run({ path: "/course/six-sigma/certificate" }).attrs).toEqual({});
     expect(run({ path: "/platformish" }).attrs).toEqual({});
+  });
+  it("flags a player topic not seen yet, keyed by the topic (its tabs included)", () => {
+    const course = "/course/six-sigma";
+    expect(run({ path: "/course/six-sigma/topic/m3-t1", visited: [course] }).attrs).toEqual({ "data-arrival": "pending" });
+    expect(run({ path: "/course/six-sigma/topic/m3-t1/notes", visited: [course, "/course/six-sigma/topic/m3-t1"] }).attrs).toEqual({});
+  });
+  it("flags a course not opened yet, for its shell rings, whatever the load mode", () => {
+    expect(run({ path: "/course/six-sigma/topic/m3-t1" }).attrs).toEqual({
+      "data-arrival": "pending",
+      "data-arrival-course": "",
+    });
+    expect(run({ path: "/course/six-sigma/topic/m3-t1", mode: "off" }).attrs).toEqual({ "data-arrival-course": "" });
+    const r = run({ path: "/course/six-sigma/topic/m3-t2", visited: ["/course/six-sigma/topic/m3-t1"] });
+    r.timers.forEach((fn) => fn());
+    expect(r.attrs).toEqual({});
   });
 });

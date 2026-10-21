@@ -41,3 +41,27 @@ export function isFirstVisit(path: string, visited: Set<string>): boolean {
 export function markVisited(path: string, visited: Set<string>): Set<string> {
   return new Set(visited).add(arrivalKey(path));
 }
+
+/**
+ * The arrival page of a player address: the topic itself (`/course/<slug>/topic/<id>`), so its
+ * Notes and Downloads tabs are the same visit; null outside a topic.
+ */
+export function topicArrivalPath(path: string): string | null {
+  const m = /^\/course\/[^/?#]+\/topic\/[^/?#]+/.exec(path);
+  return m ? m[0] : null;
+}
+
+/**
+ * The course of the player (its shell: top bar and sidebar rings): `/course/<slug>`. Its first
+ * visit in the session is the first topic opened in it; later topics are revisits of the course
+ * even when they are first visits of their own body.
+ */
+export function courseArrivalPath(slug: string): string {
+  return `/course/${slug}`;
+}
+
+/** Whether `key` is a first visit, and the visited set with it marked (unchanged on a revisit). */
+export function decideVisit(key: string, visited: Set<string>): { first: boolean; visited: Set<string> } {
+  const first = isFirstVisit(key, visited);
+  return { first, visited: first ? markVisited(key, visited) : visited };
+}

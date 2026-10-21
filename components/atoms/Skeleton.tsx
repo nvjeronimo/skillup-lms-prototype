@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const RADIUS = {
@@ -30,6 +31,16 @@ export type SkeletonProps =
       className?: string;
     }
   | {
+      /**
+       * A known text (a title, a description) drawn as bars that wrap where it will: the text
+       * itself, invisible, on bg/muted (`.sk-skeleton-ghost`). Static, no sweep.
+       */
+      variant: "ghost";
+      text?: string;
+      children: React.ReactNode;
+      className?: string;
+    }
+  | {
       /** A disc: an avatar, a ring. */
       variant: "circle";
       size: Size;
@@ -54,6 +65,13 @@ export function Skeleton(props: SkeletonProps) {
       />
     );
   }
+  if (props.variant === "ghost") {
+    return (
+      <div aria-hidden="true" className={cn(`sk-text-${props.text ?? "body-medium-regular"}`, "select-none", props.className)}>
+        <span className="sk-skeleton-ghost">{props.children}</span>
+      </div>
+    );
+  }
   if (props.variant === "circle") {
     return (
       <div
@@ -73,5 +91,41 @@ export function Skeleton(props: SkeletonProps) {
       {"​"}
       <span className="sk-skeleton rounded-inner" />
     </div>
+  );
+}
+
+/**
+ * A pill (a Badge, a segment, a button) whose width is its own label: the label invisible on
+ * bg/muted, with the Badge's padding and height (sm 22, md 24), a segment's (32, 44 on a
+ * phone) or a Button's (sm 36, md 44; buttonStyles).
+ */
+export function SkeletonPill({
+  children,
+  size = "sm",
+  icon = false,
+  className,
+}: {
+  children: React.ReactNode;
+  size?: "sm" | "md" | "segment" | "button-sm" | "button-md";
+  /** A button's leading 20px icon. */
+  icon?: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "inline-flex shrink-0 select-none items-center whitespace-nowrap bg-sko-bg-muted text-transparent",
+        size === "sm" && "sk-text-body-small-medium h-[22px] rounded-pill px-2",
+        size === "md" && "sk-text-body-medium-medium h-6 rounded-pill px-2.5",
+        size === "segment" && "sk-text-body-medium-semibold h-8 rounded-control border border-transparent px-4 max-md:h-11",
+        size === "button-sm" && "sk-text-body-medium-semibold h-9 gap-1 rounded-control px-3",
+        size === "button-md" && "sk-text-body-medium-semibold h-11 gap-1 rounded-control px-3",
+        className,
+      )}
+    >
+      {icon ? <span className="size-5" /> : null}
+      {children}
+    </span>
   );
 }

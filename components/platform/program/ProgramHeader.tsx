@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { BookOpen, ChevronRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { programPartnersOf } from "@/lib/platform/my-learning";
@@ -168,7 +169,9 @@ export function ProgramHeader({ program }: { program: Program }) {
             className="flex w-full shrink-0 flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
           >
             <div className="flex items-end justify-between gap-3">
-              <p className="sk-text-headline-medium-bold text-sko-text-default">{program.progress.percent}%</p>
+              <p className="sk-text-headline-medium-bold text-sko-text-default">
+                <ArrivalCount value={`${program.progress.percent}%`} />
+              </p>
               <ProgressCardLabel complete={program.progress.percent >= 100} label={program.progress.label} />
             </div>
             {/* Green only once complete, beside the check icon and the word (as on the cards). */}

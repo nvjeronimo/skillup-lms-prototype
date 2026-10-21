@@ -6,7 +6,9 @@ import { ARMING_WINDOW_MS, canArm, parseCssTimeMs } from "./arming";
 import { arriveDelay, batchSteps, planArrival } from "./cascade";
 import { countText } from "./count";
 import { LOAD_MODE_KEY, loadDelayMs, parseLoadMode, shouldShowSkeleton, type LoadMode } from "./loadMode";
-import { VISITED_KEY, arrivalKey, isFirstVisit, markVisited, parseVisited, serializeVisited } from "./visits";
+import { nextRingPhase, ringShownPct, ringTransitionClass, type RingPhase } from "./ring";
+import { createObserverRegistry, viewportObserver, type InViewCallback } from "./observerRegistry";
+import { VISITED_KEY, arrivalKey, decideVisit, isFirstVisit, markVisited, parseVisited, serializeVisited } from "./visits";
 
 /*
  * Loading and arrival (motion-matrix §7.9). One controller per platform page
@@ -33,9 +35,15 @@ export type ArrivalState = {
   released: boolean;
   /** Just after the load (ARMING_WINDOW_MS): counters and fills mounting now still count. */
   arming: boolean;
+  /**
+   * The page's one IntersectionObserver (review M2): calls `cb` once when `el` first shows,
+   * with the batch that came into view with it. Returns the unregister.
+   */
+  observe: (el: Element, cb: InViewCallback) => () => void;
 };
 
-const SETTLED: ArrivalState = { decided: false, first: false, released: true, arming: false };
+const NO_OBSERVE: ArrivalState["observe"] = () => () => {};
+const SETTLED: ArrivalState = { decided: false, first: false, released: true, arming: false, observe: NO_OBSERVE };
 
 declare global {
   interface Window {
@@ -87,17 +95,42 @@ export function readLoadMode(): LoadMode {
   }
 }
 
-/** The demo menu's Loading switch, kept per browser. */
+/** Fired on window when either Loading switch changes (the other tab gets a `storage` event). */
+const LOAD_MODE_EVENT = "sk-arrival-load-mode";
+/** The choice when storage is blocked: still shared by the two switches of this page. */
+let memoryLoadMode: LoadMode | null = null;
+
+function subscribeLoadMode(onChange: () => void): () => void {
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === LOAD_MODE_KEY) onChange();
+  };
+  window.addEventListener(LOAD_MODE_EVENT, onChange);
+  window.addEventListener("storage", onStorage);
+  return () => {
+    window.removeEventListener(LOAD_MODE_EVENT, onChange);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+/**
+ * The demo menu's Loading switch, kept per browser. One source for its two places (the
+ * player's demo menu and the platform top bar's panel, review M6): both read localStorage
+ * through useSyncExternalStore and a change in one updates the other while it is open.
+ */
 export function useLoadMode(): [LoadMode, (mode: LoadMode) => void] {
-  const [mode, setMode] = React.useState<LoadMode>("normal");
-  React.useEffect(() => setMode(readLoadMode()), []);
+  const mode = React.useSyncExternalStore(
+    subscribeLoadMode,
+    () => memoryLoadMode ?? readLoadMode(),
+    () => "normal" as LoadMode,
+  );
   const set = React.useCallback((next: LoadMode) => {
-    setMode(next);
     try {
       window.localStorage.setItem(LOAD_MODE_KEY, next);
+      memoryLoadMode = null;
     } catch {
-      /* blocked: the choice holds for this page only */
+      memoryLoadMode = next;
     }
+    window.dispatchEvent(new Event(LOAD_MODE_EVENT));
   }, []);
   return [mode, set];
 }
@@ -121,36 +154,44 @@ function runArrive(el: HTMLElement, delayStep: number) {
  * below the fold wait (invisible, still focusable: a Tab to one scrolls it in and shows it)
  * and rise when they first intersect, each batch from that moment. Returns the cleanup.
  */
-function startCascade(root: HTMLElement, resume = false): () => void {
+function startCascade(
+  root: HTMLElement,
+  observe: ArrivalState["observe"],
+  resume = false,
+): () => void {
   // Resuming (strict mode's second effect run, after the first run's cleanup disconnected the
   // observer): only the sections still waiting below the fold are watched again.
-  const sections = [...root.querySelectorAll<HTMLElement>(resume ? '[data-arrive-state="wait"]' : "[data-arrive]")];
+  // A section that is not rendered (a hidden tab panel, a breakpoint's other block) is left
+  // alone: it would keep a "run" it never plays and replay it when it is shown later.
+  const sections = [...root.querySelectorAll<HTMLElement>(resume ? '[data-arrive-state="wait"]' : "[data-arrive]")].filter(
+    (el) => el.getClientRects().length > 0,
+  );
   if (!sections.length) return () => {};
   const step = (el: Element) => Number((el as HTMLElement).dataset.arrive);
-  const fold = window.innerHeight;
+  // The fold: the window's bottom, or the root's when it scrolls itself and ends above it (the
+  // player body, over its footer nav).
+  const fold = Math.min(window.innerHeight, root.getBoundingClientRect().bottom);
   const plan = planArrival(
     sections.map((el) => ({ step: step(el), inView: !resume && el.getBoundingClientRect().top < fold })),
   );
-  const observer =
-    typeof IntersectionObserver === "undefined"
-      ? null
-      : new IntersectionObserver((entries) => {
-          const shown = entries.filter((e) => e.isIntersecting).map((e) => e.target as HTMLElement);
-          const ranks = batchSteps(shown.map(step));
-          shown.forEach((el, k) => {
-            observer?.unobserve(el);
-            runArrive(el, ranks[k]);
-          });
-        });
+  const offs: (() => void)[] = [];
   sections.forEach((el, i) => {
     const p = plan[i];
-    if (p.run) runArrive(el, p.delayStep);
-    else if (observer) {
-      el.setAttribute("data-arrive-state", "wait");
-      observer.observe(el);
+    if (p.run) {
+      runArrive(el, p.delayStep);
+      return;
     }
+    el.setAttribute("data-arrive-state", "wait");
+    // The page's shared observer: the sections of one round rise as a batch, in step order.
+    offs.push(
+      observe(el, (batch) => {
+        const shown = batch.filter((b): b is HTMLElement => b instanceof HTMLElement && b.hasAttribute("data-arrive"));
+        const ranks = batchSteps(shown.map(step));
+        runArrive(el, ranks[Math.max(0, shown.indexOf(el))] ?? 0);
+      }),
+    );
   });
-  return () => observer?.disconnect();
+  return () => offs.forEach((off) => off());
 }
 
 /**
@@ -160,7 +201,10 @@ function startCascade(root: HTMLElement, resume = false): () => void {
  * starts the cascade inside `rootRef` in the same task (no frame of un-animated content).
  */
 export function useArrivalController(pathname: string, rootRef: React.RefObject<HTMLElement>): ArrivalState {
-  const [state, setState] = React.useState<ArrivalState>(SETTLED);
+  const [state, setState] = React.useState<Omit<ArrivalState, "observe">>(SETTLED);
+  // One observer for the page: the cascade and every counter, bar and ring (review M2).
+  const [registry] = React.useState(() => createObserverRegistry(viewportObserver));
+  React.useEffect(() => () => registry.disconnect(), [registry]);
   const decision = React.useRef<{ key: string; first: boolean; mode: LoadMode; released: boolean } | null>(null);
 
   useIsoLayoutEffect(() => {
@@ -189,7 +233,7 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
     const release = () => {
       d.released = true;
       html.removeAttribute("data-arrival");
-      if (rootRef.current) stopCascade = startCascade(rootRef.current);
+      if (rootRef.current) stopCascade = startCascade(rootRef.current, registry.observe);
       openArming();
     };
 
@@ -197,7 +241,7 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
       html.removeAttribute("data-arrival");
       setState({ decided: true, first: false, released: true, arming: false });
     } else if (d.released) {
-      if (rootRef.current) stopCascade = startCascade(rootRef.current, true);
+      if (rootRef.current) stopCascade = startCascade(rootRef.current, registry.observe, true);
       openArming();
     } else if (shouldShowSkeleton(d.first, d.mode)) {
       html.setAttribute("data-arrival", "pending");
@@ -212,9 +256,46 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
       stopCascade();
       if (!d.released) html.removeAttribute("data-arrival");
     };
-  }, [pathname, rootRef]);
+  }, [pathname, rootRef, registry]);
 
-  return state;
+  return React.useMemo(() => ({ ...state, observe: registry.observe }), [state, registry]);
+}
+
+/**
+ * The player shell's arrival (top bar and sidebar rings): its own first visit, keyed by the
+ * course (`courseArrivalPath`), decided once and marked in the session, so the rings sweep on
+ * the first topic opened in the course and not on every new topic. The load, the arming window
+ * and the page's observer are the body controller's (`body`). Clears the pre-paint
+ * `data-arrival-course` flag once the rings have been drawn from this decision. Call it after
+ * useArrivalController in the same component, so it reads the session the body just marked.
+ */
+export function useCourseArrival(courseKey: string, body: ArrivalState): ArrivalState {
+  const decision = React.useRef<{ key: string; first: boolean } | null>(null);
+  const [first, setFirst] = React.useState<boolean | null>(null);
+  useIsoLayoutEffect(() => {
+    if (decision.current?.key !== courseKey) {
+      const visited = readVisited();
+      const d = visited ? decideVisit(courseKey, visited) : { first: false, visited: null };
+      if (d.visited && d.first) writeVisited(d.visited);
+      decision.current = { key: courseKey, first: d.first };
+    }
+    setFirst(decision.current.first);
+  }, [courseKey]);
+  // The flag only acts on rings that have not read a decision yet (OverallProgress), so it can
+  // go as soon as the course is decided.
+  React.useEffect(() => {
+    if (first !== null) document.documentElement.removeAttribute("data-arrival-course");
+  }, [first]);
+  return React.useMemo(
+    () => ({
+      decided: first !== null && body.decided,
+      first: first === true,
+      released: body.released,
+      arming: body.arming,
+      observe: body.observe,
+    }),
+    [first, body.decided, body.released, body.arming, body.observe],
+  );
 }
 
 /**
@@ -224,8 +305,15 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
  * Never armed on a revisit, under reduced motion, outside a platform page, or when the element
  * mounts after the arming window (a tab panel, a filtered card: no replay).
  */
-function useArrivalTrigger(ref: React.RefObject<Element>): { armed: boolean; go: boolean } {
-  const { first, released, decided, arming } = useArrival();
+export type ArrivalTrigger = {
+  armed: boolean;
+  go: boolean;
+  /** The element has read the arrival decision (false on the server and before the decision). */
+  decided: boolean;
+};
+
+export function useArrivalTrigger(ref: React.RefObject<Element>): ArrivalTrigger {
+  const { first, released, decided, arming, observe } = useArrival();
   const [phase, setPhase] = React.useState<"idle" | "armed" | "go" | "done">("idle");
   const used = React.useRef(false);
 
@@ -239,15 +327,15 @@ function useArrivalTrigger(ref: React.RefObject<Element>): { armed: boolean; go:
   React.useEffect(() => {
     const el = ref.current;
     if (phase !== "armed" || !released || !el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      setPhase("go");
+    // Not rendered when the content shows (a hidden tab panel): it never counts, so showing
+    // it later (a tab switch) does not replay anything.
+    if (el.getClientRects().length === 0) {
+      setPhase("done");
       return;
     }
     let next = 0;
     let wait = 0;
-    const observer = new IntersectionObserver((entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      observer.disconnect();
+    const off = observe(el, () => {
       // Next task: the section around it has been set rising by then (if it was waiting below
       // the fold, its own observer fires in the same round); start when its delay is over.
       next = window.setTimeout(() => {
@@ -256,15 +344,14 @@ function useArrivalTrigger(ref: React.RefObject<Element>): { armed: boolean; go:
         wait = window.setTimeout(() => setPhase("go"), delay);
       }, 0);
     });
-    observer.observe(el);
     return () => {
-      observer.disconnect();
+      off();
       window.clearTimeout(next);
       window.clearTimeout(wait);
     };
-  }, [phase, released, ref]);
+  }, [phase, released, ref, observe]);
 
-  return { armed: phase === "armed", go: phase === "go" };
+  return { armed: phase === "armed", go: phase === "go", decided: phase !== "idle" };
 }
 
 /**
@@ -274,7 +361,15 @@ function useArrivalTrigger(ref: React.RefObject<Element>): { armed: boolean; go:
  */
 export function useArrivalCount<T extends Element>(value: string): { ref: React.RefObject<T>; text: string; counting: boolean } {
   const ref = React.useRef<T>(null);
-  const { armed, go } = useArrivalTrigger(ref);
+  const trigger = useArrivalTrigger(ref);
+  return { ref, ...useCountText(value, trigger) };
+}
+
+/**
+ * The count-up text of `value` driven by a trigger the caller owns: a bar's value text runs
+ * from the bar's own trigger, so the two start on the same frame (review M2).
+ */
+export function useCountText(value: string, { armed, go }: ArrivalTrigger): { text: string; counting: boolean } {
   // Starts on the count's first step, so the frame between "in view" and the first tick is 0, not the figure.
   const [text, setText] = React.useState(() => countText(value, 0, MOTION_MS.long2));
 
@@ -293,7 +388,7 @@ export function useArrivalCount<T extends Element>(value: string): { ref: React.
   }, [go, value]);
 
   const counting = armed || (go && text !== value);
-  return { ref, text: armed ? countText(value, 0, MOTION_MS.long2) : go ? text : value, counting };
+  return { text: armed ? countText(value, 0, MOTION_MS.long2) : go ? text : value, counting };
 }
 
 /**
@@ -301,8 +396,33 @@ export function useArrivalCount<T extends Element>(value: string): { ref: React.
  * component animates the change itself (a transform or stroke-dashoffset transition at
  * long2, standard-decelerate); under reduced motion it is never armed.
  */
-export function useArrivalValue<T extends Element>(target: number): { ref: React.RefObject<T>; value: number; armed: boolean } {
+export function useArrivalValue<T extends Element>(
+  target: number,
+): { ref: React.RefObject<T>; value: number; armed: boolean; trigger: ArrivalTrigger } {
   const ref = React.useRef<T>(null);
-  const { armed } = useArrivalTrigger(ref);
-  return { ref, value: armed ? 0 : target, armed };
+  const trigger = useArrivalTrigger(ref);
+  return { ref, value: trigger.armed ? 0 : target, armed: trigger.armed, trigger };
+}
+
+/**
+ * A progress ring (motion-matrix §7.9 with §7.2): on a first visit it is drawn empty until it
+ * shows, then sweeps to `pct` (long2, standard-decelerate, no delay); afterwards, and on every
+ * revisit, a change of `pct` is the completion chain's beat (the same transition, short4
+ * late). See lib/arrival/ring. `shown` is the percentage to draw, `transition` the arc's
+ * classes, `trigger` drives the centre figure's count (ArrivalCountFrom).
+ */
+export function useArrivalRing<T extends Element>(
+  pct: number,
+): { ref: React.RefObject<T>; shown: number; transition: string; trigger: ArrivalTrigger; decided: boolean } {
+  const { ref, armed, trigger } = useArrivalValue<T>(pct);
+  const [phase, setPhase] = React.useState<RingPhase>("settled");
+  const last = React.useRef(pct);
+  useIsoLayoutEffect(() => {
+    const changed = last.current !== pct;
+    last.current = pct;
+    setPhase((p) => nextRingPhase(p, armed, changed));
+  }, [armed, pct]);
+  // The render that arms comes before the effect above: draw it empty already.
+  const drawn: RingPhase = armed ? "armed" : phase;
+  return { ref, shown: ringShownPct(drawn, pct), transition: ringTransitionClass(drawn), trigger, decided: trigger.decided };
 }

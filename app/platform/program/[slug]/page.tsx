@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { ProgramDetailView } from "@/components/platform/program/ProgramDetailView";
+import { ProgramSkeleton } from "@/components/platform/program/ProgramSkeleton";
 import { getProgramBySlug } from "@/lib/platform/program";
 import { pageTitle } from "@/lib/utils";
 
@@ -19,7 +20,7 @@ export default function ProgramDetailPage({ params }: Params) {
   if (!program) notFound();
 
   return (
-    <PlatformPage current="my-learning">
+    <PlatformPage current="my-learning" skeleton={<ProgramSkeleton program={program} />}>
       {/* The view reads ?tab= through useSearchParams, which needs a Suspense boundary. */}
       <Suspense fallback={null}>
         <ProgramDetailView program={program} />

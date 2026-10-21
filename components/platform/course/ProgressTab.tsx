@@ -4,6 +4,8 @@ import * as React from "react";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
+import { ArrivalCountFrom } from "@/components/atoms/ArrivalCount";
+import { useArrivalRing } from "@/lib/arrival/useArrival";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CertificateCard } from "@/components/platform/program/CertificatesTab";
 import type { CourseDetail } from "@/lib/platform/course-detail";
@@ -19,8 +21,10 @@ import { WeeklyGoalCard } from "./WeeklyGoalCard";
 function CompletionRing({ percent, label }: { percent: number; label: string }) {
   const radius = 41.4;
   const circumference = 2 * Math.PI * radius;
+  // Sweeps from empty when it first shows on a first visit (motion-matrix §7.9).
+  const ring = useArrivalRing<HTMLDivElement>(percent);
   return (
-    <div role="img" aria-label={`${label}: ${percent}%`} className="relative flex size-[92px] shrink-0 items-center justify-center">
+    <div ref={ring.ref} role="img" aria-label={`${label}: ${percent}%`} className="relative flex size-[92px] shrink-0 items-center justify-center">
       <svg className="size-[92px] -rotate-90" viewBox="0 0 92 92" aria-hidden>
         <circle cx="46" cy="46" r={radius} fill="none" stroke="var(--color-bg-muted)" strokeWidth="9.2" />
         <circle
@@ -31,12 +35,13 @@ function CompletionRing({ percent, label }: { percent: number; label: string }) 
           stroke="var(--color-bg-info)"
           strokeWidth="9.2"
           strokeLinecap="butt"
+          className={ring.transition}
           strokeDasharray={circumference}
-          strokeDashoffset={circumference - (percent / 100) * circumference}
+          strokeDashoffset={circumference - (ring.shown / 100) * circumference}
         />
       </svg>
       <span aria-hidden className="sk-text-headline-small-semibold absolute text-sko-text-default">
-        {percent}%
+        <ArrivalCountFrom value={`${percent}%`} trigger={ring.trigger} />
       </span>
     </div>
   );

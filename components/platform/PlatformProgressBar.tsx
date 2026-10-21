@@ -2,7 +2,7 @@
 
 import { CheckCircle2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { ArrivalCount } from "@/components/atoms/ArrivalCount";
+import { ArrivalCountFrom } from "@/components/atoms/ArrivalCount";
 import { useArrivalValue } from "@/lib/arrival/useArrival";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +40,7 @@ export interface PlatformProgressBarProps {
  * `className` goes on the bar, or on the bar + value row when `showValue` is set.
  * On a page's first visit in the session the fill grows from empty when the bar first shows
  * (a scaleX transform, long2, standard-decelerate) and the value counts up with it
- * (motion-matrix §7.9); on a revisit or under reduced motion it is drawn full at once.
+ * from the bar's own trigger (motion-matrix §7.9); on a revisit or under reduced motion it is drawn full at once.
  */
 export function PlatformProgressBar({
   value,
@@ -86,7 +86,7 @@ export function PlatformProgressBar({
       {bar}
       {/* The progressbar already carries the value. */}
       <span aria-hidden="true" className="sk-text-body-medium-medium shrink-0 text-sko-text-muted">
-        <ArrivalCount value={`${pct}%`} />
+        <ArrivalCountFrom value={`${pct}%`} trigger={arrival.trigger} />
       </span>
     </div>
   );

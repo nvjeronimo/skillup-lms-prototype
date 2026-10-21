@@ -7,6 +7,7 @@ import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore } from "@/lib/store";
 import type { PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
 import { useDemoMode } from "@/lib/demo";
 import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
 import { PageSkeleton } from "./PageSkeleton";
@@ -124,7 +125,7 @@ export function PlatformPage({
           {/* Rendered by the server and until the controller has decided (it only shows under
               data-arrival="pending"), then dropped once the content is in. */}
           {!arrival.decided || !arrival.released ? (
-            <div className="sk-arrival-skeleton">
+            <div {...inertProps(true)} className="sk-arrival-skeleton">
               {skeleton ?? <PageSkeleton />}
             </div>
           ) : null}

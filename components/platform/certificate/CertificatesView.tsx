@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { Badge } from "@/components/atoms/Badge";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CertificateCard } from "@/components/platform/program/CertificatesTab";
 import { certificatesInProgress, earnedCertificates } from "@/lib/platform/certificates";
+import { CertificatesSkeleton } from "./CertificatesSkeleton";
 
 /** A section heading with its count, as My Learning's section headers. */
 function SectionTitle({ id, title, count }: { id: string; title: string; count: number }) {
@@ -15,7 +17,7 @@ function SectionTitle({ id, title, count }: { id: string; title: string; count: 
     <h2 id={id} className="sk-text-title-large-semibold flex items-center gap-2 text-sko-text-default">
       {title}
       <Badge color="gray" variant="soft" size="md" aria-label={`${count} certificates`}>
-        {count}
+        <ArrivalCount value={String(count)} />
       </Badge>
     </h2>
   );
@@ -32,16 +34,20 @@ function SectionTitle({ id, title, count }: { id: string; title: string; count: 
  */
 export function CertificatesView() {
   return (
-    <PlatformPage current={null} className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
+    <PlatformPage
+      current={null}
+      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      skeleton={<CertificatesSkeleton />}
+    >
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 lg:gap-10">
-        <div className="flex flex-col gap-2">
+        <div data-arrive={0} className="flex flex-col gap-2">
           <h1 className="sk-text-headline-large-bold text-sko-text-default">Certificates</h1>
           <p className="sk-text-body-large-regular text-sko-text-subtle">
             Everything you have earned, and what you are working towards.
           </p>
         </div>
 
-        <section aria-labelledby="earned-title" className="flex flex-col gap-4 md:gap-5">
+        <section data-arrive={1} aria-labelledby="earned-title" className="flex flex-col gap-4 md:gap-5">
           <SectionTitle id="earned-title" title="Earned" count={earnedCertificates.length} />
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6">
             {earnedCertificates.map((e) => (
@@ -65,7 +71,7 @@ export function CertificatesView() {
           </ul>
         </section>
 
-        <section aria-labelledby="progress-title" className="flex flex-col gap-4 md:gap-5">
+        <section data-arrive={2} aria-labelledby="progress-title" className="flex flex-col gap-4 md:gap-5">
           <SectionTitle id="progress-title" title="In progress" count={certificatesInProgress.length} />
           <ul className="flex flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
             {certificatesInProgress.map((c) => (

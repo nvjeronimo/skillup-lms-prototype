@@ -7,6 +7,7 @@ import { ArrowLeft, MessageSquare, Plus } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { SelectField } from "@/components/atoms/SelectField";
 import { Button } from "@/components/atoms/Button";
+import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { Message } from "@/components/platform/course/QaTab";
 import { SearchField } from "@/components/platform/my-learning/SearchField";
@@ -81,6 +82,133 @@ function InboxRow({ thread, selected, selectedFromTablet }: { thread: Discussion
   );
 }
 
+/** A message bubble while it loads: the author line, the bubble with its ghost text, the time line. */
+function MessageSkeleton({ message }: { message: DiscussionThread["messages"][number] }) {
+  const bubble = (
+    <div className="sk-text-body-medium-regular select-none rounded-control bg-sko-bg-muted px-3 py-2 text-transparent max-md:self-stretch md:max-w-[420px]">
+      {message.body}
+    </div>
+  );
+  if (message.from === "learner") {
+    return (
+      <div aria-hidden="true" className="flex flex-col items-end gap-1">
+        <Skeleton variant="ghost" text="body-small-medium">{message.author}</Skeleton>
+        {bubble}
+        <Skeleton variant="ghost" text="body-small-regular">{message.time}</Skeleton>
+      </div>
+    );
+  }
+  return (
+    <div aria-hidden="true" className="flex items-start gap-2">
+      <Skeleton variant="circle" size={32} />
+      <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
+        <div className="flex flex-wrap items-center gap-1">
+          <Skeleton variant="ghost" text="body-small-medium">{message.author}</Skeleton>
+          {message.label ? <SkeletonPill>{message.label}</SkeletonPill> : null}
+          {message.accepted ? <SkeletonPill>ACCEPTED ANSWER</SkeletonPill> : null}
+        </div>
+        {bubble}
+        <Skeleton variant="ghost" text="body-small-regular">{`${message.time}  Report`}</Skeleton>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Discussion while it loads (motion-matrix §7.9): DiscussionView's layout from the same data,
+ * so it has the page's geometry: the title, its lead and New post; the inbox (search, course,
+ * filter, the conversation rows as ghost lines); the open conversation (tablet up, or the one
+ * in ?thread=, which on a phone is shown alone).
+ */
+export function DiscussionSkeleton() {
+  const [threadId, setThreadId] = React.useState<string | null>(null);
+  React.useEffect(() => setThreadId(new URLSearchParams(window.location.search).get("thread")), []);
+  const explicit = discussionThreads.find((t) => t.id === threadId);
+  const current = explicit ?? discussionThreads[0];
+  return (
+    <div className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
+        <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
+          <div className="flex flex-col gap-1">
+            <Skeleton variant="ghost" text="headline-large-bold">Discussion across your courses.</Skeleton>
+            <Skeleton variant="ghost" text="body-medium-regular">
+              Talk with your cohort. For a private question to your mentor, use Mentorship Q&amp;A in the course.
+            </Skeleton>
+          </div>
+          <SkeletonPill size="button-md" icon className="md:h-11">New post</SkeletonPill>
+        </div>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start">
+          <div
+            className={cn(
+              "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[340px] md:shrink-0 lg:w-[380px]",
+              explicit && "max-md:hidden",
+            )}
+          >
+            <div className="flex flex-col gap-3 bg-sko-bg-subtle px-[11px] py-3">
+              <Skeleton variant="block" radius="control" className="h-11 md:h-10" />
+              <div className="flex flex-col gap-1">
+                <Skeleton variant="ghost" text="body-small-medium">Course</Skeleton>
+                <Skeleton variant="block" radius="control" className="h-11 md:h-10" />
+              </div>
+              <div className="inline-flex max-w-full gap-0.5 self-start overflow-hidden rounded-track bg-sko-bg-track p-1">
+                {discussionFilters.map((f) => (
+                  <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
+                ))}
+              </div>
+            </div>
+            <div className="border-t border-sko-border-subtle">
+              {discussionThreads.map((t) => (
+                <div key={t.id} className="flex items-start gap-2 border-b border-sko-border-subtle px-[11px] py-3 last:border-b-0">
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <Skeleton variant="ghost" text="body-small-medium" className="truncate">{t.course}</Skeleton>
+                    <div className="flex flex-wrap items-start gap-1">
+                      <SkeletonPill>{t.kind === "question" ? "QUESTION" : "DISCUSSION"}</SkeletonPill>
+                      {t.answered ? <SkeletonPill>ANSWERED</SkeletonPill> : null}
+                      {t.following ? <SkeletonPill>FOLLOWING</SkeletonPill> : null}
+                    </div>
+                    <Skeleton variant="ghost" text={t.unread > 0 ? "body-medium-semibold" : "body-medium-medium"}>{t.title}</Skeleton>
+                    <Skeleton variant="ghost" text="body-small-regular" className="truncate">{t.preview}</Skeleton>
+                    <Skeleton variant="ghost" text="body-small-regular">
+                      {`${t.meta} · ${t.replies} ${t.replies === 1 ? "reply" : "replies"}`}
+                    </Skeleton>
+                  </div>
+                  {t.unread > 0 ? <Skeleton variant="block" width={20} height={20} radius="pill" className="mt-0.5" /> : null}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className={cn("min-w-0 flex-1 flex-col gap-4", explicit ? "flex" : "hidden md:flex")}>
+            <SkeletonPill size="button-sm" icon className="self-start max-md:h-11 md:hidden">All conversations</SkeletonPill>
+            <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+              <div className="flex flex-col gap-3 bg-sko-bg-subtle p-3 md:flex-row md:items-start md:justify-between">
+                <div className="flex min-w-0 flex-col gap-1">
+                  <Skeleton variant="ghost" text="body-small-medium">{`${current.course} · ${current.topic}`}</Skeleton>
+                  <Skeleton variant="ghost" text="title-medium-semibold">{current.title}</Skeleton>
+                </div>
+                <SkeletonPill size="button-sm" className="self-start max-md:h-11">{current.following ? "Following" : "Follow"}</SkeletonPill>
+              </div>
+              <div className="flex flex-col gap-4 p-4 md:p-5 lg:p-6">
+                {current.messages.map((m) => (
+                  <MessageSkeleton key={m.id} message={m} />
+                ))}
+              </div>
+              {current.replies > current.messages.length - 1 ? (
+                <div className="px-4 pb-4 md:px-5 lg:px-6">
+                  <Skeleton text="body-small-regular" width="60%" />
+                </div>
+              ) : null}
+              <div className="flex items-center gap-2 border-t border-sko-border-subtle p-3">
+                <Skeleton variant="block" radius="control" className="h-11 min-w-0 flex-1 md:h-10" />
+                <SkeletonPill size="button-sm" className="max-md:h-11">Reply</SkeletonPill>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Discussion (proposal, 17 Oct 2026; no Figma screen yet): every course's discussions in one
  * inbox, laid out as the course's Q&A tab (list 360 / 320 beside the open conversation; mobile
@@ -114,7 +242,7 @@ export function DiscussionView() {
   return (
     <div className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
-        <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
+        <div data-arrive={0} className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
           <div className="flex flex-col gap-1">
             <h1 className="sk-text-headline-large-bold text-sko-text-default">
               Discussion <span data-heading-em="" className="text-sko-text-subtle">across your courses.</span>
@@ -131,6 +259,7 @@ export function DiscussionView() {
 
         <div className="flex flex-col gap-4 md:flex-row md:items-start" data-mock="Discussions come one course at a time (Discussions API); this inbox merges them">
           <section
+            data-arrive={1}
             aria-labelledby="discussion-list-title"
             className={cn(
               "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[340px] md:shrink-0 lg:w-[380px]",
@@ -172,7 +301,7 @@ export function DiscussionView() {
             )}
           </section>
 
-          <div className={cn("min-w-0 flex-1 flex-col gap-4", explicit ? "flex" : "hidden md:flex")}>
+          <div data-arrive={2} className={cn("min-w-0 flex-1 flex-col gap-4", explicit ? "flex" : "hidden md:flex")}>
             <ButtonLink
               href={discussionHref()}
               scroll={false}
