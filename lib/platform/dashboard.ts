@@ -23,6 +23,9 @@ export interface DashboardStat {
   label: string;
   value: string;
   detail: string;
+  /** The phone's one-line card (Nelson, 21 Oct 2026): shorter words, same facts. */
+  shortLabel?: string;
+  shortDetail?: string;
 }
 
 /**
@@ -43,14 +46,15 @@ const programsInProgress = programPercents.filter((ps) => ps.some((x) => x > 0) 
 export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
   title: "Your learning at a glance",
   stats: [
-    { label: "Courses in progress", value: String(coursesInProgress), detail: `of ${enrolled} enrolled` },
-    { label: "Courses completed", value: String(coursesCompleted), detail: `of ${enrolled} enrolled` },
+    { label: "Courses in progress", value: String(coursesInProgress), detail: `of ${enrolled} enrolled`, shortLabel: "In progress", shortDetail: `of ${enrolled} courses` },
+    { label: "Courses completed", value: String(coursesCompleted), detail: `of ${enrolled} enrolled`, shortLabel: "Completed", shortDetail: `of ${enrolled} courses` },
     // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
-    { label: "Certificates", value: String(earnedCertificates.length), detail: "ready to download" },
+    { label: "Certificates", value: String(earnedCertificates.length), detail: "ready to download", shortDetail: "to download" },
     {
       label: "Programs",
       value: String(PROGRAMS.length),
       detail: `${programsInProgress} in progress · ${programsCompleted} completed`,
+      shortDetail: `${programsInProgress} active · ${programsCompleted} done`,
     },
   ],
 };
