@@ -56,16 +56,12 @@ export function watchedFraction(intervals: readonly Interval[], duration: number
   return Math.min(1, seconds / duration);
 }
 
-/** True only on the update that takes coverage from below the threshold to at or above it. */
-export function crossesAutoComplete(
-  before: readonly Interval[],
-  after: readonly Interval[],
-  duration: number,
-): boolean {
-  return (
-    watchedFraction(before, duration) < AUTO_COMPLETE_FRACTION &&
-    watchedFraction(after, duration) >= AUTO_COMPLETE_FRACTION
-  );
+/**
+ * True when the coverage meets BR-01's 90%. Completing once is the store's part: a topic already
+ * completed is never completed again (P1-46), so this may stay true on every later stretch.
+ */
+export function reachedAutoComplete(intervals: readonly Interval[], duration: number): boolean {
+  return watchedFraction(intervals, duration) >= AUTO_COMPLETE_FRACTION;
 }
 
 /**

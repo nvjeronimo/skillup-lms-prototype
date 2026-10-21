@@ -17,8 +17,8 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "completion",
     question: "How does a topic get completed?",
     answer:
-      "Quizzes, assignments and open responses complete when you submit them and, where they are graded, once the grade is in. An activity completes when you finish its last step. Readings, lesson pages, labs, videos and podcasts are completed by you, with Mark as Complete at the end of the content.",
-    source: "lab-third-party-platforms.md §4",
+      "Quizzes, assignments and open responses complete when you submit them and, where they are graded, once the grade is in. An activity completes when you finish its last step. A video or podcast completes by itself once you have played 90% of it, over one visit or several. Readings, lesson pages and labs are completed by you, with Mark as Complete at the end of the content.",
+    source: "lab-third-party-platforms.md §4, BR-01",
   },
   {
     id: "completion-by-hand",

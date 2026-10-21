@@ -954,14 +954,29 @@ export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
 }
 
 /**
+ * A video or podcast whose playback the platform measures: it completes by itself once 90% of
+ * it has been played, in one session or across sessions (BR-01, P1-46; `lib/playback/coverage`).
+ * In the prototype that is every video and podcast with a duration, since the simulated players
+ * report the time played. A topic can say otherwise with `playbackMeasurable: false`.
+ */
+export function isPlaybackMeasured(topic: FlatTopic): boolean {
+  const family = topicFamily(topic.type);
+  return (
+    (family === "video" || family === "podcast") &&
+    topic.playbackMeasurable !== false &&
+    getMediaSeconds(topic) > 0
+  );
+}
+
+/**
  * Topics the platform cannot measure (lab-third-party-platforms.md §4): a Reading, a Lesson Page,
  * an Activity, a lab the learner downloads and a partner lab that sends nothing back. They keep
  * their Mark as Complete button, and Next asks the learner whether they have completed the topic
  * when they move on without it.
  *
- * Video and Podcast are in the list here for one reason: the prototype does not measure
- * playback. In the product they complete by themselves at 90% played, and Next asks only when
- * playback cannot be measured. The prototype is always in that case.
+ * A Video or Podcast is in the list only when its playback cannot be measured (BR-01: "as
+ * Reading"). Measured, it completes by itself at 90% played, with no Mark as Complete and no
+ * question on Next (Nelson, 21 Oct 2026). See `isPlaybackMeasured`.
  *
  * Left out: the types with their own submission (quiz, assignment, ORA) and VILT (attendance).
  */
@@ -972,8 +987,7 @@ export function completesByHand(topic: FlatTopic): boolean {
     family === "reading" ||
     family === "lessonPage" ||
     family === "activity" ||
-    family === "video" ||
-    family === "podcast"
+    ((family === "video" || family === "podcast") && !isPlaybackMeasured(topic))
   );
 }
 

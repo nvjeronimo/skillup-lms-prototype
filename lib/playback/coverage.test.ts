@@ -4,8 +4,8 @@ import {
   MAX_TICK_SECONDS,
   addPlayed,
   advancePlayback,
-  crossesAutoComplete,
   mergeIntervals,
+  reachedAutoComplete,
   watchedFraction,
   type Interval,
 } from "./coverage";
@@ -76,25 +76,20 @@ describe("seeking does not count as watching", () => {
     // The seek itself adds nothing: only the stretches advanced by playback are added.
     watched = addPlayed(watched, 90, 100);
     expect(watchedFraction(watched, 100)).toBeCloseTo(0.2);
-    expect(crossesAutoComplete([], watched, 100)).toBe(false);
+    expect(reachedAutoComplete(watched, 100)).toBe(false);
   });
 });
 
-describe("crossesAutoComplete", () => {
+describe("reachedAutoComplete", () => {
   const d = 100;
   it("the threshold is 90% (BR-01)", () => expect(AUTO_COMPLETE_FRACTION).toBe(0.9));
-  it("is true on the stretch that reaches 90%", () =>
-    expect(crossesAutoComplete([[0, 89]], addPlayed([[0, 89]], 89, 90), d)).toBe(true));
-  it("is false below 90%", () =>
-    expect(crossesAutoComplete([[0, 80]], addPlayed([[0, 80]], 80, 89.9), d)).toBe(false));
-  it("is true once only: past 90% it is false on every later stretch", () => {
-    const at90 = addPlayed([], 0, 90);
-    expect(crossesAutoComplete(at90, addPlayed(at90, 90, 95), d)).toBe(false);
-  });
+  it("is true from the stretch that reaches 90%", () =>
+    expect(reachedAutoComplete(addPlayed([[0, 89]], 89, 90), d)).toBe(true));
+  it("is false below 90%", () => expect(reachedAutoComplete(addPlayed([[0, 80]], 80, 89.9), d)).toBe(false));
   it("counts coverage from earlier sessions (cumulative)", () => {
     const earlier: Interval[] = [[0, 50]];
-    const today = addPlayed(earlier, 50, 90);
-    expect(crossesAutoComplete(earlier, today, d)).toBe(true);
+    expect(reachedAutoComplete(earlier, d)).toBe(false);
+    expect(reachedAutoComplete(addPlayed(earlier, 50, 90), d)).toBe(true);
   });
 });
 

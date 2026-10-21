@@ -46,6 +46,12 @@ export interface Topic {
   bookmarked?: boolean;
   videoSrc?: string;
   transcript?: TranscriptLine[];
+  /**
+   * Video and Podcast only: `false` when the platform cannot measure playback (BR-01: then the
+   * topic completes as a Reading, with Mark as Complete and the question on Next). Left out, the
+   * playback is measured and the topic completes by itself at 90% played (`isPlaybackMeasured`).
+   */
+  playbackMeasurable?: boolean;
 }
 
 export interface Lesson {
