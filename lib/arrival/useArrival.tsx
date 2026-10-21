@@ -161,7 +161,11 @@ function startCascade(
 ): () => void {
   // Resuming (strict mode's second effect run, after the first run's cleanup disconnected the
   // observer): only the sections still waiting below the fold are watched again.
-  const sections = [...root.querySelectorAll<HTMLElement>(resume ? '[data-arrive-state="wait"]' : "[data-arrive]")];
+  // A section that is not rendered (a hidden tab panel, a breakpoint's other block) is left
+  // alone: it would keep a "run" it never plays and replay it when it is shown later.
+  const sections = [...root.querySelectorAll<HTMLElement>(resume ? '[data-arrive-state="wait"]' : "[data-arrive]")].filter(
+    (el) => el.getClientRects().length > 0,
+  );
   if (!sections.length) return () => {};
   const step = (el: Element) => Number((el as HTMLElement).dataset.arrive);
   const fold = window.innerHeight;
@@ -279,6 +283,12 @@ export function useArrivalTrigger(ref: React.RefObject<Element>): ArrivalTrigger
   React.useEffect(() => {
     const el = ref.current;
     if (phase !== "armed" || !released || !el) return;
+    // Not rendered when the content shows (a hidden tab panel): it never counts, so showing
+    // it later (a tab switch) does not replay anything.
+    if (el.getClientRects().length === 0) {
+      setPhase("done");
+      return;
+    }
     let next = 0;
     let wait = 0;
     const off = observe(el, () => {
