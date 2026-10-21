@@ -466,7 +466,7 @@ export function AssistantWindow({
           maxLength={MAX_QUESTION}
           autoComplete="off"
           placeholder="Ask about the platform or your courses…"
-          className="sk-text-body-medium-regular h-11 min-w-0 flex-1 rounded-control border border-sko-border-subtle bg-sko-bg-subtle px-4 text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
+          className="sk-text-body-medium-regular h-11 min-w-0 flex-1 rounded-control border border-sko-border-subtle bg-sko-bg-subtle px-4 text-sko-text-default outline-none placeholder:text-sko-text-placeholder transition-colors focus:border-sko-border-primary"
         />
         <button
           type="submit"

@@ -65,7 +65,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
   return (
     <div className="flex flex-col gap-3 py-3">
       {/* DS Input field Size=sm, Type=Search (Focused: 2px border/primary). */}
-      <div className="flex items-center gap-2 rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary">
+      <div className="flex items-center gap-2 rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 transition-[border-color,box-shadow] focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary">
         <Icon icon={Search} size={20} className="text-sko-icon-faint" />
         <input
           value={query}

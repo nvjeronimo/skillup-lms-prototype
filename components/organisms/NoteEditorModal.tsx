@@ -152,7 +152,7 @@ export function NoteEditorModal({
               onChange={(e) => setText(e.target.value)}
               rows={4}
               placeholder="Write your note…"
-              className="sk-text-body-medium-regular w-full resize-none rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus:border-sko-border-primary"
+              className="sk-text-body-medium-regular w-full resize-none rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none transition-colors focus:border-sko-border-primary"
             />
           </label>
 

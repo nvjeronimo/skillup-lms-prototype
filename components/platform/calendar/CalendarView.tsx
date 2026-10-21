@@ -203,7 +203,7 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
                             href={e.href}
                             title={`${e.label}: ${e.title}`}
                             className={cn(
-                              "sk-text-body-small-medium flex items-center gap-1 truncate rounded-inner px-1 py-0.5 text-sko-text-default hover:bg-sko-bg-subtle",
+                              "sk-text-body-small-medium flex items-center gap-1 truncate rounded-inner px-1 py-0.5 text-sko-text-default transition-colors hover:bg-sko-bg-subtle",
                               // Done: struck through. Missed: in the error ink, not struck — it still needs doing.
                               e.complete && "text-sko-text-subtle line-through",
                               isMissed(e) && "text-sko-text-error",

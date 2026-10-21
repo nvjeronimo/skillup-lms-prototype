@@ -147,7 +147,7 @@ export function DiscussionView() {
                 <SelectField
                   value={course}
                   onChange={(e) => setCourse(e.target.value)}
-                  className="sk-text-body-medium-regular h-11 rounded-control border border-sko-border-default bg-sko-bg-page pl-3.5 text-sko-text-default focus:border-sko-border-primary focus:outline-none md:h-10"
+                  className="sk-text-body-medium-regular h-11 rounded-control border border-sko-border-default bg-sko-bg-page pl-3.5 text-sko-text-default transition-colors focus:border-sko-border-primary focus:outline-none md:h-10"
                 >
                   <option value="all">All courses</option>
                   {COURSES.map(([slug, title]) => (
@@ -226,7 +226,7 @@ export function DiscussionView() {
                   notInPrototype("Sending a reply");
                 }}
               >
-                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
+                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm transition-[border-color,box-shadow] focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
                   <span className="sr-only">Write a reply</span>
                   <input
                     type="text"
