@@ -1,16 +1,16 @@
-import { Loader2 } from "lucide-react";
+import { PageSkeleton, SkeletonStatus } from "@/components/platform/PageSkeleton";
 
 /**
- * Shown while a platform route segment loads. The spinner pulses instead of turning
- * when reduced motion is on (app/globals.css).
+ * Shown while a platform route segment loads (Next's route-segment fallback): the generic
+ * page skeleton on the page ground, with the Dashboard's padding (motion-matrix §7.9; it
+ * replaced the spinner). Static under reduced motion (app/globals.css).
  */
 export default function PlatformLoading() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-3 bg-sko-bg-faint">
-      <div role="status" className="flex flex-col items-center gap-3">
-        <Loader2 size={32} strokeWidth={2} aria-hidden className="animate-spin text-sko-icon-primary" />
-        <p className="sk-text-body-medium-medium text-sko-text-muted">Loading your learning…</p>
-      </div>
+    <div className="min-h-[100dvh] bg-sko-bg-faint px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
+      <SkeletonStatus>
+        <PageSkeleton />
+      </SkeletonStatus>
     </div>
   );
 }
