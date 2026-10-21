@@ -412,6 +412,116 @@ button {
   animation: sk-sheet-out var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
 }
 
+/* Menus and popovers (motion block "Popovers & disclosures", 21 Oct 2026): a small panel that
+   grows out of its trigger, 96% → 100% with a nudge (4px) of travel and a fade, short3 in on
+   standard-decelerate; it leaves the same way it came, short2 on standard-accelerate (R8, R10).
+   The trigger side comes from an origin-* utility on the panel (origin-top-right under a
+   right-aligned trigger). `-menu` drops down (starts 4px up); `-menu-up` opens above its
+   trigger (starts 4px down). The flyout is the fade alone, no travel (the rail's Topic-Flyout).
+   A closing panel never takes a click meant for what is under it. */
+@keyframes sk-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-menu-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scale(0.96);
+  }
+}
+@keyframes sk-menu-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-nudge)) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-menu-up-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-nudge)) scale(0.96);
+  }
+}
+/* A full-width dropdown (the compact top bar's section menu): no horizontal scale, which would
+   pull its edges in from the screen sides; it settles down by the nudge with a 96% vertical scale. */
+@keyframes sk-menu-y-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sk-menu-y-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
+  }
+}
+.sk-animate-menu-y {
+  animation: sk-menu-y-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-menu {
+  animation: sk-menu-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-menu-up {
+  animation: sk-menu-up-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+.sk-animate-flyout {
+  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+[data-state="closed"].sk-animate-menu,
+[data-state="closed"] .sk-animate-menu {
+  animation: sk-menu-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-menu-y,
+[data-state="closed"] .sk-animate-menu-y {
+  animation: sk-menu-y-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-menu-up,
+[data-state="closed"] .sk-animate-menu-up {
+  animation: sk-menu-up-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-flyout,
+[data-state="closed"] .sk-animate-flyout {
+  animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+}
+[data-state="closed"].sk-animate-menu,
+[data-state="closed"] .sk-animate-menu,
+[data-state="closed"].sk-animate-menu-y,
+[data-state="closed"] .sk-animate-menu-y,
+[data-state="closed"].sk-animate-menu-up,
+[data-state="closed"] .sk-animate-menu-up,
+[data-state="closed"].sk-animate-flyout,
+[data-state="closed"] .sk-animate-flyout,
+[data-state="closed"].sk-animate-sheet,
+[data-state="closed"] .sk-animate-sheet {
+  pointer-events: none;
+}
+
 /* Reduced motion (the OS setting here; the Accessibility panel's switch further down
    applies the same rules). Movement is removed, feedback is kept: colour and opacity
    changes still ease, sliding surfaces fade in, and the spinner pulses. A blanket
@@ -448,6 +558,31 @@ button {
   .sk-animate-reveal,
   .sk-animate-fade {
     animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+  }
+  /* Menus: the fade alone, short3 in / short2 out (the exits below). */
+  .sk-animate-menu,
+  .sk-animate-menu-y,
+  .sk-animate-menu-up {
+    animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+  }
+  [data-state="closed"].sk-animate-menu,
+  [data-state="closed"] .sk-animate-menu,
+  [data-state="closed"].sk-animate-menu-y,
+  [data-state="closed"] .sk-animate-menu-y,
+  [data-state="closed"].sk-animate-menu-up,
+  [data-state="closed"] .sk-animate-menu-up {
+    animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+  }
+  /* Collapse snaps open and shut (no height travel, spec §6); its content fades in (short3). */
+  [data-collapse] {
+    transition-property: none !important;
+  }
+  .sk-collapse-body {
+    transition-duration: var(--motion-duration-short3);
+    transition-timing-function: var(--motion-easing-standard-decelerate);
+  }
+  [data-collapse="closed"] > .sk-collapse-body {
+    opacity: 0;
   }
   /* The bookmark only fills; the live dot holds still beside its word. */
   .sk-animate-bookmark,
@@ -581,6 +716,31 @@ button {
 [data-reduce-motion] .sk-animate-reveal,
 [data-reduce-motion] .sk-animate-fade {
   animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+/* Menus: the fade alone, short3 in / short2 out. */
+[data-reduce-motion] .sk-animate-menu,
+[data-reduce-motion] .sk-animate-menu-y,
+[data-reduce-motion] .sk-animate-menu-up {
+  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+}
+[data-reduce-motion] [data-state="closed"].sk-animate-menu,
+[data-reduce-motion] [data-state="closed"] .sk-animate-menu,
+[data-reduce-motion] [data-state="closed"].sk-animate-menu-y,
+[data-reduce-motion] [data-state="closed"] .sk-animate-menu-y,
+[data-reduce-motion] [data-state="closed"].sk-animate-menu-up,
+[data-reduce-motion] [data-state="closed"] .sk-animate-menu-up {
+  animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+}
+/* Collapse snaps open and shut (no height travel, spec §6); its content fades in (short3). */
+[data-reduce-motion] [data-collapse] {
+  transition-property: none !important;
+}
+[data-reduce-motion] .sk-collapse-body {
+  transition-duration: var(--motion-duration-short3);
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+}
+[data-reduce-motion] [data-collapse="closed"] > .sk-collapse-body {
+  opacity: 0;
 }
 /* The bookmark only fills; the live dot holds still beside its word. */
 [data-reduce-motion] .sk-animate-bookmark,

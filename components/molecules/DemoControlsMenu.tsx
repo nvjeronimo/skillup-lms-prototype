@@ -89,7 +89,7 @@ export function DemoControlsMenu({
   userAvatarUrl,
   compact = false,
 }: DemoControlsMenuProps) {
-  const { open, setOpen, containerRef, triggerProps, panelProps } = useDisclosure();
+  const { mounted, setOpen, containerRef, triggerProps, panelProps } = useDisclosure();
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const demo = useDemoMode();
@@ -147,7 +147,7 @@ export function DemoControlsMenu({
         ) : null}
       </button>
 
-      {open ? (
+      {mounted ? (
         <div
           {...panelProps}
           role="group"

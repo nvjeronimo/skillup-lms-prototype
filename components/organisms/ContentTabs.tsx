@@ -47,7 +47,7 @@ function CountBadge({ n }: { n: number }) {
  * trigger). A visually hidden h2 names the region that follows.
  */
 export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", className }: ContentTabsProps) {
-  const { open, close, containerRef, triggerProps, panelProps } = useDisclosure();
+  const { open, mounted, close, containerRef, triggerProps, panelProps } = useDisclosure();
   const current = tabs.find((t) => t.slug === active) ?? tabs[0];
   const indicator = useTabIndicator(active, tabs.length);
 
@@ -84,10 +84,10 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               />
             </button>
 
-            {open ? (
+            {mounted ? (
               <ul
                 {...panelProps}
-                className="absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-card border border-sko-border-primary bg-sko-bg-page p-1 shadow-lg"
+                className="sk-animate-menu origin-top absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-card border border-sko-border-primary bg-sko-bg-page p-1 shadow-lg"
               >
                 {tabs.map((t) => {
                   const selected = t.slug === active;

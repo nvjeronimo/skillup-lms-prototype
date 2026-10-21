@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { Collapse } from "@/components/atoms/Collapse";
 import { MyLearningCourseCard } from "@/components/platform/my-learning/MyLearningCourseCard";
 import { useLmsStore } from "@/lib/store";
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
@@ -179,26 +180,23 @@ export function CourseRowCard({
         </button>
       </div>
 
-      <div
-        id={panelId}
-        role="region"
-        aria-label={`Modules of ${title}`}
-        hidden={!open}
-        className="border-t border-sko-border-subtle bg-sko-bg-faint p-4"
-      >
-        {modules?.length ? (
-          <ol
-            data-mock="Module durations are not authored yet (effort_time)"
-            className="flex flex-col gap-2"
-          >
-            {modules.map((module) => (
-              <ModuleRow key={module.number} module={module} />
-            ))}
-          </ol>
-        ) : (
-          <p className="sk-text-body-medium-regular text-sko-text-subtle">{CONTENT_PENDING}</p>
-        )}
-      </div>
+      {/* Grows open (Collapse, medium2); the rule and padding sit inside the clipped row. */}
+      <Collapse id={panelId} role="region" aria-label={`Modules of ${title}`} open={open}>
+        <div className="border-t border-sko-border-subtle bg-sko-bg-faint p-4">
+          {modules?.length ? (
+            <ol
+              data-mock="Module durations are not authored yet (effort_time)"
+              className="flex flex-col gap-2"
+            >
+              {modules.map((module) => (
+                <ModuleRow key={module.number} module={module} />
+              ))}
+            </ol>
+          ) : (
+            <p className="sk-text-body-medium-regular text-sko-text-subtle">{CONTENT_PENDING}</p>
+          )}
+        </div>
+      </Collapse>
     </li>
   );
 }

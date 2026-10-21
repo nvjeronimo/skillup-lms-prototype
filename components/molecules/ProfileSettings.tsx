@@ -46,9 +46,12 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
   );
 }
 
-/** The menu's panel: 288 wide, scrolls inside when the window is short. */
+/**
+ * The menu's panel: 288 wide, scrolls inside when the window is short. It hangs under the
+ * avatar and grows out of the trigger's corner (top right).
+ */
 export const PROFILE_PANEL =
-  "absolute right-0 top-[calc(100%+8px)] z-50 flex max-h-[calc(100dvh-88px)] w-72 flex-col overflow-y-auto overflow-x-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-xl";
+  "sk-animate-menu origin-top-right absolute right-0 top-[calc(100%+8px)] z-50 flex max-h-[calc(100dvh-88px)] w-72 flex-col overflow-y-auto overflow-x-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-xl";
 
 export function ProfileSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (

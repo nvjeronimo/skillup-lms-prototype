@@ -39,7 +39,7 @@ export function CardOverflowMenu({
   itemLabel,
   className,
 }: CardOverflowMenuProps) {
-  const { open, setOpen, containerRef, triggerProps, panelProps } = useDisclosure(defaultOpen);
+  const { mounted, setOpen, containerRef, triggerProps, panelProps } = useDisclosure(defaultOpen);
 
   return (
     <div ref={containerRef} className={cn("relative", className)}>
@@ -51,10 +51,10 @@ export function CardOverflowMenu({
       >
         <Icon icon={MoreHorizontal} size={20} />
       </button>
-      {open ? (
+      {mounted ? (
         <ul
           {...panelProps}
-          className="absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-sk-card"
+          className="sk-animate-menu origin-top-right absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-sk-card"
         >
           {items.map((item) => (
             <li key={item.label}>

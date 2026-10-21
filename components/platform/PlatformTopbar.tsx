@@ -264,7 +264,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 </span>
                 <Icon icon={ChevronDown} size={16} className="text-sko-icon-default" />
               </button>
-              {profile.open ? (
+              {profile.mounted ? (
                 <ProfilePanel panelProps={profile.panelProps} onDone={profile.close} />
               ) : null}
             </div>
@@ -287,11 +287,13 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               >
                 <Icon icon={Menu02} size={24} />
               </button>
-              {menu.open ? (
+              {/* A full-width dropdown under the bar (not a drawer): the menu motion without the
+                  horizontal scale (menu-y), settling from the top. */}
+              {menu.mounted ? (
                 <nav
                   {...menu.panelProps}
                   aria-label="Platform"
-                  className="absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
+                  className="sk-animate-menu-y origin-top absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
                 >
                   <SectionLinks
                     current={current}
@@ -326,7 +328,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               >
                 <Initials />
               </button>
-              {profileCompact.open ? (
+              {profileCompact.mounted ? (
                 <ProfilePanel
                   panelProps={profileCompact.panelProps}
                   onDone={profileCompact.close}

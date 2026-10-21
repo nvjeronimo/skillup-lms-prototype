@@ -14,6 +14,7 @@ export interface CollapseProps extends React.HTMLAttributes<HTMLDivElement> {
  * not on the Collapse: padding on the clipped row would stay visible when closed.
  * Extra props (id, role, aria-labelledby) go on the outer element. A closed body carries
  * `data-collapse="closed"`, so callers can tell it from inert set elsewhere (useDialog).
+ * Reduced motion (globals.css): the rows snap, and the content fades in at short3.
  */
 export function Collapse({ open, children, className, ...rest }: CollapseProps) {
   return (
@@ -28,7 +29,7 @@ export function Collapse({ open, children, className, ...rest }: CollapseProps) 
         className,
       )}
     >
-      <div className="min-h-0 overflow-hidden">{children}</div>
+      <div className="sk-collapse-body min-h-0 overflow-hidden">{children}</div>
     </div>
   );
 }

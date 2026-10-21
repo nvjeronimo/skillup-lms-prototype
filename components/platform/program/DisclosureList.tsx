@@ -3,6 +3,7 @@
 import * as React from "react";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { Collapse } from "@/components/atoms/Collapse";
 import { CONTENT_PENDING, type ProgramDisclosureItem } from "@/lib/platform/program";
 import { cn } from "@/lib/utils";
 
@@ -51,17 +52,14 @@ function DisclosureRow({
           />
         </button>
       </h3>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        hidden={!open}
-        className="sk-text-body-large-regular mt-1 space-y-4 pr-8 text-sko-text-subtle md:pr-10"
-      >
-        {body.map((paragraph) => (
-          <p key={paragraph}>{paragraph}</p>
-        ))}
-      </div>
+      {/* Grows open (Collapse, medium2); the 4 above the body is padding inside the clipped row. */}
+      <Collapse id={panelId} role="region" aria-labelledby={buttonId} open={open}>
+        <div className="sk-text-body-large-regular space-y-4 pr-8 pt-1 text-sko-text-subtle md:pr-10">
+          {body.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+      </Collapse>
     </li>
   );
 }
