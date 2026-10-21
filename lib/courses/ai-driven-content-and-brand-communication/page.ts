@@ -1,12 +1,24 @@
 import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
 import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
 import { outline } from "./outline";
+/**
+ * The mentor of this course, in one place (UX audit, 20 Oct 2026): the Q&A tab, the Discussion
+ * inbox and the Services page all read it, so the same course never shows two mentors.
+ */
+export const MENTOR = {
+  name: "Ana Costa",
+  firstName: "Ana",
+  role: "Brand and content strategy",
+  responds: "typically responds within 1 day",
+} as const;
+
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "AI-Driven Content and Brand Communication": course 2 of 7 of the AI Augmented Digital
  * Marketing program, in progress. Its figures follow the module rows of the Program page
  * (lib/platform/program): 38 topics, Module 1 complete and 3 of 10 topics of Module 2,
- * about 13 hours, a weighted grade of 28% against the 70% needed. Today is 24 Sep 2026, the
+ * about 13 hours, a weighted grade of 28% against the 70% needed. Today is 24 Oct 2026, the
  * day of the Dashboard, whose due item is Assignment 02 on the 26th.
  */
 const WEEKLY_GOAL: WeeklyGoal = {
@@ -14,7 +26,7 @@ const WEEKLY_GOAL: WeeklyGoal = {
   title: "You met your goal this week",
   body: "Take a moment to celebrate your progress.",
   week: THIS_WEEK,
-  days: week(["done", "done", "missed", "today-done", "upcoming", "upcoming", "upcoming"]),
+  days: week(["done", "done", "missed", "missed", "missed", "today-done", "upcoming"]),
   count: "3 of 3 days this week",
   lastWeek: "Last week: 3 of 3",
   plan: "Regular · 3 days a week.",
@@ -28,7 +40,7 @@ export const page: CourseDetail = {
   difficulty: "Beginner",
   stats: { structure: "4 modules · 38 topics", duration: "~ 13 hours", org: "SkillUp · ADM-02" },
   progress: {
-    percent: 40,
+    percent: 39,
     label: "Course progress",
     eyebrow: "Go to last topic",
     cta: "Resume course",
@@ -74,7 +86,7 @@ export const page: CourseDetail = {
     title: "Not earned yet, keep on track!",
     requirements: [
       { title: "Reach the passing grade", detail: "28% now · 70% needed", percent: 28 },
-      { title: "Complete the course content", detail: "15 of 38 topics · 40%", percent: 40 },
+      { title: "Complete the course content", detail: "15 of 38 topics · 39%", percent: 39 },
     ],
   },
   handouts: {
@@ -90,23 +102,23 @@ export const page: CourseDetail = {
     items: [
       {
         id: "assignment-02",
-        iso: "2026-09-26",
+        iso: "2026-10-26",
         day: "26",
-        month: "SEP",
+        month: "OCT",
         title: "Assignment 02 · Audience segmentation",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 2 days",
-        relativeColor: "yellow",
+        relative: relativeLabel("2026-10-26"),
+        relativeColor: relativeColor("2026-10-26"),
       },
       {
         id: "graded-quiz-visual",
-        iso: "2026-10-04",
-        day: "04",
-        month: "OCT",
+        iso: "2026-11-03",
+        day: "03",
+        month: "NOV",
         title: "Graded Quiz: AI for visual content",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 10 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-03"),
+        relativeColor: relativeColor("2026-11-03"),
       },
     ],
     cta: "All dates",
@@ -119,7 +131,7 @@ export const page: CourseDetail = {
       title: "Course completion",
       body: "How much of the course content you have completed.",
       counts: "15 complete · 17 incomplete · 6 locked",
-      percent: 40,
+      percent: 39,
     },
     passAlert: {
       title: "A weighted grade of 70% is required to pass",
@@ -187,8 +199,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-01",
-        iso: "2026-09-18T23:59",
-        date: "18 Sep 2026",
+        iso: "2026-10-18T23:59",
+        date: "18 Oct 2026",
         time: "23:59 · your time",
         state: "complete",
         badges: [
@@ -202,8 +214,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-brand",
-        iso: "2026-09-20T23:59",
-        date: "20 Sep 2026",
+        iso: "2026-10-20T23:59",
+        date: "20 Oct 2026",
         time: "23:59 · your time",
         state: "complete",
         badges: [
@@ -216,14 +228,14 @@ export const page: CourseDetail = {
         link: "Open the assignment",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "assignment-02",
-        iso: "2026-09-26T23:59",
-        date: "26 Sep 2026",
+        iso: "2026-10-26T23:59",
+        date: "26 Oct 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -237,8 +249,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-visual",
-        iso: "2026-10-04T23:59",
-        date: "04 Oct 2026",
+        iso: "2026-11-03T23:59",
+        date: "03 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -251,8 +263,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-project",
-        iso: "2026-10-10T23:59",
-        date: "10 Oct 2026",
+        iso: "2026-11-09T23:59",
+        date: "09 Nov 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -265,8 +277,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-assessment",
-        iso: "2026-10-11T23:59",
-        date: "11 Oct 2026",
+        iso: "2026-11-10T23:59",
+        date: "10 Nov 2026",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -279,8 +291,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2026-10-12T09:00",
-        date: "12 Oct 2026",
+        iso: "2026-11-11T09:00",
+        date: "11 Nov 2026",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],
@@ -307,7 +319,7 @@ export const page: CourseDetail = {
       {
         id: "brand-voice-drafts",
         title: "My AI drafts all sound the same. How do I get our voice in?",
-        preview: "Marcus: Add one sentence you would publish and one you would not.",
+        preview: `${MENTOR.firstName}: Add one sentence you would publish and one you would not.`,
         meta: "2 days ago  ·  4 replies",
         answered: true,
         following: true,
@@ -323,7 +335,7 @@ export const page: CourseDetail = {
           {
             id: "m2",
             from: "mentor",
-            author: "Marcus Lee",
+            author: MENTOR.name,
             label: "STAFF",
             accepted: true,
             body: "Traits on their own are too abstract for an assistant. Add one sentence you would publish and one you would not, and say why the second one fails. Examples steer the draft more than adjectives do.",
@@ -339,7 +351,7 @@ export const page: CourseDetail = {
           {
             id: "m4",
             from: "mentor",
-            author: "Marcus Lee",
+            author: MENTOR.name,
             label: "STAFF",
             body: "Then give the limit as a number: headlines of up to six words. Ask for the output with labels as well, so you can check each line against the limit.",
             time: "yesterday",
@@ -349,7 +361,7 @@ export const page: CourseDetail = {
       {
         id: "segments-count",
         title: "How many segments should Assignment 02 cover?",
-        preview: "Marcus: Three, split by need or situation.",
+        preview: `${MENTOR.firstName}: Three, split by need or situation.`,
         meta: "4 days ago  ·  3 replies  ·  1 unread",
         answered: true,
         following: false,
@@ -374,6 +386,6 @@ export const page: CourseDetail = {
         unread: false,
       },
     ],
-    mentorLine: "Marcus Lee · your mentor · typically responds within 1 day",
+    mentorLine: `${MENTOR.name} · your mentor · ${MENTOR.responds}`,
   },
 };

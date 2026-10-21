@@ -1,13 +1,14 @@
 import { GRAY, SIX_SIGMA, modulesFromOutline, playerHref } from "@/lib/courses/kit";
 import type { CourseDetail } from "@/lib/courses/kit";
 import { outline } from "./outline";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "Digital Marketing Fundamentals and the AI Mindset": course 1 of 7 of the AI Augmented
  * Digital Marketing program, completed. Its figures follow its row and its certificate in
  * the program file (lib/programs/ai-driven-digital-marketing): 4 modules, 36 topics, about
  * 12 hours, all complete, certificate issued 12 September 2026. The course opened with the
- * program on 27 June 2026. Today is 24 Sep 2026. The weighted grade is 91% against the 70%
+ * program on 27 June 2026. Today is 24 Oct 2026. The weighted grade is 91% against the 70%
  * needed.
  *
  * Since 10 Oct 2026 the page shows a PROPOSAL of the passed state (`passed`), which has no
@@ -112,8 +113,8 @@ export const page: CourseDetail = {
         month: "OCT",
         title: "Course ends",
         detail: "Access to the course closes with the program",
-        relative: "In 13 months",
-        relativeColor: "gray",
+        relative: relativeLabel("2027-10-31"),
+        relativeColor: relativeColor("2027-10-31"),
       },
     ],
     cta: "All dates",
@@ -296,8 +297,8 @@ export const page: CourseDetail = {
         description: "You passed with a weighted grade of 91%. Course 2 of the program opened the next day.",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {

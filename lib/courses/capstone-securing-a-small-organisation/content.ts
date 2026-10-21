@@ -548,7 +548,7 @@ export const content: CourseContent = {
         "Bring your three milestones together into one security plan for Tidewater Veterinary Group. Revise them with the feedback you received, add a twelve-month roadmap, and open with a one-page summary written for the practice owner.",
       deliverable:
         "Submit one PDF of 8 to 12 pages: the owner's summary, the risk register, the network and access design, the monitoring and incident response plan, and the roadmap with an owner and a cost band for each action.",
-      dueLabel: "Due 7 Feb 2027",
+      dueLabel: "Due 9 Mar 2027",
       requiredReviews: 2,
       acceptedTypes: [".pdf", ".docx"],
       overallCommentPrompt: "Which recommendation in your peer's plan would reduce the most risk for the least effort?",
@@ -613,7 +613,7 @@ export const content: CourseContent = {
         "Review the network and access designs of two peers. You are reading as the practice owner's adviser: could Tidewater approve this design and run it? Score each design against the rubric, and write comments that the author can act on before the final project.",
       deliverable:
         "First upload the design you submitted for Milestone 2, as a PDF or DOCX, so that it can be shared with your reviewers. Then complete two reviews: a score for each criterion and a comment of at least three sentences for each design.",
-      dueLabel: "Due 27 Jan 2027",
+      dueLabel: "Due 26 Feb 2027",
       requiredReviews: 2,
       acceptedTypes: [".pdf", ".docx"],
       overallCommentPrompt: "Which single change would most improve your peer's design before the final project?",

@@ -1,5 +1,6 @@
 import { certificatePageHref, coursePlayerHref, programCourse, slugify, user } from "./kit";
 import type { Program } from "./kit";
+import { relativeLabel } from "@/lib/sample-time";
 
 /**
  * Mock data of the Program page (Figma handoff frame 6728:15050, twelve cards: Courses,
@@ -48,7 +49,7 @@ const program: Program = {
       ],
     }),
     programCourse(2, "AI-Driven Content and Brand Communication", "AC", "program-course-2-ai-driven-content", {
-      progressPct: 40,
+      progressPct: 39,
       progressMeta: "13 hours total",
       upNext: { title: "Creating impactful ad copy with effective prompts", type: "Reading" },
       cta: "Resume",
@@ -175,7 +176,7 @@ const program: Program = {
       title: "Not earned yet, keep on track!",
       requirements: [
         { title: "Reach the passing grade", detail: "28% now · 70% needed", percent: 28 },
-        { title: "Complete the course content", detail: "15 of 38 topics · 40%", percent: 40 },
+        { title: "Complete the course content", detail: "15 of 38 topics · 39%", percent: 39 },
       ],
     },
   ],
@@ -373,7 +374,7 @@ const program: Program = {
       month: "OCT",
       title: "Program ends",
       detail: "31 Oct 2027 · access to all courses closes",
-      relative: "In 13 months",
+      relative: relativeLabel("2027-10-31"),
     },
   ],
   included: [

@@ -501,7 +501,7 @@ export const content: CourseContent = {
         "You take over a remote team next month: use your own team, or the case-study team from Assignment 01. Write the plan for your first 30 days. Say what you will learn about the team and how, which rituals you will keep, change or start, how the team will know what is expected of each person, and how you will notice if someone is overloaded or isolated.",
       deliverable:
         "Submit a PDF or DOCX of 2 to 3 pages: the plan week by week, the weekly calendar you propose with its time zones, and one paragraph on what you will not change in the first month and why.",
-      dueLabel: "Due 18 Oct 2026",
+      dueLabel: "Due 17 Nov 2026",
       requiredReviews: 2,
       acceptedTypes: [".pdf", ".docx"],
       overallCommentPrompt: "Which part of your peer's plan would you use with your own team?",

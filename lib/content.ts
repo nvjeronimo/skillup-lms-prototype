@@ -1072,7 +1072,7 @@ export function getOra(topic: FlatTopic): OraContent {
       "Define a control plan for a process of your choice. Identify the critical-to-quality characteristics, the metrics you'll monitor, the control limits, and the response plan when a measurement falls out of range.",
     deliverable:
       "Submit your plan as a PDF or DOCX, 1–2 pages, including at least one control chart sketch.",
-    dueLabel: "Due 1 Sep 2026",
+    dueLabel: "Due 25 Oct 2026",
     requiredReviews: 1,
     acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
     overallCommentPrompt: "What did you like most about your peer's submission?",

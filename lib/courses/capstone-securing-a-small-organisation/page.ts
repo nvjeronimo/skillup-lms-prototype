@@ -1,13 +1,14 @@
 import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
 import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
 import { outline } from "./outline";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "Capstone: Securing a Small Organisation":
  * the capstone (course 5 of 5) of the Cybersecurity Fundamentals Certificate, not started. Its figures follow
  * the course row of the Program page (lib/programs/cybersecurity-fundamentals): 25 topics
  * in 4 modules, about 12 hours, nothing completed and nothing graded. Today is
- * 24 Sep 2026 and the suggested schedule of the course starts on 11 Jan 2027, so every
+ * 24 Oct 2026 and the suggested schedule of the course starts on 10 Feb 2027, so every
  * due date is still to come and none is missed.
  */
 const WEEKLY_GOAL: WeeklyGoal = {
@@ -15,7 +16,7 @@ const WEEKLY_GOAL: WeeklyGoal = {
   title: "Your weekly goal",
   body: "A day counts when you open any lesson in this course.",
   week: THIS_WEEK,
-  days: week(["missed", "missed", "missed", "today", "upcoming", "upcoming", "upcoming"]),
+  days: week(["missed", "missed", "missed", "missed", "missed", "today", "upcoming"]),
   count: "0 of 3 days this week",
   lastWeek: "Last week: 0 of 3",
   plan: "Regular · 3 days a week.",
@@ -43,7 +44,7 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The suggested schedule of the capstone starts on 11 Jan 2027, after Course 4. The Tidewater Veterinary Group case file is in Handouts; read it before the first milestone.",
+    body: "The suggested schedule of the capstone starts on 10 Feb 2027, after Course 4. The Tidewater Veterinary Group case file is in Handouts; read it before the first milestone.",
   },
   intro: {
     title: "What you'll learn",
@@ -86,23 +87,23 @@ export const page: CourseDetail = {
     items: [
       {
         id: "course-starts",
-        iso: "2027-01-11",
-        day: "11",
-        month: "JAN",
+        iso: "2027-02-10",
+        day: "10",
+        month: "FEB",
         title: "Course starts",
         detail: "Suggested schedule begins",
-        relative: "In 4 months",
-        relativeColor: "gray",
+        relative: relativeLabel("2027-02-10"),
+        relativeColor: relativeColor("2027-02-10"),
       },
       {
         id: "milestone-1-asset-inventory-and-risk-register",
-        iso: "2027-01-17",
-        day: "17",
-        month: "JAN",
+        iso: "2027-02-16",
+        day: "16",
+        month: "FEB",
         title: "Milestone 1 · Asset inventory and risk register",
         detail: "Milestone due · 23:59 your time",
-        relative: "In 4 months",
-        relativeColor: "gray",
+        relative: relativeLabel("2027-02-16"),
+        relativeColor: relativeColor("2027-02-16"),
       },
     ],
     cta: "All dates",
@@ -176,17 +177,17 @@ export const page: CourseDetail = {
         state: "complete",
         badges: [{ label: "PROGRAM", color: GRAY }],
         title: "Enrolled in the program",
-        description: "You joined the Cybersecurity Fundamentals Certificate. Its five courses follow one another from 5 Oct 2026.",
+        description: "You joined the Cybersecurity Fundamentals Certificate. Its five courses follow one another from 4 Nov 2026.",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "course-starts",
-        iso: "2027-01-11T00:00",
-        date: "11 Jan 2027",
+        iso: "2027-02-10T00:00",
+        date: "10 Feb 2027",
         time: "00:00 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -195,8 +196,8 @@ export const page: CourseDetail = {
       },
       {
         id: "milestone-1-asset-inventory-and-risk-register",
-        iso: "2027-01-17T23:59",
-        date: "17 Jan 2027",
+        iso: "2027-02-16T23:59",
+        date: "16 Feb 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "MILESTONE", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -205,8 +206,8 @@ export const page: CourseDetail = {
       },
       {
         id: "milestone-2-network-and-access-design",
-        iso: "2027-01-24T23:59",
-        date: "24 Jan 2027",
+        iso: "2027-02-23T23:59",
+        date: "23 Feb 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "MILESTONE", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -215,8 +216,8 @@ export const page: CourseDetail = {
       },
       {
         id: "peer-review-two-control-designs",
-        iso: "2027-01-27T23:59",
-        date: "27 Jan 2027",
+        iso: "2027-02-26T23:59",
+        date: "26 Feb 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "PEER REVIEW", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -225,8 +226,8 @@ export const page: CourseDetail = {
       },
       {
         id: "milestone-3-monitoring-and-incident-response-plan",
-        iso: "2027-01-31T23:59",
-        date: "31 Jan 2027",
+        iso: "2027-03-02T23:59",
+        date: "02 Mar 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "MILESTONE", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -235,8 +236,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-capstone-checkpoint",
-        iso: "2027-01-31T23:59",
-        date: "31 Jan 2027",
+        iso: "2027-03-02T23:59",
+        date: "02 Mar 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "CHECKPOINT QUIZ", color: GRAY }, { label: "UPCOMING", color: GRAY }],
@@ -245,8 +246,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-project-security-plan-for-tidewater-veterinary-group",
-        iso: "2027-02-07T23:59",
-        date: "07 Feb 2027",
+        iso: "2027-03-09T23:59",
+        date: "09 Mar 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "FINAL PROJECT", color: GRAY }, { label: "LOCKED", color: GRAY }],
@@ -255,8 +256,8 @@ export const page: CourseDetail = {
       },
       {
         id: "peer-review-two-final-plans",
-        iso: "2027-02-10T23:59",
-        date: "10 Feb 2027",
+        iso: "2027-03-12T23:59",
+        date: "12 Mar 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [{ label: "DUE DATE", color: GRAY }, { label: "PEER REVIEW", color: GRAY }, { label: "LOCKED", color: GRAY }],
@@ -265,8 +266,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2027-02-15T09:00",
-        date: "15 Feb 2027",
+        iso: "2027-03-17T09:00",
+        date: "17 Mar 2027",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],

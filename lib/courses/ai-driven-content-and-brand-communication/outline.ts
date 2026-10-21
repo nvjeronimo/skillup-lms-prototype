@@ -12,7 +12,7 @@ export const outline: Course = {
   courseType: "Course",
   difficulty: "Beginner",
   deliveryMode: "Flexible Learning",
-  overallProgressPct: 40,
+  overallProgressPct: 39,
   modulesCompleted: 1,
   modulesTotal: 4,
   modules: [

@@ -1,3 +1,5 @@
+import { MENTOR as ACB_MENTOR } from "@/lib/courses/ai-driven-content-and-brand-communication/page";
+import { MENTOR as UXR_MENTOR } from "@/lib/courses/ux-research-and-design-thinking/page";
 import type { QaMessage } from "./course-detail";
 
 /**
@@ -51,7 +53,7 @@ export const discussionThreads: DiscussionThread[] = [
     mine: true,
     messages: [
       { id: "m1", from: "learner", author: "You", body: "Mine is already six pages and I haven't covered channels yet. Is there a sensible length for the assignment?", time: "Thu 4:12 PM" },
-      { id: "m2", from: "mentor", author: "Ana Costa", label: "Mentor", accepted: true, body: "Aim for one page people will actually read: three traits, a do/don't for each, and two before/after rewrites. Channel detail can live in an appendix.", time: "Fri 9:30 AM" },
+      { id: "m2", from: "mentor", author: ACB_MENTOR.name, label: "Mentor", accepted: true, body: "Aim for one page people will actually read: three traits, a do/don't for each, and two before/after rewrites. Channel detail can live in an appendix.", time: "Fri 9:30 AM" },
       { id: "m3", from: "mentor", author: "Marco Silva", label: "Learner", body: "That one-page rule helped me too. I put the channel notes in a table at the end.", time: "Fri 11:02 AM" },
     ],
   },
@@ -119,7 +121,7 @@ export const discussionThreads: DiscussionThread[] = [
     mine: true,
     messages: [
       { id: "m1", from: "learner", author: "You", body: "My draft has 18 questions and feels too long for a 30-minute interview.", time: "Tue 11:20 AM" },
-      { id: "m2", from: "mentor", author: "Ana Costa", label: "Mentor", accepted: true, body: "Six to eight open questions, with follow-ups you don't script. The rest of the time is the participant talking.", time: "Tue 3:05 PM" },
+      { id: "m2", from: "mentor", author: UXR_MENTOR.name, label: "Mentor", accepted: true, body: "Six to eight open questions, with follow-ups you don't script. The rest of the time is the participant talking.", time: "Tue 3:05 PM" },
     ],
   },
 ];

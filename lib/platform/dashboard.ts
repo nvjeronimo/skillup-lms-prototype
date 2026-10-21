@@ -3,6 +3,8 @@ import { discussionHref, discussionUnread } from "./discussion";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
 import { coursePageHref, coursePlayerHref, slugify } from "./hrefs";
+import { SAMPLE_TODAY, YOUR_TIME, dueBadgeLabel, parseDay, whenLabel } from "@/lib/sample-time";
+import { calendarEvents, isDueThisWeek, isMissed } from "./calendar";
 import { certificatesInProgress, earnedCertificates } from "./certificates";
 import { CATALOG } from "./catalog";
 import { PROGRAMS } from "./program";
@@ -61,53 +63,37 @@ export interface DashboardDueItem {
   day: string;
   /** "Today", "Tonight", or the weekday. */
   when: string;
-  /** Today = the day in text/error; Upcoming = text/default. */
+  /** Today (and overdue) = the day in text/error; Upcoming = text/default. */
   urgency: "today" | "upcoming";
   title: string;
   meta: string;
-  /** DS Badge Soft sm, Warning: "Due …". */
+  /** DS Badge Soft sm: Warning "Due tonight" / "Due tomorrow" / "Due Mon", Error "Overdue · 3 days". */
   status: { label: string; color: BadgeColor };
   /** The assignment in the player (the Dates API gives each one its `link`). */
   href: string;
 }
 
-/** Assignment deadlines only, titled as the Dates API titles them (one call per enrolled course). */
+/**
+ * Assignment deadlines only, as the Calendar lists them (lib/platform/calendar, read from each
+ * course's Dates tab since 20 Oct 2026): the overdue ones first, the same the Calendar's
+ * "Shift due dates" is about, then the next seven days, today included.
+ */
 export const dashboardDue: DashboardDueItem[] = [
-  {
-    id: "peer-review-persona-research",
-    day: "24",
-    when: "Tonight",
-    urgency: "today",
-    title: "Persona research draft (Peer Assessment)",
-    meta: "UX Research and Design Thinking · 11:59 PM",
-    status: { label: "Due 11:59", color: "warning" },
-    // "Persona research draft", the peer assessment that closes Module 1 of the course.
-    href: coursePlayerHref("ux-research-and-design-thinking", "uxr-m1-t10"),
-  },
-  {
-    id: "assignment-02-audience-segmentation",
-    day: "26",
-    // 26 October 2026 is a Monday (the sample week: today is Saturday the 24th).
-    when: "Mon",
-    urgency: "upcoming",
-    title: "Assignment 02 · Audience segmentation",
-    meta: "AI-Driven Content and Brand Communication · Homework",
-    status: { label: "Due Mon", color: "warning" },
-    // "Assignment 02 · Audience segmentation", the homework that closes Module 2 of the course.
-    href: coursePlayerHref(slugify("AI-Driven Content and Brand Communication"), "acb-m2-t10"),
-  },
-  {
-    // The third deadline of the week, as the Calendar lists it (17 Oct 2026).
-    id: "lrt-quiz-module-3",
-    day: "28",
-    when: "Wed",
-    urgency: "upcoming",
-    title: "Module 3 quiz · Meetings and rituals",
-    meta: "Leadership in Remote Teams · Graded quiz",
-    status: { label: "Due Wed", color: "warning" },
-    href: coursePlayerHref("leadership-in-remote-teams"),
-  },
-];
+  ...calendarEvents.filter(isMissed),
+  ...calendarEvents.filter(isDueThisWeek),
+].map((e) => {
+  const overdue = isMissed(e);
+  return {
+    id: e.id,
+    day: String(parseDay(e.date).getDate()),
+    when: whenLabel(e.date, e.time),
+    urgency: overdue || e.date === SAMPLE_TODAY ? "today" : "upcoming",
+    title: e.title,
+    meta: [e.course, e.label, e.time ? `${e.time} · ${YOUR_TIME}` : null].filter(Boolean).join(" · "),
+    status: { label: dueBadgeLabel(e.date, e.time), color: overdue ? "error" : "warning" },
+    href: e.href,
+  };
+});
 
 /* ── Pick up where you left off (LMS / Course Row · LMS / Platform / Resume row) ────── */
 
@@ -128,7 +114,7 @@ const PROGRAM_COURSE = slugify("AI-Driven Content and Brand Communication");
 
 export const dashboardResume: DashboardResumeCourse[] = [
   // Learner Home lists enrolments, which are courses: the row is the course the learner is in, not its program.
-  { id: PROGRAM_COURSE, slug: PROGRAM_COURSE, title: "AI-Driven Content and Brand Communication", deliveryMode: "Flexible Learning", progressPct: 40, href: coursePlayerHref(PROGRAM_COURSE), homeHref: coursePageHref(PROGRAM_COURSE) },
+  { id: PROGRAM_COURSE, slug: PROGRAM_COURSE, title: "AI-Driven Content and Brand Communication", deliveryMode: "Flexible Learning", progressPct: 39, href: coursePlayerHref(PROGRAM_COURSE), homeHref: coursePageHref(PROGRAM_COURSE) },
   { id: "ux-research-design-thinking", slug: "ux-research-and-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: coursePlayerHref("ux-research-and-design-thinking"), homeHref: coursePageHref("ux-research-and-design-thinking") },
   { id: "leadership-remote-teams", slug: "leadership-in-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: coursePlayerHref("leadership-in-remote-teams"), homeHref: coursePageHref("leadership-in-remote-teams") },
 ];

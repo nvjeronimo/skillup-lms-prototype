@@ -1,5 +1,6 @@
 import type { Course } from "@/lib/types";
 import type { CourseModule, CourseModuleState } from "@/lib/platform/course-detail";
+import { thisWeekLabel } from "@/lib/sample-time";
 import { moduleTopics, playerTopicHref, resumeTopicOf } from "./outline";
 
 /**
@@ -87,5 +88,5 @@ export function modulesFromOutline(
   });
 }
 
-/** Both sample weeks run Monday 21 to Sunday 27 September 2026; today is Thursday 24. */
-export const THIS_WEEK = "This week · 21–27 Sep";
+/** The sample week of every Weekly goal: Monday 19 to Sunday 25 October 2026; today is Saturday 24 (lib/sample-time). */
+export const THIS_WEEK = thisWeekLabel();

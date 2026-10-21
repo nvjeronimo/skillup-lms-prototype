@@ -1,5 +1,8 @@
 import type { DeliveryMode, Difficulty, Provider } from "@/components/atoms/MetaBadges";
 import type { TopicType } from "@/lib/types";
+import { COURSES as OWN_COURSES } from "@/lib/courses";
+import { PROGRAMS } from "@/lib/programs";
+import { SAMPLE_TODAY, formatDate, formatDay, formatDayMonth } from "@/lib/sample-time";
 import { coursePageHref, coursePlayerHref } from "./hrefs";
 
 /**
@@ -83,6 +86,63 @@ export interface MyLearningCourse {
 
 const COVERS = "/platform/covers";
 
+/* ── Dates and hours, read from the course and program data (UX audit, 20 Oct 2026) ──── */
+
+/** The page of a course with content of its own (lib/courses). */
+const ownPage = (slug: string) => OWN_COURSES.find((c) => c.page.slug === slug)?.page;
+
+/** The day a course's suggested schedule starts, from its Dates tab. */
+const courseStart = (slug: string) => {
+  const page = ownPage(slug);
+  const rows = page ? [...page.datesTab.past, ...page.datesTab.upcoming] : [];
+  return rows.find((r) => r.id === "course-starts" || r.id === "suggested-start")?.iso.slice(0, 10) ?? SAMPLE_TODAY;
+};
+
+/** A start date: "Starts Fri 13 Nov" while it is to come, "Started 5 Oct" once it has passed. */
+const startLabel = (iso: string) => (iso > SAMPLE_TODAY ? `Starts ${formatDay(iso)}` : `Started ${formatDayMonth(iso)}`);
+
+/** The first deadline still to come in a course (its Dates tab), as "Due Mon 26 Oct". */
+function nextDueOf(slug: string): string | undefined {
+  const row = ownPage(slug)?.datesTab.upcoming.find(
+    (r) => r.badges[0]?.label === "DUE DATE" && r.state !== "complete" && r.iso.slice(0, 10) >= SAMPLE_TODAY,
+  );
+  return row ? `Due ${formatDay(row.iso.slice(0, 10))}` : undefined;
+}
+
+/** "~ 8h 35m left" → 8.58; "13 hours total" → 13. */
+function hoursIn(text: string): number {
+  const m = /(\d+)\s*h(?:ours?)?(?:\s*(\d+)\s*m)?/.exec(text);
+  return m ? Number(m[1]) + Number(m[2] ?? 0) / 60 : 0;
+}
+
+/**
+ * The hours of a program (DS v1.8 details line), the sum over its courses: nothing for a course
+ * completed, the time left on the page of a course in progress, the whole effort of a course not
+ * started. A program not started yet shows its total.
+ */
+function programHours(slug: string): string | undefined {
+  const program = PROGRAMS.find((p) => p.slug === slug);
+  if (!program) return undefined;
+  let total = 0;
+  let left = 0;
+  for (const c of program.courses) {
+    const hours = hoursIn(c.card.progressMeta);
+    const pct = c.card.progressPct ?? 0;
+    total += hours;
+    if (pct >= 100) continue;
+    const timeLeft = ownPage(c.slug)?.progress.timeLeft;
+    left += pct > 0 && timeLeft ? hoursIn(timeLeft) : hours;
+  }
+  const started = program.courses.some((c) => (c.card.progressPct ?? 0) > 0);
+  return started ? `${Math.round(left)} h left` : `${Math.round(total)} h total`;
+}
+
+/** The end of access of a program: the "ends" date of its page, which every course's "Course ends" repeats. */
+function accessUntilOf(slug: string): string | undefined {
+  const iso = PROGRAMS.find((p) => p.slug === slug)?.dates.find((d) => d.id === "ends")?.iso;
+  return iso ? `Access until ${formatDate(iso)}` : undefined;
+}
+
 const COURSES: MyLearningCourse[] = [
   {
     id: "ux-research-and-design-thinking",
@@ -148,7 +208,7 @@ const COURSES: MyLearningCourse[] = [
     difficulty: "Advanced",
     delivery: "Flexible Learning",
     progressPct: null,
-    progressMeta: "Starts Oct 14",
+    progressMeta: startLabel(courseStart("business-analytics-with-python")),
     upNext: { title: "Python environment setup", type: "Reading" },
     cta: "Start",
   },
@@ -211,7 +271,7 @@ export interface MyLearningProgram {
   progressPct: number;
   /** State=In progress: the first course in progress, with a Primary "Resume". */
   upNext?: string;
-  /** State=Not started: the Badge Gray start date ("Starts Oct 5"), with a Secondary "Start". */
+  /** State=Not started: the Badge Gray start date ("Starts Wed 4 Nov"), with a Secondary "Start". */
   status?: string;
   /** State=Completed: the date the program certificate was issued (Certificates API). */
   certificateDate?: string;
@@ -237,10 +297,10 @@ export const myLearningPrograms: MyLearningProgram[] = [
     courseCount: 7,
     imageSrc: `${COVERS}/program-ai-digital-marketing.jpg`,
     initials: "AD",
-    nextDue: "Due Fri 17 Oct",
+    nextDue: nextDueOf("ai-driven-content-and-brand-communication"),
     lastStudied: "Last studied 3 days ago",
-    hours: "18 h left",
-    accessUntil: "Access until 30 Jun 2027",
+    hours: programHours("ai-driven-digital-marketing"),
+    accessUntil: accessUntilOf("ai-driven-digital-marketing"),
     progressPct: 14,
     upNext: "Course 2 · AI-Driven Content and Brand Communication",
     cta: "Resume",
@@ -258,10 +318,10 @@ export const myLearningPrograms: MyLearningProgram[] = [
     initials: "CF",
     // No picture was made for this program: a placeholder cover, the same as the Figma screens (16 Oct 2026).
     imageSrc: `${COVERS}/intro-to-product-analytics.jpg`,
-    hours: "42 h total",
-    accessUntil: "Access until 31 Mar 2027",
+    hours: programHours("cybersecurity-fundamentals"),
+    accessUntil: accessUntilOf("cybersecurity-fundamentals"),
     progressPct: 0,
-    status: "Starts Oct 5",
+    status: startLabel(courseStart("security-foundations-and-the-threat-landscape")),
     cta: "Start",
     href: "/platform/program/cybersecurity-fundamentals",
   },

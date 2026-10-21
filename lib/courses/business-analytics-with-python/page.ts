@@ -1,13 +1,14 @@
 import { GRAY, SIX_SIGMA, THIS_WEEK, modulesFromOutline, playerHref, week } from "@/lib/courses/kit";
 import type { CourseDetail, WeeklyGoal } from "@/lib/courses/kit";
 import { outline } from "./outline";
+import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sample-time";
 
 /**
  * "Business Analytics with Python": a stand-alone course of My Learning, not started. Its
  * figures follow the My Learning card: no progress (0 of 44 topics), first up the reading
- * "Python environment setup". The card gives no total effort, only "Starts Oct 14": the
- * 15 hours here are the sum of the outline, and the start is 14 Oct 2026, three weeks after
- * today (24 Sep 2026, the day of the Dashboard). The content is open before
+ * "Python environment setup". The card gives no total effort, only "Starts Fri 13 Nov": the
+ * 15 hours here are the sum of the outline, and the start is 13 Nov 2026, three weeks after
+ * today (24 Oct 2026, the day of the Dashboard). The content is open before
  * then, which is why the card offers Start; the due dates count from the start date.
  */
 const WEEKLY_GOAL: WeeklyGoal = {
@@ -15,7 +16,7 @@ const WEEKLY_GOAL: WeeklyGoal = {
   title: "Your weekly goal",
   body: "A day counts when you open any lesson in this course.",
   week: THIS_WEEK,
-  days: week(["missed", "missed", "missed", "today", "upcoming", "upcoming", "upcoming"]),
+  days: week(["missed", "missed", "missed", "missed", "missed", "today", "upcoming"]),
   count: "0 of 3 days this week",
   lastWeek: "Last week: 0 of 3",
   plan: "Regular · 3 days a week.",
@@ -42,7 +43,7 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The due dates of this course count from 14 Oct 2026. The content is already open, so you can set up Python and work through Module 1 before then. The sales sample used in every module is in Handouts.",
+    body: "The due dates of this course count from 13 Nov 2026. The content is already open, so you can set up Python and work through Module 1 before then. The sales sample used in every module is in Handouts.",
   },
   intro: {
     title: "What you'll learn",
@@ -90,23 +91,23 @@ export const page: CourseDetail = {
     items: [
       {
         id: "course-starts",
-        iso: "2026-10-14",
-        day: "28",
-        month: "APR",
+        iso: "2026-11-13",
+        day: "13",
+        month: "NOV",
         title: "Course starts",
         detail: "Due dates count from this day",
-        relative: "In 20 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-13"),
+        relativeColor: relativeColor("2026-11-13"),
       },
       {
         id: "graded-quiz-foundations",
-        iso: "2026-10-25",
-        day: "09",
-        month: "MAY",
+        iso: "2026-11-24",
+        day: "24",
+        month: "NOV",
         title: "Graded Quiz: Python and pandas foundations",
         detail: "Assignment due · 23:59 your time",
-        relative: "In 31 days",
-        relativeColor: "gray",
+        relative: relativeLabel("2026-11-24"),
+        relativeColor: relativeColor("2026-11-24"),
       },
     ],
     cta: "All dates",
@@ -185,14 +186,14 @@ export const page: CourseDetail = {
         description: "The course content opened for you on this day.",
       },
     ],
-    todayLabel: "Today · 24 Sep 2026",
-    todayIso: "2026-09-24",
+    todayLabel: todayLabel(),
+    todayIso: SAMPLE_TODAY,
     upcomingLabel: "Upcoming",
     upcoming: [
       {
         id: "course-starts",
-        iso: "2026-10-14T00:00",
-        date: "14 Oct 2026",
+        iso: "2026-11-13T00:00",
+        date: "13 Nov 2026",
         time: "00:00 · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }],
@@ -201,8 +202,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-foundations",
-        iso: "2026-10-25T23:59",
-        date: "25 Oct 2026",
+        iso: "2026-11-24T23:59",
+        date: "24 Nov 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -215,8 +216,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-01",
-        iso: "2026-11-08T23:59",
-        date: "08 Nov 2026",
+        iso: "2026-12-08T23:59",
+        date: "08 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -229,8 +230,8 @@ export const page: CourseDetail = {
       },
       {
         id: "graded-quiz-exploration",
-        iso: "2026-11-22T23:59",
-        date: "22 Nov 2026",
+        iso: "2026-12-22T23:59",
+        date: "22 Dec 2026",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -243,8 +244,8 @@ export const page: CourseDetail = {
       },
       {
         id: "assignment-02",
-        iso: "2026-12-06T23:59",
-        date: "06 Dec 2026",
+        iso: "2027-01-05T23:59",
+        date: "05 Jan 2027",
         time: "23:59 · your time",
         state: "upcoming",
         badges: [
@@ -257,8 +258,8 @@ export const page: CourseDetail = {
       },
       {
         id: "capstone-project",
-        iso: "2026-12-20T23:59",
-        date: "20 Dec 2026",
+        iso: "2027-01-19T23:59",
+        date: "19 Jan 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -271,8 +272,8 @@ export const page: CourseDetail = {
       },
       {
         id: "final-assessment",
-        iso: "2026-12-23T23:59",
-        date: "23 Dec 2026",
+        iso: "2027-01-22T23:59",
+        date: "22 Jan 2027",
         time: "23:59 · your time",
         state: "locked",
         badges: [
@@ -285,8 +286,8 @@ export const page: CourseDetail = {
       },
       {
         id: "certificate-available",
-        iso: "2026-12-28T09:00",
-        date: "28 Dec 2026",
+        iso: "2027-01-27T09:00",
+        date: "27 Jan 2027",
         time: "09:00 · your time",
         state: "upcoming",
         badges: [{ label: "CERTIFICATE", color: GRAY }],
@@ -363,7 +364,7 @@ export const page: CourseDetail = {
       },
       {
         id: "start-before-date",
-        title: "The course starts on 14 Oct. Can I begin the content now?",
+        title: "The course starts on 13 Nov. Can I begin the content now?",
         preview: "You: Good, I will start with the setup this week.",
         meta: "last week  ·  3 replies",
         answered: true,

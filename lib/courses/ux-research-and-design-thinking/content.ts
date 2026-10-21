@@ -567,9 +567,9 @@ export const content: CourseContent = {
         "Using the five interview transcripts of the case study (or your own interviews, if you have run at least three), draft one persona. Show the evidence behind it: the patterns you found across participants, and the quotes or observations that support each one.",
       deliverable:
         "Submit a PDF or DOCX of 1–2 pages: the persona (goals, behaviours, pain points, context) and an evidence table that links each trait to at least two participants.",
-      dueLabel: "Due 24 Sep 2026",
+      dueLabel: "Due 24 Oct 2026",
       requiredReviews: 1,
-      acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
+      acceptedTypes: [".pdf", ".docx"],
       overallCommentPrompt: "Which part of your peer's persona was best supported by evidence?",
       criteria: [
         {
@@ -620,7 +620,7 @@ export const content: CourseContent = {
         "Build a low-fidelity prototype of one idea from your ideation work: paper sketches, or a simple clickable version. Before you show it to anyone, write the two or three questions it is meant to answer and what result would change your mind. Then test it with at least two people and report what happened.",
       deliverable:
         "Submit a PDF of up to 3 pages: photos or screenshots of the prototype, the questions it was built to answer, what each tester did, and the one change you will make next. You then review one peer's submission.",
-      dueLabel: "Due 16 Oct 2026",
+      dueLabel: "Due 15 Nov 2026",
       requiredReviews: 1,
       acceptedTypes: [".pdf", ".png", ".jpg"],
       overallCommentPrompt: "Which of your peer's questions did the prototype answer most clearly, and what would you test next?",
