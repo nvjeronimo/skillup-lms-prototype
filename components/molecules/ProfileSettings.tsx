@@ -69,10 +69,11 @@ const MENU_ROW =
   "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-control px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
 /**
- * DS Profile Menu 1.5 (Nelson, 19 Oct 2026): Appearance and Accessibility standards open the
+ * DS Profile Menu 1.7 (Nelson, 21 Oct 2026): Appearance and Accessibility standards open the
  * menu; then a Profile section (title as the others) with Edit profile and Certificates; then
- * SkillUp Online, the public site in a new tab; then the demo footer. Every group has the
- * section padding (12 / 16) and a rule above; the rows keep their own 12 inside.
+ * Sign out in a group of its own, its icon icon/error; then SkillUp Online, the public site in a
+ * new tab; then the demo footer. Every group has the section padding (12 / 16) and a rule
+ * above; the rows keep their own 12 inside.
  */
 export function ProfileLinks({ onDone }: { onDone?: () => void }) {
   return (
@@ -91,16 +92,11 @@ export function ProfileLinks({ onDone }: { onDone?: () => void }) {
   );
 }
 
-export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
+/** Sign out, a group of its own after Profile (Open edX's user menu has it, /logout); the learner must always find it. */
+export function SignOutLink({ onDone }: { onDone?: () => void }) {
   const showToast = useLmsStore((s) => s.showToast);
   return (
     <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
-      <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
-        <Icon icon={ExternalLink} size={16} />
-        SkillUp Online
-        <span className="sr-only"> (opens in a new tab)</span>
-      </a>
-      {/* Open edX's user menu ends with Sign out (/logout); the learner must always find it here. */}
       <button
         type="button"
         className={MENU_ROW}
@@ -109,9 +105,21 @@ export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
           onDone?.();
         }}
       >
-        <Icon icon={LogOut} size={16} />
+        <Icon icon={LogOut} size={16} className="text-sko-icon-error" />
         Sign out
       </button>
+    </div>
+  );
+}
+
+export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
+  return (
+    <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
+      <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
+        <Icon icon={ExternalLink} size={16} />
+        SkillUp Online
+        <span className="sr-only"> (opens in a new tab)</span>
+      </a>
     </div>
   );
 }

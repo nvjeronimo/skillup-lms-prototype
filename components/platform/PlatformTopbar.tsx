@@ -14,6 +14,7 @@ import {
   PROFILE_PANEL,
   ProfileFooter,
   ProfileLinks,
+  SignOutLink,
   SkillUpOnlineLink,
 } from "@/components/molecules/ProfileSettings";
 import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
@@ -133,6 +134,7 @@ function ProfilePanel({
       <AppearanceSection />
       <AccessibilitySection />
       <ProfileLinks onDone={onDone} />
+      <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
       <ProfileFooter onDone={onDone} />
     </div>

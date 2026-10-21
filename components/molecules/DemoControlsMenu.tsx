@@ -15,6 +15,7 @@ import {
   PROFILE_PANEL,
   ProfileFooter,
   ProfileLinks,
+  SignOutLink,
   SkillUpOnlineLink,
   ProfileSection as Section,
   ToggleRow,
@@ -161,6 +162,7 @@ export function DemoControlsMenu({
           <AppearanceSection showTheme={bp === "mobile"} />
           <AccessibilitySection />
           <ProfileLinks onDone={() => setOpen(false)} />
+          <SignOutLink onDone={() => setOpen(false)} />
           <SkillUpOnlineLink onDone={() => setOpen(false)} />
           {demo ? (
             <>
