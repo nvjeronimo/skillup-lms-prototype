@@ -41,7 +41,7 @@ export function PlatformStat({ label, value, detail, shortLabel, shortDetail, th
     return (
       <div className={cn("flex min-w-0 flex-col justify-end gap-1 text-sko-text-on-inverse", className)}>
         <p data-stat-value="" className="sk-text-headline-medium-bold">{value}</p>
-        <p data-stat-label="" className="sk-text-label-small-semibold opacity-80 max-md:normal-case max-md:tracking-normal max-md:[hyphens:auto]">{both(label, shortLabel)}</p>
+        <p data-stat-label="" className="sk-text-label-small-semibold opacity-80 max-md:whitespace-nowrap max-md:normal-case max-md:tracking-normal">{both(label, shortLabel)}</p>
         <p data-stat-detail="" className="sk-text-body-small-medium opacity-60 [[data-theme=dark]_&]:opacity-70">{both(detail, shortDetail)}</p>
       </div>
     );

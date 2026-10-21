@@ -44,9 +44,9 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-inverse">
         {title}
       </h2>
-      <ul lang="en" className="relative grid grid-cols-4 gap-1.5 md:gap-5 lg:gap-6">
+      <ul className="relative flex justify-between gap-2 md:grid md:grid-cols-4 md:gap-5 lg:gap-6">
         {stats.map((stat) => (
-          <li key={stat.label} className="min-w-0">
+          <li key={stat.label} className="w-min md:w-auto md:min-w-0">
             <PlatformStat
               theme="inverse"
               label={stat.label}
