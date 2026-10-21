@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { KeyRound, Trash2, Upload } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Button } from "@/components/atoms/Button";
+import { SelectField } from "@/components/atoms/SelectField";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSegmented } from "@/components/platform/PlatformSegmented";
 import {
@@ -17,10 +18,10 @@ import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 /* DS Input field, Size=md with a label (as NoteEditorModal): label body-medium/Medium text/muted,
-   the field bg/page, 1px border/default, radius 8, padding 10/12, body-large/Regular, 44 tall.
+   the field bg/page, 1px border/default, radius 8, padding 10/14, body-large/Regular, 44 tall.
    Focus: border/primary. Read-only: bg/muted, text/subtle. */
 const FIELD =
-  "sk-text-body-large-regular min-h-11 w-full rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default shadow-sm placeholder:text-sko-text-placeholder focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
+  "sk-text-body-large-regular min-h-11 w-full rounded-control border border-sko-border-default bg-sko-bg-page px-3.5 py-2.5 text-sko-text-default shadow-sm placeholder:text-sko-text-placeholder focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
 const READ_ONLY = "bg-sko-bg-muted text-sko-text-subtle shadow-none";
 
 function Field({
@@ -63,18 +64,13 @@ function Select({
   onChange: (value: string) => void;
 }) {
   return (
-    <select
-      id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={cn(FIELD, "pr-8")}
-    >
+    <SelectField id={id} value={value} onChange={(e) => onChange(e.target.value)} className={FIELD}>
       {options.map((o) => (
         <option key={o} value={o}>
           {o}
         </option>
       ))}
-    </select>
+    </SelectField>
   );
 }
 
@@ -161,7 +157,7 @@ export function EditProfileView() {
         >
           {/* Photo: Open edX takes JPG or PNG, up to 1 MB. */}
           <div className="flex flex-wrap items-center gap-4 md:col-span-2">
-            <Avatar name={form.fullName} size="lg" />
+            <Avatar name={form.fullName} size="lg" shape="square" />
             <div className="flex flex-col gap-2">
               <div className="flex flex-wrap gap-2">
                 <Button

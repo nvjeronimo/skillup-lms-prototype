@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, MessageSquare, Plus } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
+import { SelectField } from "@/components/atoms/SelectField";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { Message } from "@/components/platform/course/QaTab";
@@ -143,10 +144,10 @@ export function DiscussionView() {
               <SearchField value={query} onChange={setQuery} label="Search discussions" />
               <label className="flex flex-col gap-1">
                 <span className="sk-text-body-small-medium text-sko-text-subtle">Course</span>
-                <select
+                <SelectField
                   value={course}
                   onChange={(e) => setCourse(e.target.value)}
-                  className="sk-text-body-medium-regular h-11 rounded-control border border-sko-border-default bg-sko-bg-page px-3 text-sko-text-default focus:border-sko-border-primary focus:outline-none md:h-10"
+                  className="sk-text-body-medium-regular h-11 rounded-control border border-sko-border-default bg-sko-bg-page pl-3.5 text-sko-text-default focus:border-sko-border-primary focus:outline-none md:h-10"
                 >
                   <option value="all">All courses</option>
                   {COURSES.map(([slug, title]) => (
@@ -154,7 +155,7 @@ export function DiscussionView() {
                       {title}
                     </option>
                   ))}
-                </select>
+                </SelectField>
               </label>
               <PlatformSegmented label="Filter conversations" options={[...discussionFilters]} value={filter} onChange={setFilter} />
             </div>

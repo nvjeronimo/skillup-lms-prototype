@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { SelectField } from "@/components/atoms/SelectField";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
@@ -335,17 +336,17 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
         compact ? (
           <label className="flex flex-col">
             <span className="sr-only">Show results of type</span>
-            <select
+            <SelectField
               value={current}
               onChange={(event) => search.selectFilter(event.target.value as Filter)}
-              className="sk-text-body-medium-semibold h-11 rounded-control border border-sko-border-primary bg-sko-bg-page px-3 text-sko-text-primary"
+              className="sk-text-body-medium-semibold h-11 rounded-control border border-sko-border-primary bg-sko-bg-page pl-3.5 text-sko-text-primary"
             >
               {tabs.map((tab) => (
                 <option key={tab.id} value={tab.id}>
                   {tab.label} {tab.count}
                 </option>
               ))}
-            </select>
+            </SelectField>
           </label>
         ) : (
           <PlatformTabs
