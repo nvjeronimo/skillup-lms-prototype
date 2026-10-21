@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   BUTTON_DONE_MS,
+  COPIED_MS,
   LOCK_TOOLTIP_MS,
   TRANSCRIPT_FOLLOW_PAUSE_MS,
   intersectSpans,
   isOutOfView,
+  copiedLabel,
   isScrollKey,
   showsDoneCheck,
 } from "./feedback";
@@ -60,5 +62,15 @@ describe("isOutOfView", () => {
 describe("intersectSpans", () => {
   it("keeps the overlap", () => {
     expect(intersectSpans({ top: 0, bottom: 800 }, { top: 120, bottom: 1000 })).toEqual({ top: 120, bottom: 800 });
+  });
+});
+
+describe("copy confirmation", () => {
+  it("lasts 1.5 s (§7.9)", () => {
+    expect(COPIED_MS).toBe(1500);
+  });
+  it("says Copied while it shows, the trigger's own label otherwise", () => {
+    expect(copiedLabel(true, "Share certificate")).toBe("Copied");
+    expect(copiedLabel(false, "Share certificate")).toBe("Share certificate");
   });
 });

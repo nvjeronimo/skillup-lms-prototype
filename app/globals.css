@@ -357,6 +357,28 @@ button {
   animation: sk-draw-check var(--motion-duration-short4) var(--motion-easing-standard-decelerate) both;
 }
 
+/* Course covers arrive (§7.9, atoms/FadeImage): opacity 0 over the placeholder colour until the
+   image loads, then a short4 fade. One already complete at mount (cached) shows at once.
+   Reduced motion keeps the fade (it does not travel) at short3, as every fade (§6). */
+.sk-fade-image {
+  transition-property: opacity;
+  transition-duration: var(--motion-duration-short4);
+  transition-timing-function: var(--motion-easing-standard);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-fade-image {
+    transition-duration: var(--motion-duration-short3);
+  }
+}
+[data-reduce-motion] .sk-fade-image {
+  transition-duration: var(--motion-duration-short3);
+}
+/* A zero duration, not `transition-property: none`: the reduced-motion guard forces the property list. */
+.sk-fade-image[data-image="instant"],
+[data-reduce-motion] .sk-fade-image[data-image="instant"] {
+  transition-duration: 0s;
+}
+
 /* Quiz question swap (mode B): the next question comes in from the side it lies on —
    from the right going forward, from the left going back. Entrance only: the old
    question is replaced, not animated out. */
