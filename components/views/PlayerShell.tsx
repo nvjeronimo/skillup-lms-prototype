@@ -48,6 +48,7 @@ import {
   getCaptions,
   getMediaSeconds,
   getTranscript,
+  isPlaybackMeasured,
   getDiscussionThreads,
   getByline,
   FOOTER_AUTHOR_FAMILIES,
@@ -65,6 +66,8 @@ import {
   user,
 } from "@/lib/data";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
+import { lineAt } from "@/lib/playback/lineAt";
+import { RESUME_SAVE_EVERY_SECONDS } from "@/lib/playback/coverage";
 
 
 export interface PlayerShellProps {
@@ -97,6 +100,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const storedResume = resumePositions[topicId];
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
   const seekVideoTo = useLmsStore((s) => s.seekVideoTo);
+  const recordPlayback = useLmsStore((s) => s.recordPlayback);
+  /** Where playback last saved the resume position: it saves every few seconds, not every tick. */
+  const lastResumeSave = React.useRef(0);
   const activeLineId = useLmsStore((s) => s.activeLineId);
   const collapsedModules = useLmsStore((s) => s.collapsedModules);
   const toggleModule = useLmsStore((s) => s.toggleModule);
@@ -138,8 +144,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   React.useEffect(() => {
     setCurrentTopic(topicId);
     setAskOpen(false);
+    // A topic opens at 00:00 (the resume banner offers the stored position): the playhead of the
+    // previous video must not carry over, or its time would count as played here.
+    seekVideoTo(0);
     track("topic_enter", { topicId });
-  }, [topicId, setCurrentTopic]);
+  }, [topicId, setCurrentTopic, seekVideoTo]);
 
   // Derive active tab from the URL.
   const activeTab: TabSlug = pathname.endsWith("/notes")
@@ -201,6 +210,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Blocked types can't be completed — no manual action, ever.
   const isBlocked = family === "blocked";
   const isCompleted = completedTopics.has(topicId);
+  // A video or podcast whose playback is measured completes by itself at 90% (BR-01, P1-46):
+  // no Mark as Complete for it, and Next does not ask (Nelson, 21 Oct 2026). Once it is
+  // completed, the status badge shows as for any topic.
+  const measuredMedia = isPlaybackMeasured(topic);
   const actionState: TopicActionState = isCompleted ? "completed" : "incomplete";
   const renderAction = () => (
     <TopicActionBar
@@ -233,7 +246,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // is feedback only, because the status is in the header. The one exception is a video on a
   // phone, where the header shows no status: the completed badge stays in the row there.
   const endAction =
-    showAction && activeTab === "transcript" && (!isCompleted || (isVideo && bp === "mobile"))
+    showAction && activeTab === "transcript" && (isCompleted ? isVideo && bp === "mobile" : !measuredMedia)
       ? renderAction()
       : null;
 
@@ -431,6 +444,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   )}
                 >
                   <VideoPlayer
+                    key={topicId}
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
@@ -441,6 +455,22 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       saveResumePosition(topicId, s);
                       track("video_seek", { to: s });
                     }}
+                    // Played time: the same playhead as a seek, but no seek event, and the resume
+                    // position saved every few seconds and on pause, not on every tick.
+                    onPlaybackAdvance={(from, to) => {
+                      seekVideoTo(to, lineAt(getTranscript(topic), to));
+                      recordPlayback(topicId, from, to);
+                      // Pressing Play answers the resume banner: it must not reappear as the position saves.
+                      setResumeHandled(true);
+                      if (Math.abs(to - lastResumeSave.current) >= RESUME_SAVE_EVERY_SECONDS) {
+                        lastResumeSave.current = to;
+                        saveResumePosition(topicId, to);
+                      }
+                    }}
+                    // At the end there is nothing to resume: the next visit starts at 00:00.
+                    onPause={(s) =>
+                      s >= durationSeconds ? clearResumePosition(topicId) : saveResumePosition(topicId, s)
+                    }
                   />
                 </div>
                 {showResume ? (

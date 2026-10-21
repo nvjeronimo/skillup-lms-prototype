@@ -20,6 +20,7 @@ import { Icon } from "@/lib/icons";
 import { cn, secondsToTs, tsToSeconds } from "@/lib/utils";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
+import { usePlaybackClock } from "@/lib/playback/usePlaybackClock";
 import type { TranscriptLine, VideoState } from "@/lib/types";
 
 /** DS `_Video actions bar` Size. Set by the caller; the bar never re-sizes itself. */
@@ -31,7 +32,17 @@ export interface VideoPlayerProps {
   durationSeconds?: number;
   /** Controlled current time. */
   currentTime?: number;
+  /** A jump by the learner (slider, skip buttons). Set, the player is controlled. */
   onSeek?: (seconds: number) => void;
+  /**
+   * Time PLAYED, not seeked: called on every tick of the simulated clock while playing, with the
+   * stretch played. A controlled player moves its time through this, not through `onSeek`, so a
+   * caller can count coverage (BR-01) and keep seek analytics for real seeks. Without it, a
+   * controlled player's time stands still while playing.
+   */
+  onPlaybackAdvance?: (from: number, to: number) => void;
+  /** Playback stopped (Pause, the end, the tab hidden, the player gone), at `seconds`. */
+  onPause?: (seconds: number) => void;
   /**
    * Caption cues: the transcript lines of the topic. The overlay prints the line for the
    * current time (the first line before it starts). None, or left out: no caption overlay.
@@ -224,6 +235,8 @@ export function VideoPlayer({
   durationSeconds = 200,
   currentTime: controlledTime = 0,
   onSeek,
+  onPlaybackAdvance,
+  onPause,
   captions: cues,
   state = "ready",
   onRetry,
@@ -267,8 +280,38 @@ export function VideoPlayer({
     return () => document.removeEventListener("fullscreenchange", onChange);
   }, []);
 
+  // The simulated clock (no media file): advances while playing, at the selected speed.
+  function stop(seconds: number) {
+    setPlaying(false);
+    onPause?.(seconds);
+  }
+  usePlaybackClock({
+    playing: playing && state === "ready",
+    time: currentTime,
+    duration: durationSeconds,
+    speed: SPEEDS[speedIdx],
+    onAdvance: (from, to) => {
+      if (!onSeek) setOwnTime(to);
+      onPlaybackAdvance?.(from, to);
+    },
+    onEnd: () => stop(durationSeconds),
+    onHidden: () => stop(currentTime),
+  });
+  // Leaving while playing (another topic, another page) stops playback where it was.
+  const stopOnUnmount = React.useRef<() => void>(() => {});
+  stopOnUnmount.current = () => {
+    if (playing) onPause?.(currentTime);
+  };
+  React.useEffect(() => () => stopOnUnmount.current(), []);
+
   function togglePlay() {
-    setPlaying((p) => !p);
+    if (playing) {
+      stop(currentTime);
+      return;
+    }
+    // Play at the end starts again from the top.
+    if (currentTime >= durationSeconds) seekTo(0);
+    setPlaying(true);
   }
 
   function seekTo(seconds: number) {

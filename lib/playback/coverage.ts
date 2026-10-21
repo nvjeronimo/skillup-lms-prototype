@@ -19,6 +19,9 @@ export const AUTO_COMPLETE_FRACTION = 0.9;
 /** How often the simulated players advance their clock, in milliseconds. */
 export const PLAYBACK_TICK_MS = 250;
 
+/** While playing, the resume position is saved this often (in seconds of media), and on pause. */
+export const RESUME_SAVE_EVERY_SECONDS = 5;
+
 /**
  * The most a single tick may advance, in seconds of media at 1×. A timer the browser throttled
  * (a background tab) would otherwise jump ahead by the whole gap.

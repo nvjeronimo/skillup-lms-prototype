@@ -9,13 +9,16 @@ import { getPodcast } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn, secondsToTs } from "@/lib/utils";
+import { usePlaybackClock } from "@/lib/playback/usePlaybackClock";
+import { RESUME_SAVE_EVERY_SECONDS } from "@/lib/playback/coverage";
 
 const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
 
 /**
  * Podcast — the same chrome as Video with the video surface replaced by a
  * waveform. Per the Topic Content Types model this is an Audio asset, so the
- * completion rule and the transcript/chapter affordances match Video.
+ * completion rule and the transcript/chapter affordances match Video: measured playback
+ * completes the topic at 90% played (BR-01 "Audio reaches ≥ 90%", P1-46).
  */
 export function PodcastView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
@@ -24,6 +27,12 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const resumePositions = useLmsStore((s) => s.resumePositions);
   const saveResumePosition = useLmsStore((s) => s.saveResumePosition);
   const clearResumePosition = useLmsStore((s) => s.clearResumePosition);
+  const recordPlayback = useLmsStore((s) => s.recordPlayback);
+  // The demo menu ("Mark 85% watched") moves the playhead through the store's timestamp; the
+  // podcast keeps its own time otherwise, so only a change after mount is followed.
+  const storePlayhead = useLmsStore((s) => s.currentVideoTimestamp);
+  const mountedPlayhead = React.useRef<number | null>(storePlayhead);
+  const lastResumeSave = React.useRef(0);
 
   const [playing, setPlaying] = React.useState(false);
   const [speedIdx, setSpeedIdx] = React.useState(1);
@@ -33,10 +42,56 @@ export function PodcastView({ topicId }: { topicId: string }) {
   const [resumeHandled, setResumeHandled] = React.useState(false);
   const storedResume = resumePositions[topicId];
   const showResume = !resumeHandled && typeof storedResume === "number" && storedResume > 0;
+  const durationSeconds = podcast?.durationSeconds ?? 0;
+
+  React.useEffect(() => {
+    if (mountedPlayhead.current === storePlayhead) return;
+    mountedPlayhead.current = null;
+    setT(Math.max(0, Math.min(durationSeconds, storePlayhead)));
+  }, [storePlayhead, durationSeconds]);
+
+  function stop(seconds: number) {
+    setPlaying(false);
+    // At the end there is nothing to resume: the next visit starts at 00:00.
+    if (seconds >= durationSeconds) clearResumePosition(topicId);
+    else saveResumePosition(topicId, seconds);
+  }
+  // The simulated clock (no audio file): advances while playing, at the selected speed. Played
+  // time counts towards the 90% (recordPlayback); a seek does not.
+  usePlaybackClock({
+    playing,
+    time: t,
+    duration: durationSeconds,
+    speed: SPEEDS[speedIdx],
+    onAdvance: (from, to) => {
+      setT(to);
+      recordPlayback(topicId, from, to);
+      setResumeHandled(true);
+      if (Math.abs(to - lastResumeSave.current) >= RESUME_SAVE_EVERY_SECONDS) {
+        lastResumeSave.current = to;
+        saveResumePosition(topicId, to);
+      }
+    },
+    onEnd: () => stop(durationSeconds),
+    onHidden: () => stop(t),
+  });
+  const stopOnUnmount = React.useRef<() => void>(() => {});
+  stopOnUnmount.current = () => {
+    if (playing) saveResumePosition(topicId, t);
+  };
+  React.useEffect(() => () => stopOnUnmount.current(), []);
 
   if (!topic || !podcast) return null;
-  const durationSeconds = podcast.durationSeconds;
   const pct = Math.min(100, (t / durationSeconds) * 100);
+
+  function togglePlay() {
+    if (playing) {
+      stop(t);
+      return;
+    }
+    if (t >= durationSeconds) setT(0);
+    setPlaying(true);
+  }
 
   function seek(next: number) {
     const clamped = Math.max(0, Math.min(durationSeconds, next));
@@ -104,7 +159,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
               size="sm"
               aria-label={playing ? "Pause" : "Play"}
               leftIcon={playing ? Pause : Play}
-              onClick={() => setPlaying((p) => !p)}
+              onClick={togglePlay}
             >
               {playing ? "Pause" : "Play"}
             </Button>
@@ -208,8 +263,9 @@ export function PodcastView({ topicId }: { topicId: string }) {
         </ul>
       </section>
 
-      {/* No "completes at 90%" line: this player can't report playback, so the podcast completes
-          with Mark as Complete (rule of 12 Oct 2026: the button only when playback isn't measured). */}
+      {/* No "completes at 90%" line and no Mark as Complete: the podcast completes by itself once
+          90% has been played, and the toast says so (BR-01; the button only when playback isn't
+          measured, Nelson 21 Oct 2026). */}
     </div>
   );
 }
