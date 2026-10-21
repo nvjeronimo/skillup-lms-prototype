@@ -197,8 +197,11 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
   const markComplete = useLmsStore((s) => s.markComplete);
   const showToast = useLmsStore((s) => s.showToast);
   const [downloaded, setDownloaded] = React.useState<Set<string>>(new Set());
+  const [sandboxOpened, setSandboxOpened] = React.useState(false);
 
   const allDownloaded = downloaded.size === lab.files.length;
+  // With a sandbox the learner can do the lab without downloading anything.
+  const ready = allDownloaded || sandboxOpened;
 
   return (
     <div className="flex flex-col gap-5 py-4">
@@ -206,7 +209,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
         <Badge tone="brand" leftIcon={TerminalSquare}>
           Hands-on lab
         </Badge>
-        <Badge tone="neutral">Runs on your machine</Badge>
+        <Badge tone="neutral">{lab.sandbox ? "Runs in your browser or on your machine" : "Runs on your machine"}</Badge>
         <Badge tone="neutral">~{lab.estimatedMinutes} min</Badge>
       </div>
 
@@ -214,6 +217,29 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
 
       {/* Prerequisites — surfaced before the download so nobody gets stuck. */}
       <Prerequisites items={lab.prerequisites} />
+
+      {/* The browser sandbox first, when the course has one (Nelson, 21 Oct 2026): one primary
+          action until it is opened; the local setup below is the alternative. */}
+      {lab.sandbox ? (
+        <section className="flex flex-col gap-3 rounded-card bg-sko-bg-primary-soft p-4">
+          <h2 className="sk-text-body-large-semibold text-sko-text-default">Run it in your browser</h2>
+          <p className="sk-text-body-medium-regular text-sko-text-muted">{lab.sandbox.note}</p>
+          <div>
+            <Button
+              variant={sandboxOpened ? "secondary" : "primary"}
+              size="md"
+              rightIcon={ExternalLink}
+              onClick={() => {
+                setSandboxOpened(true);
+                showToast(`Opening the ${lab.sandbox?.name} in a new tab…`);
+              }}
+            >
+              Open in the {lab.sandbox.name}
+            </Button>
+          </div>
+          <p className="sk-text-body-small-regular text-sko-text-subtle">Prefer your own machine? Download the files and follow the steps below.</p>
+        </section>
+      ) : null}
 
       {/* Files — the core affordance of a lab topic. */}
       <section className="flex flex-col gap-3">
@@ -295,7 +321,11 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
       <InlineAlert
         tone="info"
         title="You mark this lab complete yourself"
-        description="The notebook runs on your own machine and is ungraded. Mark it complete once you have worked through it."
+        description={
+          lab.sandbox
+            ? "SkillUp can't see what you do in the sandbox or on your machine, and the lab is ungraded. Mark it complete once you have worked through it."
+            : "The notebook runs on your own machine and is ungraded. Mark it complete once you have worked through it."
+        }
       />
 
       {isCompleted ? (
@@ -303,16 +333,16 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
       ) : (
         <div>
           <Button
-            variant="primary"
+            variant={lab.sandbox && !ready ? "secondary" : "primary"}
             size="lg"
-            disabled={!allDownloaded}
+            disabled={!ready}
             onClick={() => markComplete(topicId)}
           >
             Mark as Complete
           </Button>
-          {!allDownloaded ? (
+          {!ready ? (
             <p className="sk-text-body-small-regular mt-2 text-sko-text-subtle">
-              Download the lab files first.
+              {lab.sandbox ? "Open the sandbox or download the lab files first." : "Download the lab files first."}
             </p>
           ) : null}
         </div>

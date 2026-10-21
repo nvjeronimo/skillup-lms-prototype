@@ -340,11 +340,15 @@ export const content: CourseContent = {
   labs: {
     "bap-m1-t4": {
       kind: "download",
+      sandbox: {
+        name: "Python sandbox",
+        note: "The notebook and the sales sample are already loaded, with the course packages. Nothing to install.",
+      },
       intro:
-        "In this lab you run a prepared notebook on the sales sample: load 5,000 orders, look at their shape and types, and answer two first questions about them. Everything runs on your machine and nothing is submitted.",
+        "In this lab you run a prepared notebook on the sales sample: load 5,000 orders, look at their shape and types, and answer two first questions about them. It runs in the Python sandbox or on your own machine, and nothing is submitted.",
       prerequisites: [
-        "The course environment from “Python environment setup”, with JupyterLab started from it",
-        "The sales sample from Handouts, unzipped into a data folder",
+        "In the sandbox: nothing, the notebook and the data are loaded for you",
+        "On your own machine: the course environment from “Python environment setup”, with JupyterLab started from it, and the sales sample from Handouts unzipped into a data folder",
       ],
       steps: [
         "Download the notebook and save it in your course folder, next to the data folder.",

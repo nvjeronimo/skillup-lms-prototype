@@ -824,6 +824,12 @@ export interface DownloadLabContent {
   steps: string[];
   files: { name: string; kind: "notebook" | "pdf" | "data"; size: string }[];
   estimatedMinutes: number;
+  /**
+   * The browser sandbox SkillUp offers for the course (Services, "Python sandbox"): the notebook
+   * and data open there with nothing to install. When set, it is the lab's first way in and the
+   * local setup is the alternative (Nelson, 21 Oct 2026).
+   */
+  sandbox?: { name: string; note: string };
 }
 
 /**

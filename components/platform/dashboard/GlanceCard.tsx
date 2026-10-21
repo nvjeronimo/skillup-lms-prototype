@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export interface GlanceCardProps {
   title: string;
-  /** Four stats: one line from tablet up, 2 × 2 on mobile. */
+  /** Four stats in one line on every breakpoint (the phone's line uses short words). */
   stats: DashboardStat[];
   className?: string;
 }
@@ -12,8 +12,9 @@ export interface GlanceCardProps {
 /**
  * DS `LMS/Platform/Dashboard/Today-at-a-glance`: the Dashboard hero card, full width since
  * the streak card left (7 Oct). Title (label-small/Semibold, text/on-inverse) and four
- * `Stat` · Inverse on bg/inverse, radius 8. `Breakpoint=Desktop` (desktop and tablet): four
- * in a line; `Breakpoint=Mobile`: 2 × 2. Padding 24 / 20 / 16, title-to-stats gap 20 / 20 / 16
+ * `Stat` · Inverse on bg/inverse. Four in a line on every breakpoint: on a phone too since
+ * Nelson, 21 Oct 2026 (it was 2 × 2 and pushed "Pick up where you left off" below the fold),
+ * with short labels and details there. Padding 24 / 20 / 16, title-to-stats gap 20 / 20 / 16
  * and the gap between stats 24 / 20 / 16 (desktop / tablet / mobile): 1200 × 168, 896 × 160,
  * 327 × 252. The two circles are decoration only: bg/info (200) and bg/primary (320) at
  * 12% layer opacity, clipped by the card.
@@ -43,10 +44,17 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-inverse">
         {title}
       </h2>
-      <ul className="relative grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5 lg:gap-6">
+      <ul className="relative flex justify-between gap-2 md:grid md:grid-cols-4 md:gap-5 lg:gap-6">
         {stats.map((stat) => (
-          <li key={stat.label} className="min-w-0">
-            <PlatformStat theme="inverse" label={stat.label} value={stat.value} detail={stat.detail} />
+          <li key={stat.label} className="w-min md:w-auto md:min-w-0">
+            <PlatformStat
+              theme="inverse"
+              label={stat.label}
+              value={stat.value}
+              detail={stat.detail}
+              shortLabel={stat.shortLabel}
+              shortDetail={stat.shortDetail}
+            />
           </li>
         ))}
       </ul>

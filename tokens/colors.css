@@ -545,6 +545,14 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
+/* The phone's one-line glance card (21 Oct 2026): four columns of ~72px have no room for tracked
+   caps ("CERTIFICATES" needs ~100px), so the labels are sentence case there. */
+@media (max-width: 767px) {
+  [data-skin="sea"] [data-glance] [data-stat-label] {
+    letter-spacing: normal;
+    text-transform: none;
+  }
+}
 [data-skin="sea"] [data-glance] [data-stat-detail] {
   opacity: 1;
   color: #acd5f4;
