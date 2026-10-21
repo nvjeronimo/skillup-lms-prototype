@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const RADIUS = {
@@ -30,6 +31,16 @@ export type SkeletonProps =
       className?: string;
     }
   | {
+      /**
+       * A known text (a title, a description) drawn as bars that wrap where it will: the text
+       * itself, invisible, on bg/muted (`.sk-skeleton-ghost`). Static, no sweep.
+       */
+      variant: "ghost";
+      text?: string;
+      children: React.ReactNode;
+      className?: string;
+    }
+  | {
       /** A disc: an avatar, a ring. */
       variant: "circle";
       size: Size;
@@ -52,6 +63,13 @@ export function Skeleton(props: SkeletonProps) {
         className={cn("sk-skeleton", RADIUS[props.radius ?? "control"], props.className)}
         style={{ width: px(props.width), height: px(props.height) }}
       />
+    );
+  }
+  if (props.variant === "ghost") {
+    return (
+      <div aria-hidden="true" className={cn(`sk-text-${props.text ?? "body-medium-regular"}`, props.className)}>
+        <span className="sk-skeleton-ghost">{props.children}</span>
+      </div>
     );
   }
   if (props.variant === "circle") {

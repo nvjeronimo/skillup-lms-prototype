@@ -565,6 +565,16 @@ button {
   height: 0.8em;
   transform: translateY(-50%);
 }
+/* A ghost line: the real text, invisible, on bg/muted bars that follow its own line breaks
+   (box-decoration-break), so a title or a description in the skeleton wraps as the content
+   will. No sweep: it holds still, as under reduced motion. */
+.sk-skeleton-ghost {
+  color: transparent;
+  background: var(--color-bg-muted);
+  border-radius: var(--sk-radius-inner);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
 /* The simulated load: under data-arrival="pending" on <html> (set pre-paint on a hard load, by
    the arrival controller on a client navigation) the page's real content is out of the
    picture (still in the DOM) and its skeleton shows. With no flag the skeleton never shows. */

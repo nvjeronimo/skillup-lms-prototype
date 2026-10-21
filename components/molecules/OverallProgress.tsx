@@ -1,5 +1,9 @@
+"use client";
+
 import * as React from "react";
 import { Check } from "lucide-react";
+import { ArrivalCountFrom } from "@/components/atoms/ArrivalCount";
+import { useArrivalRing } from "@/lib/arrival/useArrival";
 import { cn } from "@/lib/utils";
 
 export interface OverallProgressProps {
@@ -36,10 +40,14 @@ export function ProgressRing({
   const band = compact ? 3 : 4;
   const radius = box / 2 - band / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (pct / 100) * circumference;
+  // On a first visit the arc sweeps from empty when it shows (motion-matrix §7.9); after that
+  // only the completion chain moves it (useArrivalRing keeps the two apart).
+  const ring = useArrivalRing<HTMLDivElement>(pct);
+  const offset = circumference - (ring.shown / 100) * circumference;
   const complete = pct >= 100;
   return (
     <div
+      ref={ring.ref}
       className={cn("relative inline-flex shrink-0 items-center justify-center", className)}
       style={{ width: box, height: box }}
       role="img"
@@ -58,7 +66,8 @@ export function ProgressRing({
           // The last beat of the completion chain: the arc advances 200ms after the badge pops.
           // A transition runs only on change, so the first paint does not animate; reduced
           // motion leaves stroke-dashoffset out of the transitioned properties, so it jumps.
-          className="transition-[stroke-dashoffset] delay-short4 duration-long2 ease-standard-decelerate"
+          // The first-visit sweep uses the same transition without the delay.
+          className={ring.transition}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
         />
@@ -66,7 +75,9 @@ export function ProgressRing({
       {compact && complete ? (
         <Check size={14} strokeWidth={2} className="absolute text-sko-icon-success-strong" aria-hidden />
       ) : (
-        <span className="sk-text-body-small-semibold absolute text-sko-text-default">{pct}%</span>
+        <span className="sk-text-body-small-semibold absolute text-sko-text-default">
+          <ArrivalCountFrom value={`${pct}%`} trigger={ring.trigger} />
+        </span>
       )}
     </div>
   );
