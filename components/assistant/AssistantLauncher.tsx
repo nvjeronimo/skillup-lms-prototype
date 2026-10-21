@@ -29,7 +29,7 @@ export interface AssistantLauncherProps {
  * Closed, it is the assistant mark: the SkillUp ball and paper plane with AI sparkles in place
  * of the trail lines (Nelson, 13 Oct 2026; DS `LMS/Platform/Assistant/Assistant-Launcher`).
  * Like the logo, the mark keeps its own colours and swaps its ink to white on a dark page
- * (inline since 21 Oct 2026, see AssistantMark: its three sparkles each turn a quarter now and
+ * (inline since 21 Oct 2026, see AssistantMark: its three sparkles each spin now and
  * then). Open, it is a round close button.
  * Since 15 Oct 2026 the ball wears a 2px gradient ring in the logo's blues (DS: a linear
  * gradient stroke outside the ball), and the gradient turns slowly round it (Nelson asked

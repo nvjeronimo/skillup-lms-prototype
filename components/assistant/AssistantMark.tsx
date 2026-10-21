@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /**
  * The assistant mark (DS `LMS/Platform/Assistant/Assistant-Launcher`), inline so its three
  * sparkles can move: the same 160 viewBox and geometry as public/assistant-mark.svg, with the
- * asset's two-star path split in two (Nelson, 21 Oct 2026). Each sparkle turns a quarter round
+ * asset's two-star path split in two (Nelson, 21 Oct 2026). Each sparkle spins (2, 3 and 2 turns, fast) round
  * its own centre now and then, on its own cycle (`.sk-sparkle-a/-b/-c`, globals.css); the ball
  * and the plane hold still. Reduced motion holds the sparkles too.
  *
