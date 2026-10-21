@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { ResponsiveShell } from "@/components/views/ResponsiveShell";
+import { ARRIVAL_INIT_SCRIPT } from "@/lib/arrival/prepaint";
 
 // SkillUp DS (v2.0): Montserrat is the single family for body + display. Inter
 // (the old UUI default) is retired.
@@ -34,6 +35,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={montserrat.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* First visit of a platform page in this session: hold the skeleton from the first
+            paint (motion-matrix §7.9; lib/arrival/prepaint). */}
+        <script dangerouslySetInnerHTML={{ __html: ARRIVAL_INIT_SCRIPT }} />
       </head>
       <body>
         {/* First focusable element on every page (WCAG 2.4.1). Every route

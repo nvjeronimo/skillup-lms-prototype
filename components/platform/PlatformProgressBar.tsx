@@ -1,5 +1,9 @@
+"use client";
+
 import { CheckCircle2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { ArrivalCount } from "@/components/atoms/ArrivalCount";
+import { useArrivalValue } from "@/lib/arrival/useArrival";
 import { cn } from "@/lib/utils";
 
 export interface PlatformProgressBarProps {
@@ -34,6 +38,9 @@ export interface PlatformProgressBarProps {
  * platform pages, on a bg/track track (alias of bg/muted; 20 Oct 2026, contrast). With `stepped` the fill is rounded to the nearest 10 as in
  * the DS component; assistive tech always gets the real value.
  * `className` goes on the bar, or on the bar + value row when `showValue` is set.
+ * On a page's first visit in the session the fill grows from empty when the bar first shows
+ * (a scaleX transform, long2, standard-decelerate) and the value counts up with it
+ * (motion-matrix §7.9); on a revisit or under reduced motion it is drawn full at once.
  */
 export function PlatformProgressBar({
   value,
@@ -46,9 +53,11 @@ export function PlatformProgressBar({
 }: PlatformProgressBarProps) {
   const pct = Math.max(0, Math.min(100, value));
   const fill = stepped ? Math.round(pct / 10) * 10 : pct;
+  const arrival = useArrivalValue<HTMLDivElement>(fill);
 
   const bar = (
     <div
+      ref={arrival.ref}
       role="progressbar"
       aria-label={label}
       aria-valuenow={pct}
@@ -60,7 +69,13 @@ export function PlatformProgressBar({
         showValue ? "min-w-0 flex-1" : className,
       )}
     >
-      <div className={cn("h-full", tone === "complete" ? "bg-sko-bg-success" : "bg-sko-bg-info")} style={{ width: `${fill}%` }} />
+      <div
+        className={cn(
+          "h-full origin-left transition-transform duration-long2 ease-standard-decelerate",
+          tone === "complete" ? "bg-sko-bg-success" : "bg-sko-bg-info",
+        )}
+        style={{ width: `${fill}%`, transform: arrival.armed ? "scaleX(0)" : undefined }}
+      />
     </div>
   );
 
@@ -71,7 +86,7 @@ export function PlatformProgressBar({
       {bar}
       {/* The progressbar already carries the value. */}
       <span aria-hidden="true" className="sk-text-body-medium-medium shrink-0 text-sko-text-muted">
-        {pct}%
+        <ArrivalCount value={`${pct}%`} />
       </span>
     </div>
   );

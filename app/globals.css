@@ -534,6 +534,65 @@ button {
   pointer-events: none;
 }
 
+/* Loading and arrival (motion-matrix §7.9). Skeleton: bg/muted with a bg/subtle sheen sweeping
+   across, calc(long2 × 2.4) ≈ 1.2 s, linear, looping. Both reduced-motion blocks hold it still. */
+.sk-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-muted);
+}
+.sk-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--color-bg-subtle), transparent);
+  animation: sk-shimmer calc(var(--motion-duration-long2) * 2.4) var(--motion-easing-linear) infinite;
+}
+@keyframes sk-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+/* A text line: the box is the text style's line (a zero-width space), the bar ~0.8em in it. */
+.sk-skeleton-line {
+  position: relative;
+}
+.sk-skeleton-line > .sk-skeleton {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 0.8em;
+  transform: translateY(-50%);
+}
+/* The simulated load: under data-arrival="pending" on <html> (set pre-paint on a hard load, by
+   the arrival controller on a client navigation) the page's real content is out of the
+   picture (still in the DOM) and its skeleton shows. With no flag the skeleton never shows. */
+[data-arrival-content] {
+  display: contents;
+}
+.sk-arrival-skeleton,
+[data-arrival="pending"] [data-arrival-content] {
+  display: none;
+}
+[data-arrival="pending"] .sk-arrival-skeleton {
+  display: block;
+}
+/* The first-visit cascade: a section rises (distance/enter, short4, standard-decelerate) after
+   its delay (half a short2 per step, set by the controller); below the fold it waits unseen
+   until it scrolls into view. Backwards fill: hidden during its delay, never shown then hidden. */
+[data-arrive-state="wait"] {
+  opacity: 0;
+}
+/* A waiting section that takes focus (Tab, find) is never invisible. */
+[data-arrive-state="wait"]:focus-within {
+  opacity: 1;
+}
+[data-arrive-state="run"] {
+  animation: sk-rise-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate) backwards;
+  animation-delay: var(--sk-arrive-delay, 0s);
+}
+
 /* Reduced motion (the OS setting here; the Accessibility panel's switch further down
    applies the same rules). Movement is removed, feedback is kept: colour and opacity
    changes still ease, sliding surfaces fade in, and the spinner pulses. A blanket
@@ -645,6 +704,18 @@ button {
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
   .animate-spin {
     animation: sk-pulse calc(var(--motion-duration-short3) * 8) var(--motion-easing-standard) infinite;
+  }
+  /* Skeletons hold still (no sweep); the cascade is a fade, no stagger (§7.9). */
+  .sk-skeleton::after {
+    animation: none;
+    opacity: 0;
+  }
+  [data-arrive-state="run"] {
+    animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate) backwards;
+    animation-delay: 0s;
+  }
+  [data-arrive-state="wait"]:focus-within {
+    opacity: 1;
   }
 }
 
@@ -803,6 +874,18 @@ button {
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
 [data-reduce-motion] .animate-spin {
   animation: sk-pulse calc(var(--motion-duration-short3) * 8) var(--motion-easing-standard) infinite;
+}
+/* Skeletons hold still (no sweep); the cascade is a fade, no stagger (§7.9). */
+[data-reduce-motion] .sk-skeleton::after {
+  animation: none;
+  opacity: 0;
+}
+[data-reduce-motion] [data-arrive-state="run"] {
+  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate) backwards;
+  animation-delay: 0s;
+}
+[data-reduce-motion] [data-arrive-state="wait"]:focus-within {
+  opacity: 1;
 }
 
 /* Sublinhar sempre os links — não depender da cor para os distinguir. */

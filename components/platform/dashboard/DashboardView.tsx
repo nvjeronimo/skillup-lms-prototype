@@ -12,6 +12,7 @@ import {
 import type { DashboardResumeRow } from "@/lib/platform/dashboard-resume";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
+import { DashboardSkeleton } from "./DashboardSkeleton";
 import { DueItem } from "./DueItem";
 import { GlanceCard } from "./GlanceCard";
 import { JumpTile } from "./JumpTile";
@@ -35,27 +36,38 @@ import { ResumeRow } from "./ResumeRow";
  *
  * Each row says where the learner left off (12 Oct 2026): the module is the headline, the
  * course and its program the line under it. The rows come from lib/platform/dashboard-resume.
+ *
+ * Arrival (motion-matrix §7.9): DashboardSkeleton during the simulated load of a first visit,
+ * then the greeting, the glance card, Due, Resume and Jump rise in that order (`data-arrive`;
+ * Jump, usually below the fold, when it scrolls in); the glance figures count up and the
+ * resume bars fill as they show.
  */
 export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
   const showToast = useLmsStore((s) => s.showToast);
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
   return (
-    <PlatformPage current="dashboard" className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
+    <PlatformPage
+      current="dashboard"
+      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      skeleton={<DashboardSkeleton due={dashboardDue.length} resume={resume.length} jump={dashboardJump.length} />}
+    >
       {/* The frames are drawn at 1280; wider windows keep the 1200 content width. */}
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
-        <h1 className="sk-text-headline-large-bold text-sko-text-default">
+        <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
           {dashboardGreeting.salutation}{" "}
           {/* One line from tablet up; on mobile the name takes the second line, as drawn. */}
           <br className="md:hidden" />
           <span data-heading-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
         </h1>
 
-        <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />
+        <div data-arrive={1}>
+          <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />
+        </div>
 
         <div className="flex flex-col gap-5 md:gap-6 lg:flex-row lg:items-start lg:gap-8">
-          <section aria-labelledby="dashboard-due-title" className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
+          <section data-arrive={2} aria-labelledby="dashboard-due-title" className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
             <PlatformSectionHeader
               id="dashboard-due-title"
               title="Due"
@@ -72,7 +84,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             </ul>
           </section>
 
-          <section aria-labelledby="dashboard-resume-title" className="flex min-w-0 flex-col gap-4 lg:flex-1">
+          <section data-arrive={3} aria-labelledby="dashboard-resume-title" className="flex min-w-0 flex-col gap-4 lg:flex-1">
             <PlatformSectionHeader
               id="dashboard-resume-title"
               title="Pick up"
@@ -110,7 +122,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           </section>
         </div>
 
-        <section aria-labelledby="dashboard-jump-title" className="flex flex-col gap-4">
+        <section data-arrive={4} aria-labelledby="dashboard-jump-title" className="flex flex-col gap-4">
           <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
           <ul
             data-mock="The Discussion count needs the notifications flag switched on"

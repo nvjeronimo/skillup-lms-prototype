@@ -8,6 +8,8 @@ import { useLmsStore } from "@/lib/store";
 import type { PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
 import { useDemoMode } from "@/lib/demo";
+import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
+import { PageSkeleton } from "./PageSkeleton";
 
 const SHOW_MOCK_KEY = "sk-platform-show-mock";
 
@@ -22,18 +24,28 @@ const SHOW_MOCK_KEY = "sk-platform-show-mock";
  * `data-show-mock` here, and every block tagged `data-mock="<what has no API>"`
  * gets a dashed outline and a SAMPLE chip (styles in app/globals.css), while the note
  * lists what each one is missing.
+ *
+ * Arrival (motion-matrix §7.9): on a page's first visit in the session the page shows its
+ * `skeleton` for the simulated load (PageSkeleton when it has none), then the content, whose
+ * `data-arrive={n}` sections rise in order and whose figures count up (lib/arrival). On a
+ * revisit the content shows at once with the page fade below.
  */
 export function PlatformPage({
   current,
   children,
   className,
+  skeleton,
 }: {
   /** The section tab to mark current; null on pages outside the five (Edit profile). */
   current: PlatformSection | null;
   children: React.ReactNode;
   className?: string;
+  /** The page-shaped skeleton shown during the simulated load of a first visit. */
+  skeleton?: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const mainRef = React.useRef<HTMLElement>(null);
+  const arrival = useArrivalController(pathname, mainRef);
   const toast = useLmsStore((s) => s.toast);
   const demo = useDemoMode();
   const clearToast = useLmsStore((s) => s.clearToast);
@@ -100,6 +112,7 @@ export function PlatformPage({
       {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
       <main
         key={pathname}
+        ref={mainRef}
         id="main"
         tabIndex={-1}
         // On a phone the assistant launcher floats 48 + 16 over the bottom right. The test-build
@@ -107,7 +120,16 @@ export function PlatformPage({
         // so the last card or button scrolls clear of the launcher (audit, 21 Oct 2026).
         className={cn("sk-animate-page flex-1 outline-none", !demo && "max-md:pb-20", className)}
       >
-        {children}
+        <ArrivalContext.Provider value={arrival}>
+          {/* Rendered by the server and until the controller has decided (it only shows under
+              data-arrival="pending"), then dropped once the content is in. */}
+          {!arrival.decided || !arrival.released ? (
+            <div className="sk-arrival-skeleton">
+              {skeleton ?? <PageSkeleton />}
+            </div>
+          ) : null}
+          <div data-arrival-content="">{children}</div>
+        </ArrivalContext.Provider>
       </main>
       {/* Test-build note, in the footer (Nelson, 15 Oct 2026). The same dashed warning treatment
           as the /lab note, so a screenshot of these pages is not read as a promise about the data.
@@ -139,6 +161,11 @@ export function PlatformPage({
         ) : null}
       </footer>
       ) : null}
+      {/* One persistent live region for the load (outside the keyed <main>, so it is in the page
+          before its text changes): "Loading…" while the skeleton shows, empty after. */}
+      <p role="status" className="sr-only">
+        {arrival.decided && arrival.first && !arrival.released ? "Loading…" : ""}
+      </p>
       <Toast toast={toast} onDone={clearToast} />
     </div>
   );

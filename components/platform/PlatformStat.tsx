@@ -1,3 +1,4 @@
+import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { cn } from "@/lib/utils";
 
 export interface PlatformStatProps {
@@ -24,6 +25,7 @@ export interface PlatformStatProps {
  * Inverse: value · label · detail, gap 4, all text/on-inverse; the label sits at 80% and
  * the detail at 60% layer opacity (the DS has no translucent text token). In Dark, bg/inverse
  * turns light and the detail fails AA at 60%, so it sits at 70% there.
+ * The value counts up on a page's first visit in the session (ArrivalCount, motion-matrix §7.9).
  */
 export function PlatformStat({ label, value, detail, shortLabel, shortDetail, theme = "default", divider = false, className }: PlatformStatProps) {
   if (theme === "inverse") {
@@ -40,7 +42,7 @@ export function PlatformStat({ label, value, detail, shortLabel, shortDetail, th
       );
     return (
       <div className={cn("flex min-w-0 flex-col justify-end gap-1 text-sko-text-on-inverse", className)}>
-        <p data-stat-value="" className="sk-text-headline-medium-bold">{value}</p>
+        <p data-stat-value="" className="sk-text-headline-medium-bold"><ArrivalCount value={value} /></p>
         <p data-stat-label="" className="sk-text-label-small-semibold opacity-80 max-md:whitespace-nowrap max-md:normal-case max-md:tracking-normal">{both(label, shortLabel)}</p>
         <p data-stat-detail="" className="sk-text-body-small-medium opacity-60 [[data-theme=dark]_&]:opacity-70">{both(detail, shortDetail)}</p>
       </div>
@@ -57,7 +59,7 @@ export function PlatformStat({ label, value, detail, shortLabel, shortDetail, th
       )}
     >
       <p className="sk-text-label-small-semibold text-sko-text-muted">{label}</p>
-      <p className="sk-text-headline-medium-bold text-sko-text-default">{value}</p>
+      <p className="sk-text-headline-medium-bold text-sko-text-default"><ArrivalCount value={value} /></p>
       <p className="sk-text-body-small-medium text-sko-text-muted">{detail}</p>
     </div>
   );

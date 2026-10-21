@@ -24,6 +24,8 @@ import { useDisclosure } from "@/lib/useDisclosure";
 import { PLATFORM_SECTIONS, platformUser, type PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
+import { useDemoMode } from "@/lib/demo";
+import { LoadingSection } from "@/components/molecules/DemoControlsMenu";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
@@ -122,7 +124,11 @@ function SectionLinks({
   );
 }
 
-/** Profile panel: the standard profile menu (DS LMS / Profile Menu), as in the player minus its preview sections. */
+/**
+ * Profile panel: the standard profile menu (DS LMS / Profile Menu), as in the player minus its
+ * preview sections. In demo mode (?demo=1) it also holds the Loading switch, the one demo
+ * setting that acts on the platform pages (motion-matrix §7.9).
+ */
 function ProfilePanel({
   panelProps,
   onDone,
@@ -130,6 +136,7 @@ function ProfilePanel({
   panelProps: ReturnType<typeof useDisclosure>["panelProps"];
   onDone: () => void;
 }) {
+  const demo = useDemoMode();
   return (
     <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
       <AppearanceSection />
@@ -137,6 +144,7 @@ function ProfilePanel({
       <ProfileLinks onDone={onDone} />
       <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
+      {demo ? <LoadingSection /> : null}
       <ProfileFooter onDone={onDone} />
     </div>
   );
