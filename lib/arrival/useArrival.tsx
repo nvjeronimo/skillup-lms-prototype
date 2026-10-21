@@ -8,7 +8,7 @@ import { countText } from "./count";
 import { LOAD_MODE_KEY, loadDelayMs, parseLoadMode, shouldShowSkeleton, type LoadMode } from "./loadMode";
 import { nextRingPhase, ringShownPct, ringTransitionClass, type RingPhase } from "./ring";
 import { createObserverRegistry, viewportObserver, type InViewCallback } from "./observerRegistry";
-import { VISITED_KEY, arrivalKey, isFirstVisit, markVisited, parseVisited, serializeVisited } from "./visits";
+import { VISITED_KEY, arrivalKey, decideVisit, isFirstVisit, markVisited, parseVisited, serializeVisited } from "./visits";
 
 /*
  * Loading and arrival (motion-matrix §7.9). One controller per platform page
@@ -260,13 +260,55 @@ export function useArrivalController(pathname: string, rootRef: React.RefObject<
 }
 
 /**
+ * The player shell's arrival (top bar and sidebar rings): its own first visit, keyed by the
+ * course (`courseArrivalPath`), decided once and marked in the session, so the rings sweep on
+ * the first topic opened in the course and not on every new topic. The load, the arming window
+ * and the page's observer are the body controller's (`body`). Clears the pre-paint
+ * `data-arrival-course` flag once the rings have been drawn from this decision. Call it after
+ * useArrivalController in the same component, so it reads the session the body just marked.
+ */
+export function useCourseArrival(courseKey: string, body: ArrivalState): ArrivalState {
+  const decision = React.useRef<{ key: string; first: boolean } | null>(null);
+  const [first, setFirst] = React.useState<boolean | null>(null);
+  useIsoLayoutEffect(() => {
+    if (decision.current?.key !== courseKey) {
+      const visited = readVisited();
+      const d = visited ? decideVisit(courseKey, visited) : { first: false, visited: null };
+      if (d.visited && d.first) writeVisited(d.visited);
+      decision.current = { key: courseKey, first: d.first };
+    }
+    setFirst(decision.current.first);
+  }, [courseKey]);
+  // The flag only acts on rings that have not read a decision yet (OverallProgress), so it can
+  // go as soon as the course is decided.
+  React.useEffect(() => {
+    if (first !== null) document.documentElement.removeAttribute("data-arrival-course");
+  }, [first]);
+  return React.useMemo(
+    () => ({
+      decided: first !== null && body.decided,
+      first: first === true,
+      released: body.released,
+      arming: body.arming,
+      observe: body.observe,
+    }),
+    [first, body.decided, body.released, body.arming, body.observe],
+  );
+}
+
+/**
  * Fires once, the first time `ref`'s element is in view after the load of a first visit,
  * after its section's cascade delay (so the count is seen, not run under an invisible section).
  * `armed` is true from the decision until then: the value should show empty / 0.
  * Never armed on a revisit, under reduced motion, outside a platform page, or when the element
  * mounts after the arming window (a tab panel, a filtered card: no replay).
  */
-export type ArrivalTrigger = { armed: boolean; go: boolean };
+export type ArrivalTrigger = {
+  armed: boolean;
+  go: boolean;
+  /** The element has read the arrival decision (false on the server and before the decision). */
+  decided: boolean;
+};
 
 export function useArrivalTrigger(ref: React.RefObject<Element>): ArrivalTrigger {
   const { first, released, decided, arming, observe } = useArrival();
@@ -307,7 +349,7 @@ export function useArrivalTrigger(ref: React.RefObject<Element>): ArrivalTrigger
     };
   }, [phase, released, ref, observe]);
 
-  return { armed: phase === "armed", go: phase === "go" };
+  return { armed: phase === "armed", go: phase === "go", decided: phase !== "idle" };
 }
 
 /**
@@ -369,7 +411,7 @@ export function useArrivalValue<T extends Element>(
  */
 export function useArrivalRing<T extends Element>(
   pct: number,
-): { ref: React.RefObject<T>; shown: number; transition: string; trigger: ArrivalTrigger } {
+): { ref: React.RefObject<T>; shown: number; transition: string; trigger: ArrivalTrigger; decided: boolean } {
   const { ref, armed, trigger } = useArrivalValue<T>(pct);
   const [phase, setPhase] = React.useState<RingPhase>("settled");
   const last = React.useRef(pct);
@@ -380,5 +422,5 @@ export function useArrivalRing<T extends Element>(
   }, [armed, pct]);
   // The render that arms comes before the effect above: draw it empty already.
   const drawn: RingPhase = armed ? "armed" : phase;
-  return { ref, shown: ringShownPct(drawn, pct), transition: ringTransitionClass(drawn), trigger };
+  return { ref, shown: ringShownPct(drawn, pct), transition: ringTransitionClass(drawn), trigger, decided: trigger.decided };
 }

@@ -68,8 +68,8 @@ import {
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { lineAt } from "@/lib/playback/lineAt";
 import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
-import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
-import { topicArrivalPath } from "@/lib/arrival/visits";
+import { ArrivalContext, useArrivalController, useCourseArrival } from "@/lib/arrival/useArrival";
+import { courseArrivalPath, topicArrivalPath } from "@/lib/arrival/visits";
 import { TopicSkeleton } from "./TopicSkeleton";
 
 
@@ -93,6 +93,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // (top bar, sidebar, footer) stays put. A revisit has the template's page fade only.
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const arrival = useArrivalController(topicArrivalPath(pathname) ?? pathname, bodyRef);
+  // The shell's rings (top bar, both sidebars) sweep on the course's first visit only.
+  const courseArrival = useCourseArrival(courseArrivalPath(courseSlug), arrival);
 
   // Store wiring
   const sidebarExpanded = useLmsStore((s) => s.sidebarExpanded);
@@ -381,8 +383,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const durationSeconds = getMediaSeconds(topic);
 
   return (
-    <ArrivalContext.Provider value={arrival}>
     <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
+      <ArrivalContext.Provider value={courseArrival}>
       <CoursePlayerTopbar
         size={topbarSize}
         showNotifications
@@ -411,12 +413,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           />
         }
       />
+      </ArrivalContext.Provider>
 
       {/* Body — floating white card(s) on a secondary-tint surface. Desktop/tablet
           add the sidebar + a 16px gutter; mobile keeps a smaller gutter so the
           tinted body shows around the single content card. */}
       <div className={cn("flex min-h-0 flex-1", showInlineSidebar ? "gap-4 p-4" : "p-3")}>
         {showInlineSidebar ? (
+          <ArrivalContext.Provider value={courseArrival}>
           <Sidebar
             course={activeCourse}
             currentTopicId={topicId}
@@ -430,8 +434,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             onSelectTopic={navigateTopic}
             onToggleBookmark={toggleBookmark}
           />
+          </ArrivalContext.Provider>
         ) : null}
 
+        {/* The body's arrival (its skeleton, its cascade; the template reads it). */}
+        <ArrivalContext.Provider value={arrival}>
         <main
           id="main"
           tabIndex={-1}
@@ -447,7 +454,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           >
             {/* Only under data-arrival="pending" (lib/arrival): the topic-shaped skeleton. */}
             {!arrival.decided || !arrival.released ? (
-              <div className="sk-arrival-skeleton">
+              <div {...inertProps(true)} className="sk-arrival-skeleton">
                 <TopicSkeleton
                   bp={bp}
                   video={isVideo && !isLocked}
@@ -615,6 +622,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             }}
           />
         </main>
+        </ArrivalContext.Provider>
       </div>
 
       {/* Mobile drawer — a modal dialog (focus moves in, is trapped, the page
@@ -625,6 +633,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onClose={() => setMobileDrawerOpen(false)}
       >
         {(titleId) => (
+          <ArrivalContext.Provider value={courseArrival}>
           <Sidebar
             course={activeCourse}
             currentTopicId={topicId}
@@ -639,6 +648,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             onCloseMobile={() => setMobileDrawerOpen(false)}
             mobileTitleId={titleId}
           />
+          </ArrivalContext.Provider>
         )}
       </MobileCourseDrawer>
 
@@ -744,7 +754,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       </p>
       <Toast toast={toast} onDone={clearToast} />
     </div>
-    </ArrivalContext.Provider>
   );
 }
 

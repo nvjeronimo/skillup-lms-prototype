@@ -68,6 +68,11 @@ export function ProgressRing({
           // motion leaves stroke-dashoffset out of the transitioned properties, so it jumps.
           // The first-visit sweep uses the same transition without the delay.
           className={ring.transition}
+          // Under the pre-paint flag of a course not opened yet (lib/arrival/prepaint) the arc is
+          // empty from the first paint until the ring has read the arrival decision (then React
+          // draws it: empty while armed), so a hard load never shows it full before the sweep.
+          data-arrival-ring={ring.decided ? undefined : ""}
+          style={{ "--sk-ring-empty": `${circumference}px` } as React.CSSProperties}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
         />
@@ -75,7 +80,7 @@ export function ProgressRing({
       {compact && complete ? (
         <Check size={14} strokeWidth={2} className="absolute text-sko-icon-success-strong" aria-hidden />
       ) : (
-        <span className="sk-text-body-small-semibold absolute text-sko-text-default">
+        <span data-arrival-figure={ring.decided ? undefined : ""} className="sk-text-body-small-semibold absolute text-sko-text-default">
           <ArrivalCountFrom value={`${pct}%`} trigger={ring.trigger} />
         </span>
       )}

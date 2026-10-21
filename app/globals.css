@@ -610,6 +610,16 @@ button {
 [data-arrival="pending"] .sk-arrival-skeleton {
   display: block;
 }
+/* A course not opened yet in the session, on a hard load (lib/arrival/prepaint): the shell's
+   rings are drawn empty and their figure hidden until the course arrival has armed them (it then
+   clears the flag), so the first paint is never the full ring that the sweep would empty again. */
+[data-arrival-course] [data-arrival-ring] {
+  stroke-dashoffset: var(--sk-ring-empty);
+  transition: none;
+}
+[data-arrival-course] [data-arrival-figure] {
+  visibility: hidden;
+}
 /* The first-visit cascade: a section rises (distance/enter, short4, standard-decelerate) after
    its delay (half a short2 per step, set by the controller); below the fold it waits unseen
    until it scrolls into view. Backwards fill: hidden during its delay, never shown then hidden. */
