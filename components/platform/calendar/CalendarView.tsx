@@ -4,8 +4,10 @@ import * as React from "react";
 import Link from "next/link";
 import { AlertCircle, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, Flag, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
+import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSegmented } from "@/components/platform/PlatformSegmented";
 import {
@@ -50,14 +52,27 @@ function dayHeading(iso: string) {
   return { lead: DAY_MONTH.format(parseDay(iso)), rest: "" };
 }
 
-function statusBadge(e: CalendarEvent) {
+/** The status badge's label and colour (the row's badge, and its skeleton's width). */
+function statusOf(e: CalendarEvent): { label: string; color: "success" | "error" | "warning" | "info" } {
   if (e.kind === "deadline") {
-    if (e.complete) return <Badge color="success">Done</Badge>;
-    if (isMissed(e)) return <Badge color="error">Missed</Badge>;
-    return <Badge color="warning">{dueBadgeLabel(e.date, e.time)}</Badge>;
+    if (e.complete) return { label: "Done", color: "success" };
+    if (isMissed(e)) return { label: "Missed", color: "error" };
+    return { label: dueBadgeLabel(e.date, e.time), color: "warning" };
   }
-  if (e.kind === "live") return <Badge color="success">{`Live · ${e.time}`}</Badge>;
-  return <Badge color="info">{e.label}</Badge>;
+  if (e.kind === "live") return { label: `Live · ${e.time}`, color: "success" };
+  return { label: e.label, color: "info" };
+}
+
+function statusBadge(e: CalendarEvent) {
+  const s = statusOf(e);
+  return <Badge color={s.color}>{s.label}</Badge>;
+}
+
+/** The upcoming days of the Agenda and their dates (shared with the skeleton). */
+function agendaDays(events: CalendarEvent[]) {
+  const upcoming = events.filter((e) => e.date >= CALENDAR_TODAY && !e.complete);
+  const days = [...new Set(upcoming.map((e) => e.date))].sort();
+  return days.map((day) => ({ day, events: upcoming.filter((e) => e.date === day) }));
 }
 
 /** One date: kind tile, the label and time over the title (a link) and its course, the status on the right. */
@@ -108,8 +123,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
 
 /** The days from today on, each with its dates; the done and the missed ones are elsewhere. */
 function Agenda({ events }: { events: CalendarEvent[] }) {
-  const upcoming = events.filter((e) => e.date >= CALENDAR_TODAY && !e.complete);
-  const days = [...new Set(upcoming.map((e) => e.date))].sort();
+  const days = agendaDays(events);
   if (!days.length) {
     return (
       <p role="status" className="sk-text-body-medium-regular rounded-card border border-sko-border-subtle bg-sko-bg-page p-5 text-sko-text-subtle">
@@ -119,7 +133,7 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
   }
   return (
     <ol className="flex flex-col gap-5">
-      {days.map((day) => {
+      {days.map(({ day, events: dayEvents }) => {
         const h = dayHeading(day);
         return (
           <li key={day} className="flex flex-col gap-2">
@@ -127,11 +141,9 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
               {h.lead} {h.rest ? <span className="text-sko-text-subtle">{h.rest}</span> : null}
             </h3>
             <ul className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
-              {upcoming
-                .filter((e) => e.date === day)
-                .map((e) => (
-                  <EventRow key={e.id} event={e} />
-                ))}
+              {dayEvents.map((e) => (
+                <EventRow key={e.id} event={e} />
+              ))}
             </ul>
           </li>
         );
@@ -252,6 +264,131 @@ function WeekStrip({ events }: { events: CalendarEvent[] }) {
   );
 }
 
+/** An event row while it loads: the kind tile, ghost label · time, title and course, the badges. */
+function EventRowSkeleton({ event, demo }: { event: CalendarEvent; demo: boolean }) {
+  const badges = (
+    <>
+      <SkeletonPill>{statusOf(event).label}</SkeletonPill>
+      {event.outOfMvp && demo ? <SkeletonPill>Not in MVP</SkeletonPill> : null}
+    </>
+  );
+  return (
+    <div className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5">
+      <Skeleton variant="block" width={40} height={40} radius="control" />
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <Skeleton variant="ghost" text="body-small-semibold" className="uppercase">
+          {event.label}
+          {event.time ? <span className="normal-case"> · {event.time} · {YOUR_TIME}</span> : null}
+        </Skeleton>
+        <Skeleton variant="ghost" text="body-medium-semibold">{event.title}</Skeleton>
+        <Skeleton variant="ghost" text="body-small-regular">{event.course}</Skeleton>
+        <span className="mt-1 flex flex-wrap gap-1 md:hidden">{badges}</span>
+      </div>
+      <span className="flex shrink-0 flex-col items-end gap-1 max-md:hidden">{badges}</span>
+    </div>
+  );
+}
+
+/**
+ * The Calendar while it loads (motion-matrix §7.9): CalendarView's column in Skeletons from the
+ * same data, so it has the page's geometry: the title, the missed-deadlines alert and its rows,
+ * the filters, the Agenda (the view that opens) day by day as ghost lines, and the 320 column.
+ */
+function CalendarSkeleton() {
+  const demo = useDemoMode();
+  const [twoCourses, setTwoCourses] = React.useState(false);
+  React.useEffect(() => setTwoCourses(new URLSearchParams(window.location.search).get("missed") === "2"), []);
+  const all = twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents;
+  const missed = missedByCourse(all);
+  return (
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
+      <Skeleton variant="ghost" text="headline-large-bold">What’s coming up.</Skeleton>
+      {missed.length ? (
+        <div className="flex flex-col gap-3">
+          <div className="flex items-start gap-3 border-t-2 border-sko-border-subtle bg-sko-bg-page p-4">
+            <Skeleton variant="circle" size={20} className="mt-0.5" />
+            <div className="flex flex-col gap-0.5">
+              <Skeleton variant="ghost" text="body-medium-semibold">{SHIFT_DATES.title}</Skeleton>
+              <Skeleton variant="ghost" text="body-medium-regular">{SHIFT_DATES.body}</Skeleton>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+            {missed.map(({ course, items }) => (
+              <div key={course} className="flex flex-col gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:flex-row md:items-center">
+                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <Skeleton variant="ghost" text="body-medium-semibold">{course}</Skeleton>
+                  <Skeleton variant="ghost" text="body-small-regular">
+                    {items.map((e) => `${e.title} · was due ${formatDay(e.date)}`).join(" · ")}
+                  </Skeleton>
+                </div>
+                <SkeletonPill size="segment" className="max-md:w-full md:h-9">{SHIFT_DATES.button}</SkeletonPill>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:gap-8">
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="inline-flex max-w-full gap-0.5 overflow-hidden rounded-track bg-sko-bg-track p-1">
+              {calendarFilters.map((f) => (
+                <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
+              ))}
+            </div>
+            <div className="inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1 max-md:hidden">
+              <SkeletonPill size="segment" className="bg-transparent">Agenda</SkeletonPill>
+              <SkeletonPill size="segment" className="bg-transparent">Month</SkeletonPill>
+            </div>
+          </div>
+          <div className="flex flex-col gap-5">
+            {agendaDays(all).map(({ day, events }) => {
+              const h = dayHeading(day);
+              return (
+                <div key={day} className="flex flex-col gap-2">
+                  <Skeleton variant="ghost" text="title-medium-semibold">{`${h.lead} ${h.rest}`}</Skeleton>
+                  <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+                    {events.map((e) => (
+                      <EventRowSkeleton key={e.id} event={e} demo={demo} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="flex flex-col gap-4 lg:w-[320px] lg:shrink-0">
+          <div className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
+            <Skeleton variant="ghost" text="title-medium-semibold">Next 7 days</Skeleton>
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 7 }, (_, i) => (
+                <div key={i} className="flex flex-col items-center gap-1 py-2">
+                  <Skeleton text="body-small-medium" width={24} />
+                  <Skeleton text="title-medium-semibold" width={20} />
+                  <span className="h-1.5" />
+                </div>
+              ))}
+            </div>
+            <Skeleton text="body-small-regular" width="60%" />
+            <Skeleton text="body-small-regular" width="90%" />
+          </div>
+          <div className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
+            <div className="flex items-start gap-3">
+              <Skeleton variant="circle" size={20} className="mt-0.5" />
+              <div className="flex flex-col gap-0.5">
+                <Skeleton variant="ghost" text="body-medium-semibold">Add to your calendar</Skeleton>
+                <Skeleton variant="ghost" text="body-small-regular">
+                  Your deadlines and sessions in Google, Outlook or Apple Calendar, kept up to date.
+                </Skeleton>
+              </div>
+            </div>
+            <SkeletonPill size="segment" className="self-start md:h-9">Subscribe</SkeletonPill>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Calendar (proposal, 17 Oct 2026; no Figma screen yet): the dates of every course in one place.
  * Header, then the missed deadlines (if any), then Agenda (the default, and the only view on
@@ -289,9 +426,13 @@ export function CalendarView() {
   };
 
   return (
-    <PlatformPage current="calendar" className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
+    <PlatformPage
+      current="calendar"
+      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      skeleton={<CalendarSkeleton />}
+    >
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
-        <h1 className="sk-text-headline-large-bold text-sko-text-default">
+        <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
           What&rsquo;s <span data-heading-em="" className="text-sko-text-subtle">coming up.</span>
         </h1>
 
@@ -300,7 +441,7 @@ export function CalendarView() {
           // alert and copy, then one row per self-paced course with missed deadlines, each with its own
           // Primary "Shift due dates" (reset_course_deadlines is one course per call, no confirmation).
           // After a shift: the platform's toast with "View all dates" (that course's Dates tab), and the row goes.
-          <section aria-labelledby="calendar-missed" className="flex flex-col gap-3">
+          <section data-arrive={1} aria-labelledby="calendar-missed" className="flex flex-col gap-3">
             <div className="flex items-start gap-3 border-t-2 border-sko-border-warning bg-sko-bg-page p-4">
               <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-warning" />
               <div className="flex flex-col gap-0.5">
@@ -329,7 +470,7 @@ export function CalendarView() {
         ) : null}
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:gap-8">
-          <section aria-label="Dates" className="flex min-w-0 flex-1 flex-col gap-4">
+          <section data-arrive={2} aria-label="Dates" className="flex min-w-0 flex-1 flex-col gap-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <PlatformSegmented label="Show" options={calendarFilters} value={filter} onChange={setFilter} />
               <PlatformSegmented
@@ -359,15 +500,15 @@ export function CalendarView() {
             </div>
           </section>
 
-          <aside aria-label="This week and calendar sync" className="flex flex-col gap-4 lg:w-[320px] lg:shrink-0">
+          <aside data-arrive={3} aria-label="This week and calendar sync" className="flex flex-col gap-4 lg:w-[320px] lg:shrink-0">
             <section aria-labelledby="calendar-week" className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
               <h2 id="calendar-week" className="sk-text-title-medium-semibold text-sko-text-default">
                 Next 7 days
               </h2>
               <WeekStrip events={calendarEvents} />
               <p className="sk-text-body-small-regular text-sko-text-subtle">
-                {thisWeek.filter((e) => e.kind === "deadline").length} deadlines ·{" "}
-                {thisWeek.filter((e) => e.kind === "live").length} live sessions
+                <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "deadline").length)} /> deadlines ·{" "}
+                <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "live").length)} /> live sessions
               </p>
               <ul className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
                 {(["deadline", "live", "course"] as const).map((k) => (

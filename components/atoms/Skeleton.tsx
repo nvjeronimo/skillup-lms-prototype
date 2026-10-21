@@ -93,3 +93,32 @@ export function Skeleton(props: SkeletonProps) {
     </div>
   );
 }
+
+/**
+ * A pill (a Badge, a segment) whose width is its own label: the label invisible on bg/muted,
+ * with the Badge's padding and height (sm 22, md 24), or a segment's (32, 44 on a phone).
+ */
+export function SkeletonPill({
+  children,
+  size = "sm",
+  className,
+}: {
+  children: React.ReactNode;
+  size?: "sm" | "md" | "segment";
+  className?: string;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "inline-flex shrink-0 select-none items-center whitespace-nowrap bg-sko-bg-muted text-transparent",
+        size === "sm" && "sk-text-body-small-medium h-[22px] rounded-pill px-2",
+        size === "md" && "sk-text-body-medium-medium h-6 rounded-pill px-2.5",
+        size === "segment" && "sk-text-body-medium-semibold h-8 rounded-control border border-transparent px-4 max-md:h-11",
+        className,
+      )}
+    >
+      {children}
+    </span>
+  );
+}
