@@ -41,3 +41,12 @@ export function isFirstVisit(path: string, visited: Set<string>): boolean {
 export function markVisited(path: string, visited: Set<string>): Set<string> {
   return new Set(visited).add(arrivalKey(path));
 }
+
+/**
+ * The arrival page of a player address: the topic itself (`/course/<slug>/topic/<id>`), so its
+ * Notes and Downloads tabs are the same visit; null outside a topic.
+ */
+export function topicArrivalPath(path: string): string | null {
+  const m = /^\/course\/[^/?#]+\/topic\/[^/?#]+/.exec(path);
+  return m ? m[0] : null;
+}

@@ -68,6 +68,9 @@ import {
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { lineAt } from "@/lib/playback/lineAt";
 import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
+import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
+import { topicArrivalPath } from "@/lib/arrival/visits";
+import { TopicSkeleton } from "./TopicSkeleton";
 
 
 export interface PlayerShellProps {
@@ -83,6 +86,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   const topic = getTopic(topicId);
   const { previous, next, total, position } = getAdjacentTopics(topicId);
+
+  // Arrival (motion-matrix §7.9): the first visit of a topic in the session shows the body's
+  // skeleton for the simulated load, then the body's sections rise in order and the rings
+  // sweep. Keyed by the topic (its Notes / Downloads tabs are the same visit); the shell
+  // (top bar, sidebar, footer) stays put. A revisit has the template's page fade only.
+  const bodyRef = React.useRef<HTMLDivElement>(null);
+  const arrival = useArrivalController(topicArrivalPath(pathname) ?? pathname, bodyRef);
 
   // Store wiring
   const sidebarExpanded = useLmsStore((s) => s.sidebarExpanded);
@@ -371,6 +381,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const durationSeconds = getMediaSeconds(topic);
 
   return (
+    <ArrivalContext.Provider value={arrival}>
     <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
       <CoursePlayerTopbar
         size={topbarSize}
@@ -427,19 +438,36 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page outline-none"
         >
           <div
+            ref={bodyRef}
             className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto"
             onScroll={(e) => {
               const next = e.currentTarget.scrollTop > 8;
               setVideoDocked((prev) => (prev === next ? prev : next));
             }}
           >
+            {/* Only under data-arrival="pending" (lib/arrival): the topic-shaped skeleton. */}
+            {!arrival.decided || !arrival.released ? (
+              <div className="sk-arrival-skeleton">
+                <TopicSkeleton
+                  bp={bp}
+                  video={isVideo && !isLocked}
+                  videoHeight={videoHeight}
+                  tabs={showTabs && !isLocked}
+                  title={topic.title}
+                  completed={Boolean(headerStatus)}
+                  description={!isLocked && family !== "assessment" ? topicDescription(topic) : undefined}
+                />
+              </div>
+            ) : null}
+            <div data-arrival-content="">
             {isLocked ? (
-              <div className={cn("w-full", CONTENT_PAD[bp])}>{children}</div>
+              <div data-arrive={0} className={cn("w-full", CONTENT_PAD[bp])}>{children}</div>
             ) : isVideo ? (
               <>
                 {/* Sticky player band — the video stays visible at the top and
                     docks (shrinks) once the content scrolls past the top. */}
                 <div
+                  data-arrive={0}
                   className={cn(
                     "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate",
                     videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
@@ -507,7 +535,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   {/* Topic title below the player (ICP Phase 1 canonical layout).
                       The top-right action is hidden on mobile — it lives only at
                       the end of the content there. */}
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div data-arrive={1} className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <h1 className="sk-text-headline-small-semibold min-w-0 text-sko-text-default">
                       {topic.title}
                     </h1>
@@ -515,7 +543,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       <div className="shrink-0">{headerStatus}</div>
                     ) : null}
                   </div>
-                  <div className="mt-4">
+                  <div data-arrive={2} className="mt-4">
                     {showTabs ? (
                       <ContentTabs
                         tabs={tabs}
@@ -528,7 +556,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       {children}
                     </TopicEndActionContext.Provider>
                   </div>
-                  {discussFooter}
+                  {discussFooter ? <div data-arrive={3}>{discussFooter}</div> : null}
                 </div>
               </>
             ) : (
@@ -540,16 +568,18 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     author row is off because assessment types have no single
                     author — a shared-shell rule, not a preference. The status
                     badge turns on by completion state. */}
-                <TopicHeader
-                  type={topic.type}
-                  title={topic.title}
-                  duration={topic.duration}
-                  showDescription={family !== "assessment"}
-                  description={topicDescription(topic)}
-                  rightSlot={headerStatus ?? undefined}
-                />
+                <div data-arrive={0}>
+                  <TopicHeader
+                    type={topic.type}
+                    title={topic.title}
+                    duration={topic.duration}
+                    showDescription={family !== "assessment"}
+                    description={topicDescription(topic)}
+                    rightSlot={headerStatus ?? undefined}
+                  />
+                </div>
                 {/* A partner lab opens with the divider Reading uses, 12 under the header. */}
-                <div className={partnerLab ? "mt-3" : "mt-5"}>
+                <div data-arrive={1} className={partnerLab ? "mt-3" : "mt-5"}>
                   {showTabs ? (
                     <ContentTabs
                       tabs={tabs}
@@ -559,10 +589,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   ) : null}
                   {children}
                 </div>
-                {footerMeta}
-                {discussFooter}
+                {footerMeta ? <div data-arrive={2}>{footerMeta}</div> : null}
+                {discussFooter ? <div data-arrive={3}>{discussFooter}</div> : null}
               </div>
             )}
+            </div>
           </div>
 
           <TopicFooterNav
@@ -707,8 +738,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         }}
       />
 
+      {/* The body's load, announced once: "Loading…" while its skeleton shows. */}
+      <p role="status" className="sr-only">
+        {arrival.decided && arrival.first && !arrival.released ? "Loading…" : ""}
+      </p>
       <Toast toast={toast} onDone={clearToast} />
     </div>
+    </ArrivalContext.Provider>
   );
 }
 

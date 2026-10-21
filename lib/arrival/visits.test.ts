@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { arrivalKey, isFirstVisit, markVisited, parseVisited, serializeVisited } from "./visits";
+import { arrivalKey, topicArrivalPath, isFirstVisit, markVisited, parseVisited, serializeVisited } from "./visits";
 
 describe("arrivalKey", () => {
   it("is the pathname without query or hash", () => {
@@ -49,5 +49,14 @@ describe("isFirstVisit / markVisited", () => {
   it("round-trips through storage text", () => {
     const text = serializeVisited(markVisited("/b", new Set(["/a"])));
     expect([...parseVisited(text)]).toEqual(["/a", "/b"]);
+  });
+});
+
+describe("topicArrivalPath", () => {
+  it("is the topic for the topic and its tabs, null elsewhere", () => {
+    expect(topicArrivalPath("/course/a/topic/t1")).toBe("/course/a/topic/t1");
+    expect(topicArrivalPath("/course/a/topic/t1/downloads")).toBe("/course/a/topic/t1");
+    expect(topicArrivalPath("/course/a/certificate")).toBeNull();
+    expect(topicArrivalPath("/platform/dashboard")).toBeNull();
   });
 });

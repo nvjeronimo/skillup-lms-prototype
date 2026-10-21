@@ -62,8 +62,12 @@ describe("ARRIVAL_INIT_SCRIPT", () => {
     r.timers.forEach((fn) => fn());
     expect(r.attrs).toEqual({});
   });
-  it("does nothing outside the platform pages", () => {
-    expect(run({ path: "/course/six-sigma/topic/m3-t1" }).attrs).toEqual({});
+  it("does nothing outside the platform pages and the player topics", () => {
+    expect(run({ path: "/course/six-sigma/certificate" }).attrs).toEqual({});
     expect(run({ path: "/platformish" }).attrs).toEqual({});
+  });
+  it("flags a player topic not seen yet, keyed by the topic (its tabs included)", () => {
+    expect(run({ path: "/course/six-sigma/topic/m3-t1" }).attrs).toEqual({ "data-arrival": "pending" });
+    expect(run({ path: "/course/six-sigma/topic/m3-t1/notes", visited: ["/course/six-sigma/topic/m3-t1"] }).attrs).toEqual({});
   });
 });
