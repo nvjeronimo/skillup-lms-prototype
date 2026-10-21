@@ -69,7 +69,7 @@ export function ProgramSkeleton({ program }: { program: Program }) {
       <HeaderBandSkeleton
         kind="program"
         title={program.title}
-        facts={[program.stats.courses, program.stats.duration, program.stats.org].join("  |  ")}
+        facts={[program.stats.courses, program.stats.duration, program.stats.org]}
         cardLines={1}
       />
       <div className="bg-sko-bg-page shadow-[inset_0_-1px_0_0_var(--color-border-subtle)]">

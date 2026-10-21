@@ -30,8 +30,8 @@ export function HeaderBandSkeleton({
 }: {
   kind: "program" | "course";
   title: string;
-  /** The facts row as text ("7 courses | 6 months | …"). */
-  facts: string;
+  /** The facts row, item by item ("7 courses", "6 months", …). */
+  facts: string[];
   /** Lines under the Progress card's button: one on a program, two on a course. */
   cardLines: 1 | 2;
 }) {
@@ -73,12 +73,33 @@ export function HeaderBandSkeleton({
               <Skeleton variant="block" width={96} height={22} radius="pill" />
               <Skeleton variant="block" width={88} height={22} radius="pill" />
             </div>
-            <div className={cn("py-3", !program && "md:pb-0 lg:pb-3")}>
-              {/* The facts row: 19 tall a line (its separators), 8 between wrapped lines. */}
-              <Skeleton variant="ghost" text="body-medium-regular" className="[line-height:27px] -my-1">
-                {facts}
-              </Skeleton>
-            </div>
+            {/* The facts, item by item as the headers lay them out, so they wrap where the real
+                row does: a program's 19-tall items between separators; a course's items each
+                with its left rule, the first one's pushed out of the clipped box. */}
+            {program ? (
+              <div className="flex flex-wrap items-center gap-2 py-3">
+                {facts.map((fact, i) => (
+                  <div key={fact} className="flex items-center gap-2">
+                    {i > 0 ? <span className="h-[19px] border-l border-sko-border-default" /> : null}
+                    <span className="flex h-[19px] items-center gap-1.5">
+                      {i === 0 ? <Skeleton variant="block" width={18} height={18} radius="inner" /> : null}
+                      <Skeleton variant="ghost" text="body-medium-regular">{fact}</Skeleton>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="overflow-hidden py-3 md:pb-0 lg:pb-3">
+                <div className="-ml-[17px] flex flex-wrap items-center gap-y-2">
+                  {facts.map((fact, i) => (
+                    <div key={fact} className="ml-2 flex items-center gap-1.5 border-l border-sko-border-default pl-2">
+                      {i === 0 ? <Skeleton variant="block" width={18} height={18} radius="inner" /> : null}
+                      <Skeleton variant="ghost" text="body-medium-regular">{fact}</Skeleton>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex w-full shrink-0 flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]">
             <Skeleton text="headline-medium-bold" width={72} />
@@ -100,7 +121,7 @@ export function TabBarSkeleton({ tabs, search = false, rule = true }: { tabs: nu
   return (
     <div className={cn("bg-sko-bg-page", rule && "border-b border-sko-border-subtle")}>
       <div className="mx-auto flex w-full max-w-[1280px] items-end justify-between pl-4 pt-3 md:px-6 md:pt-0 lg:px-10">
-        <div className="flex h-8 items-center gap-6 md:h-12">
+        <div className={cn("flex h-8 items-center gap-6 md:h-12", rule && "-mb-px")}>
           {tabs.map((w, i) => (
             <Skeleton key={i} variant="block" width={w} height={20} radius="inner" />
           ))}

@@ -77,14 +77,16 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
   const panels: Record<CourseTabId, React.ReactNode> = {
     course: (
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-8 lg:gap-10">
-        <div className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
+        <div data-arrive={2} className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
           {/* Open edX shows Shift due dates on the course outline as on the Dates tab. */}
           {course.datesTab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
           <CourseAlert tone="brand" layout="stacked" title={course.update.title} body={course.update.body} dismissible />
           <SectionIntro title={course.intro.title} lead={course.intro.lead} />
           <ModuleList modules={course.modules} topicHref={links.byId} />
         </div>
-        <CourseSidebar course={course} className="md:w-[320px] md:shrink-0" />
+        <div data-arrive={3} className="md:w-[320px] md:shrink-0">
+          <CourseSidebar course={course} />
+        </div>
       </div>
     ),
     progress: <ProgressTab course={course} />,
@@ -96,8 +98,10 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
   if (course.hosted) {
     return (
       <>
-        <CourseHeader course={course} />
-        <div className="mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8">
+        <div data-arrive={0}>
+          <CourseHeader course={course} />
+        </div>
+        <div data-arrive={1} className="mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8">
           <div data-mock="Not designed yet: what this page shows under the header for a course hosted by a partner">
             <InlineAlert tone="info" title={course.hosted.dialog.title} description={course.hosted.dialog.body} />
           </div>
@@ -108,11 +112,13 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
 
   return (
     <>
-      <CourseHeader course={course} className={cn(openThread && "max-md:hidden")} />
+      <div data-arrive={0}>
+        <CourseHeader course={course} className={cn(openThread && "max-md:hidden")} />
+      </div>
       {/* With the header out of the mobile conversation view, the page keeps its one heading. */}
       {openThread ? <h1 className="sr-only md:hidden">{course.title}</h1> : null}
 
-      <div className={cn("border-b border-sko-border-subtle bg-sko-bg-page", openThread && "max-md:hidden")}>
+      <div data-arrive={1} className={cn("border-b border-sko-border-subtle bg-sko-bg-page", openThread && "max-md:hidden")}>
         {/* Mobile: 12 above the 32px tabs (a 44px row). With the larger-targets setting the tabs are 44 themselves. */}
         <div className="mx-auto flex w-full max-w-[1280px] items-end pl-4 pt-3 max-md:[[data-large-targets]_&]:pt-0 md:gap-5 md:px-6 md:pt-0 lg:gap-6 lg:px-10">
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up. Their own rule sits on the row's. */}
@@ -133,13 +139,14 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
         {/* Mobile: the search sits above every tab, not only Course (asked by Nelson on 8 Oct;
             the Figma screens draw it on the Course tab only). Not on an open Q&A conversation. */}
         {openThread ? null : (
-          <CourseSearch
-            label={course.search.placeholder}
-            topicHref={course.progress.href}
-            slug={course.slug}
-            variant="sheet"
-            className="mb-4 md:hidden"
-          />
+          <div data-arrive={1} className="mb-4 md:hidden">
+            <CourseSearch
+              label={course.search.placeholder}
+              topicHref={course.progress.href}
+              slug={course.slug}
+              variant="sheet"
+            />
+          </div>
         )}
         {/* PROPOSAL (10 Oct 2026): the passed state has no Figma screen; the page says so on every
             tab, with the note of the sample certificate page. Not on an open Q&A conversation. */}
@@ -159,6 +166,8 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             aria-labelledby={platformTabId(baseId, tab.id)}
             tabIndex={0}
             hidden={tab.id !== active}
+            // The Course tab's column and sidebar rise on their own (2, 3); another tab rises whole.
+            data-arrive={tab.id === "course" ? undefined : 2}
             className={fadeIn}
           >
             {panels[tab.id]}

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { CourseDetailView } from "@/components/platform/course/CourseDetailView";
+import { CourseSkeleton } from "@/components/platform/course/CourseSkeleton";
 import { getCourseDetailBySlug } from "@/lib/platform/course-detail";
 import { pageTitle } from "@/lib/utils";
 
@@ -19,7 +20,7 @@ export default function CourseDetailPage({ params }: Params) {
   if (!course) notFound();
 
   return (
-    <PlatformPage current="my-learning">
+    <PlatformPage current="my-learning" skeleton={<CourseSkeleton course={course} />}>
       {/* The view reads ?tab= and ?thread= through useSearchParams, which needs a Suspense boundary. */}
       <Suspense fallback={null}>
         <CourseDetailView course={course} />
