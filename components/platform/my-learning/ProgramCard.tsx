@@ -34,6 +34,9 @@ export interface ProgramCardProps {
 const TARGET_44 =
   "relative z-[2] shrink-0 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-1 max-md:before:content-['']";
 
+/** The Program card's frame; its skeleton reuses it. */
+export const PROGRAM_CARD_FRAME = "relative flex overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page";
+
 /**
  * DS `LMS/Platform/My-Learning/Program-Card`: one program in My Learning. White card,
  * 1px border/subtle, radius 8, no shadow.
@@ -89,7 +92,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
       className={cn(
         // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
         // so the desktop side padding is 23 (+1 border = the DS 24 inset). The height already matches with 24.
-        "relative flex overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page",
+        PROGRAM_CARD_FRAME,
         program.href && "transition-colors has-[a:hover]:border-sko-border-default",
         list ? "min-h-[280px] items-stretch" : "flex-col",
         className,

@@ -1,21 +1,35 @@
 "use client";
 
 import * as React from "react";
-import { Skeleton } from "@/components/atoms/Skeleton";
-import { MY_LEARNING_TAB_KEY, myLearningFirstTab, myLearningHeading, type MyLearningTab } from "@/lib/platform/my-learning";
+import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
+import { COURSE_ROW_FRAME } from "@/components/platform/CourseRowCard";
+import {
+  MY_LEARNING_TAB_KEY,
+  myLearningFirstTab,
+  myLearningHeading,
+  myLearningStatusFilters,
+  type MyLearningTab,
+} from "@/lib/platform/my-learning";
 import { cn } from "@/lib/utils";
+import { MY_LEARNING_FILTER_TRACK, MY_LEARNING_GRID } from "./MyLearningCollection";
+import { PROGRAM_CARD_FRAME } from "./ProgramCard";
 
 /* The Collection's grid: 3 columns / 24, 2 / 20 on tablet, 1 / 16 on a phone (MyLearningCollection). */
-const GRID = "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
-const CARD = "flex flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page";
-/* Card heights as the sample data draws them (measured 21 Oct 2026 at 375 / 768 / 1024 / 1280). */
+/* Card heights: measured from sample data (21 Oct 2026, at 375 / 768 / 1024 / 1280). The cards'
+   inner layouts (cover band, partner logos, module row) are not drawn line for line, so the
+   outer height is held instead; the first screen is what has to stay still. */
 const PROGRAM_H = "h-[418px] md:h-[420px] lg:h-[456px] xl:h-[412px]";
 const COURSE_H = "h-[429px] lg:h-[487px] xl:h-[437px]";
+/* At most this many cards: a long list is mostly below the fold and only adds markup. */
+const MAX_CARDS = 8;
+
+const useIsoLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 /** A Program card in the grid: the cover band (title, badges), then progress, next course and Resume. */
 function ProgramCardSkeleton() {
   return (
-    <div className={cn(CARD, PROGRAM_H)}>
+    <div className={cn(PROGRAM_CARD_FRAME, "flex-col", PROGRAM_H)}>
+      {/* The cover band: measured from sample data (220 at every width). */}
       <div className="flex h-[220px] shrink-0 flex-col justify-between bg-sko-bg-subtle p-6">
         <div className="flex flex-col gap-3">
           <Skeleton variant="block" width={120} height={28} radius="pill" />
@@ -48,7 +62,7 @@ function ProgramCardSkeleton() {
 /** A compact Course-Row: the card (kind, thumb + title, tags, progress, up next, Resume) over the module row. */
 function CourseRowSkeleton() {
   return (
-    <div className={cn(CARD, COURSE_H)}>
+    <div className={cn(COURSE_ROW_FRAME, "flex flex-col", COURSE_H)}>
       <div className="flex flex-1 flex-col justify-between gap-4 p-6">
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
@@ -77,6 +91,7 @@ function CourseRowSkeleton() {
         </div>
         <Skeleton variant="block" height={36} radius="control" />
       </div>
+      {/* The module row: measured from sample data (67). */}
       <div className="flex h-[67px] shrink-0 items-center justify-between gap-4 border-t border-sko-border-subtle px-6">
         <div className="flex min-w-0 flex-1 flex-col">
           <Skeleton text="body-small-medium" width={96} />
@@ -97,7 +112,10 @@ function CourseRowSkeleton() {
  */
 export function MyLearningSkeleton({ courses, programs }: { courses: number; programs: number }) {
   const [tab, setTab] = React.useState<MyLearningTab>(() => myLearningFirstTab(programs));
-  React.useEffect(() => {
+  // Before the first paint after hydration (a layout effect), so a client navigation never shows
+  // the wrong tab's cards; on a hard load the pre-painted server markup has the first-time rule
+  // until hydration, as the page itself does.
+  useIsoLayoutEffect(() => {
     try {
       const linked = new URLSearchParams(window.location.search).get("tab");
       const stored = window.localStorage.getItem(MY_LEARNING_TAB_KEY);
@@ -107,7 +125,7 @@ export function MyLearningSkeleton({ courses, programs }: { courses: number; pro
       /* storage blocked: the first-time rule */
     }
   }, []);
-  const count = tab === "courses" ? courses : programs;
+  const count = Math.min(tab === "courses" ? courses : programs, MAX_CARDS);
   return (
     <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
       <Skeleton variant="ghost" text="headline-large-bold">
@@ -124,13 +142,20 @@ export function MyLearningSkeleton({ courses, programs }: { courses: number; pro
           </div>
         </div>
         <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
-          <Skeleton variant="block" radius="track" className="h-10 w-full max-md:h-[52px] md:w-[411px]" />
+          {/* The status filter, its segments as wide as their labels. */}
+          <div className="min-w-0 md:shrink-0">
+            <div className={cn(MY_LEARNING_FILTER_TRACK, "overflow-hidden")}>
+              {myLearningStatusFilters.map((f) => (
+                <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
+              ))}
+            </div>
+          </div>
           <div className="flex items-center gap-2">
             <Skeleton variant="block" radius="control" className="h-10 w-full max-md:h-11 md:w-[240px] lg:w-[320px]" />
             <Skeleton variant="block" width={98} height={40} radius="track" className="hidden shrink-0 lg:block" />
           </div>
         </div>
-        <div className={cn(GRID, "items-start")}>
+        <div className={cn(MY_LEARNING_GRID, "items-start")}>
           {Array.from({ length: count }, (_, i) =>
             tab === "courses" ? <CourseRowSkeleton key={i} /> : <ProgramCardSkeleton key={i} />,
           )}

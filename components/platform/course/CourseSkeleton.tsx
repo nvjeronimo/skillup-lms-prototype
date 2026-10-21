@@ -9,7 +9,8 @@ import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import { cn } from "@/lib/utils";
 
 const BODY = "mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8";
-/* The sidebar cards as the sample draws them (measured 21 Oct 2026; phone / tablet and up). */
+/* The sidebar cards: measured from sample data (21 Oct 2026; phone / tablet and up). Seven
+   different cards (team, dates, certificate, weekly goal…) not drawn line for line here. */
 const SIDEBAR = [
   "h-[174px] md:h-[166px]",
   "h-[214px] md:h-[206px]",

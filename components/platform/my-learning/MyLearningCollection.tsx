@@ -33,7 +33,10 @@ import { ViewToggle } from "./ViewToggle";
 const ID_BASE = "my-learning";
 
 /* Grid: 3 columns / 24 on desktop, 2 columns / 20 on tablet, 1 column / 16 on mobile. */
-const GRID = "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
+/* The status filter's track (DS Button group); its skeleton reuses it. */
+export const MY_LEARNING_FILTER_TRACK =
+  "flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden";
+export const MY_LEARNING_GRID = "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
 /* List: one column, 24 apart. Desktop only. */
 const LIST = "hidden flex-col gap-6 lg:flex";
 
@@ -187,7 +190,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           <div
             role="group"
             aria-label={`Filter ${noun} by status`}
-            className="flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden"
+            className={MY_LEARNING_FILTER_TRACK}
           >
             {myLearningStatusFilters.map((item) => (
               <button
@@ -251,7 +254,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           ) : tab === "courses" ? (
             <>
               {/* items-start: an opened row does not stretch the rows of its line. */}
-              <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "lg:hidden")}>
                 {courses.map((row, i) => (
                   <CourseRowCard
                     key={row.card.id}
@@ -285,7 +288,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           ) : (
             <>
               {/* Every program card has the same height, whatever its state or title (useEqualHeights). */}
-              <ul className={cn(GRID, "items-start", listView && "lg:hidden")}>
+              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "lg:hidden")}>
                 {programs.map((program, i) => (
                   <li key={program.id} className={cn("min-w-0", ROW_ENTER)} style={staggerStyle(i, programs.length)}>
                     <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />

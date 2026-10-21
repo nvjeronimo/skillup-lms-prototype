@@ -83,6 +83,9 @@ export interface CourseRowCardProps extends Pick<ProgramCourse, "position" | "de
   style?: React.CSSProperties;
 }
 
+/** The Course-Row's frame (card, stroke, elevation); its skeletons reuse it. */
+export const COURSE_ROW_FRAME = "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
+
 /**
  * DS `LMS/Platform/Program-Detail/Course-Row` (`Breakpoint` Desktop · Compact, `Expanded`):
  * one course with its modules. bg/page, 1px border/subtle, radius 12, Shadows/shadow-card.
@@ -122,7 +125,7 @@ export function CourseRowCard({
 
   return (
     <li
-      className={cn("overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card", className)}
+      className={cn(COURSE_ROW_FRAME, className)}
       style={style}
     >
       {!compact ? (

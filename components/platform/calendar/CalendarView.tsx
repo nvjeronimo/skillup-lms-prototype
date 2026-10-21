@@ -76,18 +76,28 @@ function agendaDays(events: CalendarEvent[]) {
 }
 
 /** One date: kind tile, the label and time over the title (a link) and its course, the status on the right. */
+/* An event row's layout, shared by the row and its skeleton. */
+const EVENT_ROW = "flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5";
+const EVENT_TEXT = "flex min-w-0 flex-1 flex-col gap-0.5";
+const EVENT_BADGES_PHONE = "mt-1 flex flex-wrap gap-1 md:hidden";
+const EVENT_BADGES = "flex shrink-0 flex-col items-end gap-1 max-md:hidden";
+/* The day list and a day's card, shared by the Agenda and its skeleton. */
+const AGENDA = "flex flex-col gap-5";
+const AGENDA_DAY = "flex flex-col gap-2";
+const AGENDA_CARD = "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page";
+
 function EventRow({ event }: { event: CalendarEvent }) {
   const demo = useDemoMode();
   const k = KIND[event.kind];
   return (
     <li
-      className="relative flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5"
+      className={cn("relative", EVENT_ROW)}
       data-mock={event.outOfMvp ? "Live sessions are not in Open edX, and VILT is out of the MVP" : undefined}
     >
       <span aria-hidden className={cn("inline-flex size-10 shrink-0 items-center justify-center rounded-control", k.tile)}>
         <Icon icon={k.icon} size={20} />
       </span>
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className={EVENT_TEXT}>
         <p className="sk-text-body-small-semibold uppercase text-sko-text-subtle">
           {event.label}
           {event.time ? <span className="normal-case"> · {event.time} · {YOUR_TIME}</span> : null}
@@ -100,7 +110,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
         </p>
         <p className="sk-text-body-small-regular text-sko-text-subtle">{event.course}</p>
         {/* Mobile: the status sits under the text, so the title keeps the width. */}
-        <span className="mt-1 flex flex-wrap gap-1 md:hidden">
+        <span className={EVENT_BADGES_PHONE}>
           {statusBadge(event)}
           {event.outOfMvp && demo ? (
             <Badge variant="outline" color="gray">
@@ -109,7 +119,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
           ) : null}
         </span>
       </div>
-      <span className="flex shrink-0 flex-col items-end gap-1 max-md:hidden">
+      <span className={EVENT_BADGES}>
         {statusBadge(event)}
         {event.outOfMvp && demo ? (
           <Badge variant="outline" color="gray">
@@ -132,15 +142,15 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
     );
   }
   return (
-    <ol className="flex flex-col gap-5">
+    <ol className={AGENDA}>
       {days.map(({ day, events: dayEvents }) => {
         const h = dayHeading(day);
         return (
-          <li key={day} className="flex flex-col gap-2">
+          <li key={day} className={AGENDA_DAY}>
             <h3 className="sk-text-title-medium-semibold text-sko-text-default">
               {h.lead} {h.rest ? <span className="text-sko-text-subtle">{h.rest}</span> : null}
             </h3>
-            <ul className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+            <ul className={AGENDA_CARD}>
               {dayEvents.map((e) => (
                 <EventRow key={e.id} event={e} />
               ))}
@@ -264,6 +274,21 @@ function WeekStrip({ events }: { events: CalendarEvent[] }) {
   );
 }
 
+/* The skeleton draws the first events only: a long agenda is mostly below the fold. */
+const MAX_SKELETON_EVENTS = 8;
+
+/** The first `max` events of the days, in order (the days they leave empty are dropped). */
+function capDays(days: { day: string; events: CalendarEvent[] }[], max: number) {
+  const out: typeof days = [];
+  let left = max;
+  for (const d of days) {
+    if (left <= 0) break;
+    out.push({ day: d.day, events: d.events.slice(0, left) });
+    left -= d.events.length;
+  }
+  return out;
+}
+
 /** An event row while it loads: the kind tile, ghost label · time, title and course, the badges. */
 function EventRowSkeleton({ event, demo }: { event: CalendarEvent; demo: boolean }) {
   const badges = (
@@ -273,18 +298,18 @@ function EventRowSkeleton({ event, demo }: { event: CalendarEvent; demo: boolean
     </>
   );
   return (
-    <div className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5">
+    <div className={EVENT_ROW}>
       <Skeleton variant="block" width={40} height={40} radius="control" />
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className={EVENT_TEXT}>
         <Skeleton variant="ghost" text="body-small-semibold" className="uppercase">
           {event.label}
           {event.time ? <span className="normal-case"> · {event.time} · {YOUR_TIME}</span> : null}
         </Skeleton>
         <Skeleton variant="ghost" text="body-medium-semibold">{event.title}</Skeleton>
         <Skeleton variant="ghost" text="body-small-regular">{event.course}</Skeleton>
-        <span className="mt-1 flex flex-wrap gap-1 md:hidden">{badges}</span>
+        <span className={EVENT_BADGES_PHONE}>{badges}</span>
       </div>
-      <span className="flex shrink-0 flex-col items-end gap-1 max-md:hidden">{badges}</span>
+      <span className={EVENT_BADGES}>{badges}</span>
     </div>
   );
 }
@@ -340,13 +365,13 @@ function CalendarSkeleton() {
               <SkeletonPill size="segment" className="bg-transparent">Month</SkeletonPill>
             </div>
           </div>
-          <div className="flex flex-col gap-5">
-            {agendaDays(all).map(({ day, events }) => {
+          <div className={AGENDA}>
+            {capDays(agendaDays(all), MAX_SKELETON_EVENTS).map(({ day, events }) => {
               const h = dayHeading(day);
               return (
-                <div key={day} className="flex flex-col gap-2">
+                <div key={day} className={AGENDA_DAY}>
                   <Skeleton variant="ghost" text="title-medium-semibold">{`${h.lead} ${h.rest}`}</Skeleton>
-                  <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+                  <div className={AGENDA_CARD}>
                     {events.map((e) => (
                       <EventRowSkeleton key={e.id} event={e} demo={demo} />
                     ))}
