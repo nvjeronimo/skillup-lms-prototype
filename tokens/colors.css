@@ -498,6 +498,10 @@
 [data-band][data-skin="sea"] {
   background-color: var(--color-bg-chrome);
   border-color: transparent;
+  /* The dark theme's subtle grey was made for the neutral dark page: on deep teal it reads 4.3:1
+     (Services mentor card, Nelson 21 Oct 2026). The bar's light sky (#acd5f4) reads 7.0:1. */
+  --color-text-subtle: #acd5f4;
+  --color-icon-subtle: #acd5f4;
 }
 
 /* Sea, 21 Oct 2026 (Nelson): no borders on cards, panels, menus and modals; a smooth, soft drop
