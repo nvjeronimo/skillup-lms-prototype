@@ -10,6 +10,11 @@
  *   5. Raw motion           — hand-typed durations / delays / curves, bare `transition` (use motion tokens)
  *   6. Raw radius           — Tailwind size radii (rounded-sm/md/lg/xl/…, rounded-[Npx], bare `rounded`)
  *                             instead of the six role radii in tokens/radius.css
+ *   5b. Raw motion in CSS  — the same rule over the stylesheets (every .css under app/ and
+ *                             components/, not app/lab/**; tokens/*.css are not scanned): a raw
+ *                             non-zero `<n>s` / `<n>ms`, `cubic-bezier(` or an ease-in / ease-out /
+ *                             ease-in-out keyword, outside @keyframes blocks, comments and
+ *                             `var(--motion-…)`. Keyframe percentages are fine; so is a zero (0s).
  *   7. Popup without motion — a file-level rule (FILE_RULES), read with comments stripped:
  *                             a file that opens a popup panel (calls useDisclosure, renders
  *                             role="menu"/"listbox", or an aria-haspopup trigger other than
@@ -169,8 +174,77 @@ for (const file of files) {
   }
 }
 
+/* ── 5b. Raw motion in the stylesheets ─────────────────────────────────────── */
+const CSS_DIRS = ["app", "components"];
+const CSS_SKIP = /^app\/lab\//;
+function walkCss(dir, out) {
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    const s = statSync(p);
+    if (s.isDirectory()) {
+      if (name === "node_modules" || name === ".next") continue;
+      walkCss(p, out);
+    } else if (name.endsWith(".css")) {
+      out.push(p);
+    }
+  }
+}
+const cssFiles = [];
+for (const d of CSS_DIRS) {
+  try {
+    walkCss(join(ROOT, d), cssFiles);
+  } catch {
+    /* dir may not exist */
+  }
+}
+
+/** Blanks out comments and @keyframes blocks (keeping line breaks), and every var(--motion-…). */
+function cssMotionCode(src) {
+  let code = src.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "));
+  let out = "";
+  let i = 0;
+  const kf = /@(?:-webkit-)?keyframes\b/g;
+  let m;
+  while ((m = kf.exec(code))) {
+    const open = code.indexOf("{", m.index);
+    if (open < 0) break;
+    let depth = 0;
+    let j = open;
+    for (; j < code.length; j++) {
+      if (code[j] === "{") depth++;
+      else if (code[j] === "}" && --depth === 0) break;
+    }
+    out += code.slice(i, m.index) + code.slice(m.index, j + 1).replace(/[^\n]/g, " ");
+    i = j + 1;
+    kf.lastIndex = i;
+  }
+  out += code.slice(i);
+  return out.replace(/var\(--motion-[\w-]+\)/g, (v) => " ".repeat(v.length));
+}
+
+const CSS_RAW_MOTION =
+  /(?<![\w.#-])(?!0+(?:\.0+)?m?s\b)\d*\.?\d+m?s(?![\w-])|cubic-bezier\(|(?<![\w-])ease-(?:in-out|in|out)(?![\w-])/;
+for (const file of cssFiles) {
+  const rel = relative(ROOT, file);
+  if (CSS_SKIP.test(rel) || ALLOW.has(rel)) continue;
+  const raw = readFileSync(file, "utf8").split("\n");
+  const code = cssMotionCode(raw.join("\n")).split("\n");
+  code.forEach((line, i) => {
+    if (/token-lint-disable/.test(raw[i - 1] || "")) return;
+    if (CSS_RAW_MOTION.test(line)) {
+      violations.push({
+        rel,
+        line: i + 1,
+        id: "raw-motion-css",
+        msg: "raw motion in CSS — use var(--motion-duration-*) / var(--motion-easing-*) (tokens/motion.css)",
+        src: raw[i].trim().slice(0, 100),
+      });
+    }
+  });
+}
+
 if (violations.length === 0) {
-  console.log(`✓ token-lint: ${files.length} files clean`);
+  console.log(`✓ token-lint: ${files.length} files and ${cssFiles.length} stylesheets clean`);
   process.exit(0);
 }
 

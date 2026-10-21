@@ -63,7 +63,7 @@ export function OverlayPanel({
       className={cn("fixed inset-0 z-50", closed && "pointer-events-none")}
     >
       {/* Backdrop — SKO DS light dim + blur (token-bound via .sk-backdrop). */}
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
+      <div className="sk-backdrop sk-animate-fade sk-backdrop-panel absolute inset-0" onClick={onClose} aria-hidden />
 
       <aside
         role="dialog"

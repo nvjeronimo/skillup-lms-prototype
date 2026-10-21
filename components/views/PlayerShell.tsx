@@ -695,7 +695,7 @@ function MobileCourseDrawer({
       {...inertProps(closed)}
       className={cn("fixed inset-0 z-40", closed && "pointer-events-none")}
     >
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} aria-hidden />
+      <div className="sk-backdrop sk-animate-fade sk-backdrop-panel absolute inset-0" onClick={onClose} aria-hidden />
       <div
         id={COURSE_DRAWER_ID}
         role="dialog"
