@@ -434,11 +434,13 @@
    The SKO brand tokens (no override: Sea inherits SKO in light and dark), plus a deep-teal
    chrome. One new token, --color-bg-chrome (#044150, the SkillUp deep teal of the logo and the
    certificate), to become a DS token if Sea is approved; #0a5266 / #0a5a70 are steps between it
-   and bg/primary (hover and gradient), to be named with it. Everything else reuses tokens: the
+   and bg/primary (hover), to be named with it. Everything else reuses tokens: the
    bar's controls take the dark-mode tokens (data-theme="dark" on them, as the Program-Card hero),
    the current-page marker and the avatar take the yellow spark (bg/warning), the glance card runs
    deep teal → teal, the page gets a breath of bg/primary-soft, the Jump tiles take sky, mint and
-   sun. Rules kept: progress in bg/info, green only when completed, AA everywhere. */
+   sun. Rules kept: progress in bg/info, green only when completed, AA everywhere.
+   21 Oct 2026 (Nelson): no gradients (not part of the brand) and no borders on cards and panels:
+   a smooth drop shadow separates them instead (below). */
 :root {
   --color-bg-chrome: #044150;
 }
@@ -467,10 +469,11 @@
 [data-skin="sea"] [data-glance] {
   /* The deep-teal card in both themes: its text stays white (in Dark, bg/inverse is light). */
   --color-text-on-inverse: #ffffff;
-  background-image: linear-gradient(120deg, var(--color-bg-chrome) 0%, #0a5a70 55%, #26708e 100%);
+  background-color: var(--color-bg-chrome);
 }
+/* No decorative glows on the flat deep-teal card. */
 [data-skin="sea"] [data-glance] [data-glow] {
-  opacity: 0.3;
+  display: none;
 }
 /* Sea v2 (Nelson, 20 Oct 2026, after his "v4 (Brand)" reference): the second half of page and
    section headings in Montserrat Italic, lighter and grey, as an aside to the bold first half. */
@@ -489,14 +492,28 @@
 }
 
 /* Sea, more screens (19 Oct 2026): the dark bands (Program header, Program-Card hero, the course
-   page's mentor card, the Services mentor card) become deep-teal bands with the glance card's
-   gradient; their contents already read on dark (data-theme="dark"). Page headings: the second
-   half in text/primary (light). */
+   page's mentor card, the Services mentor card) become flat deep-teal bands (no gradient since
+   21 Oct); their contents already read on dark (data-theme="dark"). */
 [data-skin="sea"] [data-band],
 [data-band][data-skin="sea"] {
   background-color: var(--color-bg-chrome);
-  background-image: linear-gradient(120deg, var(--color-bg-chrome) 0%, #0a5a70 55%, #26708e 100%);
   border-color: transparent;
+}
+
+/* Sea, 21 Oct 2026 (Nelson): no borders on cards, panels, menus and modals; a smooth, soft drop
+   shadow tinted with the deep teal separates them from the page. Kept on purpose: inputs and
+   controls (a field needs a visible edge, WCAG 1.4.11), dashed drop zones and tiles (the dash is
+   the affordance), and the hairline dividers inside a card. */
+:root {
+  --sk-shadow-sea: 0 1px 2px #0441500d, 0 6px 20px -4px #0441501f;
+}
+:root[data-theme="dark"] {
+  --sk-shadow-sea: 0 1px 2px #00000052, 0 8px 24px -6px #0000008c;
+}
+[data-skin="sea"] :is(.rounded-card, .rounded-surface, .rounded-card-inset).border:not(.border-dashed),
+[data-skin="sea"] :is(.rounded-card, .rounded-surface, .rounded-card-inset).border-2:not(.border-dashed) {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-sea);
 }
 
 /* Sea v2 — the glance card as in the reference: the title in the sky blue of the logo, caps and

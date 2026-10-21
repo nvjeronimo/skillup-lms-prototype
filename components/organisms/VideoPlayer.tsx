@@ -212,7 +212,7 @@ function ActionButton({
 }
 
 /**
- * Lightweight video player. Branded gradient placeholder (no real asset needed).
+ * Lightweight video player. A flat brand-colour placeholder (no real asset needed).
  * Mirrors DS `Video player 16:9` + `_Video actions bar` (9264:576771 / 9264:576129):
  * one row of action buttons around the progress slider, all bound to tokens.
  * Paused: `_Video overlay action` scrim + centred play button. Playing: bar only.
@@ -321,15 +321,9 @@ export function VideoPlayer({
       }}
     >
       {/* The picture: a 16:9 frame fitted in the player's height and centred (Figma: image fill,
-          Fit). No real asset is required: a branded gradient stands in for the video frame. */}
-      <div
-        className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2"
-        style={{
-          background:
-            "linear-gradient(135deg, var(--color-bg-primary), var(--color-text-on-primary-soft))",
-        }}
-        aria-hidden
-      />
+          Fit). No real asset is required: a flat brand colour stands in for the video frame (no
+          gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
+      <div className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2 bg-sko-bg-primary" aria-hidden />
 
       {state === "ready" ? (
         // Full-size click layer toggles play/pause in both states. Only while paused does it
