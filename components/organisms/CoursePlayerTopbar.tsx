@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sun, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
-import { SkillUpLogo, SkillUpMark } from "@/components/atoms/SkillUpLogo";
+import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { cn } from "@/lib/utils";
 import { ProgressRing } from "@/components/molecules/OverallProgress";
 
@@ -152,14 +152,18 @@ export function CoursePlayerTopbar({
   const closeIcon = <Icon icon={X} size={24} />;
 
   if (isMobile) {
+    // DS Topbar Size=Mobile (Nelson, 21 Oct 2026): three equal columns. Left: the course menu
+    // and the progress ring (gap 8). Centre: the SkillUp wordmark (Tiny32H, 24 tall). Right:
+    // bookmark, avatar and close (gap 6). No bell and no theme button on a phone: four controls
+    // do not fit the right column; the theme switch is in the profile menu.
     return (
       <header
         className={cn(
-          "flex h-14 items-center justify-between gap-2 border-b border-sko-border-subtle bg-sko-bg-page pl-3 pr-2",
+          "grid h-14 grid-cols-3 items-center gap-2 border-b border-sko-border-subtle bg-sko-bg-page pl-3 pr-2",
           className,
         )}
       >
-        <div className="flex min-w-0 items-center gap-1.5">
+        <div className="flex min-w-0 items-center gap-2">
           <UtilityButton
             label="Open course menu"
             onClick={onMenu}
@@ -170,25 +174,21 @@ export function CoursePlayerTopbar({
           >
             <Icon icon={List} size={20} />
           </UtilityButton>
-          {/* The mark only on a phone: the wordmark does not fit next to eight controls (audit,
-              21 Oct 2026). 44px target; the mark itself 32 tall. */}
-          <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 min-w-11 shrink-0 items-center justify-center">
-            <SkillUpMark className="h-8 shrink-0" />
-          </Link>
           {progressPct !== undefined ? <ProgressRing pct={progressPct} compact /> : null}
         </div>
-        <div className="flex items-center gap-2">
-          {showNotifications ? (
-            <UtilityButton label={notificationsLabel} onClick={onNotifications}>
-              {bell}
-            </UtilityButton>
-          ) : null}
+        <Link
+          href="/platform/dashboard"
+          aria-label="SkillUp, Dashboard"
+          className="flex min-h-11 items-center justify-center justify-self-center"
+        >
+          <SkillUpLogo className="h-6" />
+        </Link>
+        <div className="flex items-center justify-end gap-1.5">
           {showBookmark ? (
             <UtilityButton label="Saved items" onClick={onBookmark}>
               <Icon icon={Bookmark} size={20} />
             </UtilityButton>
           ) : null}
-          {/* No theme button on a phone (audit, 21 Oct 2026): it is in the profile menu. */}
           {accountMenu ?? (
             <button type="button" aria-label="Account" className="flex items-center rounded-control">
               <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />
