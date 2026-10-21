@@ -905,3 +905,89 @@ button {
 [data-reduce-motion] .sk-assistant-ring {
   animation: none;
 }
+
+/* Assistant mark (components/assistant/AssistantMark.tsx). The svg is a light island, so the
+   tokens read as SKO light on every page: ball border/info-soft (#51bffc), ink icon/info
+   (#044150). On a dark page the ink is white (icon/on-media), as the dark asset was. */
+.sk-assistant-mark__ball {
+  fill: var(--color-border-info-soft);
+}
+.sk-assistant-mark__ink {
+  fill: var(--color-icon-info);
+}
+[data-theme="dark"] .sk-assistant-mark__ink {
+  fill: var(--color-icon-on-media);
+}
+
+/* The sparkles (Nelson, 21 Oct 2026): each turns a quarter (0 -> 90deg, the four-point star
+   lands on itself, so the loop back to 0 is invisible) round its own centre, in long2 (500 ms)
+   with the standard curve, then rests. Three cycles that rarely meet: 12 s, 15 s, 19 s. The turn
+   is the last 500 ms of each cycle: 500/12000 = 4.17% (from 95.83%), 500/15000 = 3.33% (from
+   96.67%), 500/19000 = 2.63% (from 97.37%). Negative delays put the first turns about 3 s,
+   7.5 s and 12 s after load (cycle - 500 ms + delay), instead of a first wait of a whole cycle.
+   The turn lasts long2 only while its percentage = long2 / cycle (x24 / x30 / x38): change both together. */
+@keyframes sk-sparkle-a {
+  0%,
+  95.83% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}
+@keyframes sk-sparkle-b {
+  0%,
+  96.67% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}
+@keyframes sk-sparkle-c {
+  0%,
+  97.37% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}
+.sk-sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-timing-function: var(--motion-easing-standard);
+  animation-iteration-count: infinite;
+}
+.sk-sparkle-a {
+  animation-name: sk-sparkle-a;
+  animation-duration: calc(var(--motion-duration-long2) * 24);
+  animation-delay: calc(var(--motion-duration-long2) * -17);
+}
+.sk-sparkle-b {
+  animation-name: sk-sparkle-b;
+  animation-duration: calc(var(--motion-duration-long2) * 30);
+  animation-delay: calc(var(--motion-duration-long2) * -14);
+}
+.sk-sparkle-c {
+  animation-name: sk-sparkle-c;
+  animation-duration: calc(var(--motion-duration-long2) * 38);
+  animation-delay: calc(var(--motion-duration-long2) * -13);
+}
+/* Open, the mark is hidden under the close cross: the stars pause (no repaint under an
+   invisible mark) and pick up their phase again on close. */
+[aria-expanded="true"] .sk-assistant-mark .sk-sparkle {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-sparkle-a,
+  .sk-sparkle-b,
+  .sk-sparkle-c {
+    animation: none;
+  }
+}
+[data-reduce-motion] .sk-sparkle-a,
+[data-reduce-motion] .sk-sparkle-b,
+[data-reduce-motion] .sk-sparkle-c {
+  animation: none;
+}
