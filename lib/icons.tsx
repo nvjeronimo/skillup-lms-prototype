@@ -1,5 +1,6 @@
 import type { LucideIcon, LucideProps } from "lucide-react";
 import {
+  createLucideIcon,
   AlertTriangle,
   Atom,
   Award,
@@ -57,6 +58,17 @@ export interface IconProps extends Omit<LucideProps, "ref"> {
   /** Pixel size. Drives the stroke-width rule (<24 → 1.5, >=24 → 2). */
   size?: number;
 }
+
+/**
+ * DS `menu-02` (Untitled UI): three lines, the middle one shorter (12 of 18). Lucide has no
+ * such glyph (its `Menu` is `menu-01`, three equal lines), so it is drawn here on lucide's
+ * 24 grid from the DS vector, and takes the same stroke rule through `Icon`.
+ */
+export const Menu02 = createLucideIcon("Menu02", [
+  ["path", { d: "M3 6h18", key: "top" }],
+  ["path", { d: "M3 12h12", key: "middle" }],
+  ["path", { d: "M3 18h18", key: "bottom" }],
+]);
 
 /**
  * Single source of truth for SVG icons. Enforces the stroke-weight rule so
