@@ -7,7 +7,6 @@ import { Icon } from "@/lib/icons";
 import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";
 import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { cn } from "@/lib/utils";
-import { useDemoMode } from "@/lib/demo";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
@@ -299,12 +298,14 @@ export function AccessibilitySection() {
   );
 }
 
-/** The footer (DS "Footer demo purposes only"): Reset demo and Restart first steps, prototype only. */
+/**
+ * The footer (DS "Footer demo purposes only"): Reset demo and Restart first steps, prototype only.
+ * Shown without `?demo=1` again (Nelson, 21 Oct 2026): testers need it to run the assistant's
+ * first steps from the start.
+ */
 export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const resetDemo = useLmsStore((s) => s.resetDemo);
-  const demo = useDemoMode();
   const row = MENU_ROW;
-  if (!demo) return null;
   return (
     <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
       <button
