@@ -12,7 +12,8 @@ import { cn } from "@/lib/utils";
  * svg is a light island (`data-theme="light"`, the certificate's pattern) and reads the SKO light
  * tokens whatever the page: the ball border/info-soft (#51bffc), the ink icon/info (#044150).
  * On a dark page the ink turns white (icon/on-media, #ffffff in every theme), as the dark asset
- * did (`.sk-assistant-mark`, globals.css).
+ * did (`.sk-assistant-mark`, globals.css). `overflow="visible"`: a turning star's tip may pass
+ * the viewBox edge (the medium one touches y = 160) and must not be clipped.
  */
 export function AssistantMark({ className }: { className?: string }) {
   return (
@@ -22,6 +23,7 @@ export function AssistantMark({ className }: { className?: string }) {
       data-theme="light"
       viewBox="0 0 160 160"
       fill="none"
+      overflow="visible"
       xmlns="http://www.w3.org/2000/svg"
       className={cn("sk-assistant-mark", className)}
     >

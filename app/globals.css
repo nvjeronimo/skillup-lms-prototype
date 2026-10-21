@@ -918,16 +918,14 @@ button {
 [data-theme="dark"] .sk-assistant-mark__ink {
   fill: var(--color-icon-on-media);
 }
-[data-theme="dark"] [data-theme="light"] .sk-assistant-mark .sk-assistant-mark__ink {
-  fill: var(--color-icon-info);
-}
 
 /* The sparkles (Nelson, 21 Oct 2026): each turns a quarter (0 -> 90deg, the four-point star
    lands on itself, so the loop back to 0 is invisible) round its own centre, in long2 (500 ms)
    with the standard curve, then rests. Three cycles that rarely meet: 12 s, 15 s, 19 s. The turn
    is the last 500 ms of each cycle: 500/12000 = 4.17% (from 95.83%), 500/15000 = 3.33% (from
    96.67%), 500/19000 = 2.63% (from 97.37%). Negative delays put the first turns about 3 s,
-   7.5 s and 12 s after load (cycle - 500 ms + delay), instead of a first wait of a whole cycle. */
+   7.5 s and 12 s after load (cycle - 500 ms + delay), instead of a first wait of a whole cycle.
+   The turn lasts long2 only while its percentage = long2 / cycle (x24 / x30 / x38): change both together. */
 @keyframes sk-sparkle-a {
   0%,
   95.83% {
@@ -975,6 +973,11 @@ button {
   animation-name: sk-sparkle-c;
   animation-duration: calc(var(--motion-duration-long2) * 38);
   animation-delay: calc(var(--motion-duration-long2) * -13);
+}
+/* Open, the mark is hidden under the close cross: the stars pause (no repaint under an
+   invisible mark) and pick up their phase again on close. */
+[aria-expanded="true"] .sk-assistant-mark .sk-sparkle {
+  animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
   .sk-sparkle-a,
