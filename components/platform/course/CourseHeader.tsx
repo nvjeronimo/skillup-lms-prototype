@@ -160,8 +160,8 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
             >
               <div className="flex items-end justify-between gap-3">
                 <p className="sk-text-headline-medium-bold text-sko-text-default">
-              <ArrivalCount value={`${course.progress.percent}%`} />
-            </p>
+                  <ArrivalCount value={`${course.progress.percent}%`} />
+                </p>
                 <ProgressCardLabel complete={course.progress.percent >= 100} label={course.progress.label} />
               </div>
               {/* Green only once complete, beside the check icon and the word (as on the cards). */}

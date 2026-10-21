@@ -67,7 +67,7 @@ export function Skeleton(props: SkeletonProps) {
   }
   if (props.variant === "ghost") {
     return (
-      <div aria-hidden="true" className={cn(`sk-text-${props.text ?? "body-medium-regular"}`, props.className)}>
+      <div aria-hidden="true" className={cn(`sk-text-${props.text ?? "body-medium-regular"}`, "select-none", props.className)}>
         <span className="sk-skeleton-ghost">{props.children}</span>
       </div>
     );

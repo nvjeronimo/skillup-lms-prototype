@@ -170,8 +170,8 @@ export function ProgramHeader({ program }: { program: Program }) {
           >
             <div className="flex items-end justify-between gap-3">
               <p className="sk-text-headline-medium-bold text-sko-text-default">
-              <ArrivalCount value={`${program.progress.percent}%`} />
-            </p>
+                <ArrivalCount value={`${program.progress.percent}%`} />
+              </p>
               <ProgressCardLabel complete={program.progress.percent >= 100} label={program.progress.label} />
             </div>
             {/* Green only once complete, beside the check icon and the word (as on the cards). */}
