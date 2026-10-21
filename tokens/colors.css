@@ -471,10 +471,9 @@
   --color-text-on-inverse: #ffffff;
   background-color: var(--color-bg-chrome);
 }
-/* No decorative glows on the flat deep-teal card. */
-[data-skin="sea"] [data-glance] [data-glow] {
-  display: none;
-}
+/* The two decorative circles, flat (bg/info and bg/primary, no gradient): back on Nelson's ask,
+   21 Oct 2026, at the card's own 12% (from the component). At 30% the text over them fell to 3.5:1
+   in dark; at 12% every text on the card stays AA in light and dark, desktop and phone. */
 /* Sea v2 (Nelson, 20 Oct 2026, after his "v4 (Brand)" reference): the second half of page and
    section headings in Montserrat Italic, lighter and grey, as an aside to the bold first half. */
 [data-skin="sea"] [data-heading-em] {
