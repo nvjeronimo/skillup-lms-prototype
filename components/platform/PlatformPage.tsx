@@ -98,7 +98,15 @@ export function PlatformPage({
     >
       <PlatformTopbar current={current} />
       {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
-      <main key={pathname} id="main" tabIndex={-1} className={cn("sk-animate-page flex-1 outline-none", className)}>
+      <main
+        key={pathname}
+        id="main"
+        tabIndex={-1}
+        // On a phone the assistant launcher floats 48 + 16 over the bottom right. The test-build
+        // footer used to keep 80px under the page; without it (demo mode off) the page keeps it,
+        // so the last card or button scrolls clear of the launcher (audit, 21 Oct 2026).
+        className={cn("sk-animate-page flex-1 outline-none", !demo && "max-md:pb-20", className)}
+      >
         {children}
       </main>
       {/* Test-build note, in the footer (Nelson, 15 Oct 2026). The same dashed warning treatment
