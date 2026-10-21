@@ -116,6 +116,8 @@ interface LmsState {
   textSize: TextSize;
   reduceMotion: boolean;
   underlineLinks: boolean;
+  /** Experimental (Nelson, 21 Oct 2026): every corner square except buttons'. */
+  squareCorners: boolean;
   /**
    * The learner's explicit Larger touch targets choice; `null` = never chosen,
    * so the default applies (ON at ≤767px / mobile preview, OFF otherwise —
@@ -189,6 +191,7 @@ interface LmsState {
   setTextSize: (size: TextSize) => void;
   setReduceMotion: (v: boolean) => void;
   setUnderlineLinks: (v: boolean) => void;
+  setSquareCorners: (v: boolean) => void;
   setLargeTargets: (v: boolean) => void;
   setDiscussionsPreview: (v: boolean) => void;
   setQuizMode: (v: "A" | "B") => void;
@@ -298,6 +301,7 @@ export const useLmsStore = create<LmsState>()(
   textSize: "md",
   reduceMotion: false,
   underlineLinks: false,
+  squareCorners: false,
   largeTargetsChoice: null,
   discussionsPreview: false,
   quizMode: "A",
@@ -535,6 +539,7 @@ export const useLmsStore = create<LmsState>()(
     track("a11y_change", { setting: "reduceMotion", value: String(reduceMotion) });
     set({ reduceMotion });
   },
+  setSquareCorners: (squareCorners) => set({ squareCorners }),
   setUnderlineLinks: (underlineLinks) => {
     track("a11y_change", { setting: "underlineLinks", value: String(underlineLinks) });
     set({ underlineLinks });
@@ -644,6 +649,7 @@ export const useLmsStore = create<LmsState>()(
         textSize: s.textSize,
         reduceMotion: s.reduceMotion,
         underlineLinks: s.underlineLinks,
+        squareCorners: s.squareCorners,
         largeTargetsChoice: s.largeTargetsChoice,
         discussionsPreview: s.discussionsPreview,
         quizMode: s.quizMode,

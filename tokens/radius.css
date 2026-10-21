@@ -30,3 +30,31 @@
   --sk-radius-surface: 16px;
   --sk-radius-pill: 9999px;
 }
+
+/*
+ * Experiment: Square corners (Nelson, 21 Oct 2026; a switch in the profile menu, under the brand
+ * skins). Every role radius goes to 0 — cards, panels, menus, modals, tiles, avatars, badges,
+ * fields, tracks — except buttons: inside any button the roles come back, so a button keeps its
+ * own corners (and so do the segments of a Button group and the parts inside a button).
+ */
+[data-square-corners] {
+  --sk-radius-inner: 0px;
+  --sk-radius-control: 0px;
+  --sk-radius-card: 0px;
+  --sk-radius-card-inset: 0px;
+  --sk-radius-track: 0px;
+  --sk-radius-surface: 0px;
+  --sk-radius-pill: 0px;
+}
+[data-square-corners] :is(button, [role="button"], .sk-button) {
+  --sk-radius-inner: 2px;
+  --sk-radius-control: 6px;
+  --sk-radius-card-inset: 8px;
+  --sk-radius-track: 10px;
+  --sk-radius-pill: 9999px;
+}
+/* Decorative circles and dots (aria-hidden: the glance card's circles, the headers' circle, status
+   dots) stay round: they are shapes, not corners. */
+[data-square-corners] [aria-hidden="true"].rounded-pill {
+  --sk-radius-pill: 9999px;
+}
