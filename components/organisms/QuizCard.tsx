@@ -5,6 +5,7 @@ import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { InlineAlert, type AlertTone } from "@/components/atoms/InlineAlert";
 import { Collapse } from "@/components/atoms/Collapse";
+import { useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { cn, iconStroke } from "@/lib/utils";
 import { useRovingRadio } from "@/lib/useRovingRadio";
 import type { QuizOption } from "@/lib/content";
@@ -394,6 +395,10 @@ export function QuizCard({
     },
     { disabled: revealed || multiSelect },
   );
+  // The hint alert opens and closes as a Collapse; while it closes (Reset) it keeps the hints
+  // it showed instead of emptying first.
+  const hintOpen = showHint && hints.length > 0 && hintIndex >= 0;
+  const shownHintIndex = useFrozenWhileClosed(hintIndex, hintOpen);
 
   return (
     <div
@@ -573,39 +578,43 @@ export function QuizCard({
           `Next Hint` lives in here once the first hint shows. It disables on
           exhaustion, never on first use — with three hints authored it stays
           live after the first press. */}
-        {showHint && hints.length > 0 && hintIndex >= 0 ? (
-          <InlineAlert
-            tone="hint"
-            title=""
-            action={
-              <button
-                type="button"
-                onClick={onNextHint}
-                disabled={hintIndex + 1 >= hints.length}
-                // DS Next Hint: a link button with a 1px bottom stroke in every
-                // state (border/disabled once the hints run out).
-                className={cn(
-                  "sk-text-body-medium-semibold border-b px-0.5 py-1",
-                  hintIndex + 1 >= hints.length
-                    ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
-                    : "border-sko-border-primary text-sko-text-primary",
-                )}
+        {hints.length > 0 ? (
+          <Collapse open={hintOpen} className="-mt-5">
+            <div className="pt-5">
+              <InlineAlert
+                tone="hint"
+                title=""
+                action={
+                  <button
+                    type="button"
+                    onClick={onNextHint}
+                    disabled={shownHintIndex + 1 >= hints.length}
+                    // DS Next Hint: a link button with a 1px bottom stroke in every
+                    // state (border/disabled once the hints run out).
+                    className={cn(
+                      "sk-text-body-medium-semibold border-b px-0.5 py-1",
+                      shownHintIndex + 1 >= hints.length
+                        ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
+                        : "border-sko-border-primary text-sko-text-primary",
+                    )}
+                  >
+                    Next Hint
+                  </button>
+                }
               >
-                Next Hint
-              </button>
-            }
-          >
-            <ol className="flex flex-col gap-1">
-              {hints.slice(0, hintIndex + 1).map((h, i) => (
-                <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
-                  <span className="sk-text-body-medium-semibold text-sko-text-default">
-                    Hint ({i + 1} of {hints.length}):{" "}
-                  </span>
-                  {h}
-                </li>
-              ))}
-            </ol>
-          </InlineAlert>
+                <ol className="flex flex-col gap-1">
+                  {hints.slice(0, shownHintIndex + 1).map((h, i) => (
+                    <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
+                      <span className="sk-text-body-medium-semibold text-sko-text-default">
+                        Hint ({i + 1} of {hints.length}):{" "}
+                      </span>
+                      {h}
+                    </li>
+                  ))}
+                </ol>
+              </InlineAlert>
+            </div>
+          </Collapse>
         ) : null}
       </div>
 

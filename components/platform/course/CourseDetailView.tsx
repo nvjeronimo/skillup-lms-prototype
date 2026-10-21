@@ -12,6 +12,7 @@ import {
   type CourseDetail,
   type CourseTabId,
 } from "@/lib/platform/course-detail";
+import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { cn } from "@/lib/utils";
 import { CourseAlert } from "./CourseAlert";
 import { ShiftDatesAlert } from "./ShiftDatesAlert";
@@ -52,6 +53,9 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
   const urlTab: CourseTabId = isCourseTab(param) ? param : DEFAULT_COURSE_TAB;
   const [active, setActive] = React.useState<CourseTabId>(urlTab);
   React.useEffect(() => setActive(urlTab), [urlTab]);
+  // After the first tab change, a panel fades in as it is shown (display: none → shown restarts
+  // the animation); on the page's first paint the page entrance is the only movement.
+  const fadeIn = useHasChanged(active) ? "sk-animate-fade sk-enter-only" : undefined;
 
   const threadParam = searchParams.get("thread");
   const openThread =
@@ -155,6 +159,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             aria-labelledby={platformTabId(baseId, tab.id)}
             tabIndex={0}
             hidden={tab.id !== active}
+            className={fadeIn}
           >
             {panels[tab.id]}
           </div>

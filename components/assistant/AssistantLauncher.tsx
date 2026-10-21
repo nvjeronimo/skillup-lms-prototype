@@ -4,6 +4,7 @@ import * as React from "react";
 import { X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
 
 export interface AssistantLauncherProps {
   open: boolean;
@@ -12,6 +13,11 @@ export interface AssistantLauncherProps {
   controls: string;
   /** First steps still to do: shown as a count on the launcher and said in its name. */
   badge?: number;
+  /**
+   * Under the phone sheet: the launcher stays mounted (so it never vanishes or pops back while
+   * the sheet moves) but is out of the tab order and the accessibility tree while covered.
+   */
+  covered?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -31,7 +37,7 @@ export interface AssistantLauncherProps {
  * it takes bg/primary, the nearest blue that holds AA, until the DS settles it.
  */
 export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLauncherProps>(
-  function AssistantLauncher({ open, onToggle, controls, badge = 0, className, style }, ref) {
+  function AssistantLauncher({ open, onToggle, controls, badge = 0, covered = false, className, style }, ref) {
     // The badge pops when its count changes (shown at once, or on the next close if the
     // window was open), never merely because it is shown again when the window closes.
     const [lastBadge, setLastBadge] = React.useState(badge);
@@ -54,6 +60,8 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
         }
         aria-expanded={open}
         aria-controls={controls}
+        aria-hidden={covered || undefined}
+        {...inertProps(covered)}
         style={style}
         className={cn(
           // Hover lifts it a little, a press pushes it in (faster); the colour of the open state
@@ -97,14 +105,18 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
         >
           <Icon icon={X} size={24} />
         </span>
-        {!open && badge > 0 ? (
-          // Keyed on the count, so a change pops the new number in.
+        {badge > 0 ? (
+          // Keyed on the count, so a change pops the new number in. It fades out as the window
+          // opens and back in as it closes (short3), instead of dropping in one frame; a count
+          // that changed while the window was open pops once it is shown again.
           <span
             key={badge}
             aria-hidden
             onAnimationEnd={() => setPopping(null)}
             className={cn(
-              popping === badge && "sk-animate-badge-pop",
+              !open && popping === badge && "sk-animate-badge-pop",
+              "transition-opacity duration-short3 ease-standard",
+              open ? "opacity-0" : "opacity-100",
               "sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-pill bg-sko-bg-primary px-1 text-sko-text-on-primary",
             )}
           >

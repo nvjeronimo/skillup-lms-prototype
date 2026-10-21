@@ -395,9 +395,21 @@ button {
 [data-state="closed"] .sk-animate-slide-left {
   animation: sk-slide-out-left var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
 }
+/* A fade leaving is short3, faster than its short4 entrance (R8). */
 [data-state="closed"].sk-animate-fade,
 [data-state="closed"] .sk-animate-fade {
-  animation: sk-fade-out var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+}
+/* Except the backdrop of a panel that slides out (OverlayPanel, the player's drawer): it clears
+   with its panel, short4. Same specificity as the rule above and before the reduced-motion
+   blocks, so under reduced motion (the panel fades at short3) it is short3 again. */
+[data-state="closed"] .sk-backdrop-panel {
+  animation-duration: var(--motion-duration-short4);
+}
+/* A short3 fade leaving (the video's caption overlay): short2, on the element itself only, so
+   a value fading in inside a closing panel does not vanish ahead of the panel. */
+[data-state="closed"].sk-animate-fade-short3 {
+  animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
 }
 [data-state="closed"].sk-animate-pop,
 [data-state="closed"] .sk-animate-pop {
@@ -632,7 +644,7 @@ button {
   }
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
   .animate-spin {
-    animation: sk-pulse 1.2s ease-in-out infinite;
+    animation: sk-pulse calc(var(--motion-duration-short3) * 8) var(--motion-easing-standard) infinite;
   }
 }
 
@@ -790,7 +802,7 @@ button {
 }
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
 [data-reduce-motion] .animate-spin {
-  animation: sk-pulse 1.2s ease-in-out infinite;
+  animation: sk-pulse calc(var(--motion-duration-short3) * 8) var(--motion-easing-standard) infinite;
 }
 
 /* Sublinhar sempre os links — não depender da cor para os distinguir. */

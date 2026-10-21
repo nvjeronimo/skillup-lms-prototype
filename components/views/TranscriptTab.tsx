@@ -5,6 +5,9 @@ import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import { inertProps } from "@/lib/inert";
+import { MOTION_MS } from "@/lib/motion/tokens";
+import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { useLmsStore } from "@/lib/store";
@@ -128,6 +131,11 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     [],
   );
 
+  // "Sync to Video" rises in from below (short4) and sinks back down as it leaves (short3,
+  // R8/R10), keeping its arrow while it goes; the leaving pill is inert and click-through.
+  const pill = useExitTransition(!following, MOTION_MS.short3);
+  const pillDirection = useFrozenWhileClosed(scrollDirection, !following);
+
   if (!topic || !transcript.length) {
     return (
       <p className="sk-text-body-medium-regular px-1 py-8 text-center text-sko-text-subtle">
@@ -213,12 +221,20 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
           );
         })}
 
-        {!following ? (
-          <div className="absolute inset-x-0 bottom-4 z-10 flex justify-center">
+        {pill.mounted ? (
+          <div
+            data-state={pill.state}
+            onAnimationEnd={pill.onAnimationEnd}
+            {...inertProps(pill.state === "closed")}
+            className={cn(
+              "sk-animate-rise absolute inset-x-0 bottom-4 z-10 flex justify-center",
+              pill.state === "closed" && "pointer-events-none",
+            )}
+          >
             <Button
               variant="primary"
               size="sm"
-              rightIcon={scrollDirection === "down" ? ChevronUp : ChevronDown}
+              rightIcon={pillDirection === "down" ? ChevronUp : ChevronDown}
               onClick={resumeFollow}
             >
               Sync to Video

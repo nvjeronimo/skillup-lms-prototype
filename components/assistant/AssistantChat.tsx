@@ -129,8 +129,8 @@ function Chat({ pathname }: { pathname: string }) {
       /* see above */
     }
   };
-  // Closing gives the focus back to the launcher. On a phone the launcher is not rendered
-  // under the sheet, so the focus moves once it is back (the effect below).
+  // Closing gives the focus back to the launcher (the effect below). On a phone it is inert
+  // under the open sheet, so the focus moves once the sheet starts to leave.
   const refocus = React.useRef(false);
   // Opened or closed by the learner: the window never opens by itself after that. (Not in
   // `set`: the sheet closing on navigation is not the learner's doing.)
@@ -223,17 +223,19 @@ function Chat({ pathname }: { pathname: string }) {
           }
         />
       ) : null}
-      {sheet ? null : (
-        <AssistantLauncher
-          ref={launcherRef}
-          open={open}
-          onToggle={() => (open ? close() : openByLearner())}
-          controls={windowId}
-          badge={firstSteps.left}
-          className="fixed z-[45]"
-          style={{ [side]: edge, bottom }}
-        />
-      )}
+      {/* Always mounted. On a phone it sits under the sheet (one layer down) while the sheet is on
+          screen, so it is covered as the sheet rises and uncovered as it slides away, never
+          removed and put back in one frame; while the sheet is open it is inert and hidden. */}
+      <AssistantLauncher
+        ref={launcherRef}
+        open={open}
+        onToggle={() => (open ? close() : openByLearner())}
+        controls={windowId}
+        badge={firstSteps.left}
+        covered={sheet}
+        className={cn("fixed", isPhone && presence.mounted ? "z-[44]" : "z-[45]")}
+        style={{ [side]: edge, bottom }}
+      />
     </>
   );
 }

@@ -241,7 +241,7 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Control plan with chart and response actions"
-              className="sk-text-body-medium-regular rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none focus-visible:border-sko-border-primary"
+              className="sk-text-body-medium-regular rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none transition-colors focus-visible:border-sko-border-primary"
             />
           </label>
         </div>
@@ -266,7 +266,8 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
         // DS LMS / ORA · Submit Gate (20344:3359): p16, gap 8, r10, warning
         // fill + stroke, IRREVERSIBLE tag. Tag and title are Bold in the DS —
         // semibold until .sk-text-body-small-bold / .sk-text-body-large-bold exist (CT-22).
-        <div className="flex flex-col gap-2 rounded-card border border-sko-border-warning bg-sko-bg-warning-soft p-4">
+        // It rises into the place of the Submit button (short4, entrance only).
+        <div className="sk-animate-rise sk-enter-only flex flex-col gap-2 rounded-card border border-sko-border-warning bg-sko-bg-warning-soft p-4">
           <span className="sk-text-body-small-semibold self-start rounded-control border border-sko-border-warning px-2 py-1 text-sko-text-warning">
             IRREVERSIBLE
           </span>
@@ -431,7 +432,7 @@ function PeerStep({
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Share one specific thing that worked well…"
-          className="sk-text-body-medium-regular rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default outline-none focus-visible:border-sko-border-primary"
+          className="sk-text-body-medium-regular rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default outline-none transition-colors focus-visible:border-sko-border-primary"
         />
       </label>
 

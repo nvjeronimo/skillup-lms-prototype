@@ -11,3 +11,10 @@ export const MOTION_MS = {
   medium2: 300,
   long2: 500,
 } as const;
+
+/**
+ * Hover-intent grace before a hover surface (the rail's Topic-Flyout) closes: a timer, not a
+ * motion duration. It lets the pointer cross the gap from the row into the flyout without the
+ * flyout closing under it. Tied to short3 so it stays on the scale (it was a raw 140 ms).
+ */
+export const HOVER_CLOSE_GRACE_MS = MOTION_MS.short3;
