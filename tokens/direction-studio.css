@@ -9,20 +9,24 @@
    - the glance as a deep ink block of figures, and a floating dark bar that keeps Resume in reach.
    Left out on purpose: the reference's gradient headline and iridescent renders (off-brand).
    Switched on by html[data-direction="studio"] (Profile menu > Studio look, or ?direction=studio).
-   Light theme only for now: in dark, the colour block below stands back and SKO Dark applies.
+   Light and dark (dark since 22 Oct 2026, Nelson): a cool neutral night, not SKO Dark's teal one.
    ============================================================================ */
 
 [data-direction="studio"] {
   --sk-font-body: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
   --sk-font-display: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
 
-  /* Not 9999 for every control-radius element: rows, bubbles and blocks of several lines turned
-     into blobs (search results, chat bubbles, menu rows; Nelson, 22 Oct 2026). The pill goes only
-     to one-line controls (rule below); everything else on the control radius takes 12. */
-  --sk-radius-control: 12px;
-  --sk-radius-card: 24px;
-  --sk-radius-surface: 28px;
-  --sk-radius-inner: 6px;
+  /* Radius roles, with the nesting rule (inner radius + padding = outer radius, Nelson 20 Oct
+     2026; tokens/radius.css), built around the pill (Nelson, 22 Oct 2026: buttons and fields are
+     pills everywhere, and the cards round up around them). A one-line control is about 40 tall, a
+     pill of radius 20; a card's usual padding is 16; so the card is 16 + 20 = 36, and anything
+     else in a card's corner (icon tiles, rows, nested cards) takes 36 − 16 = 20, the control role.
+     Cards with other paddings follow the same sum (below). Card-inset is card − 4. */
+  --sk-radius-inner: 8px;
+  --sk-radius-control: 20px;
+  --sk-radius-card: 36px;
+  --sk-radius-surface: 40px;
+  --sk-radius-track: 9999px;
 
   --sk-shadow-studio: 0 1px 2px #1317200a, 0 10px 30px -12px #13172024;
 }
@@ -45,6 +49,56 @@
   --color-icon-primary: #0a5266;
   --color-border-primary: #0a5266;
   --color-border-primary-muted: #c5e3ea;
+}
+
+/* Studio Dark (Nelson, 22 Oct 2026). The same idea as the light theme, at night: a cool neutral
+   ground (no teal cast, unlike SKO Dark), surfaces a step above it, ink-white text, and the logo's
+   deep teal turned into a pale aqua primary with dark text on it. It also takes every nested dark
+   region (data-theme="dark" bands, the Resume bar, the glance backdrop), so a Studio page never
+   mixes in SKO Dark's teal greys. html[…] outranks the skin dark blocks of tokens/colors.css.
+   Contrast on bg/page #16191f: text/default 15:1, muted 10:1, subtle 6.9:1, primary 10:1;
+   on bg/primary #8fd0e0 the on-primary text #0b1d23 reads 10:1. */
+html[data-direction="studio"][data-theme="dark"],
+html[data-direction="studio"] [data-theme="dark"] {
+  --color-bg-page: #16191f;
+  --color-bg-faint: #0d0f13;
+  --color-bg-subtle: #1b1f26;
+  --color-bg-muted: #262b34;
+  --color-bg-strong: #323844;
+  --color-bg-inverse: #eef0f3;
+  --color-bg-overlay: #0d0f13b3;
+  --color-bg-overlay-soft: #0d0f1333;
+  --color-text-default: #eef0f3;
+  --color-text-muted: #c4c9d1;
+  --color-text-subtle: #9ca3ae;
+  --color-text-placeholder: #9ca3ae;
+  --color-text-disabled: #4f5663;
+  --color-text-on-inverse: #0d0f13;
+  --color-icon-default: #eef0f3;
+  --color-icon-muted: #c4c9d1;
+  --color-icon-subtle: #9ca3ae;
+  --color-icon-faint: #5d6470;
+  --color-border-default: #7d8593;
+  --color-border-subtle: #272c35;
+  --color-border-disabled: #262b34;
+  --color-border-inverse: #1b1f26;
+  --color-border-focus-gap: #0d0f13;
+
+  --color-bg-primary: #8fd0e0;
+  --color-bg-primary-hover: #b4e2ed;
+  --color-bg-primary-soft: #12303a;
+  --color-text-primary: #8fd0e0;
+  --color-text-on-primary: #0b1d23;
+  --color-text-on-primary-hover: #0b1d23;
+  --color-text-on-primary-soft: #d3eef5;
+  --color-icon-primary: #8fd0e0;
+  --color-icon-on-primary: #0b1d23;
+  --color-border-primary: #8fd0e0;
+  --color-border-primary-soft: #2b5561;
+  --color-border-primary-muted: #2b5561;
+
+  /* Shadows barely read on a dark ground: a hairline of light gives the floating surfaces an edge. */
+  --sk-shadow-studio: 0 0 0 1px #ffffff0f, 0 1px 2px #00000066, 0 12px 32px -12px #000000b3;
 }
 
 /* Type: large and light. Every bold or semibold display style steps down to 500, tracked tight;
@@ -74,21 +128,57 @@
 [data-direction="studio"]:not([data-theme="dark"]) [data-heading-em] {
   color: #4f8799;
 }
+/* Dark: a lighter teal of the same hue, 8.8:1 on the #0d0f13 ground. */
+html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
+  color: #7fb8c8;
+}
 
-/* Pills, for one-line controls only: buttons, links, fields, tabs, radios and switches, and the
-   wrapper of a search field. Anything that holds paragraphs, a column or a list keeps 12. */
+/* Pills for every one-line control: buttons, links, fields, tabs, radios, switches, the wrapper
+   of a search field, and the segments of a track (a pill in a pill with even padding is
+   concentric). Inside a card they are concentric too, because the card's radius is its padding
+   plus 20 (see the scale above and the padding rules below). Anything that holds paragraphs, a
+   column or a list keeps the control role (a pill of several lines is a blob, 22 Oct 2026). */
 [data-direction="studio"]
   :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"], [role="menuitem"]).rounded-control:not(
     :has(p, .flex-col, ul, ol, h2, h3, h4)
   ),
-[data-direction="studio"] .rounded-control:has(> input:not([type="checkbox"], [type="radio"])) {
+[data-direction="studio"] .rounded-control:has(> input:not([type="checkbox"], [type="radio"])),
+[data-direction="studio"] .rounded-track .rounded-control {
   border-radius: 9999px;
+}
+
+/* A card's radius is its padding + 20, so the pill in its corner is concentric: 12 → 32, 8 → 28,
+   20 → 40, 24 → 44. The padding can be the card's own or that of the bands flush with its edges
+   (the Discussion panels). A card inside a card is in its parent's corner: control role, 20. */
+[data-direction="studio"] .rounded-card:is(.p-3, :has(> :is(.p-3, .px-3, .px-\[11px\]))) {
+  border-radius: 32px;
+}
+[data-direction="studio"] .rounded-card.p-2 {
+  border-radius: 28px;
+}
+@media (min-width: 768px) {
+  [data-direction="studio"] .rounded-card.md\:p-5 {
+    border-radius: 40px;
+  }
+}
+@media (min-width: 1024px) {
+  [data-direction="studio"] .rounded-card.lg\:p-6 {
+    border-radius: 44px;
+  }
+}
+[data-direction="studio"] .rounded-card .rounded-card,
+[data-direction="studio"] .rounded-card:not(.p-1) .rounded-card-inset {
+  border-radius: var(--sk-radius-control);
 }
 
 /* A large container that borrows the control radius (the player's course rail, a <nav>) takes
    the card radius. */
 [data-direction="studio"] :is(nav, aside, section).rounded-control {
   border-radius: var(--sk-radius-card);
+}
+/* …and what sits in its corner (the rail's collapse button, 16 in) takes 36 − 16 = 20. */
+[data-direction="studio"] :is(nav, aside, section).rounded-control .rounded-inner {
+  border-radius: var(--sk-radius-control);
 }
 
 /* Surfaces float on a soft shadow; the border goes (fields and dashed zones keep theirs). */
@@ -98,7 +188,7 @@
 }
 
 /* The platform top bar: no rule under it, it sits on the same ground as the page. */
-[data-direction="studio"]:not([data-theme="dark"]) [data-platform-page] header[data-chrome] {
+[data-direction="studio"] [data-platform-page] header[data-chrome] {
   border-bottom-color: transparent;
   background-color: var(--color-bg-faint);
 }
@@ -131,4 +221,9 @@
   -webkit-backdrop-filter: blur(14px) saturate(1.3);
   backdrop-filter: blur(14px) saturate(1.3);
   box-shadow: 0 0 0 1px #ffffff14 inset, 0 12px 32px -8px #13172066;
+}
+/* Dark: ink on a near-black ground would vanish; the bar steps up to bg/muted's grey. */
+html[data-theme="dark"] .sk-studio-bar {
+  background-color: color-mix(in srgb, #262b34 92%, transparent);
+  box-shadow: 0 0 0 1px #ffffff1a inset, 0 12px 32px -8px #000000b3;
 }
