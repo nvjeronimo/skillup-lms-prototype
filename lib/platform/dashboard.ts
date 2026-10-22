@@ -22,12 +22,14 @@ export const dashboardGreeting = { salutation: "Good morning," } as const;
 export interface DashboardStat {
   label: string;
   value: string;
+  /** The first line of the detail, in bold (DS v1.4: "in progress", "1 in progress"). */
+  detailStrong?: string;
   detail: string;
-  /** The phone's line uses shorter words, same facts. */
-  shortLabel?: string;
-  shortDetail?: string;
-  /** The goal beside the figure, only when Open edX serves the fact behind it. */
-  goal?: { label: string; spoken: string };
+  /** The value's colour: brand (text/on-primary-soft) or success (text/success, what is done). */
+  tone: "brand" | "success";
+  /** The goal beside the figure, only when Open edX serves the fact behind it. Warning when it
+   *  asks for action (a deadline is near), Gray otherwise. */
+  goal?: { label: string; spoken: string; color?: "warning" | "gray" };
 }
 
 /**
@@ -38,10 +40,11 @@ export interface DashboardStat {
  * learner is enrolled in (the single courses and the courses of the three programs), how many
  * are started and not complete, how many are complete, and the programs by state.
  *
- * Goals (Nelson, 21–22 Oct 2026, DS Today-at-a-glance v1.3): each figure on its own card with
+ * Goals (Nelson, 21–22 Oct 2026, DS Today-at-a-glance v1.4): each figure on its own card with
  * a goal, only what Open edX already serves: the deadlines (Dates API, one call per course), the
- * enrolments (Learner Home) and the active program's courses (`progress_details`). No goal on
- * Certificates. The month arrows of PR 242 were taken out of the DS by Nelson on 22 Oct.
+ * enrolments (Learner Home) and the programs' states (`progress_details`). No goal on
+ * Certificates. v1.4 (22 Oct): the light card; the same short labels and two-line details on
+ * every breakpoint; the done figures (Completed, Certificates) in text/success.
  */
 const enrolled = CATALOG.length;
 const coursesInProgress = CATALOG.filter((c) => c.percent !== null && c.percent > 0 && c.percent < 100).length;
@@ -49,11 +52,8 @@ const coursesCompleted = CATALOG.filter((c) => c.percent === 100).length;
 const programPercents = PROGRAMS.map((p) => p.courses.map((c) => c.card.progressPct ?? 0));
 const programsCompleted = programPercents.filter((ps) => ps.every((x) => x === 100)).length;
 const programsInProgress = programPercents.filter((ps) => ps.some((x) => x > 0) && !ps.every((x) => x === 100)).length;
+const programsNotStarted = PROGRAMS.length - programsCompleted - programsInProgress;
 
-const activeIndex = programPercents.findIndex((ps) => ps.some((x) => x > 0) && !ps.every((x) => x === 100));
-const activeProgram = activeIndex >= 0 ? PROGRAMS[activeIndex] : undefined;
-const activeDone = activeIndex >= 0 ? programPercents[activeIndex].filter((x) => x === 100).length : 0;
-const activeTotal = activeIndex >= 0 ? programPercents[activeIndex].length : 0;
 const dueThisWeek = calendarEvents.filter(isDueThisWeek).length;
 const pct = (a: number, b: number) => `${Math.round((a / b) * 100)}%`;
 
@@ -61,36 +61,37 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
   title: "Your learning at a glance",
   stats: [
     {
-      label: "Courses in progress",
+      label: "Courses",
       value: String(coursesInProgress),
+      detailStrong: "in progress",
       detail: `of ${enrolled} enrolled`,
-      shortLabel: "In progress",
-      shortDetail: `of ${enrolled} courses`,
-      goal: { label: `${dueThisWeek} due this week`, spoken: `${dueThisWeek} deadlines in the next seven days` },
+      tone: "brand",
+      goal: { label: `${dueThisWeek} due this week`, spoken: `${dueThisWeek} deadlines in the next seven days`, color: "warning" },
     },
     {
       label: "Programs",
       value: String(PROGRAMS.length),
-      detail: `${programsInProgress} in progress · ${programsCompleted} completed`,
-      shortDetail: `${programsInProgress} active · ${programsCompleted} done`,
-      goal: activeProgram
-        ? { label: `${activeDone} of ${activeTotal} courses`, spoken: `${activeProgram.title}: ${activeDone} of ${activeTotal} courses complete` }
-        : undefined,
+      detailStrong: `${programsInProgress} in progress`,
+      detail: `${programsNotStarted} not started`,
+      tone: "brand",
+      goal: {
+        label: `${programsCompleted} of ${PROGRAMS.length} completed`,
+        spoken: `${programsCompleted} of your ${PROGRAMS.length} programs completed`,
+      },
     },
     {
-      label: "Courses completed",
+      label: "Completed",
       value: String(coursesCompleted),
       detail: `of ${enrolled} enrolled`,
-      shortLabel: "Completed",
-      shortDetail: `of ${enrolled} courses`,
-      goal: { label: `${pct(coursesCompleted, enrolled)} of ${enrolled}`, spoken: `${pct(coursesCompleted, enrolled)} of your ${enrolled} enrolled courses complete` },
+      tone: "success",
+      goal: { label: `${pct(coursesCompleted, enrolled)} completed`, spoken: `${pct(coursesCompleted, enrolled)} of your ${enrolled} enrolled courses complete` },
     },
     // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
     {
       label: "Certificates",
       value: String(earnedCertificates.length),
-      detail: "ready to download",
-      shortDetail: "to download",
+      detail: "ready to download and share",
+      tone: "success",
     },
   ],
 };

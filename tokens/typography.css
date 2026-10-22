@@ -123,6 +123,7 @@
 .sk-text-body-small-regular   { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
 .sk-text-body-small-medium    { font-family: var(--sk-font-body); font-weight: 500; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
 .sk-text-body-small-semibold  { font-family: var(--sk-font-body); font-weight: 600; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
+.sk-text-body-small-bold      { font-family: var(--sk-font-body); font-weight: 700; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); }
 
 /* ---- 2xs — uppercase eyebrows (12px / 18px, +4% letter-spacing, UPPER-cased) ---- */
 .sk-text-label-small-regular  { font-family: var(--sk-font-body); font-weight: 400; font-size: calc(12px * var(--sk-font-scale, 1)); line-height: calc(18px * var(--sk-font-scale, 1)); letter-spacing: 0.04em; text-transform: uppercase; }
