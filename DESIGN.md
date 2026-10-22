@@ -248,7 +248,7 @@ Corners are chosen by role: none (0) for full-width bars, bands and progress bar
 Firm and welcoming: big targets, one obvious primary.
 - **Shape:** gently rounded (control, 6 px).
 - **Primary:** Primary Teal fill, white label 14/20 semibold; 44 px tall at md (36 sm, 48 lg), 12 px side padding, optional 20 px icon.
-- **Hover / Focus:** Primary turns Spark Yellow with Deep Teal text. Focus is a 2 px Primary Teal outline, 2 px offset, over a 2 px white gap ring.
+- **Hover / Focus:** Primary turns Spark Yellow with Deep Teal text, on devices that can hover only (a tap on a phone never leaves it yellow). Pressing scales it to 98 %. Focus is a 2 px Primary Teal outline, 2 px offset, over a 2 px white gap ring.
 - **Secondary:** white fill, Primary Ink label, 1 px inset Primary Teal ring. **Tertiary:** white fill, Primary Ink label, Track Grey on hover. **Link:** text only, underline on hover.
 - **Destructive:** Error Red fill (Primary) or Error Text ring (Secondary). Utility and close buttons stay neutral grey.
 - **Width:** hug the label, or fill the container; never a fixed width. Two side by side both fill, except on large screens and in lists.

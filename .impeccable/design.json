@@ -471,13 +471,13 @@
       },
       {
         "name": "easing-standard-decelerate",
-        "value": "cubic-bezier(0.2, 0.7, 0.2, 1)",
-        "purpose": "Things entering."
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Entries and exits: a strong ease-out (since 22 Oct 2026)."
       },
       {
         "name": "easing-standard-accelerate",
         "value": "cubic-bezier(0.55, 0, 1, 0.45)",
-        "purpose": "Things leaving."
+        "purpose": "Kept in the scale; no UI surface uses it since 22 Oct 2026 (ease-in delays the first frame)."
       },
       {
         "name": "easing-emphasized",

@@ -88,7 +88,9 @@ const DEFAULT_OPTIONS: QuizOption[] = [
 ];
 
 /** The marker's dot or tick growing in from its centre. */
-const MARK_MOTION = "transition-transform duration-short3 ease-standard-decelerate";
+/* The mark grows from half size with a fade, never from nothing (scale 0): it settles into the
+   box instead of popping out of it (Emil Kowalski review, 22 Oct 2026). */
+const MARK_MOTION = "transition-[transform,opacity] duration-short3 ease-standard-decelerate";
 
 /**
  * The answer marker — DS Checkbox `Type=Radio` (circle) / `Type=Checkbox` (square).
@@ -139,7 +141,7 @@ function OptionMarker({
         <Icon
           icon={Check}
           size={12}
-          className={cn("text-sko-icon-on-primary", MARK_MOTION, checked ? "scale-100" : "scale-0")}
+          className={cn("text-sko-icon-on-primary", MARK_MOTION, checked ? "scale-100 opacity-100" : "scale-50 opacity-0")}
         />
       ) : (
         // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
@@ -147,7 +149,7 @@ function OptionMarker({
           className={cn(
             "h-1.5 w-1.5 rounded-pill bg-current text-sko-icon-on-primary",
             MARK_MOTION,
-            checked ? "scale-100" : "scale-0",
+            checked ? "scale-100 opacity-100" : "scale-50 opacity-0",
           )}
         />
       )}
