@@ -162,8 +162,8 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
   );
 }
 
-/** A month: weeks from Monday, each day with up to two dates and "+N more". Desktop and tablet. */
-function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: string; onMonth: (delta: number) => void }) {
+/** The month's cells from Monday (null pads the first and last week), in weeks. */
+function monthWeeks(month: string) {
   const first = parseDay(`${month}-01`);
   const lead = (first.getDay() + 6) % 7; // Monday first
   const daysIn = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
@@ -172,24 +172,38 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
     ...Array.from({ length: daysIn }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`),
   ];
   while (cells.length % 7) cells.push(null);
-  const weeks = Array.from({ length: cells.length / 7 }, (_, w) => cells.slice(w * 7, w * 7 + 7));
-  const heads = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  return Array.from({ length: cells.length / 7 }, (_, w) => cells.slice(w * 7, w * 7 + 7));
+}
+
+const WEEK_HEADS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+/** The month's name and the previous / next buttons, shared by both month views. */
+function MonthHeader({ month, onMonth }: { month: string; onMonth: (delta: number) => void }) {
+  return (
+    <div className="flex items-center justify-between gap-2 border-b border-sko-border-subtle px-4 py-3">
+      <h3 className="sk-text-title-medium-semibold text-sko-text-default" aria-live="polite">
+        {MONTH.format(parseDay(`${month}-01`))}
+      </h3>
+      <div className="flex gap-1">
+        <button type="button" aria-label="Previous month" onClick={() => onMonth(-1)} className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle md:size-9">
+          <Icon icon={ChevronLeft} size={20} />
+        </button>
+        <button type="button" aria-label="Next month" onClick={() => onMonth(1)} className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle md:size-9">
+          <Icon icon={ChevronRight} size={20} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** A month: weeks from Monday, each day with up to two dates and "+N more". Desktop and tablet. */
+function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: string; onMonth: (delta: number) => void }) {
+  const weeks = monthWeeks(month);
+  const heads = WEEK_HEADS;
 
   return (
     <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
-      <div className="flex items-center justify-between gap-2 border-b border-sko-border-subtle px-4 py-3">
-        <h3 className="sk-text-title-medium-semibold text-sko-text-default" aria-live="polite">
-          {MONTH.format(first)}
-        </h3>
-        <div className="flex gap-1">
-          <button type="button" aria-label="Previous month" onClick={() => onMonth(-1)} className="inline-flex size-9 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle">
-            <Icon icon={ChevronLeft} size={20} />
-          </button>
-          <button type="button" aria-label="Next month" onClick={() => onMonth(1)} className="inline-flex size-9 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle">
-            <Icon icon={ChevronRight} size={20} />
-          </button>
-        </div>
-      </div>
+      <MonthHeader month={month} onMonth={onMonth} />
       <table className="w-full table-fixed border-collapse">
         <thead>
           <tr>
@@ -245,6 +259,100 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+/**
+ * The month on a phone (Nelson, 22 Oct 2026): seven columns are ~45 px there, too narrow for
+ * titles, so each day shows its number and a dot per kind of date (deadline, live, course
+ * dates). Tapping a day lists its dates under the grid, as the Agenda rows. Today is selected
+ * when it is in the month, else the first day with a date, else the 1st.
+ */
+function MonthCompact({ events, month, onMonth }: { events: CalendarEvent[]; month: string; onMonth: (delta: number) => void }) {
+  const weeks = monthWeeks(month);
+  const inMonth = events.filter((e) => e.date.startsWith(month)).sort((a, b) => a.date.localeCompare(b.date));
+  const fallback = CALENDAR_TODAY.startsWith(month) ? CALENDAR_TODAY : (inMonth[0]?.date ?? `${month}-01`);
+  const [picked, setPicked] = React.useState<string | null>(null);
+  const selected = picked && picked.startsWith(month) ? picked : fallback;
+  const dayEvents = events.filter((e) => e.date === selected);
+  const h = dayHeading(selected);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+        <MonthHeader month={month} onMonth={onMonth} />
+        <table className="w-full table-fixed border-collapse">
+          <thead>
+            <tr>
+              {WEEK_HEADS.map((d) => (
+                <th key={d} scope="col" className="sk-text-label-small-semibold py-2 text-center uppercase text-sko-text-subtle">
+                  <abbr title={d} className="no-underline">{d.slice(0, 1)}</abbr>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {weeks.map((week, w) => (
+              <tr key={w}>
+                {week.map((day, d) => {
+                  if (!day) return <td key={d} />;
+                  const list = events.filter((e) => e.date === day);
+                  const kinds = (Object.keys(KIND) as CalendarKind[]).filter((k) => list.some((e) => e.kind === k));
+                  const today = day === CALENDAR_TODAY;
+                  const isSelected = day === selected;
+                  const missed = list.some(isMissed);
+                  return (
+                    <td key={d} className="p-0.5 text-center">
+                      <button
+                        type="button"
+                        onClick={() => setPicked(day)}
+                        aria-pressed={isSelected}
+                        aria-current={today ? "date" : undefined}
+                        aria-label={`${DAY_MONTH.format(parseDay(day))}${list.length ? `, ${list.length} ${list.length === 1 ? "date" : "dates"}` : ", no dates"}${missed ? ", missed deadline" : ""}`}
+                        className={cn(
+                          "flex h-12 w-full flex-col items-center justify-center gap-1 rounded-control transition-colors",
+                          isSelected ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-hover",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "sk-text-body-small-semibold inline-flex size-6 items-center justify-center rounded-pill",
+                            today ? "bg-sko-bg-primary text-sko-text-on-primary" : isSelected ? "text-sko-text-primary" : "text-sko-text-default",
+                          )}
+                        >
+                          {Number(day.slice(8))}
+                        </span>
+                        <span aria-hidden className="flex h-1.5 gap-0.5">
+                          {kinds.map((k) => (
+                            <span key={k} className={cn("size-1.5 rounded-pill", KIND[k].dot)} />
+                          ))}
+                        </span>
+                      </button>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <section aria-live="polite" aria-label={`${h.lead} ${h.rest}`.trim()} className={AGENDA_DAY}>
+        <h3 className="sk-text-title-medium-semibold text-sko-text-default">
+          {h.lead} {h.rest ? <span className="text-sko-text-subtle">{h.rest}</span> : null}
+        </h3>
+        {dayEvents.length ? (
+          <ul className={AGENDA_CARD}>
+            {dayEvents.map((e) => (
+              <EventRow key={e.id} event={e} />
+            ))}
+          </ul>
+        ) : (
+          <p className="sk-text-body-medium-regular rounded-card border border-sko-border-subtle bg-sko-bg-page p-5 text-sko-text-subtle">
+            Nothing on this day.
+          </p>
+        )}
+      </section>
     </div>
   );
 }
@@ -416,8 +524,8 @@ function CalendarSkeleton() {
 
 /**
  * Calendar (proposal, 17 Oct 2026; no Figma screen yet): the dates of every course in one place.
- * Header, then the missed deadlines (if any), then Agenda (the default, and the only view on
- * mobile) or Month, filtered by kind. Desktop has a 320 column: the next seven days and calendar
+ * Header, then the missed deadlines (if any), then Agenda (the default) or Month (compact on
+ * mobile: dots per day, the picked day's dates under the grid), filtered by kind. Desktop has a 320 column: the next seven days and calendar
  * sync. Every date opens what it is about: the unit in the player, the course or program page.
  */
 export function CalendarView() {
@@ -500,7 +608,6 @@ export function CalendarView() {
               <PlatformSegmented label="Show" options={calendarFilters} value={filter} onChange={setFilter} />
               <PlatformSegmented
                 label="View"
-                className="max-md:hidden"
                 options={[
                   { id: "agenda", label: "Agenda" },
                   { id: "month", label: "Month" },
@@ -516,7 +623,7 @@ export function CalendarView() {
                     <Month events={events} month={month} onMonth={shiftMonth} />
                   </div>
                   <div className="md:hidden">
-                    <Agenda events={events} />
+                    <MonthCompact events={events} month={month} onMonth={shiftMonth} />
                   </div>
                 </>
               ) : (
