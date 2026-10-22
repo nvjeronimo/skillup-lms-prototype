@@ -27,8 +27,9 @@ export interface DashboardStat {
   detail: string;
   /** The value's colour: brand (text/on-primary-soft) or success (text/success, what is done). */
   tone: "brand" | "success";
-  /** The goal beside the figure, only when Open edX serves the fact behind it. */
-  goal?: { label: string; spoken: string };
+  /** The goal beside the figure, only when Open edX serves the fact behind it. Warning when it
+   *  asks for action (a deadline is near), Gray otherwise. */
+  goal?: { label: string; spoken: string; color?: "warning" | "gray" };
 }
 
 /**
@@ -65,7 +66,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       detailStrong: "in progress",
       detail: `of ${enrolled} enrolled`,
       tone: "brand",
-      goal: { label: `${dueThisWeek} due this week`, spoken: `${dueThisWeek} deadlines in the next seven days` },
+      goal: { label: `${dueThisWeek} due this week`, spoken: `${dueThisWeek} deadlines in the next seven days`, color: "warning" },
     },
     {
       label: "Programs",

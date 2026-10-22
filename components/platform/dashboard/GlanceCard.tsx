@@ -39,7 +39,7 @@ function StatCard({ stat }: { stat: DashboardStat }) {
       </p>
       {stat.goal ? (
         <div className="mt-auto pt-1">
-          <Badge color="gray" size="sm">
+          <Badge color={stat.goal.color ?? "gray"} size="sm">
             <span aria-hidden="true">{stat.goal.label}</span>
             <span className="sr-only">{stat.goal.spoken}</span>
           </Badge>
@@ -51,7 +51,8 @@ function StatCard({ stat }: { stat: DashboardStat }) {
 
 /**
  * DS `LMS/Platform/Dashboard/Today-at-a-glance` v1.4 (Nelson, 22 Oct 2026): the Dashboard
- * hero card, full width, light. Title (label-small/Semibold, text/default) on bg/primary-soft,
+ * hero card, full width, light. Title (label-small/Semibold, text/default) on bg/primary-soft
+ * with a 1px border/primary-muted,
  * then the four figures, each on its own card (bg/page, Radius/card-inset) with a goal.
  * Four in a row from tablet up (gap 20 / 24); on a phone the row scrolls sideways, the cards
  * 174 wide (as the DS) and snapping, so "Pick up where you left off" stays up.
@@ -64,7 +65,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       aria-labelledby="dashboard-glance-title"
       data-glance=""
       className={cn(
-        "relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-card bg-sko-bg-primary-soft p-4 md:gap-4 md:p-5 lg:p-6",
+        "relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-card border border-sko-border-primary-muted bg-sko-bg-primary-soft p-4 md:gap-4 md:p-5 lg:p-6",
         className,
       )}
     >
