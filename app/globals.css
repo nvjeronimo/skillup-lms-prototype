@@ -380,6 +380,30 @@ button {
   transition-duration: 0s;
 }
 
+/* Cover zoom on hover (CourseThumb shape="cover"): the picture eases in to 1.02 while the card
+   (`group`) is hovered — long2 standard in, medium2 out, so it drifts rather than jumps. Listed
+   together with the load fade, because a single transition-property would drop one of them.
+   Only on devices that hover; reduced motion keeps the picture still (both blocks). */
+.sk-fade-image.sk-cover-zoom {
+  transition-property: opacity, transform;
+  transition-duration: var(--motion-duration-short4), var(--motion-duration-medium2);
+  transition-timing-function: var(--motion-easing-standard);
+}
+@media (hover: hover) {
+  .group:hover .sk-fade-image.sk-cover-zoom {
+    transform: scale(1.02);
+    transition-duration: var(--motion-duration-short4), var(--motion-duration-long2);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .sk-fade-image.sk-cover-zoom {
+    transform: none;
+  }
+}
+[data-reduce-motion] .group:hover .sk-fade-image.sk-cover-zoom {
+  transform: none;
+}
+
 /* Quiz question swap (mode B): the next question comes in from the side it lies on —
    from the right going forward, from the left going back. Entrance only: the old
    question is replaced, not animated out. */
