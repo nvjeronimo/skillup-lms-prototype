@@ -6,7 +6,7 @@
    - a cool grey ground with white surfaces that float on a soft shadow, no card borders;
    - deep-teal pill buttons (the logo's #044150) and a pale aqua soft accent, no yellow hover;
    - big, calm corners (cards 24, sheets 28), pills for every control;
-   - the glance as a deep ink block with its figures on light cards, and a floating dark bar that keeps Resume in reach.
+   - the glance as a deep ink block with its figures on light cards.
    Left out on purpose: the reference's gradient headline and iridescent renders (off-brand).
    Switched on by html[data-direction="studio"] (Profile menu > Studio look, or ?direction=studio).
    Light and dark (dark since 22 Oct 2026, Nelson): a cool neutral night, not SKO Dark's teal one.
@@ -54,7 +54,7 @@
 /* Studio Dark (Nelson, 22 Oct 2026). The same idea as the light theme, at night: a cool neutral
    ground (no teal cast, unlike SKO Dark), surfaces a step above it, ink-white text, and the logo's
    deep teal turned into a pale aqua primary with dark text on it. It also takes every nested dark
-   region (data-theme="dark" bands, the Resume bar, the glance backdrop), so a Studio page never
+   region (data-theme="dark" bands, the glance backdrop), so a Studio page never
    mixes in SKO Dark's teal greys. html[…] outranks the skin dark blocks of tokens/colors.css.
    Contrast on bg/page #16191f: text/default 15:1, muted 10:1, subtle 6.9:1, primary 10:1;
    on bg/primary #8fd0e0 the on-primary text #0b1d23 reads 10:1. */
@@ -209,18 +209,4 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
 }
 [data-direction="studio"] [data-glance] .shadow-sk-card {
   box-shadow: var(--sk-shadow-studio);
-}
-
-/* The floating bar that keeps Resume in reach (StudioResumeBar): ink glass, like the reference's
-   pass bar. The blur goes under "reduce transparency" (colors.css). */
-.sk-studio-bar {
-  background-color: color-mix(in srgb, #131720 88%, transparent);
-  -webkit-backdrop-filter: blur(14px) saturate(1.3);
-  backdrop-filter: blur(14px) saturate(1.3);
-  box-shadow: 0 0 0 1px #ffffff14 inset, 0 12px 32px -8px #13172066;
-}
-/* Dark: ink on a near-black ground would vanish; the bar steps up to bg/muted's grey. */
-html[data-theme="dark"] .sk-studio-bar {
-  background-color: color-mix(in srgb, #262b34 92%, transparent);
-  box-shadow: 0 0 0 1px #ffffff1a inset, 0 12px 32px -8px #000000b3;
 }
