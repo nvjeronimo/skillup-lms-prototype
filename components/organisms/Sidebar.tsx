@@ -380,12 +380,12 @@ export function Sidebar({
            backdrop tap still work too. The title labels the dialog. */
         <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-sko-border-subtle pl-4 pr-2">
           <h2 id={mobileTitleId} className="sk-text-body-large-semibold text-sko-text-default">
-            Course menu
+            Course Journey
           </h2>
           <button
             type="button"
             onClick={onCloseMobile}
-            aria-label="Close course menu"
+            aria-label="Close Course Journey"
             className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-hover"
           >
             <Icon icon={X} size={24} />

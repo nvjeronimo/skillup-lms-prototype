@@ -659,7 +659,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
       {/* Mobile drawer — a modal dialog (focus moves in, is trapped, the page
           behind is inert, Esc / backdrop / Close dismiss, focus returns to the
-          "Open course menu" trigger). */}
+          "Open Course Journey" trigger). */}
       <MobileCourseDrawer
         open={bp === "mobile" && mobileDrawerOpen}
         onClose={() => setMobileDrawerOpen(false)}
