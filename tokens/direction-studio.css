@@ -1,0 +1,121 @@
+/* ============================================================================
+   "Studio" — an experimental visual direction for the whole platform (22 Oct 2026).
+   Nelson asked for another visual direction, with humanacademy.ai as the reference. What it
+   takes from it, translated to SkillUp's rules (no gradients, role tokens, AA):
+   - a neo-grotesk (Inter Tight) set large and light, tracked tight, instead of Montserrat bold;
+   - a cool grey ground with white surfaces that float on a soft shadow, no card borders;
+   - deep-teal pill buttons (the logo's #044150) and a pale aqua soft accent, no yellow hover;
+   - big, calm corners (cards 24, sheets 28), pills for every control;
+   - the glance as a deep ink block of figures, and a floating dark bar that keeps Resume in reach.
+   Left out on purpose: the reference's gradient headline and iridescent renders (off-brand).
+   Switched on by html[data-direction="studio"] (Profile menu > Studio look, or ?direction=studio).
+   Light theme only for now: in dark, the colour block below stands back and SKO Dark applies.
+   ============================================================================ */
+
+[data-direction="studio"] {
+  --sk-font-body: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
+  --sk-font-display: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
+
+  --sk-radius-control: 9999px;
+  --sk-radius-card: 24px;
+  --sk-radius-surface: 28px;
+  --sk-radius-inner: 6px;
+
+  --sk-shadow-studio: 0 1px 2px #1317200a, 0 10px 30px -12px #13172024;
+}
+
+[data-direction="studio"]:not([data-theme="dark"]) {
+  --color-bg-faint: #f3f4f6;
+  --color-bg-subtle: #eceef1;
+  --color-text-default: #131720;
+  --color-text-muted: #3b4150;
+  --color-text-subtle: #545a68;
+  --color-icon-default: #131720;
+  --color-border-subtle: #e2e4e9;
+
+  --color-bg-primary: #044150;
+  --color-bg-primary-hover: #0a5266;
+  --color-text-on-primary-hover: #ffffff;
+  --color-bg-primary-soft: #e3f3f6;
+  --color-text-primary: #0a5266;
+  --color-text-on-primary-soft: #044150;
+  --color-icon-primary: #0a5266;
+  --color-border-primary: #0a5266;
+  --color-border-primary-muted: #c5e3ea;
+}
+
+/* Type: large and light. Every bold or semibold display style steps down to 500, tracked tight;
+   titles to 500; the uppercase labels open up a little. */
+[data-direction="studio"] :is(
+    .sk-text-display-large-bold,
+    .sk-text-headline-large-bold,
+    .sk-text-headline-large-semibold,
+    .sk-text-headline-medium-bold,
+    .sk-text-headline-medium-semibold,
+    .sk-text-headline-small-bold,
+    .sk-text-headline-small-semibold
+  ) {
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+[data-direction="studio"] :is(.sk-text-title-large-semibold, .sk-text-title-large-bold, .sk-text-title-medium-semibold) {
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+[data-direction="studio"] :is(.sk-text-label-small-semibold, .sk-text-label-small-medium) {
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+/* The second half of a page title ("John.") in a calm teal instead of grey: flat, never a gradient.
+   #4f8799 on the #f3f4f6 ground is 3.9:1, enough for text this large. */
+[data-direction="studio"]:not([data-theme="dark"]) [data-heading-em] {
+  color: #4f8799;
+}
+
+/* Controls are pills here, so a large container that borrows the control radius (the player's
+   course rail, a <nav>) takes the card radius instead of turning into a capsule. */
+[data-direction="studio"] :is(nav, aside, section).rounded-control {
+  border-radius: var(--sk-radius-card);
+}
+
+/* Surfaces float on a soft shadow; the border goes (fields and dashed zones keep theirs). */
+[data-direction="studio"] :is(.rounded-card, .rounded-surface).border:not(.border-dashed) {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+
+/* The platform top bar: no rule under it, it sits on the same ground as the page. */
+[data-direction="studio"]:not([data-theme="dark"]) [data-platform-page] header[data-chrome] {
+  border-bottom-color: transparent;
+  background-color: var(--color-bg-faint);
+}
+
+/* The glance becomes a deep ink block of figures: the stat cards dissolve into columns, the two
+   decorative circles go (they only made sense on the light card). */
+[data-direction="studio"] [data-glance] {
+  --color-bg-primary-soft: #13282f;
+  --color-border-primary-muted: transparent;
+  --color-bg-page: transparent;
+  --color-text-default: #ffffff;
+  --color-text-muted: #d5dee3;
+  --color-text-subtle: #b4c2ca;
+  --color-text-on-primary-soft: #ffffff;
+  --color-text-success: #7fdba5;
+  --color-bg-muted: #23414b;
+  --color-bg-warning-soft: #3d3215;
+  --color-text-warning: #f9d27a;
+  --color-shadow-default: transparent;
+  border-color: transparent;
+}
+[data-direction="studio"] [data-glance] [data-glow] {
+  display: none;
+}
+
+/* The floating bar that keeps Resume in reach (StudioResumeBar): ink glass, like the reference's
+   pass bar. The blur goes under "reduce transparency" (colors.css). */
+.sk-studio-bar {
+  background-color: color-mix(in srgb, #131720 88%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: 0 0 0 1px #ffffff14 inset, 0 12px 32px -8px #13172066;
+}

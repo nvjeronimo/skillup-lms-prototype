@@ -2,6 +2,7 @@
 @import "../tokens/typography.css";
 @import "../tokens/motion.css";
 @import "../tokens/radius.css";
+@import "../tokens/direction-studio.css";
 
 @tailwind base;
 @tailwind components;

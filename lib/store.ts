@@ -129,6 +129,8 @@ interface LmsState {
   underlineLinks: boolean;
   /** Experimental (Nelson, 21 Oct 2026): every corner square except buttons'. */
   squareCorners: boolean;
+  /** Experimental (22 Oct 2026): the "Studio" visual direction of the whole platform. */
+  studio: boolean;
   /**
    * The learner's explicit Larger touch targets choice; `null` = never chosen,
    * so the default applies (ON at ≤767px / mobile preview, OFF otherwise —
@@ -218,6 +220,7 @@ interface LmsState {
   setReduceMotion: (v: boolean) => void;
   setUnderlineLinks: (v: boolean) => void;
   setSquareCorners: (v: boolean) => void;
+  setStudio: (v: boolean) => void;
   setLargeTargets: (v: boolean) => void;
   setDiscussionsPreview: (v: boolean) => void;
   setQuizMode: (v: "A" | "B") => void;
@@ -330,6 +333,7 @@ export const useLmsStore = create<LmsState>()(
   reduceMotion: false,
   underlineLinks: false,
   squareCorners: false,
+  studio: false,
   largeTargetsChoice: null,
   discussionsPreview: false,
   quizMode: "A",
@@ -600,6 +604,7 @@ export const useLmsStore = create<LmsState>()(
     set({ reduceMotion });
   },
   setSquareCorners: (squareCorners) => set({ squareCorners }),
+  setStudio: (studio) => set({ studio }),
   setUnderlineLinks: (underlineLinks) => {
     track("a11y_change", { setting: "underlineLinks", value: String(underlineLinks) });
     set({ underlineLinks });
@@ -712,6 +717,7 @@ export const useLmsStore = create<LmsState>()(
         reduceMotion: s.reduceMotion,
         underlineLinks: s.underlineLinks,
         squareCorners: s.squareCorners,
+        studio: s.studio,
         largeTargetsChoice: s.largeTargetsChoice,
         discussionsPreview: s.discussionsPreview,
         quizMode: s.quizMode,

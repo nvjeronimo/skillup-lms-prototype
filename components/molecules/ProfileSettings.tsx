@@ -233,6 +233,8 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const squareCorners = useLmsStore((s) => s.squareCorners);
   const setSquareCorners = useLmsStore((s) => s.setSquareCorners);
+  const studio = useLmsStore((s) => s.studio);
+  const setStudio = useLmsStore((s) => s.setStudio);
   return (
     <ProfileSection title="Appearance">
       <div className="flex flex-col gap-1.5 px-1">
@@ -254,6 +256,8 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
           onChange={setSkin}
         />
       </div>
+      {/* Experiment (22 Oct 2026): a second visual direction for the whole platform. */}
+      <ToggleRow label="Studio look" hint="Experimental · a calmer, editorial direction" checked={studio} onChange={setStudio} />
       {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
       <ToggleRow
         label="Square corners"
