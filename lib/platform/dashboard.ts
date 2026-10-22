@@ -70,13 +70,13 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
     },
     {
       label: "Programs",
-      value: String(PROGRAMS.length),
-      detailStrong: `${programsInProgress} in progress`,
-      detail: `${programsNotStarted} not started`,
+      value: String(programsInProgress),
+      detailStrong: "in progress",
+      detail: `of ${PROGRAMS.length} enrolled`,
       tone: "brand",
       goal: {
-        label: `${programsCompleted} of ${PROGRAMS.length} completed`,
-        spoken: `${programsCompleted} of your ${PROGRAMS.length} programs completed`,
+        label: `${programsNotStarted} not started`,
+        spoken: `${programsNotStarted} of your ${PROGRAMS.length} programs not started yet`,
       },
     },
     {
@@ -90,7 +90,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
     {
       label: "Certificates",
       value: String(earnedCertificates.length),
-      detail: "ready to download and share",
+      detail: "ready to download",
       tone: "success",
     },
   ],
