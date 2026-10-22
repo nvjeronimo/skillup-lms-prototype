@@ -226,7 +226,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               {/* On the green certificate footer text/subtle is 3.3:1 in dark: the default ink holds AA. */}
               <span className="inline-flex items-center gap-2">
-                <span className={cn("sk-text-body-small-semibold", completed ? "text-sko-text-default" : "text-sko-text-subtle")}>{footerLabel}</span>
+                {/* DS v1.14 (Nelson, 22 Oct 2026): uppercase, as the Course-Card overlines. */}
+                <span className={cn("sk-text-body-small-semibold uppercase", completed ? "text-sko-text-default" : "text-sko-text-subtle")}>{footerLabel}</span>
                 {/* DS v1.8: the next deadline, only when the next item has one. DS v1.12 (Nelson,
                     17 Oct 2026): Soft Warning, as the Dashboard Due-Item, not the accent yellow. */}
                 {!completed && program.nextDue ? (
