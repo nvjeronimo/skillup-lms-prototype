@@ -460,6 +460,9 @@
   --color-text-subtle: #acd5f4;
   --color-text-default: #ffffff;
   --color-icon-default: #ffffff;
+  /* The player bar's Tertiary icons (bell, saved, theme) are icon/subtle: the dark theme's grey
+     reads ~3:1 on deep teal; the bands' light sky reads 7.0:1 (22 Oct 2026). */
+  --color-icon-subtle: #acd5f4;
 }
 [data-skin="sea"] [data-chrome-ink] [data-chrome-avatar],
 [data-skin="sea"] [data-chrome-ink][data-chrome-avatar] {
