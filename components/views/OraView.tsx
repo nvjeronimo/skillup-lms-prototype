@@ -53,7 +53,13 @@ export function OraView({ topicId }: { topicId: string }) {
 
   return (
     <div className="flex flex-col gap-5 py-4">
-      <Stepper step={step} submitted={submitted} quotaMet={quotaMet} graded={graded} />
+      <Stepper
+        step={step}
+        submitted={submitted}
+        quotaMet={quotaMet}
+        graded={graded}
+        requiredReviews={ora.requiredReviews}
+      />
 
       {step === "response" ? (
         <ResponseStep
@@ -100,24 +106,28 @@ function Stepper({
   submitted,
   quotaMet,
   graded,
+  requiredReviews,
 }: {
   step: OraStep;
   submitted: boolean;
   quotaMet: boolean;
   graded: boolean;
+  requiredReviews: number;
 }) {
   const steps: { id: OraStep; label: string; done: boolean }[] = [
     { id: "response", label: "Your response", done: submitted },
-    { id: "peer", label: "Review a peer", done: quotaMet },
+    { id: "peer", label: `Review ${requiredReviews} peer${requiredReviews === 1 ? "" : "s"}`, done: quotaMet },
     { id: "grade", label: "Your grade", done: graded },
   ];
 
   return (
-    // DS LMS / ORA · Stepper (node 20328:3534), Size=Default: a single
-    // horizontal segmented pill — three equal-width segments split by vertical
-    // dividers, each tinted by its state. Completed = green, current = brand,
+    // DS LMS/ICP/Topics/ORA-Stepper v1.2 (node 20328:3534): a single
+    // horizontal segmented pill split by vertical dividers. Completed = green
+    // check and label on bg/page, current = brand on bg/primary-soft,
     // upcoming = bg/faint. 26px circles; numbers body-medium/Bold (semibold
-    // until .sk-text-body-medium-bold exists, CT-22).
+    // until .sk-text-body-medium-bold exists, CT-22). Below sm it is
+    // Size=Compact: the current step keeps its label and takes the free width,
+    // every other step shows only its circle.
     <ol className="flex overflow-hidden rounded-card border border-sko-border-subtle">
       {steps.map((s, i) => {
         const isCurrent = s.id === step;
@@ -125,9 +135,10 @@ function Stepper({
           <li
             key={s.id}
             className={cn(
-              "flex flex-1 min-w-0 items-center gap-2 p-4",
+              "flex min-w-0 items-center gap-2 p-4 sm:flex-1",
+              isCurrent ? "flex-1" : "max-sm:px-3",
               i > 0 && "border-l border-sko-border-subtle",
-              isCurrent ? "bg-sko-bg-primary-soft" : s.done ? "bg-sko-bg-success-soft" : "bg-sko-bg-faint",
+              isCurrent ? "bg-sko-bg-primary-soft" : s.done ? "bg-sko-bg-page" : "bg-sko-bg-faint",
             )}
           >
             <span
@@ -145,6 +156,7 @@ function Stepper({
             <span
               className={cn(
                 "truncate",
+                !isCurrent && "max-sm:sr-only",
                 s.done
                   ? "sk-text-body-medium-semibold text-sko-text-success"
                   : isCurrent
