@@ -10,14 +10,15 @@ export interface GlanceCardProps {
 }
 
 /**
- * One figure on its own card (DS `Stat` Theme=Card, v1.4: on bg/page, no dark pin): label,
+ * One figure on its own card (DS `Stat` Theme=Card, v1.4: on bg/page with Shadows/shadow-card,
+ * no dark pin): label,
  * value, the detail in two lines (the first bold), then the goal as a DS Badge Gray sm. The
  * value is text/on-primary-soft, or text/success for what is done (Completed, Certificates).
  * The badge carries a spoken sentence; its short text is hidden from assistive tech.
  */
 function StatCard({ stat }: { stat: DashboardStat }) {
   return (
-    <div className="flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-4">
+    <div className="flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-4 shadow-sk-card">
       <p className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-muted">{stat.label}</p>
       <p
         className={cn(

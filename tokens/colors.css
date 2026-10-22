@@ -470,11 +470,8 @@
 [data-skin="sea"]:not([data-theme="dark"]) [data-platform-page] {
   background-color: color-mix(in srgb, var(--color-bg-primary-soft) 55%, var(--color-bg-faint));
 }
-[data-skin="sea"] [data-glance] {
-  /* The deep-teal card in both themes: its text stays white (in Dark, bg/inverse is light). */
-  --color-text-on-inverse: #ffffff;
-  background-color: var(--color-bg-chrome);
-}
+/* The glance card (Today-at-a-glance v1.4, 22 Oct 2026) is light in every skin: Sea no longer
+   paints it deep teal. It keeps the Sea card rule below (no border, the soft teal shadow). */
 /* The two decorative circles, flat (bg/info and bg/primary, no gradient): back on Nelson's ask,
    21 Oct 2026, at the card's own 12% (from the component). At 30% the text over them fell to 3.5:1
    in dark; at 12% every text on the card stays AA in light and dark, desktop and phone. */
@@ -527,33 +524,8 @@
   box-shadow: var(--sk-shadow-sea);
 }
 
-/* Sea v2 — the glance card as in the reference: the title in the sky blue of the logo, caps and
-   tracked; the figures larger (display-md, the headline-large size); labels tracked caps in white;
-   details in a light sky tint. */
+/* Sea v2 — the glance title tracked wider. It stays text/default on the light card (the logo's
+   sky blue read 2:1 on it, 22 Oct 2026); the old data-stat-* rules for the dark glance went with it. */
 [data-skin="sea"] [data-glance] [data-glance-title] {
-  color: #51bffc;
   letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-[data-skin="sea"] [data-glance] [data-stat-value] {
-  font-size: calc(var(--sk-type-size-display-md) * var(--sk-font-scale, 1));
-  line-height: calc(var(--sk-type-line-height-display-md) * var(--sk-font-scale, 1));
-  letter-spacing: -0.02em;
-}
-[data-skin="sea"] [data-glance] [data-stat-label] {
-  opacity: 1;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-/* The phone's one-line glance card (21 Oct 2026): four columns of ~72px have no room for tracked
-   caps ("CERTIFICATES" needs ~100px), so the labels are sentence case there. */
-@media (max-width: 767px) {
-  [data-skin="sea"] [data-glance] [data-stat-label] {
-    letter-spacing: normal;
-    text-transform: none;
-  }
-}
-[data-skin="sea"] [data-glance] [data-stat-detail] {
-  opacity: 1;
-  color: #acd5f4;
 }
