@@ -135,11 +135,6 @@ export function CoursePlayerTopbar({
 }: CoursePlayerTopbarProps) {
   const isMobile = size === "Mobile";
   const isDesktop = size === "Desktop";
-  // Sea skin (decision 027, prototype only; the player since 22 Oct 2026): the bar is the deep-teal
-  // chrome of the platform bar and its controls take the dark-mode tokens. The profile menu that
-  // opens from it resets to the page theme (DemoControlsMenu).
-  const sea = useLmsStore((st) => st.skin) === "sea";
-  const chrome = sea ? { "data-chrome": "", "data-theme": "dark", "data-chrome-ink": "" } : {};
 
   const notificationsLabel =
     notificationsCount > 0 ? `Notifications, ${notificationsCount} unread` : "Notifications";
@@ -167,7 +162,6 @@ export function CoursePlayerTopbar({
     // do not fit the right column; the theme switch is in the profile menu.
     return (
       <header
-        {...chrome}
         className={cn(
           "grid h-14 grid-cols-3 items-center gap-2 border-b border-sko-border-subtle bg-sko-bg-page pl-3 pr-2",
           className,
@@ -201,7 +195,7 @@ export function CoursePlayerTopbar({
           ) : null}
           {accountMenu ?? (
             <button type="button" aria-label="Account" className="flex items-center rounded-control">
-              <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" chrome={sea} />
+              <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />
             </button>
           )}
           <UtilityButton label="Exit course player" onClick={onClose} large>
@@ -214,7 +208,6 @@ export function CoursePlayerTopbar({
 
   return (
     <header
-      {...chrome}
       className={cn(
         // DS padding 8/16/8/24 (Desktop) · 8/16/8/20 (Tablet); the 60px height with
         // items-center covers the 8px vertical padding.
@@ -279,7 +272,7 @@ export function CoursePlayerTopbar({
           // match the topbar icon buttons and CTAs; the DS `Avatar label group` draws a
           // 24px circle), 8px gap, name in body-medium/Semibold.
           <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-control">
-            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" chrome={sea} />
+            <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
             <span className="sk-text-body-medium-semibold text-sko-text-default">{userName}</span>
           </button>
         )}

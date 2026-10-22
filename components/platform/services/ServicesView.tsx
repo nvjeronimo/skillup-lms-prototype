@@ -122,8 +122,6 @@ function ServicesSkeleton() {
 export function ServicesView() {
   const showToast = useLmsStore((s) => s.showToast);
   const notInPrototype = (what: string) => showToast(`${what} is not part of this prototype yet`);
-  // Sea skin: the mentor card becomes a deep-teal band (its contents take the dark-mode tokens).
-  const sea = useLmsStore((s) => s.skin) === "sea";
 
   return (
     <PlatformPage
@@ -140,8 +138,6 @@ export function ServicesView() {
           data-arrive={1}
           aria-labelledby="services-mentor"
           data-mock={servicesMentor.mock}
-          data-theme={sea ? "dark" : undefined}
-          data-band={sea ? "" : undefined}
           className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:flex-row lg:items-center lg:justify-between lg:p-6"
         >
           <div className="flex items-start gap-4">

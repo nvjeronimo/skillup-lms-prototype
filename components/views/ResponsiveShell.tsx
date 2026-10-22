@@ -28,8 +28,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const reduceMotion = useLmsStore((s) => s.reduceMotion);
   const underlineLinks = useLmsStore((s) => s.underlineLinks);
   const squareCorners = useLmsStore((s) => s.squareCorners);
-  const studio = useLmsStore((s) => s.studio);
-  const setStudio = useLmsStore((s) => s.setStudio);
+  const setSkin = useLmsStore((s) => s.setSkin);
   const largeTargets = useLargeTargets();
   const width = FRAME_WIDTH[mode];
 
@@ -70,6 +69,9 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
       const el = document.documentElement;
       if (skin === "teal") el.removeAttribute("data-skin");
       else el.setAttribute("data-skin", skin);
+      // Studio is a direction more than a palette: its stylesheet keys on data-direction.
+      if (skin === "studio") el.setAttribute("data-direction", "studio");
+      else el.removeAttribute("data-direction");
     });
   }, [skin]);
   React.useEffect(() => {
@@ -88,25 +90,12 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   React.useEffect(() => flag("data-reduce-motion", reduceMotion), [reduceMotion]);
   React.useEffect(() => flag("data-underline-links", underlineLinks), [underlineLinks]);
   React.useEffect(() => flag("data-square-corners", squareCorners), [squareCorners]);
-  // ?direction=studio / ?direction=classic switches the experimental direction (a shareable link).
+  // ?direction=studio / ?direction=classic picks the Studio skin or SKO (a shareable link).
   React.useEffect(() => {
     const dq = new URLSearchParams(window.location.search).get("direction");
-    if (dq === "studio") setStudio(true);
-    else if (dq === "classic") setStudio(false);
-  }, [setStudio]);
-  // Applied at once on the first run (as the pre-paint script did), cross-faded on a change.
-  const studioApplied = React.useRef(false);
-  React.useEffect(() => {
-    const set = () => {
-      const el = document.documentElement;
-      if (studio) el.setAttribute("data-direction", "studio");
-      else el.removeAttribute("data-direction");
-    };
-    if (!studioApplied.current) {
-      studioApplied.current = true;
-      set();
-    } else applyAppearance(set);
-  }, [studio]);
+    if (dq === "studio") setSkin("studio");
+    else if (dq === "classic") setSkin("teal");
+  }, [setSkin]);
   React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
 
   // The assistant is mounted once, for every page (it shows on platform and player pages only).
