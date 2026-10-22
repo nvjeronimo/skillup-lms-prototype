@@ -6,7 +6,7 @@
    - a cool grey ground with white surfaces that float on a soft shadow, no card borders;
    - deep-teal pill buttons (the logo's #044150) and a pale aqua soft accent, no yellow hover;
    - big, calm corners (cards 24, sheets 28), pills for every control;
-   - the glance as a deep ink block of figures, and a floating dark bar that keeps Resume in reach.
+   - the glance as a deep ink block with its figures on light cards, and a floating dark bar that keeps Resume in reach.
    Left out on purpose: the reference's gradient headline and iridescent renders (off-brand).
    Switched on by html[data-direction="studio"] (Profile menu > Studio look, or ?direction=studio).
    Light and dark (dark since 22 Oct 2026, Nelson): a cool neutral night, not SKO Dark's teal one.
@@ -193,25 +193,22 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
   background-color: var(--color-bg-faint);
 }
 
-/* The glance becomes a deep ink block of figures: the stat cards dissolve into columns, the two
-   decorative circles go (they only made sense on the light card). */
+/* The glance (Today-at-a-glance 1.5, Nelson 22 Oct 2026), in Studio's terms: the same structure as
+   SKO (a dark block, the four figures on their own light cards, the soft glows) with Studio's
+   ink for the block, no border, the cards as Studio surfaces (soft shadow, radius by the nesting
+   rule: 20 inside the block) and Studio's type. The two hard circles go: Studio is flat and calm;
+   the blurred glows stay. Light and dark: in dark the cards are Studio Dark's surface. */
 [data-direction="studio"] [data-glance] {
-  --color-bg-primary-soft: #13282f;
-  --color-border-primary-muted: transparent;
-  --color-bg-page: transparent;
-  --color-text-default: #ffffff;
-  --color-text-muted: #d5dee3;
-  --color-text-subtle: #b4c2ca;
-  --color-text-on-primary-soft: #ffffff;
-  --color-text-success: #7fdba5;
-  --color-bg-muted: #23414b;
-  --color-bg-warning-soft: #3d3215;
-  --color-text-warning: #f9d27a;
-  --color-shadow-default: transparent;
   border-color: transparent;
 }
-[data-direction="studio"] [data-glance] [data-glow] {
+[data-direction="studio"] [data-glance-backdrop] {
+  background-color: #13282f;
+}
+[data-direction="studio"] [data-glance] [data-glow]:not([class*="blur"]) {
   display: none;
+}
+[data-direction="studio"] [data-glance] .shadow-sk-card {
+  box-shadow: var(--sk-shadow-studio);
 }
 
 /* The floating bar that keeps Resume in reach (StudioResumeBar): ink glass, like the reference's
