@@ -10,11 +10,12 @@ import { cn } from "@/lib/utils";
  * text/default when Upcoming, over label-small/Semibold text/subtle. Content: title
  * body-medium/Semibold, meta body-small/Regular text/subtle, gap 2. Status: DS Badge
  * Soft sm Warning ("Due …"). Gap 12, padding 16 / 20 (16 / 16 on
- * mobile), a 1px border/subtle rule below every item but the last.
+ * mobile), a 1px border/subtle rule below every item but the last; Shadows/shadow-card (v1.1,
+ * Nelson, 22 Oct 2026).
  */
 export function DueItem({ day, when, urgency, title, meta, status, href }: Omit<DashboardDueItem, "id">) {
   return (
-    <li className="relative flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5">
+    <li className="relative flex items-start gap-3 border-b border-sko-border-subtle p-4 shadow-sk-card last:border-b-0 md:px-5">
       <div className="flex w-[60px] shrink-0 flex-col">
         <span
           className={cn(
