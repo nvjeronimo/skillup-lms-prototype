@@ -15,6 +15,8 @@ export interface TopicFooterNavProps {
   milestone?: Milestone;
   previousDisabled?: boolean;
   nextDisabled?: boolean;
+  /** The current topic is complete: Next turns Brand/Primary. */
+  topicComplete?: boolean;
   onPrevious?: () => void;
   onNext?: () => void;
   /** Mobile (≤768): title hidden, milestone captions hidden. */
@@ -46,6 +48,7 @@ export function TopicFooterNav({
   nextDisabled = false,
   onPrevious,
   onNext,
+  topicComplete = false,
   compact = false,
   className,
 }: TopicFooterNavProps) {
@@ -108,6 +111,7 @@ export function TopicFooterNav({
           size="sm"
           compact={compact}
           disabled={nextDisabled}
+          topicComplete={topicComplete}
           onClick={onNext}
         />
       </div>
