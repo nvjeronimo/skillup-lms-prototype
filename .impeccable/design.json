@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-22T13:31:57.793367+00:00",
+  "title": "Design System: SkillUp LMS",
+  "extensions": {
+    "colorMeta": {
+      "primary-teal": {
+        "role": "primary",
+        "displayName": "Primary Teal",
+        "canonical": "#26708e",
+        "tonalRamp": [
+          "#10303c",
+          "#1b4f65",
+          "#266f8d",
+          "#308fb5",
+          "#5eb2d4",
+          "#9acfe4",
+          "#cfe8f2",
+          "#ebf5fa"
+        ]
+      },
+      "primary-ink": {
+        "role": "primary",
+        "displayName": "Primary Ink",
+        "canonical": "#215477",
+        "tonalRamp": [
+          "#112a3c",
+          "#1c4664",
+          "#27638c",
+          "#327fb4",
+          "#5fa4d3",
+          "#9bc6e3",
+          "#cfe4f2",
+          "#ebf4f9"
+        ]
+      },
+      "primary-mist": {
+        "role": "primary",
+        "displayName": "Primary Mist",
+        "canonical": "#ebf8ff",
+        "tonalRamp": [
+          "#00324c",
+          "#005380",
+          "#0074b2",
+          "#0095e6",
+          "#33b8ff",
+          "#80d2ff",
+          "#c2eaff",
+          "#e5f6ff"
+        ]
+      },
+      "deep-teal": {
+        "role": "primary",
+        "displayName": "Deep Teal",
+        "canonical": "#044150",
+        "tonalRamp": [
+          "#043b49",
+          "#066379",
+          "#088aaa",
+          "#0bb2db",
+          "#3dd1f5",
+          "#86e2f9",
+          "#c5f1fc",
+          "#e7f9fe"
+        ]
+      },
+      "spark-yellow": {
+        "role": "secondary",
+        "displayName": "Spark Yellow",
+        "canonical": "#f9c654",
+        "tonalRamp": [
+          "#4a3403",
+          "#7b5604",
+          "#ac7906",
+          "#de9c08",
+          "#f8bd3a",
+          "#fbd684",
+          "#fdebc4",
+          "#fef7e6"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#13282f",
+        "tonalRamp": [
+          "#162e36",
+          "#254d5b",
+          "#336c7f",
+          "#428ba3",
+          "#6eafc4",
+          "#a4cdda",
+          "#d3e7ed",
+          "#edf5f8"
+        ]
+      },
+      "slate": {
+        "role": "neutral",
+        "displayName": "Slate",
+        "canonical": "#39414c",
+        "tonalRamp": [
+          "#21252c",
+          "#373e49",
+          "#4c5766",
+          "#627083",
+          "#8a97a8",
+          "#b6bec8",
+          "#dce0e5",
+          "#f0f2f4"
+        ]
+      },
+      "slate-soft": {
+        "role": "neutral",
+        "displayName": "Slate Soft",
+        "canonical": "#4f5b69",
+        "tonalRamp": [
+          "#21262c",
+          "#373f49",
+          "#4d5866",
+          "#637283",
+          "#8b98a7",
+          "#b6bfc8",
+          "#dce0e5",
+          "#f0f2f4"
+        ]
+      },
+      "slate-placeholder": {
+        "role": "neutral",
+        "displayName": "Slate Placeholder",
+        "canonical": "#606b7a",
+        "tonalRamp": [
+          "#22262b",
+          "#383f47",
+          "#4f5864",
+          "#657180",
+          "#8d97a5",
+          "#b8bec7",
+          "#dde0e4",
+          "#f1f2f4"
+        ]
+      },
+      "disabled-grey": {
+        "role": "neutral",
+        "displayName": "Disabled Grey",
+        "canonical": "#8995a6",
+        "tonalRamp": [
+          "#21252c",
+          "#373e49",
+          "#4d5766",
+          "#637083",
+          "#8b97a7",
+          "#b6bec8",
+          "#dce0e5",
+          "#f0f2f4"
+        ]
+      },
+      "page": {
+        "role": "neutral",
+        "displayName": "Page",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#999999",
+          "#bfbfbf",
+          "#e0e0e0",
+          "#f2f2f2"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f8f9fa",
+        "tonalRamp": [
+          "#20262d",
+          "#35404a",
+          "#4a5968",
+          "#607386",
+          "#8899aa",
+          "#b5bfca",
+          "#dbe0e5",
+          "#f0f2f4"
+        ]
+      },
+      "mist-grey": {
+        "role": "neutral",
+        "displayName": "Mist Grey",
+        "canonical": "#f3f5fa",
+        "tonalRamp": [
+          "#162036",
+          "#25355a",
+          "#344a7e",
+          "#435fa2",
+          "#6f87c3",
+          "#a5b4da",
+          "#d4dbed",
+          "#edf0f8"
+        ]
+      },
+      "track-grey": {
+        "role": "neutral",
+        "displayName": "Track Grey",
+        "canonical": "#e1e7ec",
+        "tonalRamp": [
+          "#1e272f",
+          "#31414e",
+          "#455b6d",
+          "#59758d",
+          "#829bb0",
+          "#b1c1ce",
+          "#dae1e7",
+          "#eff3f5"
+        ]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Steel",
+        "canonical": "#b9c4ce",
+        "tonalRamp": [
+          "#1f272d",
+          "#34404b",
+          "#4a5a69",
+          "#5e7487",
+          "#879aab",
+          "#b4c0ca",
+          "#dbe1e6",
+          "#f0f2f4"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#d5dce2",
+        "tonalRamp": [
+          "#1f272d",
+          "#34414b",
+          "#495b6a",
+          "#5e7488",
+          "#869aac",
+          "#b4c0cb",
+          "#dbe1e6",
+          "#f0f2f5"
+        ]
+      },
+      "border-grey": {
+        "role": "neutral",
+        "displayName": "Border Grey",
+        "canonical": "#8995a6",
+        "tonalRamp": [
+          "#21252c",
+          "#373e49",
+          "#4d5766",
+          "#637083",
+          "#8b97a7",
+          "#b6bec8",
+          "#dce0e5",
+          "#f0f2f4"
+        ]
+      },
+      "success-green": {
+        "role": "status",
+        "displayName": "Success Green",
+        "canonical": "#1f7643",
+        "tonalRamp": [
+          "#103d22",
+          "#1b6539",
+          "#258d50",
+          "#30b667",
+          "#5dd58f",
+          "#9ae4b9",
+          "#cff2dd",
+          "#ebfaf1"
+        ]
+      },
+      "success-mint": {
+        "role": "status",
+        "displayName": "Success Mint",
+        "canonical": "#e4fced",
+        "tonalRamp": [
+          "#08451f",
+          "#0d7333",
+          "#12a147",
+          "#17cf5c",
+          "#47eb85",
+          "#8cf2b2",
+          "#c8f9da",
+          "#e8fcf0"
+        ]
+      },
+      "warning-cream": {
+        "role": "status",
+        "displayName": "Warning Cream",
+        "canonical": "#fff9eb",
+        "tonalRamp": [
+          "#4c3600",
+          "#805900",
+          "#b27d00",
+          "#e6a100",
+          "#ffc233",
+          "#ffd980",
+          "#ffedc2",
+          "#fff7e5"
+        ]
+      },
+      "warning-ochre": {
+        "role": "status",
+        "displayName": "Warning Ochre",
+        "canonical": "#85580e",
+        "tonalRamp": [
+          "#452e07",
+          "#734c0c",
+          "#a16b11",
+          "#d08916",
+          "#ecad46",
+          "#f3cc8c",
+          "#f9e6c8",
+          "#fdf5e8"
+        ]
+      },
+      "error-red": {
+        "role": "status",
+        "displayName": "Error Red",
+        "canonical": "#da3336",
+        "tonalRamp": [
+          "#410c0d",
+          "#6c1415",
+          "#971b1e",
+          "#c22326",
+          "#e05255",
+          "#eb9395",
+          "#f6cbcc",
+          "#fbe9ea"
+        ]
+      },
+      "error-text": {
+        "role": "status",
+        "displayName": "Error Text",
+        "canonical": "#b62226",
+        "tonalRamp": [
+          "#400c0d",
+          "#6b1416",
+          "#961c1f",
+          "#c12428",
+          "#df5357",
+          "#eb9496",
+          "#f5cbcd",
+          "#fbeaea"
+        ]
+      },
+      "error-blush": {
+        "role": "status",
+        "displayName": "Error Blush",
+        "canonical": "#fce8e8",
+        "tonalRamp": [
+          "#440909",
+          "#710f0f",
+          "#9e1515",
+          "#cb1a1a",
+          "#e74b4b",
+          "#f08e8e",
+          "#f8c9c9",
+          "#fce8e8"
+        ]
+      },
+      "info-blue": {
+        "role": "status",
+        "displayName": "Info Blue",
+        "canonical": "#0086c9",
+        "tonalRamp": [
+          "#00334c",
+          "#005580",
+          "#0077b2",
+          "#0099e6",
+          "#33bbff",
+          "#80d5ff",
+          "#c2ebff",
+          "#e5f6ff"
+        ]
+      },
+      "info-sky": {
+        "role": "status",
+        "displayName": "Info Sky",
+        "canonical": "#acd5f4",
+        "tonalRamp": [
+          "#092a44",
+          "#0f4771",
+          "#15639e",
+          "#1b7fcb",
+          "#4ba4e7",
+          "#8ec6f0",
+          "#c9e4f8",
+          "#e8f4fc"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The one hero figure on a platform page (72/90, 60/72 tablet, 48/60 phone)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles (36/44, 30/38 tablet, 24/32 phone)."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles and course names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Content and primary list text."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Button labels (semibold) and secondary lines."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase eyebrows and stat labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-hint",
+        "value": "0 2px 6px -4px #1f233e0d",
+        "purpose": "Resting cards in SKO."
+      },
+      {
+        "name": "floating",
+        "value": "0 2px 4px -2px #0a0d120f, 0 4px 6px -1px #0a0d121a",
+        "purpose": "Menus and flyouts over the page (DS Elevation/level3)."
+      },
+      {
+        "name": "sea-card",
+        "value": "0 1px 2px #0441500d, 0 6px 20px -4px #0441501f",
+        "purpose": "Cards, panels and menus in the Sea skin, replacing borders."
+      }
+    ],
+    "motion": [
+      {
+        "name": "duration-short2",
+        "value": "100ms",
+        "purpose": "Tiny state changes."
+      },
+      {
+        "name": "duration-short3",
+        "value": "150ms",
+        "purpose": "Hover and colour transitions."
+      },
+      {
+        "name": "duration-short4",
+        "value": "200ms",
+        "purpose": "Tab indicator slide."
+      },
+      {
+        "name": "duration-medium2",
+        "value": "300ms",
+        "purpose": "Panels and enter motions."
+      },
+      {
+        "name": "duration-long2",
+        "value": "500ms",
+        "purpose": "Arrival sequences."
+      },
+      {
+        "name": "easing-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing."
+      },
+      {
+        "name": "easing-standard-decelerate",
+        "value": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "purpose": "Things entering."
+      },
+      {
+        "name": "easing-standard-accelerate",
+        "value": "cubic-bezier(0.55, 0, 1, 0.45)",
+        "purpose": "Things leaving."
+      },
+      {
+        "name": "easing-emphasized",
+        "value": "cubic-bezier(0.34, 1.3, 0.64, 1)",
+        "purpose": "Small celebratory overshoot."
+      },
+      {
+        "name": "distance-nudge",
+        "value": "4px",
+        "purpose": "Card rise on arrival; 0 under reduced motion."
+      },
+      {
+        "name": "distance-enter",
+        "value": "8px",
+        "purpose": "Enter travel."
+      },
+      {
+        "name": "distance-surface",
+        "value": "16px",
+        "purpose": "Panels and sheets."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "768px"
+      },
+      {
+        "name": "tablet",
+        "value": "1024px"
+      },
+      {
+        "name": "desktop",
+        "value": "1025px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action in an area (Resume, Start, Submit).",
+      "html": "<button class=\"ds-btn-primary\">Resume course</button>",
+      "css": ".ds-btn-primary{font-family:var(--sk-font-body,Montserrat,system-ui,sans-serif);font-weight:600;font-size:14px;line-height:20px;height:44px;padding:0 12px;border:0;border-radius:6px;background:var(--color-bg-primary,#26708e);color:var(--color-text-on-primary,#fff);cursor:pointer;transition:background-color 150ms cubic-bezier(.4,0,.2,1),color 150ms cubic-bezier(.4,0,.2,1)}.ds-btn-primary:hover{background:var(--color-bg-primary-hover,#f9c654);color:var(--color-text-on-primary-hover,#044150)}.ds-btn-primary:focus-visible{outline:2px solid var(--color-border-primary,#26708e);outline-offset:2px;box-shadow:0 0 0 2px #fff}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting actions beside a primary, and card actions.",
+      "html": "<button class=\"ds-btn-secondary\">Download</button>",
+      "css": ".ds-btn-secondary{font-family:var(--sk-font-body,Montserrat,system-ui,sans-serif);font-weight:600;font-size:14px;line-height:20px;height:44px;padding:0 12px;border:0;border-radius:6px;background:var(--color-bg-page,#fff);color:var(--color-text-primary,#215477);box-shadow:inset 0 0 0 1px var(--color-border-primary,#26708e);cursor:pointer;transition:background-color 150ms}.ds-btn-secondary:hover{background:var(--color-bg-primary-soft,#ebf8ff)}.ds-btn-secondary:focus-visible{outline:2px solid var(--color-border-primary,#26708e);outline-offset:2px}"
+    },
+    {
+      "name": "Tertiary Button",
+      "kind": "button",
+      "refersTo": "button-tertiary",
+      "description": "Low-emphasis actions; neutral hover on Track Grey.",
+      "html": "<button class=\"ds-btn-tertiary\">View calendar</button>",
+      "css": ".ds-btn-tertiary{font-family:var(--sk-font-body,Montserrat,system-ui,sans-serif);font-weight:600;font-size:14px;line-height:20px;height:44px;padding:0 12px;border:0;border-radius:6px;background:var(--color-bg-page,#fff);color:var(--color-text-primary,#215477);cursor:pointer;transition:background-color 150ms}.ds-btn-tertiary:hover{background:var(--color-bg-hover,#e1e7ec)}.ds-btn-tertiary:focus-visible{outline:2px solid var(--color-border-primary,#26708e);outline-offset:2px}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "DS Input field sm with a leading search icon.",
+      "html": "<label class=\"ds-input-search\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input type=\"search\" placeholder=\"Search certificates\"></label>",
+      "css": ".ds-input-search{display:flex;align-items:center;gap:8px;height:40px;width:320px;padding:0 12px;border:1px solid var(--color-border-default,#8995a6);border-radius:6px;background:var(--color-bg-page,#fff);color:var(--color-icon-subtle,#4f5b69);box-shadow:0 1px 2px #1018280d}.ds-input-search:focus-within{border-color:var(--color-border-primary,#26708e);box-shadow:0 0 0 1px var(--color-border-primary,#26708e)}.ds-input-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:var(--sk-font-body,Montserrat,system-ui,sans-serif);font-size:16px;line-height:24px;color:var(--color-text-default,#13282f)}.ds-input-search input::placeholder{color:var(--color-text-placeholder,#606b7a)}"
+    },
+    {
+      "name": "Underline Tabs",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "DS Horizontal tabs, Underline, with count badges; selected tab carries the teal bar.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button role=\"tab\" aria-selected=\"false\">In progress <span class=\"ds-count\">5</span></button><button role=\"tab\" aria-selected=\"true\">Earned <span class=\"ds-count ds-count-on\">8</span></button></div>",
+      "css": ".ds-tabs{display:flex;gap:12px;box-shadow:inset 0 -1px 0 var(--color-border-subtle,#d5dce2)}.ds-tabs button{position:relative;display:flex;align-items:center;gap:8px;padding:12px 4px;border:0;background:none;font-family:var(--sk-font-body,Montserrat,system-ui,sans-serif);font-weight:600;font-size:16px;line-height:24px;color:var(--color-text-subtle,#4f5b69);cursor:pointer}.ds-tabs button:hover{color:var(--color-text-default,#13282f)}.ds-tabs button[aria-selected=true]{color:var(--color-text-primary,#215477)}.ds-tabs button[aria-selected=true]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px 2px 0 0;background:var(--color-bg-primary,#26708e)}.ds-count{padding:2px 10px;border-radius:9999px;font-size:14px;line-height:20px;font-weight:500;background:var(--color-bg-muted,#e1e7ec);color:var(--color-text-muted,#39414c)}.ds-count-on{background:var(--color-bg-primary,#26708e);color:#fff}.ds-tabs button:focus-visible{outline:2px solid var(--color-border-primary,#26708e);outline-offset:-2px}"
+    },
+    {
+      "name": "Gray Soft Badge",
+      "kind": "chip",
+      "refersTo": "badge-gray",
+      "description": "Neutral status and goal badges, e.g. '32% completed'.",
+      "html": "<span class=\"ds-badge-gray\">32% completed</span> <span class=\"ds-badge-warning\">3 due this week</span>",
+      "css": ".ds-badge-gray,.ds-badge-warning{display:inline-flex;align-items:center;height:22px;padding:2px 8px;border-radius:9999px;font-family:var(--sk-font-body,Montserrat,system-ui,sans-serif);font-weight:500;font-size:12px;line-height:18px}.ds-badge-gray{background:var(--color-bg-muted,#e1e7ec);color:var(--color-text-muted,#39414c)}.ds-badge-warning{background:var(--color-bg-warning-soft,#fff9eb);color:var(--color-text-warning,#85580e)}"
+    },
+    {
+      "name": "Course Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A card on Page over the Paper ground, hairline border, progress in Info Blue.",
+      "html": "<article class=\"ds-card\"><p class=\"ds-eyebrow\">Course certificate</p><h3>UX Research and Design Thinking</h3><div class=\"ds-track\"><div class=\"ds-fill\"></div></div><p class=\"ds-meta\">5% of the course complete</p></article>",
+      "css": ".ds-card{width:300px;padding:16px;border:1px solid var(--color-border-subtle,#d5dce2);border-radius:12px;background:var(--color-bg-page,#fff);box-shadow:0 2px 6px -4px #1f233e0d;font-family:var(--sk-font-body,Montserrat,system-ui,sans-serif);transition:border-color 150ms}.ds-card:hover{border-color:var(--color-border-default,#8995a6)}.ds-eyebrow{margin:0 0 2px;font-size:12px;line-height:18px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--color-text-subtle,#4f5b69)}.ds-card h3{margin:0 0 8px;font-size:16px;line-height:24px;font-weight:600;color:var(--color-text-default,#13282f)}.ds-track{height:8px;background:var(--color-bg-muted,#e1e7ec)}.ds-fill{width:5%;min-width:6px;height:100%;background:var(--color-bg-info,#0086c9)}.ds-meta{margin:4px 0 0;font-size:12px;line-height:18px;color:var(--color-text-subtle,#4f5b69)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Course Atlas",
+    "overview": "Every screen is a map of the learner's journey: where they are, how far they have come, and the one next step. Structure is the design. Program, course, module and topic nest in a fixed order; progress bars, step markers and dates are the landmarks; the page around them stays quiet so the landmarks read at a glance. The same map serves the platform pages (Dashboard, My Learning, course and program pages, Calendar) and the player, where the content itself takes the space and the chrome recedes.\n\nThe atlas is printed for many partners. A skin changes the brand colours (SKO teal, Gold, Red, and the Sea proposal), never the structure, the components or the type. Light and dark themes, a colour-vision-safe mode and a text scale up to 130 % sit on top of every skin, and each combination holds WCAG 2.2 AA. Density is moderate: generous 44 px targets on phones, 16 px card padding, one content column of 1200 px on desktop.\n\nComponents are firm and welcoming: large, honest targets, direct labels, and one small moment of warmth, the yellow spark that the primary button turns to on hover. Depth is light and hybrid: the default skin separates surfaces with hairline borders and tonal steps; the Sea skin trades those borders for a soft teal shadow. Gradients are off-brand everywhere.",
+    "keyCharacteristics": [
+      "Role tokens only: every colour, radius and type style comes from a DS role, never a raw value.",
+      "One accent at a time: teal for action and position, yellow only as the hover spark and for warnings.",
+      "Progress is blue; green means done, and comes with an icon and a word.",
+      "Radius by what an element is, not by its size, with the nesting rule inner + padding = outer.",
+      "The same content on desktop, tablet and phone; layouts change, content does not hide."
+    ],
+    "rules": [
+      {
+        "name": "The Role Token Rule",
+        "body": "No raw hex in a component. Every colour is a `--color-*` role (`bg-sko-*`, `text-sko-*`, `border-sko-*`), so a skin, theme or vision mode can re-point it. The token lint (`pnpm lint:tokens`) fails the build otherwise.",
+        "section": "colors"
+      },
+      {
+        "name": "The Blue Progress, Green Done Rule",
+        "body": "A progress fill is Info Blue while it runs. Green appears only when something is complete, always with a check icon and a word, never by colour alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Spark Rule",
+        "body": "Spark Yellow is the primary button's hover and the warning colour; it is not a decorative accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Twelve Pixel Floor Rule",
+        "body": "No text below 12 px, at any skin or breakpoint.",
+        "section": "typography"
+      },
+      {
+        "name": "The Style Class Rule",
+        "body": "Text uses a `.sk-text-{style}-{weight}` class from the DS ramp; components never set font-size or font-weight inline. Every size multiplies by `--sk-font-scale` (100 / 115 / 130 %).",
+        "section": "typography"
+      },
+      {
+        "name": "The Content Parity Rule",
+        "body": "What a learner sees on desktop is there on tablet and phone. A layout reflows, scrolls sideways or stacks; it never hides content to fit.",
+        "section": "layout"
+      },
+      {
+        "name": "The Borders For Controls Rule",
+        "body": "Inputs, selects and toggles keep a visible border in every skin (3:1 non-text contrast); only containers may trade a border for a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No Gradient Rule",
+        "body": "Fills are flat. The one exception is the assistant launcher's rotating ring.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Nesting Rule",
+        "body": "An element inside a rounded container, closer to its edge than the container's radius, gets outer − padding; never less than its own role. Elements further in keep their own role.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do use a DS role token for every colour, radius and type style (`bg-sko-*`, `rounded-control`, `.sk-text-body-medium-semibold`).",
+      "Do keep one primary button per area; Resume, Start, Submit are primary, the rest secondary or tertiary.",
+      "Do make every interactive target at least 44 × 44 px on phones.",
+      "Do fill progress with Info Blue and show completion with Success Green plus an icon and a word.",
+      "Do pick a radius by what the element is, and apply inner + padding = outer when nesting.",
+      "Do check every new screen in all skins, light and dark, the CVD mode and 130 % text."
+    ],
+    "donts": [
+      "Don't write a raw hex, px font size or arbitrary radius in a component; the token lint will fail it.",
+      "Don't use gradients; the assistant launcher's ring is the only exception.",
+      "Don't colour progress green before it is complete, or signal any state by colour alone.",
+      "Don't set text below 12 px.",
+      "Don't hide content on smaller screens to make a layout fit.",
+      "Don't give buttons a fixed width.",
+      "Don't add italic text styles; the DS has none."
+    ]
+  }
+}
