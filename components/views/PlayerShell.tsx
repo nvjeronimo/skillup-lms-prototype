@@ -32,7 +32,7 @@ import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
-import { CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
+import { CONTENT_MEASURE, CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { useSheetDrag } from "@/lib/useSheetDrag";
@@ -216,8 +216,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const isLocked = Boolean(topic.locked);
 
 
-  // Sticky video heights per viewport (DS Phase-1 §0): full hero → docked band.
-  const VIDEO_FULL = { mobile: 211, tablet: 315, desktop: 405 } as const;
+  // Sticky video heights per viewport (DS Phase-1 §0): full hero → docked band. From tablet up the
+  // player opens at half the viewport and docks only once the learner scrolls to the transcript
+  // (Nelson, 22 Oct 2026), never taller than the 16:9 picture at its width (56.25cqi of the band,
+  // which is a size container): a portrait tablet would otherwise show a player taller than wide.
+  // On a phone it stays 16:9.
+  const VIDEO_FULL = { mobile: 211, tablet: "min(50dvh, 56.25cqi)", desktop: "min(50dvh, 56.25cqi)" } as const;
   const VIDEO_DOCK = { mobile: 160, tablet: 180, desktop: 240 } as const;
   const videoHeight = videoDocked ? VIDEO_DOCK[bp] : VIDEO_FULL[bp];
 
@@ -493,7 +497,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             ) : null}
             <div data-arrival-content="">
             {isLocked ? (
-              <div data-arrive={0} className={cn("w-full", CONTENT_PAD[bp])}>{children}</div>
+              <div data-arrive={0} className={cn(CONTENT_PAD[bp], CONTENT_MEASURE)}>{children}</div>
             ) : isVideo ? (
               <>
                 {/* Sticky player band — the video stays visible at the top and
@@ -501,7 +505,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 <div
                   data-arrive={0}
                   className={cn(
-                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate",
+                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate [container-type:inline-size]",
                     videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
                   )}
                 >
@@ -546,7 +550,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   />
                 </div>
                 {showResume ? (
-                  <div className={cn(CONTENT_PX[bp], "pb-1 pt-1")}>
+                  <div className={cn(CONTENT_PX[bp], CONTENT_MEASURE, "pb-1 pt-1")}>
                     <ResumeBanner
                       seconds={storedResume}
                       onResume={() => {
@@ -563,7 +567,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     />
                   </div>
                 ) : null}
-                <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp])}>
+                <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp], CONTENT_MEASURE)}>
                   {/* Topic title below the player (ICP Phase 1 canonical layout).
                       The top-right action is hidden on mobile — it lives only at
                       the end of the content there. */}
@@ -593,7 +597,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 </div>
               </>
             ) : (
-              <div className={cn("w-full", CONTENT_PAD[bp])}>
+              <div className={cn(CONTENT_PAD[bp], CONTENT_MEASURE)}>
                 {/* Completion action lives on the meta row (right-aligned), so the
                     title keeps the full content width. */}
                 {/* Phase 1 quiz handoff §7: on a quiz the header carries title,

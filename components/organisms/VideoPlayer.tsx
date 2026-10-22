@@ -67,8 +67,9 @@ export interface VideoPlayerProps {
   state?: VideoState;
   onRetry?: () => void;
   onReplay?: () => void;
-  /** Explicit pixel height (sticky docking). Animates between full + docked heights. */
-  heightPx?: number;
+  /** Explicit height (sticky docking): pixels, or a CSS length such as "50dvh". Animates between
+   *  the full and docked heights. */
+  heightPx?: number | string;
   /** Docked (scrolled) treatment: drop shadow + bottom-only corners. */
   docked?: boolean;
   /**
@@ -381,7 +382,7 @@ export function VideoPlayer({
         // inside it, so a player wider than 16:9 shows the ground on both sides.
         "relative w-full overflow-hidden bg-sko-bg-subtle transition-[height,border-radius,box-shadow] duration-short4 ease-standard-decelerate",
         (size === "auto" || size === "md") && "[container-type:inline-size]",
-        // Explicit pixel height drives the sticky full→docked shrink; otherwise
+        // An explicit height drives the sticky full→docked shrink; otherwise
         // fall back to a capped 16:9 band (Storybook / non-sticky usage).
         heightPx ? "" : "aspect-video max-h-[34vh]",
         // Docked treatment: square top, rounded bottom (it's flush to the top).
