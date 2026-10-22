@@ -13,7 +13,8 @@ import { cn } from "@/lib/utils";
  * The image is decorative (the course title is next to it), so it has no text alternative.
  * `cover` (22 Oct 2026, Nelson: the picture large on course cards and module rows): no radius of
  * its own (the card clips it), larger initials, and the picture eases in a little when the
- * card is hovered (`group` on the card; hover only exists on devices that hover).
+ * card is hovered (`group` on the card; hover only exists on devices that hover): `.sk-cover-zoom`,
+ * 1.02 over long2, in app/globals.css next to the load fade it shares a transition with.
  */
 export function CourseThumb({
   initials,
@@ -48,7 +49,7 @@ export function CourseThumb({
           onError={() => setFailed(true)}
           className={cn(
             "absolute inset-0 size-full object-cover",
-            shape === "cover" && "transition-transform duration-medium2 ease-standard-decelerate group-hover:scale-[1.03]",
+            shape === "cover" && "sk-cover-zoom",
           )}
         />
       ) : null}
