@@ -339,7 +339,7 @@ export const page: CourseDetail = {
             id: "m2",
             from: "mentor",
             author: "Marcus Lee",
-            label: "STAFF",
+            label: "Staff",
             accepted: true,
             body: "No. You plan campaigns and read reports, and you do not spend anything. The Handouts include a sample account for a small online shop, with three months of search, social and display reports. Every activity, both assignments and the final project use it.",
             time: "last week",

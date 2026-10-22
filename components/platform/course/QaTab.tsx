@@ -58,16 +58,16 @@ function ThreadRow({
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="flex flex-wrap items-start gap-1">
             <Badge variant="outline" color="gray">
-              QUESTION
+              Question
             </Badge>
             {thread.answered ? (
               <Badge variant="outline" color="success">
-                ANSWERED
+                Answered
               </Badge>
             ) : null}
             {thread.following ? (
               <Badge variant="outline" color="gray">
-                FOLLOWING
+                Following
               </Badge>
             ) : null}
           </span>
@@ -103,7 +103,7 @@ function ThreadRow({
 /**
  * DS `LMS/Platform/Course-Detail/Message`. Learner: right-aligned, "You" over a bg/primary
  * bubble (text/on-primary; radius 10, 2 on the bottom right) and the time. Mentor: DS Avatar
- * sm, then the author line — name (body-small/Medium), `author_label` and "ACCEPTED ANSWER"
+ * sm, then the author line — name (body-small/Medium), `author_label` and "Accepted answer" (sentence case, as every Badge: Nelson, 22 Oct 2026)
  * as Badge Outline — over a bg/subtle bubble (radius 10, 2 on the bottom left), the time
  * and "Report". Bubbles hug their text up to 420px; on mobile they fill the column.
  */
@@ -132,7 +132,7 @@ export function Message({ message, report, onReport }: { message: QaMessage; rep
           ) : null}
           {message.accepted ? (
             <Badge variant="outline" color="success">
-              ACCEPTED ANSWER
+              Accepted answer
             </Badge>
           ) : null}
         </p>

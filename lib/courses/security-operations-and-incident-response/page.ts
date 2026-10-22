@@ -297,7 +297,7 @@ export const page: CourseDetail = {
             id: "m2",
             from: "mentor",
             author: "David Chen",
-            label: "STAFF",
+            label: "Staff",
             accepted: true,
             body: "No. You work on exported log extracts and a sample alert queue in a spreadsheet, so no tool license is needed. The aim is the reasoning: what fired, what you checked, what you concluded. That carries over to whichever product you meet later.",
             time: "2 days ago",

@@ -294,7 +294,7 @@ export const page: CourseDetail = {
             id: "m2",
             from: "mentor",
             author: "David Chen",
-            label: "STAFF",
+            label: "Staff",
             accepted: true,
             body: "No. Course 1 assumes you can use a computer and a browser, nothing more. If you want a head start, read the glossary in Handouts and mark the terms you have already met at work.",
             time: "3 days ago",

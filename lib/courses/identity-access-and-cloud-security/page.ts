@@ -297,7 +297,7 @@ export const page: CourseDetail = {
             id: "m2",
             from: "mentor",
             author: "David Chen",
-            label: "STAFF",
+            label: "Staff",
             accepted: true,
             body: "No. The cloud exercises use screenshots and exported settings from a sample account, so there is nothing to sign up for and nothing to pay. If you already have access to a cloud account at work, do not change its settings for this course.",
             time: "yesterday",
