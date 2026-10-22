@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/atoms/Skeleton";
-import { CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
+import { CONTENT_MEASURE, CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
 import type { Breakpoint } from "@/lib/useBreakpoint";
 import { cn } from "@/lib/utils";
 
@@ -43,7 +43,7 @@ export function TopicSkeleton({
 }: {
   bp: Breakpoint;
   video: boolean;
-  videoHeight: number;
+  videoHeight: number | string;
   tabs: boolean;
   /** The header carries the "Marked as completed" badge. */
   completed?: boolean;
@@ -54,10 +54,10 @@ export function TopicSkeleton({
   if (video) {
     return (
       <>
-        <div className={cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3")}>
+        <div className={cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3 [container-type:inline-size]")}>
           <Skeleton variant="block" height={videoHeight} radius="card" />
         </div>
-        <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp])}>
+        <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp], CONTENT_MEASURE)}>
           <Skeleton variant="ghost" text="headline-small-semibold">{title}</Skeleton>
           <div className="mt-4 flex flex-col gap-4">
             {tabs ? <TabsSkeleton bp={bp} /> : null}
@@ -69,7 +69,7 @@ export function TopicSkeleton({
     );
   }
   return (
-    <div className={cn("w-full", CONTENT_PAD[bp])}>
+    <div className={cn(CONTENT_PAD[bp], CONTENT_MEASURE)}>
       <div className="flex flex-col gap-1">
         {/* Type · duration, and the completed badge on the right (it wraps under on a phone). */}
         <div className="flex flex-wrap items-center gap-2">
