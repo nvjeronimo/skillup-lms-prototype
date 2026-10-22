@@ -25,6 +25,7 @@ import { useDialog } from "@/lib/useDialog";
 import { inertProps } from "@/lib/inert";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
+import { useSheetDrag } from "@/lib/useSheetDrag";
 import { cn } from "@/lib/utils";
 
 type Filter = "all" | SearchContentType;
@@ -438,6 +439,8 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
   // while it leaves, inert and click-through. The panel's content is not keyed, so a new
   // result list does not replay the entrance.
   const sheet = useExitTransition(sheetOpen, MOTION_MS.short4);
+  // Pull the search row down to close the phone sheet (Apple, 22 Oct 2026).
+  const sheetDrag = useSheetDrag({ panelRef: sheetRef, axis: "y", dir: 1, onDismiss: () => closeSheet(), enabled: sheetOpen });
   const sheetId = React.useId();
   const popup = useExitTransition(variant === "popup" && search.open, MOTION_MS.short2);
   // While it leaves, the popup draws what it showed when it was open, whatever the close path did.
@@ -496,7 +499,12 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
             {...inertProps(!sheetOpen)}
             className="sk-animate-sheet fixed inset-0 z-[60] flex flex-col bg-sko-bg-page"
           >
-            <form role="search" onSubmit={onSubmit} className="flex items-center gap-3 border-b border-sko-border-subtle p-4">
+            <form
+              role="search"
+              onSubmit={onSubmit}
+              onPointerDown={sheetDrag.onPointerDown}
+              className="flex touch-none items-center gap-3 border-b border-sko-border-subtle p-4"
+            >
               <SearchField
                 value={search.text}
                 onChange={search.change}

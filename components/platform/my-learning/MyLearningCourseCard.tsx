@@ -189,7 +189,7 @@ export function MyLearningCourseCard({
   const inRow = context === "row";
   const surface = inRow ? "" : "rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
   // The card is the target of its title link; a card of its own shows it on hover.
-  const clickable = cn("relative", course.detailHref && !inRow && "transition-colors has-[h3_a:hover]:border-sko-border-default");
+  const clickable = cn("relative", course.detailHref && !inRow && "sk-press-card transition-colors has-[h3_a:hover]:border-sko-border-default");
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${course.cta} ${course.title}`;
   const next = "certificate" in course.upNext ? null : course.upNext;

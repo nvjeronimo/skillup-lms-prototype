@@ -14,7 +14,7 @@ export interface JumpTileProps {
 }
 
 const TILE =
-  "flex h-full w-full flex-col items-start gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 text-left transition-colors hover:border-sko-border-primary";
+  "sk-press-card flex h-full w-full flex-col items-start gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 text-left transition-colors hover:border-sko-border-primary";
 
 /**
  * DS `LMS / Platform / Jump tile` (6382:3302): a shortcut tile ("Jump somewhere"). Icon 20

@@ -532,3 +532,32 @@
 [data-skin="sea"] [data-glance] [data-glance-title] {
   letter-spacing: 0.14em;
 }
+
+/* --- System preferences (Apple-design pass, 22 Oct 2026) -----------------------------------
+   prefers-contrast: more — hairlines and the faintest text step up one role, in every skin and
+   theme (the selector list matches the mode blocks above, and comes last, so it wins).
+   prefers-reduced-transparency: reduce — the translucent media surfaces (the video's big play
+   button and its control tints) become the solid-ish overlay and lose their blur.
+   Roles re-pointed, no new values. */
+@media (prefers-contrast: more) {
+  :root,
+  [data-theme],
+  [data-skin] {
+    --color-border-subtle: var(--color-border-default);
+    --color-text-subtle: var(--color-text-muted);
+    --color-text-placeholder: var(--color-text-muted);
+    --color-icon-subtle: var(--color-icon-muted);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme],
+  [data-skin] {
+    --color-bg-overlay-soft: var(--color-bg-overlay);
+  }
+  *,
+  *::before,
+  *::after {
+    backdrop-filter: none !important;
+  }
+}

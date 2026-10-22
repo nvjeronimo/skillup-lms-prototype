@@ -91,7 +91,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
   const k = KIND[event.kind];
   return (
     <li
-      className={cn("relative", EVENT_ROW)}
+      className={cn("sk-press-card relative", EVENT_ROW)}
       data-mock={event.outOfMvp ? "Live sessions are not in Open edX, and VILT is out of the MVP" : undefined}
     >
       <span aria-hidden className={cn("inline-flex size-10 shrink-0 items-center justify-center rounded-control", k.tile)}>

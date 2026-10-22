@@ -7,6 +7,7 @@ import { FilterChip } from "@/components/atoms/FilterChip";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
+import { useSheetDrag } from "@/lib/useSheetDrag";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { inertProps } from "@/lib/inert";
 
@@ -50,6 +51,10 @@ export function OverlayPanel({
   const dialogRef = useDialog(open, onClose, { initialFocusRef: closeRef });
 
   const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short4);
+  // Swipe the panel back to the right to close it on a touch screen (Apple, 22 Oct 2026).
+  const panelRef = React.useRef<HTMLElement>(null);
+  const backdropRef = React.useRef<HTMLDivElement>(null);
+  const drag = useSheetDrag({ panelRef, backdropRef, axis: "x", dir: 1, onDismiss: onClose, enabled: open });
 
   if (!mounted) return null;
   const closed = state === "closed";
@@ -63,14 +68,16 @@ export function OverlayPanel({
       className={cn("fixed inset-0 z-50", closed && "pointer-events-none")}
     >
       {/* Backdrop — SKO DS light dim + blur (token-bound via .sk-backdrop). */}
-      <div className="sk-backdrop sk-animate-fade sk-backdrop-panel absolute inset-0" onClick={onClose} aria-hidden />
+      <div ref={backdropRef} className="sk-backdrop sk-animate-fade sk-backdrop-panel absolute inset-0" onClick={onClose} aria-hidden />
 
       <aside
+        ref={panelRef}
+        onPointerDown={drag.onPointerDown}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         onAnimationEnd={onAnimationEnd}
-        className="sk-animate-slide-right absolute right-0 top-0 flex h-full w-full flex-col border-l border-sko-border-subtle bg-sko-bg-page md:w-[480px]"
+        className="sk-animate-slide-right absolute right-0 top-0 flex h-full w-full touch-pan-y flex-col border-l border-sko-border-subtle bg-sko-bg-page md:w-[480px]"
       >
         <header className="flex items-center justify-between gap-2 border-b border-sko-border-subtle px-6 py-5">
           <h2 id={titleId} className="sk-text-title-medium-semibold text-sko-text-default">
