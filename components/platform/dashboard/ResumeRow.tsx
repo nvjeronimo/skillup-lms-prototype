@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
+import { CourseThumb } from "@/components/platform/my-learning/CourseThumb";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import type { TopicType } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,9 @@ export interface ResumeRowProps {
   homeHref?: string;
   /** Weight of the action. Secondary, as the DS Resume-Row; `primary` only where a screen asks for it. */
   emphasis?: "primary" | "secondary";
+  /** The course's picture, across the top of the row (22 Oct 2026); the initials until it loads. */
+  imageSrc?: string;
+  initials?: string;
   className?: string;
 }
 
@@ -33,16 +37,19 @@ export interface ResumeRowProps {
  * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
  * opens the course, so it is a link with the button look (atoms/ButtonLink).
  */
-export function ResumeRow({ title, context, next, progressPct, href, homeHref, emphasis = "secondary", className }: ResumeRowProps) {
+export function ResumeRow({ title, context, next, progressPct, href, homeHref, emphasis = "secondary", imageSrc, initials, className }: ResumeRowProps) {
   const subject = context ? `${title}, ${context}` : title;
   return (
     <div
       className={cn(
-        "sk-press-card relative flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4",
+        "sk-press-card group relative flex flex-col gap-3 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-4",
         homeHref && "transition-colors has-[p_a:hover]:border-sko-border-default",
         className,
       )}
     >
+      {initials ? (
+        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-mx-4 -mt-4 mb-1 aspect-[16/7] w-[calc(100%+2rem)]" />
+      ) : null}
       <div className="flex w-full min-w-0 flex-col gap-0.5">
         <div className="flex w-full min-w-0 flex-col">
           {next ? (

@@ -105,6 +105,8 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
                     progressPct={course.progressPct}
                     href={course.href}
                     homeHref={course.homeHref}
+                    imageSrc={course.imageSrc}
+                    initials={course.initials}
                   />
                   <div className="hidden [@container_(min-width:700px)]:block">
                     <CourseRow
@@ -115,6 +117,8 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
                       progressPct={course.progressPct}
                       href={course.href}
                     homeHref={course.homeHref}
+                    imageSrc={course.imageSrc}
+                    initials={course.initials}
                       />
                   </div>
                 </li>
