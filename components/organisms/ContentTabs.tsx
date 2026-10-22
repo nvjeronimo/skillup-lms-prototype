@@ -20,7 +20,10 @@ export interface ContentTabsProps {
   active: TabSlug;
   /** Controls rendered at the right of the tab row (language / download / add note). */
   rightSlot?: React.ReactNode;
-  /** Mobile renders the tab switcher as a dropdown select. */
+  /**
+   * `tabs` everywhere since 22 Oct 2026 (Nelson: the phone keeps the desktop tabs; the row scrolls
+   * sideways if it ever needs to). `select`, the old phone dropdown, is kept but unused.
+   */
   variant?: "tabs" | "select";
   className?: string;
 }

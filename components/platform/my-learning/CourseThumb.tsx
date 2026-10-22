@@ -11,14 +11,19 @@ import { cn } from "@/lib/utils";
  * as the fallback: they show while the image loads and if it fails. The image fades in when it
  * has loaded (FadeImage, motion-matrix §7.9).
  * The image is decorative (the course title is next to it), so it has no text alternative.
+ * `cover` (22 Oct 2026, Nelson: the picture large on course cards and module rows): no radius of
+ * its own (the card clips it), larger initials, and the picture eases in a little when the
+ * card is hovered (`group` on the card; hover only exists on devices that hover).
  */
 export function CourseThumb({
   initials,
   imageSrc,
+  shape = "tile",
   className,
 }: {
   initials: string;
   imageSrc?: string;
+  shape?: "tile" | "cover";
   /** Sets the size: 86 on Grid, 118 on List. */
   className?: string;
 }) {
@@ -27,7 +32,8 @@ export function CourseThumb({
     <span
       aria-hidden="true"
       className={cn(
-        "sk-text-title-large-bold relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-control bg-sko-bg-primary-soft text-sko-text-primary",
+        "relative inline-flex shrink-0 items-center justify-center overflow-hidden bg-sko-bg-primary-soft text-sko-text-primary",
+        shape === "cover" ? "sk-text-headline-medium-bold" : "sk-text-title-large-bold rounded-control",
         className,
       )}
     >
@@ -40,7 +46,10 @@ export function CourseThumb({
           loading="lazy"
           decoding="async"
           onError={() => setFailed(true)}
-          className="absolute inset-0 size-full object-cover"
+          className={cn(
+            "absolute inset-0 size-full object-cover",
+            shape === "cover" && "transition-transform duration-medium2 ease-standard-decelerate group-hover:scale-[1.03]",
+          )}
         />
       ) : null}
     </span>

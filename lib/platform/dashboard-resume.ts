@@ -1,6 +1,7 @@
 import { COURSES as OWN_COURSES } from "@/lib/courses";
 import { flattenOutline } from "@/lib/courses/outline";
 import type { TopicType } from "@/lib/types";
+import { getCatalogCourse } from "./catalog";
 import { getCourseDetailBySlug } from "./course-detail";
 import { dashboardResume, type DashboardResumeCourse } from "./dashboard";
 
@@ -26,9 +27,26 @@ export interface DashboardResumeRow extends DashboardResumeCourse {
   context?: string;
   /** The topic Resume lands on: its type and its length as the outline prints it, above the headline. */
   next?: { type: TopicType; duration?: string };
+  /** The course's own picture (Open edX course_image), shown large on the row (22 Oct 2026). */
+  imageSrc?: string;
+  /** Shown while the picture loads or if it fails. */
+  initials: string;
 }
 
+const initialsOf = (title: string) =>
+  title
+    .split(/\s+/)
+    .filter((w) => /^[A-Za-z]/.test(w))
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+
 function rowOf(course: DashboardResumeCourse): DashboardResumeRow {
+  const picture = { imageSrc: getCatalogCourse(course.slug)?.imageSrc, initials: initialsOf(course.title) };
+  return { ...rowText(course), ...picture };
+}
+
+function rowText(course: DashboardResumeCourse): Omit<DashboardResumeRow, "imageSrc" | "initials"> {
   const page = getCourseDetailBySlug(course.slug);
   const outline = OWN_COURSES.find((c) => c.outline.slug === course.slug)?.outline;
   const active = outline ? flattenOutline(outline).find((t) => t.active) : undefined;

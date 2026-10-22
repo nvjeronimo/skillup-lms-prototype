@@ -172,7 +172,8 @@ function CoursePartners({ course }: { course: MyLearningCourse }) {
     <ul aria-label="Provider and partners" className="flex items-center gap-2">
       {list.map((p) => (
         <li key={p} className="flex">
-          <ProviderBadge value={p} type="logo" />
+          {/* White chip on the course card (Nelson, 22 Oct 2026), as in the page headers. */}
+          <ProviderBadge value={p} type="logo" chip="page" />
         </li>
       ))}
     </ul>
@@ -204,14 +205,11 @@ export function MyLearningCourseCard({
     return (
       // DS Course-Card 1.15 (Nelson, 19 Oct 2026): List min height 146, the height with a two-line title,
       // so a list of one-line titles keeps the same height; the rows of a collection match (useEqualHeights).
-      <article data-card-grid="" className={cn(surface, clickable, "flex min-h-[146px] items-center gap-6 p-4", className)}>
-        {/* DS v1.8: thumb and titles are one group, 12 apart. */}
+      <article data-card-grid="" className={cn(surface, clickable, "group flex min-h-[146px] items-center gap-6 overflow-hidden p-4", className)}>
+        {/* The course picture down the left edge, full height (Nelson, 22 Oct 2026: the picture
+            large); it replaced the 84px thumb. */}
+        <CourseThumb shape="cover" initials={course.initials} imageSrc={course.imageSrc} className="-my-4 -ml-4 w-48 self-stretch" />
         <div className="flex min-w-[298px] flex-1 basis-0 items-center gap-3">
-        <CourseThumb
-          initials={course.initials}
-          imageSrc={course.imageSrc}
-          className="size-[84px] shrink-0"
-        />
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
               16 after the badge (in the grid card it goes to the right end of that line); the
@@ -264,9 +262,17 @@ export function MyLearningCourseCard({
   }
 
   return (
-    <article data-card-grid="" className={cn(surface, clickable, "flex flex-col items-start gap-4 p-4 md:p-5 lg:p-6", className)}>
+    <article data-card-grid="" className={cn(surface, clickable, "group flex flex-col items-start gap-4 overflow-hidden p-4 md:p-5 lg:p-6", className)}>
+      {/* The course picture across the top, edge to edge (Nelson, 22 Oct 2026: the picture large);
+          it replaced the 64px thumb beside the title. */}
+      <CourseThumb
+        shape="cover"
+        initials={course.initials}
+        imageSrc={course.imageSrc}
+        className="-mx-4 -mt-4 aspect-[16/9] w-[calc(100%+2rem)] md:-mx-5 md:-mt-5 md:w-[calc(100%+2.5rem)] lg:-mx-6 lg:-mt-6 lg:w-[calc(100%+3rem)]"
+      />
       {/* DS v1.8 header (Nelson, 15 Oct 2026), gap 12: the Course Type line across the card
-          (provider at its right end), then the 64px thumb beside the title, then the badges.
+          (provider at its right end), then the title, then the badges (the picture is above, 22 Oct 2026).
           In a row of cards stretched to one height, the header takes the extra space and the
           badges sit at its bottom, so badges, progress, footer and action line up at the bottom
           of every card (Nelson, 19 Oct 2026). */}
@@ -275,12 +281,9 @@ export function MyLearningCourseCard({
           <CourseTypeBadge value="Course" />
           <CoursePartners course={course} />
         </div>
-        <div className="flex w-full items-start gap-3">
-          <CourseThumb initials={course.initials} imageSrc={course.imageSrc} className="size-16 shrink-0" />
-          <h3 title={course.title} className={cn("sk-text-title-large-semibold min-h-[2lh] min-w-0 flex-1 text-sko-text-default", TITLE_TWO_LINES)}>
-            <CourseTitle course={course} />
-          </h3>
-        </div>
+        <h3 title={course.title} className={cn("sk-text-title-large-semibold min-h-[2lh] w-full min-w-0 text-sko-text-default", TITLE_TWO_LINES)}>
+          <CourseTitle course={course} />
+        </h3>
         <div className="mt-auto flex flex-wrap items-start gap-2">
           <DifficultyBadge value={course.difficulty} />
           <DeliveryModeBadge value={course.delivery} />

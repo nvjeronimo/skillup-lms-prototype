@@ -6,6 +6,7 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
+import { CourseThumb } from "@/components/platform/my-learning/CourseThumb";
 import type { TopicType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,9 @@ export interface CourseRowProps {
   onClick?: () => void;
   /** Weight of the Resume action (Active). Secondary, as the DS Course-Row; `primary` only where a screen asks for it. */
   emphasis?: "primary" | "secondary";
+  /** The course's picture, down the left edge of the row (22 Oct 2026); the initials until it loads. */
+  imageSrc?: string;
+  initials?: string;
   className?: string;
 }
 
@@ -58,6 +62,8 @@ export function CourseRow({
   homeHref,
   onClick,
   emphasis = "secondary",
+  imageSrc,
+  initials,
   className,
 }: CourseRowProps) {
   // What the controls name: the module and, with it, the course it belongs to.
@@ -68,13 +74,16 @@ export function CourseRow({
         // The DS stroke is inside the 68px row and the CSS border is outside the padding:
         // 19 / 15 + 1 border = the DS 20 / 16.
         // Every state has the same 1px border/subtle stroke in the DS (read 8 Oct 2026).
-        "sk-press-card relative flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page px-[19px] py-[15px] shadow-sk-card",
+        "sk-press-card group relative flex items-center gap-4 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page px-[19px] py-[15px] shadow-sk-card",
         homeHref &&
           state !== "Locked" &&
           "transition-colors has-[span_a:hover]:border-sko-border-default",
         className,
       )}
     >
+      {initials ? (
+        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-my-[15px] -ml-[19px] w-40 self-stretch" />
+      ) : null}
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span className="flex min-w-0 flex-col">

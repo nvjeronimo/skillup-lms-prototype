@@ -580,7 +580,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       <ContentTabs
                         tabs={tabs}
                         active={activeTab}
-                        variant={bp === "mobile" ? "select" : "tabs"}
+                        // Tabs on every breakpoint, as on desktop (Nelson, 22 Oct 2026: no dropdown on phones).
+                        variant="tabs"
                       />
                     ) : null}
                     {/* The transcript tab owns the feedback row, so it receives the action. */}
@@ -616,7 +617,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     <ContentTabs
                       tabs={tabs}
                       active={activeTab}
-                      variant={bp === "mobile" ? "select" : "tabs"}
+                      // Tabs on every breakpoint, as on desktop (Nelson, 22 Oct 2026: no dropdown on phones).
+                      variant="tabs"
                     />
                   ) : null}
                   {children}
