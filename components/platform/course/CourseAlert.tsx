@@ -30,7 +30,7 @@ export interface CourseAlertProps {
   mock?: string;
   /**
    * False makes the alert leave (ShiftDatesAlert after the shift). A dismissed or closed alert
-   * fades and sinks out (short3, standard-accelerate), inert while it goes, then unmounts.
+   * fades and sinks out (short3, standard-decelerate), inert while it goes, then unmounts.
    */
   open?: boolean;
   className?: string;

@@ -97,7 +97,7 @@ export function VideoChromeFooter({
             <ul
               role="listbox"
               data-state={lang.state}
-              onAnimationEnd={lang.onAnimationEnd}
+              onTransitionEnd={lang.onTransitionEnd}
               aria-hidden={!langOpen || undefined}
               {...inertProps(!langOpen)}
               className="sk-animate-menu origin-top-right absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
@@ -145,7 +145,7 @@ export function VideoChromeFooter({
             <ul
               role="menu"
               data-state={dl.state}
-              onAnimationEnd={dl.onAnimationEnd}
+              onTransitionEnd={dl.onTransitionEnd}
               aria-hidden={!dlOpen || undefined}
               {...inertProps(!dlOpen)}
               className="sk-animate-menu origin-top-right absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"

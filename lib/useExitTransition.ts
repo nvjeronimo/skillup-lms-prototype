@@ -19,7 +19,8 @@ export function useFrozenWhileClosed<T>(value: T, open: boolean): T {
 /**
  * Keeps a surface mounted while its exit animation plays.
  * Render only when `mounted`; set `data-state={state}` on the root and `onAnimationEnd`
- * on the element whose animation ends last. `exitMs` is the fallback for when the
+ * on the element whose animation ends last. Surfaces that leave by a CSS transition (menus and
+ * popovers since 22 Oct 2026, interruptible) set `onTransitionEnd` instead: their opacity ends it. `exitMs` is the fallback for when the
  * animation never fires (reduced motion edge cases, display:none).
  */
 export function useExitTransition(
@@ -29,6 +30,7 @@ export function useExitTransition(
   mounted: boolean;
   state: "open" | "closed";
   onAnimationEnd: (e: React.AnimationEvent) => void;
+  onTransitionEnd: (e: React.TransitionEvent) => void;
 } {
   const [presence, dispatch] = React.useReducer(nextPresence, open ? "open" : "unmounted");
 
@@ -45,5 +47,9 @@ export function useExitTransition(
     if (isOwnAnimationEnd(e.target, e.currentTarget)) dispatch("exited");
   }, []);
 
-  return { ...presenceView(open, presence), onAnimationEnd };
+  const onTransitionEnd = React.useCallback((e: React.TransitionEvent) => {
+    if (e.propertyName === "opacity" && isOwnAnimationEnd(e.target, e.currentTarget)) dispatch("exited");
+  }, []);
+
+  return { ...presenceView(open, presence), onAnimationEnd, onTransitionEnd };
 }

@@ -8,6 +8,10 @@ import type { Config } from "tailwindcss";
  * Colour is never hardcoded as hex in components.
  */
 const config: Config = {
+  // hover: styles apply only where the device can hover (Emil Kowalski review, 22 Oct 2026):
+  // on a phone a tap left the hover state on (the primary button stayed yellow, the assistant
+  // launcher stayed at 104 %) until the next tap elsewhere.
+  future: { hoverOnlyWhenSupported: true },
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",

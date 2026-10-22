@@ -319,7 +319,7 @@ export function Sidebar({
         <div
           ref={flyoutRef}
           data-state={flyoutPresence.state}
-          onAnimationEnd={flyoutPresence.onAnimationEnd}
+          onTransitionEnd={flyoutPresence.onTransitionEnd}
           aria-hidden={flyoutClosing || undefined}
           {...inertProps(flyoutClosing)}
           className="sk-animate-flyout fixed z-[70]"

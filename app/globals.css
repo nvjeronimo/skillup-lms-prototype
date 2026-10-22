@@ -120,7 +120,7 @@ button {
   animation: sk-fade-in var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
 }
 
-/* Exit keyframes. Exits are shorter than their entrance, use standard-accelerate, and
+/* Exit keyframes. Exits are shorter than their entrance, use standard-decelerate (an ease-out; since 22 Oct 2026), and
    leave toward where they came from. `data-state="closed"` comes from useExitTransition;
    the class may sit on the root itself or on a descendant (backdrop + panel). */
 @keyframes sk-slide-out-right {
@@ -403,24 +403,24 @@ button {
   }
 }
 .sk-animate-step-next {
-  animation: sk-step-in-next var(--motion-duration-short4) var(--motion-easing-standard);
+  animation: sk-step-in-next var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
 }
 .sk-animate-step-prev {
-  animation: sk-step-in-prev var(--motion-duration-short4) var(--motion-easing-standard);
+  animation: sk-step-in-prev var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
 }
 
 [data-state="closed"].sk-animate-slide-right,
 [data-state="closed"] .sk-animate-slide-right {
-  animation: sk-slide-out-right var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-slide-out-right var(--motion-duration-short4) var(--motion-easing-standard-decelerate) forwards;
 }
 [data-state="closed"].sk-animate-slide-left,
 [data-state="closed"] .sk-animate-slide-left {
-  animation: sk-slide-out-left var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-slide-out-left var(--motion-duration-short4) var(--motion-easing-standard-decelerate) forwards;
 }
 /* A fade leaving is short3, faster than its short4 entrance (R8). */
 [data-state="closed"].sk-animate-fade,
 [data-state="closed"] .sk-animate-fade {
-  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-decelerate) forwards;
 }
 /* Except the backdrop of a panel that slides out (OverlayPanel, the player's drawer): it clears
    with its panel, short4. Same specificity as the rule above and before the reduced-motion
@@ -431,117 +431,81 @@ button {
 /* A short3 fade leaving (the video's caption overlay): short2, on the element itself only, so
    a value fading in inside a closing panel does not vanish ahead of the panel. */
 [data-state="closed"].sk-animate-fade-short3 {
-  animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-decelerate) forwards;
 }
 [data-state="closed"].sk-animate-pop,
 [data-state="closed"] .sk-animate-pop {
-  animation: sk-pop-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-pop-out var(--motion-duration-short3) var(--motion-easing-standard-decelerate) forwards;
 }
 [data-state="closed"].sk-animate-rise,
 [data-state="closed"] .sk-animate-rise {
-  animation: sk-rise-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-rise-out var(--motion-duration-short3) var(--motion-easing-standard-decelerate) forwards;
 }
 [data-state="closed"].sk-animate-sheet,
 [data-state="closed"] .sk-animate-sheet {
-  animation: sk-sheet-out var(--motion-duration-short4) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-sheet-out var(--motion-duration-short4) var(--motion-easing-standard-decelerate) forwards;
 }
 
 /* Menus and popovers (motion block "Popovers & disclosures", 21 Oct 2026): a small panel that
-   grows out of its trigger, 96% → 100% with a nudge (4px) of travel and a fade, short3 in on
-   standard-decelerate; it leaves the same way it came, short2 on standard-accelerate (R8, R10).
-   The trigger side comes from an origin-* utility on the panel (origin-top-right under a
-   right-aligned trigger). `-menu` drops down (starts 4px up); `-menu-up` opens above its
-   trigger (starts 4px down). The flyout is the fade alone, no travel (the rail's Topic-Flyout).
-   A closing panel never takes a click meant for what is under it. */
-@keyframes sk-menu-in {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes sk-menu-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scale(0.96);
-  }
-}
-@keyframes sk-menu-up-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--motion-distance-nudge)) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes sk-menu-up-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: translateY(var(--motion-distance-nudge)) scale(0.96);
-  }
-}
-/* A full-width dropdown (the compact top bar's section menu): no horizontal scale, which would
-   pull its edges in from the screen sides; it settles down by the nudge with a 96% vertical scale. */
-@keyframes sk-menu-y-in {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes sk-menu-y-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
-  }
-}
-.sk-animate-menu-y {
-  animation: sk-menu-y-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
-}
-.sk-animate-menu {
-  animation: sk-menu-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
-}
-.sk-animate-menu-up {
-  animation: sk-menu-up-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
-}
+   grows out of its trigger, 96% → 100% with a nudge (4px) of travel and a fade, short3 in; it
+   leaves the same way it came, short2, both on standard-decelerate (an ease-out). The trigger
+   side comes from an origin-* utility on the panel (origin-top-right under a right-aligned
+   trigger). `-menu` drops down (starts 4px up); `-menu-up` opens above its trigger (starts 4px
+   down); `-menu-y` is the full-width dropdown (vertical scale only, so its edges never pull in
+   from the screen sides); the flyout is the fade alone (the rail's Topic-Flyout).
+   CSS transitions, not keyframes (Emil Kowalski review, 22 Oct 2026): a menu opened and closed
+   quickly turns back from where it is instead of restarting. The entry state is @starting-style;
+   the exit is [data-state="closed"] from useExitTransition, which unmounts on the opacity
+   transitionend. Under reduced motion the global rule keeps only opacity in transition-property,
+   so these panels fade and the scale snaps. A closing panel never takes a click meant for what
+   is under it (below). */
+.sk-animate-menu,
+.sk-animate-menu-up,
+.sk-animate-menu-y,
 .sk-animate-flyout {
-  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
+  transition-property: opacity, transform;
+  transition-duration: var(--motion-duration-short3);
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+}
+@starting-style {
+  .sk-animate-menu {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scale(0.96);
+  }
+  .sk-animate-menu-up {
+    opacity: 0;
+    transform: translateY(var(--motion-distance-nudge)) scale(0.96);
+  }
+  .sk-animate-menu-y {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
+  }
+  .sk-animate-flyout {
+    opacity: 0;
+  }
 }
 [data-state="closed"].sk-animate-menu,
 [data-state="closed"] .sk-animate-menu {
-  animation: sk-menu-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
-}
-[data-state="closed"].sk-animate-menu-y,
-[data-state="closed"] .sk-animate-menu-y {
-  animation: sk-menu-y-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+  opacity: 0;
+  transform: translateY(calc(var(--motion-distance-nudge) * -1)) scale(0.96);
+  transition-duration: var(--motion-duration-short2);
 }
 [data-state="closed"].sk-animate-menu-up,
 [data-state="closed"] .sk-animate-menu-up {
-  animation: sk-menu-up-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+  opacity: 0;
+  transform: translateY(var(--motion-distance-nudge)) scale(0.96);
+  transition-duration: var(--motion-duration-short2);
+}
+[data-state="closed"].sk-animate-menu-y,
+[data-state="closed"] .sk-animate-menu-y {
+  opacity: 0;
+  transform: translateY(calc(var(--motion-distance-nudge) * -1)) scaleY(0.96);
+  transition-duration: var(--motion-duration-short2);
 }
 [data-state="closed"].sk-animate-flyout,
 [data-state="closed"] .sk-animate-flyout {
-  animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
+  opacity: 0;
+  transition-duration: var(--motion-duration-short2);
 }
 [data-state="closed"].sk-animate-menu,
 [data-state="closed"] .sk-animate-menu,
@@ -672,20 +636,7 @@ button {
   .sk-animate-fade {
     animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
   }
-  /* Menus: the fade alone, short3 in / short2 out (the exits below). */
-  .sk-animate-menu,
-  .sk-animate-menu-y,
-  .sk-animate-menu-up {
-    animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
-  }
-  [data-state="closed"].sk-animate-menu,
-  [data-state="closed"] .sk-animate-menu,
-  [data-state="closed"].sk-animate-menu-y,
-  [data-state="closed"] .sk-animate-menu-y,
-  [data-state="closed"].sk-animate-menu-up,
-  [data-state="closed"] .sk-animate-menu-up {
-    animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
-  }
+  /* Menus are transitions (above): the global rule above keeps only their fade. */
   /* Collapse snaps open and shut (no height travel, spec §6); its content fades in (short3). */
   [data-collapse] {
     transition-property: none !important;
@@ -723,7 +674,7 @@ button {
   [data-state="closed"] .sk-animate-sheet,
   [data-state="closed"].sk-animate-fade,
   [data-state="closed"] .sk-animate-fade {
-    animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+    animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-decelerate) forwards;
   }
   /* The check is shown at once, not drawn (its disc still fades in). */
   .sk-draw-check,
@@ -842,20 +793,7 @@ button {
 [data-reduce-motion] .sk-animate-fade {
   animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
 }
-/* Menus: the fade alone, short3 in / short2 out. */
-[data-reduce-motion] .sk-animate-menu,
-[data-reduce-motion] .sk-animate-menu-y,
-[data-reduce-motion] .sk-animate-menu-up {
-  animation: sk-fade-in var(--motion-duration-short3) var(--motion-easing-standard-decelerate);
-}
-[data-reduce-motion] [data-state="closed"].sk-animate-menu,
-[data-reduce-motion] [data-state="closed"] .sk-animate-menu,
-[data-reduce-motion] [data-state="closed"].sk-animate-menu-y,
-[data-reduce-motion] [data-state="closed"] .sk-animate-menu-y,
-[data-reduce-motion] [data-state="closed"].sk-animate-menu-up,
-[data-reduce-motion] [data-state="closed"] .sk-animate-menu-up {
-  animation: sk-fade-out var(--motion-duration-short2) var(--motion-easing-standard-accelerate) forwards;
-}
+/* Menus are transitions: the rule above keeps only their fade. */
 /* Collapse snaps open and shut (no height travel, spec §6); its content fades in (short3). */
 [data-reduce-motion] [data-collapse] {
   transition-property: none !important;
@@ -893,7 +831,7 @@ button {
 [data-reduce-motion] [data-state="closed"] .sk-animate-sheet,
 [data-reduce-motion] [data-state="closed"].sk-animate-fade,
 [data-reduce-motion] [data-state="closed"] .sk-animate-fade {
-  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-accelerate) forwards;
+  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-decelerate) forwards;
 }
 /* The check is shown at once, not drawn (its disc still fades in). */
 [data-reduce-motion] .sk-draw-check,

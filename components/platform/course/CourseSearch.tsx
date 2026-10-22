@@ -549,7 +549,7 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
         <section
           aria-label="Search results"
           data-state={popup.state}
-          onAnimationEnd={popup.onAnimationEnd}
+          onTransitionEnd={popup.onTransitionEnd}
           aria-hidden={!showPopup || undefined}
           {...inertProps(!showPopup)}
           className="sk-animate-menu origin-top-right absolute right-0 top-full z-30 mt-2 flex w-[560px] max-w-[calc(100vw-48px)] flex-col gap-3 rounded-card border border-sko-border-default bg-sko-bg-page p-4 shadow-2xl"
