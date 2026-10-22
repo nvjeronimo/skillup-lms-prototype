@@ -182,7 +182,7 @@ export const content: CourseContent = {
         {
           heading: "Put the request first",
           paragraphs: [
-            "Start with what you need from the reader and by when. “Please approve option B below by Wednesday 17:00 your time” tells the reader at once why they are reading. The background follows for those who need it.",
+            "Start with what you need from the reader and by when. “Please approve option B below by Wednesday 5:00 PM · your time” tells the reader at once why they are reading. The background follows for those who need it.",
             "Most messages are written in the order the writer thought of things: history first, request last. Reverse it. Many readers will act on the first two lines and read no further, and that is a success.",
           ],
         },

@@ -26,7 +26,7 @@ export interface CalendarEvent {
   id: string;
   /** ISO date, local. */
   date: string;
-  /** 24 h, in the learner's zone ("23:59", "16:00"), printed "23:59 · your time"; none for a whole-day date. */
+  /** 24 h, in the learner's zone ("23:59", "16:00"), printed "11:59 PM · your time" (formatTime); none for a whole-day date. */
   time?: string;
   kind: CalendarKind;
   /** Deadlines: the assignment type of the Dates tab ("Graded quiz", "Homework"). Course dates: what the date is, in a word. */

@@ -7,8 +7,8 @@
  * 30 days, so each course keeps the same distance between today and its deadlines.
  *
  * The sample dates are local days, with no time zone: an ISO day ("2026-10-24") is read as that
- * day wherever the page is opened. Times are 24 h in the learner's zone, as the Dates tab prints
- * them ("23:59 · your time").
+ * day wherever the page is opened. Times are stored 24 h in the learner's zone ("23:59") and
+ * printed 12 h with "your time" (Nelson, 22 Oct 2026: "11:59 PM · your time"), see formatTime.
  *
  * This file imports nothing, so course files (lib/courses/README.md) may import it too.
  */
@@ -17,6 +17,12 @@ export const SAMPLE_TODAY = "2026-10-24";
 
 /** The suffix of every time the learner reads, as on the course Dates tab. */
 export const YOUR_TIME = "your time";
+
+/** A stored 24 h time as the learner reads it, 12 h: "23:59" → "11:59 PM", "00:00" → "12:00 AM". */
+export function formatTime(hhmm: string): string {
+  const [h, m] = hhmm.split(":").map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+}
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
