@@ -17,7 +17,6 @@ import { DueItem } from "./DueItem";
 import { GlanceCard } from "./GlanceCard";
 import { JumpTile } from "./JumpTile";
 import { ResumeRow } from "./ResumeRow";
-import { StudioResumeBar } from "./StudioResumeBar";
 
 /**
  * Platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop 6408:72361, tablet
@@ -147,8 +146,6 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           </ul>
         </section>
       </div>
-      {/* "Studio" direction (experimental): the next step stays in reach while the page scrolls. */}
-      <StudioResumeBar course={resume[0]} />
     </PlatformPage>
   );
 }
