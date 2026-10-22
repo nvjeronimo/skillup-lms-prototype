@@ -156,7 +156,7 @@ export function CoursePlayerTopbar({
   const closeIcon = <Icon icon={X} size={24} />;
 
   if (isMobile) {
-    // DS Topbar Size=Mobile (Nelson, 21 Oct 2026): three equal columns. Left: the course menu
+    // DS Topbar Size=Mobile (Nelson, 21 Oct 2026): three equal columns. Left: the Course Journey menu
     // and the progress ring (gap 8). Centre: the SkillUp wordmark (Tiny32H, 24 tall). Right:
     // bookmark, avatar and close (gap 6). No bell and no theme button on a phone: four controls
     // do not fit the right column; the theme switch is in the profile menu.
@@ -169,7 +169,7 @@ export function CoursePlayerTopbar({
       >
         <div className="flex min-w-0 items-center gap-2">
           <UtilityButton
-            label="Open course menu"
+            label="Open Course Journey"
             onClick={onMenu}
             hierarchy="secondary"
             aria-haspopup="dialog"
