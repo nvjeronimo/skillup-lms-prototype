@@ -172,7 +172,8 @@ function CoursePartners({ course }: { course: MyLearningCourse }) {
     <ul aria-label="Provider and partners" className="flex items-center gap-2">
       {list.map((p) => (
         <li key={p} className="flex">
-          <ProviderBadge value={p} type="logo" />
+          {/* White chip on the course card (Nelson, 22 Oct 2026), as in the page headers. */}
+          <ProviderBadge value={p} type="logo" chip="page" />
         </li>
       ))}
     </ul>
