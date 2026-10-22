@@ -42,9 +42,19 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   // Transitions apply it at once. The fade is opacity only, so it stays under reduced motion.
   const appearanceReady = React.useRef(false);
   const applyAppearance = (apply: () => void) => {
-    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
-    if (appearanceReady.current && typeof doc.startViewTransition === "function") doc.startViewTransition(apply);
-    else apply();
+    type Transition = { ready: Promise<void>; finished: Promise<void>; updateCallbackDone: Promise<void> };
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => Transition };
+    if (!appearanceReady.current || typeof doc.startViewTransition !== "function" || document.visibilityState !== "visible") {
+      apply();
+      return;
+    }
+    // A transition the browser skips (a second change before the first painted, a hidden tab)
+    // rejects its promises; the change itself is still applied, so the rejections are expected.
+    const t = doc.startViewTransition(apply);
+    const ignore = () => {};
+    t.ready.catch(ignore);
+    t.finished.catch(ignore);
+    t.updateCallbackDone.catch(ignore);
   };
   React.useEffect(() => {
     applyAppearance(() => {
