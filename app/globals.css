@@ -686,6 +686,21 @@ button {
     opacity: 0.35;
   }
 }
+/* A closed Collapse (components/atoms/Collapse.tsx) stops laying out its content once the rows
+   have shut: clipped to 0, the content still counted toward the page's scroll height, so the
+   last card of a list left a blank band under the page (My Learning on a phone, 22 Oct 2026).
+   The switch waits for the close (medium2), so the content is seen shrinking away; opening shows
+   it at once. Opacity stays in the list for the reduced-motion fade below. */
+.sk-collapse-body {
+  transition-property: opacity, content-visibility;
+  transition-behavior: allow-discrete;
+  transition-duration: 0s;
+}
+[data-collapse="closed"] > .sk-collapse-body {
+  content-visibility: hidden;
+  transition-delay: var(--motion-duration-medium2);
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* Movement goes: no smooth scroll, and only non-moving properties may transition
      (so slides, the docking video and rotating chevrons snap). */
