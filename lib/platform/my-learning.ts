@@ -312,7 +312,9 @@ export const myLearningPrograms: MyLearningProgram[] = [
     title: "Cybersecurity Fundamentals Certificate",
     delivery: "Flexible Learning",
     difficulty: "Beginner",
-    partners: [],
+    // SkillUp's own program: its logo as the partner (Nelson, 22 Oct 2026); the card and the
+    // program header read it from here.
+    partners: [{ name: "SkillUp" }],
     courses: "0 of 5 courses complete",
     courseCount: 5,
     initials: "CF",
