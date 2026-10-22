@@ -16,13 +16,17 @@
   --sk-font-body: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
   --sk-font-display: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
 
-  /* Not 9999 for every control-radius element: rows, bubbles and blocks of several lines turned
-     into blobs (search results, chat bubbles, menu rows; Nelson, 22 Oct 2026). The pill goes only
-     to one-line controls (rule below); everything else on the control radius takes 12. */
-  --sk-radius-control: 12px;
+  /* Radius roles, with the nesting rule (inner radius + padding = outer radius, Nelson 20 Oct
+     2026; tokens/radius.css). Studio's cards are 24 and most have 16 of padding, so what sits in a
+     card's corner is 24 − 16 = 8: the control role is 8 here. Card-inset (card − 4) and the rest
+     follow from tokens/radius.css. Pills are a Studio signature, but only where the rule allows
+     them (below): one-line controls on the page itself, and the segments of a track, which is a
+     pill too (a pill inside a pill with even padding is concentric by construction). */
+  --sk-radius-inner: 4px;
+  --sk-radius-control: 8px;
   --sk-radius-card: 24px;
   --sk-radius-surface: 28px;
-  --sk-radius-inner: 6px;
+  --sk-radius-track: 9999px;
 
   --sk-shadow-studio: 0 1px 2px #1317200a, 0 10px 30px -12px #13172024;
 }
@@ -75,20 +79,41 @@
   color: #4f8799;
 }
 
-/* Pills, for one-line controls only: buttons, links, fields, tabs, radios and switches, and the
-   wrapper of a search field. Anything that holds paragraphs, a column or a list keeps 12. */
+/* Pills, for one-line controls only (buttons, links, fields, tabs, radios, switches, the wrapper
+   of a search field), and only where the nesting rule allows them: on the page itself, or as the
+   segments of a track. Inside a card, panel, menu or sheet a control sits in its parent's corner
+   zone and keeps the control role (8 = 24 − 16). Anything that holds paragraphs, a column or a list
+   keeps the control role everywhere (a pill of several lines is a blob, 22 Oct 2026). */
 [data-direction="studio"]
   :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"], [role="menuitem"]).rounded-control:not(
     :has(p, .flex-col, ul, ol, h2, h3, h4)
+  ):not(:is(.rounded-card, .rounded-card-inset, .rounded-surface, [role="menu"], [role="dialog"]) *),
+[data-direction="studio"]
+  .rounded-control:has(> input:not([type="checkbox"], [type="radio"])):not(
+    :is(.rounded-card, .rounded-card-inset, .rounded-surface, [role="menu"], [role="dialog"]) *
   ),
-[data-direction="studio"] .rounded-control:has(> input:not([type="checkbox"], [type="radio"])) {
+[data-direction="studio"] .rounded-track .rounded-control {
   border-radius: 9999px;
+}
+
+/* A card with less padding than 16 gets a smaller radius, so a control in its corner still reads
+   concentric: padding + control (12 + 8 = 20, 8 + 8 = 16). The padding can be the card's own or
+   that of the bands flush with its edges (the Discussion panels). */
+[data-direction="studio"] .rounded-card:is(.p-3, :has(> :is(.p-3, .px-3, .px-\[11px\]))) {
+  border-radius: 20px;
+}
+[data-direction="studio"] .rounded-card.p-2 {
+  border-radius: 16px;
 }
 
 /* A large container that borrows the control radius (the player's course rail, a <nav>) takes
    the card radius. */
 [data-direction="studio"] :is(nav, aside, section).rounded-control {
   border-radius: var(--sk-radius-card);
+}
+/* …and what sits in its corner (the rail's collapse button, 16 in) takes 24 − 16 = 8. */
+[data-direction="studio"] :is(nav, aside, section).rounded-control .rounded-inner {
+  border-radius: var(--sk-radius-control);
 }
 
 /* Surfaces float on a soft shadow; the border goes (fields and dashed zones keep theirs). */
