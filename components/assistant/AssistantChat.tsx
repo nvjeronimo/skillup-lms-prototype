@@ -249,11 +249,15 @@ function Chat({ pathname }: { pathname: string }) {
 function useFooterHeight(pathname: string, side: "left" | "right", reach: number): number {
   const [height, setHeight] = React.useState(0);
   const inPlayer = pathname.startsWith("/course/");
+  // On a phone the platform pages float their sections at the bottom (PlatformTabBar, Nelson
+  // 22 Oct 2026): the launcher stacks above that bar the same way.
+  const onPlatform = pathname.startsWith("/platform");
   React.useEffect(() => {
-    // Only the player has a footer nav; the other pages pay nothing.
-    if (!inPlayer) return setHeight(0);
+    // Only the player's footer nav and the platform's floating bar; the other pages pay nothing.
+    if (!inPlayer && !onPlatform) return setHeight(0);
+    const selector = inPlayer ? 'nav[aria-label="Topic navigation"]' : "nav[data-floating-nav]";
     const measure = () => {
-      const footer = document.querySelector<HTMLElement>('nav[aria-label="Topic navigation"]');
+      const footer = document.querySelector<HTMLElement>(selector);
       if (!footer) return setHeight(0);
       const { top, bottom, left, right } = footer.getBoundingClientRect();
       const meets = side === "left" ? left < reach : right > window.innerWidth - reach;
@@ -277,6 +281,6 @@ function useFooterHeight(pathname: string, side: "left" | "right", reach: number
       window.removeEventListener("resize", measure);
       window.removeEventListener("scroll", measure, true);
     };
-  }, [pathname, inPlayer, side, reach]);
+  }, [pathname, inPlayer, onPlatform, side, reach]);
   return height;
 }

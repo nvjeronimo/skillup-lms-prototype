@@ -10,7 +10,7 @@ import { useLmsStore } from "@/lib/store";
  * "Studio" direction (experimental, 22 Oct 2026): a floating ink bar that keeps the one next
  * step in reach while the Dashboard scrolls — where you stopped, how far the course is, Resume.
  * The reference's sticky pass bar, given SkillUp's job. Bottom centre on desktop and tablet; on a
- * phone it leaves the right corner to the assistant launcher. Shown only when the direction is on.
+ * phone it sits over the floating section bar (16 + 64 + 16) and leaves the right to the launcher. Shown only when the direction is on.
  */
 export function StudioResumeBar({ course }: { course: DashboardResumeRow | undefined }) {
   const studio = useLmsStore((s) => s.studio);
@@ -18,7 +18,7 @@ export function StudioResumeBar({ course }: { course: DashboardResumeRow | undef
   return (
     <aside
       aria-label="Continue learning"
-      className="sk-studio-bar sk-animate-rise fixed bottom-4 left-4 right-[80px] z-30 flex items-center gap-3 rounded-pill py-2 pl-5 pr-2 md:inset-x-0 md:bottom-6 md:mx-auto md:w-[min(600px,calc(100vw-48px))]"
+      className="sk-studio-bar sk-animate-rise fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] left-4 right-[80px] z-30 flex items-center gap-3 rounded-pill py-2 pl-5 pr-2 md:inset-x-0 md:bottom-6 md:mx-auto md:w-[min(600px,calc(100vw-48px))]"
     >
       <div data-theme="dark" className="flex min-w-0 flex-1 flex-col">
         <span className="sk-text-body-small-medium text-sko-text-subtle">Continue · {course.progressPct}%</span>

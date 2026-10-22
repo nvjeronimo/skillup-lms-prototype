@@ -3,6 +3,8 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import { PlatformTopbar } from "./PlatformTopbar";
+import { PlatformTabBar } from "./PlatformTabBar";
+import { useBreakpoint } from "@/lib/useBreakpoint";
 import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore } from "@/lib/store";
 import type { PlatformSection } from "@/lib/platform/user";
@@ -49,6 +51,11 @@ export function PlatformPage({
   const arrival = useArrivalController(pathname, mainRef);
   const toast = useLmsStore((s) => s.toast);
   const demo = useDemoMode();
+  // On a phone the sections float at the bottom (PlatformTabBar, Nelson 22 Oct 2026).
+  const phone = useBreakpoint() === "mobile";
+  // What the last block on the page keeps under it on a phone: the bar (16 + 64) and the
+  // assistant launcher stacked above it (16 + 48 + 16), plus the safe area.
+  const phonePad = "pb-[calc(10rem+env(safe-area-inset-bottom,0px))]";
   const clearToast = useLmsStore((s) => s.clearToast);
   // Remembered per browser; read after mount so the server and first client render agree.
   const [showMock, setShowMock] = React.useState(false);
@@ -119,7 +126,7 @@ export function PlatformPage({
         // On a phone the assistant launcher floats 48 + 16 over the bottom right. The test-build
         // footer used to keep 80px under the page; without it (demo mode off) the page keeps it,
         // so the last card or button scrolls clear of the launcher (audit, 21 Oct 2026).
-        className={cn("sk-animate-page flex-1 outline-none", !demo && "max-md:pb-20", className)}
+        className={cn("sk-animate-page flex-1 outline-none", !demo && (phone ? phonePad : "max-md:pb-20"), className)}
       >
         <ArrivalContext.Provider value={arrival}>
           {/* Rendered by the server and until the controller has decided (it only shows under
@@ -139,7 +146,10 @@ export function PlatformPage({
       {demo ? (
       <footer
         aria-label="Test build"
-        className="sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-2 text-sko-text-warning max-md:pb-20 md:px-8 lg:px-10"
+        className={cn(
+          "sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-2 text-sko-text-warning md:px-8 lg:px-10",
+          phone ? phonePad : "max-md:pb-20",
+        )}
       >
         <p className="sk-text-body-medium-regular">
           <span className="sk-text-body-medium-semibold">Test build.</span> Most figures on this page are sample data: no
@@ -167,6 +177,7 @@ export function PlatformPage({
       <p role="status" className="sr-only">
         {arrival.decided && arrival.first && !arrival.released ? "Loading…" : ""}
       </p>
+      {phone ? <PlatformTabBar current={current} /> : null}
       <Toast toast={toast} onDone={clearToast} />
     </div>
   );
