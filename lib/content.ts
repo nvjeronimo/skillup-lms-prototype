@@ -1510,7 +1510,7 @@ function plainSession(topic: FlatTopic, own: CourseContent): ViltSession {
   return {
     ...shared,
     stage: "pre-live",
-    whenLabel: "Today · 15:00–16:00, your time",
+    whenLabel: "Today · 3:00 PM–4:00 PM, your time",
     durationLabel: "60 min",
     minutesUntilStart: 12,
     agenda: ["Bring one example from your own work", "Work on it in breakout groups", "Feedback round with the cohort"],

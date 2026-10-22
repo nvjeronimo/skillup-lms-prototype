@@ -187,7 +187,7 @@ export const page: CourseDetail = {
         id: "course-starts",
         iso: "2026-06-27T00:00",
         date: "27 Jun 2026",
-        time: "00:00 · your time",
+        time: "12:00 AM · your time",
         state: "complete",
         badges: [{ label: "COURSE", color: GRAY }],
         title: "Course starts",
@@ -197,7 +197,7 @@ export const page: CourseDetail = {
         id: "assignment-01",
         iso: "2026-07-12T23:59",
         date: "12 Jul 2026",
-        time: "23:59 · your time",
+        time: "11:59 PM · your time",
         state: "complete",
         badges: [
           { label: "DUE DATE", color: GRAY },
@@ -212,7 +212,7 @@ export const page: CourseDetail = {
         id: "graded-quiz-landscape",
         iso: "2026-07-19T23:59",
         date: "19 Jul 2026",
-        time: "23:59 · your time",
+        time: "11:59 PM · your time",
         state: "complete",
         badges: [
           { label: "DUE DATE", color: GRAY },
@@ -227,7 +227,7 @@ export const page: CourseDetail = {
         id: "assignment-02",
         iso: "2026-08-09T23:59",
         date: "09 Aug 2026",
-        time: "23:59 · your time",
+        time: "11:59 PM · your time",
         state: "complete",
         badges: [
           { label: "DUE DATE", color: GRAY },
@@ -242,7 +242,7 @@ export const page: CourseDetail = {
         id: "graded-quiz-ai-mindset",
         iso: "2026-08-23T23:59",
         date: "23 Aug 2026",
-        time: "23:59 · your time",
+        time: "11:59 PM · your time",
         state: "complete",
         badges: [
           { label: "DUE DATE", color: GRAY },
@@ -257,7 +257,7 @@ export const page: CourseDetail = {
         id: "final-project",
         iso: "2026-09-06T23:59",
         date: "06 Sep 2026",
-        time: "23:59 · your time",
+        time: "11:59 PM · your time",
         state: "complete",
         badges: [
           { label: "DUE DATE", color: GRAY },
@@ -272,7 +272,7 @@ export const page: CourseDetail = {
         id: "final-assessment",
         iso: "2026-09-11T23:59",
         date: "11 Sep 2026",
-        time: "23:59 · your time",
+        time: "11:59 PM · your time",
         state: "complete",
         badges: [
           { label: "DUE DATE", color: GRAY },
@@ -287,7 +287,7 @@ export const page: CourseDetail = {
         id: "certificate-issued",
         iso: "2026-09-12T09:00",
         date: "12 Sep 2026",
-        time: "09:00 · your time",
+        time: "9:00 AM · your time",
         state: "complete",
         badges: [
           { label: "CERTIFICATE", color: GRAY },
@@ -305,7 +305,7 @@ export const page: CourseDetail = {
         id: "course-ends",
         iso: "2027-10-31T23:59",
         date: "31 Oct 2027",
-        time: "23:59 · your time",
+        time: "11:59 PM · your time",
         state: "upcoming",
         badges: [{ label: "COURSE", color: GRAY }],
         title: "Course ends",

@@ -26,7 +26,7 @@ import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
-import { YOUR_TIME, dueBadgeLabel, formatDay } from "@/lib/sample-time";
+import { YOUR_TIME, dueBadgeLabel, formatDay, formatTime } from "@/lib/sample-time";
 import { coursePageHref, slugify } from "@/lib/platform/hrefs";
 import { cn } from "@/lib/utils";
 import { useDemoMode } from "@/lib/demo";
@@ -59,7 +59,7 @@ function statusOf(e: CalendarEvent): { label: string; color: "success" | "error"
     if (isMissed(e)) return { label: "Missed", color: "error" };
     return { label: dueBadgeLabel(e.date, e.time), color: "warning" };
   }
-  if (e.kind === "live") return { label: `Live · ${e.time}`, color: "success" };
+  if (e.kind === "live") return { label: `Live · ${e.time ? formatTime(e.time) : ""}`, color: "success" };
   return { label: e.label, color: "info" };
 }
 
@@ -100,7 +100,7 @@ function EventRow({ event }: { event: CalendarEvent }) {
       <div className={EVENT_TEXT}>
         <p className="sk-text-body-small-semibold uppercase text-sko-text-subtle">
           {event.label}
-          {event.time ? <span className="normal-case"> · {event.time} · {YOUR_TIME}</span> : null}
+          {event.time ? <span className="normal-case"> · {formatTime(event.time)} · {YOUR_TIME}</span> : null}
         </p>
         <p className="sk-text-body-medium-semibold text-sko-text-default">
           {/* The whole row is the title's target (44 at least), as the Dashboard rows. */}
@@ -303,7 +303,7 @@ function EventRowSkeleton({ event, demo }: { event: CalendarEvent; demo: boolean
       <div className={EVENT_TEXT}>
         <Skeleton variant="ghost" text="body-small-semibold" className="uppercase">
           {event.label}
-          {event.time ? <span className="normal-case"> · {event.time} · {YOUR_TIME}</span> : null}
+          {event.time ? <span className="normal-case"> · {formatTime(event.time)} · {YOUR_TIME}</span> : null}
         </Skeleton>
         <Skeleton variant="ghost" text="body-medium-semibold">{event.title}</Skeleton>
         <Skeleton variant="ghost" text="body-small-regular">{event.course}</Skeleton>

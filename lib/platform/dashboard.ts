@@ -3,7 +3,7 @@ import { discussionHref, discussionUnread } from "./discussion";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import type { DeliveryMode } from "@/components/atoms/MetaBadges";
 import { coursePageHref, coursePlayerHref, slugify } from "./hrefs";
-import { SAMPLE_TODAY, YOUR_TIME, dueBadgeLabel, parseDay, whenLabel } from "@/lib/sample-time";
+import { SAMPLE_TODAY, YOUR_TIME, dueBadgeLabel, formatTime, parseDay, whenLabel } from "@/lib/sample-time";
 import { calendarEvents, isDueThisWeek, isMissed } from "./calendar";
 import { certificatesInProgress, earnedCertificates } from "./certificates";
 import { CATALOG } from "./catalog";
@@ -129,8 +129,12 @@ export const dashboardDue: DashboardDueItem[] = [
     day: String(parseDay(e.date).getDate()),
     when: whenLabel(e.date, e.time),
     urgency: overdue || e.date === SAMPLE_TODAY ? "today" : "upcoming",
-    title: e.title,
-    meta: [e.course, e.label, e.time ? `${e.time} · ${YOUR_TIME}` : null].filter(Boolean).join(" · "),
+    // DS Due-Item v1.1 (Nelson, 22 Oct 2026): the activity type in brackets after the title (not
+    // when the title already starts with it: "Graded Quiz: …"); the meta is the course and the
+    // time, 12 h, in the learner's zone.
+    title:
+      e.label && !e.title.toLowerCase().startsWith(e.label.toLowerCase()) ? `${e.title} (${e.label})` : e.title,
+    meta: [e.course, e.time ? `${formatTime(e.time)} · ${YOUR_TIME}` : null].filter(Boolean).join(" · "),
     status: { label: dueBadgeLabel(e.date, e.time), color: overdue ? "error" : "warning" },
     href: e.href,
   };
