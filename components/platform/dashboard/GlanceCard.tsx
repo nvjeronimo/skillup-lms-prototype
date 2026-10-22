@@ -91,11 +91,13 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-media">
         {title}
       </h2>
-      {/* On a phone the row scrolls: it takes the focus so a keyboard can scroll it (WCAG 2.1.1). */}
+      {/* On a phone the row scrolls: it takes the focus so a keyboard can scroll it (WCAG 2.1.1).
+          It bleeds to the card's edges; scroll-padding puts the snap point back on the content
+          padding, so the first figure lines up with the title (Nelson, 22 Oct 2026). */}
       <ul
         tabIndex={0}
         aria-labelledby="dashboard-glance-title"
-        className="relative -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden"
+        className="relative -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-6 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden"
       >
         {stats.map((stat) => (
           <li key={stat.label} className="w-[174px] shrink-0 snap-start md:w-auto md:min-w-0">
