@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils";
 import { CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
+import { useSheetDrag } from "@/lib/useSheetDrag";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { isFreshCompletion } from "@/lib/motion/completion";
 import { inertProps } from "@/lib/inert";
@@ -797,6 +798,10 @@ function MobileCourseDrawer({
   const titleId = React.useId();
   const ref = useDialog(open, onClose);
   const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short4);
+  // Swipe the drawer back to the left to close it (Apple, 22 Oct 2026); its list still scrolls.
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const backdropRef = React.useRef<HTMLDivElement>(null);
+  const drag = useSheetDrag({ panelRef, backdropRef, axis: "x", dir: -1, onDismiss: onClose, enabled: open });
   if (!mounted) return null;
   const closed = state === "closed";
   return (
@@ -807,14 +812,16 @@ function MobileCourseDrawer({
       {...inertProps(closed)}
       className={cn("fixed inset-0 z-40", closed && "pointer-events-none")}
     >
-      <div className="sk-backdrop sk-animate-fade sk-backdrop-panel absolute inset-0" onClick={onClose} aria-hidden />
+      <div ref={backdropRef} className="sk-backdrop sk-animate-fade sk-backdrop-panel absolute inset-0" onClick={onClose} aria-hidden />
       <div
+        ref={panelRef}
+        onPointerDown={drag.onPointerDown}
         id={COURSE_DRAWER_ID}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         onAnimationEnd={onAnimationEnd}
-        className="sk-animate-slide-left absolute left-0 top-0 h-full"
+        className="sk-animate-slide-left absolute left-0 top-0 h-full touch-pan-y"
       >
         {children(titleId)}
       </div>

@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  */
 export function DueItem({ day, when, urgency, title, meta, status, href }: Omit<DashboardDueItem, "id">) {
   return (
-    <li className="relative flex items-start gap-3 border-b border-sko-border-subtle p-4 shadow-sk-card last:border-b-0 md:px-5">
+    <li className="sk-press-card relative flex items-start gap-3 border-b border-sko-border-subtle p-4 shadow-sk-card last:border-b-0 md:px-5">
       <div className="flex w-[60px] shrink-0 flex-col">
         <span
           className={cn(

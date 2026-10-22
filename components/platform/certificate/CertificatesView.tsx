@@ -49,7 +49,7 @@ function InProgressCard({ item, layout }: { item: CertificateInProgress; layout:
   return (
     <Link
       href={item.href}
-      className="flex h-full items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default md:px-5"
+      className="sk-press-card flex h-full items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default md:px-5"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex flex-col gap-0.5">
@@ -78,7 +78,7 @@ function EarnedRow({ e }: { e: EarnedCertificate }) {
   return (
     <Link
       href={e.viewHref}
-      className="flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default md:px-5"
+      className="sk-press-card flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default md:px-5"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className="sk-text-label-small-medium text-sko-text-subtle">{kindLabel(e.kind)}</p>

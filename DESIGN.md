@@ -212,7 +212,7 @@ A cool, low-chroma neutral world with one teal accent and a warm yellow spark, p
 ### Named Rules
 **The Twelve Pixel Floor Rule.** No text below 12 px, at any skin or breakpoint.
 
-**The Style Class Rule.** Text uses a `.sk-text-{style}-{weight}` class from the DS ramp; components never set font-size or font-weight inline. Every size multiplies by `--sk-font-scale` (100 / 115 / 130 %).
+**The Style Class Rule.** Text uses a `.sk-text-{style}-{weight}` class from the DS ramp; components never set font-size or font-weight inline. Sizes are in rem, so the browser's own text size scales the ramp, and every size multiplies by `--sk-font-scale` (100 / 115 / 130 %) on top.
 
 ## Layout
 
@@ -232,6 +232,8 @@ Light and hybrid, decided per skin. In SKO, surfaces separate by hairline border
 - **Sea card** (`box-shadow: 0 1px 2px #0441500d, 0 6px 20px -4px #0441501f`; darker in dark): every card, panel and menu in the Sea skin, in place of the border.
 
 ### Named Rules
+**The System Preferences Rule.** With "increase contrast" on, hairlines and the faintest text step up one role; with "reduce transparency" on, translucent media surfaces turn solid and lose their blur. A theme or skin change cross-fades the page instead of jumping in one frame.
+
 **The Borders For Controls Rule.** Inputs, selects and toggles keep a visible border in every skin (3:1 non-text contrast); only containers may trade a border for a shadow.
 
 **The No Gradient Rule.** Fills are flat. The one exception is the assistant launcher's rotating ring.
@@ -258,6 +260,7 @@ Firm and welcoming: big targets, one obvious primary.
 - **Gray Soft** sits on Track Grey so it stays visible on Paper and on white cards. Count badges follow tab labels: Brand when the tab is selected, Gray otherwise.
 
 ### Cards / Containers
+- **Press:** a card or row that is one link answers on touch-down: 99 % and a Paper tint (`sk-press-card`), since hover exists only where a pointer can hover.
 - **Corner Style:** card (12 px); rows inside take card-inset (8 px).
 - **Background:** Page on a Paper ground.
 - **Shadow Strategy:** the card hint in SKO, the Sea card shadow in Sea (see Elevation & Depth).
@@ -273,6 +276,9 @@ Firm and welcoming: big targets, one obvious primary.
 - **Top bar:** logo left, five destinations (Dashboard, My Learning, Calendar, Discussion, Services) with count badges, then notifications, theme and the profile menu on the right. The current page carries the teal underline. Compact below desktop: a menu button opens the destinations.
 - **Tabs:** Underline tabs on a hairline rule; the selected tab is Primary Ink with a 2 px Primary Teal bar that slides between tabs. 48 px tall on desktop; 32 px on phones with the touch target grown to 44 px upwards.
 - **Segmented controls:** a Track Grey track (track radius 10, 4 px padding) holding 32 px segments; the pressed one is a white pill with a hairline and Primary Ink.
+
+### Sheets, drawers and panels
+- **Gesture:** on a touch screen the phone sheets (assistant, course search) pull down to close from their header, and the course drawer and side panels swipe back to their edge. The surface follows the finger 1:1, resists past its open position, and the release velocity decides: a flick closes it, a slow short drag settles back (`useSheetDrag`). The close button and Escape stay.
 
 ### Progress
 - **Bar:** a Track Grey track with an Info Blue fill, square ends (none radius), 8 px (4 px in compact rows). Complete turns Success Green with a check and the word.

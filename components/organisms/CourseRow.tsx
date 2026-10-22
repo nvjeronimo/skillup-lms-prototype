@@ -68,7 +68,7 @@ export function CourseRow({
         // The DS stroke is inside the 68px row and the CSS border is outside the padding:
         // 19 / 15 + 1 border = the DS 20 / 16.
         // Every state has the same 1px border/subtle stroke in the DS (read 8 Oct 2026).
-        "relative flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page px-[19px] py-[15px] shadow-sk-card",
+        "sk-press-card relative flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page px-[19px] py-[15px] shadow-sk-card",
         homeHref &&
           state !== "Locked" &&
           "transition-colors has-[span_a:hover]:border-sko-border-default",

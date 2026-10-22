@@ -46,7 +46,7 @@ function TopicRow({ topic, href, last }: { topic: CourseTopic; href: string; las
       className={cn(
         // relative: the topic link's ::after stretches over the row, so the whole row is the target
         // (72–96 px tall on mobile) and not only the title's 20 px line.
-        "relative flex items-start gap-2 py-3 md:items-center md:py-4",
+        "sk-press-card relative flex items-start gap-2 py-3 md:items-center md:py-4",
         // The DS rule is inside the row: the 1px comes off the bottom padding.
         !last && "border-b border-dashed border-sko-border-subtle pb-[11px] md:pb-[15px]",
       )}

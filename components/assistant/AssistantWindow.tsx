@@ -10,6 +10,7 @@ import type { ActionEntry, ChatMessage } from "@/lib/assistant/types";
 import { FirstStepsView, type FirstStepsViewProps } from "./FirstStepsView";
 import { NextStepCard } from "./NextStepCard";
 import { useDialog } from "@/lib/useDialog";
+import { useSheetDrag } from "@/lib/useSheetDrag";
 import { inertProps } from "@/lib/inert";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { isNearEnd } from "@/lib/motion/scroll";
@@ -95,6 +96,8 @@ export function AssistantWindow({
   // Focus trap, inert page and Esc for the sheet. The floating card is not modal: the page
   // behind stays usable, so it only takes the focus on open and closes on its own Esc.
   const dialogRef = useDialog(modal && open, onClose, { initialFocusRef: inputRef });
+  // On a phone the window is a sheet: pull its header down to close it (Apple, 22 Oct 2026).
+  const drag = useSheetDrag({ panelRef: dialogRef, axis: "y", dir: 1, onDismiss: onClose, enabled: modal && open });
   const tabsId = React.useId();
   // First steps come first while they run; the learner can go to the chat at any time.
   const [view, setView] = React.useState<View>(firstSteps ? "first-steps" : "ask");
@@ -239,7 +242,11 @@ export function AssistantWindow({
           sparkles in a 28px bg/primary-soft tile (radius 6), all resolved dark. */}
       <header
         data-theme="dark"
-        className="flex items-center justify-between border-b border-sko-border-subtle bg-sko-bg-subtle py-3 pl-5 pr-3"
+        onPointerDown={drag.onPointerDown}
+        className={cn(
+          "flex items-center justify-between border-b border-sko-border-subtle bg-sko-bg-subtle py-3 pl-5 pr-3",
+          modal && "touch-none",
+        )}
       >
         <h2 className="sk-text-body-large-medium inline-flex items-center gap-2 text-sko-text-default">
           <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-control bg-sko-bg-primary-soft">

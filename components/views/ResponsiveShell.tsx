@@ -37,16 +37,32 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     else el.removeAttribute(attr);
   };
 
+  // A theme or skin change cross-fades the whole page instead of jumping in one frame (Apple:
+  // avoid abrupt brightness changes; 22 Oct 2026). The first paint and browsers without View
+  // Transitions apply it at once. The fade is opacity only, so it stays under reduced motion.
+  const appearanceReady = React.useRef(false);
+  const applyAppearance = (apply: () => void) => {
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+    if (appearanceReady.current && typeof doc.startViewTransition === "function") doc.startViewTransition(apply);
+    else apply();
+  };
   React.useEffect(() => {
-    const el = document.documentElement;
-    if (theme === "dark") el.setAttribute("data-theme", "dark");
-    else el.removeAttribute("data-theme");
+    applyAppearance(() => {
+      const el = document.documentElement;
+      if (theme === "dark") el.setAttribute("data-theme", "dark");
+      else el.removeAttribute("data-theme");
+    });
   }, [theme]);
   React.useEffect(() => {
-    const el = document.documentElement;
-    if (skin === "teal") el.removeAttribute("data-skin");
-    else el.setAttribute("data-skin", skin);
+    applyAppearance(() => {
+      const el = document.documentElement;
+      if (skin === "teal") el.removeAttribute("data-skin");
+      else el.setAttribute("data-skin", skin);
+    });
   }, [skin]);
+  React.useEffect(() => {
+    appearanceReady.current = true;
+  }, []);
   React.useEffect(() => {
     const el = document.documentElement;
     if (vision === "cvd") el.setAttribute("data-vision", "cvd");
