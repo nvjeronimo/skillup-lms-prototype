@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
  * The assistant mark (DS `LMS/Platform/Assistant/Assistant-Launcher`), inline so its three
  * sparkles can move: the 160 viewBox of public/assistant-mark.svg. The ball and the plane are
  * the asset's; the three sparkles are the DS vectors (smaller, moved in), scaled 160/48 from
- * the launcher's 48px Mark (Nelson, 21 Oct 2026). Each sparkle spins (2, 3 and 2 turns, fast) round
- * its own centre now and then, on its own cycle (`.sk-sparkle-a/-b/-c`, globals.css); the ball
+ * the launcher's 48px Mark (Nelson, 21 Oct 2026). Each sparkle spins (2, 3 and 2 turns, in 1.5 to 2 s)
+ * round its own centre now and then, on its own cycle (`.sk-sparkle-a/-b/-c`, globals.css); the ball
  * and the plane hold still. Reduced motion holds the sparkles too.
  *
  * Colours: the mark keeps the logo's colours on every skin, like the asset it replaces, so the
