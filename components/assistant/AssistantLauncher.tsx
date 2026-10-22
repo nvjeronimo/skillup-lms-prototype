@@ -31,8 +31,8 @@ export interface AssistantLauncherProps {
  * Like the logo, the mark keeps its own colours and swaps its ink to white on a dark page
  * (inline since 21 Oct 2026, see AssistantMark: its three sparkles each spin now and
  * then). Open, it is a round close button.
- * The ball wears a 3px polished-metal ring with a warm glint that runs round it now and then
- * (22 Oct 2026, Nelson's reference; before, a 2px ring in the logo's blues). Reduced motion
+ * The ball wears a 3px polished-metal ring in SkillUp blue with a white glint that runs round
+ * it now and then (22 Oct 2026, Nelson's reference; before, a flat 2px ring in the logo's blues). Reduced motion
  * holds the glint still (`.sk-assistant-ring`, globals.css).
  * The count of first steps: the DS draws it on bg/info, but its 12px number on that blue is
  * 4.0:1 (white) in light and 4.2:1 in dark, under AA; WCAG wins over the DS (PRODUCT.md), so

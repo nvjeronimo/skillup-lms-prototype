@@ -1022,12 +1022,15 @@ button {
 }
 
 /* Assistant launcher ring (DS Assistant-Launcher; metal since 22 Oct 2026, Nelson's reference: a
-   polished metal ring with a glint running round it). Two layers under the ball of the mark,
-   which covers their middle, so only a 3px edge shows:
-   - the metal: a fixed conic shading lit from the top left, as polished metal under one light
-     (silver to graphite, dark enough to hold its edge on a white page);
-   - the glint (::after): a narrow warm highlight that runs once round the ring, easing in and
-     out, then rests; it runs only while first steps are left (--still parks it top left).
+   polished metal ring with a glint running round it; the same day, in SkillUp blue instead of
+   silver). Two layers under the ball of the mark, which covers their middle, so only a 3px
+   edge shows:
+   - the metal: a fixed conic shading lit from the top left, as polished metal under one light,
+     in the logo's blues (ice to deep teal, dark enough to hold its edge on a white page and
+     against the light-blue ball);
+   - the glint (::after): a narrow white highlight with an ice-blue edge that runs once round
+     the ring, easing in and out, then rests; it runs only while first steps are left (--still
+     parks it top left).
    Literal colours, like the mark's SVG: they are the ring's material, not roles (the one
    gradient the brand allows, Nelson 21 Oct). Geometry, at 48px: ball centre 24.85/26.32,
    radius 20.84; the ring is 3px wider all round. Reduced motion (OS or the Accessibility
@@ -1056,15 +1059,15 @@ button {
   border-radius: 9999px;
   background: conic-gradient(
     from -45deg,
-    #ffffff 0deg,
-    #c9d0d7 40deg,
-    #59626c 95deg,
-    #a7b0b9 140deg,
-    #ffffff 180deg,
-    #8a949e 230deg,
-    #3f4851 280deg,
-    #d5dbe0 330deg,
-    #ffffff 360deg
+    #c8ecff 0deg,
+    #51bffc 40deg,
+    #04608f 95deg,
+    #0088d4 140deg,
+    #85d3ff 180deg,
+    #0077ba 230deg,
+    #044150 280deg,
+    #2fa8ec 330deg,
+    #c8ecff 360deg
   );
   box-shadow: inset 0 0 0 0.5px rgba(31, 38, 46, 0.35);
 }
@@ -1075,12 +1078,12 @@ button {
   border-radius: inherit;
   background: conic-gradient(
     from var(--sk-ring-angle),
-    rgba(255, 140, 50, 0) 0deg,
-    rgba(255, 140, 50, 0.85) 12deg,
-    #fff4e6 22deg,
-    rgba(255, 120, 40, 0.9) 30deg,
-    rgba(255, 120, 40, 0) 44deg,
-    rgba(255, 120, 40, 0) 360deg
+    rgba(133, 211, 255, 0) 0deg,
+    rgba(133, 211, 255, 0.85) 12deg,
+    #ffffff 22deg,
+    rgba(133, 211, 255, 0.9) 30deg,
+    rgba(133, 211, 255, 0) 44deg,
+    rgba(133, 211, 255, 0) 360deg
   );
   animation: sk-ring-turn calc(var(--motion-duration-short3) * 24) var(--motion-easing-linear) infinite;
 }
