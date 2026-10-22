@@ -50,16 +50,16 @@ function InboxRow({ thread, selected, selectedFromTablet }: { thread: Discussion
           <span className="sk-text-body-small-medium truncate text-sko-text-subtle">{thread.course}</span>
           <span className="flex flex-wrap items-start gap-1">
             <Badge variant="outline" color="gray">
-              {thread.kind === "question" ? "QUESTION" : "DISCUSSION"}
+              {thread.kind === "question" ? "Question" : "Discussion"}
             </Badge>
             {thread.answered ? (
               <Badge variant="outline" color="success">
-                ANSWERED
+                Answered
               </Badge>
             ) : null}
             {thread.following ? (
               <Badge variant="outline" color="gray">
-                FOLLOWING
+                Following
               </Badge>
             ) : null}
           </span>
@@ -105,7 +105,7 @@ function MessageSkeleton({ message }: { message: DiscussionThread["messages"][nu
         <div className="flex flex-wrap items-center gap-1">
           <Skeleton variant="ghost" text="body-small-medium">{message.author}</Skeleton>
           {message.label ? <SkeletonPill>{message.label}</SkeletonPill> : null}
-          {message.accepted ? <SkeletonPill>ACCEPTED ANSWER</SkeletonPill> : null}
+          {message.accepted ? <SkeletonPill>Accepted answer</SkeletonPill> : null}
         </div>
         {bubble}
         <Skeleton variant="ghost" text="body-small-regular">{`${message.time}  Report`}</Skeleton>
@@ -162,9 +162,9 @@ export function DiscussionSkeleton() {
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <Skeleton variant="ghost" text="body-small-medium" className="truncate">{t.course}</Skeleton>
                     <div className="flex flex-wrap items-start gap-1">
-                      <SkeletonPill>{t.kind === "question" ? "QUESTION" : "DISCUSSION"}</SkeletonPill>
-                      {t.answered ? <SkeletonPill>ANSWERED</SkeletonPill> : null}
-                      {t.following ? <SkeletonPill>FOLLOWING</SkeletonPill> : null}
+                      <SkeletonPill>{t.kind === "question" ? "Question" : "Discussion"}</SkeletonPill>
+                      {t.answered ? <SkeletonPill>Answered</SkeletonPill> : null}
+                      {t.following ? <SkeletonPill>Following</SkeletonPill> : null}
                     </div>
                     <Skeleton variant="ghost" text={t.unread > 0 ? "body-medium-semibold" : "body-medium-medium"}>{t.title}</Skeleton>
                     <Skeleton variant="ghost" text="body-small-regular" className="truncate">{t.preview}</Skeleton>

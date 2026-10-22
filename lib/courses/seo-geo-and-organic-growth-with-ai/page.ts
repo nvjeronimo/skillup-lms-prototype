@@ -335,7 +335,7 @@ export const page: CourseDetail = {
             id: "m2",
             from: "mentor",
             author: "Marcus Lee",
-            label: "STAFF",
+            label: "Staff",
             accepted: true,
             body: "Yes. The Handouts include a sample site for a small online plant shop: its pages and three months of its search report. Both assignments and the final project can be done on it. If you do have a site, you may use it instead, as long as you can see its search report.",
             time: "2 days ago",

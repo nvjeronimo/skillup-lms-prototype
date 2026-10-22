@@ -294,7 +294,7 @@ export const page: CourseDetail = {
             id: "m2",
             from: "mentor",
             author: "David Chen",
-            label: "STAFF",
+            label: "Staff",
             accepted: true,
             body: "Yes. Every exercise uses diagrams and sample data: a packet capture summary and a rule base that you download and open as tables in any spreadsheet program, and a device list. No security tool is installed, and nothing is run against a real network.",
             time: "2 days ago",

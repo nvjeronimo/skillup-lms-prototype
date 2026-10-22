@@ -311,7 +311,7 @@ export const page: CourseDetail = {
             id: "m2",
             from: "mentor",
             author: "David Chen",
-            label: "STAFF",
+            label: "Staff",
             accepted: true,
             body: "Yes, read the brief and the case file whenever you like. The milestones themselves assume Courses 1 to 4: the risk register comes from Course 1, the zones from Course 2, the access model from Course 3 and the response plan from Course 4. Keeping your assignments from those courses will save you time.",
             time: "4 days ago",
