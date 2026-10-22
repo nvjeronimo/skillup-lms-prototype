@@ -10,33 +10,29 @@ export interface GlanceCardProps {
 }
 
 /**
- * One figure on its own card (DS `Stat` Theme=Card, v1.4: on bg/page with Shadows/shadow-card,
- * no dark pin): label,
- * value, the detail in two lines (the first bold), then the goal as a DS Badge Gray sm. The
- * value is text/on-primary-soft, or text/success for what is done (Completed, Certificates).
- * The badge carries a spoken sentence; its short text is hidden from assistive tech.
+ * One figure on its own card (DS `Stat` Theme=Card: on bg/page with Shadows/shadow-card): label,
+ * then the value with the detail beside it, bottom-aligned (the bold part first: "**in progress**
+ * of 22 enrolled"), then the goal as a DS Badge sm. The value is text/on-primary-soft, or
+ * text/success for what is done (Completed, Certificates). The badge carries a spoken sentence;
+ * its short text is hidden from assistive tech.
  */
 function StatCard({ stat }: { stat: DashboardStat }) {
   return (
     <div className="flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-4 shadow-sk-card">
       <p className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-muted">{stat.label}</p>
-      <p
-        className={cn(
-          "sk-text-headline-medium-bold",
-          stat.tone === "success" ? "text-sko-text-success" : "text-sko-text-on-primary-soft",
-        )}
-      >
-        <ArrivalCount value={stat.value} />
-      </p>
-      <p className="sk-text-body-small-medium text-sko-text-muted">
-        {stat.detailStrong ? (
-          <>
-            <span className="sk-text-body-small-bold block">{stat.detailStrong}</span>
-            <span className="block">{stat.detail}</span>
-          </>
-        ) : (
-          stat.detail
-        )}
+      <p className="flex items-end gap-2">
+        <span
+          className={cn(
+            "sk-text-headline-large-semibold shrink-0",
+            stat.tone === "success" ? "text-sko-text-success" : "text-sko-text-on-primary-soft",
+          )}
+        >
+          <ArrivalCount value={stat.value} />
+        </span>
+        <span className="sk-text-body-small-medium min-w-0 pb-1 text-sko-text-muted">
+          {stat.detailStrong ? <span className="sk-text-body-small-bold">{stat.detailStrong} </span> : null}
+          {stat.detail}
+        </span>
       </p>
       {stat.goal ? (
         <div className="mt-auto pt-1">
@@ -51,14 +47,15 @@ function StatCard({ stat }: { stat: DashboardStat }) {
 }
 
 /**
- * DS `LMS/Platform/Dashboard/Today-at-a-glance` v1.4 (Nelson, 22 Oct 2026): the Dashboard
- * hero card, full width, light. Title (label-small/Semibold, text/default) on bg/primary-soft
- * with a 1px border/primary-muted,
- * then the four figures, each on its own card (bg/page, Radius/card-inset) with a goal.
+ * DS `LMS/Platform/Dashboard/Today-at-a-glance` v1.5 (Nelson, 22 Oct 2026, as drawn on the ICP
+ * Dashboard): the Dashboard hero card, full width, dark. A backdrop on bg/info-soft in a dark
+ * island (#044150 in every dark skin), two blurred glows (border/info-soft, blur 179, 37% / 80%)
+ * and the two circles (bg/info 200, bg/primary 320) at 19%, all decoration and clipped by the
+ * card, which keeps its 1px border/primary-muted. Title label-small/Semibold, text/on-primary.
+ * Then the four figures, each on its own light card (bg/page, Radius/card-inset) with a goal.
  * Four in a row from tablet up (gap 20 / 24); on a phone the row scrolls sideways, the cards
  * 174 wide (as the DS) and snapping, so "Pick up where you left off" stays up.
- * Padding 24 / 20 / 16. The two circles are decoration only: bg/info (200) and bg/primary
- * (320) at 12% layer opacity, clipped by the card.
+ * Padding 24 / 20 / 16.
  */
 export function GlanceCard({ title, stats, className }: GlanceCardProps) {
   return (
@@ -66,21 +63,32 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       aria-labelledby="dashboard-glance-title"
       data-glance=""
       className={cn(
-        "relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-card border border-sko-border-primary-muted bg-sko-bg-primary-soft p-4 md:gap-4 md:p-5 lg:p-6",
+        "relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-card border border-sko-border-primary-muted p-4 md:gap-4 md:p-5 lg:p-6",
         className,
       )}
     >
+      <div aria-hidden="true" data-theme="dark" data-glance-backdrop="" className="pointer-events-none absolute inset-0 bg-sko-bg-info-soft" />
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute right-[18px] top-[calc(50%+146px)] size-[200px] -translate-y-1/2 rounded-pill bg-sko-bg-info opacity-[0.12]"
+        className="pointer-events-none absolute left-[calc(100%-121px)] top-[3px] h-[193px] w-[483px] rounded-pill bg-sko-border-info-soft opacity-[0.37] blur-[179px]"
       />
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute -right-[102px] top-[calc(50%-76px)] size-[320px] -translate-y-1/2 rounded-pill bg-sko-bg-primary opacity-[0.12]"
+        className="pointer-events-none absolute left-[29.3%] -top-[70px] h-[74px] w-[185px] rounded-pill bg-sko-border-info-soft opacity-80 blur-[179px]"
       />
-      <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-default">
+      <div
+        aria-hidden="true"
+        data-glow=""
+        className="pointer-events-none absolute right-[18px] top-[calc(50%+146px)] size-[200px] -translate-y-1/2 rounded-pill bg-sko-bg-info opacity-[0.19]"
+      />
+      <div
+        aria-hidden="true"
+        data-glow=""
+        className="pointer-events-none absolute -right-[102px] top-[calc(50%-76px)] size-[320px] -translate-y-1/2 rounded-pill bg-sko-bg-primary opacity-[0.19]"
+      />
+      <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-primary">
         {title}
       </h2>
       {/* On a phone the row scrolls: it takes the focus so a keyboard can scroll it (WCAG 2.1.1). */}
