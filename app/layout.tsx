@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Inter_Tight, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ResponsiveShell } from "@/components/views/ResponsiveShell";
 import { ARRIVAL_INIT_SCRIPT } from "@/lib/arrival/prepaint";
@@ -11,6 +11,13 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
   // Italic too: the Sea skin sets the second half of headings in Montserrat Italic (19–20 Oct 2026).
   style: ["normal", "italic"],
+  display: "swap",
+});
+
+// The "Studio" direction (experimental, 22 Oct 2026) sets the interface in a neo-grotesk.
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
   display: "swap",
 });
 
@@ -28,11 +35,11 @@ export const metadata: Metadata = {
 // session. Mirrors ResponsiveShell's attribute logic; must stay in sync with it.
 // Large targets: the stored choice wins; with no choice they default ON at
 // ≤767px (useLargeTargets in lib/store.ts).
-const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;var s={};try{var raw=localStorage.getItem('sk-lms-demo');s=(raw&&JSON.parse(raw).state)||{};}catch(e){}try{if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');if(s.squareCorners)d.setAttribute('data-square-corners','');var lt=s.largeTargetsChoice;if(lt===undefined||lt===null)lt=s.largeTargets===true?true:(s.deviceMode==='mobile'||window.matchMedia('(max-width: 767px)').matches)?true:null;if(lt===true)d.setAttribute('data-large-targets','');}catch(e){}})();`;
+const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;var s={};try{var raw=localStorage.getItem('sk-lms-demo');s=(raw&&JSON.parse(raw).state)||{};}catch(e){}try{if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');if(s.squareCorners)d.setAttribute('data-square-corners','');var dq=new URLSearchParams(location.search).get('direction');if(dq==='studio'||(dq!=='classic'&&s.studio))d.setAttribute('data-direction','studio');var lt=s.largeTargetsChoice;if(lt===undefined||lt===null)lt=s.largeTargets===true?true:(s.deviceMode==='mobile'||window.matchMedia('(max-width: 767px)').matches)?true:null;if(lt===true)d.setAttribute('data-large-targets','');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={montserrat.variable} suppressHydrationWarning>
+    <html lang="en" className={`${montserrat.variable} ${interTight.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         {/* First visit of a platform page in this session: hold the skeleton from the first
