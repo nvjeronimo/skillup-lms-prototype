@@ -9,7 +9,7 @@
    - the glance as a deep ink block of figures, and a floating dark bar that keeps Resume in reach.
    Left out on purpose: the reference's gradient headline and iridescent renders (off-brand).
    Switched on by html[data-direction="studio"] (Profile menu > Studio look, or ?direction=studio).
-   Light theme only for now: in dark, the colour block below stands back and SKO Dark applies.
+   Light and dark (dark since 22 Oct 2026, Nelson): a cool neutral night, not SKO Dark's teal one.
    ============================================================================ */
 
 [data-direction="studio"] {
@@ -51,6 +51,56 @@
   --color-border-primary-muted: #c5e3ea;
 }
 
+/* Studio Dark (Nelson, 22 Oct 2026). The same idea as the light theme, at night: a cool neutral
+   ground (no teal cast, unlike SKO Dark), surfaces a step above it, ink-white text, and the logo's
+   deep teal turned into a pale aqua primary with dark text on it. It also takes every nested dark
+   region (data-theme="dark" bands, the Resume bar, the glance backdrop), so a Studio page never
+   mixes in SKO Dark's teal greys. html[…] outranks the skin dark blocks of tokens/colors.css.
+   Contrast on bg/page #16191f: text/default 15:1, muted 10:1, subtle 6.9:1, primary 10:1;
+   on bg/primary #8fd0e0 the on-primary text #0b1d23 reads 10:1. */
+html[data-direction="studio"][data-theme="dark"],
+html[data-direction="studio"] [data-theme="dark"] {
+  --color-bg-page: #16191f;
+  --color-bg-faint: #0d0f13;
+  --color-bg-subtle: #1b1f26;
+  --color-bg-muted: #262b34;
+  --color-bg-strong: #323844;
+  --color-bg-inverse: #eef0f3;
+  --color-bg-overlay: #0d0f13b3;
+  --color-bg-overlay-soft: #0d0f1333;
+  --color-text-default: #eef0f3;
+  --color-text-muted: #c4c9d1;
+  --color-text-subtle: #9ca3ae;
+  --color-text-placeholder: #9ca3ae;
+  --color-text-disabled: #4f5663;
+  --color-text-on-inverse: #0d0f13;
+  --color-icon-default: #eef0f3;
+  --color-icon-muted: #c4c9d1;
+  --color-icon-subtle: #9ca3ae;
+  --color-icon-faint: #5d6470;
+  --color-border-default: #7d8593;
+  --color-border-subtle: #272c35;
+  --color-border-disabled: #262b34;
+  --color-border-inverse: #1b1f26;
+  --color-border-focus-gap: #0d0f13;
+
+  --color-bg-primary: #8fd0e0;
+  --color-bg-primary-hover: #b4e2ed;
+  --color-bg-primary-soft: #12303a;
+  --color-text-primary: #8fd0e0;
+  --color-text-on-primary: #0b1d23;
+  --color-text-on-primary-hover: #0b1d23;
+  --color-text-on-primary-soft: #d3eef5;
+  --color-icon-primary: #8fd0e0;
+  --color-icon-on-primary: #0b1d23;
+  --color-border-primary: #8fd0e0;
+  --color-border-primary-soft: #2b5561;
+  --color-border-primary-muted: #2b5561;
+
+  /* Shadows barely read on a dark ground: a hairline of light gives the floating surfaces an edge. */
+  --sk-shadow-studio: 0 0 0 1px #ffffff0f, 0 1px 2px #00000066, 0 12px 32px -12px #000000b3;
+}
+
 /* Type: large and light. Every bold or semibold display style steps down to 500, tracked tight;
    titles to 500; the uppercase labels open up a little. */
 [data-direction="studio"] :is(
@@ -77,6 +127,10 @@
    #4f8799 on the #f3f4f6 ground is 3.9:1, enough for text this large. */
 [data-direction="studio"]:not([data-theme="dark"]) [data-heading-em] {
   color: #4f8799;
+}
+/* Dark: a lighter teal of the same hue, 8.8:1 on the #0d0f13 ground. */
+html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
+  color: #7fb8c8;
 }
 
 /* Pills, for one-line controls only (buttons, links, fields, tabs, radios, switches, the wrapper
@@ -123,7 +177,7 @@
 }
 
 /* The platform top bar: no rule under it, it sits on the same ground as the page. */
-[data-direction="studio"]:not([data-theme="dark"]) [data-platform-page] header[data-chrome] {
+[data-direction="studio"] [data-platform-page] header[data-chrome] {
   border-bottom-color: transparent;
   background-color: var(--color-bg-faint);
 }
@@ -156,4 +210,9 @@
   -webkit-backdrop-filter: blur(14px) saturate(1.3);
   backdrop-filter: blur(14px) saturate(1.3);
   box-shadow: 0 0 0 1px #ffffff14 inset, 0 12px 32px -8px #13172066;
+}
+/* Dark: ink on a near-black ground would vanish; the bar steps up to bg/muted's grey. */
+html[data-theme="dark"] .sk-studio-bar {
+  background-color: color-mix(in srgb, #262b34 92%, transparent);
+  box-shadow: 0 0 0 1px #ffffff1a inset, 0 12px 32px -8px #000000b3;
 }

@@ -88,7 +88,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
         data-glow=""
         className="pointer-events-none absolute -right-[102px] top-[calc(50%-76px)] size-[320px] -translate-y-1/2 rounded-pill bg-sko-bg-primary opacity-[0.19]"
       />
-      <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-primary">
+      <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-media">
         {title}
       </h2>
       {/* On a phone the row scrolls: it takes the focus so a keyboard can scroll it (WCAG 2.1.1). */}
