@@ -31,9 +31,9 @@ export interface AssistantLauncherProps {
  * Like the logo, the mark keeps its own colours and swaps its ink to white on a dark page
  * (inline since 21 Oct 2026, see AssistantMark: its three sparkles each spin now and
  * then). Open, it is a round close button.
- * Since 15 Oct 2026 the ball wears a 2px gradient ring in the logo's blues (DS: a linear
- * gradient stroke outside the ball), and the gradient turns slowly round it (Nelson asked
- * for it to move). Reduced motion holds it still (`.sk-assistant-ring`, globals.css).
+ * The ball wears a 3px polished-metal ring with a warm glint that runs round it now and then
+ * (22 Oct 2026, Nelson's reference; before, a 2px ring in the logo's blues). Reduced motion
+ * holds the glint still (`.sk-assistant-ring`, globals.css).
  * The count of first steps: the DS draws it on bg/info, but its 12px number on that blue is
  * 4.0:1 (white) in light and 4.2:1 in dark, under AA; WCAG wins over the DS (PRODUCT.md), so
  * it takes bg/primary, the nearest blue that holds AA, until the DS settles it.
@@ -89,7 +89,7 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
             open ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
           )}
         >
-          {/* The ring sits under the mark: the ball covers its middle, so only its 2px edge shows. */}
+          {/* The ring sits under the mark: the ball covers its middle, so only its 3px edge shows. */}
           {/* The ring turns only while first steps are left (audit 16 Oct 2026, D3): with nothing to
               do, a moving ring would pull the eye from the page for no reason. */}
           <span className={cn("sk-assistant-ring", badge === 0 && "sk-assistant-ring--still")} />

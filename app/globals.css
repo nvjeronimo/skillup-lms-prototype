@@ -1021,40 +1021,78 @@ button {
   animation: none;
 }
 
-/* Assistant launcher ring (DS Assistant-Launcher, 15 Oct 2026): a 2px gradient ring round the
-   ball of the mark, in the logo's own blues (literal, like the mark's SVG: they are logo
-   colours, not roles). It turns slowly so the gradient moves round the ball (Nelson asked
-   for it). Geometry, from the 160 viewBox at 48px: ball centre 24.85/26.32, radius 20.84;
-   the ring is 2px wider all round. Reduced motion (OS or the Accessibility panel) holds it. */
+/* Assistant launcher ring (DS Assistant-Launcher; metal since 22 Oct 2026, Nelson's reference: a
+   polished metal ring with a glint running round it). Two layers under the ball of the mark,
+   which covers their middle, so only a 3px edge shows:
+   - the metal: a fixed conic shading lit from the top left, as polished metal under one light
+     (silver to graphite, dark enough to hold its edge on a white page);
+   - the glint (::after): a narrow warm highlight that runs once round the ring, easing in and
+     out, then rests; it runs only while first steps are left (--still parks it top left).
+   Literal colours, like the mark's SVG: they are the ring's material, not roles (the one
+   gradient the brand allows, Nelson 21 Oct). Geometry, at 48px: ball centre 24.85/26.32,
+   radius 20.84; the ring is 3px wider all round. Reduced motion (OS or the Accessibility
+   panel) holds the glint still. */
 @property --sk-ring-angle {
   syntax: "<angle>";
   inherits: false;
-  initial-value: 135deg;
+  initial-value: -45deg;
 }
 @keyframes sk-ring-turn {
-  to {
-    --sk-ring-angle: 495deg;
+  0% {
+    --sk-ring-angle: -45deg;
+    animation-timing-function: var(--motion-easing-standard);
+  }
+  60%,
+  100% {
+    --sk-ring-angle: 315deg;
   }
 }
 .sk-assistant-ring {
   position: absolute;
-  left: 2.01px;
-  top: 3.48px;
-  width: 45.68px;
-  height: 45.68px;
+  left: 1.01px;
+  top: 2.48px;
+  width: 47.68px;
+  height: 47.68px;
   border-radius: 9999px;
-  background: conic-gradient(from var(--sk-ring-angle), #0088d4, #85d3ff, #044150, #0088d4);
+  background: conic-gradient(
+    from -45deg,
+    #ffffff 0deg,
+    #c9d0d7 40deg,
+    #59626c 95deg,
+    #a7b0b9 140deg,
+    #ffffff 180deg,
+    #8a949e 230deg,
+    #3f4851 280deg,
+    #d5dbe0 330deg,
+    #ffffff 360deg
+  );
+  box-shadow: inset 0 0 0 0.5px rgba(31, 38, 46, 0.35);
+}
+.sk-assistant-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--sk-ring-angle),
+    rgba(255, 140, 50, 0) 0deg,
+    rgba(255, 140, 50, 0.85) 12deg,
+    #fff4e6 22deg,
+    rgba(255, 120, 40, 0.9) 30deg,
+    rgba(255, 120, 40, 0) 44deg,
+    rgba(255, 120, 40, 0) 360deg
+  );
   animation: sk-ring-turn calc(var(--motion-duration-short3) * 24) var(--motion-easing-linear) infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .sk-assistant-ring {
+  .sk-assistant-ring::after {
     animation: none;
   }
 }
-.sk-assistant-ring--still {
+.sk-assistant-ring--still::after {
   animation: none;
 }
-[data-reduce-motion] .sk-assistant-ring {
+[data-reduce-motion] .sk-assistant-ring::after {
   animation: none;
 }
 
