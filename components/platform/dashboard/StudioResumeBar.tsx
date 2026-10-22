@@ -13,7 +13,7 @@ import { useLmsStore } from "@/lib/store";
  * phone it sits over the floating section bar (16 + 64 + 16) and leaves the right to the launcher. Shown only when the direction is on.
  */
 export function StudioResumeBar({ course }: { course: DashboardResumeRow | undefined }) {
-  const studio = useLmsStore((s) => s.studio);
+  const studio = useLmsStore((s) => s.skin) === "studio";
   if (!studio || !course) return null;
   return (
     <aside

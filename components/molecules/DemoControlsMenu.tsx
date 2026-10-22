@@ -140,8 +140,6 @@ export function DemoControlsMenu({
 }: DemoControlsMenuProps) {
   const { mounted, setOpen, containerRef, triggerProps, panelProps } = useDisclosure();
   const mode = useLmsStore((s) => s.deviceMode);
-  const theme = useLmsStore((s) => s.theme);
-  const sea = useLmsStore((s) => s.skin) === "sea";
   const setMode = useLmsStore((s) => s.setDeviceMode);
   const demo = useDemoMode();
   const bp = useBreakpoint();
@@ -195,9 +193,9 @@ export function DemoControlsMenu({
         )}
       >
         {compact ? (
-          <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" chrome={sea} />
+          <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />
         ) : (
-          <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" chrome={sea} />
+          <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
         )}
         {!compact ? (
           <span className="sk-text-body-medium-semibold pr-1 text-sko-text-default">
@@ -211,8 +209,6 @@ export function DemoControlsMenu({
           {...panelProps}
           role="group"
           aria-label={demo ? "Account and demo settings" : "Account"}
-          // In Sea the bar is a dark island; the menu keeps the page's own theme.
-          data-theme={sea ? (theme === "dark" ? "dark" : "light") : undefined}
           className={PROFILE_PANEL}
         >
           {/* The standard profile menu (DS LMS / Profile Menu 1.5): Appearance, Accessibility, Profile,

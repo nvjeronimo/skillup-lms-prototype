@@ -136,7 +136,6 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             {dashboardJump.map((tile, i) => (
               <li key={tile.id} className="min-w-0">
                 <JumpTile
-                  tone={i}
                   icon={tile.icon}
                   title={tile.title}
                   description={tile.description}

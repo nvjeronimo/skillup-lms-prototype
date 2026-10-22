@@ -18,8 +18,6 @@ export interface AvatarProps {
    * icon buttons and CTAs.
    */
   shape?: "circle" | "square";
-  /** Sea skin: the tile takes the bar's spark colour (`[data-chrome-ink] [data-chrome-avatar]`). */
-  chrome?: boolean;
   className?: string;
 }
 
@@ -59,7 +57,6 @@ export function Avatar({
   size = "md",
   status = "none",
   shape = "circle",
-  chrome = false,
   className,
 }: AvatarProps) {
   const s = SIZE[size];
@@ -69,7 +66,6 @@ export function Avatar({
   return (
     <span className={cn("relative inline-flex shrink-0", className)}>
       <span
-        data-chrome-avatar={chrome ? "" : undefined}
         className={cn(
           "inline-flex items-center justify-center overflow-hidden text-sko-text-primary",
           shape === "square" ? "rounded-control" : "rounded-pill",

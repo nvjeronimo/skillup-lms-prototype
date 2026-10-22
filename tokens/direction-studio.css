@@ -16,7 +16,10 @@
   --sk-font-body: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
   --sk-font-display: var(--font-inter-tight, "Inter Tight"), system-ui, sans-serif;
 
-  --sk-radius-control: 9999px;
+  /* Not 9999 for every control-radius element: rows, bubbles and blocks of several lines turned
+     into blobs (search results, chat bubbles, menu rows; Nelson, 22 Oct 2026). The pill goes only
+     to one-line controls (rule below); everything else on the control radius takes 12. */
+  --sk-radius-control: 12px;
   --sk-radius-card: 24px;
   --sk-radius-surface: 28px;
   --sk-radius-inner: 6px;
@@ -72,8 +75,18 @@
   color: #4f8799;
 }
 
-/* Controls are pills here, so a large container that borrows the control radius (the player's
-   course rail, a <nav>) takes the card radius instead of turning into a capsule. */
+/* Pills, for one-line controls only: buttons, links, fields, tabs, radios and switches, and the
+   wrapper of a search field. Anything that holds paragraphs, a column or a list keeps 12. */
+[data-direction="studio"]
+  :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"], [role="menuitem"]).rounded-control:not(
+    :has(p, .flex-col, ul, ol, h2, h3, h4)
+  ),
+[data-direction="studio"] .rounded-control:has(> input:not([type="checkbox"], [type="radio"])) {
+  border-radius: 9999px;
+}
+
+/* A large container that borrows the control radius (the player's course rail, a <nav>) takes
+   the card radius. */
 [data-direction="studio"] :is(nav, aside, section).rounded-control {
   border-radius: var(--sk-radius-card);
 }

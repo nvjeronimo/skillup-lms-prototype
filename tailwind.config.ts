@@ -56,7 +56,6 @@ const config: Config = {
           "text-on-media": "var(--color-text-on-media)",
           "icon-faint": "var(--color-icon-faint)",
           "bg-page": "var(--color-bg-page)",
-          "bg-chrome": "var(--color-bg-chrome)",
           "bg-subtle": "var(--color-bg-subtle)",
           "bg-faint": "var(--color-bg-faint)",
           "bg-muted": "var(--color-bg-muted)",

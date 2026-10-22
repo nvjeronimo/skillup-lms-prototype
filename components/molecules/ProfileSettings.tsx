@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  * (Nelson): the trigger already shows who is signed in.
  */
 
-/** The three brand skins the tokens define (tokens/colors.css): SKO, Gold, Red. */
+/** The brand skins: SKO, Gold, Red (tokens/colors.css) and Studio (tokens/direction-studio.css). */
 export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/primary
   { skin: "teal", label: "SKO", dot: "bg-sko-icon-primary" },
@@ -24,8 +24,8 @@ export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   { skin: "gold", label: "Gold", dot: "bg-sko-icon-accent-yellow" },
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-red
   { skin: "red", label: "Red", dot: "bg-sko-icon-accent-red" },
-  // Sea (proposal, Nelson 19 Oct 2026; first called Maré): the SKO brand with a deep-teal chrome and a yellow spark.
-  { skin: "sea", label: "Sea", dot: "bg-sko-bg-chrome" },
+  // Studio (experimental, Nelson 22 Oct 2026): took Sea's place; its dot is Studio's own primary, the logo's deep teal.
+  { skin: "studio", label: "Studio", dot: "bg-sko-bg-primary" },
 ];
 
 /**
@@ -39,6 +39,7 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
     <span
       aria-hidden
       data-skin={skin === "teal" ? "teal" : undefined}
+      data-direction={skin === "studio" ? "studio" : undefined}
       data-theme={skin === "teal" && theme === "dark" ? "dark" : undefined}
       className={cn("size-2.5 shrink-0 rounded-pill", dot)}
     />
@@ -233,8 +234,6 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   const squareCorners = useLmsStore((s) => s.squareCorners);
   const setSquareCorners = useLmsStore((s) => s.setSquareCorners);
-  const studio = useLmsStore((s) => s.studio);
-  const setStudio = useLmsStore((s) => s.setStudio);
   return (
     <ProfileSection title="Appearance">
       <div className="flex flex-col gap-1.5 px-1">
@@ -256,8 +255,6 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
           onChange={setSkin}
         />
       </div>
-      {/* Experiment (22 Oct 2026): a second visual direction for the whole platform. */}
-      <ToggleRow label="Studio look" hint="Experimental · a calmer, editorial direction" checked={studio} onChange={setStudio} />
       {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
       <ToggleRow
         label="Square corners"

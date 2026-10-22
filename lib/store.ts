@@ -17,7 +17,9 @@ export type DeviceMode = "auto" | "desktop" | "tablet" | "mobile";
 export type Theme = "light" | "dark";
 /** Brand skin — recombinations within the SkillUp palette. */
 /** The brand skins the tokens define (tokens/colors.css). Ink, Sky and Violet had no tokens and went on 16 Oct 2026. */
-export type Skin = "teal" | "gold" | "red" | "sea";
+/** "studio" (22 Oct 2026, Nelson) is the experimental whole-platform direction (tokens/direction-studio.css):
+ *  it took the place of the Sea skin, which went the same day. */
+export type Skin = "teal" | "gold" | "red" | "studio";
 
 /** Vision mode — "cvd" = red-green colourblind-safe state colours (deuter + protan). */
 export type Vision = "default" | "cvd";
@@ -129,8 +131,6 @@ interface LmsState {
   underlineLinks: boolean;
   /** Experimental (Nelson, 21 Oct 2026): every corner square except buttons'. */
   squareCorners: boolean;
-  /** Experimental (22 Oct 2026): the "Studio" visual direction of the whole platform. */
-  studio: boolean;
   /**
    * The learner's explicit Larger touch targets choice; `null` = never chosen,
    * so the default applies (ON at ≤767px / mobile preview, OFF otherwise —
@@ -220,7 +220,6 @@ interface LmsState {
   setReduceMotion: (v: boolean) => void;
   setUnderlineLinks: (v: boolean) => void;
   setSquareCorners: (v: boolean) => void;
-  setStudio: (v: boolean) => void;
   setLargeTargets: (v: boolean) => void;
   setDiscussionsPreview: (v: boolean) => void;
   setQuizMode: (v: "A" | "B") => void;
@@ -333,7 +332,6 @@ export const useLmsStore = create<LmsState>()(
   reduceMotion: false,
   underlineLinks: false,
   squareCorners: false,
-  studio: false,
   largeTargetsChoice: null,
   discussionsPreview: false,
   quizMode: "A",
@@ -604,7 +602,6 @@ export const useLmsStore = create<LmsState>()(
     set({ reduceMotion });
   },
   setSquareCorners: (squareCorners) => set({ squareCorners }),
-  setStudio: (studio) => set({ studio }),
   setUnderlineLinks: (underlineLinks) => {
     track("a11y_change", { setting: "underlineLinks", value: String(underlineLinks) });
     set({ underlineLinks });
@@ -662,7 +659,7 @@ export const useLmsStore = create<LmsState>()(
     }),
     {
       name: "sk-lms-demo",
-      version: 6,
+      version: 7,
       storage: skStorage,
       // v2 dropped the third "Default" quiz mode. Anyone carrying the stored
       // `null` from v1 lands on A, which is what Default resolved to anyway.
@@ -674,6 +671,7 @@ export const useLmsStore = create<LmsState>()(
       // any course added since; the step here only says which courses that state knew.
       // v5 kept only the skins the tokens define: a stored Ink, Sky or Violet goes back to SKO.
       // v6 renamed the Maré skin to Sea.
+      // v7 replaced Sea with Studio, which had been a separate switch.
       migrate: (state, from) => {
         let s = (state ?? {}) as Partial<LmsState> & { largeTargets?: boolean };
         if (from < 2 && !s.quizMode) s = { ...s, quizMode: "A" as const };
@@ -682,9 +680,16 @@ export const useLmsStore = create<LmsState>()(
           s = { ...rest, largeTargetsChoice: largeTargets ? true : null };
         }
         if (from < 4) s = { ...s, seededCourses: COURSES_BEFORE_V4 };
-        if (from < 5 && s.skin && !["teal", "gold", "red", "sea", "mare"].includes(s.skin as string)) s = { ...s, skin: "teal" };
+        if (from < 5 && s.skin && !["teal", "gold", "red", "sea", "mare", "studio"].includes(s.skin as string)) s = { ...s, skin: "teal" };
         // v6: the Maré skin is called Sea (Nelson, 19 Oct 2026).
-        if (from < 6 && (s.skin as string) === "mare") s = { ...s, skin: "sea" };
+        if (from < 6 && (s.skin as string) === "mare") s = { ...s, skin: "sea" as Skin };
+        // v7: Studio takes Sea's place among the skins (Nelson, 22 Oct 2026); the old Studio switch
+        // becomes that skin, and a stored Sea lands on it too.
+        if (from < 7) {
+          const { studio, ...rest } = s as typeof s & { studio?: boolean };
+          s = rest;
+          if (studio || (s.skin as string) === "sea") s = { ...s, skin: "studio" };
+        }
         return s;
       },
       // Runs on every read of the stored state, after `migrate`: the default shallow merge,
@@ -717,7 +722,6 @@ export const useLmsStore = create<LmsState>()(
         reduceMotion: s.reduceMotion,
         underlineLinks: s.underlineLinks,
         squareCorners: s.squareCorners,
-        studio: s.studio,
         largeTargetsChoice: s.largeTargetsChoice,
         discussionsPreview: s.discussionsPreview,
         quizMode: s.quizMode,
