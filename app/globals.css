@@ -534,6 +534,21 @@ button {
    pointer-down"; 22 Oct 2026). Needed since hover only exists on devices that hover: a tap on a
    phone had no feedback at all until the page changed. 99 % and a bg/faint tint, short2 in.
    A press on a button inside the card (Resume, View) is the button's own (sk-button). */
+/* The floating tab bar of the platform pages on a phone (PlatformTabBar, Nelson 22 Oct 2026):
+   bg/page at 88% under a blur, lifted by a soft shadow, no border. Solid under "reduce
+   transparency" (the blur goes with the rule in tokens/colors.css). */
+.sk-floating-nav {
+  background-color: color-mix(in srgb, var(--color-bg-page) 88%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: 0 1px 2px var(--color-shadow-default), 0 10px 28px -8px color-mix(in srgb, var(--color-text-default) 22%, transparent);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .sk-floating-nav {
+    background-color: var(--color-bg-page);
+  }
+}
+
 .sk-press-card {
   transition-property: transform, background-color, border-color, box-shadow;
   transition-duration: var(--motion-duration-short2);

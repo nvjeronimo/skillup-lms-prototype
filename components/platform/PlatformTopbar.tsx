@@ -25,6 +25,7 @@ import { PLATFORM_SECTIONS, platformUser, type PlatformSection } from "@/lib/pla
 import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { useDemoMode } from "@/lib/demo";
+import { useBreakpoint } from "@/lib/useBreakpoint";
 import { LoadingSection } from "@/components/molecules/DemoControlsMenu";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
@@ -186,6 +187,9 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   const profile = useDisclosure();
   const profileCompact = useDisclosure();
   const menu = useDisclosure();
+  // On a phone the sections are in the floating bar at the bottom (PlatformTabBar, Nelson
+  // 22 Oct 2026): no menu button there; the tablet keeps it.
+  const phone = useBreakpoint() === "mobile";
   const router = useRouter();
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
@@ -293,7 +297,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           learner on the right. The menu's icon sits on the 16px edge, the logo 8 after it. */}
         <div className="flex h-[63px] items-center justify-between px-4 lg:hidden">
           <div className="flex items-center">
-            <div ref={menu.containerRef}>
+            <div ref={menu.containerRef} hidden={phone}>
               <button
                 type="button"
                 {...ink}
@@ -324,7 +328,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               href="/platform/dashboard"
               aria-label="SkillUp, Dashboard"
               {...ink}
-              className="-ml-0.5 flex min-h-11 items-center"
+              className={cn("flex min-h-11 items-center", !phone && "-ml-0.5")}
             >
               <SkillUpLogo className="h-[30px]" />
             </Link>
