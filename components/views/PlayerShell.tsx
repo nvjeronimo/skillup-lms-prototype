@@ -18,6 +18,7 @@ import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { SavedPanel, type SavedFilter } from "@/components/organisms/SavedPanel";
 import { DiscussionsPanel } from "@/components/organisms/DiscussionsPanel";
 import { Button } from "@/components/atoms/Button";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { Icon } from "@/lib/icons";
 import { MessagesSquare } from "lucide-react";
 import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
@@ -26,7 +27,7 @@ import { CompletionQuestionModal } from "@/components/organisms/CompletionQuesti
 import { Toast } from "@/components/organisms/Toast";
 import { nextCourseInProgram, playerCourse } from "@/lib/platform/catalog";
 import { coursePageHref } from "@/lib/platform/hrefs";
-import { MY_LEARNING_HREF, courseHomeHref } from "@/lib/platform/routes";
+import { DASHBOARD_HREF, MY_LEARNING_HREF, courseHomeHref } from "@/lib/platform/routes";
 import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
@@ -176,7 +177,30 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   }, [activeTab, setCurrentTab]);
 
   if (!topic) {
-    return <div className="p-8">Topic not found.</div>;
+    // A topic id the course does not have (an old link, a typo): say so, and give the two ways
+    // back, as the app's own 404 does (app/not-found.tsx).
+    return (
+      <main
+        id="main"
+        tabIndex={-1}
+        className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 bg-sko-bg-faint px-4 py-12 text-center outline-none"
+      >
+        <div className="flex max-w-[480px] flex-col gap-2">
+          <h1 className="sk-text-headline-small-semibold text-sko-text-default">This topic is not in the course</h1>
+          <p className="sk-text-body-large-regular text-sko-text-muted">
+            The link may be old or mistyped. The course page lists every topic and where you left off.
+          </p>
+        </div>
+        <div className="flex w-full max-w-[480px] flex-col gap-3 sm:w-auto sm:flex-row">
+          <ButtonLink href={courseHomeHref(courseSlug)} hierarchy="primary" size="lg">
+            Go to the course
+          </ButtonLink>
+          <ButtonLink href={DASHBOARD_HREF} hierarchy="secondary" size="lg">
+            Dashboard
+          </ButtonLink>
+        </div>
+      </main>
+    );
   }
 
   const topbarSize: TopbarSize =
@@ -613,6 +637,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             // On the last topic, Next opens the course-complete dialog: only once the course is done.
             // A topic that asks keeps Next enabled on the last topic too: the answer may finish the course.
             nextDisabled={!next && !courseDone && !asksNow}
+            topicComplete={isCompleted}
             compact={bp === "mobile"}
             onPrevious={() => previous && navigateTopic(previous.id)}
             onNext={() => {

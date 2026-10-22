@@ -11,6 +11,8 @@ export interface CourseProgressionButtonProps {
   size?: ButtonSize;
   /** Mobile: the milestone caption is hidden. */
   compact?: boolean;
+  /** The current topic is complete: the Topic step turns Brand/Primary (Nelson, 22 Oct 2026). */
+  topicComplete?: boolean;
   onClick?: () => void;
   className?: string;
 }
@@ -18,8 +20,10 @@ export interface CourseProgressionButtonProps {
 /**
  * DS `LMS / Course Progression Button` — the footer's forward step. Navigation
  * only, never the topic's action.
- * - Topic  → Brand/Secondary "Next" + arrow. Naming the next topic inside the button
- *            was tried and parked (TBD, Sep 2026): for now the label is always just "Next".
+ * - Topic  → "Next" + arrow: Brand/Secondary while the topic is not complete, Brand/Primary
+ *            once it is (Nelson, 22 Oct 2026: moving on becomes the one main action only when
+ *            there is nothing left to do here). Naming the next topic inside the button was tried
+ *            and parked (TBD, Sep 2026): for now the label is always just "Next".
  * - Module → "MODULE COMPLETED" caption (text/primary, body-small/Medium) + Brand/Primary
  *            "Go to next Module" + arrow.
  * - Course → "COURSE COMPLETED" caption (text/success) + Success/Primary (bg/success)
@@ -30,13 +34,14 @@ export function CourseProgressionButton({
   disabled = false,
   size = "sm",
   compact = false,
+  topicComplete = false,
   onClick,
   className,
 }: CourseProgressionButtonProps) {
   if (milestone === "Topic") {
     return (
       <Button
-        hierarchy="secondary"
+        hierarchy={topicComplete ? "primary" : "secondary"}
         size={size}
         rightIcon={ArrowRight}
         disabled={disabled}

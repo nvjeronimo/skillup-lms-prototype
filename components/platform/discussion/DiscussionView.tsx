@@ -3,8 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowLeft, MessageSquare, Plus } from "lucide-react";
+import { ArrowLeft, MessageSquare, Plus, Search } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
+import { EmptyState } from "@/components/atoms/EmptyState";
 import { SelectField } from "@/components/atoms/SelectField";
 import { Button } from "@/components/atoms/Button";
 import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
@@ -295,9 +296,32 @@ export function DiscussionView() {
                 ))}
               </ul>
             ) : (
-              <p role="status" className="sk-text-body-medium-regular border-t border-sko-border-subtle p-3 text-sko-text-subtle">
-                No conversations match.
-              </p>
+              // The empty search or filter says what was asked and gives the way back (as My Learning).
+              <div role="status">
+                <EmptyState
+                  icon={Search}
+                  title={query.trim() ? `No conversations match “${query.trim()}”` : "No conversations here"}
+                  description={
+                    query.trim()
+                      ? "Check the spelling or search for other words."
+                      : "None of the conversations fit this course and filter."
+                  }
+                  action={
+                    <Button
+                      hierarchy="secondary"
+                      size="md"
+                      onClick={() => {
+                        setQuery("");
+                        setFilter("all");
+                        setCourse("all");
+                      }}
+                    >
+                      {query.trim() ? "Clear search" : "Show all conversations"}
+                    </Button>
+                  }
+                  className="rounded-none border-0 border-t px-4 py-8"
+                />
+              </div>
             )}
           </section>
 
