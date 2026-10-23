@@ -136,7 +136,7 @@ export function VideoChromeFooter({
               setLangOpen(false);
             }}
             // DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
-            className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
+            className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
           >
             <Icon icon={Download} size={16} className="text-sko-icon-primary" />
             <span className="px-0.5">Download transcript</span>

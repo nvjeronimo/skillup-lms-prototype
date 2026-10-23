@@ -89,7 +89,7 @@ export function OverlayPanel({
                 type="button"
                 onClick={headerAction.onClick}
                 // DS Link Button Brand/Primary (text-only: px-1 = structure 2 + label 2).
-                className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
+                className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
               >
                 {headerAction.label}
               </button>
@@ -124,7 +124,7 @@ export function OverlayPanel({
 
         {footer ? (
           <footer className="border-t border-sko-border-subtle px-6 py-4 text-center">
-            <a href={footer.href} className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint">
+            <a href={footer.href} className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default">
               {footer.label}
             </a>
           </footer>
