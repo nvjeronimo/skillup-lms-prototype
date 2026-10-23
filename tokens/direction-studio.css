@@ -202,16 +202,13 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
 /* The glance (Today-at-a-glance 1.5, Nelson 22 Oct 2026), in Studio's terms: the same structure as
    SKO (a dark block, the four figures on their own light cards, the soft glows) with Studio's
    ink for the block, no border, the cards as Studio surfaces (soft shadow, radius by the nesting
-   rule: 20 inside the block) and Studio's type. The two hard circles go: Studio is flat and calm;
-   the blurred glows stay. Light and dark: in dark the cards are Studio Dark's surface. */
+   rule: 20 inside the block) and Studio's type. The glow and the two circles stay, as in SKO
+   (Nelson, 23 Oct 2026). Light and dark: in dark the cards are Studio Dark's surface. */
 [data-direction="studio"] [data-glance] {
   border-color: transparent;
 }
 [data-direction="studio"] [data-glance-backdrop] {
   background-color: #13282f;
-}
-[data-direction="studio"] [data-glance] [data-glow]:not([class*="blur"]) {
-  display: none;
 }
 [data-direction="studio"] [data-glance] .shadow-sk-card {
   box-shadow: var(--sk-shadow-studio);
