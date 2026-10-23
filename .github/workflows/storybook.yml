@@ -1,0 +1,46 @@
+# Storybook, for reference: rebuilt on every change to main that can change what it shows
+# (a token sync from Figma included) and published to GitHub Pages.
+name: Storybook
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tokens/**"
+      - "stories/**"
+      - "components/**"
+      - ".storybook/**"
+      - "app/globals.css"
+      - "tailwind.config.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: storybook
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: ./node_modules/.bin/storybook build --quiet -o storybook-static
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: storybook-static
+      - id: deployment
+        uses: actions/deploy-pages@v4

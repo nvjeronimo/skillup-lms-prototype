@@ -1,0 +1,13 @@
+{
+  "name": "SkillUp · Publish tokens",
+  "id": "skillup-publish-tokens",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["https://api.github.com"],
+    "reasoning": "Reads the published tokens and opens the token pull request on the prototype's GitHub repository."
+  }
+}

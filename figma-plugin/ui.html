@@ -1,0 +1,195 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; font: 12px/18px Inter, system-ui, sans-serif;
+    color: var(--figma-color-text); background: var(--figma-color-bg);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  h1 { font-size: 13px; line-height: 20px; margin: 0; font-weight: 600; }
+  p { margin: 0; color: var(--figma-color-text-secondary); }
+  label { display: flex; flex-direction: column; gap: 4px; font-weight: 500; }
+  input, textarea {
+    font: inherit; color: inherit; background: var(--figma-color-bg-secondary);
+    border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 6px 8px;
+  }
+  textarea { resize: vertical; min-height: 48px; }
+  button {
+    font: inherit; font-weight: 600; border: 0; border-radius: 6px; padding: 8px 12px; cursor: pointer;
+    background: var(--figma-color-bg-brand); color: var(--figma-color-text-onbrand);
+  }
+  button:disabled { opacity: 0.4; cursor: default; }
+  .changes {
+    border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px;
+    max-height: 180px; overflow: auto; font: 11px/16px ui-monospace, Menlo, monospace;
+  }
+  .changes div { white-space: nowrap; }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px;
+    border: 1px solid var(--figma-color-border); }
+  .status { min-height: 18px; }
+  .status.error { color: var(--figma-color-text-danger); }
+  a { color: var(--figma-color-text-brand); }
+  details summary { cursor: pointer; color: var(--figma-color-text-secondary); }
+  details[open] { display: flex; flex-direction: column; gap: 8px; }
+</style>
+
+<h1>Publish tokens</h1>
+<p>Sends the variables and text styles of this file to the prototype. A pull request opens; the
+  build generates the CSS, checks it and merges, and the prototype and Storybook update.</p>
+
+<div>
+  <strong id="summary">Reading the variables…</strong>
+  <div class="changes" id="changes" hidden></div>
+</div>
+
+<label>What changed, in your words
+  <textarea id="note" placeholder="e.g. Primary teal a step darker for contrast"></textarea>
+</label>
+
+<details id="setup">
+  <summary>GitHub connection</summary>
+  <label>Repository <input id="repo" /></label>
+  <label>Access token
+    <input id="token" type="password" placeholder="github_pat_…" autocomplete="off" />
+  </label>
+  <p>A fine-grained token with access to this repository only: Contents and Pull requests, read and
+    write. It stays on this computer (Figma client storage).</p>
+</details>
+
+<button id="publish" disabled>Publish tokens</button>
+<div class="status" id="status"></div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const FILE = "tokens/figma/variables.json";
+  let next = null, current = null, user = "";
+
+  const api = async (path, init = {}) => {
+    const res = await fetch(`https://api.github.com/repos/${$("repo").value.trim()}${path}`, {
+      ...init,
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${$("token").value.trim()}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        ...(init.body ? { "Content-Type": "application/json" } : {}),
+      },
+    });
+    if (!res.ok) throw new Error(`GitHub ${res.status} on ${path}: ${(await res.json().catch(() => ({}))).message || res.statusText}`);
+    return res.json();
+  };
+  const toBase64 = (text) => {
+    const bytes = new TextEncoder().encode(text);
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return btoa(bin);
+  };
+  const fromBase64 = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\n/g, "")), (c) => c.charCodeAt(0)));
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+  // Token-by-token difference between what is on GitHub and what this file holds now.
+  function diff(before, after) {
+    const lines = [];
+    const index = (data) => {
+      const map = new Map();
+      for (const c of data.collections) for (const v of c.variables) map.set(`${c.name}\u0000${v.name}`, v);
+      return map;
+    };
+    const a = index(before), b = index(after);
+    for (const [key, v] of b) {
+      const old = a.get(key);
+      if (!old) { lines.push({ text: `+ ${v.name}` }); continue; }
+      for (const [mode, value] of Object.entries(v.values))
+        if (old.values[mode] !== value) lines.push({ text: `${v.name} · ${mode}: ${old.values[mode]} → ${value}`, color: v.type === "COLOR" ? value : null });
+    }
+    for (const [key, v] of a) if (!b.has(key)) lines.push({ text: `− ${v.name}` });
+    const styles = new Map(before.textStyles.map((s) => [s.name, JSON.stringify(s)]));
+    for (const s of after.textStyles) {
+      if (!styles.has(s.name)) lines.push({ text: `+ text style ${s.name}` });
+      else if (styles.get(s.name) !== JSON.stringify(s)) lines.push({ text: `text style ${s.name} changed` });
+    }
+    const names = new Set(after.textStyles.map((s) => s.name));
+    for (const s of before.textStyles) if (!names.has(s.name)) lines.push({ text: `− text style ${s.name}` });
+    return lines;
+  }
+
+  async function refresh() {
+    $("publish").disabled = true;
+    if (!$("token").value.trim()) {
+      $("summary").textContent = "Add the GitHub token to compare with what is published.";
+      $("setup").open = true;
+      return;
+    }
+    try {
+      const file = await api(`/contents/${FILE}?ref=main`);
+      current = file;
+      const lines = diff(JSON.parse(fromBase64(file.content)), JSON.parse(next));
+      $("summary").textContent = lines.length ? `${lines.length} change(s) since the last publish` : "Nothing changed since the last publish.";
+      $("changes").hidden = !lines.length;
+      $("changes").innerHTML = lines
+        .map((l) => `<div>${l.color ? `<span class="swatch" style="background:${esc(l.color)}"></span> ` : ""}${esc(l.text)}</div>`)
+        .join("");
+      $("publish").disabled = !lines.length;
+    } catch (e) {
+      $("summary").textContent = "Could not read the published tokens.";
+      status(e.message, true);
+    }
+  }
+  function status(text, error = false, html = false) {
+    $("status").className = `status${error ? " error" : ""}`;
+    $("status")[html ? "innerHTML" : "textContent"] = text;
+  }
+  function saveSettings() {
+    parent.postMessage({ pluginMessage: { type: "save-settings", settings: { repo: $("repo").value.trim(), token: $("token").value.trim() } } }, "*");
+  }
+
+  $("token").addEventListener("change", () => { saveSettings(); refresh(); });
+  $("repo").addEventListener("change", () => { saveSettings(); refresh(); });
+
+  $("publish").addEventListener("click", async () => {
+    $("publish").disabled = true;
+    const note = $("note").value.trim() || "Token update from Figma";
+    const stamp = new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15);
+    const branch = `tokens/figma-${stamp}`;
+    try {
+      status("Creating the branch…");
+      const main = await api("/git/ref/heads/main");
+      await api("/git/refs", { method: "POST", body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: main.object.sha }) });
+      status("Sending the tokens…");
+      await api(`/contents/${FILE}`, {
+        method: "PUT",
+        body: JSON.stringify({ message: `tokens(figma): ${note}`, content: toBase64(next), branch, sha: current.sha }),
+      });
+      status("Opening the pull request…");
+      const pr = await api("/pulls", {
+        method: "POST",
+        body: JSON.stringify({
+          title: `tokens(figma): ${note}`,
+          head: branch,
+          base: "main",
+          body: `Published from the SKO Design System in Figma by ${user}.\n\n> ${note}\n\n` +
+            "The **Tokens from Figma** check generates `tokens/generated/*.css` from this export, builds the " +
+            "prototype, comments with what changes on the page, and merges when everything passes.\n\n" +
+            `<details><summary>Changes the plugin saw</summary>\n\n${[...$("changes").children].map((d) => `- ${d.textContent.trim()}`).join("\n")}\n</details>`,
+        }),
+      });
+      status(`Pull request <a href="${esc(pr.html_url)}" target="_blank">#${pr.number}</a> is open. The prototype updates when its checks pass (about 3 minutes).`, false, true);
+    } catch (e) {
+      status(e.message, true);
+      $("publish").disabled = false;
+    }
+  });
+
+  onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+    if (msg.type === "error") { $("summary").textContent = "Could not read the variables."; status(msg.message, true); }
+    if (msg.type === "ready") {
+      next = msg.json;
+      user = msg.user;
+      $("repo").value = msg.settings.repo;
+      $("token").value = msg.settings.token;
+      refresh();
+    }
+  };
+</script>
