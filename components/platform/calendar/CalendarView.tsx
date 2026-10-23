@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AlertCircle, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, Flag, Video } from "lucide-react";
+import { AlertCircle, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, Flag, List, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { Badge } from "@/components/atoms/Badge";
@@ -462,15 +462,19 @@ function CalendarSkeleton() {
       ) : null}
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:gap-8">
         <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="inline-flex max-w-full gap-0.5 overflow-hidden rounded-track bg-sko-bg-track p-1">
+          <div className="flex items-center justify-between gap-3">
+            <div className="inline-flex min-w-0 max-w-full gap-0.5 overflow-hidden rounded-track bg-sko-bg-track p-1">
               {calendarFilters.map((f) => (
                 <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
               ))}
             </div>
-            <div className="inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1 max-md:hidden">
-              <SkeletonPill size="segment" className="bg-transparent">Agenda</SkeletonPill>
-              <SkeletonPill size="segment" className="bg-transparent">Month</SkeletonPill>
+            <div className="inline-flex shrink-0 gap-0.5 rounded-track bg-sko-bg-track p-1">
+              <SkeletonPill size="segment" className="bg-transparent max-md:w-11 max-md:px-0">
+                <span className="max-md:sr-only">Agenda</span>
+              </SkeletonPill>
+              <SkeletonPill size="segment" className="bg-transparent max-md:w-11 max-md:px-0">
+                <span className="max-md:sr-only">Month</span>
+              </SkeletonPill>
             </div>
           </div>
           <div className={AGENDA}>
@@ -604,16 +608,26 @@ export function CalendarView() {
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:gap-8">
           <section data-arrive={2} aria-label="Dates" className="flex min-w-0 flex-1 flex-col gap-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <PlatformSegmented label="Show" options={calendarFilters} value={filter} onChange={setFilter} />
+            {/* The two controls side by side on every breakpoint (Nelson, 23 Oct 2026): the kind filter
+                takes the room and scrolls sideways if it must; the view switch is icons only below md. */}
+            <div className="flex items-center justify-between gap-3">
+              <PlatformSegmented
+                label="Show"
+                options={calendarFilters}
+                value={filter}
+                onChange={setFilter}
+                className="min-w-0"
+              />
               <PlatformSegmented
                 label="View"
+                compact
                 options={[
-                  { id: "agenda", label: "Agenda" },
-                  { id: "month", label: "Month" },
+                  { id: "agenda", label: "Agenda", icon: List },
+                  { id: "month", label: "Month", icon: CalendarDays },
                 ]}
                 value={view}
                 onChange={(v) => setView(v as View)}
+                className="shrink-0"
               />
             </div>
             <div data-mock="Dates come one course at a time (Dates API); no route merges them, and no course has due dates authored yet">
