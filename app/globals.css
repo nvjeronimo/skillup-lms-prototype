@@ -1,6 +1,11 @@
+@import "../tokens/generated/colors.css";
 @import "../tokens/colors.css";
+@import "../tokens/generated/typography.css";
 @import "../tokens/typography.css";
+@import "../tokens/generated/spacing.css";
+@import "../tokens/generated/motion.css";
 @import "../tokens/motion.css";
+@import "../tokens/generated/radius.css";
 @import "../tokens/radius.css";
 @import "../tokens/direction-studio.css";
 

@@ -20,16 +20,7 @@
  *                   (segments stay control 6; 6 + 4 = 10, Nelson's DS Button group, 20 Oct 2026)
  * Tailwind: rounded-none / -inner / -control / -card / -card-inset / -track / -surface / -pill.
  */
-:root {
-  --sk-radius-none: 0px;
-  --sk-radius-inner: 2px;
-  --sk-radius-control: 6px;
-  --sk-radius-card: 12px;
-  --sk-radius-card-inset: calc(var(--sk-radius-card) - 4px);
-  --sk-radius-track: calc(var(--sk-radius-control) + 4px);
-  --sk-radius-surface: 16px;
-  --sk-radius-pill: 9999px;
-}
+/* The values above live in tokens/generated/radius.css (DS 2. Responsive 📐 Radius/*). */
 
 /*
  * Experiment: Square corners (Nelson, 21 Oct 2026; a switch in the profile menu, under the brand
