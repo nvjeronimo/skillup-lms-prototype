@@ -209,6 +209,8 @@ export function AssistantWindow({
     setDraft("");
   };
 
+  // The large greeting shows until the first question is sent.
+  const greet = messages.length === 0 && !answering;
   // The suggestions fade out when one is sent (or a question is typed), instead of vanishing.
   const empty = useExitTransition(messages.length === 0, MOTION_MS.short4);
 
@@ -237,46 +239,46 @@ export function AssistantWindow({
         className,
       )}
     >
-      {/* DS v1.3 (Nelson, 21 Oct 2026): the header is a dark band in both themes — the frame
-          carries SKO Dark, so here `data-theme="dark"` (as the Program header): bg/subtle, the
-          sparkles in a 28px bg/primary-soft tile (radius 6), all resolved dark. */}
+      {/* Header (Nelson, 23 Oct 2026, after the program quick view): a dark band in both themes
+          (data-theme="dark", bg/subtle), the assistant's mark and two Secondary icon buttons. Before
+          the first question it greets the learner by name in large type ("Hey John / How can we
+          help?"); once a conversation runs it shrinks to one row so the log keeps the room. */}
       <header
         data-theme="dark"
         onPointerDown={drag.onPointerDown}
-        className={cn(
-          "flex items-center justify-between border-b border-sko-border-subtle bg-sko-bg-subtle py-3 pl-5 pr-3",
-          modal && "touch-none",
-        )}
+        className={cn("flex shrink-0 flex-col gap-4 bg-sko-bg-subtle p-4 md:p-5", modal && "touch-none")}
       >
-        <h2 className="sk-text-body-large-medium inline-flex items-center gap-2 text-sko-text-default">
-          <span aria-hidden className="inline-flex size-7 items-center justify-center rounded-control bg-sko-bg-primary-soft">
-            <Icon icon={Sparkles} size={16} className="text-sko-icon-primary" />
-          </span>
-          SkillUp Assistant
-        </h2>
-        <div className="flex items-center">
-          {messages.length && !showSteps ? (
-            <button
-              type="button"
-              onClick={() => {
-                onClear();
-                inputRef.current?.focus();
-              }}
-              aria-label="Start a new conversation"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-hover"
-            >
-              <Icon icon={RotateCcw} size={20} />
-            </button>
-          ) : null}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close the assistant"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-hover"
-          >
-            <Icon icon={X} size={20} />
-          </button>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="sk-text-body-large-medium inline-flex items-center gap-3 text-sko-text-default">
+            <span aria-hidden className="inline-flex size-10 items-center justify-center rounded-control bg-sko-bg-primary-soft">
+              <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" />
+            </span>
+            <span className={cn(greet && "sr-only")}>SkillUp Assistant</span>
+          </h2>
+          <div className="flex items-center gap-2">
+            {messages.length && !showSteps ? (
+              <Button
+                hierarchy="secondary"
+                size="md"
+                iconOnly
+                leftIcon={RotateCcw}
+                onClick={() => {
+                  onClear();
+                  inputRef.current?.focus();
+                }}
+                aria-label="Start a new conversation"
+              />
+            ) : null}
+            <Button hierarchy="secondary" size="md" iconOnly leftIcon={X} onClick={onClose} aria-label="Close the assistant" />
+          </div>
         </div>
+        {greet ? (
+          <p className="sk-text-headline-small-semibold text-sko-text-default" aria-hidden>
+            Hey {firstName}
+            <br />
+            How can we help?
+          </p>
+        ) : null}
       </header>
 
       {firstSteps ? (
@@ -337,9 +339,7 @@ export function AssistantWindow({
             className="sk-animate-fade flex flex-col gap-4"
           >
             {next ? <NextStepCard text={next.text} action={next.action} /> : null}
-            <p className="sk-text-body-medium-regular text-sko-text-default">
-              Hi {firstName}. Ask me about the platform or your courses.
-            </p>
+            <p className="sk-text-body-medium-regular text-sko-text-muted">Ask me about the platform or your courses.</p>
             <ul className="flex flex-wrap gap-2">
               {suggestions.map((s) => (
                 <li key={s}>
