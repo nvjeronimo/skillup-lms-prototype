@@ -54,9 +54,9 @@ export function PlatformPage({
   const demo = useDemoMode();
   // On a phone the sections float at the bottom (PlatformTabBar, Nelson 22 Oct 2026).
   const phone = useBreakpoint() === "mobile";
-  // What the last block on the page keeps under it on a phone: the bar (16 + 64) and 16 of air,
+  // What the last block on the page keeps under it on a phone: the bar (16 + 52, compact since 23 Oct) and 16 of air,
   // plus the safe area. The assistant launcher sits beside the bar (23 Oct 2026), not above it.
-  const phonePad = "pb-[calc(6rem+env(safe-area-inset-bottom,0px))]";
+  const phonePad = "pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))]";
   const clearToast = useLmsStore((s) => s.clearToast);
   // Remembered per browser; read after mount so the server and first client render agree.
   const [showMock, setShowMock] = React.useState(false);
