@@ -572,16 +572,9 @@ button {
     background-color: var(--color-bg-page);
   }
 }
-/* The More panel of the tab bar, in every skin (Nelson, 23 Oct 2026): a family of pills. Its rows
-   are 44-tall pills (radius 22); the panel takes 8 of padding and a radius of 36 (DS
-   Radius/fixed-5xl), so the rows sit inside its curve with room. */
-[data-tab-menu] {
-  border-radius: 36px;
-  padding: 8px;
-}
-[data-square-corners] [data-tab-menu] {
-  border-radius: 0;
-}
+/* The tab bar follows the radius roles (decision 028; Nelson, 23 Oct 2026): the bar is a track
+   (Radius/track = control + its 4 of padding), its items controls, the More panel a card (padding 4)
+   and its rows card-inset. In Studio those roles are pills (tokens/direction-studio.css). */
 /* It slides away on scroll down and back on scroll up (Nelson, 23 Oct 2026): out by its own height
    plus the gap and the safe area, so no edge of it stays on screen. Reduced motion: it fades. */
 .sk-floating-nav {

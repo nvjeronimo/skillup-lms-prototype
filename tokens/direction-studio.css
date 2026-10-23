@@ -171,6 +171,12 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
   border-radius: var(--sk-radius-control);
 }
 
+/* The tab bar's More panel in Studio (Nelson, 23 Oct 2026): its card radius (36) with 8 of
+   padding, so the rows (44-tall pills here) sit inside its curve with room. */
+[data-direction="studio"] [data-tab-menu] {
+  padding: 8px;
+}
+
 /* A large container that borrows the control radius (the player's course rail, a <nav>) takes
    the card radius. */
 [data-direction="studio"] :is(nav, aside, section).rounded-control {

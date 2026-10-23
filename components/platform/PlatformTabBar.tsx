@@ -31,13 +31,13 @@ const IN_BAR: PlatformSection[] = ["dashboard", "my-learning", "calendar"];
 type Section = (typeof PLATFORM_SECTIONS)[number];
 
 const ITEM =
-  "sk-text-body-small-medium relative flex min-h-14 w-full flex-col items-center justify-center gap-0.5 rounded-pill transition-[background-color,color,transform] duration-short2 ease-standard-decelerate active:scale-[.96]";
+  "sk-text-body-small-medium relative flex min-h-14 w-full flex-col items-center justify-center gap-0.5 rounded-control transition-[background-color,color,transform] duration-short2 ease-standard-decelerate active:scale-[.96]";
 const itemTone = (on: boolean) =>
   on ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft" : "text-sko-text-subtle";
 
-/** A row of the More panel: a 44-tall pill, 20px icon, body-medium/Medium (as the profile menu rows). */
+/** A row of the More panel: 44 tall, 20px icon, body-medium/Medium, Radius/card-inset (as the profile menu rows). */
 const MORE_ROW =
-  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-3 rounded-pill px-4 text-left transition-colors hover:bg-sko-bg-hover";
+  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-3 rounded-card-inset px-3 text-left transition-colors hover:bg-sko-bg-hover";
 
 function TabIcon({ icon, on, count }: { icon: LucideIcon; on: boolean; count?: number }) {
   return (
@@ -57,15 +57,16 @@ function TabIcon({ icon, on, count }: { icon: LucideIcon; on: boolean; count?: n
 
 /**
  * The platform sections on a phone (Nelson, 22 Oct 2026: "a floating menu, as in an app"; 23 Oct:
- * his answers to the open question). A pill that floats 16 above the bottom edge (plus the safe
+ * his answers to the open question). A bar that floats 16 above the bottom edge (plus the safe
  * area), leaving the right corner to the assistant launcher, which sits beside it on the same line.
  * Dashboard, My Learning and Calendar are in the bar; More gathers the rest (Discussion, Services, and
  * any section added later) in a panel that opens above it. Each item is an icon over a short label
- * (body-small Medium; the full name, cut with an ellipsis when it does not fit, Nelson 23 Oct 2026), 56 tall; the current one sits on a bg/primary-soft pill with a heavier icon,
+ * (body-small Medium; the full name, cut with an ellipsis when it does not fit, Nelson 23 Oct 2026), 56 tall; the current one sits on a bg/primary-soft fill with a heavier icon,
  * so it never depends on colour alone (More is current on any page it holds). Links with
  * `aria-current`, not a tablist: each opens another page. The material is bg/page at 88% under a
  * blur, solid under "reduce transparency"; a soft shadow lifts it, no border, no gradient. Phones
- * only: tablet and desktop keep the top bar.
+ * only: tablet and desktop keep the top bar. Radius by role (decision 028): the bar is a track, its
+ * items controls, the More panel a card with card-inset rows; in Studio they are pills.
  * It slides away while the learner scrolls down and comes back on any scroll up, at the top and at
  * the end of the page, and when the keyboard focus reaches it (Nelson, 23 Oct 2026); never while
  * the More panel is open. Under reduced motion it fades instead of sliding (globals.css).
@@ -112,7 +113,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
       data-floating-nav=""
       data-hidden={hidden || undefined}
       onFocus={() => setScrolledAway(false)}
-      className="sk-floating-nav sk-no-print sk-animate-rise fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 right-[4.5rem] z-30 rounded-pill p-1"
+      className="sk-floating-nav sk-no-print sk-animate-rise fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 right-[4.5rem] z-30 rounded-track p-1"
     >
       <ul className="flex items-stretch">
         {inBar.map((s) => {
@@ -166,7 +167,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
               <div
                 {...more.panelProps}
                 data-tab-menu=""
-                className="sk-animate-menu-up absolute bottom-full right-0 z-10 mb-2 w-56 origin-bottom-right bg-sko-bg-page shadow-xl"
+                className="sk-animate-menu-up absolute bottom-full right-0 z-10 mb-2 w-56 origin-bottom-right rounded-card bg-sko-bg-page p-1 shadow-xl"
               >
                 <ul className="flex flex-col">
                   {inMore.map((s) => {
