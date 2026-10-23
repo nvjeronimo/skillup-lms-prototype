@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Eye } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseCountBadge, CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CourseThumb } from "./CourseThumb";
+import { ProgramQuickView } from "@/components/platform/program/ProgramQuickView";
 import {
   myLearningProgramCertificateLabel,
   myLearningProgramCompletedLabel,
@@ -72,6 +73,14 @@ export const PROGRAM_CARD_FRAME = "relative flex overflow-hidden rounded-card bo
  */
 export function ProgramCard({ program, layout, onAction, className }: ProgramCardProps) {
   const list = layout === "list";
+  // Quick view (proposal, Nelson 23 Oct 2026): the program's key facts in a modal, from the hero.
+  const [quickView, setQuickView] = React.useState(false);
+  const quickViewButton = React.useRef<HTMLButtonElement>(null);
+  const closeQuickView = () => {
+    setQuickView(false);
+    // Back to the button that opened it (WCAG 2.4.3).
+    window.requestAnimationFrame(() => quickViewButton.current?.focus());
+  };
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${program.cta} ${program.title}`;
   // DS (15 Oct 2026): Resume is Primary, Start and View Certificate are Secondary.
@@ -174,13 +183,29 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             </h3>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <DeliveryModeBadge value={program.delivery} />
-            <DifficultyBadge value={program.difficulty} />
-            <CourseCountBadge count={program.courseCount} />
+          <div className="flex w-full items-end justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <DeliveryModeBadge value={program.delivery} />
+              <DifficultyBadge value={program.difficulty} />
+              <CourseCountBadge count={program.courseCount} />
+            </div>
+            {/* Above the card's pointer link (z-[1]), as the action is. */}
+            <Button
+              ref={quickViewButton}
+              hierarchy="tertiary"
+              size="sm"
+              leftIcon={Eye}
+              onClick={() => setQuickView(true)}
+              aria-label={`Quick view of ${program.title}`}
+              aria-haspopup="dialog"
+              className={TARGET_44}
+            >
+              Quick view
+            </Button>
           </div>
         </div>
       </div>
+      <ProgramQuickView program={program} open={quickView} onClose={closeQuickView} />
 
       {/* The body takes the rest of the card and spreads: progress at the top, the footer (Up next,
           the start date, the certificate) at the bottom, in the grid too, so in a row of cards
