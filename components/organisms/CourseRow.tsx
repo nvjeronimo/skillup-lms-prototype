@@ -82,7 +82,7 @@ export function CourseRow({
       )}
     >
       {initials ? (
-        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-my-[15px] -ml-[19px] w-[236px] max-w-[40%] shrink-0 self-stretch" />
+        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-my-[15px] -ml-[19px] w-[118px] shrink-0 self-stretch" />
       ) : null}
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
