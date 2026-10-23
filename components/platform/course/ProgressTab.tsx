@@ -220,7 +220,7 @@ export function ProgressTab({ course }: { course: CourseDetail }) {
 
       <aside aria-label={tab.weeklyGoal ? "Certificate and weekly goal" : "Certificate"} className="flex flex-col gap-4 md:w-[320px] md:shrink-0">
         <CertificateCard certificate={course.certificate} labelAs="h3" />
-        {tab.weeklyGoal ? <WeeklyGoalCard goal={tab.weeklyGoal} labelAs="h3" /> : null}
+        {tab.weeklyGoal ? <WeeklyGoalCard goal={tab.weeklyGoal} courseSlug={course.slug} labelAs="h3" /> : null}
       </aside>
     </div>
   );

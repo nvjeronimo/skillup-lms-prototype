@@ -30,6 +30,8 @@ import { YOUR_TIME, dueBadgeLabel, formatDay, formatTime } from "@/lib/sample-ti
 import { coursePageHref, slugify } from "@/lib/platform/hrefs";
 import { cn } from "@/lib/utils";
 import { useDemoMode } from "@/lib/demo";
+import { CalendarSyncModal } from "@/components/platform/forms/CalendarSyncModal";
+import { useSessionAdditions } from "@/lib/platform/session-additions";
 
 type Filter = (typeof calendarFilters)[number]["id"];
 type View = "agenda" | "month";
@@ -541,7 +543,28 @@ export function CalendarView() {
   // `?missed=2` shows the two-course case (Figma cards 01b / 03b).
   const [twoCourses, setTwoCourses] = React.useState(false);
   React.useEffect(() => setTwoCourses(new URLSearchParams(window.location.search).get("missed") === "2"), []);
-  const all = twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents;
+  // Sessions booked in Services this session show as live sessions (23 Oct 2026).
+  const bookings = useSessionAdditions((s) => s.bookings);
+  const [syncing, setSyncing] = React.useState(false);
+  const all = React.useMemo(
+    () => [
+      ...(twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents),
+      ...bookings.map(
+        (b): CalendarEvent => ({
+          id: b.id,
+          date: b.date,
+          time: b.time,
+          kind: "live",
+          label: "Coaching",
+          title: `${b.service} with a career coach`,
+          course: "SkillUp Career services",
+          href: "/platform/services",
+          outOfMvp: true,
+        }),
+      ),
+    ],
+    [twoCourses, bookings],
+  );
   const events = all.filter((e) => filter === "all" || e.kind === filter);
   const missed = all.filter(isMissed);
   const missedCourses = missedByCourse(all);
@@ -555,7 +578,7 @@ export function CalendarView() {
       onAction: () => router.push(`${coursePageHref(slugify(course))}?tab=dates`),
     });
   };
-  const thisWeek = calendarEvents.filter((e) => e.date >= CALENDAR_TODAY && e.date <= addDays(CALENDAR_TODAY, 6) && !e.complete);
+  const thisWeek = all.filter((e) => e.date >= CALENDAR_TODAY && e.date <= addDays(CALENDAR_TODAY, 6) && !e.complete);
   const shiftMonth = (delta: number) => {
     const d = parseDay(`${month}-01`);
     d.setMonth(d.getMonth() + delta);
@@ -681,13 +704,14 @@ export function CalendarView() {
                   </p>
                 </div>
               </div>
-              <Button hierarchy="secondary" size="sm" className="self-start max-md:h-11" onClick={() => showToast("Calendar sync is not part of this prototype yet")}>
+              <Button hierarchy="secondary" size="sm" className="self-start max-md:h-11" onClick={() => setSyncing(true)}>
                 Subscribe
               </Button>
             </section>
           </aside>
         </div>
       </div>
+      <CalendarSyncModal open={syncing} onClose={() => setSyncing(false)} />
     </PlatformPage>
   );
 }

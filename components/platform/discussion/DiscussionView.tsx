@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, MessageSquare, Plus, Search } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { EmptyState } from "@/components/atoms/EmptyState";
@@ -23,6 +23,9 @@ import {
 import { coursePageHref } from "@/lib/platform/hrefs";
 import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
+import { NewPostModal } from "@/components/platform/forms/NewPostModal";
+import { ReportMessageModal } from "@/components/platform/forms/ReportMessageModal";
+import { sessionAdditions, useSessionAdditions } from "@/lib/platform/session-additions";
 import { cn } from "@/lib/utils";
 
 const COURSES = [...new Map(discussionThreads.map((t) => [t.courseSlug, t.course])).entries()];
@@ -214,8 +217,9 @@ export function DiscussionSkeleton() {
  * Discussion (proposal, 17 Oct 2026; no Figma screen yet): every course's discussions in one
  * inbox, laid out as the course's Q&A tab (list 360 / 320 beside the open conversation; mobile
  * shows one at a time, `?thread=` opens one). The list filters by state and by course and
- * searches titles and previews. "New post" starts in a course; replying, following and
- * reporting are not built and say so.
+ * searches titles and previews. "New post" and "Report" open their modals (23 Oct 2026): a new
+ * post opens at the top of the inbox for the session. Replying and following are not built and
+ * say so.
  */
 export function DiscussionView() {
   const params = useSearchParams();
@@ -226,10 +230,15 @@ export function DiscussionView() {
   const [course, setCourse] = React.useState("all");
   const [query, setQuery] = React.useState("");
   const [reply, setReply] = React.useState("");
+  const [posting, setPosting] = React.useState(false);
+  const [reporting, setReporting] = React.useState(false);
+  const router = useRouter();
+  const posted = useSessionAdditions((s) => s.posts);
+  const all = React.useMemo(() => [...posted, ...discussionThreads], [posted]);
 
-  const explicit = discussionThreads.find((t) => t.id === threadId);
+  const explicit = all.find((t) => t.id === threadId);
   const needle = query.trim().toLowerCase();
-  const threads = discussionThreads.filter(
+  const threads = all.filter(
     (t) =>
       (course === "all" || t.courseSlug === course) &&
       (filter === "all" ||
@@ -238,7 +247,7 @@ export function DiscussionView() {
         (filter === "mine" && t.mine)) &&
       (!needle || `${t.title} ${t.preview}`.toLowerCase().includes(needle)),
   );
-  const current = explicit ?? threads[0] ?? discussionThreads[0];
+  const current = explicit ?? threads[0] ?? all[0];
 
   return (
     <div className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
@@ -253,7 +262,7 @@ export function DiscussionView() {
               Talk with your cohort. For a private question to your mentor, use Mentorship Q&amp;A in the course.
             </p>
           </div>
-          <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => notInPrototype("New post (choose a course, then a topic)")} className="max-md:h-11">
+          <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => setPosting(true)} className="max-md:h-11">
             New post
           </Button>
         </div>
@@ -361,7 +370,7 @@ export function DiscussionView() {
               </div>
               <ol aria-label="Messages" className="flex flex-col gap-4 p-4 md:p-5 lg:p-6">
                 {current.messages.map((m) => (
-                  <Message key={m.id} message={m} report="Report" onReport={() => notInPrototype("Reporting a message")} />
+                  <Message key={m.id} message={m} report="Report" onReport={() => setReporting(true)} />
                 ))}
               </ol>
               {current.replies > current.messages.length - 1 ? (
@@ -398,6 +407,29 @@ export function DiscussionView() {
           </div>
         </div>
       </div>
+
+      <NewPostModal
+        open={posting}
+        onClose={() => setPosting(false)}
+        defaultCourse={course === "all" ? undefined : course}
+        onPosted={(thread) => {
+          sessionAdditions.addPost(thread);
+          setPosting(false);
+          setFilter("all");
+          setQuery("");
+          setCourse("all");
+          router.replace(discussionHref(thread.id), { scroll: false });
+          showToast("Posted. Your cohort can reply now.");
+        }}
+      />
+      <ReportMessageModal
+        open={reporting}
+        onClose={() => setReporting(false)}
+        onReported={() => {
+          setReporting(false);
+          showToast("Thanks. The course team will review this message.");
+        }}
+      />
     </div>
   );
 }

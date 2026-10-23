@@ -47,8 +47,8 @@ export const serviceSections: ServiceSection[] = [
     emphasis: "next steps",
     mock: "Career services are SkillUp's own; none of them has a system behind it yet",
     items: [
-      { id: "cv", icon: FileText, title: "CV review", description: "A career coach reviews your CV and LinkedIn profile. One review is included with your program.", action: "Request a review", status: { label: "1 included", color: "info" } },
-      { id: "interview", icon: MessagesSquare, title: "Interview practice", description: "Practice common questions for your field with the assistant, and get feedback on your answers.", action: "Start practicing" },
+      { id: "cv", icon: FileText, title: "CV review", description: "A career coach reviews your CV and LinkedIn profile. One review is included with your program.", action: "Book a review", status: { label: "1 included", color: "info" } },
+      { id: "interview", icon: MessagesSquare, title: "Interview practice", description: "A mock interview for your field with a career coach, then feedback on your answers.", action: "Book a practice" },
       { id: "jobs", icon: Briefcase, title: "Job board", description: "Roles from SkillUp's hiring partners that match your programs.", action: "Browse jobs", external: true },
       { id: "linkedin", icon: Linkedin, title: "Share your certificates", description: "Add your certificates to LinkedIn in one step.", action: "Add to LinkedIn", external: true },
     ],

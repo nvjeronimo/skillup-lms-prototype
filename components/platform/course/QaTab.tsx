@@ -9,7 +9,11 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { CONTENT_PENDING } from "@/lib/platform/program";
+import { useRouter } from "next/navigation";
 import { useLmsStore } from "@/lib/store";
+import { AskQuestionModal } from "@/components/platform/forms/AskQuestionModal";
+import { ReportMessageModal } from "@/components/platform/forms/ReportMessageModal";
+import { NONE, sessionAdditions, useSessionAdditions } from "@/lib/platform/session-additions";
 import { courseDetailHref, type CourseDetail, type QaMessage, type QaThread } from "@/lib/platform/course-detail";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { cn } from "@/lib/utils";
@@ -164,8 +168,9 @@ export function Message({ message, report, onReport }: { message: QaMessage; rep
  * and the tab bar for that view, as drawn.
  *
  * The list's search and its All / Unanswered / Following filter work on the sample threads.
- * Only the first thread is drawn with its messages. Sending a reply, asking a question,
- * following and reporting are not built: they say so in a toast.
+ * Only the first thread is drawn with its messages. Ask a question and Report open their modals
+ * (23 Oct 2026): an asked question opens at the top of the list for the session. Sending a
+ * reply and following are not built: they say so in a toast.
  */
 export function QaTab({ course, threadId }: { course: CourseDetail; threadId: string | null }) {
   const showToast = useLmsStore((s) => s.showToast);
@@ -178,11 +183,16 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
   const [filterChanged, setFilterChanged] = React.useState(false);
   const [reply, setReply] = React.useState("");
   const notInPrototype = (what: string) => showToast(`${what} is not part of this prototype yet`);
+  const router = useRouter();
+  const [asking, setAsking] = React.useState(false);
+  const [reporting, setReporting] = React.useState(false);
+  const asked = useSessionAdditions((s) => s.questions[course.slug] ?? NONE);
+  const all = React.useMemo(() => [...asked, ...tab.threads], [asked, tab.threads]);
 
-  const explicit = tab.threads.find((t) => t.id === threadId);
-  const current = explicit ?? tab.threads[0];
+  const explicit = all.find((t) => t.id === threadId);
+  const current = explicit ?? all[0];
   const needle = query.trim().toLowerCase();
-  const threads = tab.threads.filter(
+  const threads = all.filter(
     (t) =>
       (filter === "all" || (filter === "unanswered" ? !t.answered : t.following)) &&
       (!needle || t.title.toLowerCase().includes(needle) || t.preview.toLowerCase().includes(needle)),
@@ -214,7 +224,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             <h3 id="qa-list-title" className="sk-text-body-medium-semibold text-sko-text-default">
               {tab.listTitle}
             </h3>
-            <Button hierarchy="secondary" size="sm" onClick={() => notInPrototype(tab.ask)} className="max-md:h-11">
+            <Button hierarchy="secondary" size="sm" onClick={() => setAsking(true)} className="max-md:h-11">
               {tab.ask}
             </Button>
           </div>
@@ -334,7 +344,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                     key={message.id}
                     message={message}
                     report={tab.report}
-                    onReport={() => notInPrototype("Reporting a message")}
+                    onReport={() => setReporting(true)}
                   />
                 ))}
               </ol>
@@ -373,6 +383,28 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
           </section>
         </div>
       </div>
+
+      <AskQuestionModal
+        course={course}
+        open={asking}
+        onClose={() => setAsking(false)}
+        onAsked={(thread) => {
+          sessionAdditions.addQuestion(course.slug, thread);
+          setAsking(false);
+          setFilter("all");
+          setQuery("");
+          router.replace(courseDetailHref(course.slug, "qa", thread.id), { scroll: false });
+          showToast("Question posted. Your mentor has been notified.");
+        }}
+      />
+      <ReportMessageModal
+        open={reporting}
+        onClose={() => setReporting(false)}
+        onReported={() => {
+          setReporting(false);
+          showToast("Thanks. The course team will review this message.");
+        }}
+      />
     </div>
   );
 }
