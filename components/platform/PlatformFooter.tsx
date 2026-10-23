@@ -12,8 +12,8 @@ const LINK =
 /**
  * DS `LMS/Platform/Navigation/Footer` (Nelson, 23 Oct 2026): a micro footer at the end of every
  * platform page, never in the player (the player keeps only the content). One line on desktop,
- * centred lines below it: the copyright, the legal and help links, and "Powered by Open edX" (the
- * Open edX trademark policy's usual credit). body-small, text/subtle, a 1px border/subtle rule
+ * centred lines below it: the copyright, the legal and help links, and "Powered by" with the Open edX
+ * logo, small (the Open edX trademark policy's usual credit). body-small, text/subtle, a 1px border/subtle rule
  * above, inside the pages' 1200 column. Open edX's MFEs already ship a footer slot
  * (frontend-component-footer); this is how it looks here. The links point to SkillUp pages that
  * have no URL yet, so they say so (and carry the sample-data mark).
@@ -37,7 +37,13 @@ export function PlatformFooter({ className }: { className?: string }) {
             </li>
           ))}
         </ul>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">Powered by Open edX</p>
+        <p className="sk-text-body-small-regular flex items-center gap-2 text-sko-text-subtle">
+          Powered by
+          {/* Open edX's own logo file (Nelson, 23 Oct 2026), small: 20 tall. It carries its own
+              navy and magenta fills, so it reads on light and dark pages alike. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/open-edx-logo.svg" alt="Open edX" width={68} height={20} className="h-5 w-auto" />
+        </p>
       </div>
     </footer>
   );
