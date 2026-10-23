@@ -36,8 +36,8 @@ const ITEM =
     label beside the icon; the others are 44 × 44 icons, their names kept for screen readers. */
 const itemTone = (on: boolean) =>
   on
-    ? // gap-3: room for the count badge, which overhangs the icon by 10.
-      "gap-3 bg-sko-bg-primary-soft px-3.5 text-sko-text-on-primary-soft"
+    ? // As DS Tab-Bar-Item 1.1: padding 12 (Spacing/lg), gap 16 (Spacing/xl, room for the count).
+      "gap-4 bg-sko-bg-primary-soft px-3 text-sko-text-on-primary-soft"
     : "w-11 text-sko-text-subtle hover:bg-sko-bg-hover";
 const labelTone = (on: boolean) => (on ? "whitespace-nowrap" : "sr-only");
 
