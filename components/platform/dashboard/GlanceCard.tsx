@@ -23,7 +23,7 @@ function StatCard({ stat }: { stat: DashboardStat }) {
       <p className="flex items-end gap-2">
         <span
           className={cn(
-            "sk-text-headline-large-semibold shrink-0",
+            "sk-text-display-small-semibold shrink-0",
             stat.tone === "success" ? "text-sko-text-success" : "text-sko-text-on-primary-soft",
           )}
         >
