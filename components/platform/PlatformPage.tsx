@@ -4,6 +4,7 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import { PlatformTopbar } from "./PlatformTopbar";
 import { PlatformTabBar } from "./PlatformTabBar";
+import { PlatformFooter } from "./PlatformFooter";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { Toast } from "@/components/organisms/Toast";
 import { useLmsStore } from "@/lib/store";
@@ -123,10 +124,9 @@ export function PlatformPage({
         ref={mainRef}
         id="main"
         tabIndex={-1}
-        // On a phone the assistant launcher floats 48 + 16 over the bottom right. The test-build
-        // footer used to keep 80px under the page; without it (demo mode off) the page keeps it,
-        // so the last card or button scrolls clear of the launcher (audit, 21 Oct 2026).
-        className={cn("sk-animate-page flex-1 outline-none", !demo && (phone ? phonePad : "max-md:pb-20"), className)}
+        // The room the floating tab bar / the assistant launcher need under the page goes under the
+        // last block of the page: the micro footer, or the test-build note when it shows.
+        className={cn("sk-animate-page flex-1 outline-none", className)}
       >
         <ArrivalContext.Provider value={arrival}>
           {/* Rendered by the server and until the controller has decided (it only shows under
@@ -139,6 +139,8 @@ export function PlatformPage({
           <div data-arrival-content="">{children}</div>
         </ArrivalContext.Provider>
       </main>
+      {/* The micro footer of the platform pages (Nelson, 23 Oct 2026); the player has none. */}
+      <PlatformFooter className={cn(!demo && (phone ? phonePad : "max-md:pb-20"))} />
       {/* Test-build note, in the footer (Nelson, 15 Oct 2026). The same dashed warning treatment
           as the /lab note, so a screenshot of these pages is not read as a promise about the data.
           max-md:pb-20: on a phone the assistant launcher floats over the bottom right (48 + 16 from
