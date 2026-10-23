@@ -14,7 +14,8 @@ import { CourseThumb } from "./CourseThumb";
 export interface MyLearningCourseCardProps {
   course: MyLearningCourse;
   /** DS `Layout`: Grid is the browsing card, List the scan row (desktop only). */
-  layout: "grid" | "list";
+  /** `list-stacked` (DS Layout=List stacked, 23 Oct 2026): the tablet list, the progress above the Up next box. */
+  layout: "grid" | "list" | "list-stacked";
   /**
    * `card` (My Learning): the card draws its own border, radius and shadow.
    * `row` (the Program page's `Course-Row`): the row's container draws them and the card is
@@ -201,7 +202,8 @@ export function MyLearningCourseCard({
   const hierarchy = hierarchyOf(course);
   const overlineText = course.progressPct === null ? "Starts with" : overline;
 
-  if (layout === "list") {
+  if (layout === "list" || layout === "list-stacked") {
+    const stacked = layout === "list-stacked";
     return (
       // DS Course-Card 1.15 (Nelson, 19 Oct 2026): List min height 146, the height with a two-line title,
       // so a list of one-line titles keeps the same height; the rows of a collection match (useEqualHeights).
@@ -209,7 +211,7 @@ export function MyLearningCourseCard({
         {/* The course picture down the left edge, full height (Nelson, 22 Oct 2026: the picture
             large); it replaced the 84px thumb. */}
         <CourseThumb shape="cover" initials={course.initials} imageSrc={course.imageSrc} className="-my-4 -ml-4 w-[300px] max-w-[40%] shrink-0 self-stretch" />
-        <div className="flex min-w-[298px] flex-1 basis-0 items-center gap-3">
+        <div className={cn("flex flex-1 basis-0 items-center gap-3", stacked ? "min-w-0" : "min-w-[298px]")}>
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
               16 after the badge (in the grid card it goes to the right end of that line); the
@@ -233,12 +235,15 @@ export function MyLearningCourseCard({
           </div>
         </div>
         </div>
+        {/* DS List stacked (tablet): the progress and the footer share one Status column, the
+            progress on top (gap 12), so the title keeps half the width. */}
+        <div className={stacked ? "flex min-w-0 flex-1 basis-0 flex-col gap-3" : "contents"}>
         {/* DS List: the progress block hugs its line ("45% complete", 24, "8 hours total"). */}
-        <Progress course={course} hug className="shrink-0 gap-1.5" />
+        <Progress course={course} hug={!stacked} className="shrink-0 gap-1.5" />
         <div
           // DS List: the footer fills what the titles and the progress leave; grey beside Resume,
           // white with a border beside Start, green when completed (v1.8). Its height hugs.
-          className={cn("flex min-w-[250px] flex-1 items-center gap-4 rounded-control", stripOf(course, hierarchy))}
+          className={cn("flex items-center gap-4 rounded-control", stacked ? "w-full" : "min-w-[250px] flex-1", stripOf(course, hierarchy))}
         >
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
             {/* DS v1.11 (Nelson, 16 Oct 2026): the overline and the topic type share one row, 16
@@ -256,6 +261,7 @@ export function MyLearningCourseCard({
           ) : (
             <Action course={course} hierarchy={hierarchy} label={actionLabel} onAction={onAction} className="shrink-0" />
           )}
+        </div>
         </div>
       </article>
     );

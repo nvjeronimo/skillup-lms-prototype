@@ -73,9 +73,10 @@ export interface CourseRowCardProps extends Pick<ProgramCourse, "position" | "de
   open: boolean;
   onToggle: () => void;
   /**
-   * DS `Breakpoint`. `responsive` (the Program page) is Desktop from lg up and Compact below.
-   * `desktop` and `compact` fix it, for a page that picks the row by its view: the list and
-   * the grid of My Learning.
+   * DS `Breakpoint`. `responsive` (the Program page) is Desktop from lg up, Tablet from md to lg
+   * (the card on List stacked: the progress above the Up next box, DS Course-Row 1.1, Nelson
+   * 23 Oct 2026) and Compact below. `desktop` and `compact` fix it, for a page that picks the
+   * row by its view: the list and the grid of My Learning (the list stacks on a tablet too).
    */
   breakpoint?: "responsive" | "desktop" | "compact";
   className?: string;
@@ -129,13 +130,16 @@ export function CourseRowCard({
       style={style}
     >
       {!compact ? (
-        <MyLearningCourseCard
-          course={card}
-          layout="list"
-          context="row"
-          onAction={notInPrototype}
-          className={responsive ? "hidden lg:flex" : undefined}
-        />
+        <>
+          <MyLearningCourseCard course={card} layout="list" context="row" onAction={notInPrototype} className="hidden lg:flex" />
+          <MyLearningCourseCard
+            course={card}
+            layout="list-stacked"
+            context="row"
+            onAction={notInPrototype}
+            className={responsive ? "hidden md:flex lg:hidden" : "lg:hidden"}
+          />
+        </>
       ) : null}
       {breakpoint !== "desktop" ? (
         <MyLearningCourseCard
@@ -143,7 +147,7 @@ export function CourseRowCard({
           layout="grid"
           context="row"
           onAction={notInPrototype}
-          className={responsive ? "lg:hidden" : undefined}
+          className={responsive ? "md:hidden" : undefined}
         />
       ) : null}
 
