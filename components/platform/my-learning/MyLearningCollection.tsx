@@ -37,8 +37,8 @@ const ID_BASE = "my-learning";
 export const MY_LEARNING_FILTER_TRACK =
   "flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden";
 export const MY_LEARNING_GRID = "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
-/* List: one column, 24 apart. Desktop only. */
-const LIST = "hidden flex-col gap-6 lg:flex";
+/* List: one column, 20 / 24 apart; from a tablet up since 23 Oct 2026 (Nelson). */
+const LIST = "hidden flex-col gap-5 md:flex lg:gap-6";
 
 /* The row is the target of its card's title link: it shows it on hover, as the card did. */
 const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
@@ -56,8 +56,10 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
  * search at full width, then the filter, 16 apart.
  * The tab and the view live in the URL (`?tab=programs`, `?view=list`; the drawn defaults,
  * Courses and Grid, leave it clean). Search filters the cards of the selected tab by title.
- * Below desktop the collections are Grid only: the toggle is hidden, and a `?view=list`
- * URL still shows the grid there.
+ * The Grid / List toggle shows from a tablet up (Nelson, 23 Oct 2026; it used to hide below
+ * desktop). List on a tablet: course rows take the stacked list card (progress above the Up next
+ * box), program cards their list layout. A phone stays Grid: a list card does not fit 343, and a
+ * `?view=list` URL still shows the grid there.
  *
  * Status filter (decided by Nelson on 13 Oct 2026; it replaced the three sections of the same
  * day, which spread the cards and made the learner scroll): one list per tab, always ordered
@@ -222,7 +224,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           <ViewToggle
             view={view}
             onChange={(next) => setParam("view", next, MY_LEARNING_DEFAULT_VIEW)}
-            className="hidden shrink-0 lg:inline-flex"
+            className="hidden shrink-0 md:inline-flex"
           />
         </div>
       </div>
@@ -254,7 +256,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           ) : tab === "courses" ? (
             <>
               {/* items-start: an opened row does not stretch the rows of its line. */}
-              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "lg:hidden")}>
+              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "md:hidden")}>
                 {courses.map((row, i) => (
                   <CourseRowCard
                     key={row.card.id}
@@ -288,7 +290,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           ) : (
             <>
               {/* Every program card has the same height, whatever its state or title (useEqualHeights). */}
-              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "lg:hidden")}>
+              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "md:hidden")}>
                 {programs.map((program, i) => (
                   <li key={program.id} className={cn("min-w-0", ROW_ENTER)} style={staggerStyle(i, programs.length)}>
                     <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />
