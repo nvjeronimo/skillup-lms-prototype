@@ -207,7 +207,9 @@ export function Segmented<T extends string>({
           aria-label={o.aria}
           onClick={() => onChange(o.value)}
           className={cn(
-            "inline-flex h-8 flex-1 items-center justify-center rounded-control border transition-colors",
+            // min-w-0: a segment may shrink below its text, which then ends with an ellipsis (Nelson,
+            // 23 Oct 2026: the four brand skins overflowed the 288 panel in Studio).
+            "inline-flex h-8 min-w-0 flex-1 items-center justify-center rounded-control border transition-colors",
             // An option can set its own padding and gap (the four brand skins need tighter ones).
             o.className?.includes("px-") ? null : "gap-2 px-2.5",
             o.className ?? "sk-text-body-medium-semibold",
@@ -242,12 +244,14 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
           label="Brand skin"
           options={PROFILE_SKINS.map((s) => ({
             value: s.skin,
-            // Four skins in the 288 panel: tighter segments so none is cut.
-            className: "sk-text-body-medium-semibold gap-1.5 px-1.5",
+            // Four skins in the 288 panel: tighter segments, and a name that ends with an ellipsis
+            // when it does not fit (the dot always shows; the button keeps the full name).
+            // flex-auto: each segment takes its text's width and only shrinks when the four do not fit.
+            className: "sk-text-body-medium-semibold flex-auto gap-1 px-1",
             label: (
               <>
                 <SkinDot skin={s.skin} dot={s.dot} />
-                {s.label}
+                <span className="min-w-0 truncate">{s.label}</span>
               </>
             ),
           }))}
