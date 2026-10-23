@@ -15,8 +15,7 @@ import { useBreakpoint } from "@/lib/useBreakpoint";
 import { CONTENT_BLEED, CONTENT_PX } from "@/lib/contentPadding";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
-import { tsToSeconds } from "@/lib/utils";
-import { scrollToElement } from "@/lib/scrollToElement";
+import { scrollBehavior, tsToSeconds } from "@/lib/utils";
 import { track } from "@/lib/analytics";
 import { TopicEndActionContext } from "@/lib/topicEndAction";
 import { TRANSCRIPT_FOLLOW_PAUSE_MS, isOutOfView, isScrollKey } from "@/lib/motion/feedback";
@@ -31,14 +30,30 @@ function scrollParent(el: HTMLElement): HTMLElement | null {
 }
 
 /**
- * True when the line is not wholly visible in the transcript's scroll box. With no box there
- * is nothing to test against: the page is never scrolled for the transcript (a box below the
- * fold stays below the fold).
+ * The part of the scroll box the learner can read: below the sticky video band when the
+ * transcript sits under the player (PlayerShell's `data-video-band`), else the whole box.
  */
-function lineOutOfView(el: HTMLElement): boolean {
+function readableSpan(box: HTMLElement) {
+  const r = box.getBoundingClientRect();
+  const band = box.querySelector<HTMLElement>("[data-video-band]");
+  const top = band ? Math.max(r.top, band.getBoundingClientRect().bottom) : r.top;
+  return { top, bottom: r.bottom };
+}
+
+/**
+ * Brings the active line into the readable part of the box when it is not wholly there, a
+ * third of the way down (so the next lines show under it). The box's own scroll, not
+ * scrollIntoView: that ignored the sticky player and parked the line under it. With no box
+ * the page is never scrolled for the transcript.
+ */
+function followLine(el: HTMLElement, force = false) {
   const box = scrollParent(el);
-  if (!box) return false;
-  return isOutOfView(el.getBoundingClientRect(), box.getBoundingClientRect());
+  if (!box) return;
+  const view = readableSpan(box);
+  const line = el.getBoundingClientRect();
+  if (!force && !isOutOfView(line, view)) return;
+  const target = view.top + (view.bottom - view.top) / 3;
+  box.scrollBy({ top: line.top - target, behavior: scrollBehavior() });
 }
 
 export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: string }) {
@@ -67,20 +82,20 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   const scrollToActive = React.useCallback(() => {
     const el = activeLineId ? lineRefs.current[activeLineId] : null;
-    scrollToElement(el, "center");
+    if (el) followLine(el, true);
   }, [activeLineId]);
 
-  // Not on the first render: scrollIntoView also moves the page, so a topic would open
-  // with its title already scrolled under the player. Follow from the first line change on,
-  // and only when the active line has left the view: a line on screen stays where the
-  // learner is reading it, and one off screen comes in by the shortest way ("nearest").
+  // Not on the first render: a topic opens on its title, not scrolled under the player. From the
+  // first line change on, while the video plays and the learner is not scrolling, the
+  // transcript follows it (Nelson, 23 Oct 2026): whenever the active line is not wholly in the
+  // readable part (below the docked player), it comes in a third of the way down.
   const mountedLineId = React.useRef(activeLineId);
   React.useEffect(() => {
     if (mountedLineId.current === activeLineId) return;
     mountedLineId.current = null;
     if (!following) return;
     const el = activeLineId ? lineRefs.current[activeLineId] : null;
-    if (el && lineOutOfView(el)) scrollToElement(el, "nearest");
+    if (el) followLine(el);
   }, [activeLineId, following]);
 
   function pauseFollow(direction: "up" | "down") {
