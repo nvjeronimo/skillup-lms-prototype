@@ -208,7 +208,7 @@ export function MyLearningCourseCard({
       <article data-card-grid="" className={cn(surface, clickable, "group flex min-h-[146px] items-center gap-6 overflow-hidden p-4", className)}>
         {/* The course picture down the left edge, full height (Nelson, 22 Oct 2026: the picture
             large); it replaced the 84px thumb. */}
-        <CourseThumb shape="cover" initials={course.initials} imageSrc={course.imageSrc} className="-my-4 -ml-4 w-48 self-stretch" />
+        <CourseThumb shape="cover" initials={course.initials} imageSrc={course.imageSrc} className="-my-4 -ml-4 w-[300px] max-w-[40%] shrink-0 self-stretch" />
         <div className="flex min-w-[298px] flex-1 basis-0 items-center gap-3">
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           {/* DS List (Nelson, 13 Oct 2026): the provider or partner sits on the Course Type line,
@@ -269,7 +269,7 @@ export function MyLearningCourseCard({
         shape="cover"
         initials={course.initials}
         imageSrc={course.imageSrc}
-        className="-mx-4 -mt-4 aspect-[16/9] w-[calc(100%+2rem)] md:-mx-5 md:-mt-5 md:w-[calc(100%+2.5rem)] lg:-mx-6 lg:-mt-6 lg:w-[calc(100%+3rem)]"
+        className="-mx-4 -mt-4 aspect-[2/1] w-[calc(100%+2rem)] md:-mx-5 md:-mt-5 md:w-[calc(100%+2.5rem)] lg:-mx-6 lg:-mt-6 lg:w-[calc(100%+3rem)]"
       />
       {/* DS v1.8 header (Nelson, 15 Oct 2026), gap 12: the Course Type line across the card
           (provider at its right end), then the title, then the badges (the picture is above, 22 Oct 2026).
