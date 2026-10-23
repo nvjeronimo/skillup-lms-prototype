@@ -1,7 +1,9 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
-import { ArrowUpRight, MessageCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowUpRight, FileText, MessageCircle } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
@@ -14,9 +16,13 @@ import { serviceSections, servicesMentor, type ServiceItem } from "@/lib/platfor
 import { coursePageHref } from "@/lib/platform/hrefs";
 import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
+import { BookSessionModal, type BookableService } from "@/components/platform/forms/BookSessionModal";
+import { ContactSupportModal } from "@/components/platform/forms/ContactSupportModal";
+import { sessionAdditions, useSessionAdditions } from "@/lib/platform/session-additions";
+import { formatDay, formatTime } from "@/lib/sample-time";
 
 /** One service: icon tile, title and status, a line on what it gives, the action as a link-looking button. */
-function ServiceRow({ item, onAction }: { item: ServiceItem; onAction: (what: string) => void }) {
+function ServiceRow({ item, onAction }: { item: ServiceItem; onAction: (item: ServiceItem) => void }) {
   const actionClass =
     "sk-text-body-medium-semibold relative inline-flex items-center gap-1 self-start text-sko-text-primary underline-offset-4 hover:underline min-h-6 max-md:min-h-11";
   const label = (
@@ -42,7 +48,7 @@ function ServiceRow({ item, onAction }: { item: ServiceItem; onAction: (what: st
             {label}
           </Link>
         ) : (
-          <button type="button" onClick={() => onAction(item.action)} className={actionClass}>
+          <button type="button" onClick={() => onAction(item)} className={actionClass}>
             {label}
           </button>
         )}
@@ -117,11 +123,51 @@ function ServicesSkeleton() {
  * Services (proposal, 17 Oct 2026; no Figma screen yet). The mentor first — the one person who
  * answers this learner — then three groups of services: Career, Support, Benefits and tools.
  * Desktop: the groups in three columns; tablet two; mobile one. Nothing here is Open edX, so
- * each block carries the SAMPLE mark with what it needs.
+ * each block carries the SAMPLE mark with what it needs. Since 23 Oct 2026 "Book a review",
+ * "Book a practice" and "Write to us" open their modals: a booking goes to the Calendar and a
+ * request joins the Support list, for the session.
  */
 export function ServicesView() {
   const showToast = useLmsStore((s) => s.showToast);
   const notInPrototype = (what: string) => showToast(`${what} is not part of this prototype yet`);
+  const router = useRouter();
+  const [booking, setBooking] = React.useState<BookableService | null>(null);
+  const [contacting, setContacting] = React.useState(false);
+  const requests = useSessionAdditions((s) => s.requests);
+  const onAction = (item: ServiceItem) => {
+    if (item.id === "cv" || item.id === "interview") setBooking(item.id);
+    else if (item.id === "contact") setContacting(true);
+    else notInPrototype(item.action);
+  };
+  // Requests sent this session join the Support list under "Contact support".
+  const sections = React.useMemo(
+    () =>
+      serviceSections.map((section) =>
+        section.id !== "support" || !requests.length
+          ? section
+          : {
+              ...section,
+              items: section.items.flatMap((item) =>
+                item.id !== "contact"
+                  ? [item]
+                  : [
+                      item,
+                      ...requests.map(
+                        (r): ServiceItem => ({
+                          id: r.id,
+                          icon: FileText,
+                          title: r.subject,
+                          description: `Request ${r.number} · opened today${r.course ? ` · ${r.course}` : ""}`,
+                          action: "View request",
+                          status: { label: "In progress", color: "warning" },
+                        }),
+                      ),
+                    ],
+              ),
+            },
+      ),
+    [requests],
+  );
 
   return (
     <PlatformPage
@@ -170,18 +216,41 @@ export function ServicesView() {
         </section>
 
         <div className="grid gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
-          {serviceSections.map((section, i) => (
+          {sections.map((section, i) => (
             <section key={section.id} data-arrive={2 + i} aria-labelledby={`services-${section.id}`} className="flex min-w-0 flex-col gap-4">
               <PlatformSectionHeader id={`services-${section.id}`} title={section.title} emphasis={section.emphasis} />
               <ul data-mock={section.mock} className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
                 {section.items.map((item) => (
-                  <ServiceRow key={item.id} item={item} onAction={notInPrototype} />
+                  <ServiceRow key={item.id} item={item} onAction={onAction} />
                 ))}
               </ul>
             </section>
           ))}
         </div>
       </div>
+
+      <BookSessionModal
+        service={booking ?? "cv"}
+        open={booking !== null}
+        onClose={() => setBooking(null)}
+        onBooked={(b) => {
+          sessionAdditions.addBooking(b);
+          setBooking(null);
+          showToast(`${b.service} booked for ${formatDay(b.date)}, ${formatTime(b.time)}.`, {
+            actionLabel: "View in Calendar",
+            onAction: () => router.push("/platform/calendar"),
+          });
+        }}
+      />
+      <ContactSupportModal
+        open={contacting}
+        onClose={() => setContacting(false)}
+        onSent={(r) => {
+          const full = sessionAdditions.addRequest(r);
+          setContacting(false);
+          showToast(`Request ${full.number} sent. We'll reply by email within one business day.`);
+        }}
+      />
     </PlatformPage>
   );
 }

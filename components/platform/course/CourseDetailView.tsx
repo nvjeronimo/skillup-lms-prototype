@@ -24,6 +24,7 @@ import { DatesTab } from "./DatesTab";
 import { ModuleList } from "./ModuleList";
 import { ProgressTab } from "./ProgressTab";
 import { QaTab } from "./QaTab";
+import { NONE, useSessionAdditions } from "@/lib/platform/session-additions";
 
 /**
  * Course Detail, self-paced (Figma handoff 6146:10226; Course 6406:39255, Progress
@@ -58,8 +59,9 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
   const fadeIn = useHasChanged(active) ? "sk-animate-fade sk-enter-only" : undefined;
 
   const threadParam = searchParams.get("thread");
+  const asked = useSessionAdditions((s) => s.questions[course.slug] ?? NONE);
   const openThread =
-    active === "qa" && course.qaTab.threads.some((t) => t.id === threadParam) ? threadParam : null;
+    active === "qa" && [...asked, ...course.qaTab.threads].some((t) => t.id === threadParam) ? threadParam : null;
 
   function selectTab(tab: CourseTabId) {
     if (tab === active) return;

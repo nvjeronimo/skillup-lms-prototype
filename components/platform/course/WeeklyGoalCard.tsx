@@ -6,6 +6,8 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { CardShell } from "@/components/platform/program/parts";
 import { useLmsStore } from "@/lib/store";
+import { GOAL_LEVELS, levelOfPlan, WeeklyGoalModal, type GoalLevel } from "@/components/platform/forms/WeeklyGoalModal";
+import { sessionAdditions, useSessionAdditions } from "@/lib/platform/session-additions";
 import type { WeekDayState, WeeklyGoal } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
 
@@ -65,17 +67,25 @@ function WeekDay({ day }: { day: WeeklyGoal["days"][number] }) {
  * - State=Set (Progress tab, 6406:41528): title, text, a 1px rule, the week on the card
  *   itself with the count and last week's on one line, then the plan line.
  * The other states of the component are not on any screen and are not built.
+ * "Edit goal" opens WeeklyGoalModal (23 Oct 2026): the new goal changes the plan line and the
+ * count's target for the session, on every card of the course.
  */
 export function WeeklyGoalCard({
-  goal,
+  goal: drawn,
+  courseSlug,
   labelAs = "h2",
   className,
 }: {
   goal: WeeklyGoal;
+  /** Keys the goal set this session, so the course's cards agree. */
+  courseSlug: string;
   labelAs?: "h2" | "h3";
   className?: string;
 }) {
   const showToast = useLmsStore((s) => s.showToast);
+  const [editing, setEditing] = React.useState(false);
+  const saved = useSessionAdditions((s) => s.goals[courseSlug]);
+  const goal = saved ? withTarget(drawn, saved.days) : drawn;
   const met = goal.state === "met";
 
   const days = (
@@ -129,12 +139,38 @@ export function WeeklyGoalCard({
         <Button
           hierarchy="link"
           size="sm"
-          onClick={() => showToast("Edit goal is not part of this prototype yet")}
+          onClick={() => setEditing(true)}
           className="shrink-0"
         >
           Edit goal
         </Button>
       </div>
+      <WeeklyGoalModal
+        open={editing}
+        onClose={() => setEditing(false)}
+        current={saved ? (String(saved.days) as GoalLevel) : levelOfPlan(drawn.plan)}
+        reminders={saved?.reminders ?? true}
+        onSaved={(g) => {
+          sessionAdditions.setGoal(courseSlug, g);
+          setEditing(false);
+          showToast(`Goal saved: ${g.days} ${g.days === 1 ? "day" : "days"} a week.`);
+        }}
+      />
     </CardShell>
   );
+}
+
+/** The drawn card with a new target: the plan line, the count's "of N" and whether it is met. */
+function withTarget(goal: WeeklyGoal, target: number): WeeklyGoal {
+  const level = GOAL_LEVELS.find((l) => Number(l.value) === target);
+  const done = goal.days.filter((d) => d.state === "done" || d.state === "today-done").length;
+  const met = done >= target;
+  return {
+    ...goal,
+    state: met ? "met" : "set",
+    title: met ? "You met your goal this week" : "Your weekly goal",
+    body: met ? "Take a moment to celebrate your progress." : "A day counts when you open any lesson in this course.",
+    count: `${done} of ${target} ${target === 1 ? "day" : "days"} this week`,
+    plan: `${level?.label ?? "Custom"} · ${target} ${target === 1 ? "day" : "days"} a week.`,
+  };
 }
