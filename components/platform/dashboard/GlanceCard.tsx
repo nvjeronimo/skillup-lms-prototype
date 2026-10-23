@@ -49,7 +49,7 @@ function StatCard({ stat }: { stat: DashboardStat }) {
 /**
  * DS `LMS/Platform/Dashboard/Today-at-a-glance` v1.5 (Nelson, 22 Oct 2026, as drawn on the ICP
  * Dashboard): the Dashboard hero card, full width, dark. A backdrop on bg/info-soft in a dark
- * island (#044150 in every dark skin), two blurred glows (border/info-soft, blur 179, 37% / 80%)
+ * island (#044150 in every dark skin), one blurred glow (border/info-soft, blur 179, 80%; 23 Oct: the right one went)
  * and the two circles (bg/info 200, bg/primary 320) at 19%, all decoration and clipped by the
  * card, which keeps its 1px border/primary-muted. Title label-small/Semibold, text/on-primary.
  * Then the four figures, each on its own light card (bg/page, Radius/card-inset) with a goal.
@@ -68,15 +68,12 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       )}
     >
       <div aria-hidden="true" data-theme="dark" data-glance-backdrop="" className="pointer-events-none absolute inset-0 bg-sko-bg-info-soft" />
+      {/* One glow (Nelson, 23 Oct 2026: the right one went): over the top edge on a wide card,
+          low on the left on a phone, as the DS Mobile variant. */}
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute left-[calc(100%-121px)] top-[3px] h-[193px] w-[483px] rounded-pill bg-sko-border-info-soft opacity-[0.37] blur-[179px]"
-      />
-      <div
-        aria-hidden="true"
-        data-glow=""
-        className="pointer-events-none absolute left-[29.3%] -top-[70px] h-[74px] w-[185px] rounded-pill bg-sko-border-info-soft opacity-80 blur-[179px]"
+        className="pointer-events-none absolute -left-[124px] top-[60px] h-[74px] w-[185px] rounded-pill bg-sko-border-info-soft opacity-80 blur-[179px] md:left-[29.3%] md:-top-[70px]"
       />
       <div
         aria-hidden="true"
