@@ -53,7 +53,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
       skeleton={<DashboardSkeleton due={dashboardDue.length} resume={resume.length} jump={dashboardJump.length} />}
     >
       {/* The frames are drawn at 1280; wider windows keep the 1200 content width. */}
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
         {/* Always one line (Nelson, 23 Oct 2026): a very long name is cut with an ellipsis. */}
         <h1 data-arrive={0} className="sk-text-headline-large-bold truncate whitespace-nowrap text-sko-text-default">
@@ -65,7 +65,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />
         </div>
 
-        <div className="flex flex-col gap-5 md:gap-6 lg:flex-row lg:items-start lg:gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
           <section data-arrive={2} aria-labelledby="dashboard-due-title" className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
             <PlatformSectionHeader
               id="dashboard-due-title"

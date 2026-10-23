@@ -61,7 +61,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
       </section>
 
       <CardShell label={course.team.label} gap="lg" mock="No instructor or author field on the Course Home APIs">
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-6 md:gap-4">
           {course.team.people.map((person) => (
             <li key={person.name} className="flex items-center gap-2">
               <Avatar name={person.name} size="md" />

@@ -139,8 +139,8 @@ export function CourseSkeleton({ course }: { course: CourseDetail }) {
         <Skeleton variant="block" radius="control" className="mb-4 h-11 md:hidden" />
         {course.passed ? <Skeleton variant="block" height={96} radius="none" className="mb-4 md:mb-5 lg:mb-6" /> : null}
         {tab === "course" ? (
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-8 lg:gap-10">
-            <div className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
+          <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8 lg:gap-10">
+            <div className="flex min-w-0 flex-1 flex-col gap-6">
               {course.datesTab.missedAlert ? (
                 <AlertSkeleton title={SHIFT_DATES.title} body={SHIFT_DATES.body} stacked={false} dismissible={false} action />
               ) : null}
@@ -159,7 +159,7 @@ export function CourseSkeleton({ course }: { course: CourseDetail }) {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
+          <div className="flex flex-col gap-6">
             <Skeleton variant="block" height={160} radius="card" />
             <Skeleton variant="block" height={240} radius="card" />
             <Skeleton variant="block" height={240} radius="card" />

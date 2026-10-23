@@ -132,7 +132,7 @@ export function CertificatesView() {
           </p>
         </div>
 
-        <section aria-label="My certificates" className="flex flex-col gap-4 md:gap-5 lg:gap-6">
+        <section aria-label="My certificates" className="flex flex-col gap-6">
           {/* The tabs on their 1px border/subtle rule, across the whole width (as My Learning). */}
           <div data-arrive={1} className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0">
             <PlatformTabs

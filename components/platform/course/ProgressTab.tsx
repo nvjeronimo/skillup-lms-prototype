@@ -193,8 +193,8 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
 export function ProgressTab({ course }: { course: CourseDetail }) {
   const tab = course.progressTab;
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-8 lg:gap-10">
-      <div className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
+    <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8 lg:gap-10">
+      <div className="flex min-w-0 flex-1 flex-col gap-6">
         <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
 
         <section

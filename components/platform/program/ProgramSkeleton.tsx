@@ -76,7 +76,7 @@ export function ProgramSkeleton({ program }: { program: Program }) {
         <TabBarSkeleton tabs={[74, 102, 51, 59]} rule={false} />
       </div>
       <div className={BODY}>
-        <div className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-6">
           <IntroSkeleton title={intro.title} lead={"lead" in intro ? (intro.lead as string) : undefined} />
           {tab === "courses" ? (
             <div className="flex flex-col gap-4">

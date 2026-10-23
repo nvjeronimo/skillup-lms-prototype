@@ -158,7 +158,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const gridRef = useEqualHeights<HTMLDivElement>('[data-card-grid]', [tab, status, needle, view, courses.length, programs.length]);
 
   return (
-    <section aria-label="My courses and programs" className="flex flex-col gap-4 md:gap-5 lg:gap-6">
+    <section aria-label="My courses and programs" className="flex flex-col gap-6">
       {/* Row 1: the tabs on their 1px border/subtle rule, across the whole width.
           The Size=sm tabs already grow their target to 44 upwards, so the "larger targets"
           min-height is switched off on them: it would make the 32px row 44 tall. */}
