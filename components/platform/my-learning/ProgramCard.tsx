@@ -154,7 +154,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             </div>
             {/* DS v1.8: the program image, 64, beside the title (as on Course-Card 1.8). */}
             <div className="flex w-full items-start gap-3">
-            <CourseThumb initials={program.initials} imageSrc={program.imageSrc} className="h-12 w-24" />
+            <CourseThumb initials={program.initials} imageSrc={program.imageSrc} className="size-16" />
             <h3
               title={program.title}
               className={cn(

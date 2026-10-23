@@ -17,8 +17,8 @@ import { cn } from "@/lib/utils";
  * 1.02 over long2, in app/globals.css next to the load fade it shares a transition with.
  * Card pictures are 2:1 (Nelson, 23 Oct 2026: the course images are 2:1), so the callers size
  * the box at that ratio: `aspect-[2/1]` across a card, a width twice the row's height beside a
- * row (Course-Row 236 for its 118, list card 300 for its 150; at most 40% of a narrow row), 96 × 48 for
- * the program card's tile.
+ * row (Course-Row 236 for its 118, list card 300 for its 150; at most 40% of a narrow row). The
+ * exception is the program card's tile, which stays square (64 × 64, the picture cropped 1:1).
  */
 export function CourseThumb({
   initials,
