@@ -113,7 +113,7 @@ export function PlatformPage({
     <div
       ref={rootRef}
       data-platform-page=""
-      className="flex min-h-[100dvh] flex-col bg-sko-bg-faint"
+      className="flex min-h-[100dvh] flex-col overflow-x-clip bg-sko-bg-faint"
       data-show-mock={showMock ? "" : undefined}
     >
       <PlatformTopbar current={current} />
