@@ -154,10 +154,11 @@ const PROVIDER_LOGO: Record<Provider, { light: string; dark?: string }> = {
 };
 
 /**
- * Provider (DS `LMS/Platform/Discovery/Provider-Partner-Badge` 1.3, 19975:538091).
+ * Provider (DS `LMS/Platform/Discovery/Provider-Partner-Badge` 1.4, 19975:538091).
  * Type=Text: Badge Style=Plain, Size=sm, Color=Gray, the name only (no "by" prefix).
  * Type=Logo: the artwork, 16 tall, on a bg/subtle chip with a 1px border/subtle, Radius/control
- * (6), still 28 tall (Nelson, 22 Oct 2026: the padding gives the border its pixel, 5 + 1). The DS Theme
+ * (6), padding Spacing/md: 32 tall (DS 1.4, Nelson, 23 Oct 2026; the padding gives the border its
+ * pixel, 7 + 1; it was 28). The DS Theme
  * (Light / Dark) follows the surface here: inside a `data-theme="dark"` band (the Program-Card
  * hero) the dark drawing shows (`.sk-logo-light` / `.sk-logo-dark`, app/globals.css).
  */
@@ -183,10 +184,10 @@ export function ProviderBadge({
     );
   const logo = PROVIDER_LOGO[value];
   return (
-    // DS 1.3 (22 Oct 2026): 1px border/subtle inside, Radius/control (6); 28 tall with the 16px artwork.
+    // DS 1.4 (23 Oct 2026): 1px border/subtle inside, Radius/control (6), padding 8; 32 tall with the 16px artwork.
     <span
       className={cn(
-        "inline-flex h-7 shrink-0 items-center rounded-control border border-sko-border-subtle p-[5px]",
+        "inline-flex h-8 shrink-0 items-center rounded-control border border-sko-border-subtle p-[7px]",
         chip === "page" ? "bg-sko-bg-page" : "bg-sko-bg-subtle",
       )}
     >
