@@ -139,6 +139,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
             {more.mounted ? (
               <div
                 {...more.panelProps}
+                data-tab-menu=""
                 className="sk-animate-menu-up absolute bottom-full right-0 z-10 mb-2 w-56 origin-bottom-right rounded-card bg-sko-bg-page p-1 shadow-xl"
               >
                 <ul className="flex flex-col">
