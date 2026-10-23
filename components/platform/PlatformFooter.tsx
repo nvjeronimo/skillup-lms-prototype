@@ -1,13 +1,11 @@
 "use client";
 
+import { Button } from "@/components/atoms/Button";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 /** The legal and help pages: SkillUp's own, not the platform's; no URLs yet. */
 const LINKS = ["Terms of use", "Privacy", "Cookie settings", "Accessibility", "Help center"] as const;
-
-const LINK =
-  "sk-text-body-small-medium inline-flex min-h-11 items-center text-sko-text-subtle underline-offset-2 transition-colors hover:text-sko-text-default hover:underline md:min-h-0";
 
 /**
  * DS `LMS/Platform/Navigation/Footer` (Nelson, 23 Oct 2026): a micro footer at the end of every
@@ -17,32 +15,39 @@ const LINK =
  * above, inside the pages' 1200 column. Open edX's MFEs already ship a footer slot
  * (frontend-component-footer); this is how it looks here. The links point to SkillUp pages that
  * have no URL yet, so they say so (and carry the sample-data mark).
+ * Footer 1.1 (Nelson, 23 Oct 2026): the links are DS Link Buttons (Brand, Secondary: the grey link
+ * with its 1px rule), centred in the row, 16 apart and 8 between rows when they wrap; the Open edX
+ * logo is 14 tall, 6 after "Powered by".
  */
 export function PlatformFooter({ className }: { className?: string }) {
   const showToast = useLmsStore((s) => s.showToast);
   return (
     <footer aria-label="Site" className={cn("sk-no-print px-6 md:px-8 lg:px-10", className)}>
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-x-6 gap-y-2 border-t border-sko-border-subtle py-6 text-center md:flex-row md:flex-wrap md:justify-between md:text-left">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-x-6 gap-y-4 border-t border-sko-border-subtle py-6 text-center md:flex-row md:flex-wrap md:justify-between md:text-left">
         <p className="sk-text-body-small-regular text-sko-text-subtle">© 2026 SkillUp Online</p>
         <ul
           aria-label="Legal and help"
           data-mock="SkillUp's legal and help pages are not linked yet"
-          className="flex flex-wrap items-center justify-center gap-x-4"
+          className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:flex-1"
         >
           {LINKS.map((label) => (
             <li key={label} className="flex">
-              <button type="button" className={LINK} onClick={() => showToast(`${label} is not part of this prototype yet`)}>
+              <Button
+                hierarchy="link-subtle"
+                size="sm"
+                onClick={() => showToast(`${label} is not part of this prototype yet`)}
+              >
                 {label}
-              </button>
+              </Button>
             </li>
           ))}
         </ul>
-        <p className="sk-text-body-small-regular flex items-center gap-2 text-sko-text-subtle">
+        <p className="sk-text-body-small-regular flex items-center gap-1.5 text-sko-text-subtle">
           Powered by
-          {/* Open edX's own logo file (Nelson, 23 Oct 2026), small: 20 tall. It carries its own
+          {/* Open edX's own logo file (Nelson, 23 Oct 2026), small: 14 tall (Footer 1.1). It carries its own
               navy and magenta fills, so it reads on light and dark pages alike. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/open-edx-logo.svg" alt="Open edX" width={68} height={20} className="h-5 w-auto" />
+          <img src="/open-edx-logo.svg" alt="Open edX" width={48} height={14} className="h-3.5 w-auto" />
         </p>
       </div>
     </footer>
