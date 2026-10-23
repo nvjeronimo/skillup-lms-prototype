@@ -4,7 +4,6 @@ import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
-import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { getProgramCertificate } from "@/lib/platform/catalog";
 import { programCertificatePageHref } from "@/lib/platform/hrefs";
 import { useLmsStore } from "@/lib/store";
@@ -12,7 +11,7 @@ import type { Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import { CardShell, SectionIntro } from "./parts";
-import { DemoOnly } from "@/lib/demo";
+import { ProgramCertificateHero } from "./ProgramCertificateHero";
 
 /**
  * DS `LMS / Course Detail / Certificate card` (5425:566), the two states the page draws.
@@ -131,10 +130,10 @@ export function CertificateCard({
  * courses not started yet. Desktop: the columns side by side, 24 apart. Tablet: one under
  * the other at 320, 20 apart. Mobile: at full width, 16 apart.
  *
- * PROPOSAL, NOT DESIGNED (10 Oct 2026): above the course cards, the Program certificate in a
- * block of its own (its heading, the note that says it is a proposal, one card at 320) closed
- * by a 1px rule, and a "Course certificates" heading for what was the whole tab. The card
- * links to the program certificate page (/platform/certificate/program/<slug>).
+ * Above the course cards, the Program certificate first and large (ProgramCertificateHero;
+ * Nelson, 23 Oct 2026: it is the goal of the program, so it leads the tab), closed by a 1px
+ * rule, then a "Course certificates" heading for the course cards. Until 23 Oct it was a
+ * 320 card under a "Proposal: not designed yet" note (10 Oct 2026).
  */
 export function CertificatesTab({ program }: { program: Program }) {
   const programCertificate = getProgramCertificate(program.slug);
@@ -147,30 +146,10 @@ export function CertificatesTab({ program }: { program: Program }) {
             aria-labelledby="program-certificate-title"
             className="flex flex-col gap-3 border-b border-sko-border-subtle pb-4 md:pb-5 lg:pb-6"
           >
-            <h3 id="program-certificate-title" className="sk-text-body-large-semibold text-sko-text-default">
+            <h3 id="program-certificate-title" className="sr-only">
               Program certificate
             </h3>
-            <DemoOnly>
-              <InlineAlert
-                tone="info"
-                title="Proposal: not designed yet"
-                description="The program certificate has no Figma screen. This card and the page it opens are a proposal built from parts that already exist."
-              />
-            </DemoOnly>
-            <div
-              data-mock="No API says whether a program certificate is earned: counted here from the course rows"
-              className="w-full md:w-[320px]"
-            >
-              <CertificateCard
-                certificate={
-                  programCertificate.certificate.status === "issued"
-                    ? { ...programCertificate.certificate, viewHref: programCertificatePageHref(program.slug) }
-                    : programCertificate.certificate
-                }
-                label={program.title}
-                detailsHref={programCertificatePageHref(program.slug)}
-              />
-            </div>
+            <ProgramCertificateHero state={programCertificate} />
           </section>
           <h3 className="sk-text-body-large-semibold text-sko-text-default">Course certificates</h3>
         </>
