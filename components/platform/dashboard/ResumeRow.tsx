@@ -33,7 +33,9 @@ export interface ResumeRowProps {
  * the module the learner left off in (body-large Medium, wraps), and `context`, the course and
  * its program (body-small Regular, text/subtle, one line, 2 under the title). Then the DS
  * Progress bar with the percentage and the button (gap 12 above, 16 between). bg/page, 1px
- * border/subtle, radius 12, padding 16, no shadow. No delivery badge since v1.1.
+ * border/subtle, radius 12, no shadow. No delivery badge since v1.1. The cover (Nelson, 23 Oct
+ * 2026): 140 tall across the top, the content 16 under it (padding top 140 + 16), 20 on the
+ * sides and 16 at the bottom.
  * The button is drawn sm (36); it is md (44) here for the mobile touch-target minimum. It
  * opens the course, so it is a link with the button look (atoms/ButtonLink).
  */
@@ -42,13 +44,13 @@ export function ResumeRow({ title, context, next, progressPct, href, homeHref, e
   return (
     <div
       className={cn(
-        "sk-press-card group relative flex flex-col gap-3 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-4",
+        "sk-press-card group relative flex flex-col gap-3 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page px-5 pb-4 pt-4",
         homeHref && "transition-colors has-[p_a:hover]:border-sko-border-default",
         className,
       )}
     >
       {initials ? (
-        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-mx-4 -mt-4 mb-1 aspect-[16/7] w-[calc(100%+2rem)]" />
+        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-mx-5 -mt-4 mb-1 h-[140px] w-[calc(100%+2.5rem)] shrink-0" />
       ) : null}
       <div className="flex w-full min-w-0 flex-col gap-0.5">
         <div className="flex w-full min-w-0 flex-col">
