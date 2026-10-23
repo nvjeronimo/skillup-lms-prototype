@@ -5,10 +5,9 @@ import { MOTION_MS } from "./tokens";
 
 // The values come from Figma (DS 3. Motion) through scripts/tokens/build.mjs since PR 306;
 // tokens/motion.css keeps only the reduced-motion overrides.
-const css = readFileSync(
-  fileURLToPath(new URL("../../tokens/generated/motion.css", import.meta.url)),
-  "utf8",
-);
+const read = (path: string) => readFileSync(fileURLToPath(new URL(path, import.meta.url)), "utf8");
+const css = read("../../tokens/generated/motion.css");
+const reduced = read("../../tokens/motion.css");
 // The base :root block is the first one; the reduced-motion overrides come after it.
 const root = css.slice(css.indexOf(":root"), css.indexOf("}", css.indexOf(":root")));
 
@@ -41,10 +40,10 @@ describe("motion tokens", () => {
 
   it("overrides distances and long durations under both reduced-motion switches", () => {
     const override = `--motion-distance-nudge: 0px;`;
-    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*:root\s*\{/);
-    expect(css).toMatch(/:root\[data-reduce-motion\]\s*\{/);
-    expect(css.split(override).length - 1).toBe(2);
-    expect(css.split("--motion-duration-medium2: 150ms;").length - 1).toBe(2);
-    expect(css.split("--motion-duration-long2: 150ms;").length - 1).toBe(2);
+    expect(reduced).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*:root\s*\{/);
+    expect(reduced).toMatch(/:root\[data-reduce-motion\]\s*\{/);
+    expect(reduced.split(override).length - 1).toBe(2);
+    expect(reduced.split("--motion-duration-medium2: 150ms;").length - 1).toBe(2);
+    expect(reduced.split("--motion-duration-long2: 150ms;").length - 1).toBe(2);
   });
 });
