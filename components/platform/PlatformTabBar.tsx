@@ -35,9 +35,9 @@ const ITEM =
 const itemTone = (on: boolean) =>
   on ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft" : "text-sko-text-subtle";
 
-/** A row of the More panel: 44 tall, 20px icon, body-medium/Medium (as the profile menu rows). */
+/** A row of the More panel: a 44-tall pill, 20px icon, body-medium/Medium (as the profile menu rows). */
 const MORE_ROW =
-  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-3 rounded-card-inset px-3 text-left transition-colors hover:bg-sko-bg-hover";
+  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-3 rounded-pill px-4 text-left transition-colors hover:bg-sko-bg-hover";
 
 function TabIcon({ icon, on, count }: { icon: LucideIcon; on: boolean; count?: number }) {
   return (
@@ -166,7 +166,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
               <div
                 {...more.panelProps}
                 data-tab-menu=""
-                className="sk-animate-menu-up absolute bottom-full right-0 z-10 mb-2 w-56 origin-bottom-right rounded-card bg-sko-bg-page p-1 shadow-xl"
+                className="sk-animate-menu-up absolute bottom-full right-0 z-10 mb-2 w-56 origin-bottom-right bg-sko-bg-page shadow-xl"
               >
                 <ul className="flex flex-col">
                   {inMore.map((s) => {

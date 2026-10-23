@@ -171,14 +171,6 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
   border-radius: var(--sk-radius-control);
 }
 
-/* The phone tab bar's More panel (Nelson, 23 Oct 2026: rounder). Its rows are 44 tall, so in
-   Studio they read as pills (radius 22); the panel takes 8 of padding and 36 of radius (40 was
-   tried first), so the rows sit inside its curve with room. */
-[data-direction="studio"] [data-tab-menu] {
-  border-radius: 36px;
-  padding: 8px;
-}
-
 /* A large container that borrows the control radius (the player's course rail, a <nav>) takes
    the card radius. */
 [data-direction="studio"] :is(nav, aside, section).rounded-control {
