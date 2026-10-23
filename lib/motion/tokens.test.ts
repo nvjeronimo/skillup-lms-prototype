@@ -3,8 +3,10 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { MOTION_MS } from "./tokens";
 
+// The values come from Figma (DS 3. Motion) through scripts/tokens/build.mjs since PR 306;
+// tokens/motion.css keeps only the reduced-motion overrides.
 const css = readFileSync(
-  fileURLToPath(new URL("../../tokens/motion.css", import.meta.url)),
+  fileURLToPath(new URL("../../tokens/generated/motion.css", import.meta.url)),
   "utf8",
 );
 // The base :root block is the first one; the reduced-motion overrides come after it.
