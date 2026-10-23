@@ -56,9 +56,10 @@
   --color-bg-success: #1f7643;
   --color-bg-success-soft: #e4fced;
   --color-bg-warning: #f9c654;
-  --color-bg-warning-soft: #fff9eb;
+  /* 23 Oct 2026 DS export: SKO and Studio Light take a deeper warning-soft (Yellow/50 → #fff2d4); Gold and Red keep #fff9eb. */
+  --color-bg-warning-soft: #fff2d4;
   /* DS bg/warning-muted (14 Oct 2026): a "toasted" yellow, deeper than warning-soft; Yellow/100. Live-Now-Banner Upcoming. */
-  --color-bg-warning-muted: #ffebbd;
+  --color-bg-warning-muted: #fdd988;
   --color-bg-error: #da3336;
   --color-bg-error-soft: #fce8e8;
   --color-bg-info: #0086c9;
@@ -173,6 +174,8 @@
 }
 
 [data-skin="gold"] {
+  --color-bg-warning-soft: #fff9eb;
+  --color-bg-warning-muted: #ffebbd;
   --color-bg-primary: #553600;
   --color-bg-primary-soft: #ffda8f;
   --color-bg-primary-hover: #ffe4a9;
@@ -187,6 +190,8 @@
 }
 
 [data-skin="red"] {
+  --color-bg-warning-soft: #fff9eb;
+  --color-bg-warning-muted: #ffebbd;
   --color-bg-primary: #88262a;
   --color-bg-primary-soft: #ffd5d0;
   --color-bg-primary-hover: #ffa19d;

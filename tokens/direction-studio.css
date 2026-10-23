@@ -38,6 +38,10 @@
   --color-text-muted: #3b4150;
   --color-text-subtle: #545a68;
   --color-icon-default: #131720;
+  --color-icon-muted: #3b4150;
+  --color-icon-subtle: #545a68;
+  --color-bg-inverse: #131720;
+  --color-border-strong: #131720;
   --color-border-subtle: #e2e4e9;
 
   --color-bg-primary: #044150;
@@ -66,6 +70,7 @@ html[data-direction="studio"] [data-theme="dark"] {
   --color-bg-muted: #262b34;
   --color-bg-strong: #323844;
   --color-bg-inverse: #eef0f3;
+  --color-border-strong: #eef0f3;
   --color-bg-overlay: #0d0f13b3;
   --color-bg-overlay-soft: #0d0f1333;
   --color-text-default: #eef0f3;
