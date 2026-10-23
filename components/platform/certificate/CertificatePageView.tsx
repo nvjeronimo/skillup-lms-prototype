@@ -68,7 +68,7 @@ export function CertificatePageView({
         : { label: "Go to My Learning", href: MY_LEARNING_HREF };
 
   return (
-    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-4 pb-8 pt-4 md:gap-5 md:px-6 md:pb-12 lg:gap-6 lg:px-10 lg:pb-20 lg:pt-5">
+    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-6 px-4 pb-8 pt-6 md:px-6 md:pb-12 lg:gap-6 lg:px-10 lg:pb-20 lg:pt-5">
       <nav data-arrive={0} aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
           <li className="flex items-center gap-1.5 md:gap-2">
@@ -112,7 +112,7 @@ export function CertificatePageView({
       </div>
 
       {certificate.status === "issued" ? (
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
           <div
             data-arrive={2}
             data-mock="Certificate artwork, ID and verification address are sample data"
@@ -172,7 +172,7 @@ export function CertificatePageView({
         </div>
       ) : (
         /* Not earned: no sheet and nothing to download. What is missing, then the way back. */
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
           <section
             data-arrive={2}
             aria-labelledby="certificate-missing-title"

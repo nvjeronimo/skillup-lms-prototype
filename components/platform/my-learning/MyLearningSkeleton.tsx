@@ -127,11 +127,11 @@ export function MyLearningSkeleton({ courses, programs }: { courses: number; pro
   }, []);
   const count = Math.min(tab === "courses" ? courses : programs, MAX_CARDS);
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
       <Skeleton variant="ghost" text="headline-large-bold">
         {myLearningHeading.title} {myLearningHeading.emphasis}
       </Skeleton>
-      <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
+      <div className="flex flex-col gap-6">
         {/* Tabs on their rule: 32 tall on a phone, 48 from tablet up, 8 above. */}
         <div className="flex gap-3 border-b border-sko-border-subtle pt-2">
           <div className="flex h-8 items-center md:h-12">

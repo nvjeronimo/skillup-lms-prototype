@@ -43,7 +43,7 @@ export function CertificatePageSkeleton({
 }) {
   const heading = kind === "program" && program ? program.title : certificate.title;
   return (
-    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-4 pb-8 pt-4 md:gap-5 md:px-6 md:pb-12 lg:gap-6 lg:px-10 lg:pb-20 lg:pt-5">
+    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-6 px-4 pb-8 pt-6 md:px-6 md:pb-12 lg:gap-6 lg:px-10 lg:pb-20 lg:pt-5">
       <div className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
         <Crumb text="My Learning" />
         {program ? (
@@ -63,7 +63,7 @@ export function CertificatePageSkeleton({
       </div>
 
       {certificate.status === "issued" ? (
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
           <Skeleton variant="block" radius="card" className="aspect-[1123/794] w-full min-w-0 lg:flex-1" />
           <div className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
             {[0, 1, 2].map((i) => (
@@ -88,7 +88,7 @@ export function CertificatePageSkeleton({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-10">
           <div className="flex min-w-0 flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:p-[19px] lg:flex-1 lg:p-[23px]">
             <Skeleton variant="ghost" text="headline-small-bold">What is missing</Skeleton>
             <div className="flex flex-col gap-4">

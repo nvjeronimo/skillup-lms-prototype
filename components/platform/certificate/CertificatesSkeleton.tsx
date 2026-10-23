@@ -17,7 +17,7 @@ export function CertificatesSkeleton() {
         </Skeleton>
       </div>
 
-      <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
+      <div className="flex flex-col gap-6">
         <div className="flex gap-3 border-b border-sko-border-subtle pb-3 pt-2 md:pt-5">
           <Skeleton text="body-large-semibold" width={120} />
           <Skeleton text="body-large-semibold" width={84} />

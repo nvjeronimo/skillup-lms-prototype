@@ -64,7 +64,7 @@ function ServiceRow({ item, onAction }: { item: ServiceItem; onAction: (item: Se
  */
 function ServicesSkeleton() {
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
       <Skeleton variant="ghost" text="headline-large-bold">Here to help.</Skeleton>
       <div className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div className="flex items-start gap-4">
@@ -86,7 +86,7 @@ function ServicesSkeleton() {
           <SkeletonPill size="button-md" className="justify-center">Your discussions</SkeletonPill>
         </div>
       </div>
-      <div className="grid gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+      <div className="grid gap-8 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
         {serviceSections.map((section) => (
           <div key={section.id} className="flex min-w-0 flex-col gap-4">
             <Skeleton variant="ghost" text="headline-small-bold">
@@ -175,7 +175,7 @@ export function ServicesView() {
       className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
       skeleton={<ServicesSkeleton />}
     >
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
         <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
           Here <span data-heading-em="" className="text-sko-text-subtle">to help.</span>
         </h1>
@@ -215,7 +215,7 @@ export function ServicesView() {
           </div>
         </section>
 
-        <div className="grid gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
           {sections.map((section, i) => (
             <section key={section.id} data-arrive={2 + i} aria-labelledby={`services-${section.id}`} className="flex min-w-0 flex-col gap-4">
               <PlatformSectionHeader id={`services-${section.id}`} title={section.title} emphasis={section.emphasis} />

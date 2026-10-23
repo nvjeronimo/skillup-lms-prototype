@@ -119,7 +119,7 @@ export function DatesTab({ course }: { course: CourseDetail }) {
   const tab = course.datesTab;
   const links = React.useMemo(() => topicLinks(course.slug, course.progress.href), [course.slug, course.progress.href]);
   return (
-    <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
+    <div className="flex flex-col gap-6">
       <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
 
       {/* Only for a learner who is behind the suggested schedule. */}
