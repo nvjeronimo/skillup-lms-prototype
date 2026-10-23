@@ -31,18 +31,34 @@ const IN_BAR: PlatformSection[] = ["dashboard", "my-learning", "calendar"];
 type Section = (typeof PLATFORM_SECTIONS)[number];
 
 const ITEM =
-  "sk-text-body-small-medium relative flex min-h-14 w-full flex-col items-center justify-center gap-0.5 rounded-control transition-[background-color,color,transform] duration-short2 ease-standard-decelerate active:scale-[.96]";
+  "sk-text-body-small-semibold relative flex h-11 shrink-0 items-center justify-center rounded-control transition-[background-color,color,transform] duration-short2 ease-standard-decelerate active:scale-[.96]";
+/** Compact, as an iOS tab bar (Nelson, 23 Oct 2026): the current tab is a wide segment with its
+    label beside the icon; the others are 44 × 44 icons, their names kept for screen readers. */
 const itemTone = (on: boolean) =>
-  on ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft" : "text-sko-text-subtle";
+  on
+    ? // gap-3: room for the count badge, which overhangs the icon by 10.
+      "gap-3 bg-sko-bg-primary-soft px-3.5 text-sko-text-on-primary-soft"
+    : "w-11 text-sko-text-subtle hover:bg-sko-bg-hover";
+const labelTone = (on: boolean) => (on ? "whitespace-nowrap" : "sr-only");
 
 /** A row of the More panel: 44 tall, 20px icon, body-medium/Medium, Radius/card-inset (as the profile menu rows). */
 const MORE_ROW =
   "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-3 rounded-card-inset px-3 text-left transition-colors hover:bg-sko-bg-hover";
 
-function TabIcon({ icon, on, count }: { icon: LucideIcon; on: boolean; count?: number }) {
+function TabIcon({
+  icon,
+  on,
+  count,
+  size = 22,
+}: {
+  icon: LucideIcon;
+  on: boolean;
+  count?: number;
+  size?: number;
+}) {
   return (
     <span className="relative">
-      <Icon icon={icon} size={22} strokeWidth={on ? 2.25 : 1.75} aria-hidden />
+      <Icon icon={icon} size={size} strokeWidth={on ? 2.25 : 1.75} aria-hidden />
       {typeof count === "number" && count > 0 ? (
         <span
           aria-hidden
@@ -60,13 +76,16 @@ function TabIcon({ icon, on, count }: { icon: LucideIcon; on: boolean; count?: n
  * his answers to the open question). A bar that floats 16 above the bottom edge (plus the safe
  * area), leaving the right corner to the assistant launcher, which sits beside it on the same line.
  * Dashboard, My Learning and Calendar are in the bar; More gathers the rest (Discussion, Services, and
- * any section added later) in a panel that opens above it. Each item is an icon over a short label
+ * any section added later) in a panel that opens above it. Before the compact pass each item was an icon over a short label
  * (body-small Medium; the full name, cut with an ellipsis when it does not fit, Nelson 23 Oct 2026), 56 tall; the current one sits on a bg/primary-soft fill with a heavier icon,
  * so it never depends on colour alone (More is current on any page it holds). Links with
  * `aria-current`, not a tablist: each opens another page. The material is bg/page at 88% under a
  * blur, solid under "reduce transparency"; a soft shadow lifts it, no border, no gradient. Phones
  * only: tablet and desktop keep the top bar. Radius by role (decision 028): the bar is a track, its
  * items controls, the More panel a card with card-inset rows; in Studio they are pills.
+ * Compact since 23 Oct 2026 (Nelson, iOS style): the bar hugs its items (52 tall, not 64); only the
+ * current tab shows its label, beside the icon; the others are icon-only 44 × 44 targets with
+ * `aria-label`. The current tab still never depends on colour alone: its fill, its label, a heavier icon.
  * It slides away while the learner scrolls down and comes back on any scroll up, at the top and at
  * the end of the page, and when the keyboard focus reaches it (Nelson, 23 Oct 2026); never while
  * the More panel is open. Under reduced motion it fades instead of sliding (globals.css).
@@ -113,19 +132,19 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
       data-floating-nav=""
       data-hidden={hidden || undefined}
       onFocus={() => setScrolledAway(false)}
-      className="sk-floating-nav sk-no-print sk-animate-rise fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 right-[4.5rem] z-30 rounded-track p-1"
+      className="sk-floating-nav sk-no-print sk-animate-rise fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 z-30 max-w-[calc(100vw-5.5rem)] rounded-track p-1"
     >
-      <ul className="flex items-stretch">
+      <ul className="flex items-center gap-1">
         {inBar.map((s) => {
           const on = s.id === current;
           const content = (
             <>
-              <TabIcon icon={ICONS[s.id]} on={on} count={s.count} />
-              <span className="max-w-full truncate px-1">{s.label}</span>
+              <TabIcon icon={ICONS[s.id]} on={on} count={s.count} size={on ? 20 : 22} />
+              <span className={labelTone(on)}>{s.label}</span>
             </>
           );
           return (
-            <li key={s.id} className="flex min-w-0 flex-1">
+            <li key={s.id} className="flex">
               {s.href ? (
                 <Link
                   href={s.href}
@@ -148,8 +167,8 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
             </li>
           );
         })}
-        <li className="flex min-w-0 flex-1">
-          <div ref={more.containerRef} className="relative flex w-full">
+        <li className="flex">
+          <div ref={more.containerRef} className="relative flex">
             <button
               type="button"
               {...more.triggerProps}
@@ -160,8 +179,8 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
               }
               className={cn(ITEM, itemTone(moreCurrent || more.open))}
             >
-              <TabIcon icon={MoreHorizontal} on={moreCurrent} />
-              <span className="max-w-full truncate px-1">More</span>
+              <TabIcon icon={MoreHorizontal} on={moreCurrent} size={moreCurrent ? 20 : 22} />
+              <span className={labelTone(moreCurrent)}>More</span>
             </button>
             {more.mounted ? (
               <div
