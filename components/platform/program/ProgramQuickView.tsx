@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Award, Check, Clock, X } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
+import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
@@ -58,7 +59,11 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
   const notStarted = program.progressPct === 0;
   const facts = [program.lastStudied, program.hours, program.accessUntil].filter(Boolean) as string[];
   const overview = detail?.about.find((a) => /overview/i.test(a.title))?.body?.[0];
-  const skills = detail?.about.find((a) => /skills/i.test(a.title))?.body ?? [];
+  // One chip per skill: a program may write its skills as sentences in one paragraph.
+  const skills = (detail?.about.find((a) => /skills/i.test(a.title))?.body ?? [])
+    .flatMap((b) => b.split(/(?<=\.)\s+/))
+    .map((t) => t.replace(/\.$/, "").trim())
+    .filter(Boolean);
   const current = detail?.courses.find((c) => (c.card.progressPct ?? 0) > 0 && (c.card.progressPct ?? 0) < 100);
   const pageHref = program.href ?? (slug ? programPageHref(slug) : undefined);
   const actionHref = program.actionHref ?? program.href;
@@ -103,18 +108,20 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
             <DeliveryModeBadge value={program.delivery} />
             <DifficultyBadge value={program.difficulty} />
           </div>
-          <button
-            type="button"
+          {/* A Secondary icon button: it reads on the dark hero in every skin (Nelson, 23 Oct 2026). */}
+          <Button
+            hierarchy="secondary"
+            size="md"
+            iconOnly
+            leftIcon={X}
             onClick={onClose}
             aria-label="Close quick view"
-            className="absolute right-3 top-3 inline-flex size-11 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-hover md:right-4 md:top-4"
-          >
-            <Icon icon={X} size={20} />
-          </button>
+            className="absolute right-3 top-3 md:right-4 md:top-4"
+          />
         </header>
 
         {/* The body scrolls: it takes the focus so a keyboard can scroll it (WCAG 2.1.1). */}
-        <div tabIndex={0} aria-label="Program details" className="sk-scroll flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-5 md:p-6">
+        <div tabIndex={0} aria-label="Program details" className="sk-scroll flex min-h-0 min-w-0 flex-1 flex-col gap-6 overflow-y-auto overflow-x-hidden p-5 md:p-6">
           {/* Progress */}
           <section aria-labelledby={`${titleId}-progress`} className="flex flex-col gap-2">
             <h3 id={`${titleId}-progress`} className={SECTION_TITLE}>
@@ -236,8 +243,11 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
               {skills.length ? (
                 <ul className="flex flex-wrap gap-2" aria-label="Skills you will gain">
                   {skills.slice(0, 6).map((s) => (
-                    <li key={s}>
-                      <Badge color="gray">{s.replace(/\.$/, "")}</Badge>
+                    <li key={s} className="max-w-full">
+                      {/* A long skill wraps inside its chip instead of pushing the dialog wider. */}
+                      <Badge color="gray" className="max-w-full whitespace-normal">
+                        {s}
+                      </Badge>
                     </li>
                   ))}
                 </ul>
