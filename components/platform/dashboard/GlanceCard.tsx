@@ -18,7 +18,7 @@ export interface GlanceCardProps {
  */
 function StatCard({ stat }: { stat: DashboardStat }) {
   return (
-    <div className="flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-4 shadow-sk-card">
+    <div className="flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-3 shadow-sk-card md:p-4">
       <p className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-muted">{stat.label}</p>
       <p className="flex items-end gap-2">
         <span
@@ -96,10 +96,10 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       <ul
         tabIndex={0}
         aria-labelledby="dashboard-glance-title"
-        className="relative -mx-[calc(50vw-50%)] flex snap-x snap-mandatory scroll-px-6 gap-6 overflow-x-auto px-[calc(50vw-50%)] [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden"
+        className="relative -mx-[calc(50vw-50%)] flex snap-x snap-mandatory scroll-px-6 gap-3 overflow-x-auto px-[calc(50vw-50%)] [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden"
       >
         {stats.map((stat) => (
-          <li key={stat.label} className="w-[174px] shrink-0 snap-start md:w-auto md:min-w-0">
+          <li key={stat.label} className="w-[156px] shrink-0 snap-start md:w-auto md:min-w-0">
             <StatCard stat={stat} />
           </li>
         ))}

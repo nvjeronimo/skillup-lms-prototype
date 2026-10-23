@@ -55,10 +55,9 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
       {/* The frames are drawn at 1280; wider windows keep the 1200 content width. */}
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 md:gap-6 lg:gap-8">
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
-        <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
+        {/* Always one line (Nelson, 23 Oct 2026): a very long name is cut with an ellipsis. */}
+        <h1 data-arrive={0} className="sk-text-headline-large-bold truncate whitespace-nowrap text-sko-text-default">
           {dashboardGreeting.salutation}{" "}
-          {/* One line from tablet up; on mobile the name takes the second line, as drawn. */}
-          <br className="md:hidden" />
           <span data-heading-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
         </h1>
 
