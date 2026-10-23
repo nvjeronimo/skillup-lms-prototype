@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/atoms/Button";
+import { SkillUpWordmark } from "@/components/atoms/SkillUpLogo";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -18,37 +19,50 @@ const LINKS = ["Terms of use", "Privacy", "Cookie settings", "Accessibility", "H
  * Footer 1.1 (Nelson, 23 Oct 2026): the links are DS Link Buttons (Brand, Secondary: the grey link
  * with its 1px rule), centred in the row, 16 apart and 8 between rows when they wrap; the Open edX
  * logo is 14 tall, 6 after "Powered by".
+ * Footer 1.2 (Nelson, 23 Oct 2026): the SkillUp name (monotone wordmark, 24 tall) leads, the
+ * copyright after a divider; the links sit on the right with the Open edX logo after a divider,
+ * without the "Powered by" words (its alt keeps them). Phones: the links first, then one centred
+ * row of name | copyright | Open edX, 24 apart. The dividers are border/subtle (the DS draws them
+ * as black at 30%, 0.5 px, unbound).
  */
 export function PlatformFooter({ className }: { className?: string }) {
   const showToast = useLmsStore((s) => s.showToast);
+  const openEdx = (
+    // Open edX's own logo file (Nelson, 23 Oct 2026), 14 tall. It carries its own navy and magenta
+    // fills, so it reads on light and dark pages alike.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/open-edx-logo.svg" alt="Powered by Open edX" width={48} height={14} className="h-3.5 w-auto" />
+  );
   return (
     <footer aria-label="Site" className={cn("sk-no-print px-6 md:px-8 lg:px-10", className)}>
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-x-6 gap-y-4 border-t border-sko-border-subtle py-6 text-center md:flex-row md:flex-wrap md:justify-between md:text-left">
-        <p className="sk-text-body-small-regular text-sko-text-subtle">© 2026 SkillUp Online</p>
-        <ul
-          aria-label="Legal and help"
-          data-mock="SkillUp's legal and help pages are not linked yet"
-          className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:flex-1"
-        >
-          {LINKS.map((label) => (
-            <li key={label} className="flex">
-              <Button
-                hierarchy="link-subtle"
-                size="sm"
-                onClick={() => showToast(`${label} is not part of this prototype yet`)}
-              >
-                {label}
-              </Button>
-            </li>
-          ))}
-        </ul>
-        <p className="sk-text-body-small-regular flex items-center gap-1.5 text-sko-text-subtle">
-          Powered by
-          {/* Open edX's own logo file (Nelson, 23 Oct 2026), small: 14 tall (Footer 1.1). It carries its own
-              navy and magenta fills, so it reads on light and dark pages alike. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/open-edx-logo.svg" alt="Open edX" width={48} height={14} className="h-3.5 w-auto" />
-        </p>
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-6 border-t border-sko-border-subtle py-6 md:flex-row md:justify-between">
+        <div className="flex items-center gap-3 max-md:order-last md:gap-2">
+          <SkillUpWordmark className="h-6" />
+          <p className="sk-text-body-small-regular border-l border-sko-border-subtle pl-3 text-sko-text-subtle max-md:border-r max-md:pr-3 md:pl-2">
+            © 2026 SkillUp Online
+          </p>
+          <span className="flex md:hidden">{openEdx}</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <ul
+            aria-label="Legal and help"
+            data-mock="SkillUp's legal and help pages are not linked yet"
+            className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:justify-end"
+          >
+            {LINKS.map((label) => (
+              <li key={label} className="flex">
+                <Button
+                  hierarchy="link-subtle"
+                  size="sm"
+                  onClick={() => showToast(`${label} is not part of this prototype yet`)}
+                >
+                  {label}
+                </Button>
+              </li>
+            ))}
+          </ul>
+          <span className="hidden border-l border-sko-border-subtle pl-4 md:flex">{openEdx}</span>
+        </div>
       </div>
     </footer>
   );
