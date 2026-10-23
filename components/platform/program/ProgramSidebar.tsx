@@ -19,7 +19,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
   return (
     <aside
       aria-label="Program details"
-      className={cn("flex flex-col gap-4", className)}
+      className={cn("flex flex-col gap-6 md:gap-4", className)}
     >
       <CardShell label="Program dates" gap="lg" mock="Program dates have no API; the relative labels are computed">
         <ul className="flex flex-col">

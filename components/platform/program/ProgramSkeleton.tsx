@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 /* ProgramDetailView's body column, with its paddings. */
 const BODY =
-  "mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-4 pb-8 pt-4 md:flex-row md:items-start md:gap-8 md:px-6 md:pb-12 md:pt-6 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-8";
+  "mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 pb-8 pt-6 md:flex-row md:items-start md:gap-8 md:px-6 md:pb-12 md:pt-6 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-8";
 const CARD = "rounded-card border border-sko-border-subtle bg-sko-bg-page";
 
 /** The section intro of a tab: the headline-small title and its lead, as ghost lines. */

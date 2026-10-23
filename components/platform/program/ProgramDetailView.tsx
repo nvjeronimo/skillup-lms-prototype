@@ -37,7 +37,7 @@ import { SectionIntro } from "./parts";
  *
  */
 /* A tab's main column: its blocks are 24 / 20 / 16 apart (desktop / tablet / mobile). */
-const PANEL = "flex flex-col gap-4 md:gap-5 lg:gap-6";
+const PANEL = "flex flex-col gap-6";
 
 export function ProgramDetailView({ program }: { program: Program }) {
   const router = useRouter();
@@ -104,7 +104,7 @@ export function ProgramDetailView({ program }: { program: Program }) {
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-4 pb-8 pt-4 md:flex-row md:items-start md:gap-8 md:px-6 md:pb-12 md:pt-6 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-8">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 pb-8 pt-6 md:flex-row md:items-start md:gap-8 md:px-6 md:pb-12 md:pt-6 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-8">
         <div data-arrive={2} className="min-w-0 flex-1">
           {PROGRAM_TABS.map((tab) => (
             <div

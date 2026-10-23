@@ -138,13 +138,13 @@ export function CertificateCard({
 export function CertificatesTab({ program }: { program: Program }) {
   const programCertificate = getProgramCertificate(program.slug);
   return (
-    <div className="flex flex-col gap-4 md:gap-5 lg:gap-6">
+    <div className="flex flex-col gap-6">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
       {programCertificate ? (
         <>
           <section
             aria-labelledby="program-certificate-title"
-            className="flex flex-col gap-3 border-b border-sko-border-subtle pb-4 md:pb-5 lg:pb-6"
+            className="flex flex-col gap-3 border-b border-sko-border-subtle pb-6"
           >
             <h3 id="program-certificate-title" className="sr-only">
               Program certificate
@@ -158,7 +158,7 @@ export function CertificatesTab({ program }: { program: Program }) {
       {program.certificates.length > 0 ? (
         <ul
           data-mock="Certificate artwork, IDs and requirements are not readable yet"
-          className="flex flex-wrap items-start gap-4 md:gap-5 lg:gap-6"
+          className="flex flex-wrap items-start gap-6"
         >
           {program.certificates.map((certificate) => (
             <li key={certificate.courseId} className="flex w-full flex-col gap-2 md:w-[320px]">
