@@ -24,45 +24,44 @@ const LINKS = ["Terms of use", "Privacy", "Cookie settings", "Accessibility", "H
  * without the "Powered by" words (its alt keeps them). Phones: the links first, then one centred
  * row of name | copyright | Open edX, 24 apart. The dividers are border/subtle (the DS draws them
  * as black at 30%, 0.5 px, unbound).
+ * Footer 1.3 (Nelson, 23 Oct 2026): the name 18 tall (61 × 18); the Open edX logo moves next to it: name | Open edX |
+ * copyright on the left (12 apart, a divider before each), the links alone on the right. Phones:
+ * the links, then that same row, centred.
  */
 export function PlatformFooter({ className }: { className?: string }) {
   const showToast = useLmsStore((s) => s.showToast);
-  const openEdx = (
-    // Open edX's own logo file (Nelson, 23 Oct 2026), 14 tall. It carries its own navy and magenta
-    // fills, so it reads on light and dark pages alike.
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src="/open-edx-logo.svg" alt="Powered by Open edX" width={48} height={14} className="h-3.5 w-auto" />
-  );
   return (
     <footer aria-label="Site" className={cn("sk-no-print px-6 md:px-8 lg:px-10", className)}>
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-6 border-t border-sko-border-subtle py-6 md:flex-row md:justify-between">
-        <div className="flex items-center gap-3 max-md:order-last md:gap-2">
-          <SkillUpWordmark className="h-6" />
-          <p className="sk-text-body-small-regular border-l border-sko-border-subtle pl-3 text-sko-text-subtle max-md:border-r max-md:pr-3 md:pl-2">
+        <div className="flex items-center gap-3 max-md:order-last">
+          <SkillUpWordmark className="h-[18px]" />
+          {/* Open edX's own logo file (Nelson, 23 Oct 2026), 14 tall. It carries its own navy and
+              magenta fills, so it reads on light and dark pages alike. */}
+          <span className="flex border-l border-sko-border-subtle pl-2 md:pl-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/open-edx-logo.svg" alt="Powered by Open edX" width={48} height={14} className="h-3.5 w-auto" />
+          </span>
+          <p className="sk-text-body-small-regular border-l border-sko-border-subtle pl-3 text-sko-text-subtle">
             © 2026 SkillUp Online
           </p>
-          <span className="flex md:hidden">{openEdx}</span>
         </div>
-        <div className="flex items-center gap-4">
-          <ul
-            aria-label="Legal and help"
-            data-mock="SkillUp's legal and help pages are not linked yet"
-            className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:justify-end"
-          >
-            {LINKS.map((label) => (
-              <li key={label} className="flex">
-                <Button
-                  hierarchy="link-subtle"
-                  size="sm"
-                  onClick={() => showToast(`${label} is not part of this prototype yet`)}
-                >
-                  {label}
-                </Button>
-              </li>
-            ))}
-          </ul>
-          <span className="hidden border-l border-sko-border-subtle pl-4 md:flex">{openEdx}</span>
-        </div>
+        <ul
+          aria-label="Legal and help"
+          data-mock="SkillUp's legal and help pages are not linked yet"
+          className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:justify-end"
+        >
+          {LINKS.map((label) => (
+            <li key={label} className="flex">
+              <Button
+                hierarchy="link-subtle"
+                size="sm"
+                onClick={() => showToast(`${label} is not part of this prototype yet`)}
+              >
+                {label}
+              </Button>
+            </li>
+          ))}
+        </ul>
       </div>
     </footer>
   );

@@ -64,8 +64,10 @@ const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
 /* Link Button (DS 15 Oct 2026): a 1px bottom stroke in every state, on the icon token of
    its tone (border/disabled when Disabled); radius 0. Hover has no fill: the label and the
    stroke darken (LINK_TONE). Focused: bg/faint and radius 6. */
+/* sk-link-button: under "larger targets" its 44 is a hit area around it (globals.css), not its
+   height, so the line stays 4 under the label as in the DS (Nelson, 23 Oct 2026). */
 const LINK =
-  "border-b bg-transparent focus-visible:rounded-control focus-visible:bg-sko-bg-faint disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
+  "sk-link-button border-b bg-transparent focus-visible:rounded-control focus-visible:bg-sko-bg-faint disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
 const LINK_TONE = {
   brand: "text-sko-text-primary border-sko-icon-primary hover:text-sko-text-on-primary-soft hover:border-sko-icon-default [&:not(:disabled):hover_svg]:text-sko-icon-default",
   subtle: "text-sko-text-subtle border-sko-icon-subtle hover:text-sko-text-muted hover:border-sko-icon-muted",
@@ -201,11 +203,11 @@ const SIZE: Record<
   xl: { pad: "h-14 px-5 gap-1.5", text: "sk-text-body-large-semibold", icon: 20, square: "h-14 w-14", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
 };
 
-/* ._Link Button_Structure 21851:7588 has md and lg only: sm maps to md, xl to lg.
+/* ._Link Button_Structure 21851:7588: sm 26 (body-small), md 28, lg 32 (xl maps to lg).
    4/2 padding, 4 gap, radius 0, 1px bottom stroke (the LINK border-b). The bottom padding
-   is 3px so the stroke keeps the 28/32 heights. */
+   is 3px so the stroke keeps the 26/28/32 heights: 4 between the label and the line. */
 const LINK_SIZE: Record<ButtonSize, { pad: string; text: string; icon: number }> = {
-  sm: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-medium-semibold", icon: 16 },
+  sm: { pad: "h-[26px] px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-small-semibold", icon: 16 },
   md: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-medium-semibold", icon: 16 },
   lg: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
   xl: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
