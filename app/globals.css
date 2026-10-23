@@ -1004,6 +1004,22 @@ button {
   min-height: 44px;
   min-width: 44px;
 }
+/* A Link Button keeps its DS height (26/28/32, the line 4 under the label): its 44 is a hit area
+   drawn around it, so the line never drifts away from the label (Nelson, 23 Oct 2026). */
+[data-large-targets] :is(button, a).sk-link-button {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+}
+[data-large-targets] .sk-link-button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
 
 /* ============================================================================
    Platform pages: sample-data marks. The pages under /platform are a test build

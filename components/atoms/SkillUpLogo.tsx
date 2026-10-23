@@ -36,7 +36,7 @@ export function SkillUpMark({ className }: { className?: string }) {
 }
 
 /**
- * The SkillUp name alone, monotone (DS Skillup_logo Monotone, Small40H: 82 × 24), for the platform
+ * The SkillUp name alone, monotone (DS Skillup_logo Monotone, Small40H), for the platform
  * footer (Footer 1.2, Nelson 23 Oct 2026). Brand ink in light, white in dark: the same swap.
  */
 export function SkillUpWordmark({ className }: { className?: string }) {

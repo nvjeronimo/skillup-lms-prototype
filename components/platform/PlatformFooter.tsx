@@ -24,7 +24,7 @@ const LINKS = ["Terms of use", "Privacy", "Cookie settings", "Accessibility", "H
  * without the "Powered by" words (its alt keeps them). Phones: the links first, then one centred
  * row of name | copyright | Open edX, 24 apart. The dividers are border/subtle (the DS draws them
  * as black at 30%, 0.5 px, unbound).
- * Footer 1.3 (Nelson, 23 Oct 2026): the Open edX logo moves next to the name: name | Open edX |
+ * Footer 1.3 (Nelson, 23 Oct 2026): the name 18 tall (61 × 18); the Open edX logo moves next to it: name | Open edX |
  * copyright on the left (12 apart, a divider before each), the links alone on the right. Phones:
  * the links, then that same row, centred.
  */
@@ -34,7 +34,7 @@ export function PlatformFooter({ className }: { className?: string }) {
     <footer aria-label="Site" className={cn("sk-no-print px-6 md:px-8 lg:px-10", className)}>
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-6 border-t border-sko-border-subtle py-6 md:flex-row md:justify-between">
         <div className="flex items-center gap-3 max-md:order-last">
-          <SkillUpWordmark className="h-6" />
+          <SkillUpWordmark className="h-[18px]" />
           {/* Open edX's own logo file (Nelson, 23 Oct 2026), 14 tall. It carries its own navy and
               magenta fills, so it reads on light and dark pages alike. */}
           <span className="flex border-l border-sko-border-subtle pl-2 md:pl-3">
