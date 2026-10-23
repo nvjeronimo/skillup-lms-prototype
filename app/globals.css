@@ -572,6 +572,28 @@ button {
     background-color: var(--color-bg-page);
   }
 }
+/* It slides away on scroll down and back on scroll up (Nelson, 23 Oct 2026): out by its own height
+   plus the gap and the safe area, so no edge of it stays on screen. Reduced motion: it fades. */
+.sk-floating-nav {
+  transition:
+    transform var(--motion-duration-medium2) var(--motion-easing-standard-decelerate),
+    opacity var(--motion-duration-short3) var(--motion-easing-standard);
+}
+.sk-floating-nav[data-hidden] {
+  transform: translateY(calc(100% + 1rem + env(safe-area-inset-bottom, 0px)));
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-floating-nav[data-hidden] {
+    transform: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+[data-reduce-motion] .sk-floating-nav[data-hidden] {
+  transform: none;
+  opacity: 0;
+  pointer-events: none;
+}
 
 .sk-press-card {
   transition-property: transform, background-color, border-color, box-shadow;

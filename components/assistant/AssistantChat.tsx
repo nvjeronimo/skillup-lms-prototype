@@ -187,7 +187,9 @@ function Chat({ pathname }: { pathname: string }) {
     <>
       {/* The window opening by itself leaves the focus on the page: this is how it is heard. */}
       <p role="status" className="sr-only">
-        {open && selfOpened ? `SkillUp Assistant opened: ${firstSteps.left} first steps to get you started.` : ""}
+        {open && selfOpened
+          ? `SkillUp Assistant opened: ${firstSteps.left} first steps to get you started.`
+          : ""}
       </p>
       {presence.mounted ? (
         <AssistantWindow
@@ -219,7 +221,11 @@ function Chat({ pathname }: { pathname: string }) {
           style={
             isPhone
               ? undefined
-              : { [side]: edge, bottom: bottom + SIZE + GAP, height: `min(600px, calc(100dvh - ${bottom + SIZE + GAP + 24}px))` }
+              : {
+                  [side]: edge,
+                  bottom: bottom + SIZE + GAP,
+                  height: `min(600px, calc(100dvh - ${bottom + SIZE + GAP + 24}px))`,
+                }
           }
         />
       ) : null}
@@ -248,7 +254,12 @@ function Chat({ pathname }: { pathname: string }) {
  * On a phone's platform page the launcher sits beside the floating tab bar instead, on the same
  * line, centred on it (Nelson, 23 Oct 2026): the value then lifts it from `edge` to that centre.
  */
-function useFooterHeight(pathname: string, side: "left" | "right", reach: number, edge: number): number {
+function useFooterHeight(
+  pathname: string,
+  side: "left" | "right",
+  reach: number,
+  edge: number,
+): number {
   const [height, setHeight] = React.useState(0);
   const inPlayer = pathname.startsWith("/course/");
   const onPlatform = pathname.startsWith("/platform");
@@ -261,9 +272,16 @@ function useFooterHeight(pathname: string, side: "left" | "right", reach: number
       if (!footer) return setHeight(0);
       const { top, bottom, left, right } = footer.getBoundingClientRect();
       if (onPlatform) {
-        // Beside the bar: the launcher's centre on the bar's centre.
-        const visible = top < window.innerHeight && bottom > 0;
-        return setHeight(visible ? Math.max(0, Math.round(window.innerHeight - bottom + (bottom - top - SIZE) / 2 - edge)) : 0);
+        // Beside the bar: the launcher's centre on the bar's centre. Read from its layout box, not
+        // its painted one, so the launcher stays put while the bar slides away on scroll.
+        const barTop = footer.offsetTop;
+        const barHeight = footer.offsetHeight;
+        return setHeight(
+          Math.max(
+            0,
+            Math.round(window.innerHeight - barTop - barHeight + (barHeight - SIZE) / 2 - edge),
+          ),
+        );
       }
       const meets = side === "left" ? left < reach : right > window.innerWidth - reach;
       const visible = top < window.innerHeight && bottom > 0 && meets;

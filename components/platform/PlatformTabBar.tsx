@@ -25,7 +25,6 @@ const ICONS: Record<PlatformSection, LucideIcon> = {
   services: LifeBuoy,
 };
 
-
 /** The sections in the bar itself; every other section (and any added later) goes under More. */
 const IN_BAR: PlatformSection[] = ["dashboard", "my-learning", "calendar"];
 
@@ -67,6 +66,9 @@ function TabIcon({ icon, on, count }: { icon: LucideIcon; on: boolean; count?: n
  * `aria-current`, not a tablist: each opens another page. The material is bg/page at 88% under a
  * blur, solid under "reduce transparency"; a soft shadow lifts it, no border, no gradient. Phones
  * only: tablet and desktop keep the top bar.
+ * It slides away while the learner scrolls down and comes back on any scroll up, at the top and at
+ * the end of the page, and when the keyboard focus reaches it (Nelson, 23 Oct 2026); never while
+ * the More panel is open. Under reduced motion it fades instead of sliding (globals.css).
  */
 export function PlatformTabBar({ current }: { current: PlatformSection | null }) {
   const showToast = useLmsStore((s) => s.showToast);
@@ -74,6 +76,30 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
   const inMore = PLATFORM_SECTIONS.filter((s) => !IN_BAR.includes(s.id));
   const moreCurrent = inMore.some((s) => s.id === current);
   const more = useDisclosure();
+  const [scrolledAway, setScrolledAway] = React.useState(false);
+  React.useEffect(() => {
+    let last = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY;
+        const delta = y - last;
+        const atEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 4;
+        // A small dead zone, so a finger resting on the glass does not make the bar flicker.
+        if (y < 64 || atEnd || delta < -6) setScrolledAway(false);
+        else if (delta > 6) setScrolledAway(true);
+        if (Math.abs(delta) > 6) last = y;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+  const hidden = scrolledAway && !more.open;
 
   const named = (s: Section) =>
     typeof s.count === "number" && s.count > 0 ? `${s.label}, ${s.count} items` : s.label;
@@ -84,6 +110,8 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
     <nav
       aria-label="Platform"
       data-floating-nav=""
+      data-hidden={hidden || undefined}
+      onFocus={() => setScrolledAway(false)}
       className="sk-floating-nav sk-no-print sk-animate-rise fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 right-[4.5rem] z-30 rounded-pill p-1"
     >
       <ul className="flex items-stretch">
