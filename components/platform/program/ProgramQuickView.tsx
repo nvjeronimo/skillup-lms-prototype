@@ -41,6 +41,7 @@ const SECTION_TITLE = "sk-text-label-small-semibold uppercase text-sko-text-subt
  * - Courses: every course of the program in order, with its state (done, in progress with its
  *   percent and "Up next", not started) — programs API + course progress;
  * - Certificate: issued on a date, or what is left to earn it (Certificates API);
+ * - What's included: the Program page's list (courses, hours, projects…; no API, sample-data mark);
  * - About: the overview and the skills. Open edX serves no program marketing text: it is mock
  *   copy until the vendor's catalogue (handoff map §37), so it carries the sample-data mark.
  * Bottom: "Open program page" and the card's own action (Resume, Start, View Certificate).
@@ -226,6 +227,24 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
                   </p>
                 </div>
               </div>
+            </section>
+          ) : null}
+
+          {/* What's included: the Program page's sidebar list (Nelson, 23 Oct 2026). */}
+          {detail?.included.length ? (
+            <section
+              aria-labelledby={`${titleId}-included`}
+              data-mock="Content counts per program have no API"
+              className="flex flex-col gap-2"
+            >
+              <h3 id={`${titleId}-included`} className={SECTION_TITLE}>
+                What&apos;s included
+              </h3>
+              <ul className="sk-text-body-medium-regular list-disc ps-[21px] text-sko-text-default">
+                {detail.included.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </section>
           ) : null}
 
