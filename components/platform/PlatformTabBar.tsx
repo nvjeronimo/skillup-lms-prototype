@@ -25,8 +25,6 @@ const ICONS: Record<PlatformSection, LucideIcon> = {
   services: LifeBuoy,
 };
 
-/** Shorter names where the full one does not fit the bar (the page title keeps it). */
-const SHORT: Partial<Record<PlatformSection, string>> = { "my-learning": "Learning" };
 
 /** The sections in the bar itself; every other section (and any added later) goes under More. */
 const IN_BAR: PlatformSection[] = ["dashboard", "my-learning", "calendar"];
@@ -62,9 +60,9 @@ function TabIcon({ icon, on, count }: { icon: LucideIcon; on: boolean; count?: n
  * The platform sections on a phone (Nelson, 22 Oct 2026: "a floating menu, as in an app"; 23 Oct:
  * his answers to the open question). A pill that floats 16 above the bottom edge (plus the safe
  * area), leaving the right corner to the assistant launcher, which sits beside it on the same line.
- * Dashboard, Learning and Calendar are in the bar; More gathers the rest (Discussion, Services, and
+ * Dashboard, My Learning and Calendar are in the bar; More gathers the rest (Discussion, Services, and
  * any section added later) in a panel that opens above it. Each item is an icon over a short label
- * (body-small Medium), 56 tall; the current one sits on a bg/primary-soft pill with a heavier icon,
+ * (body-small Medium; the full name, cut with an ellipsis when it does not fit, Nelson 23 Oct 2026), 56 tall; the current one sits on a bg/primary-soft pill with a heavier icon,
  * so it never depends on colour alone (More is current on any page it holds). Links with
  * `aria-current`, not a tablist: each opens another page. The material is bg/page at 88% under a
  * blur, solid under "reduce transparency"; a soft shadow lifts it, no border, no gradient. Phones
@@ -94,7 +92,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
           const content = (
             <>
               <TabIcon icon={ICONS[s.id]} on={on} count={s.count} />
-              <span className="max-w-full truncate">{SHORT[s.id] ?? s.label}</span>
+              <span className="max-w-full truncate px-1">{s.label}</span>
             </>
           );
           return (
@@ -134,7 +132,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
               className={cn(ITEM, itemTone(moreCurrent || more.open))}
             >
               <TabIcon icon={MoreHorizontal} on={moreCurrent} />
-              <span className="max-w-full truncate">More</span>
+              <span className="max-w-full truncate px-1">More</span>
             </button>
             {more.mounted ? (
               <div
