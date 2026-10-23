@@ -63,7 +63,9 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       aria-labelledby="dashboard-glance-title"
       data-glance=""
       className={cn(
-        "relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-card border border-sko-border-primary-muted p-4 md:gap-4 md:p-5 lg:p-6",
+        // Test (Nelson, 23 Oct 2026, prototype only): the backdrop runs the full width of the
+        // window on every device; the title and the cards stay on the page's content edges.
+        "relative mx-[calc(50%-50vw)] flex min-w-0 flex-col gap-3 overflow-hidden px-[calc(50vw-50%)] py-5 md:gap-4 md:py-6 lg:py-8",
         className,
       )}
     >
@@ -94,7 +96,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       <ul
         tabIndex={0}
         aria-labelledby="dashboard-glance-title"
-        className="relative -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-6 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden"
+        className="relative -mx-[calc(50vw-50%)] flex snap-x snap-mandatory scroll-px-6 gap-6 overflow-x-auto px-[calc(50vw-50%)] [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden"
       >
         {stats.map((stat) => (
           <li key={stat.label} className="w-[174px] shrink-0 snap-start md:w-auto md:min-w-0">
