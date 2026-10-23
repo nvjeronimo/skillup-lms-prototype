@@ -155,6 +155,29 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const [askOpen, setAskOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
   const [videoDocked, setVideoDocked] = React.useState(false);
+  // Docking shrinks the band by up to ~210 px. Without help the browser's scroll anchoring pulled
+  // scrollTop back to 0 as it shrank, the band undocked and grew, and the page jumped back up
+  // (Nelson, 23 Oct 2026). So: no scroll anchoring on the body, undock only at the very top, and
+  // while docked a spacer at the end gives back the height the band lost, so the scroll range
+  // does not shrink under the finger.
+  const bandRef = React.useRef<HTMLDivElement>(null);
+  const dockedRef = React.useRef(false);
+  const fullBandHeight = React.useRef(0);
+  const [dockGap, setDockGap] = React.useState(0);
+  React.useEffect(() => {
+    dockedRef.current = videoDocked;
+  }, [videoDocked]);
+  React.useEffect(() => {
+    const band = bandRef.current;
+    if (!band || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      const h = band.getBoundingClientRect().height;
+      if (!dockedRef.current) fullBandHeight.current = h;
+      setDockGap(dockedRef.current ? Math.max(0, Math.round(fullBandHeight.current - h)) : 0);
+    });
+    ro.observe(band);
+    return () => ro.disconnect();
+  });
 
   // Keep currentTopicId in sync with the route + emit topic_enter.
   React.useEffect(() => {
@@ -475,10 +498,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         >
           <div
             ref={bodyRef}
-            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto"
+            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto [overflow-anchor:none]"
             onScroll={(e) => {
-              const next = e.currentTarget.scrollTop > 8;
-              setVideoDocked((prev) => (prev === next ? prev : next));
+              const top = e.currentTarget.scrollTop;
+              // Dock past 8 px, undock only back at the top (hysteresis).
+              setVideoDocked((prev) => (prev ? top > 0 : top > 8));
             }}
           >
             {/* Only under data-arrival="pending" (lib/arrival): the topic-shaped skeleton. */}
@@ -503,7 +527,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 {/* Sticky player band — the video stays visible at the top and
                     docks (shrinks) once the content scrolls past the top. */}
                 <div
+                  ref={bandRef}
                   data-arrive={0}
+                  data-video-band=""
                   className={cn(
                     "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate [container-type:inline-size]",
                     videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
@@ -595,6 +621,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   </div>
                   {discussFooter ? <div data-arrive={3}>{discussFooter}</div> : null}
                 </div>
+                <div aria-hidden="true" style={{ height: dockGap }} />
               </>
             ) : (
               <div className={cn(CONTENT_PAD[bp], CONTENT_MEASURE)}>
