@@ -51,8 +51,9 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
             track("download_file", { fileId: "all", type: "ZIP" });
             showToast(`Downloading ${files.length} resources…`);
           }}
-          // DS Link Button Type=Brand, Hierarchy=Primary: 1px icon/primary underline, bg/faint on hover.
-          className="sk-text-body-medium-semibold inline-flex items-center gap-1 border-b border-sko-icon-primary px-0.5 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:bg-sko-bg-faint"
+          // DS Link Button Type=Brand, Hierarchy=Primary: 1px icon/primary underline; on hover the text, line and icon
+          // darken, no fill (Nelson, 23 Oct 2026: a fill on hover was wrong); bg/faint only on keyboard focus.
+          className="sk-text-body-medium-semibold inline-flex items-center gap-1 border-b border-sko-icon-primary px-0.5 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
         >
           <Icon icon={Download} size={16} className="text-sko-icon-primary" />
           <span className="px-0.5">Download all resources</span>
