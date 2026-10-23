@@ -166,3 +166,11 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
 [data-direction="studio"] [data-glance] .shadow-sk-card {
   box-shadow: var(--sk-shadow-studio);
 }
+/* On a phone the figure cards have 12 of padding, so the card-inset 32 reads too round (Nelson,
+   23 Oct 2026). By the nesting rule, padding 12 + the badge's half height (14) gives 26: 24 here,
+   back to the card-inset from tablet up, where the padding is 16. */
+@media (max-width: 767px) {
+  [data-direction="studio"] [data-glance] .rounded-card-inset {
+    border-radius: 24px;
+  }
+}
