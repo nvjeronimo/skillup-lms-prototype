@@ -59,10 +59,12 @@ function TabIcon({
   return (
     <span className="relative">
       <Icon icon={icon} size={size} strokeWidth={on ? 2.25 : 1.75} aria-hidden />
+      {/* The count is a Badge Soft sm Info (Nelson, 23 Oct 2026): it reads on the current tab's
+          primary-soft fill as well as on the bar. */}
       {typeof count === "number" && count > 0 ? (
         <span
           aria-hidden
-          className="sk-text-label-small-semibold absolute -right-2.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-pill bg-sko-bg-primary px-1 text-sko-text-on-primary"
+          className="sk-text-label-small-semibold absolute -right-2.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-pill bg-sko-bg-info-soft px-1 text-sko-text-info"
         >
           {count}
         </span>
