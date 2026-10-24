@@ -138,7 +138,7 @@ export function OverlayPanel({
 /** Sticky section label inside a panel body (semantic heading, eyebrow style). */
 /* Every panel's body follows Nelson's ICP panel (7497:132529, 24 Oct 2026): the scroll area is
    bg/subtle; PanelBody insets the content 16 from the sides; each group of rows is a PanelGroup (white
-   rows under one border/subtle rule, divided by it); a PanelSectionLabel sits 24 in from the inset. */
+   rows, each closed by a border/subtle rule underneath, as in the ICP); a PanelSectionLabel sits 24 in from the inset. */
 export function PanelSectionLabel({ children }: { children: React.ReactNode }) {
   return <h3 className="sk-text-label-small-medium px-6 py-3 text-sko-text-subtle">{children}</h3>;
 }
@@ -149,7 +149,7 @@ export function PanelBody({ children, className }: { children: React.ReactNode; 
 
 export function PanelGroup({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("divide-y divide-sko-border-subtle border border-sko-border-subtle bg-sko-bg-page", className)}>
+    <div className={cn("divide-y divide-sko-border-subtle border-b border-sko-border-subtle bg-sko-bg-page", className)}>
       {children}
     </div>
   );
