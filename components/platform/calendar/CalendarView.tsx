@@ -10,6 +10,7 @@ import { Button } from "@/components/atoms/Button";
 import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSegmented } from "@/components/platform/PlatformSegmented";
+import { StickyToolbar } from "@/components/platform/StickyToolbar";
 import {
   CALENDAR_TODAY,
   addDays,
@@ -633,7 +634,8 @@ export function CalendarView() {
           <section data-arrive={2} aria-label="Dates" className="flex min-w-0 flex-1 flex-col gap-6">
             {/* The two controls side by side on every breakpoint (Nelson, 23 Oct 2026): the kind filter
                 takes the room and scrolls sideways if it must; the view switch is icons only below md. */}
-            <div className="flex items-center justify-between gap-3">
+            {/* Stuck to the top on scroll up (StickyToolbar, Nelson 24 Oct 2026). */}
+            <StickyToolbar className="flex items-center justify-between gap-3">
               <PlatformSegmented
                 label="Show"
                 options={calendarFilters}
@@ -652,7 +654,7 @@ export function CalendarView() {
                 onChange={(v) => setView(v as View)}
                 className="shrink-0"
               />
-            </div>
+            </StickyToolbar>
             <div data-mock="Dates come one course at a time (Dates API); no route merges them, and no course has due dates authored yet">
               {view === "month" ? (
                 <>
