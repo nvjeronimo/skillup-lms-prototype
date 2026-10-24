@@ -34,7 +34,7 @@ export function DiscussionPrompt({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 border border-sko-border-subtle bg-sko-bg-page px-6 py-4",
+        "flex flex-col gap-4 border-b border-sko-border-subtle bg-sko-bg-page px-6 py-4",
         className,
       )}
     >
