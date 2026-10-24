@@ -42,9 +42,10 @@ export function StickyToolbar({
         data-sticky-toolbar=""
         data-stuck={stuck || undefined}
         className={cn(
-          "sk-sticky-toolbar sticky top-[env(safe-area-inset-top,0px)] z-20 -my-3 py-3",
+          // The ground and the rule fade in and out (globals.css): never a hard switch.
+          "sk-sticky-toolbar sticky top-[env(safe-area-inset-top,0px)] z-20 -my-3 border-b border-transparent py-3",
           bleed && "mx-[calc(50%-50vw)] px-[calc(50vw-50%)]",
-          stuck && "border-b border-sko-border-subtle bg-sko-bg-faint",
+          stuck && "border-sko-border-subtle bg-sko-bg-faint",
           className,
         )}
       >

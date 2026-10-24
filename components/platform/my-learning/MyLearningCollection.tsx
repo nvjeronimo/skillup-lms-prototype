@@ -235,8 +235,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             </div>
           </div>
           {/* Stuck to the top, the bar keeps the tabs and the filter; the search steps out unless it holds a query. */}
-          <div data-search-slot={query ? undefined : ""} className="flex min-w-0 items-center gap-2">
-            <div data-hide-when-stuck={query ? undefined : ""} className="w-full md:w-auto">
+          <div data-search-slot="" data-keep={query ? "" : undefined} className="flex min-w-0 items-center gap-2">
+            <div data-hide-when-stuck="" data-keep={query ? "" : undefined} className="w-full md:w-auto">
               <SearchField
                 value={query}
                 onChange={setQuery}
