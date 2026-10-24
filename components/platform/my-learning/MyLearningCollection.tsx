@@ -27,6 +27,7 @@ import { scrollToElement } from "@/lib/scrollToElement";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { useEqualHeights } from "@/lib/useEqualHeights";
 import { ProgramCard } from "./ProgramCard";
+import { StickyToolbar } from "@/components/platform/StickyToolbar";
 import { SearchField } from "./SearchField";
 import { ViewToggle } from "./ViewToggle";
 
@@ -36,7 +37,8 @@ const ID_BASE = "my-learning";
 /* The status filter's track (DS Button group); its skeleton reuses it. */
 export const MY_LEARNING_FILTER_TRACK =
   "flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden";
-export const MY_LEARNING_GRID = "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
+export const MY_LEARNING_GRID =
+  "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
 /* List: one column, 20 / 24 apart; from a tablet up since 23 Oct 2026 (Nelson). */
 const LIST = "hidden flex-col gap-5 md:flex lg:gap-6";
 
@@ -99,7 +101,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   // The tab: `?tab=` when the link says one; otherwise the one the learner last opened (kept in
   // this browser); the first time, Programs when they are enrolled in one (Nelson, 16 Oct 2026).
   const paramTab = params.get("tab");
-  const linkedTab: MyLearningTab | null = paramTab === "programs" || paramTab === "courses" ? paramTab : null;
+  const linkedTab: MyLearningTab | null =
+    paramTab === "programs" || paramTab === "courses" ? paramTab : null;
   const [storedTab, setStoredTab] = React.useState<MyLearningTab | null>(null);
   React.useEffect(() => {
     try {
@@ -109,7 +112,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
       /* storage blocked: the first-time rule applies */
     }
   }, []);
-  const tab: MyLearningTab = linkedTab ?? storedTab ?? myLearningFirstTab(myLearningPrograms.length);
+  const tab: MyLearningTab =
+    linkedTab ?? storedTab ?? myLearningFirstTab(myLearningPrograms.length);
   const rememberTab = (t: MyLearningTab) => {
     setStoredTab(t);
     try {
@@ -134,7 +138,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const needle = query.trim().toLowerCase();
   const inStatus = (pct: number | null) => status === "all" || myLearningStateOf(pct) === status;
   const byState = (a: number | null, b: number | null) =>
-    myLearningStatusOrder.indexOf(myLearningStateOf(a)) - myLearningStatusOrder.indexOf(myLearningStateOf(b));
+    myLearningStatusOrder.indexOf(myLearningStateOf(a)) -
+    myLearningStatusOrder.indexOf(myLearningStateOf(b));
   // Always In progress, then Not started, then Completed; the data order holds inside a state.
   const courses = courseRows
     .filter((row) => matches(row.card.title, needle) && inStatus(row.card.progressPct))
@@ -155,81 +160,102 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
 
   const listView = view === "list";
   // Every card has the height of the tallest one, in the grid and in the list (course rows; a title can take two lines).
-  const gridRef = useEqualHeights<HTMLDivElement>('[data-card-grid]', [tab, status, needle, view, courses.length, programs.length]);
+  const gridRef = useEqualHeights<HTMLDivElement>("[data-card-grid]", [
+    tab,
+    status,
+    needle,
+    view,
+    courses.length,
+    programs.length,
+  ]);
 
   return (
     <section aria-label="My courses and programs" className="flex flex-col gap-6">
-      {/* Row 1: the tabs on their 1px border/subtle rule, across the whole width.
+      {/* The tabs and the filter row stay at hand: stuck to the top on scroll up (StickyToolbar). */}
+      <StickyToolbar bleed className="flex flex-col gap-6">
+        {/* Row 1: the tabs on their 1px border/subtle rule, across the whole width.
           The Size=sm tabs already grow their target to 44 upwards, so the "larger targets"
           min-height is switched off on them: it would make the 32px row 44 tall. */}
-      <div data-arrive={1} className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0">
-        {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
+        <div
+          data-arrive={1}
+          className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0"
+        >
+          {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
             is the border of this row, and only the selected panel is rendered. */}
-        <PlatformTabs
-          tabs={tabs}
-          value={tab}
-          onChange={(id) => {
-            rememberTab(id as MyLearningTab);
-            setParam("tab", id, "");
-          }}
-          size="responsive"
-          rule="parent"
-          panels="selected"
-          idBase={ID_BASE}
-          ariaLabel="My learning"
-        />
-      </div>
+          <PlatformTabs
+            tabs={tabs}
+            value={tab}
+            onChange={(id) => {
+              rememberTab(id as MyLearningTab);
+              setParam("tab", id, "");
+            }}
+            size="responsive"
+            rule="parent"
+            panels="selected"
+            idBase={ID_BASE}
+            ariaLabel="My learning"
+          />
+        </div>
 
-      {/* Row 2 (Nelson, 13 Oct 2026): the status filter on the left, the search and the Grid /
+        {/* Row 2 (Nelson, 13 Oct 2026): the status filter on the left, the search and the Grid /
           List toggle on the right, 24 apart. Mobile: the search at full width, then the filter. */}
-      <div data-arrive={2} className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
-        {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
+        <div
+          data-arrive={2}
+          className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6"
+        >
+          {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
             pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
             Mobile (Nelson, 13 Oct 2026, Figma 7187:37067): the track fills the width and stays
             put; the segments scroll sideways inside it and the last one is cut at its right edge,
             which is the cue that there is more. No scrollbar is drawn. */}
-        <div className="min-w-0 md:shrink-0">
-          <div
-            role="group"
-            aria-label={`Filter ${noun} by status`}
-            className={MY_LEARNING_FILTER_TRACK}
-          >
-            {myLearningStatusFilters.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                aria-pressed={status === item.id}
-                onClick={() => setStatus(item.id)}
-                // A segment reached with the keyboard comes into the track when it was cut off.
-                onFocus={(e) => scrollToElement(e.currentTarget, "nearest")}
-                className={cn(
-                  "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-control border px-4 transition-colors max-md:h-11",
-                  status === item.id
-                    ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
-                    : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
-                )}
-              >
-                {item.label}
-              </button>
-            ))}
+          <div className="min-w-0 md:shrink-0">
+            <div
+              role="group"
+              aria-label={`Filter ${noun} by status`}
+              className={MY_LEARNING_FILTER_TRACK}
+            >
+              {myLearningStatusFilters.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={status === item.id}
+                  onClick={() => setStatus(item.id)}
+                  // A segment reached with the keyboard comes into the track when it was cut off.
+                  onFocus={(e) => scrollToElement(e.currentTarget, "nearest")}
+                  className={cn(
+                    "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-control border px-4 transition-colors max-md:h-11",
+                    status === item.id
+                      ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
+                      : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+                  )}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex min-w-0 items-center gap-2">
+            <SearchField
+              value={query}
+              onChange={setQuery}
+              label={myLearningSearch.placeholder}
+              className="w-full md:w-[240px] lg:w-[320px]"
+            />
+            <ViewToggle
+              view={view}
+              onChange={(next) => setParam("view", next, MY_LEARNING_DEFAULT_VIEW)}
+              className="hidden shrink-0 md:inline-flex"
+            />
           </div>
         </div>
-        <div className="flex min-w-0 items-center gap-2">
-          <SearchField
-            value={query}
-            onChange={setQuery}
-            label={myLearningSearch.placeholder}
-            className="w-full md:w-[240px] lg:w-[320px]"
-          />
-          <ViewToggle
-            view={view}
-            onChange={(next) => setParam("view", next, MY_LEARNING_DEFAULT_VIEW)}
-            className="hidden shrink-0 md:inline-flex"
-          />
-        </div>
-      </div>
+      </StickyToolbar>
 
-      <div data-arrive={3} role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
+      <div
+        data-arrive={3}
+        role="tabpanel"
+        id={platformPanelId(ID_BASE, tab)}
+        aria-labelledby={platformTabId(ID_BASE, tab)}
+      >
         {/* The card titles are h3: this h2 (the tab's own name) keeps the outline h1 → h2 → h3. */}
         <h2 className="sr-only">{myLearningTabs.find((t) => t.id === tab)?.label ?? noun}</h2>
         {/* Tells assistive tech how many cards the search or the filter left. */}
@@ -292,16 +318,32 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
               {/* Every program card has the same height, whatever its state or title (useEqualHeights). */}
               <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "md:hidden")}>
                 {programs.map((program, i) => (
-                  <li key={program.id} className={cn("min-w-0", ROW_ENTER)} style={staggerStyle(i, programs.length)}>
-                    <ProgramCard program={program} layout="grid" onAction={() => notInPrototype(program.cta)} />
+                  <li
+                    key={program.id}
+                    className={cn("min-w-0", ROW_ENTER)}
+                    style={staggerStyle(i, programs.length)}
+                  >
+                    <ProgramCard
+                      program={program}
+                      layout="grid"
+                      onAction={() => notInPrototype(program.cta)}
+                    />
                   </li>
                 ))}
               </ul>
               {listView ? (
                 <ul className={LIST}>
                   {programs.map((program, i) => (
-                    <li key={program.id} className={ROW_ENTER} style={staggerStyle(i, programs.length)}>
-                      <ProgramCard program={program} layout="list" onAction={() => notInPrototype(program.cta)} />
+                    <li
+                      key={program.id}
+                      className={ROW_ENTER}
+                      style={staggerStyle(i, programs.length)}
+                    >
+                      <ProgramCard
+                        program={program}
+                        layout="list"
+                        onAction={() => notInPrototype(program.cta)}
+                      />
                     </li>
                   ))}
                 </ul>
