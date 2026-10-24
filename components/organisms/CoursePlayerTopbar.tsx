@@ -30,6 +30,9 @@ export interface CoursePlayerTopbarProps {
   menuExpanded?: boolean;
   /** Id of the course-menu drawer, for aria-controls on the trigger. */
   menuControls?: string;
+  /** The menu trigger's name. The Course Journey proposal passes "Course Journey", which
+   *  aria-expanded completes, instead of "Open…" while it is open. */
+  menuLabel?: string;
   onDiscussions?: () => void;
   onBookmark?: () => void;
   onNotifications?: () => void;
@@ -123,6 +126,7 @@ export function CoursePlayerTopbar({
   notificationsCount = 0,
   onMenu,
   menuExpanded = false,
+  menuLabel = "Open Course Journey",
   menuControls,
   onDiscussions,
   onBookmark,
@@ -169,7 +173,7 @@ export function CoursePlayerTopbar({
       >
         <div className="flex min-w-0 items-center gap-2">
           <UtilityButton
-            label="Open Course Journey"
+            label={menuLabel}
             onClick={onMenu}
             hierarchy="secondary"
             aria-haspopup="dialog"

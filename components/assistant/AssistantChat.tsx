@@ -15,6 +15,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
 import { AssistantLauncher } from "./AssistantLauncher";
+import { useJourneyProposal } from "@/lib/journeyProposal";
 import { AssistantWindow } from "./AssistantWindow";
 
 const OPEN_KEY = "sk-assistant-open";
@@ -171,8 +172,15 @@ function Chat({ pathname }: { pathname: string }) {
     return () => window.clearTimeout(timer);
   }, [greet, greetedFn]);
   const edge = isPhone ? EDGE_PHONE : EDGE;
+  // Course Journey proposal (critique P1, 24 Oct 2026): in the player the launcher leaves the
+  // sidebar's corner for the content card's (bottom right, above Previous / Next), and it steps
+  // away while another modal (the Course Journey drawer, a dialog) is open.
+  const journeyProposal = useJourneyProposal();
+  const inPlayer = pathname.startsWith("/course/");
+  const otherModal = useOtherModalOpen(journeyProposal, windowId);
+  const hideForModal = journeyProposal && otherModal && !open;
   // Left, except on a phone. The footer lifts the launcher only where the two would meet.
-  const side = isPhone ? "right" : "left";
+  const side = isPhone || (journeyProposal && inPlayer) ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
   const sheet = open && isPhone;
   // The window stays on screen while it leaves: it shrinks back into the launcher (short3),
@@ -238,12 +246,38 @@ function Chat({ pathname }: { pathname: string }) {
         onToggle={() => (open ? close() : openByLearner())}
         controls={windowId}
         badge={firstSteps.left}
-        covered={sheet}
-        className={cn("fixed", isPhone && presence.mounted ? "z-[44]" : "z-[45]")}
+        covered={sheet || hideForModal}
+        className={cn(
+          "fixed",
+          isPhone && presence.mounted ? "z-[44]" : "z-[45]",
+          hideForModal && "pointer-events-none opacity-0",
+        )}
         style={{ [side]: edge, bottom }}
       />
     </>
   );
+}
+
+/**
+ * Whether a modal dialog other than the assistant's own window is open (Course Journey
+ * proposal only: off, it never observes). Watches the page for `aria-modal="true"`.
+ */
+function useOtherModalOpen(enabled: boolean, ownId: string): boolean {
+  const [openModal, setOpenModal] = React.useState(false);
+  React.useEffect(() => {
+    if (!enabled) return setOpenModal(false);
+    const check = () =>
+      setOpenModal(
+        [...document.querySelectorAll<HTMLElement>('[aria-modal="true"]')].some(
+          (el) => el.id !== ownId && !el.closest(`#${CSS.escape(ownId)}`),
+        ),
+      );
+    check();
+    const mo = new MutationObserver(check);
+    mo.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["aria-modal"] });
+    return () => mo.disconnect();
+  }, [enabled, ownId]);
+  return openModal;
 }
 
 /**

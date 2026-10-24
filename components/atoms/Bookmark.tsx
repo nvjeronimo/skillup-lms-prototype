@@ -10,6 +10,11 @@ export interface BookmarkButtonProps {
   size?: number;
   /** Context label, e.g. the topic title — overrides the generic label. */
   itemLabel?: string;
+  /**
+   * Keep the name the same in both states ("Bookmark X") and let aria-pressed say whether it is
+   * on, so the state is not spoken twice ("Remove bookmark…, pressed"). Course Journey proposal.
+   */
+  stableLabel?: boolean;
   className?: string;
 }
 
@@ -19,9 +24,14 @@ export function BookmarkButton({
   onToggle,
   size = 16,
   itemLabel,
+  stableLabel = false,
   className,
 }: BookmarkButtonProps) {
-  const ariaLabel = itemLabel
+  const ariaLabel = stableLabel
+    ? itemLabel
+      ? `Bookmark ${itemLabel}`
+      : "Bookmark"
+    : itemLabel
     ? bookmarked
       ? `Remove bookmark from ${itemLabel}`
       : `Bookmark ${itemLabel}`
