@@ -31,7 +31,7 @@ export function ThreadItem({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full gap-3 rounded-card border border-sko-border-subtle p-4 text-left transition-colors hover:border-sko-border-default",
+        "flex w-full gap-3 bg-sko-bg-page px-6 py-4 text-left transition-colors hover:bg-sko-bg-faint",
         className,
       )}
     >

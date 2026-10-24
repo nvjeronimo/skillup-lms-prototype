@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { OverlayPanel } from "./OverlayPanel";
+import { OverlayPanel, PanelBody, PanelGroup, PanelSectionLabel } from "./OverlayPanel";
 import { NotificationItem } from "@/components/molecules/NotificationItem";
 import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { notificationCategory } from "@/lib/data";
@@ -37,9 +37,7 @@ const TAB_DEFS: { value: NotificationCategory; label: string }[] = [
 /**
  * Notifications panel with hybrid grouping: activity-category tabs
  * (All · Discussions · Grading · Updates) with date sections inside each tab.
- * Layout as Nelson's ICP panel (7497:132529, 24 Oct 2026): the list sits on bg/subtle with 16 of
- * side margin; each date group is a column of white rows under a border/subtle rule, its label
- * 24 in from the list's edge.
+ * Layout as every panel (OverlayPanel: PanelBody, PanelSectionLabel, PanelGroup).
  */
 export function NotificationsPanel({
   open,
@@ -84,11 +82,10 @@ export function NotificationsPanel({
         active={tab}
         onChange={(v) => setTab(v as NotificationCategory)}
         ariaLabel="Notification categories"
-        className="px-6"
       />
 
       {/* A new category cross-fades the list; the rows rise one after the other. */}
-      <div key={tab} className="sk-animate-fade sk-enter-only min-h-full bg-sko-bg-subtle px-4 pb-4">
+      <PanelBody key={tab} className="sk-animate-fade sk-enter-only">
         {visible.length === 0 ? (
           <p className="sk-text-body-medium-regular px-6 py-8 text-center text-sko-text-subtle">
             You are all caught up.
@@ -99,8 +96,8 @@ export function NotificationsPanel({
             if (!items.length) return null;
             return (
               <section key={group}>
-                <h3 className="sk-text-label-small-medium px-6 py-3 text-sko-text-subtle">{GROUP_LABEL[group]}</h3>
-                <div className="divide-y divide-sko-border-subtle border border-sko-border-subtle">
+                <PanelSectionLabel>{GROUP_LABEL[group]}</PanelSectionLabel>
+                <PanelGroup>
                   {items.map((n) => (
                     <div
                       key={n.id}
@@ -117,12 +114,12 @@ export function NotificationsPanel({
                       />
                     </div>
                   ))}
-                </div>
+                </PanelGroup>
               </section>
             );
           })
         )}
-      </div>
+      </PanelBody>
     </OverlayPanel>
   );
 }

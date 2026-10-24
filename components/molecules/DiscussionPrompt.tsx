@@ -34,7 +34,7 @@ export function DiscussionPrompt({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6",
+        "flex flex-col gap-4 border border-sko-border-subtle bg-sko-bg-page px-6 py-4",
         className,
       )}
     >

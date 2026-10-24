@@ -121,7 +121,7 @@ export function OverlayPanel({
           </div>
         ) : null}
 
-        <div className="sk-scroll flex-1 overflow-y-auto">{children}</div>
+        <div className="sk-scroll flex-1 overflow-y-auto bg-sko-bg-subtle">{children}</div>
 
         {footer ? (
           <footer className="border-t border-sko-border-subtle px-6 py-4 text-center">
@@ -136,10 +136,21 @@ export function OverlayPanel({
 }
 
 /** Sticky section label inside a panel body (semantic heading, eyebrow style). */
+/* Every panel's body follows Nelson's ICP panel (7497:132529, 24 Oct 2026): the scroll area is
+   bg/subtle; PanelBody insets the content 16 from the sides; each group of rows is a PanelGroup (white
+   rows under one border/subtle rule, divided by it); a PanelSectionLabel sits 24 in from the inset. */
 export function PanelSectionLabel({ children }: { children: React.ReactNode }) {
+  return <h3 className="sk-text-label-small-medium px-6 py-3 text-sko-text-subtle">{children}</h3>;
+}
+
+export function PanelBody({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cn("px-4 pb-4", className)}>{children}</div>;
+}
+
+export function PanelGroup({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <h3 className="sk-text-label-small-medium bg-sko-bg-subtle px-4 py-2.5 text-sko-text-subtle">
+    <div className={cn("divide-y divide-sko-border-subtle border border-sko-border-subtle bg-sko-bg-page", className)}>
       {children}
-    </h3>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { OverlayPanel, PanelSectionLabel } from "./OverlayPanel";
+import { OverlayPanel, PanelBody, PanelGroup, PanelSectionLabel } from "./OverlayPanel";
 import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { SavedTopicItem } from "@/components/molecules/SavedTopicItem";
 import { SavedNoteItem } from "@/components/molecules/SavedNoteItem";
@@ -54,11 +54,11 @@ export function SavedPanel({
       />
 
       {/* A new filter cross-fades the list; the rows rise one after the other. */}
-      <div key={filter} className="sk-animate-fade sk-enter-only">
+      <PanelBody key={filter} className="sk-animate-fade sk-enter-only">
         {showTopics && savedTopics.length ? (
           <section>
             <PanelSectionLabel>Bookmarked topics</PanelSectionLabel>
-            <div className="divide-y divide-sko-border-subtle">
+            <PanelGroup>
               {savedTopics.map((t, i) => (
                 <div key={t.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(i, rowCount)}>
                   <SavedTopicItem
@@ -71,14 +71,14 @@ export function SavedPanel({
                   />
                 </div>
               ))}
-            </div>
+            </PanelGroup>
           </section>
         ) : null}
 
         {showNotes && savedNotes.length ? (
           <section>
             <PanelSectionLabel>Saved notes</PanelSectionLabel>
-            <div className="divide-y divide-sko-border-subtle">
+            <PanelGroup>
               {savedNotes.map((n, i) => (
                 <div key={n.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(topicRows + i, rowCount)}>
                   <SavedNoteItem
@@ -92,10 +92,10 @@ export function SavedPanel({
                   />
                 </div>
               ))}
-            </div>
+            </PanelGroup>
           </section>
         ) : null}
-      </div>
+      </PanelBody>
     </OverlayPanel>
   );
 }
