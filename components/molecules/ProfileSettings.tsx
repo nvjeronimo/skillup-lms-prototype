@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
- * DS `LMS / Profile Menu`). Same Appearance (brand skin), same Accessibility standards, same
- * Profile section (Edit profile, Certificates), SkillUp Online and the same footer everywhere; the player adds its
+ * DS `LMS / Profile Menu`). Same Profile section first (Edit profile, Certificates), same
+ * Appearance (brand skin), same Accessibility standards, SkillUp Online and the same footer everywhere; the player adds its
  * preview sections between SkillUp Online and the footer. No learner header since 19 Oct 2026
  * (Nelson): the trigger already shows who is signed in.
  */
@@ -70,8 +70,8 @@ const MENU_ROW =
   "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-control px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
 
 /**
- * DS Profile Menu 1.7 (Nelson, 21 Oct 2026): Appearance and Accessibility standards open the
- * menu; then a Profile section (title as the others) with Edit profile and Certificates; then
+ * DS Profile Menu 1.8 (Nelson, 24 Oct 2026): the Profile section (Edit profile, Certificates)
+ * opens the menu; then Appearance and Accessibility standards (1.7 had them first); then
  * Sign out in a group of its own, its icon icon/error; then SkillUp Online, the public site in a
  * new tab; then the demo footer. Every group has the section padding (12 / 16) and a rule
  * above; the rows keep their own 12 inside.
@@ -93,7 +93,7 @@ export function ProfileLinks({ onDone }: { onDone?: () => void }) {
   );
 }
 
-/** Sign out, a group of its own after Profile (Open edX's user menu has it, /logout); the learner must always find it. */
+/** Sign out, a group of its own after Accessibility standards (Open edX's user menu has it, /logout); the learner must always find it. */
 export function SignOutLink({ onDone }: { onDone?: () => void }) {
   const showToast = useLmsStore((s) => s.showToast);
   return (
