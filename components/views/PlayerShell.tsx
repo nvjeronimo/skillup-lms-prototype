@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import { courseProgressPct } from "@/lib/courses/outline";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
+import { SidebarProposal } from "@/components/organisms/SidebarProposal";
+import { useJourneyProposal } from "@/lib/journeyProposal";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
@@ -85,6 +87,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const router = useRouter();
   const pathname = usePathname();
   const bp = useBreakpoint();
+  // The Course Journey proposal (?journey=proposal, /lab/course-journey): off by default.
+  const journeyProposal = useJourneyProposal();
+  const JourneySidebar = journeyProposal ? SidebarProposal : Sidebar;
 
   const topic = getTopic(topicId);
   const { previous, next, total, position } = getAdjacentTopics(topicId);
@@ -448,6 +453,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         menuExpanded={bp === "mobile" && mobileDrawerOpen}
         progressPct={courseProgressPct(activeCourse, completedTopics)}
         menuControls={COURSE_DRAWER_ID}
+        menuLabel={journeyProposal ? "Course Journey" : undefined}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
         showDiscussions={discussionsPreview}
@@ -473,7 +479,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       <div className={cn("flex min-h-0 flex-1", showInlineSidebar ? "gap-4 p-4" : "p-3")}>
         {showInlineSidebar ? (
           <ArrivalContext.Provider value={courseArrival}>
-          <Sidebar
+          <JourneySidebar
             course={activeCourse}
             currentTopicId={topicId}
             variant={sidebarVariant}
@@ -693,7 +699,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       >
         {(titleId) => (
           <ArrivalContext.Provider value={courseArrival}>
-          <Sidebar
+          <JourneySidebar
             course={activeCourse}
             currentTopicId={topicId}
             variant="Mobile"

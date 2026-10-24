@@ -4,6 +4,8 @@ import * as React from "react";
 import { CompletionStatus } from "@/components/atoms/CompletionStatus";
 import { BookmarkButton } from "@/components/atoms/Bookmark";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
+import { Lock } from "lucide-react";
+import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { LOCK_TOOLTIP_MS } from "@/lib/motion/feedback";
 import { MOTION_MS } from "@/lib/motion/tokens";
@@ -29,6 +31,14 @@ export interface TopicRowProps {
   lockedHint?: string;
   onClick?: () => void;
   onToggleBookmark?: () => void;
+  /** The next topic to open after the current one: a quiet "Up next" tag (Course Journey proposal). */
+  upNext?: boolean;
+  /**
+   * Course Journey proposal (24 Oct 2026): the lock reason shows under the row instead of in a
+   * 3 s tooltip, the meta line wraps instead of truncating, the bookmark keeps one name, and
+   * the main button is a roving-focus item (`data-roving`) of the sidebar list.
+   */
+  refined?: boolean;
   /** Collapsed sidebar shows only the status dot + active indicator. */
   collapsed?: boolean;
   className?: string;
@@ -118,6 +128,8 @@ export function TopicRow({
   showBookmark = false,
   bookmarked = false,
   optional = false,
+  upNext = false,
+  refined = false,
   lockedHint,
   onClick,
   onToggleBookmark,
@@ -152,11 +164,12 @@ export function TopicRow({
         // A locked topic does not open, here as in the expanded row; trying it announces why
         // (no visual tooltip on the rail: its flyout already shows the topic).
         onClick={locked ? (lockedHint ? (e) => hint.show(e.currentTarget) : undefined) : onClick}
+        data-roving={refined || undefined}
         aria-disabled={locked || undefined}
         aria-describedby={locked && lockedHint ? hintId : undefined}
         aria-current={active ? "page" : undefined}
         // Icon-only rail row: the name carries what the ring and badge show.
-        aria-label={`${title}, ${type}, ${STATUS_TEXT[status]}`}
+        aria-label={`${title}, ${type}, ${STATUS_TEXT[status]}${refined && bookmarked ? ", bookmarked" : ""}${refined && upNext ? ", up next" : ""}`}
         className={cn(
           // DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred.
           "relative flex w-full items-start justify-center px-2 py-3 transition-colors",
@@ -187,6 +200,7 @@ export function TopicRow({
       <button
         type="button"
         onClick={locked ? (lockedHint ? () => hint.show(rowRef.current) : undefined) : onClick}
+        data-roving={refined || undefined}
         onBlur={locked ? hint.hide : undefined}
         onKeyDown={
           locked
@@ -215,7 +229,7 @@ export function TopicRow({
           <span className="sk-text-body-medium-medium block text-sko-text-default">{title}</span>
           {/* state-row: brand type badge · gray duration (Caption/Medium), 6px apart,
               on one line; the trailing duration truncates with an ellipsis. */}
-          <span className="flex min-w-0 items-center gap-1.5">
+          <span className={cn("flex min-w-0 items-center gap-1.5", refined && "flex-wrap gap-y-1")}>
             <TopicTypeBadge type={type} className="shrink-0" />
             {/* Duration is optional: render nothing rather than a dash placeholder. */}
             {duration ? (
@@ -223,7 +237,12 @@ export function TopicRow({
                 <span className="sk-text-body-medium-medium shrink-0 text-sko-text-subtle" aria-hidden>
                   ·
                 </span>
-                <span className="sk-text-body-small-medium min-w-0 truncate text-sko-text-subtle">
+                <span
+                  className={cn(
+                    "sk-text-body-small-medium min-w-0 text-sko-text-subtle",
+                    refined ? "whitespace-nowrap" : "truncate",
+                  )}
+                >
                   {duration}
                 </span>
               </>
@@ -231,12 +250,22 @@ export function TopicRow({
             {optional ? (
               <span className="sk-text-body-small-medium shrink-0 text-sko-icon-faint">Optional</span>
             ) : null}
+            {upNext ? (
+              <span className="sk-text-label-small-semibold shrink-0 text-sko-text-primary">Up next</span>
+            ) : null}
             <span className="sr-only">, {STATUS_TEXT[status]}</span>
           </span>
+          {/* Proposal: the reason is read where the row is, before anyone tries it. */}
+          {refined && locked && lockedHint ? (
+            <span aria-hidden className="sk-text-body-small-regular flex items-start gap-1 text-sko-text-subtle">
+              <Icon icon={Lock} size={14} className="mt-0.5 shrink-0" />
+              {lockedHint}
+            </span>
+          ) : null}
         </span>
       </button>
       {lockedA11y}
-      {locked && lockedHint && hintPresence.mounted ? (
+      {!refined && locked && lockedHint && hintPresence.mounted ? (
         <span
           aria-hidden
           data-state={hintPresence.state}
@@ -263,6 +292,7 @@ export function TopicRow({
           bookmarked={bookmarked}
           onToggle={onToggleBookmark}
           itemLabel={title}
+          stableLabel={refined}
           size={16}
         />
       ) : null}

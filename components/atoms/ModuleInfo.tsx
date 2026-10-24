@@ -11,6 +11,8 @@ export interface ModuleInfoProps {
   showTopicProgress?: boolean;
   /** Status = Module Completed: everything turns success and a 14px check trails the count. */
   isCompleted?: boolean;
+  /** Replaces "x of y", e.g. "3 of 12 topics" or "Completed" (Course Journey proposal). */
+  progressText?: string;
   className?: string;
 }
 
@@ -26,6 +28,7 @@ export function ModuleInfo({
   topicsTotal,
   showTopicProgress = true,
   isCompleted = false,
+  progressText,
   className,
 }: ModuleInfoProps) {
   const tone = isCompleted ? "text-sko-text-success" : "text-sko-text-subtle";
@@ -47,7 +50,7 @@ export function ModuleInfo({
           </span>
           <span className="flex items-center gap-1">
             <span className={cn("sk-text-label-small-medium", tone)}>
-              {topicsCompleted} of {topicsTotal}
+              {progressText ?? `${topicsCompleted} of ${topicsTotal}`}
             </span>
             {isCompleted ? (
               // DS completed-check: 1.5px `icon/success` stroke at 14px (absolute, not scaled).

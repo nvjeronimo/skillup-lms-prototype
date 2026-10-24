@@ -25,6 +25,8 @@ export interface CourseHeaderProps {
   trailing?: React.ReactNode;
   /** Bottom hairline (DS: the header carries its own 1px `border-secondary`). */
   showDivider?: boolean;
+  /** "label" sets the eyebrow in the DS Label style (Course Journey proposal); default Caption + uppercase. */
+  eyebrowStyle?: "caption" | "label";
   className?: string;
 }
 
@@ -48,6 +50,7 @@ export function CourseHeader({
   rightSlot,
   trailing,
   showDivider = true,
+  eyebrowStyle = "caption",
   className,
 }: CourseHeaderProps) {
   const rowTrailing = rightSlot ?? (showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null);
@@ -68,10 +71,20 @@ export function CourseHeader({
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex items-center gap-1">
-          <p className="sk-text-body-small-medium min-w-0 flex-1 uppercase text-sko-text-subtle">{eyebrow}</p>
-          {rowTrailing}
-        </div>
+        {/* An empty eyebrow with nothing beside it leaves no empty row. */}
+        {eyebrow || rowTrailing ? (
+          <div className="flex items-center gap-1">
+            <p
+              className={cn(
+                "min-w-0 flex-1 text-sko-text-subtle",
+                eyebrowStyle === "label" ? "sk-text-label-small-semibold" : "sk-text-body-small-medium uppercase",
+              )}
+            >
+              {eyebrow}
+            </p>
+            {rowTrailing}
+          </div>
+        ) : null}
         <p className="sk-text-title-medium-semibold text-sko-text-default">{title}</p>
         {partnerList.length ? (
           <p className="sk-text-body-small-medium text-sko-text-muted">
