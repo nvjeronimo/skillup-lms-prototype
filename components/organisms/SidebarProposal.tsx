@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bookmark, LocateFixed, Lock, X } from "lucide-react";
+import { Bookmark, Lock, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
@@ -34,14 +34,15 @@ const ROVING = "[data-roving]:not([data-collapse='closed'] *)";
  * The Course Journey proposal (Impeccable critique of the ICP sidebar, 24 Oct 2026). Same props
  * and DS parts as Sidebar; behind `?journey=proposal` (lib/journeyProposal) so Nelson can compare
  * it with the current one in the real player. What changes, by the critique's numbering:
- * 2. Where am I, what's next: the open topic is In Progress (not the empty "not started" ring),
+ * 2. Where am I, what's next: the open topic keeps the current look (brand row, empty ring: the
+ *    In Progress ring was refused by the stakeholders, 24 Oct 2026),
  *    "Module N of M" is the module that holds the open topic (not modules done + 1, which read
  *    "Module 5 of 4" at 100%), "Course completed" at 100%, and a quiet "Up next" on the next topic.
  * 3. Locks: every locked row names the topic straight before it ("Unlocks after …"), read under
  *    the row instead of a 3 s tooltip; a module locked as a whole says so once, under its header.
  * 4. Structure: each module is a section with its toggle in a heading, topics are an ordered list,
  *    and the list is one tab stop (roving focus: ↑ ↓ Home End; → to a row's bookmark, ← back;
- *    → / ← open and close a module). "Jump to current topic" in the progress block.
+ *    → / ← open and close a module). (A "Jump to current topic" button was refused, 24 Oct 2026.)
  * 5. Disclosure: only the module of the open topic is open; completed modules close (Nelson:
  *    "Sim, fecham"), module headers stick while their topics scroll, and the open topic lands a
  *    third of the way down when it is out of view.
@@ -70,7 +71,7 @@ export function SidebarProposal({
 
   const isDone = (t: Topic) => (completed ? completed.has(t.id) : t.completed);
   const statusOf = (t: Topic): CompletionState =>
-    t.locked ? "Locked" : isDone(t) ? "Done" : t.id === currentTopicId ? "In Progress" : "Pending";
+    t.locked ? "Locked" : isDone(t) ? "Done" : "Pending";
 
   const ordered = React.useMemo(() => course.modules.flatMap((m) => moduleTopics(m)), [course]);
   const modules = course.modules.filter((m) => !m.implicit);
@@ -167,18 +168,6 @@ export function SidebarProposal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopicId, collapsed]);
 
-  const jumpToCurrent = () => {
-    if (currentModule) toggle(currentModule.id, true);
-    // After the module has opened (its rows are no longer inert).
-    window.setTimeout(() => {
-      placeCurrent(true, true);
-      const row = scrollRef.current?.querySelector<HTMLElement>(`[aria-current="page"][data-roving]`);
-      if (row) {
-        roving.current = row;
-        row.focus({ preventScroll: true });
-      }
-    }, MOTION_MS.short2);
-  };
 
   // ── Roving focus: the list is one tab stop.
   const roving = React.useRef<HTMLElement | null>(null);
@@ -478,16 +467,6 @@ export function SidebarProposal({
           </span>
           {progressDetail ? (
             <span className="sk-text-body-small-regular text-sko-text-subtle">{progressDetail}</span>
-          ) : null}
-          {currentIndex >= 0 ? (
-            <button
-              type="button"
-              onClick={jumpToCurrent}
-              className="sk-text-body-small-semibold -mx-1 mt-1 inline-flex min-h-6 w-fit items-center gap-1 rounded-control px-1 text-sko-text-primary hover:bg-sko-bg-primary-soft"
-            >
-              <Icon icon={LocateFixed} size={14} />
-              Jump to current topic
-            </button>
           ) : null}
         </div>
         <ProgressRing pct={overallPct} />

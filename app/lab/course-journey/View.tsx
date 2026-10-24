@@ -17,7 +17,7 @@ const FIXES: { priority: string; problem: string; change: string; check: string 
   {
     priority: "P1",
     problem: "The open topic shows the same empty ring as a topic not started; \"Module 5 of 4\" at 100%; nothing says what is next.",
-    change: "The open topic is In Progress. \"Module N of M\" is the module of the open topic, \"Course completed\" at 100%, plus \"x of y topics done\". A quiet \"Up next\" tag on the next topic.",
+    change: "\"Module N of M\" is the module of the open topic, \"Course completed\" at 100%, plus \"x of y topics done\". A quiet \"Up next\" tag on the next topic.",
     check: "The progress block and the row after the open one.",
   },
   {
@@ -29,7 +29,7 @@ const FIXES: { priority: string; problem: string; change: string; check: string 
   {
     priority: "P2",
     problem: "38 topics with no list or headings, and 43 tab stops before the content.",
-    change: "Modules are sections with their toggle in a heading, topics are ordered lists, and the list is one tab stop: ↑ ↓ Home End move, → goes to a row's bookmark and opens a module, ← comes back and closes it. \"Jump to current topic\" in the progress block.",
+    change: "Modules are sections with their toggle in a heading, topics are ordered lists, and the list is one tab stop: ↑ ↓ Home End move, → goes to a row's bookmark and opens a module, ← comes back and closes it.",
     check: "Tab into the list, then use the arrows.",
   },
   {
@@ -97,6 +97,7 @@ export function CourseJourneyProposal() {
 
       <h2 className="sk-text-title-medium-semibold mt-10 text-sko-text-default">Not in the proposal</h2>
       <ul className="sk-text-body-medium-regular mt-2 list-disc pl-5 text-sko-text-muted">
+        <li>An In Progress ring on the open topic and a &ldquo;Jump to current topic&rdquo; button: refused by the stakeholders (24 Oct 2026).</li>
         <li>Search or filter over the topics (the critique&apos;s efficiency score): one more decision, not a fix.</li>
         <li>The drawer&apos;s close button stays top right; the phone trigger stays top left.</li>
         <li>The lock text follows the order of the outline. Open edX gates a subsection on a prerequisite subsection; which one comes from the course, not from the order (MOCK).</li>
