@@ -140,9 +140,9 @@ function ProfilePanel({
   const demo = useDemoMode();
   return (
     <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
+      <ProfileLinks onDone={onDone} />
       <AppearanceSection />
       <AccessibilitySection />
-      <ProfileLinks onDone={onDone} />
       <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
       {demo ? <LoadingSection /> : null}

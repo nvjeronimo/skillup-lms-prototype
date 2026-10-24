@@ -216,9 +216,9 @@ export function DemoControlsMenu({
               SkillUp Online;
               then the player's preview sections; the footer last. */}
           {/* On a phone the top bar has no room for the theme button (audit, 21 Oct 2026): it lives here. */}
+          <ProfileLinks onDone={() => setOpen(false)} />
           <AppearanceSection showTheme={bp === "mobile"} />
           <AccessibilitySection />
-          <ProfileLinks onDone={() => setOpen(false)} />
           <SignOutLink onDone={() => setOpen(false)} />
           <SkillUpOnlineLink onDone={() => setOpen(false)} />
           {demo ? (
