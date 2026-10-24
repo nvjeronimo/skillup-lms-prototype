@@ -507,7 +507,7 @@ export function SidebarProposal({
                   topicsCompleted={done}
                   topicsTotal={tops.length}
                   isCompleted={complete}
-                  progressText={complete ? "Completed" : `${done} of ${tops.length} topics`}
+                  progressText={`${done} of ${tops.length} topics`}
                   collapsed={!isOpen}
                   onToggle={() => toggle(module.id)}
                   buttonProps={{ "aria-controls": bodyId, "data-roving": true, "data-module": module.id }}

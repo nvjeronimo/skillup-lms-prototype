@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { CheckCircle2, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
@@ -17,7 +17,6 @@ import {
   myLearningProgramUpNextLabel,
   type MyLearningProgram,
 } from "@/lib/platform/my-learning";
-import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -214,10 +213,16 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         <div className="flex flex-col gap-2">
           {/* The DS sets these words in a raw 18 Semibold: title-medium/Semibold is that style. */}
           <div className="flex items-baseline justify-between gap-3">
-            <p className="sk-text-title-medium-semibold inline-flex items-center gap-1.5 text-sko-text-default">
-              {completed ? <Icon icon={CheckCircle2} size={20} className="text-sko-icon-success" aria-hidden="true" /> : null}
-              {completed ? myLearningProgramCompletedLabel : notStarted ? myLearningProgramNotStartedLabel : program.courses}
-            </p>
+            {/* Completed: the soft success Badge of every completed module, course and program (Nelson, 25 Oct 2026). */}
+            {completed ? (
+              <Badge variant="soft" color="success">
+                Completed
+              </Badge>
+            ) : (
+              <p className="sk-text-title-medium-semibold text-sko-text-default">
+                {notStarted ? myLearningProgramNotStartedLabel : program.courses}
+              </p>
+            )}
             {/* DS v1.7: the count at the right end, as the course card shows its hours; In progress already says it. */}
             {completed || notStarted ? (
               <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">
