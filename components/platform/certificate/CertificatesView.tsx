@@ -11,6 +11,8 @@ import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platf
 import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { ViewToggle } from "@/components/platform/my-learning/ViewToggle";
 import { CertificateCard } from "@/components/platform/program/CertificatesTab";
+import { ProgramCertificateHero } from "@/components/platform/program/ProgramCertificateHero";
+import { getProgramCertificate } from "@/lib/platform/catalog";
 import {
   certificatesInProgress,
   earnedCertificates,
@@ -38,6 +40,40 @@ const issuedLine = (e: EarnedCertificate) =>
   e.program
     ? `${e.certificate.issuedLine} Course ${e.program.number} of ${e.program.total}, ${e.program.title}.`
     : e.certificate.issuedLine;
+
+/** A program's slug from its row id (`program-<slug>`). */
+const programSlug = (id: string) => id.replace(/^program-/, "");
+
+/**
+ * One block of a tab: its heading (title-medium/Semibold) and what goes under it. Programs and
+ * courses are two blocks (Nelson, 24 Oct 2026: tell program certificates from course ones).
+ */
+function Group({ id, title, count, children }: { id: string; title: string; count: number; children: React.ReactNode }) {
+  return (
+    <section aria-labelledby={id} className="flex flex-col gap-4">
+      <h3 id={id} className="sk-text-title-medium-semibold text-sko-text-default">
+        {title} <span className="text-sko-text-subtle">· {count}</span>
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+/** The program certificates of a tab: one large card each (the Program page's), stacked. */
+function ProgramBlock({ ids }: { ids: string[] }) {
+  return (
+    <ul className="flex flex-col gap-6">
+      {ids.map((id) => {
+        const state = getProgramCertificate(programSlug(id));
+        return state ? (
+          <li key={id}>
+            <ProgramCertificateHero state={state} titleAs="h4" />
+          </li>
+        ) : null;
+      })}
+    </ul>
+  );
+}
 
 /**
  * A certificate on the way (Figma 05b, 7587:245385): a card linking to the course page, or to
@@ -97,9 +133,13 @@ function EarnedRow({ e }: { e: EarnedCertificate }) {
  * (Underline, a count badge) In progress and Earned, Earned selected first; under them Search
  * (by title, in the selected tab) and, on desktop only, the Grid / List toggle on the right.
  * Below desktop the page is Grid only and the search fills the width on mobile.
+ * In each tab, programs and courses apart (Nelson, 24 Oct 2026): "Program certificates" first,
+ * one large card each (ProgramCertificateHero, as on the Program page: the sheet, the course
+ * segments, the course in progress), then "Course certificates":
  * - Earned: the DS Certificate card (issued) in a grid, 3 / 2 / 1 columns, one height per row
  *   with the actions on the bottom edge. View opens the certificate's own page.
- * - In progress: one card per course or program on the way, in the same grid.
+ * - In progress: one card per course on the way, in the same grid.
+ * The Grid / List toggle applies to the course certificates.
  */
 export function CertificatesView() {
   const [tab, setTab] = React.useState<CertificatesTab>("earned");
@@ -110,6 +150,11 @@ export function CertificatesView() {
   const earned = earnedCertificates.filter((e) => matches(e.certificate.title, needle));
   const inProgress = certificatesInProgress.filter((c) => matches(c.title, needle));
   const shown = tab === "earned" ? earned.length : inProgress.length;
+  // Programs and courses apart (Nelson, 24 Oct 2026): the program certificate is the goal.
+  const earnedPrograms = earned.filter((e) => e.kind === "program");
+  const earnedCourses = earned.filter((e) => e.kind === "course");
+  const progressPrograms = inProgress.filter((c) => c.kind === "program");
+  const progressCourses = inProgress.filter((c) => c.kind === "course");
   const listView = view === "list";
 
   const tabs = [
@@ -173,48 +218,66 @@ export function CertificatesView() {
                   description={needle ? "Check the spelling or search for another title." : undefined}
                 />
               ) : tab === "earned" ? (
-                <>
-                  <ul className={cn(CERTIFICATES_GRID, listView && "lg:hidden")}>
-                    {earned.map((e) => (
-                      <li key={e.id} className="flex">
-                        <CertificateCard
-                          certificate={{ ...e.certificate, viewHref: e.viewHref, issuedLine: issuedLine(e) }}
-                          label={kindLabel(e.kind)}
-                          labelAs="p"
-                          className="w-full"
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                  {listView ? (
-                    <ul className={LIST}>
-                      {earned.map((e) => (
-                        <li key={e.id}>
-                          <EarnedRow e={e} />
-                        </li>
-                      ))}
-                    </ul>
+                <div className="flex flex-col gap-8 lg:gap-10">
+                  {earnedPrograms.length ? (
+                    <Group id="certificates-earned-programs" title="Program certificates" count={earnedPrograms.length}>
+                      <ProgramBlock ids={earnedPrograms.map((e) => e.id)} />
+                    </Group>
                   ) : null}
-                </>
+                  {earnedCourses.length ? (
+                    <Group id="certificates-earned-courses" title="Course certificates" count={earnedCourses.length}>
+                      <ul className={cn(CERTIFICATES_GRID, listView && "lg:hidden")}>
+                        {earnedCourses.map((e) => (
+                          <li key={e.id} className="flex">
+                            <CertificateCard
+                              certificate={{ ...e.certificate, viewHref: e.viewHref, issuedLine: issuedLine(e) }}
+                              label={kindLabel(e.kind)}
+                              labelAs="p"
+                              className="w-full"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                      {listView ? (
+                        <ul className={LIST}>
+                          {earnedCourses.map((e) => (
+                            <li key={e.id}>
+                              <EarnedRow e={e} />
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </Group>
+                  ) : null}
+                </div>
               ) : (
-                <>
-                  <ul className={cn(CERTIFICATES_GRID, listView && "lg:hidden")}>
-                    {inProgress.map((c) => (
-                      <li key={c.id} className="flex min-w-0 [&>a]:w-full">
-                        <InProgressCard item={c} layout="grid" />
-                      </li>
-                    ))}
-                  </ul>
-                  {listView ? (
-                    <ul className={LIST}>
-                      {inProgress.map((c) => (
-                        <li key={c.id}>
-                          <InProgressCard item={c} layout="list" />
-                        </li>
-                      ))}
-                    </ul>
+                <div className="flex flex-col gap-8 lg:gap-10">
+                  {progressPrograms.length ? (
+                    <Group id="certificates-progress-programs" title="Program certificates" count={progressPrograms.length}>
+                      <ProgramBlock ids={progressPrograms.map((c) => c.id)} />
+                    </Group>
                   ) : null}
-                </>
+                  {progressCourses.length ? (
+                    <Group id="certificates-progress-courses" title="Course certificates" count={progressCourses.length}>
+                      <ul className={cn(CERTIFICATES_GRID, listView && "lg:hidden")}>
+                        {progressCourses.map((c) => (
+                          <li key={c.id} className="flex min-w-0 [&>a]:w-full">
+                            <InProgressCard item={c} layout="grid" />
+                          </li>
+                        ))}
+                      </ul>
+                      {listView ? (
+                        <ul className={LIST}>
+                          {progressCourses.map((c) => (
+                            <li key={c.id}>
+                              <InProgressCard item={c} layout="list" />
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </Group>
+                  ) : null}
+                </div>
               )}
             </div>
           </div>

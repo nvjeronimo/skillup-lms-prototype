@@ -54,7 +54,15 @@ function previewDocument(program: Program): CertificateDocumentData {
  * narrower, the sheet on top (up to 480), the details under it.
  * No API says whether a program certificate is earned: counted from the course rows (mock mark).
  */
-export function ProgramCertificateHero({ state }: { state: ProgramCertificateState }) {
+export function ProgramCertificateHero({
+  state,
+  titleAs: Title = "h3",
+}: {
+  state: ProgramCertificateState;
+  /** The title's level: h3 on the program page, h4 under a section heading (Certificates page). */
+  titleAs?: "h3" | "h4";
+}) {
+  const titleId = React.useId();
   const showToast = useLmsStore((s) => s.showToast);
   const { program, certificate, complete } = state;
   const courses = state.courses.map((c) => ({ ...c, percent: c.percent ?? 0 }));
@@ -72,7 +80,7 @@ export function ProgramCertificateHero({ state }: { state: ProgramCertificateSta
     // main column can be narrow on a laptop, so the sheet goes beside the details only from 680.
     <div className="[container-type:inline-size]">
       <article
-        aria-labelledby="program-certificate-hero-title"
+        aria-labelledby={titleId}
         data-mock="No API says whether a program certificate is earned: counted here from the course rows"
         className="grid gap-5 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:p-6 [@container_(min-width:680px)]:grid-cols-[320px_minmax(0,1fr)] [@container_(min-width:680px)]:gap-6"
       >
@@ -108,12 +116,12 @@ export function ProgramCertificateHero({ state }: { state: ProgramCertificateSta
                 </Badge>
               ) : null}
             </div>
-            <h3
-              id="program-certificate-hero-title"
+            <Title
+              id={titleId}
               className="sk-text-title-large-semibold text-sko-text-default"
             >
               {program.title}
-            </h3>
+            </Title>
             <p className="sk-text-body-medium-regular text-sko-text-subtle">
               {issued
                 ? certificate.issuedLine
