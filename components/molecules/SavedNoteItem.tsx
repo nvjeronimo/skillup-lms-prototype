@@ -53,7 +53,7 @@ export function SavedNoteItem({
   );
 
   const classes = cn(
-    "block w-full px-4 py-4 text-left transition-colors hover:bg-sko-bg-subtle",
+    "block w-full bg-sko-bg-page px-6 py-4 text-left transition-colors hover:bg-sko-bg-faint",
     className,
   );
 

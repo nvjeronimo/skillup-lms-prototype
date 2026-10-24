@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { OverlayPanel, PanelSectionLabel } from "./OverlayPanel";
+import { OverlayPanel, PanelBody, PanelGroup, PanelSectionLabel } from "./OverlayPanel";
 import { DiscussionPrompt } from "@/components/molecules/DiscussionPrompt";
 import { ThreadItem } from "@/components/molecules/ThreadItem";
 import type { DiscussionThread } from "@/lib/content";
@@ -38,25 +38,29 @@ export function DiscussionsPanel({
       title="Discussions"
       footer={{ label: "View all course discussions", href: "#" }}
     >
-      <PanelSectionLabel>On this topic</PanelSectionLabel>
-      <div className="px-4 py-4">
-        <DiscussionPrompt prompt={`${topicTitle}: what's your take?`} duration={topicDuration} onSubmit={onPost} />
-      </div>
+      <PanelBody>
+        <PanelSectionLabel>On this topic</PanelSectionLabel>
+        <DiscussionPrompt
+          prompt={`${topicTitle}: what's your take?`}
+          duration={topicDuration}
+          onSubmit={onPost}
+        />
 
-      <PanelSectionLabel>{threads.length} responses from your cohort</PanelSectionLabel>
-      <div className="flex flex-col gap-2 px-4 py-4">
-        {threads.map((t, i) => (
-          <ThreadItem
-            key={i}
-            author={t.author}
-            timestamp={t.timestamp}
-            content={t.content}
-            replies={t.replies}
-            upvotes={t.upvotes}
-            onClick={onOpenThread}
-          />
-        ))}
-      </div>
+        <PanelSectionLabel>{threads.length} responses from your cohort</PanelSectionLabel>
+        <PanelGroup>
+          {threads.map((t, i) => (
+            <ThreadItem
+              key={i}
+              author={t.author}
+              timestamp={t.timestamp}
+              content={t.content}
+              replies={t.replies}
+              upvotes={t.upvotes}
+              onClick={onOpenThread}
+            />
+          ))}
+        </PanelGroup>
+      </PanelBody>
     </OverlayPanel>
   );
 }

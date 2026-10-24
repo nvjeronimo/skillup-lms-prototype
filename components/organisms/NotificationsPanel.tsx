@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { OverlayPanel, PanelSectionLabel } from "./OverlayPanel";
+import { OverlayPanel, PanelBody, PanelGroup, PanelSectionLabel } from "./OverlayPanel";
 import { NotificationItem } from "@/components/molecules/NotificationItem";
 import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { notificationCategory } from "@/lib/data";
@@ -37,6 +37,7 @@ const TAB_DEFS: { value: NotificationCategory; label: string }[] = [
 /**
  * Notifications panel with hybrid grouping: activity-category tabs
  * (All · Discussions · Grading · Updates) with date sections inside each tab.
+ * Layout as every panel (OverlayPanel: PanelBody, PanelSectionLabel, PanelGroup).
  */
 export function NotificationsPanel({
   open,
@@ -84,9 +85,9 @@ export function NotificationsPanel({
       />
 
       {/* A new category cross-fades the list; the rows rise one after the other. */}
-      <div key={tab} className="sk-animate-fade sk-enter-only">
+      <PanelBody key={tab} className="sk-animate-fade sk-enter-only">
         {visible.length === 0 ? (
-          <p className="sk-text-body-medium-regular px-4 py-8 text-center text-sko-text-subtle">
+          <p className="sk-text-body-medium-regular px-6 py-8 text-center text-sko-text-subtle">
             You are all caught up.
           </p>
         ) : (
@@ -94,9 +95,9 @@ export function NotificationsPanel({
             const items = visible.filter((n) => n.group === group);
             if (!items.length) return null;
             return (
-              <section key={group} className="mb-2">
+              <section key={group}>
                 <PanelSectionLabel>{GROUP_LABEL[group]}</PanelSectionLabel>
-                <div className="divide-y divide-sko-border-subtle">
+                <PanelGroup>
                   {items.map((n) => (
                     <div
                       key={n.id}
@@ -113,12 +114,12 @@ export function NotificationsPanel({
                       />
                     </div>
                   ))}
-                </div>
+                </PanelGroup>
               </section>
             );
           })
         )}
-      </div>
+      </PanelBody>
     </OverlayPanel>
   );
 }

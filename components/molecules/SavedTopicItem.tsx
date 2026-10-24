@@ -27,7 +27,7 @@ export function SavedTopicItem({
 }: SavedTopicItemProps) {
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={topicTypeIcon(topicType)} size={18} />
       </span>
       <span className="min-w-0 flex-1">
@@ -45,7 +45,7 @@ export function SavedTopicItem({
   );
 
   const classes = cn(
-    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-sko-bg-subtle",
+    "flex w-full gap-3 bg-sko-bg-page px-6 py-4 text-left transition-colors hover:bg-sko-bg-faint",
     className,
   );
 

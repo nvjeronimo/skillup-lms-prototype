@@ -38,7 +38,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
       role="tablist"
       aria-label={ariaLabel}
       className={cn(
-        "sticky top-0 z-20 flex items-center gap-4 border-b border-sko-border-subtle bg-sko-bg-page px-4",
+        "sticky top-0 z-20 flex items-center gap-4 border-b border-sko-border-subtle bg-sko-bg-page px-6",
         className,
       )}
     >
