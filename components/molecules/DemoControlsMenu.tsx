@@ -189,7 +189,8 @@ export function DemoControlsMenu({
           "flex items-center transition-colors hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px avatar. Desktop/Tablet: a 32px avatar + name. Every
           // learner avatar is a rounded square, never a circle (Nelson, 19 Oct 2026).
-          compact ? "rounded-control" : "ml-1 gap-2 rounded-track p-1",
+          // Compact: the avatar sits in the middle of the 44 target that "larger targets" gives it.
+          compact ? "justify-center rounded-control" : "ml-1 gap-2 rounded-track p-1",
         )}
       >
         {compact ? (
