@@ -83,13 +83,14 @@ export function OverlayPanel({
           <h2 id={titleId} className="sk-text-title-medium-semibold text-sko-text-default">
             {title}
           </h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             {headerAction ? (
               <button
                 type="button"
                 onClick={headerAction.onClick}
-                // DS Link Button Brand/Primary (text-only: px-1 = structure 2 + label 2).
-                className="sk-text-body-medium-semibold inline-flex items-center border-b border-sko-icon-primary px-1 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
+                // A quiet text action (Nelson's ICP panel 7497:132529, 24 Oct 2026): body-medium Medium,
+                // text/primary, no rule; underline on hover. Its 44 target comes from "larger targets".
+                className="sk-text-body-medium-medium inline-flex items-center rounded-control px-1 py-1 text-sko-text-primary transition-colors hover:text-sko-text-on-primary-soft hover:underline focus-visible:bg-sko-bg-faint"
               >
                 {headerAction.label}
               </button>

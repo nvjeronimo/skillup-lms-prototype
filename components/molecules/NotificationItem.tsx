@@ -27,7 +27,11 @@ const ICON_MAP: Record<NotificationType, LucideIcon> = {
   "syllabus-change": BookOpen,
 };
 
-/** Single notification row: type icon avatar + content + (right) unread dot. */
+/**
+ * Single notification row: type icon tile + content + (right) unread dot. Since 24 Oct 2026
+ * (Nelson's ICP panel 7497:132529) each row is a white block on the panel's bg/subtle list,
+ * 16/24 padding, its icon on a 36 square tile (Radius/control).
+ */
 export function NotificationItem({
   type,
   title,
@@ -42,7 +46,7 @@ export function NotificationItem({
 
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
         <Icon icon={IconCmp} size={18} />
       </span>
 
@@ -68,7 +72,7 @@ export function NotificationItem({
   );
 
   const classes = cn(
-    "flex w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-sko-bg-subtle",
+    "flex w-full gap-3 bg-sko-bg-page px-6 py-4 text-left transition-colors hover:bg-sko-bg-faint",
     className,
   );
 
