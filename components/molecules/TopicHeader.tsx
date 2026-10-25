@@ -37,17 +37,21 @@ export function TopicHeader({
   return (
     // DS: root, Content Container and meta-row → title are 4px apart; meta-row items 8px.
     <header className={cn("flex flex-col gap-1", className)}>
-      <div className="flex flex-wrap items-center gap-2">
-        <TopicTypeBadge type={type} />
+      {/* One line on every screen (Nelson, 25 Oct 2026): the type and the completion badge keep
+          their width, the duration gives way and ends in an ellipsis. */}
+      <div className="flex min-w-0 items-center gap-2">
+        <TopicTypeBadge type={type} className="shrink-0" />
         {/* Duration is optional; with none, render nothing rather than a stray
             "approx." or a dash placeholder. Separator and Duration are two
             body-medium/Medium layers in text/subtle, as in the DS meta-row. */}
         {showDuration && duration ? (
           <>
-            <span aria-hidden className="sk-text-body-medium-medium text-sko-text-subtle">
+            <span aria-hidden className="sk-text-body-medium-medium shrink-0 text-sko-text-subtle">
               ·
             </span>
-            <span className="sk-text-body-medium-medium text-sko-text-subtle">{durationLabel}</span>
+            <span title={durationLabel} className="sk-text-body-medium-medium min-w-0 truncate text-sko-text-subtle">
+              {durationLabel}
+            </span>
           </>
         ) : null}
         {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
