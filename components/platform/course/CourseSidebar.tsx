@@ -21,7 +21,7 @@ const TOOL_ICON: Record<CourseToolId, LucideIcon> = {
 };
 
 /**
- * The right column of the Course tab (Sidebar, 6406:39276): seven cards side-gap apart (tokens/layout.css), 320 wide on
+ * The right column of the Course tab (Sidebar, 6406:39276): seven cards side-gap apart (DS Layout/*), 320 wide on
  * desktop and tablet; on mobile they follow the modules at full width, in the same order.
  * - Mentor (`Sidebar-Card` Kind=Mentor Q&A): pinned to the dark Semantics mode in the DS, so
  *   the card carries `data-theme="dark"`; bg/primary-soft, the title, a line and a Secondary

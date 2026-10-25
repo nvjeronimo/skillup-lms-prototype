@@ -22,7 +22,7 @@ const SHOW_MOCK_KEY = "sk-platform-show-mock";
  * Shell of every platform page: the page ground is bg/faint, the light
  * `LMS / Platform / Topbar` on top, then the page's own <main>. The LMS sidebar
  * is in development and hidden on these pages.
- * The page sets its own padding from the layout rhythm (tokens/layout.css, Nelson 25 Oct 2026):
+ * The page sets its own padding from the layout rhythm (DS Layout/*, Nelson 25 Oct 2026):
  * Dashboard, My Learning and the other section pages use page-x / page-top; Program and Course
  * Detail are full-bleed under the bar and use band-x.
  *

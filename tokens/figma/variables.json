@@ -3032,6 +3032,126 @@
             "Tablet": 1200,
             "Mobile": 1200
           }
+        },
+        {
+          "name": "Layout/page-x",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-page-x)",
+          "values": {
+            "Desktop": 48,
+            "Tablet": 40,
+            "Mobile": 24
+          },
+          "aliases": {
+            "Desktop": "Spacing/6xl",
+            "Tablet": "Spacing/6xl",
+            "Mobile": "Spacing/5xl"
+          }
+        },
+        {
+          "name": "Layout/page-top",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-page-top)",
+          "values": {
+            "Desktop": 48,
+            "Tablet": 40,
+            "Mobile": 32
+          },
+          "aliases": {
+            "Desktop": "Spacing/6xl",
+            "Tablet": "Spacing/6xl",
+            "Mobile": "Spacing/6xl"
+          }
+        },
+        {
+          "name": "Layout/band-x",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-band-x)",
+          "values": {
+            "Desktop": 48,
+            "Tablet": 32,
+            "Mobile": 16
+          },
+          "aliases": {
+            "Desktop": "Spacing/6xl",
+            "Tablet": "Spacing/5xl",
+            "Mobile": "Spacing/xl"
+          }
+        },
+        {
+          "name": "Layout/section-gap",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-section-gap)",
+          "values": {
+            "Desktop": 48,
+            "Tablet": 40,
+            "Mobile": 32
+          },
+          "aliases": {
+            "Desktop": "Spacing/6xl",
+            "Tablet": "Spacing/6xl",
+            "Mobile": "Spacing/6xl"
+          }
+        },
+        {
+          "name": "Layout/column-gap",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-column-gap)",
+          "values": {
+            "Desktop": 48,
+            "Tablet": 40,
+            "Mobile": 40
+          },
+          "aliases": {
+            "Desktop": "Spacing/6xl",
+            "Tablet": "Spacing/6xl",
+            "Mobile": "Spacing/7xl"
+          }
+        },
+        {
+          "name": "Layout/stack-gap",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-stack-gap)",
+          "values": {
+            "Desktop": 32,
+            "Tablet": 32,
+            "Mobile": 32
+          },
+          "aliases": {
+            "Desktop": "Spacing/4xl",
+            "Tablet": "Spacing/5xl",
+            "Mobile": "Spacing/6xl"
+          }
+        },
+        {
+          "name": "Layout/side-gap",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-side-gap)",
+          "values": {
+            "Desktop": 24,
+            "Tablet": 24,
+            "Mobile": 32
+          },
+          "aliases": {
+            "Desktop": "Spacing/3xl",
+            "Tablet": "Spacing/4xl",
+            "Mobile": "Spacing/6xl"
+          }
+        },
+        {
+          "name": "Layout/grid-gap",
+          "type": "FLOAT",
+          "web": "var(--sk-layout-grid-gap)",
+          "values": {
+            "Desktop": 32,
+            "Tablet": 24,
+            "Mobile": 24
+          },
+          "aliases": {
+            "Desktop": "Spacing/4xl",
+            "Tablet": "Spacing/4xl",
+            "Mobile": "Spacing/5xl"
+          }
         }
       ]
     },

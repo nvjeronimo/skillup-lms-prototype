@@ -23,12 +23,12 @@ import { SectionIntro } from "./parts";
  * Program page (Figma handoff frame 6728:15050: Courses, Certificates, FAQs and About on
  * desktop 1280, tablet 960 and mobile 375). Full-bleed under the platform top bar: the dark
  * Program header across the page, then the tab bar (bg/page, on a 1px border/subtle rule)
- * and the tab content inside the 1200 content width. Side padding band-x (tokens/layout.css),
+ * and the tab content inside the 1200 content width. Side padding band-x (DS Layout/*),
  * as the Course Detail shell.
  * Tab content: 40 / 32 / 32 above and 80 / 48 / 32 below.
  * - Courses: one full-width column, no sidebar (the course rows need the width).
  * - Certificates, FAQs, About: main column + the 320 sidebar on the right, column-gap apart;
- *   on mobile the three sidebar cards follow the content (tokens/layout.css).
+ *   on mobile the three sidebar cards follow the content (DS Layout/*).
  *
  * The tab lives in the URL (`?tab=courses|certificates|faqs|about`, Courses when absent or
  * unknown). The selection is kept locally as well so the panel swaps at once; the URL
@@ -36,7 +36,7 @@ import { SectionIntro } from "./parts";
  * All four panels stay mounted (the inactive ones `hidden`) so open rows survive a tab change.
  *
  */
-/* A tab's main column: its blocks are stack-gap apart (tokens/layout.css, Nelson 25 Oct 2026). */
+/* A tab's main column: its blocks are stack-gap apart (DS Layout/*, Nelson 25 Oct 2026). */
 const PANEL = "flex flex-col gap-layout-stack";
 
 export function ProgramDetailView({ program }: { program: Program }) {

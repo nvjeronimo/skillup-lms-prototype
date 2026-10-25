@@ -33,7 +33,7 @@ import { ViewToggle } from "./ViewToggle";
 
 const ID_BASE = "my-learning";
 
-/* Grid: 3 columns on desktop, 2 on tablet, 1 on mobile, grid-gap apart (tokens/layout.css). */
+/* Grid: 3 columns on desktop, 2 on tablet, 1 on mobile, grid-gap apart (DS Layout/*). */
 /* The status filter's track (DS Button group); its skeleton reuses it. */
 export const MY_LEARNING_FILTER_TRACK =
   "flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden";
@@ -51,7 +51,7 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
 
 /**
  * The Collection of My Learning (6394:16636 and siblings): Toolbar + the cards of the
- * selected tab, stack-gap apart (tokens/layout.css, Nelson 25 Oct 2026).
+ * selected tab, stack-gap apart (DS Layout/*, Nelson 25 Oct 2026).
  * Toolbar (Nelson, 13 Oct 2026): the Tabs alone on the first row, on a 1px border/subtle rule
  * across the width, 8 above. Second row: the status filter on the left, Search (320 on
  * desktop, 240 on tablet) and the Grid / List toggle on the right. Mobile: the tabs, the

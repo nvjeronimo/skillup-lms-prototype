@@ -23,7 +23,7 @@ import { ResumeRow } from "./ResumeRow";
  * 6408:72704, mobile 6418:127183).
  * Greeting, the glance card, Due this week + Pick up where you left off, Jump somewhere.
  * Page padding, the space between the blocks and between the two columns: the layout rhythm
- * (tokens/layout.css, Nelson 25 Oct 2026); 80 / 64 / 48 below (desktop / tablet / mobile).
+ * (DS Layout/*, Nelson 25 Oct 2026); 80 / 64 / 48 below (desktop / tablet / mobile).
  * Desktop: Due (440) sits beside Resume (728). Tablet: Due and Resume stack, three tiles in
  * a row. Mobile: everything stacks, the resume list uses the Resume row, tiles go two a row.
  *
