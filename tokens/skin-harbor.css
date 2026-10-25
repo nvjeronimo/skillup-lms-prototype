@@ -168,9 +168,11 @@ html[data-skin="harbor"] [data-theme="dark"] {
 
 /* ── Buttons ─────────────────────────────────────────────────────────────────
    Every one-line control is a pill, as the panel's buttons, filters and search. Anything that holds
-   paragraphs, a column or a list keeps the control radius (10, the panel's "Manage"). */
+   paragraphs, a column or a list (or is a column itself) keeps the control radius (10, the panel's
+   "Manage"). */
 [data-skin="harbor"]
   :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"]).rounded-control:not(
+    .flex-col,
     :has(p, .flex-col, ul, ol, h2, h3, h4),
     [data-option-state]
   ),
@@ -186,7 +188,8 @@ html[data-skin="harbor"] [data-theme="dark"] {
   --tw-ring-color: var(--color-border-default);
   background-color: var(--color-bg-page);
 }
-/* Fields: the panel's search sits on a pale blue pill with no border. */
+/* Fields: the panel's search sits on a pale blue pill with no border; the search icon and the
+   placeholder identify it. */
 [data-skin="harbor"] .rounded-control:has(> input[type="search"]),
 [data-skin="harbor"] .rounded-control:has(> input[placeholder^="Search"]) {
   border-color: transparent;
@@ -194,8 +197,9 @@ html[data-skin="harbor"] [data-theme="dark"] {
 }
 
 /* ── Filters ─────────────────────────────────────────────────────────────────
-   No track: bare pills, the selected one on #F0F0F0 with ink text and no ring (the panel's
-   "All · Hosted · Other"). Every segmented control in the prototype is a bg/track row of segments,
+   No track and no border: bare pills (the panel's "All · Hosted · Other"), the selected one on
+   bg/primary-soft with semibold ink (Nelson's choice, 25 Oct). The fill is 1.2:1 on the page, below
+   WCAG 1.4.11's 3:1; aria-pressed/checked carries the state for assistive tech. Every segmented control in the prototype is a bg/track row of segments,
    the selected one on bg/page; this restyles them all. */
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track {
   background-color: transparent;
@@ -213,8 +217,9 @@ html[data-skin="harbor"] [data-theme="dark"] {
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
   border-color: transparent;
-  background-color: var(--color-bg-muted);
-  color: var(--color-text-default);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-on-primary-soft);
+  font-weight: 600;
   box-shadow: none;
 }
 [data-skin="harbor"] [data-segmented] > button {

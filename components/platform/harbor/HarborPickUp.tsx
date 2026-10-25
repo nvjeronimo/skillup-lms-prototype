@@ -33,25 +33,25 @@ export function HarborPickUp({ resume, titleId }: { resume: DashboardResumeRow[]
                 aria-pressed={on}
                 onClick={() => setCurrent(i)}
                 className={cn(
-                  "flex min-h-16 w-full flex-col items-start justify-center gap-0.5 rounded-control border px-4 py-3 text-left transition-colors",
+                  "flex min-h-16 w-full flex-col items-start justify-center gap-0.5 rounded-inner px-4 py-3 text-left transition-colors",
                   on
-                    ? "border-transparent bg-sko-bg-primary-soft"
-                    : "border-sko-border-subtle bg-sko-bg-page hover:bg-sko-bg-hover",
+                    ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft"
+                    : "bg-sko-bg-subtle text-sko-text-default hover:bg-sko-bg-hover",
                 )}
               >
-                <span className="sk-text-body-medium-semibold line-clamp-2 text-sko-text-default">{c.title}</span>
+                <span className="sk-text-body-medium-semibold line-clamp-2">{c.title}</span>
                 <span className="sk-text-body-small-regular text-sko-text-subtle">{c.progressPct}% complete</span>
               </button>
             </li>
           );
         })}
       </ul>
-      <div aria-live="polite" className="flex min-w-0 flex-col gap-4 rounded-control bg-sko-bg-subtle p-5 md:p-6">
+      <div aria-live="polite" className="flex min-w-0 flex-col gap-4 rounded-inner bg-sko-bg-subtle p-5 md:p-6">
         <CourseThumb
           shape="cover"
           initials={course.initials}
           imageSrc={course.imageSrc}
-          className="aspect-[3/1] w-full rounded-control"
+          className="aspect-[3/1] w-full rounded-inner"
         />
         <Link
           href={course.homeHref}
