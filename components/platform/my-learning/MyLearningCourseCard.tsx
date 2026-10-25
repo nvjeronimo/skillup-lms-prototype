@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Badge } from "@/components/atoms/Badge";
+import { CheckCircle2 } from "lucide-react";
 import { Button, type ButtonHierarchy } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CourseTypeBadge, DeliveryModeBadge, DifficultyBadge, ProviderBadge } from "@/components/atoms/MetaBadges";
@@ -7,6 +7,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { certificatePageHref } from "@/lib/platform/hrefs";
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
+import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { CourseThumb } from "./CourseThumb";
 
@@ -33,8 +34,8 @@ const OVERLINE = "sk-text-body-small-semibold uppercase text-sko-text-subtle";
 const OVERLINE_ON_GREEN = "sk-text-body-small-semibold uppercase text-sko-text-default";
 
 /* DS progress: "{n}% complete" or "Not started" + the effort on the right, then the 8px bar
-   (bg/muted track, bg/info fill, straight ends). DS `State=Completed`: the soft success
-   Badge "Completed" (Nelson, 25 Oct 2026; was a check-circle + "Completed") and the fill in bg/success. */
+   (bg/muted track, bg/info fill, straight ends). DS `State=Completed` (13 Oct 2026): a
+   check-circle in icon/success before "Completed" and the fill in bg/success. */
 function Progress({ course, hug = false, className }: { course: MyLearningCourse; hug?: boolean; className?: string }) {
   const pct = course.progressPct ?? 0;
   const complete = pct >= 100;
@@ -43,13 +44,10 @@ function Progress({ course, hug = false, className }: { course: MyLearningCourse
     <div className={cn("flex flex-col", className)}>
       {/* Grid: the label fills and the effort sits at the right end. List (`hug`): both hug, 24 apart. */}
       <div className={cn("flex items-center", hug ? "gap-6" : "justify-between gap-2")}>
-        {complete ? (
-          <Badge variant="soft" color="success">
-            Completed
-          </Badge>
-        ) : (
-          <span className="sk-text-body-large-semibold whitespace-nowrap text-sko-text-default">{label}</span>
-        )}
+        <span className="sk-text-body-large-semibold inline-flex items-center gap-1.5 whitespace-nowrap text-sko-text-default">
+          {complete ? <Icon icon={CheckCircle2} size={16} className="text-sko-icon-success" aria-hidden="true" /> : null}
+          {label}
+        </span>
         <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
       </div>
       {/* DS `State=Not started` (v1.4): no bar, a 0% bar says nothing. */}
