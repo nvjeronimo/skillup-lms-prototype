@@ -169,7 +169,7 @@ export function CertificatesView() {
       className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<CertificatesSkeleton />}
     >
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <div data-arrive={0} className="flex flex-col gap-2">
           <h1 className="sk-text-headline-large-bold text-sko-text-default">Certificates</h1>
           <p className="sk-text-body-large-regular text-sko-text-subtle">
