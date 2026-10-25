@@ -296,3 +296,32 @@ html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance-title] {
     padding-inline: 0;
   }
 }
+
+/* ── Player sidebar ──────────────────────────────────────────────────────────
+   Each module in its own box, as in Studio (Nelson, 25 Oct 2026). The list sits on the faint ground
+   with 8 of padding and 8 between boxes; a box is white with a 1px border/subtle (Harbor's hairline
+   for a box inside a surface) and Radius/inner (8: the sidebar card's 16 − the list's 8 of padding). overflow: clip keeps a
+   sticky module header working; inside a box the header has no hairline and no grey band. */
+[data-skin="harbor"] [data-module-list] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background-color: var(--color-bg-faint);
+}
+[data-skin="harbor"] [data-module-box] {
+  flex-shrink: 0;
+  overflow: clip;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-page);
+}
+[data-skin="harbor"] [data-module-box] > button,
+[data-skin="harbor"] [data-module-box] > h3 > button {
+  border-bottom-width: 0;
+  background-color: transparent;
+}
+/* The proposal's sticky header must stay opaque over the rows that scroll under it. */
+[data-skin="harbor"] [data-module-box] > h3 > button {
+  background-color: var(--color-bg-page);
+}
