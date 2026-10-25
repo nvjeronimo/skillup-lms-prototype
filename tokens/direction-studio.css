@@ -73,9 +73,10 @@ html[data-direction="studio"] [data-theme="dark"] {
   letter-spacing: 0.08em;
 }
 /* The second half of a page title ("John.") in a calm teal instead of grey: flat, never a gradient.
-   #4f8799 on the #f3f4f6 ground is 3.9:1, enough for text this large. */
+   #427482: 4.7:1 on the #f3f4f6 ground and 5.2:1 on white, so it holds AA at any size (audit,
+   25 Oct 2026: the section titles are 20px on a phone, not large text, and #4f8799 was 3.6:1). */
 [data-direction="studio"]:not([data-theme="dark"]) [data-heading-em] {
-  color: #4f8799;
+  color: #427482;
 }
 /* Dark: a lighter teal of the same hue, 8.8:1 on the #0d0f13 ground. */
 html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
