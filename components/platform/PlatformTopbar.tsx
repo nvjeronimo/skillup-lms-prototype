@@ -29,6 +29,8 @@ import { useBreakpoint } from "@/lib/useBreakpoint";
 import { LoadingSection, PreviewDeviceSection } from "@/components/molecules/DemoControlsMenu";
 import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 import { useLearner } from "@/lib/persona-gate";
+import { toggleHarborRail, useHarbor, useHarborRailExpanded } from "@/lib/platform/harbor";
+import { HarborSearch } from "./harbor/HarborSearch";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
@@ -192,6 +194,8 @@ function Initials() {
  * Do not give the menu a list of its own.
  */
 export function PlatformTopbar({ current }: { current: PlatformSection | null }) {
+  const harbor = useHarbor();
+  const railExpanded = useHarborRailExpanded();
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
   // The learner, or the synthetic persona once hydrated (Nelson, 25 Oct 2026; lib/persona-gate).
@@ -252,22 +256,45 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
     <>
       <header data-chrome="" className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
         {/* Desktop */}
-        <div className="hidden h-[71px] items-center justify-between px-6 lg:flex">
-          <Link
-            href="/platform/dashboard"
-            aria-label="SkillUp, Dashboard"
-            className="flex min-h-11 items-center"
-          >
-            <SkillUpLogo className="h-[30px]" />
-          </Link>
-          <nav aria-label="Platform" className="self-stretch">
-            <SectionLinks
-              current={current}
-              look="tabs"
-              className="flex h-full items-stretch gap-6"
-            />
-          </nav>
-          <div className="flex items-center gap-3">
+        <div className="hidden h-[71px] items-center justify-between gap-6 px-6 lg:flex">
+          {harbor ? (
+            // Harbor (Nelson, 25 Oct 2026, after the DreamHost panel): the menu button folds the
+            // rail on the left, where the sections are; the middle of the bar is the search pill.
+            <div className="flex flex-1 basis-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleHarborRail}
+                aria-label={railExpanded ? "Collapse the navigation" : "Expand the navigation"}
+                aria-expanded={railExpanded}
+                className="-ml-2.5 inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover"
+              >
+                <Icon icon={Menu02} size={24} />
+              </button>
+              <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
+                <SkillUpLogo className="h-[30px]" />
+              </Link>
+            </div>
+          ) : (
+            <Link
+              href="/platform/dashboard"
+              aria-label="SkillUp, Dashboard"
+              className="flex min-h-11 items-center"
+            >
+              <SkillUpLogo className="h-[30px]" />
+            </Link>
+          )}
+          {harbor ? (
+            <HarborSearch className="flex-[0_1_420px]" />
+          ) : (
+            <nav aria-label="Platform" className="self-stretch">
+              <SectionLinks
+                current={current}
+                look="tabs"
+                className="flex h-full items-stretch gap-6"
+              />
+            </nav>
+          )}
+          <div className={cn("flex items-center gap-3", harbor && "flex-1 basis-0 justify-end")}>
             <span className="flex items-center gap-3">
               {bell}
               {themeButton}

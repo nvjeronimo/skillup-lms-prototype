@@ -15,6 +15,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
 import { AssistantLauncher } from "./AssistantLauncher";
+import { ASSISTANT_OPEN_EVENT } from "@/lib/assistant/bus";
 import { useJourneyProposal } from "@/lib/journeyProposal";
 import { AssistantWindow } from "./AssistantWindow";
 
@@ -146,6 +147,23 @@ function Chat({ pathname }: { pathname: string }) {
     firstSteps.greeted();
     set(true);
   };
+  // Opened from elsewhere on the page, with or without a question (lib/assistant/bus: Harbor's
+  // top-bar search, Nelson 25 Oct 2026).
+  const [askNonce, setAskNonce] = React.useState(0);
+  const fromBus = React.useRef({ openByLearner, ask });
+  fromBus.current = { openByLearner, ask };
+  React.useEffect(() => {
+    const onOpen = (e: Event) => {
+      const question = (e as CustomEvent<{ question: string }>).detail?.question ?? "";
+      fromBus.current.openByLearner();
+      if (question) {
+        fromBus.current.ask(question);
+        setAskNonce((n) => n + 1);
+      }
+    };
+    window.addEventListener(ASSISTANT_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(ASSISTANT_OPEN_EVENT, onOpen);
+  }, []);
   React.useEffect(() => {
     if (open || !refocus.current) return;
     refocus.current = false;
@@ -182,7 +200,18 @@ function Chat({ pathname }: { pathname: string }) {
   const otherModal = useOtherModalOpen(journeyProposal, windowId);
   const hideForModal = journeyProposal && otherModal && !open;
   // Left, except on a phone. The footer lifts the launcher only where the two would meet.
-  const side = isPhone || (journeyProposal && inPlayer) ? "right" : "left";
+  const [wideEnough, setWideEnough] = React.useState(false);
+  React.useEffect(() => {
+    const q = window.matchMedia("(min-width: 1025px)");
+    const sync = () => setWideEnough(q.matches);
+    sync();
+    q.addEventListener("change", sync);
+    return () => q.removeEventListener("change", sync);
+  }, []);
+  // Harbor on a platform page from desktop up: the assistant is in the top bar (its search pill), so
+  // the launcher steps away and the window opens on the right, under the bar's Assistant button.
+  const harborBar = useLmsStore((s) => s.skin === "harbor") && pathname.startsWith("/platform") && !isPhone && wideEnough;
+  const side = isPhone || (journeyProposal && inPlayer) || harborBar ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
   const sheet = open && isPhone;
   // The window stays on screen while it leaves: it shrinks back into the launcher (short3),
@@ -216,6 +245,7 @@ function Chat({ pathname }: { pathname: string }) {
           firstSteps={shownSteps}
           next={shownNext}
           takeFocus={!selfOpened}
+          askNonce={askNonce}
           onClear={assistant.clear}
           onClose={close}
           modal={isPhone}
@@ -248,11 +278,11 @@ function Chat({ pathname }: { pathname: string }) {
         onToggle={() => (open ? close() : openByLearner())}
         controls={windowId}
         badge={firstSteps.left}
-        covered={sheet || hideForModal}
+        covered={sheet || hideForModal || (harborBar && !open)}
         className={cn(
           "fixed",
           isPhone && presence.mounted ? "z-[44]" : "z-[45]",
-          hideForModal && "pointer-events-none opacity-0",
+          (hideForModal || (harborBar && !open)) && "pointer-events-none opacity-0",
         )}
         style={{ [side]: edge, bottom }}
       />

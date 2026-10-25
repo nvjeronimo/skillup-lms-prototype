@@ -46,6 +46,8 @@ export interface AssistantWindowProps {
   next?: { text: string; action: ActionEntry } | null;
   /** False when the window opened by itself: it must not pull the focus from the page. */
   takeFocus?: boolean;
+  /** Changes when a question comes from outside the window (lib/assistant/bus): show the chat. */
+  askNonce?: number;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -86,6 +88,7 @@ export function AssistantWindow({
   firstSteps = null,
   next = null,
   takeFocus = true,
+  askNonce = 0,
   className,
   style,
 }: AssistantWindowProps) {
@@ -102,6 +105,9 @@ export function AssistantWindow({
   // First steps come first while they run; the learner can go to the chat at any time.
   const [view, setView] = React.useState<View>(firstSteps ? "first-steps" : "ask");
   const showSteps = Boolean(firstSteps) && view === "first-steps";
+  React.useEffect(() => {
+    if (askNonce) setView("ask");
+  }, [askNonce]);
   React.useEffect(() => {
     if (!open || modal || !takeFocus) return;
     // The chat's input, or the selected tab when the First steps view is shown instead.

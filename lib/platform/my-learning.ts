@@ -17,7 +17,8 @@ import { getPersona } from "@/lib/personas";
  */
 
 export type MyLearningTab = "programs" | "courses";
-export type MyLearningView = "grid" | "list";
+/** "table": Harbor only (25 Oct 2026), the DreamHost panel's list view. */
+export type MyLearningView = "grid" | "list" | "table";
 
 /** The tab drawn in the default frame (Courses). */
 export const MY_LEARNING_DEFAULT_TAB: MyLearningTab = "courses";
