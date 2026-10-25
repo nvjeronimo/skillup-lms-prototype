@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Collapse } from "@/components/atoms/Collapse";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { cn } from "@/lib/utils";
 import type { Partner } from "@/lib/types";
@@ -27,6 +28,12 @@ export interface CourseHeaderProps {
   showDivider?: boolean;
   /** "label" sets the eyebrow in the DS Label style (Course Journey proposal); default Caption + uppercase. */
   eyebrowStyle?: "caption" | "label";
+  /**
+   * The player sidebar condenses its header while the topic list is scrolled (Nelson, 25 Oct
+   * 2026): the eyebrow and the partner line fold away, the title and the toggle (or the ring)
+   * stay. Leave it undefined for the fixed layout; a boolean switches to the foldable one.
+   */
+  condensed?: boolean;
   className?: string;
 }
 
@@ -51,6 +58,7 @@ export function CourseHeader({
   trailing,
   showDivider = true,
   eyebrowStyle = "caption",
+  condensed,
   className,
 }: CourseHeaderProps) {
   const rowTrailing = rightSlot ?? (showToggle ? <SidebarToggle expanded={expanded} onToggle={onToggle} /> : null);
@@ -59,6 +67,42 @@ export function CourseHeader({
   if (compact) {
     return (
       <div className={cn("flex justify-center px-2 pb-2 pt-4", className)}>{rowTrailing}</div>
+    );
+  }
+
+  const eyebrowClass = cn(
+    "min-w-0 text-sko-text-subtle",
+    eyebrowStyle === "label" ? "sk-text-label-small-semibold" : "sk-text-body-small-medium uppercase",
+  );
+
+  if (condensed !== undefined) {
+    // Foldable: the toggle (or the ring) beside the column, so it stays when the eyebrow folds.
+    return (
+      <div
+        className={cn(
+          "flex items-start gap-2 px-4 pb-2 pt-4",
+          showDivider && "border-b border-sko-border-subtle",
+          className,
+        )}
+      >
+        <div className="flex min-w-0 flex-1 flex-col">
+          {eyebrow ? (
+            <Collapse open={!condensed}>
+              <p className={cn(eyebrowClass, "pb-1")}>{eyebrow}</p>
+            </Collapse>
+          ) : null}
+          <p className="sk-text-title-medium-semibold text-sko-text-default">{title}</p>
+          {partnerList.length ? (
+            <Collapse open={!condensed}>
+              <p className="sk-text-body-small-medium pt-1 text-sko-text-muted">
+                {partnerList.map((p) => p.name).join(" · ")}
+              </p>
+            </Collapse>
+          ) : null}
+        </div>
+        {rowTrailing}
+        {trailing}
+      </div>
     );
   }
 

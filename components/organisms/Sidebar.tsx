@@ -139,6 +139,10 @@ export function Sidebar({
   // topic the user just clicked stays exactly where it was. We only auto-scroll
   // when the active row would otherwise be off-screen (e.g. a deep link).
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  // The header condenses to title + progress while the list is scrolled (Nelson, 25 Oct 2026):
+  // past 8 px it folds, back at the top it opens (hysteresis, as the docked video).
+  const [condensed, setCondensed] = React.useState(() => !isMobile && savedScrollTop > 8);
+  const condenseFrom = (top: number) => setCondensed((prev) => (prev ? top > 0 : top > 8));
   useIsoLayoutEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
@@ -159,11 +163,13 @@ export function Sidebar({
       }
     }
     if (!isMobile) savedScrollTop = container.scrollTop;
+    condenseFrom(container.scrollTop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopicId]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
+    condenseFrom(e.currentTarget.scrollTop);
   };
 
   // Collapsed rail: a flyout (DS: LMS/ICP/Sidebar/Topic-Flyout) surfaces the topic
@@ -401,6 +407,7 @@ export function Sidebar({
           eyebrow="Course"
           partners={coursePartners(course)}
           showToggle={false}
+          condensed={condensed}
           trailing={
             <OverallProgress
               device="Mobile"
@@ -422,6 +429,7 @@ export function Sidebar({
             showToggle
             onToggle={onToggleSidebar}
             showDivider={false}
+            condensed={condensed}
           />
           <OverallProgress
             pct={overallPct}
