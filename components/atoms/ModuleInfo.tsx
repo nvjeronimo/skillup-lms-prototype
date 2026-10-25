@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Check } from "lucide-react";
+import { Badge } from "@/components/atoms/Badge";
 import { cn } from "@/lib/utils";
 
 export interface ModuleInfoProps {
@@ -19,8 +19,10 @@ export interface ModuleInfoProps {
 /**
  * DS `LMS / Module Info` (Status = Module In progress · Module Completed).
  * One horizontal row, 8px gap: module number (Overline/Medium, tertiary) ·
- * separator (Caption/Medium, disabled) · "x of y" (Overline/Medium) with a
- * 14px success check after the count once the module is complete.
+ * separator (Caption/Medium, disabled) · "x of y" (Overline/Medium).
+ * A completed module shows the number and the soft success Badge "Completed", the badge of
+ * every completed module, course and program (Nelson, 25 Oct 2026; it replaced the green
+ * "x of y" + check).
  */
 export function ModuleInfo({
   label,
@@ -31,31 +33,28 @@ export function ModuleInfo({
   progressText,
   className,
 }: ModuleInfoProps) {
-  const tone = isCompleted ? "text-sko-text-success" : "text-sko-text-subtle";
+  if (isCompleted && showTopicProgress) {
+    return (
+      <span className={cn("flex items-center gap-2", className)}>
+        <span className="sk-text-label-small-medium text-sko-text-subtle">{label}</span>
+        <Badge variant="soft" color="success">
+          Completed
+        </Badge>
+      </span>
+    );
+  }
   return (
     // 18px row: pinned to the Overline height (label-small, 12/18 since the
     // no-text-below-12 decision) so the Caption separator dot centres inside it.
     <span className={cn("flex h-[18px] items-center gap-2", className)}>
-      <span className={cn("sk-text-label-small-medium", tone)}>{label}</span>
+      <span className="sk-text-label-small-medium text-sko-text-subtle">{label}</span>
       {showTopicProgress ? (
         <>
-          <span
-            className={cn(
-              "sk-text-body-small-medium",
-              isCompleted ? "text-sko-text-success" : "text-sko-text-disabled",
-            )}
-            aria-hidden
-          >
+          <span className="sk-text-body-small-medium text-sko-text-disabled" aria-hidden>
             ·
           </span>
-          <span className="flex items-center gap-1">
-            <span className={cn("sk-text-label-small-medium", tone)}>
-              {progressText ?? `${topicsCompleted} of ${topicsTotal}`}
-            </span>
-            {isCompleted ? (
-              // DS completed-check: 1.5px `icon/success` stroke at 14px (absolute, not scaled).
-              <Check size={14} strokeWidth={1.5} absoluteStrokeWidth className="text-sko-icon-success" aria-hidden />
-            ) : null}
+          <span className="sk-text-label-small-medium text-sko-text-subtle">
+            {progressText ?? `${topicsCompleted} of ${topicsTotal}`}
           </span>
         </>
       ) : null}

@@ -1,7 +1,6 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
-import { Icon } from "@/lib/icons";
+import { Badge } from "@/components/atoms/Badge";
 import { ArrivalCountFrom } from "@/components/atoms/ArrivalCount";
 import { useArrivalValue } from "@/lib/arrival/useArrival";
 import { cn } from "@/lib/utils";
@@ -94,15 +93,14 @@ export function PlatformProgressBar({
 
 /**
  * The right-hand label of a header Progress card (program and course pages): what the bar measures
- * while it runs, and the check icon + "Completed" once it reaches 100, as on the cards (the green
- * bar is never the only sign; Nelson, 16 Oct 2026).
+ * while it runs, and the soft success Badge "Completed" once it reaches 100, as on the cards (the
+ * green bar is never the only sign; Nelson, 16 Oct 2026; the badge since 25 Oct 2026).
  */
 export function ProgressCardLabel({ complete, label }: { complete: boolean; label: string }) {
   return complete ? (
-    <p className="sk-text-body-medium-semibold inline-flex items-center gap-1.5 text-sko-text-default">
-      <Icon icon={CheckCircle2} size={16} className="text-sko-icon-success" aria-hidden="true" />
+    <Badge variant="soft" color="success">
       Completed
-    </p>
+    </Badge>
   ) : (
     <p className="sk-text-body-small-regular text-sko-text-subtle">{label}</p>
   );
