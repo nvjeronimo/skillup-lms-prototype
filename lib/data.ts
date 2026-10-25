@@ -23,7 +23,7 @@ export const downloads: DownloadFile[] = model.downloads;
 /** The mock learner as written (John Smith), whatever persona is on. */
 export const DEFAULT_USER: User = model.user;
 /**
- * The signed-in learner. In the browser, while a synthetic persona is on, the first one's name
+ * The signed-in learner. In the browser, while a synthetic persona is on, the persona's name
  * (Nelson, 25 Oct 2026; lib/persona-active), with no picture so the initials show; on the
  * server always the written one. Outside a gated page read it through `useLearner()`.
  */

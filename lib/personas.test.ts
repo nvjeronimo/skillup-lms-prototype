@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PERSONAS, parsePersonaIds, unionConditions } from "./personas";
+import { PERSONAS, getPersona, parsePersonaId } from "./personas";
 import { ctaFor, overlayCard, overlayProgramCourse } from "./persona-overlay";
 import { applyPlan, personaCookie, settingsFor, type PersonaSettings } from "./persona-settings";
 import { programsFor } from "./programs";
@@ -34,12 +34,14 @@ describe("persona data", () => {
     }
   });
 
-  it("parses the cookie: known ids, once each, in order", () => {
-    expect(parsePersonaIds("P02,P06")).toEqual(["P02", "P06"]);
-    expect(parsePersonaIds(encodeURIComponent("P06,P02,P06,X9"))).toEqual(["P06", "P02"]);
-    expect(parsePersonaIds(undefined)).toEqual([]);
-    expect(personaCookie(["P02", "P06"])).toContain("sk-persona=P02%2CP06");
-    expect(personaCookie([])).toContain("max-age=0");
+  it("parses the cookie: one persona, and the first known id of an old multi-id cookie", () => {
+    expect(parsePersonaId("P07")).toBe("P07");
+    expect(parsePersonaId("P02,P06")).toBe("P02");
+    expect(parsePersonaId(encodeURIComponent("X9,P06,P02"))).toBe("P06");
+    expect(parsePersonaId("%E0%A4%A")).toBeNull();
+    expect(parsePersonaId(undefined)).toBeNull();
+    expect(personaCookie("P02")).toContain("sk-persona=P02;");
+    expect(personaCookie(null)).toContain("max-age=0");
   });
 });
 
@@ -114,20 +116,29 @@ describe("persona overlay", () => {
 });
 
 describe("persona settings", () => {
-  it("takes the union of the conditions", () => {
-    expect(unionConditions(["P02", "P06"])).toEqual({ mobile: true });
-    const s = settingsFor(unionConditions(["P06", "P07"]), BASE);
-    expect(s).toEqual({ deviceMode: "mobile", textSize: "xl", largeTargetsChoice: true, underlineLinks: true, reduceMotion: true });
+  it("takes one persona's conditions only", () => {
+    expect(settingsFor(getPersona("P06")!.conditions, BASE)).toEqual({ ...BASE, deviceMode: "mobile" });
+    expect(settingsFor(getPersona("P07")!.conditions, BASE)).toEqual({
+      deviceMode: "auto",
+      textSize: "xl",
+      largeTargetsChoice: true,
+      underlineLinks: true,
+      reduceMotion: true,
+    });
+    expect(applyPlan("P02", BASE, null).settings).toEqual(BASE);
   });
 
   it("applies over the settings from before any persona and keeps them for Clear", () => {
     const mine = { ...BASE, textSize: "lg" as const };
-    const first = applyPlan(["P07"], mine, null);
+    const first = applyPlan("P07", mine, null);
     expect(first.before).toEqual(mine);
     expect(first.settings.textSize).toBe("xl");
-    // Switching to Maya alone drops Helena's settings: back to the kept ones.
-    const second = applyPlan(["P02"], first.settings, first.before);
+    // Switching from Helena to Maya restores the baseline first: no large text leaks into P02.
+    const second = applyPlan("P02", first.settings, first.before);
     expect(second.settings).toEqual(mine);
     expect(second.before).toEqual(mine);
+    // And on to Sara: the baseline plus the mobile preview only.
+    const third = applyPlan("P06", second.settings, second.before);
+    expect(third.settings).toEqual({ ...mine, deviceMode: "mobile" });
   });
 });

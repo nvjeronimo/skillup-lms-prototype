@@ -1,5 +1,5 @@
 import { PersonaGateProvider } from "@/lib/persona-gate";
-import { requestPersonaIds } from "@/lib/persona-server";
+import { requestPersonaId } from "@/lib/persona-server";
 
 /**
  * The platform pages' layout: only the synthetic personas' gate (Nelson, 25 Oct 2026). It reads
@@ -7,5 +7,5 @@ import { requestPersonaIds } from "@/lib/persona-server";
  * hydrating alike, whether to hold its content until mount (lib/persona-gate).
  */
 export default function PlatformLayout({ children }: { children: React.ReactNode }) {
-  return <PersonaGateProvider ids={requestPersonaIds()}>{children}</PersonaGateProvider>;
+  return <PersonaGateProvider id={requestPersonaId()}>{children}</PersonaGateProvider>;
 }
