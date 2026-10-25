@@ -606,44 +606,63 @@ button {
 /* The sticky tabs and filters of My Learning and Calendar (StickyToolbar, Nelson 24 Oct 2026): always
    fixed once scrolled past; what is marked data-hide-when-stuck (the search) steps out while stuck. On a
    phone the whole search slot goes, so the bar keeps only the tabs and the filter. */
-/* Motion (Nelson, 25 Oct 2026: "entra e sai de forma muito brusca"): the ground and the rule fade in
-   over medium2; the search does not vanish, it folds away. Tablet and desktop: it fades in short4 while
-   its width closes over medium2. Phone: its row folds (grid rows 1fr to 0fr) and its 16 gap closes with
-   it, so the cards below glide up instead of jumping. visibility follows at the end of the fold, so a
-   hidden search is out of the tab order. A search that holds a query (data-keep) stays. */
+/* Motion (Nelson, 25 Oct 2026: "entra e sai de forma muito brusca"; second pass the same day: "melhora a
+   animação"). The ground (bg/faint) and its border/subtle rule are a ::before layer under the content;
+   its opacity is --sk-stuck, which StickyToolbar ramps 0 to 1 over the first 24 px scrolled past the
+   row, so it follows the finger both ways and the cards never pass under a see-through bar.
+   The search does not vanish, it steps out in two beats, so it is never squashed while visible:
+   leaving, it fades first (short3) and only then its room closes (medium2, after short2); coming
+   back, its room opens first (medium2) and it fades in once there is space (short4, after short3).
+   Tablet and desktop close its width; a phone folds its row (grid rows 1fr to 0fr) with its 16 gap,
+   so the cards below glide up instead of jumping. `overflow: clip` with a 4 px margin keeps the
+   field inside its room while it opens and closes without cutting its focus ring. visibility
+   follows at the end, so a hidden search is out of the tab order. A search that holds a query
+   (data-keep) stays. */
 .sk-sticky-toolbar {
-  transition:
-    background-color var(--motion-duration-medium2) var(--motion-easing-standard),
-    border-color var(--motion-duration-medium2) var(--motion-easing-standard);
+  --sk-stuck: 0;
+  isolation: isolate;
+}
+.sk-sticky-toolbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--color-bg-faint);
+  border-bottom: 1px solid var(--color-border-subtle);
+  opacity: var(--sk-stuck);
+  pointer-events: none;
 }
 @media (min-width: 768px) {
   .sk-sticky-toolbar [data-hide-when-stuck] {
     max-width: 400px;
+    overflow: clip;
+    overflow-clip-margin: 4px;
     transition:
-      opacity var(--motion-duration-short4) var(--motion-easing-standard),
-      max-width var(--motion-duration-medium2) var(--motion-easing-standard-decelerate),
+      max-width var(--motion-duration-medium2) var(--motion-easing-standard-decelerate) 0s,
+      opacity var(--motion-duration-short4) var(--motion-easing-standard) var(--motion-duration-short3),
       visibility 0s linear 0s;
   }
   .sk-sticky-toolbar[data-stuck] [data-hide-when-stuck]:not([data-keep]) {
     max-width: 0;
     opacity: 0;
-    overflow: hidden;
     visibility: hidden;
     pointer-events: none;
     transition:
-      opacity var(--motion-duration-short4) var(--motion-easing-standard),
-      max-width var(--motion-duration-medium2) var(--motion-easing-standard-decelerate),
-      visibility 0s linear var(--motion-duration-medium2);
+      opacity var(--motion-duration-short3) var(--motion-easing-standard-decelerate) 0s,
+      max-width var(--motion-duration-medium2) var(--motion-easing-standard) var(--motion-duration-short2),
+      visibility 0s linear calc(var(--motion-duration-medium2) + var(--motion-duration-short2));
   }
 }
 @media (max-width: 767px) {
   .sk-sticky-toolbar [data-search-slot] {
     display: grid;
     grid-template-rows: 1fr;
+    overflow: clip;
+    overflow-clip-margin: 4px;
     transition:
-      grid-template-rows var(--motion-duration-medium2) var(--motion-easing-standard-decelerate),
-      margin-bottom var(--motion-duration-medium2) var(--motion-easing-standard-decelerate),
-      opacity var(--motion-duration-short4) var(--motion-easing-standard),
+      grid-template-rows var(--motion-duration-medium2) var(--motion-easing-standard-decelerate) 0s,
+      margin-bottom var(--motion-duration-medium2) var(--motion-easing-standard-decelerate) 0s,
+      opacity var(--motion-duration-short4) var(--motion-easing-standard) var(--motion-duration-short3),
       visibility 0s linear 0s;
   }
   .sk-sticky-toolbar [data-search-slot] > * {
@@ -653,24 +672,23 @@ button {
     grid-template-rows: 0fr;
     margin-bottom: -1rem;
     opacity: 0;
-    overflow: hidden;
     visibility: hidden;
     pointer-events: none;
     transition:
-      grid-template-rows var(--motion-duration-medium2) var(--motion-easing-standard-decelerate),
-      margin-bottom var(--motion-duration-medium2) var(--motion-easing-standard-decelerate),
-      opacity var(--motion-duration-short4) var(--motion-easing-standard),
-      visibility 0s linear var(--motion-duration-medium2);
+      opacity var(--motion-duration-short3) var(--motion-easing-standard-decelerate) 0s,
+      grid-template-rows var(--motion-duration-medium2) var(--motion-easing-standard) var(--motion-duration-short2),
+      margin-bottom var(--motion-duration-medium2) var(--motion-easing-standard) var(--motion-duration-short2),
+      visibility 0s linear calc(var(--motion-duration-medium2) + var(--motion-duration-short2));
   }
 }
+/* Reduced motion: the search simply goes and comes back; the ground still follows the scroll (an
+   opacity tied to the position, nothing travels). */
 @media (prefers-reduced-motion: reduce) {
-  .sk-sticky-toolbar,
   .sk-sticky-toolbar [data-hide-when-stuck],
   .sk-sticky-toolbar [data-search-slot] {
     transition: none !important;
   }
 }
-[data-reduce-motion] .sk-sticky-toolbar,
 [data-reduce-motion] .sk-sticky-toolbar [data-hide-when-stuck],
 [data-reduce-motion] .sk-sticky-toolbar [data-search-slot] {
   transition: none !important;
