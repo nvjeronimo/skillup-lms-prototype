@@ -39,8 +39,11 @@
    deep teal turned into a pale aqua primary with dark text on it. It also takes every nested dark
    region (data-theme="dark" bands, the glance backdrop), so a Studio page never
    mixes in SKO Dark's teal greys. Its colours are Figma's Studio Dark mode (tokens/generated/colors.css); this block keeps the shadow.
-   Contrast on bg/page #16191f: text/default 15:1, muted 10:1, subtle 6.9:1, primary 10:1;
-   on bg/primary #8fd0e0 the on-primary text #0b1d23 reads 10:1. */
+   Surfaces lifted (Nelson, 25 Oct 2026: too little contrast between the ground and everything on it):
+   bg/page #20242d now sits 1.23:1 above the bg/faint ground #0d0f13 (was 1.09:1), border/subtle
+   #3a404d is 1.5:1 on a card, and subtle/muted/strong step up with it.
+   Contrast on bg/page #20242d: text/default 13.6:1, muted 9.3:1, subtle 6.1:1, primary 9.1:1;
+   text/subtle on bg/muted #323844 4.6:1; on bg/primary #8fd0e0 the on-primary text #0b1d23 reads 10:1. */
 html[data-direction="studio"][data-theme="dark"],
 html[data-direction="studio"] [data-theme="dark"] {
   /* Shadows barely read on a dark ground: a hairline of light gives the floating surfaces an edge. */

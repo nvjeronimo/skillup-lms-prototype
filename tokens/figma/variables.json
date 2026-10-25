@@ -342,7 +342,7 @@
             "Red Light": "#ffffff",
             "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#16191f"
+            "Studio Dark": "#20242d"
           }
         },
         {
@@ -357,7 +357,7 @@
             "Red Light": "#f3f5fa",
             "Red Dark": "#122228",
             "Studio Light": "#eceef1",
-            "Studio Dark": "#1b1f26"
+            "Studio Dark": "#272c36"
           }
         },
         {
@@ -387,7 +387,7 @@
             "Red Light": "#e1e7ec",
             "Red Dark": "#25383f",
             "Studio Light": "#e1e7ec",
-            "Studio Dark": "#262b34"
+            "Studio Dark": "#323844"
           }
         },
         {
@@ -552,7 +552,7 @@
             "Red Light": "#d5dce2",
             "Red Dark": "#2c3d45",
             "Studio Light": "#e2e4e9",
-            "Studio Dark": "#272c35"
+            "Studio Dark": "#3a404d"
           }
         },
         {
@@ -672,7 +672,7 @@
             "Red Light": "#b9c4ce",
             "Red Dark": "#25383f",
             "Studio Light": "#b9c4ce",
-            "Studio Dark": "#262b34"
+            "Studio Dark": "#323844"
           }
         },
         {
@@ -702,7 +702,7 @@
             "Red Light": "#b9c4ce",
             "Red Dark": "#2c3d45",
             "Studio Light": "#b9c4ce",
-            "Studio Dark": "#323844"
+            "Studio Dark": "#3d4350"
           }
         },
         {
@@ -717,7 +717,7 @@
             "Red Light": "#13282f",
             "Red Dark": "#16282f",
             "Studio Light": "#13282f",
-            "Studio Dark": "#1b1f26"
+            "Studio Dark": "#272c36"
           }
         },
         {
@@ -2161,7 +2161,7 @@
             "Red Light": "#e1e7ec",
             "Red Dark": "#25383f",
             "Studio Light": "#e1e7ec",
-            "Studio Dark": "#262b34"
+            "Studio Dark": "#323844"
           },
           "aliases": {
             "SKO Light": "bg/muted",
@@ -2186,7 +2186,7 @@
             "Red Light": "#e1e7ec",
             "Red Dark": "#25383f",
             "Studio Light": "#e1e7ec",
-            "Studio Dark": "#262b34"
+            "Studio Dark": "#323844"
           },
           "aliases": {
             "SKO Light": "bg/muted",
