@@ -68,7 +68,8 @@ function StatCard({ stat }: { stat: DashboardStat }) {
  * Then the four figures, each on its own light card (bg/page, Radius/card-inset) with a goal.
  * Four in a row from tablet up (gap 20 / 24); on a phone the row scrolls sideways, the cards
  * 174 wide (as the DS) and snapping, so "Pick up where you left off" stays up.
- * Padding 24 / 20 / 16.
+ * Padding 24 / 20 / 16. Above and below the cards: Spacing/6xl, 48 / 40 / 32 (Nelson, 25 Oct 2026:
+ * 3rem on desktop, or the nearest token).
  */
 export function GlanceCard({ title, stats, className }: GlanceCardProps) {
   return (
@@ -78,7 +79,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       className={cn(
         // Test (Nelson, 23 Oct 2026, prototype only): the backdrop runs the full width of the
         // window on every device; the title and the cards stay on the page's content edges.
-        "relative mx-[calc(50%-50vw)] flex min-w-0 flex-col gap-3 overflow-hidden px-[calc(50vw-50%)] py-5 md:gap-4 md:py-6 lg:py-8",
+        "relative mx-[calc(50%-50vw)] flex min-w-0 flex-col gap-3 overflow-hidden px-[calc(50vw-50%)] py-[var(--sk-space-6xl)] md:gap-4",
         className,
       )}
     >
