@@ -106,7 +106,9 @@ function CertificateAction({ course, href, className }: { course: MyLearningCour
 }
 
 /* Every card has the same height whatever its title (asked by Nelson on 10 Oct 2026): the
-   title keeps the height of two lines and is cut at the second. The full title stays in the
+   title keeps the height of two lines and is cut at the second. Only where cards sit side by
+   side (md and up): on a phone they stack, so a one-line title takes one line (Nelson, 25 Oct
+   2026: the phone cards were too tall). The full title stays in the
    `title` attribute and in the link's name. */
 const TITLE_TWO_LINES = "line-clamp-2";
 
@@ -287,7 +289,7 @@ export function MyLearningCourseCard({
           <CourseTypeBadge value="Course" />
           <CoursePartners course={course} />
         </div>
-        <h3 title={course.title} className={cn("sk-text-title-large-semibold min-h-[2lh] w-full min-w-0 text-sko-text-default", TITLE_TWO_LINES)}>
+        <h3 title={course.title} className={cn("sk-text-title-large-semibold w-full md:min-h-[2lh] min-w-0 text-sko-text-default", TITLE_TWO_LINES)}>
           <CourseTitle course={course} />
         </h3>
         <div className="mt-auto flex flex-wrap items-start gap-2">
