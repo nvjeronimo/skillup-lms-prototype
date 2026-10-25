@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  */
 
 /** The brand skins: SKO, Gold, Red (tokens/colors.css), Studio (tokens/direction-studio.css) and
- *  Harbor (tokens/skin-harbor.css). */
+ *  Harbor (tokens/skin-harbor.css) and Fluent (tokens/skin-fluent.css). */
 export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/primary
   { skin: "teal", label: "SKO", dot: "bg-sko-icon-primary" },
@@ -29,6 +29,8 @@ export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   { skin: "studio", label: "Studio", dot: "bg-sko-bg-primary" },
   // Harbor (Nelson, 25 Oct 2026): a hosting-panel look; its dot is its own primary, black.
   { skin: "harbor", label: "Harbor", dot: "bg-sko-bg-primary" },
+  // Fluent (Nelson, 25 Oct 2026): Fluent 2 web; its dot is its own brand blue.
+  { skin: "fluent", label: "Fluent", dot: "bg-sko-bg-primary" },
 ];
 
 /**
@@ -41,7 +43,7 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
   return (
     <span
       aria-hidden
-      data-skin={skin === "teal" || skin === "harbor" ? skin : undefined}
+      data-skin={skin === "teal" || skin === "harbor" || skin === "fluent" ? skin : undefined}
       data-direction={skin === "studio" ? "studio" : undefined}
       data-theme={skin === "teal" && theme === "dark" ? "dark" : undefined}
       className={cn("size-2.5 shrink-0 rounded-pill", dot)}

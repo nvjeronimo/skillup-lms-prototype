@@ -9,6 +9,7 @@
 @import "../tokens/radius.css";
 @import "../tokens/direction-studio.css";
 @import "../tokens/skin-harbor.css";
+@import "../tokens/skin-fluent.css";
 
 @tailwind base;
 @tailwind components;

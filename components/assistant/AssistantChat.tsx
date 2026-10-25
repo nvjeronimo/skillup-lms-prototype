@@ -210,7 +210,7 @@ function Chat({ pathname }: { pathname: string }) {
   }, []);
   // Harbor on a platform page from desktop up: the assistant is in the top bar (its search pill), so
   // the launcher steps away and the window opens on the right, under the bar's Assistant button.
-  const harborBar = useLmsStore((s) => s.skin === "harbor") && pathname.startsWith("/platform") && !isPhone && wideEnough;
+  const harborBar = useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent") && pathname.startsWith("/platform") && !isPhone && wideEnough;
   const side = isPhone || (journeyProposal && inPlayer) || harborBar ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
   const sheet = open && isPhone;
