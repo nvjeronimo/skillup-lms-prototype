@@ -27,6 +27,9 @@ const LINKS = ["Terms of use", "Privacy", "Cookie settings", "Accessibility", "H
  * Footer 1.3 (Nelson, 23 Oct 2026): the name 18 tall (61 × 18); the Open edX logo moves next to it: name | Open edX |
  * copyright on the left (12 apart, a divider before each), the links alone on the right. Phones:
  * the links, then that same row, centred.
+ * Footer 1.4 (Nelson, 25 Oct 2026): name, copyright, then the Open edX logo after the only divider
+ * (12 of padding, 8 on phones); no divider between the name and the copyright. The DS divider is now
+ * 1px border/subtle too.
  */
 export function PlatformFooter({ className }: { className?: string }) {
   const showToast = useLmsStore((s) => s.showToast);
@@ -35,15 +38,13 @@ export function PlatformFooter({ className }: { className?: string }) {
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-6 border-t border-sko-border-subtle py-6 md:flex-row md:justify-between">
         <div className="flex items-center gap-3 max-md:order-last">
           <SkillUpWordmark className="h-[18px]" />
+          <p className="sk-text-body-small-regular text-sko-text-subtle">© 2026 SkillUp Online</p>
           {/* Open edX's own logo file (Nelson, 23 Oct 2026), 14 tall. It carries its own navy and
               magenta fills, so it reads on light and dark pages alike. */}
           <span className="flex border-l border-sko-border-subtle pl-2 md:pl-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/open-edx-logo.svg" alt="Powered by Open edX" width={48} height={14} className="h-3.5 w-auto" />
           </span>
-          <p className="sk-text-body-small-regular border-l border-sko-border-subtle pl-3 text-sko-text-subtle">
-            © 2026 SkillUp Online
-          </p>
         </div>
         <ul
           aria-label="Legal and help"
