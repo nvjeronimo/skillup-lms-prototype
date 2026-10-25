@@ -8,7 +8,7 @@ import { DEFAULT_COURSE_TAB, isCourseTab, type CourseDetail, type CourseModule, 
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import { cn } from "@/lib/utils";
 
-const BODY = "mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8";
+const BODY = "mx-auto w-full max-w-[1280px] px-layout-band-x pb-8 pt-6 md:pb-12 md:pt-8 lg:pb-20 lg:pt-10";
 /* The sidebar cards: measured from sample data (21 Oct 2026; phone / tablet and up). Seven
    different cards (team, dates, certificate, weekly goal…) not drawn line for line here. */
 const SIDEBAR = [
@@ -139,8 +139,8 @@ export function CourseSkeleton({ course }: { course: CourseDetail }) {
         <Skeleton variant="block" radius="control" className="mb-4 h-11 md:hidden" />
         {course.passed ? <Skeleton variant="block" height={96} radius="none" className="mb-4 md:mb-5 lg:mb-6" /> : null}
         {tab === "course" ? (
-          <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8 lg:gap-10">
-            <div className="flex min-w-0 flex-1 flex-col gap-6">
+          <div className="flex flex-col gap-layout-column md:flex-row md:items-start">
+            <div className="flex min-w-0 flex-1 flex-col gap-layout-stack">
               {course.datesTab.missedAlert ? (
                 <AlertSkeleton title={SHIFT_DATES.title} body={SHIFT_DATES.body} stacked={false} dismissible={false} action />
               ) : null}
@@ -159,7 +159,7 @@ export function CourseSkeleton({ course }: { course: CourseDetail }) {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-layout-stack">
             <Skeleton variant="block" height={160} radius="card" />
             <Skeleton variant="block" height={240} radius="card" />
             <Skeleton variant="block" height={240} radius="card" />

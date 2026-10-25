@@ -466,7 +466,7 @@ export function Sidebar({
           // 3-level (implicit module): topic rows directly under the Course Header.
           if (module.implicit) {
             return (
-              <div key={module.id} className="border-b border-sko-border-subtle py-2">
+              <div key={module.id} className="border-b border-sko-border-subtle py-3">
                 {moduleTopics(module).map(renderTopic)}
               </div>
             );
@@ -482,14 +482,18 @@ export function Sidebar({
                 onToggle={() => onToggleModule?.(module.id)}
               />
               <Collapse open={!moduleCollapsed}>
-                {module.lessons
-                  ? module.lessons.map((lesson) => (
-                      <div key={lesson.id}>
-                        <LessonHeader label={lesson.label} />
-                        {lesson.topics.map(renderTopic)}
-                      </div>
-                    ))
-                  : moduleTopics(module).map(renderTopic)}
+                {/* 8 of air under a module's last topic, before the next module band (Nelson,
+                    25 Oct 2026: more space between sections). */}
+                <div className="pb-2">
+                  {module.lessons
+                    ? module.lessons.map((lesson) => (
+                        <div key={lesson.id}>
+                          <LessonHeader label={lesson.label} />
+                          {lesson.topics.map(renderTopic)}
+                        </div>
+                      ))
+                    : moduleTopics(module).map(renderTopic)}
+                </div>
               </Collapse>
             </div>
           );

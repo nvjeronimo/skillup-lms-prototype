@@ -437,7 +437,7 @@ function CalendarSkeleton() {
   const all = twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents;
   const missed = missedByCourse(all);
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <Skeleton variant="ghost" text="headline-large-bold">What’s coming up.</Skeleton>
       {missed.length ? (
         <div className="flex flex-col gap-3">
@@ -463,8 +463,8 @@ function CalendarSkeleton() {
           </div>
         </div>
       ) : null}
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
-        <div className="flex min-w-0 flex-1 flex-col gap-6">
+      <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
+        <div className="flex min-w-0 flex-1 flex-col gap-layout-stack">
           <div className="flex items-center justify-between gap-3">
             <div className="inline-flex min-w-0 max-w-full gap-0.5 overflow-hidden rounded-track bg-sko-bg-track p-1">
               {calendarFilters.map((f) => (
@@ -496,7 +496,7 @@ function CalendarSkeleton() {
             })}
           </div>
         </div>
-        <div className="flex flex-col gap-6 lg:w-[320px] lg:shrink-0 lg:gap-4">
+        <div className="flex flex-col gap-layout-side lg:w-[320px] lg:shrink-0">
           <div className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
             <Skeleton variant="ghost" text="title-medium-semibold">Next 7 days</Skeleton>
             <div className="grid grid-cols-7 gap-1">
@@ -589,10 +589,10 @@ export function CalendarView() {
   return (
     <PlatformPage
       current="calendar"
-      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<CalendarSkeleton />}
     >
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
           What&rsquo;s <span data-heading-em="" className="text-sko-text-subtle">coming up.</span>
         </h1>
@@ -630,8 +630,8 @@ export function CalendarView() {
           </section>
         ) : null}
 
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
-          <section data-arrive={2} aria-label="Dates" className="flex min-w-0 flex-1 flex-col gap-6">
+        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
+          <section data-arrive={2} aria-label="Dates" className="flex min-w-0 flex-1 flex-col gap-layout-stack">
             {/* The two controls side by side on every breakpoint (Nelson, 23 Oct 2026): the kind filter
                 takes the room and scrolls sideways if it must; the view switch is icons only below md. */}
             {/* Stuck to the top on scroll up (StickyToolbar, Nelson 24 Oct 2026). */}
@@ -671,7 +671,7 @@ export function CalendarView() {
             </div>
           </section>
 
-          <aside data-arrive={3} aria-label="This week and calendar sync" className="flex flex-col gap-6 lg:w-[320px] lg:shrink-0 lg:gap-4">
+          <aside data-arrive={3} aria-label="This week and calendar sync" className="flex flex-col gap-layout-side lg:w-[320px] lg:shrink-0">
             <section aria-labelledby="calendar-week" className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
               <h2 id="calendar-week" className="sk-text-title-medium-semibold text-sko-text-default">
                 Next 7 days

@@ -62,7 +62,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
   );
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-6 py-6">
       <ProgressRail
         states={railStates}
         currentIndex={currentIdx}
@@ -146,7 +146,7 @@ function ScormActivity({
   }
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-6 py-6">
       <ScormContainer
         title={title}
         packageLabel={packageLabel}

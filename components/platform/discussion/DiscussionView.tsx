@@ -130,8 +130,8 @@ export function DiscussionSkeleton() {
   const explicit = discussionThreads.find((t) => t.id === threadId);
   const current = explicit ?? discussionThreads[0];
   return (
-    <div className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+    <div className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
           <div className="flex flex-col gap-1">
             <Skeleton variant="ghost" text="headline-large-bold">Discussion across your courses.</Skeleton>
@@ -141,7 +141,7 @@ export function DiscussionSkeleton() {
           </div>
           <SkeletonPill size="button-md" icon className="md:h-11">New post</SkeletonPill>
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:items-start">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start">
           <div
             className={cn(
               "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[340px] md:shrink-0 lg:w-[380px]",
@@ -250,8 +250,8 @@ export function DiscussionView() {
   const current = explicit ?? threads[0] ?? all[0];
 
   return (
-    <div className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+    <div className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <div data-arrive={0} className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
           <div className="flex flex-col gap-1">
             <h1 className="sk-text-headline-large-bold text-sko-text-default">
@@ -267,7 +267,7 @@ export function DiscussionView() {
           </Button>
         </div>
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-start" data-mock="Discussions come one course at a time (Discussions API); this inbox merges them">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start" data-mock="Discussions come one course at a time (Discussions API); this inbox merges them">
           <section
             data-arrive={1}
             aria-labelledby="discussion-list-title"

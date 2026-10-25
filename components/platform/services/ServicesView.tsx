@@ -83,9 +83,9 @@ function RequestRow({ request }: { request: SupportRequest }) {
  */
 function ServicesSkeleton() {
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <Skeleton variant="ghost" text="headline-large-bold">Here to help.</Skeleton>
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+      <div className="grid gap-layout-column lg:grid-cols-2">
         {["Your mentor", "Support"].map((label) => (
           <div key={label} className={cn(CARD, "flex flex-col gap-4")}>
             <Skeleton variant="ghost" text="label-small-semibold">{label}</Skeleton>
@@ -104,7 +104,7 @@ function ServicesSkeleton() {
         ))}
       </div>
       <Skeleton variant="ghost" text="headline-small-bold">Included with your program</Skeleton>
-      <div className="grid gap-4 md:grid-cols-3 lg:gap-6">
+      <div className="grid gap-layout-grid md:grid-cols-3">
         {includedServices.map((item) => (
           <div key={item.id} className={cn(CARD, "flex flex-col gap-3")}>
             <Skeleton variant="block" width={40} height={40} radius="control" />
@@ -165,16 +165,16 @@ export function ServicesView() {
   return (
     <PlatformPage
       current="services"
-      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<ServicesSkeleton />}
     >
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
           Here <span data-heading-em="" className="text-sko-text-subtle">to help.</span>
         </h1>
 
         {/* 1 · Help now */}
-        <div data-arrive={1} className="grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+        <div data-arrive={1} className="grid items-stretch gap-layout-column lg:grid-cols-2">
           <section aria-labelledby="services-mentor" data-mock={servicesMentor.mock} className={cn(CARD, "flex flex-col gap-4")}>
             <p className={EYEBROW}>Your mentor</p>
             <div className="flex items-start gap-4">
@@ -239,7 +239,7 @@ export function ServicesView() {
         {/* 2 · Included with your program */}
         <section data-arrive={2} aria-labelledby="services-included" className="flex flex-col gap-4">
           <PlatformSectionHeader id="services-included" title="Included" emphasis="with your program" />
-          <ul data-mock={includedMock} className="grid gap-4 md:grid-cols-3 lg:gap-6">
+          <ul data-mock={includedMock} className="grid gap-layout-grid md:grid-cols-3">
             {includedServices.map((item) => {
               const booked = item.id === "cv" ? cvBooked : undefined;
               return (

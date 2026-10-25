@@ -483,9 +483,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       </ArrivalContext.Provider>
 
       {/* Body — floating white card(s) on a secondary-tint surface. Desktop/tablet
-          add the sidebar + a 16px gutter; mobile keeps a smaller gutter so the
+          add the sidebar, 24 from the content (16 until Nelson, 25 Oct 2026: more space
+          between columns); mobile keeps a smaller gutter so the
           tinted body shows around the single content card. */}
-      <div className={cn("flex min-h-0 flex-1", showInlineSidebar ? "gap-4 p-4" : "p-3")}>
+      <div className={cn("flex min-h-0 flex-1", showInlineSidebar ? "gap-6 p-4" : "p-3")}>
         {showInlineSidebar ? (
           <ArrivalContext.Provider value={courseArrival}>
           <JourneySidebar
@@ -621,7 +622,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       <div className="shrink-0">{headerStatus}</div>
                     ) : null}
                   </div>
-                  <div data-arrive={2} className="mt-4">
+                  <div data-arrive={2} className="mt-6">
                     {showTabs ? (
                       <ContentTabs
                         tabs={tabs}
@@ -659,7 +660,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   />
                 </div>
                 {/* A partner lab opens with the divider Reading uses, 12 under the header. */}
-                <div data-arrive={1} className={partnerLab ? "mt-3" : "mt-5"}>
+                <div data-arrive={1} className={partnerLab ? "mt-3" : "mt-6"}>
                   {showTabs ? (
                     <ContentTabs
                       tabs={tabs}

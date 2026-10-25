@@ -204,7 +204,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
   const ready = allDownloaded || sandboxOpened;
 
   return (
-    <div className="flex flex-col gap-5 py-4">
+    <div className="flex flex-col gap-8 py-6">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone="brand" leftIcon={TerminalSquare}>
           Hands-on lab

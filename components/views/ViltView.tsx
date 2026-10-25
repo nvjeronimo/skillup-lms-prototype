@@ -32,7 +32,7 @@ export function ViltView({ topicId }: { topicId: string }) {
   const current: ViltStage = stage ?? session.stage;
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-6 py-6">
       <StageStepper current={current} />
 
       {current === "pre-live" ? (

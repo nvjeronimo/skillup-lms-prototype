@@ -31,6 +31,18 @@ const config: Config = {
         surface: "var(--sk-radius-surface)",
         pill: "var(--sk-radius-pill)",
       },
+      /* Layout rhythm, the space between sections, columns and cards (tokens/layout.css,
+         Nelson 25 Oct 2026): gap-layout-section, px-layout-page-x … */
+      spacing: {
+        "layout-page-x": "var(--sk-layout-page-x)",
+        "layout-page-top": "var(--sk-layout-page-top)",
+        "layout-band-x": "var(--sk-layout-band-x)",
+        "layout-section": "var(--sk-layout-section-gap)",
+        "layout-column": "var(--sk-layout-column-gap)",
+        "layout-stack": "var(--sk-layout-stack-gap)",
+        "layout-side": "var(--sk-layout-side-gap)",
+        "layout-grid": "var(--sk-layout-grid-gap)",
+      },
       boxShadow: {
         "sk-card": "var(--sk-shadow-card)",
         "sk-elevation-3": "var(--sk-shadow-elevation-3)",

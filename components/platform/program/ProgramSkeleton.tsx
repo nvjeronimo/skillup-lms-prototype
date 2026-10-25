@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 /* ProgramDetailView's body column, with its paddings. */
 const BODY =
-  "mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 pb-8 pt-6 md:flex-row md:items-start md:gap-8 md:px-6 md:pb-12 md:pt-6 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-8";
+  "mx-auto flex w-full max-w-[1280px] flex-col gap-layout-column px-layout-band-x pb-8 pt-8 md:flex-row md:items-start md:pb-12 md:pt-8 lg:pb-20 lg:pt-10";
 const CARD = "rounded-card border border-sko-border-subtle bg-sko-bg-page";
 
 /** The section intro of a tab: the headline-small title and its lead, as ghost lines. */
@@ -76,7 +76,7 @@ export function ProgramSkeleton({ program }: { program: Program }) {
         <TabBarSkeleton tabs={[74, 102, 51, 59]} rule={false} />
       </div>
       <div className={BODY}>
-        <div className="flex min-w-0 flex-1 flex-col gap-6">
+        <div className="flex min-w-0 flex-1 flex-col gap-layout-stack">
           <IntroSkeleton title={intro.title} lead={"lead" in intro ? (intro.lead as string) : undefined} />
           {tab === "courses" ? (
             <div className="flex flex-col gap-4">

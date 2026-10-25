@@ -54,7 +54,7 @@ export function ProgramHeader({ program }: { program: Program }) {
       data-skin={mounted && skin !== "teal" ? skin : undefined}
       className="relative overflow-hidden bg-sko-bg-subtle"
     >
-      <div className="relative mx-auto w-full max-w-[1280px] px-4 pb-6 pt-4 md:px-6 md:pb-8 lg:px-10 lg:pb-10 lg:pt-5">
+      <div className="relative mx-auto w-full max-w-[1280px] px-layout-band-x pb-6 pt-4 md:pb-8 lg:pb-10 lg:pt-5">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-[103px] -top-[100px] size-[273px] rounded-pill opacity-[0.35] md:-right-[73px] md:-top-[110px] lg:-right-[100px] lg:-top-[100px] lg:size-[360px]"

@@ -22,8 +22,9 @@ const SHOW_MOCK_KEY = "sk-platform-show-mock";
  * Shell of every platform page: the page ground is bg/faint, the light
  * `LMS / Platform / Topbar` on top, then the page's own <main>. The LMS sidebar
  * is in development and hidden on these pages.
- * The page sets its own padding: Dashboard and My Learning use 40 / 32 / 24
- * (desktop / tablet / mobile); Program Detail is full-bleed under the bar.
+ * The page sets its own padding from the layout rhythm (tokens/layout.css, Nelson 25 Oct 2026):
+ * Dashboard, My Learning and the other section pages use page-x / page-top; Program and Course
+ * Detail are full-bleed under the bar and use band-x.
  *
  * Under the page, in the footer, sits the test-build note with the "Show which" switch: it sets
  * `data-show-mock` here, and every block tagged `data-mock="<what has no API>"`

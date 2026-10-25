@@ -33,14 +33,14 @@ import { ViewToggle } from "./ViewToggle";
 
 const ID_BASE = "my-learning";
 
-/* Grid: 3 columns / 24 on desktop, 2 columns / 20 on tablet, 1 column / 16 on mobile. */
+/* Grid: 3 columns on desktop, 2 on tablet, 1 on mobile, grid-gap apart (tokens/layout.css). */
 /* The status filter's track (DS Button group); its skeleton reuses it. */
 export const MY_LEARNING_FILTER_TRACK =
   "flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden";
 export const MY_LEARNING_GRID =
-  "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
-/* List: one column, 20 / 24 apart; from a tablet up since 23 Oct 2026 (Nelson). */
-const LIST = "hidden flex-col gap-5 md:flex lg:gap-6";
+  "grid grid-cols-1 gap-layout-grid md:grid-cols-2 lg:grid-cols-3";
+/* List: one column, grid-gap apart; from a tablet up since 23 Oct 2026 (Nelson). */
+const LIST = "hidden flex-col gap-layout-grid md:flex";
 
 /* The row is the target of its card's title link: it shows it on hover, as the card did. */
 const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
@@ -51,7 +51,7 @@ const matches = (title: string, query: string) => title.toLowerCase().includes(q
 
 /**
  * The Collection of My Learning (6394:16636 and siblings): Toolbar + the cards of the
- * selected tab, 24 / 20 / 16 apart (desktop / tablet / mobile).
+ * selected tab, stack-gap apart (tokens/layout.css, Nelson 25 Oct 2026).
  * Toolbar (Nelson, 13 Oct 2026): the Tabs alone on the first row, on a 1px border/subtle rule
  * across the width, 8 above. Second row: the status filter on the left, Search (320 on
  * desktop, 240 on tablet) and the Grid / List toggle on the right. Mobile: the tabs, the
@@ -174,7 +174,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   );
 
   return (
-    <section aria-label="My courses and programs" className="flex flex-col gap-6">
+    <section aria-label="My courses and programs" className="flex flex-col gap-layout-stack">
       {/* The tabs and the filter row stay at hand: stuck to the top on scroll up (StickyToolbar). */}
       <StickyToolbar bleed className="flex flex-col gap-6">
         {/* Row 1: the tabs on their 1px border/subtle rule, across the whole width.

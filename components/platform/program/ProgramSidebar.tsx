@@ -7,7 +7,7 @@ import { CardShell } from "./parts";
 
 /**
  * The right column of the Program page, three `LMS / Course Detail / Sidebar card` instances
- * 16 apart, the same on Certificates, FAQs and About (the Courses tab has none):
+ * side-gap apart (tokens/layout.css), the same on Certificates, FAQs and About (the Courses tab has none):
  * - Program dates (Type=Dates, 6443:18749): rows of a 44×48 date tile (bg/subtle, radius 8),
  *   title, date line and the relative badge (Badge Outline / Gray), split by 1px rules;
  * - What's included (Card shell, 6445:24736): a bulleted list, body-medium/Regular;
@@ -19,7 +19,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
   return (
     <aside
       aria-label="Program details"
-      className={cn("flex flex-col gap-6 md:gap-4", className)}
+      className={cn("flex flex-col gap-layout-side", className)}
     >
       <CardShell label="Program dates" gap="lg" mock="Program dates have no API; the relative labels are computed">
         <ul className="flex flex-col">

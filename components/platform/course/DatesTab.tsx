@@ -112,14 +112,14 @@ function DateCard({ items, href, label }: { items: CourseDate[]; href: (title: s
  * Dates tab (desktop 6406:42688, tablet 6406:43322, mobile 6406:43877): heading, the
  * missed-deadline alert with "Shift due dates", then the timeline of `course_date_blocks[]`
  * — Past, the Today marker, Upcoming — and the time-zone line. One column on every
- * breakpoint, 24 / 20 / 16 apart; the timeline's own blocks are 12 apart.
+ * breakpoint, stack-gap apart (tokens/layout.css); the timeline's own blocks are 12 apart.
  */
 export function DatesTab({ course }: { course: CourseDetail }) {
   const showToast = useLmsStore((s) => s.showToast);
   const tab = course.datesTab;
   const links = React.useMemo(() => topicLinks(course.slug, course.progress.href), [course.slug, course.progress.href]);
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-layout-stack">
       <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
 
       {/* Only for a learner who is behind the suggested schedule. */}

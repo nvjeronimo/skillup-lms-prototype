@@ -204,7 +204,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
 
   if (phase !== "quiz") {
     return (
-      <div className="py-4">
+      <div className="py-6">
         <QuizEntryHeader
           topic={topic}
           config={config}
@@ -409,7 +409,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     const bucketHints = questions.find((q) => q.hints?.length)?.hints ?? [];
 
     return (
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex flex-col gap-6 py-6">
         {/* The problem's own header, printed once for the whole set. The points
             line carries the score after submitting. */}
         <div className="flex flex-col gap-1">
@@ -502,7 +502,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   /* ---- Mode A-1: one problem per question, one Submit each ---- */
   if (isModeA) {
     return (
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex flex-col gap-6 py-6">
         {questions.map((_, i) => (
           <QuizCard key={i} {...cardPropsFor(i)} />
         ))}
@@ -518,7 +518,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   /* ---- Mode B: a stepper, nav at the top, results in place at the end ---- */
   const stepProps = cardPropsFor(index);
   return (
-    <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-4 py-4">
+    <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-6 py-6">
       {/* DS: `Show progress` nests the Stepper Bar (Mode=With Back only) inside
           the card, after the Platform prompt and before the Question. */}
       {/* The question body is keyed on the step inside the card, so each
@@ -716,7 +716,7 @@ function QuizSummary({
     .filter((i) => i >= 0);
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-6 py-6">
       <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -810,7 +810,7 @@ function GradedSubmission({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
   const assignment = topic ? getAssignmentBrief(topic) : null;
   return (
-    <div className="flex flex-col gap-5 py-4">
+    <div className="flex flex-col gap-8 py-6">
       <section className="rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <p className="sk-text-label-small-medium mb-2 text-sko-text-primary">Assignment brief</p>
         <p className="sk-text-body-large-regular text-sko-text-muted">{assignment?.brief}</p>

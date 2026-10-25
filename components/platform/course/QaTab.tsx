@@ -199,7 +199,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
   );
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-layout-stack">
       <div className={cn("flex flex-col gap-1", explicit && "max-md:sr-only")}>
         <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
         {/* Nelson, 21 Oct 2026: Q&A is private with the mentor; Discussion is the cohort's forum. */}

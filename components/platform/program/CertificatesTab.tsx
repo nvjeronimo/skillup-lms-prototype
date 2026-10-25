@@ -138,7 +138,7 @@ export function CertificateCard({
 export function CertificatesTab({ program }: { program: Program }) {
   const programCertificate = getProgramCertificate(program.slug);
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-layout-stack">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
       {programCertificate ? (
         <>
@@ -158,7 +158,7 @@ export function CertificatesTab({ program }: { program: Program }) {
       {program.certificates.length > 0 ? (
         <ul
           data-mock="Certificate artwork, IDs and requirements are not readable yet"
-          className="flex flex-wrap items-start gap-6"
+          className="flex flex-wrap items-start gap-layout-grid"
         >
           {program.certificates.map((certificate) => (
             <li key={certificate.courseId} className="flex w-full flex-col gap-2 md:w-[320px]">

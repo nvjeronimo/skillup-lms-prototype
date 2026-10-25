@@ -78,8 +78,8 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
 
   const panels: Record<CourseTabId, React.ReactNode> = {
     course: (
-      <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-8 lg:gap-10">
-        <div data-arrive={2} className="flex min-w-0 flex-1 flex-col gap-6">
+      <div className="flex flex-col gap-layout-column md:flex-row md:items-start">
+        <div data-arrive={2} className="flex min-w-0 flex-1 flex-col gap-layout-stack">
           {/* Open edX shows Shift due dates on the course outline as on the Dates tab. */}
           {course.datesTab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
           <CourseAlert tone="brand" layout="stacked" title={course.update.title} body={course.update.body} dismissible />
@@ -103,7 +103,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
         <div data-arrive={0}>
           <CourseHeader course={course} />
         </div>
-        <div data-arrive={1} className="mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8">
+        <div data-arrive={1} className="mx-auto w-full max-w-[1280px] px-layout-band-x pb-8 pt-6 md:pb-12 md:pt-8 lg:pb-20 lg:pt-10">
           <div data-mock="Not designed yet: what this page shows under the header for a course hosted by a partner">
             <InlineAlert tone="info" title={course.hosted.dialog.title} description={course.hosted.dialog.body} />
           </div>
@@ -122,7 +122,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
 
       <div data-arrive={1} className={cn("border-b border-sko-border-subtle bg-sko-bg-page", openThread && "max-md:hidden")}>
         {/* Mobile: 12 above the 32px tabs (a 44px row). With the larger-targets setting the tabs are 44 themselves. */}
-        <div className="mx-auto flex w-full max-w-[1280px] items-end pl-4 pt-3 max-md:[[data-large-targets]_&]:pt-0 md:gap-5 md:px-6 md:pt-0 lg:gap-6 lg:px-10">
+        <div className="mx-auto flex w-full max-w-[1280px] items-end pl-layout-band-x pt-3 max-md:[[data-large-targets]_&]:pt-0 md:gap-5 md:px-layout-band-x md:pt-0 lg:gap-6">
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up. Their own rule sits on the row's. */}
           <PlatformTabs
             tabs={COURSE_TABS}
@@ -137,7 +137,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-[1280px] px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6 lg:px-10 lg:pb-20 lg:pt-8">
+      <div className="mx-auto w-full max-w-[1280px] px-layout-band-x pb-8 pt-6 md:pb-12 md:pt-8 lg:pb-20 lg:pt-10">
         {/* Mobile: the search sits above every tab, not only Course (asked by Nelson on 8 Oct;
             the Figma screens draw it on the Course tab only). Not on an open Q&A conversation. */}
         {openThread ? null : (
