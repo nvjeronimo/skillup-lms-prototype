@@ -18,10 +18,10 @@ export interface PlatformTabsProps<T extends string> {
   value: T;
   onChange: (id: T) => void;
   /**
-   * `md`: DS Size=md on every breakpoint (title-large/Semibold, 20 on desktop, 18 on tablet, badge md).
-   * `responsive`: Size=sm on mobile (body-large/Semibold 16, badge sm, the target grown to 44
+   * `md`: DS Size=md on every breakpoint (headline-small/Semibold 24, badge md).
+   * `responsive`: Size=sm on mobile (title-large/Semibold 18, badge sm, the target grown to 44
    * upwards) and Size=md from tablet up.
-   * Platform-page tabs went up two steps of the type ramp (Nelson, 25 Oct 2026): md was
+   * Platform-page tabs went up three steps of the type ramp (Nelson, 25 Oct 2026): md was
    * body-large 16, the mobile size body-medium 14.
    * `sm`: Size=sm on every breakpoint, for a tab row inside a panel.
    */
@@ -122,7 +122,7 @@ export function PlatformTabs<T extends string>({
                 ? "sk-text-body-medium-semibold h-8 pb-3 before:absolute before:inset-x-0 before:-top-3 before:bottom-0 before:content-[''] [[data-large-targets]_&]:before:-top-3"
                 : responsive
                 ? "pb-3 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-top-3 max-md:before:bottom-0 max-md:before:content-[''] md:h-auto md:py-3"
-                : "sk-text-title-large-semibold py-3",
+                : "sk-text-headline-small-semibold py-3",
               // The scrolling row clips an outline drawn outside the tab.
               ownRule && "focus-visible:-outline-offset-2",
               selected ? "text-sko-text-primary" : "text-sko-text-subtle hover:text-sko-text-default",
@@ -131,8 +131,8 @@ export function PlatformTabs<T extends string>({
             {/* The DS text styles are not responsive, so `responsive` renders a label and a badge per size. */}
             {responsive ? (
               <>
-                <span className="sk-text-body-large-semibold md:hidden">{tab.label}</span>
-                <span className="sk-text-title-large-semibold hidden md:inline">{tab.label}</span>
+                <span className="sk-text-title-large-semibold md:hidden">{tab.label}</span>
+                <span className="sk-text-headline-small-semibold hidden md:inline">{tab.label}</span>
               </>
             ) : (
               tab.label
