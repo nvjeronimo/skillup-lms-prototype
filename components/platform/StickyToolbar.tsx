@@ -57,7 +57,9 @@ export function StickyToolbar({
 
   return (
     <>
-      <div ref={sentinelRef} aria-hidden className="h-0" />
+      {/* The marker's own flex gap is cancelled: both rows sit in a Layout/stack-gap column, and an
+          empty item there added 32 above the tabs (Nelson, 25 Oct 2026). */}
+      <div ref={sentinelRef} aria-hidden className="-mb-layout-stack h-0" />
       <div
         ref={barRef}
         data-sticky-toolbar=""

@@ -9,7 +9,7 @@ import { earnedCertificates } from "@/lib/platform/certificates";
  */
 export function CertificatesSkeleton() {
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+    <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <div className="flex flex-col gap-2">
         <Skeleton variant="ghost" text="headline-large-bold">Certificates</Skeleton>
         <Skeleton variant="ghost" text="body-large-regular">

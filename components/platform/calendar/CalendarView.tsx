@@ -437,7 +437,7 @@ function CalendarSkeleton() {
   const all = twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents;
   const missed = missedByCourse(all);
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+    <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <Skeleton variant="ghost" text="headline-large-bold">What’s coming up.</Skeleton>
       {missed.length ? (
         <div className="flex flex-col gap-3">
@@ -592,7 +592,7 @@ export function CalendarView() {
       className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<CalendarSkeleton />}
     >
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
           What&rsquo;s <span data-heading-em="" className="text-sko-text-subtle">coming up.</span>
         </h1>

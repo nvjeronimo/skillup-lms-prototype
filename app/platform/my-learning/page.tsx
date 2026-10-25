@@ -31,7 +31,7 @@ export default function MyLearningPage() {
       className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<MyLearningSkeleton courses={myLearningCourseRows.length} programs={myLearningPrograms.length} />}
     >
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <MyLearningHeader />
         <Suspense fallback={null}>
           <MyLearningCollection courseRows={myLearningCourseRows} />

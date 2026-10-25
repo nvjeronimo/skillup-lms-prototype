@@ -131,7 +131,7 @@ export function DiscussionSkeleton() {
   const current = explicit ?? discussionThreads[0];
   return (
     <div className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
           <div className="flex flex-col gap-1">
             <Skeleton variant="ghost" text="headline-large-bold">Discussion across your courses.</Skeleton>
@@ -251,7 +251,7 @@ export function DiscussionView() {
 
   return (
     <div className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <div data-arrive={0} className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
           <div className="flex flex-col gap-1">
             <h1 className="sk-text-headline-large-bold text-sko-text-default">

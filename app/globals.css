@@ -664,6 +664,13 @@ button {
 /* The sticky tabs and filters of My Learning and Calendar (StickyToolbar, Nelson 24 Oct 2026): always
    fixed once scrolled past; what is marked data-hide-when-stuck (the search) steps out while stuck. On a
    phone the whole search slot goes, so the bar keeps only the tabs and the filter. */
+/* A platform page's title sits closer to what it heads (Nelson, 25 Oct 2026): the first gap of a
+   page stack is Layout/stack-gap (32), the gaps between the sections after it stay
+   Layout/section-gap (48 / 40 / 32). */
+.sk-page-stack > :first-child {
+  margin-bottom: calc(var(--sk-layout-stack-gap) - var(--sk-layout-section-gap));
+}
+
 /* Motion (Nelson, 25 Oct 2026: "entra e sai de forma muito brusca"; second pass the same day: "melhora a
    animação"). The ground (bg/faint) and its border/subtle rule are a ::before layer under the content;
    its opacity is --sk-stuck, which StickyToolbar ramps 0 to 1 over the first 24 px scrolled past the
