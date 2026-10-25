@@ -87,7 +87,11 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const params = useSearchParams();
   const showToast = useLmsStore((s) => s.showToast);
   const [query, setQuery] = React.useState("");
-  const [status, setStatus] = React.useState<MyLearningStatusFilter>("all");
+  // A link may open the list on a status (the Dashboard glance figures: ?status=in-progress|completed).
+  const linkedStatus = params.get("status");
+  const [status, setStatus] = React.useState<MyLearningStatusFilter>(
+    myLearningStatusFilters.some((f) => f.id === linkedStatus) ? (linkedStatus as MyLearningStatusFilter) : "all",
+  );
   // The rows opened by the learner, by course id: the grid and the list show the same ones.
   const [openRows, setOpenRows] = React.useState<Set<string>>(() => new Set());
   const toggleRow = (id: string) =>

@@ -30,6 +30,8 @@ export interface DashboardStat {
   /** The goal beside the figure, only when Open edX serves the fact behind it. Warning when it
    *  asks for action (a deadline is near), Gray otherwise. */
   goal?: { label: string; spoken: string; color?: "warning" | "gray" };
+  /** Where the card goes (Nelson, 25 Oct 2026: the figures link to the list they count). */
+  href: string;
 }
 
 /**
@@ -67,6 +69,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       detail: `of ${enrolled} enrolled`,
       tone: "brand",
       goal: { label: `${dueThisWeek} due this week`, spoken: `${dueThisWeek} deadlines in the next seven days`, color: "warning" },
+      href: "/platform/my-learning?tab=courses&status=in-progress",
     },
     {
       label: "Programs",
@@ -78,6 +81,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
         label: `${programsNotStarted} not started`,
         spoken: `${programsNotStarted} of your ${PROGRAMS.length} programs not started yet`,
       },
+      href: "/platform/my-learning?tab=programs&status=in-progress",
     },
     {
       label: "Completed",
@@ -85,6 +89,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       detail: `of ${enrolled} enrolled`,
       tone: "success",
       goal: { label: `${pct(coursesCompleted, enrolled)} completed`, spoken: `${pct(coursesCompleted, enrolled)} of your ${enrolled} enrolled courses complete` },
+      href: "/platform/my-learning?tab=courses&status=completed",
     },
     // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
     {
@@ -92,6 +97,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       value: String(earnedCertificates.length),
       detail: "ready to download",
       tone: "success",
+      href: "/platform/certificates",
     },
   ],
 };
