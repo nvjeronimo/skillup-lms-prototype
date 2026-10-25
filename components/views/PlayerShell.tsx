@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import { courseProgressPct } from "@/lib/courses/outline";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
+import { navigateWithTransition } from "@/lib/motion/pageTransition";
 import { SidebarProposal } from "@/components/organisms/SidebarProposal";
 import { useJourneyProposal } from "@/lib/journeyProposal";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
@@ -426,7 +427,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 
   function navigateTopic(id: string) {
     setCurrentTopic(id);
-    router.push(`/course/${courseSlug}/topic/${id}`);
+    // The body cross-fades to the next topic while the shell holds still (lib/motion/pageTransition).
+    navigateWithTransition(() => router.push(`/course/${courseSlug}/topic/${id}`));
   }
 
   // Note editor derived content
@@ -443,6 +445,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
       <ArrivalContext.Provider value={courseArrival}>
       <CoursePlayerTopbar
+        // Chrome that holds still through a page transition (globals.css).
+        className="sk-vt-player-topbar"
         size={topbarSize}
         showNotifications
         notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
@@ -480,6 +484,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         {showInlineSidebar ? (
           <ArrivalContext.Provider value={courseArrival}>
           <JourneySidebar
+            className="sk-vt-player-sidebar"
             course={activeCourse}
             currentTopicId={topicId}
             variant={sidebarVariant}
@@ -668,6 +673,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           </div>
 
           <TopicFooterNav
+            className="sk-vt-player-footer"
             courseSlug={courseSlug}
             position={position}
             total={total}

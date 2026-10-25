@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
+import { PageTransitions } from "@/components/views/PageTransitions";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
 const FRAME_WIDTH: Record<DeviceMode, number | null> = {
@@ -104,6 +105,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
       <>
         {children}
         <AssistantChat />
+        <PageTransitions />
       </>
     );
 
@@ -115,6 +117,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
       >
         {children}
         <AssistantChat />
+        <PageTransitions />
       </div>
     </div>
   );
