@@ -102,6 +102,7 @@ function SectionLinks({
               <Link
                 href={s.href}
                 aria-current={isCurrent ? "page" : undefined}
+                data-topbar-tab={tabs || undefined}
                 onClick={onPick}
                 className={cn(itemLook(isCurrent), itemClassName)}
               >
