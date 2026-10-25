@@ -164,14 +164,12 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
 
   const listView = view === "list";
   // Every card has the height of the tallest one, in the grid and in the list (course rows; a title can take two lines).
-  const gridRef = useEqualHeights<HTMLDivElement>("[data-card-grid]", [
-    tab,
-    status,
-    needle,
-    view,
-    courses.length,
-    programs.length,
-  ]);
+  // Not on a phone (below md, one column): there the cards keep their own height (25 Oct 2026).
+  const gridRef = useEqualHeights<HTMLDivElement>(
+    "[data-card-grid]",
+    [tab, status, needle, view, courses.length, programs.length],
+    { minWidth: 768 },
+  );
 
   return (
     <section aria-label="My courses and programs" className="flex flex-col gap-6">
