@@ -21,7 +21,7 @@ const TOOL_ICON: Record<CourseToolId, LucideIcon> = {
 };
 
 /**
- * The right column of the Course tab (Sidebar, 6406:39276): seven cards 16 apart, 320 wide on
+ * The right column of the Course tab (Sidebar, 6406:39276): seven cards side-gap apart (tokens/layout.css), 320 wide on
  * desktop and tablet; on mobile they follow the modules at full width, in the same order.
  * - Mentor (`Sidebar-Card` Kind=Mentor Q&A): pinned to the dark Semantics mode in the DS, so
  *   the card carries `data-theme="dark"`; bg/primary-soft, the title, a line and a Secondary
@@ -61,7 +61,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
       </section>
 
       <CardShell label={course.team.label} gap="lg" mock="No instructor or author field on the Course Home APIs">
-        <ul className="flex flex-col gap-6 md:gap-4">
+        <ul className="flex flex-col gap-layout-side">
           {course.team.people.map((person) => (
             <li key={person.name} className="flex items-center gap-2">
               <Avatar name={person.name} size="md" />

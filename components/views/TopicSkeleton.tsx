@@ -59,7 +59,7 @@ export function TopicSkeleton({
         </div>
         <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp], CONTENT_MEASURE)}>
           <Skeleton variant="ghost" text="headline-small-semibold">{title}</Skeleton>
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="mt-6 flex flex-col gap-6">
             {tabs ? <TabsSkeleton bp={bp} /> : null}
             <Lines count={4} />
             <Lines count={3} />
@@ -80,7 +80,7 @@ export function TopicSkeleton({
         <Skeleton variant="ghost" text="headline-small-semibold">{title}</Skeleton>
         {description ? <Skeleton variant="ghost" text="body-large-medium">{description}</Skeleton> : null}
       </div>
-      <div className="mt-5 flex flex-col gap-4">
+      <div className="mt-6 flex flex-col gap-8">
         {tabs ? <TabsSkeleton bp={bp} /> : null}
         <Lines count={5} />
         <Lines count={4} />

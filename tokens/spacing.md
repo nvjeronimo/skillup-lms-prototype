@@ -52,6 +52,14 @@ All four are mode-aware.
 | `Container/max-width` | 1280 / 768 / 480 | `max-w-[480px] min-[769px]:max-w-[768px] min-[1025px]:max-w-[1280px]` | content column width |
 | `Container/content-padding` | 24 / 20 / 16 | `p-4 min-[769px]:p-5 min-[1025px]:p-6` (in the player: `CONTENT_PAD[bp]`, PlayerShell) | the padding of a topic's content section (Nelson, 15 Oct 2026); aliases `Spacing/3xl` in every mode |
 
+## Layout rhythm (prototype, 25 Oct 2026)
+
+The space between sections, columns and cards of the platform pages comes from layout
+variables in `tokens/layout.css` (`--sk-layout-page-x`, `-page-top`, `-band-x`,
+`-section-gap`, `-column-gap`, `-stack-gap`, `-side-gap`, `-grid-gap`; Tailwind
+`gap-layout-section`, `px-layout-page-x` …). They are not DS tokens yet; the table of values
+is in that file. Component padding stays on the Spacing steps above.
+
 ## Component anchors
 
 - Sidebar widths: Expanded `280px`, Collapsed `72px`, Mobile drawer `320px`.

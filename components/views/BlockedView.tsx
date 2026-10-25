@@ -20,7 +20,7 @@ export function BlockedView({ topicId }: { topicId: string }) {
   const info = getBlockedInfo(topic);
 
   return (
-    <div className="flex flex-col gap-5 py-4">
+    <div className="flex flex-col gap-8 py-6">
       <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="warning" leftIcon={Lock}>

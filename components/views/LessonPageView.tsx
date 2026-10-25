@@ -29,7 +29,7 @@ export function LessonPageView({ topicId }: { topicId: string }) {
   ].filter(Boolean) as string[];
 
   return (
-    <div className="flex flex-col gap-5 py-4">
+    <div className="flex flex-col gap-8 py-6">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone="brand" leftIcon={Layers}>
           Lesson page

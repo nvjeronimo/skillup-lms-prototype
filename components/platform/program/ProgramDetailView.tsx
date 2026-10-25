@@ -23,12 +23,12 @@ import { SectionIntro } from "./parts";
  * Program page (Figma handoff frame 6728:15050: Courses, Certificates, FAQs and About on
  * desktop 1280, tablet 960 and mobile 375). Full-bleed under the platform top bar: the dark
  * Program header across the page, then the tab bar (bg/page, on a 1px border/subtle rule)
- * and the tab content inside the 1200 content width. Side padding 40 / 24 / 16
- * (desktop / tablet / mobile), as the Course Detail shell.
- * Tab content: 32 / 24 / 16 above and 80 / 48 / 32 below.
+ * and the tab content inside the 1200 content width. Side padding band-x (tokens/layout.css),
+ * as the Course Detail shell.
+ * Tab content: 40 / 32 / 32 above and 80 / 48 / 32 below.
  * - Courses: one full-width column, no sidebar (the course rows need the width).
- * - Certificates, FAQs, About: main column + the 320 sidebar on the right, 40 apart on
- *   desktop and 32 on tablet; on mobile the three sidebar cards follow the content, 16 apart.
+ * - Certificates, FAQs, About: main column + the 320 sidebar on the right, column-gap apart;
+ *   on mobile the three sidebar cards follow the content (tokens/layout.css).
  *
  * The tab lives in the URL (`?tab=courses|certificates|faqs|about`, Courses when absent or
  * unknown). The selection is kept locally as well so the panel swaps at once; the URL
@@ -36,8 +36,8 @@ import { SectionIntro } from "./parts";
  * All four panels stay mounted (the inactive ones `hidden`) so open rows survive a tab change.
  *
  */
-/* A tab's main column: its blocks are 24 / 20 / 16 apart (desktop / tablet / mobile). */
-const PANEL = "flex flex-col gap-6";
+/* A tab's main column: its blocks are stack-gap apart (tokens/layout.css, Nelson 25 Oct 2026). */
+const PANEL = "flex flex-col gap-layout-stack";
 
 export function ProgramDetailView({ program }: { program: Program }) {
   const router = useRouter();
@@ -91,7 +91,7 @@ export function ProgramDetailView({ program }: { program: Program }) {
       <div data-arrive={1} className="bg-sko-bg-page shadow-[inset_0_-1px_0_0_var(--color-border-subtle)] forced-colors:border-b forced-colors:border-sko-border-subtle">
         {/* Mobile: 12 above the 32px tabs (44 in all). The tabs already grow their target to 44
             upwards, so the "larger targets" min-height is switched off here: it would make the bar 56. */}
-        <div className="mx-auto w-full max-w-[1280px] pl-4 pt-3 max-md:[&_[role=tab]]:min-h-0 md:px-6 md:pt-0 lg:px-10">
+        <div className="mx-auto w-full max-w-[1280px] pl-layout-band-x pt-3 max-md:[&_[role=tab]]:min-h-0 md:px-layout-band-x md:pt-0">
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up, on their own rule. All four panels stay mounted. */}
           <PlatformTabs
             tabs={PROGRAM_TABS}
@@ -104,7 +104,7 @@ export function ProgramDetailView({ program }: { program: Program }) {
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 pb-8 pt-6 md:flex-row md:items-start md:gap-8 md:px-6 md:pb-12 md:pt-6 lg:gap-10 lg:px-10 lg:pb-20 lg:pt-8">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-layout-column px-layout-band-x pb-8 pt-8 md:flex-row md:items-start md:pb-12 md:pt-8 lg:pb-20 lg:pt-10">
         <div data-arrive={2} className="min-w-0 flex-1">
           {PROGRAM_TABS.map((tab) => (
             <div

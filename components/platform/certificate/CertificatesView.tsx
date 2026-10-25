@@ -27,10 +27,10 @@ type CertificatesTab = "in-progress" | "earned";
 
 const ID_BASE = "certificates";
 
-/* Grid: 3 columns / 24 on desktop, 2 columns / 20 on tablet, 1 column / 16 on mobile (as My Learning). */
-export const CERTIFICATES_GRID = "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6";
-/* List: one column, 24 apart. Desktop only. */
-const LIST = "hidden flex-col gap-6 lg:flex";
+/* Grid: 3 columns on desktop, 2 on tablet, 1 on mobile, grid-gap apart (as My Learning). */
+export const CERTIFICATES_GRID = "grid grid-cols-1 gap-layout-grid md:grid-cols-2 lg:grid-cols-3";
+/* List: one column, grid-gap apart. Desktop only. */
+const LIST = "hidden flex-col gap-layout-grid lg:flex";
 
 const kindLabel = (kind: "course" | "program") => (kind === "program" ? "Program certificate" : "Course certificate");
 const matches = (title: string, needle: string) => title.toLowerCase().includes(needle);
@@ -62,7 +62,7 @@ function Group({ id, title, count, children }: { id: string; title: string; coun
 /** The program certificates of a tab: one large card each (the Program page's), stacked. */
 function ProgramBlock({ ids }: { ids: string[] }) {
   return (
-    <ul className="flex flex-col gap-6">
+    <ul className="flex flex-col gap-layout-grid">
       {ids.map((id) => {
         const state = getProgramCertificate(programSlug(id));
         return state ? (
@@ -166,10 +166,10 @@ export function CertificatesView() {
   return (
     <PlatformPage
       current={null}
-      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<CertificatesSkeleton />}
     >
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 lg:gap-10">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <div data-arrive={0} className="flex flex-col gap-2">
           <h1 className="sk-text-headline-large-bold text-sko-text-default">Certificates</h1>
           <p className="sk-text-body-large-regular text-sko-text-subtle">
@@ -177,7 +177,7 @@ export function CertificatesView() {
           </p>
         </div>
 
-        <section aria-label="My certificates" className="flex flex-col gap-6">
+        <section aria-label="My certificates" className="flex flex-col gap-layout-stack">
           {/* The tabs on their 1px border/subtle rule, across the whole width (as My Learning). */}
           <div data-arrive={1} className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0">
             <PlatformTabs
@@ -218,7 +218,7 @@ export function CertificatesView() {
                   description={needle ? "Check the spelling or search for another title." : undefined}
                 />
               ) : tab === "earned" ? (
-                <div className="flex flex-col gap-8 lg:gap-10">
+                <div className="flex flex-col gap-layout-section">
                   {earnedPrograms.length ? (
                     <Group id="certificates-earned-programs" title="Program certificates" count={earnedPrograms.length}>
                       <ProgramBlock ids={earnedPrograms.map((e) => e.id)} />
@@ -251,7 +251,7 @@ export function CertificatesView() {
                   ) : null}
                 </div>
               ) : (
-                <div className="flex flex-col gap-8 lg:gap-10">
+                <div className="flex flex-col gap-layout-section">
                   {progressPrograms.length ? (
                     <Group id="certificates-progress-programs" title="Program certificates" count={progressPrograms.length}>
                       <ProgramBlock ids={progressPrograms.map((c) => c.id)} />

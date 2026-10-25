@@ -52,7 +52,7 @@ export function OraView({ topicId }: { topicId: string }) {
   const step: OraStep = !submitted ? "response" : !quotaMet ? "peer" : "grade";
 
   return (
-    <div className="flex flex-col gap-5 py-4">
+    <div className="flex flex-col gap-8 py-6">
       <Stepper
         step={step}
         submitted={submitted}

@@ -31,7 +31,7 @@ const LINKS = ["Terms of use", "Privacy", "Cookie settings", "Accessibility", "H
 export function PlatformFooter({ className }: { className?: string }) {
   const showToast = useLmsStore((s) => s.showToast);
   return (
-    <footer aria-label="Site" className={cn("sk-no-print px-6 md:px-8 lg:px-10", className)}>
+    <footer aria-label="Site" className={cn("sk-no-print px-layout-page-x", className)}>
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-6 border-t border-sko-border-subtle py-6 md:flex-row md:justify-between">
         <div className="flex items-center gap-3 max-md:order-last">
           <SkillUpWordmark className="h-[18px]" />

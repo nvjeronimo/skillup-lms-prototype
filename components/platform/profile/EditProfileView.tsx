@@ -139,7 +139,7 @@ function SectionSkeleton({ title, lead, children }: { title: string; lead: strin
 function EditProfileSkeleton() {
   const f = editProfileSeed;
   return (
-    <div className="mx-auto flex w-full max-w-[880px] flex-col gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[880px] flex-col gap-layout-section">
       <div className="flex flex-col gap-2">
         <Skeleton variant="ghost" text="headline-large-bold">Edit profile</Skeleton>
         <Skeleton variant="ghost" text="body-large-regular">
@@ -226,12 +226,12 @@ export function EditProfileView() {
   return (
     <PlatformPage
       current={null}
-      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<EditProfileSkeleton />}
     >
       <form
         onSubmit={onSubmit}
-        className="mx-auto flex w-full max-w-[880px] flex-col gap-6 lg:gap-8"
+        className="mx-auto flex w-full max-w-[880px] flex-col gap-layout-section"
       >
         <div data-arrive={0} className="flex flex-col gap-2">
           <h1 className="sk-text-headline-large-bold text-sko-text-default">Edit profile</h1>

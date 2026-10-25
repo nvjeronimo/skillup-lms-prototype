@@ -78,7 +78,7 @@ export function OptionRadio({ checked, disabled = false }: { checked: boolean; d
  */
 export function LessonBlocks({ blocks }: { blocks: LessonBlock[] }) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {blocks.map((b, i) => (
         <Block key={i} block={b} />
       ))}

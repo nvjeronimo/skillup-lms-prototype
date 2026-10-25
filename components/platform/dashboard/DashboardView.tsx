@@ -22,8 +22,8 @@ import { ResumeRow } from "./ResumeRow";
  * Platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop 6408:72361, tablet
  * 6408:72704, mobile 6418:127183).
  * Greeting, the glance card, Due this week + Pick up where you left off, Jump somewhere.
- * Page padding 40 / 32 / 24, 80 / 64 / 48 below, 32 / 24 / 20 between the blocks
- * (desktop / tablet / mobile).
+ * Page padding, the space between the blocks and between the two columns: the layout rhythm
+ * (tokens/layout.css, Nelson 25 Oct 2026); 80 / 64 / 48 below (desktop / tablet / mobile).
  * Desktop: Due (440) sits beside Resume (728). Tablet: Due and Resume stack, three tiles in
  * a row. Mobile: everything stacks, the resume list uses the Resume row, tiles go two a row.
  *
@@ -49,11 +49,11 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
   return (
     <PlatformPage
       current="dashboard"
-      className="px-6 pb-12 pt-6 md:px-8 md:pb-16 md:pt-8 lg:px-10 lg:pb-20 lg:pt-10"
+      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
       skeleton={<DashboardSkeleton due={dashboardDue.length} resume={resume.length} jump={dashboardJump.length} />}
     >
       {/* The frames are drawn at 1280; wider windows keep the 1200 content width. */}
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
         {/* Always one line (Nelson, 23 Oct 2026): a very long name is cut with an ellipsis. */}
         <h1 data-arrive={0} className="sk-text-headline-large-bold truncate whitespace-nowrap text-sko-text-default">
@@ -65,7 +65,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />
         </div>
 
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
+        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
           <section data-arrive={2} aria-labelledby="dashboard-due-title" className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
             <PlatformSectionHeader
               id="dashboard-due-title"

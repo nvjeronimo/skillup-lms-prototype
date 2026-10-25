@@ -17,7 +17,7 @@ function HeaderSkeleton({ action = true }: { action?: boolean }) {
  */
 export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: number; jump: number }) {
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       {/* Greeting: one line from tablet up, two on a phone. */}
       <div>
         <Skeleton text="headline-large-bold" width={420} className="max-w-[70%]" />
@@ -38,7 +38,7 @@ export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: 
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-8">
+      <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
         {/* Due this week. */}
         <div className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
           <HeaderSkeleton />

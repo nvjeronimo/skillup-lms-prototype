@@ -3,6 +3,7 @@
 @import "../tokens/generated/typography.css";
 @import "../tokens/typography.css";
 @import "../tokens/generated/spacing.css";
+@import "../tokens/layout.css";
 @import "../tokens/generated/motion.css";
 @import "../tokens/motion.css";
 @import "../tokens/generated/radius.css";

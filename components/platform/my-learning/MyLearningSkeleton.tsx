@@ -127,32 +127,35 @@ export function MyLearningSkeleton({ courses, programs }: { courses: number; pro
   }, []);
   const count = Math.min(tab === "courses" ? courses : programs, MAX_CARDS);
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <Skeleton variant="ghost" text="headline-large-bold">
         {myLearningHeading.title} {myLearningHeading.emphasis}
       </Skeleton>
-      <div className="flex flex-col gap-6">
-        {/* Tabs on their rule: 32 tall on a phone, 48 from tablet up, 8 above. */}
-        <div className="flex gap-3 border-b border-sko-border-subtle pt-2">
-          <div className="flex h-8 items-center md:h-12">
-            <Skeleton variant="block" width={124} height={24} radius="inner" />
-          </div>
-          <div className="flex h-8 items-center md:h-12">
-            <Skeleton variant="block" width={110} height={24} radius="inner" />
-          </div>
-        </div>
-        <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
-          {/* The status filter, its segments as wide as their labels. */}
-          <div className="min-w-0 md:shrink-0">
-            <div className={cn(MY_LEARNING_FILTER_TRACK, "overflow-hidden")}>
-              {myLearningStatusFilters.map((f) => (
-                <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
-              ))}
+      <div className="flex flex-col gap-layout-stack">
+        {/* The toolbar (tabs + filter row, 24 apart), then the grid (as MyLearningCollection). */}
+        <div className="flex flex-col gap-6">
+          {/* Tabs on their rule: 32 tall on a phone, 48 from tablet up, 8 above. */}
+          <div className="flex gap-3 border-b border-sko-border-subtle pt-2">
+            <div className="flex h-8 items-center md:h-12">
+              <Skeleton variant="block" width={124} height={24} radius="inner" />
+            </div>
+            <div className="flex h-8 items-center md:h-12">
+              <Skeleton variant="block" width={110} height={24} radius="inner" />
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Skeleton variant="block" radius="control" className="h-10 w-full max-md:h-11 md:w-[240px] lg:w-[320px]" />
-            <Skeleton variant="block" width={98} height={40} radius="track" className="hidden shrink-0 lg:block" />
+          <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
+            {/* The status filter, its segments as wide as their labels. */}
+            <div className="min-w-0 md:shrink-0">
+              <div className={cn(MY_LEARNING_FILTER_TRACK, "overflow-hidden")}>
+                {myLearningStatusFilters.map((f) => (
+                  <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton variant="block" radius="control" className="h-10 w-full max-md:h-11 md:w-[240px] lg:w-[320px]" />
+              <Skeleton variant="block" width={98} height={40} radius="track" className="hidden shrink-0 lg:block" />
+            </div>
           </div>
         </div>
         <div className={cn(MY_LEARNING_GRID, "items-start")}>

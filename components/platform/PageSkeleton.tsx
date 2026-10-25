@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/atoms/Skeleton";
  */
 export function PageSkeleton() {
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 lg:gap-8">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <Skeleton text="headline-large-bold" width="40%" />
       <Skeleton variant="block" height={160} radius="card" />
       <Skeleton variant="block" height={240} radius="card" />

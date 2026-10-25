@@ -24,7 +24,7 @@ export function CoursesTab({ program }: { program: Program }) {
     });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-layout-stack">
       <SectionIntro title={program.coursesIntro.title} lead={program.coursesIntro.lead} />
       <ol className="flex flex-col gap-4">
         {program.courses.map((course) => (

@@ -43,7 +43,7 @@ export function HeaderBandSkeleton({
     >
       <div
         className={cn(
-          "relative mx-auto w-full max-w-[1280px] px-4 pb-6 pt-4 md:px-6 md:pb-8 lg:px-10 lg:pb-10 lg:pt-5",
+          "relative mx-auto w-full max-w-[1280px] px-layout-band-x pb-6 pt-4 md:pb-8 lg:pb-10 lg:pt-5",
           !program && "flex flex-col gap-4 lg:gap-0",
         )}
       >
@@ -120,7 +120,7 @@ export function HeaderBandSkeleton({
 export function TabBarSkeleton({ tabs, search = false, rule = true }: { tabs: number[]; search?: boolean; rule?: boolean }) {
   return (
     <div className={cn("bg-sko-bg-page", rule && "border-b border-sko-border-subtle")}>
-      <div className="mx-auto flex w-full max-w-[1280px] items-end justify-between pl-4 pt-3 md:px-6 md:pt-0 lg:px-10">
+      <div className="mx-auto flex w-full max-w-[1280px] items-end justify-between pl-layout-band-x pt-3 md:px-layout-band-x md:pt-0">
         <div className={cn("flex h-8 items-center gap-6 md:h-12", rule && "-mb-px")}>
           {tabs.map((w, i) => (
             <Skeleton key={i} variant="block" width={w} height={20} radius="inner" />

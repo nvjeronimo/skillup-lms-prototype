@@ -9,7 +9,7 @@ import { earnedCertificates } from "@/lib/platform/certificates";
  */
 export function CertificatesSkeleton() {
   return (
-    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 lg:gap-10">
+    <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <div className="flex flex-col gap-2">
         <Skeleton variant="ghost" text="headline-large-bold">Certificates</Skeleton>
         <Skeleton variant="ghost" text="body-large-regular">
@@ -17,7 +17,7 @@ export function CertificatesSkeleton() {
         </Skeleton>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-layout-stack">
         <div className="flex gap-3 border-b border-sko-border-subtle pb-3 pt-2 md:pt-5">
           <Skeleton text="body-large-semibold" width={120} />
           <Skeleton text="body-large-semibold" width={84} />
@@ -26,7 +26,7 @@ export function CertificatesSkeleton() {
           <Skeleton variant="block" radius="control" className="h-11 w-full md:h-10 md:w-[240px] lg:w-[320px]" />
           <Skeleton variant="block" radius="track" className="hidden h-10 w-[98px] shrink-0 lg:block" />
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6">
+        <div className="grid grid-cols-1 gap-layout-grid md:grid-cols-2 lg:grid-cols-3">
           {earnedCertificates.map((e) => (
             <div key={e.id} className="flex">
               <div className="flex w-full flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]">

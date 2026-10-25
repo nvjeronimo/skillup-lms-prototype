@@ -15,7 +15,8 @@ export function ReadingView({ topicId }: { topicId: string }) {
   const files = getDownloads(topic);
 
   return (
-    <article className="flex flex-col gap-5 py-4">
+    // Blocks 32 apart, 24 above and below (were 20 / 16; Nelson, 25 Oct 2026: more space between sections).
+    <article className="flex flex-col gap-8 py-6">
       <p className="sk-text-title-medium-medium text-sko-text-default">{article.lede}</p>
 
       {article.sections.map((s) => (
