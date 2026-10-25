@@ -671,7 +671,9 @@ export function CalendarView() {
             </div>
           </section>
 
-          <aside data-arrive={3} aria-label="This week and calendar sync" className="flex flex-col gap-layout-side lg:w-[320px] lg:shrink-0">
+          {/* On desktop the side column stays in view while the long agenda scrolls (audit, 25 Oct
+              2026: the agenda ran 153% of the first viewport beside a column of 48%). */}
+          <aside data-arrive={3} aria-label="This week and calendar sync" className="flex flex-col gap-layout-side lg:sticky lg:top-6 lg:w-[320px] lg:shrink-0">
             <section aria-labelledby="calendar-week" className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
               <h2 id="calendar-week" className="sk-text-title-medium-semibold text-sko-text-default">
                 Next 7 days

@@ -97,7 +97,8 @@ function Block({ block }: { block: LessonBlock }) {
             <h2 className="sk-text-headline-small-semibold text-sko-text-default">{block.heading}</h2>
           ) : null}
           {block.paragraphs.map((p, i) => (
-            <p key={i} className="sk-text-body-large-regular text-sko-text-muted">
+            // Running text stops at 56ch, about 75 characters, inside the 1200 column (audit, 25 Oct 2026).
+            <p key={i} className="sk-text-body-large-regular max-w-[56ch] text-pretty text-sko-text-muted">
               {p}
             </p>
           ))}

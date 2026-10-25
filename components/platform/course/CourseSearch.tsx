@@ -481,8 +481,10 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
                 setOpen(true);
               }
             },
+            // No aria-expanded: it is not allowed on a search field (audit, 25 Oct 2026, axe
+            // aria-allowed-attr). The sheet is a modal dialog, so its opening is announced by the
+            // focus moving into it; aria-haspopup still says the field opens one.
             "aria-haspopup": "dialog",
-            "aria-expanded": sheetOpen,
             "aria-controls": sheet.mounted ? sheetId : undefined,
           }}
         />
