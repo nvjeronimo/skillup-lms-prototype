@@ -752,6 +752,33 @@ button {
   transition: none !important;
 }
 
+/* A line that folds away and back (the player sidebar's course header while its list scrolls,
+   Nelson 25 Oct 2026: "a ocultação do course e logo está brusca"). Two beats, as the Sticky-Toolbar
+   search: leaving, the text fades first (short3) and only then its row closes (medium2, after
+   short2); coming back, the row opens first and the text fades in once there is room (short4,
+   after short3). It never shows half-cut text. Reduced motion: Collapse's own rule (rows snap). */
+.sk-fold {
+  transition: grid-template-rows var(--motion-duration-medium2) var(--motion-easing-standard-decelerate) 0s;
+}
+.sk-fold > .sk-collapse-body {
+  transition:
+    opacity var(--motion-duration-short4) var(--motion-easing-standard) var(--motion-duration-short3),
+    content-visibility 0s linear 0s;
+  transition-behavior: allow-discrete;
+}
+.sk-fold[data-collapse="closed"] {
+  transition: grid-template-rows var(--motion-duration-medium2) var(--motion-easing-standard) var(--motion-duration-short2);
+}
+/* content-visibility (Collapse's own rule: a shut body stops counting toward the page height)
+   switches at the end of the fold, not before it. */
+.sk-fold[data-collapse="closed"] > .sk-collapse-body {
+  opacity: 0;
+  transition:
+    opacity var(--motion-duration-short3) var(--motion-easing-standard-decelerate) 0s,
+    content-visibility 0s linear calc(var(--motion-duration-medium2) + var(--motion-duration-short2));
+  transition-behavior: allow-discrete;
+}
+
 .sk-press-card {
   transition-property: transform, background-color, border-color, box-shadow;
   transition-duration: var(--motion-duration-short2);

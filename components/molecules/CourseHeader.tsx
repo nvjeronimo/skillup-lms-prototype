@@ -86,14 +86,15 @@ export function CourseHeader({
         )}
       >
         <div className="flex min-w-0 flex-1 flex-col">
+          {/* Each line steps out in two beats (`.sk-fold`, globals.css): it fades, then its room closes. */}
           {eyebrow ? (
-            <Collapse open={!condensed}>
+            <Collapse open={!condensed} className="sk-fold">
               <p className={cn(eyebrowClass, "pb-1")}>{eyebrow}</p>
             </Collapse>
           ) : null}
           <p className="sk-text-title-medium-semibold text-sko-text-default">{title}</p>
           {partnerList.length ? (
-            <Collapse open={!condensed}>
+            <Collapse open={!condensed} className="sk-fold">
               <p className="sk-text-body-small-medium pt-1 text-sko-text-muted">
                 {partnerList.map((p) => p.name).join(" · ")}
               </p>

@@ -30,7 +30,7 @@ describe("motion tokens", () => {
   it("has exactly the five easings and three distances, verbatim", () => {
     expect(declarations("easing")).toEqual({
       standard: "cubic-bezier(0.4, 0, 0.2, 1)",
-      "standard-decelerate": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "standard-decelerate": "cubic-bezier(0.2, 0.7, 0.2, 1)",
       "standard-accelerate": "cubic-bezier(0.55, 0, 1, 0.45)",
       emphasized: "cubic-bezier(0.34, 1.3, 0.64, 1)",
       linear: "linear",

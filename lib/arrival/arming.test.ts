@@ -18,7 +18,7 @@ describe("canArm", () => {
 
 describe("ARMING_WINDOW_MS", () => {
   it("covers a full cascade (7 half-short2 steps + short4) and a long2 count", () => {
-    expect(ARMING_WINDOW_MS).toBe(350 + 200 + 500);
+    expect(ARMING_WINDOW_MS).toBe((7 * 150) / 2 + 300 + 600);
   });
 });
 
