@@ -1,0 +1,389 @@
+/* ============================================================================
+   "Fluent" — a brand skin built on Microsoft's Fluent 2 web design system (Nelson, 25 Oct 2026:
+   "uma direção mais Microsoft style", fluent2.microsoft.design). Values come from Fluent 2's web
+   alias tokens (Color tokens, Shapes, Elevation), held to SkillUp's rules: role tokens, AA, no
+   gradients, no third-party logos. What makes it Fluent and not SKO with new colours:
+   - Rectangles with small radii: 4 for buttons, fields and menus (Medium), 8 for cards (Large),
+     12 for surfaces and popovers (X-Large), 2 under 32 px. Pills only for badges and tracks.
+   - Buttons: primary on brand 80 (#0F6CBD), hover brand 70; secondary is white with a 1px Stroke1
+     (#D1D1D1) and neutral ink text, hover Background1 Hover (#F5F5F5). Semibold 14.
+   - Fields: a 1px Stroke1 frame with an accessible bottom edge (#616161), Fluent's Input.
+   - Filters and view switches are a TabList: no track, the selected item in semibold ink over a 3px
+     brand indicator (5.4:1 on the page, so the state passes WCAG 1.4.11 without a fill).
+   - Cards: white Background1 on the Background3 canvas, no stroke, shadow 4. A card inside a card
+     takes Stroke2 instead.
+   - Neutrals are Fluent's greys: Foreground1 #242424, Foreground2 #424242, Foreground3 #616161.
+   - Type: Open Sans stands in for Segoe UI (Nelson's choice); titles Semibold, never Bold.
+   Switched on by html[data-skin="fluent"] (Profile menu > Brand skin, or ?direction=fluent). The
+   platform pages share Harbor's panel layout (left rail, search in the top bar), which is also
+   Microsoft 365's shell.
+   Contrast on white: Foreground1 15.8:1, Foreground2 10.1:1, Foreground3 6.1:1, brand text 5.4:1,
+   white on brand 80 5.4:1, accessible stroke #616161 6.1:1.
+   ============================================================================ */
+
+[data-skin="fluent"] {
+  --sk-font-body: var(--font-open-sans, "Open Sans"), "Segoe UI", system-ui, sans-serif;
+  --sk-font-display: var(--font-open-sans, "Open Sans"), "Segoe UI", system-ui, sans-serif;
+
+  --sk-radius-inner: 4px;
+  --sk-radius-control: 4px;
+  --sk-radius-card: 8px;
+  --sk-radius-surface: 12px;
+  --sk-radius-card-inset: 4px;
+  --sk-radius-track: 4px;
+
+  /* Fluent elevation: shadow 4 (cards), shadow 8 (raised, hover), shadow 16 (flyouts). */
+  --sk-shadow-card: 0 0 2px #0000001f, 0 2px 4px #00000024;
+  --sk-shadow-fluent-8: 0 0 2px #0000001f, 0 4px 8px #00000024;
+  --sk-shadow-harbor-bar: 0 0 2px #0000001f, 0 1px 2px #00000024;
+  --sk-shadow-harbor-pill: none;
+}
+
+/* Fluent Light (web light theme). */
+[data-skin="fluent"]:not([data-theme="dark"]) {
+  --color-text-default: #242424;
+  --color-text-muted: #424242;
+  --color-text-subtle: #616161;
+  --color-text-placeholder: #707070;
+  --color-text-disabled: #bdbdbd;
+  --color-text-primary: #0f6cbd;
+  --color-text-on-primary: #ffffff;
+  --color-text-on-primary-hover: #ffffff;
+  --color-text-on-primary-soft: #242424;
+  --color-text-info: #0f6cbd;
+  --color-text-success: #0e700e;
+  --color-text-error: #b10e1c;
+  --color-text-on-inverse: #ffffff;
+
+  --color-bg-page: #ffffff;
+  --color-bg-faint: #f5f5f5;
+  --color-bg-subtle: #fafafa;
+  --color-bg-muted: #f0f0f0;
+  --color-bg-strong: #d1d1d1;
+  --color-bg-hover: #f5f5f5;
+  --color-bg-track: #f0f0f0;
+  --color-bg-primary: #0f6cbd;
+  --color-bg-primary-hover: #115ea3;
+  --color-bg-primary-soft: #ebf3fc;
+  --color-bg-info: #0f6cbd;
+  --color-bg-info-soft: #ebf3fc;
+  --color-bg-success: #107c10;
+  --color-bg-success-soft: #f1faf1;
+  --color-bg-error: #c50f1f;
+  --color-bg-error-soft: #fdf3f4;
+  --color-bg-inverse: #292929;
+
+  --color-border-default: #616161;
+  --color-border-subtle: #e0e0e0;
+  --color-border-strong: #242424;
+  --color-border-inverse: #242424;
+  --color-border-disabled: #e0e0e0;
+  --color-border-primary: #0f6cbd;
+  --color-border-primary-soft: #b4d6fa;
+  --color-border-primary-muted: #b4d6fa;
+  --color-border-info: #0f6cbd;
+  --color-border-success: #107c10;
+  --color-border-error: #c50f1f;
+
+  --color-icon-default: #242424;
+  --color-icon-muted: #424242;
+  --color-icon-subtle: #616161;
+  --color-icon-faint: #bdbdbd;
+  --color-icon-primary: #0f6cbd;
+  --color-icon-info: #0f6cbd;
+  --color-icon-success: #107c10;
+  --color-icon-success-strong: #107c10;
+  --color-icon-error: #c50f1f;
+
+  /* Stroke1: the frame of secondary buttons and fields (the accessible edge is border/default). */
+  --sk-fluent-stroke1: #d1d1d1;
+  --sk-fluent-stroke1-hover: #c7c7c7;
+}
+
+/* Fluent Dark (web dark theme): canvas Background3 #141414 under Background1 #292929, brand 70
+   (#115EA3) for filled buttons, brand 110 (#62ABF5) for brand text and indicators (brand 100 is
+   4.5:1 on Background1 Selected, one step short). */
+html[data-skin="fluent"][data-theme="dark"],
+html[data-skin="fluent"] [data-theme="dark"] {
+  --color-text-default: #ffffff;
+  --color-text-muted: #d6d6d6;
+  --color-text-subtle: #adadad;
+  --color-text-placeholder: #adadad;
+  --color-text-disabled: #5c5c5c;
+  --color-text-primary: #62abf5;
+  --color-text-on-primary: #ffffff;
+  --color-text-on-primary-hover: #ffffff;
+  --color-text-on-primary-soft: #ffffff;
+  --color-text-info: #62abf5;
+  --color-text-success: #54b054;
+  --color-text-error: #dc626d;
+
+  --color-bg-page: #292929;
+  --color-bg-faint: #141414;
+  --color-bg-subtle: #1f1f1f;
+  --color-bg-muted: #333333;
+  --color-bg-strong: #525252;
+  --color-bg-hover: #3d3d3d;
+  --color-bg-track: #1f1f1f;
+  --color-bg-primary: #115ea3;
+  --color-bg-primary-hover: #0f6cbd;
+  --color-bg-primary-soft: #0c3b5e;
+  --color-bg-info: #115ea3;
+  --color-bg-info-soft: #141414;
+  --color-bg-inverse: #ffffff;
+
+  --color-border-default: #adadad;
+  --color-border-subtle: #525252;
+  --color-border-strong: #ffffff;
+  --color-border-primary: #62abf5;
+  --color-border-primary-soft: #0e4775;
+  --color-border-primary-muted: #0e4775;
+
+  --color-icon-default: #ffffff;
+  --color-icon-muted: #d6d6d6;
+  --color-icon-subtle: #adadad;
+  --color-icon-faint: #525252;
+  --color-icon-primary: #62abf5;
+  --color-icon-success: #54b054;
+  --color-icon-success-strong: #54b054;
+
+  --sk-fluent-stroke1: #666666;
+  --sk-fluent-stroke1-hover: #757575;
+
+  --sk-shadow-card: 0 0 2px #0000003d, 0 2px 4px #00000047;
+  --sk-shadow-fluent-8: 0 0 2px #0000003d, 0 4px 8px #00000047;
+  --sk-shadow-harbor-bar: 0 1px 0 #ffffff14;
+}
+
+/* ── Type ────────────────────────────────────────────────────────────────────
+   Fluent titles are Semibold (600); there is no Bold in the type ramp. One ink, no grey second
+   half in a heading. */
+[data-skin="fluent"] :is(
+    .sk-text-display-large-bold,
+    .sk-text-headline-large-bold,
+    .sk-text-headline-medium-bold,
+    .sk-text-headline-small-bold,
+    .sk-text-title-large-bold
+  ) {
+  font-weight: 600;
+  letter-spacing: 0;
+}
+[data-skin="fluent"] [data-heading-em] {
+  color: var(--color-text-default);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────
+   Rectangles: every control keeps Radius/control (4). Secondary is Fluent's default button: white,
+   1px Stroke1, neutral ink; hover Background1 Hover with Stroke1 Hover. */
+[data-skin="fluent"] .ring-inset.ring-sko-border-primary.text-sko-text-primary {
+  --tw-ring-color: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+[data-skin="fluent"] .ring-inset.ring-sko-border-primary.text-sko-text-primary:hover {
+  --tw-ring-color: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
+}
+
+/* ── Fields ──────────────────────────────────────────────────────────────────
+   Fluent's Input: a Stroke1 frame with the accessible stroke along the bottom edge (6.1:1), white
+   inside. The search box in the top bar is the same field. */
+[data-skin="fluent"] .rounded-control.border:has(> input:not([type="checkbox"], [type="radio"])),
+[data-skin="fluent"] :is(input:not([type="checkbox"], [type="radio"]), textarea, select).border {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+[data-skin="fluent"] form[role="search"] {
+  height: 36px;
+  border: 1px solid var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-page);
+}
+[data-skin="fluent"] form[role="search"] > button {
+  height: 28px;
+  border-radius: 2px;
+  background-color: transparent;
+}
+[data-skin="fluent"] form[role="search"] > button:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* ── Filters and view switches ───────────────────────────────────────────────
+   Fluent's TabList: no track, transparent items, the selected one in semibold ink over a 3px brand
+   indicator with round caps, inset 12 from each side. The indicator carries the state (5.4:1). */
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track {
+  background-color: transparent;
+  padding: 0;
+  gap: 2px;
+}
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]) {
+  position: relative;
+  border-color: transparent;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-muted);
+  font-weight: 400;
+  box-shadow: none;
+}
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]):hover {
+  background-color: transparent;
+  color: var(--color-text-default);
+}
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page,
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"],
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: none;
+}
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"])::after {
+  content: "";
+  position: absolute;
+  inset-inline: 12px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 9999px;
+  background-color: transparent;
+  pointer-events: none;
+}
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]):hover::after {
+  background-color: var(--sk-fluent-stroke1);
+}
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page::after,
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"]::after,
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-checked="true"]::after,
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-selected="true"]::after {
+  background-color: var(--color-border-primary);
+}
+/* Icon-only view switches (grid · list · table) keep a square hit area. */
+[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a)[aria-label]:not(:has(span:not([class*="sr-only"])))::after {
+  inset-inline: 8px;
+}
+
+/* ── Top navigation ──────────────────────────────────────────────────────────
+   The bar is Background1 on a hairline shadow. Section links are TabList items: ink, the current
+   one semibold over the brand indicator (the bar's own underline, recoloured). */
+[data-skin="fluent"] [data-platform-page] header[data-chrome] {
+  border-bottom-color: transparent;
+  box-shadow: var(--sk-shadow-harbor-bar);
+}
+[data-skin="fluent"] [data-topbar-tab] {
+  color: var(--color-text-muted);
+}
+[data-skin="fluent"] [data-topbar-tab][aria-current="page"] {
+  color: var(--color-text-default);
+  font-weight: 600;
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────────────
+   TabList: selected in semibold ink, brand indicator. */
+[data-skin="fluent"] [role="tab"][aria-selected="true"] {
+  color: var(--color-text-default);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────────
+   Fluent's Card: Background1, no stroke, shadow 4; a card inside a card takes Stroke2. */
+[data-skin="fluent"] [data-platform-page] .rounded-card.border {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-skin="fluent"] [data-platform-page] .rounded-card .rounded-card.border {
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+}
+
+/* ── Left navigation (the panel rail) ────────────────────────────────────────
+   Fluent's Nav: the current item on Background1 Selected (#EBEBEB) with a 4 × 20 brand indicator on
+   the left edge; the indicator carries the state. Radius 4. */
+[data-skin="fluent"] aside > nav[aria-label="Platform"] :is(a, button) {
+  border-radius: var(--sk-radius-control);
+}
+[data-skin="fluent"] aside > nav[aria-label="Platform"] a[aria-current="page"] {
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-default);
+}
+[data-skin="fluent"] aside > nav[aria-label="Platform"] a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: var(--color-border-primary);
+  transform: translateY(-50%);
+}
+
+/* A selectable list (Pick up where you left off) follows the same rule as the Nav: the selected
+   row on Background1 Selected with the brand indicator on its left edge. */
+[data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed] {
+  position: relative;
+}
+[data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed="true"] {
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-default);
+}
+[data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: var(--color-border-primary);
+  transform: translateY(-50%);
+}
+
+/* ── The glance ──────────────────────────────────────────────────────────────
+   No band, light or dark: the figure cards sit straight on the canvas with shadow 4, title in ink,
+   no glows (Fluent has no decorative shapes). */
+html[data-skin="fluent"] [data-glance-backdrop] {
+  background-color: transparent;
+}
+html[data-skin="fluent"] [data-glance] [data-glow] {
+  display: none;
+}
+html[data-skin="fluent"] [data-glance-title] {
+  color: var(--color-text-default);
+}
+@media (min-width: 1025px) {
+  [data-skin="fluent"] [data-glance] {
+    margin-inline: 0;
+    padding-inline: 0;
+    border-radius: var(--sk-radius-surface);
+  }
+  [data-skin="fluent"] [data-glance] > ul {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
+/* ── Player sidebar ──────────────────────────────────────────────────────────
+   Each module in its own box, as in Studio and Harbor: Background1, Stroke2, Radius/inner (4: the
+   sidebar card's 8 − the list's 4 of padding). */
+[data-skin="fluent"] [data-module-list] {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  background-color: var(--color-bg-faint);
+}
+[data-skin="fluent"] [data-module-box] {
+  flex-shrink: 0;
+  overflow: clip;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-page);
+}
+[data-skin="fluent"] [data-module-box] > button,
+[data-skin="fluent"] [data-module-box] > h3 > button {
+  border-bottom-width: 0;
+  background-color: transparent;
+}
+[data-skin="fluent"] [data-module-box] > h3 > button {
+  background-color: var(--color-bg-page);
+}

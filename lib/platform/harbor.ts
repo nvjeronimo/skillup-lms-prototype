@@ -3,9 +3,10 @@
 import * as React from "react";
 import { useLmsStore } from "@/lib/store";
 
-/** The Harbor skin is on (25 Oct 2026): its own layout patterns, after the DreamHost panel. */
+/** The panel layout is on (25 Oct 2026): Harbor's patterns after the DreamHost panel, which the
+ *  Fluent skin shares (left rail + search in the top bar is also Microsoft 365's shell). */
 export function useHarbor(): boolean {
-  return useLmsStore((s) => s.skin === "harbor");
+  return useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent");
 }
 
 /*

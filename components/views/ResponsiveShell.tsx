@@ -92,11 +92,12 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   React.useEffect(() => flag("data-reduce-motion", reduceMotion), [reduceMotion]);
   React.useEffect(() => flag("data-underline-links", underlineLinks), [underlineLinks]);
   React.useEffect(() => flag("data-square-corners", squareCorners), [squareCorners]);
-  // ?direction=studio / harbor / classic picks the Studio or Harbor skin, or SKO (a shareable link).
+  // ?direction=studio / harbor / fluent / classic picks the Studio, Harbor or Fluent skin, or SKO (a shareable link).
   React.useEffect(() => {
     const dq = new URLSearchParams(window.location.search).get("direction");
     if (dq === "studio") setSkin("studio");
     else if (dq === "harbor") setSkin("harbor");
+    else if (dq === "fluent") setSkin("fluent");
     else if (dq === "classic") setSkin("teal");
   }, [setSkin]);
   React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
