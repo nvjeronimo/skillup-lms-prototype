@@ -177,3 +177,27 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
     border-radius: 24px;
   }
 }
+
+/* Player sidebar, Studio only (Nelson, 25 Oct 2026, a test): each module in its own box. The list
+   sits on the faint ground with 8 of padding and 8 between boxes; a box is a white surface with a
+   1px border/subtle and the nesting radius (the sidebar's control radius − the 8 of padding). It
+   clips with overflow: clip, not hidden, so a sticky module header (Course Journey proposal) still
+   sticks to the list. Inside a box the closed header needs no hairline. SKO, Gold, Red unchanged. */
+[data-direction="studio"] [data-module-list] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background-color: var(--color-bg-faint);
+}
+[data-direction="studio"] [data-module-box] {
+  flex-shrink: 0;
+  overflow: clip;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: calc(var(--sk-radius-control) - 8px);
+  background-color: var(--color-bg-page);
+}
+[data-direction="studio"] [data-module-box] > button,
+[data-direction="studio"] [data-module-box] > h3 > button {
+  border-bottom-width: 0;
+}

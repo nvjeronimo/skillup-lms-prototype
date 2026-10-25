@@ -442,6 +442,7 @@ export function Sidebar({
       <div
         ref={scrollRef}
         onScroll={handleScroll}
+        data-module-list=""
         className="sk-scroll flex-1 overflow-y-auto"
       >
         {course.modules.map((module) => {
@@ -466,14 +467,15 @@ export function Sidebar({
           // 3-level (implicit module): topic rows directly under the Course Header.
           if (module.implicit) {
             return (
-              <div key={module.id} className="border-b border-sko-border-subtle py-3">
+              <div key={module.id} data-module-box="" className="border-b border-sko-border-subtle py-3">
                 {moduleTopics(module).map(renderTopic)}
               </div>
             );
           }
 
           return (
-            <div key={module.id}>
+            // Studio boxes each module on its own (data-module-box, tokens/direction-studio.css).
+            <div key={module.id} data-module-box="">
               <ModuleHeader
                 label={module.label}
                 title={module.title}

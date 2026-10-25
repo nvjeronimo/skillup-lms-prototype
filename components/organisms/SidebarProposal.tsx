@@ -487,12 +487,13 @@ export function SidebarProposal({
         onFocus={(e) => {
           if ((e.target as HTMLElement).matches(ROVING)) roving.current = e.target as HTMLElement;
         }}
+        data-module-list=""
         className="sk-scroll flex-1 overflow-y-auto"
       >
         {course.modules.map((module) => {
           if (module.implicit) {
             return (
-              <ol key={module.id} className="border-b border-sko-border-subtle py-2">
+              <ol key={module.id} data-module-box="" className="border-b border-sko-border-subtle py-2">
                 {moduleTopics(module).map(renderTopic)}
               </ol>
             );
@@ -504,7 +505,7 @@ export function SidebarProposal({
           const bodyId = `${headingId}-${module.id}`;
           const moduleHint = moduleHints.get(module.id);
           return (
-            <section key={module.id} aria-labelledby={`${bodyId}-h`}>
+            <section key={module.id} data-module-box="" aria-labelledby={`${bodyId}-h`}>
               {/* Sticks while its own topics scroll under it, then leaves with them. */}
               <h3 id={`${bodyId}-h`} className="sticky top-0 z-[1]">
                 <ModuleHeader
