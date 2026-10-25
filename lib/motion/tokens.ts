@@ -5,11 +5,11 @@
  * use the Tailwind keys (`duration-short3` …).
  */
 export const MOTION_MS = {
-  short2: 100,
-  short3: 150,
-  short4: 200,
-  medium2: 300,
-  long2: 500,
+  short2: 150,
+  short3: 200,
+  short4: 300,
+  medium2: 400,
+  long2: 600,
 } as const;
 
 /**
