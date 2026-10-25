@@ -194,20 +194,37 @@ export function Segmented<T extends string>({
   options,
   value,
   onChange,
-  wrap = false,
+  scroll = false,
 }: {
   label: string;
   options: { value: T; label: React.ReactNode; aria?: string; className?: string }[];
   value: T;
   onChange: (v: T) => void;
-  /** Lay the segments out in rows of three (the five brand skins do not fit one 288 row). */
-  wrap?: boolean;
+  /**
+   * One row that scrolls sideways, segments at their natural width (the five brand skins do not fit
+   * the 288 panel; Nelson, 25 Oct 2026: scrollable, like the My Learning filters on a phone). The
+   * selected segment is scrolled into view.
+   */
+  scroll?: boolean;
 }) {
+  const trackRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const track = trackRef.current;
+    if (!scroll || !track) return;
+    const on = track.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!on) return;
+    const left = on.offsetLeft - track.clientWidth / 2 + on.offsetWidth / 2;
+    track.scrollLeft = Math.max(0, left);
+  }, [scroll, value]);
   return (
     <div
+      ref={trackRef}
       role="group"
       aria-label={label}
-      className={cn("gap-0.5 rounded-track bg-sko-bg-track p-1", wrap ? "grid grid-cols-3" : "flex")}
+      className={cn(
+        "flex gap-0.5 rounded-track bg-sko-bg-track p-1",
+        scroll && "overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+      )}
     >
       {options.map((o) => (
         <button
@@ -219,7 +236,8 @@ export function Segmented<T extends string>({
           className={cn(
             // min-w-0: a segment may shrink below its text, which then ends with an ellipsis (Nelson,
             // 23 Oct 2026: the four brand skins overflowed the 288 panel in Studio).
-            "inline-flex h-8 min-w-0 flex-1 items-center justify-center rounded-control border transition-colors",
+            "inline-flex h-8 items-center justify-center rounded-control border transition-colors",
+            scroll ? "shrink-0" : "min-w-0 flex-1",
             // An option can set its own padding and gap (the four brand skins need tighter ones).
             o.className?.includes("px-") ? null : "gap-2 px-2.5",
             o.className ?? "sk-text-body-medium-semibold",
@@ -254,19 +272,18 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
           label="Brand skin"
           options={PROFILE_SKINS.map((s) => ({
             value: s.skin,
-            // Five skins in the 288 panel, in rows of three (25 Oct 2026): tighter segments, and a
-            // name that ends with an ellipsis when it does not fit (the dot always shows).
-            className: "sk-text-body-medium-semibold flex-auto gap-1 px-1",
+            // Five skins in the 288 panel: one row that scrolls, each name in full.
+            className: "sk-text-body-medium-semibold gap-1.5 px-3",
             label: (
               <>
                 <SkinDot skin={s.skin} dot={s.dot} />
-                <span className="min-w-0 truncate">{s.label}</span>
+                <span className="whitespace-nowrap">{s.label}</span>
               </>
             ),
           }))}
           value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
           onChange={setSkin}
-          wrap
+          scroll
         />
       </div>
       {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
