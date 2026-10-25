@@ -49,7 +49,7 @@ export function HarborRail({ current }: { current: PlatformSection | null }) {
           const item = cn(
             "sk-text-body-medium-semibold relative flex min-h-11 w-full items-center gap-3 rounded-card text-sko-text-default transition-colors",
             expanded ? "px-4" : "justify-center px-0",
-            on ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft" : "hover:bg-sko-bg-hover",
+            on ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft ring-1 ring-inset ring-sko-border-primary" : "hover:bg-sko-bg-hover",
           );
           const content = (
             <>

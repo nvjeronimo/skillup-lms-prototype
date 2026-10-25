@@ -35,7 +35,7 @@ export function HarborPickUp({ resume, titleId }: { resume: DashboardResumeRow[]
                 className={cn(
                   "flex min-h-16 w-full flex-col items-start justify-center gap-0.5 rounded-control border px-4 py-3 text-left transition-colors",
                   on
-                    ? "border-transparent bg-sko-bg-primary-soft"
+                    ? "border-sko-border-primary bg-sko-bg-primary-soft"
                     : "border-sko-border-subtle bg-sko-bg-page hover:bg-sko-bg-hover",
                 )}
               >
