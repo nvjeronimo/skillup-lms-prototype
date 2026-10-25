@@ -35,12 +35,12 @@ export function HarborPickUp({ resume, titleId }: { resume: DashboardResumeRow[]
                 className={cn(
                   "flex min-h-16 w-full flex-col items-start justify-center gap-0.5 rounded-control px-4 py-3 text-left transition-colors",
                   on
-                    ? "bg-sko-bg-primary text-sko-text-on-primary"
+                    ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft"
                     : "bg-sko-bg-subtle text-sko-text-default hover:bg-sko-bg-hover",
                 )}
               >
                 <span className="sk-text-body-medium-semibold line-clamp-2">{c.title}</span>
-                <span className={cn("sk-text-body-small-regular", on ? "text-sko-text-on-primary" : "text-sko-text-subtle")}>{c.progressPct}% complete</span>
+                <span className="sk-text-body-small-regular text-sko-text-subtle">{c.progressPct}% complete</span>
               </button>
             </li>
           );

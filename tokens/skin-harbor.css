@@ -195,9 +195,9 @@ html[data-skin="harbor"] [data-theme="dark"] {
 }
 
 /* ── Filters ─────────────────────────────────────────────────────────────────
-   No track and no border: bare pills (the panel's "All · Hosted · Other"). The panel's #F0F0F0
-   selected fill is 1.1:1 on the page, so the selected pill is solid bg/primary with on-primary text
-   (5:1 on the page, WCAG 1.4.11). Every segmented control in the prototype is a bg/track row of segments,
+   No track and no border: bare pills (the panel's "All · Hosted · Other"), the selected one on
+   bg/primary-soft with semibold ink (Nelson's choice, 25 Oct). The fill is 1.2:1 on the page, below
+   WCAG 1.4.11's 3:1; aria-pressed/checked carries the state for assistive tech. Every segmented control in the prototype is a bg/track row of segments,
    the selected one on bg/page; this restyles them all. */
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track {
   background-color: transparent;
@@ -215,8 +215,8 @@ html[data-skin="harbor"] [data-theme="dark"] {
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
   border-color: transparent;
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-on-primary);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-on-primary-soft);
   font-weight: 600;
   box-shadow: none;
 }
@@ -226,7 +226,7 @@ html[data-skin="harbor"] [data-theme="dark"] {
 }
 
 /* ── Top navigation ──────────────────────────────────────────────────────────
-   The panel's rail item: a pill, ink text; the current page on solid bg/primary (#D9EAFC is 1.2:1 on the page), no underline. The bar sits
+   The panel's rail item: a pill, ink text; the current page on #D9EAFC, no underline. The bar sits
    on a soft shadow instead of a rule. */
 [data-skin="harbor"] [data-platform-page] header[data-chrome] {
   border-bottom-color: transparent;
@@ -244,8 +244,8 @@ html[data-skin="harbor"] [data-theme="dark"] {
   background-color: var(--color-bg-hover);
 }
 [data-skin="harbor"] [data-topbar-tab][aria-current="page"] {
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-on-primary);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-on-primary-soft);
 }
 [data-skin="harbor"] [data-topbar-tab] > span[aria-hidden="true"].absolute {
   display: none;
