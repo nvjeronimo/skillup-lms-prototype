@@ -30,7 +30,7 @@ export function PlatformSegmented<T extends string>({
   className?: string;
 }) {
   return (
-    <div role="group" aria-label={label} className={cn("inline-flex max-w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1", className)}>
+    <div role="group" aria-label={label} data-segmented="" className={cn("inline-flex max-w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1", className)}>
       {options.map((item) => (
         <button
           key={item.id}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter_Tight, Montserrat } from "next/font/google";
+import { Figtree, Inter_Tight, Montserrat, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ResponsiveShell } from "@/components/views/ResponsiveShell";
 import { ARRIVAL_INIT_SCRIPT } from "@/lib/arrival/prepaint";
@@ -21,6 +21,19 @@ const interTight = Inter_Tight({
   display: "swap",
 });
 
+// The "Harbor" skin (25 Oct 2026): Plus Jakarta Sans for display, Figtree for text, the free
+// stand-ins for a geometric display face and a humanist sans.
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
+const figtree = Figtree({
+  subsets: ["latin"],
+  variable: "--font-figtree",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   // Every route sets its own title (WCAG 2.4.2) through pageTitle() in lib/utils;
   // the template is only a fallback for a route that forgets.
@@ -35,11 +48,11 @@ export const metadata: Metadata = {
 // session. Mirrors ResponsiveShell's attribute logic; must stay in sync with it.
 // Large targets: the stored choice wins; with no choice they default ON at
 // ≤767px (useLargeTargets in lib/store.ts).
-const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;var s={};try{var raw=localStorage.getItem('sk-lms-demo');s=(raw&&JSON.parse(raw).state)||{};}catch(e){}try{if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');if(s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');if(s.squareCorners)d.setAttribute('data-square-corners','');var dq=new URLSearchParams(location.search).get('direction');if(dq==='studio'||(dq!=='classic'&&(s.skin==='studio'||s.skin==='sea'||s.studio)))d.setAttribute('data-direction','studio');var lt=s.largeTargetsChoice;if(lt===undefined||lt===null)lt=s.largeTargets===true?true:(s.deviceMode==='mobile'||window.matchMedia('(max-width: 767px)').matches)?true:null;if(lt===true)d.setAttribute('data-large-targets','');}catch(e){}})();`;
+const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;var s={};try{var raw=localStorage.getItem('sk-lms-demo');s=(raw&&JSON.parse(raw).state)||{};}catch(e){}try{if(s.theme==='dark')document.documentElement.setAttribute('data-theme','dark');var dq0=new URLSearchParams(location.search).get('direction');if(dq0==='harbor')d.setAttribute('data-skin','harbor');else if(dq0!=='classic'&&dq0!=='studio'&&s.skin&&s.skin!=='teal')document.documentElement.setAttribute('data-skin',s.skin);if(s.vision==='cvd')document.documentElement.setAttribute('data-vision','cvd');if(s.textSize&&s.textSize!=='md')d.setAttribute('data-text-size',s.textSize);if(s.reduceMotion)d.setAttribute('data-reduce-motion','');if(s.underlineLinks)d.setAttribute('data-underline-links','');if(s.squareCorners)d.setAttribute('data-square-corners','');var dq=new URLSearchParams(location.search).get('direction');if(dq==='studio'||(dq!=='classic'&&(s.skin==='studio'||s.skin==='sea'||s.studio)))d.setAttribute('data-direction','studio');var lt=s.largeTargetsChoice;if(lt===undefined||lt===null)lt=s.largeTargets===true?true:(s.deviceMode==='mobile'||window.matchMedia('(max-width: 767px)').matches)?true:null;if(lt===true)d.setAttribute('data-large-targets','');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${montserrat.variable} ${interTight.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${montserrat.variable} ${interTight.variable} ${plusJakarta.variable} ${figtree.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         {/* First visit of a platform page in this session: hold the skeleton from the first

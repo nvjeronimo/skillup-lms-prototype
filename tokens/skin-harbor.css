@@ -1,0 +1,284 @@
+/* ============================================================================
+   "Harbor" — a brand skin built on the DreamHost web panel's own components (Nelson, 25 Oct
+   2026: "uma skin Dreamhost like … o mais próximo de como a DreamHost criou os seus componentes";
+   named Harbor because the prototype is public). Every value below was read from the panel's
+   computed styles (Home, Websites list), then held to SkillUp's rules: role tokens, AA, no
+   gradients, no third-party logos. What makes it the panel and not SKO with new colours:
+   - Buttons are pills (radius 100). Primary is the panel's blue (#0073EC, darkened to #006CDD so
+     white text holds AA), Semibold; secondary is a white pill with a 1px #E3E3E3 ring and ink text
+     ("Filters"); the table action ("Manage") is a white 10-radius button with a #CCC ring.
+   - Filters are bare pills: no track, the selected one on #F0F0F0, ink text ("All · Hosted").
+   - The top navigation is the panel's rail item: a 16-radius pill on #D9EAFC for the current page,
+     ink text, no underline. The bar itself sits on a soft shadow, not a rule.
+   - Cards are white, borderless, radius 16, on a 0 4 8 3% shadow; a band of cards sits in a #F0F0F0
+     tray (radius 20, 8 in).
+   - Tabs are ink: the selected one in ink with an ink bar (the "Updates" tab).
+   - Text is the panel's slate: titles #071C27, body #434F58; links #0062C4 (the panel's #0069D7,
+     one step darker so it holds AA on the #D9EAFC pill too).
+   - Type: Plus Jakarta Sans for titles (stands in for Gilroy 600), Figtree for text (Proxima Nova).
+   Switched on by html[data-skin="harbor"] (Profile menu > Brand skin, or ?direction=harbor).
+   Contrast on white: title 17.4:1, body 8.4:1, subtle 6.3:1, link 5.9:1, white on the blue 5.0:1;
+   on the #D9EAFC pill: subtle 5.1:1, link 4.8:1.
+   ============================================================================ */
+
+[data-skin="harbor"] {
+  --sk-font-body: var(--font-figtree, "Figtree"), system-ui, sans-serif;
+  --sk-font-display: var(--font-plus-jakarta, "Plus Jakarta Sans"), system-ui, sans-serif;
+
+  --sk-radius-inner: 8px;
+  --sk-radius-control: 10px;
+  --sk-radius-card: 16px;
+  --sk-radius-surface: 20px;
+  --sk-radius-card-inset: 12px;
+  --sk-radius-track: 9999px;
+
+  --sk-shadow-card: 0 4px 8px #00000008;
+  --sk-shadow-harbor-bar: 0 1px 5px #00000029;
+  --sk-shadow-harbor-pill: 0 2px 6px #00000014;
+}
+
+/* Harbor Light. */
+[data-skin="harbor"]:not([data-theme="dark"]) {
+  --color-text-default: #071c27;
+  --color-text-muted: #434f58;
+  --color-text-subtle: #56626b;
+  --color-text-placeholder: #56626b;
+  --color-text-disabled: #a1a1aa;
+  --color-text-primary: #0062c4;
+  --color-text-on-primary: #ffffff;
+  --color-text-on-primary-hover: #ffffff;
+  --color-text-on-primary-soft: #071c27;
+  --color-text-info: #0062c4;
+  --color-text-success: #00695c;
+  --color-text-error: #c62828;
+  --color-text-on-inverse: #ffffff;
+
+  --color-bg-page: #ffffff;
+  --color-bg-faint: #f7f9fa;
+  --color-bg-subtle: #f4f6f8;
+  --color-bg-muted: #f0f0f0;
+  --color-bg-strong: #d4d4d8;
+  --color-bg-hover: #f0f0f0;
+  --color-bg-track: #ecf1fa;
+  --color-bg-primary: #006cdd;
+  --color-bg-primary-hover: #0058b8;
+  --color-bg-primary-soft: #d9eafc;
+  --color-bg-info: #0073ec;
+  --color-bg-info-soft: #e5f1fd;
+  --color-bg-success: #00796b;
+  --color-bg-success-soft: #e0f7f4;
+  --color-bg-error: #d32f2f;
+  --color-bg-error-soft: #ffeded;
+  --color-bg-inverse: #111111;
+
+  --color-border-default: #8b8b94;
+  --color-border-subtle: #e3e3e3;
+  --color-border-strong: #111111;
+  --color-border-inverse: #111111;
+  --color-border-disabled: #d4d4d8;
+  --color-border-primary: #006cdd;
+  --color-border-primary-soft: #b3d4f7;
+  --color-border-primary-muted: #b3d4f7;
+  --color-border-info: #0073ec;
+  --color-border-success: #00796b;
+  --color-border-error: #c62828;
+
+  --color-icon-default: #111111;
+  --color-icon-muted: #2f323d;
+  --color-icon-subtle: #56626b;
+  --color-icon-faint: #a1a1aa;
+  --color-icon-primary: #0073ec;
+  --color-icon-info: #0073ec;
+  --color-icon-success: #00897b;
+  --color-icon-success-strong: #00897b;
+  --color-icon-error: #c62828;
+
+  /* The panel's tray: a band of cards sits in #F0F0F0 (radius 20, 8 in). Its own name, because the
+     glance band is a dark region and would read the dark bg/muted. */
+  --sk-harbor-tray: #f0f0f0;
+}
+
+/* Harbor Dark (the panel has none): the same components at night. Slate-ink ground #0b1218, page
+   #17212a (1.2:1 above it), the blue lightened to #4da3ff with ink text on the buttons, the tray
+   and selected pills one step above the page. Every text role ≥ 6:1 on the page. */
+html[data-skin="harbor"][data-theme="dark"],
+html[data-skin="harbor"] [data-theme="dark"] {
+  --color-text-default: #f3f6f8;
+  --color-text-muted: #c9d2d9;
+  --color-text-subtle: #9aa7b1;
+  --color-text-placeholder: #9aa7b1;
+  --color-text-disabled: #5f6b74;
+  --color-text-primary: #6cb4ff;
+  --color-text-on-primary: #071c27;
+  --color-text-on-primary-hover: #071c27;
+  --color-text-on-primary-soft: #e6f1fe;
+  --color-text-info: #6cb4ff;
+  --color-text-success: #34d399;
+  --color-text-error: #f87171;
+
+  --color-bg-page: #17212a;
+  --color-bg-faint: #0b1218;
+  --color-bg-subtle: #1e2a34;
+  --color-bg-muted: #26333e;
+  --color-bg-strong: #3a4854;
+  --color-bg-hover: #26333e;
+  --color-bg-track: #1e2a34;
+  --color-bg-primary: #4da3ff;
+  --color-bg-primary-hover: #82bfff;
+  --color-bg-primary-soft: #0f3257;
+  --color-bg-info: #4da3ff;
+  --color-bg-info-soft: #0b1218;
+  --color-bg-inverse: #f3f6f8;
+
+  --color-border-default: #6b7883;
+  --color-border-subtle: #2d3b47;
+  --color-border-strong: #f3f6f8;
+  --color-border-primary: #4da3ff;
+  --color-border-primary-soft: #1d4d80;
+  --color-border-primary-muted: #1d4d80;
+
+  --color-icon-default: #f3f6f8;
+  --color-icon-muted: #c9d2d9;
+  --color-icon-subtle: #9aa7b1;
+  --color-icon-faint: #3a4854;
+  --color-icon-primary: #6cb4ff;
+  --color-icon-success: #34d399;
+  --color-icon-success-strong: #34d399;
+
+  --sk-shadow-card: 0 0 0 1px #ffffff0d, 0 4px 8px #00000040;
+  --sk-shadow-harbor-bar: 0 1px 0 #ffffff14;
+  --sk-shadow-harbor-pill: 0 0 0 1px #ffffff14;
+}
+
+/* ── Type ────────────────────────────────────────────────────────────────────
+   Titles in the geometric face at 600 (the panel's Gilroy 600, 32 for a page title). */
+[data-skin="harbor"] :is(
+    .sk-text-display-large-bold,
+    .sk-text-headline-large-bold,
+    .sk-text-headline-medium-bold,
+    .sk-text-headline-small-bold,
+    .sk-text-title-large-bold
+  ) {
+  font-weight: 600;
+}
+/* The panel's titles are one ink; no grey second half ("Good morning, John."). */
+[data-skin="harbor"] [data-heading-em] {
+  color: var(--color-text-default);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────
+   Every one-line control is a pill, as the panel's buttons, filters and search. Anything that holds
+   paragraphs, a column or a list keeps the control radius (10, the panel's "Manage"). */
+[data-skin="harbor"]
+  :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"]).rounded-control:not(
+    :has(p, .flex-col, ul, ol, h2, h3, h4),
+    [data-option-state]
+  ),
+[data-skin="harbor"] .rounded-control:has(> input:not([type="checkbox"], [type="radio"])) {
+  border-radius: 9999px;
+}
+/* Secondary: the panel's white pill with a light ring and ink text ("Filters", "Assistant"). */
+[data-skin="harbor"] .ring-inset.ring-sko-border-primary.text-sko-text-primary {
+  --tw-ring-color: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+[data-skin="harbor"] .ring-inset.ring-sko-border-primary.text-sko-text-primary:hover {
+  --tw-ring-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+/* Fields: the panel's search sits on a pale blue pill with no border. */
+[data-skin="harbor"] .rounded-control:has(> input[type="search"]),
+[data-skin="harbor"] .rounded-control:has(> input[placeholder^="Search"]) {
+  border-color: transparent;
+  background-color: var(--color-bg-track);
+}
+
+/* ── Filters ─────────────────────────────────────────────────────────────────
+   No track: bare pills, the selected one on #F0F0F0 with ink text and no ring (the panel's
+   "All · Hosted · Other"). Every segmented control in the prototype is a bg/track row of segments,
+   the selected one on bg/page; this restyles them all. */
+[data-skin="harbor"] .rounded-track.bg-sko-bg-track {
+  background-color: transparent;
+  padding: 0;
+  gap: 4px;
+}
+[data-skin="harbor"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]) {
+  border-radius: 9999px;
+  border-color: transparent;
+  color: var(--color-text-default);
+  font-weight: 500;
+}
+[data-skin="harbor"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page,
+[data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"],
+[data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
+[data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
+  border-color: transparent;
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-default);
+  box-shadow: none;
+}
+[data-skin="harbor"] [data-segmented] > button {
+  height: 38px;
+  padding-inline: 16px;
+}
+
+/* ── Top navigation ──────────────────────────────────────────────────────────
+   The panel's rail item: a pill, ink text; the current page on #D9EAFC, no underline. The bar sits
+   on a soft shadow instead of a rule. */
+[data-skin="harbor"] [data-platform-page] header[data-chrome] {
+  border-bottom-color: transparent;
+  box-shadow: var(--sk-shadow-harbor-bar);
+}
+[data-skin="harbor"] [data-topbar-tab] {
+  align-self: center;
+  height: 44px;
+  padding-inline: 16px;
+  border-radius: 16px;
+  color: var(--color-text-default);
+  font-weight: 600;
+}
+[data-skin="harbor"] [data-topbar-tab]:hover {
+  background-color: var(--color-bg-hover);
+}
+[data-skin="harbor"] [data-topbar-tab][aria-current="page"] {
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-on-primary-soft);
+}
+[data-skin="harbor"] [data-topbar-tab] > span[aria-hidden="true"].absolute {
+  display: none;
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────────────
+   Ink, as "Stay Informed": the selected tab in ink over an ink bar. */
+[data-skin="harbor"] [role="tab"][aria-selected="true"] {
+  color: var(--color-text-default);
+}
+[data-skin="harbor"] [role="tablist"] > span[aria-hidden="true"].bg-sko-bg-primary,
+[data-skin="harbor"] [role="tab"] > span[aria-hidden="true"].bg-sko-bg-primary {
+  background-color: var(--color-text-default);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────────
+   White and borderless on a soft shadow (the panel's site cards and table card). A card inside a
+   card keeps a hairline instead, so it still reads as a separate box. */
+[data-skin="harbor"] [data-platform-page] .rounded-card.border {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-skin="harbor"] [data-platform-page] .rounded-card .rounded-card.border {
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+}
+
+/* ── The glance ──────────────────────────────────────────────────────────────
+   Light: the panel's "Your Sites at a Glance" tray, not a dark band: #F0F0F0 with the white figure
+   cards on it, the title in ink, no glows. Dark keeps the slate-ink band. */
+html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance-backdrop] {
+  background-color: var(--sk-harbor-tray);
+}
+html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance] [data-glow] {
+  display: none;
+}
+html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance-title] {
+  color: var(--color-text-default);
+}
