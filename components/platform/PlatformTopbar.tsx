@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { useDemoMode } from "@/lib/demo";
 import { useBreakpoint } from "@/lib/useBreakpoint";
-import { LoadingSection } from "@/components/molecules/DemoControlsMenu";
+import { LoadingSection, PreviewDeviceSection } from "@/components/molecules/DemoControlsMenu";
 import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 import { useLearner } from "@/lib/persona-gate";
 
@@ -129,8 +129,9 @@ function SectionLinks({
 
 /**
  * Profile panel: the standard profile menu (DS LMS / Profile Menu), as in the player minus its
- * preview sections. In demo mode (?demo=1) it also holds the Loading switch, the one demo
- * setting that acts on the platform pages (motion-matrix §7.9).
+ * preview sections. In demo mode (?demo=1) it also holds the two demo settings that act on the
+ * platform pages, in the player's order: Preview device, then Loading (motion-matrix §7.9). The
+ * player-only ones (content shape, quiz mode, lab launch, completion, playback) stay in the player.
  */
 function ProfilePanel({
   panelProps,
@@ -147,7 +148,12 @@ function ProfilePanel({
       <AccessibilitySection />
       <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
-      {demo ? <LoadingSection /> : null}
+      {demo ? (
+        <>
+          <PreviewDeviceSection onDone={onDone} />
+          <LoadingSection />
+        </>
+      ) : null}
       <PersonasMenuRow onDone={onDone} />
       <ProfileFooter onDone={onDone} />
     </div>

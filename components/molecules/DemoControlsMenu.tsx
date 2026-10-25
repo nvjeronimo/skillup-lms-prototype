@@ -117,6 +117,48 @@ export function LoadingSection() {
   );
 }
 
+/**
+ * Demo: the preview device (the page in a desktop, tablet or phone frame, or following the window).
+ * One stored choice for the player and the platform pages: switching it in one menu shows in the
+ * other (Nelson, 25 Oct 2026: the platform profile menu has it too, before Loading, as in the player).
+ */
+export function PreviewDeviceSection({ onDone }: { onDone: () => void }) {
+  const mode = useLmsStore((s) => s.deviceMode);
+  const setMode = useLmsStore((s) => s.setDeviceMode);
+  const pill =
+    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-control transition-colors";
+  return (
+    <Section title="Preview device">
+      <div className="flex gap-1">
+        {MODES.map((m) => {
+          const active = mode === m.mode;
+          return (
+            <button
+              key={m.mode}
+              type="button"
+              onClick={() => {
+                setMode(m.mode);
+                onDone();
+              }}
+              aria-pressed={active}
+              aria-label={m.label}
+              title={m.label}
+              className={cn(
+                pill,
+                active
+                  ? "bg-sko-bg-primary text-sko-text-on-primary"
+                  : "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+              )}
+            >
+              <Icon icon={m.icon} size={16} />
+            </button>
+          );
+        })}
+      </div>
+    </Section>
+  );
+}
+
 export interface DemoControlsMenuProps {
   userName?: string;
   userAvatarUrl?: string;
@@ -223,29 +265,7 @@ export function DemoControlsMenu({
           <SkillUpOnlineLink onDone={() => setOpen(false)} />
           {demo ? (
             <>
-              <Section title="Preview device">
-                <div className="flex gap-1">
-                  {MODES.map((m) => {
-                    const active = mode === m.mode;
-                    return (
-                      <button
-                        key={m.mode}
-                        type="button"
-                        onClick={() => {
-                          setMode(m.mode);
-                          setOpen(false);
-                        }}
-                        aria-pressed={active}
-                        aria-label={m.label}
-                        title={m.label}
-                        className={cn(pill, active ? pillOn : pillOff)}
-                      >
-                        <Icon icon={m.icon} size={16} />
-                      </button>
-                    );
-                  })}
-                </div>
-              </Section>
+              <PreviewDeviceSection onDone={() => setOpen(false)} />
 
               <Section title="Content Shape Levels">
                 <div className="flex flex-col gap-1">
