@@ -1,8 +1,9 @@
 /**
  * The seven synthetic personas (Nelson, 25 Oct 2026; 04-research/personas, INDEX.md and
  * personas.json). Test lenses, not real learners (PRODUCT.md): the profile menu's "Synthetic
- * personas" picks one or more, the prototype takes their conditions (the settings it already
- * has) and the first one's learner data (its name and its progress over the prototype's courses).
+ * personas" picks one at a time (Nelson, 25 Oct 2026: "Só podemos escolher uma persona de cada
+ * vez"); the prototype takes its conditions (settings it already has) and its learner data (its
+ * name and its progress over the prototype's courses).
  *
  * Pure data, no imports: lib/data and lib/programs read it at import, so it must not close a cycle.
  *
@@ -21,7 +22,7 @@ export type PersonaPercent = number | null;
 
 /**
  * What a persona switches on, among the settings the prototype already has (lib/store and the
- * My Learning view). Several personas together take the union.
+ * My Learning view).
  */
 export interface PersonaConditions {
   /** The 375 mobile preview (lib/store `deviceMode`). */
@@ -208,35 +209,29 @@ export const CONDITION_LABELS: Record<keyof PersonaConditions, string> = {
   listView: "My Learning list",
 };
 
-/** The union of the conditions of several personas. */
-export function unionConditions(ids: readonly string[]): PersonaConditions {
-  const out: PersonaConditions = {};
-  for (const id of ids) {
-    const p = getPersona(id);
-    if (!p) continue;
-    for (const [k, v] of Object.entries(p.conditions) as [keyof PersonaConditions, boolean | undefined][]) {
-      if (v) out[k] = true;
-    }
-  }
-  return out;
-}
-
 /** "Noah Carter" → "Noah". */
 export const firstNameOf = (name: string) => name.split(" ")[0] ?? name;
 
 /* ── The cookie ─────────────────────────────────────────────────────────────────────── */
 
-/** The active personas, in the order picked: "P02,P06". Set by Apply, read by the server layout. */
+/** The active persona's id: "P02". Set by Apply, read by the browser and the server layout. */
 export const PERSONA_COOKIE = "sk-persona";
 
-/** The ids of a cookie value, known ones only, each once, in order. */
-export function parsePersonaIds(value: string | null | undefined): PersonaId[] {
-  if (!value) return [];
-  const out: PersonaId[] = [];
-  for (const raw of decodeURIComponent(value).split(",")) {
-    const id = raw.trim();
-    const p = getPersona(id);
-    if (p && !out.includes(p.id)) out.push(p.id);
+/**
+ * The persona of a cookie value, or null. A cookie from the first version, which held several
+ * ("P02,P06"), gives its first known id, so no browser breaks.
+ */
+export function parsePersonaId(value: string | null | undefined): PersonaId | null {
+  if (!value) return null;
+  let text = value;
+  try {
+    text = decodeURIComponent(value);
+  } catch {
+    /* not encoded: read as it is */
   }
-  return out;
+  for (const raw of text.split(",")) {
+    const p = getPersona(raw.trim());
+    if (p) return p.id;
+  }
+  return null;
 }

@@ -1,5 +1,5 @@
 import type { DeviceMode, TextSize } from "./store";
-import { PERSONA_COOKIE, unionConditions, type PersonaConditions, type PersonaId } from "./personas";
+import { PERSONA_COOKIE, getPersona, type PersonaConditions, type PersonaId } from "./personas";
 
 /**
  * What the synthetic personas change in the store (Nelson, 25 Oct 2026), and how Apply and
@@ -27,7 +27,7 @@ export function snapshotSettings(s: PersonaSettings): PersonaSettings {
   };
 }
 
-/** The settings the conditions ask for, on top of `base`: each condition only ever switches one on. */
+/** The settings a persona's conditions ask for, on top of `base`: each condition only ever switches one on. */
 export function settingsFor(conditions: PersonaConditions, base: PersonaSettings): PersonaSettings {
   return {
     deviceMode: conditions.mobile ? "mobile" : base.deviceMode,
@@ -39,23 +39,24 @@ export function settingsFor(conditions: PersonaConditions, base: PersonaSettings
 }
 
 /**
- * Apply: the settings of the union of the personas' conditions, always over the settings from
- * before any persona (so switching from P07 to P02 drops P07's large text), and the snapshot
- * to keep: the one already kept when a persona was on, else the current settings.
+ * Apply one persona (one at a time, Nelson 25 Oct 2026): its conditions only, always over the
+ * settings from before any persona, so switching from P07 to P02 puts the baseline back first
+ * and P07's large text does not leak into P02. Returns the snapshot to keep: the one already
+ * kept when a persona was on, else the current settings.
  */
 export function applyPlan(
-  ids: readonly PersonaId[],
+  id: PersonaId,
   current: PersonaSettings,
   kept: PersonaSettings | null,
 ): { settings: PersonaSettings; before: PersonaSettings } {
   const before = kept ?? snapshotSettings(current);
-  return { settings: settingsFor(unionConditions(ids), before), before };
+  return { settings: settingsFor(getPersona(id)?.conditions ?? {}, before), before };
 }
 
-/** The cookie Apply writes ("P02,P06", a year, every path); an empty list deletes it. */
-export function personaCookie(ids: readonly PersonaId[]): string {
-  return ids.length
-    ? `${PERSONA_COOKIE}=${encodeURIComponent(ids.join(","))}; path=/; max-age=31536000; samesite=lax`
+/** The cookie Apply writes ("P02", a year, every path); null deletes it. */
+export function personaCookie(id: PersonaId | null): string {
+  return id
+    ? `${PERSONA_COOKIE}=${id}; path=/; max-age=31536000; samesite=lax`
     : `${PERSONA_COOKIE}=; path=/; max-age=0; samesite=lax`;
 }
 
