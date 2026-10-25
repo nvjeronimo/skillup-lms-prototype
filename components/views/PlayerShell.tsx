@@ -450,8 +450,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
       <ArrivalContext.Provider value={courseArrival}>
       <CoursePlayerTopbar
-        // Chrome that holds still through a page transition (globals.css).
-        className="sk-vt-player-topbar"
+        // Chrome that holds still through a page transition (globals.css). Its view-transition-name
+        // makes it a stacking context, so without a z-index the body painted over the profile menu
+        // (Nelson, 25 Oct 2026); z-30 as the platform top bar, under the drawer (40) and modals.
+        className="sk-vt-player-topbar relative z-30"
         size={topbarSize}
         showNotifications
         notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
