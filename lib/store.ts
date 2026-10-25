@@ -19,7 +19,9 @@ export type Theme = "light" | "dark";
 /** The brand skins the tokens define (tokens/colors.css). Ink, Sky and Violet had no tokens and went on 16 Oct 2026. */
 /** "studio" (22 Oct 2026, Nelson) is the experimental whole-platform direction (tokens/direction-studio.css):
  *  it took the place of the Sea skin, which went the same day. */
-export type Skin = "teal" | "gold" | "red" | "studio";
+/** "harbor" (25 Oct 2026, Nelson): a hosting-panel look (tokens/skin-harbor.css): black buttons,
+ *  blue links, zinc greys, Plus Jakarta Sans + Figtree. */
+export type Skin = "teal" | "gold" | "red" | "studio" | "harbor";
 
 /** Vision mode — "cvd" = red-green colourblind-safe state colours (deuter + protan). */
 export type Vision = "default" | "cvd";
@@ -680,7 +682,7 @@ export const useLmsStore = create<LmsState>()(
           s = { ...rest, largeTargetsChoice: largeTargets ? true : null };
         }
         if (from < 4) s = { ...s, seededCourses: COURSES_BEFORE_V4 };
-        if (from < 5 && s.skin && !["teal", "gold", "red", "sea", "mare", "studio"].includes(s.skin as string)) s = { ...s, skin: "teal" };
+        if (from < 5 && s.skin && !["teal", "gold", "red", "sea", "mare", "studio", "harbor"].includes(s.skin as string)) s = { ...s, skin: "teal" };
         // v6: the Maré skin is called Sea (Nelson, 19 Oct 2026).
         if (from < 6 && (s.skin as string) === "mare") s = { ...s, skin: "sea" as Skin };
         // v7: Studio takes Sea's place among the skins (Nelson, 22 Oct 2026); the old Studio switch

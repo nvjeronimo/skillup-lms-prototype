@@ -1,0 +1,161 @@
+/* ============================================================================
+   "Harbor" — a brand skin with a hosting-control-panel look (Nelson, 25 Oct 2026: "uma skin
+   Dreamhost like"; named Harbor because the prototype is public). Read from the panel's own
+   computed styles, then held to SkillUp's rules (role tokens, AA, no gradients):
+   - ink-black primary buttons with white text, 12 radius, Semibold;
+   - blue for links, icons, progress and the selected nav pill (#d9eafc);
+   - zinc greys for text, a #f7f9fa ground, white cards with a hairline and a whisper of shadow;
+   - geometric display type (Plus Jakarta Sans, standing in for Gilroy) and a humanist text face
+     (Figtree, standing in for Proxima Nova), both free;
+   - cards 16, bands 20, controls 12, segmented tracks as pills.
+   Switched on by html[data-skin="harbor"] (Profile menu > Brand skin, or ?direction=harbor).
+   Contrast (light, on white): text/default 17.7:1, muted 10.4:1, subtle 7.7:1, placeholder 4.8:1,
+   text/primary #0062cc 5.8:1, text/success 6.6:1, text/error 5.6:1, border/default 3.4:1, white on
+   the black primary 18.9:1. Dark, on the #1f1f23 page: every text role ≥ 6:1.
+   ============================================================================ */
+
+[data-skin="harbor"] {
+  --sk-font-body: var(--font-figtree, "Figtree"), system-ui, sans-serif;
+  --sk-font-display: var(--font-plus-jakarta, "Plus Jakarta Sans"), system-ui, sans-serif;
+
+  --sk-radius-inner: 8px;
+  --sk-radius-control: 12px;
+  --sk-radius-card: 16px;
+  --sk-radius-surface: 20px;
+  --sk-radius-card-inset: 12px;
+  --sk-radius-track: 9999px;
+
+  /* Cards float on a hairline and a shadow you barely see. */
+  --sk-shadow-card: 0 1px 1px #0000000f, 0 2px 8px #00000005;
+}
+
+/* Harbor Light. */
+[data-skin="harbor"]:not([data-theme="dark"]) {
+  --color-text-default: #18181b;
+  --color-text-muted: #3f3f46;
+  --color-text-subtle: #52525b;
+  --color-text-placeholder: #71717a;
+  --color-text-disabled: #a1a1aa;
+  --color-text-primary: #0062cc;
+  --color-text-on-primary: #ffffff;
+  --color-text-on-primary-hover: #ffffff;
+  --color-text-on-primary-soft: #18181b;
+  --color-text-info: #0062cc;
+  --color-text-success: #00695c;
+  --color-text-error: #c62828;
+  --color-text-on-inverse: #ffffff;
+
+  --color-bg-page: #ffffff;
+  --color-bg-faint: #f7f9fa;
+  --color-bg-subtle: #f4f4f5;
+  --color-bg-muted: #ececee;
+  --color-bg-strong: #d4d4d8;
+  --color-bg-primary: #111111;
+  --color-bg-primary-hover: #3f3f46;
+  --color-bg-primary-soft: #d9eafc;
+  --color-bg-info: #0073ec;
+  --color-bg-info-soft: #e5f1fd;
+  --color-bg-success: #00796b;
+  --color-bg-success-soft: #e0f7f4;
+  --color-bg-error: #d32f2f;
+  --color-bg-error-soft: #fdecea;
+  --color-bg-inverse: #18181b;
+
+  --color-border-default: #8b8b94;
+  --color-border-subtle: #e4e4e7;
+  --color-border-strong: #18181b;
+  --color-border-inverse: #18181b;
+  --color-border-disabled: #d4d4d8;
+  --color-border-primary: #0073ec;
+  --color-border-primary-soft: #b3d4f7;
+  --color-border-primary-muted: #b3d4f7;
+  --color-border-info: #0073ec;
+  --color-border-success: #00796b;
+  --color-border-error: #c62828;
+
+  --color-icon-default: #18181b;
+  --color-icon-muted: #3f3f46;
+  --color-icon-subtle: #52525b;
+  --color-icon-faint: #a1a1aa;
+  --color-icon-primary: #0073ec;
+  --color-icon-info: #0073ec;
+  --color-icon-success: #00897b;
+  --color-icon-success-strong: #00897b;
+  --color-icon-error: #c62828;
+}
+
+/* Harbor Dark: zinc at night, a white primary with ink text (the black button inverted), a
+   lighter blue for links and icons. Also every nested dark region. Page #1f1f23 sits 1.25:1 above
+   the #09090b ground; on it text/default 15.6:1, muted 11:1, subtle 6.3:1, primary 6.2:1. */
+html[data-skin="harbor"][data-theme="dark"],
+html[data-skin="harbor"] [data-theme="dark"] {
+  --color-text-default: #fafafa;
+  --color-text-muted: #d4d4d8;
+  --color-text-subtle: #a1a1aa;
+  --color-text-placeholder: #a1a1aa;
+  --color-text-disabled: #71717a;
+  --color-text-primary: #4da3ff;
+  --color-text-on-primary: #09090b;
+  --color-text-on-primary-hover: #09090b;
+  --color-text-on-primary-soft: #cfe5ff;
+  --color-text-info: #4da3ff;
+  --color-text-success: #34d399;
+  --color-text-error: #f87171;
+
+  --color-bg-page: #1f1f23;
+  --color-bg-faint: #09090b;
+  --color-bg-subtle: #27272a;
+  --color-bg-muted: #2f2f34;
+  --color-bg-strong: #52525b;
+  --color-bg-primary: #fafafa;
+  --color-bg-primary-hover: #d4d4d8;
+  --color-bg-primary-soft: #0b2a4d;
+  --color-bg-info: #4da3ff;
+  --color-bg-inverse: #fafafa;
+  /* The glance band (a nested dark region on bg/info-soft): ink, as the panel's black controls. */
+  --color-bg-info-soft: #111111;
+
+  --color-border-default: #71717a;
+  --color-border-subtle: #3f3f46;
+  --color-border-strong: #fafafa;
+  --color-border-primary: #4da3ff;
+  --color-border-primary-soft: #1d4d80;
+  --color-border-primary-muted: #1d4d80;
+
+  --color-icon-default: #fafafa;
+  --color-icon-muted: #d4d4d8;
+  --color-icon-subtle: #a1a1aa;
+  --color-icon-faint: #52525b;
+  --color-icon-primary: #4da3ff;
+  --color-icon-success: #34d399;
+  --color-icon-success-strong: #34d399;
+
+  --sk-shadow-card: 0 0 0 1px #ffffff0d, 0 1px 2px #00000066;
+}
+
+/* Type: headings in the geometric face at Semibold, as the panel sets its titles. */
+[data-skin="harbor"] :is(
+    .sk-text-display-large-bold,
+    .sk-text-headline-large-bold,
+    .sk-text-headline-medium-bold,
+    .sk-text-headline-small-bold,
+    .sk-text-title-large-bold
+  ) {
+  font-weight: 600;
+}
+
+/* Secondary buttons are outlined in ink, not blue, as the panel's "Manage": black ring and text,
+   the hover keeps the soft fill. Links, tabs and icons stay blue. */
+[data-skin="harbor"] .ring-inset.ring-sko-border-primary.text-sko-text-primary {
+  --tw-ring-color: var(--color-border-strong);
+  color: var(--color-text-default);
+}
+
+/* The platform top bar: no rule under it, a soft shadow instead (the panel's bar). */
+[data-skin="harbor"] [data-platform-page] header[data-chrome] {
+  border-bottom-color: transparent;
+  box-shadow: 0 1px 5px #00000029;
+}
+html[data-skin="harbor"][data-theme="dark"] [data-platform-page] header[data-chrome] {
+  box-shadow: 0 1px 0 #ffffff14;
+}

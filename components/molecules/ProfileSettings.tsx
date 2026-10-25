@@ -16,7 +16,8 @@ import { cn } from "@/lib/utils";
  * (Nelson): the trigger already shows who is signed in.
  */
 
-/** The brand skins: SKO, Gold, Red (tokens/colors.css) and Studio (tokens/direction-studio.css). */
+/** The brand skins: SKO, Gold, Red (tokens/colors.css), Studio (tokens/direction-studio.css) and
+ *  Harbor (tokens/skin-harbor.css). */
 export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/primary
   { skin: "teal", label: "SKO", dot: "bg-sko-icon-primary" },
@@ -26,6 +27,8 @@ export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   { skin: "red", label: "Red", dot: "bg-sko-icon-accent-red" },
   // Studio (experimental, Nelson 22 Oct 2026): took Sea's place; its dot is Studio's own primary, the logo's deep teal.
   { skin: "studio", label: "Studio", dot: "bg-sko-bg-primary" },
+  // Harbor (Nelson, 25 Oct 2026): a hosting-panel look; its dot is its own primary, black.
+  { skin: "harbor", label: "Harbor", dot: "bg-sko-bg-primary" },
 ];
 
 /**
@@ -38,7 +41,7 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
   return (
     <span
       aria-hidden
-      data-skin={skin === "teal" ? "teal" : undefined}
+      data-skin={skin === "teal" || skin === "harbor" ? skin : undefined}
       data-direction={skin === "studio" ? "studio" : undefined}
       data-theme={skin === "teal" && theme === "dark" ? "dark" : undefined}
       className={cn("size-2.5 shrink-0 rounded-pill", dot)}
@@ -191,14 +194,21 @@ export function Segmented<T extends string>({
   options,
   value,
   onChange,
+  wrap = false,
 }: {
   label: string;
   options: { value: T; label: React.ReactNode; aria?: string; className?: string }[];
   value: T;
   onChange: (v: T) => void;
+  /** Lay the segments out in rows of three (the five brand skins do not fit one 288 row). */
+  wrap?: boolean;
 }) {
   return (
-    <div role="group" aria-label={label} className="flex gap-0.5 rounded-track bg-sko-bg-track p-1">
+    <div
+      role="group"
+      aria-label={label}
+      className={cn("gap-0.5 rounded-track bg-sko-bg-track p-1", wrap ? "grid grid-cols-3" : "flex")}
+    >
       {options.map((o) => (
         <button
           key={o.value}
@@ -244,9 +254,8 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
           label="Brand skin"
           options={PROFILE_SKINS.map((s) => ({
             value: s.skin,
-            // Four skins in the 288 panel: tighter segments, and a name that ends with an ellipsis
-            // when it does not fit (the dot always shows; the button keeps the full name).
-            // flex-auto: each segment takes its text's width and only shrinks when the four do not fit.
+            // Five skins in the 288 panel, in rows of three (25 Oct 2026): tighter segments, and a
+            // name that ends with an ellipsis when it does not fit (the dot always shows).
             className: "sk-text-body-medium-semibold flex-auto gap-1 px-1",
             label: (
               <>
@@ -257,6 +266,7 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
           }))}
           value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
           onChange={setSkin}
+          wrap
         />
       </div>
       {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
