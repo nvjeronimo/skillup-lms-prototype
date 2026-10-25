@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { LayoutGrid, List, type LucideIcon } from "lucide-react";
+import { LayoutGrid, List, Table2, type LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import type { MyLearningView } from "@/lib/platform/my-learning";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 export interface ViewToggleProps {
   view: MyLearningView;
   onChange: (view: MyLearningView) => void;
+  /** Harbor: a third option, the table (the DreamHost panel's Websites list). */
+  withTable?: boolean;
   className?: string;
 }
 
@@ -17,6 +19,7 @@ const OPTIONS: { view: MyLearningView; label: string; icon: LucideIcon }[] = [
   { view: "grid", label: "Grid view", icon: LayoutGrid },
   { view: "list", label: "List view", icon: List },
 ];
+const TABLE: { view: MyLearningView; label: string; icon: LucideIcon } = { view: "table", label: "Table view", icon: Table2 };
 
 /**
  * DS Button group v2.0, icon only: a bg/muted track (padding 4, gap 2, radius 8) holding two
@@ -27,14 +30,15 @@ const OPTIONS: { view: MyLearningView; label: string; icon: LucideIcon }[] = [
  * A group of two toggle buttons (aria-pressed). Desktop only: below desktop the collections
  * are Grid only, so the parent hides it.
  */
-export function ViewToggle({ view, onChange, className }: ViewToggleProps) {
+export function ViewToggle({ view, onChange, withTable = false, className }: ViewToggleProps) {
+  const options = withTable ? [...OPTIONS, TABLE] : OPTIONS;
   return (
     <div
       role="group"
       aria-label="View"
       className={cn("inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1", className)}
     >
-      {OPTIONS.map((option) => {
+      {options.map((option) => {
         const pressed = option.view === view;
         return (
           <button

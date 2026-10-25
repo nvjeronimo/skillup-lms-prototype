@@ -15,6 +15,8 @@ import { useDemoMode } from "@/lib/demo";
 import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
 import { PageSkeleton } from "./PageSkeleton";
 import { usePersonaGated } from "@/lib/persona-gate";
+import { useHarbor } from "@/lib/platform/harbor";
+import { HarborRail } from "./harbor/HarborRail";
 
 const SHOW_MOCK_KEY = "sk-platform-show-mock";
 
@@ -55,6 +57,8 @@ export function PlatformPage({
   // A synthetic persona is on (Nelson, 25 Oct 2026): the content reads data the server does
   // not have, so it renders after mount; the skeleton holds its place until then.
   const personaGated = usePersonaGated();
+  // Harbor (25 Oct 2026): the sections live in a rail on the left from desktop up.
+  const harbor = useHarbor();
   const toast = useLmsStore((s) => s.toast);
   const demo = useDemoMode();
   // On a phone the sections float at the bottom (PlatformTabBar, Nelson 22 Oct 2026).
@@ -123,6 +127,9 @@ export function PlatformPage({
       data-show-mock={showMock ? "" : undefined}
     >
       <PlatformTopbar current={current} />
+      <div className={cn(harbor && "lg:flex lg:items-stretch")}>
+      {harbor ? <HarborRail current={current} /> : null}
+      <div className={cn(harbor && "flex min-h-[calc(100dvh-72px)] min-w-0 flex-1 flex-col")}>
       {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
       <main
         key={pathname}
@@ -179,6 +186,8 @@ export function PlatformPage({
         ) : null}
       </footer>
       ) : null}
+      </div>
+      </div>
       {/* One persistent live region for the load (outside the keyed <main>, so it is in the page
           before its text changes): "Loading…" while the skeleton shows, empty after. */}
       <p role="status" className="sr-only">

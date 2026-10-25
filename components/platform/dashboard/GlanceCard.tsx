@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ArrowDownRight, ArrowRight, ArrowUpRight } from "lucide-react";
+import { Icon } from "@/lib/icons";
 import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { Badge } from "@/components/atoms/Badge";
 import type { DashboardStat } from "@/lib/platform/dashboard";
@@ -7,7 +9,30 @@ import { cn } from "@/lib/utils";
 export interface GlanceCardProps {
   title: string;
   stats: DashboardStat[];
+  /** Harbor: each figure carries its 30-day trend chip (sample data). */
+  trends?: boolean;
   className?: string;
+}
+
+/** Harbor's trend chip (the DreamHost panel's "↓ 38%"): a soft tint, an arrow and the change. */
+function TrendChip({ trend }: { trend: NonNullable<DashboardStat["trend"]> }) {
+  const tone =
+    trend.dir === "up"
+      ? "bg-sko-bg-success-soft text-sko-text-success"
+      : trend.dir === "down"
+        ? "bg-sko-bg-error-soft text-sko-text-error"
+        : "bg-sko-bg-muted text-sko-text-muted";
+  const arrow = trend.dir === "up" ? ArrowUpRight : trend.dir === "down" ? ArrowDownRight : ArrowRight;
+  return (
+    <span
+      data-mock="No API returns a figure's value 30 days ago"
+      className={cn("sk-text-body-small-semibold inline-flex items-center gap-0.5 rounded-pill px-1.5 py-0.5", tone)}
+    >
+      <Icon icon={arrow} size={14} aria-hidden />
+      <span aria-hidden="true">{trend.label}</span>
+      <span className="sr-only">{trend.spoken}</span>
+    </span>
+  );
 }
 
 /**
@@ -21,10 +46,10 @@ export interface GlanceCardProps {
  * carries the link, stretched over the whole card (as the Due items); no arrow (Nelson, 22 Oct).
  * Hover: the label underlines; press: the card's .99 scale (sk-press-card); focus: the ring on the card.
  */
-function StatCard({ stat }: { stat: DashboardStat }) {
+function StatCard({ stat, trends = false }: { stat: DashboardStat; trends?: boolean }) {
   return (
     <div className="sk-press-card relative flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-3 shadow-sk-card md:p-4">
-      <p className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-muted">
+      <p className="sk-text-label-small-semibold flex items-center justify-between gap-2 whitespace-nowrap text-sko-text-muted">
         <Link
           href={stat.href}
           aria-label={`${stat.label}: ${stat.value} ${stat.detailStrong ?? ""} ${stat.detail}`.replace(/\s+/g, " ")}
@@ -32,6 +57,7 @@ function StatCard({ stat }: { stat: DashboardStat }) {
         >
           {stat.label}
         </Link>
+        {trends && stat.trend ? <TrendChip trend={stat.trend} /> : null}
       </p>
       <p className="flex items-end gap-2">
         <span
@@ -71,7 +97,7 @@ function StatCard({ stat }: { stat: DashboardStat }) {
  * Padding 24 / 20 / 16. Above and below the cards: Spacing/6xl, 48 / 40 / 32 (Nelson, 25 Oct 2026:
  * 3rem on desktop, or the nearest token).
  */
-export function GlanceCard({ title, stats, className }: GlanceCardProps) {
+export function GlanceCard({ title, stats, trends = false, className }: GlanceCardProps) {
   return (
     <section
       aria-labelledby="dashboard-glance-title"
@@ -114,7 +140,7 @@ export function GlanceCard({ title, stats, className }: GlanceCardProps) {
       >
         {stats.map((stat) => (
           <li key={stat.label} className="w-[156px] shrink-0 snap-start md:w-auto md:min-w-0">
-            <StatCard stat={stat} />
+            <StatCard stat={stat} trends={trends} />
           </li>
         ))}
       </ul>

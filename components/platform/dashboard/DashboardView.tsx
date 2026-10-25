@@ -12,11 +12,19 @@ import {
 import type { DashboardResumeRow } from "@/lib/platform/dashboard-resume";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
+import { cn } from "@/lib/utils";
 import { DashboardSkeleton } from "./DashboardSkeleton";
 import { DueItem } from "./DueItem";
 import { GlanceCard } from "./GlanceCard";
 import { JumpTile } from "./JumpTile";
 import { ResumeRow } from "./ResumeRow";
+import { Sparkles } from "lucide-react";
+import { Icon } from "@/lib/icons";
+import { openAssistant } from "@/lib/assistant/bus";
+import { deadlinesThisWeek } from "@/lib/platform/calendar";
+import { useHarbor } from "@/lib/platform/harbor";
+import { HarborPickUp } from "@/components/platform/harbor/HarborPickUp";
+import { HarborStayInformed } from "@/components/platform/harbor/HarborStayInformed";
 
 /**
  * Platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop 6408:72361, tablet
@@ -44,6 +52,9 @@ import { ResumeRow } from "./ResumeRow";
  */
 export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
   const showToast = useLmsStore((s) => s.showToast);
+  // Harbor (25 Oct 2026, after the DreamHost panel's home): a tip under the greeting, the glance's
+  // trend chips, "Pick up" as a list beside a large panel with "Stay informed" next to it.
+  const harbor = useHarbor();
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
   return (
@@ -56,17 +67,53 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
       <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
         {/* Always one line (Nelson, 23 Oct 2026): a very long name is cut with an ellipsis. */}
-        <h1 data-arrive={0} className="sk-text-headline-large-bold truncate whitespace-nowrap text-sko-text-default">
-          {dashboardGreeting.salutation}{" "}
-          <span data-heading-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
-        </h1>
-
-        <div data-arrive={1}>
-          <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} />
+        <div data-arrive={0} className="flex flex-col gap-2">
+          <h1 className="sk-text-headline-large-bold flex items-center gap-3 truncate whitespace-nowrap text-sko-text-default">
+            {harbor ? <Icon icon={Sparkles} size={28} className="shrink-0 text-sko-icon-primary" aria-hidden /> : null}
+            <span className="truncate">
+              {dashboardGreeting.salutation}{" "}
+              <span data-heading-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
+            </span>
+          </h1>
+          {harbor ? (
+            // The panel's greeting tip: one useful sentence and a link, from the assistant.
+            <p
+              data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
+              className="sk-text-body-large-regular text-sko-text-muted"
+            >
+              {deadlinesThisWeek === 1 ? "One deadline is" : `${deadlinesThisWeek} deadlines are`} coming up this week. I can help you plan them.{" "}
+              <button
+                type="button"
+                onClick={() => openAssistant("Help me plan my deadlines this week")}
+                className="sk-text-body-large-semibold text-sko-text-primary underline underline-offset-2"
+              >
+                Plan my week
+              </button>
+            </p>
+          ) : null}
         </div>
 
+        <div data-arrive={1}>
+          <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} trends={harbor} />
+        </div>
+
+        {harbor ? (
+          <div className="flex flex-col gap-layout-column lg:flex-row lg:items-stretch">
+            <section data-arrive={2} aria-labelledby="dashboard-pickup-title" className="flex min-w-0 flex-col gap-4 lg:flex-1">
+              <PlatformSectionHeader
+                id="dashboard-pickup-title"
+                title="Pick up"
+                emphasis="where you left off"
+                action={{ label: "My learning", href: "/platform/my-learning" }}
+              />
+              <HarborPickUp resume={resume} titleId="dashboard-pickup-title" />
+            </section>
+            <HarborStayInformed className="flex flex-col lg:w-[400px] lg:shrink-0 lg:pt-12" />
+          </div>
+        ) : null}
+
         <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-          <section data-arrive={2} aria-labelledby="dashboard-due-title" className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
+          <section data-arrive={2} aria-labelledby="dashboard-due-title" className={cn("flex flex-col gap-4", harbor ? "lg:flex-1" : "lg:w-[440px] lg:shrink-0")}>
             <PlatformSectionHeader
               id="dashboard-due-title"
               title="Due"
@@ -83,6 +130,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             </ul>
           </section>
 
+          {harbor ? null : (
           <section data-arrive={3} aria-labelledby="dashboard-resume-title" className="flex min-w-0 flex-col gap-4 lg:flex-1">
             <PlatformSectionHeader
               id="dashboard-resume-title"
@@ -123,6 +171,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
               ))}
             </ul>
           </section>
+          )}
         </div>
 
         <section data-arrive={4} aria-labelledby="dashboard-jump-title" className="flex flex-col gap-4">

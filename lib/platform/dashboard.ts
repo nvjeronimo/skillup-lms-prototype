@@ -34,6 +34,11 @@ export interface DashboardStat {
   goal?: { label: string; spoken: string; color?: "warning" | "gray" };
   /** Where the card goes (Nelson, 25 Oct 2026: the figures link to the list they count). */
   href: string;
+  /**
+   * Harbor only (25 Oct 2026, the DreamHost panel's trend chips): the change over the last 30 days.
+   * Sample data: no Open edX API returns a figure's past value (data-mock on the chip).
+   */
+  trend?: { label: string; dir: "up" | "down" | "flat"; spoken: string };
 }
 
 /**
@@ -72,6 +77,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       tone: "brand",
       goal: { label: `${dueThisWeek} due this week`, spoken: `${dueThisWeek} deadlines in the next seven days`, color: "warning" },
       href: "/platform/my-learning?tab=courses&status=in-progress",
+      trend: { label: "1", dir: "up", spoken: "1 more than 30 days ago" },
     },
     {
       label: "Programs",
@@ -84,6 +90,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
         spoken: `${programsNotStarted} of your ${PROGRAMS.length} programs not started yet`,
       },
       href: "/platform/my-learning?tab=programs&status=in-progress",
+      trend: { label: "0", dir: "flat", spoken: "the same as 30 days ago" },
     },
     {
       label: "Completed",
@@ -92,6 +99,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       tone: "success",
       goal: { label: `${pct(coursesCompleted, enrolled)} completed`, spoken: `${pct(coursesCompleted, enrolled)} of your ${enrolled} enrolled courses complete` },
       href: "/platform/my-learning?tab=courses&status=completed",
+      trend: { label: "2", dir: "up", spoken: "2 more than 30 days ago" },
     },
     // Counted from the Certificates page (19 Oct 2026; it read 2 before the Data Analytics sample program).
     {
@@ -100,6 +108,7 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       detail: "ready to download",
       tone: "success",
       href: "/platform/certificates",
+      trend: { label: "1", dir: "up", spoken: "1 more than 30 days ago" },
     },
   ],
 };

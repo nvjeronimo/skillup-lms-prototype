@@ -282,3 +282,17 @@ html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance] [data-glow] {
 html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance-title] {
   color: var(--color-text-default);
 }
+
+/* From desktop up the rail is on the left: the glance is a rounded tray in the page column, not a
+   band across the window (the panel's tray: radius 20). */
+@media (min-width: 1025px) {
+  [data-skin="harbor"] [data-glance] {
+    margin-inline: 0;
+    padding-inline: 24px;
+    border-radius: var(--sk-radius-surface);
+  }
+  [data-skin="harbor"] [data-glance] > ul {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}

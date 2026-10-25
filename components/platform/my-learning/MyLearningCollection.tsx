@@ -26,6 +26,8 @@ import { cn } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { useEqualHeights } from "@/lib/useEqualHeights";
+import { useHarbor } from "@/lib/platform/harbor";
+import { HarborCourseTable } from "@/components/platform/harbor/HarborCourseTable";
 import { ProgramCard } from "./ProgramCard";
 import { StickyToolbar } from "@/components/platform/StickyToolbar";
 import { SearchField } from "./SearchField";
@@ -86,7 +88,12 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const pathname = usePathname();
   const params = useSearchParams();
   const showToast = useLmsStore((s) => s.showToast);
-  const [query, setQuery] = React.useState("");
+  // `?q=`: a search from Harbor's top bar lands here with its words (25 Oct 2026).
+  const [query, setQuery] = React.useState(() => params.get("q") ?? "");
+  const paramQ = params.get("q");
+  React.useEffect(() => {
+    if (paramQ !== null) setQuery(paramQ);
+  }, [paramQ]);
   // A link may open the list on a status (the Dashboard glance figures: ?status=in-progress|completed).
   const linkedStatus = params.get("status");
   const [status, setStatus] = React.useState<MyLearningStatusFilter>(
@@ -131,7 +138,11 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   }, [linkedTab]);
   // `?view=grid` too: a synthetic persona can open on the list (Nelson, 25 Oct 2026), and the grid is then the one asked for.
   const viewParam = params.get("view");
-  const view: MyLearningView = viewParam === "list" || viewParam === "grid" ? viewParam : MY_LEARNING_DEFAULT_VIEW;
+  const harbor = useHarbor();
+  const view: MyLearningView =
+    viewParam === "list" || viewParam === "grid" || (viewParam === "table" && harbor) ? viewParam : MY_LEARNING_DEFAULT_VIEW;
+  // The table is for courses; on Programs it reads as the list.
+  const tableView = view === "table" && tab === "courses";
 
   const setParam = (key: "tab" | "view", value: string, fallback: string) => {
     const next = new URLSearchParams(params.toString());
@@ -164,7 +175,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
 
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
-  const listView = view === "list";
+  const listView = view === "list" || (view === "table" && tab !== "courses");
   // Every card has the height of the tallest one, in the grid and in the list (course rows; a title can take two lines).
   // Not on a phone (below md, one column): there the cards keep their own height (25 Oct 2026).
   const gridRef = useEqualHeights<HTMLDivElement>(
@@ -250,6 +261,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             </div>
             <ViewToggle
               view={view}
+              withTable={harbor}
               onChange={(next) => setParam("view", next, MY_LEARNING_DEFAULT_VIEW)}
               className="hidden shrink-0 md:inline-flex"
             />
@@ -288,8 +300,13 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             />
           ) : tab === "courses" ? (
             <>
+              {tableView ? (
+                <div className="hidden md:block">
+                  <HarborCourseTable courses={courses.map((r) => r.card)} onAction={(c) => notInPrototype(c.cta)} />
+                </div>
+              ) : null}
               {/* items-start: an opened row does not stretch the rows of its line. */}
-              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "md:hidden")}>
+              <ul className={cn(MY_LEARNING_GRID, "items-start", (listView || tableView) && "md:hidden")}>
                 {courses.map((row, i) => (
                   <CourseRowCard
                     key={row.card.id}
