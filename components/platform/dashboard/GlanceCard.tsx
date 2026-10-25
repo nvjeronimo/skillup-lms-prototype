@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { Badge } from "@/components/atoms/Badge";
 import type { DashboardStat } from "@/lib/platform/dashboard";
@@ -15,11 +16,23 @@ export interface GlanceCardProps {
  * of 22 enrolled"), then the goal as a DS Badge sm. The value is text/on-primary-soft, or
  * text/success for what is done (Completed, Certificates). The badge carries a spoken sentence;
  * its short text is hidden from assistive tech.
+ * Each card is a link to the list its figure counts (Nelson, 25 Oct 2026): Courses and Programs to
+ * My Learning in progress, Completed to the completed courses, Certificates to its page. The label
+ * carries the link, stretched over the whole card (as the Due items); no arrow (Nelson, 22 Oct).
+ * Hover: the label underlines; press: the card's .99 scale (sk-press-card); focus: the ring on the card.
  */
 function StatCard({ stat }: { stat: DashboardStat }) {
   return (
-    <div className="flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-3 shadow-sk-card md:p-4">
-      <p className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-muted">{stat.label}</p>
+    <div className="sk-press-card relative flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-3 shadow-sk-card md:p-4">
+      <p className="sk-text-label-small-semibold whitespace-nowrap text-sko-text-muted">
+        <Link
+          href={stat.href}
+          aria-label={`${stat.label}: ${stat.value} ${stat.detailStrong ?? ""} ${stat.detail}`.replace(/\s+/g, " ")}
+          className="underline-offset-2 hover:underline focus-visible:outline-none after:absolute after:inset-0 after:rounded-card-inset after:content-[''] focus-visible:after:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]"
+        >
+          {stat.label}
+        </Link>
+      </p>
       <p className="flex items-end gap-2">
         <span
           className={cn(
