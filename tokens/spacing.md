@@ -52,13 +52,29 @@ All four are mode-aware.
 | `Container/max-width` | 1280 / 768 / 480 | `max-w-[480px] min-[769px]:max-w-[768px] min-[1025px]:max-w-[1280px]` | content column width |
 | `Container/content-padding` | 24 / 20 / 16 | `p-4 min-[769px]:p-5 min-[1025px]:p-6` (in the player: `CONTENT_PAD[bp]`, PlayerShell) | the padding of a topic's content section (Nelson, 15 Oct 2026); aliases `Spacing/3xl` in every mode |
 
-## Layout rhythm (prototype, 25 Oct 2026)
+## Layout
 
-The space between sections, columns and cards of the platform pages comes from layout
-variables in `tokens/layout.css` (`--sk-layout-page-x`, `-page-top`, `-band-x`,
-`-section-gap`, `-column-gap`, `-stack-gap`, `-side-gap`, `-grid-gap`; Tailwind
-`gap-layout-section`, `px-layout-page-x` …). They are not DS tokens yet; the table of values
-is in that file. Component padding stays on the Spacing steps above.
+The space BETWEEN the sections, columns and cards of the platform pages (Nelson, 25 Oct 2026).
+DS tokens `Layout/*` in the same collection, generated into `tokens/generated/spacing.css` as
+`--sk-layout-*`, Tailwind `px-layout-page-x`, `pt-layout-page-top`, `px-layout-band-x`,
+`gap-layout-section`, `gap-layout-column`, `gap-layout-stack`, `gap-layout-side`,
+`gap-layout-grid`. Never inside a component: component padding stays on the Spacing steps above.
+Each one aliases the Spacing step with that value in each mode; same values on every skin.
+
+| DS token | Desktop / Tablet / Mobile (px) | Aliases (D / T / M) | Tailwind | Use |
+|----------|-------------------------------|---------------------|----------|-----|
+| `Layout/page-x` | 48 / 40 / 24 | 6xl / 6xl / 5xl | `px-layout-page-x` | side padding of a platform page |
+| `Layout/page-top` | 48 / 40 / 32 | 6xl | `pt-layout-page-top` | top bar → first line of the page |
+| `Layout/band-x` | 48 / 32 / 16 | 6xl / 5xl / xl | `px-layout-band-x` | side padding of the full-bleed pages (course, program, certificate, header bands) |
+| `Layout/section-gap` | 48 / 40 / 32 | 6xl | `gap-layout-section` | between the sections of a page |
+| `Layout/column-gap` | 48 / 40 / 40 | 6xl / 6xl / 7xl | `gap-layout-column` | main column ↔ side column |
+| `Layout/stack-gap` | 32 / 32 / 32 | 4xl / 5xl / 6xl | `gap-layout-stack` | between the blocks of a column or a tab |
+| `Layout/side-gap` | 24 / 24 / 32 | 3xl / 4xl / 6xl | `gap-layout-side` | between the cards of a side column |
+| `Layout/grid-gap` | 32 / 24 / 24 | 4xl / 4xl / 5xl | `gap-layout-grid` | between cards of a grid or a list |
+
+Breakpoints are the DS modes (Tablet ≤ 1024, Mobile ≤ 768), like every generated token. Until
+25 Oct the hand-written `tokens/layout.css` switched at 768 / 1024 (Tailwind `md` / `lg`), so a
+window exactly 768 or 1024 wide now gets the Mobile / Tablet value, matching the rest of the page.
 
 ## Component anchors
 

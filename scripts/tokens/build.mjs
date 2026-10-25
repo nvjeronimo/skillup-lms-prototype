@@ -11,7 +11,8 @@
  *   1. SKO-Semantics 🎨 colours   → colors.css      --color-* (the Web code syntax set in Figma)
  *     modes SKO / Gold / Red / Studio × Light / Dark → :root, [data-theme], [data-skin], [data-direction]
  *   2. Responsive 📐 Radius/*      → radius.css      --sk-radius-*
- *   2. Responsive 📐 Spacing/*, Container/* → spacing.css  --sk-space-*, --sk-container-*
+ *   2. Responsive 📐 Spacing/*, Container/*, Layout/* → spacing.css  --sk-space-*, --sk-container-*,
+ *     --sk-layout-* (the page rhythm: space between sections, columns and cards, 25 Oct 2026)
  *   2. Responsive 📐 Type/* + text styles   → typography.css  --sk-type-* and .sk-text-* classes
  *   3. Motion                      → motion.css      --motion-*
  * Responsive modes follow lib/useBreakpoint.ts: Desktop by default, Tablet ≤ 1024, Mobile ≤ 768,
@@ -111,12 +112,14 @@ function radius() {
 }
 
 function spacing() {
-  const vars = R().variables.filter((v) => /^(Spacing|Container)\//.test(v.name));
+  const vars = R().variables.filter((v) => /^(Spacing|Container|Layout)\//.test(v.name));
   const name = (v) => {
     const [group, key] = v.name.split("/");
-    return group === "Spacing" ? `--sk-space-${key}` : `--sk-container-${key}`;
+    if (group === "Spacing") return `--sk-space-${key}`;
+    if (group === "Layout") return `--sk-layout-${key}`;
+    return `--sk-container-${key}`;
   };
-  return header("collection 2. Responsive 📐, Spacing/* and Container/*") + "\n" + responsive(vars, name, px);
+  return header("collection 2. Responsive 📐, Spacing/*, Container/* and Layout/*") + "\n" + responsive(vars, name, px);
 }
 
 function typography() {

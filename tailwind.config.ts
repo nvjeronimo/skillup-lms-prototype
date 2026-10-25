@@ -31,8 +31,8 @@ const config: Config = {
         surface: "var(--sk-radius-surface)",
         pill: "var(--sk-radius-pill)",
       },
-      /* Layout rhythm, the space between sections, columns and cards (tokens/layout.css,
-         Nelson 25 Oct 2026): gap-layout-section, px-layout-page-x … */
+      /* Layout rhythm, the space between sections, columns and cards: the DS Layout/* tokens
+         (tokens/generated/spacing.css, Nelson 25 Oct 2026): gap-layout-section, px-layout-page-x … */
       spacing: {
         "layout-page-x": "var(--sk-layout-page-x)",
         "layout-page-top": "var(--sk-layout-page-top)",
