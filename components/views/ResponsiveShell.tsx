@@ -53,7 +53,18 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     }
     // A transition the browser skips (a second change before the first painted, a hidden tab)
     // rejects its promises; the change itself is still applied, so the rejections are expected.
-    const t = doc.startViewTransition(apply);
+    // The browser runs the callback only once it can capture a frame; a page that reports
+    // "visible" but paints nothing (an embedded preview, a throttled window) never did, so the
+    // skin never landed (25 Oct 2026). The change is applied anyway after 400 ms; it is
+    // idempotent, so whichever comes first wins.
+    let done = false;
+    const run = () => {
+      if (done) return;
+      done = true;
+      apply();
+    };
+    window.setTimeout(run, 400);
+    const t = doc.startViewTransition(run);
     const ignore = () => {};
     t.ready.catch(ignore);
     t.finished.catch(ignore);
