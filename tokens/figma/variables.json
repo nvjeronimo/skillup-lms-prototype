@@ -2161,7 +2161,7 @@
             "Red Light": "#e1e7ec",
             "Red Dark": "#25383f",
             "Studio Light": "#e1e7ec",
-            "Studio Dark": "#323844"
+            "Studio Dark": "#272c36"
           },
           "aliases": {
             "SKO Light": "bg/muted",
@@ -2170,8 +2170,7 @@
             "Gold Dark": "bg/muted",
             "Red Light": "bg/muted",
             "Red Dark": "bg/muted",
-            "Studio Light": "bg/muted",
-            "Studio Dark": "bg/muted"
+            "Studio Light": "bg/muted"
           }
         },
         {
