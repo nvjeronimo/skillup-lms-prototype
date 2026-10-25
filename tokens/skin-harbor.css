@@ -168,9 +168,11 @@ html[data-skin="harbor"] [data-theme="dark"] {
 
 /* ── Buttons ─────────────────────────────────────────────────────────────────
    Every one-line control is a pill, as the panel's buttons, filters and search. Anything that holds
-   paragraphs, a column or a list keeps the control radius (10, the panel's "Manage"). */
+   paragraphs, a column or a list (or is a column itself) keeps the control radius (10, the panel's
+   "Manage"). */
 [data-skin="harbor"]
   :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"]).rounded-control:not(
+    .flex-col,
     :has(p, .flex-col, ul, ol, h2, h3, h4),
     [data-option-state]
   ),
