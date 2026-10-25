@@ -69,7 +69,9 @@ import {
   savedTopics,
   topicNotes,
   user,
+  DEFAULT_USER,
 } from "@/lib/data";
+import { useHydrated } from "@/lib/persona-gate";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { lineAt } from "@/lib/playback/lineAt";
 import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
@@ -86,6 +88,9 @@ export interface PlayerShellProps {
 
 export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps) {
   const router = useRouter();
+  // The learner, or the synthetic persona once hydrated (Nelson, 25 Oct 2026; lib/persona-gate).
+  const hydrated = useHydrated();
+  const learner = hydrated ? user : DEFAULT_USER;
   const pathname = usePathname();
   const bp = useBreakpoint();
   // The Course Journey proposal (?journey=proposal, /lab/course-journey): off by default.
@@ -469,8 +474,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         onClose={() => router.push(courseHomeHref(courseSlug))}
         accountMenu={
           <DemoControlsMenu
-            userName={user.name}
-            userAvatarUrl={user.avatarUrl}
+            userName={learner.name}
+            userAvatarUrl={learner.avatarUrl}
             compact={topbarSize === "Mobile"}
           />
         }

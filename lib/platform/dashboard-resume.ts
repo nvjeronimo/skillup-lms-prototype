@@ -3,7 +3,8 @@ import { flattenOutline } from "@/lib/courses/outline";
 import type { TopicType } from "@/lib/types";
 import { getCatalogCourse } from "./catalog";
 import { getCourseDetailBySlug } from "./course-detail";
-import { dashboardResume, type DashboardResumeCourse } from "./dashboard";
+import { ACTIVE_PERSONA_ID } from "@/lib/persona-active";
+import { dashboardResumeFor, type DashboardResumeCourse } from "./dashboard";
 
 /**
  * The rows of "Pick up where you left off". Decided by Nelson on 12 Oct 2026: the row says
@@ -58,5 +59,10 @@ function rowText(course: DashboardResumeCourse): Omit<DashboardResumeRow, "image
   return { ...course, headline, context, next: active ? { type: active.type, duration: active.duration } : undefined };
 }
 
+/** The rows at a synthetic persona's progress (Nelson, 25 Oct 2026); the Dashboard page passes the request's persona. */
+export function dashboardResumeRowsFor(personaId: string | null): DashboardResumeRow[] {
+  return dashboardResumeFor(personaId).map(rowOf);
+}
+
 /** One row per course of `dashboardResume`, in its order. */
-export const dashboardResumeRows: DashboardResumeRow[] = dashboardResume.map(rowOf);
+export const dashboardResumeRows: DashboardResumeRow[] = dashboardResumeRowsFor(ACTIVE_PERSONA_ID);

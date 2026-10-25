@@ -2,7 +2,10 @@ import { COURSES as OWN_COURSES } from "@/lib/courses";
 import { flattenOutline } from "@/lib/courses/outline";
 import type { ProgramCourse, ProgramModule } from "@/lib/programs/types";
 import { getCourseDetailBySlug, type CourseModule } from "./course-detail";
-import { myLearningCourses, type MyLearningCourse } from "./my-learning";
+import { ACTIVE_PERSONA_ID } from "@/lib/persona-active";
+import { overlayProgramCourse } from "@/lib/persona-overlay";
+import { getPersona } from "@/lib/personas";
+import { myLearningCoursesFor, type MyLearningCourse } from "./my-learning";
 
 /**
  * The course rows of My Learning › Courses. Decided by Nelson on 11 Oct 2026: wherever the
@@ -41,7 +44,7 @@ function topicsOf(module: CourseModule): { total: number; done: number } {
  * The module the learner is in reads "3 of 9 topics"; the others their count.
  */
 function rowOf(card: MyLearningCourse): MyLearningCourseRow {
-  const pageModules = getCourseDetailBySlug(card.id)?.modules ?? [];
+  const pageModules = getCourseDetailBySlug(card.id, null)?.modules ?? [];
   const outline = OWN_COURSES.find((c) => c.outline.slug === card.id)?.outline;
   const active = outline ? flattenOutline(outline).find((t) => t.active) : undefined;
   const current = active ? pageModules.find((m) => m.id === active.moduleId) : undefined;
@@ -67,5 +70,25 @@ function rowOf(card: MyLearningCourse): MyLearningCourseRow {
   };
 }
 
+const WRITTEN_ROWS: MyLearningCourseRow[] = myLearningCoursesFor(null).map(rowOf);
+
+/**
+ * The rows at a synthetic persona's progress (Nelson, 25 Oct 2026): each written row through
+ * the overlay of a program's course row (lib/persona-overlay), so the card, the modules bar and
+ * the modules follow the persona's percentage. The page passes the request's persona.
+ */
+export function myLearningCourseRowsFor(personaId: string | null): MyLearningCourseRow[] {
+  const persona = getPersona(personaId);
+  if (!persona) return WRITTEN_ROWS;
+  return WRITTEN_ROWS.map((row) => {
+    if (!(row.card.id in persona.courses)) return row;
+    const { card, position, detail, modules } = overlayProgramCourse(
+      { ...row, id: row.card.id, slug: row.card.id, number: 0 },
+      persona.courses[row.card.id],
+    );
+    return { card, position, detail, modules };
+  });
+}
+
 /** One row per course of My Learning, in the order of `myLearningCourses`. */
-export const myLearningCourseRows: MyLearningCourseRow[] = myLearningCourses.map(rowOf);
+export const myLearningCourseRows: MyLearningCourseRow[] = myLearningCourseRowsFor(ACTIVE_PERSONA_ID);

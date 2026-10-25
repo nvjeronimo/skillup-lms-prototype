@@ -14,6 +14,7 @@ import { inertProps } from "@/lib/inert";
 import { useDemoMode } from "@/lib/demo";
 import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
 import { PageSkeleton } from "./PageSkeleton";
+import { usePersonaGated } from "@/lib/persona-gate";
 
 const SHOW_MOCK_KEY = "sk-platform-show-mock";
 
@@ -50,6 +51,9 @@ export function PlatformPage({
   const pathname = usePathname();
   const mainRef = React.useRef<HTMLElement>(null);
   const arrival = useArrivalController(pathname, mainRef);
+  // A synthetic persona is on (Nelson, 25 Oct 2026): the content reads data the server does
+  // not have, so it renders after mount; the skeleton holds its place until then.
+  const personaGated = usePersonaGated();
   const toast = useLmsStore((s) => s.toast);
   const demo = useDemoMode();
   // On a phone the sections float at the bottom (PlatformTabBar, Nelson 22 Oct 2026).
@@ -131,12 +135,12 @@ export function PlatformPage({
         <ArrivalContext.Provider value={arrival}>
           {/* Rendered by the server and until the controller has decided (it only shows under
               data-arrival="pending"), then dropped once the content is in. */}
-          {!arrival.decided || !arrival.released ? (
+          {!arrival.decided || !arrival.released || personaGated ? (
             <div {...inertProps(true)} className="sk-arrival-skeleton">
               {skeleton ?? <PageSkeleton />}
             </div>
           ) : null}
-          <div data-arrival-content="">{children}</div>
+          <div data-arrival-content="">{personaGated ? null : children}</div>
         </ArrivalContext.Provider>
       </main>
       {/* The micro footer of the platform pages (Nelson, 23 Oct 2026); the player has none. */}

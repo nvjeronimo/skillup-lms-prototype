@@ -1,8 +1,12 @@
 import { COURSES as OWN_COURSES } from "@/lib/courses";
 import { coursesBySlug, course as sampleCourse, getCourseBySlug } from "@/lib/data";
 import type { Course } from "@/lib/types";
-import { myLearningCourses } from "./my-learning";
-import { PROGRAMS, type Program, type ProgramCertificate } from "./program";
+import { ACTIVE_PERSONA_ID } from "@/lib/persona-active";
+import { synthesizeCertificate } from "@/lib/persona-overlay";
+import { getPersona } from "@/lib/personas";
+import { CERTIFICATE_TEMPLATE } from "@/lib/programs";
+import { myLearningCoursesFor } from "./my-learning";
+import { programsFor, type Program, type ProgramCertificate } from "./program";
 
 /**
  * Every course the platform pages name, so each one has a page and a player under its own
@@ -24,28 +28,41 @@ export interface CatalogCourse {
   program?: { slug: string; title: string; number: number; total: number };
 }
 
-const fromPrograms: CatalogCourse[] = PROGRAMS.flatMap((program) =>
-  program.courses.map((c) => ({
-    slug: c.slug,
-    title: c.card.title,
-    imageSrc: c.card.imageSrc,
-    percent: c.card.progressPct,
-    program: { slug: program.slug, title: program.title, number: c.number, total: program.courses.length },
-  })),
-);
+const byPersona = new Map<string, CatalogCourse[]>();
 
-const fromMyLearning: CatalogCourse[] = myLearningCourses.map((c) => ({
-  slug: c.id,
-  title: c.title,
-  imageSrc: c.imageSrc,
-  percent: c.progressPct,
-}));
+/**
+ * Every course, programs first, at a synthetic persona's progress (Nelson, 25 Oct 2026); as
+ * written with none. A server page passes the request's persona (lib/persona-server).
+ */
+export function catalogFor(personaId: string | null | undefined): CatalogCourse[] {
+  const key = getPersona(personaId)?.id ?? "";
+  let hit = byPersona.get(key);
+  if (hit) return hit;
+  const fromPrograms: CatalogCourse[] = programsFor(key || null).flatMap((program) =>
+    program.courses.map((c) => ({
+      slug: c.slug,
+      title: c.card.title,
+      imageSrc: c.card.imageSrc,
+      percent: c.card.progressPct,
+      program: { slug: program.slug, title: program.title, number: c.number, total: program.courses.length },
+    })),
+  );
+  const fromMyLearning: CatalogCourse[] = myLearningCoursesFor(key || null).map((c) => ({
+    slug: c.id,
+    title: c.title,
+    imageSrc: c.imageSrc,
+    percent: c.progressPct,
+  }));
+  hit = [...fromPrograms, ...fromMyLearning];
+  byPersona.set(key, hit);
+  return hit;
+}
 
-/** Every course, programs first; exported for the Certificates page (19 Oct 2026). */
-export const CATALOG: CatalogCourse[] = [...fromPrograms, ...fromMyLearning];
+/** Every course, programs first; exported for the Certificates page (19 Oct 2026). In the browser at the active persona's progress. */
+export const CATALOG: CatalogCourse[] = catalogFor(ACTIVE_PERSONA_ID);
 
-export function getCatalogCourse(slug: string): CatalogCourse | undefined {
-  return CATALOG.find((c) => c.slug === slug);
+export function getCatalogCourse(slug: string, personaId: string | null = ACTIVE_PERSONA_ID): CatalogCourse | undefined {
+  return catalogFor(personaId).find((c) => c.slug === slug);
 }
 
 /** The course after this one in its program; undefined for the last one or a course of no program. */
@@ -74,14 +91,27 @@ export function playerCourse(slug: string): Course {
  */
 export function getIssuedCertificate(
   courseSlug: string,
+  personaId: string | null = ACTIVE_PERSONA_ID,
 ): { certificate: Extract<ProgramCertificate, { status: "issued" }>; course: CatalogCourse } | undefined {
-  const course = getCatalogCourse(courseSlug);
+  const course = getCatalogCourse(courseSlug, personaId);
   if (!course) return undefined;
-  const program = PROGRAMS.find((p) => p.slug === course.program?.slug);
-  const certificate = program
-    ? program.certificates.find((c) => c.status === "issued" && c.courseId === `course-${course.program?.number}`)
-    : OWN_COURSES.find((c) => c.page.slug === courseSlug)?.page.certificate;
-  return certificate && certificate.status === "issued" ? { certificate, course } : undefined;
+  const program = programsFor(personaId).find((p) => p.slug === course.program?.slug);
+  if (program) {
+    const certificate = program.certificates.find((c) => c.status === "issued" && c.courseId === `course-${course.program?.number}`);
+    return certificate && certificate.status === "issued" ? { certificate, course } : undefined;
+  }
+  // A course of no program: its own page's certificate. Under a synthetic persona (25 Oct 2026)
+  // only once the persona completed it, printed for the persona, or made from the template
+  // when the course page has none.
+  const own = OWN_COURSES.find((c) => c.page.slug === courseSlug)?.page.certificate;
+  const persona = getPersona(personaId);
+  if (persona) {
+    if (course.percent !== 100) return undefined;
+    if (own && own.status === "issued") return { certificate: { ...own, document: { ...own.document, learner: persona.name } }, course };
+    const initials = course.title.split(/\s+/).filter((w) => /^[A-Za-z]/.test(w)).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
+    return { certificate: synthesizeCertificate(CERTIFICATE_TEMPLATE, persona, { slug: course.slug, title: course.title, initials }), course };
+  }
+  return own && own.status === "issued" ? { certificate: own, course } : undefined;
 }
 
 /* ── The certificate of a program (PROPOSAL, NOT DESIGNED: 10 Oct 2026) ─────────────── */
@@ -107,8 +137,11 @@ export interface ProgramCertificateState {
  * (`programCertificate`); otherwise not earned, with what is missing counted from the
  * program's own course rows: a course counts when it is at 100%.
  */
-export function getProgramCertificate(programSlug: string): ProgramCertificateState | undefined {
-  const program = PROGRAMS.find((p) => p.slug === programSlug);
+export function getProgramCertificate(
+  programSlug: string,
+  personaId: string | null = ACTIVE_PERSONA_ID,
+): ProgramCertificateState | undefined {
+  const program = programsFor(personaId).find((p) => p.slug === programSlug);
   if (!program) return undefined;
   const courses = program.courses.map((c) => ({
     slug: c.slug,

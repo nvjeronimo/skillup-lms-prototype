@@ -4,8 +4,9 @@ import { MyLearningCollection } from "@/components/platform/my-learning/MyLearni
 import { MyLearningHeader } from "@/components/platform/my-learning/MyLearningHeader";
 import { MyLearningSkeleton } from "@/components/platform/my-learning/MyLearningSkeleton";
 import { myLearningPrograms } from "@/lib/platform/my-learning";
-import { myLearningCourseRows } from "@/lib/platform/my-learning-rows";
+import { myLearningCourseRowsFor } from "@/lib/platform/my-learning-rows";
 import { pageTitle } from "@/lib/utils";
+import { requestPersonaId } from "@/lib/persona-server";
 
 export const metadata = { title: pageTitle("My Learning") };
 
@@ -22,6 +23,8 @@ export const metadata = { title: pageTitle("My Learning") };
  * then the title, the tabs, the toolbar and the cards rise in that order.
  */
 export default function MyLearningPage() {
+  // At the request's synthetic persona, if one is on (Nelson, 25 Oct 2026; lib/persona-server).
+  const myLearningCourseRows = myLearningCourseRowsFor(requestPersonaId());
   return (
     <PlatformPage
       current="my-learning"

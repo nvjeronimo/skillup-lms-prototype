@@ -4,6 +4,7 @@ import * as React from "react";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
 import { PageTransitions } from "@/components/views/PageTransitions";
+import { SyntheticPersonasHost } from "@/components/molecules/SyntheticPersonas";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
 const FRAME_WIDTH: Record<DeviceMode, number | null> = {
@@ -99,13 +100,15 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   }, [setSkin]);
   React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
 
-  // The assistant is mounted once, for every page (it shows on platform and player pages only).
+  // The assistant is mounted once, for every page (it shows on platform and player pages only);
+  // so is the synthetic personas' modal (Nelson, 25 Oct 2026), opened from the profile menu.
   if (!width)
     return (
       <>
         {children}
         <AssistantChat />
         <PageTransitions />
+        <SyntheticPersonasHost />
       </>
     );
 
@@ -118,6 +121,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
         {children}
         <AssistantChat />
         <PageTransitions />
+        <SyntheticPersonasHost />
       </div>
     </div>
   );

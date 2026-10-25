@@ -4,12 +4,13 @@ import { PlatformPage } from "@/components/platform/PlatformPage";
 import { CertificatePageSkeleton } from "@/components/platform/certificate/CertificatePageSkeleton";
 import { CertificatePageView } from "@/components/platform/certificate/CertificatePageView";
 import { getProgramCertificate } from "@/lib/platform/catalog";
+import { requestPersonaId } from "@/lib/persona-server";
 import { pageTitle } from "@/lib/utils";
 
 type Params = { params: { programSlug: string } };
 
 export function generateMetadata({ params }: Params): Metadata {
-  const found = getProgramCertificate(params.programSlug);
+  const found = getProgramCertificate(params.programSlug, requestPersonaId());
   return { title: pageTitle(found ? `Program certificate · ${found.program.title}` : "Certificate not found") };
 }
 
@@ -21,7 +22,7 @@ export function generateMetadata({ params }: Params): Metadata {
  * `program` segment sits beside `[courseSlug]`: no course is called "program".
  */
 export default function ProgramCertificatePage({ params }: Params) {
-  const found = getProgramCertificate(params.programSlug);
+  const found = getProgramCertificate(params.programSlug, requestPersonaId());
   if (!found) notFound();
   return (
     <PlatformPage

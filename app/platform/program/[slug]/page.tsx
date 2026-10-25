@@ -5,18 +5,19 @@ import { PlatformPage } from "@/components/platform/PlatformPage";
 import { ProgramDetailView } from "@/components/platform/program/ProgramDetailView";
 import { ProgramSkeleton } from "@/components/platform/program/ProgramSkeleton";
 import { getProgramBySlug } from "@/lib/platform/program";
+import { requestPersonaId } from "@/lib/persona-server";
 import { pageTitle } from "@/lib/utils";
 
 type Params = { params: { slug: string } };
 
 export function generateMetadata({ params }: Params): Metadata {
-  const program = getProgramBySlug(params.slug);
+  const program = getProgramBySlug(params.slug, requestPersonaId());
   return { title: pageTitle(program ? program.title : "Program not found") };
 }
 
 /** Program Detail (Figma 6443:18721): a program opened from My Learning. */
 export default function ProgramDetailPage({ params }: Params) {
-  const program = getProgramBySlug(params.slug);
+  const program = getProgramBySlug(params.slug, requestPersonaId());
   if (!program) notFound();
 
   return (

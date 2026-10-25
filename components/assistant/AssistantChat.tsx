@@ -9,7 +9,7 @@ import { useAssistant } from "@/lib/assistant/useAssistant";
 import { STEPS, stepAction } from "@/lib/first-steps/steps";
 import { restartFirstSteps, useFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { wantsRestart, withoutRestart } from "@/lib/first-steps/url";
-import { platformUser } from "@/lib/platform/user";
+import { useLearner } from "@/lib/persona-gate";
 import { useLmsStore } from "@/lib/store";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
@@ -43,6 +43,8 @@ export function AssistantChat() {
 function Chat({ pathname }: { pathname: string }) {
   const windowId = React.useId();
   const launcherRef = React.useRef<HTMLButtonElement>(null);
+  // The learner, or the synthetic persona once hydrated (Nelson, 25 Oct 2026).
+  const learner = useLearner();
   const completedTopics = useLmsStore((s) => s.completedTopics);
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const previewPhone = useLmsStore((s) => s.deviceMode === "mobile");
@@ -209,7 +211,7 @@ function Chat({ pathname }: { pathname: string }) {
           streaming={assistant.streaming}
           status={assistant.status}
           suggestions={assistant.suggestions}
-          firstName={platformUser.firstName}
+          firstName={learner.firstName}
           onAsk={ask}
           firstSteps={shownSteps}
           next={shownNext}

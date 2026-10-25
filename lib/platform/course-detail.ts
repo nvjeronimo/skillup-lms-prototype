@@ -4,6 +4,9 @@ import { COURSES as OWN_COURSES } from "@/lib/courses";
 import { CLOUD_COMPUTING, SIX_SIGMA } from "@/lib/courses/sample-page";
 import type { TopicType } from "@/lib/types";
 import type { ProgramCertificate } from "@/lib/platform/program";
+import { ACTIVE_PERSONA_ID } from "@/lib/persona-active";
+import { courseProgressCta } from "@/lib/persona-overlay";
+import { getPersona } from "@/lib/personas";
 import { getCatalogCourse } from "./catalog";
 import { coursePlayerHref } from "./hrefs";
 
@@ -316,13 +319,19 @@ const COURSES: CourseDetail[] = [SIX_SIGMA, CLOUD_COMPUTING, ...OWN_COURSES.map(
  * of the catalogue gets the Six Sigma sample body under its own title, picture, progress and
  * program (lib/platform/catalog).
  */
-export function getCourseDetailBySlug(slug: string): CourseDetail | undefined {
+export function getCourseDetailBySlug(slug: string, personaId: string | null = ACTIVE_PERSONA_ID): CourseDetail | undefined {
   const own = COURSES.find((c) => c.slug === slug);
-  const entry = getCatalogCourse(slug);
+  const entry = getCatalogCourse(slug, personaId);
   // The program path is decided here, from the registry of programs, for every course alike:
   // the breadcrumb does not depend on where the course was opened from, nor on its own file.
   const program = entry?.program ? { slug: entry.program.slug, title: entry.program.title } : undefined;
-  if (own) return program ? { ...own, program } : own;
+  if (own) {
+    // Under a synthetic persona (Nelson, 25 Oct 2026) the progress card follows the catalogue.
+    const page = entry && getPersona(personaId)
+      ? { ...own, progress: { ...own.progress, percent: entry.percent ?? 0, cta: courseProgressCta(entry.percent) } }
+      : own;
+    return program ? { ...page, program } : page;
+  }
   if (!entry) return undefined;
   const percent = entry.percent ?? 0;
   return {
