@@ -27,7 +27,7 @@ export function HarborSearch({ className }: { className?: string }) {
         router.push(`/platform/my-learning?tab=courses${text ? `&q=${encodeURIComponent(text)}` : ""}`);
       }}
       className={cn(
-        "flex h-12 w-full max-w-[420px] items-center gap-2 rounded-pill bg-sko-bg-track pl-4 ring-1 ring-inset ring-sko-border-default pr-1.5",
+        "flex h-12 w-full max-w-[420px] items-center gap-2 rounded-pill bg-sko-bg-track pl-4 pr-1.5",
         "focus-within:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]",
         className,
       )}

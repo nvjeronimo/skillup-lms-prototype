@@ -28,7 +28,7 @@ const ICONS: Record<PlatformSection, LucideIcon> = {
  * Harbor's navigation (Nelson, 25 Oct 2026, after the DreamHost panel): a rail on the left from
  * desktop up, instead of the sections in the top bar. Expanded (240): icon and name; collapsed
  * (72): the icon, its name for assistive tech and as a tooltip. The menu button in the bar
- * switches it, remembered per browser. The current page is a Radius/card pill (16 in Harbor) on bg/primary-soft
+ * switches it, remembered per browser. The current page is a Radius/card pill (16 in Harbor) on solid bg/primary
  * (the panel's #D9EAFC), ink text; the others take bg/hover on hover. Tablet and phone keep
  * their own navigation (the bar's menu, the floating tab bar).
  */
@@ -49,7 +49,7 @@ export function HarborRail({ current }: { current: PlatformSection | null }) {
           const item = cn(
             "sk-text-body-medium-semibold relative flex min-h-11 w-full items-center gap-3 rounded-card text-sko-text-default transition-colors",
             expanded ? "px-4" : "justify-center px-0",
-            on ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft ring-1 ring-inset ring-sko-border-primary" : "hover:bg-sko-bg-hover",
+            on ? "bg-sko-bg-primary text-sko-text-on-primary" : "hover:bg-sko-bg-hover",
           );
           const content = (
             <>
