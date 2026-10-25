@@ -159,6 +159,11 @@ export interface FormModalProps {
   doneOnly?: boolean;
   /** Marks the body as sample data (the page's mock outline). */
   mock?: string;
+  /**
+   * A Secondary action in place of Cancel (Nelson, 25 Oct 2026: the synthetic personas' Clear).
+   * Esc, the backdrop and the close button still cancel.
+   */
+  secondaryAction?: { label: string; onClick: () => void; disabled?: boolean };
   children: React.ReactNode;
 }
 
@@ -182,6 +187,7 @@ export function FormModal({
   canSubmit,
   doneOnly,
   mock,
+  secondaryAction,
   children,
 }: FormModalProps) {
   const titleId = React.useId();
@@ -239,9 +245,22 @@ export function FormModal({
             </Button>
           ) : (
             <>
-              <Button type="button" hierarchy="tertiary" size="md" onClick={onClose} className="max-md:w-full">
-                Cancel
-              </Button>
+              {secondaryAction ? (
+                <Button
+                  type="button"
+                  hierarchy="secondary"
+                  size="md"
+                  onClick={secondaryAction.onClick}
+                  disabled={secondaryAction.disabled}
+                  className="max-md:w-full"
+                >
+                  {secondaryAction.label}
+                </Button>
+              ) : (
+                <Button type="button" hierarchy="tertiary" size="md" onClick={onClose} className="max-md:w-full">
+                  Cancel
+                </Button>
+              )}
               <Button type="submit" hierarchy="primary" size="md" disabled={!canSubmit} className="max-md:w-full">
                 {submitLabel}
               </Button>

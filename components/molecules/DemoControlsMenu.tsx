@@ -17,7 +17,6 @@ import {
 import { watchedFraction } from "@/lib/playback/coverage";
 import { lineAt } from "@/lib/playback/lineAt";
 import { useLmsStore, type CompletionFlow, type DeviceMode, type LabLaunch } from "@/lib/store";
-import { platformUser } from "@/lib/platform/user";
 import {
   AccessibilitySection,
   AppearanceSection,
@@ -36,6 +35,7 @@ import { useDemoMode } from "@/lib/demo";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { LOAD_MODES } from "@/lib/arrival/loadMode";
 import { useLoadMode } from "@/lib/arrival/useArrival";
+import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 
 const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
   { mode: "auto", label: "Responsive (follow window)", icon: MonitorSmartphone },
@@ -424,6 +424,7 @@ export function DemoControlsMenu({
             </>
           ) : null}
 
+          <PersonasMenuRow onDone={() => setOpen(false)} />
           <ProfileFooter onDone={() => setOpen(false)} />
         </div>
       ) : null}

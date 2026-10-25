@@ -3,7 +3,10 @@ import type { TopicType } from "@/lib/types";
 import { COURSES as OWN_COURSES } from "@/lib/courses";
 import { PROGRAMS } from "@/lib/programs";
 import { SAMPLE_TODAY, formatDate, formatDay, formatDayMonth } from "@/lib/sample-time";
-import { coursePageHref, coursePlayerHref } from "./hrefs";
+import { coursePageHref, coursePlayerHref, programCertificatePageHref } from "./hrefs";
+import { ACTIVE_PERSONA, ACTIVE_PERSONA_ID } from "@/lib/persona-active";
+import { overlayCard } from "@/lib/persona-overlay";
+import { getPersona } from "@/lib/personas";
 
 /**
  * Mock data of the platform My Learning page (Figma handoff cards 04–11 of 6408:35150, as
@@ -26,8 +29,11 @@ export const MY_LEARNING_TAB_KEY = "sk-my-learning-tab";
 export function myLearningFirstTab(programCount: number): MyLearningTab {
   return programCount > 0 ? "programs" : MY_LEARNING_DEFAULT_TAB;
 }
-/** The view drawn in the default frame (Grid). */
-export const MY_LEARNING_DEFAULT_VIEW: MyLearningView = "grid";
+/**
+ * The view drawn in the default frame (Grid). A synthetic persona that asks for density (P04,
+ * Nelson 25 Oct 2026) opens on the list; the browser only, where My Learning renders under one.
+ */
+export const MY_LEARNING_DEFAULT_VIEW: MyLearningView = ACTIVE_PERSONA?.conditions.listView ? "list" : "grid";
 
 
 /* ── Header ─────────────────────────────────────────────────────────────────────────── */
@@ -220,11 +226,25 @@ const COURSES: MyLearningCourse[] = [
  * Single courses only: a course of a program is reached through its program (decision 025,
  * 14 Oct 2026; checked in my-learning.test.ts).
  */
-export const myLearningCourses: MyLearningCourse[] = COURSES.map((course) => ({
+const WRITTEN_COURSES: MyLearningCourse[] = COURSES.map((course) => ({
   ...course,
   href: course.cta === "Review" ? coursePageHref(course.id) : coursePlayerHref(course.id),
   detailHref: coursePageHref(course.id),
 }));
+
+/**
+ * The single courses at a synthetic persona's progress (Nelson, 25 Oct 2026; lib/persona-overlay),
+ * as written with none. A server page passes the request's persona (lib/persona-server).
+ */
+export function myLearningCoursesFor(personaId: string | null | undefined): MyLearningCourse[] {
+  const persona = getPersona(personaId);
+  if (!persona) return WRITTEN_COURSES;
+  return WRITTEN_COURSES.map((c) =>
+    c.id in persona.courses ? overlayCard(c, persona.courses[c.id], c.id) : c,
+  );
+}
+
+export const myLearningCourses: MyLearningCourse[] = myLearningCoursesFor(ACTIVE_PERSONA_ID);
 
 /* ── Browse tile (LMS / Platform / Browse tile, 6388:116426) ────────────────────────── */
 
@@ -282,7 +302,7 @@ export interface MyLearningProgram {
   actionHref?: string;
 }
 
-export const myLearningPrograms: MyLearningProgram[] = [
+const WRITTEN_PROGRAMS: MyLearningProgram[] = [
   {
     id: "ai-driven-digital-marketing",
     // The program's own title, as its page shows it.
@@ -350,6 +370,48 @@ export const myLearningPrograms: MyLearningProgram[] = [
     actionHref: "/platform/certificate/program/data-analytics-foundations",
   },
 ];
+
+/**
+ * A program card at the active persona's progress (Nelson, 25 Oct 2026), counted from the
+ * program's course rows (lib/programs carries the persona): N of M complete, the course in
+ * progress or up next, Start / Resume / View Certificate.
+ */
+function personaProgramCard(card: MyLearningProgram): MyLearningProgram {
+  const program = PROGRAMS.find((p) => p.slug === card.id);
+  if (!program) return card;
+  const pcts = program.courses.map((c) => c.card.progressPct ?? 0);
+  const total = pcts.length;
+  const complete = pcts.filter((x) => x >= 100).length;
+  const started = pcts.some((x) => x > 0);
+  const current = program.courses.find((c) => (c.card.progressPct ?? 0) > 0 && (c.card.progressPct ?? 0) < 100)
+    ?? program.courses.find((c) => !c.card.progressPct);
+  const base: MyLearningProgram = {
+    ...card,
+    courses: `${complete} of ${total} courses complete`,
+    progressPct: total ? Math.round((complete / total) * 100) : 0,
+    hours: programHours(card.id),
+    upNext: undefined,
+    status: undefined,
+    certificateDate: undefined,
+    actionHref: undefined,
+  };
+  if (complete === total) {
+    return { ...base, hours: undefined, cta: "View Certificate", certificateDate: card.certificateDate ?? "2 Oct 2026", actionHref: programCertificatePageHref(card.id) };
+  }
+  if (!started) {
+    return { ...base, nextDue: undefined, lastStudied: undefined, cta: "Start", status: card.status ?? "Not started" };
+  }
+  return {
+    ...base,
+    lastStudied: card.lastStudied ?? "Last studied 5 days ago",
+    nextDue: card.nextDue,
+    cta: "Resume",
+    upNext: current ? `Course ${current.number} · ${current.card.title}` : undefined,
+    actionHref: current ? coursePlayerHref(current.slug) : undefined,
+  };
+}
+
+export const myLearningPrograms: MyLearningProgram[] = ACTIVE_PERSONA ? WRITTEN_PROGRAMS.map(personaProgramCard) : WRITTEN_PROGRAMS;
 
 /* ── Status filter (13 Oct 2026) ────────────────────────────────────────────────────── */
 

@@ -24,4 +24,4 @@ export function isProgramTab(value: string | null | undefined): value is Program
 /* The shape of a program (`Program` and its parts) is in lib/programs/types; each program is
  * a file under lib/programs, listed in lib/programs/index (lib/courses/README.md). */
 export * from "@/lib/programs/types";
-export { PROGRAMS, getProgramBySlug } from "@/lib/programs";
+export { PROGRAMS, getProgramBySlug, programsFor } from "@/lib/programs";

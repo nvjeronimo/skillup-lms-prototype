@@ -6,7 +6,9 @@ import { coursePageHref, coursePlayerHref, slugify } from "./hrefs";
 import { SAMPLE_TODAY, YOUR_TIME, dueBadgeLabel, formatTime, parseDay, whenLabel } from "@/lib/sample-time";
 import { calendarEvents, isDueThisWeek, isMissed } from "./calendar";
 import { certificatesInProgress, earnedCertificates } from "./certificates";
-import { CATALOG } from "./catalog";
+import { ACTIVE_PERSONA_ID } from "@/lib/persona-active";
+import { getPersona } from "@/lib/personas";
+import { CATALOG, catalogFor } from "./catalog";
 import { PROGRAMS } from "./program";
 
 /**
@@ -163,12 +165,34 @@ export interface DashboardResumeCourse {
 
 const PROGRAM_COURSE = slugify("AI-Driven Content and Brand Communication");
 
-export const dashboardResume: DashboardResumeCourse[] = [
+const WRITTEN_RESUME: DashboardResumeCourse[] = [
   // Learner Home lists enrolments, which are courses: the row is the course the learner is in, not its program.
   { id: PROGRAM_COURSE, slug: PROGRAM_COURSE, title: "AI-Driven Content and Brand Communication", deliveryMode: "Flexible Learning", progressPct: 39, href: coursePlayerHref(PROGRAM_COURSE), homeHref: coursePageHref(PROGRAM_COURSE) },
   { id: "ux-research-design-thinking", slug: "ux-research-and-design-thinking", title: "UX Research and Design Thinking", deliveryMode: "Flexible Learning", progressPct: 5, href: coursePlayerHref("ux-research-and-design-thinking"), homeHref: coursePageHref("ux-research-and-design-thinking") },
   { id: "leadership-remote-teams", slug: "leadership-in-remote-teams", title: "Leadership in Remote Teams", deliveryMode: "Flexible Learning", progressPct: 52, href: coursePlayerHref("leadership-in-remote-teams"), homeHref: coursePageHref("leadership-in-remote-teams") },
 ];
+
+/**
+ * The rows under a synthetic persona (Nelson, 25 Oct 2026): the persona's courses in progress,
+ * programs first as the catalogue orders them, at most three; as written with no persona.
+ */
+export function dashboardResumeFor(personaId: string | null): DashboardResumeCourse[] {
+  if (!getPersona(personaId)) return WRITTEN_RESUME;
+  return catalogFor(personaId)
+    .filter((c) => c.percent !== null && c.percent > 0 && c.percent < 100)
+    .slice(0, 3)
+    .map((c) => ({
+      id: c.slug,
+      slug: c.slug,
+      title: c.title,
+      deliveryMode: "Flexible Learning" as const,
+      progressPct: c.percent ?? 0,
+      href: coursePlayerHref(c.slug),
+      homeHref: coursePageHref(c.slug),
+    }));
+}
+
+export const dashboardResume: DashboardResumeCourse[] = dashboardResumeFor(ACTIVE_PERSONA_ID);
 
 /* ── Jump somewhere (LMS / Platform / Jump tile, 6382:3302) ─────────────────────────── */
 

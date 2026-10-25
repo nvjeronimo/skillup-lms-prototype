@@ -1,23 +1,38 @@
-import { user } from "@/lib/data";
+import { DEFAULT_USER, user } from "@/lib/data";
 import { deadlinesThisWeek } from "./calendar";
 
-const [firstName = user.name] = user.name.split(" ");
+export interface PlatformUser {
+  name: string;
+  firstName: string;
+  initials: string;
+  role: string;
+}
+
+function platformUserOf(name: string): PlatformUser {
+  const [firstName = name] = name.split(" ");
+  return {
+    name,
+    firstName,
+    initials: name
+      .split(" ")
+      .map((word) => word[0]?.toUpperCase() ?? "")
+      .slice(0, 2)
+      .join(""),
+    role: "Learner · Pro",
+  };
+}
 
 /**
  * The learner shown on the platform pages: the same mock user as the course player and the
  * home page (`lib/data-model.json`), so a test session shows one person throughout: "John
  * Smith", as the Figma screens are drawn (10 Oct 2026; "Olivia Rhye" before).
+ * In the browser, while a synthetic persona is on, the persona (Nelson, 25 Oct 2026): read it
+ * through `useLearner()` (lib/persona-gate) outside the gated page content.
  */
-export const platformUser = {
-  name: user.name,
-  firstName,
-  initials: user.name
-    .split(" ")
-    .map((word) => word[0]?.toUpperCase() ?? "")
-    .slice(0, 2)
-    .join(""),
-  role: "Learner · Pro",
-} as const;
+export const platformUser: PlatformUser = platformUserOf(user.name);
+
+/** The learner as written, what the server renders whatever persona is on. */
+export const DEFAULT_PLATFORM_USER: PlatformUser = platformUserOf(DEFAULT_USER.name);
 
 export type PlatformSection = "dashboard" | "my-learning" | "calendar" | "discussion" | "services";
 

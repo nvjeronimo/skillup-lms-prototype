@@ -129,7 +129,9 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   React.useEffect(() => {
     if (linkedTab) rememberTab(linkedTab);
   }, [linkedTab]);
-  const view: MyLearningView = params.get("view") === "list" ? "list" : MY_LEARNING_DEFAULT_VIEW;
+  // `?view=grid` too: a synthetic persona can open on the list (Nelson, 25 Oct 2026), and the grid is then the one asked for.
+  const viewParam = params.get("view");
+  const view: MyLearningView = viewParam === "list" || viewParam === "grid" ? viewParam : MY_LEARNING_DEFAULT_VIEW;
 
   const setParam = (key: "tab" | "view", value: string, fallback: string) => {
     const next = new URLSearchParams(params.toString());

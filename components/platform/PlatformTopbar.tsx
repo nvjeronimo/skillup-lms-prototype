@@ -21,12 +21,14 @@ import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { notifications } from "@/lib/data";
 import { track } from "@/lib/analytics";
 import { useDisclosure } from "@/lib/useDisclosure";
-import { PLATFORM_SECTIONS, platformUser, type PlatformSection } from "@/lib/platform/user";
+import { PLATFORM_SECTIONS, type PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { useDemoMode } from "@/lib/demo";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { LoadingSection } from "@/components/molecules/DemoControlsMenu";
+import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
+import { useLearner } from "@/lib/persona-gate";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
@@ -146,6 +148,7 @@ function ProfilePanel({
       <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
       {demo ? <LoadingSection /> : null}
+      <PersonasMenuRow onDone={onDone} />
       <ProfileFooter onDone={onDone} />
     </div>
   );
@@ -153,6 +156,7 @@ function ProfilePanel({
 
 /** DS Avatar sm (32px, a rounded square: Radius/control, Nelson 19 Oct 2026, not a circle; initials body-medium/Semibold text/subtle on bg/muted, 0.75px border/subtle). */
 function Initials() {
+  const platformUser = useLearner();
   return (
     <span
       aria-hidden
@@ -183,6 +187,8 @@ function Initials() {
 export function PlatformTopbar({ current }: { current: PlatformSection | null }) {
   const theme = useLmsStore((s) => s.theme);
   const toggleTheme = useLmsStore((s) => s.toggleTheme);
+  // The learner, or the synthetic persona once hydrated (Nelson, 25 Oct 2026; lib/persona-gate).
+  const platformUser = useLearner();
   const profile = useDisclosure();
   const profileCompact = useDisclosure();
   const menu = useDisclosure();

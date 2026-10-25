@@ -1,6 +1,7 @@
 import raw from "./data-model.json";
 import { COURSES } from "./courses";
 import { DEFAULT_TOPIC_ID, flattenOutline, moduleTopics, resumeTopicOf } from "./courses/outline";
+import { ACTIVE_PERSONA } from "./persona-active";
 import type {
   Course,
   DataModel,
@@ -19,7 +20,14 @@ const model = raw as unknown as DataModel;
 export const course: Course = model.course;
 export const notesSeed: Note[] = model.notes;
 export const downloads: DownloadFile[] = model.downloads;
-export const user: User = model.user;
+/** The mock learner as written (John Smith), whatever persona is on. */
+export const DEFAULT_USER: User = model.user;
+/**
+ * The signed-in learner. In the browser, while a synthetic persona is on, the first one's name
+ * (Nelson, 25 Oct 2026; lib/persona-active), with no picture so the initials show; on the
+ * server always the written one. Outside a gated page read it through `useLearner()`.
+ */
+export const user: User = ACTIVE_PERSONA ? { ...model.user, id: ACTIVE_PERSONA.id, name: ACTIVE_PERSONA.name, avatarUrl: "" } : model.user;
 
 /* ----------------------------------------------------------------------------
  * Demo courses for the Sidebar content-shape preview (Showcases & Diagrams).
