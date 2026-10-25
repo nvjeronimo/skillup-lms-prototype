@@ -144,6 +144,9 @@ export function SidebarProposal({
   // ── Scroll: restore across the remount; the open topic a third of the way down when it is
   //    out of view (always in the drawer, which opens fresh each time).
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  // The header condenses to title + progress while the list is scrolled (as Sidebar, 25 Oct 2026).
+  const [condensed, setCondensed] = React.useState(() => !isMobile && savedScrollTop > 8);
+  const condenseFrom = (top: number) => setCondensed((prev) => (prev ? top > 0 : top > 8));
   const placeCurrent = React.useCallback(
     (force: boolean, smooth = false) => {
       const box = scrollRef.current;
@@ -165,6 +168,7 @@ export function SidebarProposal({
     if (!isMobile) box.scrollTo({ top: savedScrollTop, behavior: "instant" });
     placeCurrent(isMobile);
     if (!isMobile) savedScrollTop = box.scrollTop;
+    condenseFrom(box.scrollTop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTopicId, collapsed]);
 
@@ -447,6 +451,7 @@ export function SidebarProposal({
         showToggle={!isMobile}
         onToggle={onToggleSidebar}
         showDivider={false}
+        condensed={condensed}
       />
       {isMobile ? null : (
         <h2 id={headingId} className="sr-only">
@@ -476,6 +481,7 @@ export function SidebarProposal({
         ref={scrollRef}
         onScroll={(e) => {
           if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
+          condenseFrom(e.currentTarget.scrollTop);
         }}
         onKeyDown={onListKeyDown}
         onFocus={(e) => {

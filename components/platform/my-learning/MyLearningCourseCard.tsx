@@ -272,12 +272,14 @@ export function MyLearningCourseCard({
   return (
     <article data-card-grid="" className={cn(surface, clickable, "group flex flex-col items-start gap-4 overflow-hidden p-4 md:p-5 lg:p-6", className)}>
       {/* The course picture across the top, edge to edge (Nelson, 22 Oct 2026: the picture large);
-          it replaced the 64px thumb beside the title. */}
+          it replaced the 64px thumb beside the title. On a phone the box is 5:2 (Nelson, 25 Oct
+          2026: smaller, the proportion kept): the 2:1 picture fills it, cropped top and bottom,
+          never stretched; from md the box is 2:1 again. */}
       <CourseThumb
         shape="cover"
         initials={course.initials}
         imageSrc={course.imageSrc}
-        className="-mx-4 -mt-4 aspect-[2/1] w-[calc(100%+2rem)] md:-mx-5 md:-mt-5 md:w-[calc(100%+2.5rem)] lg:-mx-6 lg:-mt-6 lg:w-[calc(100%+3rem)]"
+        className="-mx-4 -mt-4 aspect-[5/2] w-[calc(100%+2rem)] md:aspect-[2/1] md:-mx-5 md:-mt-5 md:w-[calc(100%+2.5rem)] lg:-mx-6 lg:-mt-6 lg:w-[calc(100%+3rem)]"
       />
       {/* DS v1.8 header (Nelson, 15 Oct 2026), gap 12: the Course Type line across the card
           (provider at its right end), then the title, then the badges (the picture is above, 22 Oct 2026).
