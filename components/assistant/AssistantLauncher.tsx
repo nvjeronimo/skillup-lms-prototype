@@ -52,6 +52,7 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
       <button
         ref={ref}
         type="button"
+        data-assistant-launcher=""
         onClick={onToggle}
         aria-label={
           open

@@ -558,6 +558,64 @@ button {
   animation-timing-function: var(--motion-easing-standard-decelerate);
 }
 
+/* Page transitions (lib/motion/pageTransition, Nelson 25 Oct 2026: "ainda me parecem muito bruscas").
+   The old page used to vanish in one frame. Now it stays and fades out (short3) while the new one
+   fades in with a 4 px rise (medium2), both on standard-decelerate, so the change reads as one
+   movement. The chrome that is the same on both pages holds still instead of dimming with the
+   page: each piece is its own transition group showing only the new picture. The names are
+   unique: one of each is on screen at a time. The new page's own entrance (.sk-animate-page) is
+   switched off while the transition runs; a 0s duration, not `none`, so taking the flag down
+   afterwards does not start it again. Reduced motion never starts a page transition. */
+:root[data-page-transition]::view-transition-old(root) {
+  animation: sk-fade-out var(--motion-duration-short3) var(--motion-easing-standard-decelerate) both;
+}
+:root[data-page-transition]::view-transition-new(root) {
+  animation: sk-page-in var(--motion-duration-medium2) var(--motion-easing-standard-decelerate) both;
+}
+:root[data-page-transition] .sk-animate-page {
+  animation-duration: 0s;
+}
+[data-platform-page] header[data-chrome] {
+  view-transition-name: sk-chrome-platform-topbar;
+}
+.sk-vt-player-topbar {
+  view-transition-name: sk-chrome-player-topbar;
+}
+.sk-vt-player-sidebar {
+  view-transition-name: sk-chrome-player-sidebar;
+}
+.sk-vt-player-footer {
+  view-transition-name: sk-chrome-player-footer;
+}
+[data-floating-nav] {
+  view-transition-name: sk-chrome-tab-bar;
+}
+[data-assistant-launcher] {
+  view-transition-name: sk-chrome-assistant;
+}
+::view-transition-group(sk-chrome-platform-topbar),
+::view-transition-group(sk-chrome-player-topbar),
+::view-transition-group(sk-chrome-player-sidebar),
+::view-transition-group(sk-chrome-player-footer),
+::view-transition-group(sk-chrome-tab-bar),
+::view-transition-group(sk-chrome-assistant),
+::view-transition-new(sk-chrome-platform-topbar),
+::view-transition-new(sk-chrome-player-topbar),
+::view-transition-new(sk-chrome-player-sidebar),
+::view-transition-new(sk-chrome-player-footer),
+::view-transition-new(sk-chrome-tab-bar),
+::view-transition-new(sk-chrome-assistant) {
+  animation: none;
+}
+::view-transition-old(sk-chrome-platform-topbar),
+::view-transition-old(sk-chrome-player-topbar),
+::view-transition-old(sk-chrome-player-sidebar),
+::view-transition-old(sk-chrome-player-footer),
+::view-transition-old(sk-chrome-tab-bar),
+::view-transition-old(sk-chrome-assistant) {
+  display: none;
+}
+
 /* Press feedback on cards and rows that are one link (a stretched link covers the card, or the
    card is the link): the card answers on touch-down, not on release (Apple, "respond on
    pointer-down"; 22 Oct 2026). Needed since hover only exists on devices that hover: a tap on a
