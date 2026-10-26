@@ -211,7 +211,10 @@ function Chat({ pathname }: { pathname: string }) {
   // Harbor on a platform page from desktop up: the assistant is in the top bar (its search pill), so
   // the launcher steps away and the window opens on the right, under the bar's Assistant button.
   const harborBar = useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent") && pathname.startsWith("/platform") && !isPhone && wideEnough;
-  const side = isPhone || (journeyProposal && inPlayer) || harborBar ? "right" : "left";
+  // In the player the launcher always takes the content card's corner (bottom right, above Previous
+  // / Next), as the Course Journey proposal did: in the sidebar's corner it covered the collapsed
+  // rail's last rows (Nelson, 26 Oct 2026).
+  const side = isPhone || inPlayer || harborBar ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
   const sheet = open && isPhone;
   // The window stays on screen while it leaves: it shrinks back into the launcher (short3),
