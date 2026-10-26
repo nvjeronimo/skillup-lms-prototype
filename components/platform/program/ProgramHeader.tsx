@@ -17,7 +17,7 @@ import { FadeImage } from "@/components/atoms/FadeImage";
 /* Breadcrumb item (DS `_Breadcrumb button base`): body-medium/Semibold, text/subtle; the
    current page is text/primary. 20px tall as drawn. The target is 44px below desktop and
    24px on desktop (WCAG 2.5.8); the negative margin keeps the breadcrumb at its drawn height. */
-const CRUMB = "sk-text-body-medium-semibold -my-3 inline-flex min-h-11 items-center lg:-my-0.5 lg:min-h-6";
+const CRUMB = "sk-text-body-medium-semibold relative inline-flex items-center after:absolute after:inset-x-0 after:-inset-y-3 after:content-['']";
 
 /**
  * DS `LMS/Platform/Course-Detail/Course-Header`, Kind=Program, on its three breakpoints: the
@@ -69,7 +69,7 @@ export function ProgramHeader({ program }: { program: Program }) {
         />
 
         <nav aria-label="Breadcrumb" className="relative">
-          <ol className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
+          <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 md:gap-x-2">
             <li className="flex items-center gap-1.5 md:gap-2">
               <Link
                 href="/platform/my-learning"

@@ -15,7 +15,7 @@ import { FadeImage } from "@/components/atoms/FadeImage";
 
 /* Breadcrumb item, as on the Program header: body-medium/Semibold, 44px tall below desktop,
    20px as drawn on desktop with the target grown to 24px. */
-const CRUMB = "sk-text-body-medium-semibold inline-flex min-h-11 items-center lg:-my-0.5 lg:min-h-6";
+const CRUMB = "sk-text-body-medium-semibold relative inline-flex items-center after:absolute after:inset-x-0 after:-inset-y-3 after:content-['']";
 
 /**
  * DS `LMS/Platform/Course-Detail/Course-Header`, Kind=Course (desktop 6406:39262, tablet and
@@ -50,7 +50,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
         />
 
         <nav aria-label="Breadcrumb" className="relative">
-          <ol className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
+          <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 md:gap-x-2">
             <li className="flex items-center gap-1.5 md:gap-2">
               <Link href="/platform/my-learning" className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
                 My Learning
