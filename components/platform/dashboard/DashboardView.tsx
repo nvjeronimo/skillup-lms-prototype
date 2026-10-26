@@ -57,11 +57,37 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
   const harbor = useHarbor();
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
+  // Due this week: beside Pick up (panel layout, 400) or before it (440).
+  const dueSection = (className: string) => (
+    <section data-arrive={2} aria-labelledby="dashboard-due-title" className={className}>
+      <PlatformSectionHeader
+        id="dashboard-due-title"
+        title="Due"
+        emphasis="this week"
+        action={{ label: "View calendar", href: "/platform/calendar" }}
+      />
+      <ul
+        data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
+        className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
+      >
+        {dashboardDue.map(({ id, ...item }) => (
+          <DueItem key={id} {...item} />
+        ))}
+      </ul>
+    </section>
+  );
+
   return (
     <PlatformPage
       current="dashboard"
       className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
-      skeleton={<DashboardSkeleton due={dashboardDue.length} resume={resume.length} jump={dashboardJump.length} />}
+      skeleton={
+        <DashboardSkeleton
+          due={dashboardDue.length}
+          resume={resume.length}
+          jump={dashboardJump.length}
+        />
+      }
     >
       {/* The frames are drawn at 1280; wider windows keep the 1200 content width. */}
       <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
@@ -69,10 +95,19 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
         {/* Always one line (Nelson, 23 Oct 2026): a very long name is cut with an ellipsis. */}
         <div data-arrive={0} className="flex flex-col gap-2">
           <h1 className="sk-text-headline-large-bold flex items-center gap-3 truncate whitespace-nowrap text-sko-text-default">
-            {harbor ? <Icon icon={Sparkles} size={28} className="shrink-0 text-sko-icon-primary" aria-hidden /> : null}
+            {harbor ? (
+              <Icon
+                icon={Sparkles}
+                size={28}
+                className="shrink-0 text-sko-icon-primary"
+                aria-hidden
+              />
+            ) : null}
             <span className="truncate">
               {dashboardGreeting.salutation}{" "}
-              <span data-heading-em="" className="text-sko-text-subtle">{platformUser.firstName}.</span>
+              <span data-heading-em="" className="text-sko-text-subtle">
+                {platformUser.firstName}.
+              </span>
             </span>
           </h1>
           {harbor ? (
@@ -81,7 +116,8 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
               data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
               className="sk-text-body-large-regular text-sko-text-muted"
             >
-              {deadlinesThisWeek === 1 ? "One deadline is" : `${deadlinesThisWeek} deadlines are`} coming up this week. I can help you plan them.{" "}
+              {deadlinesThisWeek === 1 ? "One deadline is" : `${deadlinesThisWeek} deadlines are`}{" "}
+              coming up this week. I can help you plan them.{" "}
               <button
                 type="button"
                 onClick={() => openAssistant("Help me plan my deadlines this week")}
@@ -99,7 +135,11 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
 
         {harbor ? (
           <div className="flex flex-col gap-layout-column lg:flex-row lg:items-stretch">
-            <section data-arrive={2} aria-labelledby="dashboard-pickup-title" className="flex min-w-0 flex-col gap-4 lg:flex-1">
+            <section
+              data-arrive={2}
+              aria-labelledby="dashboard-pickup-title"
+              className="flex min-w-0 flex-col gap-4 lg:flex-1"
+            >
               <PlatformSectionHeader
                 id="dashboard-pickup-title"
                 title="Pick up"
@@ -108,91 +148,93 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
               />
               <HarborPickUp resume={resume} titleId="dashboard-pickup-title" />
             </section>
-            <HarborStayInformed className="flex flex-col lg:w-[400px] lg:shrink-0 lg:pt-12" />
+            {dueSection("flex flex-col gap-4 lg:w-[400px] lg:shrink-0")}
           </div>
         ) : null}
 
-        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-          <section data-arrive={2} aria-labelledby="dashboard-due-title" className={cn("flex flex-col gap-4", harbor ? "lg:flex-1" : "lg:w-[440px] lg:shrink-0")}>
-            <PlatformSectionHeader
-              id="dashboard-due-title"
-              title="Due"
-              emphasis="this week"
-              action={{ label: "View calendar", href: "/platform/calendar" }}
-            />
-            <ul
-              data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
-              className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
-            >
-              {dashboardDue.map(({ id, ...item }) => (
-                <DueItem key={id} {...item} />
-              ))}
-            </ul>
-          </section>
+        {/* The panel layout (Harbor, Fluent; Nelson, 26 Oct 2026): Pick up beside Due this week, then
+            Jump somewhere beside Stay informed. The other skins keep Due beside Pick up, Jump below. */}
+        {harbor ? null : (
+          <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
+            {dueSection("flex flex-col gap-4 lg:w-[440px] lg:shrink-0")}
 
-          {harbor ? null : (
-          <section data-arrive={3} aria-labelledby="dashboard-resume-title" className="flex min-w-0 flex-col gap-4 lg:flex-1">
-            <PlatformSectionHeader
-              id="dashboard-resume-title"
-              title="Pick up"
-              emphasis="where you left off"
-              action={{ label: "My learning", href: "/platform/my-learning" }}
-            />
-            <ul className="flex flex-col gap-4">
-              {resume.map((course) => (
-                <li key={course.id} className="[container-type:inline-size]">
-                  {/* A list narrower than 700: the Resume row. From 700: the DS Course Row.
+            <section
+              data-arrive={3}
+              aria-labelledby="dashboard-resume-title"
+              className="flex min-w-0 flex-col gap-4 lg:flex-1"
+            >
+              <PlatformSectionHeader
+                id="dashboard-resume-title"
+                title="Pick up"
+                emphasis="where you left off"
+                action={{ label: "My learning", href: "/platform/my-learning" }}
+              />
+              <ul className="flex flex-col gap-4">
+                {resume.map((course) => (
+                  <li key={course.id} className="[container-type:inline-size]">
+                    {/* A list narrower than 700: the Resume row. From 700: the DS Course Row.
                       Resume is Secondary on every row, as the DS Course-Row and Resume-Row (Nelson, 13 Oct 2026). */}
-                  <ResumeRow
-                    className="[@container_(min-width:700px)]:hidden"
-                    title={course.headline}
-                    context={course.context}
-                    next={course.next}
-                    progressPct={course.progressPct}
-                    href={course.href}
-                    homeHref={course.homeHref}
-                    imageSrc={course.imageSrc}
-                    initials={course.initials}
-                  />
-                  <div className="hidden [@container_(min-width:700px)]:block">
-                    <CourseRow
+                    <ResumeRow
+                      className="[@container_(min-width:700px)]:hidden"
                       title={course.headline}
                       context={course.context}
                       next={course.next}
-                      state="Active"
                       progressPct={course.progressPct}
                       href={course.href}
-                    homeHref={course.homeHref}
-                    imageSrc={course.imageSrc}
-                    initials={course.initials}
+                      homeHref={course.homeHref}
+                      imageSrc={course.imageSrc}
+                      initials={course.initials}
+                    />
+                    <div className="hidden [@container_(min-width:700px)]:block">
+                      <CourseRow
+                        title={course.headline}
+                        context={course.context}
+                        next={course.next}
+                        state="Active"
+                        progressPct={course.progressPct}
+                        href={course.href}
+                        homeHref={course.homeHref}
+                        imageSrc={course.imageSrc}
+                        initials={course.initials}
                       />
-                  </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+        )}
+
+        <div
+          className={cn(harbor && "flex flex-col gap-layout-column lg:flex-row lg:items-stretch")}
+        >
+          <section
+            data-arrive={4}
+            aria-labelledby="dashboard-jump-title"
+            className={cn("flex flex-col gap-4", harbor && "min-w-0 lg:flex-1")}
+          >
+            <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
+            <ul
+              data-mock="The Discussion count needs the notifications flag switched on"
+              className="grid grid-cols-2 gap-4 md:grid-cols-3"
+            >
+              {dashboardJump.map((tile, i) => (
+                <li key={tile.id} className="min-w-0">
+                  <JumpTile
+                    icon={tile.icon}
+                    title={tile.title}
+                    description={tile.description}
+                    href={tile.href}
+                    onClick={tile.href ? undefined : () => notInPrototype(tile.title)}
+                  />
                 </li>
               ))}
             </ul>
           </section>
-          )}
+          {harbor ? (
+            <HarborStayInformed className="flex flex-col lg:w-[400px] lg:shrink-0 lg:pt-12" />
+          ) : null}
         </div>
-
-        <section data-arrive={4} aria-labelledby="dashboard-jump-title" className="flex flex-col gap-4">
-          <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
-          <ul
-            data-mock="The Discussion count needs the notifications flag switched on"
-            className="grid grid-cols-2 gap-4 md:grid-cols-3"
-          >
-            {dashboardJump.map((tile, i) => (
-              <li key={tile.id} className="min-w-0">
-                <JumpTile
-                  icon={tile.icon}
-                  title={tile.title}
-                  description={tile.description}
-                  href={tile.href}
-                  onClick={tile.href ? undefined : () => notInPrototype(tile.title)}
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
       </div>
     </PlatformPage>
   );
