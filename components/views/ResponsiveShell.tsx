@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
 import { PageTransitions } from "@/components/views/PageTransitions";
@@ -15,11 +16,29 @@ const FRAME_WIDTH: Record<DeviceMode, number | null> = {
   mobile: 375,
 };
 
+/** Messages between the preview frame and the window around it (same origin only). */
+const FRAME_URL = "sk-preview-url";
+const FRAME_DEVICE = "sk-preview-device";
+
+/** This document is the tablet/mobile preview inside the window's own frame. */
+function inPreviewFrame(): boolean {
+  try {
+    return window.self !== window.top && window.frameElement?.hasAttribute("data-preview-device") === true;
+  } catch {
+    return false;
+  }
+}
+
 /**
- * Wraps the whole app. Constrains the width for the tablet/mobile preview modes
- * and keeps <html data-theme> + data-skin in sync with the store, so every
- * `--sk-*` token flips. The device/shape/skin controls themselves now live in
- * the top-bar profile menu (DemoControlsMenu).
+ * Wraps the whole app. Shows the tablet/mobile preview modes in a frame of that width and keeps
+ * <html data-theme> + data-skin in sync with the store, so every `--sk-*` token flips. The
+ * device/shape/skin controls themselves live in the top-bar profile menu (DemoControlsMenu).
+ *
+ * The preview is an iframe of the same page, not a narrower box (Nelson, 26 Oct 2026: the
+ * platform pages did not adapt): every layout answers to media queries, which read the viewport,
+ * and only a frame gives the page a 375 or 834 viewport. Inside it the page runs as usual; it
+ * reports its URL (kept in the address bar) and a device change from its own profile menu; the
+ * window reloads the shared settings when the frame writes them.
  */
 export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const mode = useLmsStore((s) => s.deviceMode);
@@ -31,8 +50,111 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const underlineLinks = useLmsStore((s) => s.underlineLinks);
   const squareCorners = useLmsStore((s) => s.squareCorners);
   const setSkin = useLmsStore((s) => s.setSkin);
+  const setDeviceMode = useLmsStore((s) => s.setDeviceMode);
   const largeTargets = useLargeTargets();
-  const width = FRAME_WIDTH[mode];
+  const router = useRouter();
+
+  // The frame is chosen after mount (the server renders the page itself), and never inside the
+  // preview: there the page is the device.
+  const [mounted, setMounted] = React.useState(false);
+  const [framed, setFramed] = React.useState(false);
+  React.useEffect(() => {
+    setFramed(inPreviewFrame());
+    setMounted(true);
+  }, []);
+  const width = mounted && !framed ? FRAME_WIDTH[mode] : null;
+
+  // The page the frame opens on: where the window was when the preview started. A change of
+  // device keeps the same frame (and page); leaving the preview returns the window to the
+  // frame's page.
+  const [frameSrc, setFrameSrc] = React.useState<string | null>(null);
+  const frameUrl = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (width && !frameSrc) {
+      const here = window.location.pathname + window.location.search + window.location.hash;
+      frameUrl.current = here;
+      setFrameSrc(here);
+    }
+    if (!width && frameSrc) {
+      const last = frameUrl.current;
+      setFrameSrc(null);
+      if (last && last !== window.location.pathname + window.location.search) router.replace(last);
+    }
+  }, [width, frameSrc, router]);
+
+  // Window side: follow the frame's URL and device changes, and reload the shared settings
+  // (theme, skin, progress) the frame writes to storage.
+  React.useEffect(() => {
+    if (!width) return;
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin || !e.data || typeof e.data !== "object") return;
+      if (e.data.type === FRAME_URL && typeof e.data.url === "string") {
+        frameUrl.current = e.data.url;
+        window.history.replaceState(window.history.state, "", e.data.url);
+        if (typeof e.data.title === "string") document.title = e.data.title;
+      }
+      if (e.data.type === FRAME_DEVICE && e.data.mode in FRAME_WIDTH) setDeviceMode(e.data.mode as DeviceMode);
+    };
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "sk-lms-demo") void useLmsStore.persist.rehydrate();
+    };
+    window.addEventListener("message", onMessage);
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener("message", onMessage);
+      window.removeEventListener("storage", onStorage);
+    };
+  }, [width, setDeviceMode]);
+
+  // Frame side: take the device from the frame, then report URL and device changes.
+  const frameDevice = React.useRef<DeviceMode | null>(null);
+  React.useEffect(() => {
+    if (!framed) return;
+    const device = window.frameElement?.getAttribute("data-preview-device") as DeviceMode | null;
+    if (device && device in FRAME_WIDTH) {
+      frameDevice.current = device;
+      setDeviceMode(device);
+    }
+  }, [framed, setDeviceMode]);
+  // Report only a change made inside the frame: until the frame's store holds the frame's device,
+  // its first renders still say "auto", which must not reach the window.
+  const deviceSynced = React.useRef(false);
+  React.useEffect(() => {
+    if (!framed || !frameDevice.current) return;
+    if (!deviceSynced.current) {
+      if (mode === frameDevice.current) deviceSynced.current = true;
+      return;
+    }
+    if (mode === frameDevice.current) return;
+    frameDevice.current = mode;
+    window.parent.postMessage({ type: FRAME_DEVICE, mode }, window.location.origin);
+  }, [framed, mode]);
+  // Every client navigation goes through the History API: report the URL after each one.
+  React.useEffect(() => {
+    if (!framed) return;
+    // The title is read a frame later, once the new page has set it.
+    const report = () =>
+      window.requestAnimationFrame(() => {
+        const url = window.location.pathname + window.location.search + window.location.hash;
+        window.parent.postMessage({ type: FRAME_URL, url, title: document.title }, window.location.origin);
+      });
+    const { pushState, replaceState } = window.history;
+    window.history.pushState = function (...args: Parameters<History["pushState"]>) {
+      pushState.apply(this, args);
+      report();
+    };
+    window.history.replaceState = function (...args: Parameters<History["replaceState"]>) {
+      replaceState.apply(this, args);
+      report();
+    };
+    window.addEventListener("popstate", report);
+    report();
+    return () => {
+      window.history.pushState = pushState;
+      window.history.replaceState = replaceState;
+      window.removeEventListener("popstate", report);
+    };
+  }, [framed]);
 
   const flag = (attr: string, on: boolean) => {
     const el = document.documentElement;
@@ -126,16 +248,18 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     );
 
   return (
-    <div className="flex min-h-[100dvh] justify-center bg-sko-bg-subtle">
-      <div
-        style={{ width }}
-        className="w-full shrink-0 overflow-hidden border-x border-sko-border-subtle bg-sko-bg-page shadow-2xl"
-      >
-        {children}
-        <AssistantChat />
-        <PageTransitions />
-        <SyntheticPersonasHost />
-      </div>
+    <div className="flex h-[100dvh] justify-center overflow-hidden bg-sko-bg-subtle">
+      {frameSrc ? (
+        <iframe
+          key="preview"
+          src={frameSrc}
+          title={`Preview at ${width} px (${mode})`}
+          data-preview-device={mode}
+          style={{ width }}
+          // box-content: the border sits outside, so the page inside gets the full 375 / 834.
+          className="box-content h-full shrink-0 border-x border-sko-border-subtle bg-sko-bg-page shadow-2xl"
+        />
+      ) : null}
     </div>
   );
 }
