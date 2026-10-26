@@ -14,6 +14,8 @@ import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platf
 import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { ViewToggle } from "@/components/platform/my-learning/ViewToggle";
 import { CertificateCard } from "@/components/platform/program/CertificatesTab";
+import { ProgramCertificateHero } from "@/components/platform/program/ProgramCertificateHero";
+import { getProgramCertificate } from "@/lib/platform/catalog";
 import {
   certificatesInProgress,
   earnedCertificates,
@@ -161,13 +163,16 @@ function ProgramCertificateLine({ program }: { program: CertificateProgram }) {
  * One program's block (Nelson, 26 Oct 2026: "group the course certificates that belonged to a
  * program"): the program as an h3 with what the tab holds of it, its certificate (a row when
  * it is in this tab, a quiet line when not), then its course certificates in course order,
- * four at most until "Show all N".
+ * four at most until "Show all N". An earned program certificate is the large card, as before
+ * (Nelson, 26 Oct 2026: "o program certificate card podes deixar como antes"), at the top of
+ * the block: its title is then the block's h3, and the meta line goes under it.
  */
 function ProgramGroup<T extends EarnedCertificate | CertificateInProgress>({
   tab,
   group,
   meta,
   programRow,
+  hero,
   renderGrid,
   renderList,
   listView,
@@ -175,7 +180,9 @@ function ProgramGroup<T extends EarnedCertificate | CertificateInProgress>({
   tab: CertificatesTab;
   group: ProgramCertificateGroup<T>;
   meta?: string;
-  programRow: React.ReactNode;
+  programRow?: React.ReactNode;
+  /** The large card, which carries the program title (the block's h3, `headingId`). */
+  hero?: (headingId: string) => React.ReactNode;
   renderGrid: (item: T) => React.ReactNode;
   renderList: (item: T) => React.ReactNode;
   listView: boolean;
@@ -187,13 +194,22 @@ function ProgramGroup<T extends EarnedCertificate | CertificateInProgress>({
   const courses = all || !more ? group.courses : group.courses.slice(0, BLOCK_LIMIT);
   return (
     <section aria-labelledby={headingId} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-0.5">
-        <h3 id={headingId} className="sk-text-title-medium-semibold text-sko-text-default">
-          {group.program.title}
-        </h3>
-        {meta ? <p className="sk-text-body-medium-regular text-sko-text-subtle">{meta}</p> : null}
-      </div>
-      {programRow}
+      {hero ? (
+        <>
+          {hero(headingId)}
+          {meta ? <p className="sk-text-body-medium-regular text-sko-text-subtle">{meta}</p> : null}
+        </>
+      ) : (
+        <>
+          <div className="flex flex-col gap-0.5">
+            <h3 id={headingId} className="sk-text-title-medium-semibold text-sko-text-default">
+              {group.program.title}
+            </h3>
+            {meta ? <p className="sk-text-body-medium-regular text-sko-text-subtle">{meta}</p> : null}
+          </div>
+          {programRow}
+        </>
+      )}
       {courses.length ? (
         <div id={coursesId} className="contents">
           <ul className={cn(CERTIFICATES_GRID, listView && "lg:hidden")}>
@@ -314,6 +330,11 @@ export function CertificatesView() {
     { id: "in-progress" as const, label: "In progress", count: certificatesInProgress.length },
     { id: "earned" as const, label: "Earned", count: earnedCertificates.length },
   ];
+  /** An earned program certificate: the large card, as before, its title the block's h3. */
+  const heroFor = (slug: string, earnedHere: boolean) => {
+    const state = earnedHere ? getProgramCertificate(slug) : undefined;
+    return state ? (headingId: string) => <ProgramCertificateHero state={state} titleAs="h3" titleId={headingId} /> : undefined;
+  };
   const tabLabel = tabs.find((t) => t.id === tab)?.label ?? "";
   const othersTitle = (blocks: number) => (blocks ? "Other courses" : "Course certificates");
 
@@ -391,13 +412,8 @@ export function CertificatesView() {
                       tab={tab}
                       group={g}
                       meta={`${g.courses.length} of ${plural(g.program.total, "course certificate", "course certificates")}`}
-                      programRow={
-                        g.programItem ? (
-                          <ProgramCertificateRow program={g.program} earned={g.programItem} />
-                        ) : (
-                          <ProgramCertificateLine program={g.program} />
-                        )
-                      }
+                      programRow={g.programItem ? undefined : <ProgramCertificateLine program={g.program} />}
+                      hero={heroFor(g.program.slug, !!g.programItem)}
                       renderGrid={earnedCard}
                       renderList={earnedRow}
                       listView={listView}
