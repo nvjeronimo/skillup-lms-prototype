@@ -130,7 +130,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
         </div>
 
         <div data-arrive={1}>
-          <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} trends={harbor} />
+          <GlanceCard title={dashboardGlance.title} stats={dashboardGlance.stats} trends />
         </div>
 
         {harbor ? (

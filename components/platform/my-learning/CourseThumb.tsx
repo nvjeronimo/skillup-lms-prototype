@@ -18,7 +18,8 @@ import { cn } from "@/lib/utils";
  * Card pictures are 2:1 (Nelson, 23 Oct 2026: the course images are 2:1), so the callers size
  * the box at that ratio: `aspect-[2/1]` across a card, a width twice the row's height beside a
  * row (list card 300 for its 150; at most 40% of a narrow row). Exceptions, square (the picture
- * cropped 1:1): the program card's tile (64 × 64) and the Course-Row's cover (118, its height).
+ * cropped 1:1): the program card's tile (64 × 64), the Course-Row's cover (118, its height) and
+ * the My Learning table's thumb (48).
  */
 export function CourseThumb({
   initials,

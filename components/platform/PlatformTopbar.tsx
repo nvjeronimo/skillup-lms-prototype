@@ -31,6 +31,7 @@ import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 import { useLearner } from "@/lib/persona-gate";
 import { toggleHarborRail, useHarbor, useHarborRailExpanded } from "@/lib/platform/harbor";
 import { HarborSearch } from "./harbor/HarborSearch";
+import { SidebarToggleGlyph } from "@/components/atoms/SidebarToggle";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
@@ -266,9 +267,10 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 onClick={toggleHarborRail}
                 aria-label={railExpanded ? "Collapse the navigation" : "Expand the navigation"}
                 aria-expanded={railExpanded}
-                className="-ml-2.5 inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover"
+                className="-ml-2.5 inline-flex size-11 items-center justify-center rounded-control text-sko-border-default transition-colors hover:bg-sko-bg-hover"
               >
-                <Icon icon={Menu02} size={24} />
+                {/* The ICP sidebar's own panel glyph (Nelson, 26 Oct 2026): left pane filled when the rail is open. */}
+                <SidebarToggleGlyph expanded={railExpanded} />
               </button>
               <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
                 <SkillUpLogo className="h-[30px]" />

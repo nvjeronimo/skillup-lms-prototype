@@ -16,6 +16,24 @@ export interface SidebarToggleProps {
  * Stroke geometry is inset by half the stroke so the outer edge matches the
  * DS inside stroke.
  */
+/** The panel glyph alone, for a toggle that needs its own button (the platform rail, 26 Oct 2026). */
+export function SidebarToggleGlyph({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={iconStroke(24)}
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="4" y="5" width="17" height="14" rx="1" fill="none" />
+      <path d="M9 5H5A1 1 0 0 0 4 6v12A1 1 0 0 0 5 19h4z" fill={expanded ? "currentColor" : "none"} />
+    </svg>
+  );
+}
+
 export function SidebarToggle({ expanded, onToggle, className }: SidebarToggleProps) {
   return (
     <button
@@ -28,21 +46,7 @@ export function SidebarToggle({ expanded, onToggle, className }: SidebarTogglePr
         className,
       )}
     >
-      <svg
-        width={24}
-        height={24}
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={iconStroke(24)}
-        strokeLinejoin="round"
-        aria-hidden
-      >
-        <rect x="4" y="5" width="17" height="14" rx="1" fill="none" />
-        <path
-          d="M9 5H5A1 1 0 0 0 4 6v12A1 1 0 0 0 5 19h4z"
-          fill={expanded ? "currentColor" : "none"}
-        />
-      </svg>
+      <SidebarToggleGlyph expanded={expanded} />
     </button>
   );
 }
