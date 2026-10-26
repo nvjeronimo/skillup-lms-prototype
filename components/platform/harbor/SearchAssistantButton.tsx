@@ -23,7 +23,9 @@ export function SearchAssistantButton({
   className,
 }: {
   scope?: SearchScope;
-  /** "md": 44 (compact bars); "sm": 32, as the desktop bars' utility buttons. */
+  /** "md": 44. "sm": 32 with an invisible band that keeps a 44 target, for the desktop bars'
+   * utility row and, since 26 Oct 2026, the compact bars (Nelson: the phone row has to fit; as the
+   * DS Compact Topbar, Search-Assistant-Button sm). */
   size?: "sm" | "md";
   className?: string;
 }) {
@@ -42,9 +44,12 @@ export function SearchAssistantButton({
         aria-expanded={open}
         aria-label={course ? "Search this course or ask the assistant" : "Search or ask the assistant"}
         onClick={() => setOpen(true)}
+        data-hit-band={size === "sm" ? "" : undefined}
         className={cn(
           "inline-flex shrink-0 items-center justify-center rounded-control text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
-          size === "md" ? "size-11" : "size-8",
+          size === "md"
+            ? "size-11"
+            : "relative size-8 before:absolute before:-inset-1.5 before:content-['']",
           className,
         )}
       >

@@ -365,7 +365,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           </div>
           <div className="flex items-center gap-1">
             <span className="flex items-center gap-1">
-              <SearchAssistantButton />
+              <SearchAssistantButton size="sm" />
               {bell}
               {themeSwitch("md")}
             </span>
