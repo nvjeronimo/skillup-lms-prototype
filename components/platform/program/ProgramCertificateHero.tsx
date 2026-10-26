@@ -57,12 +57,16 @@ function previewDocument(program: Program): CertificateDocumentData {
 export function ProgramCertificateHero({
   state,
   titleAs: Title = "h3",
+  titleId: titleIdProp,
 }: {
   state: ProgramCertificateState;
   /** The title's level: h3 on the program page, h4 under a section heading (Certificates page). */
   titleAs?: "h3" | "h4";
+  /** The title's id, when a section around the card is named by it (Certificates page). */
+  titleId?: string;
 }) {
-  const titleId = React.useId();
+  const generatedId = React.useId();
+  const titleId = titleIdProp ?? generatedId;
   const showToast = useLmsStore((s) => s.showToast);
   const { program, certificate, complete } = state;
   const courses = state.courses.map((c) => ({ ...c, percent: c.percent ?? 0 }));
