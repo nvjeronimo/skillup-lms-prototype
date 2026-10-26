@@ -309,15 +309,18 @@ html[data-skin="fluent"] [data-theme="dark"] {
 }
 
 /* ── The glance ──────────────────────────────────────────────────────────────
-   A neutral tray (Nelson, 26 Oct 2026): Background5 #EBEBEB in light, Background2 #1F1F1F in dark,
+   A tray (Nelson, 26 Oct 2026), blue-tinted since the same day (below; it was Background5 #EBEBEB),
    radius 12 from desktop up; the white figure cards sit on it with shadow 4, title in ink, the
    shared rings on it. Set on <html> only: the backdrop itself is a data-theme="dark" region and
    would read the dark value. */
 html[data-skin="fluent"] {
-  --sk-fluent-glance: #ebebeb;
+  /* A blue-tinted tray (Nelson, 26 Oct 2026, was Background5 #EBEBEB): Brand 160, Fluent's
+     BrandBackground2; the white cards and the ink title read on it as they did on grey. */
+  --sk-fluent-glance: #ebf3fc;
 }
 html[data-skin="fluent"][data-theme="dark"] {
-  --sk-fluent-glance: #1f1f1f;
+  /* Dark: Brand 20 (was Background2 #1F1F1F). */
+  --sk-fluent-glance: #082338;
 }
 html[data-skin="fluent"] [data-glance-backdrop] {
   background-color: var(--sk-fluent-glance);
