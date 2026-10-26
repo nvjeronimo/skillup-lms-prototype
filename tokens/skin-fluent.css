@@ -325,18 +325,9 @@ html[data-skin="fluent"][data-theme="dark"] {
 html[data-skin="fluent"] [data-glance-backdrop] {
   background-color: var(--sk-fluent-glance);
 }
-/* On the light canvas the hazes read as a blue blob: Fluent Light keeps the rings alone, in grey. */
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(2) {
-  display: none;
-}
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(4) {
-  box-shadow: none;
-}
-/* The rings in Fluent's neutral stroke, not blue (Nelson, 26 Oct 2026: grey on the light canvas). */
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:is(:nth-child(3), :nth-child(4)),
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(4)::after {
-  border-color: var(--sk-fluent-stroke1);
-}
+/* The rings, the light in the middle ring and the haze as in every other skin (Nelson, 26 Oct 2026:
+   "o mesmo efeito usado nos circulos nos outros skins"; Fluent Light had them grey, no haze), in
+   Fluent's brand blue (border/info, bg/info) on the blue tray. */
 html[data-skin="fluent"] [data-glance-title] {
   color: var(--color-text-default);
 }
