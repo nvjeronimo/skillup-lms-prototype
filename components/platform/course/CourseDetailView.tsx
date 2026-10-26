@@ -121,8 +121,9 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
       {openThread ? <h1 className="sr-only md:hidden">{course.title}</h1> : null}
 
       <div data-arrive={1} className={cn("border-b border-sko-border-subtle bg-sko-bg-page", openThread && "max-md:hidden")}>
-        {/* Mobile: 12 above the 32px tabs (a 44px row). With the larger-targets setting the tabs are 44 themselves. */}
-        <div className="mx-auto flex w-full max-w-[1280px] items-end pl-layout-band-x pt-3 max-md:[[data-large-targets]_&]:pt-0 md:gap-5 md:px-layout-band-x md:pt-0 lg:gap-6">
+        {/* Room above the tabs (Nelson, 26 Oct 2026: "mais espaço superior nos tabs"): 24 on mobile (12 with
+            the larger-targets setting, where the tabs are 44 themselves), 16 from tablet up. */}
+        <div className="mx-auto flex w-full max-w-[1280px] items-end pl-layout-band-x pt-6 max-md:[[data-large-targets]_&]:pt-3 md:gap-5 md:px-layout-band-x md:pt-4 lg:gap-6">
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up. Their own rule sits on the row's. */}
           <PlatformTabs
             tabs={COURSE_TABS}
