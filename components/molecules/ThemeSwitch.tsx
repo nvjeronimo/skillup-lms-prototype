@@ -10,7 +10,9 @@ import { cn } from "@/lib/utils";
  * icons"): a DS Button group with two icon segments, Sun and Moon, the current theme pressed. It
  * replaces the single Utility Button that showed the theme to switch to, so the state is always
  * visible. Decision 028's Button group: segments 6 inside a 10 track with 4 of padding. `sm` is the
- * desktop bars' (28 segments); `md` keeps the compact bars' 44px targets.
+ * desktop bars' (28 segments); `md` keeps the compact bars' 44px targets. The track is bg/muted, not
+ * bg/track: Harbor and Fluent restyle every bg/track row as bare filters, and this one must read as
+ * one group in every skin (Nelson, 26 Oct 2026).
  */
 export function ThemeSwitch({
   value,
@@ -31,7 +33,7 @@ export function ThemeSwitch({
     <div
       role="group"
       aria-label="Theme"
-      className={cn("inline-flex shrink-0 gap-0.5 rounded-track bg-sko-bg-track p-1", className)}
+      className={cn("inline-flex shrink-0 gap-0.5 rounded-track bg-sko-bg-muted p-1", className)}
     >
       {options.map((o) => {
         const on = value === o.theme;

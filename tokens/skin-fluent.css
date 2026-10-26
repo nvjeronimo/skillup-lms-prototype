@@ -339,10 +339,18 @@ html[data-skin="fluent"] [data-theme="dark"] {
 }
 
 /* ── The glance ──────────────────────────────────────────────────────────────
-   No band, light or dark: the figure cards sit straight on the canvas with shadow 4, title in ink;
-   the rings shared by every skin draw on the canvas (Nelson, 26 Oct 2026). */
+   A neutral tray (Nelson, 26 Oct 2026): Background5 #EBEBEB in light, Background2 #1F1F1F in dark,
+   radius 12 from desktop up; the white figure cards sit on it with shadow 4, title in ink, the
+   shared rings on it. Set on <html> only: the backdrop itself is a data-theme="dark" region and
+   would read the dark value. */
+html[data-skin="fluent"] {
+  --sk-fluent-glance: #ebebeb;
+}
+html[data-skin="fluent"][data-theme="dark"] {
+  --sk-fluent-glance: #1f1f1f;
+}
 html[data-skin="fluent"] [data-glance-backdrop] {
-  background-color: transparent;
+  background-color: var(--sk-fluent-glance);
 }
 /* On the light canvas the hazes read as a blue blob: Fluent Light keeps the rings alone, in grey. */
 html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(2) {
@@ -362,7 +370,7 @@ html[data-skin="fluent"] [data-glance-title] {
 @media (min-width: 1025px) {
   [data-skin="fluent"] [data-glance] {
     margin-inline: 0;
-    padding-inline: 0;
+    padding-inline: 24px;
     border-radius: var(--sk-radius-surface);
   }
   [data-skin="fluent"] [data-glance] > ul {

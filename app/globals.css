@@ -10,6 +10,7 @@
 @import "../tokens/direction-studio.css";
 @import "../tokens/skin-harbor.css";
 @import "../tokens/skin-fluent.css";
+@import "../tokens/square-corners.css";
 
 @tailwind base;
 @tailwind components;

@@ -6,6 +6,7 @@ import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
 import { PageTransitions } from "@/components/views/PageTransitions";
 import { SyntheticPersonasHost } from "@/components/molecules/SyntheticPersonas";
+import { LOAD_MODE_KEY } from "@/lib/arrival/loadMode";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
 const FRAME_WIDTH: Record<DeviceMode, number | null> = {
@@ -234,6 +235,15 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     else if (dq === "classic") setSkin("teal");
   }, [setSkin]);
   React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
+  // The demo's Loading switch went (Nelson, 26 Oct 2026): a browser that kept Off or Slow goes back
+  // to the normal simulated load.
+  React.useEffect(() => {
+    try {
+      window.localStorage.removeItem(LOAD_MODE_KEY);
+    } catch {
+      /* storage blocked: nothing was kept either */
+    }
+  }, []);
 
   // The assistant is mounted once, for every page (it shows on platform and player pages only);
   // so is the synthetic personas' modal (Nelson, 25 Oct 2026), opened from the profile menu.
