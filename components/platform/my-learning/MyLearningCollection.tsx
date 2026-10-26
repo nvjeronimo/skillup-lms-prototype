@@ -26,7 +26,6 @@ import { cn } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { useEqualHeights } from "@/lib/useEqualHeights";
-import { useHarbor } from "@/lib/platform/harbor";
 import { HarborCourseTable } from "@/components/platform/harbor/HarborCourseTable";
 import { ProgramCard } from "./ProgramCard";
 import { StickyToolbar } from "@/components/platform/StickyToolbar";
@@ -138,10 +137,10 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   }, [linkedTab]);
   // `?view=grid` too: a synthetic persona can open on the list (Nelson, 25 Oct 2026), and the grid is then the one asked for.
   const viewParam = params.get("view");
-  const harbor = useHarbor();
   const view: MyLearningView =
-    viewParam === "list" || viewParam === "grid" || (viewParam === "table" && harbor) ? viewParam : MY_LEARNING_DEFAULT_VIEW;
-  // The table is for courses; on Programs it reads as the list.
+    viewParam === "list" || viewParam === "grid" || viewParam === "table" ? viewParam : MY_LEARNING_DEFAULT_VIEW;
+  // The table view (Harbor first, every skin since 26 Oct 2026, Nelson) is for courses; on Programs
+  // it reads as the list.
   const tableView = view === "table" && tab === "courses";
 
   const setParam = (key: "tab" | "view", value: string, fallback: string) => {
@@ -261,7 +260,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             </div>
             <ViewToggle
               view={view}
-              withTable={harbor}
+              withTable
               onChange={(next) => setParam("view", next, MY_LEARNING_DEFAULT_VIEW)}
               className="hidden shrink-0 md:inline-flex"
             />
