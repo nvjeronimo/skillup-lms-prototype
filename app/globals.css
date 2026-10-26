@@ -1197,6 +1197,11 @@ button {
   min-height: 0;
   min-width: 0;
 }
+/* A control that draws its own 44 band (ThemeSwitch segments, Nelson 26 Oct 2026) keeps its size. */
+[data-large-targets] button[data-hit-band] {
+  min-height: 0;
+  min-width: 0;
+}
 [data-large-targets] .sk-link-button::after {
   content: "";
   position: absolute;
