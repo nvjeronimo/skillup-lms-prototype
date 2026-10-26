@@ -95,7 +95,12 @@ export function PlatformTabs<T extends string>({
       ref={indicator.rowRef}
       role="tablist"
       aria-label={ariaLabel}
-      className={cn("relative flex items-start gap-3", !ownRule && className)}
+      // The large tabs (headline-small) sit further apart: 32 (Nelson, 26 Oct 2026); sm keeps 12.
+      className={cn(
+        "relative flex items-start",
+        small ? "gap-3" : responsive ? "gap-3 md:gap-8" : "gap-8",
+        !ownRule && className,
+      )}
     >
       {tabs.map((tab, index) => {
         const selected = tab.id === value;
