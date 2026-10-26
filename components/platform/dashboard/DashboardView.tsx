@@ -77,6 +77,29 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
     </section>
   );
 
+  // Jump somewhere: the last row, or beside Due this week in the panel layout (one column there).
+  const jumpSection = (className: string, gridClass: string) => (
+    <section data-arrive={4} aria-labelledby="dashboard-jump-title" className={className}>
+      <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
+      <ul
+        data-mock="The Discussion count needs the notifications flag switched on"
+        className={gridClass}
+      >
+        {dashboardJump.map((tile, i) => (
+          <li key={tile.id} className="min-w-0">
+            <JumpTile
+              icon={tile.icon}
+              title={tile.title}
+              description={tile.description}
+              href={tile.href}
+              onClick={tile.href ? undefined : () => notInPrototype(tile.title)}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+
   return (
     <PlatformPage
       current="dashboard"
@@ -152,9 +175,17 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           </div>
         ) : null}
 
-        {/* The panel layout (Harbor, Fluent; Nelson, 26 Oct 2026): Pick up beside Stay informed, Due
-            this week under them, Jump somewhere last. The other skins keep Due beside Pick up. */}
-        {harbor ? dueSection("flex flex-col gap-4") : null}
+        {/* The panel layout (Harbor, Fluent; Nelson, 26 Oct 2026): Pick up beside Stay informed, then
+            Due this week beside Jump somewhere. The other skins keep Due beside Pick up, Jump last. */}
+        {harbor ? (
+          <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
+            {dueSection("flex min-w-0 flex-col gap-4 lg:flex-1")}
+            {jumpSection(
+              "flex flex-col gap-4 lg:w-[400px] lg:shrink-0",
+              "grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-1",
+            )}
+          </div>
+        ) : null}
         {harbor ? null : (
           <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
             {dueSection("flex flex-col gap-4 lg:w-[440px] lg:shrink-0")}
@@ -206,29 +237,9 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           </div>
         )}
 
-        <section
-          data-arrive={4}
-          aria-labelledby="dashboard-jump-title"
-          className="flex flex-col gap-4"
-        >
-          <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
-          <ul
-            data-mock="The Discussion count needs the notifications flag switched on"
-            className="grid grid-cols-2 gap-4 md:grid-cols-3"
-          >
-            {dashboardJump.map((tile, i) => (
-              <li key={tile.id} className="min-w-0">
-                <JumpTile
-                  icon={tile.icon}
-                  title={tile.title}
-                  description={tile.description}
-                  href={tile.href}
-                  onClick={tile.href ? undefined : () => notInPrototype(tile.title)}
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
+        {harbor
+          ? null
+          : jumpSection("flex flex-col gap-4", "grid grid-cols-2 gap-4 md:grid-cols-3")}
       </div>
     </PlatformPage>
   );
