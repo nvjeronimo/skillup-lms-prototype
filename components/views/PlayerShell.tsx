@@ -515,9 +515,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           tabIndex={-1}
           className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page outline-none"
         >
+          {/* md:pb-20: the assistant launcher sits in this card's bottom-right corner, above Previous /
+              Next (26 Oct 2026); the room lets the last row (Mark as Complete) scroll clear of it. */}
           <div
             ref={bodyRef}
-            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto [overflow-anchor:none]"
+            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto [overflow-anchor:none] md:pb-20"
             onScroll={(e) => {
               const top = e.currentTarget.scrollTop;
               // Dock past 8 px, undock only back at the top (hysteresis).

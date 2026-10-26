@@ -220,7 +220,10 @@ function Chat({ pathname }: { pathname: string }) {
     pathname.startsWith("/platform") &&
     !isPhone &&
     wideEnough;
-  const side = isPhone || (journeyProposal && inPlayer) || harborBar ? "right" : "left";
+  // In the player the launcher always takes the content card's corner (bottom right, above Previous
+  // / Next), as the Course Journey proposal did: in the sidebar's corner it covered the collapsed
+  // rail's last rows (Nelson, 26 Oct 2026).
+  const side = isPhone || inPlayer || harborBar ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
   // In the bar, the window hangs under the bar's Assistant button, as the DreamHost panel's.
   const barAnchor = useBarAnchor(harborBar && open);
