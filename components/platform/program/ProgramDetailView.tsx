@@ -89,8 +89,9 @@ export function ProgramDetailView({ program }: { program: Program }) {
       {/* The bar is bg/page across the page, on a 1px border/subtle rule (an inset shadow, as the
           tabs' own rule, so the bar keeps its height: 48, and 44 on mobile). */}
       <div data-arrive={1} className="bg-sko-bg-page shadow-[inset_0_-1px_0_0_var(--color-border-subtle)] forced-colors:border-b forced-colors:border-sko-border-subtle">
-        {/* Mobile: 12 above the 32px tabs (44 in all). The tabs already grow their target to 44
-            upwards, so the "larger targets" min-height is switched off here: it would make the bar 56. */}
+        {/* The room above the tabs equals the tab's own room to its bar (Nelson, 26 Oct 2026): 12 on mobile,
+            the tab's own 12 top padding from tablet up. The tabs grow their target to 44 upwards, so the
+            "larger targets" min-height is switched off here. */}
         <div className="mx-auto w-full max-w-[1280px] pl-layout-band-x pt-3 max-md:[&_[role=tab]]:min-h-0 md:px-layout-band-x md:pt-0">
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up, on their own rule. All four panels stay mounted. */}
           <PlatformTabs
