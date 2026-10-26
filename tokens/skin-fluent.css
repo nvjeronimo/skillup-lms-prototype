@@ -339,13 +339,17 @@ html[data-skin="fluent"] [data-theme="dark"] {
 }
 
 /* ── The glance ──────────────────────────────────────────────────────────────
-   No band, light or dark: the figure cards sit straight on the canvas with shadow 4, title in ink,
-   no glows (Fluent has no decorative shapes). */
+   No band, light or dark: the figure cards sit straight on the canvas with shadow 4, title in ink;
+   the rings shared by every skin draw on the canvas (Nelson, 26 Oct 2026). */
 html[data-skin="fluent"] [data-glance-backdrop] {
   background-color: transparent;
 }
-html[data-skin="fluent"] [data-glance] [data-glow] {
+/* On the light canvas the hazes read as a blue blob: Fluent Light keeps the rings alone. */
+html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(2) {
   display: none;
+}
+html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(4) {
+  box-shadow: none;
 }
 html[data-skin="fluent"] [data-glance-title] {
   color: var(--color-text-default);

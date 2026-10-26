@@ -276,54 +276,13 @@ html[data-skin="harbor"] [data-theme="dark"] {
 
 /* ── The glance ──────────────────────────────────────────────────────────────
    After the panel's "Remixer" banner (Nelson, 26 Oct 2026): a deep indigo-navy block, light and
-   dark alike, with thin concentric rings off the top-right corner and two soft hazes, all in
-   SkillUp's blues (#0086C9, #51BFFC; Nelson, 26 Oct 2026: no purple) from the glance's own glow layers, the title in white, the figures on their
-   white cards. No gradient fill: the hazes are the blurred glow shapes SKO already uses. */
+   dark alike, the title in white, the figures on their white cards. The rings and hazes are the
+   glance's own, shared by every skin (GlanceCard). */
 [data-skin="harbor"] [data-glance-backdrop] {
   background-color: var(--sk-harbor-glance);
 }
 [data-skin="harbor"] [data-glance-title] {
   color: #ffffff;
-}
-/* Haze 1 (the wide glow): SkillUp blue, low on the right. */
-[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(2) {
-  left: auto;
-  right: -80px;
-  top: auto;
-  bottom: -120px;
-  width: 520px;
-  height: 240px;
-  background-color: #0086c9;
-  opacity: 0.5;
-  filter: blur(120px);
-}
-/* Rings: the two circles become 1px outlines on one centre off the top-right corner; the larger one
-   draws a third ring with ::after. */
-[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(3),
-[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(4) {
-  top: 10px;
-  right: 14%;
-  border: 1px solid #0086c9;
-  background-color: transparent;
-  opacity: 0.85;
-  transform: translate(50%, -50%);
-}
-[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(3) {
-  width: 300px;
-  height: 300px;
-}
-[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(4) {
-  width: 620px;
-  height: 620px;
-  /* Haze 2: a blue light inside the middle ring. */
-  box-shadow: inset 0 0 200px #51bffc55;
-}
-[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(4)::after {
-  content: "";
-  position: absolute;
-  inset: -230px;
-  border: 1px solid #0086c9;
-  border-radius: 9999px;
 }
 
 /* From desktop up the rail is on the left: the glance is a rounded tray in the page column, not a
