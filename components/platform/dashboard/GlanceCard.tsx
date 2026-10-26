@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
 export interface GlanceCardProps {
   title: string;
   stats: DashboardStat[];
-  /** Harbor: each figure carries its 30-day trend chip (sample data). */
+  /** Each figure carries its 30-day trend chip (sample data; Harbor first, every skin since 26 Oct 2026). */
   trends?: boolean;
   className?: string;
 }
 
-/** Harbor's trend chip (the DreamHost panel's "↓ 38%"): a soft tint, an arrow and the change. */
+/** The trend chip (Harbor first, after the DreamHost panel's "↓ 38%"): a soft tint, an arrow and the change. */
 function TrendChip({ trend }: { trend: NonNullable<DashboardStat["trend"]> }) {
   const tone =
     trend.dir === "up"
