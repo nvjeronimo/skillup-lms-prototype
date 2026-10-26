@@ -68,7 +68,7 @@ function StatCard({ stat, trends = false }: { stat: DashboardStat; trends?: bool
         >
           <ArrivalCount value={stat.value} />
         </span>
-        <span className="sk-text-body-small-medium min-w-0 pb-1 text-sko-text-muted">
+        <span className="sk-text-body-small-medium min-w-0 pb-2 text-sko-text-muted">
           {stat.detailStrong ? <span className="sk-text-body-small-bold">{stat.detailStrong} </span> : null}
           {stat.detail}
         </span>

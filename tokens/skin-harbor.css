@@ -93,9 +93,10 @@
   --color-icon-success-strong: #00897b;
   --color-icon-error: #c62828;
 
-  /* The panel's tray: a band of cards sits in #F0F0F0 (radius 20, 8 in). Its own name, because the
-     glance band is a dark region and would read the dark bg/muted. */
-  --sk-harbor-tray: #f0f0f0;
+  /* The glance tray (radius 20): the light blue of the selected states, bg/primary-soft (Nelson,
+     26 Oct 2026; it was the panel's #F0F0F0). Its own name, because the glance band is a dark region
+     and would read the dark tokens. */
+  --sk-harbor-tray: #d9eafc;
 }
 
 /* Harbor Dark (the panel has none): the same components at night. Slate-ink ground #0b1218, page
@@ -276,7 +277,7 @@ html[data-skin="harbor"] [data-theme="dark"] {
 }
 
 /* ── The glance ──────────────────────────────────────────────────────────────
-   Light: the panel's "Your Sites at a Glance" tray, not a dark band: #F0F0F0 with the white figure
+   Light: the panel's "Your Sites at a Glance" tray, not a dark band: light blue #D9EAFC with the white figure
    cards on it, the title in ink, no glows. Dark keeps the slate-ink band. */
 html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance-backdrop] {
   background-color: var(--sk-harbor-tray);
