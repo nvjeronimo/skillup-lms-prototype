@@ -256,7 +256,7 @@ export function CoursePlayerTopbar({
         ) : null}
       </div>
 
-      {searchScope && isDesktop ? <HarborSearch scope={searchScope} className="min-w-[200px] flex-[0_1_380px]" /> : null}
+      {searchScope && isDesktop ? <HarborSearch scope={searchScope} width={380} /> : null}
 
       <div className="flex items-center gap-2">
         {searchScope && !isDesktop ? <SearchAssistantButton scope={searchScope} size="sm" /> : null}

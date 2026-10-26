@@ -62,6 +62,9 @@ const PAGES: { label: string; icon: LucideIcon; href: string }[] = [
   { label: "Profile", icon: UserRound, href: "/platform/profile" },
 ];
 
+/* The bar pill at rest: the search icon, "Search" and the Assistant button, with some air. */
+const COLLAPSED = 240;
+
 /* In the player, before anything is typed: the course questions learners ask first. */
 const POPULAR_COURSE_HELP = ["Summarize this topic", "Where did I stop?", "What is due this week?"];
 const COURSE_HELP = Array.from(new Set(COURSE_ASSISTANT_TOPICS.flatMap((t) => t.questions)));
@@ -141,16 +144,23 @@ export function HarborSearch({
   className,
   scope = { kind: "platform" },
   layout = "bar",
+  width = 420,
   onDone,
 }: {
   className?: string;
   scope?: SearchScope;
   /** "sheet": inside SearchAssistantButton's full-screen sheet: palette inline and always open. */
   layout?: "bar" | "sheet";
+  /**
+   * The bar pill's open width. At rest it is only as wide as "Search" and the Assistant button
+   * (COLLAPSED); it grows to this width while the learner is in it (Nelson, 26 Oct 2026).
+   */
+  width?: number;
   /** Called once an option is chosen or the assistant opens (the sheet closes itself). */
   onDone?: () => void;
 }) {
   const sheet = layout === "sheet";
+  const [focused, setFocused] = React.useState(false);
   const router = useRouter();
   const [q, setQ] = React.useState("");
   const [openState, setOpen] = React.useState(false);
@@ -161,6 +171,7 @@ export function HarborSearch({
   const rootRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  const expanded = sheet || focused || open || q.trim() !== "";
   const presence = useExitTransition(open, MOTION_MS.short3);
   const groups = React.useMemo(
     () => (scope.kind === "course" ? courseGroupsFor(q, scope) : groupsFor(q)),
@@ -223,7 +234,19 @@ export function HarborSearch({
 
   let index = -1;
   return (
-    <div ref={rootRef} className={cn("relative w-full", !sheet && "max-w-[420px]", className)}>
+    <div
+      ref={rootRef}
+      onFocus={() => setFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+      }}
+      style={sheet ? undefined : { width: expanded ? width : COLLAPSED }}
+      className={cn(
+        "relative",
+        sheet ? "w-full" : "min-w-0 max-w-full shrink transition-[width] duration-short4 ease-standard",
+        className,
+      )}
+    >
       <form
         role="search"
         aria-label={scope.kind === "course" ? "Search this course" : "Search your courses"}
@@ -260,7 +283,7 @@ export function HarborSearch({
           onFocus={() => setOpen(true)}
           onClick={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder={scope.kind === "course" ? "Search this course" : "Search"}
+          placeholder={scope.kind === "course" && expanded ? "Search this course" : "Search"}
           autoComplete="off"
           className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus-visible:!shadow-none focus-visible:!outline-none"
         />
@@ -269,10 +292,10 @@ export function HarborSearch({
           data-assistant-anchor={sheet ? undefined : ""}
           onClick={ask}
           aria-label={q.trim() ? `Ask the assistant: ${q.trim()}` : "Open the assistant"}
-          className="sk-text-body-small-semibold inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill bg-sko-bg-page pl-4 pr-3 text-sko-text-default shadow-[var(--sk-shadow-harbor-pill)] transition-colors hover:bg-sko-bg-subtle [@container_(max-width:260px)]:pl-3"
+          className="sk-text-body-small-semibold inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill bg-sko-bg-page pl-4 pr-3 text-sko-text-default shadow-[var(--sk-shadow-harbor-pill)] transition-colors hover:bg-sko-bg-subtle [@container_(max-width:220px)]:pl-3"
         >
           {/* A narrow pill (the tabs bar at 1280) keeps the field: the word goes, the mark stays. */}
-          <span className="[@container_(max-width:260px)]:sr-only">Assistant</span>
+          <span className="[@container_(max-width:220px)]:sr-only">Assistant</span>
           <AssistantGlyph size={16} className="text-sko-icon-primary" />
         </button>
       </form>
