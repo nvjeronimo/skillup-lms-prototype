@@ -89,7 +89,8 @@ export function ProfileLinks({ onDone }: { onDone?: () => void }) {
         </Link>
         <Link href="/platform/certificates" className={MENU_ROW} onClick={onDone}>
           <Icon icon={Award} size={16} />
-          Certificates
+          {/* "My Certificates" (Nelson, 26 Oct 2026), as the page's title. */}
+          My Certificates
         </Link>
       </div>
     </ProfileSection>

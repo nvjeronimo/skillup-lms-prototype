@@ -171,7 +171,7 @@ export function CertificatesView() {
     >
       <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
         <div data-arrive={0} className="flex flex-col gap-2">
-          <h1 className="sk-text-headline-large-bold text-sko-text-default">Certificates</h1>
+          <h1 className="sk-text-headline-large-bold text-sko-text-default">My Certificates</h1>
           <p className="sk-text-body-large-regular text-sko-text-subtle">
             Everything you have earned, and what you are working towards.
           </p>
@@ -188,7 +188,7 @@ export function CertificatesView() {
               rule="parent"
               panels="selected"
               idBase={ID_BASE}
-              ariaLabel="Certificates"
+              ariaLabel="My Certificates"
             />
           </div>
 
