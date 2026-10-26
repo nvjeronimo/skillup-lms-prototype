@@ -64,6 +64,8 @@ const PAGES: { label: string; icon: LucideIcon; href: string }[] = [
 
 /* The bar pill at rest: the search icon, "Search" and the Assistant button, with some air. */
 const COLLAPSED = 240;
+/* From here the bars have room for the pill at its full width all the time. */
+const WIDE = "(min-width: 1536px)";
 
 /* In the player, before anything is typed: the course questions learners ask first. */
 const POPULAR_COURSE_HELP = ["Summarize this topic", "Where did I stop?", "What is due this week?"];
@@ -171,7 +173,17 @@ export function HarborSearch({
   const rootRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const expanded = sheet || focused || open || q.trim() !== "";
+  // On a large screen (from 1536) there is room: the pill keeps its full width, as before
+  // (Nelson, 26 Oct 2026); below, it rests compact and opens when the learner is in it.
+  const [wide, setWide] = React.useState(false);
+  React.useEffect(() => {
+    const query = window.matchMedia(WIDE);
+    const sync = () => setWide(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+  const expanded = sheet || wide || focused || open || q.trim() !== "";
   const presence = useExitTransition(open, MOTION_MS.short3);
   const groups = React.useMemo(
     () => (scope.kind === "course" ? courseGroupsFor(q, scope) : groupsFor(q)),
