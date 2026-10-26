@@ -56,7 +56,8 @@ export function HarborStayInformed({ className }: { className?: string }) {
   const idBase = React.useId();
   const rows = ROWS[tab];
   return (
-    <section aria-labelledby={`${idBase}-title`} className={className}>
+    // Arrives in the Dashboard cascade with Pick up beside it (motion-matrix §7.9), as every section does.
+    <section data-arrive={3} aria-labelledby={`${idBase}-title`} className={className}>
       <div className="flex h-full flex-col rounded-card border border-sko-border-subtle bg-sko-bg-page p-2">
         <h2 id={`${idBase}-title`} className="sk-text-title-medium-semibold px-3 pt-3 text-sko-text-default">
           Stay informed

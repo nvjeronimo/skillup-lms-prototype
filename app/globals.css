@@ -595,18 +595,24 @@ button {
 [data-assistant-launcher] {
   view-transition-name: sk-chrome-assistant;
 }
+/* The panel layout's left rail (Harbor, Fluent): chrome too. */
+.sk-vt-platform-rail {
+  view-transition-name: sk-chrome-platform-rail;
+}
 ::view-transition-group(sk-chrome-platform-topbar),
 ::view-transition-group(sk-chrome-player-topbar),
 ::view-transition-group(sk-chrome-player-sidebar),
 ::view-transition-group(sk-chrome-player-footer),
 ::view-transition-group(sk-chrome-tab-bar),
 ::view-transition-group(sk-chrome-assistant),
+::view-transition-group(sk-chrome-platform-rail),
 ::view-transition-new(sk-chrome-platform-topbar),
 ::view-transition-new(sk-chrome-player-topbar),
 ::view-transition-new(sk-chrome-player-sidebar),
 ::view-transition-new(sk-chrome-player-footer),
 ::view-transition-new(sk-chrome-tab-bar),
-::view-transition-new(sk-chrome-assistant) {
+::view-transition-new(sk-chrome-assistant),
+::view-transition-new(sk-chrome-platform-rail) {
   animation: none;
 }
 ::view-transition-old(sk-chrome-platform-topbar),
@@ -614,7 +620,8 @@ button {
 ::view-transition-old(sk-chrome-player-sidebar),
 ::view-transition-old(sk-chrome-player-footer),
 ::view-transition-old(sk-chrome-tab-bar),
-::view-transition-old(sk-chrome-assistant) {
+::view-transition-old(sk-chrome-assistant),
+::view-transition-old(sk-chrome-platform-rail) {
   display: none;
 }
 

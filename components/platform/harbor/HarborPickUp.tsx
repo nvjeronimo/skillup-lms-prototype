@@ -46,7 +46,10 @@ export function HarborPickUp({ resume, titleId }: { resume: DashboardResumeRow[]
           );
         })}
       </ul>
-      <div aria-live="polite" className="flex min-w-0 flex-col gap-4 rounded-inner bg-sko-bg-subtle p-5 md:p-6">
+      <div aria-live="polite" className="flex min-w-0 flex-col rounded-inner bg-sko-bg-subtle p-5 md:p-6">
+        {/* Another course picked: its preview fades in (short3), as a filtered list does in every
+            skin. Keyed inside the live region, so the region itself stays mounted and keeps speaking. */}
+        <div key={course.id} className="sk-animate-fade-short3 flex min-w-0 flex-1 flex-col gap-4">
         <CourseThumb
           shape="cover"
           initials={course.initials}
@@ -80,6 +83,7 @@ export function HarborPickUp({ resume, titleId }: { resume: DashboardResumeRow[]
           <ButtonLink href={course.homeHref} hierarchy="secondary" size="md">
             View course
           </ButtonLink>
+        </div>
         </div>
       </div>
     </div>
