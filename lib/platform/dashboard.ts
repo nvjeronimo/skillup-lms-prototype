@@ -17,8 +17,6 @@ import { PROGRAMS } from "./program";
  * Copy is verbatim from the Figma frames. Nothing here is read from an API yet.
  */
 
-export const dashboardGreeting = { salutation: "Good morning," } as const;
-
 /* ── Your learning at a glance (LMS/Platform/Dashboard/Today-at-a-glance) ───────────── */
 
 export interface DashboardStat {
