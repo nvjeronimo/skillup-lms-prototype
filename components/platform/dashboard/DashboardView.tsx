@@ -5,10 +5,10 @@ import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHead
 import {
   dashboardDue,
   dashboardGlance,
-  dashboardGreeting,
   dashboardJump,
 } from "@/lib/platform/dashboard";
 import type { DashboardResumeRow } from "@/lib/platform/dashboard-resume";
+import { useSalutation } from "@/lib/platform/greeting";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
 import { DashboardSkeleton } from "./DashboardSkeleton";
@@ -39,6 +39,7 @@ import { deadlinesThisWeek } from "@/lib/platform/calendar";
  * the glance figures count up and the progress bar fills as it shows.
  */
 export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
+  const salutation = useSalutation();
   const showToast = useLmsStore((s) => s.showToast);
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
@@ -62,7 +63,8 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           <h1 className="sk-text-headline-large-bold flex items-center gap-3 truncate whitespace-nowrap text-sko-text-default">
             <Icon icon={Sparkles} size={28} className="shrink-0 text-sko-icon-primary" aria-hidden />
             <span className="truncate">
-              {dashboardGreeting.salutation}{" "}
+              {/* Good morning / afternoon / evening, by the learner's local time (26 Oct 2026). */}
+              {salutation}{" "}
               <span data-heading-em="" className="text-sko-text-subtle">
                 {platformUser.firstName}.
               </span>
