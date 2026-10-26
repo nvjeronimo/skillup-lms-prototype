@@ -1,12 +1,22 @@
 "use client";
 
 import * as React from "react";
-import { ArrowDown, RotateCcw, Send, Sparkles, X } from "lucide-react";
+import {
+  ArrowDown,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  RotateCcw,
+  Send,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import type { ActionEntry, ChatMessage } from "@/lib/assistant/types";
+import { ASSISTANT_TOPICS } from "@/lib/assistant/topics";
 import { FirstStepsView, type FirstStepsViewProps } from "./FirstStepsView";
 import { NextStepCard } from "./NextStepCard";
 import { useDialog } from "@/lib/useDialog";
@@ -48,6 +58,13 @@ export interface AssistantWindowProps {
   takeFocus?: boolean;
   /** Changes when a question comes from outside the window (lib/assistant/bus): show the chat. */
   askNonce?: number;
+  /**
+   * "panel": the panel layout's assistant (Harbor, Fluent; Nelson, 26 Oct 2026, after the
+   * DreamHost panel): a white header ("Assistant", New chat, close), "Hi {name}! Explore a topic
+   * or chat below" with topics that open their questions, a pill input and the AI notice in a
+   * footer row. "default": the floating chat of the other skins.
+   */
+  variant?: "default" | "panel";
   className?: string;
   style?: React.CSSProperties;
 }
@@ -89,9 +106,14 @@ export function AssistantWindow({
   next = null,
   takeFocus = true,
   askNonce = 0,
+  variant = "default",
   className,
   style,
 }: AssistantWindowProps) {
+  const panel = variant === "panel";
+  // The topic whose questions are shown (panel only); null: the topic list.
+  const [topicId, setTopicId] = React.useState<string | null>(null);
+  const topic = ASSISTANT_TOPICS.find((t) => t.id === topicId) ?? null;
   const inputId = React.useId();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLDivElement>(null);
@@ -100,7 +122,13 @@ export function AssistantWindow({
   // behind stays usable, so it only takes the focus on open and closes on its own Esc.
   const dialogRef = useDialog(modal && open, onClose, { initialFocusRef: inputRef });
   // On a phone the window is a sheet: pull its header down to close it (Apple, 22 Oct 2026).
-  const drag = useSheetDrag({ panelRef: dialogRef, axis: "y", dir: 1, onDismiss: onClose, enabled: modal && open });
+  const drag = useSheetDrag({
+    panelRef: dialogRef,
+    axis: "y",
+    dir: 1,
+    onDismiss: onClose,
+    enabled: modal && open,
+  });
   const tabsId = React.useId();
   // First steps come first while they run; the learner can go to the chat at any time.
   const [view, setView] = React.useState<View>(firstSteps ? "first-steps" : "ask");
@@ -111,7 +139,10 @@ export function AssistantWindow({
   React.useEffect(() => {
     if (!open || modal || !takeFocus) return;
     // The chat's input, or the selected tab when the First steps view is shown instead.
-    (inputRef.current ?? dialogRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]'))?.focus();
+    (
+      inputRef.current ??
+      dialogRef.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')
+    )?.focus();
     // Only when the window opens (also when it is reopened during its exit): switching tabs
     // moves the focus itself (toAsk).
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,7 +153,10 @@ export function AssistantWindow({
     window.setTimeout(() => inputRef.current?.focus(), 0);
   };
   // A step that ticks while the window is open is said once: the one that was not done before.
-  const doneKey = (firstSteps?.rows ?? []).filter((row) => row.done).map((row) => row.id).join(",");
+  const doneKey = (firstSteps?.rows ?? [])
+    .filter((row) => row.done)
+    .map((row) => row.id)
+    .join(",");
   const lastDone = React.useRef(doneKey);
   const [ticked, setTicked] = React.useState("");
   React.useEffect(() => {
@@ -180,7 +214,8 @@ export function AssistantWindow({
     lastTop.current = log.scrollTop;
   };
   // "instant", not "auto": the log is an .sk-scroll region, where "auto" means its CSS glide.
-  const toEnd = (behavior: ScrollBehavior) => endRef.current?.scrollIntoView({ block: "end", behavior });
+  const toEnd = (behavior: ScrollBehavior) =>
+    endRef.current?.scrollIntoView({ block: "end", behavior });
   React.useEffect(() => {
     // The log is not rendered under the First steps tab: when it comes back it starts at the end.
     if (showSteps) {
@@ -188,6 +223,12 @@ export function AssistantWindow({
       return;
     }
     if (messages.length === 0) setPill(false);
+    // The panel's empty chat opens on its greeting and topics, at the top.
+    if (panel && messages.length === 0 && !answering) {
+      firstScroll.current = true;
+      logRef.current?.scrollTo({ top: 0 });
+      return;
+    }
     if (firstScroll.current) {
       // Opening on a conversation: it is already at its end, not scrolled there.
       firstScroll.current = false;
@@ -200,7 +241,7 @@ export function AssistantWindow({
     } else {
       setPill(true);
     }
-  }, [messages.length, streaming, answering, showSteps]);
+  }, [messages.length, streaming, answering, showSteps, panel]);
 
   // A question the learner sends takes them to the end, wherever they were.
   const send = (question: string) => {
@@ -240,7 +281,11 @@ export function AssistantWindow({
       }}
       className={cn(
         "flex flex-col overflow-hidden bg-sko-bg-page",
-        modal ? "" : "rounded-card border border-sko-border-subtle shadow-xl",
+        modal
+          ? ""
+          : panel
+            ? "rounded-surface border-2 border-sko-border-primary-soft shadow-xl"
+            : "rounded-card border border-sko-border-subtle shadow-xl",
         !open && "pointer-events-none",
         className,
       )}
@@ -249,43 +294,95 @@ export function AssistantWindow({
           (data-theme="dark", bg/subtle), the assistant's mark and two Secondary icon buttons. Before
           the first question it greets the learner by name in large type ("Hey John / How can we
           help?"); once a conversation runs it shrinks to one row so the log keeps the room. */}
-      <header
-        data-theme="dark"
-        onPointerDown={drag.onPointerDown}
-        className={cn("flex shrink-0 flex-col gap-4 bg-sko-bg-subtle p-4 md:p-5", modal && "touch-none")}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="sk-text-body-large-medium inline-flex items-center gap-3 text-sko-text-default">
-            <span aria-hidden className="inline-flex size-10 items-center justify-center rounded-control bg-sko-bg-primary-soft">
-              <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" />
-            </span>
-            <span className={cn(greet && "sr-only")}>SkillUp Assistant</span>
+      {panel ? (
+        <header
+          onPointerDown={drag.onPointerDown}
+          className={cn(
+            "flex shrink-0 items-center justify-between gap-3 border-b border-sko-border-subtle px-5 py-3",
+            modal && "touch-none",
+          )}
+        >
+          <h2 className="sk-text-title-medium-semibold inline-flex items-center gap-2 text-sko-text-default">
+            <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" aria-hidden />
+            Assistant
           </h2>
-          <div className="flex items-center gap-2">
-            {messages.length && !showSteps ? (
+          <div className="flex items-center gap-3">
+            <Button
+              hierarchy="secondary"
+              size="sm"
+              rightIcon={Plus}
+              disabled={!messages.length || showSteps}
+              onClick={() => {
+                onClear();
+                setTopicId(null);
+                inputRef.current?.focus();
+              }}
+            >
+              New chat
+            </Button>
+            <span aria-hidden className="h-8 w-px bg-sko-border-subtle" />
+            <Button
+              hierarchy="secondary"
+              size="sm"
+              iconOnly
+              leftIcon={X}
+              onClick={onClose}
+              aria-label="Close the assistant"
+            />
+          </div>
+        </header>
+      ) : (
+        <header
+          data-theme="dark"
+          onPointerDown={drag.onPointerDown}
+          className={cn(
+            "flex shrink-0 flex-col gap-4 bg-sko-bg-subtle p-4 md:p-5",
+            modal && "touch-none",
+          )}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="sk-text-body-large-medium inline-flex items-center gap-3 text-sko-text-default">
+              <span
+                aria-hidden
+                className="inline-flex size-10 items-center justify-center rounded-control bg-sko-bg-primary-soft"
+              >
+                <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" />
+              </span>
+              <span className={cn(greet && "sr-only")}>SkillUp Assistant</span>
+            </h2>
+            <div className="flex items-center gap-2">
+              {messages.length && !showSteps ? (
+                <Button
+                  hierarchy="secondary"
+                  size="md"
+                  iconOnly
+                  leftIcon={RotateCcw}
+                  onClick={() => {
+                    onClear();
+                    inputRef.current?.focus();
+                  }}
+                  aria-label="Start a new conversation"
+                />
+              ) : null}
               <Button
                 hierarchy="secondary"
                 size="md"
                 iconOnly
-                leftIcon={RotateCcw}
-                onClick={() => {
-                  onClear();
-                  inputRef.current?.focus();
-                }}
-                aria-label="Start a new conversation"
+                leftIcon={X}
+                onClick={onClose}
+                aria-label="Close the assistant"
               />
-            ) : null}
-            <Button hierarchy="secondary" size="md" iconOnly leftIcon={X} onClick={onClose} aria-label="Close the assistant" />
+            </div>
           </div>
-        </div>
-        {greet ? (
-          <p className="sk-text-headline-small-semibold text-sko-text-default" aria-hidden>
-            Hey {firstName}
-            <br />
-            How can we help?
-          </p>
-        ) : null}
-      </header>
+          {greet ? (
+            <p className="sk-text-headline-small-semibold text-sko-text-default" aria-hidden>
+              Hey {firstName}
+              <br />
+              How can we help?
+            </p>
+          ) : null}
+        </header>
+      )}
 
       {firstSteps ? (
         <div className="px-5 pt-3">
@@ -321,182 +418,330 @@ export function AssistantWindow({
           />
         </div>
       ) : (
-      <div
-        role={firstSteps ? "tabpanel" : undefined}
-        id={firstSteps ? platformPanelId(tabsId, "ask") : undefined}
-        aria-labelledby={firstSteps ? platformTabId(tabsId, "ask") : undefined}
-        className="flex min-h-0 flex-1 flex-col"
-      >
-      <div className="relative flex min-h-0 flex-1 flex-col">
-      <div
-        ref={logRef}
-        onScroll={onLogScroll}
-        role="log"
-        aria-live="off"
-        aria-label="Conversation"
-        className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-5"
-      >
-        {empty.mounted ? (
-          <div
-            data-state={empty.state}
-            aria-hidden={empty.state === "closed" || undefined}
-            {...inertProps(empty.state === "closed")}
-            onAnimationEnd={empty.onAnimationEnd}
-            className="sk-animate-fade flex flex-col gap-4"
-          >
-            {next ? <NextStepCard text={next.text} action={next.action} /> : null}
-            <p className="sk-text-body-medium-regular text-sko-text-muted">Ask me about the platform or your courses.</p>
-            <ul className="flex flex-wrap gap-2">
-              {suggestions.map((s) => (
-                <li key={s}>
-                  <button
-                    type="button"
-                    onClick={() => send(s)}
-                    disabled={answering}
-                    className="sk-text-body-small-medium min-h-11 rounded-pill bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
-                  >
-                    {s}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
-
-        {messages.map((m) =>
-          m.role === "user" ? (
-            // DS v1.2 (15 Oct 2026): each message is named above it, ME on the right, ASSISTANT
-            // on the left (body-small, text/subtle, capitals).
-            <div
-              key={m.id}
-              className={cn("flex max-w-[85%] flex-col items-end gap-1 self-end", arrived(m.id) && "sk-animate-rise sk-enter-only")}
-            >
-              <span className={WHO}>
-                Me<span className="sr-only">:</span>
-              </span>
-              <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default">
-                {m.text}
-              </p>
-            </div>
-          ) : (
-            <div
-              key={m.id}
-              className={cn(
-                "flex max-w-[92%] flex-col gap-3 self-start",
-                arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise sk-enter-only",
-              )}
-            >
-              <div className="flex flex-col gap-1">
-                <span className={WHO}>
-                  Assistant<span className="sr-only">:</span>
-                </span>
-                {/* DS v1.2: the answer is on bg/primary, in text/on-primary. */}
-                <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
-                  {m.text}
-                </p>
-              </div>
-              {m.actions?.length ? (
-                <ul className="flex flex-col items-start gap-2">
-                  {m.actions.map((a, i) => (
-                    <li
-                      key={a.id}
-                      // The buttons follow the answer one after the other, half a short2 apart.
-                      className={cn(arrived(m.id) && "sk-animate-rise sk-rise-nudge sk-enter-only")}
-                      style={
-                        arrived(m.id)
-                          ? {
-                              animationDelay: `calc(var(--motion-duration-short2) / 2 * ${i})`,
-                              animationFillMode: "backwards",
-                            }
-                          : undefined
-                      }
-                    >
-                      {/* A long label wraps: the button grows with it instead of keeping the 36px of Button sm. */}
-                      <ButtonLink href={a.href} hierarchy="secondary" size="sm" className="!h-auto min-h-9 py-1.5">
-                        {a.label}
-                      </ButtonLink>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-              {/* The DS moved the AI notice under the input (Copy row). A scripted answer keeps
-                  its own line: a test participant must not take it for the model. */}
-              {m.source !== "model" ? <p className="sk-text-body-small-regular text-sko-text-subtle">{SCRIPTED_CAPTION}</p> : null}
-            </div>
-          ),
-        )}
-
-        {/* The answering bubble: mounted once per answer, it keeps its element while the
-            streamed text grows into it (the text itself is never animated). */}
-        {answering ? (
-          <div className="sk-animate-rise sk-enter-only flex max-w-[92%] flex-col gap-1 self-start">
-          <span aria-hidden className={WHO}>Assistant</span>
-          <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
-            {streaming ? (
-              streaming
-            ) : (
-              <span className="sk-typing">
-                <span aria-hidden className="sk-typing__dot" />
-                <span aria-hidden className="sk-typing__dot" />
-                <span aria-hidden className="sk-typing__dot" />
-                <span className="sk-typing__word">Thinking…</span>
-              </span>
-            )}
-          </p>
-          </div>
-        ) : null}
-        <div ref={endRef} />
-      </div>
-      {pill ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
-          <Button
-            hierarchy="secondary"
-            size="sm"
-            leftIcon={ArrowDown}
-            className="sk-animate-rise sk-enter-only pointer-events-auto shadow-md"
-            onClick={() => {
-              following.current = true;
-              setPill(false);
-              toEnd(scrollBehavior());
-            }}
-          >
-            New message
-          </Button>
-        </div>
-      ) : null}
-      </div>
-
-      {/* What a screen reader hears: the status, then the finished answer once. */}
-      <p aria-live="polite" className="sr-only">
-        {answering ? "Thinking…" : last?.role === "assistant" ? last.text : ""}
-      </p>
-
-      <form onSubmit={submit} className="flex items-center gap-2 border-t border-sko-border-subtle px-3 pb-2 pt-3">
-        <label htmlFor={inputId} className="sr-only">
-          Your question
-        </label>
-        <input
-          ref={inputRef}
-          id={inputId}
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          maxLength={MAX_QUESTION}
-          autoComplete="off"
-          placeholder="Ask about the platform or your courses…"
-          className="sk-text-body-medium-regular h-11 min-w-0 flex-1 rounded-control border border-sko-border-subtle bg-sko-bg-subtle px-4 text-sko-text-default outline-none placeholder:text-sko-text-placeholder transition-colors focus:border-sko-border-primary"
-        />
-        <button
-          type="submit"
-          aria-label="Send"
-          disabled={answering || !draft.trim()}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary text-sko-text-on-primary transition-colors hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
+        <div
+          role={firstSteps ? "tabpanel" : undefined}
+          id={firstSteps ? platformPanelId(tabsId, "ask") : undefined}
+          aria-labelledby={firstSteps ? platformTabId(tabsId, "ask") : undefined}
+          className="flex min-h-0 flex-1 flex-col"
         >
-          <Icon icon={Send} size={20} />
-        </button>
-      </form>
-      {/* DS Copy row (v1.2): the notice for every answer, under the input. */}
-      <p className="sk-text-body-small-regular px-3 pb-3 text-sko-text-subtle">{AI_NOTICE}</p>
-      </div>
+          <div className="relative flex min-h-0 flex-1 flex-col">
+            <div
+              ref={logRef}
+              onScroll={onLogScroll}
+              role="log"
+              aria-live="off"
+              aria-label="Conversation"
+              className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-5"
+            >
+              {empty.mounted ? (
+                <div
+                  data-state={empty.state}
+                  aria-hidden={empty.state === "closed" || undefined}
+                  {...inertProps(empty.state === "closed")}
+                  onAnimationEnd={empty.onAnimationEnd}
+                  className="sk-animate-fade flex flex-col gap-4"
+                >
+                  {panel ? (
+                    <div className="flex flex-col gap-6 pt-2">
+                      <div className="flex flex-col gap-1">
+                        <p className="sk-text-headline-small-semibold inline-flex items-center gap-2 text-sko-text-default">
+                          <Icon
+                            icon={Sparkles}
+                            size={24}
+                            className="text-sko-icon-primary"
+                            aria-hidden
+                          />
+                          Hi {firstName}!
+                        </p>
+                        <p className="sk-text-title-large-regular text-sko-text-muted">
+                          Explore a topic or chat below
+                        </p>
+                      </div>
+                      {next ? <NextStepCard text={next.text} action={next.action} /> : null}
+                      {topic ? (
+                        <div className="flex flex-col gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setTopicId(null)}
+                            aria-label={`${topic.label}: back to the topics`}
+                            className="inline-flex min-h-11 items-center gap-3 self-start rounded-control pr-3 text-left transition-colors hover:bg-sko-bg-hover"
+                          >
+                            <Icon
+                              icon={ChevronLeft}
+                              size={20}
+                              className="text-sko-icon-subtle"
+                              aria-hidden
+                            />
+                            <span
+                              aria-hidden
+                              className="inline-flex size-10 items-center justify-center rounded-pill bg-sko-bg-primary-soft"
+                            >
+                              <Icon icon={topic.icon} size={20} className="text-sko-icon-primary" />
+                            </span>
+                            <span className="sk-text-body-large-medium text-sko-text-default">
+                              {topic.label}
+                            </span>
+                          </button>
+                          <ul className="flex flex-col divide-y divide-sko-border-subtle">
+                            {topic.questions.map((question) => (
+                              <li key={question}>
+                                <button
+                                  type="button"
+                                  onClick={() => send(question)}
+                                  disabled={answering}
+                                  className="sk-text-body-large-regular flex min-h-12 w-full items-center px-4 py-3 text-left text-sko-text-default transition-colors hover:bg-sko-bg-hover"
+                                >
+                                  {question}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : (
+                        <ul className="flex flex-col gap-1">
+                          {ASSISTANT_TOPICS.map((t) => (
+                            <li key={t.id}>
+                              <button
+                                type="button"
+                                onClick={() => setTopicId(t.id)}
+                                className="flex min-h-12 w-full items-center gap-3 rounded-control px-2 py-1.5 text-left transition-colors hover:bg-sko-bg-hover"
+                              >
+                                <span
+                                  aria-hidden
+                                  className="inline-flex size-10 items-center justify-center rounded-pill bg-sko-bg-primary-soft"
+                                >
+                                  <Icon icon={t.icon} size={20} className="text-sko-icon-primary" />
+                                </span>
+                                <span className="sk-text-body-large-medium flex-1 text-sko-text-default">
+                                  {t.label}
+                                </span>
+                                <Icon
+                                  icon={ChevronRight}
+                                  size={20}
+                                  className="text-sko-icon-subtle"
+                                  aria-hidden
+                                />
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      {next ? <NextStepCard text={next.text} action={next.action} /> : null}
+                      <p className="sk-text-body-medium-regular text-sko-text-muted">
+                        Ask me about the platform or your courses.
+                      </p>
+                      <ul className="flex flex-wrap gap-2">
+                        {suggestions.map((s) => (
+                          <li key={s}>
+                            <button
+                              type="button"
+                              onClick={() => send(s)}
+                              disabled={answering}
+                              className="sk-text-body-small-medium min-h-11 rounded-pill bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
+                            >
+                              {s}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              ) : null}
+
+              {messages.map((m) =>
+                m.role === "user" ? (
+                  // DS v1.2 (15 Oct 2026): each message is named above it, ME on the right, ASSISTANT
+                  // on the left (body-small, text/subtle, capitals).
+                  <div
+                    key={m.id}
+                    className={cn(
+                      "flex max-w-[85%] flex-col items-end gap-1 self-end",
+                      arrived(m.id) && "sk-animate-rise sk-enter-only",
+                    )}
+                  >
+                    <span className={WHO}>
+                      Me<span className="sr-only">:</span>
+                    </span>
+                    <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default">
+                      {m.text}
+                    </p>
+                  </div>
+                ) : (
+                  <div
+                    key={m.id}
+                    className={cn(
+                      "flex max-w-[92%] flex-col gap-3 self-start",
+                      arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise sk-enter-only",
+                    )}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className={WHO}>
+                        Assistant<span className="sr-only">:</span>
+                      </span>
+                      {/* DS v1.2: the answer is on bg/primary, in text/on-primary. */}
+                      <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
+                        {m.text}
+                      </p>
+                    </div>
+                    {m.actions?.length ? (
+                      <ul className="flex flex-col items-start gap-2">
+                        {m.actions.map((a, i) => (
+                          <li
+                            key={a.id}
+                            // The buttons follow the answer one after the other, half a short2 apart.
+                            className={cn(
+                              arrived(m.id) && "sk-animate-rise sk-rise-nudge sk-enter-only",
+                            )}
+                            style={
+                              arrived(m.id)
+                                ? {
+                                    animationDelay: `calc(var(--motion-duration-short2) / 2 * ${i})`,
+                                    animationFillMode: "backwards",
+                                  }
+                                : undefined
+                            }
+                          >
+                            {/* A long label wraps: the button grows with it instead of keeping the 36px of Button sm. */}
+                            <ButtonLink
+                              href={a.href}
+                              hierarchy="secondary"
+                              size="sm"
+                              className="!h-auto min-h-9 py-1.5"
+                            >
+                              {a.label}
+                            </ButtonLink>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {/* The DS moved the AI notice under the input (Copy row). A scripted answer keeps
+                  its own line: a test participant must not take it for the model. */}
+                    {m.source !== "model" ? (
+                      <p className="sk-text-body-small-regular text-sko-text-subtle">
+                        {SCRIPTED_CAPTION}
+                      </p>
+                    ) : null}
+                  </div>
+                ),
+              )}
+
+              {/* The answering bubble: mounted once per answer, it keeps its element while the
+            streamed text grows into it (the text itself is never animated). */}
+              {answering ? (
+                <div className="sk-animate-rise sk-enter-only flex max-w-[92%] flex-col gap-1 self-start">
+                  <span aria-hidden className={WHO}>
+                    Assistant
+                  </span>
+                  <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
+                    {streaming ? (
+                      streaming
+                    ) : (
+                      <span className="sk-typing">
+                        <span aria-hidden className="sk-typing__dot" />
+                        <span aria-hidden className="sk-typing__dot" />
+                        <span aria-hidden className="sk-typing__dot" />
+                        <span className="sk-typing__word">Thinking…</span>
+                      </span>
+                    )}
+                  </p>
+                </div>
+              ) : null}
+              <div ref={endRef} />
+            </div>
+            {pill ? (
+              <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
+                <Button
+                  hierarchy="secondary"
+                  size="sm"
+                  leftIcon={ArrowDown}
+                  className="sk-animate-rise sk-enter-only pointer-events-auto shadow-md"
+                  onClick={() => {
+                    following.current = true;
+                    setPill(false);
+                    toEnd(scrollBehavior());
+                  }}
+                >
+                  New message
+                </Button>
+              </div>
+            ) : null}
+          </div>
+
+          {/* What a screen reader hears: the status, then the finished answer once. */}
+          <p aria-live="polite" className="sr-only">
+            {answering ? "Thinking…" : last?.role === "assistant" ? last.text : ""}
+          </p>
+
+          {panel ? (
+            <>
+              <form onSubmit={submit} className="px-4 pb-4 pt-2">
+                <div className="flex h-12 items-center gap-2 rounded-pill border border-sko-border-subtle bg-sko-bg-page pl-5 pr-1.5 transition-colors focus-within:border-sko-border-primary">
+                  <label htmlFor={inputId} className="sr-only">
+                    Your question
+                  </label>
+                  <input
+                    ref={inputRef}
+                    id={inputId}
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
+                    maxLength={MAX_QUESTION}
+                    autoComplete="off"
+                    placeholder="What can I help you with today?"
+                    className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus-visible:!shadow-none focus-visible:!outline-none"
+                  />
+                  <button
+                    type="submit"
+                    aria-label="Send"
+                    disabled={answering || !draft.trim()}
+                    className="inline-flex size-9 shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover disabled:text-sko-icon-faint"
+                  >
+                    <Icon icon={Send} size={20} />
+                  </button>
+                </div>
+              </form>
+              <p className="sk-text-body-small-regular border-t border-sko-border-subtle px-5 py-3 text-sko-text-subtle">
+                {AI_NOTICE}
+              </p>
+            </>
+          ) : (
+            <>
+              <form
+                onSubmit={submit}
+                className="flex items-center gap-2 border-t border-sko-border-subtle px-3 pb-2 pt-3"
+              >
+                <label htmlFor={inputId} className="sr-only">
+                  Your question
+                </label>
+                <input
+                  ref={inputRef}
+                  id={inputId}
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  maxLength={MAX_QUESTION}
+                  autoComplete="off"
+                  placeholder="Ask about the platform or your courses…"
+                  className="sk-text-body-medium-regular h-11 min-w-0 flex-1 rounded-control border border-sko-border-subtle bg-sko-bg-subtle px-4 text-sko-text-default outline-none transition-colors placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
+                />
+                <button
+                  type="submit"
+                  aria-label="Send"
+                  disabled={answering || !draft.trim()}
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary text-sko-text-on-primary transition-colors hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
+                >
+                  <Icon icon={Send} size={20} />
+                </button>
+              </form>
+              {/* DS Copy row (v1.2): the notice for every answer, under the input. */}
+              <p className="sk-text-body-small-regular px-3 pb-3 text-sko-text-subtle">
+                {AI_NOTICE}
+              </p>
+            </>
+          )}
+        </div>
       )}
 
       {/* A first step ticking, said once, whichever tab is shown. */}
