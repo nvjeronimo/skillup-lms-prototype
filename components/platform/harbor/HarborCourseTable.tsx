@@ -45,11 +45,12 @@ export function HarborCourseTable({
               <tr key={c.id} className="border-t border-sko-border-subtle">
                 <th scope="row" className="sk-text-body-medium-regular py-3 pr-4">
                   <span className="flex items-center gap-3">
+                    {/* Square, 48 (Nelson, 26 Oct 2026): a table row is one line of type high. */}
                     <CourseThumb
-                      shape="cover"
+                      shape="tile"
                       initials={c.initials}
                       imageSrc={c.imageSrc}
-                      className="aspect-[2/1] w-16 shrink-0 rounded-inner"
+                      className="size-12 shrink-0 rounded-inner"
                     />
                     <span className="flex min-w-0 flex-col">
                       {c.detailHref ? (
