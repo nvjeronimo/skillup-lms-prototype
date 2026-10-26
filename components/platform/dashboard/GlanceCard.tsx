@@ -110,22 +110,23 @@ export function GlanceCard({ title, stats, trends = false, className }: GlanceCa
       )}
     >
       <div aria-hidden="true" data-theme="dark" data-glance-backdrop="" className="pointer-events-none absolute inset-0 bg-sko-bg-info-soft" />
-      {/* One glow (Nelson, 23 Oct 2026: the right one went): over the top edge on a wide card,
-          low on the left on a phone, as the DS Mobile variant. */}
+      {/* The rings (Nelson, 26 Oct 2026: adopted in every skin from Harbor's "Remixer" glance):
+          three thin concentric circles in the info blue off the top-right corner, a soft blue light
+          inside the middle one, and a blurred blue haze low on the right. No gradient fill. */}
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute -left-[124px] top-[60px] h-[74px] w-[185px] rounded-pill bg-sko-border-info-soft opacity-80 blur-[179px] md:left-[29.3%] md:-top-[70px]"
+        className="pointer-events-none absolute -bottom-[120px] -right-20 h-[240px] w-[520px] rounded-pill bg-sko-bg-info opacity-50 blur-[120px]"
       />
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute right-[18px] top-[calc(50%+146px)] size-[200px] -translate-y-1/2 rounded-pill bg-sko-bg-info opacity-[0.19]"
+        className="pointer-events-none absolute right-[14%] top-[10px] size-[300px] -translate-y-1/2 translate-x-1/2 rounded-pill border border-sko-border-info opacity-85"
       />
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute -right-[102px] top-[calc(50%-76px)] size-[320px] -translate-y-1/2 rounded-pill bg-sko-bg-primary opacity-[0.19]"
+        className="pointer-events-none absolute right-[14%] top-[10px] size-[620px] -translate-y-1/2 translate-x-1/2 rounded-pill border border-sko-border-info opacity-85 shadow-[inset_0_0_200px_color-mix(in_srgb,var(--color-border-info-soft)_33%,transparent)] after:absolute after:-inset-[230px] after:rounded-pill after:border after:border-sko-border-info after:content-['']"
       />
       <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-media">
         {title}
