@@ -17,8 +17,6 @@ import { PROGRAMS } from "./program";
  * Copy is verbatim from the Figma frames. Nothing here is read from an API yet.
  */
 
-export const dashboardGreeting = { salutation: "Good morning," } as const;
-
 /* ── Your learning at a glance (LMS/Platform/Dashboard/Today-at-a-glance) ───────────── */
 
 export interface DashboardStat {
@@ -226,7 +224,7 @@ export const dashboardJump: DashboardJumpTile[] = [
   {
     id: "certificates",
     icon: Award,
-    title: "Certificates",
+    title: "My Certificates",
     description: `${certificatesInProgress.length} in progress · ${earnedCertificates.length} to download`,
     // The Certificates page (19 Oct 2026); it opened the Six Sigma certificate until then.
     href: "/platform/certificates",

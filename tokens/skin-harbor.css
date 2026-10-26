@@ -7,7 +7,8 @@
    - Buttons are pills (radius 100). Primary is the panel's blue (#0073EC, darkened to #006CDD so
      white text holds AA), Semibold; secondary is a white pill with a 1px #E3E3E3 ring and ink text
      ("Filters"); the table action ("Manage") is a white 10-radius button with a #CCC ring.
-   - Filters are bare pills: no track, the selected one on #F0F0F0, ink text ("All · Hosted").
+   - Filters are pill Button groups (26 Oct 2026, were bare pills): a bg/muted track, the selected
+     segment raised on white.
    - The top navigation is the panel's rail item: a 16-radius pill on #D9EAFC for the current page,
      ink text, no underline. The bar itself sits on a soft shadow, not a rule.
    - Cards are white, borderless, radius 16, on a 0 4 8 3% shadow; a band of cards sits in a #F0F0F0
@@ -195,20 +196,17 @@ html[data-skin="harbor"] [data-theme="dark"] {
   background-color: var(--color-bg-track);
 }
 
-/* ── Filters ─────────────────────────────────────────────────────────────────
-   No track and no border: bare pills (the panel's "All · Hosted · Other"), the selected one on
-   bg/primary-soft with semibold ink (Nelson's choice, 25 Oct). The fill is 1.2:1 on the page, below
-   WCAG 1.4.11's 3:1; aria-pressed/checked carries the state for assistive tech. Every segmented control in the prototype is a bg/track row of segments,
-   the selected one on bg/page; this restyles them all. */
+/* ── Filters and button groups ───────────────────────────────────────────────
+   Every segmented control (a bg/track row of segments) reads as one group, as the light / dark
+   switch (Nelson, 26 Oct 2026: the bare pills of 25 Oct were hard to see): a bg/muted track, the
+   segments pills inside it, the selected one raised on bg/page with semibold ink and a soft shadow. */
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track {
-  background-color: transparent;
-  padding: 0;
-  gap: 4px;
+  background-color: var(--color-bg-muted);
 }
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]) {
   border-radius: 9999px;
   border-color: transparent;
-  color: var(--color-text-default);
+  color: var(--color-text-subtle);
   font-weight: 500;
 }
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page,
@@ -216,10 +214,10 @@ html[data-skin="harbor"] [data-theme="dark"] {
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
 [data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
   border-color: transparent;
-  background-color: var(--color-bg-primary-soft);
-  color: var(--color-text-on-primary-soft);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
   font-weight: 600;
-  box-shadow: none;
+  box-shadow: var(--sk-shadow-harbor-pill);
 }
 [data-skin="harbor"] [data-segmented] > button {
   height: 38px;

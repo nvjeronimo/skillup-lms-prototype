@@ -18,10 +18,13 @@ function HeaderSkeleton({ action = true }: { action?: boolean }) {
 export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: number; jump: number }) {
   return (
     <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
-      {/* Greeting: one line from tablet up, two on a phone. */}
-      <div>
-        <Skeleton text="headline-large-bold" width={420} className="max-w-[70%]" />
-        <Skeleton text="headline-large-bold" width="35%" className="md:hidden" />
+      {/* Greeting: one line from tablet up, two on a phone; then the assistant's tip. */}
+      <div className="flex flex-col gap-2">
+        <div>
+          <Skeleton text="headline-large-bold" width={420} className="max-w-[70%]" />
+          <Skeleton text="headline-large-bold" width="35%" className="md:hidden" />
+        </div>
+        <Skeleton text="body-large-regular" width={520} className="max-w-[90%]" />
       </div>
 
       {/* Today at a glance: title, then four stats (value · label · detail). */}
@@ -38,9 +41,45 @@ export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: 
         </div>
       </div>
 
+      {/* Pick up (the list beside the chosen course) beside Stay informed (400). */}
+      <div className="flex flex-col gap-layout-column lg:flex-row lg:items-stretch">
+        <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
+          <HeaderSkeleton />
+          <div className="grid gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-2 lg:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: resume }, (_, i) => (
+                <div key={i} className="flex min-h-16 flex-col justify-center gap-0.5 rounded-inner bg-sko-bg-subtle px-4 py-3">
+                  <Skeleton text="body-medium-semibold" width="80%" />
+                  <Skeleton text="body-small-regular" width={96} />
+                </div>
+              ))}
+            </div>
+            <div className="flex min-w-0 flex-col gap-4 rounded-inner bg-sko-bg-subtle p-5 md:p-6">
+              <Skeleton variant="block" radius="inner" className="aspect-[3/1] w-full" />
+              <Skeleton text="title-large-semibold" width="70%" />
+              <Skeleton text="body-medium-regular" width="55%" />
+              <Skeleton variant="block" height={8} radius="none" />
+              <div className="flex gap-3">
+                <Skeleton variant="block" width={104} height={44} radius="control" />
+                <Skeleton variant="block" width={128} height={44} radius="control" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col lg:w-[400px] lg:shrink-0 lg:pt-12">
+          <div className="flex h-full flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-5">
+            <Skeleton text="title-medium-semibold" width={140} />
+            <Skeleton variant="block" height={36} radius="none" />
+            {[0, 1, 2, 3].map((i) => (
+              <Skeleton key={i} text="body-medium-medium" width="90%" />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Due this week beside Jump somewhere (400, one tile a row there). */}
       <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-        {/* Due this week. */}
-        <div className="flex flex-col gap-4 lg:w-[440px] lg:shrink-0">
+        <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
           <HeaderSkeleton />
           <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
             {Array.from({ length: due }, (_, i) => (
@@ -51,59 +90,24 @@ export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: 
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <Skeleton text="body-medium-semibold" width="80%" />
-                  {/* The meta line (course · kind) usually wraps to two in the 440 column. */}
-                  <Skeleton text="body-small-regular" width="95%" />
-                  <Skeleton text="body-small-regular" width="45%" />
+                  <Skeleton text="body-small-regular" width="60%" />
                 </div>
                 <Skeleton variant="block" width={72} height={24} radius="pill" />
               </div>
             ))}
           </div>
         </div>
-
-        {/* Pick up where you left off: the Resume row under 700px of list, the Course Row from 700. */}
-        <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
-          <HeaderSkeleton />
-          <div className="flex flex-col gap-4">
-            {Array.from({ length: resume }, (_, i) => (
-              <div key={i} className="[container-type:inline-size]">
-                <div className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 [@container_(min-width:700px)]:hidden">
-                  <div className="flex flex-col gap-0.5">
-                    <Skeleton text="body-small-medium" width={120} />
-                    <Skeleton text="body-large-medium" width="75%" />
-                    <Skeleton text="body-small-regular" width="50%" />
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Skeleton variant="block" height={8} radius="none" className="min-w-0 flex-1" />
-                    <Skeleton variant="block" width={96} height={44} radius="control" />
-                  </div>
-                </div>
-                <div className="hidden items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page px-[19px] py-[15px] shadow-sk-card [@container_(min-width:700px)]:flex">
-                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <Skeleton text="body-small-medium" width={120} />
-                    <Skeleton text="body-large-medium" width="70%" />
-                    <Skeleton text="body-small-regular" width="45%" />
-                  </div>
-                  <Skeleton variant="block" width={180} height={8} radius="none" />
-                  <Skeleton variant="block" width={88} height={36} radius="control" />
-                </div>
+        <div className="flex flex-col gap-4 lg:w-[400px] lg:shrink-0">
+          <HeaderSkeleton action={false} />
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-1">
+            {Array.from({ length: jump }, (_, i) => (
+              <div key={i} className="flex flex-col items-start gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
+                <Skeleton variant="block" width={36} height={36} radius="control" />
+                <Skeleton text="body-medium-semibold" width="60%" />
+                <Skeleton text="body-small-regular" width="90%" />
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Jump somewhere: tiles, two a row on a phone, three from tablet up. */}
-      <div className="flex flex-col gap-4">
-        <HeaderSkeleton action={false} />
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-          {Array.from({ length: jump }, (_, i) => (
-            <div key={i} className="flex flex-col items-start gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
-              <Skeleton variant="block" width={36} height={36} radius="control" />
-              <Skeleton text="body-medium-semibold" width="60%" />
-              <Skeleton text="body-small-regular" width="90%" />
-            </div>
-          ))}
         </div>
       </div>
     </div>

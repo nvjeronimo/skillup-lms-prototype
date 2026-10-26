@@ -9,7 +9,10 @@
  *
  * What maps where:
  *   1. SKO-Semantics 🎨 colours   → colors.css      --color-* (the Web code syntax set in Figma)
- *     modes SKO / Gold / Red / Studio × Light / Dark → :root, [data-theme], [data-skin], [data-direction]
+ *     modes SKO / Studio × Light / Dark → :root, [data-theme], [data-direction]; every other
+ *     "<Skin> Light/Dark" pair in the collection (Gold, Harbor, Fluent since 26 Oct 2026; Red left
+ *     that day) → [data-skin="<skin>"], read from the JSON so a skin added or removed in Figma
+ *     needs no change here
  *   2. Responsive 📐 Radius/*      → radius.css      --sk-radius-*
  *   2. Responsive 📐 Spacing/*, Container/*, Layout/* → spacing.css  --sk-space-*, --sk-container-*,
  *     --sk-layout-* (the page rhythm: space between sections, columns and cards, 25 Oct 2026)
@@ -52,7 +55,13 @@ function colors() {
 
   const L = mode("SKO Light");
   const D = mode("SKO Dark");
-  const skins = ["Gold", "Red"];
+  // The brand skins are the collection's own "<Skin> Light" / "<Skin> Dark" pairs, except SKO (the
+  // base) and Studio (a direction, below): Gold, Harbor and Fluent on 26 Oct 2026 (Red went).
+  const modeNames = [...new Set(tokens.flatMap((v) => Object.keys(v.values)))];
+  const skins = modeNames
+    .filter((m) => m.endsWith(" Light"))
+    .map((m) => m.slice(0, -" Light".length))
+    .filter((s) => s !== "SKO" && s !== "Studio" && modeNames.includes(`${s} Dark`));
   const all = [...L.keys()];
   // [data-skin="teal"] forces SKO inside another skin: every token a skin changes, at its SKO value.
   const skinKeys = (base, theme) => all.filter((k) => skins.some((s) => mode(`${s} ${theme}`).get(k) !== base.get(k)));

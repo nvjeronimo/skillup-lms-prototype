@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { useEqualHeights } from "@/lib/useEqualHeights";
-import { HarborCourseTable } from "@/components/platform/harbor/HarborCourseTable";
+import { HarborCourseTable, HarborProgramTable } from "@/components/platform/harbor/HarborCourseTable";
 import { ProgramCard } from "./ProgramCard";
 import { StickyToolbar } from "@/components/platform/StickyToolbar";
 import { SearchField } from "./SearchField";
@@ -139,9 +139,8 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   const viewParam = params.get("view");
   const view: MyLearningView =
     viewParam === "list" || viewParam === "grid" || viewParam === "table" ? viewParam : MY_LEARNING_DEFAULT_VIEW;
-  // The table view (Harbor first, every skin since 26 Oct 2026, Nelson) is for courses; on Programs
-  // it reads as the list.
-  const tableView = view === "table" && tab === "courses";
+  // The table view (Harbor first, every skin since 26 Oct 2026, Nelson), on Courses and Programs.
+  const tableView = view === "table";
 
   const setParam = (key: "tab" | "view", value: string, fallback: string) => {
     const next = new URLSearchParams(params.toString());
@@ -174,7 +173,7 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
 
   const notInPrototype = (name: string) => showToast(`${name} is not part of this prototype yet`);
 
-  const listView = view === "list" || (view === "table" && tab !== "courses");
+  const listView = view === "list";
   // Every card has the height of the tallest one, in the grid and in the list (course rows; a title can take two lines).
   // Not on a phone (below md, one column): there the cards keep their own height (25 Oct 2026).
   const gridRef = useEqualHeights<HTMLDivElement>(
@@ -339,7 +338,12 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           ) : (
             <>
               {/* Every program card has the same height, whatever its state or title (useEqualHeights). */}
-              <ul className={cn(MY_LEARNING_GRID, "items-start", listView && "md:hidden")}>
+              {tableView ? (
+                <div className="hidden md:block">
+                  <HarborProgramTable programs={programs} onAction={(p) => notInPrototype(p.cta)} />
+                </div>
+              ) : null}
+              <ul className={cn(MY_LEARNING_GRID, "items-start", (listView || tableView) && "md:hidden")}>
                 {programs.map((program, i) => (
                   <li
                     key={program.id}

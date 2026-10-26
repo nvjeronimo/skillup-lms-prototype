@@ -4,8 +4,11 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
+import { AssistantChatFloating } from "@/components/assistant/AssistantChatFloating";
+import { useFloatingAssistant } from "@/lib/assistant/floating";
 import { PageTransitions } from "@/components/views/PageTransitions";
 import { SyntheticPersonasHost } from "@/components/molecules/SyntheticPersonas";
+import { LOAD_MODE_KEY } from "@/lib/arrival/loadMode";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
 const FRAME_WIDTH: Record<DeviceMode, number | null> = {
@@ -52,6 +55,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const setSkin = useLmsStore((s) => s.setSkin);
   const setDeviceMode = useLmsStore((s) => s.setDeviceMode);
   const largeTargets = useLargeTargets();
+  const floatingAssistant = useFloatingAssistant();
   const router = useRouter();
 
   // The frame is chosen after mount (the server renders the page itself), and never inside the
@@ -234,6 +238,15 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     else if (dq === "classic") setSkin("teal");
   }, [setSkin]);
   React.useEffect(() => flag("data-large-targets", largeTargets), [largeTargets]);
+  // The demo's Loading switch went (Nelson, 26 Oct 2026): a browser that kept Off or Slow goes back
+  // to the normal simulated load.
+  React.useEffect(() => {
+    try {
+      window.localStorage.removeItem(LOAD_MODE_KEY);
+    } catch {
+      /* storage blocked: nothing was kept either */
+    }
+  }, []);
 
   // The assistant is mounted once, for every page (it shows on platform and player pages only);
   // so is the synthetic personas' modal (Nelson, 25 Oct 2026), opened from the profile menu.
@@ -241,7 +254,8 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     return (
       <>
         {children}
-        <AssistantChat />
+        {/* The floating launcher is kept as a reference behind ?assistant=floating (26 Oct 2026). */}
+        {floatingAssistant ? <AssistantChatFloating /> : <AssistantChat />}
         <PageTransitions />
         <SyntheticPersonasHost />
       </>

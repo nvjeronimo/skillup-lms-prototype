@@ -11,7 +11,7 @@ export function CertificatesSkeleton() {
   return (
     <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <div className="flex flex-col gap-2">
-        <Skeleton variant="ghost" text="headline-large-bold">Certificates</Skeleton>
+        <Skeleton variant="ghost" text="headline-large-bold">My Certificates</Skeleton>
         <Skeleton variant="ghost" text="body-large-regular">
           Everything you have earned, and what you are working towards.
         </Skeleton>
@@ -34,8 +34,8 @@ export function CertificatesSkeleton() {
                 <Skeleton variant="block" radius="card" className="aspect-[1123/794] w-full" />
                 <Skeleton variant="ghost" text="body-large-semibold">{e.certificate.title}</Skeleton>
                 <Skeleton variant="ghost" text="body-medium-regular">
-                  {e.program
-                    ? `${e.certificate.issuedLine} Course ${e.program.number} of ${e.program.total}, ${e.program.title}.`
+                  {e.kind === "course" && e.program?.number
+                    ? `${e.certificate.issuedLine} Course ${e.program.number} of ${e.program.total}.`
                     : e.certificate.issuedLine}
                 </Skeleton>
                 <div className="mt-auto flex items-start gap-1.5">

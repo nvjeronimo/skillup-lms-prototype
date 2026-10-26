@@ -8,7 +8,6 @@ import {
   Plus,
   RotateCcw,
   Send,
-  Sparkles,
   X,
 } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -16,7 +15,8 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import type { ActionEntry, ChatMessage } from "@/lib/assistant/types";
-import { ASSISTANT_TOPICS } from "@/lib/assistant/topics";
+import { ASSISTANT_TOPICS, COURSE_ASSISTANT_TOPICS } from "@/lib/assistant/topics";
+import { AssistantGlyph } from "./AssistantGlyph";
 import { FirstStepsView, type FirstStepsViewProps } from "./FirstStepsView";
 import { NextStepCard } from "./NextStepCard";
 import { useDialog } from "@/lib/useDialog";
@@ -65,6 +65,8 @@ export interface AssistantWindowProps {
    * footer row. "default": the floating chat of the other skins.
    */
   variant?: "default" | "panel";
+  /** "course": in the player, the panel's topics are about the course (Nelson, 26 Oct 2026). */
+  scope?: "platform" | "course";
   className?: string;
   style?: React.CSSProperties;
 }
@@ -107,13 +109,15 @@ export function AssistantWindow({
   takeFocus = true,
   askNonce = 0,
   variant = "default",
+  scope = "platform",
   className,
   style,
 }: AssistantWindowProps) {
   const panel = variant === "panel";
   // The topic whose questions are shown (panel only); null: the topic list.
   const [topicId, setTopicId] = React.useState<string | null>(null);
-  const topic = ASSISTANT_TOPICS.find((t) => t.id === topicId) ?? null;
+  const topics = scope === "course" ? COURSE_ASSISTANT_TOPICS : ASSISTANT_TOPICS;
+  const topic = topics.find((t) => t.id === topicId) ?? null;
   const inputId = React.useId();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLDivElement>(null);
@@ -303,7 +307,7 @@ export function AssistantWindow({
           )}
         >
           <h2 className="sk-text-title-medium-semibold inline-flex items-center gap-2 text-sko-text-default">
-            <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" aria-hidden />
+            <AssistantGlyph size={20} className="text-sko-icon-primary" />
             Assistant
           </h2>
           <div className="flex items-center gap-3">
@@ -346,7 +350,7 @@ export function AssistantWindow({
                 aria-hidden
                 className="inline-flex size-10 items-center justify-center rounded-control bg-sko-bg-primary-soft"
               >
-                <Icon icon={Sparkles} size={20} className="text-sko-icon-primary" />
+                <AssistantGlyph size={20} className="text-sko-icon-primary" />
               </span>
               <span className={cn(greet && "sr-only")}>SkillUp Assistant</span>
             </h2>
@@ -445,12 +449,7 @@ export function AssistantWindow({
                     <div className="flex flex-col gap-6 pt-2">
                       <div className="flex flex-col gap-1">
                         <p className="sk-text-headline-small-semibold inline-flex items-center gap-2 text-sko-text-default">
-                          <Icon
-                            icon={Sparkles}
-                            size={24}
-                            className="text-sko-icon-primary"
-                            aria-hidden
-                          />
+                          <AssistantGlyph size={24} className="text-sko-icon-primary" />
                           Hi {firstName}!
                         </p>
                         <p className="sk-text-title-large-regular text-sko-text-muted">
@@ -499,7 +498,7 @@ export function AssistantWindow({
                         </div>
                       ) : (
                         <ul className="flex flex-col gap-1">
-                          {ASSISTANT_TOPICS.map((t) => (
+                          {topics.map((t) => (
                             <li key={t.id}>
                               <button
                                 type="button"

@@ -45,13 +45,14 @@ const TABS = [
 ] as const;
 
 /**
- * Harbor's "Stay Informed" (Nelson, 25 Oct 2026, after the DreamHost panel's home): a card beside
+ * "Stay informed" (Nelson, 25 Oct 2026, after the DreamHost panel's home; Harbor and Fluent first,
+ * every skin since 26 Oct 2026): a card beside
  * "Pick up" with three tabs, Alerts · Updates · Support, each a short list of one-line rows (icon,
  * title cut with an ellipsis, when) that open where they point. The rows are the bell's
  * notifications split by kind, and the open help-desk requests of Services; the bell keeps the
  * full panel.
  */
-export function HarborStayInformed({ className }: { className?: string }) {
+export function StayInformed({ className }: { className?: string }) {
   const [tab, setTab] = React.useState<InformedTab>("updates");
   const idBase = React.useId();
   const rows = ROWS[tab];

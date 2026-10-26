@@ -64,7 +64,7 @@ export function PlatformPage({
   // On a phone the sections float at the bottom (PlatformTabBar, Nelson 22 Oct 2026).
   const phone = useBreakpoint() === "mobile";
   // What the last block on the page keeps under it on a phone: the bar (16 + 52, compact since 23 Oct) and 16 of air,
-  // plus the safe area. The assistant launcher sits beside the bar (23 Oct 2026), not above it.
+  // plus the safe area.
   const phonePad = "pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))]";
   const clearToast = useLmsStore((s) => s.clearToast);
   // Remembered per browser; read after mount so the server and first client render agree.
@@ -127,16 +127,18 @@ export function PlatformPage({
       data-show-mock={showMock ? "" : undefined}
     >
       <PlatformTopbar current={current} />
-      <div className={cn(harbor && "lg:flex lg:items-stretch")}>
+      {/* Both wrappers grow, so <main> (flex-1) fills a short page and the footer sits at the bottom
+          of the screen on every device (Nelson, 26 Oct 2026); the panel layout puts the rail beside. */}
+      <div className={cn("flex flex-1 flex-col", harbor && "lg:flex-row lg:items-stretch")}>
       {harbor ? <HarborRail current={current} /> : null}
-      <div className={cn(harbor && "flex min-h-[calc(100dvh-72px)] min-w-0 flex-1 flex-col")}>
+      <div className="flex min-w-0 flex-1 flex-col">
       {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
       <main
         key={pathname}
         ref={mainRef}
         id="main"
         tabIndex={-1}
-        // The room the floating tab bar / the assistant launcher need under the page goes under the
+        // The room the floating tab bar needs under the page goes under the
         // last block of the page: the micro footer, or the test-build note when it shows.
         className={cn("sk-animate-page flex-1 outline-none", className)}
       >
@@ -152,17 +154,16 @@ export function PlatformPage({
         </ArrivalContext.Provider>
       </main>
       {/* The micro footer of the platform pages (Nelson, 23 Oct 2026); the player has none. */}
-      <PlatformFooter className={cn(!demo && (phone ? phonePad : "max-md:pb-20"))} />
+      <PlatformFooter className={cn(!demo && phone && phonePad)} />
       {/* Test-build note, in the footer (Nelson, 15 Oct 2026). The same dashed warning treatment
           as the /lab note, so a screenshot of these pages is not read as a promise about the data.
-          max-md:pb-20: on a phone the assistant launcher floats over the bottom right (48 + 16 from
-          the edge); the footer, last on the page, keeps 80px under its text so it scrolls clear of it. */}
+          On a phone the floating tab bar sits over the bottom: the last block keeps room under it. */}
       {demo ? (
       <footer
         aria-label="Test build"
         className={cn(
           "sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-2 text-sko-text-warning md:px-8 lg:px-10",
-          phone ? phonePad : "max-md:pb-20",
+          phone && phonePad,
         )}
       >
         <p className="sk-text-body-medium-regular">

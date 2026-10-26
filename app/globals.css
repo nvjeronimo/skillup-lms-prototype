@@ -10,6 +10,8 @@
 @import "../tokens/direction-studio.css";
 @import "../tokens/skin-harbor.css";
 @import "../tokens/skin-fluent.css";
+@import "../tokens/skin-gold.css";
+@import "../tokens/square-corners.css";
 
 @tailwind base;
 @tailwind components;
@@ -1200,6 +1202,11 @@ button {
    drawn around it, so the line never drifts away from the label (Nelson, 23 Oct 2026). */
 [data-large-targets] :is(button, a).sk-link-button {
   position: relative;
+  min-height: 0;
+  min-width: 0;
+}
+/* A control that draws its own 44 band (ThemeSwitch segments, Nelson 26 Oct 2026) keeps its size. */
+[data-large-targets] button[data-hit-band] {
   min-height: 0;
   min-width: 0;
 }

@@ -8,8 +8,8 @@
    - Buttons: primary on brand 80 (#0F6CBD), hover brand 70; secondary is white with a 1px Stroke1
      (#D1D1D1) and neutral ink text, hover Background1 Hover (#F5F5F5). Semibold 14.
    - Fields: a 1px Stroke1 frame with an accessible bottom edge (#616161), Fluent's Input.
-   - Filters and view switches are a TabList: no track, the selected item in semibold ink over a 3px
-     brand indicator (5.4:1 on the page, so the state passes WCAG 1.4.11 without a fill).
+   - Filters and view switches are Button groups (26 Oct 2026, were a TabList): a #F0F0F0 track,
+     the selected segment raised on white with Stroke1 and semibold ink.
    - Cards: white Background1 on the Background3 canvas, no stroke, shadow 4. A card inside a card
      takes Stroke2 instead.
    - Neutrals are Fluent's greys: Foreground1 #242424, Foreground2 #424242, Foreground3 #616161.
@@ -30,7 +30,7 @@
   --sk-radius-card: 8px;
   --sk-radius-surface: 12px;
   --sk-radius-card-inset: 4px;
-  --sk-radius-track: 4px;
+  --sk-radius-track: 8px; /* a Button group: 4 segments + 4 of padding (nesting rule) */
 
   /* Fluent elevation: shadow 4 (cards), shadow 8 (raised, hover), shadow 16 (flyouts). */
   --sk-shadow-card: 0 0 2px #0000001f, 0 2px 4px #00000024;
@@ -209,71 +209,28 @@ html[data-skin="fluent"] [data-theme="dark"] {
   background-color: var(--color-bg-hover);
 }
 
-/* ── Filters and view switches ───────────────────────────────────────────────
-   Fluent's TabList: no track, transparent items, the selected one in semibold ink over a 3px brand
-   indicator with round caps, inset 12 from each side. The indicator carries the state (5.4:1). */
+/* ── Filters and button groups ───────────────────────────────────────────────
+   As the light / dark switch (Nelson, 26 Oct 2026: the TabList filters were hard to read as a
+   group): a bg/muted track (#F0F0F0), segments at the control radius, the selected one raised on
+   Background1 with semibold ink and Stroke1. */
 [data-skin="fluent"] .rounded-track.bg-sko-bg-track {
-  background-color: transparent;
-  padding: 0;
-  gap: 2px;
+  background-color: var(--color-bg-muted);
 }
 [data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]) {
-  position: relative;
   border-color: transparent;
   border-radius: var(--sk-radius-control);
   color: var(--color-text-muted);
   font-weight: 400;
-  box-shadow: none;
-}
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]):hover {
-  background-color: transparent;
-  color: var(--color-text-default);
 }
 [data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page,
 [data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"],
 [data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
 [data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
-  border-color: transparent;
-  background-color: transparent;
+  border-color: var(--sk-fluent-stroke1);
+  background-color: var(--color-bg-page);
   color: var(--color-text-default);
   font-weight: 600;
   box-shadow: none;
-}
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"])::after {
-  content: "";
-  position: absolute;
-  inset-inline: 12px;
-  bottom: 0;
-  height: 3px;
-  border-radius: 9999px;
-  background-color: transparent;
-  pointer-events: none;
-  /* The indicator grows from the centre and its colour eases (motion is shared by every skin:
-     Fluent's indicators must not snap where the other skins' pills ease; 26 Oct 2026). */
-  transform: scaleX(0.4);
-  transition:
-    transform var(--motion-duration-short4) var(--motion-easing-standard-decelerate),
-    background-color var(--motion-duration-short3) var(--motion-easing-standard);
-}
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]):hover::after,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page::after,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"]::after,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-checked="true"]::after,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-selected="true"]::after {
-  transform: none;
-}
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]):hover::after {
-  background-color: var(--sk-fluent-stroke1);
-}
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page::after,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"]::after,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-checked="true"]::after,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-selected="true"]::after {
-  background-color: var(--color-border-primary);
-}
-/* Icon-only view switches (grid · list · table) keep a square hit area. */
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a)[aria-label]:not(:has(span:not([class*="sr-only"])))::after {
-  inset-inline: 8px;
 }
 
 /* ── Top navigation ──────────────────────────────────────────────────────────
@@ -360,30 +317,32 @@ html[data-skin="fluent"] [data-theme="dark"] {
 }
 
 /* ── The glance ──────────────────────────────────────────────────────────────
-   No band, light or dark: the figure cards sit straight on the canvas with shadow 4, title in ink;
-   the rings shared by every skin draw on the canvas (Nelson, 26 Oct 2026). */
+   A tray (Nelson, 26 Oct 2026), blue-tinted since the same day (below; it was Background5 #EBEBEB),
+   radius 12 from desktop up; the white figure cards sit on it with shadow 4, title in ink, the
+   shared rings on it. Set on <html> only: the backdrop itself is a data-theme="dark" region and
+   would read the dark value. */
+html[data-skin="fluent"] {
+  /* A blue-tinted tray (Nelson, 26 Oct 2026, was Background5 #EBEBEB): Brand 160, Fluent's
+     BrandBackground2; the white cards and the ink title read on it as they did on grey. */
+  --sk-fluent-glance: #ebf3fc;
+}
+html[data-skin="fluent"][data-theme="dark"] {
+  /* Dark: Brand 20 (was Background2 #1F1F1F). */
+  --sk-fluent-glance: #082338;
+}
 html[data-skin="fluent"] [data-glance-backdrop] {
-  background-color: transparent;
+  background-color: var(--sk-fluent-glance);
 }
-/* On the light canvas the hazes read as a blue blob: Fluent Light keeps the rings alone, in grey. */
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(2) {
-  display: none;
-}
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(4) {
-  box-shadow: none;
-}
-/* The rings in Fluent's neutral stroke, not blue (Nelson, 26 Oct 2026: grey on the light canvas). */
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:is(:nth-child(3), :nth-child(4)),
-html[data-skin="fluent"]:not([data-theme="dark"]) [data-glance] > [data-glow]:nth-child(4)::after {
-  border-color: var(--sk-fluent-stroke1);
-}
+/* The rings, the light in the middle ring and the haze as in every other skin (Nelson, 26 Oct 2026:
+   "o mesmo efeito usado nos circulos nos outros skins"; Fluent Light had them grey, no haze), in
+   Fluent's brand blue (border/info, bg/info) on the blue tray. */
 html[data-skin="fluent"] [data-glance-title] {
   color: var(--color-text-default);
 }
 @media (min-width: 1025px) {
   [data-skin="fluent"] [data-glance] {
     margin-inline: 0;
-    padding-inline: 0;
+    padding-inline: 24px;
     border-radius: var(--sk-radius-surface);
   }
   [data-skin="fluent"] [data-glance] > ul {
@@ -420,7 +379,6 @@ html[data-skin="fluent"] [data-glance-title] {
 
 /* Reduced motion: the indicators appear in place, nothing grows (both paths, as everywhere). */
 @media (prefers-reduced-motion: reduce) {
-  [data-skin="fluent"] .rounded-track.bg-sko-bg-track > *::after,
   [data-skin="fluent"] aside > nav[aria-label="Platform"] :is(a, button)::before,
   [data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed]::before {
     transition-property: background-color;

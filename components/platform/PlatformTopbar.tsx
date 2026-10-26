@@ -26,11 +26,12 @@ import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { useDemoMode } from "@/lib/demo";
 import { useBreakpoint } from "@/lib/useBreakpoint";
-import { LoadingSection, PreviewDeviceSection } from "@/components/molecules/DemoControlsMenu";
+import { PreviewDeviceSection } from "@/components/molecules/DemoControlsMenu";
 import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 import { useLearner } from "@/lib/persona-gate";
 import { toggleHarborRail, useHarbor, useHarborRailExpanded } from "@/lib/platform/harbor";
 import { HarborSearch } from "./harbor/HarborSearch";
+import { SearchAssistantButton } from "./harbor/SearchAssistantButton";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 import { SidebarToggleGlyph } from "@/components/atoms/SidebarToggle";
 
@@ -154,10 +155,7 @@ function ProfilePanel({
       <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
       {demo ? (
-        <>
-          <PreviewDeviceSection onDone={onDone} />
-          <LoadingSection />
-        </>
+        <PreviewDeviceSection onDone={onDone} />
       ) : null}
       <PersonasMenuRow onDone={onDone} />
       <ProfileFooter onDone={onDone} />
@@ -278,7 +276,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
             </Link>
           )}
           {harbor ? (
-            <HarborSearch className="flex-[0_1_420px]" />
+            <HarborSearch width={420} />
           ) : (
             <nav aria-label="Platform" className="self-stretch [&_a]:whitespace-nowrap">
               <SectionLinks
@@ -291,9 +289,11 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           {/* Every skin has the search + Assistant pill (Nelson, 26 Oct 2026): beside the tabs here,
               in the middle of the bar in the panel layout. With the five tabs it needs 1280: below
               that the bar keeps the floating launcher. The launcher always stays in the player. */}
-          {harbor ? null : <HarborSearch className="hidden min-w-[176px] flex-[0_1_340px] xl:block" />}
+          {harbor ? null : <HarborSearch width={340} className="hidden xl:block" />}
           <div className={cn("flex items-center gap-3", harbor && "flex-1 basis-0 justify-end")}>
             <span className="flex items-center gap-3">
+              {/* Where the pill does not fit (the tabs bar below 1280): its button and sheet. */}
+              {harbor ? null : <SearchAssistantButton size="sm" className="xl:hidden" />}
               {bell}
               {themeSwitch("sm")}
             </span>
@@ -305,7 +305,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 className="flex items-center gap-2 rounded-control p-1 text-left transition-colors hover:bg-sko-bg-hover"
               >
                 <Initials />
-                <span className="flex flex-col whitespace-nowrap">
+                {/* The name and role give way to the search button below 1280 (Nelson, 26 Oct 2026). */}
+                <span className="hidden flex-col whitespace-nowrap xl:flex">
                   <span className="sk-text-body-small-semibold text-sko-text-default">
                     {platformUser.name}
                   </span>
@@ -364,6 +365,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           </div>
           <div className="flex items-center gap-1">
             <span className="flex items-center gap-1">
+              <SearchAssistantButton size="sm" />
               {bell}
               {themeSwitch("md")}
             </span>
