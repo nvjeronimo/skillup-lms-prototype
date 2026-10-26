@@ -16,15 +16,13 @@ import { cn } from "@/lib/utils";
  * (Nelson): the trigger already shows who is signed in.
  */
 
-/** The brand skins: SKO, Gold, Red (tokens/colors.css), Studio (tokens/direction-studio.css) and
- *  Harbor (tokens/skin-harbor.css) and Fluent (tokens/skin-fluent.css). */
+/** The brand skins: SKO, Gold (tokens/colors.css), Studio (tokens/direction-studio.css), Harbor
+ *  (tokens/skin-harbor.css) and Fluent (tokens/skin-fluent.css). Red went on 26 Oct 2026. */
 export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/primary
   { skin: "teal", label: "SKO", dot: "bg-sko-icon-primary" },
   // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-yellow
   { skin: "gold", label: "Gold", dot: "bg-sko-icon-accent-yellow" },
-  // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-red
-  { skin: "red", label: "Red", dot: "bg-sko-icon-accent-red" },
   // Studio (experimental, Nelson 22 Oct 2026): took Sea's place; its dot is Studio's own primary, the logo's deep teal.
   { skin: "studio", label: "Studio", dot: "bg-sko-bg-primary" },
   // Harbor (Nelson, 25 Oct 2026): a hosting-panel look; its dot is its own primary, black.
@@ -36,7 +34,7 @@ export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
 /**
  * DS Profile Menu 1.2 (Nelson, 17 Oct 2026): each Brand skin segment is the Button group base
  * Icon=Dot, a 10px dot in the skin's colour before the name. SKO is icon/primary held on the SKO
- * skin (`data-skin="teal"`), so it stays blue whichever skin is on; Gold and Red are the accent icons.
+ * skin (`data-skin="teal"`), so it stays blue whichever skin is on; Gold is the accent icon.
  */
 function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
   const theme = useLmsStore((s) => s.theme);

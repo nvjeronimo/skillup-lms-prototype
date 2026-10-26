@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * What a token change does to the page. Resolves every CSS custom property (and the .sk-text-*
- * classes) the way the browser would, in every mode the prototype has — SKO / Gold / Red / Studio,
+ * classes) the way the browser would, in every mode the prototype has — SKO / Gold / Studio,
  * light and dark, nested dark bands, colour-vision mode, desktop / tablet / mobile and the forced
  * device preview — once for a git ref and once for the working tree, and lists the differences.
  *
@@ -167,7 +167,7 @@ const html = (attrs = {}) => ({ tag: "html", attrs, classes: [] });
 const div = (attrs = {}, classes = []) => ({ tag: "div", attrs, classes });
 const contexts = [];
 for (const theme of [null, "dark"])
-  for (const skin of [null, "teal", "gold", "red"])
+  for (const skin of [null, "teal", "gold"])
     for (const direction of [null, "studio"]) {
       if (direction && skin) continue; // Studio is its own brand: it is never combined with a skin
       for (const vision of [null, "cvd"]) {
