@@ -33,8 +33,6 @@ import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
 import { useDemoMode } from "@/lib/demo";
 import { useBreakpoint } from "@/lib/useBreakpoint";
-import { LOAD_MODES } from "@/lib/arrival/loadMode";
-import { useLoadMode } from "@/lib/arrival/useArrival";
 import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 
 const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
@@ -79,43 +77,6 @@ const COMPLETION_FLOWS: { value: CompletionFlow; label: string }[] = [
   { value: "ask-on-next", label: "Button + Next asks" },
   { value: "mark-as-complete", label: "Button only" },
 ];
-
-/**
- * Demo: the simulated load of the platform pages (motion-matrix §7.9). Normal ≈ 500 ms with the
- * page's skeleton, Off shows the content at once, Slow holds the skeleton 2 s for a review.
- * Kept per browser; it applies from the next first visit of a page in the session.
- */
-export function LoadingSection() {
-  const [loadMode, setLoadMode] = useLoadMode();
-  return (
-    <Section title="Loading">
-      <div className="flex flex-col gap-1.5">
-        <div className="flex overflow-hidden rounded-control border border-sko-border-subtle">
-          {LOAD_MODES.map((l) => (
-            <button
-              key={l.value}
-              type="button"
-              aria-pressed={loadMode === l.value}
-              onClick={() => setLoadMode(l.value)}
-              className={cn(
-                "sk-text-body-small-semibold flex-1 px-2 py-1 transition-colors",
-                loadMode === l.value
-                  ? "bg-sko-bg-primary text-sko-text-on-primary"
-                  : "text-sko-text-muted hover:bg-sko-bg-subtle",
-              )}
-            >
-              {l.label}
-            </button>
-          ))}
-        </div>
-        <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
-          A platform page shows its skeleton while it loads, once per session. Off skips the wait;
-          Slow holds it 2 s. It applies to pages not yet visited in this tab.
-        </p>
-      </div>
-    </Section>
-  );
-}
 
 /**
  * Demo: the preview device (the page in a desktop, tablet or phone frame, or following the window).
@@ -428,8 +389,6 @@ export function DemoControlsMenu({
                   </div>
                 </Section>
               ) : null}
-
-              <LoadingSection />
 
               <Section title="Preview features">
                 <div className="flex flex-col gap-1">

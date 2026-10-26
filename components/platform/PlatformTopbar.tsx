@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { useDemoMode } from "@/lib/demo";
 import { useBreakpoint } from "@/lib/useBreakpoint";
-import { LoadingSection, PreviewDeviceSection } from "@/components/molecules/DemoControlsMenu";
+import { PreviewDeviceSection } from "@/components/molecules/DemoControlsMenu";
 import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 import { useLearner } from "@/lib/persona-gate";
 import { toggleHarborRail, useHarbor, useHarborRailExpanded } from "@/lib/platform/harbor";
@@ -154,10 +154,7 @@ function ProfilePanel({
       <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
       {demo ? (
-        <>
-          <PreviewDeviceSection onDone={onDone} />
-          <LoadingSection />
-        </>
+        <PreviewDeviceSection onDone={onDone} />
       ) : null}
       <PersonasMenuRow onDone={onDone} />
       <ProfileFooter onDone={onDone} />

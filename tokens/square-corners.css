@@ -1,0 +1,47 @@
+/*
+ * Experiment: Square corners (Nelson, 21 Oct 2026; a switch in the profile menu, under the brand
+ * skins). Every role radius goes to 0 — cards, panels, menus, modals, tiles, avatars, badges,
+ * fields, tracks — except buttons: inside any button the roles come back, so a button keeps its
+ * own corners (and so do the segments of a Button group and the parts inside a button).
+ *
+ * Transversal to every skin (Nelson, 26 Oct 2026): this file is imported after the skins. The role
+ * values are !important on <html>, so a skin's own role values give way, and the skins' literal
+ * radii on cards, fields and the panel layout's tabs, tray and boxes are squared below.
+ */
+html[data-square-corners] {
+  --sk-radius-inner: 0px !important;
+  --sk-radius-control: 0px !important;
+  --sk-radius-card: 0px !important;
+  --sk-radius-card-inset: 0px !important;
+  --sk-radius-track: 0px !important;
+  --sk-radius-surface: 0px !important;
+  --sk-radius-pill: 0px !important;
+}
+[data-square-corners] :is(button, [role="button"], .sk-button) {
+  --sk-radius-inner: 2px;
+  --sk-radius-control: 6px;
+  --sk-radius-card-inset: 8px;
+  --sk-radius-track: 10px;
+  --sk-radius-pill: 9999px;
+}
+/* Decorative circles and dots (aria-hidden: the glance card's circles, the headers' circle, status
+   dots) stay round: they are shapes, not corners. */
+[data-square-corners] [aria-hidden="true"].rounded-pill {
+  --sk-radius-pill: 9999px;
+}
+/* The skins' literal radii (Studio's card sums, the pill fields, Harbor's rail-pill tabs). */
+html[data-square-corners]
+  :is(
+    .rounded-card,
+    .rounded-card-inset,
+    .rounded-surface,
+    [data-topbar-tab],
+    [data-glance],
+    [data-module-box],
+    .rounded-control:has(> input:not([type="checkbox"], [type="radio"])),
+    input:not([type="checkbox"], [type="radio"]),
+    select,
+    textarea
+  ) {
+  border-radius: 0 !important;
+}
