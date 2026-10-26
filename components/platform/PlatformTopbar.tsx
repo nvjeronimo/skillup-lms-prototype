@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, ChevronDown, Moon, Sun } from "lucide-react";
+import { Bell, ChevronDown } from "lucide-react";
 import { Icon, Menu02 } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { Badge } from "@/components/atoms/Badge";
@@ -31,6 +31,7 @@ import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 import { useLearner } from "@/lib/persona-gate";
 import { toggleHarborRail, useHarbor, useHarborRailExpanded } from "@/lib/platform/harbor";
 import { HarborSearch } from "./harbor/HarborSearch";
+import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 import { SidebarToggleGlyph } from "@/components/atoms/SidebarToggle";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
@@ -198,7 +199,6 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   const harbor = useHarbor();
   const railExpanded = useHarborRailExpanded();
   const theme = useLmsStore((s) => s.theme);
-  const toggleTheme = useLmsStore((s) => s.toggleTheme);
   // The learner, or the synthetic persona once hydrated (Nelson, 25 Oct 2026; lib/persona-gate).
   const platformUser = useLearner();
   const profile = useDisclosure();
@@ -241,23 +241,15 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   );
 
   // DS Topbar v1.3 (Nelson, 17 Oct 2026): the light / dark switch is in the bar, not in the
-  // profile menu: a Utility Button (sm, Tertiary) after the notifications, moon-01 in light, sun in dark.
-  const themeButton = (
-    <button
-      type="button"
-      aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-      onClick={() => toggleTheme()}
-      className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover lg:size-8"
-    >
-      <Icon icon={theme === "dark" ? Sun : Moon} size={20} />
-    </button>
-  );
+  // profile menu. Since 26 Oct 2026 a mini Button group with both icons (ThemeSwitch).
+  const setTheme = useLmsStore((s) => s.setTheme);
+  const themeSwitch = (size: "sm" | "md") => <ThemeSwitch value={theme} onChange={setTheme} size={size} />;
 
   return (
     <>
       <header data-chrome="" className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
         {/* Desktop */}
-        <div className="hidden h-[71px] items-center justify-between gap-6 px-6 lg:flex">
+        <div className="hidden h-[71px] items-center justify-between gap-6 px-6 lg:flex xl:gap-4 min-[1440px]:gap-6">
           {harbor ? (
             // Harbor (Nelson, 25 Oct 2026, after the DreamHost panel): the menu button folds the
             // rail on the left, where the sections are; the middle of the bar is the search pill.
@@ -280,7 +272,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
             <Link
               href="/platform/dashboard"
               aria-label="SkillUp, Dashboard"
-              className="flex min-h-11 items-center"
+              className="flex min-h-11 shrink-0 items-center"
             >
               <SkillUpLogo className="h-[30px]" />
             </Link>
@@ -288,18 +280,22 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           {harbor ? (
             <HarborSearch className="flex-[0_1_420px]" />
           ) : (
-            <nav aria-label="Platform" className="self-stretch">
+            <nav aria-label="Platform" className="self-stretch [&_a]:whitespace-nowrap">
               <SectionLinks
                 current={current}
                 look="tabs"
-                className="flex h-full items-stretch gap-6"
+                className="flex h-full items-stretch gap-6 xl:gap-3 min-[1440px]:gap-6"
               />
             </nav>
           )}
+          {/* Every skin has the search + Assistant pill (Nelson, 26 Oct 2026): beside the tabs here,
+              in the middle of the bar in the panel layout. With the five tabs it needs 1280: below
+              that the bar keeps the floating launcher. The launcher always stays in the player. */}
+          {harbor ? null : <HarborSearch className="hidden min-w-[176px] flex-[0_1_340px] xl:block" />}
           <div className={cn("flex items-center gap-3", harbor && "flex-1 basis-0 justify-end")}>
             <span className="flex items-center gap-3">
               {bell}
-              {themeButton}
+              {themeSwitch("sm")}
             </span>
             <div ref={profile.containerRef} className="relative">
               <button
@@ -369,7 +365,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           <div className="flex items-center gap-1">
             <span className="flex items-center gap-1">
               {bell}
-              {themeButton}
+              {themeSwitch("md")}
             </span>
             <div ref={profileCompact.containerRef} className="relative">
               <button

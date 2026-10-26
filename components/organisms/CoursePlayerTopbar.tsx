@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bell, Bookmark, ChevronRight, List, MessagesSquare, Moon, Sun, X } from "lucide-react";
+import { Bell, Bookmark, ChevronRight, List, MessagesSquare, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { ProgressRing } from "@/components/molecules/OverallProgress";
 import { useLmsStore } from "@/lib/store";
+import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 
 export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
 
@@ -263,12 +264,13 @@ export function CoursePlayerTopbar({
           </UtilityButton>
         ) : null}
         {showTheme ? (
-          <UtilityButton
-            label={theme === "Dark" ? "Switch to light theme" : "Switch to dark theme"}
-            onClick={onTheme}
-          >
-            <Icon icon={theme === "Dark" ? Sun : Moon} size={20} />
-          </UtilityButton>
+          // The mini light / dark Button group (ThemeSwitch, Nelson 26 Oct 2026), as on the platform bar.
+          <ThemeSwitch
+            value={theme === "Dark" ? "dark" : "light"}
+            onChange={(next) => {
+              if (next !== (theme === "Dark" ? "dark" : "light")) onTheme?.();
+            }}
+          />
         ) : null}
 
         {accountMenu ?? (
