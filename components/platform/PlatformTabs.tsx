@@ -18,9 +18,10 @@ export interface PlatformTabsProps<T extends string> {
   value: T;
   onChange: (id: T) => void;
   /**
-   * `md`: DS Size=md on every breakpoint (headline-small/Semibold 24, badge md).
+   * `md`: DS Size=md on every breakpoint (headline-small/Semibold 24, badge md); from desktop (lg)
+   *   the label is one step down, title-large/Semibold (Nelson, 26 Oct 2026).
    * `responsive`: Size=sm on mobile (title-large/Semibold 18, badge sm, the target grown to 44
-   * upwards) and Size=md from tablet up.
+   * upwards), Size=md on tablet and title-large/Semibold labels again from desktop (lg).
    * Platform-page tabs went up three steps of the type ramp (Nelson, 25 Oct 2026): md was
    * body-large 16, the mobile size body-medium 14.
    * `sm`: Size=sm on every breakpoint, for a tab row inside a panel.
@@ -127,20 +128,27 @@ export function PlatformTabs<T extends string>({
                 ? "sk-text-body-medium-semibold h-8 pb-3 before:absolute before:inset-x-0 before:-top-3 before:bottom-0 before:content-[''] [[data-large-targets]_&]:before:-top-3"
                 : responsive
                 ? "pb-3 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-top-3 max-md:before:bottom-0 max-md:before:content-[''] md:h-auto md:py-3"
-                : "sk-text-headline-small-semibold py-3",
+                : "py-3",
               // The scrolling row clips an outline drawn outside the tab.
               ownRule && "focus-visible:-outline-offset-2",
               selected ? "text-sko-text-primary" : "text-sko-text-subtle hover:text-sko-text-default",
             )}
           >
             {/* The DS text styles are not responsive, so `responsive` renders a label and a badge per size. */}
+            {/* Desktop is one step down the ramp (Nelson, 26 Oct 2026): title-large from lg, headline-small
+                on tablet (and on mobile for `md`), title-large on mobile for `responsive`. */}
             {responsive ? (
               <>
-                <span className="sk-text-title-large-semibold md:hidden">{tab.label}</span>
-                <span className="sk-text-headline-small-semibold hidden md:inline">{tab.label}</span>
+                <span className="sk-text-title-large-semibold md:hidden lg:inline">{tab.label}</span>
+                <span className="sk-text-headline-small-semibold hidden md:inline lg:hidden">{tab.label}</span>
               </>
-            ) : (
+            ) : small ? (
               tab.label
+            ) : (
+              <>
+                <span className="sk-text-headline-small-semibold lg:hidden">{tab.label}</span>
+                <span className="sk-text-title-large-semibold hidden lg:inline">{tab.label}</span>
+              </>
             )}
             {tab.count !== undefined && responsive ? (
               <Badge color={badgeColor} size="sm" className="md:hidden">
