@@ -35,6 +35,9 @@
   --sk-shadow-card: 0 4px 8px #00000008;
   --sk-shadow-harbor-bar: 0 1px 5px #00000029;
   --sk-shadow-harbor-pill: 0 2px 6px #00000014;
+  /* The glance block: the panel's "Remixer" banner navy (Nelson, 26 Oct 2026; it was a light-blue
+     tray), light and dark alike. */
+  --sk-harbor-glance: #181b31;
 }
 
 /* Harbor Light. */
@@ -92,11 +95,6 @@
   --color-icon-success: #00897b;
   --color-icon-success-strong: #00897b;
   --color-icon-error: #c62828;
-
-  /* The glance tray (radius 20): the light blue of the selected states, bg/primary-soft (Nelson,
-     26 Oct 2026; it was the panel's #F0F0F0). Its own name, because the glance band is a dark region
-     and would read the dark tokens. */
-  --sk-harbor-tray: #d9eafc;
 }
 
 /* Harbor Dark (the panel has none): the same components at night. Slate-ink ground #0b1218, page
@@ -277,16 +275,55 @@ html[data-skin="harbor"] [data-theme="dark"] {
 }
 
 /* ── The glance ──────────────────────────────────────────────────────────────
-   Light: the panel's "Your Sites at a Glance" tray, not a dark band: light blue #D9EAFC with the white figure
-   cards on it, the title in ink, no glows. Dark keeps the slate-ink band. */
-html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance-backdrop] {
-  background-color: var(--sk-harbor-tray);
+   After the panel's "Remixer" banner (Nelson, 26 Oct 2026): a deep indigo-navy block, light and
+   dark alike, with thin concentric rings off the top-right corner and two soft hazes (blue above,
+   violet below right) from the glance's own glow layers, the title in white, the figures on their
+   white cards. No gradient fill: the hazes are the blurred glow shapes SKO already uses. */
+[data-skin="harbor"] [data-glance-backdrop] {
+  background-color: var(--sk-harbor-glance);
 }
-html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance] [data-glow] {
-  display: none;
+[data-skin="harbor"] [data-glance-title] {
+  color: #ffffff;
 }
-html[data-skin="harbor"]:not([data-theme="dark"]) [data-glance-title] {
-  color: var(--color-text-default);
+/* Haze 1 (the wide glow): violet, low on the right. */
+[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(2) {
+  left: auto;
+  right: -80px;
+  top: auto;
+  bottom: -120px;
+  width: 520px;
+  height: 240px;
+  background-color: #6a4bc9;
+  opacity: 0.5;
+  filter: blur(120px);
+}
+/* Rings: the two circles become 1px outlines on one centre off the top-right corner; the larger one
+   draws a third ring with ::after. */
+[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(3),
+[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(4) {
+  top: 10px;
+  right: 14%;
+  border: 1px solid #4552c4;
+  background-color: transparent;
+  opacity: 0.85;
+  transform: translate(50%, -50%);
+}
+[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(3) {
+  width: 300px;
+  height: 300px;
+}
+[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(4) {
+  width: 620px;
+  height: 620px;
+  /* Haze 2: a blue light inside the middle ring. */
+  box-shadow: inset 0 0 200px #3a4ccfaa;
+}
+[data-skin="harbor"] [data-glance] > [data-glow]:nth-child(4)::after {
+  content: "";
+  position: absolute;
+  inset: -230px;
+  border: 1px solid #4552c4;
+  border-radius: 9999px;
 }
 
 /* From desktop up the rail is on the left: the glance is a rounded tray in the page column, not a
