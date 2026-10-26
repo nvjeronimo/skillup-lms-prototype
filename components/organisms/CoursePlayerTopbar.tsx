@@ -192,7 +192,7 @@ export function CoursePlayerTopbar({
             <Icon icon={List} size={20} />
           </UtilityButton>
           {progressPct !== undefined ? <ProgressRing pct={progressPct} compact /> : null}
-          {searchScope ? <SearchAssistantButton scope={searchScope} /> : null}
+          {searchScope ? <SearchAssistantButton scope={searchScope} size="sm" /> : null}
         </div>
         <Link
           href="/platform/dashboard"
