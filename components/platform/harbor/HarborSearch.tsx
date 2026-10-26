@@ -45,7 +45,7 @@ const PAGES: { label: string; icon: LucideIcon; href: string }[] = [
   { label: "Calendar", icon: CalendarDays, href: "/platform/calendar" },
   { label: "Discussion", icon: MessagesSquare, href: "/platform/discussion" },
   { label: "Services", icon: LifeBuoy, href: "/platform/services" },
-  { label: "Certificates", icon: Award, href: "/platform/certificates" },
+  { label: "My Certificates", icon: Award, href: "/platform/certificates" },
   { label: "Profile", icon: UserRound, href: "/platform/profile" },
 ];
 

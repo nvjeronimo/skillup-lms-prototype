@@ -226,7 +226,7 @@ export const dashboardJump: DashboardJumpTile[] = [
   {
     id: "certificates",
     icon: Award,
-    title: "Certificates",
+    title: "My Certificates",
     description: `${certificatesInProgress.length} in progress · ${earnedCertificates.length} to download`,
     // The Certificates page (19 Oct 2026); it opened the Six Sigma certificate until then.
     href: "/platform/certificates",
