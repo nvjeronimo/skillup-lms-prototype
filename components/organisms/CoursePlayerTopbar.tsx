@@ -11,6 +11,8 @@ import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { ProgressRing } from "@/components/molecules/OverallProgress";
 import { useLmsStore } from "@/lib/store";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
+import { HarborSearch, type SearchScope } from "@/components/platform/harbor/HarborSearch";
+import { SearchAssistantButton } from "@/components/platform/harbor/SearchAssistantButton";
 
 export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
 
@@ -48,6 +50,11 @@ export interface CoursePlayerTopbarProps {
   /** Replaces the default (inert) account button — e.g. the demo-settings menu. */
   accountMenu?: React.ReactNode;
   className?: string;
+  /**
+   * The search + Assistant about this course (Nelson, 26 Oct 2026): the pill in the middle of the
+   * Desktop bar, a button with a full-screen sheet on Tablet and Mobile. Absent: none.
+   */
+  searchScope?: SearchScope;
 }
 
 /**
@@ -136,6 +143,7 @@ export function CoursePlayerTopbar({
   onClose,
   accountMenu,
   progressPct,
+  searchScope,
   className,
 }: CoursePlayerTopbarProps) {
   const isMobile = size === "Mobile";
@@ -184,6 +192,7 @@ export function CoursePlayerTopbar({
             <Icon icon={List} size={20} />
           </UtilityButton>
           {progressPct !== undefined ? <ProgressRing pct={progressPct} compact /> : null}
+          {searchScope ? <SearchAssistantButton scope={searchScope} /> : null}
         </div>
         <Link
           href="/platform/dashboard"
@@ -247,7 +256,10 @@ export function CoursePlayerTopbar({
         ) : null}
       </div>
 
+      {searchScope && isDesktop ? <HarborSearch scope={searchScope} width={380} /> : null}
+
       <div className="flex items-center gap-2">
+        {searchScope && !isDesktop ? <SearchAssistantButton scope={searchScope} size="sm" /> : null}
         {showNotifications ? (
           <UtilityButton label={notificationsLabel} onClick={onNotifications}>
             {bell}

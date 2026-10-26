@@ -13,27 +13,19 @@ import { useLearner } from "@/lib/persona-gate";
 import { useLmsStore } from "@/lib/store";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
-import { cn } from "@/lib/utils";
-import { AssistantLauncher } from "./AssistantLauncher";
 import { ASSISTANT_OPEN_EVENT } from "@/lib/assistant/bus";
-import { useJourneyProposal } from "@/lib/journeyProposal";
 import { AssistantWindow } from "./AssistantWindow";
 
 const OPEN_KEY = "sk-assistant-open";
-const EDGE = 24;
-const EDGE_PHONE = 16;
-const GAP = 16;
-/** The launcher's size (DS `Assistant-Launcher`, 48 since 13 Oct 2026). */
-const SIZE = 48;
 const PHONE = "(max-width: 767px)";
 
 /**
- * The assistant, mounted once for the whole app (ResponsiveShell): a launcher in the bottom
- * left corner and the chat it opens. Left on desktop and tablet since 13 Oct 2026 (on the right
- * it sat over Mark as Complete in the feedback row); on a phone it is on the right, above the
- * footer nav, at the end of the feedback row.
- * It knows where it is from the address, so no page
- * hands it anything. Shown on the platform pages and in the player only.
+ * The assistant, mounted once for the whole app (ResponsiveShell). Since 26 Oct 2026 (Nelson) it
+ * has no launcher of its own: the search + Assistant pill of the platform and player bars (and
+ * their search button where the pill does not fit) opens it through lib/assistant/bus. The
+ * floating launcher it had is kept in AssistantChatFloating (`?assistant=floating`).
+ * It knows where it is from the address, so no page hands it anything: in the player its topics
+ * are about the course. Shown on the platform pages and in the player only.
  */
 export function AssistantChat() {
   const pathname = usePathname() ?? "/";
@@ -43,7 +35,6 @@ export function AssistantChat() {
 
 function Chat({ pathname }: { pathname: string }) {
   const windowId = React.useId();
-  const launcherRef = React.useRef<HTMLButtonElement>(null);
   // The learner, or the synthetic persona once hydrated (Nelson, 25 Oct 2026).
   const learner = useLearner();
   const completedTopics = useLmsStore((s) => s.completedTopics);
@@ -133,12 +124,10 @@ function Chat({ pathname }: { pathname: string }) {
       /* see above */
     }
   };
-  // Closing gives the focus back to the launcher (the effect below). On a phone it is inert
-  // under the open sheet, so the focus moves once the sheet starts to leave.
+  // Closing gives the focus back to the button that opened the window (the effect below).
   const refocus = React.useRef(false);
   // Opened or closed by the learner: the window never opens by itself after that. (Not in
   // `set`: the sheet closing on navigation is not the learner's doing.)
-  const inBar = React.useRef(false);
   const close = () => {
     refocus.current = true;
     firstSteps.greeted();
@@ -168,11 +157,9 @@ function Chat({ pathname }: { pathname: string }) {
   React.useEffect(() => {
     if (open || !refocus.current) return;
     refocus.current = false;
-    // In the bar the launcher is hidden: the focus goes back to the bar's Assistant button.
-    const barButton = inBar.current
-      ? document.querySelector<HTMLElement>('form[role="search"] button[type="button"]')
-      : null;
-    (barButton ?? launcherRef.current)?.focus();
+    // The focus goes back to the button that opened it: the bar's Assistant button, or its
+    // search button where the pill does not fit.
+    visibleAnchor()?.focus();
   }, [open]);
 
   const isPhone = phone || previewPhone;
@@ -183,10 +170,11 @@ function Chat({ pathname }: { pathname: string }) {
     lastPath.current = pathname;
     if (isPhone) set(false);
   });
-  // A new learner may never press the launcher: the window opens by itself, once, where it
-  // does not cover the page (not on a phone, where it is a full-screen sheet).
+  // A new learner may never press the Assistant button: the window opens by itself, once, where
+  // it does not cover the page (not on a phone, where it is a full-screen sheet).
   const greet = stepsState?.status === "active" && !stepsState.greeted && !isPhone && !open;
   const greetedFn = firstSteps.greeted;
+  const inPlayer = pathname.startsWith("/course/");
   React.useEffect(() => {
     if (!greet) return;
     const timer = window.setTimeout(() => {
@@ -196,57 +184,19 @@ function Chat({ pathname }: { pathname: string }) {
     }, 600);
     return () => window.clearTimeout(timer);
   }, [greet, greetedFn]);
-  const edge = isPhone ? EDGE_PHONE : EDGE;
-  // Course Journey proposal (critique P1, 24 Oct 2026): in the player the launcher leaves the
-  // sidebar's corner for the content card's (bottom right, above Previous / Next), and it steps
-  // away while another modal (the Course Journey drawer, a dialog) is open.
-  const journeyProposal = useJourneyProposal();
-  const inPlayer = pathname.startsWith("/course/");
-  const otherModal = useOtherModalOpen(journeyProposal, windowId);
-  const hideForModal = journeyProposal && otherModal && !open;
-  // Left, except on a phone. The footer lifts the launcher only where the two would meet.
-  const [wideEnough, setWideEnough] = React.useState(false);
-  const [xlEnough, setXlEnough] = React.useState(false);
-  React.useEffect(() => {
-    const q = window.matchMedia("(min-width: 1025px)");
-    const xl = window.matchMedia("(min-width: 1280px)");
-    const sync = () => {
-      setWideEnough(q.matches);
-      setXlEnough(xl.matches);
-    };
-    sync();
-    q.addEventListener("change", sync);
-    xl.addEventListener("change", sync);
-    return () => {
-      q.removeEventListener("change", sync);
-      xl.removeEventListener("change", sync);
-    };
-  }, []);
-  // The panel layout (Harbor, Fluent) has the pill from desktop up; the tabs bar from 1280.
-  const panelSkin = useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent");
-  // On a platform page from desktop up the assistant is in the top bar (its search pill), so
-  // the launcher steps away and the window opens on the right, under the bar's Assistant button.
-  // Since 26 Oct 2026 every skin's platform bar has the search + Assistant pill (Nelson): on the
-  // platform pages from desktop up the floating launcher steps away; it stays in the player, and
-  // below desktop (the compact bar has no pill; the phone keeps it beside the tab bar).
-  const harborBar =
-    pathname.startsWith("/platform") && !isPhone && (panelSkin ? wideEnough : xlEnough);
-  // In the player the launcher always takes the content card's corner (bottom right, above Previous
-  // / Next), as the Course Journey proposal did: in the sidebar's corner it covered the collapsed
-  // rail's last rows (Nelson, 26 Oct 2026).
-  const side = isPhone || inPlayer || harborBar ? "right" : "left";
-  const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
-  // In the bar, the window hangs under the bar's Assistant button, as the DreamHost panel's.
-  const barAnchor = useBarAnchor(harborBar && open);
-  inBar.current = harborBar;
-  const sheet = open && isPhone;
-  // The window stays on screen while it leaves: it shrinks back into the launcher (short3),
-  // or the sheet slides down (short4). Pressing the launcher again mid-exit reopens it at once.
+  // Since 26 Oct 2026 (Nelson) the assistant has no floating launcher: it opens from the search +
+  // Assistant pill of the top bars (platform pages and the player) or from their search button
+  // where the pill does not fit. The window hangs under that button (any `[data-assistant-anchor]`
+  // on screen); on a phone it is a full-screen sheet.
+  const anchor = useAnchor(open && !isPhone);
+  // The window stays on screen while it leaves: it shrinks (short3), or the sheet slides down
+  // (short4). Opening again mid-exit reopens it at once.
   const presence = useExitTransition(open, isPhone ? MOTION_MS.short4 : MOTION_MS.short3);
   // While it leaves, it shows what it showed: closing acknowledges "You're set.", which would
   // otherwise swap the view under the exit.
   const shownSteps = useFrozenWhileClosed(stepsView, open);
   const shownNext = useFrozenWhileClosed(next, open);
+  const top = anchor?.top ?? 80;
 
   return (
     <>
@@ -275,72 +225,49 @@ function Chat({ pathname }: { pathname: string }) {
           onClear={assistant.clear}
           onClose={close}
           modal={isPhone}
-          variant={harborBar ? "panel" : "default"}
+          variant="panel"
+          scope={inPlayer ? "course" : "platform"}
           className={
             isPhone
               ? "sk-animate-sheet fixed inset-0 z-[45]"
-              : harborBar && barAnchor
-                ? "sk-animate-pop fixed z-[45] w-[420px] max-w-[calc(100vw-48px)] origin-top"
-                : cn(
-                    "sk-animate-pop fixed z-[45] w-[380px] max-w-[calc(100vw-48px)]",
-                    // It grows out of the launcher, so it scales from the launcher's corner.
-                    side === "left" ? "origin-bottom-left" : "origin-bottom-right",
-                  )
+              : "sk-animate-pop fixed z-[45] w-[420px] max-w-[calc(100vw-48px)] origin-top"
           }
           style={
             isPhone
               ? undefined
-              : harborBar && barAnchor
-                ? {
-                    top: barAnchor.top,
-                    left: barAnchor.left,
-                    height: `min(640px, calc(100dvh - ${barAnchor.top + 24}px))`,
-                  }
-                : {
-                    [side]: edge,
-                    bottom: bottom + SIZE + GAP,
-                    height: `min(600px, calc(100dvh - ${bottom + SIZE + GAP + 24}px))`,
-                  }
+              : {
+                  top,
+                  ...(anchor ? { left: anchor.left } : { right: 24 }),
+                  height: `min(640px, calc(100dvh - ${top + 24}px))`,
+                }
           }
         />
       ) : null}
-      {/* Always mounted. On a phone it sits under the sheet (one layer down) while the sheet is on
-          screen, so it is covered as the sheet rises and uncovered as it slides away, never
-          removed and put back in one frame; while the sheet is open it is inert and hidden. */}
-      <AssistantLauncher
-        ref={launcherRef}
-        open={open}
-        onToggle={() => (open ? close() : openByLearner())}
-        controls={windowId}
-        badge={firstSteps.left}
-        covered={sheet || hideForModal || harborBar}
-        className={cn(
-          "fixed",
-          isPhone && presence.mounted ? "z-[44]" : "z-[45]",
-          (hideForModal || harborBar) && "pointer-events-none opacity-0",
-        )}
-        style={{ [side]: edge, bottom }}
-      />
     </>
   );
 }
 
+/** The assistant's opener on screen: the pill's Assistant button or a bar's search button. */
+function visibleAnchor(): HTMLElement | null {
+  const all = document.querySelectorAll<HTMLElement>("[data-assistant-anchor]");
+  for (const el of all) if (el.getBoundingClientRect().height > 0) return el;
+  return null;
+}
+
 /**
- * Where the panel-layout window hangs: 12 under the top bar's Assistant button, its right edge on
- * the button's (kept 24 inside the window). Read when the window opens and on resize.
+ * Where the window hangs: 12 under the opener, its right edge on the opener's (kept 24 inside the
+ * window). Read when the window opens and on resize; on a first visit the bar may not have painted
+ * yet, so it tries again for a few seconds.
  */
-function useBarAnchor(enabled: boolean): { top: number; left: number } | null {
+function useAnchor(enabled: boolean): { top: number; left: number } | null {
   const [anchor, setAnchor] = React.useState<{ top: number; left: number } | null>(null);
   React.useEffect(() => {
     if (!enabled) return;
     let tries = 0;
     let retry = 0;
     const place = () => {
-      const button = document.querySelector<HTMLElement>(
-        'form[role="search"] button[type="button"]',
-      );
-      // On a first visit the window can open before the bar has painted: try again shortly.
-      if (!button || button.getBoundingClientRect().height === 0) {
+      const button = visibleAnchor();
+      if (!button) {
         if (tries++ < 20) retry = window.setTimeout(place, 150);
         return;
       }
@@ -359,93 +286,4 @@ function useBarAnchor(enabled: boolean): { top: number; left: number } | null {
     };
   }, [enabled]);
   return anchor;
-}
-
-/**
- * Whether a modal dialog other than the assistant's own window is open (Course Journey
- * proposal only: off, it never observes). Watches the page for `aria-modal="true"`.
- */
-function useOtherModalOpen(enabled: boolean, ownId: string): boolean {
-  const [openModal, setOpenModal] = React.useState(false);
-  React.useEffect(() => {
-    if (!enabled) return setOpenModal(false);
-    const check = () =>
-      setOpenModal(
-        [...document.querySelectorAll<HTMLElement>('[aria-modal="true"]')].some(
-          (el) => el.id !== ownId && !el.closest(`#${CSS.escape(ownId)}`),
-        ),
-      );
-    check();
-    const mo = new MutationObserver(check);
-    mo.observe(document.body, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ["aria-modal"],
-    });
-    return () => mo.disconnect();
-  }, [enabled, ownId]);
-  return openModal;
-}
-
-/**
- * How much of the viewport's bottom the player's topic footer covers under the launcher, so
- * the launcher sits above it and never over Previous or Next. 0 on a page with no footer nav, and 0
- * where the footer does not reach the launcher's column (on desktop the sidebar is there).
- * `reach` is how far from its edge the launcher extends. On a phone the launcher is on the right.
- * On a phone's platform page the launcher sits beside the floating tab bar instead, on the same
- * line, centred on it (Nelson, 23 Oct 2026): the value then lifts it from `edge` to that centre.
- */
-function useFooterHeight(
-  pathname: string,
-  side: "left" | "right",
-  reach: number,
-  edge: number,
-): number {
-  const [height, setHeight] = React.useState(0);
-  const inPlayer = pathname.startsWith("/course/");
-  const onPlatform = pathname.startsWith("/platform");
-  React.useEffect(() => {
-    // Only the player's footer nav and the platform's floating bar; the other pages pay nothing.
-    if (!inPlayer && !onPlatform) return setHeight(0);
-    const selector = inPlayer ? 'nav[aria-label="Topic navigation"]' : "nav[data-floating-nav]";
-    const measure = () => {
-      const footer = document.querySelector<HTMLElement>(selector);
-      if (!footer) return setHeight(0);
-      const { top, bottom, left, right } = footer.getBoundingClientRect();
-      if (onPlatform) {
-        // Beside the bar: the launcher's centre on the bar's centre. Read from its layout box, not
-        // its painted one, so the launcher stays put while the bar slides away on scroll.
-        const barTop = footer.offsetTop;
-        const barHeight = footer.offsetHeight;
-        return setHeight(
-          Math.max(
-            0,
-            Math.round(window.innerHeight - barTop - barHeight + (barHeight - SIZE) / 2 - edge),
-          ),
-        );
-      }
-      const meets = side === "left" ? left < reach : right > window.innerWidth - reach;
-      const visible = top < window.innerHeight && bottom > 0 && meets;
-      setHeight(visible ? Math.max(0, Math.round(window.innerHeight - top)) : 0);
-    };
-    measure();
-    // The footer moves without the DOM changing (the player settles its layout after the
-    // store hydrates), so DOM and size observers are not enough: a slow tick catches the rest.
-    const mutations = new MutationObserver(measure);
-    mutations.observe(document.body, { childList: true, subtree: true });
-    const sizes = new ResizeObserver(measure);
-    sizes.observe(document.body);
-    const tick = window.setInterval(measure, 500);
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, true);
-    return () => {
-      mutations.disconnect();
-      sizes.disconnect();
-      window.clearInterval(tick);
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure, true);
-    };
-  }, [pathname, inPlayer, onPlatform, side, reach, edge]);
-  return height;
 }

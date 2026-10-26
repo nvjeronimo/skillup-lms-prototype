@@ -3,6 +3,7 @@
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
+import type { SearchScope } from "@/components/platform/harbor/HarborSearch";
 import { courseProgressPct } from "@/lib/courses/outline";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { navigateWithTransition } from "@/lib/motion/pageTransition";
@@ -144,6 +145,22 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const discussionsPreview = useLmsStore((s) => s.discussionsPreview);
   // A catalogue course plays the sample content under its own slug and title.
   const activeCourse = playerCourse(courseSlug);
+  // The player's search + Assistant is about this course (Nelson, 26 Oct 2026): its topics.
+  const courseSearchScope = React.useMemo<SearchScope>(
+    () => ({
+      kind: "course",
+      title: activeCourse.title,
+      topics: activeCourse.modules.flatMap((m) =>
+        (m.topics ?? m.lessons?.flatMap((l) => l.topics) ?? []).map((t) => ({
+          id: t.id,
+          title: t.title,
+          meta: [m.implicit ? null : m.label, t.type].filter(Boolean).join(" · "),
+          href: `/course/${courseSlug}/topic/${t.id}`,
+        })),
+      ),
+    }),
+    [activeCourse, courseSlug],
+  );
   const openPanel = useLmsStore((s) => s.openPanel);
   const openOverlayPanel = useLmsStore((s) => s.openOverlayPanel);
   const closeOverlayPanel = useLmsStore((s) => s.closeOverlayPanel);
@@ -463,6 +480,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         }}
         menuExpanded={bp === "mobile" && mobileDrawerOpen}
         progressPct={courseProgressPct(activeCourse, completedTopics)}
+        searchScope={courseSearchScope}
         menuControls={COURSE_DRAWER_ID}
         menuLabel={journeyProposal ? "Course Journey" : undefined}
         onBookmark={() => openOverlayPanel("saved")}
@@ -515,11 +533,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           tabIndex={-1}
           className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page outline-none"
         >
-          {/* md:pb-20: the assistant launcher sits in this card's bottom-right corner, above Previous /
-              Next (26 Oct 2026); the room lets the last row (Mark as Complete) scroll clear of it. */}
           <div
             ref={bodyRef}
-            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto [overflow-anchor:none] md:pb-20"
+            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto [overflow-anchor:none]"
             onScroll={(e) => {
               const top = e.currentTarget.scrollTop;
               // Dock past 8 px, undock only back at the top (hysteresis).

@@ -4,6 +4,8 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
+import { AssistantChatFloating } from "@/components/assistant/AssistantChatFloating";
+import { useFloatingAssistant } from "@/lib/assistant/floating";
 import { PageTransitions } from "@/components/views/PageTransitions";
 import { SyntheticPersonasHost } from "@/components/molecules/SyntheticPersonas";
 import { LOAD_MODE_KEY } from "@/lib/arrival/loadMode";
@@ -53,6 +55,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const setSkin = useLmsStore((s) => s.setSkin);
   const setDeviceMode = useLmsStore((s) => s.setDeviceMode);
   const largeTargets = useLargeTargets();
+  const floatingAssistant = useFloatingAssistant();
   const router = useRouter();
 
   // The frame is chosen after mount (the server renders the page itself), and never inside the
@@ -251,7 +254,8 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     return (
       <>
         {children}
-        <AssistantChat />
+        {/* The floating launcher is kept as a reference behind ?assistant=floating (26 Oct 2026). */}
+        {floatingAssistant ? <AssistantChatFloating /> : <AssistantChat />}
         <PageTransitions />
         <SyntheticPersonasHost />
       </>
