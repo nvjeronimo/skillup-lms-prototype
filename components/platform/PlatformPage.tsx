@@ -127,9 +127,11 @@ export function PlatformPage({
       data-show-mock={showMock ? "" : undefined}
     >
       <PlatformTopbar current={current} />
-      <div className={cn(harbor && "lg:flex lg:items-stretch")}>
+      {/* Both wrappers grow, so <main> (flex-1) fills a short page and the footer sits at the bottom
+          of the screen on every device (Nelson, 26 Oct 2026); the panel layout puts the rail beside. */}
+      <div className={cn("flex flex-1 flex-col", harbor && "lg:flex-row lg:items-stretch")}>
       {harbor ? <HarborRail current={current} /> : null}
-      <div className={cn(harbor && "flex min-h-[calc(100dvh-72px)] min-w-0 flex-1 flex-col")}>
+      <div className="flex min-w-0 flex-1 flex-col">
       {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
       <main
         key={pathname}
