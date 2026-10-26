@@ -10,13 +10,14 @@ import type { DashboardResumeRow } from "@/lib/platform/dashboard-resume";
 import { cn } from "@/lib/utils";
 
 /**
- * Harbor's "Pick up where you left off" (Nelson, 25 Oct 2026, after the DreamHost panel's home):
+ * "Pick up where you left off" (Nelson, 25 Oct 2026, after the DreamHost panel's home; Harbor and
+ * Fluent first, every skin since 26 Oct 2026):
  * a list on the left (each course a white, hairlined card: its title and where it stopped) and
  * the chosen one large on the right, on a pale panel: the picture, the module, the next topic,
  * the progress and Resume. The list is a set of toggle buttons (aria-pressed) that drive the
  * panel, which is announced politely. Below desktop the list stacks above the panel.
  */
-export function HarborPickUp({ resume, titleId }: { resume: DashboardResumeRow[]; titleId: string }) {
+export function PickUp({ resume, titleId }: { resume: DashboardResumeRow[]; titleId: string }) {
   const [current, setCurrent] = React.useState(0);
   const course = resume[current] ?? resume[0];
   if (!course) return null;
