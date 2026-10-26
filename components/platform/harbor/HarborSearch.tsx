@@ -10,14 +10,16 @@ import {
   LayoutDashboard,
   LifeBuoy,
   MessagesSquare,
+  ListTree,
   Search,
-  Sparkles,
   UserRound,
   type LucideIcon,
 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { openAssistant } from "@/lib/assistant/bus";
 import { KNOWLEDGE } from "@/lib/assistant/knowledge";
+import { COURSE_ASSISTANT_TOPICS } from "@/lib/assistant/topics";
+import { AssistantGlyph } from "@/components/assistant/AssistantGlyph";
 import { myLearningCourses } from "@/lib/platform/my-learning";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition } from "@/lib/useExitTransition";
@@ -31,12 +33,23 @@ import { cn } from "@/lib/utils";
  * move through the options, Enter opens one (or searches My Learning when none is picked), Esc
  * closes. Open edX searches one course at a time, so "your courses" means their titles, as My
  * Learning's own search.
+ *
+ * Since 26 Oct 2026 (Nelson) it is the assistant's only way in, everywhere: every skin's platform
+ * bar, the player's bar with `scope` "course" (In this course: the topics whose title matches;
+ * Ask about this course: the course questions; Enter asks the assistant), and, where the pill does
+ * not fit, a full-screen sheet (`layout` "sheet", SearchAssistantButton) with the palette inline.
+ * The Assistant button carries `data-assistant-anchor`: the window hangs under it.
  */
+
+export type SearchScope =
+  | { kind: "platform" }
+  | { kind: "course"; title: string; topics: { id: string; title: string; meta: string; href: string }[] };
 
 type Option =
   | { kind: "page"; id: string; label: string; icon: LucideIcon; href: string }
   | { kind: "course"; id: string; label: string; meta: string; href: string }
   | { kind: "all"; id: string; label: string; href: string }
+  | { kind: "topic"; id: string; label: string; meta: string; href: string }
   | { kind: "help"; id: string; label: string };
 
 const PAGES: { label: string; icon: LucideIcon; href: string }[] = [
@@ -48,6 +61,31 @@ const PAGES: { label: string; icon: LucideIcon; href: string }[] = [
   { label: "Certificates", icon: Award, href: "/platform/certificates" },
   { label: "Profile", icon: UserRound, href: "/platform/profile" },
 ];
+
+/* In the player, before anything is typed: the course questions learners ask first. */
+const POPULAR_COURSE_HELP = ["Summarize this topic", "Where did I stop?", "What is due this week?"];
+const COURSE_HELP = Array.from(new Set(COURSE_ASSISTANT_TOPICS.flatMap((t) => t.questions)));
+
+function courseGroupsFor(
+  query: string,
+  scope: Extract<SearchScope, { kind: "course" }>,
+): { id: string; title: string; ai?: boolean; options: Option[] }[] {
+  const q = query.trim().toLowerCase();
+  const words = q.split(/\s+/).filter((w) => w.length > 2);
+  const topics: Option[] = q
+    ? scope.topics
+        .filter((t) => t.title.toLowerCase().includes(q))
+        .slice(0, 6)
+        .map((t) => ({ kind: "topic", id: `topic-${t.id}`, label: t.title, meta: t.meta, href: t.href }))
+    : [];
+  const help: Option[] = (q ? COURSE_HELP.filter((h) => words.some((w) => h.toLowerCase().includes(w))) : POPULAR_COURSE_HELP)
+    .slice(0, 4)
+    .map((h) => ({ kind: "help", id: `help-${h}`, label: h }));
+  return [
+    { id: "topics", title: "In this course", options: topics },
+    { id: "help", title: "Ask about this course", ai: true, options: help },
+  ].filter((g) => g.options.length);
+}
 
 /* Shown before anything is typed: the questions learners ask first. */
 const POPULAR_HELP = ["completion", "certificate", "saved"];
@@ -99,10 +137,24 @@ function groupsFor(
   ].filter((g) => g.options.length);
 }
 
-export function HarborSearch({ className }: { className?: string }) {
+export function HarborSearch({
+  className,
+  scope = { kind: "platform" },
+  layout = "bar",
+  onDone,
+}: {
+  className?: string;
+  scope?: SearchScope;
+  /** "sheet": inside SearchAssistantButton's full-screen sheet: palette inline and always open. */
+  layout?: "bar" | "sheet";
+  /** Called once an option is chosen or the assistant opens (the sheet closes itself). */
+  onDone?: () => void;
+}) {
+  const sheet = layout === "sheet";
   const router = useRouter();
   const [q, setQ] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const [openState, setOpen] = React.useState(false);
+  const open = sheet || openState;
   const [active, setActive] = React.useState(-1);
   const id = React.useId();
   const listId = `${id}-list`;
@@ -110,29 +162,44 @@ export function HarborSearch({ className }: { className?: string }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const presence = useExitTransition(open, MOTION_MS.short3);
-  const groups = React.useMemo(() => groupsFor(q), [q]);
+  const groups = React.useMemo(
+    () => (scope.kind === "course" ? courseGroupsFor(q, scope) : groupsFor(q)),
+    [q, scope],
+  );
   const options = groups.flatMap((g) => g.options);
   const optionId = (index: number) => `${id}-opt-${index}`;
 
   // A click outside closes the palette (the input's blur would close it before a click lands).
   React.useEffect(() => {
-    if (!open) return;
+    if (!open || sheet) return;
     const onDown = (event: PointerEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
     };
     document.addEventListener("pointerdown", onDown);
     return () => document.removeEventListener("pointerdown", onDown);
-  }, [open]);
+  }, [open, sheet]);
+  React.useEffect(() => {
+    if (sheet) inputRef.current?.focus();
+  }, [sheet]);
 
   const choose = (option: Option) => {
     setOpen(false);
     setActive(-1);
+    onDone?.();
     if (option.kind === "help") openAssistant(option.label);
     else router.push(option.href);
   };
+  const ask = () => {
+    setOpen(false);
+    onDone?.();
+    openAssistant(q);
+  };
+  // Enter with nothing picked: My Learning's search on the platform; in the player, the assistant.
   const searchCourses = () => {
     const text = q.trim();
+    if (scope.kind === "course") return ask();
     setOpen(false);
+    onDone?.();
     router.push(`/platform/my-learning?tab=courses${text ? `&q=${encodeURIComponent(text)}` : ""}`);
   };
 
@@ -156,10 +223,10 @@ export function HarborSearch({ className }: { className?: string }) {
 
   let index = -1;
   return (
-    <div ref={rootRef} className={cn("relative w-full max-w-[420px]", className)}>
+    <div ref={rootRef} className={cn("relative w-full", !sheet && "max-w-[420px]", className)}>
       <form
         role="search"
-        aria-label="Search your courses"
+        aria-label={scope.kind === "course" ? "Search this course" : "Search your courses"}
         onSubmit={(e) => {
           e.preventDefault();
           const picked = open && active >= 0 ? options[active] : undefined;
@@ -173,7 +240,7 @@ export function HarborSearch({ className }: { className?: string }) {
       >
         <Icon icon={Search} size={20} className="shrink-0 text-sko-icon-subtle" aria-hidden />
         <label htmlFor={id} className="sr-only">
-          Search pages, your courses and help
+          {scope.kind === "course" ? "Search this course or ask the assistant" : "Search pages, your courses and help"}
         </label>
         <input
           ref={inputRef}
@@ -193,44 +260,49 @@ export function HarborSearch({ className }: { className?: string }) {
           onFocus={() => setOpen(true)}
           onClick={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder="Search"
+          placeholder={scope.kind === "course" ? "Search this course" : "Search"}
           autoComplete="off"
           className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus-visible:!shadow-none focus-visible:!outline-none"
         />
         <button
           type="button"
-          onClick={() => {
-            setOpen(false);
-            openAssistant(q);
-          }}
+          data-assistant-anchor={sheet ? undefined : ""}
+          onClick={ask}
           aria-label={q.trim() ? `Ask the assistant: ${q.trim()}` : "Open the assistant"}
           className="sk-text-body-small-semibold inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill bg-sko-bg-page pl-4 pr-3 text-sko-text-default shadow-[var(--sk-shadow-harbor-pill)] transition-colors hover:bg-sko-bg-subtle [@container_(max-width:260px)]:pl-3"
         >
           {/* A narrow pill (the tabs bar at 1280) keeps the field: the word goes, the mark stays. */}
           <span className="[@container_(max-width:260px)]:sr-only">Assistant</span>
-          <Icon icon={Sparkles} size={16} className="text-sko-icon-primary" aria-hidden />
+          <AssistantGlyph size={16} className="text-sko-icon-primary" />
         </button>
       </form>
 
       {presence.mounted ? (
         // Centred under the pill without a transform (the menu motion owns the panel's transform).
-        <div className="absolute left-1/2 top-[calc(100%+8px)] z-50 flex w-0 justify-center">
+        // In the sheet the palette is the page under the field.
+        <div className={cn(sheet ? "mt-4" : "absolute left-1/2 top-[calc(100%+8px)] z-50 flex w-0 justify-center")}>
           <div
             data-search-palette=""
             data-state={presence.state}
             onAnimationEnd={presence.onAnimationEnd}
-            className="sk-animate-menu w-[min(560px,calc(100vw-32px))] shrink-0 origin-top overflow-hidden rounded-surface border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+            className={cn(
+              "overflow-hidden bg-sko-bg-page",
+              sheet
+                ? "w-full"
+                : "sk-animate-menu w-[min(560px,calc(100vw-32px))] shrink-0 origin-top rounded-surface border border-sko-border-subtle shadow-xl",
+            )}
           >
             <div
               id={listId}
               role="listbox"
               aria-label="Search results"
-              className="sk-scroll max-h-[min(560px,70dvh)] overflow-y-auto py-2"
+              className={cn("sk-scroll overflow-y-auto py-2", !sheet && "max-h-[min(560px,70dvh)]")}
             >
               {groups.length === 0 ? (
                 <p className="sk-text-body-medium-regular px-5 py-4 text-sko-text-muted">
-                  Nothing matches “{q.trim()}”. Press Enter to search your courses, or ask the
-                  assistant.
+                  {scope.kind === "course"
+                    ? `Nothing in this course matches “${q.trim()}”. Press Enter to ask the assistant.`
+                    : `Nothing matches “${q.trim()}”. Press Enter to search your courses, or ask the assistant.`}
                 </p>
               ) : (
                 groups.map((group, g) => (
@@ -250,7 +322,7 @@ export function HarborSearch({ className }: { className?: string }) {
                       </span>
                       {group.ai ? (
                         <span className="sk-text-body-small-semibold inline-flex items-center gap-1 text-sko-text-primary">
-                          <Icon icon={Sparkles} size={14} aria-hidden />
+                          <AssistantGlyph size={14} />
                           Powered by AI
                         </span>
                       ) : null}
@@ -266,7 +338,9 @@ export function HarborSearch({ className }: { className?: string }) {
                             ? FileText
                             : option.kind === "all"
                               ? Search
-                              : BookOpen;
+                              : option.kind === "topic"
+                                ? ListTree
+                                : BookOpen;
                       return (
                         <div
                           key={option.id}
@@ -296,7 +370,7 @@ export function HarborSearch({ className }: { className?: string }) {
                             <span className="sk-text-body-large-regular truncate text-sko-text-default">
                               {option.label}
                             </span>
-                            {option.kind === "course" ? (
+                            {option.kind === "course" || option.kind === "topic" ? (
                               <span className="sk-text-body-small-regular text-sko-text-subtle">
                                 {option.meta}
                               </span>

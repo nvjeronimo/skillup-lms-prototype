@@ -31,6 +31,7 @@ import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
 import { useLearner } from "@/lib/persona-gate";
 import { toggleHarborRail, useHarbor, useHarborRailExpanded } from "@/lib/platform/harbor";
 import { HarborSearch } from "./harbor/HarborSearch";
+import { SearchAssistantButton } from "./harbor/SearchAssistantButton";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 import { SidebarToggleGlyph } from "@/components/atoms/SidebarToggle";
 
@@ -291,6 +292,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           {harbor ? null : <HarborSearch className="hidden min-w-[176px] flex-[0_1_340px] xl:block" />}
           <div className={cn("flex items-center gap-3", harbor && "flex-1 basis-0 justify-end")}>
             <span className="flex items-center gap-3">
+              {/* Where the pill does not fit (the tabs bar below 1280): its button and sheet. */}
+              {harbor ? null : <SearchAssistantButton size="sm" className="xl:hidden" />}
               {bell}
               {themeSwitch("sm")}
             </span>
@@ -302,7 +305,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 className="flex items-center gap-2 rounded-control p-1 text-left transition-colors hover:bg-sko-bg-hover"
               >
                 <Initials />
-                <span className="flex flex-col whitespace-nowrap">
+                {/* The name and role give way to the search button below 1280 (Nelson, 26 Oct 2026). */}
+                <span className="hidden flex-col whitespace-nowrap xl:flex">
                   <span className="sk-text-body-small-semibold text-sko-text-default">
                     {platformUser.name}
                   </span>
@@ -361,6 +365,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           </div>
           <div className="flex items-center gap-1">
             <span className="flex items-center gap-1">
+              <SearchAssistantButton />
               {bell}
               {themeSwitch("md")}
             </span>

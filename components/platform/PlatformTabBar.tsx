@@ -76,7 +76,7 @@ function TabIcon({
 /**
  * The platform sections on a phone (Nelson, 22 Oct 2026: "a floating menu, as in an app"; 23 Oct:
  * his answers to the open question). A bar that floats 16 above the bottom edge (plus the safe
- * area), leaving the right corner to the assistant launcher, which sits beside it on the same line.
+ * area). The right corner held the assistant launcher until 26 Oct 2026 (now the bar search).
  * Dashboard, My Learning and Calendar are in the bar; More gathers the rest (Discussion, Services, and
  * any section added later) in a panel that opens above it. Before the compact pass each item was an icon over a short label
  * (body-small Medium; the full name, cut with an ellipsis when it does not fit, Nelson 23 Oct 2026), 56 tall; the current one sits on a bg/primary-soft fill with a heavier icon,
