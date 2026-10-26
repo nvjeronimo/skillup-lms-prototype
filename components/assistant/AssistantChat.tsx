@@ -138,6 +138,7 @@ function Chat({ pathname }: { pathname: string }) {
   const refocus = React.useRef(false);
   // Opened or closed by the learner: the window never opens by itself after that. (Not in
   // `set`: the sheet closing on navigation is not the learner's doing.)
+  const inBar = React.useRef(false);
   const close = () => {
     refocus.current = true;
     firstSteps.greeted();
@@ -167,7 +168,11 @@ function Chat({ pathname }: { pathname: string }) {
   React.useEffect(() => {
     if (open || !refocus.current) return;
     refocus.current = false;
-    launcherRef.current?.focus();
+    // In the bar the launcher is hidden: the focus goes back to the bar's Assistant button.
+    const barButton = inBar.current
+      ? document.querySelector<HTMLElement>('form[role="search"] button[type="button"]')
+      : null;
+    (barButton ?? launcherRef.current)?.focus();
   }, [open]);
 
   const isPhone = phone || previewPhone;
@@ -210,12 +215,19 @@ function Chat({ pathname }: { pathname: string }) {
   }, []);
   // Harbor on a platform page from desktop up: the assistant is in the top bar (its search pill), so
   // the launcher steps away and the window opens on the right, under the bar's Assistant button.
-  const harborBar = useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent") && pathname.startsWith("/platform") && !isPhone && wideEnough;
+  const harborBar =
+    useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent") &&
+    pathname.startsWith("/platform") &&
+    !isPhone &&
+    wideEnough;
   // In the player the launcher always takes the content card's corner (bottom right, above Previous
   // / Next), as the Course Journey proposal did: in the sidebar's corner it covered the collapsed
   // rail's last rows (Nelson, 26 Oct 2026).
   const side = isPhone || inPlayer || harborBar ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
+  // In the bar, the window hangs under the bar's Assistant button, as the DreamHost panel's.
+  const barAnchor = useBarAnchor(harborBar && open);
+  inBar.current = harborBar;
   const sheet = open && isPhone;
   // The window stays on screen while it leaves: it shrinks back into the launcher (short3),
   // or the sheet slides down (short4). Pressing the launcher again mid-exit reopens it at once.
@@ -252,23 +264,32 @@ function Chat({ pathname }: { pathname: string }) {
           onClear={assistant.clear}
           onClose={close}
           modal={isPhone}
+          variant={harborBar ? "panel" : "default"}
           className={
             isPhone
               ? "sk-animate-sheet fixed inset-0 z-[45]"
-              : cn(
-                  "sk-animate-pop fixed z-[45] w-[380px] max-w-[calc(100vw-48px)]",
-                  // It grows out of the launcher, so it scales from the launcher's corner.
-                  side === "left" ? "origin-bottom-left" : "origin-bottom-right",
-                )
+              : harborBar && barAnchor
+                ? "sk-animate-pop fixed z-[45] w-[420px] max-w-[calc(100vw-48px)] origin-top"
+                : cn(
+                    "sk-animate-pop fixed z-[45] w-[380px] max-w-[calc(100vw-48px)]",
+                    // It grows out of the launcher, so it scales from the launcher's corner.
+                    side === "left" ? "origin-bottom-left" : "origin-bottom-right",
+                  )
           }
           style={
             isPhone
               ? undefined
-              : {
-                  [side]: edge,
-                  bottom: bottom + SIZE + GAP,
-                  height: `min(600px, calc(100dvh - ${bottom + SIZE + GAP + 24}px))`,
-                }
+              : harborBar && barAnchor
+                ? {
+                    top: barAnchor.top,
+                    left: barAnchor.left,
+                    height: `min(640px, calc(100dvh - ${barAnchor.top + 24}px))`,
+                  }
+                : {
+                    [side]: edge,
+                    bottom: bottom + SIZE + GAP,
+                    height: `min(600px, calc(100dvh - ${bottom + SIZE + GAP + 24}px))`,
+                  }
           }
         />
       ) : null}
@@ -281,16 +302,52 @@ function Chat({ pathname }: { pathname: string }) {
         onToggle={() => (open ? close() : openByLearner())}
         controls={windowId}
         badge={firstSteps.left}
-        covered={sheet || hideForModal || (harborBar && !open)}
+        covered={sheet || hideForModal || harborBar}
         className={cn(
           "fixed",
           isPhone && presence.mounted ? "z-[44]" : "z-[45]",
-          (hideForModal || (harborBar && !open)) && "pointer-events-none opacity-0",
+          (hideForModal || harborBar) && "pointer-events-none opacity-0",
         )}
         style={{ [side]: edge, bottom }}
       />
     </>
   );
+}
+
+/**
+ * Where the panel-layout window hangs: 12 under the top bar's Assistant button, its right edge on
+ * the button's (kept 24 inside the window). Read when the window opens and on resize.
+ */
+function useBarAnchor(enabled: boolean): { top: number; left: number } | null {
+  const [anchor, setAnchor] = React.useState<{ top: number; left: number } | null>(null);
+  React.useEffect(() => {
+    if (!enabled) return;
+    let tries = 0;
+    let retry = 0;
+    const place = () => {
+      const button = document.querySelector<HTMLElement>(
+        'form[role="search"] button[type="button"]',
+      );
+      // On a first visit the window can open before the bar has painted: try again shortly.
+      if (!button || button.getBoundingClientRect().height === 0) {
+        if (tries++ < 20) retry = window.setTimeout(place, 150);
+        return;
+      }
+      const r = button.getBoundingClientRect();
+      const width = Math.min(420, window.innerWidth - 48);
+      setAnchor({
+        top: Math.round(r.bottom + 12),
+        left: Math.round(Math.max(24, Math.min(r.right - width, window.innerWidth - width - 24))),
+      });
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => {
+      window.clearTimeout(retry);
+      window.removeEventListener("resize", place);
+    };
+  }, [enabled]);
+  return anchor;
 }
 
 /**
@@ -309,7 +366,12 @@ function useOtherModalOpen(enabled: boolean, ownId: string): boolean {
       );
     check();
     const mo = new MutationObserver(check);
-    mo.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["aria-modal"] });
+    mo.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["aria-modal"],
+    });
     return () => mo.disconnect();
   }, [enabled, ownId]);
   return openModal;
