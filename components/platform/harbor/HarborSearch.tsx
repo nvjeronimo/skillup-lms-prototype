@@ -167,7 +167,7 @@ export function HarborSearch({ className }: { className?: string }) {
           else searchCourses();
         }}
         className={cn(
-          "flex h-12 w-full items-center gap-2 rounded-pill bg-sko-bg-track pl-4 pr-1.5",
+          "flex h-12 w-full items-center gap-2 rounded-pill bg-sko-bg-track pl-4 pr-1.5 [container-type:inline-size]",
           "focus-within:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]",
         )}
       >
@@ -204,9 +204,10 @@ export function HarborSearch({ className }: { className?: string }) {
             openAssistant(q);
           }}
           aria-label={q.trim() ? `Ask the assistant: ${q.trim()}` : "Open the assistant"}
-          className="sk-text-body-small-semibold inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill bg-sko-bg-page pl-4 pr-3 text-sko-text-default shadow-[var(--sk-shadow-harbor-pill)] transition-colors hover:bg-sko-bg-subtle"
+          className="sk-text-body-small-semibold inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill bg-sko-bg-page pl-4 pr-3 text-sko-text-default shadow-[var(--sk-shadow-harbor-pill)] transition-colors hover:bg-sko-bg-subtle [@container_(max-width:260px)]:pl-3"
         >
-          Assistant
+          {/* A narrow pill (the tabs bar at 1280) keeps the field: the word goes, the mark stays. */}
+          <span className="[@container_(max-width:260px)]:sr-only">Assistant</span>
           <Icon icon={Sparkles} size={16} className="text-sko-icon-primary" aria-hidden />
         </button>
       </form>

@@ -1,0 +1,60 @@
+"use client";
+
+import * as React from "react";
+import { Moon, Sun } from "lucide-react";
+import { Icon } from "@/lib/icons";
+import { cn } from "@/lib/utils";
+
+/**
+ * The light / dark switch of the top bars (Nelson, 26 Oct 2026: "um mini switcher, só com os
+ * icons"): a DS Button group with two icon segments, Sun and Moon, the current theme pressed. It
+ * replaces the single Utility Button that showed the theme to switch to, so the state is always
+ * visible. Decision 028's Button group: segments 6 inside a 10 track with 4 of padding. `sm` is the
+ * desktop bars' (28 segments); `md` keeps the compact bars' 44px targets.
+ */
+export function ThemeSwitch({
+  value,
+  onChange,
+  size = "sm",
+  className,
+}: {
+  value: "light" | "dark";
+  onChange: (theme: "light" | "dark") => void;
+  size?: "sm" | "md";
+  className?: string;
+}) {
+  const options = [
+    { theme: "light" as const, label: "Light theme", icon: Sun },
+    { theme: "dark" as const, label: "Dark theme", icon: Moon },
+  ];
+  return (
+    <div
+      role="group"
+      aria-label="Theme"
+      className={cn("inline-flex shrink-0 gap-0.5 rounded-track bg-sko-bg-track p-1", className)}
+    >
+      {options.map((o) => {
+        const on = value === o.theme;
+        return (
+          <button
+            key={o.theme}
+            type="button"
+            aria-pressed={on}
+            aria-label={o.label}
+            title={o.label}
+            onClick={() => onChange(o.theme)}
+            className={cn(
+              "inline-flex items-center justify-center rounded-control border transition-colors",
+              size === "md" ? "size-11" : "size-7",
+              on
+                ? "border-sko-border-subtle bg-sko-bg-page text-sko-icon-default"
+                : "border-transparent text-sko-icon-subtle hover:text-sko-icon-default",
+            )}
+          >
+            <Icon icon={o.icon} size={16} />
+          </button>
+        );
+      })}
+    </div>
+  );
+}

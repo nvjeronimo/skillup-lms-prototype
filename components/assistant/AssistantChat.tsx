@@ -206,20 +206,31 @@ function Chat({ pathname }: { pathname: string }) {
   const hideForModal = journeyProposal && otherModal && !open;
   // Left, except on a phone. The footer lifts the launcher only where the two would meet.
   const [wideEnough, setWideEnough] = React.useState(false);
+  const [xlEnough, setXlEnough] = React.useState(false);
   React.useEffect(() => {
     const q = window.matchMedia("(min-width: 1025px)");
-    const sync = () => setWideEnough(q.matches);
+    const xl = window.matchMedia("(min-width: 1280px)");
+    const sync = () => {
+      setWideEnough(q.matches);
+      setXlEnough(xl.matches);
+    };
     sync();
     q.addEventListener("change", sync);
-    return () => q.removeEventListener("change", sync);
+    xl.addEventListener("change", sync);
+    return () => {
+      q.removeEventListener("change", sync);
+      xl.removeEventListener("change", sync);
+    };
   }, []);
-  // Harbor on a platform page from desktop up: the assistant is in the top bar (its search pill), so
+  // The panel layout (Harbor, Fluent) has the pill from desktop up; the tabs bar from 1280.
+  const panelSkin = useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent");
+  // On a platform page from desktop up the assistant is in the top bar (its search pill), so
   // the launcher steps away and the window opens on the right, under the bar's Assistant button.
+  // Since 26 Oct 2026 every skin's platform bar has the search + Assistant pill (Nelson): on the
+  // platform pages from desktop up the floating launcher steps away; it stays in the player, and
+  // below desktop (the compact bar has no pill; the phone keeps it beside the tab bar).
   const harborBar =
-    useLmsStore((s) => s.skin === "harbor" || s.skin === "fluent") &&
-    pathname.startsWith("/platform") &&
-    !isPhone &&
-    wideEnough;
+    pathname.startsWith("/platform") && !isPhone && (panelSkin ? wideEnough : xlEnough);
   // In the player the launcher always takes the content card's corner (bottom right, above Previous
   // / Next), as the Course Journey proposal did: in the sidebar's corner it covered the collapsed
   // rail's last rows (Nelson, 26 Oct 2026).
