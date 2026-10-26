@@ -14,7 +14,8 @@
    MODES (tokens/generated/colors.css)
      :root, [data-theme="light"]              SKO Light (default; light island in a dark page)
      [data-theme="dark"]                      SKO Dark
-     [data-skin="gold"|"red"|"teal"]          Gold / Red / explicit SKO, light and dark
+     [data-skin="gold"|"teal"]                Gold / explicit SKO, light and dark (Red went 26 Oct 2026;
+                                              its generated block leaves with the next token sync)
      [data-direction="studio"]                Studio, light and dark
    This file adds, after them: the [data-vision="cvd"] axis, the legacy --sk-* aliases and the
    system preferences.

@@ -22,8 +22,9 @@ export type Theme = "light" | "dark";
 /** "harbor" (25 Oct 2026, Nelson): a hosting-panel look (tokens/skin-harbor.css): black buttons,
  *  blue links, zinc greys, Plus Jakarta Sans + Figtree. */
 /** "fluent" (25 Oct 2026, Nelson): Fluent 2 web (tokens/skin-fluent.css): brand #0F6CBD, 4/8/12
- *  radii, TabList filters, Open Sans for Segoe UI. */
-export type Skin = "teal" | "gold" | "red" | "studio" | "harbor" | "fluent";
+ *  radii, TabList filters, Open Sans for Segoe UI. The Red skin went on 26 Oct 2026 (Nelson
+ *  removed it from the DS). */
+export type Skin = "teal" | "gold" | "studio" | "harbor" | "fluent";
 
 /** Vision mode — "cvd" = red-green colourblind-safe state colours (deuter + protan). */
 export type Vision = "default" | "cvd";
@@ -663,7 +664,7 @@ export const useLmsStore = create<LmsState>()(
     }),
     {
       name: "sk-lms-demo",
-      version: 7,
+      version: 8,
       storage: skStorage,
       // v2 dropped the third "Default" quiz mode. Anyone carrying the stored
       // `null` from v1 lands on A, which is what Default resolved to anyway.
@@ -694,6 +695,8 @@ export const useLmsStore = create<LmsState>()(
           s = rest;
           if (studio || (s.skin as string) === "sea") s = { ...s, skin: "studio" };
         }
+        // v8: the Red skin went (Nelson, 26 Oct 2026): a stored Red lands on SKO.
+        if (from < 8 && (s.skin as string) === "red") s = { ...s, skin: "teal" };
         return s;
       },
       // Runs on every read of the stored state, after `migrate`: the default shallow merge,
