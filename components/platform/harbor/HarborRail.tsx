@@ -38,7 +38,9 @@ export function HarborRail({ current }: { current: PlatformSection | null }) {
   return (
     <aside
       className={cn(
-        "sk-no-print hidden shrink-0 self-stretch border-r border-sko-border-subtle bg-sko-bg-page lg:block",
+        // Opening and closing ease the width (medium2) instead of jumping; the names fade in as it
+        // opens. A page transition leaves it still (sk-vt-platform-rail, globals.css).
+        "sk-no-print sk-vt-platform-rail hidden shrink-0 self-stretch border-r border-sko-border-subtle bg-sko-bg-page transition-[width] duration-medium2 ease-standard-decelerate lg:block",
         expanded ? "w-60" : "w-[72px]",
       )}
     >
@@ -54,7 +56,7 @@ export function HarborRail({ current }: { current: PlatformSection | null }) {
           const content = (
             <>
               <Icon icon={ICONS[s.id]} size={20} strokeWidth={on ? 2.25 : 1.75} aria-hidden />
-              <span className={cn(expanded ? "min-w-0 flex-1 truncate" : "sr-only")}>{s.label}</span>
+              <span key={String(expanded)} className={cn(expanded ? "sk-animate-fade min-w-0 flex-1 truncate" : "sr-only")}>{s.label}</span>
               {typeof s.count === "number" ? (
                 expanded ? (
                   <span className="sk-text-body-small-semibold rounded-pill bg-sko-bg-muted px-2 py-0.5 text-sko-text-muted">

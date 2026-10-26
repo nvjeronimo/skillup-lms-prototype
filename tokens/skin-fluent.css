@@ -275,7 +275,7 @@ html[data-skin="fluent"] [data-theme="dark"] {
   background-color: var(--color-bg-muted);
   color: var(--color-text-default);
 }
-[data-skin="fluent"] aside > nav[aria-label="Platform"] a[aria-current="page"]::before {
+[data-skin="fluent"] aside > nav[aria-label="Platform"] :is(a, button)::before {
   content: "";
   position: absolute;
   left: 0;
@@ -284,6 +284,10 @@ html[data-skin="fluent"] [data-theme="dark"] {
   height: 20px;
   border-radius: 9999px;
   background-color: var(--color-border-primary);
+  transform: translateY(-50%) scaleY(0);
+  transition: transform var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+[data-skin="fluent"] aside > nav[aria-label="Platform"] a[aria-current="page"]::before {
   transform: translateY(-50%);
 }
 
@@ -296,7 +300,7 @@ html[data-skin="fluent"] [data-theme="dark"] {
   background-color: var(--color-bg-muted);
   color: var(--color-text-default);
 }
-[data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed="true"]::before {
+[data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed]::before {
   content: "";
   position: absolute;
   left: 0;
@@ -305,6 +309,10 @@ html[data-skin="fluent"] [data-theme="dark"] {
   height: 20px;
   border-radius: 9999px;
   background-color: var(--color-border-primary);
+  transform: translateY(-50%) scaleY(0);
+  transition: transform var(--motion-duration-short4) var(--motion-easing-standard-decelerate);
+}
+[data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed="true"]::before {
   transform: translateY(-50%);
 }
 
@@ -367,4 +375,12 @@ html[data-skin="fluent"] [data-glance-title] {
 }
 [data-skin="fluent"] [data-module-box] > h3 > button {
   background-color: var(--color-bg-page);
+}
+
+/* Reduced motion: the indicators appear in place, nothing grows (both paths, as everywhere). */
+@media (prefers-reduced-motion: reduce) {
+  [data-skin="fluent"] aside > nav[aria-label="Platform"] :is(a, button)::before,
+  [data-skin="fluent"] ul[aria-labelledby] > li > button[aria-pressed]::before {
+    transition-property: background-color;
+  }
 }
