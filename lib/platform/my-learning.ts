@@ -111,7 +111,7 @@ const startLabel = (iso: string) => (iso > SAMPLE_TODAY ? `Starts ${formatDay(is
 /** The first deadline still to come in a course (its Dates tab), as "Due Mon 26 Oct". */
 function nextDueOf(slug: string): string | undefined {
   const row = ownPage(slug)?.datesTab.upcoming.find(
-    (r) => r.badges[0]?.label === "DUE DATE" && r.state !== "complete" && r.iso.slice(0, 10) >= SAMPLE_TODAY,
+    (r) => r.badges[0]?.label === "Due date" && r.state !== "complete" && r.iso.slice(0, 10) >= SAMPLE_TODAY,
   );
   return row ? `Due ${formatDay(row.iso.slice(0, 10))}` : undefined;
 }

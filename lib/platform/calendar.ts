@@ -47,7 +47,7 @@ const LRT = "leadership-in-remote-teams";
 const PMA = "project-management-with-ai-tools";
 const SEO = "seo-geo-and-organic-growth-with-ai";
 
-/** "GRADED QUIZ" → "Graded quiz". */
+/** "Graded quiz" stays "Graded quiz"; older all-caps labels ("GRADED QUIZ") are lowered too. */
 const sentence = (label: string) => label.charAt(0) + label.slice(1).toLowerCase();
 
 /** One row of a course's Dates tab (`course_date_blocks[]`). */
@@ -66,7 +66,7 @@ function deadline(slug: string, dateId: string, topicId: string, id: string): Ca
     date: row.iso.slice(0, 10),
     time: row.iso.slice(11, 16),
     kind: "deadline",
-    label: sentence(row.badges[1]?.label ?? "DUE DATE"),
+    label: sentence(row.badges[1]?.label ?? "Due date"),
     // "Module 1 · Graded Quiz: Research foundations" → the unit's own title, as the outline has it.
     title: row.title.replace(/^Module \d+ · /, ""),
     course: page.title,
