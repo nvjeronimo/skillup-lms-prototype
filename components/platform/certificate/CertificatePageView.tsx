@@ -15,7 +15,7 @@ import type { ProgramCertificate } from "@/lib/platform/program";
 import { MY_LEARNING_HREF, MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 import { useLmsStore } from "@/lib/store";
 
-const CRUMB = "sk-text-body-medium-semibold inline-flex min-h-11 items-center lg:min-h-6";
+const CRUMB = "sk-text-body-medium-semibold relative inline-flex items-center after:absolute after:inset-x-0 after:-inset-y-3 after:content-['']";
 
 
 /** The state of one course on the program certificate page, in the words of the course cards. */
@@ -70,7 +70,7 @@ export function CertificatePageView({
   return (
     <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-layout-band-x pb-8 pt-6 md:pb-12 lg:pb-20 lg:pt-6">
       <nav data-arrive={0} aria-label="Breadcrumb">
-        <ol className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
+        <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 md:gap-x-2">
           <li className="flex items-center gap-1.5 md:gap-2">
             <Link href={MY_LEARNING_HREF} className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
               My Learning
