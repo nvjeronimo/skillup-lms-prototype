@@ -8,6 +8,7 @@ import {
   dashboardJump,
 } from "@/lib/platform/dashboard";
 import type { DashboardResumeRow } from "@/lib/platform/dashboard-resume";
+import { AssistantGlyph } from "@/components/assistant/AssistantGlyph";
 import { useSalutation } from "@/lib/platform/greeting";
 import { platformUser } from "@/lib/platform/user";
 import { useLmsStore } from "@/lib/store";
@@ -17,8 +18,6 @@ import { GlanceCard } from "./GlanceCard";
 import { JumpTile } from "./JumpTile";
 import { PickUp } from "./PickUp";
 import { StayInformed } from "./StayInformed";
-import { Sparkles } from "lucide-react";
-import { Icon } from "@/lib/icons";
 import { openAssistant } from "@/lib/assistant/bus";
 import { deadlinesThisWeek } from "@/lib/platform/calendar";
 
@@ -60,8 +59,8 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
         {/* Always one line (Nelson, 23 Oct 2026): a very long name is cut with an ellipsis. */}
         <div data-arrive={0} className="flex flex-col gap-2">
-          <h1 className="sk-text-headline-large-bold flex items-center gap-3 truncate whitespace-nowrap text-sko-text-default">
-            <Icon icon={Sparkles} size={28} className="shrink-0 text-sko-icon-primary" aria-hidden />
+          {/* No icon before the greeting (Nelson, 27 Oct 2026). */}
+          <h1 className="sk-text-headline-large-bold flex items-center truncate whitespace-nowrap text-sko-text-default">
             <span className="truncate">
               {/* Good morning / afternoon / evening, by the learner's local time (26 Oct 2026). */}
               {salutation}{" "}
@@ -80,9 +79,11 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             <button
               type="button"
               onClick={() => openAssistant("Help me plan my deadlines this week")}
-              className="sk-text-body-large-semibold text-sko-text-primary underline underline-offset-2"
+              className="sk-text-body-large-semibold inline-flex items-center gap-1 align-bottom text-sko-text-primary"
             >
-              Plan my week
+              {/* The assistant's mark after the words (Nelson, 27 Oct 2026): this link opens the assistant. */}
+              <span className="underline underline-offset-2">Plan my week</span>
+              <AssistantGlyph size={20} />
             </button>
           </p>
         </div>
