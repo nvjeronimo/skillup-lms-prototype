@@ -18,8 +18,9 @@ export interface PlatformProgressBarProps {
   /** Bar height in px. */
   height?: 4 | 8;
   /**
-   * `complete` paints the fill in bg/success: only for a finished course or program, and
-   * always beside a check icon and the word (colour is never the only sign).
+   * `complete` paints the fill in bg/success. Left out, the bar turns green by itself at 100%:
+   * any progress at 100% is complete (Nelson, 27 Oct 2026). The value or a word beside it says
+   * so too (colour is never the only sign).
    */
   tone?: "progress" | "complete";
   /** The DS Progress bar has steps of 10: the fill goes to the nearest one. */
@@ -31,8 +32,9 @@ export interface PlatformProgressBarProps {
 
 /**
  * DS `Progress bar` (6204:128904): an 8px track with the fill on bg/info — never bg/primary,
- * the product rule for every progress fill while it runs; green (bg/success) only once the
- * course or program is complete (`tone`, 13 Oct 2026). A progress bar ends straight, track and fill
+ * the product rule for every progress fill while it runs; green (bg/success) once it reaches 100%
+ * (Nelson, 27 Oct 2026; before, only for a finished course or program via `tone`, 13 Oct 2026).
+ * A progress bar ends straight, track and fill
  * (Nelson, 13 Oct 2026; the Course Card bar was rounded until then). One bar for the
  * platform pages, on a bg/track track (alias of bg/muted; 20 Oct 2026, contrast). With `stepped` the fill is rounded to the nearest 10 as in
  * the DS component; assistive tech always gets the real value.
@@ -46,11 +48,12 @@ export function PlatformProgressBar({
   label,
   height = 8,
   stepped = false,
-  tone = "progress",
+  tone,
   showValue = false,
   className,
 }: PlatformProgressBarProps) {
   const pct = Math.max(0, Math.min(100, value));
+  const done = (tone ?? (pct >= 100 ? "complete" : "progress")) === "complete";
   const fill = stepped ? Math.round(pct / 10) * 10 : pct;
   const arrival = useArrivalValue<HTMLDivElement>(fill);
 
@@ -71,7 +74,7 @@ export function PlatformProgressBar({
       <div
         className={cn(
           "h-full origin-left transition-transform duration-long2 ease-standard-decelerate",
-          tone === "complete" ? "bg-sko-bg-success" : "bg-sko-bg-info",
+          done ? "bg-sko-bg-success" : "bg-sko-bg-info",
         )}
         style={{ width: `${fill}%`, transform: arrival.armed ? "scaleX(0)" : undefined }}
       />

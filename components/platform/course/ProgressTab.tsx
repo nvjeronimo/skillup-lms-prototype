@@ -15,7 +15,7 @@ import { WeeklyGoalCard } from "./WeeklyGoalCard";
 
 /**
  * DS `LMS / Overall Progress` ring as the Completion card uses it: 92px, a 9.2px band
- * (innerRadius 0.8) on bg/muted with the arc on bg/info, square ends. The percentage has no
+ * (innerRadius 0.8) on bg/muted with the arc on bg/info (icon/success-strong at 100%), square ends. The percentage has no
  * DS text style (36px line): headline-small/Semibold is the nearest class.
  */
 function CompletionRing({ percent, label }: { percent: number; label: string }) {
@@ -32,7 +32,8 @@ function CompletionRing({ percent, label }: { percent: number; label: string }) 
           cy="46"
           r={radius}
           fill="none"
-          stroke="var(--color-bg-info)"
+          // Green at 100%, as every completed progress (Nelson, 27 Oct 2026; OverallProgress's colour).
+          stroke={percent >= 100 ? "var(--color-icon-success-strong)" : "var(--color-bg-info)"}
           strokeWidth="9.2"
           strokeLinecap="butt"
           className={ring.transition}

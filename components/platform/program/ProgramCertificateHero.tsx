@@ -171,7 +171,8 @@ export function ProgramCertificateHero({
                       key={c.slug}
                       className={cn(
                         "h-2 min-w-0 flex-1",
-                        done ? "bg-sko-bg-info" : now ? "bg-sko-bg-info-soft" : "bg-sko-bg-track",
+                        // A finished course is a progress at 100%: green (Nelson, 27 Oct 2026).
+                        done ? "bg-sko-bg-success" : now ? "bg-sko-bg-info-soft" : "bg-sko-bg-track",
                       )}
                     >
                       <span className="sr-only">

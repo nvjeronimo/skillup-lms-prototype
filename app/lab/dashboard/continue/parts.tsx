@@ -51,7 +51,7 @@ export function TopicProgress({
         className={cn("overflow-hidden rounded-pill bg-sko-bg-track", size === "md" ? "h-2.5" : "h-1.5")}
       >
         {/* DS rule: progress bars fill with bg/info. */}
-        <div className="h-full rounded-pill bg-sko-bg-info" style={{ width: `${pct}%` }} />
+        <div className={cn("h-full rounded-pill", pct >= 100 ? "bg-sko-bg-success" : "bg-sko-bg-info")} style={{ width: `${pct}%` }} />
       </div>
       <p className={cn(size === "md" ? "sk-text-body-medium-medium" : "sk-text-body-small-medium", "text-sko-text-muted")}>{label}</p>
     </div>
