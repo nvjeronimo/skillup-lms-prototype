@@ -21,7 +21,8 @@ export interface PlatformTabsProps<T extends string> {
    * `md`: DS Size=md on every breakpoint (headline-small/Semibold 24, badge md); from desktop (lg)
    *   the label is one step down, title-large/Semibold (Nelson, 26 Oct 2026).
    * `responsive`: Size=sm on mobile (title-large/Semibold 18, badge sm, the target grown to 44
-   * upwards), Size=md on tablet and title-large/Semibold labels again from desktop (lg).
+   * upwards), Size=md on tablet and desktop, the label title-large/Semibold on every breakpoint
+   * (Nelson, 27 Oct 2026: 20/30 on tablet and desktop, it was headline-small 24 on tablet).
    * Platform-page tabs went up three steps of the type ramp (Nelson, 25 Oct 2026): md was
    * body-large 16, the mobile size body-medium 14.
    * `sm`: Size=sm on every breakpoint, for a tab row inside a panel.
@@ -136,12 +137,10 @@ export function PlatformTabs<T extends string>({
           >
             {/* The DS text styles are not responsive, so `responsive` renders a label and a badge per size. */}
             {/* Desktop is one step down the ramp (Nelson, 26 Oct 2026): title-large from lg, headline-small
-                on tablet (and on mobile for `md`), title-large on mobile for `responsive`. */}
+                on tablet (and on mobile for `md`). `responsive` (the platform-page tabs) is title-large on
+                every breakpoint since 27 Oct 2026 (Nelson): 20/30 on desktop and tablet, 18/28 on a phone. */}
             {responsive ? (
-              <>
-                <span className="sk-text-title-large-semibold md:hidden lg:inline">{tab.label}</span>
-                <span className="sk-text-headline-small-semibold hidden md:inline lg:hidden">{tab.label}</span>
-              </>
+              <span className="sk-text-title-large-semibold">{tab.label}</span>
             ) : small ? (
               tab.label
             ) : (
