@@ -16,7 +16,6 @@ import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition
 import { cn } from "@/lib/utils";
 import { AssistantLauncher } from "./AssistantLauncher";
 import { ASSISTANT_OPEN_EVENT } from "@/lib/assistant/bus";
-import { useJourneyProposal } from "@/lib/journeyProposal";
 import { AssistantWindow } from "./AssistantWindow";
 
 const OPEN_KEY = "sk-assistant-open";
@@ -202,13 +201,11 @@ function Chat({ pathname }: { pathname: string }) {
     return () => window.clearTimeout(timer);
   }, [greet, greetedFn]);
   const edge = isPhone ? EDGE_PHONE : EDGE;
-  // Course Journey proposal (critique P1, 24 Oct 2026): in the player the launcher leaves the
-  // sidebar's corner for the content card's (bottom right, above Previous / Next), and it steps
-  // away while another modal (the Course Journey drawer, a dialog) is open.
-  const journeyProposal = useJourneyProposal();
+  // The launcher steps away while another modal (the Course Journey drawer, a dialog) is open
+  // (Course Journey critique P1, 24 Oct 2026; promoted by Nelson, 27 Oct 2026).
   const inPlayer = pathname.startsWith("/course/");
-  const otherModal = useOtherModalOpen(journeyProposal, windowId);
-  const hideForModal = journeyProposal && otherModal && !open;
+  const otherModal = useOtherModalOpen(windowId);
+  const hideForModal = otherModal && !open;
   // Left, except on a phone. The footer lifts the launcher only where the two would meet.
   const [wideEnough, setWideEnough] = React.useState(false);
   const [xlEnough, setXlEnough] = React.useState(false);
@@ -237,8 +234,7 @@ function Chat({ pathname }: { pathname: string }) {
   const harborBar =
     pathname.startsWith("/platform") && !isPhone && (panelSkin ? wideEnough : xlEnough);
   // In the player the launcher always takes the content card's corner (bottom right, above Previous
-  // / Next), as the Course Journey proposal did: in the sidebar's corner it covered the collapsed
-  // rail's last rows (Nelson, 26 Oct 2026).
+  // / Next): in the sidebar's corner it covered the collapsed rail's last rows (Nelson, 26 Oct 2026).
   const side = isPhone || inPlayer || harborBar ? "right" : "left";
   const bottom = edge + useFooterHeight(pathname, side, edge + SIZE, edge);
   // In the bar, the window hangs under the bar's Assistant button, as the DreamHost panel's.
@@ -367,13 +363,12 @@ function useBarAnchor(enabled: boolean): { top: number; left: number } | null {
 }
 
 /**
- * Whether a modal dialog other than the assistant's own window is open (Course Journey
- * proposal only: off, it never observes). Watches the page for `aria-modal="true"`.
+ * Whether a modal dialog other than the assistant's own window is open. Watches the page for
+ * `aria-modal="true"`.
  */
-function useOtherModalOpen(enabled: boolean, ownId: string): boolean {
+function useOtherModalOpen(ownId: string): boolean {
   const [openModal, setOpenModal] = React.useState(false);
   React.useEffect(() => {
-    if (!enabled) return setOpenModal(false);
     const check = () =>
       setOpenModal(
         [...document.querySelectorAll<HTMLElement>('[aria-modal="true"]')].some(
@@ -389,7 +384,7 @@ function useOtherModalOpen(enabled: boolean, ownId: string): boolean {
       attributeFilter: ["aria-modal"],
     });
     return () => mo.disconnect();
-  }, [enabled, ownId]);
+  }, [ownId]);
   return openModal;
 }
 

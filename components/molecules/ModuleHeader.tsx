@@ -12,8 +12,6 @@ export interface ModuleHeaderProps {
   collapsed?: boolean;
   showTopicProgress?: boolean;
   isCompleted?: boolean;
-  /** Passed to Module Info in place of "x of y" (Course Journey proposal). */
-  progressText?: string;
   /** Extra attributes on the toggle button (ids, roving focus marker). */
   buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement> & { [key: `data-${string}`]: unknown };
   onToggle?: () => void;
@@ -42,7 +40,6 @@ export function ModuleHeader({
   collapsed = false,
   showTopicProgress = true,
   isCompleted = false,
-  progressText,
   buttonProps,
   onToggle,
   className,
@@ -66,7 +63,6 @@ export function ModuleHeader({
           topicsTotal={topicsTotal}
           showTopicProgress={showTopicProgress}
           isCompleted={isCompleted}
-          progressText={progressText}
         />
         {/* DS name is auto-height with truncation off — long names wrap, never clip. */}
         <span className="sk-text-body-medium-semibold text-sko-text-default">{title}</span>

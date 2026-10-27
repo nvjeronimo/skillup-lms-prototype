@@ -118,8 +118,6 @@ interface LmsState {
   quizResults: Record<string, { score: number; total: number; attempts: number }>;
   notificationsRead: Set<string>;
   openPanel: OverlayPanel;
-  /** Locally collapsed module groups in the sidebar. */
-  collapsedModules: Set<string>;
   /** Ephemeral toast (bookmark feedback, out-of-scope actions). */
   toast: ToastModel | null;
   /** Preview device mode (responsive-mode switcher). */
@@ -210,7 +208,6 @@ interface LmsState {
   submitForReview: (topicId: string) => void;
   /** Record a finished quiz attempt — stores the score, bumps the attempt count, completes the topic. */
   recordQuizResult: (topicId: string, score: number, total: number) => void;
-  toggleModule: (moduleId: string) => void;
   openOverlayPanel: (which: "notifications" | "saved" | "discussions") => void;
   closeOverlayPanel: () => void;
   markAllNotificationsRead: (ids: string[]) => void;
@@ -327,7 +324,6 @@ export const useLmsStore = create<LmsState>()(
   quizResults: {},
   notificationsRead: new Set<string>(),
   openPanel: null,
-  collapsedModules: new Set<string>(),
   toast: null,
   deviceMode: "auto",
   theme: "light",
@@ -558,16 +554,6 @@ export const useLmsStore = create<LmsState>()(
       };
     }),
 
-  toggleModule: (moduleId) =>
-    set((state) => {
-      const next = new Set(state.collapsedModules);
-      const willCollapse = !next.has(moduleId);
-      if (willCollapse) next.add(moduleId);
-      else next.delete(moduleId);
-      track(willCollapse ? "module_collapse" : "module_expand", { moduleId });
-      return { collapsedModules: next };
-    }),
-
   openOverlayPanel: (which) => {
     track("panel_open", { panel: which });
     set({ openPanel: which });
@@ -648,7 +634,6 @@ export const useLmsStore = create<LmsState>()(
       bookmarks: seedBookmarks(),
       notes: notesSeed,
       notificationsRead: new Set<string>(),
-      collapsedModules: new Set<string>(),
       noteEditor: { open: false },
       currentVideoTimestamp: 0,
       resumePositions: {},
@@ -720,7 +705,6 @@ export const useLmsStore = create<LmsState>()(
         bookmarks: s.bookmarks,
         notes: s.notes,
         notificationsRead: s.notificationsRead,
-        collapsedModules: s.collapsedModules,
         sidebarExpanded: s.sidebarExpanded,
         theme: s.theme,
         skin: s.skin,

@@ -369,7 +369,6 @@ html[data-skin="fluent"] [data-glance-title] {
   border-radius: var(--sk-radius-inner);
   background-color: var(--color-bg-page);
 }
-[data-skin="fluent"] [data-module-box] > button,
 [data-skin="fluent"] [data-module-box] > h3 > button {
   border-bottom-width: 0;
   background-color: transparent;

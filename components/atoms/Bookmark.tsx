@@ -10,11 +10,6 @@ export interface BookmarkButtonProps {
   size?: number;
   /** Context label, e.g. the topic title — overrides the generic label. */
   itemLabel?: string;
-  /**
-   * Keep the name the same in both states ("Bookmark X") and let aria-pressed say whether it is
-   * on, so the state is not spoken twice ("Remove bookmark…, pressed"). Course Journey proposal.
-   */
-  stableLabel?: boolean;
   className?: string;
 }
 
@@ -24,20 +19,11 @@ export function BookmarkButton({
   onToggle,
   size = 16,
   itemLabel,
-  stableLabel = false,
   className,
 }: BookmarkButtonProps) {
-  const ariaLabel = stableLabel
-    ? itemLabel
-      ? `Bookmark ${itemLabel}`
-      : "Bookmark"
-    : itemLabel
-    ? bookmarked
-      ? `Remove bookmark from ${itemLabel}`
-      : `Bookmark ${itemLabel}`
-    : bookmarked
-      ? "Remove bookmark"
-      : "Add bookmark";
+  // One name in both states ("Bookmark X"): aria-pressed says whether it is on, so the state is
+  // not spoken twice ("Remove bookmark…, pressed"). Course Journey, promoted by Nelson, 27 Oct 2026.
+  const ariaLabel = itemLabel ? `Bookmark ${itemLabel}` : "Bookmark";
   // Off → on swells the icon once; not on first paint (a row that mounts bookmarked stays
   // still). The class leaves when the bookmark goes off, so the next on replays it.
   const [toggled, setToggled] = React.useState(false);
