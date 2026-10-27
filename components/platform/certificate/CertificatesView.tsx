@@ -39,8 +39,14 @@ const ID_BASE = "certificates";
 export const CERTIFICATES_GRID = "grid grid-cols-1 gap-layout-grid md:grid-cols-2 lg:grid-cols-3";
 /* List: one column, grid-gap apart. Desktop only. */
 const LIST = "hidden flex-col gap-layout-grid lg:flex";
-/* A program block shows this many course certificates, then "Show all N" (Nelson, 26 Oct 2026). */
-const BLOCK_LIMIT = 4;
+/* A program block shows the first row of its course certificates, then "Show all N" (Nelson,
+   27 Oct 2026; it was four). The grid is 1 / 2 / 3 columns, so the row is 1 card on a phone, 2
+   from md and 3 from lg (the list view, lg only, shows 3 rows too). Collapsed, the cards past
+   the row are hidden by breakpoint; the button shows only where something is hidden. */
+const ROW_HIDE = ["", "max-md:hidden", "max-lg:hidden"];
+const rowHide = (i: number) => ROW_HIDE[i] ?? "hidden";
+const MORE_SHOWN = ["hidden", "hidden", "md:hidden", "lg:hidden"];
+const moreShown = (n: number) => MORE_SHOWN[n] ?? "";
 /* The card shell every row of the page shares. */
 const ROW =
   "sk-press-card flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default md:px-5";
@@ -163,7 +169,7 @@ function ProgramCertificateLine({ program }: { program: CertificateProgram }) {
  * One program's block (Nelson, 26 Oct 2026: "group the course certificates that belonged to a
  * program"): the program as an h3 with what the tab holds of it, its certificate (a row when
  * it is in this tab, a quiet line when not), then its course certificates in course order,
- * four at most until "Show all N". An earned program certificate is the large card, as before
+ * the first row until "Show all N". An earned program certificate is the large card, as before
  * (Nelson, 26 Oct 2026: "o program certificate card podes deixar como antes"), at the top of
  * the block: its title is then the block's h3, and the meta line goes under it.
  */
@@ -190,8 +196,8 @@ function ProgramGroup<T extends EarnedCertificate | CertificateInProgress>({
   const [all, setAll] = React.useState(false);
   const headingId = `${ID_BASE}-${tab}-${group.program.slug}`;
   const coursesId = `${headingId}-courses`;
-  const more = group.courses.length > BLOCK_LIMIT;
-  const courses = all || !more ? group.courses : group.courses.slice(0, BLOCK_LIMIT);
+  const more = group.courses.length > 1;
+  const courses = group.courses;
   return (
     <section aria-labelledby={headingId} className="flex flex-col gap-4">
       {hero ? (
@@ -213,16 +219,18 @@ function ProgramGroup<T extends EarnedCertificate | CertificateInProgress>({
       {courses.length ? (
         <div id={coursesId} className="contents">
           <ul className={cn(CERTIFICATES_GRID, listView && "lg:hidden")}>
-            {courses.map((item) => (
-              <li key={item.id} className="flex min-w-0 [&>a]:w-full">
+            {courses.map((item, i) => (
+              <li key={item.id} className={cn("flex min-w-0 [&>a]:w-full", !all && rowHide(i))}>
                 {renderGrid(item)}
               </li>
             ))}
           </ul>
           {listView ? (
             <ul className={LIST}>
-              {courses.map((item) => (
-                <li key={item.id}>{renderList(item)}</li>
+              {courses.map((item, i) => (
+                <li key={item.id} className={cn(!all && i >= 3 && "hidden")}>
+                  {renderList(item)}
+                </li>
               ))}
             </ul>
           ) : null}
@@ -235,7 +243,7 @@ function ProgramGroup<T extends EarnedCertificate | CertificateInProgress>({
           aria-expanded={all}
           aria-controls={coursesId}
           onClick={() => setAll((v) => !v)}
-          className="self-start max-md:h-11"
+          className={cn("self-start max-md:h-11", !all && moreShown(courses.length))}
         >
           {all ? "Show fewer" : `Show all ${group.courses.length}`}
         </Button>
@@ -302,7 +310,7 @@ function EarnedRow({ e }: { e: EarnedCertificate }) {
  * In each tab, by program (Nelson, 26 Oct 2026; before, programs and courses apart, 24 Oct):
  * one block per program the learner has a certificate in, the programs with their certificate
  * first, then the most recent; the program certificate row (or a quiet line until it is due),
- * then its course certificates in course order, four until "Show all N". Then "Other courses",
+ * then its course certificates in course order, the first row until "Show all N". Then "Other courses",
  * the courses of no program.
  * - Earned: the DS Certificate card (issued) in a grid, 3 / 2 / 1 columns, one height per row
  *   with the actions on the bottom edge. View opens the certificate's own page.
