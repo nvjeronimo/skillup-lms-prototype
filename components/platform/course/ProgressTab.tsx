@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { ArrivalCountFrom } from "@/components/atoms/ArrivalCount";
@@ -48,20 +48,69 @@ function CompletionRing({ percent, label }: { percent: number; label: string }) 
   );
 }
 
+export type GradeState = "not-started" | "below" | "passing" | "submitted" | "ended";
+
+/** The DS Result of a grade, from the Grades API (`percent`, the pass mark) and the course dates. */
+export function gradeState(grade: CourseDetail["progressTab"]["grade"]): GradeState {
+  if (grade.percent >= grade.passPercent) return "passing";
+  if (grade.courseEnded) return "ended";
+  if (grade.allSubmitted) return "submitted";
+  const scored = grade.sections.some((section) => section.items.some((item) => item.score !== null));
+  return grade.percent === 0 && !scored ? "not-started" : "below";
+}
+
+function gradeSentence(state: GradeState, percent: number, pass: number): string {
+  switch (state) {
+    case "not-started":
+      return `Your grade counts from your first graded activity. You need ${pass}% to pass.`;
+    case "passing":
+      return "You’re currently passing this course.";
+    case "submitted":
+      return `All graded activities are submitted. Your grade is below the ${pass}% pass mark.`;
+    case "ended":
+      return `This course has ended. Your final grade is below the ${pass}% pass mark.`;
+    default:
+      return `You need ${pass}% to pass. ${pass - percent}% to go.`;
+  }
+}
+
+/** Percentage + sentence colour: amber only once all graded work is in, red only once the course ended. */
+const GRADE_TONE: Record<GradeState, { percent: string; sentence: string }> = {
+  "not-started": { percent: "text-sko-text-default", sentence: "text-sko-text-muted" },
+  below: { percent: "text-sko-text-default", sentence: "text-sko-text-muted" },
+  passing: { percent: "text-sko-text-success", sentence: "text-sko-text-muted" },
+  submitted: { percent: "text-sko-text-warning", sentence: "text-sko-text-warning" },
+  ended: { percent: "text-sko-text-error", sentence: "text-sko-text-error" },
+};
+
+const PASS_ICON: Record<GradeState, { icon: typeof AlertTriangle; className: string } | null> = {
+  "not-started": null,
+  below: { icon: AlertTriangle, className: "text-sko-icon-warning" },
+  submitted: { icon: AlertTriangle, className: "text-sko-icon-warning" },
+  passing: { icon: CheckCircle2, className: "text-sko-icon-success" },
+  ended: { icon: XCircle, className: "text-sko-icon-error" },
+};
+
 /**
- * DS `LMS / Quiz · Grade Summary`, Result=Below pass (6406:41528): one card (bg/page,
+ * DS `LMS/ICP/Assessment/Grade-Summary` 1.1 (27 Oct 2026, Nelson): one card (bg/page,
  * border/subtle, radius 12, Elevation/level1; padding 24 / 20 / 16) with the title and the
- * verdict badge, the grade bar with its 70% pass mark, the weights table and the breakdown
- * of the graded sections.
+ * percentage, a sentence that says where the learner stands, the grade bar with its pass mark,
+ * the weights table and the graded items of each section.
+ * Five Results, derived by `gradeState`: Not started, Below pass, Passing, Submitted below pass
+ * (amber) and Course ended (the only red one). Open edX itself has no failed state: below the
+ * pass mark is a warning in every release.
+ * The current grade shows as a tooltip under the bar on hover only (Nelson, 27 Oct 2026): the
+ * header already says it, so the tooltip is aria-hidden.
+ * Item scores are neutral: a single item has no pass mark in Open edX. An item not submitted
+ * reads "Not started" (`score: null`).
  * The table is a real <table>. On mobile the design keeps two columns, the weight and the
  * grade written into the first one ("Final Quiz · 50%, worth 30%"): the two middle columns
  * drop out and the same values join the row header.
- *
- * `passed` is a PROPOSAL of 10 Oct 2026 (the DS has Result=Below pass only on these screens):
- * the verdict badge in Success, a success check at the pass mark instead of the warning
- * triangle, and the section scores in text/default instead of text/error.
  */
-function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progressTab"]["grade"]; passed?: boolean }) {
+export function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["grade"] }) {
+  const state = gradeState(grade);
+  const tone = GRADE_TONE[state];
+  const passIcon = PASS_ICON[state];
   const head = "px-0 py-2 text-right";
   const cell = "sk-text-body-medium-regular py-3 text-right align-top text-sko-text-muted";
   return (
@@ -69,34 +118,39 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
       aria-labelledby="course-grade-title"
       className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] shadow-sm md:p-[19px] lg:p-[23px]"
     >
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-        <h3 id="course-grade-title" className="sk-text-headline-small-bold text-sko-text-default">
-          {grade.title}
-        </h3>
-        <Badge color={passed ? "success" : "error"} size="md">
-          {grade.badge}
-        </Badge>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <h3 id="course-grade-title" className="sk-text-headline-small-bold text-sko-text-default">
+            {grade.title}
+          </h3>
+          <p className={cn("sk-text-headline-small-bold", tone.percent)}>{grade.percent}%</p>
+        </div>
+        <p className={cn("sk-text-body-medium-regular", tone.sentence)}>
+          {gradeSentence(state, grade.percent, grade.passPercent)}
+        </p>
       </div>
 
-      <div className="relative flex flex-col gap-2">
+      <div className="group relative flex flex-col gap-2">
         <PlatformProgressBar value={grade.percent} label={grade.title} />
         <span
           aria-hidden
           className="absolute top-0 h-2.5 w-0.5 -translate-x-1/2 bg-sko-bg-inverse"
           style={{ left: `${grade.passPercent}%` }}
         />
+        {/* DS Progress bar Label=Bottom floating, shown on hover only. */}
+        <span
+          aria-hidden
+          className="sk-text-body-small-medium pointer-events-none absolute top-4 z-10 -translate-x-1/2 rounded-control border border-sko-border-subtle bg-sko-bg-page px-2 py-1 text-sko-text-default opacity-0 shadow-sm transition-opacity duration-150 group-hover:opacity-100 motion-reduce:transition-none"
+          style={{ left: `${Math.max(grade.percent, 4)}%` }}
+        >
+          {grade.percent}%
+        </span>
         <div className="relative h-[18px]">
-          <p className="sk-text-body-small-regular absolute left-0 top-0 text-sko-text-subtle">{grade.currentLabel}</p>
           <p
             className="sk-text-body-small-medium absolute top-0 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap text-sko-text-default"
             style={{ left: `${grade.passPercent}%` }}
           >
-            <Icon
-              icon={passed ? CheckCircle2 : AlertTriangle}
-              size={14}
-              aria-hidden
-              className={passed ? "text-sko-icon-success" : "text-sko-icon-warning"}
-            />
+            {passIcon ? <Icon icon={passIcon.icon} size={14} aria-hidden className={passIcon.className} /> : null}
             {grade.passLabel}
           </p>
         </div>
@@ -161,21 +215,58 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
                   className="flex items-center justify-between gap-2 border-b border-sko-border-subtle pb-1"
                 >
                   <span className="sk-text-body-medium-regular min-w-0 text-sko-text-default">{item.title}</span>
-                  {/* DS body-medium/Bold: semibold until .sk-text-body-medium-bold exists (CT-22). */}
-                  <span
-                    className={cn(
-                      "sk-text-body-medium-semibold shrink-0",
-                      passed ? "text-sko-text-default" : "text-sko-text-error",
-                    )}
-                  >
-                    {item.score}
-                  </span>
+                  {item.score === null ? (
+                    <span className="sk-text-body-medium-regular shrink-0 text-sko-text-subtle">Not started</span>
+                  ) : (
+                    // DS body-medium/Bold: semibold until .sk-text-body-medium-bold exists (CT-22).
+                    <span className="sk-text-body-medium-semibold shrink-0 text-sko-text-default">{item.score}</span>
+                  )}
                 </li>
               ))}
             </ul>
           </React.Fragment>
         ))}
       </div>
+    </section>
+  );
+}
+
+/**
+ * DS `LMS/Platform/Course-Detail/Completion-Card` 1.3 (27 Oct 2026, Nelson): the count line
+ * instead of a general sentence, a Gray badge for locked topics (only when there are any: they
+ * are left out of the percentage), and Badge Success "Completed" beside the title at 100%.
+ */
+export function CompletionCard({ completion }: { completion: CourseDetail["progressTab"]["completion"] }) {
+  const available = completion.complete + completion.incomplete;
+  const percent = available ? Math.round((completion.complete / available) * 100) : 0;
+  const done = available > 0 && completion.incomplete === 0;
+  const line = done
+    ? `All ${available} topics complete.`
+    : `${completion.complete} of ${available} ${completion.locked ? "available " : ""}topics complete.`;
+  return (
+    <section
+      aria-labelledby="course-completion-title"
+      className="flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:gap-5 md:p-[19px] lg:gap-6 lg:p-[23px]"
+    >
+      <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <h3 id="course-completion-title" className="sk-text-headline-small-bold text-sko-text-default">
+            {completion.title}
+          </h3>
+          {done ? (
+            <Badge color="success" size="sm">
+              Completed
+            </Badge>
+          ) : null}
+        </div>
+        <p className="sk-text-body-large-regular text-sko-text-muted">{line}</p>
+        {completion.locked ? (
+          <Badge color="gray" size="sm">
+            {completion.locked} locked {completion.locked === 1 ? "topic" : "topics"}
+          </Badge>
+        ) : null}
+      </div>
+      <CompletionRing percent={percent} label={completion.title} />
     </section>
   );
 }
@@ -188,8 +279,9 @@ function GradeSummary({ grade, passed = false }: { grade: CourseDetail["progress
  * everything, 16 apart. Until 10 Oct 2026 desktop split the row in two equal columns: Nelson
  * changed the desktop screen that day.
  *
- * A passed course (`course.passed`, a proposal of 10 Oct 2026) turns the alert and the grade
- * to the success tokens and has no Weekly goal card: the Certificate card stands alone.
+ * A passed course (`course.passed`, a proposal of 10 Oct 2026) turns the alert to the success
+ * tokens and has no Weekly goal card: the Certificate card stands alone. The Grade summary
+ * finds its own state from the grade (`gradeState`).
  */
 export function ProgressTab({ course }: { course: CourseDetail }) {
   const tab = course.progressTab;
@@ -198,24 +290,11 @@ export function ProgressTab({ course }: { course: CourseDetail }) {
       <div className="flex min-w-0 flex-1 flex-col gap-layout-stack">
         <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
 
-        <section
-          aria-labelledby="course-completion-title"
-          className="flex items-center gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:gap-5 md:p-[19px] lg:gap-6 lg:p-[23px]"
-        >
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
-            <h3 id="course-completion-title" className="sk-text-headline-small-bold text-sko-text-default">
-              {tab.completion.title}
-            </h3>
-            <p className="sk-text-body-large-regular text-sko-text-muted">{tab.completion.body}</p>
-            {/* "Topics:" names what is counted (Nelson, ICP 6406:41528, 27 Oct 2026). */}
-            <p className="sk-text-body-large-medium text-sko-text-muted">Topics: {tab.completion.counts}</p>
-          </div>
-          <CompletionRing percent={tab.completion.percent} label={tab.completion.title} />
-        </section>
+        <CompletionCard completion={tab.completion} />
 
         <CourseAlert tone={course.passed ? "success" : "warning"} title={tab.passAlert.title} body={tab.passAlert.body} />
 
-        <GradeSummary grade={tab.grade} passed={course.passed} />
+        <GradeSummary grade={tab.grade} />
 
         <p className="sk-text-body-large-regular text-sko-text-muted">{tab.note}</p>
       </div>

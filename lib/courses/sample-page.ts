@@ -197,9 +197,9 @@ export const SIX_SIGMA: CourseDetail = {
     title: "Your progress",
     completion: {
       title: "Course completion",
-      body: "How much of the course content you have completed.",
-      counts: "16 complete · 26 incomplete · 0 locked",
-      percent: 38,
+      complete: 16,
+      incomplete: 26,
+      locked: 0,
     },
     passAlert: {
       title: "A weighted grade of 70% is required to pass",
@@ -207,22 +207,20 @@ export const SIX_SIGMA: CourseDetail = {
     },
     grade: {
       title: "Your grade",
-      badge: "15% · below the 70% pass mark",
       percent: 15,
       passPercent: 70,
-      currentLabel: "Current 15%",
       passLabel: "Pass 70%",
       columns: { type: "Assignment type", weight: "Weight", grade: "Grade", weighted: "Weighted" },
       rows: [
         { type: "Final Quiz", weight: "30%", grade: "50%", weighted: "15%" },
-        { type: "Hands-on Lab · BigQuery ML", weight: "70%", grade: "0%", weighted: "0%" },
+        { type: "Final project", weight: "70%", grade: "0%", weighted: "0%" },
       ],
       sections: [
         {
           title: "Module 4 · Final project and wrap-up",
           items: [
-            { title: "Final project · Digital marketing strategy", score: "0/100 · 0%" },
-            { title: "Course wrap-up and assessment", score: "3/10 · 30%" },
+            { title: "Final project · Digital marketing strategy", score: null },
+            { title: "Final Quiz · Course wrap-up and assessment", score: "5/10 · 50%" },
           ],
         },
       ],

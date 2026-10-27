@@ -136,7 +136,8 @@ export interface GradeRow {
 
 export interface GradeSection {
   title: string;
-  items: { title: string; score: string }[];
+  /** `score` is "earned/possible · %"; null while the learner has not submitted the item ("Not started"). */
+  items: { title: string; score: string | null }[];
 }
 
 /* ── Dates tab ──────────────────────────────────────────────────────────────────────── */
@@ -261,16 +262,22 @@ export interface CourseDetail {
 
   progressTab: {
     title: string;
-    completion: { title: string; body: string; counts: string; percent: number };
+    /**
+     * `completion_summary` of the Progress API. The percentage is derived, complete / (complete +
+     * incomplete): locked topics are left out of it (DS Completion-Card 1.3, 27 Oct 2026).
+     */
+    completion: { title: string; complete: number; incomplete: number; locked: number };
     passAlert: { title: string; body: string };
     grade: {
       title: string;
-      badge: string;
       /** `course_grade.percent` and the Pass threshold of `grading_policy.grade_range`. */
       percent: number;
       passPercent: number;
-      currentLabel: string;
       passLabel: string;
+      /** Every graded item submitted, still below the pass mark: the amber sentence (DS Result=Submitted below pass). */
+      allSubmitted?: boolean;
+      /** The course end date has passed: below the pass mark this is the one red state (DS Result=Course ended). */
+      courseEnded?: boolean;
       columns: { type: string; weight: string; grade: string; weighted: string };
       rows: GradeRow[];
       sections: GradeSection[];
