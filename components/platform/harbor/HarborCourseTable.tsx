@@ -11,7 +11,7 @@ import type { MyLearningCourse, MyLearningProgram } from "@/lib/platform/my-lear
 /**
  * Harbor's table view of My Learning (Nelson, 25 Oct 2026, after the DreamHost panel's Websites
  * list): one row per course, the columns a learner with many courses scans: the course (picture,
- * title linking to its page, provider), progress, what is next, the effort, and the action as the
+ * title linking to its page, provider, then level and delivery as words), progress, what is next, the effort, and the action as the
  * panel's white "Manage" button. A real table (caption, column headers), from desktop up; below,
  * My Learning shows its grid.
  */
@@ -60,7 +60,10 @@ export function HarborCourseTable({
                       ) : (
                         <span className="sk-text-body-large-medium text-sko-text-default">{c.title}</span>
                       )}
-                      <span className="sk-text-body-small-medium text-sko-text-primary">{c.provider}</span>
+                      {/* Level and delivery as plain words after the provider (Nelson, 27 Oct 2026). */}
+                      <span className="sk-text-body-small-medium text-sko-text-subtle">
+                        <span className="text-sko-text-primary">{c.provider}</span> · {c.difficulty} · {c.delivery}
+                      </span>
                     </span>
                   </span>
                 </th>
@@ -103,7 +106,7 @@ export function HarborCourseTable({
 
 /**
  * The same table for the Programs tab (Nelson, 26 Oct 2026): the program (picture, title linking
- * to its page, partners), progress, how many courses are complete, what is next (the course in
+ * to its page, partners, then level and delivery as words), progress, how many courses are complete, what is next (the course in
  * progress, the start date, or the certificate), and the action.
  */
 export function HarborProgramTable({
@@ -150,8 +153,10 @@ export function HarborProgramTable({
                       ) : (
                         <span className="sk-text-body-large-medium text-sko-text-default">{p.title}</span>
                       )}
-                      <span className="sk-text-body-small-medium text-sko-text-primary">
-                        {p.partners.map((partner) => partner.name).join(" · ")}
+                      {/* Level and delivery as plain words after the partners (Nelson, 27 Oct 2026). */}
+                      <span className="sk-text-body-small-medium text-sko-text-subtle">
+                        <span className="text-sko-text-primary">{p.partners.map((partner) => partner.name).join(" · ")}</span> ·{" "}
+                        {p.difficulty} · {p.delivery}
                       </span>
                     </span>
                   </span>
