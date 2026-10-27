@@ -1,17 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Bookmark, X } from "lucide-react";
+import { Bookmark, Lock, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
 import { Collapse } from "@/components/atoms/Collapse";
-import { LessonHeader } from "@/components/atoms/LessonHeader";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { BookmarkButton } from "@/components/atoms/Bookmark";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
-import { OverallProgress } from "@/components/molecules/OverallProgress";
+import { ProgressRing } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
 import { HOVER_CLOSE_GRACE_MS, MOTION_MS } from "@/lib/motion/tokens";
@@ -24,19 +23,20 @@ import type { Course, CompletionState, Topic } from "@/lib/types";
 
 export type SidebarVariant = "Expanded" | "Collapsed" | "Mobile";
 
-// Persisted across the per-topic remount of the player layout (module scope
-// survives component unmount). Keeps the desktop/tablet sidebar scroll in place.
+// Persisted across the per-topic remount of the player layout (module scope survives component
+// unmount): the list's scroll and which modules are open.
 let savedScrollTop = 0;
+let savedOpen: { courseId: string; open: string[] } | null = null;
 
 // useLayoutEffect on the client (no scroll flicker), useEffect on the server (no SSR warning).
 const useIsoLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
+const ROVING = "[data-roving]:not([data-collapse='closed'] *)";
 
 export interface SidebarProps {
   course: Course;
   currentTopicId: string;
   variant?: SidebarVariant;
-  /** Module IDs that are collapsed. */
-  collapsedModules?: Set<string>;
   bookmarks?: Set<string>;
   /** Runtime completion (store). When provided, drives the row checks + progress
    *  live; when omitted (e.g. Storybook), the static `topic.completed` is used. */
@@ -44,7 +44,6 @@ export interface SidebarProps {
   /** The topic completed last (store): its row check draws itself while it is fresh. */
   lastCompleted?: LastCompleted;
   onToggleSidebar?: () => void;
-  onToggleModule?: (moduleId: string) => void;
   onSelectTopic?: (topicId: string) => void;
   onToggleBookmark?: (topicId: string) => void;
   /** Mobile drawer close — renders the DS Mobile header (title + 44px close X).
@@ -55,35 +54,36 @@ export interface SidebarProps {
   className?: string;
 }
 
-function topicStatus(topic: Topic, completed?: Set<string>): CompletionState {
-  if (topic.locked) return "Locked";
-  const done = completed ? completed.has(topic.id) : topic.completed;
-  if (done) return "Done";
-  // Active/current topics show an empty ring; the brand highlight marks "current".
-  return "Pending";
-}
-
-const WIDTH: Record<SidebarVariant, string> = {
-  Expanded: "w-[280px]",
-  Collapsed: "w-[72px]",
-  Mobile: "w-[320px]",
-};
-
 /**
- * Course navigation sidebar (DS `LMS / Sidebar-ICP`). Five logical states: Expanded · Collapsed · Mobile
- * (+ the two `noLesson` variants are simply courses whose modules have no lesson
- * sub-grouping — handled automatically by the data shape).
+ * Course navigation sidebar, the Course Journey (DS `LMS / Sidebar-ICP`): Expanded · Collapsed ·
+ * Mobile. Built as a proposal from the Impeccable critique of the ICP sidebar (24 Oct 2026, behind
+ * `?journey=proposal`); promoted to the only sidebar by Nelson, 27 Oct 2026. By the critique's
+ * numbering:
+ * 2. Where am I, what's next: the open topic keeps the current look (brand row, empty ring: the
+ *    In Progress ring was refused by the stakeholders, 24 Oct 2026),
+ *    "Module N of M" is the module that holds the open topic (not modules done + 1, which read
+ *    "Module 5 of 4" at 100%), "Course completed" at 100%, and a quiet "Up next" on the next topic.
+ * 3. Locks: every locked row names the topic straight before it ("Unlocks after …"), read under
+ *    the row instead of a 3 s tooltip; a module locked as a whole says so once, under its header.
+ * 4. Structure: each module is a section with its toggle in a heading, topics are an ordered list,
+ *    and the list is one tab stop (roving focus: ↑ ↓ Home End; → to a row's bookmark, ← back;
+ *    → / ← open and close a module). (A "Jump to current topic" button was refused, 24 Oct 2026.)
+ * 5. Disclosure: only the module of the open topic is open; completed modules close (Nelson:
+ *    "Sim, fecham"), module headers stick while their topics scroll, and the open topic lands a
+ *    third of the way down when it is out of view.
+ * Minor: "Course journey" names the panel on desktop (the drawer drops the eyebrow under its own
+ * title), Label styles instead of inline uppercase, Module Info says "topics" and "Completed",
+ * lesson names are headings, the rail reads M2 / L1 with spoken groups and bookmarks, meta lines
+ * wrap instead of truncating, and the bookmark keeps one name.
  */
 export function Sidebar({
   course,
   currentTopicId,
   variant = "Expanded",
-  collapsedModules = new Set(),
   bookmarks = new Set(),
   completed,
   lastCompleted = null,
   onToggleSidebar,
-  onToggleModule,
   onSelectTopic,
   onToggleBookmark,
   onCloseMobile,
@@ -92,96 +92,176 @@ export function Sidebar({
 }: SidebarProps) {
   const collapsed = variant === "Collapsed";
   const isMobile = variant === "Mobile";
+  const headingId = React.useId();
 
-  // When the store drives completion, recompute per-module + overall progress live
-  // so the checks, "x / y" counts and progress ring all move as topics complete.
-  const moduleStats = (module: Course["modules"][number]) => {
-    if (!completed) {
-      return {
-        topicsCompleted: module.topicsCompleted,
-        topicsTotal: module.topicsTotal,
-        isCompleted: module.isCompleted,
-      };
-    }
-    const tops = moduleTopics(module);
-    const done = tops.filter((t) => completed.has(t.id)).length;
-    return { topicsCompleted: done, topicsTotal: tops.length, isCompleted: tops.length > 0 && done === tops.length };
+  const isDone = (t: Topic) => (completed ? completed.has(t.id) : t.completed);
+  const statusOf = (t: Topic): CompletionState =>
+    t.locked ? "Locked" : isDone(t) ? "Done" : "Pending";
+
+  const ordered = React.useMemo(() => course.modules.flatMap((m) => moduleTopics(m)), [course]);
+  const modules = course.modules.filter((m) => !m.implicit);
+  const currentModule = course.modules.find((m) => moduleTopics(m).some((t) => t.id === currentTopicId));
+  const moduleDone = (m: Course["modules"][number]) => {
+    const tops = moduleTopics(m);
+    return tops.length > 0 && tops.every(isDone);
   };
 
-  // A locked row says what opens it: the nearest unlocked topic before it in course order,
-  // or, with none, LockedView's sentence about the earlier topics of its module.
-  const lockedHints = React.useMemo(() => {
-    const hints = new Map<string, string>();
-    let prevUnlocked: Topic | null = null;
+  // The next topic to open: the first after the open one that is neither done nor locked.
+  const currentIndex = ordered.findIndex((t) => t.id === currentTopicId);
+  const upNextId = ordered.slice(currentIndex + 1).find((t) => !t.locked && !isDone(t))?.id;
+
+  // What opens a locked row: the topic straight before it. A module locked as a whole also
+  // says it once, under its header: what it waits for is the last topic before the module.
+  const { rowHints, moduleHints } = React.useMemo(() => {
+    const rowHints = new Map<string, string>();
+    const moduleHints = new Map<string, string>();
+    ordered.forEach((t, i) => {
+      if (t.locked && i > 0) rowHints.set(t.id, `Unlocks after ${ordered[i - 1].title}`);
+    });
     for (const m of course.modules) {
-      for (const t of moduleTopics(m)) {
-        if (t.locked) {
-          hints.set(
-            t.id,
-            prevUnlocked
-              ? `Complete ${prevUnlocked.title} first`
-              : `“${t.title}” unlocks once you complete the earlier topics in ${m.title}.`,
-          );
-        } else prevUnlocked = t;
-      }
+      const tops = moduleTopics(m);
+      if (!tops.length || !tops.every((t) => t.locked)) continue;
+      const before = ordered[ordered.indexOf(tops[0]) - 1];
+      if (before) moduleHints.set(m.id, `Opens after ${before.title}`);
     }
-    return hints;
-  }, [course]);
+    return { rowHints, moduleHints };
+  }, [course, ordered]);
 
   const overallPct = courseProgressPct(course, completed);
-  const modulesDone = completed
-    ? course.modules.filter((m) => moduleStats(m).isCompleted).length
-    : course.modulesCompleted;
+  const doneCount = ordered.filter(isDone).length;
+  const moduleNumber = currentModule && !currentModule.implicit ? modules.indexOf(currentModule) + 1 : 0;
+  const progressLine =
+    overallPct >= 100
+      ? "Course completed"
+      : moduleNumber
+        ? `Module ${moduleNumber} of ${modules.length}`
+        : `${doneCount} of ${ordered.length} topics`;
+  const progressDetail = overallPct >= 100 || !moduleNumber ? null : `${doneCount} of ${ordered.length} topics done`;
 
-  // The player lives in [topicId]/layout, so navigating between topics REMOUNTS
-  // this sidebar and resets its scroll. We persist the scroll position across the
-  // remount (module-level, survives unmount) and restore it before paint, so the
-  // topic the user just clicked stays exactly where it was. We only auto-scroll
-  // when the active row would otherwise be off-screen (e.g. a deep link).
+  // ── Open modules: the module of the open topic; completed ones close as the learner moves on.
+  const [open, setOpen] = React.useState<Set<string>>(() => {
+    const start = savedOpen?.courseId === course.id ? new Set(savedOpen.open) : new Set<string>();
+    if (currentModule) start.add(currentModule.id);
+    for (const m of course.modules) if (m !== currentModule && moduleDone(m)) start.delete(m.id);
+    return start;
+  });
+  const completedKey = completed ? [...completed].join(",") : "";
+  React.useEffect(() => {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (currentModule) next.add(currentModule.id);
+      for (const m of course.modules) if (m !== currentModule && moduleDone(m)) next.delete(m.id);
+      return next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTopicId, completedKey]);
+  React.useEffect(() => {
+    savedOpen = { courseId: course.id, open: [...open] };
+  }, [course.id, open]);
+  const toggle = (id: string, to?: boolean) =>
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (to ?? !next.has(id)) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+
+  // ── Scroll: restore across the remount; the open topic a third of the way down when it is
+  //    out of view (always in the drawer, which opens fresh each time).
   const scrollRef = React.useRef<HTMLDivElement>(null);
   // The header condenses to title + progress while the list is scrolled (Nelson, 25 Oct 2026):
   // past 8 px it folds, back at the top it opens (hysteresis, as the docked video).
   const [condensed, setCondensed] = React.useState(() => !isMobile && savedScrollTop > 8);
   const condenseFrom = (top: number) => setCondensed((prev) => (prev ? top > 0 : top > 8));
+  const placeCurrent = React.useCallback(
+    (force: boolean, smooth = false) => {
+      const box = scrollRef.current;
+      const row = box?.querySelector<HTMLElement>('[aria-current="page"]:not([data-collapse="closed"] *)');
+      if (!box || !row) return;
+      const c = box.getBoundingClientRect();
+      const r = row.getBoundingClientRect();
+      // A sticky module header covers the top of the list: count it out.
+      const sticky = row.closest("section")?.querySelector("h3")?.getBoundingClientRect().height ?? 0;
+      const hidden = r.top < c.top + sticky || r.bottom > c.bottom;
+      if (!force && !hidden) return;
+      box.scrollTo({ top: box.scrollTop + (r.top - c.top) - c.height / 3, behavior: smooth ? "smooth" : "instant" });
+    },
+    [],
+  );
   useIsoLayoutEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-    // The list is an .sk-scroll region, which glides: a restore is a jump, so it asks for "instant".
-    const jumpTo = (top: number) => container.scrollTo({ top, behavior: "instant" });
-    if (!isMobile) jumpTo(savedScrollTop); // restore persisted position
-
-    // A collapsed module still renders its rows (zero height): skip them.
-    const active = container.querySelector<HTMLElement>('[aria-current="page"]:not([data-collapse="closed"] *)');
-    if (active) {
-      const c = container.getBoundingClientRect();
-      const a = active.getBoundingClientRect();
-      const margin = 8;
-      if (a.top < c.top + margin) {
-        jumpTo(container.scrollTop - (c.top + margin - a.top));
-      } else if (a.bottom > c.bottom - margin) {
-        jumpTo(container.scrollTop + (a.bottom - (c.bottom - margin)));
-      }
-    }
-    if (!isMobile) savedScrollTop = container.scrollTop;
-    condenseFrom(container.scrollTop);
+    const box = scrollRef.current;
+    if (!box) return;
+    if (!isMobile) box.scrollTo({ top: savedScrollTop, behavior: "instant" });
+    placeCurrent(isMobile);
+    if (!isMobile) savedScrollTop = box.scrollTop;
+    condenseFrom(box.scrollTop);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTopicId]);
+  }, [currentTopicId, collapsed]);
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
-    condenseFrom(e.currentTarget.scrollTop);
+  // ── Roving focus: the list is one tab stop.
+  const roving = React.useRef<HTMLElement | null>(null);
+  React.useEffect(() => {
+    const box = scrollRef.current;
+    if (!box) return;
+    const items = [...box.querySelectorAll<HTMLElement>(ROVING)];
+    if (!items.length) return;
+    if (!roving.current || !items.includes(roving.current)) {
+      roving.current = items.find((el) => el.getAttribute("aria-current") === "page") ?? items[0];
+    }
+    for (const el of items) el.tabIndex = el === roving.current ? 0 : -1;
+    // Bookmarks are reached with → from their row.
+    box.querySelectorAll<HTMLElement>("li button[aria-pressed]").forEach((b) => (b.tabIndex = -1));
+  });
+  const onListKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const box = scrollRef.current;
+    const target = e.target as HTMLElement;
+    if (!box) return;
+    const items = [...box.querySelectorAll<HTMLElement>(ROVING)];
+    const move = (el: HTMLElement | undefined) => {
+      if (!el) return;
+      e.preventDefault();
+      roving.current = el;
+      for (const it of items) it.tabIndex = it === el ? 0 : -1;
+      el.focus();
+    };
+    // From a bookmark, ← goes back to its row.
+    if (target.matches("button[aria-pressed]")) {
+      if (e.key === "ArrowLeft") move(target.closest("li")?.querySelector<HTMLElement>("[data-roving]") ?? undefined);
+      return;
+    }
+    const i = items.indexOf(target);
+    if (i < 0) return;
+    const moduleId = target.dataset.module;
+    switch (e.key) {
+      case "ArrowDown":
+        return move(items[i + 1]);
+      case "ArrowUp":
+        return move(items[i - 1]);
+      case "Home":
+        return move(items[0]);
+      case "End":
+        return move(items[items.length - 1]);
+      case "ArrowRight":
+        if (moduleId) {
+          e.preventDefault();
+          if (!open.has(moduleId)) toggle(moduleId, true);
+          return;
+        }
+        return move(target.closest("li")?.querySelector<HTMLElement>("button[aria-pressed]") ?? undefined);
+      case "ArrowLeft":
+        if (moduleId && open.has(moduleId)) {
+          e.preventDefault();
+          toggle(moduleId, false);
+        }
+        return;
+    }
   };
 
-  // Collapsed rail: a flyout (DS: LMS/ICP/Sidebar/Topic-Flyout) surfaces the topic
-  // title + bookmark toggle; there's no room for them on the 72px rail itself.
-  // It opens on hover and on keyboard focus of a rail row. From the row, ArrowRight
-  // moves into the card; Escape or ArrowLeft goes back to the row.
-  const [flyout, setFlyout] = React.useState<{ topic: Topic; top: number; left: number } | null>(
-    null,
-  );
+  // ── Collapsed rail: a flyout (DS: LMS/ICP/Sidebar/Topic-Flyout) surfaces the topic title +
+  //    bookmark toggle; there is no room for them on the 72px rail. Hover or focus opens it,
+  //    → moves into it, Escape or ← goes back to the row.
+  const [flyout, setFlyout] = React.useState<{ topic: Topic; top: number; left: number } | null>(null);
   const flyoutTimer = React.useRef<number | null>(null);
-  // The flyout fades in (short3) and out (short2), in place: no travel. While it fades out it
-  // keeps the topic and position it had, and is inert, so it takes no hover, click or focus.
   const flyoutPresence = useExitTransition(flyout !== null, MOTION_MS.short2);
   const shownFlyout = useFrozenWhileClosed(flyout, flyout !== null);
   const flyoutClosing = flyout === null;
@@ -199,27 +279,12 @@ export function Sidebar({
   };
   const flyoutRef = React.useRef<HTMLDivElement | null>(null);
   const flyoutRowRef = React.useRef<HTMLElement | null>(null);
-  const focusFlyout = () => {
-    keepOpen();
-    flyoutRef.current?.querySelector<HTMLElement>("button")?.focus();
-  };
-  const focusRailRow = () => {
-    flyoutRowRef.current?.querySelector<HTMLElement>("button")?.focus();
-  };
 
-  // ── Collapsed rail (DS: LMS / Sidebar-ICP · State=Collapsed) ─────────────────
-  // 72px rail: toggle + progress ring, then per-module groups separated by 40px
-  // dividers — module number (green when complete), lesson labels (L1/L2, brand on
-  // the active lesson) and status dots, with the active topic highlighted.
-  // Collapse / expand swaps the rail for the full sidebar (two different trees, so the new one
-  // mounts): the incoming one fades in. Not on the first paint, and never on a topic change
-  // (the same tree stays mounted then); the width itself snaps.
   const variantFade = useHasChanged(collapsed) ? "sk-animate-fade sk-enter-only" : undefined;
 
   if (collapsed) {
-    const Divider = () => <div className="h-px w-10 bg-sko-border-subtle" />;
     const Dot = (topic: Topic) => (
-      <div
+      <li
         key={topic.id}
         className="relative w-full"
         onMouseEnter={(e) => openFlyout(topic, e.currentTarget)}
@@ -232,10 +297,9 @@ export function Sidebar({
         onKeyDown={(e) => {
           if (e.key === "ArrowRight") {
             e.preventDefault();
-            focusFlyout();
-          } else if (e.key === "Escape") {
-            setFlyout(null);
-          }
+            keepOpen();
+            flyoutRef.current?.querySelector<HTMLElement>("button")?.focus();
+          } else if (e.key === "Escape") setFlyout(null);
         }}
       >
         <TopicRow
@@ -243,147 +307,150 @@ export function Sidebar({
           type={topic.type}
           title={topic.title}
           duration={topic.duration}
-          status={topicStatus(topic, completed)}
+          status={statusOf(topic)}
           animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
           active={topic.id === currentTopicId}
-          lockedHint={lockedHints.get(topic.id)}
+          upNext={topic.id === upNextId}
+          bookmarked={bookmarks.has(topic.id)}
+          lockedHint={rowHints.get(topic.id)}
           onClick={() => onSelectTopic?.(topic.id)}
         />
-        {/* Saved topics carry a small bookmark mark on the rail. */}
         {bookmarks.has(topic.id) ? (
-          <span className="pointer-events-none absolute right-1.5 top-1 text-sko-text-primary">
+          <span aria-hidden className="pointer-events-none absolute right-1.5 top-1 text-sko-text-primary">
             <Bookmark size={12} fill="currentColor" strokeWidth={1} />
           </span>
         ) : null}
-      </div>
+      </li>
     );
     return (
       <>
-      <nav
-        className={cn(
-          "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-4",
-          variantFade,
-          className,
-        )}
-        aria-label="Course"
-      >
-        <div className="flex flex-col items-center gap-2 pb-3">
-          <SidebarToggle expanded={false} onToggle={onToggleSidebar} />
-          <OverallProgress
-            device="Mobile"
-            pct={overallPct}
-            moduleCurrent={modulesDone + 1}
-            moduleTotal={course.modulesTotal}
-          />
-        </div>
-
-        <div ref={scrollRef} onScroll={handleScroll} className="sk-scroll w-full flex-1 overflow-y-auto">
-          {course.modules.map((module, i) => {
-            const moduleDone = moduleStats(module).isCompleted;
-            return (
-              <React.Fragment key={module.id}>
-                <Divider />
-                <div className="flex w-full flex-col items-center gap-1.5 py-2">
-                  {/* 3-level (implicit module) has no module number. */}
+        <nav
+          className={cn(
+            "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-4",
+            variantFade,
+            className,
+          )}
+          aria-label="Course Journey"
+        >
+          <div className="flex flex-col items-center gap-2 pb-3">
+            <SidebarToggle expanded={false} onToggle={onToggleSidebar} />
+            <ProgressRing pct={overallPct} />
+            <span className="sr-only">{progressLine}</span>
+          </div>
+          <div ref={scrollRef} onScroll={(e) => (savedScrollTop = e.currentTarget.scrollTop)} className="sk-scroll w-full flex-1 overflow-y-auto">
+            {course.modules.map((module) => {
+              const n = modules.indexOf(module) + 1;
+              return (
+                <section
+                  key={module.id}
+                  aria-label={module.implicit ? course.title : `Module ${n}: ${module.title}`}
+                  className="flex w-full flex-col items-center gap-1.5 border-t border-sko-border-subtle py-2"
+                >
                   {module.implicit ? null : (
                     <p
+                      aria-hidden
                       className={cn(
-                        "sk-text-body-small-semibold",
-                        moduleDone ? "text-sko-text-success" : "text-sko-text-subtle",
+                        "sk-text-label-small-semibold",
+                        moduleDone(module) ? "text-sko-text-success" : "text-sko-text-subtle",
                       )}
                     >
-                      {String(i + 1).padStart(2, "0")}
+                      M{n}
                     </p>
                   )}
-                  {module.lessons
-                    ? module.lessons.map((lesson, j) => {
-                        const lessonActive = lesson.topics.some((t) => t.id === currentTopicId);
-                        return (
-                          <React.Fragment key={lesson.id}>
-                            <p
-                              className={cn(
-                                "sk-text-body-small-semibold",
-                                lessonActive ? "text-sko-text-on-primary-soft" : "text-sko-text-subtle",
-                              )}
-                            >
-                              {`L${j + 1}`}
-                            </p>
-                            {lesson.topics.map(Dot)}
-                          </React.Fragment>
-                        );
-                      })
-                    : moduleTopics(module).map(Dot)}
-                </div>
-              </React.Fragment>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* Hover flyout — title + bookmark toggle for the rail's icon-only rows. */}
-      {flyoutPresence.mounted && shownFlyout ? (
-        <div
-          ref={flyoutRef}
-          data-state={flyoutPresence.state}
-          onTransitionEnd={flyoutPresence.onTransitionEnd}
-          aria-hidden={flyoutClosing || undefined}
-          {...inertProps(flyoutClosing)}
-          className="sk-animate-flyout fixed z-[70]"
-          style={{ top: shownFlyout.top, left: shownFlyout.left + 6 }}
-          onMouseEnter={keepOpen}
-          onMouseLeave={scheduleClose}
-          onFocus={keepOpen}
-          onBlur={scheduleClose}
-          onKeyDown={(e) => {
-            if (e.key === "Escape" || e.key === "ArrowLeft") {
-              e.preventDefault();
-              focusRailRow();
-            }
-          }}
-        >
-          <div className="flex items-center gap-2 rounded-control border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-sk-elevation-3">
-            <button
-              type="button"
-              onClick={() => {
-                onSelectTopic?.(shownFlyout.topic.id);
-                setFlyout(null);
-              }}
-              className="flex min-w-0 flex-col items-start text-left"
-            >
-              <span className="sk-text-body-medium-medium whitespace-nowrap text-sko-text-default">
-                {shownFlyout.topic.title}
-              </span>
-              <TopicTypeBadge type={shownFlyout.topic.type} />
-            </button>
-            <BookmarkButton
-              bookmarked={bookmarks.has(shownFlyout.topic.id)}
-              onToggle={() => onToggleBookmark?.(shownFlyout.topic.id)}
-              itemLabel={shownFlyout.topic.title}
-              size={16}
-            />
+                  {module.lessons ? (
+                    module.lessons.map((lesson, j) => (
+                      <ol key={lesson.id} aria-label={`Lesson ${j + 1}: ${lesson.label}`} className="flex w-full flex-col items-center gap-1.5">
+                        <li aria-hidden className="sk-text-label-small-medium text-sko-text-subtle">
+                          L{j + 1}
+                        </li>
+                        {lesson.topics.map(Dot)}
+                      </ol>
+                    ))
+                  ) : (
+                    <ol className="w-full">{moduleTopics(module).map(Dot)}</ol>
+                  )}
+                </section>
+              );
+            })}
           </div>
-        </div>
-      ) : null}
+        </nav>
+        {flyoutPresence.mounted && shownFlyout ? (
+          <div
+            ref={flyoutRef}
+            data-state={flyoutPresence.state}
+            onTransitionEnd={flyoutPresence.onTransitionEnd}
+            aria-hidden={flyoutClosing || undefined}
+            {...inertProps(flyoutClosing)}
+            className="sk-animate-flyout fixed z-[70]"
+            style={{ top: shownFlyout.top, left: shownFlyout.left + 6 }}
+            onMouseEnter={keepOpen}
+            onMouseLeave={scheduleClose}
+            onFocus={keepOpen}
+            onBlur={scheduleClose}
+            onKeyDown={(e) => {
+              if (e.key === "Escape" || e.key === "ArrowLeft") {
+                e.preventDefault();
+                flyoutRowRef.current?.querySelector<HTMLElement>("button")?.focus();
+              }
+            }}
+          >
+            <div className="flex items-center gap-2 rounded-control border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-sk-elevation-3">
+              <button
+                type="button"
+                onClick={() => {
+                  onSelectTopic?.(shownFlyout.topic.id);
+                  setFlyout(null);
+                }}
+                className="flex min-w-0 flex-col items-start text-left"
+              >
+                <span className="sk-text-body-medium-medium whitespace-nowrap text-sko-text-default">
+                  {shownFlyout.topic.title}
+                </span>
+                <TopicTypeBadge type={shownFlyout.topic.type} />
+              </button>
+              <BookmarkButton
+                bookmarked={bookmarks.has(shownFlyout.topic.id)}
+                onToggle={() => onToggleBookmark?.(shownFlyout.topic.id)}
+                itemLabel={shownFlyout.topic.title}
+                size={16}
+              />
+            </div>
+          </div>
+        ) : null}
       </>
     );
   }
+
+  const renderTopic = (topic: Topic) => (
+    <li key={topic.id}>
+      <TopicRow
+        type={topic.type}
+        title={topic.title}
+        duration={topic.duration}
+        status={statusOf(topic)}
+        animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
+        active={topic.id === currentTopicId}
+        upNext={topic.id === upNextId}
+        showBookmark={bookmarks.has(topic.id)}
+        bookmarked={bookmarks.has(topic.id)}
+        lockedHint={rowHints.get(topic.id)}
+        onClick={() => onSelectTopic?.(topic.id)}
+        onToggleBookmark={() => onToggleBookmark?.(topic.id)}
+      />
+    </li>
+  );
 
   return (
     <nav
       className={cn(
         "flex h-full flex-col overflow-hidden bg-sko-bg-page",
-        // Floating card on desktop/tablet; Mobile drawer fills its container.
-        isMobile ? "" : "rounded-control border border-sko-border-subtle",
-        WIDTH[variant],
+        isMobile ? "w-[320px]" : "w-[280px] rounded-control border border-sko-border-subtle",
         variantFade,
         className,
       )}
-      aria-label="Course"
+      aria-labelledby={isMobile ? mobileTitleId : headingId}
     >
       {isMobile && onCloseMobile ? (
-        /* DS "Mobile header" (title + close): the drawer is a modal dialog, so it
-           needs a visible close control (WCAG 2.1.2 / 2.5.8) — Escape and the
-           backdrop tap still work too. The title labels the dialog. */
         <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-sko-border-subtle pl-4 pr-2">
           <h2 id={mobileTitleId} className="sk-text-body-large-semibold text-sko-text-default">
             Course Journey
@@ -398,106 +465,102 @@ export function Sidebar({
           </button>
         </div>
       ) : null}
-      {isMobile ? (
-        /* Mobile (DS Sidebar-ICP · Mobile): the course header keeps its own
-           hairline, the toggle is hidden and there is no Overall Progress block —
-           the 46px ring sits top-right of the header, level with the eyebrow. */
-        <CourseHeader
-          title={course.title}
-          eyebrow="Course"
-          partners={coursePartners(course)}
-          showToggle={false}
-          condensed={condensed}
-          trailing={
-            <OverallProgress
-              device="Mobile"
-              pct={overallPct}
-              moduleCurrent={modulesDone + 1}
-              moduleTotal={course.modulesTotal}
-            />
-          }
-        />
-      ) : (
-        <>
-          {/* Desktop: no hairline between the header and Overall Progress — the
-              progress block carries the single divider below both. */}
-          <CourseHeader
-            title={course.title}
-            eyebrow="Course"
-            partners={coursePartners(course)}
-            expanded
-            showToggle
-            onToggle={onToggleSidebar}
-            showDivider={false}
-            condensed={condensed}
-          />
-          <OverallProgress
-            pct={overallPct}
-            moduleCurrent={modulesDone + 1}
-            moduleTotal={course.modulesTotal}
-          />
-        </>
+      {/* Desktop: "Course journey" names the panel; in the drawer its title already does. */}
+      <CourseHeader
+        title={course.title}
+        eyebrow={isMobile ? "" : "Course journey"}
+        partners={coursePartners(course)}
+        expanded
+        showToggle={!isMobile}
+        onToggle={onToggleSidebar}
+        showDivider={false}
+        condensed={condensed}
+      />
+      {isMobile ? null : (
+        <h2 id={headingId} className="sr-only">
+          Course Journey
+        </h2>
       )}
+
+      <div className="flex items-center gap-3 border-b border-sko-border-subtle px-4 pb-3 pt-1">
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="sk-text-label-small-semibold text-sko-text-subtle">Overall progress</span>
+          <span
+            className={cn(
+              "sk-text-body-small-semibold",
+              overallPct >= 100 ? "text-sko-text-success" : "text-sko-text-default",
+            )}
+          >
+            {progressLine}
+          </span>
+          {progressDetail ? (
+            <span className="sk-text-body-small-regular text-sko-text-subtle">{progressDetail}</span>
+          ) : null}
+        </div>
+        <ProgressRing pct={overallPct} />
+      </div>
 
       <div
         ref={scrollRef}
-        onScroll={handleScroll}
+        onScroll={(e) => {
+          if (!isMobile) savedScrollTop = e.currentTarget.scrollTop;
+          condenseFrom(e.currentTarget.scrollTop);
+        }}
+        onKeyDown={onListKeyDown}
+        onFocus={(e) => {
+          if ((e.target as HTMLElement).matches(ROVING)) roving.current = e.target as HTMLElement;
+        }}
         data-module-list=""
         className="sk-scroll flex-1 overflow-y-auto"
       >
         {course.modules.map((module) => {
-          const moduleCollapsed = collapsedModules.has(module.id);
-          const renderTopic = (topic: Topic) => (
-            <TopicRow
-              key={topic.id}
-              type={topic.type}
-              title={topic.title}
-              duration={topic.duration}
-              status={topicStatus(topic, completed)}
-              animateStatus={isFreshCompletion(lastCompleted, topic.id, Date.now())}
-              active={topic.id === currentTopicId}
-              showBookmark={bookmarks.has(topic.id)}
-              bookmarked={bookmarks.has(topic.id)}
-              lockedHint={lockedHints.get(topic.id)}
-              onClick={() => onSelectTopic?.(topic.id)}
-              onToggleBookmark={() => onToggleBookmark?.(topic.id)}
-            />
-          );
-
-          // 3-level (implicit module): topic rows directly under the Course Header.
           if (module.implicit) {
             return (
-              <div key={module.id} data-module-box="" className="border-b border-sko-border-subtle py-3">
+              <ol key={module.id} data-module-box="" className="border-b border-sko-border-subtle py-2">
                 {moduleTopics(module).map(renderTopic)}
-              </div>
+              </ol>
             );
           }
-
+          const isOpen = open.has(module.id);
+          const tops = moduleTopics(module);
+          const done = tops.filter(isDone).length;
+          const complete = tops.length > 0 && done === tops.length;
+          const bodyId = `${headingId}-${module.id}`;
+          const moduleHint = moduleHints.get(module.id);
           return (
-            // Studio boxes each module on its own (data-module-box, tokens/direction-studio.css).
-            <div key={module.id} data-module-box="">
-              <ModuleHeader
-                label={module.label}
-                title={module.title}
-                {...moduleStats(module)}
-                collapsed={moduleCollapsed}
-                onToggle={() => onToggleModule?.(module.id)}
-              />
-              <Collapse open={!moduleCollapsed}>
-                {/* 8 of air under a module's last topic, before the next module band (Nelson,
-                    25 Oct 2026: more space between sections). */}
-                <div className="pb-2">
-                  {module.lessons
-                    ? module.lessons.map((lesson) => (
-                        <div key={lesson.id}>
-                          <LessonHeader label={lesson.label} />
-                          {lesson.topics.map(renderTopic)}
-                        </div>
-                      ))
-                    : moduleTopics(module).map(renderTopic)}
-                </div>
+            <section key={module.id} data-module-box="" aria-labelledby={`${bodyId}-h`}>
+              {/* Sticks while its own topics scroll under it, then leaves with them. */}
+              <h3 id={`${bodyId}-h`} className="sticky top-0 z-[1]">
+                <ModuleHeader
+                  label={module.label}
+                  title={module.title}
+                  topicsCompleted={done}
+                  topicsTotal={tops.length}
+                  isCompleted={complete}
+                            collapsed={!isOpen}
+                  onToggle={() => toggle(module.id)}
+                  buttonProps={{ "aria-controls": bodyId, "data-roving": true, "data-module": module.id }}
+                />
+              </h3>
+              {moduleHint ? (
+                <p className="sk-text-body-small-regular flex items-start gap-1.5 border-b border-sko-border-subtle bg-sko-bg-faint px-4 pb-3 text-sko-text-subtle">
+                  <Icon icon={Lock} size={14} className="mt-0.5 shrink-0" />
+                  {moduleHint}
+                </p>
+              ) : null}
+              <Collapse open={isOpen} id={bodyId}>
+                {module.lessons ? (
+                  module.lessons.map((lesson) => (
+                    <div key={lesson.id}>
+                      <h4 className="sk-text-body-small-semibold px-4 pb-1 pt-4 text-sko-text-default">{lesson.label}</h4>
+                      <ol>{lesson.topics.map(renderTopic)}</ol>
+                    </div>
+                  ))
+                ) : (
+                  <ol>{tops.map(renderTopic)}</ol>
+                )}
               </Collapse>
-            </div>
+            </section>
           );
         })}
       </div>

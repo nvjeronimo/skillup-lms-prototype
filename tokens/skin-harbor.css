@@ -316,12 +316,10 @@ html[data-skin="harbor"] [data-theme="dark"] {
   border-radius: var(--sk-radius-inner);
   background-color: var(--color-bg-page);
 }
-[data-skin="harbor"] [data-module-box] > button,
 [data-skin="harbor"] [data-module-box] > h3 > button {
   border-bottom-width: 0;
   background-color: transparent;
 }
-/* The proposal's sticky header must stay opaque over the rows that scroll under it. */
 [data-skin="harbor"] [data-module-box] > h3 > button {
   background-color: var(--color-bg-page);
 }

@@ -26,8 +26,6 @@ export interface CourseHeaderProps {
   trailing?: React.ReactNode;
   /** Bottom hairline (DS: the header carries its own 1px `border-secondary`). */
   showDivider?: boolean;
-  /** "label" sets the eyebrow in the DS Label style (Course Journey proposal); default Caption + uppercase. */
-  eyebrowStyle?: "caption" | "label";
   /**
    * The player sidebar condenses its header while the topic list is scrolled (Nelson, 25 Oct
    * 2026): the eyebrow and the partner line fold away, the title and the toggle (or the ring)
@@ -57,7 +55,6 @@ export function CourseHeader({
   rightSlot,
   trailing,
   showDivider = true,
-  eyebrowStyle = "caption",
   condensed,
   className,
 }: CourseHeaderProps) {
@@ -70,10 +67,9 @@ export function CourseHeader({
     );
   }
 
-  const eyebrowClass = cn(
-    "min-w-0 text-sko-text-subtle",
-    eyebrowStyle === "label" ? "sk-text-label-small-semibold" : "sk-text-body-small-medium uppercase",
-  );
+  // The eyebrow is set in the DS Label style, not inline uppercase (Course Journey, promoted by
+  // Nelson, 27 Oct 2026).
+  const eyebrowClass = "sk-text-label-small-semibold min-w-0 text-sko-text-subtle";
 
   if (condensed !== undefined) {
     // Foldable: the toggle (or the ring) beside the column, so it stays when the eyebrow folds.
@@ -119,14 +115,7 @@ export function CourseHeader({
         {/* An empty eyebrow with nothing beside it leaves no empty row. */}
         {eyebrow || rowTrailing ? (
           <div className="flex items-center gap-1">
-            <p
-              className={cn(
-                "min-w-0 flex-1 text-sko-text-subtle",
-                eyebrowStyle === "label" ? "sk-text-label-small-semibold" : "sk-text-body-small-medium uppercase",
-              )}
-            >
-              {eyebrow}
-            </p>
+            <p className={cn(eyebrowClass, "flex-1")}>{eyebrow}</p>
             {rowTrailing}
           </div>
         ) : null}

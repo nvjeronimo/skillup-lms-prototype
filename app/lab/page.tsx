@@ -32,20 +32,6 @@ export default function LabIndex() {
           </li>
         ))}
       </ul>
-      <h2 className="sk-text-title-medium-semibold mt-8 text-sko-text-default">Player</h2>
-      <ul className="mt-3 grid gap-3 md:grid-cols-2">
-        <li>
-          <Link
-            href="/lab/course-journey"
-            className="flex h-full flex-col gap-1 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-primary"
-          >
-            <span className="sk-text-body-large-semibold text-sko-text-default">Course Journey proposal</span>
-            <span className="sk-text-body-medium-regular text-sko-text-muted">
-              The ICP sidebar with the fixes of the 24 Oct critique, in the real player.
-            </span>
-          </Link>
-        </li>
-      </ul>
     </main>
   );
 }

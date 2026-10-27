@@ -7,19 +7,18 @@ export interface ModuleInfoProps {
   label: string;
   topicsCompleted: number;
   topicsTotal: number;
-  /** Hide the "· x of y" progress part (module number only). */
+  /** Hide the "· x of y topics" progress part (module number only). */
   showTopicProgress?: boolean;
   /** Status = Module Completed: everything turns success and a 14px check trails the count. */
   isCompleted?: boolean;
-  /** Replaces "x of y", e.g. "3 of 12 topics" or "Completed" (Course Journey proposal). */
-  progressText?: string;
   className?: string;
 }
 
 /**
  * DS `LMS / Module Info` (Status = Module In progress · Module Completed).
  * One horizontal row, 8px gap: module number (Overline/Medium, tertiary) ·
- * separator (Caption/Medium, disabled) · "x of y" (Overline/Medium).
+ * separator (Caption/Medium, disabled) · "x of y topics" (Overline/Medium; "topics" since the
+ * Course Journey, promoted by Nelson, 27 Oct 2026).
  * A completed module shows the number and the soft success Badge "Completed", the badge of
  * every completed module, course and program (Nelson, 25 Oct 2026; it replaced the green
  * "x of y" + check).
@@ -30,7 +29,6 @@ export function ModuleInfo({
   topicsTotal,
   showTopicProgress = true,
   isCompleted = false,
-  progressText,
   className,
 }: ModuleInfoProps) {
   if (isCompleted && showTopicProgress) {
@@ -54,7 +52,7 @@ export function ModuleInfo({
             ·
           </span>
           <span className="sk-text-label-small-medium text-sko-text-subtle">
-            {progressText ?? `${topicsCompleted} of ${topicsTotal}`}
+            {topicsCompleted} of {topicsTotal} topics
           </span>
         </>
       ) : null}

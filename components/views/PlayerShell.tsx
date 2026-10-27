@@ -7,8 +7,6 @@ import type { SearchScope } from "@/components/platform/harbor/HarborSearch";
 import { courseProgressPct } from "@/lib/courses/outline";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { navigateWithTransition } from "@/lib/motion/pageTransition";
-import { SidebarProposal } from "@/components/organisms/SidebarProposal";
-import { useJourneyProposal } from "@/lib/journeyProposal";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
@@ -94,9 +92,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const learner = hydrated ? user : DEFAULT_USER;
   const pathname = usePathname();
   const bp = useBreakpoint();
-  // The Course Journey proposal (?journey=proposal, /lab/course-journey): off by default.
-  const journeyProposal = useJourneyProposal();
-  const JourneySidebar = journeyProposal ? SidebarProposal : Sidebar;
 
   const topic = getTopic(topicId);
   const { previous, next, total, position } = getAdjacentTopics(topicId);
@@ -132,8 +127,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Played time goes to the store in a few writes, not on every tick (usePlaybackRecorder).
   const playback = usePlaybackRecorder(topicId, topic ? getMediaSeconds(topic) : 0);
   const activeLineId = useLmsStore((s) => s.activeLineId);
-  const collapsedModules = useLmsStore((s) => s.collapsedModules);
-  const toggleModule = useLmsStore((s) => s.toggleModule);
   const bookmarks = useLmsStore((s) => s.bookmarks);
   const toggleBookmark = useLmsStore((s) => s.toggleBookmark);
   const completedTopics = useLmsStore((s) => s.completedTopics);
@@ -482,7 +475,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         progressPct={courseProgressPct(activeCourse, completedTopics)}
         searchScope={courseSearchScope}
         menuControls={COURSE_DRAWER_ID}
-        menuLabel={journeyProposal ? "Course Journey" : undefined}
         onBookmark={() => openOverlayPanel("saved")}
         onNotifications={() => openOverlayPanel("notifications")}
         showDiscussions={discussionsPreview}
@@ -509,17 +501,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       <div className={cn("flex min-h-0 flex-1", showInlineSidebar ? "gap-6 p-4" : "p-3")}>
         {showInlineSidebar ? (
           <ArrivalContext.Provider value={courseArrival}>
-          <JourneySidebar
+          <Sidebar
             className="sk-vt-player-sidebar"
             course={activeCourse}
             currentTopicId={topicId}
             variant={sidebarVariant}
-            collapsedModules={collapsedModules}
             bookmarks={bookmarks}
             completed={completedTopics}
             lastCompleted={lastCompleted}
             onToggleSidebar={toggleSidebar}
-            onToggleModule={toggleModule}
             onSelectTopic={navigateTopic}
             onToggleBookmark={toggleBookmark}
           />
@@ -731,15 +721,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       >
         {(titleId) => (
           <ArrivalContext.Provider value={courseArrival}>
-          <JourneySidebar
+          <Sidebar
             course={activeCourse}
             currentTopicId={topicId}
             variant="Mobile"
-            collapsedModules={collapsedModules}
             bookmarks={bookmarks}
             completed={completedTopics}
             lastCompleted={lastCompleted}
-            onToggleModule={toggleModule}
             onSelectTopic={navigateTopic}
             onToggleBookmark={toggleBookmark}
             onCloseMobile={() => setMobileDrawerOpen(false)}
