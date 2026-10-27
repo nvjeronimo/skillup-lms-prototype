@@ -290,7 +290,7 @@ function RecordingStage({ session }: { session: ViltSession }) {
             size="md"
           />
         </div>
-        <span className="sk-text-body-small-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-pill bg-sko-bg-subtle px-2 py-1 uppercase text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
+        <span className="sk-text-body-small-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-pill bg-sko-bg-subtle px-2 py-1 text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
           Recording
         </span>
       </div>

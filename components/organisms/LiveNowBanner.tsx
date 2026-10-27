@@ -46,7 +46,7 @@ export function LiveNowBanner({
             label at 4.5:1+ in every mode; the dot follows the label colour. */}
         <span
           className={cn(
-            "sk-text-body-small-medium inline-flex shrink-0 items-center gap-1.5 rounded-pill py-1 pl-2 pr-3 uppercase",
+            "sk-text-body-small-medium inline-flex shrink-0 items-center gap-1.5 rounded-pill py-1 pl-2 pr-3",
             isLive ? "bg-sko-bg-success text-sko-text-on-success" : "bg-sko-bg-warning text-sko-text-on-warning",
           )}
         >

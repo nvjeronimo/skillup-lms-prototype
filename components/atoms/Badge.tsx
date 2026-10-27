@@ -54,7 +54,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 
   /** @deprecated Use `color` + `variant`. Kept so existing call sites keep rendering. */
   tone?: BadgeTone;
   leftIcon?: LucideIcon;
-  /** 2xs uppercase eyebrow styling when true; otherwise the DS Medium label style. */
+  /** The Label style (semibold) when true, in sentence case like every badge; otherwise the DS Medium label style. */
   eyebrow?: boolean;
   /**
    * A live session: a dot before the label that pulses (opacity, 1.2 s loop; still under
@@ -215,7 +215,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
   const v: BadgeVariant = variant ?? fromTone.variant ?? "soft";
   const plain = v === "plain";
   const geometry = PILL_SIZE[size];
-  const textStyle = eyebrow ? "sk-text-label-small-semibold" : geometry.text;
+  const textStyle = eyebrow ? "sk-text-label-small-semibold normal-case tracking-normal" : geometry.text;
 
   return (
     <span
