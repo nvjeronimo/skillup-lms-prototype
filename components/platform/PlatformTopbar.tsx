@@ -295,14 +295,19 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 <SectionLinks
                   current={current}
                   look="tabs"
-                  className="flex h-full items-stretch gap-6 xl:gap-3 min-[1440px]:gap-6"
+                  className="flex h-full items-stretch gap-3 min-[1440px]:gap-6"
                 />
               </nav>
               {/* Every skin has the search + Assistant pill (Nelson, 26 Oct 2026): at the end of the
                   middle column here, in the middle of the bar in the panel layout. With the five
                   tabs it needs 1280: below that the bar keeps the floating launcher. The launcher
                   always stays in the player. */}
-              <HarborSearch width={340} className="hidden xl:block" />
+              {/* The pill's own width (240 at rest) must not set the column's minimum, or the column
+                  outgrows the bar at 1280 and pushes the actions off screen (27 Oct 2026): it sits
+                  in a box that contributes no width (contain: inline-size) and shrinks into it. */}
+              <div className="hidden min-w-0 flex-1 justify-end [contain:inline-size] xl:flex">
+                <HarborSearch width={340} />
+              </div>
             </div>
           )}
           <div className={cn("flex items-center gap-3", harbor ? "flex-1 basis-0 justify-end" : "justify-self-end")}>
