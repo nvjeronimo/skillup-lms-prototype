@@ -4,7 +4,7 @@ import { CompletionCard, GradeSummary } from "./ProgressTab";
 
 /**
  * The edge cases of the Progress tab (Nelson, 27 Oct 2026): the five Results of DS
- * Grade-Summary 1.1 and the states of Completion-Card 1.3. Hover the bar for the
+ * Grade-Summary 1.2 and the states of Completion-Card 1.3. Hover the bar for the
  * current-grade tooltip.
  */
 const grade = SIX_SIGMA.progressTab.grade;
