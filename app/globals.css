@@ -1344,6 +1344,66 @@ button {
   animation: none;
 }
 
+/* The assistant button's halo (Nelson, 26 Oct 2026: where the Assistant's icon stands alone,
+   as on the phone, a circle with a thin border and a gradient glint that wanders round it).
+   A 1.5px ring cut out of a conic gradient by a mask: a soft primary rim with a short glint
+   (primary into info) whose angle drifts at uneven speeds, stops, steps back and goes on, so it
+   never reads as a spinner. Each button starts at a random point of the cycle and turns either
+   way (--sk-halo-delay / --sk-halo-direction, set on mount). Role tokens, so every skin and
+   theme gets its own colours. Reduced motion (OS or the Accessibility panel) parks the glint. */
+@property --sk-halo-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes sk-halo-wander {
+  0% { --sk-halo-angle: 0deg; }
+  14% { --sk-halo-angle: 140deg; }
+  22% { --sk-halo-angle: 115deg; }
+  38% { --sk-halo-angle: 290deg; }
+  48%, 54% { --sk-halo-angle: 300deg; }
+  70% { --sk-halo-angle: 470deg; }
+  78% { --sk-halo-angle: 450deg; }
+  100% { --sk-halo-angle: 720deg; }
+}
+.sk-assistant-halo {
+  position: relative;
+  isolation: isolate;
+}
+.sk-assistant-halo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 9999px;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--sk-halo-angle),
+    var(--color-border-primary-soft) 0deg,
+    var(--color-border-primary-soft) 250deg,
+    var(--color-border-primary) 300deg,
+    var(--color-border-info-soft) 330deg,
+    var(--color-border-primary-soft) 360deg
+  );
+  -webkit-mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(black 0 0) content-box exclude, linear-gradient(black 0 0);
+  animation: sk-halo-wander calc(var(--motion-duration-long2) * 16) var(--motion-easing-linear) infinite;
+  animation-delay: var(--sk-halo-delay, 0s);
+  animation-direction: var(--sk-halo-direction, normal);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-assistant-halo::after {
+    animation: none;
+    --sk-halo-angle: 300deg;
+  }
+}
+[data-reduce-motion] .sk-assistant-halo::after {
+  animation: none;
+  --sk-halo-angle: 300deg;
+}
+
 /* Assistant mark (components/assistant/AssistantMark.tsx). The svg is a light island, so the
    tokens read as SKO light on every page: ball border/info-soft (#51bffc), ink icon/info
    (#044150). On a dark page the ink is white (icon/on-media), as the dark asset was. */

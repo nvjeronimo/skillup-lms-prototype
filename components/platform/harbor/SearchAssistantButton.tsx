@@ -35,6 +35,15 @@ export function SearchAssistantButton({
   const presence = useExitTransition(open, MOTION_MS.short4);
   const titleId = React.useId();
   const course = scope?.kind === "course";
+  // The halo's glint starts at a random point of its cycle and turns either way (after mount,
+  // so server and client render the same).
+  const [halo, setHalo] = React.useState<React.CSSProperties>();
+  React.useEffect(() => {
+    setHalo({
+      ["--sk-halo-delay" as string]: `${(-Math.random() * 9.6).toFixed(2)}s`,
+      ["--sk-halo-direction" as string]: Math.random() < 0.5 ? "normal" : "reverse",
+    });
+  }, []);
   return (
     <>
       <button
@@ -45,15 +54,16 @@ export function SearchAssistantButton({
         aria-label={course ? "Search this course or ask the assistant" : "Search or ask the assistant"}
         onClick={() => setOpen(true)}
         data-hit-band={size === "sm" ? "" : undefined}
+        style={halo}
         className={cn(
-          "inline-flex shrink-0 items-center justify-center rounded-control text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
+          "sk-assistant-halo inline-flex shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
           size === "md"
             ? "size-11"
-            : "relative size-8 before:absolute before:-inset-1.5 before:content-['']",
+            : "size-8 before:absolute before:-inset-1.5 before:content-['']",
           className,
         )}
       >
-        <AssistantGlyph size={20} />
+        <AssistantGlyph size={size === "md" ? 20 : 18} />
       </button>
       {presence.mounted ? (
         <div
