@@ -1,0 +1,36 @@
+/* ============================================================================
+   Vision: red-green colour-vision deficiency (Okabe-Ito), the "Colorblind-safe states"
+   setting. One rule for every skin: success = blue, warning = orange, error = vermilion,
+   in every skin (SKO, Gold, Studio, Harbor, Fluent), light and dark, and in themed islands.
+
+   Imported LAST (app/globals.css) and written as html[...] selectors, because the
+   Harbor and Fluent skins set their own success and error colours with
+   [data-skin]:not([data-theme="dark"]) (0,2,0) and html[data-skin][data-theme="dark"] (0,2,1).
+   Every selector here is 0,2,1, so it wins by specificity or, on a tie, by order.
+   ============================================================================ */
+
+html[data-vision="cvd"]:not([data-theme="dark"]),
+html[data-vision="cvd"] [data-theme="light"] {
+  --color-text-success: #00618f;  --color-icon-success: #00618f;  --color-border-success: #00618f;
+  --color-text-warning: #8a5a00;  --color-icon-warning: #8a5a00;  --color-border-warning: #8a5a00;
+  --color-text-error:   #9e2a2b;  --color-icon-error:   #9e2a2b;  --color-border-error:   #9e2a2b;
+  --color-bg-success: #0072b2;  --color-bg-warning: #e69f00;  --color-bg-error: #c0392b;
+  --color-text-on-success: #ffffff;  --color-text-on-warning: #13282f;  --color-text-on-error: #ffffff;
+  --color-icon-on-success: #ffffff;  --color-icon-success-strong: #0072b2;
+  --color-bg-success-soft: #e0eff8;  --color-bg-warning-soft: #fdf1d6;  --color-bg-error-soft: #f7e3e1;
+  --color-bg-warning-muted: #f3cf86;
+  --color-border-success-soft: #a9d2ea;  --color-border-warning-soft: #f5d48a;  --color-border-error-soft: #e6b3ae;
+}
+
+html[data-vision="cvd"][data-theme="dark"],
+html[data-vision="cvd"] [data-theme="dark"] {
+  --color-text-success: #56b4e9;  --color-icon-success: #56b4e9;  --color-border-success: #56b4e9;
+  --color-text-warning: #e6b54d;  --color-icon-warning: #e6b54d;  --color-border-warning: #e6b54d;
+  --color-text-error:   #e8898a;  --color-icon-error:   #e8898a;  --color-border-error:   #e8898a;
+  --color-bg-success: #56b4e9;  --color-bg-warning: #e6b54d;  --color-bg-error: #e8898a;
+  --color-text-on-success: #0e1a1f;  --color-text-on-warning: #13282f;  --color-text-on-error: #0e1a1f;
+  --color-icon-on-success: #0e1a1f;  --color-icon-success-strong: #56b4e9;
+  --color-bg-success-soft: #0f2a3d;  --color-bg-warning-soft: #2e2812;  --color-bg-error-soft: #331a19;
+  --color-bg-warning-muted: #6b5418;
+  --color-border-success-soft: #1d4f6e;  --color-border-warning-soft: #6b5418;  --color-border-error-soft: #6e2d2c;
+}
