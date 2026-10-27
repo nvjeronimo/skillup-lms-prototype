@@ -125,9 +125,9 @@ export const page: CourseDetail = {
     title: "Your progress",
     completion: {
       title: "Course completion",
-      body: "How much of the course content you have completed.",
-      counts: "36 complete · 0 incomplete · 0 locked",
-      percent: 100,
+      complete: 36,
+      incomplete: 0,
+      locked: 0,
     },
     passAlert: {
       title: "You passed this course",
@@ -135,10 +135,8 @@ export const page: CourseDetail = {
     },
     grade: {
       title: "Your grade",
-      badge: "91% · above the 70% pass mark",
       percent: 91,
       passPercent: 70,
-      currentLabel: "Final 91%",
       passLabel: "Pass 70%",
       columns: SIX_SIGMA.progressTab.grade.columns,
       // Two homework assignments (88 and 92) average 90%, two graded quizzes 100%, the final
