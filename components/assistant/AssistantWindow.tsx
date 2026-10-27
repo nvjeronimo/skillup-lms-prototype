@@ -448,8 +448,8 @@ export function AssistantWindow({
                   {panel ? (
                     <div className="flex flex-col gap-6 pt-2">
                       <div className="flex flex-col gap-1">
-                        <p className="sk-text-headline-small-semibold inline-flex items-center gap-2 text-sko-text-default">
-                          <AssistantGlyph size={24} className="text-sko-icon-primary" />
+                        {/* No icon before the greeting (Nelson, 27 Oct 2026). */}
+                        <p className="sk-text-headline-small-semibold text-sko-text-default">
                           Hi {firstName}!
                         </p>
                         <p className="sk-text-title-large-regular text-sko-text-muted">
