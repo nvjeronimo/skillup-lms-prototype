@@ -207,7 +207,8 @@ export function ProgressTab({ course }: { course: CourseDetail }) {
               {tab.completion.title}
             </h3>
             <p className="sk-text-body-large-regular text-sko-text-muted">{tab.completion.body}</p>
-            <p className="sk-text-body-large-medium text-sko-text-muted">{tab.completion.counts}</p>
+            {/* "Topics:" names what is counted (Nelson, ICP 6406:41528, 27 Oct 2026). */}
+            <p className="sk-text-body-large-medium text-sko-text-muted">Topics: {tab.completion.counts}</p>
           </div>
           <CompletionRing percent={tab.completion.percent} label={tab.completion.title} />
         </section>
