@@ -7,6 +7,7 @@ import { Icon } from "@/lib/icons";
 import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";
 import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { cn } from "@/lib/utils";
+import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
@@ -262,7 +263,7 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   const skin = useLmsStore((s) => s.skin);
   const setSkin = useLmsStore((s) => s.setSkin);
   const theme = useLmsStore((s) => s.theme);
-  const toggleTheme = useLmsStore((s) => s.toggleTheme);
+  const setTheme = useLmsStore((s) => s.setTheme);
   const squareCorners = useLmsStore((s) => s.squareCorners);
   const setSquareCorners = useLmsStore((s) => s.setSquareCorners);
   return (
@@ -294,9 +295,13 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
         checked={squareCorners}
         onChange={setSquareCorners}
       />
-      {/* The player's phone top bar has no theme button: the switch is here instead. */}
+      {/* On a phone the theme is set here too, with the top bar's own control (Nelson, 27 Oct 2026;
+          DS Profile Menu 1.10): label on the left, Theme-Switch md on the right. */}
       {showTheme ? (
-        <ToggleRow label="Dark theme" hint="Easier on the eyes at night" checked={theme === "dark"} onChange={() => toggleTheme()} />
+        <div className="flex items-center justify-between gap-3 px-1">
+          <span className="sk-text-body-medium-medium text-sko-text-muted">Theme</span>
+          <ThemeSwitch value={theme} onChange={setTheme} size="md" />
+        </div>
       ) : null}
     </ProfileSection>
   );
