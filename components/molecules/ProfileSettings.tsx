@@ -57,10 +57,25 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
 export const PROFILE_PANEL =
   "sk-animate-menu origin-top-right absolute right-0 top-[calc(100%+8px)] z-50 flex max-h-[calc(100dvh-88px)] w-72 flex-col overflow-y-auto overflow-x-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-xl";
 
-export function ProfileSection({ title, children }: { title: string; children: React.ReactNode }) {
+/**
+ * A menu group. `settings` (DS Profile Menu 1.12, Nelson, 27 Oct 2026): Appearance and
+ * Accessibility standards set their items 16 apart, title included; Accessibility standards also
+ * pads 16 top and bottom (`roomy`). The link groups keep 12 / 8.
+ */
+export function ProfileSection({
+  title,
+  children,
+  settings = false,
+  roomy = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  settings?: boolean;
+  roomy?: boolean;
+}) {
   return (
-    <div className="border-t border-sko-border-subtle px-4 py-3 first:border-t-0">
-      <p className="sk-text-label-small-medium mb-2 text-sko-text-subtle">{title}</p>
+    <div className={cn("border-t border-sko-border-subtle px-4 first:border-t-0", roomy ? "py-4" : "py-3")}>
+      <p className={cn("sk-text-label-small-medium text-sko-text-subtle", settings ? "mb-4" : "mb-2")}>{title}</p>
       {children}
     </div>
   );
@@ -267,42 +282,48 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   const squareCorners = useLmsStore((s) => s.squareCorners);
   const setSquareCorners = useLmsStore((s) => s.setSquareCorners);
   return (
-    <ProfileSection title="Appearance">
-      <div className="flex flex-col gap-1.5 px-1">
-        <span className="sk-text-body-medium-medium text-sko-text-muted">Brand skin</span>
-        <Segmented
-          label="Brand skin"
-          options={PROFILE_SKINS.map((s) => ({
-            value: s.skin,
-            // Five skins in the 288 panel: one row that scrolls, each name in full.
-            className: "sk-text-body-medium-semibold gap-1.5 px-3",
-            label: (
-              <>
-                <SkinDot skin={s.skin} dot={s.dot} />
-                <span className="whitespace-nowrap">{s.label}</span>
-              </>
-            ),
-          }))}
-          value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
-          onChange={setSkin}
-          scroll
-        />
-      </div>
-      {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
-      <ToggleRow
-        label="Square corners"
-        hint="Experimental · buttons keep their corners"
-        checked={squareCorners}
-        onChange={setSquareCorners}
-      />
-      {/* On a phone the theme is set here too, with the top bar's own control (Nelson, 27 Oct 2026;
-          DS Profile Menu 1.10): label on the left, Theme-Switch md on the right. */}
-      {showTheme ? (
-        <div className="flex items-center justify-between gap-3 px-1">
-          <span className="sk-text-body-medium-medium text-sko-text-muted">Theme</span>
-          <ThemeSwitch value={theme} onChange={setTheme} size="md" />
+    <ProfileSection title="Appearance" settings>
+      {/* 16 between items: the toggle row's own 6 of padding + 10. */}
+      <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-1.5 px-1">
+          <span className="sk-text-body-medium-medium text-sko-text-muted">Brand skin</span>
+          <Segmented
+            label="Brand skin"
+            options={PROFILE_SKINS.map((s) => ({
+              value: s.skin,
+              // Five skins in the 288 panel: one row that scrolls, each name in full.
+              className: "sk-text-body-medium-semibold gap-1.5 px-3",
+              label: (
+                <>
+                  <SkinDot skin={s.skin} dot={s.dot} />
+                  <span className="whitespace-nowrap">{s.label}</span>
+                </>
+              ),
+            }))}
+            value={PROFILE_SKINS.some((s) => s.skin === skin) ? skin : "teal"}
+            onChange={setSkin}
+            scroll
+          />
         </div>
-      ) : null}
+        {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
+        <ToggleRow
+          label="Square corners"
+          hint="Experimental · buttons keep their corners"
+          checked={squareCorners}
+          onChange={setSquareCorners}
+        />
+        {/* On a phone the theme is set here too, with the top bar's own control (Nelson, 27 Oct 2026;
+            DS Profile Menu 1.10; supporting text 1.12): label on the left, Theme-Switch md on the right. */}
+        {showTheme ? (
+          <div className="flex items-center justify-between gap-3 px-1">
+            <span className="flex min-w-0 flex-col">
+              <span className="sk-text-body-medium-medium text-sko-text-muted">Theme</span>
+              <span className="sk-text-body-medium-regular text-sko-text-subtle">Light and Dark</span>
+            </span>
+            <ThemeSwitch value={theme} onChange={setTheme} size="md" />
+          </div>
+        ) : null}
+      </div>
     </ProfileSection>
   );
 }
@@ -321,9 +342,10 @@ export function AccessibilitySection() {
   const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
   const sizes = ["md", "lg", "xl"] as const;
   return (
-    <ProfileSection title="Accessibility standards">
-      <div className="flex flex-col gap-0.5">
-        <div className="mb-1 flex flex-col gap-1.5 px-1">
+    <ProfileSection title="Accessibility standards" settings roomy>
+      {/* 16 between items: each toggle row's own 6 of padding + 4 (+ 6 under Text size). */}
+      <div className="flex flex-col gap-1">
+        <div className="mb-1.5 flex flex-col gap-1.5 px-1">
           <span className="sk-text-body-medium-medium text-sko-text-muted">Text size</span>
           <Segmented
             label="Text size"
