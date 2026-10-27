@@ -17,28 +17,9 @@
      [data-skin="gold"|"teal"]                Gold / explicit SKO, light and dark (Red went 26 Oct 2026;
                                               its generated block leaves with the next token sync)
      [data-direction="studio"]                Studio, light and dark
-   This file adds, after them: the [data-vision="cvd"] axis, the legacy --sk-* aliases and the
-   system preferences.
+   This file adds, after them: the legacy --sk-* aliases and the system preferences.
+   The [data-vision="cvd"] axis lives in tokens/vision-cvd.css, imported after every skin.
    ============================================================================ */
-
-/* --- Vision: red-green colour-vision deficiency (Okabe-Ito), unchanged from v3.2,
-   re-expressed on the new status tokens. Comes after skins/dark on purpose. ----- */
-[data-vision="cvd"] {
-  --color-text-success: #00618f;  --color-icon-success: #00618f;  --color-border-success: #00618f;
-  --color-text-warning: #8a5a00;  --color-icon-warning: #8a5a00;  --color-border-warning: #8a5a00;
-  --color-text-error:   #9e2a2b;  --color-icon-error:   #9e2a2b;  --color-border-error:   #9e2a2b;
-  --color-bg-success: #0072b2;  --color-bg-warning: #e69f00;  --color-bg-error: #c0392b;
-  --color-text-on-success: #ffffff;  --color-text-on-warning: #13282f;  --color-text-on-error: #ffffff;
-  --color-bg-success-soft: #e0eff8;  --color-bg-warning-soft: #fdf1d6;  --color-bg-error-soft: #f7e3e1;
-}
-[data-vision="cvd"][data-theme="dark"] {
-  --color-text-success: #56b4e9;  --color-icon-success: #56b4e9;  --color-border-success: #56b4e9;
-  --color-text-warning: #e6b54d;  --color-icon-warning: #e6b54d;  --color-border-warning: #e6b54d;
-  --color-text-error:   #e8898a;  --color-icon-error:   #e8898a;  --color-border-error:   #e8898a;
-  --color-bg-success: #56b4e9;  --color-bg-warning: #e6b54d;  --color-bg-error: #e8898a;
-  --color-text-on-success: #0e1a1f;  --color-text-on-warning: #13282f;  --color-text-on-error: #0e1a1f;
-  --color-bg-success-soft: #0f2a3d;  --color-bg-warning-soft: #2e2812;  --color-bg-error-soft: #331a19;
-}
 
 /* --- Legacy --sk-* aliases (v3.2 names) — DEPRECATED, do not use in new code ---- */
 :root {

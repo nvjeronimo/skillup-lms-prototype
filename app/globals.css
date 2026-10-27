@@ -12,6 +12,7 @@
 @import "../tokens/skin-fluent.css";
 @import "../tokens/skin-gold.css";
 @import "../tokens/square-corners.css";
+@import "../tokens/vision-cvd.css";
 
 @tailwind base;
 @tailwind components;
