@@ -43,6 +43,10 @@
   }
 @media screen and (max-width: 768px) {
   :root {
+    --sk-type-size-text-2xs: 0.75rem;
+    --sk-type-size-text-xs: 0.8125rem;
+    --sk-type-line-height-text-sm: 1.5rem;
+    --sk-type-line-height-text-md: 1.625rem;
     --sk-type-line-height-text-xl: 1.75rem;
     --sk-type-line-height-display-xs: 1.875rem;
     --sk-type-line-height-display-sm: 2rem;
@@ -50,6 +54,8 @@
     --sk-type-line-height-display-lg: 2.375rem;
     --sk-type-line-height-display-xl: 2.75rem;
     --sk-type-line-height-display-2xl: 3.75rem;
+    --sk-type-size-text-sm: 1rem;
+    --sk-type-size-text-md: 1.125rem;
     --sk-type-size-text-xl: 1.125rem;
     --sk-type-size-display-xs: 1.25rem;
     --sk-type-size-display-sm: 1.5rem;
@@ -57,9 +63,14 @@
     --sk-type-size-display-lg: 1.875rem;
     --sk-type-size-display-xl: 2.25rem;
     --sk-type-size-display-2xl: 3rem;
+    --sk-type-line-height-text-2xs: 1.125rem;
   }
   }
 [data-device="desktop"] {
+  --sk-type-size-text-2xs: 0.625rem;
+  --sk-type-size-text-xs: 0.75rem;
+  --sk-type-line-height-text-sm: 1.25rem;
+  --sk-type-line-height-text-md: 1.5rem;
   --sk-type-line-height-text-xl: 1.875rem;
   --sk-type-line-height-display-xs: 2rem;
   --sk-type-line-height-display-sm: 2.375rem;
@@ -67,6 +78,8 @@
   --sk-type-line-height-display-lg: 3.75rem;
   --sk-type-line-height-display-xl: 4.5rem;
   --sk-type-line-height-display-2xl: 5.625rem;
+  --sk-type-size-text-sm: 0.875rem;
+  --sk-type-size-text-md: 1rem;
   --sk-type-size-text-xl: 1.25rem;
   --sk-type-size-display-xs: 1.5rem;
   --sk-type-size-display-sm: 1.875rem;
@@ -74,8 +87,13 @@
   --sk-type-size-display-lg: 3rem;
   --sk-type-size-display-xl: 3.75rem;
   --sk-type-size-display-2xl: 4.5rem;
+  --sk-type-line-height-text-2xs: 0.875rem;
 }
 [data-device="tablet"] {
+  --sk-type-size-text-2xs: 0.625rem;
+  --sk-type-size-text-xs: 0.75rem;
+  --sk-type-line-height-text-sm: 1.25rem;
+  --sk-type-line-height-text-md: 1.5rem;
   --sk-type-line-height-text-xl: 1.875rem;
   --sk-type-line-height-display-xs: 2rem;
   --sk-type-line-height-display-sm: 2.375rem;
@@ -83,6 +101,8 @@
   --sk-type-line-height-display-lg: 2.75rem;
   --sk-type-line-height-display-xl: 3.75rem;
   --sk-type-line-height-display-2xl: 4.5rem;
+  --sk-type-size-text-sm: 0.875rem;
+  --sk-type-size-text-md: 1rem;
   --sk-type-size-text-xl: 1.25rem;
   --sk-type-size-display-xs: 1.5rem;
   --sk-type-size-display-sm: 1.875rem;
@@ -90,8 +110,13 @@
   --sk-type-size-display-lg: 2.25rem;
   --sk-type-size-display-xl: 3rem;
   --sk-type-size-display-2xl: 3.75rem;
+  --sk-type-line-height-text-2xs: 0.875rem;
 }
 [data-device="mobile"] {
+  --sk-type-size-text-2xs: 0.75rem;
+  --sk-type-size-text-xs: 0.8125rem;
+  --sk-type-line-height-text-sm: 1.5rem;
+  --sk-type-line-height-text-md: 1.625rem;
   --sk-type-line-height-text-xl: 1.75rem;
   --sk-type-line-height-display-xs: 1.875rem;
   --sk-type-line-height-display-sm: 2rem;
@@ -99,6 +124,8 @@
   --sk-type-line-height-display-lg: 2.375rem;
   --sk-type-line-height-display-xl: 2.75rem;
   --sk-type-line-height-display-2xl: 3.75rem;
+  --sk-type-size-text-sm: 1rem;
+  --sk-type-size-text-md: 1.125rem;
   --sk-type-size-text-xl: 1.125rem;
   --sk-type-size-display-xs: 1.25rem;
   --sk-type-size-display-sm: 1.5rem;
@@ -106,6 +133,7 @@
   --sk-type-size-display-lg: 1.875rem;
   --sk-type-size-display-xl: 2.25rem;
   --sk-type-size-display-2xl: 3rem;
+  --sk-type-line-height-text-2xs: 1.125rem;
 }
 
 /* One class per DS text style: .sk-text-{style}-{weight}. */

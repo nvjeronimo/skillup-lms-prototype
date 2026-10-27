@@ -2595,7 +2595,7 @@
           "values": {
             "Desktop": 10,
             "Tablet": 10,
-            "Mobile": 10
+            "Mobile": 12
           }
         },
         {
@@ -2605,7 +2605,7 @@
           "values": {
             "Desktop": 12,
             "Tablet": 12,
-            "Mobile": 12
+            "Mobile": 13
           }
         },
         {
@@ -2625,7 +2625,7 @@
           "values": {
             "Desktop": 20,
             "Tablet": 20,
-            "Mobile": 20
+            "Mobile": 24
           }
         },
         {
@@ -2635,7 +2635,7 @@
           "values": {
             "Desktop": 24,
             "Tablet": 24,
-            "Mobile": 24
+            "Mobile": 26
           }
         },
         {
@@ -2725,7 +2725,7 @@
           "values": {
             "Desktop": 14,
             "Tablet": 14,
-            "Mobile": 14
+            "Mobile": 16
           }
         },
         {
@@ -2735,7 +2735,7 @@
           "values": {
             "Desktop": 16,
             "Tablet": 16,
-            "Mobile": 16
+            "Mobile": 18
           }
         },
         {
@@ -2825,7 +2825,7 @@
           "values": {
             "Desktop": 14,
             "Tablet": 14,
-            "Mobile": 14
+            "Mobile": 18
           }
         },
         {
