@@ -12,6 +12,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { ProgressRing } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 import { inertProps } from "@/lib/inert";
 import { HOVER_CLOSE_GRACE_MS, MOTION_MS } from "@/lib/motion/tokens";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
@@ -158,13 +159,19 @@ export function Sidebar({
   React.useEffect(() => {
     savedOpen = { courseId: course.id, open: [...open] };
   }, [course.id, open]);
-  const toggle = (id: string, to?: boolean) =>
+  // A learner's own open or close is tracked, as the old sidebar's store did; the automatic
+  // opening of the current module and closing of finished ones is not.
+  const toggle = (id: string, to?: boolean) => {
+    const willOpen = to ?? !open.has(id);
+    if (willOpen === open.has(id)) return;
+    track(willOpen ? "module_expand" : "module_collapse", { moduleId: id });
     setOpen((prev) => {
       const next = new Set(prev);
-      if (to ?? !next.has(id)) next.add(id);
+      if (willOpen) next.add(id);
       else next.delete(id);
       return next;
     });
+  };
 
   // ── Scroll: restore across the remount; the open topic a third of the way down when it is
   //    out of view (always in the drawer, which opens fresh each time).

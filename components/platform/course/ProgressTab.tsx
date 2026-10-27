@@ -140,7 +140,7 @@ export function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["gr
         {/* DS Progress bar Label=Bottom floating, shown on hover only. */}
         <span
           aria-hidden
-          className="sk-text-body-small-medium pointer-events-none absolute top-4 z-10 -translate-x-1/2 rounded-control border border-sko-border-subtle bg-sko-bg-page px-2 py-1 text-sko-text-default opacity-0 shadow-sm transition-opacity duration-150 group-hover:opacity-100 motion-reduce:transition-none"
+          className="sk-text-body-small-medium pointer-events-none absolute top-4 z-10 -translate-x-1/2 rounded-control border border-sko-border-subtle bg-sko-bg-page px-2 py-1 text-sko-text-default opacity-0 shadow-sm transition-opacity duration-short3 ease-standard group-hover:opacity-100 motion-reduce:transition-none"
           style={{ left: `${Math.max(grade.percent, 4)}%` }}
         >
           {grade.percent}%
