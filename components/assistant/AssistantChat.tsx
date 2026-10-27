@@ -163,6 +163,26 @@ function Chat({ pathname }: { pathname: string }) {
   }, [open]);
 
   const isPhone = phone || previewPhone;
+  // A press outside the window closes it (Nelson, 27 Oct 2026), on the platform pages and in the
+  // player. The focus stays where the learner pressed, so not through `close`. A press on the bar's
+  // Assistant or search button is left to that button. The phone sheet covers the screen: no outside.
+  const dismiss = React.useRef(() => {});
+  dismiss.current = () => {
+    firstSteps.greeted();
+    set(false);
+  };
+  React.useEffect(() => {
+    if (!open || isPhone) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element) || !target.isConnected) return;
+      if (document.getElementById(windowId)?.contains(target)) return;
+      if (target.closest("[data-assistant-anchor]")) return;
+      dismiss.current();
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [open, isPhone, windowId]);
   // On a phone, following a button of an answer goes to the page: the sheet gets out of the way.
   const lastPath = React.useRef(pathname);
   React.useEffect(() => {
