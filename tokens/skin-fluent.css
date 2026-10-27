@@ -353,11 +353,12 @@ html[data-skin="fluent"] [data-glance-title] {
 
 /* ── Player sidebar ──────────────────────────────────────────────────────────
    Each module in its own box, as in Studio and Harbor: Background1, Stroke2, Radius/inner (4: the
-   sidebar card's 8 − the list's 4 of padding). */
+   sidebar card's 8 − the list's 4 of padding). 12 between boxes (was 4; Nelson, 27 Oct 2026: more air
+   between the boxes). */
 [data-skin="fluent"] [data-module-list] {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
   padding: 4px;
   background-color: var(--color-bg-faint);
 }

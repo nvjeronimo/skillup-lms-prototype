@@ -299,13 +299,13 @@ html[data-skin="harbor"] [data-theme="dark"] {
 
 /* ── Player sidebar ──────────────────────────────────────────────────────────
    Each module in its own box, as in Studio (Nelson, 25 Oct 2026). The list sits on the faint ground
-   with 8 of padding and 8 between boxes; a box is white with a 1px border/subtle (Harbor's hairline
+   with 8 of padding and 12 between boxes (was 8; Nelson, 27 Oct 2026); a box is white with a 1px border/subtle (Harbor's hairline
    for a box inside a surface) and Radius/inner (8: the sidebar card's 16 − the list's 8 of padding). overflow: clip keeps a
    sticky module header working; inside a box the header has no hairline and no grey band. */
 [data-skin="harbor"] [data-module-list] {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   padding: 8px;
   background-color: var(--color-bg-faint);
 }
