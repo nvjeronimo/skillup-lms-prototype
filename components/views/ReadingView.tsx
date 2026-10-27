@@ -17,15 +17,16 @@ export function ReadingView({ topicId }: { topicId: string }) {
   return (
     // Blocks 32 apart, 24 above and below (were 20 / 16; Nelson, 25 Oct 2026: more space between sections).
     <article className="flex flex-col gap-8 py-6">
-      {/* Running text fills the content column, max 1200 like the platform pages (Nelson, 27 Oct
-          2026; replaces the 56ch cap of 25 Oct). text-pretty keeps a last word from standing alone. */}
-      <p className="sk-text-title-medium-medium text-pretty text-sko-text-default">{article.lede}</p>
+      {/* Running text stops at DS Container/text-max-width (max-w-text), for now 1200 like the
+          column and the platform pages (Nelson, 27 Oct 2026; replaces the 56ch cap of 25 Oct), so a
+          shorter measure is one token away. text-pretty keeps a last word from standing alone. */}
+      <p className="sk-text-title-medium-medium max-w-text text-pretty text-sko-text-default">{article.lede}</p>
 
       {article.sections.map((s) => (
         <section key={s.heading} className="flex flex-col gap-2">
           <h2 className="sk-text-headline-small-semibold text-sko-text-default">{s.heading}</h2>
           {s.paragraphs.map((p, i) => (
-            <p key={i} className="sk-text-body-large-regular text-pretty text-sko-text-muted">
+            <p key={i} className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-muted">
               {p}
             </p>
           ))}
@@ -38,7 +39,7 @@ export function ReadingView({ topicId }: { topicId: string }) {
       <blockquote className="flex gap-3 py-2">
         <Icon icon={Quote} size={28} aria-hidden="true" className="mt-0.5 shrink-0 text-sko-icon-primary" />
         <div className="flex flex-col gap-2">
-          <p className="sk-text-title-medium-medium text-pretty text-sko-text-primary">{article.pullQuote.text}</p>
+          <p className="sk-text-title-medium-medium max-w-text text-pretty text-sko-text-primary">{article.pullQuote.text}</p>
           <footer className="sk-text-body-medium-regular text-sko-text-muted">{article.pullQuote.attribution}</footer>
         </div>
       </blockquote>

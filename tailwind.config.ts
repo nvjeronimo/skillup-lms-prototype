@@ -43,6 +43,13 @@ const config: Config = {
         "layout-side": "var(--sk-layout-side-gap)",
         "layout-grid": "var(--sk-layout-grid-gap)",
       },
+      /* Running text in a topic (Reading lede, paragraphs, pull quote; lesson-block paragraphs):
+         DS Container/text-max-width, for now an alias of Container/content-max-width (1200), so the
+         text fills the column. The fallback holds until the next Publish tokens export adds the
+         variable to tokens/generated/spacing.css (Nelson, 27 Oct 2026): max-w-text. */
+      maxWidth: {
+        text: "var(--sk-container-text-max-width, 1200px)",
+      },
       boxShadow: {
         "sk-card": "var(--sk-shadow-card)",
         "sk-elevation-3": "var(--sk-shadow-elevation-3)",

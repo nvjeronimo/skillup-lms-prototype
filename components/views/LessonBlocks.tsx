@@ -97,8 +97,8 @@ function Block({ block }: { block: LessonBlock }) {
             <h2 className="sk-text-headline-small-semibold text-sko-text-default">{block.heading}</h2>
           ) : null}
           {block.paragraphs.map((p, i) => (
-            // Running text fills the 1200 content column, like the platform pages (Nelson, 27 Oct 2026).
-            <p key={i} className="sk-text-body-large-regular text-pretty text-sko-text-muted">
+            // Running text stops at DS Container/text-max-width, for now 1200 (Nelson, 27 Oct 2026).
+            <p key={i} className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-muted">
               {p}
             </p>
           ))}
