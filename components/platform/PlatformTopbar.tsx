@@ -246,8 +246,19 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   return (
     <>
       <header data-chrome="" className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
-        {/* Desktop */}
-        <div className="hidden h-[71px] items-center justify-between gap-6 px-6 lg:flex xl:gap-4 min-[1440px]:gap-6">
+        {/* Desktop. The tabs bar lines up with the page content below it (Nelson, 27 Oct 2026): the
+            page's side padding (Layout/page-x), and on screens wider than the content
+            (Container/content-max-width + padding) the same centred 1200 column. To fit 1200 it is
+            compact: tabs 12 apart, the search pill 260, the learner as initials only. Harbor keeps
+            24 and its own spacing, its rail sits on the left. */}
+        <div
+          className={cn(
+            "hidden h-[71px] items-center justify-between gap-6 lg:flex xl:gap-4",
+            harbor
+              ? "px-6 min-[1440px]:gap-6"
+              : "px-[max(var(--sk-layout-page-x),calc((100%_-_var(--sk-container-content-max-width))/2))]",
+          )}
+        >
           {harbor ? (
             // Harbor (Nelson, 25 Oct 2026, after the DreamHost panel): the menu button folds the
             // rail on the left, where the sections are; the middle of the bar is the search pill.
@@ -282,14 +293,14 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               <SectionLinks
                 current={current}
                 look="tabs"
-                className="flex h-full items-stretch gap-6 xl:gap-3 min-[1440px]:gap-6"
+                className="flex h-full items-stretch gap-6 xl:gap-3"
               />
             </nav>
           )}
           {/* Every skin has the search + Assistant pill (Nelson, 26 Oct 2026): beside the tabs here,
               in the middle of the bar in the panel layout. With the five tabs it needs 1280: below
               that the bar keeps the floating launcher. The launcher always stays in the player. */}
-          {harbor ? null : <HarborSearch width={340} className="hidden xl:block" />}
+          {harbor ? null : <HarborSearch width={260} className="hidden xl:block" />}
           <div className={cn("flex items-center gap-3", harbor && "flex-1 basis-0 justify-end")}>
             <span className="flex items-center gap-3">
               {/* Where the pill does not fit (the tabs bar below 1280): its button and sheet. */}
@@ -305,8 +316,9 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 className="flex items-center gap-2 rounded-control p-1 text-left transition-colors hover:bg-sko-bg-hover"
               >
                 <Initials />
-                {/* The name and role give way to the search button below 1280 (Nelson, 26 Oct 2026). */}
-                <span className="hidden flex-col whitespace-nowrap xl:flex">
+                {/* The name and role give way to the search below 1280 (Nelson, 26 Oct 2026); in the
+                    tabs bar always, so the bar fits the 1200 column (27 Oct 2026). Harbor keeps them. */}
+                <span className={cn("hidden flex-col whitespace-nowrap", harbor && "xl:flex")}>
                   <span className="sk-text-body-small-semibold text-sko-text-default">
                     {platformUser.name}
                   </span>
