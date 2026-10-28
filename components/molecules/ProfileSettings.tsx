@@ -8,6 +8,7 @@ import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";
 import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { cn } from "@/lib/utils";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
+import { useEdxScope } from "@/lib/edx-scope";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
@@ -387,15 +388,29 @@ export function AccessibilitySection() {
 }
 
 /**
- * The footer (DS "Footer demo purposes only"): Reset demo and Restart first steps, prototype only.
+ * The footer (DS "Footer demo purposes only"): the Open edX only switch, Reset demo and Restart first
+ * steps, prototype only.
  * Shown without `?demo=1` again (Nelson, 21 Oct 2026): testers need it to run the assistant's
  * first steps from the start.
  */
 export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const resetDemo = useLmsStore((s) => s.resetDemo);
+  const edx = useEdxScope();
   const row = MENU_ROW;
   return (
     <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
+      {/* The Open edX scope (lib/edx-scope; Nelson, 28 Oct 2026): reloads with ?scope=edx|full so the
+          pre-paint script and every hook read the new scope. */}
+      <ToggleRow
+        label="Open edX only"
+        hint="Hides what we invented"
+        checked={edx}
+        onChange={(on) => {
+          const url = new URL(window.location.href);
+          url.searchParams.set("scope", on ? "edx" : "full");
+          window.location.assign(url.toString());
+        }}
+      />
       <button
         type="button"
         className={row}
