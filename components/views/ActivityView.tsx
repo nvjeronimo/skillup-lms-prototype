@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Check } from "lucide-react";
+import { Ban, Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { EmptyState } from "@/components/atoms/EmptyState";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Button } from "@/components/atoms/Button";
 import { ProgressRail, type RailItemState } from "@/components/molecules/ProgressRail";
@@ -12,10 +13,12 @@ import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { DemoOnly } from "@/lib/demo";
+import { useEdxScope } from "@/lib/edx-scope";
 
 export function ActivityView({ topicId }: { topicId: string }) {
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const markComplete = useLmsStore((s) => s.markComplete);
+  const edx = useEdxScope();
 
   const topic = getTopic(topicId);
   const activity = topic ? getActivity(topic) : null;
@@ -45,6 +48,20 @@ export function ActivityView({ topicId }: { topicId: string }) {
         isCompleted={isCompleted}
         onComplete={() => markComplete(topicId)}
       />
+    );
+  }
+
+  // Open edX scope: the checklist (ticks saved per learner, the last tick completing the topic)
+  // has no Open edX block behind it, so the body says so; a SCORM activity above is native.
+  if (edx) {
+    return (
+      <div className="py-6">
+        <EmptyState
+          icon={Ban}
+          title="Checklist activities are not in Open edX"
+          description="An HTML component cannot save ticked steps for each learner or complete the topic on the last tick. In Open edX this activity would be a SCORM package."
+        />
+      </div>
     );
   }
 

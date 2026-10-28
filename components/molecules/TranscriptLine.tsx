@@ -93,6 +93,7 @@ export function TranscriptLine({
             // Dot fill = icon/primary through currentColor: the token lint keeps icon tokens out of bg utilities.
             <span
               className="size-2 shrink-0 rounded-pill bg-current text-sko-icon-primary"
+              data-invented="notes: Open edX notes cannot anchor to a transcript line"
               aria-label="Has note"
               role="img"
             />
@@ -119,6 +120,7 @@ export function TranscriptLine({
           type="button"
           onClick={hasNote ? onEditNote : onAddNote}
           aria-label={`${hasNote ? "Edit" : "Add"} note at ${ts}`}
+          data-invented="notes: Open edX notes cannot anchor to a transcript line"
           className="sk-text-body-small-semibold flex shrink-0 items-center gap-1 self-start rounded-pill bg-sko-bg-primary-soft py-1 pl-2 pr-3 text-sko-text-primary"
         >
           <Icon icon={hasNote ? Edit3 : Plus} size={14} />

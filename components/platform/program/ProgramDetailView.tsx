@@ -17,6 +17,7 @@ import { ProgramHeader } from "./ProgramHeader";
 import { ProgramSidebar } from "./ProgramSidebar";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { cn } from "@/lib/utils";
+import { useEdxScope } from "@/lib/edx-scope";
 import { SectionIntro } from "./parts";
 
 /**
@@ -52,6 +53,9 @@ export function ProgramDetailView({ program }: { program: Program }) {
   // After the first tab change, a panel fades in as it is shown (display: none → shown restarts
   // the animation); on the page's first paint the page entrance is the only movement.
   const fadeIn = useHasChanged(active) ? "sk-animate-fade sk-enter-only" : undefined;
+  // Open edX scope: About keeps the one overview Discovery has; the other sections are ours.
+  const edx = useEdxScope();
+  const about = edx ? program.about.filter((a) => /overview/i.test(a.title)) : program.about;
 
   function selectTab(tab: ProgramTabId) {
     if (tab === active) return;
@@ -75,7 +79,7 @@ export function ProgramDetailView({ program }: { program: Program }) {
     about: (
       <div className={PANEL}>
         <SectionIntro title={program.aboutIntro.title} lead={program.aboutIntro.lead} />
-        <DisclosureList items={program.about} mock="Program About sections have no API" />
+        <DisclosureList items={about} mock="Program About sections have no API" />
       </div>
     ),
   };

@@ -21,7 +21,8 @@ import { NotificationsPanel } from "@/components/organisms/NotificationsPanel";
 import { notifications } from "@/lib/data";
 import { track } from "@/lib/analytics";
 import { useDisclosure } from "@/lib/useDisclosure";
-import { PLATFORM_SECTIONS, type PlatformSection } from "@/lib/platform/user";
+import { platformSections, type PlatformSection } from "@/lib/platform/user";
+import { useEdxScope } from "@/lib/edx-scope";
 import { cn } from "@/lib/utils";
 import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { useDemoMode } from "@/lib/demo";
@@ -74,11 +75,13 @@ function SectionLinks({
   itemClassName?: string;
 }) {
   const showToast = useLmsStore((s) => s.showToast);
+  // Open edX scope: no Services, no My Learning count.
+  const sections = platformSections(useEdxScope());
   const tabs = look === "tabs";
   const itemLook = tabs ? tabClass : itemClass;
   return (
     <ul className={className}>
-      {PLATFORM_SECTIONS.map((s) => {
+      {sections.map((s) => {
         const isCurrent = s.id === current;
         const content = (
           <>
@@ -334,7 +337,10 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                   <span className="sk-text-body-small-semibold text-sko-text-default">
                     {platformUser.name}
                   </span>
-                  <span className="sk-text-label-small-regular text-sko-text-subtle">
+                  <span
+                    data-invented="plan: no subscription tier in Open edX"
+                    className="sk-text-label-small-regular text-sko-text-subtle"
+                  >
                     {platformUser.role}
                   </span>
                 </span>

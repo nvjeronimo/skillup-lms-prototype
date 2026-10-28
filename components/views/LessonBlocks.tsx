@@ -135,7 +135,10 @@ function Block({ block }: { block: LessonBlock }) {
 
     case "file":
       return (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-sko-border-subtle bg-sko-bg-page px-3 py-2">
+        <div
+          data-invented="files: no file card, size or Download button in an Open edX HTML component"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-sko-border-subtle bg-sko-bg-page px-3 py-2"
+        >
           <div className="flex min-w-0 items-center gap-3">
             <FileTypeChip label={fileExtension(block.name, block.fileKind)} tone="primary" />
             <div className="flex min-w-0 flex-col gap-0.5">

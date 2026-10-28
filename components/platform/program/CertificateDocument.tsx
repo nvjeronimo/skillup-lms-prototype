@@ -172,7 +172,11 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
             className="flex items-center justify-between border-t border-sko-border-subtle"
             style={{ paddingTop: u(16) }}
           >
-            <div className="flex flex-col items-start" style={{ gap: u(2) }}>
+            <div
+              data-invented="certificate: Open edX identifies it by its verify UUID, no readable ID"
+              className="flex flex-col items-start"
+              style={{ gap: u(2) }}
+            >
               <Line size={12} leading={18} className="sk-text-label-small-semibold text-sko-text-subtle">
                 Certificate ID
               </Line>
@@ -180,7 +184,8 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
                 {data.certificateId}
               </Line>
             </div>
-            <div className="flex items-center" style={{ gap: u(12) }}>
+            {/* ml-auto keeps it on the right when the ID beside it is hidden (Open edX scope). */}
+            <div className="ml-auto flex items-center" style={{ gap: u(12) }}>
               <div className="flex flex-col items-end text-right" style={{ gap: u(2) }}>
                 <Line size={12} leading={18} className="sk-text-label-small-semibold text-sko-text-subtle">
                   Verify this certificate

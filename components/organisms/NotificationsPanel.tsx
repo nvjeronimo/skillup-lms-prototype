@@ -7,6 +7,7 @@ import { PanelTabs } from "@/components/molecules/PanelTabs";
 import { notificationCategory } from "@/lib/data";
 import type { NotificationCategory, NotificationModel } from "@/lib/types";
 import { staggerStyle } from "@/lib/motion/stagger";
+import { useEdxScope } from "@/lib/edx-scope";
 
 export interface NotificationsPanelProps {
   open: boolean;
@@ -48,6 +49,8 @@ export function NotificationsPanel({
   onSelect,
 }: NotificationsPanelProps) {
   const [tab, setTab] = React.useState<NotificationCategory>("all");
+  // Open edX scope: no "View all" (Open edX has no notifications page).
+  const edx = useEdxScope();
 
   // Reset to "All" whenever the panel re-opens.
   React.useEffect(() => {
@@ -75,7 +78,7 @@ export function NotificationsPanel({
       onClose={onClose}
       title="Notifications"
       headerAction={onMarkAllRead ? { label: "Mark all read", onClick: onMarkAllRead } : undefined}
-      footer={{ label: "View all notifications", href: "#" }}
+      footer={edx ? undefined : { label: "View all notifications", href: "#" }}
     >
       <PanelTabs
         tabs={tabs}

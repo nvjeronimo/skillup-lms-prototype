@@ -198,6 +198,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
                 : transcript[0]?.id,
             })
           }
+          data-invented="notes: Open edX notes cannot anchor to a transcript line"
           // DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
           className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
         >

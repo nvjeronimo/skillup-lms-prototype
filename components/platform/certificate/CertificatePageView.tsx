@@ -131,6 +131,7 @@ export function CertificatePageView({
               hierarchy="primary"
               size="lg"
               leftIcon={Download}
+              data-invented="certificate: Open edX makes no PDF, only the web certificate"
               onClick={() => showToast("Download certificate is not part of this prototype yet")}
             >
               Download certificate
@@ -147,7 +148,7 @@ export function CertificatePageView({
                 <dt className="sk-text-body-small-regular text-sko-text-subtle">Issued</dt>
                 <dd className="sk-text-body-medium-semibold text-sko-text-default">{certificate.document.issuedOn}</dd>
               </div>
-              <div className="flex flex-col gap-0.5">
+              <div data-invented="certificate: Open edX identifies it by its verify UUID, no readable ID" className="flex flex-col gap-0.5">
                 <dt className="sk-text-body-small-regular text-sko-text-subtle">Certificate ID</dt>
                 <dd className="sk-text-body-medium-semibold text-sko-text-default">{certificate.document.certificateId}</dd>
               </div>

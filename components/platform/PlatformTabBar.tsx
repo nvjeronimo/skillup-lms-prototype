@@ -12,7 +12,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { PLATFORM_SECTIONS, type PlatformSection } from "@/lib/platform/user";
+import { PLATFORM_SECTIONS, platformSections, type PlatformSection } from "@/lib/platform/user";
+import { useEdxScope } from "@/lib/edx-scope";
 import { useLmsStore } from "@/lib/store";
 import { useDisclosure } from "@/lib/useDisclosure";
 import { cn } from "@/lib/utils";
@@ -94,8 +95,10 @@ function TabIcon({
  */
 export function PlatformTabBar({ current }: { current: PlatformSection | null }) {
   const showToast = useLmsStore((s) => s.showToast);
-  const inBar = PLATFORM_SECTIONS.filter((s) => IN_BAR.includes(s.id));
-  const inMore = PLATFORM_SECTIONS.filter((s) => !IN_BAR.includes(s.id));
+  // Open edX scope: no Services, no My Learning count.
+  const sections = platformSections(useEdxScope());
+  const inBar = sections.filter((s) => IN_BAR.includes(s.id));
+  const inMore = sections.filter((s) => !IN_BAR.includes(s.id));
   const moreCurrent = inMore.some((s) => s.id === current);
   const more = useDisclosure();
   const [scrolledAway, setScrolledAway] = React.useState(false);

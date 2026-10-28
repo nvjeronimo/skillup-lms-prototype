@@ -123,8 +123,8 @@ function ModuleRow({
             <span className="sk-text-body-large-semibold text-sko-text-default">{mod.title}</span>
             <span className="sk-text-body-small-regular flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sko-text-subtle">
               <span>{mod.topicCount}</span>
-              <span aria-hidden>·</span>
-              <span>{mod.duration}</span>
+              <span aria-hidden data-invented="effort: no module durations authored in Open edX">·</span>
+              <span data-invented="effort: no module durations authored in Open edX">{mod.duration}</span>
             </span>
             {locked && mod.lockReason ? (
               <span className="sk-text-body-small-regular text-sko-text-subtle lg:sr-only">{mod.lockReason}</span>

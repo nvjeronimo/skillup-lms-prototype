@@ -10,6 +10,7 @@ import { STEPS, stepAction } from "@/lib/first-steps/steps";
 import { restartFirstSteps, useFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { wantsRestart, withoutRestart } from "@/lib/first-steps/url";
 import { useLearner } from "@/lib/persona-gate";
+import { useEdxScope } from "@/lib/edx-scope";
 import { useLmsStore } from "@/lib/store";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
@@ -41,7 +42,9 @@ const PHONE = "(max-width: 767px)";
  */
 export function AssistantChatFloating() {
   const pathname = usePathname() ?? "/";
-  if (!isAssistantPath(pathname)) return null;
+  // Open edX scope: no learner assistant there, so it never mounts (nor do its first steps).
+  const edx = useEdxScope();
+  if (edx || !isAssistantPath(pathname)) return null;
   return <Chat pathname={pathname} />;
 }
 

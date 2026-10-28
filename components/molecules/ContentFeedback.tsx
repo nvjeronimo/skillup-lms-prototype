@@ -102,6 +102,7 @@ export function ContentFeedback({
         <button
           type="button"
           onClick={() => setReportOpen(true)}
+          data-invented="report: nothing in Open edX receives a per-unit content report"
           className={cn(btn, "group text-sko-text-subtle hover:text-sko-text-warning")}
         >
           <Icon

@@ -110,7 +110,10 @@ export function WeeklyGoalCard({
 
       {met ? (
         <>
-          <div className="flex flex-col gap-2 rounded-control bg-sko-bg-success-soft p-3">
+          <div
+            data-invented="activity: no per-day activity or last-week count in Open edX"
+            className="flex flex-col gap-2 rounded-control bg-sko-bg-success-soft p-3"
+          >
             <p className="sk-text-body-small-medium text-sko-text-subtle">{goal.week}</p>
             {days}
             <div className="flex flex-col">
@@ -123,7 +126,7 @@ export function WeeklyGoalCard({
       ) : (
         <>
           {rule}
-          <div className="flex flex-col gap-2">
+          <div data-invented="activity: no per-day activity or last-week count in Open edX" className="flex flex-col gap-2">
             <p className="sk-text-body-small-medium text-sko-text-subtle">{goal.week}</p>
             {days}
             <div className="flex flex-wrap items-center justify-between gap-x-2">

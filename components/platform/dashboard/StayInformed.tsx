@@ -7,6 +7,7 @@ import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platf
 import { Icon } from "@/lib/icons";
 import { notifications } from "@/lib/data";
 import { openRequests } from "@/lib/platform/services";
+import { useEdxScope } from "@/lib/edx-scope";
 import type { NotificationType } from "@/lib/types";
 
 type InformedTab = "alerts" | "updates" | "support";
@@ -59,6 +60,9 @@ const TABS = [
 export function StayInformed({ className }: { className?: string }) {
   const [tab, setTab] = React.useState<InformedTab>("updates");
   const idBase = React.useId();
+  // Open edX scope: no Support tab (help-desk requests live outside Open edX).
+  const edx = useEdxScope();
+  const tabs = edx ? TABS.filter((t) => t.id !== "support") : TABS;
   const rows = ROWS[tab];
   return (
     // Arrives in the Dashboard cascade with Pick up beside it (motion-matrix §7.9), as every section does.
@@ -68,7 +72,7 @@ export function StayInformed({ className }: { className?: string }) {
           Stay informed
         </h2>
         <PlatformTabs
-          tabs={TABS}
+          tabs={tabs}
           value={tab}
           onChange={setTab}
           idBase={idBase}

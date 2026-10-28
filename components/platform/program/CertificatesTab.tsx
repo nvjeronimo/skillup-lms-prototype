@@ -112,6 +112,7 @@ export function CertificateCard({
           hierarchy="secondary"
           size="sm"
           aria-label={`Download certificate: ${certificate.title}`}
+          data-invented="certificate: Open edX makes no PDF, only the web certificate"
           onClick={() => showToast("Download certificate is not part of this prototype yet")}
           className="min-w-0 flex-1 max-md:h-11"
         >

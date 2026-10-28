@@ -45,3 +45,14 @@ export const PLATFORM_SECTIONS: { id: PlatformSection; label: string; href?: str
   { id: "discussion", label: "Discussion", href: "/platform/discussion" },
   { id: "services", label: "Services", href: "/platform/services" },
 ];
+
+/**
+ * The sections in the Open edX scope (decision 035): no Services (nothing behind it in Open edX)
+ * and no count on My Learning (a figure with no source). Calendar and Discussion stay.
+ */
+export function platformSections(edx: boolean): typeof PLATFORM_SECTIONS {
+  if (!edx) return PLATFORM_SECTIONS;
+  return PLATFORM_SECTIONS.filter((s) => s.id !== "services").map((s) =>
+    s.id === "my-learning" ? { ...s, count: undefined } : s,
+  );
+}

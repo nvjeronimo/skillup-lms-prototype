@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { useDialog } from "@/lib/useDialog";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
+import { useEdxScope } from "@/lib/edx-scope";
 import { AssistantGlyph } from "@/components/assistant/AssistantGlyph";
 import { HarborSearch, type SearchScope } from "./HarborSearch";
 
@@ -35,6 +36,8 @@ export function SearchAssistantButton({
   const presence = useExitTransition(open, MOTION_MS.short4);
   const titleId = React.useId();
   const course = scope?.kind === "course";
+  // Open edX scope: no assistant, so this is a plain search button (search icon, no halo).
+  const edx = useEdxScope();
   // The halo's glint starts at a random point of its cycle and turns either way (after mount,
   // so server and client render the same).
   const [halo, setHalo] = React.useState<React.CSSProperties>();
@@ -51,19 +54,26 @@ export function SearchAssistantButton({
         data-assistant-anchor=""
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label={course ? "Search this course or ask the assistant" : "Search or ask the assistant"}
+        aria-label={
+          edx ? (course ? "Search this course" : "Search") : course ? "Search this course or ask the assistant" : "Search or ask the assistant"
+        }
         onClick={() => setOpen(true)}
         data-hit-band={size === "sm" ? "" : undefined}
         style={halo}
         className={cn(
-          "sk-assistant-halo inline-flex shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
+          !edx && "sk-assistant-halo",
+          "inline-flex shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
           size === "md"
             ? "size-11"
             : "size-8 before:absolute before:-inset-1.5 before:content-['']",
           className,
         )}
       >
-        <AssistantGlyph size={size === "md" ? 20 : 18} />
+        {edx ? (
+          <Icon icon={Search} size={size === "md" ? 20 : 18} aria-hidden />
+        ) : (
+          <AssistantGlyph size={size === "md" ? 20 : 18} />
+        )}
       </button>
       {presence.mounted ? (
         <div
@@ -77,7 +87,7 @@ export function SearchAssistantButton({
         >
           <div className="flex h-14 shrink-0 items-center justify-between border-b border-sko-border-subtle pl-4 pr-2">
             <h2 id={titleId} className="sk-text-title-medium-semibold inline-flex items-center gap-2 text-sko-text-default">
-              <AssistantGlyph size={20} className="text-sko-icon-primary" />
+              {edx ? null : <AssistantGlyph size={20} className="text-sko-icon-primary" />}
               {course ? "Search this course" : "Search"}
             </h2>
             <button

@@ -24,6 +24,7 @@ import { myLearningCourses } from "@/lib/platform/my-learning";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
+import { useEdxScope } from "@/lib/edx-scope";
 
 /**
  * The panel layout's top-bar search (Harbor, Fluent; Nelson, 25–26 Oct 2026, after the DreamHost
@@ -74,6 +75,7 @@ const COURSE_HELP = Array.from(new Set(COURSE_ASSISTANT_TOPICS.flatMap((t) => t.
 function courseGroupsFor(
   query: string,
   scope: Extract<SearchScope, { kind: "course" }>,
+  edx = false,
 ): { id: string; title: string; ai?: boolean; options: Option[] }[] {
   const q = query.trim().toLowerCase();
   const words = q.split(/\s+/).filter((w) => w.length > 2);
@@ -88,7 +90,7 @@ function courseGroupsFor(
     .map((h) => ({ kind: "help", id: `help-${h}`, label: h }));
   return [
     { id: "topics", title: "In this course", options: topics },
-    { id: "help", title: "Ask about this course", ai: true, options: help },
+    { id: "help", title: "Ask about this course", ai: true, options: edx ? [] : help },
   ].filter((g) => g.options.length);
 }
 
@@ -97,6 +99,7 @@ const POPULAR_HELP = ["completion", "certificate", "saved"];
 
 function groupsFor(
   query: string,
+  edx = false,
 ): { id: string; title: string; ai?: boolean; options: Option[] }[] {
   const q = query.trim().toLowerCase();
   const has = (text: string) => !q || text.toLowerCase().includes(q);
@@ -136,9 +139,9 @@ function groupsFor(
     .slice(0, 4)
     .map((k) => ({ kind: "help", id: `help-${k.id}`, label: k.question }));
   return [
-    { id: "pages", title: "Go to", options: pages },
+    { id: "pages", title: "Go to", options: edx ? [] : pages },
     { id: "courses", title: "Your courses", options: courses },
-    { id: "help", title: "Help", ai: true, options: help },
+    { id: "help", title: "Help", ai: true, options: edx ? [] : help },
   ].filter((g) => g.options.length);
 }
 
@@ -184,11 +187,15 @@ export function HarborSearch({
     return () => query.removeEventListener("change", sync);
   }, []);
   const expanded = sheet || wide || focused || open || q.trim() !== "";
-  const presence = useExitTransition(open, MOTION_MS.short3);
+  // Open edX scope: search only (course titles, or the course's topics); the Go to palette, Help,
+  // Ask about this course and the Assistant button are ours, and Enter never asks the assistant.
+  const edx = useEdxScope();
   const groups = React.useMemo(
-    () => (scope.kind === "course" ? courseGroupsFor(q, scope) : groupsFor(q)),
-    [q, scope],
+    () => (scope.kind === "course" ? courseGroupsFor(q, scope, edx) : groupsFor(q, edx)),
+    [q, scope, edx],
   );
+  const hasPalette = !edx || groups.length > 0 || q.trim() !== "";
+  const presence = useExitTransition(open && hasPalette, MOTION_MS.short3);
   const options = groups.flatMap((g) => g.options);
   const optionId = (index: number) => `${id}-opt-${index}`;
 
@@ -220,6 +227,10 @@ export function HarborSearch({
   // Enter with nothing picked: My Learning's search on the platform; in the player, the assistant.
   const searchCourses = () => {
     const text = q.trim();
+    if (scope.kind === "course" && edx) {
+      if (options[0]) choose(options[0]);
+      return;
+    }
     if (scope.kind === "course") return ask();
     setOpen(false);
     onDone?.();
@@ -269,13 +280,19 @@ export function HarborSearch({
           else searchCourses();
         }}
         className={cn(
-          "flex h-12 w-full items-center gap-2 rounded-pill bg-sko-bg-track pl-4 pr-1.5 [container-type:inline-size]",
+          "flex h-12 w-full items-center gap-2 rounded-pill bg-sko-bg-track pl-4 pr-1.5 [container-type:inline-size] [[data-scope=edx]_&]:pr-4",
           "focus-within:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]",
         )}
       >
         <Icon icon={Search} size={20} className="shrink-0 text-sko-icon-subtle" aria-hidden />
         <label htmlFor={id} className="sr-only">
-          {scope.kind === "course" ? "Search this course or ask the assistant" : "Search pages, your courses and help"}
+          {scope.kind === "course"
+            ? edx
+              ? "Search this course"
+              : "Search this course or ask the assistant"
+            : edx
+              ? "Search your courses"
+              : "Search pages, your courses and help"}
         </label>
         <input
           ref={inputRef}
@@ -302,6 +319,7 @@ export function HarborSearch({
         <button
           type="button"
           data-assistant-anchor={sheet ? undefined : ""}
+          data-invented="assistant: no learner chat assistant in Open edX"
           onClick={ask}
           aria-label={q.trim() ? `Ask the assistant: ${q.trim()}` : "Open the assistant"}
           className="sk-text-body-small-semibold inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill bg-sko-bg-page pl-4 pr-3 text-sko-text-default shadow-[var(--sk-shadow-harbor-pill)] transition-colors hover:bg-sko-bg-subtle [@container_(max-width:220px)]:pl-3"
@@ -336,8 +354,12 @@ export function HarborSearch({
               {groups.length === 0 ? (
                 <p className="sk-text-body-medium-regular px-5 py-4 text-sko-text-muted">
                   {scope.kind === "course"
-                    ? `Nothing in this course matches “${q.trim()}”. Press Enter to ask the assistant.`
-                    : `Nothing matches “${q.trim()}”. Press Enter to search your courses, or ask the assistant.`}
+                    ? edx
+                      ? `Nothing in this course matches “${q.trim()}”.`
+                      : `Nothing in this course matches “${q.trim()}”. Press Enter to ask the assistant.`
+                    : edx
+                      ? `Nothing matches “${q.trim()}”. Press Enter to search your courses.`
+                      : `Nothing matches “${q.trim()}”. Press Enter to search your courses, or ask the assistant.`}
                 </p>
               ) : (
                 groups.map((group, g) => (

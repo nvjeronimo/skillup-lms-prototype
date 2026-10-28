@@ -32,6 +32,7 @@ import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { useCountUp } from "@/lib/useCountUp";
+import { useEdxScope } from "@/lib/edx-scope";
 
 export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
@@ -624,12 +625,13 @@ function QuizEntryHeader({
   // timed exam, so the label is derived rather than guessed. An attempt is one
   // run through the whole quiz, never a retry per question (spec §9.3/§9.4).
   const attempts = attemptsLabel(config);
-  const facts = [
-    `${questionCount} questions`,
+  // `invented`: the fact is ours, not Open edX's (data-invented, lib/edx-scope).
+  const facts: { label: string; invented?: string }[] = [
+    { label: `${questionCount} questions` },
     // Decision 004: estimated durations take "approx.", after the time (14 Oct 2026).
-    `${config.estMinutes} min approx.`,
-    ...(attempts ? [attempts] : []),
-    `Pass mark ${config.passThresholdPct}%`,
+    { label: `${config.estMinutes} min approx.`, invented: "duration: no time estimate for problems in Open edX" },
+    ...(attempts ? [{ label: attempts }] : []),
+    { label: `Pass mark ${config.passThresholdPct}%`, invented: "pass mark: no per-quiz pass mark in Open edX" },
   ];
 
   // DS Entry Header: the first badge is Brand in every variant; the second is
@@ -658,8 +660,8 @@ function QuizEntryHeader({
       {/* Meta facts: Badge Soft sm Gray. */}
       <ul className="flex flex-wrap gap-2">
         {facts.map((f) => (
-          <li key={f}>
-            <Badge color="gray">{f}</Badge>
+          <li key={f.label} data-invented={f.invented}>
+            <Badge color="gray">{f.label}</Badge>
           </li>
         ))}
       </ul>
@@ -686,7 +688,12 @@ function QuizEntryHeader({
             no parent to review — and what decides this is the link, not the
             quiz variant: a module-level final exam does have one. */}
         {reviewParent ? (
-          <Button variant="secondary" size="md" onClick={onReviewParent}>
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={onReviewParent}
+            data-invented="review: no question-to-lesson link in Open edX"
+          >
             Review {reviewParent} first
           </Button>
         ) : null}
@@ -721,10 +728,12 @@ function QuizSummary({
   // Withheld results show no percentage, so there is nothing to count (target 0 runs no frames).
   const shownPct = useCountUp(config.resultsWithheld ? 0 : pct);
   const passed = pct >= config.passThresholdPct;
+  // Open edX scope: no per-quiz pass mark, so no verdict and no pass/fail colour on the score.
+  const edx = useEdxScope();
   // DS Results=Withheld: `show_correctness: never` masks the score too, so the
   // summary says what was recorded and never prints a percentage.
   const withheld = Boolean(config.resultsWithheld);
-  const tone = passed ? "text-sko-text-success" : "text-sko-text-warning";
+  const tone = edx ? "text-sko-text-default" : passed ? "text-sko-text-success" : "text-sko-text-warning";
   const incorrectIdx = outcomes
     .map((o, i) => (o === false ? i : -1))
     .filter((i) => i >= 0);
@@ -737,7 +746,11 @@ function QuizSummary({
             <p className="sk-text-body-small-semibold uppercase text-sko-text-primary">{config.label}</p>
             <h3 className="sk-text-body-large-semibold mt-1 text-sko-text-default">{topic.title}</h3>
           </div>
-          <Badge size="md" color={withheld ? "gray" : passed ? "success" : "warning"}>
+          <Badge
+            size="md"
+            color={withheld ? "gray" : passed ? "success" : "warning"}
+            data-invented={withheld ? undefined : "verdict: nothing records passing a quiz in Open edX"}
+          >
             {withheld ? "Recorded" : passed ? "Passed" : "Not passed"}
           </Badge>
         </div>
@@ -755,7 +768,7 @@ function QuizSummary({
           <div
             className={cn(
               "flex items-center gap-5 rounded-control px-6 py-5",
-              passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
+              edx ? "bg-sko-bg-subtle" : passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
             )}
           >
             {/* Screen readers get the final score once, not every step of the count. */}
@@ -768,8 +781,10 @@ function QuizSummary({
                 You scored {result.score} / {result.total}
               </p>
               <p className={cn("sk-text-body-medium-medium", tone)}>
-                Pass mark {config.passThresholdPct}%
-                {config.weightPct ? ` · counts ${config.weightPct}% of your final grade` : ""}
+                <span data-invented="pass mark: no per-quiz pass mark in Open edX">
+                  Pass mark {config.passThresholdPct}%{config.weightPct ? " · " : ""}
+                </span>
+                {config.weightPct ? `${edx ? "Counts" : "counts"} ${config.weightPct}% of your final grade` : ""}
               </p>
             </div>
           </div>
@@ -805,7 +820,12 @@ function QuizSummary({
                     Retry incorrect ({incorrectIdx.length})
                   </Button>
                 ) : null}
-                <Button variant="secondary" onClick={onRetake} disabled={attemptsExhausted}>
+                <Button
+                  variant="secondary"
+                  onClick={onRetake}
+                  disabled={attemptsExhausted}
+                  data-invented="retake: no quiz-level retake in Open edX"
+                >
                   {attemptsExhausted ? "No attempts left" : "Retake quiz"}
                 </Button>
               </div>

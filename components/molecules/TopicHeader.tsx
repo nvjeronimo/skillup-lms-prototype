@@ -12,6 +12,8 @@ export interface TopicHeaderProps {
   description?: string;
   showDescription?: boolean;
   showDuration?: boolean;
+  /** When set, the duration is ours, not Open edX's: tagged data-invented with this reason. */
+  durationInvented?: string;
   /** Right-aligned content on the meta row (e.g. the completion action/badge). */
   rightSlot?: React.ReactNode;
   className?: string;
@@ -30,6 +32,7 @@ export function TopicHeader({
   description,
   showDescription = true,
   showDuration = true,
+  durationInvented,
   rightSlot,
   className,
 }: TopicHeaderProps) {
@@ -48,20 +51,25 @@ export function TopicHeader({
             "approx." or a dash placeholder. Separator and Duration are two
             body-medium/Medium layers in text/subtle, as in the DS meta-row. */}
         {showDuration && duration ? (
-          <>
+          <span data-invented={durationInvented} className="contents">
             <span aria-hidden className="sk-text-body-medium-medium shrink-0 text-sko-text-subtle">
               ·
             </span>
             <span title={durationLabel} className="sk-text-body-medium-medium min-w-0 truncate text-sko-text-subtle">
               {durationLabel}
             </span>
-          </>
+          </span>
         ) : null}
         {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
       </div>
       <h1 className="sk-text-headline-small-semibold text-sko-text-default">{title}</h1>
       {showDescription && description ? (
-        <p className="sk-text-body-large-medium text-sko-text-muted">{description}</p>
+        <p
+          data-invented="description: a unit has a display name only in Open edX"
+          className="sk-text-body-large-medium text-sko-text-muted"
+        >
+          {description}
+        </p>
       ) : null}
     </header>
   );

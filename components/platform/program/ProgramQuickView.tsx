@@ -17,6 +17,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
+import { useEdxScope } from "@/lib/edx-scope";
 
 export interface ProgramQuickViewProps {
   program: MyLearningProgram;
@@ -53,12 +54,18 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
   const slug = slugOf(program);
   const cert = slug ? getProgramCertificate(slug) : undefined;
   const detail = cert?.program;
+  // Open edX scope: no last-studied date and no hours left (no source); the total effort stays.
+  const edx = useEdxScope();
 
   if (!mounted) return null;
   const closed = state === "closed";
   const completed = program.progressPct >= 100;
   const notStarted = program.progressPct === 0;
-  const facts = [program.lastStudied, program.hours, program.accessUntil].filter(Boolean) as string[];
+  const facts = (
+    edx
+      ? [program.hours?.endsWith("total") ? program.hours : undefined, program.accessUntil]
+      : [program.lastStudied, program.hours, program.accessUntil]
+  ).filter(Boolean) as string[];
   const overview = detail?.about.find((a) => /overview/i.test(a.title))?.body?.[0];
   // One chip per skill: a program may write its skills as sentences in one paragraph.
   const skills = (detail?.about.find((a) => /skills/i.test(a.title))?.body ?? [])
@@ -235,6 +242,7 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
             <section
               aria-labelledby={`${titleId}-included`}
               data-mock="Content counts per program have no API"
+              data-invented="catalogue: no content counts per program in Open edX"
               className="flex flex-col gap-2"
             >
               <h3 id={`${titleId}-included`} className={SECTION_TITLE}>
@@ -252,6 +260,7 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
           {overview || skills.length ? (
             <section
               aria-labelledby={`${titleId}-about`}
+              data-invented="catalogue: no program marketing text in Open edX"
               data-mock="Open edX serves no program marketing text: overview and skills wait for the vendor's catalogue"
               className="flex flex-col gap-2"
             >

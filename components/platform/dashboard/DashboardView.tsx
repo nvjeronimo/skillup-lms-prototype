@@ -71,6 +71,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           </h1>
           {/* The greeting tip: one useful sentence and a link, from the assistant. */}
           <p
+            data-invented="assistant: no AI assistant or deadline count in Open edX"
             data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)"
             className="sk-text-body-large-regular text-sko-text-muted"
           >
@@ -121,7 +122,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
               id="dashboard-due-title"
               title="Due"
               emphasis="this week"
-              action={{ label: "View calendar", href: "/platform/calendar" }}
+              action={{ label: "View calendar", href: "/platform/calendar", invented: "calendar: due dates live in each course's Dates tab in Open edX" }}
             />
             <ul
               data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)"
