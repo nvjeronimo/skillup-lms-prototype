@@ -142,15 +142,18 @@ function SectionLinks({
 function ProfilePanel({
   panelProps,
   onDone,
+  showTheme = false,
 }: {
   panelProps: ReturnType<typeof useDisclosure>["panelProps"];
   onDone: () => void;
+  /** On a phone the light / dark switch leaves the bar and lives here (Nelson, 28 Oct 2026). */
+  showTheme?: boolean;
 }) {
   const demo = useDemoMode();
   return (
     <div {...panelProps} role="group" aria-label="Account settings" className={PROFILE_PANEL}>
       <ProfileLinks onDone={onDone} />
-      <AppearanceSection />
+      <AppearanceSection showTheme={showTheme} />
       <AccessibilitySection />
       <SignOutLink onDone={onDone} />
       <SkillUpOnlineLink onDone={onDone} />
@@ -183,7 +186,7 @@ function Initials() {
  *   The sections are five DS `Topbar-Item` (v2.0, Nelson, 12 Oct 2026): underline tabs that fill
  *   the height of the bar, 24 apart (12 until 12 Oct), with no rule of their own. The page sets which one is current;
  *   in Figma that is `Current=On` on the item, there is no property for it on the Topbar.
- * - Compact (tablet and mobile): 64 tall, padding 8/16 — menu · logo, then notifications · theme · avatar
+ * - Compact (tablet and mobile): 64 tall, padding 8/16 — menu · logo, then notifications · theme (tablet only; on a phone it is in the profile menu) · avatar
  *   (the menu on the left since 21 Oct 2026, as in the player bar).
  *   The menu opens the sections; the DS has no open state drawn yet, so it is a plain
  *   disclosure list under the bar.
@@ -387,7 +390,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
             <span className="flex items-center gap-1">
               <SearchAssistantButton size="sm" />
               {bell}
-              {themeSwitch("md")}
+              {/* Too little room on a phone: the switch moves to the profile menu, as in the player (Nelson, 28 Oct 2026). */}
+              {phone ? null : themeSwitch("md")}
             </span>
             <div ref={profileCompact.containerRef} className="relative">
               <button
@@ -402,6 +406,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 <ProfilePanel
                   panelProps={profileCompact.panelProps}
                   onDone={profileCompact.close}
+                  showTheme={phone}
                 />
               ) : null}
             </div>
