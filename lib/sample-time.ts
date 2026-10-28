@@ -63,6 +63,14 @@ export const formatDayMonth = (iso: string) => {
   const d = parseDay(iso);
   return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
 };
+/**
+ * Open edX's short date in English, month first and no year: "Oct 22" (the Saved panel's
+ * "Bookmarked Oct 22", Figma Overlay Card 2; Nelson's SKO match review, 28 Oct 2026).
+ */
+export const formatMonthDay = (iso: string) => {
+  const d = parseDay(iso);
+  return `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+};
 /** DS long date: "17 Oct 2026". */
 export const formatDate = (iso: string) => {
   const d = parseDay(iso);

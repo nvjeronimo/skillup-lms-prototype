@@ -178,7 +178,7 @@ export function topicFamily(type: TopicType): TopicFamily {
     case "Peer-graded":
     case "Peer Review":
     case "Project":
-      // Open Response Assessment — submit, review a peer, receive a grade.
+      // Open Response Assessment — submit, then the course team grades it on the rubric.
       return "ora";
     case "Graded Assignment":
       return "graded";
@@ -204,9 +204,39 @@ export function topicFamily(type: TopicType): TopicFamily {
   }
 }
 
+/**
+ * An Open Response inside a Reading (Figma Reading Row 6, 6014:5054, "Open Response · text
+ * only"; Nelson's SKO match review, 28 Oct 2026): written prompts at the end of the read, no
+ * file upload, graded by the course team on a rubric (no peer or self step on SkillUp courses).
+ * Seeded on one Six Sigma reading, m2-t2.
+ */
+export interface ReadingOpenResponse {
+  description: string;
+  intro: string;
+  prompts: string[];
+}
+
+const READING_OPEN_RESPONSES: Record<string, ReadingOpenResponse> = {
+  "m2-t2": {
+    description: "A short read and two written prompts to apply the idea to your own team.",
+    intro:
+      "Answer both prompts in your own words. Your draft saves as you type; once you submit, the course team grades it against the rubric and you can no longer edit it.",
+    prompts: [
+      "In your own words, what counts as a defect in your team's work?",
+      "Which process would you baseline first, and why?",
+    ],
+  },
+};
+
+export function getReadingOpenResponse(topic: FlatTopic): ReadingOpenResponse | undefined {
+  return ownContent(topic) ? undefined : READING_OPEN_RESPONSES[topic.id];
+}
+
 /** Short description shown in the Topic Header for non-video topics. */
 export function topicDescription(topic: FlatTopic): string {
   const fam = topicFamily(topic.type);
+  const openResponse = getReadingOpenResponse(topic);
+  if (openResponse) return openResponse.description;
   switch (fam) {
     case "video":
       return `A short video lesson, with a synced transcript you can search and take notes from.`;
@@ -227,7 +257,8 @@ export function topicDescription(topic: FlatTopic): string {
         ? `An interactive exercise to practice the concepts from ${topic.moduleTitle}.`
         : `An interactive exercise to practice the concepts from this course.`;
     case "ora":
-      return `A peer-reviewed project. You'll submit your work, review a peer, and receive a grade.`;
+      // Staff-graded on SkillUp courses: no peer or self assessment (28 Oct 2026).
+      return `A project graded by the course team. You'll submit your work and receive a grade on the rubric.`;
     case "lessonPage":
       return `A guided page that brings together everything on this topic: video, notes, diagrams and downloads.`;
     case "lab":
@@ -538,6 +569,16 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
     estMinutes: 4,
     submitIsFinal: false,
   };
+}
+
+/**
+ * The quiz header's type badge: the grading policy's assignment type of a graded quiz, as the
+ * course names it (`Topic.assignmentType`), or "Practice" for an ungraded one. Data, never a
+ * string picked here: Open edX shows the subsection's assignment type, whatever the course
+ * called it.
+ */
+export function quizBadgeLabel(topic: FlatTopic): string {
+  return topic.assignmentType ?? "Practice";
 }
 
 /** Quizzes authored as one CAPA problem holding every question. */
@@ -964,7 +1005,9 @@ export function getPartnerLab(topic: FlatTopic): PartnerLabContent | null {
  * it has been played, in one session or across sessions (BR-01, P1-46; `lib/playback/coverage`).
  * In the prototype that is every video and podcast (a missing duration falls back to 200 s, so the
  * duration check only guards a zero), since the simulated players report the time played. A
- * topic can say otherwise with `playbackMeasurable: false`.
+ * topic can say otherwise with `playbackMeasurable: false`: Six Sigma's m3-t2 "The define phase"
+ * does, so the player demos Figma Video Row 8 (4947:25439: Mark as Complete on a video, and Next
+ * asks; Nelson's SKO match review, 28 Oct 2026).
  */
 export function isPlaybackMeasured(topic: FlatTopic): boolean {
   const family = topicFamily(topic.type);
@@ -993,7 +1036,9 @@ export function completesByHand(topic: FlatTopic): boolean {
     family === "lab" ||
     family === "reading" ||
     family === "lessonPage" ||
-    family === "activity" ||
+    // A SCORM package reports its own completion and score (the Open edX SCORM XBlock), so only an
+    // activity authored as plain HTML is completed by hand (Figma Activity Row A; 28 Oct 2026).
+    (family === "activity" && getActivity(topic).kind !== "scorm") ||
     ((family === "video" || family === "podcast") && !isPlaybackMeasured(topic))
   );
 }
@@ -1059,9 +1104,10 @@ export function getPodcast(topic: FlatTopic): PodcastContent {
 /* ----------------------------------------------------------------- ORA --- */
 
 /**
- * Open Response Assessment. Our courses enable 3 of the 6 edX steps —
- * Response → Peer → Grade (no Learner Training, no Self Assessment) — which is
- * 12 learner-facing states. This is the only topic type where the learner
+ * Open Response Assessment. SkillUp courses enable the staff step only —
+ * Response → Grade by the course team on a rubric (no Learner Training, no Peer and no
+ * Self Assessment; 28 Oct 2026). `dueLabel`, `requiredReviews` and `overallCommentPrompt`
+ * stay in the data for the sample courses but the player shows none of them. This is the only topic type where the learner
  * returns over days or weeks, so waiting and empty states matter as much as
  * the forms.
  */
@@ -1081,7 +1127,7 @@ export interface OraContent {
   requiredReviews: number;
   acceptedTypes: string[];
   criteria: OraCriterion[];
-  /** Prompt shown on the peer-review form. */
+  /** Overall comment prompt of the grader's rubric form (the course team; no peer form on SkillUp courses). */
   overallCommentPrompt: string;
 }
 
@@ -1096,7 +1142,7 @@ export function getOra(topic: FlatTopic): OraContent {
     dueLabel: "Due 25 Oct 2026",
     requiredReviews: 1,
     acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
-    overallCommentPrompt: "What did you like most about your peer's submission?",
+    overallCommentPrompt: "What should the learner keep, and what should they change?",
     criteria: [
       {
         id: "c1",
@@ -1368,12 +1414,12 @@ function plainAssignmentBrief(topic: FlatTopic): AssignmentBrief {
 
 function plainOra(topic: FlatTopic): OraContent {
   return {
-    brief: `Complete “${topic.title}” as set out in the project brief in the Downloads tab, then submit your work for review by a peer.`,
+    brief: `Complete “${topic.title}” as set out in the project brief in the Downloads tab, then submit it for your mentor to grade on the rubric.`,
     deliverable: "Submit a PDF or DOCX. Say what you decided and why, not only what you made.",
     dueLabel: "Due date on the Dates tab",
     requiredReviews: 1,
     acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
-    overallCommentPrompt: "What did you like most about your peer's submission?",
+    overallCommentPrompt: "What should the learner keep, and what should they change?",
     criteria: [
       {
         id: "c1",

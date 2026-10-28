@@ -55,6 +55,8 @@ const SHORT_LABELS: Record<string, string> = {
   "Graded Assignment": "Graded",
   "Lesson Page": "Lesson",
   "Programming Assignment": "Programming",
+  // An ORA is graded by the course team on SkillUp courses, never by peers (28 Oct 2026).
+  "Peer-graded": "Open response",
 };
 
 export function topicTypeShortLabel(type: string): string {

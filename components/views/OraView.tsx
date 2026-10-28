@@ -1,42 +1,47 @@
 "use client";
 
 import * as React from "react";
-import { Check, FileText } from "lucide-react";
+import { Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
-import { OptionRadio } from "@/components/views/LessonBlocks";
-import { getOra, oraMaxPoints, type OraContent, type OraStep } from "@/lib/content";
+import {
+  getOra,
+  oraMaxPoints,
+  type OraContent,
+  type OraStep,
+  type ReadingOpenResponse,
+} from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 /**
  * ORA — the only topic type the learner returns to over days or weeks.
- * Steps: Response → Review a peer → Your grade. The waiting and empty states
- * carry as much weight as the forms: the learner has done everything and now
- * depends on other people, so the UI has to show progress, not a spinner.
+ * Steps: Your response → Your grade. On SkillUp courses the ORA is graded by the course team
+ * (staff or mentor) on a rubric: peer and self assessment are off, and no due date is set, since
+ * SkillUp configures only the course start and end dates (decision 036; Nelson's SKO match
+ * review, 28 Oct 2026, OR1). The waiting state carries as much weight as the form: the learner
+ * has done everything and now depends on the course team, so the UI shows where it stands.
  *
  * Completion is the platform's, not the learner's: the topic completes by itself once the
- * learner has submitted their response and given the required peer reviews
- * (topic-types-inventory.md §5, footer-contract.md row 8). It does not wait for the grade,
- * and there is no Mark as Complete button anywhere in the journey.
+ * learner has submitted their response (topic-types-inventory.md §5, footer-contract.md row 8).
+ * It does not wait for the grade, and there is no Mark as Complete button anywhere in the journey.
  */
 export function OraView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
   const ora = React.useMemo(() => (topic ? getOra(topic) : null), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
   const state = useLmsStore((s) => s.oraState[topicId]);
   const oraSubmit = useLmsStore((s) => s.oraSubmit);
-  const oraGivePeerReview = useLmsStore((s) => s.oraGivePeerReview);
-  const oraReceivePeerReview = useLmsStore((s) => s.oraReceivePeerReview);
+  // The store's grade action: the course team's assessment (`staffOverride` true), never a peer's.
+  const oraReceiveGrade = useLmsStore((s) => s.oraReceivePeerReview);
   const markComplete = useLmsStore((s) => s.markComplete);
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
   const showToast = useLmsStore((s) => s.showToast);
 
-  // Submitted and the review quota met: the topic is complete, whatever the grade does next.
-  const done =
-    Boolean(ora) && Boolean(state?.submitted) && (state?.reviewsGiven ?? 0) >= (ora?.requiredReviews ?? Infinity);
+  // Submitted: the topic is complete, whatever the grade does next.
+  const done = Boolean(ora) && Boolean(state?.submitted);
   React.useEffect(() => {
     if (done && !isCompleted) markComplete(topicId, { silent: true });
   }, [done, isCompleted, markComplete, topicId]);
@@ -44,79 +49,36 @@ export function OraView({ topicId }: { topicId: string }) {
   if (!topic || !ora) return null;
 
   const submitted = state?.submitted ?? false;
-  const reviewsGiven = state?.reviewsGiven ?? 0;
-  const reviewsReceived = state?.reviewsReceived ?? 0;
-  const quotaMet = reviewsGiven >= ora.requiredReviews;
   const graded = typeof state?.score === "number";
 
-  const step: OraStep = !submitted ? "response" : !quotaMet ? "peer" : "grade";
+  const step: OraStep = !submitted ? "response" : "grade";
 
   return (
     <div className="flex flex-col gap-8 py-6">
-      <Stepper
-        step={step}
-        submitted={submitted}
-        quotaMet={quotaMet}
-        graded={graded}
-        requiredReviews={ora.requiredReviews}
-      />
+      <Stepper step={step} submitted={submitted} graded={graded} />
 
       {step === "response" ? (
         <ResponseStep
           ora={ora}
           onSubmit={(name) => {
             oraSubmit(topicId, name);
-            showToast("Response submitted. Now review a peer.");
-          }}
-        />
-      ) : step === "peer" ? (
-        <PeerStep
-          ora={ora}
-          reviewsGiven={reviewsGiven}
-          onSubmitReview={() => {
-            oraGivePeerReview(topicId);
-            showToast(
-              reviewsGiven + 1 >= ora.requiredReviews
-                ? "Review submitted. This topic is complete; your grade arrives once a peer has reviewed you."
-                : "Review submitted. Thanks, that unlocks your own grade.",
-            );
+            showToast("Response submitted. The course team will grade it.");
           }}
         />
       ) : graded ? (
-        <GradeStep
-          ora={ora}
-          score={state!.score!}
-          staffOverride={state?.staffOverride}
-        />
+        <GradeStep ora={ora} score={state!.score!} />
       ) : (
-        <WaitingStep
-          reviewsReceived={reviewsReceived}
-          onSimulate={(staff) =>
-            oraReceivePeerReview(topicId, staff ? 19 : 17, staff)
-          }
-        />
+        <WaitingStep onSimulate={() => oraReceiveGrade(topicId, 19, true)} />
       )}
     </div>
   );
 }
 
 /* ---- Stepper: where am I, and what unlocks next ---- */
-function Stepper({
-  step,
-  submitted,
-  quotaMet,
-  graded,
-  requiredReviews,
-}: {
-  step: OraStep;
-  submitted: boolean;
-  quotaMet: boolean;
-  graded: boolean;
-  requiredReviews: number;
-}) {
+function Stepper({ step, submitted, graded }: { step: OraStep; submitted: boolean; graded: boolean }) {
+  // Two steps: no peer review on SkillUp courses (staff-graded, 28 Oct 2026).
   const steps: { id: OraStep; label: string; done: boolean }[] = [
     { id: "response", label: "Your response", done: submitted },
-    { id: "peer", label: `Review ${requiredReviews} peer${requiredReviews === 1 ? "" : "s"}`, done: quotaMet },
     { id: "grade", label: "Your grade", done: graded },
   ];
 
@@ -202,9 +164,9 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
 
   return (
     <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+      {/* No due date: SkillUp sets none (decision 036). */}
       <div className="flex flex-wrap items-center gap-2">
-        <Badge tone="brand">Peer-reviewed project</Badge>
-        <Badge tone="neutral">{ora.dueLabel}</Badge>
+        <Badge tone="brand">Graded by the course team</Badge>
       </div>
 
       <p className="sk-text-body-large-regular text-sko-text-muted">{ora.brief}</p>
@@ -214,8 +176,8 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
 
       <InlineAlert
         tone="info"
-        title={`You will also review ${ora.requiredReviews} peer`}
-        description="Your own grade is released once you've reviewed a peer and a peer has reviewed you."
+        title="Your mentor grades this response"
+        description="A member of the course team assesses your work on the rubric above. Your grade is released once they have."
       />
 
       {/* Upload + the description edX requires per file. */}
@@ -287,8 +249,8 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
             Submit your response?
           </span>
           <p className="sk-text-body-medium-regular text-sko-text-warning">
-            After you submit, you cannot edit or replace your files. Your submission goes to a peer
-            for review.
+            After you submit, you cannot edit or replace your files. Your submission goes to the
+            course team for grading.
           </p>
           <div className="flex flex-wrap gap-2 pt-1 max-md:[&>*]:flex-1">
             <Button variant="primary" size="md" onClick={() => onSubmit(file!)}>
@@ -315,159 +277,8 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
   );
 }
 
-/* ---- Step 2 · Review a peer (includes the empty state) ---- */
-function PeerStep({
-  ora,
-  reviewsGiven,
-  onSubmitReview,
-}: {
-  ora: OraContent;
-  reviewsGiven: number;
-  onSubmitReview: () => void;
-}) {
-  // The empty state is the most common one in a small cohort and the most
-  // often forgotten — it must not look like a failure.
-  const [hasPeer, setHasPeer] = React.useState(false);
-  const [scores, setScores] = React.useState<Record<string, number>>({});
-  const [comment, setComment] = React.useState("");
-  const allScored = ora.criteria.every((c) => typeof scores[c.id] === "number");
-  const ready = allScored && comment.trim().length > 0;
-
-  if (!hasPeer) {
-    return (
-      <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-        {/* DS LMS / ORA · Waiting Panel Kind=No peers yet (20328:3591): p24,
-            gap 6, r10, no icon; title body-large/Bold (semibold until
-            .sk-text-body-large-bold exists, CT-22). */}
-        <div className="flex flex-col items-center gap-1.5 rounded-card bg-sko-bg-subtle p-6 text-center">
-          <span className="sk-text-body-large-semibold text-sko-text-default">
-            No submissions to review yet
-          </span>
-          <p className="sk-text-body-medium-regular max-w-md text-sko-text-muted">
-            Nobody in your cohort has submitted work that needs reviewing right now. Check back
-            later. We&rsquo;ll email you when one is available.
-          </p>
-        </div>
-
-        <InlineAlert
-          tone="success"
-          title="Your submission is safe"
-          description="Your response is in. Next, your peers review it."
-        />
-
-        <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" onClick={() => setHasPeer(true)}>
-            A submission is available
-          </Button>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="sk-text-label-small-medium text-sko-text-primary">
-          {/* "Review 1 of 1" is noise — only show the count when there are several. */}
-          {ora.requiredReviews > 1
-            ? `Review ${reviewsGiven + 1} of ${ora.requiredReviews}`
-            : "Review a peer's submission"}
-        </span>
-        <span className="sk-text-body-small-regular text-sko-text-subtle">Anonymous peer</span>
-      </div>
-
-      <div className="flex items-center gap-3 rounded-control bg-sko-bg-subtle px-3 py-2.5">
-        <Icon icon={FileText} size={16} className="text-sko-text-primary" />
-        <div className="flex min-w-0 flex-col">
-          <span className="sk-text-body-medium-semibold truncate text-sko-text-default">
-            Control_plan_submission.pdf
-          </span>
-          <span className="sk-text-body-small-regular text-sko-text-subtle">
-            &ldquo;Control plan for the invoicing process&rdquo;
-          </span>
-        </div>
-        <Button variant="secondary" size="sm" className="ml-auto">
-          Open
-        </Button>
-      </div>
-
-      <span className="sk-text-label-small-medium text-sko-text-primary">
-        Score against the rubric
-      </span>
-
-      <div className="flex flex-col gap-3">
-        {ora.criteria.map((c) => (
-          // DS LMS / ORA · Rubric Criterion (20328:3563): p12, gap 8, r10,
-          // border/subtle, title inside the box (body-medium/Bold — semibold
-          // until .sk-text-body-medium-bold exists, CT-22). Options are Quiz · Option
-          // Rows; Scored = State=Selected (bg/primary-soft, checked radio).
-          // The floated legend is laid out inside the fieldset, not on its border.
-          <fieldset
-            key={c.id}
-            className="flex flex-col gap-2 rounded-card border border-sko-border-subtle p-3"
-          >
-            <legend className="sk-text-body-medium-semibold float-left w-full text-sko-text-default">
-              {c.label}
-            </legend>
-            {c.options.map((o) => {
-              const selected = scores[c.id] === o.points;
-              return (
-                <button
-                  key={o.points}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => setScores((s) => ({ ...s, [c.id]: o.points }))}
-                  className={cn(
-                    "sk-text-body-medium-regular flex items-center gap-3 rounded-control border border-sko-border-subtle py-3 pl-3 pr-4 text-left text-sko-text-default transition-colors",
-                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
-                    selected ? "bg-sko-bg-primary-soft" : "bg-sko-bg-page hover:bg-sko-bg-subtle",
-                  )}
-                >
-                  <OptionRadio checked={selected} />
-                  {/* The DS row has no points chip — the points ride in the label. */}
-                  <span className="flex-1">
-                    {o.label} · {o.points} pts
-                  </span>
-                </button>
-              );
-            })}
-          </fieldset>
-        ))}
-      </div>
-
-      <label className="flex flex-col gap-1.5">
-        <span className="sk-text-label-small-medium text-sko-text-subtle">
-          {ora.overallCommentPrompt} (required)
-        </span>
-        <textarea
-          rows={3}
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder="Share one specific thing that worked well…"
-          className="sk-text-body-medium-regular rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2.5 text-sko-text-default outline-none transition-colors focus-visible:border-sko-border-primary"
-        />
-      </label>
-
-      <div className="flex flex-wrap items-center gap-3">
-        <Button variant="primary" disabled={!ready} onClick={onSubmitReview}>
-          Submit review
-        </Button>
-        <span className="sk-text-body-small-regular text-sko-text-subtle">
-          {Object.keys(scores).length} of {ora.criteria.length} criteria scored
-        </span>
-      </div>
-    </section>
-  );
-}
-
-/* ---- Waiting: everything done, now it depends on other people ---- */
-function WaitingStep({
-  reviewsReceived,
-  onSimulate,
-}: {
-  reviewsReceived: number;
-  onSimulate: (staff: boolean) => void;
-}) {
+/* ---- Waiting: everything done, now it depends on the course team ---- */
+function WaitingStep({ onSimulate }: { onSimulate: () => void }) {
   return (
     <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
       {/* DS LMS / ORA · Waiting Panel Kind=Awaiting grade (20328:3591): p24,
@@ -475,30 +286,22 @@ function WaitingStep({
           .sk-text-body-large-bold exists, CT-22). */}
       <div className="flex flex-col items-center gap-1.5 rounded-card bg-sko-bg-primary-soft p-6 text-center">
         <span className="sk-text-body-large-semibold text-sko-text-primary">
-          Waiting for peer assessment
+          Waiting for the course team
         </span>
         <span className="sk-text-body-medium-regular text-sko-text-primary">
-          {reviewsReceived} of 1 peers have reviewed your work
+          Your mentor grades your work on the rubric
         </span>
       </div>
 
       <InlineAlert
         tone="success"
         title="Your part is done"
-        description="Response submitted · peer review completed. We'll email you when your grade is released."
+        description="Response submitted. You'll get a notification when your grade is released."
       />
 
-      <p className="sk-text-body-small-regular text-sko-text-subtle">
-        If peers are slow, the requirement relaxes automatically after 7 days, so your grade is never
-        blocked indefinitely.
-      </p>
-
       <div className="flex flex-wrap gap-2 border-t border-sko-border-subtle pt-4">
-        <Button variant="secondary" size="sm" onClick={() => onSimulate(false)}>
-          Simulate peer grade
-        </Button>
-        <Button variant="secondary" size="sm" onClick={() => onSimulate(true)}>
-          Simulate staff regrade
+        <Button variant="secondary" size="sm" onClick={onSimulate}>
+          Simulate staff grade
         </Button>
       </div>
     </section>
@@ -506,18 +309,10 @@ function WaitingStep({
 }
 
 /* ---- Step 3 · Your grade ---- */
-function GradeStep({
-  ora,
-  score,
-  staffOverride,
-}: {
-  ora: OraContent;
-  score: number;
-  staffOverride?: boolean;
-}) {
+function GradeStep({ ora, score }: { ora: OraContent; score: number }) {
   const max = oraMaxPoints(ora);
   const pct = Math.round((score / max) * 100);
-  // Per-criterion breakdown — edX shows the median of the peer scores.
+  // Per-criterion breakdown: the course team's score on each criterion of the rubric.
   const breakdown = ora.criteria.map((c, i) => ({
     label: c.label,
     got: i === 3 ? Math.max(0, c.maxPoints - (max - score)) : c.maxPoints,
@@ -534,21 +329,13 @@ function GradeStep({
           {score} / {max}
         </span>
         <span className="sk-text-body-small-medium text-sko-text-success">
-          {pct}% · {staffOverride ? "graded by the course team" : "peer-assessed"}
+          {pct}% · graded by the course team
         </span>
       </div>
 
-      {staffOverride ? (
-        <InlineAlert
-          tone="warning"
-          title="This grade replaced the peer score"
-          description="A member of the course team reviewed your submission. Staff assessment always takes precedence over peer grading."
-        />
-      ) : null}
-
       <div className="flex flex-col gap-1.5">
         <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
-          Breakdown · median score per criterion
+          Breakdown · score per criterion
         </span>
         <ul className="flex flex-col gap-1.5">
           {breakdown.map((b) => (
@@ -573,14 +360,144 @@ function GradeStep({
 
       <div className="flex flex-col gap-1 rounded-card bg-sko-bg-primary-soft p-4">
         <span className="sk-text-body-small-medium uppercase text-sko-text-primary">
-          {staffOverride ? "Feedback from the course team" : "Feedback from your peer"}
+          Feedback from the course team
         </span>
         <p className="sk-text-body-medium-regular text-sko-text-primary">
-          {staffOverride
-            ? "“Your response plan was stronger than the peer score reflected. Ownership was clearly assigned. Score adjusted.”"
-            : "“Clear chart and well-structured limits. The response plan could name an owner for each trigger.”"}
+          “Clear chart and well-structured limits. The response plan could name an owner for each trigger.”
         </p>
       </div>
+    </section>
+  );
+}
+
+/* ---- An Open Response inside a Reading: text prompts, no files ---- */
+
+/**
+ * Figma Reading Row 6 (6014:5054, "Open Response · text only"; Nelson's SKO match review,
+ * 28 Oct 2026), staff-graded as every SkillUp ORA: "Your turn", the two-step stepper, one text
+ * response per prompt with Save draft, then Submit through the same Submit Gate. Once submitted
+ * the answers read back and the page waits for the course team's grade. The Reading itself still
+ * completes by hand (Mark as Complete in the feedback row).
+ */
+export function ReadingOpenResponseBlock({ topicId, openResponse }: { topicId: string; openResponse: ReadingOpenResponse }) {
+  const state = useLmsStore((s) => s.oraState[topicId]);
+  const oraSubmit = useLmsStore((s) => s.oraSubmit);
+  const oraReceiveGrade = useLmsStore((s) => s.oraReceivePeerReview);
+  const showToast = useLmsStore((s) => s.showToast);
+  const [answers, setAnswers] = React.useState<string[]>(() => openResponse.prompts.map(() => ""));
+  const [savedAt, setSavedAt] = React.useState<(string | null)[]>(() => openResponse.prompts.map(() => null));
+  const [confirming, setConfirming] = React.useState(false);
+  const submitted = state?.submitted ?? false;
+  const graded = typeof state?.score === "number";
+  const ready = answers.every((a) => a.trim().length > 0);
+  const words = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
+
+  return (
+    <section className="flex flex-col gap-4">
+      <h2 className="sk-text-title-large-bold text-sko-text-default">Your turn</h2>
+      <p className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-muted">{openResponse.intro}</p>
+
+      <Stepper step={submitted ? "grade" : "response"} submitted={submitted} graded={graded} />
+
+      {openResponse.prompts.map((prompt, i) => (
+        <label key={prompt} className="flex flex-col gap-1.5">
+          <span className="sk-text-body-medium-regular text-sko-text-muted">
+            {i + 1} · {prompt}
+          </span>
+          <span className="sk-text-body-medium-medium text-sko-text-default">
+            Your response<span className="text-sko-text-error" aria-hidden>*</span>
+          </span>
+          <textarea
+            value={answers[i]}
+            readOnly={submitted}
+            required
+            rows={4}
+            onChange={(e) => {
+              const text = e.target.value;
+              setAnswers((prev) => prev.map((a, j) => (j === i ? text : a)));
+            }}
+            placeholder="Write your response here…"
+            className="sk-text-body-large-regular w-full resize-y rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none transition-colors placeholder:text-sko-text-placeholder focus:border-sko-border-primary read-only:bg-sko-bg-subtle"
+          />
+          {!submitted ? (
+            <span className="flex flex-wrap items-center gap-3 pt-1">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  const at = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+                  setSavedAt((prev) => prev.map((s, j) => (j === i ? at : s)));
+                }}
+              >
+                Save draft
+              </Button>
+              {savedAt[i] ? (
+                <span role="status" className="sk-text-body-small-regular text-sko-text-subtle">
+                  Draft saved at {savedAt[i]} · {words(answers[i])} words
+                </span>
+              ) : null}
+            </span>
+          ) : null}
+        </label>
+      ))}
+
+      {submitted ? (
+        graded ? (
+          <InlineAlert
+            tone="success"
+            title={`Graded · ${state!.score} points out of 20`}
+            description="The course team graded your responses on the rubric. Your score is in the Progress tab."
+          />
+        ) : (
+          <>
+            <InlineAlert
+              tone="info"
+              title="Waiting for the course team"
+              description="Responses submitted. You'll get a notification when your grade is released."
+            />
+            <div>
+              <Button variant="secondary" size="sm" onClick={() => oraReceiveGrade(topicId, 17, true)}>
+                Simulate staff grade
+              </Button>
+            </div>
+          </>
+        )
+      ) : confirming ? (
+        <div className="sk-animate-rise sk-enter-only flex flex-col gap-2 rounded-card border border-sko-border-warning bg-sko-bg-warning-soft p-4">
+          <span className="sk-text-body-small-semibold self-start rounded-control border border-sko-border-warning px-2 py-1 text-sko-text-warning">
+            IRREVERSIBLE
+          </span>
+          <span className="sk-text-body-large-semibold text-sko-text-warning">Submit your responses?</span>
+          <p className="sk-text-body-medium-regular text-sko-text-warning">
+            After you submit, you cannot edit your answers. They go to the course team for grading.
+          </p>
+          <div className="flex flex-wrap gap-2 pt-1 max-md:[&>*]:flex-1">
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => {
+                oraSubmit(topicId, "Text response");
+                setConfirming(false);
+                showToast("Responses submitted. The course team will grade them.");
+              }}
+            >
+              Yes, submit
+            </Button>
+            <Button variant="secondary" size="md" onClick={() => setConfirming(false)}>
+              Keep editing
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-3">
+          <Button variant="primary" size="md" disabled={!ready} onClick={() => setConfirming(true)}>
+            Submit
+          </Button>
+          {!ready ? (
+            <span className="sk-text-body-small-regular text-sko-text-subtle">Answer both prompts to submit.</span>
+          ) : null}
+        </div>
+      )}
     </section>
   );
 }

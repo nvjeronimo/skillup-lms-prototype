@@ -6,6 +6,7 @@ import { Check, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-re
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
 import { getTopic } from "@/lib/data";
+import { DEFAULT_PLATFORM_USER } from "@/lib/platform/user";
 import {
   completesByHand,
   getMediaSeconds,
@@ -123,6 +124,8 @@ export function PreviewDeviceSection({ onDone }: { onDone: () => void }) {
 export interface DemoControlsMenuProps {
   userName?: string;
   userAvatarUrl?: string;
+  /** The line under the name (DS Topbar v1.8 `Avatar label group`): "Learner · Pro". */
+  userRole?: string;
   /** Mobile topbar: hide the name next to the avatar. */
   compact?: boolean;
 }
@@ -139,6 +142,7 @@ export interface DemoControlsMenuProps {
 export function DemoControlsMenu({
   userName = "John Smith",
   userAvatarUrl,
+  userRole = DEFAULT_PLATFORM_USER.role,
   compact = false,
 }: DemoControlsMenuProps) {
   const { mounted, setOpen, containerRef, triggerProps, panelProps } = useDisclosure();
@@ -207,8 +211,11 @@ export function DemoControlsMenu({
           <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
         )}
         {!compact ? (
-          <span className="sk-text-body-medium-semibold pr-1 text-sko-text-default">
-            {userName}
+          // DS Topbar v1.8 `Avatar label group`: the name over the role, as on the platform bar
+          // (Nelson's SKO match review, 28 Oct 2026).
+          <span className="flex flex-col whitespace-nowrap pr-1 text-left">
+            <span className="sk-text-body-small-semibold text-sko-text-default">{userName}</span>
+            <span className="sk-text-label-small-regular text-sko-text-subtle">{userRole}</span>
           </span>
         ) : null}
       </button>

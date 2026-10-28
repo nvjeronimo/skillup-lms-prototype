@@ -31,6 +31,12 @@ export type PauseReason = "pause" | "end" | "hidden" | "unmount";
 
 export interface VideoPlayerProps {
   src?: string;
+  /**
+   * The poster: a photo shown in the frame until playback first starts, as a `<video poster>`
+   * (Figma Video Cards 1–3 and 7; Nelson's SKO match review, 28 Oct 2026). Left out: the flat
+   * brand colour.
+   */
+  poster?: string;
   /** Total duration in seconds (for the placeholder scrubber). */
   durationSeconds?: number;
   /**
@@ -248,6 +254,7 @@ function ActionButton({
  * Edge states (loading / error / ended) render a centered overlay.
  */
 export function VideoPlayer({
+  poster,
   durationSeconds = 200,
   currentTime: controlledTime = 0,
   seekKey,
@@ -267,7 +274,11 @@ export function VideoPlayer({
 }: VideoPlayerProps) {
   const [playing, setPlaying] = React.useState(false);
   const [speedIdx, setSpeedIdx] = React.useState(1);
-  const [captions, setCaptions] = React.useState(true);
+  // CC starts off (Figma Video Cards 1–3 and 7; Nelson's SKO match review, 28 Oct 2026): a caption
+  // on by default covered the paused frame at 0:00, and the play button once docked.
+  const [captions, setCaptions] = React.useState(false);
+  // Until the first Play the poster stands in for the frame, as a real video's poster.
+  const [started, setStarted] = React.useState(false);
   const [volume, setVolume] = React.useState(75);
   const [muted, setMuted] = React.useState(false);
   const [fullscreen, setFullscreen] = React.useState(false);
@@ -277,6 +288,7 @@ export function VideoPlayer({
   const [currentTime, setOwnTime] = React.useState(controlledTime);
   React.useEffect(() => {
     setOwnTime(controlledTime);
+    if (controlledTime > 0) setStarted(true);
   }, [controlledTime, seekKey]);
   const wrapRef = React.useRef<HTMLDivElement>(null);
 
@@ -338,10 +350,12 @@ export function VideoPlayer({
       onRestart?.();
     }
     setPlaying(true);
+    setStarted(true);
     onPlay?.(restart ? 0 : currentTime);
   }
 
   function seekTo(seconds: number) {
+    setStarted(true);
     setOwnTime(seconds);
     onSeek?.(seconds);
   }
@@ -400,7 +414,12 @@ export function VideoPlayer({
       {/* The picture: a 16:9 frame fitted in the player's height and centred (Figma: image fill,
           Fit). No real asset is required: a flat brand colour stands in for the video frame (no
           gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
-      <div className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2 bg-sko-bg-primary" aria-hidden />
+      <div className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2 overflow-hidden bg-sko-bg-primary" aria-hidden>
+        {poster && !started ? (
+          // eslint-disable-next-line @next/next/no-img-element -- a static mock poster
+          <img src={poster} alt="" className="h-full w-full object-cover" />
+        ) : null}
+      </div>
 
       {state === "ready" ? (
         // Full-size click layer toggles play/pause in both states. Only while paused does it

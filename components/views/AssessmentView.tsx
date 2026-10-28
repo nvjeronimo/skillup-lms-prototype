@@ -294,7 +294,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     // Save is hidden when attempts are unlimited: submitting costs nothing, so
     // the platform judges a save button pointless. Verified on dev.
     saveAvailable: typeof config.maxAttempts === "number",
-    hintAvailable: true,
+    // A final exam is authored without demand hints (Figma A-2 final 5200:30795: Save draft, the
+    // attempts line and Submit, no Hint; Nelson's SKO match review, 28 Oct 2026).
+    hintAvailable: config.variant !== "final",
     closed:
       typeof config.maxAttempts === "number" && attemptsUsed >= config.maxAttempts,
   };
@@ -303,7 +305,13 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   function cardPropsFor(i: number) {
     const question = questions[i];
     const state = stateFor(i);
-    const flags = ctaFlags(state, ctaCtx);
+    const matrix = ctaFlags(state, ctaCtx);
+    // A-1 offers Show answer only once an answer has come back wrong: before the first attempt
+    // the row is Hint and Submit (Figma A-1 5155:53399; Nelson's SKO match review, 28 Oct 2026).
+    const flags =
+      isModeA && !config.bucket
+        ? { ...matrix, showAnswer: matrix.showAnswer && (state === "Incorrect" || state === "Partially correct") }
+        : matrix;
     const anchor = `quiz-q-${i}`;
     // Unlimited attempts print no line at all.
     const attemptsShown = typeof config.maxAttempts === "number";
@@ -337,7 +345,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
       showPlatformPrompt: isModeA,
       platformPrompt: question.platformPrompt,
       showPoints: false,
-      showExplanation: !isModeA,
+      // The authored per-choice feedback: mode B, and the A-2 bucket once submitted (Figma
+      // 5200:30494: each verdict carries its explanation line; 28 Oct 2026).
+      showExplanation: !isModeA || Boolean(config.bucket),
       showHint: Boolean(answers[i].hintIndex >= 0 && question.hints?.length),
       hints: question.hints,
       hintIndex: answers[i].hintIndex,
@@ -481,7 +491,11 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
             problem here, not to any one question. */}
         <QuizFooterActions
           {...flags}
-          showHint={flags.showHint && bucketHints.length > 0}
+          // After Submit the set offers Hint, Reset and a disabled Submit; no Show answer, the
+          // explanations already sit under each verdict (Figma A-2 5200:30494; Nelson's SKO match
+          // review, 28 Oct 2026). Reset stays off on an all-correct set (the matrix).
+          showHint={(submitted ? ctaCtx.hintAvailable : flags.showHint) && bucketHints.length > 0}
+          showAnswer={submitted ? false : flags.showAnswer}
           showAttempts={attemptsShown}
           attemptsUsed={attemptsShown ? attemptsUsed : undefined}
           maxAttempts={attemptsShown ? config.maxAttempts : undefined}

@@ -7,6 +7,8 @@ export interface TopicTypeBadgeProps {
   type: TopicType;
   /** Hide the leading type icon. */
   showIcon?: boolean;
+  /** Replaces the type's short label (a quiz's assignment type, `quizBadgeLabel`). */
+  label?: string;
   className?: string;
 }
 
@@ -36,7 +38,7 @@ export const ALL_TOPIC_TYPES: TopicType[] = [
  * (icon/primary) sits in a 20×20 container (its bg/primary-soft fill is hidden in the DS),
  * 6px before the label (body-small/Medium). 20px high with the icon, 18px without.
  */
-export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBadgeProps) {
+export function TopicTypeBadge({ type, showIcon = true, label, className }: TopicTypeBadgeProps) {
   return (
     <span
       className={cn(
@@ -49,7 +51,7 @@ export function TopicTypeBadge({ type, showIcon = true, className }: TopicTypeBa
           <Icon icon={topicTypeIcon(type)} size={12} className="text-sko-icon-primary" />
         </span>
       ) : null}
-      {topicTypeShortLabel(type)}
+      {label ?? topicTypeShortLabel(type)}
     </span>
   );
 }

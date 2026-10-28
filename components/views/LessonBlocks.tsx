@@ -94,7 +94,8 @@ function Block({ block }: { block: LessonBlock }) {
       return (
         <section className="flex flex-col gap-2">
           {block.heading ? (
-            <h2 className="sk-text-headline-small-semibold text-sko-text-default">{block.heading}</h2>
+            // title-large/Bold under the topic title, as the Reading's sections (Nelson, 28 Oct 2026).
+            <h2 className="sk-text-title-large-bold text-sko-text-default">{block.heading}</h2>
           ) : null}
           {block.paragraphs.map((p, i) => (
             // Running text stops at DS Container/text-max-width, for now 1200 (Nelson, 27 Oct 2026).

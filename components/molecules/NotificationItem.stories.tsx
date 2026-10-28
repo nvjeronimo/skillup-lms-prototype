@@ -9,7 +9,7 @@ const meta: Meta<typeof NotificationItem> = {
   args: {
     type: "discussion-reply",
     title: "Carlos M. replied to your discussion",
-    body: "“Great point on measurement systems analysis.”",
+    body: "Six Sigma · Module 03",
     timestamp: "25 min ago",
     unread: true,
   },

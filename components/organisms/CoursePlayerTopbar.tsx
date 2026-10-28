@@ -261,7 +261,17 @@ export function CoursePlayerTopbar({
         ) : null}
       </div>
 
-      {searchScope && isDesktop ? <HarborSearch scope={searchScope} width={380} /> : null}
+      {searchScope && isDesktop ? (
+        <HarborSearch
+          scope={searchScope}
+          width={380}
+          // DS Search-Pill v1.0 (26 Oct 2026): the Assistant button keeps its word next to the mark
+          // in the player bar, also while the pill rests at its compact width (Nelson's SKO match
+          // review, 28 Oct 2026). The pill hides the word below a 220 container for the narrow tabs
+          // bar; this undoes it here only.
+          className="[&_[data-assistant-anchor]>span]:not-sr-only"
+        />
+      ) : null}
 
       <div className="flex items-center gap-2">
         {searchScope && !isDesktop ? <SearchAssistantButton scope={searchScope} size="sm" /> : null}

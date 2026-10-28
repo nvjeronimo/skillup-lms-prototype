@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { Quote } from "lucide-react";
-import { getArticle, getDownloads } from "@/lib/content";
+import { getArticle, getDownloads, getReadingOpenResponse } from "@/lib/content";
+import { ReadingOpenResponseBlock } from "./OraView";
 import { Icon } from "@/lib/icons";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
@@ -13,6 +14,7 @@ export function ReadingView({ topicId }: { topicId: string }) {
   if (!topic) return null;
   const article = getArticle(topic);
   const files = getDownloads(topic);
+  const openResponse = getReadingOpenResponse(topic);
 
   return (
     // Blocks 32 apart, 24 above and below (were 20 / 16; Nelson, 25 Oct 2026: more space between sections).
@@ -24,7 +26,9 @@ export function ReadingView({ topicId }: { topicId: string }) {
 
       {article.sections.map((s) => (
         <section key={s.heading} className="flex flex-col gap-2">
-          <h2 className="sk-text-headline-small-semibold text-sko-text-default">{s.heading}</h2>
+          {/* title-large/Bold, a step under the topic title (Figma Reading 5685:170897; Nelson's SKO
+              match review, 28 Oct 2026: the H2 was headline-small, the size of the H1). */}
+          <h2 className="sk-text-title-large-bold text-sko-text-default">{s.heading}</h2>
           {s.paragraphs.map((p, i) => (
             <p key={i} className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-muted">
               {p}
@@ -35,11 +39,12 @@ export function ReadingView({ topicId }: { topicId: string }) {
 
       {/* DS Lesson Block Kind=HTML (Blockquote) v1.1, 21354:6807: a typographic pull quote, no box
           and no stripe — the Quote mark (28, icon/primary), the quote in title-medium/Medium
-          text/primary, the attribution in body-medium text/muted. */}
+          text/primary between curly quotation marks (as the DS block draws it; Nelson's SKO match
+          review, 28 Oct 2026), the attribution in body-medium text/muted. */}
       <blockquote className="flex gap-3 py-2">
         <Icon icon={Quote} size={28} aria-hidden="true" className="mt-0.5 shrink-0 text-sko-icon-primary" />
         <div className="flex flex-col gap-2">
-          <p className="sk-text-title-medium-medium max-w-text text-pretty text-sko-text-primary">{article.pullQuote.text}</p>
+          <p className="sk-text-title-medium-medium max-w-text text-pretty text-sko-text-primary">&ldquo;{article.pullQuote.text}&rdquo;</p>
           <footer className="sk-text-body-medium-regular text-sko-text-muted">{article.pullQuote.attribution}</footer>
         </div>
       </blockquote>
@@ -57,11 +62,14 @@ export function ReadingView({ topicId }: { topicId: string }) {
         </ul>
       </section>
 
+      {/* An Open Response at the end of the read (Figma Reading Row 6, 28 Oct 2026). */}
+      {openResponse ? <ReadingOpenResponseBlock topicId={topic.id} openResponse={openResponse} /> : null}
+
       {/* Reading has no Downloads tab: its files are links in the body, and a link opens the
           file in a new tab (Studio has no download button). */}
       {files.length ? (
         <section className="flex flex-col gap-2">
-          <h2 className="sk-text-headline-small-semibold text-sko-text-default">Files</h2>
+          <h2 className="sk-text-title-large-bold text-sko-text-default">Files</h2>
           <ul className="flex flex-col gap-1">
             {files.map((f) => (
               <li key={f.id}>

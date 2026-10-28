@@ -108,7 +108,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "open-response",
     question: "How does an open response work?",
     answer:
-      "You submit your response, and a mentor from the course team grades it against the published rubric; peer and self assessment are not used on SkillUp courses. The topic completes by itself, so there is nothing to mark by hand, and your grade appears with the mentor's comments once it is released.",
+      "You submit your response, and a mentor from the course team grades it against the published rubric; peer and self assessment are not used on SkillUp courses. The topic completes by itself once you submit; there is nothing to mark by hand, and you get a notification when your grade is released.",
     source: "prototype",
   },
   {

@@ -5,6 +5,8 @@ import type { TopicType } from "@/lib/types";
 
 export interface TopicHeaderProps {
   type: TopicType;
+  /** The badge's label when it is not the type's own (a quiz's assignment type). */
+  typeLabel?: string;
   title: string;
   duration: string;
   description?: string;
@@ -22,6 +24,7 @@ export interface TopicHeaderProps {
  */
 export function TopicHeader({
   type,
+  typeLabel,
   title,
   duration,
   description,
@@ -40,7 +43,7 @@ export function TopicHeader({
       {/* One line on every screen (Nelson, 25 Oct 2026): the type and the completion badge keep
           their width, the duration gives way and ends in an ellipsis. */}
       <div className="flex min-w-0 items-center gap-2">
-        <TopicTypeBadge type={type} className="shrink-0" />
+        <TopicTypeBadge type={type} label={typeLabel} className="shrink-0" />
         {/* Duration is optional; with none, render nothing rather than a stray
             "approx." or a dash placeholder. Separator and Duration are two
             body-medium/Medium layers in text/subtle, as in the DS meta-row. */}

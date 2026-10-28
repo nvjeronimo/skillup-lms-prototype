@@ -12,7 +12,7 @@ const meta: Meta<typeof SavedNoteItem> = {
     anchorQuote: "The lifecycle begins long before any code is written.",
     text: "Lifecycle starts with customer understanding, before any code",
     tags: ["discovery", "lifecycle"],
-    savedAt: "3 days ago",
+    savedAt: "Oct 21",
   },
   decorators: [
     (Story) => (
