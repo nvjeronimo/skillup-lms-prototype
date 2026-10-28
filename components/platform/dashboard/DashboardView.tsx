@@ -71,7 +71,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           </h1>
           {/* The greeting tip: one useful sentence and a link, from the assistant. */}
           <p
-            data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
+            data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)"
             className="sk-text-body-large-regular text-sko-text-muted"
           >
             {deadlinesThisWeek === 1 ? "One deadline is" : `${deadlinesThisWeek} deadlines are`} coming
@@ -124,7 +124,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
               action={{ label: "View calendar", href: "/platform/calendar" }}
             />
             <ul
-              data-mock="Due dates come one course at a time (Dates API), and no course has them authored yet"
+              data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)"
               className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
             >
               {dashboardDue.map(({ id, ...item }) => (

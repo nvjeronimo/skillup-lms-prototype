@@ -6,8 +6,9 @@ import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { SectionIntro } from "@/components/platform/program/parts";
 import {
-  COURSE_TABS,
+  courseTabsFor,
   DEFAULT_COURSE_TAB,
+  hasDatesTab,
   isCourseTab,
   type CourseDetail,
   type CourseTabId,
@@ -50,8 +51,10 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
   const searchParams = useSearchParams();
   const baseId = React.useId();
 
+  // Decision 036: a self-paced course has no Dates tab, so ?tab=dates opens the Course tab.
+  const tabs = courseTabsFor(course);
   const param = searchParams.get("tab");
-  const urlTab: CourseTabId = isCourseTab(param) ? param : DEFAULT_COURSE_TAB;
+  const urlTab: CourseTabId = isCourseTab(param) && tabs.some((t) => t.id === param) ? param : DEFAULT_COURSE_TAB;
   const [active, setActive] = React.useState<CourseTabId>(urlTab);
   React.useEffect(() => setActive(urlTab), [urlTab]);
   // After the first tab change, a panel fades in as it is shown (display: none → shown restarts
@@ -80,8 +83,9 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
     course: (
       <div className="flex flex-col gap-layout-column md:flex-row md:items-start">
         <div data-arrive={2} className="flex min-w-0 flex-1 flex-col gap-layout-stack">
-          {/* Open edX shows Shift due dates on the course outline as on the Dates tab. */}
-          {course.datesTab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
+          {/* Open edX shows Shift due dates on the course outline as on the Dates tab. No due dates
+              are configured on SkillUp courses, so only where the course has a Dates tab (decision 036). */}
+          {hasDatesTab(course) && course.datesTab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
           <CourseAlert tone="brand" layout="stacked" title={course.update.title} body={course.update.body} dismissible />
           <SectionIntro title={course.intro.title} lead={course.intro.lead} />
           <ModuleList modules={course.modules} topicHref={links.byId} />
@@ -127,7 +131,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
         <div className="mx-auto flex w-full max-w-[1280px] items-end pl-layout-band-x pt-3 md:gap-5 md:px-layout-band-x md:pt-0 lg:gap-6">
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up. Their own rule sits on the row's. */}
           <PlatformTabs
-            tabs={COURSE_TABS}
+            tabs={tabs}
             value={active}
             onChange={selectTab}
             size="responsive"
@@ -162,7 +166,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             className="mb-4 md:mb-5 lg:mb-6"
           />
         ) : null}
-        {COURSE_TABS.map((tab) => (
+        {tabs.map((tab) => (
           <div
             key={tab.id}
             role="tabpanel"

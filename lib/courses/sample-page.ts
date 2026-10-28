@@ -266,7 +266,7 @@ export const SIX_SIGMA: CourseDetail = {
         state: "complete",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Complete", color: "success" },
         ],
         title: "Module 1 · Channel selection challenge",
@@ -281,7 +281,7 @@ export const SIX_SIGMA: CourseDetail = {
         state: "overdue",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Overdue", color: "error" },
         ],
         title: "Module 2 · Audience mapping",

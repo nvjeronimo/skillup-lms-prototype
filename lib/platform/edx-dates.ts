@@ -12,7 +12,7 @@ import type { CourseDate, CourseDateBadge, CourseDetail } from "./course-detail"
  * - Date types: course start, course end, assignment due, certificate available, upgrade
  *   deadline, audit access expires (and today, the divider). No program dates, no "suggested
  *   start": those rows are dropped.
- * - Assignments carry no description; the assignment type prefixes the title ("Homework: …").
+ * - Assignments carry no description; the assignment type prefixes the title ("Assignment: …").
  * - Badges: Completed, Past due (amber: a missed suggested date can be shifted, so it is a
  *   warning, never red; Open edX draws it neutral), Due next (ONE item: the next incomplete
  *   assignment), Not yet released (the assignment has no link yet).

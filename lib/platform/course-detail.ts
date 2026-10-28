@@ -38,6 +38,20 @@ export function isCourseTab(value: string | null | undefined): value is CourseTa
   return COURSE_TABS.some((t) => t.id === value);
 }
 
+/**
+ * Decision 036 (meeting 28 Oct 2026): no Dates tab on a self-paced course. SkillUp configures only a
+ * course's start and end, so a self-paced course (Flexible Learning) has no dates worth a tab.
+ * The Dates tab, its sidebar card and Shift due dates stay in the code for instructor-led courses.
+ */
+export function hasDatesTab(course: Pick<CourseDetail, "deliveryMode">): boolean {
+  return course.deliveryMode !== "Flexible Learning";
+}
+
+/** The tabs a course shows: COURSE_TABS without Dates on a self-paced course. */
+export function courseTabsFor(course: Pick<CourseDetail, "deliveryMode">) {
+  return COURSE_TABS.filter((t) => t.id !== "dates" || hasDatesTab(course));
+}
+
 /** The page of a course, optionally on a tab and on a Q&A thread. */
 export function courseDetailHref(slug: string, tab?: CourseTabId, thread?: string): string {
   const params = new URLSearchParams();
@@ -163,7 +177,7 @@ export interface CourseDate {
   description: string;
   /** Label of the link to the assignment, when the row has one. */
   link?: string;
-  /** `assignment_type` of a due date ("Homework", "Graded quiz"): Open edX puts it before the title. */
+  /** `assignment_type` of a due date ("Graded quiz", "Assignment"): Open edX puts it before the title. */
   assignmentType?: string;
 }
 

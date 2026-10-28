@@ -6,7 +6,7 @@ import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sa
 /**
  * "Leadership in Remote Teams": a stand-alone course of My Learning, in progress, also on
  * the Dashboard's resume list. Its figures follow both: 52% (13 of 25 topics), 6 hours in
- * all, next up "Async standups". One graded quiz of two and the one homework are done,
+ * all, next up "Async standups". One graded quiz of two and the one assignment are done,
  * which is the 39% of the grade. Today is 24 Oct 2026, the day of the Dashboard: it lists
  * nothing of this course as due this week, so the next deadline here falls on 3 Nov.
  */
@@ -129,10 +129,10 @@ export const page: CourseDetail = {
       passLabel: "Pass 70%",
       columns: SIX_SIGMA.progressTab.grade.columns,
       // Two graded quizzes, one done with full marks: half of the type, so 15% of its 30%.
-      // The one homework scored 80%, so 24% of its 30%. 15% + 24% = the 39% of the header.
+      // The one assignment scored 80%, so 24% of its 30%. 15% + 24% = the 39% of the header.
       rows: [
         { type: "Graded Quiz", weight: "30%", grade: "50%", weighted: "15%" },
-        { type: "Homework", weight: "30%", grade: "80%", weighted: "24%" },
+        { type: "Assignment", weight: "30%", grade: "80%", weighted: "24%" },
         { type: "Final Project", weight: "40%", grade: "0%", weighted: "0%" },
       ],
       sections: [
@@ -196,7 +196,7 @@ export const page: CourseDetail = {
         state: "complete",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Complete", color: "success" },
         ],
         title: "Module 2 · Assignment 01 · Team communication charter",

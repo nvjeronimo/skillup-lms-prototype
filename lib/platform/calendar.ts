@@ -29,7 +29,7 @@ export interface CalendarEvent {
   /** 24 h, in the learner's zone ("23:59", "16:00"), printed "11:59 PM · your time" (formatTime); none for a whole-day date. */
   time?: string;
   kind: CalendarKind;
-  /** Deadlines: the assignment type of the Dates tab ("Graded quiz", "Homework"). Course dates: what the date is, in a word. */
+  /** Deadlines: the assignment type of the Dates tab ("Graded quiz", "Assignment"). Course dates: what the date is, in a word. */
   label: string;
   title: string;
   course: string;

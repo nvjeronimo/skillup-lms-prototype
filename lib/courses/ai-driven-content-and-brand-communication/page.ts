@@ -143,10 +143,10 @@ export const page: CourseDetail = {
       passPercent: 70,
       passLabel: "Pass 70%",
       columns: SIX_SIGMA.progressTab.grade.columns,
-      // Two homework assignments and two graded quizzes: one of each is done, so each type
+      // Two assignments and two graded quizzes: one of each is done, so each type
       // is at half of what its one result earned. 18% + 10% = the 28% of the header.
       rows: [
-        { type: "Homework", weight: "40%", grade: "45%", weighted: "18%" },
+        { type: "Assignment", weight: "40%", grade: "45%", weighted: "18%" },
         { type: "Graded Quiz", weight: "20%", grade: "50%", weighted: "10%" },
         { type: "Final Project", weight: "25%", grade: "0%", weighted: "0%" },
         { type: "Final Assessment", weight: "15%", grade: "0%", weighted: "0%" },
@@ -203,7 +203,7 @@ export const page: CourseDetail = {
         state: "complete",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Complete", color: "success" },
         ],
         title: "Module 1 · Assignment 01 · Brand voice guide",
@@ -238,7 +238,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 2 · Assignment 02 · Audience segmentation",
