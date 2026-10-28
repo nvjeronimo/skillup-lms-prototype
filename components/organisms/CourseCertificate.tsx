@@ -85,7 +85,10 @@ export function CourseCertificate({
         <p className="sk-text-body-medium-regular text-sko-text-muted">has successfully completed</p>
         <p className="sk-text-headline-small-semibold text-sko-text-default">{courseTitle}</p>
 
-        <div className="flex flex-wrap items-start justify-center gap-6">
+        <div
+          data-invented="certificate: Open edX prints no module, topic or quiz figures"
+          className="flex flex-wrap items-start justify-center gap-6"
+        >
           {STAT.map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-0.5">
               <p className="sk-text-body-large-medium text-sko-text-default">{s.value}</p>
@@ -99,7 +102,8 @@ export function CourseCertificate({
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-sko-border-subtle px-8 py-6">
         <span className="sk-text-body-small-medium text-sko-text-muted">Issued by {provider}</span>
         <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
-          {dateLabel} · {certificateId}
+          {dateLabel}
+          <span data-invented="certificate: Open edX identifies it by its verify UUID, no readable ID"> · {certificateId}</span>
         </span>
       </div>
 
@@ -131,7 +135,13 @@ export function CourseCertificate({
         <Button variant="secondary" size="md" onClick={handlePrint}>
           Print
         </Button>
-        <Button variant="primary" size="md" rightIcon={Download} onClick={onDownload}>
+        <Button
+          variant="primary"
+          size="md"
+          rightIcon={Download}
+          data-invented="certificate: Open edX makes no PDF, only the web certificate"
+          onClick={onDownload}
+        >
           Download PDF
         </Button>
       </div>

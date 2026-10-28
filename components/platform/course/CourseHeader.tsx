@@ -32,6 +32,8 @@ const CRUMB = "sk-text-body-medium-semibold relative inline-flex items-center af
  */
 export function CourseHeader({ course, className }: { course: CourseDetail; className?: string }) {
   const facts = [course.stats.structure, course.stats.duration, course.stats.org];
+  // "~ 8h 40m left" has no source in Open edX; "Completed …" / "Certificate issued …" do.
+  const timeLeftInvented = /left$/.test(course.progress.timeLeft) ? "time: no time-left figure in Open edX" : undefined;
 
   return (
     <header className={cn("relative overflow-hidden bg-sko-bg-primary-soft", className)}>
@@ -103,6 +105,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
                   Type=Logo (Theme=Light), the same list as the course card (provider, or its partners). */}
               <ul
                 aria-label="Provider and partners"
+                data-invented="partners: no partner-logo field in Open edX"
                 data-mock="Partner logos have no field: org is the platform's own key"
                 className="flex items-center gap-2"
               >
@@ -129,7 +132,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
               <li className="flex">
                 <DeliveryModeBadge value={course.deliveryMode} />
               </li>
-              <li className="flex" data-mock="No LMS API has the course level">
+              <li className="flex" data-invented="level: no course level in Open edX" data-mock="No LMS API has the course level">
                 <DifficultyBadge value={course.difficulty} />
               </li>
             </ul>
@@ -190,8 +193,8 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
               </p>
               <p className="sk-text-body-small-regular flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sko-text-subtle">
                 <span>{course.progress.done}</span>
-                <span aria-hidden>·</span>
-                <span data-mock="Time left has no source: effort_time is null on every block">
+                <span aria-hidden data-invented={timeLeftInvented}>·</span>
+                <span data-invented={timeLeftInvented} data-mock="Time left has no source: effort_time is null on every block">
                   {course.progress.timeLeft}
                 </span>
               </p>

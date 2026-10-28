@@ -47,7 +47,11 @@ export const LabLaunchCard = React.forwardRef<HTMLElement, LabLaunchCardProps>(f
         className,
       )}
     >
-      {provider ? <ProviderBadge value={provider} /> : null}
+      {provider ? (
+        <span data-invented="provider: no partner field on an Open edX unit or LTI block" className="contents">
+          <ProviderBadge value={provider} />
+        </span>
+      ) : null}
       {/* DS body-large/Bold — semibold until .sk-text-body-large-bold exists (CT-22). */}
       <h2
         className={cn(
@@ -68,7 +72,11 @@ export const LabLaunchCard = React.forwardRef<HTMLElement, LabLaunchCardProps>(f
       {children ? <div className="flex flex-wrap justify-center gap-2 pt-2">{children}</div> : null}
       {/* The card is where the one thing we know is read from: that the lab was opened. */}
       {state === "opened" && openedOn ? (
-        <p className="sk-text-body-medium-regular text-sko-text-default" aria-live="polite">
+        <p
+          data-invented="opened: the launch click is not seen by Open edX"
+          className="sk-text-body-medium-regular text-sko-text-default"
+          aria-live="polite"
+        >
           {openedOn}
         </p>
       ) : null}

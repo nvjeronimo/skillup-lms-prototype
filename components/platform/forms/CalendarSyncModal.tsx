@@ -42,7 +42,10 @@ export function CalendarSyncModal({ open, onClose }: { open: boolean; onClose: (
       onSubmit={onClose}
       mock="Calendar sync is Phase 3 (feature deltas); the feed address is a sample"
     >
-      <fieldset className="flex flex-col gap-1.5">
+      <fieldset
+        data-invented="calendar: Open edX syncs assignment dates per course, with no choice of what goes in"
+        className="flex flex-col gap-1.5"
+      >
         <legend className="sk-text-body-medium-medium mb-1.5 text-sko-text-muted">What to include</legend>
         {WHAT.map((w) => (
           <label

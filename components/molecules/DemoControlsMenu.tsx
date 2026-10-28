@@ -215,7 +215,7 @@ export function DemoControlsMenu({
           // (Nelson's SKO match review, 28 Oct 2026).
           <span className="flex flex-col whitespace-nowrap pr-1 text-left">
             <span className="sk-text-body-small-semibold text-sko-text-default">{userName}</span>
-            <span className="sk-text-label-small-regular text-sko-text-subtle">{userRole}</span>
+            <span data-invented="personal: no learner role or plan in Open edX" className="sk-text-label-small-regular text-sko-text-subtle">{userRole}</span>
           </span>
         ) : null}
       </button>

@@ -58,6 +58,7 @@ import {
   getDiscussionThreads,
   getByline,
   FOOTER_AUTHOR_FAMILIES,
+  type TopicFamily,
 } from "@/lib/content";
 import {
   getCourseBySlug,
@@ -73,6 +74,7 @@ import {
   DEFAULT_USER,
 } from "@/lib/data";
 import { useHydrated } from "@/lib/persona-gate";
+import { useEdxScope } from "@/lib/edx-scope";
 import { courseSearchScope as searchScopeOf } from "@/lib/courseSearchScope";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { lineAt } from "@/lib/playback/lineAt";
@@ -95,6 +97,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const learner = hydrated ? user : DEFAULT_USER;
   const pathname = usePathname();
   const bp = useBreakpoint();
+  // Open edX scope (decision 035): Next never asks, and the topic has no Notes or Downloads tab.
+  const edx = useEdxScope();
 
   const topic = getTopic(topicId);
   const { previous, next, total, position } = getAdjacentTopics(topicId);
@@ -311,7 +315,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // topic the platform cannot measure, Mark as Complete stays at the end of the content, and Next
   // asks whether the learner has completed it when they move on without the button. The demo
   // menu can switch the question off, which leaves the button alone as it was before.
-  const asksOnNext = completionFlow === "ask-on-next" && completesByHand(topic) && !isLocked;
+  const asksOnNext = completionFlow === "ask-on-next" && completesByHand(topic) && !isLocked && !edx;
   const showAction =
     !isLocked && !hasInFrameAction && !isVilt && !isBlocked;
   // DS shared-shell rule (§5): the manual "Mark as complete" ACTION renders only
@@ -427,7 +431,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Reading has no Downloads tab (17 Sep decision): its files are linked in the body, and
   // with one option left the tab bar is hidden. A quiz has no tab bar either (Figma A-1 and A-2
   // quiz screens; Nelson's SKO match review, 28 Oct 2026).
-  const tabs = isVideo
+  const tabs = edx
+    ? [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
+    : isVideo
     ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
     : family === "reading" || family === "assessment" || scormActivity || partnerLab
       ? // Same rule for a partner lab: it has no files of ours, so no Downloads tab.
@@ -537,7 +543,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   tabs={showTabs && !isLocked}
                   title={topic.title}
                   completed={Boolean(headerStatus)}
-                  description={!isLocked && family !== "assessment" ? topicDescription(topic) : undefined}
+                  description={!isLocked && !edx && family !== "assessment" ? topicDescription(topic) : undefined}
                 />
               </div>
             ) : null}
@@ -663,6 +669,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     typeLabel={family === "assessment" ? quizBadgeLabel(topic) : undefined}
                     title={topic.title}
                     duration={topic.duration}
+                    // The effort estimate counts text and video only: no time on these types in Open edX.
+                    durationInvented={
+                      NO_EFFORT_FAMILIES.includes(family) ? "duration: no time estimate for this type in Open edX" : undefined
+                    }
                     showDescription={family !== "assessment"}
                     description={topicDescription(topic)}
                     rightSlot={headerStatus ?? undefined}
@@ -853,6 +863,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
 }
 
 const COURSE_DRAWER_ID = "course-drawer";
+
+/** Types the Open edX effort estimate gives no time (problems, LTI, SCORM, ORA, live sessions). */
+const NO_EFFORT_FAMILIES: TopicFamily[] = ["assessment", "graded", "activity", "lab", "ora", "vilt"];
 
 /** The mobile course drawer as a modal dialog (see useDialog). It slides back out to the left on close. */
 function MobileCourseDrawer({

@@ -10,6 +10,8 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
 import { PlatformPage } from "@/components/platform/PlatformPage";
+import { NotInEdx } from "@/components/edx-scope/NotInEdx";
+import { useEdxScope } from "@/lib/edx-scope";
 import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHeader";
 import { BookSessionModal, type BookableService } from "@/components/platform/forms/BookSessionModal";
 import { ContactSupportModal } from "@/components/platform/forms/ContactSupportModal";
@@ -155,12 +157,25 @@ export function ServicesView() {
     [sentRequests],
   );
   const cvBooked = bookings.find((b) => b.service === "CV review");
+  const edx = useEdxScope();
 
   const onAction = (item: ServiceItem) => {
     if (item.id === "cv" || item.id === "interview") setBooking(item.id);
     else if (item.id === "contact") setContacting(true);
     else notInPrototype(item.action);
   };
+
+  // Open edX scope: nothing behind this page (its modals go with it).
+  if (edx) {
+    return (
+      <PlatformPage current="services">
+        <NotInEdx
+          title="Services"
+          reason="Mentoring, coaching, support requests and included services have no Open edX feature behind them."
+        />
+      </PlatformPage>
+    );
+  }
 
   return (
     <PlatformPage

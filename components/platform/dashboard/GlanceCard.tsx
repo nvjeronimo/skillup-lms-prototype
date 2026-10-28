@@ -26,6 +26,7 @@ function TrendChip({ trend }: { trend: NonNullable<DashboardStat["trend"]> }) {
   return (
     <span
       data-mock="No API returns a figure's value 30 days ago"
+      data-invented="trend: no figure from 30 days ago in Open edX"
       className={cn("sk-text-body-small-semibold inline-flex items-center gap-0.5 rounded-pill px-1.5 py-0.5", tone)}
     >
       <Icon icon={arrow} size={14} aria-hidden />

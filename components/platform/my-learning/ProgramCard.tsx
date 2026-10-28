@@ -18,6 +18,7 @@ import {
   type MyLearningProgram,
 } from "@/lib/platform/my-learning";
 import { Icon } from "@/lib/icons";
+import { useEdxScope } from "@/lib/edx-scope";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -90,7 +91,13 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
   const notStarted = !completed && !program.upNext && Boolean(program.status);
   const footerLabel = completed ? myLearningProgramCertificateLabel : myLearningProgramUpNextLabel;
   const footerValue = completed ? program.certificateDate : program.upNext;
-  const details = [program.lastStudied, program.hours, program.accessUntil].filter(Boolean);
+  // Open edX scope: no last-studied date and no hours left (no source); the total effort stays.
+  const edx = useEdxScope();
+  const details = (
+    edx
+      ? [program.hours?.endsWith("total") ? program.hours : undefined, program.accessUntil]
+      : [program.lastStudied, program.hours, program.accessUntil]
+  ).filter(Boolean);
   const skin = useLmsStore((st) => st.skin);
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);

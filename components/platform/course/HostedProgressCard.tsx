@@ -13,6 +13,7 @@ import { useExitTransition } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
+import { useEdxScope } from "@/lib/edx-scope";
 
 /**
  * The Progress card of a course that runs on a partner's platform (Figma I1 6792:139729 and
@@ -31,13 +32,18 @@ export function HostedProgressCard({ course, hosted }: { course: CourseDetail; h
   // to the button that opened the dialog: it goes to the link that took its place.
   const actionRef = React.useRef<HTMLAnchorElement>(null);
   const copy = started ? hosted.started : hosted.start;
+  // Open edX scope: no progress from the partner and no leaving dialog; the link opens in a new tab.
+  const edx = useEdxScope();
 
   return (
     <section
       aria-label={course.progress.label}
       className="flex w-full shrink-0 flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
     >
-      <div className="flex items-end justify-between gap-3">
+      <div
+        data-invented="hosted: Open edX gets no progress back from the partner"
+        className="flex items-end justify-between gap-3"
+      >
         <p className="sk-text-headline-medium-bold text-sko-text-default">
           {started ? (
             <>
@@ -50,16 +56,16 @@ export function HostedProgressCard({ course, hosted }: { course: CourseDetail; h
         </p>
         <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.label}</p>
       </div>
-      <PlatformProgressBar value={0} label={course.progress.label} />
+      {edx ? null : <PlatformProgressBar value={0} label={course.progress.label} />}
       <p className="sk-text-body-small-regular text-sko-text-subtle">{copy.eyebrow}</p>
-      {started || skipDialog ? (
+      {started || skipDialog || edx ? (
         <ButtonLink
           ref={actionRef}
           href={hosted.href}
           target="_blank"
           rel="noopener"
           size="lg"
-          rightIcon={started ? ExternalLink : undefined}
+          rightIcon={started || edx ? ExternalLink : undefined}
           className="w-full"
           onClick={() => markStarted(course.slug)}
         >

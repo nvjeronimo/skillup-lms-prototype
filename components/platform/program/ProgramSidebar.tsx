@@ -52,7 +52,11 @@ export function ProgramSidebar({ program, className }: { program: Program; class
         </ul>
       </CardShell>
 
-      <CardShell label="What's included" mock="Content counts per program have no API">
+      <CardShell
+        label="What's included"
+        mock="Content counts per program have no API"
+        invented="catalogue: no content counts per program in Open edX"
+      >
         <ul className="sk-text-body-medium-regular list-disc ps-[21px] text-sko-text-default">
           {program.included.map((item) => (
             <li key={item}>{item}</li>

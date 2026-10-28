@@ -33,6 +33,7 @@ import { cn } from "@/lib/utils";
 import { useDemoMode } from "@/lib/demo";
 import { CalendarSyncModal } from "@/components/platform/forms/CalendarSyncModal";
 import { useSessionAdditions } from "@/lib/platform/session-additions";
+import { useEdxScope } from "@/lib/edx-scope";
 
 type Filter = (typeof calendarFilters)[number]["id"];
 type View = "agenda" | "month";
@@ -548,6 +549,10 @@ export function CalendarView() {
   // Sessions booked in Services this session show as live sessions (23 Oct 2026).
   const bookings = useSessionAdditions((s) => s.bookings);
   const [syncing, setSyncing] = React.useState(false);
+  // Open edX scope: course dates and deadlines only; live sessions and coaching bookings have no source.
+  const edx = useEdxScope();
+  const filters = edx ? calendarFilters.filter((f) => f.id !== "live") : calendarFilters;
+  const weekEvents = edx ? calendarEvents.filter((e) => e.kind !== "live") : calendarEvents;
   const all = React.useMemo(
     () => [
       ...(twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents),
@@ -564,8 +569,8 @@ export function CalendarView() {
           outOfMvp: true,
         }),
       ),
-    ],
-    [twoCourses, bookings],
+    ].filter((e) => !edx || e.kind !== "live"),
+    [twoCourses, bookings, edx],
   );
   const events = all.filter((e) => filter === "all" || e.kind === filter);
   const missed = all.filter(isMissed);
@@ -640,7 +645,7 @@ export function CalendarView() {
             <StickyToolbar className="flex items-center justify-between gap-3">
               <PlatformSegmented
                 label="Show"
-                options={calendarFilters}
+                options={filters}
                 value={filter}
                 onChange={setFilter}
                 className="min-w-0"
@@ -680,14 +685,21 @@ export function CalendarView() {
               <h2 id="calendar-week" className="sk-text-title-medium-semibold text-sko-text-default">
                 Next 7 days
               </h2>
-              <WeekStrip events={calendarEvents} />
+              <WeekStrip events={weekEvents} />
               <p className="sk-text-body-small-regular text-sko-text-subtle">
-                <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "deadline").length)} /> deadlines ·{" "}
-                <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "live").length)} /> live sessions
+                <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "deadline").length)} /> deadlines
+                <span data-invented="live: no live-session schedule in Open edX">
+                  {" "}
+                  ·{" "}
+                  <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "live").length)} /> live sessions
+                </span>
               </p>
               <ul className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
                 {(["deadline", "live", "course"] as const).map((k) => (
-                  <li key={k} className="sk-text-body-small-regular inline-flex items-center gap-1.5 text-sko-text-subtle">
+                  <li
+                    key={k}
+                    data-invented={k === "live" ? "live: no live-session schedule in Open edX" : undefined}
+                    className="sk-text-body-small-regular inline-flex items-center gap-1.5 text-sko-text-subtle">
                     <span aria-hidden className={cn("size-2 rounded-pill", KIND[k].dot)} />
                     {k === "deadline" ? "Deadline" : k === "live" ? "Live session" : "Course date"}
                   </li>

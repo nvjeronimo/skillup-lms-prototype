@@ -193,6 +193,8 @@ interface ActionButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEl
   align?: keyof typeof TOOLTIP_ALIGN;
   /** Classes for the wrapper, which is the flex item of the bar (its `order` on sm). */
   wrapClassName?: string;
+  /** Marks the button as ours, not Open edX's (data-invented on the wrapper, lib/edx-scope). */
+  invented?: string;
 }
 
 /**
@@ -208,12 +210,13 @@ function ActionButton({
   tone,
   align = "center",
   wrapClassName,
+  invented,
   className,
   children,
   ...rest
 }: ActionButtonProps) {
   return (
-    <span className={cn("relative inline-flex shrink-0", wrapClassName)}>
+    <span data-invented={invented} className={cn("relative inline-flex shrink-0", wrapClassName)}>
       <button
         type="button"
         aria-label={label}
@@ -543,6 +546,7 @@ export function VideoPlayer({
             label={`Skip back ${SKIP_SECONDS} seconds`}
             tooltip="Skip back"
             onClick={() => skip(-SKIP_SECONDS)}
+            invented="skip: the stock Open edX player has no skip buttons"
             wrapClassName={pick("order-2", "", "order-2 [@container(min-width:30rem)]:order-none")}
           >
             <Icon icon={SkipBack} size={16} className={SOLID} />
@@ -551,6 +555,7 @@ export function VideoPlayer({
             label={`Skip forward ${SKIP_SECONDS} seconds`}
             tooltip="Skip forward"
             onClick={() => skip(SKIP_SECONDS)}
+            invented="skip: the stock Open edX player has no skip buttons"
             wrapClassName={pick("order-2", "", "order-2 [@container(min-width:30rem)]:order-none")}
           >
             <Icon icon={SkipForward} size={16} className={SOLID} />

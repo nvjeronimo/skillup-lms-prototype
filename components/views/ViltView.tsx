@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Users } from "lucide-react";
+import { Ban, Users } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
+import { EmptyState } from "@/components/atoms/EmptyState";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
@@ -13,6 +14,7 @@ import { LiveAttendance } from "@/components/molecules/LiveAttendance";
 import { getViltSession, type ViltSession, type ViltStage } from "@/lib/content";
 import { useLmsStore } from "@/lib/store";
 import { getTopic } from "@/lib/data";
+import { useEdxScope } from "@/lib/edx-scope";
 
 /**
  * VILT — one Topic Content Type, three stages. The underlying asset changes as
@@ -28,6 +30,8 @@ export function ViltView({ topicId }: { topicId: string }) {
   // The pre-live stage can be advanced to "live" so the whole journey is
   // demonstrable without waiting for the clock.
   const [stage, setStage] = React.useState<ViltStage | null>(null);
+  // Open edX scope: no live-session object, so the live stage is replaced by a note.
+  const edx = useEdxScope();
   if (!topic || !session) return null;
   const current: ViltStage = stage ?? session.stage;
 
@@ -43,6 +47,12 @@ export function ViltView({ topicId }: { topicId: string }) {
           session={session}
           onAddToCalendar={() => showToast("Session added to your calendar.")}
           onSimulateLive={() => setStage("live")}
+        />
+      ) : current === "live" && edx ? (
+        <EmptyState
+          icon={Ban}
+          title="Live sessions are not in Open edX"
+          description="Open edX has no live-session object, attendance data or in-page meeting controls. The session itself runs on the meeting platform."
         />
       ) : current === "live" ? (
         <LiveStage
@@ -60,11 +70,13 @@ export function ViltView({ topicId }: { topicId: string }) {
       {/* Lane-level completion note — VILT never has a manual "Mark as complete".
           Full-width amber note: completion is one of two paths, whichever first
           (live attendance, or watching the recording). See topic-types-inventory §3. */}
-      <InlineAlert
-        tone="warning"
-        title="Completion is automatic once you attend"
-        description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
-      />
+      <div data-invented="attendance: Open edX tracks no attendance" className="contents">
+        <InlineAlert
+          tone="warning"
+          title="Completion is automatic once you attend"
+          description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
+        />
+      </div>
     </div>
   );
 }
@@ -134,13 +146,18 @@ function PreLive({
     <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone="brand">Live session</Badge>
-        <Badge tone="neutral">Scheduled</Badge>
+        <Badge tone="neutral" data-invented="schedule: no live-session schedule in Open edX">
+          Scheduled
+        </Badge>
       </div>
 
       <h3 className="sk-text-title-medium-semibold text-sko-text-default">{session.title}</h3>
 
       {/* Countdown — the learner's primary orientation before the session. */}
-      <div className="flex flex-col items-center gap-1 rounded-control bg-sko-bg-primary-soft px-4 py-6">
+      <div
+        data-invented="countdown: no live-session schedule or join window in Open edX"
+        className="flex flex-col items-center gap-1 rounded-control bg-sko-bg-primary-soft px-4 py-6"
+      >
         <span className="sk-text-headline-small-semibold text-sko-text-primary">
           Your class starts in {session.minutesUntilStart} minutes
         </span>
@@ -162,7 +179,10 @@ function PreLive({
       <SessionMeta session={session} />
       <Agenda items={session.agenda} />
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-sko-border-subtle pt-4 max-md:[&>*]:flex-1">
+      <div
+        data-invented="join: no join window or per-session calendar export in Open edX"
+        className="flex flex-wrap items-center gap-2 border-t border-sko-border-subtle pt-4 max-md:[&>*]:flex-1"
+      >
         <Button variant="primary" size="md" disabled={locked} onClick={onSimulateLive}>
           {locked ? "Join opens soon" : "Join session"}
         </Button>
@@ -171,7 +191,10 @@ function PreLive({
         </Button>
       </div>
 
-      <p className="sk-text-body-small-regular text-sko-text-subtle">
+      <p
+        data-invented="attendance: Open edX tracks no attendance"
+        className="sk-text-body-small-regular text-sko-text-subtle"
+      >
         {locked
           ? "Prefer to catch up later? A recording is published here afterwards and counts for completion just the same."
           : "Attendance is tracked. Stay for at least half the session for it to count towards completion."}

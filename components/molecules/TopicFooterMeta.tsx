@@ -30,7 +30,10 @@ export function TopicFooterMeta({ byline, onReport, action }: TopicFooterMetaPro
         // the Author frame is avatar md + text column (gap 12); name over role (gap 2). On a phone
         // the date wraps under the author, 12 below (Figma 5685:171926; Nelson's SKO match review,
         // 28 Oct 2026): beside it, it squeezed the name to 2 lines and the role to 4.
-        <div className="flex flex-col items-start gap-3 border-t border-sko-border-subtle pt-4 sm:flex-row sm:items-end sm:gap-4">
+        <div
+          data-invented="byline: Open edX shows no author or updated date for a unit"
+          className="flex flex-col items-start gap-3 border-t border-sko-border-subtle pt-4 sm:flex-row sm:items-end sm:gap-4"
+        >
           <div className="flex w-full min-w-0 flex-1 items-center gap-3">
             <Avatar name={byline.author} size="md" />
             <div className="flex min-w-0 flex-col gap-0.5">
@@ -48,7 +51,7 @@ export function TopicFooterMeta({ byline, onReport, action }: TopicFooterMetaPro
           padding (the component's own py-3), and 12 between the byline and the rule. The rules
           stay when the action goes (topic completed), so the row does not jump. */}
       <ContentFeedback
-        className={cn("border-y border-sko-border-subtle", byline && "mt-3")}
+        className={cn("border-y border-sko-border-subtle", byline && "mt-3 [[data-scope=edx]_&]:mt-0")}
         action={action}
         value={feedback}
         onLike={() => setFeedback((f) => (f === "like" ? null : "like"))}

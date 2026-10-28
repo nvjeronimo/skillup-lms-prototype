@@ -155,6 +155,7 @@ export function ProgramCertificateHero({
               <Button
                 hierarchy="secondary"
                 size="md"
+                data-invented="certificate: Open edX makes no PDF, only the web certificate"
                 onClick={() => showToast("Download certificate is not part of this prototype yet")}
                 className="max-md:h-11 max-md:flex-1"
               >

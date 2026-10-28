@@ -67,14 +67,17 @@ export function ProfileSection({
   children,
   settings = false,
   roomy = false,
+  invented,
 }: {
   title: string;
   children: React.ReactNode;
   settings?: boolean;
   roomy?: boolean;
+  /** Hidden in the Open edX scope, with why (`data-invented`, lib/edx-scope). */
+  invented?: string;
 }) {
   return (
-    <div className={cn("border-t border-sko-border-subtle px-4 first:border-t-0", roomy ? "py-4" : "py-3")}>
+    <div data-invented={invented} className={cn("border-t border-sko-border-subtle px-4 first:border-t-0", roomy ? "py-4" : "py-3")}>
       <p className={cn("sk-text-label-small-medium text-sko-text-subtle", settings ? "mb-4" : "mb-2")}>{title}</p>
       {children}
     </div>
@@ -342,7 +345,12 @@ export function AccessibilitySection() {
   const setLargeTargets = useLmsStore((s) => s.setLargeTargets);
   const sizes = ["md", "lg", "xl"] as const;
   return (
-    <ProfileSection title="Accessibility standards" settings roomy>
+    <ProfileSection
+      title="Accessibility standards"
+      settings
+      roomy
+      invented="accessibility: no text size, colour, motion or target preferences in Open edX"
+    >
       {/* 16 between items: each toggle row's own 6 of padding + 4 (+ 6 under Text size). */}
       <div className="flex flex-col gap-1">
         <div className="mb-1.5 flex flex-col gap-1.5 px-1">

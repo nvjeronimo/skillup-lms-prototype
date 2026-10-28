@@ -51,7 +51,11 @@ function ModuleRow({ module }: { module: ProgramModule }) {
             {module.complete ? <span className="sr-only"> (complete)</span> : null}
           </p>
           <p className="sk-text-body-small-regular text-sko-text-subtle">
-            {module.topics} <span aria-hidden>·</span> {module.duration}
+            {module.topics}
+            <span data-invented="effort: no module durations authored in Open edX">
+              {" "}
+              <span aria-hidden>·</span> {module.duration}
+            </span>
           </p>
         </div>
         <span aria-hidden className="size-5 shrink-0" />

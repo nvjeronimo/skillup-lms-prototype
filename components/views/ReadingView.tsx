@@ -82,7 +82,10 @@ export function ReadingView({ topicId }: { topicId: string }) {
                   className="sk-text-body-large-medium inline-flex min-h-11 items-center gap-2 text-sko-text-primary underline underline-offset-2"
                 >
                   {f.name}
-                  <span className="sk-text-body-medium-regular text-sko-text-subtle no-underline">
+                  <span
+                    data-invented="files: file type and size are not shown to learners in Open edX"
+                    className="sk-text-body-medium-regular text-sko-text-subtle no-underline"
+                  >
                     {f.type} · {f.size}
                   </span>
                 </a>

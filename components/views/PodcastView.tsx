@@ -122,7 +122,11 @@ export function PodcastView({ topicId }: { topicId: string }) {
       {/* Audio surface — a waveform stands in for the video frame. */}
       <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
         {/* A flat brand tint (no gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
-        <div className="flex h-24 items-end gap-[3px] overflow-hidden rounded-control bg-sko-bg-primary-soft px-4 py-3" aria-hidden>
+        <div
+          data-invented="waveform: no waveform in the Open edX player"
+          className="flex h-24 items-end gap-[3px] overflow-hidden rounded-control bg-sko-bg-primary-soft px-4 py-3"
+          aria-hidden
+        >
           {Array.from({ length: 64 }).map((_, i) => {
             // Deterministic pseudo-waveform so it never shifts between renders.
             const h = 20 + ((i * 37) % 60);
@@ -160,6 +164,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
               variant="secondary"
               size="sm"
               aria-label="Back 15s"
+              data-invented="skip: the stock Open edX player has no skip buttons"
               leftIcon={SkipBack}
               onClick={() => seek(t - 15)}
             >
@@ -178,6 +183,7 @@ export function PodcastView({ topicId }: { topicId: string }) {
               variant="secondary"
               size="sm"
               aria-label="Forward 15s"
+              data-invented="skip: the stock Open edX player has no skip buttons"
               rightIcon={SkipForward}
               onClick={() => seek(t + 15)}
             >
@@ -233,7 +239,10 @@ export function PodcastView({ topicId }: { topicId: string }) {
       </div>
 
       {/* Chapters behave like transcript lines: click to seek. */}
-      <section className="flex flex-col gap-2">
+      <section
+        data-invented="chapters: no chapter field or click-to-seek on the Open edX video block"
+        className="flex flex-col gap-2"
+      >
         <h2 className="sk-text-body-large-semibold text-sko-text-default">Chapters</h2>
         <ul className="flex flex-col gap-1">
           {podcast.chapters.map((c) => {

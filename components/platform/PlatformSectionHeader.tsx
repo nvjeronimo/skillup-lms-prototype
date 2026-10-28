@@ -11,7 +11,7 @@ export interface PlatformSectionHeaderProps {
   /** The rest of the title, in text/subtle. */
   emphasis?: string;
   /** Optional action on the right: a link when `href` is set, a button otherwise. */
-  action?: { label: string; href?: string; onClick?: () => void };
+  action?: { label: string; href?: string; onClick?: () => void; invented?: string };
   className?: string;
 }
 
@@ -52,11 +52,11 @@ export function PlatformSectionHeader({ id, title, emphasis, action, className }
       </h2>
       {action ? (
         action.href ? (
-          <Link href={action.href} className={ACTION}>
+          <Link href={action.href} data-invented={action.invented} className={ACTION}>
             {actionContent}
           </Link>
         ) : (
-          <button type="button" onClick={action.onClick} className={ACTION}>
+          <button type="button" onClick={action.onClick} data-invented={action.invented} className={ACTION}>
             {actionContent}
           </button>
         )

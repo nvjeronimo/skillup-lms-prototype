@@ -37,12 +37,15 @@ export function CardShell({
   labelAs: Label = "h2",
   gap = "md",
   mock,
+  invented,
   className,
   children,
 }: {
   label: string;
   /** What on this card has no API yet (shown when the sample-data marks are on). */
   mock?: string;
+  /** Hidden in the Open edX scope, with why (`data-invented`, lib/edx-scope). */
+  invented?: string;
   /** The eyebrow is an <h2> in the sidebar (an <h3> under a tab heading) and a plain line inside a titled certificate. */
   labelAs?: "h2" | "h3" | "p";
   /** Gap between the label and the content: 8 (Card shell) or 12 (Dates, Team, Certificate). */
@@ -53,6 +56,7 @@ export function CardShell({
   return (
     <section
       data-mock={mock}
+      data-invented={invented}
       className={cn(
         // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
         "flex flex-col rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]",

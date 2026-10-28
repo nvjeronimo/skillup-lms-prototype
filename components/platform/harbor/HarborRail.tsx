@@ -11,7 +11,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Icon } from "@/lib/icons";
-import { PLATFORM_SECTIONS, type PlatformSection } from "@/lib/platform/user";
+import { platformSections, type PlatformSection } from "@/lib/platform/user";
+import { useEdxScope } from "@/lib/edx-scope";
 import { useHarborRailExpanded } from "@/lib/platform/harbor";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,8 @@ const ICONS: Record<PlatformSection, LucideIcon> = {
 export function HarborRail({ current }: { current: PlatformSection | null }) {
   const expanded = useHarborRailExpanded();
   const showToast = useLmsStore((s) => s.showToast);
+  // Open edX scope: no Services, no My Learning count.
+  const sections = platformSections(useEdxScope());
   return (
     <aside
       className={cn(
@@ -46,7 +49,7 @@ export function HarborRail({ current }: { current: PlatformSection | null }) {
     >
     <nav aria-label="Platform" className="sticky top-0 flex max-h-[100dvh] flex-col gap-1 overflow-y-auto p-2">
       <ul className="flex flex-col gap-1">
-        {PLATFORM_SECTIONS.map((s) => {
+        {sections.map((s) => {
           const on = s.id === current;
           const item = cn(
             "sk-text-body-medium-semibold relative flex min-h-11 w-full items-center gap-3 rounded-card text-sko-text-default transition-colors",

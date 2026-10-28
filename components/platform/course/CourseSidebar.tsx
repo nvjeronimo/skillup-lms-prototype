@@ -60,7 +60,12 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
         </ButtonLink>
       </section>
 
-      <CardShell label={course.team.label} gap="lg" mock="No instructor or author field on the Course Home APIs">
+      <CardShell
+        label={course.team.label}
+        gap="lg"
+        mock="No instructor or author field on the Course Home APIs"
+        invented="team: no instructor or author field in Open edX"
+      >
         <ul className="flex flex-col gap-layout-side">
           {course.team.people.map((person) => (
             <li key={person.name} className="flex items-center gap-2">

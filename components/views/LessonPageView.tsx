@@ -6,6 +6,7 @@ import { Badge } from "@/components/atoms/Badge";
 import { LessonBlocks } from "./LessonBlocks";
 import { getLessonPage } from "@/lib/content";
 import { getTopic } from "@/lib/data";
+import { useEdxScope } from "@/lib/edx-scope";
 
 /**
  * Lesson Page — a topic with no single dominant asset, composed of stacked
@@ -14,6 +15,8 @@ import { getTopic } from "@/lib/data";
  */
 export function LessonPageView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
+  // Open edX scope: the file cards are hidden, so the summary does not count them.
+  const edx = useEdxScope();
   const page = React.useMemo(() => (topic ? getLessonPage(topic) : null), [topicId]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!topic || !page) return null;
 
@@ -24,7 +27,7 @@ export function LessonPageView({ topicId }: { topicId: string }) {
   const summary = [
     counts.video ? `${counts.video} video` : null,
     counts.image ? `${counts.image} diagram` : null,
-    counts.file ? `${counts.file} download` : null,
+    counts.file && !edx ? `${counts.file} download` : null,
     counts["knowledge-check"] ? "1 quick check" : null,
   ].filter(Boolean) as string[];
 
