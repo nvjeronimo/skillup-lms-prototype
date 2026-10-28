@@ -76,7 +76,7 @@ outline under the same title.
 | `quizzes` | a Quiz / Practice Assignment | topic id |
 | `articles` | a Reading (`lede`, `sections`, `pullQuote`, `takeaways`) | topic id |
 | `assignments` | a Graded Assignment (`brief`, `requirements`) | topic id |
-| `ora` | a Peer-graded / Peer Review / Project | topic id |
+| `ora` | a Project (staff-graded ORA; Peer-graded is kept as a type only) | topic id |
 | `labs` (optional) | a Lab run on the learner's machine (`kind: "download"`, `intro`, `prerequisites`, `steps`, `files`, `estimatedMinutes`) | topic id |
 | `podcasts` (optional) | a Podcast (`host`, `guest`, `episodeLabel`, `summary`, `chapters`); its length is the topic's `duration` | topic id |
 | `lessonPages` (optional) | a Lesson Page (`intro`, `blocks`; a `video` block and a recording in `sessions` take an optional `transcript` of `{ ts, text }` lines, which captions their player) | topic id |

@@ -86,7 +86,7 @@ export const calendarEvents: CalendarEvent[] = [
   // missed-deadline alert, and "Shift due dates" here, are about.
   deadline(UX, "graded-quiz-foundations", "uxr-m1-t9", "uxr-graded-quiz-foundations"),
   deadline(ACB, "assignment-01", "acb-m1-t11", "acb-assignment-01-brand-voice-guide"),
-  deadline(UX, "persona-research-draft", "uxr-m1-t10", "peer-review-persona-research"),
+  deadline(UX, "persona-research-draft", "uxr-m1-t10", "project-persona-research"),
   deadline(ACB, "assignment-02", "acb-m2-t10", "assignment-02-audience-segmentation"),
   {
     id: "live-agile-coach",

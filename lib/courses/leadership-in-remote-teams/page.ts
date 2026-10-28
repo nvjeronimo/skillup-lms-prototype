@@ -235,7 +235,7 @@ export const page: CourseDetail = {
           { label: "Locked", color: GRAY },
         ],
         title: "Module 4 · Final Project: 30-day plan for a remote team",
-        description: "Unlocks when Module 3 is complete. You then review the plans of two peers.",
+        description: "Unlocks when Module 3 is complete. Your mentor grades it against the rubric.",
       },
       {
         id: "certificate-available",

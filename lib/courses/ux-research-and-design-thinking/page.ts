@@ -53,7 +53,7 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The five interview transcripts for the persona research draft are in Handouts. The draft counts towards your grade: once you submit it, you review the draft of one peer.",
+    body: "The five interview transcripts for the persona research draft are in Handouts. The draft counts towards your grade: your mentor grades it against the rubric in the assignment.",
   },
   intro: {
     title: "What you'll learn",
@@ -102,7 +102,7 @@ export const page: CourseDetail = {
         day: "24",
         month: "OCT",
         title: "Persona research draft",
-        detail: "Peer assessment due · 11:59 PM · your time",
+        detail: "Project due · 11:59 PM · your time",
         relative: relativeLabel("2026-10-24"),
         relativeColor: relativeColor("2026-10-24"),
       },
@@ -141,7 +141,7 @@ export const page: CourseDetail = {
       columns: SIX_SIGMA.progressTab.grade.columns,
       rows: [
         { type: "Graded Quiz", weight: "30%", grade: "0%", weighted: "0%" },
-        { type: "Peer Assessment", weight: "40%", grade: "0%", weighted: "0%" },
+        { type: "Project", weight: "40%", grade: "0%", weighted: "0%" },
         { type: "Final Project", weight: "30%", grade: "0%", weighted: "0%" },
       ],
       sections: [
@@ -216,11 +216,11 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Peer assessment", color: GRAY },
+          { label: "Project", color: GRAY },
           { label: "Due today", color: "warning" },
         ],
         title: "Module 1 · Persona research draft",
-        description: "Submit one persona with its evidence table, then review the draft of one peer.",
+        description: "Submit one persona with its evidence table. Your mentor grades it against the rubric.",
         link: "Open the assignment",
       },
       {
@@ -245,11 +245,11 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Peer assessment", color: GRAY },
+          { label: "Project", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 3 · Prototype critique",
-        description: "Submit your prototype and the questions it is meant to answer, then review one peer.",
+        description: "Submit your prototype and the questions it is meant to answer. Your mentor grades it against the rubric.",
       },
       {
         id: "graded-quiz-prototype",
@@ -368,8 +368,8 @@ export const page: CourseDetail = {
         unread: false,
       },
       {
-        id: "peer-anonymous",
-        title: "Is the peer assessment anonymous?",
+        id: "who-grades-projects",
+        title: "Who grades the persona research draft?",
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,

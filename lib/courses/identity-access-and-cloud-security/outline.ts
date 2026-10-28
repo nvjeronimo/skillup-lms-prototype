@@ -640,7 +640,7 @@ export const outline: Course = {
             },
             {
               id: "sec3-m4-t8",
-              type: "Peer-graded",
+              type: "Project",
               title: "Cloud account security review",
               duration: "45 min approx.",
               completed: false,

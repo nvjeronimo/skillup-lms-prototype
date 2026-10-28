@@ -128,7 +128,7 @@ export const page: CourseDetail = {
       rows: [
         { type: "Graded Quiz", weight: "40%", grade: "0%", weighted: "0%" },
         { type: "Assignment", weight: "30%", grade: "0%", weighted: "0%" },
-        { type: "Peer Assessment", weight: "30%", grade: "0%", weighted: "0%" },
+        { type: "Project", weight: "30%", grade: "0%", weighted: "0%" },
       ],
       sections: [
         {
@@ -234,7 +234,7 @@ export const page: CourseDetail = {
         date: "09 Feb 2027",
         time: "11:59 PM · your time",
         state: "locked",
-        badges: [{ label: "Due date", color: GRAY }, { label: "Peer assessment", color: GRAY }, { label: "Locked", color: GRAY }],
+        badges: [{ label: "Due date", color: GRAY }, { label: "Project", color: GRAY }, { label: "Locked", color: GRAY }],
         title: "Module 4 · Tabletop exercise: incident summary",
         description: "Unlocks when Module 3 is complete.",
       },
@@ -305,7 +305,7 @@ export const page: CourseDetail = {
       {
         id: "tabletop-group",
         title: "Is the tabletop exercise done in a group?",
-        preview: "David: You run it alone from the scenario pack; a peer reviews your summary.",
+        preview: "David: You run it alone from the scenario pack; your mentor grades your summary.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
         following: false,

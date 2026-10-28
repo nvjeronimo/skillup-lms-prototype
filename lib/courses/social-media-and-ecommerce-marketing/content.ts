@@ -1,7 +1,7 @@
 import type { CourseContent, OraContent } from "@/lib/courses/kit";
 import { activities } from "./activities";
 
-/** The final project, as the Project topic and the Peer Review topic after it both show it. */
+/** The final project, as the Project topic shows it. */
 const FINAL_PROJECT: OraContent = {
   brief:
     "Plan the launch of one product for the business you have worked on in this course. The plan joins your four assignments: the audience and the leading job, a two-week content calendar around the launch, the product page and the shop listing, and the funnel numbers you will watch in the first month.",
@@ -10,7 +10,7 @@ const FINAL_PROJECT: OraContent = {
   dueLabel: "Due 5 Apr 2027",
   requiredReviews: 2,
   acceptedTypes: [".pdf", ".docx"],
-  overallCommentPrompt: "Which part of your peer's launch plan would you act on first, and why?",
+  overallCommentPrompt: "Which part of the launch plan would you act on first, and why?",
   criteria: [
     {
       id: "c1",
@@ -573,7 +573,6 @@ export const content: CourseContent = {
   },
   ora: {
     "smec-m5-t4": FINAL_PROJECT,
-    "smec-m5-t5": FINAL_PROJECT,
   },
   activities,
 };

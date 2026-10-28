@@ -578,7 +578,7 @@ export const content: CourseContent = {
       dueLabel: "Due 9 Sep 2026",
       requiredReviews: 2,
       acceptedTypes: [".pdf", ".docx"],
-      overallCommentPrompt: "Which finding in your peer's report would you act on first, and why?",
+      overallCommentPrompt: "Which finding in the report would you act on first, and why?",
       criteria: [
         {
           id: "c1",

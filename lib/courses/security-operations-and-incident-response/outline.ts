@@ -640,7 +640,7 @@ export const outline: Course = {
             },
             {
               id: "sec4-m4-t8",
-              type: "Peer-graded",
+              type: "Project",
               title: "Tabletop exercise: incident summary",
               duration: "60 min approx.",
               completed: false,

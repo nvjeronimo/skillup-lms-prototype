@@ -90,14 +90,16 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
       <CertificateCard certificate={course.certificate} labelAs="h2" />
 
       <CardShell label={course.handouts.label} gap="lg">
-        <ul className="flex flex-col items-start gap-2">
+        {/* Spacing/3xl between the links (24 on desktop, 20 below 1024), as in Figma; each link's
+            44 target is a band drawn around its line, so the list keeps its rhythm (Nelson, 28 Oct 2026). */}
+        <ul className="flex flex-col items-start gap-[var(--sk-space-3xl)]">
           {course.handouts.items.map((item) => (
             <li key={item} className="flex">
               {/* No files in the prototype: say so instead of a dead link. */}
               <button
                 type="button"
                 onClick={() => notInPrototype(item)}
-                className="sk-text-body-medium-medium text-left text-sko-text-on-primary-soft underline underline-offset-2 transition-colors hover:text-sko-text-primary max-md:min-h-11"
+                className="sk-text-body-medium-medium relative text-left text-sko-text-on-primary-soft underline underline-offset-2 transition-colors before:absolute before:-inset-x-1 before:-inset-y-3 before:content-[''] hover:text-sko-text-primary [[data-large-targets]_&]:min-h-0 [[data-large-targets]_&]:min-w-0"
               >
                 {item}
               </button>

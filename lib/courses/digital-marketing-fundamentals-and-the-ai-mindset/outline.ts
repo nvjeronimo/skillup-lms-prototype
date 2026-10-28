@@ -237,7 +237,7 @@ export const outline: Course = {
             { id: "dmf-m4-t1", type: "Reading", title: "Final project brief: a one-page marketing plan", duration: "15 min read approx.", completed: true },
             { id: "dmf-m4-t2", type: "Video", title: "Planning your one-page marketing plan", duration: "14 min", completed: true },
             { id: "dmf-m4-t3", type: "Project", title: "Final Project: One-page marketing plan", duration: "2 h approx.", completed: true },
-            { id: "dmf-m4-t4", type: "Peer Review", title: "Review two marketing plans", duration: "20 min approx.", completed: true },
+            { id: "dmf-m4-t4", type: "Reading", title: "After you submit: how your mentor grades the marketing plan", duration: "20 min read approx.", completed: true },
           ],
         },
         {

@@ -263,7 +263,7 @@ export const page: CourseDetail = {
           { label: "Complete", color: "success" },
         ],
         title: "Module 4 · Final Project: One-page marketing plan",
-        description: "Submitted on the due date. Graded 16/20 by a peer.",
+        description: "Submitted on the due date. Graded 16/20 by your mentor.",
         link: "Open the assignment",
       },
       {

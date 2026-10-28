@@ -41,7 +41,7 @@ export const outline: Course = {
                 { id: "lrt-m1-t1-ln3", ts: "0:28", text: "Module 1 is about trust and expectations: what changes when the corridor disappears, and how a team agrees on the way it works." },
                 { id: "lrt-m1-t1-ln4", ts: "0:43", text: "Module 2 covers communication norms: which channel for which message, time zones, and writing things down so that the team has a memory." },
                 { id: "lrt-m1-t1-ln5", ts: "0:59", text: "Module 3 looks at meetings and rituals, from async standups to one-to-ones. Module 4 covers goals, feedback and noticing when someone is struggling." },
-                { id: "lrt-m1-t1-ln6", ts: "1:16", text: "You will write a communication charter for a team, and for the final project a plan for your first thirty days leading a remote team. Two peers review it." },
+                { id: "lrt-m1-t1-ln6", ts: "1:16", text: "You will write a communication charter for a team, and for the final project a plan for your first thirty days leading a remote team. Your mentor grades it." },
                 { id: "lrt-m1-t1-ln7", ts: "1:32", text: "A case study runs through the course: a team of nine people in three time zones. Use it, or use your own team where that helps you more." },
               ],
             },
@@ -235,7 +235,7 @@ export const outline: Course = {
           label: "Final project",
           topics: [
             { id: "lrt-m4-t4", type: "Project", title: "Final Project: 30-day plan for a remote team", duration: "1 h approx.", completed: false, locked: true },
-            { id: "lrt-m4-t5", type: "Peer Review", title: "Review two 30-day plans", duration: "15 min approx.", completed: false, locked: true },
+            { id: "lrt-m4-t5", type: "Reading", title: "After you submit: how your mentor grades the 30-day plan", duration: "15 min read approx.", completed: false, locked: true },
             { id: "lrt-m4-t6", type: "Video", title: "Course wrap-up and next steps", duration: "5 min", completed: false, locked: true },
           ],
         },

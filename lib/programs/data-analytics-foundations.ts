@@ -156,7 +156,7 @@ const program: Program = {
         { number: 1, title: "Module 1 · The Brief and the Questions", complete: true, topics: "6 topics", duration: "2h 35m" },
         { number: 2, title: "Module 2 · Preparing and Exploring the Data", complete: true, topics: "7 topics", duration: "3h 20m" },
         { number: 3, title: "Module 3 · Analysis and Dashboard", complete: true, topics: "6 topics", duration: "2h 55m" },
-        { number: 4, title: "Module 4 · Final Presentation and Peer Review", complete: true, topics: "5 topics", duration: "2h 50m" },
+        { number: 4, title: "Module 4 · Final Presentation and Mentor Feedback", complete: true, topics: "5 topics", duration: "2h 50m" },
       ],
     }),
   ],
@@ -278,7 +278,7 @@ const program: Program = {
       id: "faq-7",
       title: "How is my work assessed?",
       body: [
-        "Courses 1 to 4 each have graded quizzes, one written assignment and one peer assessment. The capstone has three milestones, a final project and two rounds of peer review.",
+        "Courses 1 to 4 each have graded quizzes, one written assignment and one project. The capstone has three milestones and a final project, all graded by a mentor.",
         "You need a weighted grade of 70% to pass a course. Practice quizzes and activities do not count towards the grade.",
       ],
     },
@@ -328,7 +328,7 @@ const program: Program = {
         "Course 2, SQL for Data Analysis: how relational databases are organized; selecting, filtering and aggregating; joining tables; subqueries and common table expressions.",
         "Course 3, Statistics for Business Decisions: averages, spread and distributions; probability and sampling; confidence intervals and simple tests; correlation and linear regression.",
         "Course 4, Data Visualization and Dashboards: principles of visual design; choosing a chart for a question; building an interactive dashboard; telling a story with data.",
-        "Course 5, Capstone: one complete analysis, built in three milestones and reviewed by peers.",
+        "Course 5, Capstone: one complete analysis, built in three milestones and graded by a mentor.",
       ],
     },
     {
@@ -365,7 +365,7 @@ const program: Program = {
       id: "about-7",
       title: "Mentoring and Feedback",
       body: [
-        "Every course has a mentor in its Mentorship Q&A. Written assignments are graded against a published rubric, and peer assessments give you feedback from another learner as well as practice in reviewing an analysis.",
+        "Every course has a mentor in its Mentorship Q&A. Assignments and projects are graded by a mentor against a published rubric, with written feedback on each criterion.",
       ],
     },
     {
@@ -414,9 +414,8 @@ const program: Program = {
     "16 practice quizzes",
     "16 graded quizzes",
     "4 graded assignments",
-    "4 peer assessments",
+    "4 projects",
     "3 capstone milestones",
-    "2 peer reviews",
     "1 capstone project",
   ],
   instructors: [
