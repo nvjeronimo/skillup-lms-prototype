@@ -244,7 +244,8 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
   // DS Topbar v1.3 (Nelson, 17 Oct 2026): the light / dark switch is in the bar, not in the
   // profile menu. Since 26 Oct 2026 a mini Button group with both icons (ThemeSwitch).
   const setTheme = useLmsStore((s) => s.setTheme);
-  const themeSwitch = (size: "sm" | "md") => <ThemeSwitch value={theme} onChange={setTheme} size={size} />;
+  // One size on every bar: the compact bar uses the desktop switch too (Nelson, 28 Oct 2026, DS Topbar 1.14).
+  const themeSwitch = <ThemeSwitch value={theme} onChange={setTheme} size="sm" />;
 
   return (
     <>
@@ -318,7 +319,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               {/* Where the pill does not fit (the tabs bar below 1280): its button and sheet. */}
               {harbor ? null : <SearchAssistantButton size="sm" className="xl:hidden" />}
               {bell}
-              {themeSwitch("sm")}
+              {themeSwitch}
             </span>
             <div ref={profile.containerRef} className="relative">
               <button
@@ -391,7 +392,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               <SearchAssistantButton size="sm" />
               {bell}
               {/* Too little room on a phone: the switch moves to the profile menu, as in the player (Nelson, 28 Oct 2026). */}
-              {phone ? null : themeSwitch("md")}
+              {phone ? null : themeSwitch}
             </span>
             <div ref={profileCompact.containerRef} className="relative">
               <button
