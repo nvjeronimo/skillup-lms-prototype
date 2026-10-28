@@ -9,6 +9,7 @@ import { courseProgressCta } from "@/lib/persona-overlay";
 import { getPersona } from "@/lib/personas";
 import { getCatalogCourse } from "./catalog";
 import { coursePlayerHref } from "./hrefs";
+import { edxDatesTab } from "./edx-dates";
 
 /**
  * Mock data of the Course Detail page, self-paced (Figma handoff frame 6146:10226, "Platform
@@ -162,6 +163,8 @@ export interface CourseDate {
   description: string;
   /** Label of the link to the assignment, when the row has one. */
   link?: string;
+  /** `assignment_type` of a due date ("Homework", "Graded quiz"): Open edX puts it before the title. */
+  assignmentType?: string;
 }
 
 /* ── Mentorship Q&A ─────────────────────────────────────────────────────────────────── */
@@ -327,6 +330,12 @@ const COURSES: CourseDetail[] = [SIX_SIGMA, CLOUD_COMPUTING, ...OWN_COURSES.map(
  * program (lib/platform/catalog).
  */
 export function getCourseDetailBySlug(slug: string, personaId: string | null = ACTIVE_PERSONA_ID): CourseDetail | undefined {
+  const page = writtenCourseDetail(slug, personaId);
+  // The Dates tab as Open edX serves it (Nelson, 28 Oct 2026): lib/platform/edx-dates.
+  return page && { ...page, datesTab: edxDatesTab(page.datesTab) };
+}
+
+function writtenCourseDetail(slug: string, personaId: string | null): CourseDetail | undefined {
   const own = COURSES.find((c) => c.slug === slug);
   const entry = getCatalogCourse(slug, personaId);
   // The program path is decided here, from the registry of programs, for every course alike:

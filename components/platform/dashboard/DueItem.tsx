@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /**
  * DS `LMS/Platform/Dashboard/Due-Item`: one assignment deadline in "Due this week" (live
  * sessions left the list on 7 Oct: nothing in Open edX carries them).
- * Date (60 wide, centred): the day in headline-small/Bold, text/error when Urgency is Today
+ * Date (60 wide, centred): the day in headline-small/Bold, text/warning when Urgency is Today
  * and text/default when Upcoming, over label-small/Semibold text/subtle. Content: the title
  * row (title body-medium/Semibold + the Status badge, gap 2), then the meta body-small/Regular
  * text/subtle under both, full width, gap 2. Status: DS Badge Soft sm Warning ("Due …").
@@ -21,7 +21,7 @@ export function DueItem({ day, when, urgency, title, meta, status, href }: Omit<
         <span
           className={cn(
             "sk-text-headline-small-bold",
-            urgency === "today" ? "text-sko-text-error" : "text-sko-text-default",
+            urgency === "today" ? "text-sko-text-warning" : "text-sko-text-default",
           )}
         >
           {day}

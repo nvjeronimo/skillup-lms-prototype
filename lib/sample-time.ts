@@ -77,11 +77,11 @@ export const dueLabel = (iso: string) => `Due ${formatDate(iso)}`;
 
 /**
  * Where a date sits from today, in the words of the course sidebar and the Dashboard:
- * "Overdue · 3 days", "Today", "Tomorrow", "In 3 days", "In 2 weeks", "In 4 months".
+ * "Past due · 3 days", "Today", "Tomorrow", "In 3 days", "In 2 weeks", "In 4 months".
  */
 export function relativeLabel(iso: string, today: string = SAMPLE_TODAY): string {
   const n = daysBetween(today, iso);
-  if (n < 0) return n === -1 ? "Overdue · 1 day" : `Overdue · ${-n} days`;
+  if (n < 0) return n === -1 ? "Past due · 1 day" : `Past due · ${-n} days`;
   if (n === 0) return "Today";
   if (n === 1) return "Tomorrow";
   if (n < 14) return `In ${n} days`;
@@ -104,7 +104,7 @@ export function whenLabel(iso: string, time?: string, today: string = SAMPLE_TOD
   return formatWeekday(iso);
 }
 
-/** A deadline's badge: "Due tonight", "Due today", "Due tomorrow", "Due Mon", or "Overdue · 3 days". */
+/** A deadline's badge: "Due tonight", "Due today", "Due tomorrow", "Due Mon", or "Past due · 3 days" (Open edX's word, Nelson 28 Oct 2026). */
 export function dueBadgeLabel(iso: string, time?: string, today: string = SAMPLE_TODAY): string {
   const n = daysBetween(today, iso);
   if (n < 0) return relativeLabel(iso, today);

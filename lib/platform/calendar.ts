@@ -1,6 +1,6 @@
 import { addDays, isoDay, parseDay, SAMPLE_TODAY } from "@/lib/sample-time";
 import { getCourseDetailBySlug } from "./course-detail";
-import { coursePageHref, coursePlayerHref, programPageHref } from "./hrefs";
+import { coursePageHref, coursePlayerHref } from "./hrefs";
 
 /**
  * Calendar (proposal, 17 Oct 2026): every date the learner has to know, across their courses.
@@ -66,7 +66,7 @@ function deadline(slug: string, dateId: string, topicId: string, id: string): Ca
     date: row.iso.slice(0, 10),
     time: row.iso.slice(11, 16),
     kind: "deadline",
-    label: sentence(row.badges[1]?.label ?? "Due date"),
+    label: sentence(row.assignmentType ?? "Due date"),
     // "Module 1 · Graded Quiz: Research foundations" → the unit's own title, as the outline has it.
     title: row.title.replace(/^Module \d+ · /, ""),
     course: page.title,
@@ -112,8 +112,7 @@ export const calendarEvents: CalendarEvent[] = [
   },
   deadline(PMA, "assignment-01", "pma-m2-t8", "pma-assignment-01-sprint-plan"),
   deadline(LRT, "graded-quiz-meetings", "lrt-m3-t6", "lrt-graded-quiz-meetings"),
-  // Course 3 of the program: its suggested start, the day after the certificate date of course 2.
-  courseDay(SEO, "suggested-start", "program-course-3-opens", "Course opens", "Certificate Program in AI Augmented Digital Marketing", programPageHref("ai-driven-digital-marketing")),
+  // (28 Oct 2026) No "suggested start" of a program course: Open edX has no program dates in a course's Dates tab.
   courseDay(LRT, "certificate-available", "lrt-certificate-available", "Certificate available", "Issued after this date with a passing grade", coursePageHref(LRT)),
 ];
 

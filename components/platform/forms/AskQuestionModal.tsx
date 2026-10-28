@@ -8,8 +8,8 @@ import { sessionId } from "@/lib/platform/session-additions";
 const TITLE_MAX = 120;
 
 /**
- * Ask a question (Course Detail → Mentorship Q&A; Nelson, 23 Oct 2026). Private between the
- * learner and the mentor, as the tab says. The question (required, up to 120 characters), the
+ * Ask a question (Course Detail → Mentorship Q&A; Nelson, 23 Oct 2026). A question post in the
+ * course discussions, public to the course (28 Oct 2026: Open edX has no private messages). The question (required, up to 120 characters), the
  * details (required) and, optionally, where in the course it comes from (the course's modules,
  * `display_name` verbatim). Open edX: the Discussions API posts a thread of type "question" in
  * the course's mentorship topic. Nothing is sent: the question opens at the top of "Your
@@ -45,7 +45,7 @@ export function AskQuestionModal({
       open={open}
       onClose={onClose}
       title="Ask a question"
-      description={`Only you and your mentor see it. ${course.qaTab.mentorLine.split(" · ")[0]} usually replies within a day.`}
+      description="Everyone in the course can read your question. A mentor answers it in the course discussions."
       submitLabel="Post question"
       canSubmit={title.trim().length > 0 && details.trim().length > 0}
       onSubmit={() =>

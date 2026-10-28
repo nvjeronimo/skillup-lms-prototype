@@ -11,8 +11,12 @@ import type { NotificationType } from "@/lib/types";
 
 type InformedTab = "alerts" | "updates" | "support";
 
-/** What needs the learner (Alerts), what changed (Updates), their help-desk requests (Support). */
-const ALERT_TYPES: NotificationType[] = ["live-now", "live-soon", "assignment-due"];
+/**
+ * What is about the learner (Alerts: replies to their posts, a grade), what changed in their courses
+ * (Updates: course updates, instructor posts), their help-desk requests (Support). Open edX types
+ * only (28 Oct 2026): no live sessions or deadline reminders.
+ */
+const ALERT_TYPES: NotificationType[] = ["discussion-reply", "ora-grade-received"];
 
 interface Row {
   id: string;

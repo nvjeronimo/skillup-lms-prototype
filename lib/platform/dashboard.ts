@@ -119,11 +119,11 @@ export interface DashboardDueItem {
   day: string;
   /** "Today", "Tonight", or the weekday. */
   when: string;
-  /** Today (and overdue) = the day in text/error; Upcoming = text/default. */
+  /** Today (and past due) = the day in text/warning; Upcoming = text/default. */
   urgency: "today" | "upcoming";
   title: string;
   meta: string;
-  /** DS Badge Soft sm: Warning "Due tonight" / "Due tomorrow" / "Due Mon", Error "Overdue · 3 days". */
+  /** DS Badge Soft sm, all Warning: "Due tonight" / "Due tomorrow" / "Due Mon" / "Past due · 3 days" (amber, never red: Nelson, 28 Oct 2026). */
   status: { label: string; color: BadgeColor };
   /** The assignment in the player (the Dates API gives each one its `link`). */
   href: string;
@@ -150,7 +150,7 @@ export const dashboardDue: DashboardDueItem[] = [
     title:
       e.label && !e.title.toLowerCase().startsWith(e.label.toLowerCase()) ? `${e.title} (${e.label})` : e.title,
     meta: [e.course, e.time ? `${formatTime(e.time)} · ${YOUR_TIME}` : null].filter(Boolean).join(" · "),
-    status: { label: dueBadgeLabel(e.date, e.time), color: overdue ? "error" : "warning" },
+    status: { label: dueBadgeLabel(e.date, e.time), color: "warning" },
     href: e.href,
   };
 });
