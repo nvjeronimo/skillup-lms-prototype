@@ -809,7 +809,7 @@ export function getViltSession(topic: FlatTopic): ViltSession {
     return {
       stage: "recording",
       title: topic.title,
-      whenLabel: "Recorded Tue 15 Jul · 15:00 WEST",
+      whenLabel: "Recorded Tue 15 Jul · 3:00 PM WEST",
       durationLabel: topic.duration,
       host: "Dr. Marta Silva",
       platform: "Zoom",
@@ -838,7 +838,7 @@ export function getViltSession(topic: FlatTopic): ViltSession {
   return {
     stage: "pre-live",
     title: topic.title,
-    whenLabel: "Thu 24 Jul · 15:00–16:00 WEST",
+    whenLabel: "Thu 24 Jul · 3:00–4:00 PM WEST",
     durationLabel: "60 min",
     host: "Dr. Marta Silva",
     platform: "Zoom",
