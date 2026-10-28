@@ -38,7 +38,7 @@ export function SavedTopicItem({
         <span className="sk-text-body-medium-semibold mt-0.5 block text-sko-text-default">{title}</span>
         <span className="sk-text-body-small-regular mt-0.5 block text-sko-text-subtle">{path}</span>
         <span className="sk-text-body-small-regular mt-1 block text-sko-text-subtle">
-          Saved {savedAt}
+          Bookmarked {savedAt}
         </span>
       </span>
     </>

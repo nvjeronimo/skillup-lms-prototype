@@ -32,7 +32,9 @@ export interface CompletionQuestionModalProps {
  * 7077:18132). Copy and the three behaviours are Navdeep's, 12 Oct 2026. DS `Modal` Type=Horizontal:
  * featured icon beside the title and supporting text, close top right, two actions right
  * aligned. On a phone the actions stack and the primary one comes first, as in the DS
- * mobile variant.
+ * mobile variant. As the Figma completion question (7080:8235; Nelson's SKO match review,
+ * 28 Oct 2026): the DS `Background pattern decorative` circles behind the featured icon, the
+ * supporting text in text/subtle with 14 between its paragraphs, and lg (48) actions 32 below.
  */
 export function CompletionQuestionModal({
   open,
@@ -78,17 +80,28 @@ export function CompletionQuestionModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="sk-animate-pop relative w-full max-w-[544px] origin-center rounded-surface border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+        className="sk-animate-pop relative w-full max-w-[544px] origin-center overflow-hidden rounded-surface border border-sko-border-subtle bg-sko-bg-page shadow-xl"
       >
-        <div className="flex flex-col gap-4 p-6 pb-0 sm:flex-row">
+        {/* DS `Background pattern decorative` (Circles): 336 square, centred on the featured icon,
+            hairline rings that fade out from the middle. */}
+        <svg
+          aria-hidden
+          viewBox="0 0 336 336"
+          className="pointer-events-none absolute -left-[120px] -top-[120px] h-[336px] w-[336px] text-sko-border-subtle [mask-image:radial-gradient(closest-side,black,transparent)]"
+        >
+          {[24, 48, 72, 96, 120, 144, 168].map((r) => (
+            <circle key={r} cx="168" cy="168" r={r - 0.5} fill="none" stroke="currentColor" />
+          ))}
+        </svg>
+        <div className="relative flex flex-col gap-4 p-6 pb-0 sm:flex-row">
           <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-text-primary">
             <Icon icon={CircleHelp} size={24} />
           </span>
-          <div className="flex min-w-0 flex-1 flex-col gap-1 pr-10">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5 pr-10">
             <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
               Have you completed this {shown.noun}?
             </h2>
-            <div id={descId} className="sk-text-body-medium-regular flex flex-col text-sko-text-muted">
+            <div id={descId} className="sk-text-body-medium-regular flex flex-col gap-3.5 text-sko-text-subtle">
               <p>{shown.reason}</p>
               <p>
                 {shown.hasNext
@@ -107,11 +120,11 @@ export function CompletionQuestionModal({
           </button>
         </div>
 
-        <div className="flex flex-col gap-3 p-6 sm:flex-row-reverse sm:justify-start">
-          <Button variant="primary" size="md" onClick={onYes}>
+        <div className="relative flex flex-col gap-3 p-6 pt-8 sm:flex-row-reverse sm:justify-start">
+          <Button variant="primary" size="lg" onClick={onYes}>
             Yes, completed
           </Button>
-          <Button variant="secondary" size="md" onClick={onNotYet}>
+          <Button variant="secondary" size="lg" onClick={onNotYet}>
             Not yet
           </Button>
         </div>

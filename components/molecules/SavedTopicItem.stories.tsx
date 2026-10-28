@@ -11,7 +11,7 @@ const meta: Meta<typeof SavedTopicItem> = {
     duration: "8 min read approx.",
     title: "The measure phase",
     path: "Six Sigma · DMAIC · Define and measure",
-    savedAt: "2 days ago",
+    savedAt: "Oct 22",
   },
   decorators: [
     (Story) => (

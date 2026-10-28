@@ -108,7 +108,7 @@ export const KNOWLEDGE: KnowledgeEntry[] = [
     id: "open-response",
     question: "How does an open response work?",
     answer:
-      "You submit your response, then review the work of your peers, then receive your own grade. The topic completes by itself once the reviews are given and the grade is released; there is nothing to mark by hand.",
+      "You submit your response and a member of the course team grades it on the rubric. The topic completes by itself once you submit; there is nothing to mark by hand, and you get a notification when your grade is released.",
     source: "prototype",
   },
   {

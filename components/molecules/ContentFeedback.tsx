@@ -13,8 +13,9 @@ export interface ContentFeedbackProps {
   /** Called when a report is submitted from the modal. */
   onReport?: (payload: ReportIssuePayload) => void;
   /**
-   * DS `Show License Text`: the content licence (e.g. "CC BY-SA 4.0"), shown
-   * right-aligned in body-small/Medium text/primary. Omitted → no licence.
+   * DS `Show License Text`: the content licence (e.g. "CC BY-SA 4.0") in body-small/Medium
+   * text/primary, right after "Report an issue" (Content-Feedback v1.1, 13 Oct 2026; also when
+   * the row has no action, Nelson's SKO match review, 28 Oct 2026). Omitted → no licence.
    */
   license?: string;
   /** Where the licence text links to. */
@@ -30,7 +31,7 @@ export interface ContentFeedbackProps {
 
 /**
  * DS `LMS / Content Feedback` (node 19975-537661): like / dislike / report row at
- * the bottom of content blocks, with the optional licence at the right end.
+ * the bottom of content blocks, the optional licence following the feedback items.
  * Row: space-between, padding 12 top/bottom. Items: gap 16, no padding; each item
  * is a 16px icon/faint glyph (stroke 1.5) + a body-small/Medium label, gap 8.
  *
@@ -69,7 +70,7 @@ export function ContentFeedback({
         className,
       )}
     >
-      <div className={cn("flex items-center gap-4", action && "flex-wrap")}>
+      <div className="flex flex-wrap items-center gap-4">
         <button
           type="button"
           onClick={onLike}
@@ -110,10 +111,10 @@ export function ContentFeedback({
           />
           Report an issue
         </button>
-        {action ? licence : null}
+        {licence}
       </div>
 
-      {action ? <div className="shrink-0">{action}</div> : licence}
+      {action ? <div className="shrink-0">{action}</div> : null}
 
       <ReportIssueModal
         open={reportOpen}

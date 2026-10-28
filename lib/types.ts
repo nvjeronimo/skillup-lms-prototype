@@ -52,6 +52,13 @@ export interface Topic {
    * playback is measured and the topic completes by itself at 90% played (`isPlaybackMeasured`).
    */
   playbackMeasurable?: boolean;
+  /**
+   * Quizzes: the assignment type of the graded subsection, as the course's grading policy names it
+   * in Studio ("Graded quiz", "Final exam"; a Microsoft course says "Knowledge check"). Left out,
+   * the quiz is ungraded and its header badge reads "Practice" (Nelson's SKO match review, 28 Oct
+   * 2026: a final exam labelled "Practice" read wrong). `quizBadgeLabel` reads it.
+   */
+  assignmentType?: string;
 }
 
 export interface Lesson {

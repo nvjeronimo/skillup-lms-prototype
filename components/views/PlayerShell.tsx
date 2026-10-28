@@ -27,7 +27,7 @@ import { NoteEditorModal } from "@/components/organisms/NoteEditorModal";
 import { CourseCompleteModal } from "@/components/organisms/CourseCompleteModal";
 import { CompletionQuestionModal } from "@/components/organisms/CompletionQuestionModal";
 import { Toast } from "@/components/organisms/Toast";
-import { nextCourseInProgram, playerCourse } from "@/lib/platform/catalog";
+import { getCatalogCourse, nextCourseInProgram, playerCourse } from "@/lib/platform/catalog";
 import { coursePageHref } from "@/lib/platform/hrefs";
 import { DASHBOARD_HREF, MY_LEARNING_HREF, courseHomeHref } from "@/lib/platform/routes";
 import { useLmsStore, type TabSlug } from "@/lib/store";
@@ -46,6 +46,7 @@ import {
   completionNoun,
   completionReason,
   getPartnerLab,
+  getActivity,
   topicFamily,
   topicDescription,
   getDownloads,
@@ -53,6 +54,7 @@ import {
   getMediaSeconds,
   getTranscript,
   isPlaybackMeasured,
+  quizBadgeLabel,
   getDiscussionThreads,
   getByline,
   FOOTER_AUTHOR_FAMILIES,
@@ -71,6 +73,7 @@ import {
   DEFAULT_USER,
 } from "@/lib/data";
 import { useHydrated } from "@/lib/persona-gate";
+import { courseSearchScope as searchScopeOf } from "@/lib/courseSearchScope";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { lineAt } from "@/lib/playback/lineAt";
 import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
@@ -140,18 +143,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const activeCourse = playerCourse(courseSlug);
   // The player's search + Assistant is about this course (Nelson, 26 Oct 2026): its topics.
   const courseSearchScope = React.useMemo<SearchScope>(
-    () => ({
-      kind: "course",
-      title: activeCourse.title,
-      topics: activeCourse.modules.flatMap((m) =>
-        (m.topics ?? m.lessons?.flatMap((l) => l.topics) ?? []).map((t) => ({
-          id: t.id,
-          title: t.title,
-          meta: [m.implicit ? null : m.label, t.type].filter(Boolean).join(" · "),
-          href: `/course/${courseSlug}/topic/${t.id}`,
-        })),
-      ),
-    }),
+    () => searchScopeOf(activeCourse, courseSlug),
     [activeCourse, courseSlug],
   );
   const openPanel = useLmsStore((s) => s.openPanel);
@@ -279,6 +271,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // action of its own and nothing comes back from the partner, so the learner marks it
   // complete here, like a Reading.
   const partnerLab = getPartnerLab(topic);
+  // A SCORM activity plays its package in the page, with no tabs (Figma Activity Row A, 28 Oct 2026).
+  const scormActivity = family === "activity" && getActivity(topic).kind === "scorm";
   // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
   const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   const hasInFrameAction =
@@ -431,10 +425,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   };
 
   // Reading has no Downloads tab (17 Sep decision): its files are linked in the body, and
-  // with one option left the tab bar is hidden.
+  // with one option left the tab bar is hidden. A quiz has no tab bar either (Figma A-1 and A-2
+  // quiz screens; Nelson's SKO match review, 28 Oct 2026).
   const tabs = isVideo
     ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
-    : family === "reading" || partnerLab
+    : family === "reading" || family === "assessment" || scormActivity || partnerLab
       ? // Same rule for a partner lab: it has no files of ours, so no Downloads tab.
         [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
       : [{ ...transcriptTab, label: PRIMARY_LABEL[family] }, downloadsTab];
@@ -564,6 +559,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 >
                   <VideoPlayer
                     key={topicId}
+                    // The course picture as the poster (Figma Video Cards 1–3 and 7); Six Sigma's own.
+                    poster={getCatalogCourse(courseSlug)?.imageSrc ?? "/platform/course-six-sigma.jpg"}
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
@@ -662,6 +659,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                 <div data-arrive={0}>
                   <TopicHeader
                     type={topic.type}
+                    // A quiz names its assignment type, or "Practice" (QZ3, 28 Oct 2026).
+                    typeLabel={family === "assessment" ? quizBadgeLabel(topic) : undefined}
                     title={topic.title}
                     duration={topic.duration}
                     showDescription={family !== "assessment"}
@@ -669,8 +668,19 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     rightSlot={headerStatus ?? undefined}
                   />
                 </div>
-                {/* A partner lab opens with the divider Reading uses, 12 under the header. */}
-                <div data-arrive={1} className={partnerLab ? "mt-3" : "mt-6"}>
+                {/* A partner lab opens with the divider Reading uses, 12 under the header. A Reading
+                    has a 1px rule 32 under the header and 32 above the text (Figma 5685:170897, r4
+                    12 Oct; Nelson's SKO match review, 28 Oct 2026): the article's own 24 plus 8. */}
+                <div
+                  data-arrive={1}
+                  className={
+                    partnerLab
+                      ? "mt-3"
+                      : family === "reading" || scormActivity
+                        ? "mt-8 border-t border-sko-border-subtle pt-2"
+                        : "mt-6"
+                  }
+                >
                   {showTabs ? (
                     <ContentTabs
                       tabs={tabs}

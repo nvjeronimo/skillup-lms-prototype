@@ -27,9 +27,11 @@ export function TopicFooterMeta({ byline, onReport, action }: TopicFooterMetaPro
     <div className="mt-6 flex flex-col">
       {byline ? (
         // DS `LMS / Topic · Author & Updated Date`: the row bottom-aligns the date (gap 16);
-        // the Author frame is avatar md + text column (gap 12); name over role (gap 2).
-        <div className="flex items-end gap-4 border-t border-sko-border-subtle pt-4">
-          <div className="flex min-w-0 flex-1 items-center gap-3">
+        // the Author frame is avatar md + text column (gap 12); name over role (gap 2). On a phone
+        // the date wraps under the author, 12 below (Figma 5685:171926; Nelson's SKO match review,
+        // 28 Oct 2026): beside it, it squeezed the name to 2 lines and the role to 4.
+        <div className="flex flex-col items-start gap-3 border-t border-sko-border-subtle pt-4 sm:flex-row sm:items-end sm:gap-4">
+          <div className="flex w-full min-w-0 flex-1 items-center gap-3">
             <Avatar name={byline.author} size="md" />
             <div className="flex min-w-0 flex-col gap-0.5">
               <p className="sk-text-body-large-semibold text-sko-text-default">{byline.author}</p>

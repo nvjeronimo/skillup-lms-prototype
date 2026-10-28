@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { CourseProgressionButton, type Milestone } from "./CourseProgressionButton";
 import { cn } from "@/lib/utils";
@@ -34,7 +35,9 @@ export interface TopicFooterNavProps {
  * - Desktop ≥1025 and Tablet 769–1024: the full row above.
  * - Mobile ≤768: same padding and 36px buttons; the topic title is hidden (the
  *   paginator stays) and milestone captions are hidden. The side columns hug their
- *   buttons (8px gap) and a milestone label may wrap to two lines.
+ *   buttons (8px gap) and a milestone label may wrap to two lines. Previous is an
+ *   icon-only arrow-left button (Figma `3985:61038`, Reading `5685:175603`; Nelson's
+ *   SKO match review, 28 Oct 2026), named "Previous" for assistive tech.
  * Next always reads "Next" + arrow; naming the next topic in the button is TBD.
  * Previous is disabled on the first topic, never hidden; Next is never hidden.
  */
@@ -81,9 +84,21 @@ export function TopicFooterNav({
       )}
     >
       <div className={cn("flex items-center", compact && "flex-none")}>
-        <Button variant="neutral" size="sm" disabled={previousDisabled} onClick={onPrevious}>
-          Previous
-        </Button>
+        {compact ? (
+          <Button
+            variant="neutral"
+            size="sm"
+            iconOnly
+            leftIcon={ArrowLeft}
+            aria-label="Previous"
+            disabled={previousDisabled}
+            onClick={onPrevious}
+          />
+        ) : (
+          <Button variant="neutral" size="sm" disabled={previousDisabled} onClick={onPrevious}>
+            Previous
+          </Button>
+        )}
       </div>
 
       {/* Unit info: the paginator is the stronger element; the title sits under it

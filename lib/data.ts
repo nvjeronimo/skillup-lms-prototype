@@ -2,6 +2,7 @@ import raw from "./data-model.json";
 import { COURSES } from "./courses";
 import { DEFAULT_TOPIC_ID, flattenOutline, moduleTopics, resumeTopicOf } from "./courses/outline";
 import { ACTIVE_PERSONA } from "./persona-active";
+import { SAMPLE_TODAY, addDays, formatMonthDay } from "./sample-time";
 import type {
   Course,
   DataModel,
@@ -234,13 +235,15 @@ export function notificationCategory(
 /* ---- Mock notifications for the Notifications panel ----
    The types Open edX sends, in its own words (Teak/Ulmo notifications): Discussions (a response,
    a comment or an endorsement on my post; a new post from the instructor), Updates (course
-   updates) and Grading (an ORA grade). */
+   updates) and Grading (an ORA grade, with no score in the text). The body is the context line of
+   Figma Overlay Card 1 (3827:65480): where it happened, "course · module"; the row adds the time
+   (Nelson's SKO match review, 28 Oct 2026). */
 export const notifications: NotificationModel[] = [
   {
     id: "n1",
     type: "instructor-post",
     title: "Sarah Lee posted in Six Sigma: Office hours recap",
-    body: "“The define phase, in three questions. Read this before the Module 03 quiz.”",
+    body: "Six Sigma · Module 03",
     timestamp: "Just now",
     unread: true,
     href: "/course/six-sigma/topic/m3-t1",
@@ -250,7 +253,7 @@ export const notifications: NotificationModel[] = [
     id: "n2",
     type: "discussion-reply",
     title: "Carlos M. responded to your post",
-    body: "“Great point on measurement systems analysis, but what about gauge R&R?”",
+    body: "Six Sigma · Module 03",
     timestamp: "25 min ago",
     unread: true,
     href: "/course/six-sigma/topic/m3-t1",
@@ -260,7 +263,7 @@ export const notifications: NotificationModel[] = [
     id: "n3",
     type: "discussion-reply",
     title: "Your response was endorsed",
-    body: "Measure phase: where to start with a process map",
+    body: "Six Sigma · Module 03",
     timestamp: "2 hours ago",
     unread: true,
     href: "/course/six-sigma/topic/m3-t4",
@@ -270,7 +273,7 @@ export const notifications: NotificationModel[] = [
     id: "n4",
     type: "course-update",
     title: "New course update in Six Sigma",
-    body: "A new recording was added to Module 03.",
+    body: "Six Sigma · Module 03",
     timestamp: "Yesterday, 4:10 PM",
     unread: false,
     href: "/course/six-sigma/topic/m3-t2",
@@ -279,7 +282,7 @@ export const notifications: NotificationModel[] = [
   {
     id: "n5",
     type: "ora-grade-received",
-    title: "You received 8 out of 10 on your assessment: Control plan",
+    title: "Your assessment was graded: Control plan",
     body: "Six Sigma · Module 03",
     timestamp: "Yesterday, 9:02 AM",
     unread: false,
@@ -290,7 +293,7 @@ export const notifications: NotificationModel[] = [
     id: "n6",
     type: "course-update",
     title: "New course update in Six Sigma",
-    body: "Module 04: two readings were re-ordered and one was added.",
+    body: "Six Sigma · Module 04",
     timestamp: "Mon, 11:30 AM",
     unread: false,
     href: "/course/six-sigma/topic/m3-t1",
@@ -298,7 +301,9 @@ export const notifications: NotificationModel[] = [
   },
 ];
 
-/* ---- Mock saved topics for the Saved panel ---- */
+/* ---- Mock saved topics for the Saved panel ----
+   As Figma Overlay Card 2 (3827:65749; Nelson's SKO match review, 28 Oct 2026): the path by
+   number ("Six Sigma · Module 03 · Lesson 1") and absolute dates, Open edX's "Oct 22". */
 export const savedTopics: SavedTopicModel[] = [
   {
     id: "st1",
@@ -306,8 +311,8 @@ export const savedTopics: SavedTopicModel[] = [
     topicType: "Reading",
     duration: "8 min read approx.",
     title: "The measure phase",
-    path: "Six Sigma · DMAIC for process improvement · Define and measure",
-    savedAt: "2 days ago",
+    path: "Six Sigma · Module 03 · Lesson 1",
+    savedAt: formatMonthDay(addDays(SAMPLE_TODAY, -2)),
   },
   {
     id: "st2",
@@ -315,8 +320,8 @@ export const savedTopics: SavedTopicModel[] = [
     topicType: "Video",
     duration: "5 min",
     title: "History and origins",
-    path: "Six Sigma · Introduction to ASQ-Certified Six Sigma Black Belt",
-    savedAt: "1 week ago",
+    path: "Six Sigma · Module 01",
+    savedAt: formatMonthDay(addDays(SAMPLE_TODAY, -7)),
   },
   {
     id: "st3",
@@ -324,8 +329,8 @@ export const savedTopics: SavedTopicModel[] = [
     topicType: "Graded Assignment",
     duration: "20 min approx.",
     title: "The control phase",
-    path: "Six Sigma · DMAIC for process improvement · Analyze, improve, and control",
-    savedAt: "1 week ago",
+    path: "Six Sigma · Module 03 · Lesson 2",
+    savedAt: formatMonthDay(addDays(SAMPLE_TODAY, -7)),
   },
 ];
 
@@ -339,5 +344,5 @@ export const savedNotes: SavedNoteModel[] = notesSeed.map((n, i) => ({
   anchorQuote: n.anchorQuote,
   text: n.text,
   tags: n.tags,
-  savedAt: i === 0 ? "3 days ago" : "3 days ago",
+  savedAt: formatMonthDay(addDays(SAMPLE_TODAY, -3)),
 }));

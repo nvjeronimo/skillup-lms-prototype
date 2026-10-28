@@ -32,8 +32,11 @@ export function ViltView({ topicId }: { topicId: string }) {
   const current: ViltStage = stage ?? session.stage;
 
   return (
+    // Live sessions are not an Open edX feature: they wait for the Calendar and stakeholder approval
+    // (decision 035, no extra development). Until then the screen follows Figma's VILT canonical
+    // (4935:3048): no Scheduled → Live → Recording stepper in the learner view, and Join / Add to
+    // calendar at 44 (Nelson's SKO match review, 28 Oct 2026, LV1 and LV4).
     <div className="flex flex-col gap-6 py-6">
-      <StageStepper current={current} />
 
       {current === "pre-live" ? (
         <PreLive
@@ -63,51 +66,6 @@ export function ViltView({ topicId }: { topicId: string }) {
         description="This session completes on its own by whichever comes first: attending the live (join + at least 50% of the session), or watching the recording to 90%."
       />
     </div>
-  );
-}
-
-/* ---- DS VILT · Stage Stepper: one topic, three stages (Scheduled → Live → Recording) ---- */
-const STAGES: { stage: ViltStage; label: string }[] = [
-  { stage: "pre-live", label: "Scheduled" },
-  { stage: "live", label: "Live" },
-  { stage: "recording", label: "Recording" },
-];
-
-function StageStepper({ current }: { current: ViltStage }) {
-  const currentIdx = STAGES.findIndex((s) => s.stage === current);
-  return (
-    <ol className="flex flex-wrap items-center gap-2" aria-label="Session stage">
-      {STAGES.map((s, i) => {
-        const isCurrent = i === currentIdx;
-        const isPast = i < currentIdx;
-        return (
-          <React.Fragment key={s.stage}>
-            {i > 0 ? (
-              <li aria-hidden className="sk-text-body-small-regular text-sko-text-subtle">
-                →
-              </li>
-            ) : null}
-            <li
-              aria-current={isCurrent ? "step" : undefined}
-              className={cn(
-                "sk-text-body-small-medium inline-flex items-center rounded-pill px-2 py-1 ring-1 ring-inset",
-                isCurrent
-                  ? s.stage === "live"
-                    ? // Green is the LIVE NOW colour (decision 012); red stays for errors and
-                      // destructive actions. The DS 20322:705552 red is logged as a DS fix.
-                      "bg-sko-bg-success-soft text-sko-text-success ring-sko-border-success"
-                    : "bg-sko-bg-primary-soft text-sko-text-primary ring-sko-border-primary"
-                  : isPast
-                    ? "bg-sko-bg-subtle text-sko-text-subtle ring-sko-border-subtle"
-                    : "text-sko-text-subtle ring-sko-border-default",
-              )}
-            >
-              {s.label}
-            </li>
-          </React.Fragment>
-        );
-      })}
-    </ol>
   );
 }
 
@@ -205,10 +163,10 @@ function PreLive({
       <Agenda items={session.agenda} />
 
       <div className="flex flex-wrap items-center gap-2 border-t border-sko-border-subtle pt-4 max-md:[&>*]:flex-1">
-        <Button variant="primary" size="lg" disabled={locked} onClick={onSimulateLive}>
+        <Button variant="primary" size="md" disabled={locked} onClick={onSimulateLive}>
           {locked ? "Join opens soon" : "Join session"}
         </Button>
-        <Button variant="secondary" size="lg" onClick={onAddToCalendar}>
+        <Button variant="secondary" size="md" onClick={onAddToCalendar}>
           Add to calendar
         </Button>
       </div>

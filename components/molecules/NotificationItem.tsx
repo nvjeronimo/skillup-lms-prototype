@@ -49,10 +49,11 @@ export function NotificationItem({
 
       <span className="min-w-0 flex-1">
         <span className="sk-text-body-medium-semibold block text-sko-text-default">{title}</span>
-        {body ? (
-          <span className="sk-text-body-medium-regular mt-0.5 block text-sko-text-muted">{body}</span>
-        ) : null}
-        <span className="sk-text-body-small-regular mt-1 block text-sko-text-subtle">{timestamp}</span>
+        {/* One context line under the title, as Figma Overlay Card 1 (3827:65480): where it
+            happened and when, "Six Sigma · Module 03 · 25 min ago" (28 Oct 2026). */}
+        <span className="sk-text-body-small-regular mt-1 block text-sko-text-subtle">
+          {body ? `${body} · ${timestamp}` : timestamp}
+        </span>
       </span>
 
       {/* Unread dot — right side (matches Final Screens). */}
