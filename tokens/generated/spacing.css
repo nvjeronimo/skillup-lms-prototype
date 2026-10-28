@@ -33,6 +33,7 @@
   --sk-layout-stack-gap: 32px;
   --sk-layout-side-gap: 24px;
   --sk-layout-grid-gap: 32px;
+  --sk-container-text-max-width: 1200px;
 }
 @media screen and (max-width: 1024px) {
   :root {
