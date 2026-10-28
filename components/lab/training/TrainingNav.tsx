@@ -50,7 +50,7 @@ export function TrainingNav() {
             aria-label="SkillUp, Today"
             className="inline-flex min-h-[44px] items-center"
           >
-            <SkillUpLogo className="h-7" />
+            <SkillUpLogo className="h-5" />
           </Link>
           <nav aria-label="Primary" className="hidden flex-1 md:block">
             <ul className="flex items-stretch gap-1">

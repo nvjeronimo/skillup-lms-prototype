@@ -230,7 +230,7 @@ export function CoursePlayerTopbar({
     >
       <div className={cn("flex min-w-0 flex-1 items-center", isDesktop ? "gap-8" : "gap-6")}>
         <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex shrink-0 items-center">
-          <SkillUpLogo className="h-[33px]" />
+          <SkillUpLogo className="h-6" />
         </Link>
 
         {isDesktop && breadcrumb.length ? (
