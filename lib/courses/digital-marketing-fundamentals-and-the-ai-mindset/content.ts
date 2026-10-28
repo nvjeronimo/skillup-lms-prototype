@@ -293,7 +293,7 @@ export const content: CourseContent = {
         {
           heading: "How it is assessed",
           paragraphs: [
-            "You submit the plan as a PDF or DOCX, and it is graded by a peer with a short rubric that follows the parts of the page. The project is worth 25% of your course grade. In the topic after it, you review two plans yourself, which is the quickest way to see what a clear plan looks like from the outside.",
+            "You submit the plan as a PDF or DOCX, and your mentor grades it against a short rubric that follows the parts of the page. The project is worth 25% of your course grade. The topic after it shows how the mentor applies the rubric, with examples of clear plans.",
             "Watch the planning video next. It shows the order in which to fill in the page, and where most first drafts run long.",
           ],
         },
@@ -306,7 +306,7 @@ export const content: CourseContent = {
         "One page, six parts: customer, objectives, channels, message, measurement, AI use.",
         "At most three channels, each with a reason and a type.",
         "The parts must agree with one another; a reviewer checks the links first.",
-        "Submit as PDF or DOCX; a peer grades your plan and you review two.",
+        "Submit as PDF or DOCX; your mentor grades your plan against the rubric.",
       ],
     },
   },

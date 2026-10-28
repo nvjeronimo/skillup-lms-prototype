@@ -29,4 +29,4 @@ export const Reading: Story = {};
 export const Video: Story = { args: { topicType: "Video", duration: "5 min", title: "History and origins" } };
 export const LiveSession: Story = { args: { topicType: "VILT-Live Session", duration: "60 min", title: "Office hours" } };
 export const Project: Story = { args: { topicType: "Project", duration: "2 h approx.", title: "Capstone project" } };
-export const PeerReview: Story = { args: { topicType: "Peer Review", duration: "30 min approx.", title: "Review a peer submission" } };
+export const PeerReview: Story = { args: { topicType: "Peer Review", duration: "30 min approx.", title: "Review the grading rubric" } };

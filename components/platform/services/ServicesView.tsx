@@ -279,7 +279,9 @@ export function ServicesView() {
           <h2 id="services-more" className="sk-text-body-large-semibold text-sko-text-default">
             More from SkillUp
           </h2>
-          <ul data-mock={moreMock} className="grid border-t border-sko-border-subtle sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
+          {/* One 1fr column on a phone: an implicit column sized to the longest description ran the
+              rows past the screen and hid their chevrons (Nelson, 28 Oct 2026). */}
+          <ul data-mock={moreMock} className="grid grid-cols-1 border-t border-sko-border-subtle sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
             {moreServices.map((item) => {
               const inner = (
                 <>

@@ -95,12 +95,14 @@ export const SIX_SIGMA: CourseDetail = {
         },
         {
           id: "analyze-and-interpret",
-          label: "Analyze and interpret",
+          label: "Analyse and interpret",
           topics: [
-            { id: "m3-t6", title: "Running the analyze phase", type: "Reading", duration: "45 min", state: "Pending" },
+            { id: "m3-t6", title: "Running the analyse phase", type: "Reading", duration: "45 min", state: "Pending" },
             { id: "m3-t7", title: "Designing the prototype", type: "Video", duration: "30 min", state: "Pending" },
             { id: "m3-t8", title: "Conducting user testing", type: "Project", duration: "25 min", state: "Pending" },
-            { id: "m3-t9", title: "Implementing feedback", type: "Peer Review", duration: "50 min", state: "Locked" },
+            // A staff-graded project step: peer and self assessment are off on SkillUp courses, the ORA
+            // is graded by staff on a rubric (Nelson, 28 Oct 2026).
+            { id: "m3-t9", title: "Improvement plan: staff-graded project", type: "Project", duration: "50 min", state: "Locked" },
           ],
         },
       ],
@@ -266,7 +268,7 @@ export const SIX_SIGMA: CourseDetail = {
         state: "complete",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Complete", color: "success" },
         ],
         title: "Module 1 · Channel selection challenge",
@@ -281,7 +283,7 @@ export const SIX_SIGMA: CourseDetail = {
         state: "overdue",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Overdue", color: "error" },
         ],
         title: "Module 2 · Audience mapping",

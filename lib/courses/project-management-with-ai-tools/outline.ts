@@ -41,7 +41,7 @@ export const outline: Course = {
                 { id: "pma-m1-t1-ln3", ts: "0:31", text: "Module 1 covers the foundations: the trade-offs you manage, the main ways of delivering, and what an assistant can and cannot do for you." },
                 { id: "pma-m1-t1-ln4", ts: "0:48", text: "Module 2 is planning: breaking down scope, estimating, scheduling and preparing a sprint. Module 3 covers risks, stakeholders and communication." },
                 { id: "pma-m1-t1-ln5", ts: "1:05", text: "Module 4 is about tracking progress, reporting it honestly and using AI tools responsibly with client data. Module 5 is the final project." },
-                { id: "pma-m1-t1-ln6", ts: "1:22", text: "For that project you plan a product launch and submit a plan pack, which two peers review. Before it there are two graded assignments and three graded quizzes, and after it a final assessment." },
+                { id: "pma-m1-t1-ln6", ts: "1:22", text: "For that project you plan a product launch and submit a plan pack, which your mentor grades. Before it there are two graded assignments and three graded quizzes, and after it a final assessment." },
                 { id: "pma-m1-t1-ln7", ts: "1:40", text: "You can follow the course with any general-purpose AI assistant. We name no product, because the method matters more than the tool." },
                 { id: "pma-m1-t1-ln8", ts: "1:54", text: "One rule holds for the whole course: the assistant drafts, you check, and your name is on the plan." },
               ],
@@ -267,7 +267,7 @@ export const outline: Course = {
             { id: "pma-m5-t1", type: "Reading", title: "Final project brief: plan a product launch", duration: "12 min read approx.", completed: false, locked: true },
             { id: "pma-m5-t2", type: "Video", title: "Planning your project pack", duration: "12 min", completed: false, locked: true },
             { id: "pma-m5-t3", type: "Project", title: "Final Project: Project plan pack", duration: "1 h 30 min approx.", completed: false, locked: true },
-            { id: "pma-m5-t4", type: "Peer Review", title: "Review two project plan packs", duration: "25 min approx.", completed: false, locked: true },
+            { id: "pma-m5-t4", type: "Reading", title: "After you submit: how your mentor grades the plan pack", duration: "25 min read approx.", completed: false, locked: true },
           ],
         },
         {

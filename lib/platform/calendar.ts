@@ -29,7 +29,7 @@ export interface CalendarEvent {
   /** 24 h, in the learner's zone ("23:59", "16:00"), printed "11:59 PM · your time" (formatTime); none for a whole-day date. */
   time?: string;
   kind: CalendarKind;
-  /** Deadlines: the assignment type of the Dates tab ("Graded quiz", "Homework"). Course dates: what the date is, in a word. */
+  /** Deadlines: the assignment type of the Dates tab ("Graded quiz", "Assignment"). Course dates: what the date is, in a word. */
   label: string;
   title: string;
   course: string;
@@ -86,7 +86,7 @@ export const calendarEvents: CalendarEvent[] = [
   // missed-deadline alert, and "Shift due dates" here, are about.
   deadline(UX, "graded-quiz-foundations", "uxr-m1-t9", "uxr-graded-quiz-foundations"),
   deadline(ACB, "assignment-01", "acb-m1-t11", "acb-assignment-01-brand-voice-guide"),
-  deadline(UX, "persona-research-draft", "uxr-m1-t10", "peer-review-persona-research"),
+  deadline(UX, "persona-research-draft", "uxr-m1-t10", "project-persona-research"),
   deadline(ACB, "assignment-02", "acb-m2-t10", "assignment-02-audience-segmentation"),
   {
     id: "live-agile-coach",

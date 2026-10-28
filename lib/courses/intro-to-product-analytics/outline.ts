@@ -40,7 +40,7 @@ export const outline: Course = {
                 { id: "ipa-m1-t1-ln2", ts: "0:14", text: "You do not need to write code. You need to read tables and charts carefully, and to ask what each number counts." },
                 { id: "ipa-m1-t1-ln3", ts: "0:28", text: "Module 1 covers how product data is recorded and how to choose a metric. Module 2 follows people through a funnel, from first visit to first value." },
                 { id: "ipa-m1-t1-ln4", ts: "0:46", text: "Module 3 asks who comes back, with retention curves and cohort tables. Module 4 covers A/B tests and how to write up what you found." },
-                { id: "ipa-m1-t1-ln5", ts: "1:03", text: "There are two graded quizzes, one assignment and a final project: a product health report on a sample dataset, reviewed by two peers." },
+                { id: "ipa-m1-t1-ln5", ts: "1:03", text: "There are two graded quizzes, one assignment and a final project: a product health report on a sample dataset, graded by your mentor." },
                 { id: "ipa-m1-t1-ln6", ts: "1:19", text: "The same sample product runs through the whole course, a subscription app for planning meals, so each module adds to what you know about it." },
                 { id: "ipa-m1-t1-ln7", ts: "1:34", text: "Start with the next reading, on turning a business question into a metric. Everything else in the course builds on it." },
               ],
@@ -228,7 +228,7 @@ export const outline: Course = {
           topics: [
             { id: "ipa-m4-t5", type: "Reading", title: "Writing an analysis people act on", duration: "12 min read approx.", completed: true },
             { id: "ipa-m4-t6", type: "Project", title: "Final Project: Product health report", duration: "50 min approx.", completed: true },
-            { id: "ipa-m4-t7", type: "Peer Review", title: "Review two product health reports", duration: "18 min approx.", completed: true },
+            { id: "ipa-m4-t7", type: "Reading", title: "After you submit: how your mentor grades the product health report", duration: "18 min read approx.", completed: true },
             { id: "ipa-m4-t8", type: "Video", title: "Course wrap-up and next steps", duration: "6 min", completed: true },
           ],
         },

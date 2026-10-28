@@ -3,7 +3,7 @@ import type { Course } from "@/lib/courses/kit";
 /**
  * "Capstone Project: AI-First Marketing System": course 7, the last of the AI Augmented
  * Digital Marketing program, not started. A project, not a lecture course: 11 topics in
- * 4 modules (a brief, three graded milestones, a final submission and a peer review), none
+ * 4 modules (a brief, three graded milestones, a final submission graded by a mentor), none
  * done; Module 4 is locked until Module 3 is complete. It opens on "Course Introduction",
  * as the Program page says.
  */
@@ -43,7 +43,7 @@ export const outline: Course = {
                 { id: "cps-m1-t1-ln3", ts: "0:37", text: "AI-first does not mean AI-only. For every part of the system you say where an AI tool does the work, where a person checks it, and what you would never hand over." },
                 { id: "cps-m1-t1-ln4", ts: "0:54", text: "You build it in three milestones. Milestone 1 is the strategy and the channel plan. Milestone 2 is the content and campaign assets. Milestone 3 is the measurement plan and your AI workflow log." },
                 { id: "cps-m1-t1-ln5", ts: "1:13", text: "Each milestone is graded with a rubric you can read before you start, and each comes back with comments. Use them: the final submission is the three milestones revised and joined into one document." },
-                { id: "cps-m1-t1-ln6", ts: "1:32", text: "After you submit, you review the projects of two peers with the same rubric, and two peers review yours. Reading other people's systems is part of the learning." },
+                { id: "cps-m1-t1-ln6", ts: "1:32", text: "After you submit, your mentor grades the project with the same rubric and writes comments against each part of it." },
                 { id: "cps-m1-t1-ln7", ts: "1:48", text: "Most of what you need already exists. The voice guide from course 2, your search work from course 3, your campaign work from course 4, the launch plan and the lifecycle plan from courses 5 and 6. Collect them now." },
                 { id: "cps-m1-t1-ln8", ts: "2:07", text: "Start with the brief in the next topic. It says exactly what to hand in, and what a good project looks like." },
               ],
@@ -112,7 +112,7 @@ export const outline: Course = {
     {
       id: "cps-m4",
       label: "MODULE 04",
-      title: "Final Submission & Peer Review",
+      title: "Final Submission & Grading",
       topicsCompleted: 0,
       topicsTotal: 2,
       isCompleted: false,
@@ -122,7 +122,7 @@ export const outline: Course = {
           label: "Submit and review",
           topics: [
             { id: "cps-m4-t1", type: "Project", title: "Final Submission: AI-first marketing system", duration: "75 min approx.", completed: false, locked: true },
-            { id: "cps-m4-t2", type: "Peer Review", title: "Review two capstone projects", duration: "30 min approx.", completed: false, locked: true },
+            { id: "cps-m4-t2", type: "Reading", title: "After you submit: how your mentor grades the capstone project", duration: "30 min read approx.", completed: false, locked: true },
           ],
         },
       ],

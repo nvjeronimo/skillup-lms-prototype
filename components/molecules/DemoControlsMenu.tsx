@@ -192,12 +192,17 @@ export function DemoControlsMenu({
         type="button"
         {...triggerProps}
         aria-label={demo ? "Account and demo settings" : "Account"}
+        data-hit-band={compact ? "" : undefined}
         className={cn(
           "flex items-center transition-colors hover:bg-sko-bg-subtle",
           // DS topbar Mobile: a bare 24px avatar. Desktop/Tablet: a 32px avatar + name. Every
           // learner avatar is a rounded square, never a circle (Nelson, 19 Oct 2026).
-          // Compact: the avatar sits in the middle of the 44 target that "larger targets" gives it.
-          compact ? "justify-center rounded-control" : "ml-1 gap-2 rounded-track p-1",
+          // Compact: the button stays the 24px avatar and draws a 44-tall hit band, 3 past each side
+          // (the bar's buttons sit 6 apart); a 44 square pushed the phone bar onto the logo
+          // (Nelson, 28 Oct 2026).
+          compact
+            ? "relative justify-center rounded-control before:absolute before:-inset-x-[3px] before:-inset-y-2.5 before:content-['']"
+            : "ml-1 gap-2 rounded-track p-1",
         )}
       >
         {compact ? (

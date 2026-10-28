@@ -129,7 +129,7 @@ const program: Program = {
         { number: 1, title: "Module 1 · Project Brief & Planning", complete: false, topics: "3 topics", duration: "51m" },
         { number: 2, title: "Module 2 · Build: Strategy, Channels & Content", complete: false, topics: "3 topics", duration: "2h 27m" },
         { number: 3, title: "Module 3 · Measure, Document & Check", complete: false, topics: "3 topics", duration: "1h 07m" },
-        { number: 4, title: "Module 4 · Final Submission & Peer Review", complete: false, topics: "2 topics", duration: "1h 45m" },
+        { number: 4, title: "Module 4 · Final Submission & Grading", complete: false, topics: "2 topics", duration: "1h 45m" },
       ],
     }),
   ],
@@ -319,7 +319,7 @@ const program: Program = {
       id: "about-6",
       title: "Human Skills Training",
       body: [
-        "Alongside the marketing courses, the program builds the skills employers ask for in every role: clear writing, presenting a recommendation, giving and receiving feedback in peer reviews, and working to a deadline.",
+        "Alongside the marketing courses, the program builds the skills employers ask for in every role: clear writing, presenting a recommendation, acting on written feedback, and working to a deadline.",
       ],
     },
     {
@@ -333,7 +333,7 @@ const program: Program = {
       id: "about-8",
       title: "Personalized Mentoring & Instructor Feedback",
       body: [
-        "Each course has a mentor who answers questions in the Mentorship Q&A, usually within two working days. Graded assignments come back with written feedback against the rubric, and final projects are reviewed by your peers as well.",
+        "Each course has a mentor who answers questions in the Mentorship Q&A, usually within two working days. Graded assignments come back with written feedback against the rubric, and final projects are graded by a mentor against the same kind of rubric.",
       ],
     },
     {
@@ -380,13 +380,12 @@ const program: Program = {
   included: [
     // Counted from the seven course outlines (lib/courses), not from the frames.
     "97 videos",
-    "87 readings",
+    "94 readings",
     "27 activities",
     "20 practice quizzes",
     "18 graded quizzes",
     "17 graded assignments",
     "6 final projects",
-    "7 peer reviews",
     "1 capstone project",
   ],
   instructors: [

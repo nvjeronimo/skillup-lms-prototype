@@ -64,6 +64,10 @@ export interface CoursePlayerTopbarProps {
  * The icon is `icon/subtle` at rest, not the DS `icon/faint`: faint on `bg/page`
  * is about 1.77:1, below WCAG 1.4.11's 3:1 (audit TB-02). DS rebind pending: the
  * Button utility and Button close X Default icon should bind `icon/subtle`.
+ *
+ * The 32px button keeps its size under "larger targets" and draws a 44-tall hit band around
+ * itself, 3 past each side so neighbours 6 apart never share a band: grown to 44 squares, the
+ * phone bar's controls ran over the logo at 375 (Nelson, 28 Oct 2026).
  */
 function UtilityButton({
   label,
@@ -90,10 +94,13 @@ function UtilityButton({
       type="button"
       onClick={onClick}
       aria-label={label}
+      data-hit-band={large ? undefined : ""}
       {...aria}
       className={cn(
         "inline-flex shrink-0 items-center justify-center text-sko-icon-subtle transition-colors hover:bg-sko-bg-hover",
-        large ? "h-11 w-11 rounded-control" : "h-8 w-8 rounded-control",
+        large
+          ? "h-11 w-11 rounded-control"
+          : "relative h-8 w-8 rounded-control before:absolute before:-inset-x-[3px] before:-inset-y-1.5 before:content-['']",
         hierarchy === "secondary" && "border border-sko-border-default bg-sko-bg-page",
         className,
       )}

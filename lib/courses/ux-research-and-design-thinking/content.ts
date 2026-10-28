@@ -570,7 +570,7 @@ export const content: CourseContent = {
       dueLabel: "Due 24 Oct 2026",
       requiredReviews: 1,
       acceptedTypes: [".pdf", ".docx"],
-      overallCommentPrompt: "Which part of your peer's persona was best supported by evidence?",
+      overallCommentPrompt: "Which part of the persona is best supported by evidence?",
       criteria: [
         {
           id: "c1",
@@ -619,11 +619,11 @@ export const content: CourseContent = {
       brief:
         "Build a low-fidelity prototype of one idea from your ideation work: paper sketches, or a simple clickable version. Before you show it to anyone, write the two or three questions it is meant to answer and what result would change your mind. Then test it with at least two people and report what happened.",
       deliverable:
-        "Submit a PDF of up to 3 pages: photos or screenshots of the prototype, the questions it was built to answer, what each tester did, and the one change you will make next. You then review one peer's submission.",
+        "Submit a PDF of up to 3 pages: photos or screenshots of the prototype, the questions it was built to answer, what each tester did, and the one change you will make next.",
       dueLabel: "Due 15 Nov 2026",
       requiredReviews: 1,
       acceptedTypes: [".pdf", ".png", ".jpg"],
-      overallCommentPrompt: "Which of your peer's questions did the prototype answer most clearly, and what would you test next?",
+      overallCommentPrompt: "Which question did the prototype answer most clearly, and what would you test next?",
       criteria: [
         {
           id: "c1",

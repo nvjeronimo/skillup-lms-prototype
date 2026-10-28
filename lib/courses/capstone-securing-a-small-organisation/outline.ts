@@ -64,7 +64,7 @@ export const outline: Course = {
                 {
                   id: "sec5-m1-t1-ln6",
                   ts: "1:30",
-                  text: "Twice you will review the work of two peers. Reading other plans for the same client is one of the best ways to see what yours has missed.",
+                  text: "Your mentor grades every milestone against the published rubric and comments on what to revise before the final project.",
                 },
                 {
                   id: "sec5-m1-t1-ln7",
@@ -266,9 +266,9 @@ export const outline: Course = {
             },
             {
               id: "sec5-m2-t7",
-              type: "Peer Review",
-              title: "Peer review: two control designs",
-              duration: "30 min approx.",
+              type: "Reading",
+              title: "After you submit: how your mentor grades Milestone 2",
+              duration: "15 min read approx.",
               completed: false,
             },
           ],
@@ -467,9 +467,9 @@ export const outline: Course = {
           topics: [
             {
               id: "sec5-m4-t4",
-              type: "Peer Review",
-              title: "Peer review: two final plans",
-              duration: "40 min approx.",
+              type: "Reading",
+              title: "After you submit: how your mentor grades the security plan",
+              duration: "15 min read approx.",
               completed: false,
               locked: true,
             },

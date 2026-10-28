@@ -77,13 +77,13 @@ export const fourLevelCourse: Course = {
     {
       id: "cap-m3",
       label: "Module 03",
-      title: "Peer review assignment",
+      title: "Project assignment",
       topicsCompleted: 0,
       topicsTotal: 3,
       isCompleted: false,
       topics: [
         { id: "cap-t5", type: "Video", title: "Submit your work", duration: "3m 20s", completed: false, active: true },
-        { id: "cap-t6", type: "Peer Review", title: "Review 2 peer submissions", duration: "3m 20s", completed: false },
+        { id: "cap-t6", type: "Reading", title: "After you submit: how your mentor grades your project", duration: "3m 20s", completed: false },
         { id: "cap-t7", type: "Graded Assignment", title: "Reflection essay (300 words)", duration: "3m 20s", completed: false, locked: true },
       ],
     },

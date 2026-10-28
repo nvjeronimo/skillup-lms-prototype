@@ -504,7 +504,7 @@ export const content: CourseContent = {
       dueLabel: "Due 17 Nov 2026",
       requiredReviews: 2,
       acceptedTypes: [".pdf", ".docx"],
-      overallCommentPrompt: "Which part of your peer's plan would you use with your own team?",
+      overallCommentPrompt: "Which part of the plan would work best with a real team?",
       criteria: [
         {
           id: "c1",

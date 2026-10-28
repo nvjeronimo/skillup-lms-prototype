@@ -2,8 +2,7 @@ import type { CourseContent, OraContent } from "@/lib/courses/kit";
 import { activities } from "./activities";
 
 /**
- * The final submission, as the Project topic and the Peer Review topic after it both show
- * it. The four criteria are the rubric the three milestones are graded with.
+ * The final submission, as the Project topic shows it. The four criteria are the rubric the three milestones are graded with.
  */
 const FINAL_SUBMISSION: OraContent = {
   brief:
@@ -13,7 +12,7 @@ const FINAL_SUBMISSION: OraContent = {
   dueLabel: "Due 28 May 2027",
   requiredReviews: 2,
   acceptedTypes: [".pdf"],
-  overallCommentPrompt: "If this business could act on only one part of your peer's system this month, which should it be, and why?",
+  overallCommentPrompt: "If this business could act on only one part of the system this month, which should it be, and why?",
   criteria: [
     {
       id: "c1",
@@ -79,7 +78,7 @@ export const content: CourseContent = {
           correct: true,
           feedback: "Correct. The design of the hand-offs is what is assessed.",
         },
-        { id: "c", label: "The project is graded by an AI tool", feedback: "Milestones are graded by the course team and the final submission by two peers." },
+        { id: "c", label: "The project is graded by an AI tool", feedback: "Milestones and the final submission are graded by your mentor, with the same rubric." },
         { id: "d", label: "No human-written content is allowed", feedback: "Write whatever is better written by you, and say so in the log." },
       ],
     },
@@ -140,7 +139,7 @@ export const content: CourseContent = {
         {
           heading: "How it is graded",
           paragraphs: [
-            "Each milestone is graded by the course team with the same four-part rubric: strategy, assets, measurement, and AI workflow and responsible use. Together the milestones are 45% of the grade. The final submission is another 45%, graded by two peers with that rubric. The remaining 10% is for the two reviews you give.",
+            "Each milestone is graded by the course team with the same four-part rubric: strategy, assets, measurement, and AI workflow and responsible use. Together the milestones are 45% of the grade. The final submission is the other 55%, graded by your mentor with that rubric.",
             "The rubric rewards decisions over volume. A plan with three channels and a reason for each scores higher than one with eight channels and no reasons. An asset that could only belong to this brand scores higher than five that could belong to any. A log that records what you checked scores higher than a list of tools.",
             "It also rewards revision. The note on what you changed after each milestone review is short, and it is read first.",
           ],
@@ -232,7 +231,7 @@ export const content: CourseContent = {
         question: "Before submitting, you find a customer's name and order history in one of your example emails. What do you do?",
         platformPrompt: "Choose the correct option",
         explanation:
-          "Two peers will read the submission. Real customer data does not belong in it. Replace it with sample data and say that you did.",
+          "Your mentor will read the submission. Real customer data does not belong in it. Replace it with sample data and say that you did.",
         reviewTopicId: "cps-m1-t2",
         reviewTopicTitle: "Capstone brief: an AI-first marketing system for one business",
         options: [
@@ -301,7 +300,6 @@ export const content: CourseContent = {
   },
   ora: {
     "cps-m4-t1": FINAL_SUBMISSION,
-    "cps-m4-t2": FINAL_SUBMISSION,
   },
   activities,
 };

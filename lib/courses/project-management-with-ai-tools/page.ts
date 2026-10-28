@@ -135,7 +135,7 @@ export const page: CourseDetail = {
       // 30% it weighs. Nothing else is graded yet.
       rows: [
         { type: "Graded Quiz", weight: "30%", grade: "33%", weighted: "10%" },
-        { type: "Homework", weight: "30%", grade: "0%", weighted: "0%" },
+        { type: "Assignment", weight: "30%", grade: "0%", weighted: "0%" },
         { type: "Final Project", weight: "25%", grade: "0%", weighted: "0%" },
         { type: "Final Assessment", weight: "15%", grade: "0%", weighted: "0%" },
       ],
@@ -215,7 +215,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 2 · Assignment 01 · Sprint plan with an AI assistant",
@@ -244,7 +244,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 4 · Assignment 02 · Risk register and status report",

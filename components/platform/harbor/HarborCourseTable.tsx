@@ -40,7 +40,8 @@ export function HarborCourseTable({
         <tbody>
           {courses.map((c) => {
             const pct = c.progressPct;
-            const next = "certificate" in c.upNext ? c.upNext.certificate : c.upNext.title;
+            // A completed course reads "Certificate issued …", as the Programs table (Nelson, 28 Oct 2026).
+            const next = "certificate" in c.upNext ? c.upNext.certificate.replace(/^Issued /, "Certificate issued ") : c.upNext.title;
             return (
               <tr key={c.id} className="border-t border-sko-border-subtle">
                 <th scope="row" className="sk-text-body-medium-regular py-3 pr-4">

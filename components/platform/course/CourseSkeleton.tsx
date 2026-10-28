@@ -4,20 +4,22 @@ import * as React from "react";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { HeaderBandSkeleton, TabBarSkeleton } from "@/components/platform/HeaderBandSkeleton";
 import { IntroSkeleton } from "@/components/platform/program/ProgramSkeleton";
-import { DEFAULT_COURSE_TAB, isCourseTab, type CourseDetail, type CourseModule, type CourseTabId } from "@/lib/platform/course-detail";
+import { DEFAULT_COURSE_TAB, courseTabsFor, hasDatesTab, isCourseTab, type CourseDetail, type CourseModule, type CourseTabId } from "@/lib/platform/course-detail";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import { cn } from "@/lib/utils";
 
 const BODY = "mx-auto w-full max-w-[1280px] px-layout-band-x pb-8 pt-6 md:pb-12 md:pt-8 lg:pb-20 lg:pt-10";
 /* The sidebar cards: measured from sample data (21 Oct 2026; phone / tablet and up). Seven
    different cards (team, dates, certificate, weekly goal…) not drawn line for line here. */
+/** The Upcoming dates card (sixth), shown only with a Dates tab. */
+const UPCOMING_DATES = "h-[315px] md:h-[299px]";
 const SIDEBAR = [
   "h-[174px] md:h-[166px]",
   "h-[214px] md:h-[206px]",
   "h-[325px] md:h-[309px]",
   "h-[214px]",
   "h-[210px] md:h-[158px]",
-  "h-[315px] md:h-[299px]",
+  UPCOMING_DATES,
   "h-[274px] md:h-[312px]",
 ];
 
@@ -111,8 +113,9 @@ export function CourseSkeleton({ course }: { course: CourseDetail }) {
   const [tab, setTab] = React.useState<CourseTabId>(DEFAULT_COURSE_TAB);
   React.useEffect(() => {
     const t = new URLSearchParams(window.location.search).get("tab");
-    if (isCourseTab(t)) setTab(t);
-  }, []);
+    if (isCourseTab(t) && courseTabsFor(course).some((x) => x.id === t)) setTab(t);
+  }, [course]);
+  const dates = hasDatesTab(course);
   const header = (
     <HeaderBandSkeleton
       kind="course"
@@ -134,14 +137,14 @@ export function CourseSkeleton({ course }: { course: CourseDetail }) {
   return (
     <>
       {header}
-      <TabBarSkeleton tabs={[56, 72, 48, 136]} search />
+      <TabBarSkeleton tabs={dates ? [56, 72, 48, 136] : [56, 72, 136]} search />
       <div className={BODY}>
         <Skeleton variant="block" radius="control" className="mb-4 h-11 md:hidden" />
         {course.passed ? <Skeleton variant="block" height={96} radius="none" className="mb-4 md:mb-5 lg:mb-6" /> : null}
         {tab === "course" ? (
           <div className="flex flex-col gap-layout-column md:flex-row md:items-start">
             <div className="flex min-w-0 flex-1 flex-col gap-layout-stack">
-              {course.datesTab.missedAlert ? (
+              {dates && course.datesTab.missedAlert ? (
                 <AlertSkeleton title={SHIFT_DATES.title} body={SHIFT_DATES.body} stacked={false} dismissible={false} action />
               ) : null}
               <AlertSkeleton title={course.update.title} body={course.update.body} stacked dismissible action={false} />
@@ -153,7 +156,8 @@ export function CourseSkeleton({ course }: { course: CourseDetail }) {
               </div>
             </div>
             <div className="flex flex-col gap-4 md:w-[320px] md:shrink-0">
-              {SIDEBAR.map((h, i) => (
+              {/* Without a Dates tab, no Upcoming dates card (decision 036). */}
+              {(dates ? SIDEBAR : SIDEBAR.filter((h) => h !== UPCOMING_DATES)).map((h, i) => (
                 <Skeleton key={i} variant="block" radius="card" className={h} />
               ))}
             </div>

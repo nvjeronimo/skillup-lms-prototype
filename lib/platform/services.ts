@@ -1,4 +1,4 @@
-import { Award, BadgeCheck, Briefcase, Cloud, FileText, Headphones, LifeBuoy, Linkedin, MessagesSquare, Terminal } from "lucide-react";
+import { Award, BadgeCheck, Briefcase, Cloud, FileText, Headphones, LifeBuoy, MessagesSquare, Share, Terminal } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { BadgeColor } from "@/components/atoms/Badge";
 import { MENTOR } from "@/lib/courses/ai-driven-content-and-brand-communication/page";
@@ -95,7 +95,8 @@ export const moreMock = "Career services are SkillUp's own; none of them has a s
 export const moreServices: ServiceItem[] = [
   { id: "interview", icon: MessagesSquare, title: "Interview practice", description: "A mock interview with a career coach", action: "Book a practice" },
   { id: "jobs", icon: Briefcase, title: "Job board", description: "Roles from SkillUp's hiring partners", action: "Browse jobs", external: true },
-  { id: "linkedin", icon: Linkedin, title: "Share your certificates", description: "Add them to LinkedIn in one step", action: "Add to LinkedIn", external: true },
+  // A share icon, not the LinkedIn logo, as the Figma Services screen (Nelson, 28 Oct 2026).
+  { id: "linkedin", icon: Share, title: "Share your certificates", description: "Add them to LinkedIn in one step", action: "Add to LinkedIn", external: true },
   { id: "sandbox", icon: Terminal, title: "Python sandbox", description: "A notebook for Business Analytics with Python", action: "Open the sandbox", external: true },
   { id: "certs", icon: Award, title: "Certificates", description: "Download and share your certificates", action: "See certificates", href: "/platform/certificates" },
 ];

@@ -131,11 +131,11 @@ export const page: CourseDetail = {
       passPercent: 70,
       passLabel: "Pass 70%",
       columns: SIX_SIGMA.progressTab.grade.columns,
-      // Two graded quizzes (3/3 and 2/3: 83%, so 25% of 30%), one homework (90%, so 27% of
+      // Two graded quizzes (3/3 and 2/3: 83%, so 25% of 30%), one assignment (90%, so 27% of
       // 30%) and the final project (18/20: 90%, so 36% of 40%). 25% + 27% + 36% = 88%.
       rows: [
         { type: "Graded Quiz", weight: "30%", grade: "83%", weighted: "25%" },
-        { type: "Homework", weight: "30%", grade: "90%", weighted: "27%" },
+        { type: "Assignment", weight: "30%", grade: "90%", weighted: "27%" },
         { type: "Final Project", weight: "40%", grade: "90%", weighted: "36%" },
       ],
       sections: [
@@ -198,7 +198,7 @@ export const page: CourseDetail = {
         state: "complete",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Complete", color: "success" },
         ],
         title: "Module 2 · Assignment 01 · Funnel analysis",
@@ -232,7 +232,7 @@ export const page: CourseDetail = {
           { label: "Complete", color: "success" },
         ],
         title: "Module 4 · Final Project: Product health report",
-        description: "Submitted 2 days early. Two peers reviewed it: 18/20.",
+        description: "Submitted 2 days early. Graded by your mentor: 18/20.",
         link: "Open the assignment",
       },
       {

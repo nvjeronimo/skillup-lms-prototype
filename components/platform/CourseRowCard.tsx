@@ -94,8 +94,8 @@ export const COURSE_ROW_FRAME = "overflow-hidden rounded-card border border-sko-
  * Nelson: wherever the course card stood on its own, it is this row).
  * - The DS `LMS / Course Card`, bare (the row draws the border and the shadow): Layout=List
  *   on desktop (1198 × 136 with a two-line title), Layout=Grid below it with the action at
- *   full width (Compact). Every action in the list is Secondary: the page's primary action
- *   is "Resume course" in the header.
+ *   full width (Compact). On the Program page (`responsive`) every action is Secondary, Resume
+ *   too: the page's primary action is "Resume course" in the header (Nelson, 28 Oct 2026).
  * - The modules bar, under a 1px rule, padding 12 / 16: `Position` (body-medium/Semibold)
  *   and `Detail` (body-medium/Regular, text/subtle) 8 apart, and the Show / Hide toggle. On
  *   mobile, and in a row fixed at Compact, the detail drops under the position (2 apart);
@@ -131,11 +131,12 @@ export function CourseRowCard({
     >
       {!compact ? (
         <>
-          <MyLearningCourseCard course={card} layout="list" context="row" onAction={notInPrototype} className="hidden lg:flex" />
+          <MyLearningCourseCard course={card} layout="list" context="row" secondaryAction={responsive} onAction={notInPrototype} className="hidden lg:flex" />
           <MyLearningCourseCard
             course={card}
             layout="list-stacked"
             context="row"
+            secondaryAction={responsive}
             onAction={notInPrototype}
             className={responsive ? "hidden md:flex lg:hidden" : "lg:hidden"}
           />
@@ -146,6 +147,7 @@ export function CourseRowCard({
           course={card}
           layout="grid"
           context="row"
+          secondaryAction={responsive}
           onAction={notInPrototype}
           className={responsive ? "md:hidden" : undefined}
         />

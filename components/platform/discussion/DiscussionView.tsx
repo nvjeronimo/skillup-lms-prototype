@@ -32,7 +32,7 @@ const COURSES = [...new Map(discussionThreads.map((t) => [t.courseSlug, t.course
 
 /**
  * One conversation in the inbox, after the DS Thread-Row: the course and its topic on top, the
- * flags (Question / Discussion, Answered, Following), the title (Semibold while unread), a
+ * flags (Question / Discussion, Answered), the title (Semibold while unread), a
  * one-line preview and the meta with the replies; the unread count on the right.
  */
 function InboxRow({ thread, selected, selectedFromTablet }: { thread: DiscussionThread; selected: boolean; selectedFromTablet: boolean }) {
@@ -59,11 +59,6 @@ function InboxRow({ thread, selected, selectedFromTablet }: { thread: Discussion
             {thread.answered ? (
               <Badge variant="outline" color="success">
                 Answered
-              </Badge>
-            ) : null}
-            {thread.following ? (
-              <Badge variant="outline" color="gray">
-                Following
               </Badge>
             ) : null}
           </span>
@@ -135,9 +130,6 @@ export function DiscussionSkeleton() {
         <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
           <div className="flex flex-col gap-1">
             <Skeleton variant="ghost" text="headline-large-bold">Discussion across your courses.</Skeleton>
-            <Skeleton variant="ghost" text="body-medium-regular">
-              Talk with your cohort. To ask the course mentors, use Mentorship Q&amp;A in the course.
-            </Skeleton>
           </div>
           <SkeletonPill size="button-md" icon className="md:h-11">New post</SkeletonPill>
         </div>
@@ -168,7 +160,6 @@ export function DiscussionSkeleton() {
                     <div className="flex flex-wrap items-start gap-1">
                       <SkeletonPill>{t.kind === "question" ? "Question" : "Discussion"}</SkeletonPill>
                       {t.answered ? <SkeletonPill>Answered</SkeletonPill> : null}
-                      {t.following ? <SkeletonPill>Following</SkeletonPill> : null}
                     </div>
                     <Skeleton variant="ghost" text={t.unread > 0 ? "body-medium-semibold" : "body-medium-medium"}>{t.title}</Skeleton>
                     <Skeleton variant="ghost" text="body-small-regular" className="truncate">{t.preview}</Skeleton>
@@ -189,7 +180,6 @@ export function DiscussionSkeleton() {
                   <Skeleton variant="ghost" text="body-small-medium">{`${current.course} · ${current.topic}`}</Skeleton>
                   <Skeleton variant="ghost" text="title-medium-semibold">{current.title}</Skeleton>
                 </div>
-                <SkeletonPill size="button-sm" className="self-start max-md:h-11">{current.following ? "Following" : "Follow"}</SkeletonPill>
               </div>
               <div className="flex flex-col gap-4 p-4 md:p-5 lg:p-6">
                 {current.messages.map((m) => (
@@ -218,8 +208,8 @@ export function DiscussionSkeleton() {
  * inbox, laid out as the course's Q&A tab (list 360 / 320 beside the open conversation; mobile
  * shows one at a time, `?thread=` opens one). The list filters by state and by course and
  * searches titles and previews. "New post" and "Report" open their modals (23 Oct 2026): a new
- * post opens at the top of the inbox for the session. Replying and following are not built and
- * say so.
+ * post opens at the top of the inbox for the session. Replying is not built and says so. No
+ * Follow / Following (Kirti removed it; Nelson, 28 Oct 2026).
  */
 export function DiscussionView() {
   const params = useSearchParams();
@@ -243,7 +233,6 @@ export function DiscussionView() {
       (course === "all" || t.courseSlug === course) &&
       (filter === "all" ||
         (filter === "unread" && t.unread > 0) ||
-        (filter === "following" && t.following) ||
         (filter === "mine" && t.mine)) &&
       (!needle || `${t.title} ${t.preview}`.toLowerCase().includes(needle)),
   );
@@ -257,10 +246,8 @@ export function DiscussionView() {
             <h1 className="sk-text-headline-large-bold text-sko-text-default">
               Discussion <span data-heading-em="" className="text-sko-text-subtle">across your courses.</span>
             </h1>
-            {/* Nelson, 21 Oct 2026: Discussion is the cohort's forum; Mentorship Q&A is private. */}
-            <p className="sk-text-body-medium-regular text-sko-text-muted">
-              Talk with your cohort. To ask the course mentors, use Mentorship Q&amp;A in the course.
-            </p>
+            {/* No subtitle: there is no private learner-to-mentor channel, and Mentorship Q&A is on hold
+                (Nelson, 28 Oct 2026). */}
           </div>
           <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => setPosting(true)} className="max-md:h-11">
             New post
@@ -358,15 +345,6 @@ export function DiscussionView() {
                     {current.title}
                   </h2>
                 </div>
-                <Button
-                  hierarchy="secondary"
-                  size="sm"
-                  aria-pressed={!!current.following}
-                  onClick={() => notInPrototype("Following a conversation")}
-                  className="shrink-0 self-start max-md:h-11"
-                >
-                  {current.following ? "Following" : "Follow"}
-                </Button>
               </div>
               <ol aria-label="Messages" className="flex flex-col gap-4 p-4 md:p-5 lg:p-6">
                 {current.messages.map((m) => (

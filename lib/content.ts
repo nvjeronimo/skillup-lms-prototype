@@ -178,7 +178,7 @@ export function topicFamily(type: TopicType): TopicFamily {
     case "Peer-graded":
     case "Peer Review":
     case "Project":
-      // Open Response Assessment — submit, review a peer, receive a grade.
+      // Open Response Assessment — submit, then the course team grades it on the rubric.
       return "ora";
     case "Graded Assignment":
       return "graded";
@@ -1127,7 +1127,7 @@ export interface OraContent {
   requiredReviews: number;
   acceptedTypes: string[];
   criteria: OraCriterion[];
-  /** Prompt shown on the peer-review form. */
+  /** Overall comment prompt of the grader's rubric form (the course team; no peer form on SkillUp courses). */
   overallCommentPrompt: string;
 }
 
@@ -1142,7 +1142,7 @@ export function getOra(topic: FlatTopic): OraContent {
     dueLabel: "Due 25 Oct 2026",
     requiredReviews: 1,
     acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
-    overallCommentPrompt: "What did you like most about your peer's submission?",
+    overallCommentPrompt: "What should the learner keep, and what should they change?",
     criteria: [
       {
         id: "c1",
@@ -1414,12 +1414,12 @@ function plainAssignmentBrief(topic: FlatTopic): AssignmentBrief {
 
 function plainOra(topic: FlatTopic): OraContent {
   return {
-    brief: `Complete “${topic.title}” as set out in the project brief in the Downloads tab, then submit your work for review by a peer.`,
+    brief: `Complete “${topic.title}” as set out in the project brief in the Downloads tab, then submit it for your mentor to grade on the rubric.`,
     deliverable: "Submit a PDF or DOCX. Say what you decided and why, not only what you made.",
     dueLabel: "Due date on the Dates tab",
     requiredReviews: 1,
     acceptedTypes: [".pdf", ".docx", ".png", ".jpg"],
-    overallCommentPrompt: "What did you like most about your peer's submission?",
+    overallCommentPrompt: "What should the learner keep, and what should they change?",
     criteria: [
       {
         id: "c1",
