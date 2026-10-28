@@ -59,7 +59,8 @@ function dayHeading(iso: string) {
 function statusOf(e: CalendarEvent): { label: string; color: "success" | "error" | "warning" | "info" } {
   if (e.kind === "deadline") {
     if (e.complete) return { label: "Done", color: "success" };
-    if (isMissed(e)) return { label: "Missed", color: "error" };
+    // Past due is amber, never red (Nelson, 28 Oct 2026): it can still be shifted.
+    if (isMissed(e)) return { label: "Past due", color: "warning" };
     return { label: dueBadgeLabel(e.date, e.time), color: "warning" };
   }
   if (e.kind === "live") return { label: `Live · ${e.time ? formatTime(e.time) : ""}`, color: "success" };
@@ -243,9 +244,9 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
                             title={`${e.label}: ${e.title}`}
                             className={cn(
                               "sk-text-body-small-medium flex items-center gap-1 truncate rounded-inner px-1 py-0.5 text-sko-text-default transition-colors hover:bg-sko-bg-subtle",
-                              // Done: struck through. Missed: in the error ink, not struck — it still needs doing.
+                              // Done: struck through. Past due: in the warning ink, not struck — it still needs doing.
                               e.complete && "text-sko-text-subtle line-through",
-                              isMissed(e) && "text-sko-text-error",
+                              isMissed(e) && "text-sko-text-warning",
                             )}
                           >
                             <span aria-hidden className={cn("size-1.5 shrink-0 rounded-pill", KIND[e.kind].dot)} />

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BookOpen, Calendar, MessageCircle, Plus, Stars, Video } from "lucide-react";
+import { Megaphone, MessageCircle, Plus, Stars } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
@@ -16,15 +16,12 @@ export interface NotificationItemProps {
   className?: string;
 }
 
-// Concrete UUI icon mapping from the Final Screens (live = video-recorder).
+// One icon per Open edX notification type (Nelson, 28 Oct 2026: only what the platform sends).
 const ICON_MAP: Record<NotificationType, LucideIcon> = {
-  "live-now": Video,
-  "live-soon": Video,
-  "course-update": Plus,
-  "assignment-due": Calendar,
   "discussion-reply": MessageCircle,
-  "peer-review-received": Stars,
-  "syllabus-change": BookOpen,
+  "instructor-post": Megaphone,
+  "course-update": Plus,
+  "ora-grade-received": Stars,
 };
 
 /**

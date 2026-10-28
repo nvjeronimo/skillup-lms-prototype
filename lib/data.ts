@@ -222,22 +222,25 @@ export function notificationCategory(
 ): "discussions" | "grading" | "updates" {
   switch (type) {
     case "discussion-reply":
+    case "instructor-post":
       return "discussions";
-    case "assignment-due":
-    case "peer-review-received":
+    case "ora-grade-received":
       return "grading";
     default:
       return "updates";
   }
 }
 
-/* ---- Mock notifications for the Notifications panel ---- */
+/* ---- Mock notifications for the Notifications panel ----
+   The types Open edX sends, in its own words (Teak/Ulmo notifications): Discussions (a response,
+   a comment or an endorsement on my post; a new post from the instructor), Updates (course
+   updates) and Grading (an ORA grade). */
 export const notifications: NotificationModel[] = [
   {
     id: "n1",
-    type: "live-now",
-    title: "Live now: Office hours with Sarah",
-    body: "Drop in for Q&A on the DMAIC define phase.",
+    type: "instructor-post",
+    title: "Sarah Lee posted in Six Sigma: Office hours recap",
+    body: "“The define phase, in three questions. Read this before the Module 03 quiz.”",
     timestamp: "Just now",
     unread: true,
     href: "/course/six-sigma/topic/m3-t1",
@@ -246,7 +249,7 @@ export const notifications: NotificationModel[] = [
   {
     id: "n2",
     type: "discussion-reply",
-    title: "Carlos M. replied to your discussion",
+    title: "Carlos M. responded to your post",
     body: "“Great point on measurement systems analysis, but what about gauge R&R?”",
     timestamp: "25 min ago",
     unread: true,
@@ -255,9 +258,9 @@ export const notifications: NotificationModel[] = [
   },
   {
     id: "n3",
-    type: "assignment-due",
-    title: "Practice Quiz: Define and measure is due in 2 days",
-    body: "Module 03 · Define and measure",
+    type: "discussion-reply",
+    title: "Your response was endorsed",
+    body: "Measure phase: where to start with a process map",
     timestamp: "2 hours ago",
     unread: true,
     href: "/course/six-sigma/topic/m3-t4",
@@ -266,7 +269,7 @@ export const notifications: NotificationModel[] = [
   {
     id: "n4",
     type: "course-update",
-    title: "Sarah added new content: Prompt review recording",
+    title: "New course update in Six Sigma",
     body: "A new recording was added to Module 03.",
     timestamp: "Yesterday, 4:10 PM",
     unread: false,
@@ -275,9 +278,9 @@ export const notifications: NotificationModel[] = [
   },
   {
     id: "n5",
-    type: "peer-review-received",
-    title: "Anonymous peer rated your submission 4/5",
-    body: "“Clear analysis, tighten the control plan.”",
+    type: "ora-grade-received",
+    title: "You received 8 out of 10 on your assessment: Control plan",
+    body: "Six Sigma · Module 03",
     timestamp: "Yesterday, 9:02 AM",
     unread: false,
     href: "/course/six-sigma/topic/m3-t7",
@@ -285,9 +288,9 @@ export const notifications: NotificationModel[] = [
   },
   {
     id: "n6",
-    type: "syllabus-change",
-    title: "Module 04 syllabus updated",
-    body: "Two readings were re-ordered and one was added.",
+    type: "course-update",
+    title: "New course update in Six Sigma",
+    body: "Module 04: two readings were re-ordered and one was added.",
     timestamp: "Mon, 11:30 AM",
     unread: false,
     href: "/course/six-sigma/topic/m3-t1",

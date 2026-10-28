@@ -97,7 +97,7 @@ function ServicesSkeleton() {
               </div>
             </div>
             <div className="flex gap-2">
-              <SkeletonPill size="button-md">Message your mentor</SkeletonPill>
+              <SkeletonPill size="button-md">Ask your mentor</SkeletonPill>
               <SkeletonPill size="button-md">Your discussions</SkeletonPill>
             </div>
           </div>
@@ -121,7 +121,7 @@ function ServicesSkeleton() {
  * Services (proposal, 17 Oct 2026; reorganised by weight on 23 Oct 2026, Nelson: "too confusing,
  * too much on one level: what matters most must stand out, the rest in the background").
  * 1. Help now, two cards side by side from desktop (stacked below): the mentor — the one
- *    person who answers this learner — with the last message and Message your mentor (Primary);
+ *    person who answers this learner — with the last message and Ask your mentor (Primary, to the course's Mentorship Q&A);
  *    and support — Write to us, the help center, and the learner's open requests with their state.
  * 2. Included with your program: what the learner already has and should use (CV review,
  *    Azure credits, IBM badge), each a card with its state and one action; three across from
@@ -197,9 +197,9 @@ export function ServicesView() {
               </span>
             </p>
             <div className="mt-auto flex flex-col gap-2 sm:flex-row">
-              {/* Nelson, 21 Oct 2026: messaging the mentor is the course's private Mentorship Q&A. */}
+              {/* Asking the mentor is the course's Mentorship Q&A: question posts in the course discussions, public to the course (Open edX has no private messages, 28 Oct 2026). */}
               <ButtonLink href={`${coursePageHref("ai-driven-content-and-brand-communication")}?tab=qa`} size="md" className="max-md:h-11">
-                Message your mentor
+                Ask your mentor
               </ButtonLink>
               <ButtonLink href={discussionHref()} hierarchy="secondary" size="md" className="max-md:h-11">
                 Your discussions

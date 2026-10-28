@@ -10,20 +10,21 @@ import { cn } from "@/lib/utils";
 import { topicLinks } from "@/lib/platform/topic-links";
 import { ShiftDatesAlert } from "./ShiftDatesAlert";
 
-/* The 12px dot of the spine. The DS binds icon/success and icon/error as its fill; the bg
-   roles of the same colours stand in, since an icon token is not a fill here. */
+/* The 12px dot of the spine. The DS binds icon/success and icon/warning as its fill; the bg
+   roles of the same colours stand in, since an icon token is not a fill here. Past due is amber,
+   never red (Nelson, 28 Oct 2026): a missed suggested date can still be shifted. */
 const DOT: Record<CourseDateState, string> = {
   complete: "bg-sko-bg-success",
-  overdue: "bg-sko-bg-error",
+  overdue: "bg-sko-bg-warning",
   upcoming: "bg-sko-bg-muted",
   locked: "bg-sko-bg-muted",
 };
 
 const STATE_LABEL: Record<CourseDateState, string> = {
   complete: "Past",
-  overdue: "Overdue",
+  overdue: "Past due",
   upcoming: "Upcoming",
-  locked: "Locked",
+  locked: "Not yet released",
 };
 
 /** DS `Content divider`, Type=Text: the label (body-medium/Medium, text/subtle) between two 1px rules, 8 apart. */
@@ -41,7 +42,8 @@ function Divider({ children, as: Tag = "p" }: { children: React.ReactNode; as?: 
  * DS `LMS/Platform/Course-Detail/Date-Row`. Desktop and tablet: the date column (104 wide:
  * the date, body-medium/Semibold, over the time, body-small/Regular), the spine (a 2px
  * bg/muted line with a 12px dot ringed in bg/page) and the content — badges (Badge
- * Outline sm), title, description and the link — 12 apart. Padding 12 above; 24 / 20 below.
+ * Outline sm), title, description and the link — 12 apart. As Open edX draws a due date: the
+ * assignment type before the title ("Homework: …") and no description (lib/platform/edx-dates). Padding 12 above; 24 / 20 below.
  * Mobile: the spine first, the date and the time on one line above the badges; 16 below.
  * One markup: a grid whose date cell moves from the content column to its own column.
  */
@@ -76,8 +78,15 @@ function DateRow({ item, href, first }: { item: CourseDate; href: string; first:
             </li>
           ))}
         </ul>
-        <p className="sk-text-body-medium-semibold text-sko-text-default">{item.title}</p>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">{item.description}</p>
+        <p className="sk-text-body-medium-semibold text-sko-text-default">
+          {item.assignmentType && !item.title.toLowerCase().includes(item.assignmentType.toLowerCase())
+            ? `${item.assignmentType}: `
+            : null}
+          {item.title}
+        </p>
+        {item.description ? (
+          <p className="sk-text-body-medium-regular text-sko-text-muted">{item.description}</p>
+        ) : null}
         {item.link ? (
           <ButtonLink
             href={href}

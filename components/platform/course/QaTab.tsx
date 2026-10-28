@@ -202,9 +202,13 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
     <div className="flex flex-col gap-layout-stack">
       <div className={cn("flex flex-col gap-1", explicit && "max-md:sr-only")}>
         <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
-        {/* Nelson, 21 Oct 2026: Q&A is private with the mentor; Discussion is the cohort's forum. */}
+        {/* Nelson, 28 Oct 2026: Open edX has no private messages, so Q&A is the learner's question
+            posts in the course discussions, public to the course and answered by its mentors
+            (LMS-HANDOFF/edx-mentorship-qa.md, option D). It replaces "Private between you and your
+            mentor" (21 Oct 2026). */}
         <p className="sk-text-body-medium-regular text-sko-text-muted">
-          Private between you and your mentor. To talk with the whole cohort, use{" "}
+          Your questions to the course mentors. They are posts in the course discussions, so everyone in the
+          course can read them and the answers. For open conversations, use{" "}
           <Link href="/platform/discussion" className="text-sko-text-primary underline underline-offset-2">
             Discussion
           </Link>
@@ -314,7 +318,11 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                 <h3 id="qa-thread-title" className="sk-text-body-medium-semibold text-sko-text-default md:max-w-[307px]">
                   {current.title}
                 </h3>
-                <p className="sk-text-body-small-regular text-sko-text-subtle md:max-w-[316px]">{tab.mentorLine}</p>
+                <p className="sk-text-body-small-regular text-sko-text-subtle md:max-w-[316px]">
+                  {/* The mentor and the Staff label Open edX shows on a course-team answer; no reply time,
+                      which the platform does not know. */}
+                  {`${tab.mentorLine.split(" · ")[0]} · Staff · question post, visible to the course`}
+                </p>
               </div>
               <Button
                 hierarchy="secondary"
@@ -394,7 +402,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
           setFilter("all");
           setQuery("");
           router.replace(courseDetailHref(course.slug, "qa", thread.id), { scroll: false });
-          showToast("Question posted. Your mentor has been notified.");
+          showToast("Question posted in the course discussions.");
         }}
       />
       <ReportMessageModal

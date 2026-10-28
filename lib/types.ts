@@ -142,14 +142,12 @@ export interface NotePayload {
 
 /* ---- Overlay panel models (Notifications + Saved) ---- */
 
-export type NotificationType =
-  | "live-now"
-  | "live-soon"
-  | "course-update"
-  | "assignment-due"
-  | "discussion-reply"
-  | "peer-review-received"
-  | "syllabus-change";
+/**
+ * Only what Open edX notifies (Nelson, 28 Oct 2026; LMS-HANDOFF/edx-notifications.md): discussion
+ * activity on my posts (responses, comments, endorsements), new posts from the instructor, course
+ * updates and an ORA grade. No live sessions, no deadline reminders, no syllabus changes.
+ */
+export type NotificationType = "discussion-reply" | "instructor-post" | "course-update" | "ora-grade-received";
 
 /** Hybrid Notifications panel tabs (activity category). */
 export type NotificationCategory = "all" | "discussions" | "grading" | "updates";

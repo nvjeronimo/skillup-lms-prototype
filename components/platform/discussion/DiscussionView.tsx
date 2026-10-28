@@ -136,7 +136,7 @@ export function DiscussionSkeleton() {
           <div className="flex flex-col gap-1">
             <Skeleton variant="ghost" text="headline-large-bold">Discussion across your courses.</Skeleton>
             <Skeleton variant="ghost" text="body-medium-regular">
-              Talk with your cohort. For a private question to your mentor, use Mentorship Q&amp;A in the course.
+              Talk with your cohort. To ask the course mentors, use Mentorship Q&amp;A in the course.
             </Skeleton>
           </div>
           <SkeletonPill size="button-md" icon className="md:h-11">New post</SkeletonPill>
@@ -259,7 +259,7 @@ export function DiscussionView() {
             </h1>
             {/* Nelson, 21 Oct 2026: Discussion is the cohort's forum; Mentorship Q&A is private. */}
             <p className="sk-text-body-medium-regular text-sko-text-muted">
-              Talk with your cohort. For a private question to your mentor, use Mentorship Q&amp;A in the course.
+              Talk with your cohort. To ask the course mentors, use Mentorship Q&amp;A in the course.
             </p>
           </div>
           <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => setPosting(true)} className="max-md:h-11">
