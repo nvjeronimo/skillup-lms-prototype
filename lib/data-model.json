@@ -74,7 +74,7 @@
               { "id": "m3-t4", "type": "Practice Assignment", "title": "Practice Quiz: Define and measure", "duration": "6 min approx.", "completed": false },
               { "id": "m3-t4j", "type": "Practice Assignment", "title": "Graded Quiz: control charts", "duration": "10 min approx.", "completed": false, "assignmentType": "Graded quiz" },
               { "id": "m3-t4k", "type": "Practice Assignment", "title": "Final Exam: DMAIC end to end", "duration": "20 min approx.", "completed": false, "assignmentType": "Final exam" },
-              { "id": "m3-t4b", "type": "VILT-Live Session", "title": "Live clinic: applying DMAIC to your own process", "duration": "Thu 24 Jul · 15:00", "completed": false },
+              { "id": "m3-t4b", "type": "VILT-Live Session", "title": "Live clinic: applying DMAIC to your own process", "duration": "Thu 24 Jul · 3:00 PM", "completed": false },
               { "id": "m3-t4c", "type": "VILT-Recording", "title": "Recording: Measurement systems analysis Q&A", "duration": "58 min", "completed": false },
               { "id": "m3-t4d", "type": "Podcast", "title": "In practice: what changes on the shop floor", "duration": "19m 04s", "completed": false },
               { "id": "m3-t4e", "type": "Lab", "title": "Lab: Process capability in Python", "duration": "45 min approx.", "completed": false },
