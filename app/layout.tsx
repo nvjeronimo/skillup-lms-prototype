@@ -3,6 +3,7 @@ import { Figtree, Inter_Tight, Montserrat, Open_Sans, Plus_Jakarta_Sans } from "
 import "./globals.css";
 import { ResponsiveShell } from "@/components/views/ResponsiveShell";
 import { ARRIVAL_INIT_SCRIPT } from "@/lib/arrival/prepaint";
+import { SCOPE_INIT_SCRIPT } from "@/lib/edx-scope";
 
 // SkillUp DS (v2.0): Montserrat is the single family for body + display. Inter
 // (the old UUI default) is retired.
@@ -62,6 +63,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${montserrat.variable} ${interTight.variable} ${plusJakarta.variable} ${figtree.variable} ${openSans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* ?scope=edx: only what Open edX provides (lib/edx-scope). */}
+        <script dangerouslySetInnerHTML={{ __html: SCOPE_INIT_SCRIPT }} />
         {/* First visit of a platform page in this session: hold the skeleton from the first
             paint (motion-matrix §7.9; lib/arrival/prepaint). */}
         <script dangerouslySetInnerHTML={{ __html: ARRIVAL_INIT_SCRIPT }} />

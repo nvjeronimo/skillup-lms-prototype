@@ -1510,3 +1510,11 @@ button {
 [data-reduce-motion] .sk-sparkle-c {
   animation: none;
 }
+
+/* ============================================================================
+   Open edX scope (?scope=edx, lib/edx-scope; Nelson, 28 Oct 2026). What we invented
+   is tagged data-invented="<theme>: <what Open edX lacks>" and disappears.
+   ============================================================================ */
+[data-scope="edx"] [data-invented] {
+  display: none !important;
+}
