@@ -21,9 +21,12 @@ import { cn } from "@/lib/utils";
 /* DS Input field, Size=md with a label (as NoteEditorModal): label body-medium/Medium text/muted,
    the field bg/page, 1px border/default, radius 8, padding 10/14, body-large/Regular, 44 tall.
    Focus: border/primary. Read-only: bg/muted, text/subtle. */
-const FIELD =
-  "sk-text-body-large-regular min-h-11 w-full rounded-control border border-sko-border-default bg-sko-bg-page px-3.5 py-2.5 text-sko-text-default shadow-sm placeholder:text-sko-text-placeholder transition-[border-color,box-shadow] focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
-const READ_ONLY = "bg-sko-bg-muted text-sko-text-subtle shadow-none";
+/* The box without its fill, ink and shadow: cn() does not merge classes, so the read-only field
+   takes its own (it rendered white before; Nelson, 28 Oct 2026, the disabled look of Figma). */
+const FIELD_BOX =
+  "sk-text-body-large-regular min-h-11 w-full rounded-control border border-sko-border-default px-3.5 py-2.5 placeholder:text-sko-text-placeholder transition-[border-color,box-shadow] focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
+const FIELD = cn(FIELD_BOX, "bg-sko-bg-page text-sko-text-default shadow-sm");
+const READ_ONLY = cn(FIELD_BOX, "bg-sko-bg-muted text-sko-text-subtle");
 
 function Field({
   id,
@@ -276,7 +279,7 @@ export function EditProfileView() {
               value={form.username}
               readOnly
               aria-describedby="username-hint"
-              className={cn(FIELD, READ_ONLY)}
+              className={READ_ONLY}
             />
           </Field>
           <Field id="country" label="Country">

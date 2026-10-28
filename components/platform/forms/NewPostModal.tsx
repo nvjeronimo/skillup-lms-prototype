@@ -18,7 +18,7 @@ function topicsOf(slug: string): string[] {
  * so a post starts there: the course (preset to the inbox's course filter), then its topic, then
  * Question or Discussion (a question can get an accepted answer), the title and the post. The
  * Discussions API creates the thread (`type`, `topic_id`, `title`, `raw_body`). Nothing is sent:
- * the post opens at the top of the inbox, Mine and Following, for the session.
+ * the post opens at the top of the inbox and under My posts, for the session.
  */
 export function NewPostModal({
   open,
@@ -69,7 +69,6 @@ export function NewPostModal({
           preview: body.trim(),
           meta: "You · just now",
           replies: 0,
-          following: true,
           unread: 0,
           mine: true,
           messages: [{ id: "m1", from: "learner", author: "You", body: body.trim(), time: "Just now" }],

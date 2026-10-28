@@ -1220,6 +1220,23 @@ button {
   height: 44px;
   transform: translate(-50%, -50%);
 }
+/* A button inside running text (a <p>, as "Plan my week" on the Dashboard) keeps the line's height:
+   min 44 lifted it above the baseline. Its 44 is a band drawn around it, as the Link Button's
+   (Nelson, 28 Oct 2026). */
+[data-large-targets] p > button {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+}
+[data-large-targets] p > button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
 
 /* ============================================================================
    Platform pages: sample-data marks. The pages under /platform are a test build

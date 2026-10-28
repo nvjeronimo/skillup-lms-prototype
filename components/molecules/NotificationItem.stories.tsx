@@ -35,4 +35,4 @@ export const CourseUpdate: Story = { args: { type: "course-update", title: "Sara
 export const DiscussionReply: Story = {};
 export const Read: Story = { args: { unread: false } };
 export const InstructorPost: Story = { args: { type: "instructor-post", title: "Sarah Lee posted in Six Sigma: Office hours recap" } };
-export const OraGrade: Story = { args: { type: "ora-grade-received", title: "You received 8 out of 10 on your assessment: Control plan" } };
+export const OraGrade: Story = { args: { type: "ora-grade-received", title: "Your assessment was graded: Control plan" } };

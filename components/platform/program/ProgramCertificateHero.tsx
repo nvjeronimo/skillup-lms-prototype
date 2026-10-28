@@ -8,6 +8,7 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import type { ProgramCertificateState } from "@/lib/platform/catalog";
 import { coursePlayerHref, programCertificatePageHref } from "@/lib/platform/hrefs";
+import { programPartnersOf } from "@/lib/platform/my-learning";
 import type { CertificateDocumentData, Program } from "@/lib/platform/program";
 import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
@@ -75,8 +76,13 @@ export function ProgramCertificateHero({
   const current =
     courses.find((c) => c.percent > 0 && c.percent < 100) ?? courses.find((c) => c.percent < 100);
   const doc = issued ? certificate.document : previewDocument(program);
-  const partners = [doc.partnerName, ...(doc.morePartners ?? []).map((p) => p.name)].filter(
-    Boolean,
+  // Not earned yet, the line names the program's partners, the logos of its header ("Issued with
+  // Microsoft and IBM", as Figma; Nelson, 28 Oct 2026), not only those of a course certificate.
+  const programPartners = programPartnersOf(program.slug).filter((p) => p !== "SkillUp");
+  const partners = (
+    !issued && programPartners.length
+      ? programPartners
+      : [doc.partnerName, ...(doc.morePartners ?? []).map((p) => p.name)].filter(Boolean)
   ) as string[];
 
   return (

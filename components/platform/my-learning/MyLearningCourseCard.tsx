@@ -24,6 +24,11 @@ export interface MyLearningCourseCardProps {
   context?: "card" | "row";
   /** Called by the action of a course without a page (`course.href` unset). */
   onAction?: () => void;
+  /**
+   * Every action Secondary, Resume too: the Program page, whose header already carries the
+   * page's Primary "Resume course" (Figma 04 · Program Detail; Nelson, 28 Oct 2026).
+   */
+  secondaryAction?: boolean;
   className?: string;
 }
 
@@ -188,6 +193,7 @@ export function MyLearningCourseCard({
   layout,
   context = "card",
   onAction,
+  secondaryAction = false,
   className,
 }: MyLearningCourseCardProps) {
   const inRow = context === "row";
@@ -201,7 +207,7 @@ export function MyLearningCourseCard({
   const nextTitle = "certificate" in course.upNext ? course.upNext.certificate : course.upNext.title;
   // A completed course with a certificate: the grid card also offers the certificate page.
   const certificateHref = "certificate" in course.upNext ? certificatePageHref(course.id) : null;
-  const hierarchy = hierarchyOf(course);
+  const hierarchy: ButtonHierarchy = secondaryAction ? "secondary" : hierarchyOf(course);
   const overlineText = course.progressPct === null ? "Starts with" : overline;
 
   if (layout === "list" || layout === "list-stacked") {
@@ -250,9 +256,10 @@ export function MyLearningCourseCard({
           <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
             {/* DS v1.11 (Nelson, 16 Oct 2026): the overline and the topic type share one row, 16
                 apart, so the title below has the footer's full width (two lines, then cut). */}
+            {/* The overline stays on one line ("Starts with" broke in two at 1280, Nelson 28 Oct 2026). */}
             <div className="flex items-center gap-4">
-              <span className={next ? OVERLINE : OVERLINE_ON_GREEN}>{overlineText}</span>
-              {next ? <TopicTypeBadge type={next.type} /> : null}
+              <span className={cn(next ? OVERLINE : OVERLINE_ON_GREEN, "whitespace-nowrap")}>{overlineText}</span>
+              {next ? <TopicTypeBadge type={next.type} className="shrink-0" /> : null}
             </div>
             <span className="sk-text-body-medium-medium line-clamp-2 w-full text-sko-text-default">{nextTitle}</span>
           </div>

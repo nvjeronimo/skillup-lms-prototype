@@ -91,7 +91,8 @@ export const dashboardGlance: { title: string; stats: DashboardStat[] } = {
       trend: { label: "0", dir: "flat", spoken: "the same as 30 days ago" },
     },
     {
-      label: "Completed",
+      // "Courses completed", as the Figma Dashboard (Nelson, 28 Oct 2026): it counts courses only.
+      label: "Courses completed",
       value: String(coursesCompleted),
       detail: `of ${enrolled} enrolled`,
       tone: "success",

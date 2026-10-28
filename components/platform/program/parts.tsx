@@ -7,9 +7,21 @@ import { cn } from "@/lib/utils";
  * (headline-small/Bold, text/default) and its lead (body-large/Regular, text/muted), gap 6.
  */
 export function SectionIntro({ title, lead }: { title: string; lead?: string }) {
+  // DS Section-Intro on the Course page: "What you'll *learn*", the last word in Bold Italic
+  // (Figma 03 · Course Detail; Nelson, 28 Oct 2026). Other titles stay plain.
+  const learn = /^(What you'll )(learn)$/.exec(title);
   return (
     <div className="flex flex-col gap-1.5">
-      <h2 className="sk-text-headline-small-bold text-sko-text-default">{title}</h2>
+      <h2 className="sk-text-headline-small-bold text-sko-text-default">
+        {learn ? (
+          <>
+            {learn[1]}
+            <em className="italic">{learn[2]}</em>
+          </>
+        ) : (
+          title
+        )}
+      </h2>
       {lead ? <p className="sk-text-body-large-regular text-sko-text-muted">{lead}</p> : null}
     </div>
   );

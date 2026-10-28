@@ -234,7 +234,8 @@ export function notificationCategory(
 /* ---- Mock notifications for the Notifications panel ----
    The types Open edX sends, in its own words (Teak/Ulmo notifications): Discussions (a response,
    a comment or an endorsement on my post; a new post from the instructor), Updates (course
-   updates) and Grading (an ORA grade). */
+   updates) and Grading (an ORA grade). The ORA grade says no score in its text: the learner
+   opens the assessment to see it (Nelson, 28 Oct 2026). */
 export const notifications: NotificationModel[] = [
   {
     id: "n1",
@@ -279,7 +280,7 @@ export const notifications: NotificationModel[] = [
   {
     id: "n5",
     type: "ora-grade-received",
-    title: "You received 8 out of 10 on your assessment: Control plan",
+    title: "Your assessment was graded: Control plan",
     body: "Six Sigma · Module 03",
     timestamp: "Yesterday, 9:02 AM",
     unread: false,
