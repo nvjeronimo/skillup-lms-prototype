@@ -3152,6 +3152,21 @@
             "Tablet": "Spacing/4xl",
             "Mobile": "Spacing/5xl"
           }
+        },
+        {
+          "name": "Container/text-max-width",
+          "type": "FLOAT",
+          "web": "var(--sk-container-text-max-width)",
+          "values": {
+            "Desktop": 1200,
+            "Tablet": 1200,
+            "Mobile": 1200
+          },
+          "aliases": {
+            "Desktop": "Container/content-max-width",
+            "Tablet": "Container/content-max-width",
+            "Mobile": "Container/content-max-width"
+          }
         }
       ]
     },
