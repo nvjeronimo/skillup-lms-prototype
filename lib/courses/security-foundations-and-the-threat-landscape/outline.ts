@@ -640,7 +640,7 @@ export const outline: Course = {
             },
             {
               id: "sec1-m4-t8",
-              type: "Peer-graded",
+              type: "Project",
               title: "Acceptable use policy draft",
               duration: "45 min approx.",
               completed: false,

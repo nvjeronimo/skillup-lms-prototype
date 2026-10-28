@@ -4,7 +4,7 @@ import { activities } from "./activities";
 /**
  * Topic bodies of "Capstone: Securing a Small Organisation": the brief and six more
  * readings, the practice quiz on the brief, the checkpoint quiz, the three milestones, the
- * peer review of the designs and the final project with its rubric. The transcripts of the
+ * reading on how Milestone 2 is graded and the final project with its rubric. The transcripts of the
  * five videos that have one are in the outline. Tidewater Veterinary Group is a practice
  * made up for the course.
  */
@@ -309,7 +309,7 @@ export const content: CourseContent = {
       ],
     },
     "sec5-m4-t1": {
-      lede: "You have three milestones, written weeks apart and reviewed by different peers. The final project asks for one plan. Assembling it is editing work: making the parts agree with each other, and then arranging the actions over twelve months that the practice can actually get through.",
+      lede: "You have three milestones, written weeks apart and each graded by your mentor. The final project asks for one plan. Assembling it is editing work: making the parts agree with each other, and then arranging the actions over twelve months that the practice can actually get through.",
       sections: [
         {
           heading: "One document, five parts",
@@ -322,7 +322,7 @@ export const content: CourseContent = {
           heading: "Check that the parts agree",
           paragraphs: [
             "Read the plan once in each direction. Forwards: does every one of your top risks have at least one control, and a way to detect it? Backwards: does every action in the roadmap reduce a risk that you recorded? An action that traces to nothing is either unnecessary or a sign that the register is missing a row.",
-            "Apply the feedback from your two peer reviews, and note where you chose not to. Then look for contradictions that arose between milestones, such as an access matrix that names a role your playbook never mentions, or a backup schedule that cannot meet the recovery objective.",
+            "Apply your mentor's comments on the milestones, and note where you chose not to. Then look for contradictions that arose between milestones, such as an access matrix that names a role your playbook never mentions, or a backup schedule that cannot meet the recovery objective.",
           ],
         },
         {
@@ -551,7 +551,7 @@ export const content: CourseContent = {
       dueLabel: "Due 9 Mar 2027",
       requiredReviews: 2,
       acceptedTypes: [".pdf", ".docx"],
-      overallCommentPrompt: "Which recommendation in your peer's plan would reduce the most risk for the least effort?",
+      overallCommentPrompt: "Which recommendation in the plan would reduce the most risk for the least effort?",
       criteria: [
         {
           id: "c1",
@@ -603,60 +603,6 @@ export const content: CourseContent = {
           options: [
             { points: 4, label: "One page, in plain language, stating the decisions needed" },
             { points: 2, label: "Accurate, but written for specialists" },
-            { points: 0, label: "Not attempted" },
-          ],
-        },
-      ],
-    },
-    "sec5-m2-t7": {
-      brief:
-        "Review the network and access designs of two peers. You are reading as the practice owner's adviser: could Tidewater approve this design and run it? Score each design against the rubric, and write comments that the author can act on before the final project.",
-      deliverable:
-        "First upload the design you submitted for Milestone 2, as a PDF or DOCX, so that it can be shared with your reviewers. Then complete two reviews: a score for each criterion and a comment of at least three sentences for each design.",
-      dueLabel: "Due 26 Feb 2027",
-      requiredReviews: 2,
-      acceptedTypes: [".pdf", ".docx"],
-      overallCommentPrompt: "Which single change would most improve your peer's design before the final project?",
-      criteria: [
-        {
-          id: "c1",
-          label: "Task 1 · Check the network zones",
-          maxPoints: 6,
-          options: [
-            { points: 6, label: "Zones separate guests, payments and clinical systems, and the allowed flows are stated" },
-            { points: 4, label: "Zones are sensible; some flows between them are not stated" },
-            { points: 2, label: "A diagram is present, but the network is still effectively flat" },
-            { points: 0, label: "Not attempted" },
-          ],
-        },
-        {
-          id: "c2",
-          label: "Task 2 · Check the access model",
-          maxPoints: 6,
-          options: [
-            { points: 6, label: "Roles follow real jobs, and the contractor's administrator access is contained" },
-            { points: 4, label: "Roles are clear; privileged access is not addressed" },
-            { points: 2, label: "Access is listed person by person, without roles" },
-            { points: 0, label: "Not attempted" },
-          ],
-        },
-        {
-          id: "c3",
-          label: "Task 3 · Trace the design to the risks",
-          maxPoints: 4,
-          options: [
-            { points: 4, label: "Every design choice names the risk it answers" },
-            { points: 2, label: "Some choices are traced; others stand alone" },
-            { points: 0, label: "No reference to the risk register" },
-          ],
-        },
-        {
-          id: "c4",
-          label: "Task 4 · Judge whether the practice could run it",
-          maxPoints: 4,
-          options: [
-            { points: 4, label: "The owner could follow it, and the staff in the case file could operate it" },
-            { points: 2, label: "A sound design that needs skills or hours the practice does not have" },
             { points: 0, label: "Not attempted" },
           ],
         },

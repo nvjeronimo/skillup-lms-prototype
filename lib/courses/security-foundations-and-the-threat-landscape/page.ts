@@ -128,7 +128,7 @@ export const page: CourseDetail = {
       rows: [
         { type: "Graded Quiz", weight: "40%", grade: "0%", weighted: "0%" },
         { type: "Assignment", weight: "30%", grade: "0%", weighted: "0%" },
-        { type: "Peer Assessment", weight: "30%", grade: "0%", weighted: "0%" },
+        { type: "Project", weight: "30%", grade: "0%", weighted: "0%" },
       ],
       sections: [
         {
@@ -231,7 +231,7 @@ export const page: CourseDetail = {
         date: "24 Nov 2026",
         time: "11:59 PM · your time",
         state: "locked",
-        badges: [{ label: "Due date", color: GRAY }, { label: "Peer assessment", color: GRAY }, { label: "Locked", color: GRAY }],
+        badges: [{ label: "Due date", color: GRAY }, { label: "Project", color: GRAY }, { label: "Locked", color: GRAY }],
         title: "Module 4 · Acceptable use policy draft",
         description: "Unlocks when Module 3 is complete.",
       },

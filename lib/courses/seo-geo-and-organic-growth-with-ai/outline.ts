@@ -247,7 +247,7 @@ export const outline: Course = {
             { id: "seo-m4-t1", type: "Reading", title: "Final project brief: an organic growth plan", duration: "15 min read approx.", completed: false, locked: true },
             { id: "seo-m4-t2", type: "Video", title: "Planning your organic growth plan", duration: "14 min", completed: false, locked: true },
             { id: "seo-m4-t3", type: "Project", title: "Final Project: Organic growth plan", duration: "2 h approx.", completed: false, locked: true },
-            { id: "seo-m4-t4", type: "Peer Review", title: "Review two organic growth plans", duration: "20 min approx.", completed: false, locked: true },
+            { id: "seo-m4-t4", type: "Reading", title: "After you submit: how your mentor grades the organic growth plan", duration: "20 min read approx.", completed: false, locked: true },
           ],
         },
         {

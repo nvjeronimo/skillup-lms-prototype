@@ -290,7 +290,7 @@ export const outline: Course = {
             { id: "paid-m4-t1", type: "Reading", title: "Final project brief: an integrated campaign plan", duration: "15 min read approx.", completed: false, locked: true },
             { id: "paid-m4-t2", type: "Video", title: "Planning your integrated campaign plan", duration: "14 min", completed: false, locked: true },
             { id: "paid-m4-t3", type: "Project", title: "Final Project: Integrated campaign plan", duration: "2 h approx.", completed: false, locked: true },
-            { id: "paid-m4-t4", type: "Peer Review", title: "Review two campaign plans", duration: "20 min approx.", completed: false, locked: true },
+            { id: "paid-m4-t4", type: "Reading", title: "After you submit: how your mentor grades the campaign plan", duration: "20 min read approx.", completed: false, locked: true },
           ],
         },
         {

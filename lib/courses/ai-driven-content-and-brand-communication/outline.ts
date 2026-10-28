@@ -39,7 +39,7 @@ export const outline: Course = {
                 { id: "acb-m1-t1-ln2", ts: "0:16", text: "The order matters. We start with the brand and bring in the tools second. An assistant given no direction writes fluent copy that could belong to anyone." },
                 { id: "acb-m1-t1-ln3", ts: "0:30", text: "Module 1 covers brand strategy and voice. You define what the brand stands for and how it speaks, and you write that down as a system a person or a tool can follow." },
                 { id: "acb-m1-t1-ln4", ts: "0:47", text: "Module 2 puts the voice to work on copy: briefs, prompts, long and short formats, audience segments and editing." },
-                { id: "acb-m1-t1-ln5", ts: "1:01", text: "Module 3 does the same for visual content: image prompts, brand consistency, rights and accessibility. Module 4 is the final project, a brand content kit reviewed by two peers." },
+                { id: "acb-m1-t1-ln5", ts: "1:01", text: "Module 3 does the same for visual content: image prompts, brand consistency, rights and accessibility. Module 4 is the final project, a brand content kit graded by your mentor." },
                 { id: "acb-m1-t1-ln6", ts: "1:19", text: "Along the way there are two graded assignments, two graded quizzes and a final assessment." },
                 { id: "acb-m1-t1-ln7", ts: "1:29", text: "We use one case study throughout: Brightwell Refill, a fictional company that sells refillable household cleaning products by subscription. You can work on it, or on a brand you know." },
                 { id: "acb-m1-t1-ln8", ts: "1:46", text: "You can follow the course with any general-purpose AI assistant. One rule applies from start to finish: the tool drafts, and you answer for what is published." },
@@ -261,7 +261,7 @@ export const outline: Course = {
             { id: "acb-m4-t1", type: "Reading", title: "Final project brief: a brand content kit", duration: "15 min read approx.", completed: false, locked: true },
             { id: "acb-m4-t2", type: "Video", title: "Planning your content kit", duration: "14 min", completed: false, locked: true },
             { id: "acb-m4-t3", type: "Project", title: "Final Project: Brand content kit", duration: "2 h approx.", completed: false, locked: true },
-            { id: "acb-m4-t4", type: "Peer Review", title: "Review two content kits", duration: "20 min approx.", completed: false, locked: true },
+            { id: "acb-m4-t4", type: "Reading", title: "After you submit: how your mentor grades the content kit", duration: "20 min read approx.", completed: false, locked: true },
           ],
         },
         {

@@ -266,7 +266,7 @@ export const page: CourseDetail = {
           { label: "Locked", color: GRAY },
         ],
         title: "Module 5 · Capstone Project: Pricing and retention review",
-        description: "Unlocks when Module 4 is complete. You then review the notebooks of two peers.",
+        description: "Unlocks when Module 4 is complete. Your mentor grades it against the rubric.",
       },
       {
         id: "final-assessment",

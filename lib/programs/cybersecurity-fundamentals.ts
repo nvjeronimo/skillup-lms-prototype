@@ -126,9 +126,9 @@ const program: Program = {
       detail: "25 topics",
       modules: [
         { number: 1, title: "Module 1 · The Brief and the Assessment", complete: false, topics: "7 topics", duration: "2h 51m" },
-        { number: 2, title: "Module 2 · Designing the Controls", complete: false, topics: "7 topics", duration: "3h 32m" },
+        { number: 2, title: "Module 2 · Designing the Controls", complete: false, topics: "7 topics", duration: "3h 17m" },
         { number: 3, title: "Module 3 · Detect, Respond, Recover", complete: false, topics: "6 topics", duration: "2h 47m" },
-        { number: 4, title: "Module 4 · Final Submission and Review", complete: false, topics: "5 topics", duration: "3h 08m" },
+        { number: 4, title: "Module 4 · Final Submission and Review", complete: false, topics: "5 topics", duration: "2h 43m" },
       ],
     }),
   ],
@@ -193,7 +193,7 @@ const program: Program = {
       id: "faq-7",
       title: "How is my work assessed?",
       body: [
-        "Courses 1 to 4 each have graded quizzes, one written assignment and one peer assessment. The capstone has three milestones, a checkpoint quiz, a final project and two rounds of peer review.",
+        "Courses 1 to 4 each have graded quizzes, one written assignment and one project. The capstone has three milestones, a checkpoint quiz and a final project, all graded by a mentor.",
         "You need a weighted grade of 70% to pass a course. Practice quizzes and activities do not count towards the grade.",
       ],
     },
@@ -243,7 +243,7 @@ const program: Program = {
         "Course 2, Network Security and Defense: how networks carry data; segmentation and trust zones; firewalls, intrusion detection and network logs; TLS, VPNs, email authentication and Wi-Fi.",
         "Course 3, Identity, Access and Cloud Security: authentication and phishing-resistant sign-in; least privilege and access reviews; the shared responsibility model; encryption, keys and backups.",
         "Course 4, Security Operations and Incident Response: log sources and the SIEM; detection and triage; containment, eradication and recovery; evidence, communication and the post-incident review.",
-        "Course 5, Capstone: a complete security plan for a small organization, built in three milestones and reviewed by peers.",
+        "Course 5, Capstone: a complete security plan for a small organization, built in three milestones and graded by a mentor.",
       ],
     },
     {
@@ -280,7 +280,7 @@ const program: Program = {
       id: "about-7",
       title: "Mentoring and Feedback",
       body: [
-        "Every course has a mentor in its Mentorship Q&A. Written assignments are graded against a published rubric, and peer assessments give you feedback from another learner as well as practice in reviewing security work.",
+        "Every course has a mentor in its Mentorship Q&A. Assignments and projects are graded by a mentor against a published rubric, with written feedback on each criterion.",
       ],
     },
     {
@@ -315,7 +315,7 @@ const program: Program = {
   ],
   included: [
     "60 videos",
-    "55 readings",
+    "57 readings",
     "14 activities",
     "2 hands-on labs",
     "1 podcast",
@@ -323,9 +323,8 @@ const program: Program = {
     "17 practice quizzes",
     "17 graded quizzes",
     "4 graded assignments",
-    "4 peer assessments",
+    "4 projects",
     "3 capstone milestones",
-    "2 peer reviews",
     "1 capstone project",
   ],
   instructors: [

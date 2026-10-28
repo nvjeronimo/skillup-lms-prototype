@@ -41,7 +41,7 @@ export const outline: Course = {
                 { id: "smec-m1-t1-ln3", ts: "0:37", text: "There are five modules. The first two cover social media: strategy and platforms, then content, community and creators." },
                 { id: "smec-m1-t1-ln4", ts: "0:52", text: "Modules 3 and 4 cover ecommerce: selling inside social platforms, the storefront itself, and then conversion, retention and measurement." },
                 { id: "smec-m1-t1-ln5", ts: "1:08", text: "You will use an AI assistant throughout: to audit a profile, to draft a week of posts, to rewrite a product page. Each time, you write the brief and you check the result." },
-                { id: "smec-m1-t1-ln6", ts: "1:26", text: "Four assignments count towards your grade, one per module. In Module 5 you bring them together in a launch plan for one product, which two peers review." },
+                { id: "smec-m1-t1-ln6", ts: "1:26", text: "Four assignments count towards your grade, one per module. In Module 5 you bring them together in a launch plan for one product, which your mentor grades." },
                 { id: "smec-m1-t1-ln7", ts: "1:44", text: "Pick a business to work on now: your own, your employer's, or the case-study shop in Handouts. You will use the same one in every assignment." },
                 { id: "smec-m1-t1-ln8", ts: "2:01", text: "Let's start with the question most teams skip: what is social media for, in this business?" },
               ],
@@ -272,7 +272,7 @@ export const outline: Course = {
             { id: "smec-m5-t2", type: "Video", title: "Planning a launch: channels, calendar and budget", duration: "12 min", completed: false, locked: true },
             { id: "smec-m5-t3", type: "Activity", title: "Draft the launch timeline", duration: "15 min approx.", completed: false, locked: true },
             { id: "smec-m5-t4", type: "Project", title: "Final Project: Social commerce launch plan", duration: "90 min approx.", completed: false, locked: true },
-            { id: "smec-m5-t5", type: "Peer Review", title: "Review two launch plans", duration: "20 min approx.", completed: false, locked: true },
+            { id: "smec-m5-t5", type: "Reading", title: "After you submit: how your mentor grades the launch plan", duration: "20 min read approx.", completed: false, locked: true },
           ],
         },
         {

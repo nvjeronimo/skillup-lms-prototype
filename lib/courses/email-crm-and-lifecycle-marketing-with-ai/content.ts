@@ -1,7 +1,7 @@
 import type { CourseContent, OraContent } from "@/lib/courses/kit";
 import { activities } from "./activities";
 
-/** The final project, as the Project topic and the Peer Review topic after it both show it. */
+/** The final project, as the Project topic shows it. */
 const FINAL_PROJECT: OraContent = {
   brief:
     "Design the lifecycle email plan for one customer journey of a business you know, or of the case-study shop. Start from the lifecycle map of Assignment 02. For each stage, name the segment, the flow that serves it, what triggers the flow and what ends it. Write two of the emails in full.",
@@ -10,7 +10,7 @@ const FINAL_PROJECT: OraContent = {
   dueLabel: "Due 2 May 2027",
   requiredReviews: 2,
   acceptedTypes: [".pdf", ".docx"],
-  overallCommentPrompt: "Which email in your peer's plan would you most like to receive, and what makes it work?",
+  overallCommentPrompt: "Which email in the plan would you most like to receive, and what makes it work?",
   criteria: [
     {
       id: "c1",
@@ -573,7 +573,6 @@ export const content: CourseContent = {
   },
   ora: {
     "crm-m3-t7": FINAL_PROJECT,
-    "crm-m3-t8": FINAL_PROJECT,
   },
   activities,
 };

@@ -48,13 +48,13 @@ export const page: CourseDetail = {
   },
   intro: {
     title: "What you'll learn",
-    lead: "Four modules, one client. You assess a fictional veterinary practice, design its controls, plan how it detects and responds to incidents, and deliver a security plan its owner can act on. Two rounds of peer review are built in.",
+    lead: "Four modules, one client. You assess a fictional veterinary practice, design its controls, plan how it detects and responds to incidents, and deliver a security plan its owner can act on. Your mentor grades each milestone and the final plan against a published rubric.",
   },
   modules: modulesFromOutline(outline, [
     { duration: "2h 51m", defaultOpen: true },
-    { duration: "3h 32m" },
+    { duration: "3h 17m" },
     { duration: "2h 47m" },
-    { duration: "3h 08m", lockReason: "Complete “Module 3 · Detect, Respond, Recover” to unlock" },
+    { duration: "2h 43m", lockReason: "Complete “Module 3 · Detect, Respond, Recover” to unlock" },
   ]),
   mentor: SIX_SIGMA.mentor,
   team: {
@@ -79,7 +79,7 @@ export const page: CourseDetail = {
       "Case file: Tidewater Veterinary Group (PDF)",
       "Milestone templates: inventory, register and design (XLSX)",
       "Security plan outline (DOCX)",
-      "Peer review guide (PDF)",
+      "Grading rubric (PDF)",
     ],
   },
   upcomingDates: {
@@ -128,8 +128,7 @@ export const page: CourseDetail = {
       rows: [
         { type: "Milestone", weight: "45%", grade: "0%", weighted: "0%" },
         { type: "Checkpoint Quiz", weight: "5%", grade: "0%", weighted: "0%" },
-        { type: "Peer Review", weight: "10%", grade: "0%", weighted: "0%" },
-        { type: "Final Project", weight: "40%", grade: "0%", weighted: "0%" },
+        { type: "Final Project", weight: "50%", grade: "0%", weighted: "0%" },
       ],
       sections: [
         {
@@ -140,7 +139,6 @@ export const page: CourseDetail = {
           title: "Module 2 · Designing the Controls",
           items: [
             { title: "Milestone 2 · Network and access design", score: "0/30 · 0%" },
-            { title: "Peer review: two control designs", score: "0/10 · 0%" },
           ],
         },
         {
@@ -154,7 +152,6 @@ export const page: CourseDetail = {
           title: "Module 4 · Final Submission and Review",
           items: [
             { title: "Final Project: Security plan for Tidewater Veterinary Group", score: "0/40 · 0%" },
-            { title: "Peer review: two final plans", score: "0/10 · 0%" },
           ],
         },
       ],
@@ -213,16 +210,6 @@ export const page: CourseDetail = {
         description: "Submit the zone diagram, the flow table and the access matrix as one PDF or DOCX.",
       },
       {
-        id: "peer-review-two-control-designs",
-        iso: "2027-02-26T23:59",
-        date: "26 Feb 2027",
-        time: "11:59 PM · your time",
-        state: "upcoming",
-        badges: [{ label: "Due date", color: GRAY }, { label: "Peer review", color: GRAY }, { label: "Upcoming", color: GRAY }],
-        title: "Module 2 · Peer review: two control designs",
-        description: "Review the designs of two peers against the rubric in the peer review guide.",
-      },
-      {
         id: "milestone-3-monitoring-and-incident-response-plan",
         iso: "2027-03-02T23:59",
         date: "02 Mar 2027",
@@ -250,16 +237,6 @@ export const page: CourseDetail = {
         state: "locked",
         badges: [{ label: "Due date", color: GRAY }, { label: "Final project", color: GRAY }, { label: "Locked", color: GRAY }],
         title: "Module 4 · Final Project: Security plan for Tidewater Veterinary Group",
-        description: "Unlocks when Module 3 is complete.",
-      },
-      {
-        id: "peer-review-two-final-plans",
-        iso: "2027-03-12T23:59",
-        date: "12 Mar 2027",
-        time: "11:59 PM · your time",
-        state: "locked",
-        badges: [{ label: "Due date", color: GRAY }, { label: "Peer review", color: GRAY }, { label: "Locked", color: GRAY }],
-        title: "Module 4 · Peer review: two final plans",
         description: "Unlocks when Module 3 is complete.",
       },
       {
@@ -326,8 +303,8 @@ export const page: CourseDetail = {
         unread: true,
       },
       {
-        id: "peer-review-grade",
-        title: "How do the two peer reviews count towards the grade?",
+        id: "who-grades",
+        title: "Who grades the milestones and the final plan?",
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,

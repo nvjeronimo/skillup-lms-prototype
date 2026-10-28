@@ -8,7 +8,7 @@ import { SAMPLE_TODAY, relativeColor, relativeLabel, todayLabel } from "@/lib/sa
  * Marketing program, not started. Its figures follow its row on the Program page
  * (lib/programs/ai-driven-digital-marketing): 4 modules, 11 topics, about 6 hours, no
  * progress, next up "Course Introduction". The grade is the project: three milestones, the
- * final submission and the peer reviews given. Nothing is done, graded or overdue. Today is
+ * final submission, graded by a mentor. Nothing is done, graded or overdue. Today is
  * 24 Oct 2026; the due dates are those of the suggested pace of the program, which reaches
  * the capstone on 5 May 2027 (sample data: the program file gives only its start and end).
  */
@@ -48,11 +48,11 @@ export const page: CourseDetail = {
 
   update: {
     title: "Course update",
-    body: "The capstone is one project built in three milestones. Before you start, collect the work you kept from courses 1 to 6: most of it goes into the project. The rubric used for every milestone and for the peer review is in Handouts.",
+    body: "The capstone is one project built in three milestones. Before you start, collect the work you kept from courses 1 to 6: most of it goes into the project. The rubric your mentor uses for every milestone and for the final submission is in Handouts.",
   },
   intro: {
     title: "What you'll build",
-    lead: "An AI-first marketing system for one business: the strategy, the channels, the content, the customer lifecycle and the measurement, with a log of where AI did the work and where you checked it. Four modules: the brief, two stages of building, and the final submission with a peer review.",
+    lead: "An AI-first marketing system for one business: the strategy, the channels, the content, the customer lifecycle and the measurement, with a log of where AI did the work and where you checked it. Four modules: the brief, two stages of building, and the final submission, graded by your mentor.",
   },
   modules: modulesFromOutline(outline, [
     { duration: "51m", defaultOpen: true },
@@ -135,12 +135,11 @@ export const page: CourseDetail = {
       passPercent: 70,
       passLabel: "Pass 70%",
       columns: SIX_SIGMA.progressTab.grade.columns,
-      // Three milestones at 15% each, the final submission and the two reviews the learner
-      // gives. The practice quiz is not graded. Nothing is submitted yet.
+      // Three milestones at 15% each and the final submission, all graded by a mentor (peer and
+      // self assessment are off on SkillUp courses). The practice quiz is not graded.
       rows: [
         { type: "Milestone", weight: "45%", grade: "0%", weighted: "0%" },
-        { type: "Final Submission", weight: "45%", grade: "0%", weighted: "0%" },
-        { type: "Peer Review", weight: "10%", grade: "0%", weighted: "0%" },
+        { type: "Final Submission", weight: "55%", grade: "0%", weighted: "0%" },
       ],
       sections: [
         {
@@ -155,11 +154,8 @@ export const page: CourseDetail = {
           items: [{ title: "Milestone 3 · Measurement plan and AI workflow log", score: "0/100 · 0%" }],
         },
         {
-          title: "Module 4 · Final Submission & Peer Review",
-          items: [
-            { title: "Final Submission: AI-first marketing system", score: "0/20 · 0%" },
-            { title: "Review two capstone projects", score: "0/2 · 0%" },
-          ],
+          title: "Module 4 · Final Submission & Grading",
+          items: [{ title: "Final Submission: AI-first marketing system", score: "0/20 · 0%" }],
         },
       ],
     },
@@ -254,20 +250,6 @@ export const page: CourseDetail = {
         description: "Unlocks when Module 3 is complete. The three milestones, revised and joined into one document.",
       },
       {
-        id: "peer-reviews",
-        iso: "2027-06-01T23:59",
-        date: "01 Jun 2027",
-        time: "11:59 PM · your time",
-        state: "locked",
-        badges: [
-          { label: "Due date", color: GRAY },
-          { label: "Peer review", color: GRAY },
-          { label: "Locked", color: GRAY },
-        ],
-        title: "Module 4 · Review two capstone projects",
-        description: "Opens when you have submitted your own project.",
-      },
-      {
         id: "certificate-available",
         iso: "2027-06-02T09:00",
         date: "02 Jun 2027",
@@ -316,7 +298,7 @@ export const page: CourseDetail = {
             author: "Marcus Lee",
             label: "Staff",
             accepted: true,
-            body: "A real business usually makes a stronger project, and you may use your employer if they agree. Two peers will read your submission, so leave out real customer data, budgets and anything not already public. Replace figures with rounded or sample numbers and say that you did.",
+            body: "A real business usually makes a stronger project, and you may use your employer if they agree. Your mentor will read your submission, so leave out real customer data, budgets and anything not already public. Replace figures with rounded or sample numbers and say that you did.",
             time: "3 days ago",
           },
           {

@@ -211,7 +211,7 @@ export const outline: Course = {
           id: "bap-m5-l2",
           label: "Review and wrap-up",
           topics: [
-            { id: "bap-m5-t5", type: "Peer Review", title: "Review two capstone notebooks", duration: "25 min approx.", completed: false, locked: true },
+            { id: "bap-m5-t5", type: "Reading", title: "After you submit: how your mentor grades the capstone notebook", duration: "25 min read approx.", completed: false, locked: true },
             { id: "bap-m5-t6", type: "Quiz", title: "Final Assessment", duration: "20 min approx.", completed: false, locked: true },
             { id: "bap-m5-t7", type: "Video", title: "Where to go next: SQL, dashboards and causal inference", duration: "12 min", completed: false, locked: true },
             { id: "bap-m5-t8", type: "Video", title: "Course wrap-up and next steps", duration: "5 min", completed: false, locked: true },

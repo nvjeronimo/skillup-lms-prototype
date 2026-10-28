@@ -72,7 +72,7 @@ export const outline: Course = {
                 {
                   id: "sec2-m1-t1-ln7",
                   ts: "1:50",
-                  text: "You will design a segmentation plan for a two-site office and review a peer's hardening checklist. No lab equipment is needed: every exercise uses diagrams and sample data.",
+                  text: "You will design a segmentation plan for a two-site office and a hardening review that your mentor grades. No lab equipment is needed: every exercise uses diagrams and sample data.",
                 },
               ],
             },
@@ -512,7 +512,7 @@ export const outline: Course = {
             },
             {
               id: "sec2-m4-t8",
-              type: "Peer-graded",
+              type: "Project",
               title: "Network hardening review",
               duration: "45 min approx.",
               completed: false,

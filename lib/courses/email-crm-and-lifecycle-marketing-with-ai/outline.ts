@@ -221,7 +221,7 @@ export const outline: Course = {
           topics: [
             { id: "crm-m3-t6", type: "Reading", title: "Final project brief: a lifecycle email plan", duration: "12 min read approx.", completed: false, locked: true },
             { id: "crm-m3-t7", type: "Project", title: "Final Project: Lifecycle email plan", duration: "90 min approx.", completed: false, locked: true },
-            { id: "crm-m3-t8", type: "Peer Review", title: "Review two lifecycle email plans", duration: "25 min approx.", completed: false, locked: true },
+            { id: "crm-m3-t8", type: "Reading", title: "After you submit: how your mentor grades the lifecycle email plan", duration: "25 min read approx.", completed: false, locked: true },
             { id: "crm-m3-t9", type: "Quiz", title: "Final Assessment", duration: "20 min approx.", completed: false, locked: true },
             { id: "crm-m3-t10", type: "Video", title: "Course wrap-up and next steps", duration: "5 min", completed: false, locked: true },
           ],

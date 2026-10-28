@@ -347,7 +347,7 @@ export const page: CourseDetail = {
             from: "mentor",
             author: "Marcus Lee",
             label: "Staff",
-            body: "Use the sample list for anything you submit. Real contacts are personal data, and a peer will read your final project. You can apply the same steps to your own list in private.",
+            body: "Use the sample list for anything you submit. Real contacts are personal data, and your mentor will read your final project. You can apply the same steps to your own list in private.",
             time: "yesterday",
           },
         ],

@@ -232,7 +232,7 @@ export const page: CourseDetail = {
           { label: "Complete", color: "success" },
         ],
         title: "Module 4 · Final Project: Product health report",
-        description: "Submitted 2 days early. Two peers reviewed it: 18/20.",
+        description: "Submitted 2 days early. Graded by your mentor: 18/20.",
         link: "Open the assignment",
       },
       {
