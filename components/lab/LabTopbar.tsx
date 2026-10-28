@@ -52,7 +52,7 @@ export function LabTopbar() {
   return (
     <header className="flex min-h-[60px] flex-wrap items-center gap-x-4 gap-y-2 border-b border-sko-border-subtle bg-sko-bg-page px-4 py-2 md:px-6">
       <Link href="/lab" className="inline-flex min-h-[44px] items-center rounded-control" aria-label="SkillUp — lab home">
-        <SkillUpLogo className="h-7" />
+        <SkillUpLogo className="h-5" />
       </Link>
       <nav aria-label="Primary" className="flex flex-1 items-center gap-1">
         {NAV.map((item) => {

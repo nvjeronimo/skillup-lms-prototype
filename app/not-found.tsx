@@ -16,7 +16,7 @@ export default function NotFound() {
       tabIndex={-1}
       className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 bg-sko-bg-faint px-4 py-12 text-center outline-none"
     >
-      <SkillUpLogo className="h-8" />
+      <SkillUpLogo className="h-6" />
       <div className="flex max-w-[480px] flex-col gap-2">
         <h1 className="sk-text-headline-small-semibold text-sko-text-default">This page is not here</h1>
         <p className="sk-text-body-large-regular text-sko-text-muted">
