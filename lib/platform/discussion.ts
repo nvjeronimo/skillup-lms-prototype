@@ -28,7 +28,6 @@ export interface DiscussionThread {
   replies: number;
   /** A question with an endorsed answer. */
   answered?: boolean;
-  following?: boolean;
   /** Unread comments since the learner last opened it. */
   unread: number;
   /** Written by the learner. */
@@ -48,7 +47,6 @@ export const discussionThreads: DiscussionThread[] = [
     meta: "You · 1 day ago",
     replies: 3,
     answered: true,
-    following: true,
     unread: 2,
     mine: true,
     messages: [
@@ -83,7 +81,6 @@ export const discussionThreads: DiscussionThread[] = [
     preview: "We tried a Slack bot, then a shared doc. Neither stuck.",
     meta: "Jordan Lee · yesterday",
     replies: 12,
-    following: true,
     unread: 4,
     messages: [
       { id: "m1", from: "mentor", author: "Jordan Lee", label: "Learner", body: "We tried a Slack bot, then a shared doc. Neither stuck past week two. What works for your team?", time: "Fri 6:05 PM" },
@@ -126,10 +123,10 @@ export const discussionThreads: DiscussionThread[] = [
   },
 ];
 
+// No Following filter: Discussion has no follow (Kirti removed it; Nelson, 28 Oct 2026).
 export const discussionFilters = [
   { id: "all", label: "All" },
   { id: "unread", label: "Unread" },
-  { id: "following", label: "Following" },
   { id: "mine", label: "My posts" },
 ] as const;
 
