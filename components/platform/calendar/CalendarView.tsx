@@ -577,7 +577,7 @@ export function CalendarView() {
     setShifted((list) => [...list, course]);
     showToast(SHIFT_DATES.toast, {
       actionLabel: SHIFT_DATES.toastLink,
-      onAction: () => router.push(`${coursePageHref(slugify(course))}?tab=dates`),
+      onAction: () => router.push(coursePageHref(slugify(course))),
     });
   };
   const thisWeek = all.filter((e) => e.date >= CALENDAR_TODAY && e.date <= addDays(CALENDAR_TODAY, 6) && !e.complete);
@@ -602,8 +602,9 @@ export function CalendarView() {
           // Open edX "Shift due dates", as the platform does it (lib/platform/shift-dates): its warning
           // alert and copy, then one row per self-paced course with missed deadlines, each with its own
           // Primary "Shift due dates" (reset_course_deadlines is one course per call, no confirmation).
-          // After a shift: the platform's toast with "View all dates" (that course's Dates tab), and the row goes.
-          <section data-arrive={1} aria-labelledby="calendar-missed" className="flex flex-col gap-3">
+          // After a shift: the platform's toast with "View all dates", and the row goes. Its link opens the
+          // course page: a self-paced course has no Dates tab (decision 036).
+          <section data-arrive={1} aria-labelledby="calendar-missed" data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)" className="flex flex-col gap-3">
             <div className="flex items-start gap-3 border-t-2 border-sko-border-warning bg-sko-bg-page p-4">
               <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-warning" />
               <div className="flex flex-col gap-0.5">
@@ -656,7 +657,7 @@ export function CalendarView() {
                 className="shrink-0"
               />
             </StickyToolbar>
-            <div data-mock="Dates come one course at a time (Dates API); no route merges them, and no course has due dates authored yet">
+            <div data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036); the Dates API also serves one course at a time">
               {view === "month" ? (
                 <>
                   <div className="max-md:hidden">

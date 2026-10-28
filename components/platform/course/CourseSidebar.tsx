@@ -9,7 +9,7 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CertificateCard } from "@/components/platform/program/CertificatesTab";
 import { CardShell, SidebarDateList } from "@/components/platform/program/parts";
 import { useLmsStore } from "@/lib/store";
-import { courseDetailHref, type CourseDetail, type CourseToolId } from "@/lib/platform/course-detail";
+import { courseDetailHref, hasDatesTab, type CourseDetail, type CourseToolId } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
 import { WeeklyGoalCard } from "./WeeklyGoalCard";
 
@@ -106,19 +106,22 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
         </ul>
       </CardShell>
 
-      <CardShell label={course.upcomingDates.label} gap="lg" mock="The relative labels are computed from the date">
-        <SidebarDateList dates={course.upcomingDates.items} />
-        <ButtonLink
-          href={courseDetailHref(course.slug, "dates")}
-          scroll={false}
-          hierarchy="link"
-          size="sm"
-          rightIcon={ArrowRight}
-          className="self-start"
-        >
-          {course.upcomingDates.cta}
-        </ButtonLink>
-      </CardShell>
+      {/* Upcoming dates leads to the Dates tab: not on a self-paced course (decision 036). */}
+      {hasDatesTab(course) ? (
+        <CardShell label={course.upcomingDates.label} gap="lg" mock="The relative labels are computed from the date">
+          <SidebarDateList dates={course.upcomingDates.items} />
+          <ButtonLink
+            href={courseDetailHref(course.slug, "dates")}
+            scroll={false}
+            hierarchy="link"
+            size="sm"
+            rightIcon={ArrowRight}
+            className="self-start"
+          >
+            {course.upcomingDates.cta}
+          </ButtonLink>
+        </CardShell>
+      ) : null}
 
       <CardShell label={course.tools.label} gap="lg" mock="Tool descriptions are ours; the outline sends a title and a URL">
         <ul className="flex flex-col">

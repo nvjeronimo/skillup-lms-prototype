@@ -134,7 +134,7 @@ export const page: CourseDetail = {
       columns: SIX_SIGMA.progressTab.grade.columns,
       rows: [
         { type: "Graded Quiz", weight: "20%", grade: "0%", weighted: "0%" },
-        { type: "Homework", weight: "30%", grade: "0%", weighted: "0%" },
+        { type: "Assignment", weight: "30%", grade: "0%", weighted: "0%" },
         { type: "Capstone Project", weight: "35%", grade: "0%", weighted: "0%" },
         { type: "Final Assessment", weight: "15%", grade: "0%", weighted: "0%" },
       ],
@@ -220,7 +220,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 2 · Assignment 01 · Clean and summarize a sales dataset",
@@ -248,7 +248,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 4 · Assignment 02 · Demand forecast with a baseline",

@@ -133,10 +133,10 @@ export const page: CourseDetail = {
       passPercent: 70,
       passLabel: "Pass 70%",
       columns: SIX_SIGMA.progressTab.grade.columns,
-      // Two homework assignments, two graded quizzes, the final project and the final
+      // Two assignments, two graded quizzes, the final project and the final
       // assessment. Nothing is submitted yet.
       rows: [
-        { type: "Homework", weight: "40%", grade: "0%", weighted: "0%" },
+        { type: "Assignment", weight: "40%", grade: "0%", weighted: "0%" },
         { type: "Graded Quiz", weight: "20%", grade: "0%", weighted: "0%" },
         { type: "Final Project", weight: "25%", grade: "0%", weighted: "0%" },
         { type: "Final Assessment", weight: "15%", grade: "0%", weighted: "0%" },
@@ -208,7 +208,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 1 · Assignment 01 · Keyword map",
@@ -237,7 +237,7 @@ export const page: CourseDetail = {
         state: "upcoming",
         badges: [
           { label: "Due date", color: GRAY },
-          { label: "Homework", color: GRAY },
+          { label: "Assignment", color: GRAY },
           { label: "Upcoming", color: GRAY },
         ],
         title: "Module 2 · Assignment 02 · On-page audit",

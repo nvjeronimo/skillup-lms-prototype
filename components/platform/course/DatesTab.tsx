@@ -43,7 +43,7 @@ function Divider({ children, as: Tag = "p" }: { children: React.ReactNode; as?: 
  * the date, body-medium/Semibold, over the time, body-small/Regular), the spine (a 2px
  * bg/muted line with a 12px dot ringed in bg/page) and the content — badges (Badge
  * Outline sm), title, description and the link — 12 apart. As Open edX draws a due date: the
- * assignment type before the title ("Homework: …") and no description (lib/platform/edx-dates). Padding 12 above; 24 / 20 below.
+ * assignment type before the title ("Assignment: …") and no description (lib/platform/edx-dates). Padding 12 above; 24 / 20 below.
  * Mobile: the spine first, the date and the time on one line above the badges; 16 below.
  * One markup: a grid whose date cell moves from the content column to its own column.
  */
