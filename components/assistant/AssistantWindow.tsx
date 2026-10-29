@@ -702,7 +702,7 @@ export function AssistantWindow({
                   </button>
                 </div>
               </form>
-              <p className="sk-text-body-small-regular border-t border-sko-border-subtle px-5 py-3 text-sko-text-subtle">
+              <p className="sk-text-body-medium-regular border-t border-sko-border-subtle px-5 py-3 text-sko-text-subtle">
                 {AI_NOTICE}
               </p>
             </>
@@ -735,7 +735,7 @@ export function AssistantWindow({
                 </button>
               </form>
               {/* DS Copy row (v1.2): the notice for every answer, under the input. */}
-              <p className="sk-text-body-small-regular px-3 pb-3 text-sko-text-subtle">
+              <p className="sk-text-body-medium-regular px-3 pb-3 text-sko-text-subtle">
                 {AI_NOTICE}
               </p>
             </>

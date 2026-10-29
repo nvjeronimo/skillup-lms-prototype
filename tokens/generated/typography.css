@@ -7,7 +7,7 @@
   --sk-type-size-text-2xs: 0.75rem;
   --sk-type-size-text-xs: 0.8125rem;
   --sk-type-line-height-text-xs: 1.125rem;
-  --sk-type-line-height-text-sm: 1.375rem;
+  --sk-type-line-height-text-sm: 1.25rem;
   --sk-type-line-height-text-md: 1.5rem;
   --sk-type-line-height-text-lg: 1.75rem;
   --sk-type-line-height-text-xl: 1.875rem;
@@ -17,7 +17,7 @@
   --sk-type-line-height-display-lg: 3.75rem;
   --sk-type-line-height-display-xl: 4.5rem;
   --sk-type-line-height-display-2xl: 5.625rem;
-  --sk-type-size-text-sm: 0.9375rem;
+  --sk-type-size-text-sm: 0.875rem;
   --sk-type-size-text-md: 1rem;
   --sk-type-size-text-lg: 1.125rem;
   --sk-type-size-text-xl: 1.25rem;
@@ -64,7 +64,7 @@
   }
   }
 [data-device="desktop"] {
-  --sk-type-line-height-text-sm: 1.375rem;
+  --sk-type-line-height-text-sm: 1.25rem;
   --sk-type-line-height-text-md: 1.5rem;
   --sk-type-line-height-text-xl: 1.875rem;
   --sk-type-line-height-display-xs: 2rem;
@@ -73,7 +73,7 @@
   --sk-type-line-height-display-lg: 3.75rem;
   --sk-type-line-height-display-xl: 4.5rem;
   --sk-type-line-height-display-2xl: 5.625rem;
-  --sk-type-size-text-sm: 0.9375rem;
+  --sk-type-size-text-sm: 0.875rem;
   --sk-type-size-text-md: 1rem;
   --sk-type-size-text-xl: 1.25rem;
   --sk-type-size-display-xs: 1.5rem;
@@ -84,7 +84,7 @@
   --sk-type-size-display-2xl: 4.5rem;
 }
 [data-device="tablet"] {
-  --sk-type-line-height-text-sm: 1.375rem;
+  --sk-type-line-height-text-sm: 1.25rem;
   --sk-type-line-height-text-md: 1.5rem;
   --sk-type-line-height-text-xl: 1.875rem;
   --sk-type-line-height-display-xs: 2rem;
@@ -93,7 +93,7 @@
   --sk-type-line-height-display-lg: 2.75rem;
   --sk-type-line-height-display-xl: 3.75rem;
   --sk-type-line-height-display-2xl: 4.5rem;
-  --sk-type-size-text-sm: 0.9375rem;
+  --sk-type-size-text-sm: 0.875rem;
   --sk-type-size-text-md: 1rem;
   --sk-type-size-text-xl: 1.25rem;
   --sk-type-size-display-xs: 1.5rem;

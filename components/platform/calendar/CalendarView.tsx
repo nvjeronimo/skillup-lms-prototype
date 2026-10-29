@@ -624,7 +624,7 @@ export function CalendarView() {
                 <li key={course} className="flex flex-col gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:flex-row md:items-center">
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <p className="sk-text-body-medium-semibold text-sko-text-default">{course}</p>
-                    <p className="sk-text-body-small-regular text-sko-text-subtle">
+                    <p className="sk-text-body-medium-regular text-sko-text-subtle">
                       {items.map((e) => `${e.title} · was due ${formatDay(e.date)}`).join(" · ")}
                     </p>
                   </div>
@@ -717,7 +717,7 @@ export function CalendarView() {
                   <h2 id="calendar-sync" className="sk-text-body-medium-semibold text-sko-text-default">
                     Add to your calendar
                   </h2>
-                  <p className="sk-text-body-small-regular text-sko-text-subtle">
+                  <p className="sk-text-body-medium-regular text-sko-text-subtle">
                     Your deadlines and sessions in Google, Outlook or Apple Calendar, kept up to date.
                   </p>
                 </div>

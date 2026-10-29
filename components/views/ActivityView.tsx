@@ -208,7 +208,7 @@ function SamplePackage({
           </div>
         </>
       )}
-      <p className="sk-text-body-small-regular text-sko-text-muted">
+      <p className="sk-text-body-medium-regular text-sko-text-muted">
         Sample package content: the author builds this in their tool; the platform only plays it.
       </p>
     </div>

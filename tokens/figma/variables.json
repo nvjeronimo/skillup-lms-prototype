@@ -2623,8 +2623,8 @@
           "type": "FLOAT",
           "web": null,
           "values": {
-            "Desktop": 22,
-            "Tablet": 22,
+            "Desktop": 20,
+            "Tablet": 20,
             "Mobile": 24
           }
         },
@@ -2723,8 +2723,8 @@
           "type": "FLOAT",
           "web": null,
           "values": {
-            "Desktop": 15,
-            "Tablet": 15,
+            "Desktop": 14,
+            "Tablet": 14,
             "Mobile": 16
           }
         },

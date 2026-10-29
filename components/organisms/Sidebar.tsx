@@ -550,7 +550,7 @@ export function Sidebar({
                 />
               </h3>
               {moduleHint ? (
-                <p className="sk-text-body-small-regular flex items-start gap-1.5 border-b border-sko-border-subtle bg-sko-bg-faint px-4 pb-3 text-sko-text-subtle">
+                <p className="sk-text-body-medium-regular flex items-start gap-1.5 border-b border-sko-border-subtle bg-sko-bg-faint px-4 pb-3 text-sko-text-subtle">
                   <Icon icon={Lock} size={14} className="mt-0.5 shrink-0" />
                   {moduleHint}
                 </p>

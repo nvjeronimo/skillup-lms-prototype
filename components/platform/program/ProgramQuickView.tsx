@@ -227,7 +227,7 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
                   <p className="sk-text-body-medium-semibold text-sko-text-default">
                     {cert.certificate.status === "issued" ? `Issued ${program.certificateDate ?? ""}`.trim() : "Program certificate"}
                   </p>
-                  <p className="sk-text-body-small-regular text-sko-text-subtle">
+                  <p className="sk-text-body-medium-regular text-sko-text-subtle">
                     {cert.certificate.status === "issued"
                       ? "Every course of the program is complete."
                       : `Complete every course to earn it · ${cert.complete} of ${cert.courses.length} done`}

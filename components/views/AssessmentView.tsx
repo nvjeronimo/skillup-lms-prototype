@@ -580,7 +580,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           nothing. The count comes from submitted answers only. Framed as what
           is still to come rather than what is missing. */}
       {!allAnswered ? (
-        <p className="sk-text-body-small-regular text-center text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular text-center text-sko-text-subtle">
           {total - answeredCount} of {total} still to submit. Each answer counts once you submit it.
         </p>
       ) : null}

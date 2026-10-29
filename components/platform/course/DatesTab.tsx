@@ -144,7 +144,7 @@ export function DatesTab({ course }: { course: CourseDetail }) {
         <DateCard items={tab.upcoming} href={links.byTitle} label={tab.upcomingLabel} />
       </div>
 
-      <p className="sk-text-body-small-regular text-sko-text-subtle">{tab.timezoneNote}</p>
+      <p className="sk-text-body-medium-regular text-sko-text-subtle">{tab.timezoneNote}</p>
     </div>
   );
 }

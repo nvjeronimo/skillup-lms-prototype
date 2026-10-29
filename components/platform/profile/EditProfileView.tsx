@@ -48,7 +48,7 @@ function Field({
       </label>
       {children}
       {hint ? (
-        <p id={`${id}-hint`} className="sk-text-body-small-regular text-sko-text-subtle">
+        <p id={`${id}-hint`} className="sk-text-body-medium-regular text-sko-text-subtle">
           {hint}
         </p>
       ) : null}
@@ -267,7 +267,7 @@ export function EditProfileView() {
                   Remove
                 </Button>
               </div>
-              <p className="sk-text-body-small-regular text-sko-text-subtle">
+              <p className="sk-text-body-medium-regular text-sko-text-subtle">
                 JPG or PNG, up to 1 MB.
               </p>
             </div>
@@ -346,7 +346,7 @@ export function EditProfileView() {
                 { id: "private", label: "Limited" },
               ]}
             />
-            <p className="sk-text-body-small-regular text-sko-text-subtle">
+            <p className="sk-text-body-medium-regular text-sko-text-subtle">
               {form.visibility === "all_users"
                 ? "Learners on SkillUp see everything above."
                 : "Learners see only your username and photo."}
@@ -413,7 +413,7 @@ export function EditProfileView() {
             >
               Reset password
             </Button>
-            <p className="sk-text-body-small-regular text-sko-text-subtle">
+            <p className="sk-text-body-medium-regular text-sko-text-subtle">
               We email you a link to choose a new one.
             </p>
           </div>
