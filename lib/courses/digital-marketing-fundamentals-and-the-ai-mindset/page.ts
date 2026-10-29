@@ -322,7 +322,6 @@ export const page: CourseDetail = {
         preview: "Marcus: It depends on what the objective asks for.",
         meta: "7 weeks ago  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -364,7 +363,6 @@ export const page: CourseDetail = {
         preview: "Marcus: Five is enough: awareness to advocacy.",
         meta: "2 months ago  ·  2 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -373,7 +371,6 @@ export const page: CourseDetail = {
         preview: "Marcus: Not with names or emails in it.",
         meta: "5 weeks ago  ·  3 replies",
         answered: true,
-        following: true,
         unread: false,
       },
       {
@@ -382,7 +379,6 @@ export const page: CourseDetail = {
         preview: "Marcus: The full name on your profile.",
         meta: "2 weeks ago  ·  2 replies",
         answered: true,
-        following: false,
         unread: false,
       },
     ],

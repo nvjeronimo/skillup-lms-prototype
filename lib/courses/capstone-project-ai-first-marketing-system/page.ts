@@ -282,7 +282,6 @@ export const page: CourseDetail = {
         preview: "Marcus: Yes, if you leave out anything confidential.",
         meta: "3 days ago  ·  3 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -324,7 +323,6 @@ export const page: CourseDetail = {
         preview: "Marcus: Yes. Revise them and say what changed.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -333,7 +331,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

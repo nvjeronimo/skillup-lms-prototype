@@ -272,7 +272,6 @@ export const page: CourseDetail = {
         preview: "David: You can read the brief, but the milestones assume Courses 1 to 4.",
         meta: "4 days ago  ·  2 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -299,7 +298,6 @@ export const page: CourseDetail = {
         preview: "David: No. It was written for this course; work only from the case file.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -308,7 +306,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

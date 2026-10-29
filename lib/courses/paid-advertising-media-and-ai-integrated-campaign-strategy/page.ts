@@ -323,7 +323,6 @@ export const page: CourseDetail = {
         preview: "Marcus: No. You plan campaigns and read sample reports.",
         meta: "last week  ·  2 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -350,7 +349,6 @@ export const page: CourseDetail = {
         preview: "Marcus: You can. The order is a suggestion.",
         meta: "last week  ·  2 replies",
         answered: true,
-        following: false,
         unread: false,
       },
     ],

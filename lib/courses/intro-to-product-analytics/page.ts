@@ -276,7 +276,6 @@ export const page: CourseDetail = {
         preview: "Leila: Yes, if you count people active in that week, not in every week.",
         meta: "3 weeks ago  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -318,7 +317,6 @@ export const page: CourseDetail = {
         preview: "Leila: As long as the slowest normal user takes, and say so on the chart.",
         meta: "last month  ·  3 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -327,7 +325,6 @@ export const page: CourseDetail = {
         preview: "You: Clear, the difference is inside the noise.",
         meta: "3 weeks ago  ·  2 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -336,7 +333,6 @@ export const page: CourseDetail = {
         preview: "Leila: Yes. Use the title and the issue date as printed on it.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
     ],

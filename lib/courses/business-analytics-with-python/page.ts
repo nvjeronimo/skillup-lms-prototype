@@ -315,7 +315,6 @@ export const page: CourseDetail = {
         preview: "Lucas: 3.11 or later, in its own environment, beside the one you have.",
         meta: "yesterday  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -357,7 +356,6 @@ export const page: CourseDetail = {
         preview: "Lucas: Variables, loops and functions. Module 1 refreshes the rest.",
         meta: "5 days ago  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -366,7 +364,6 @@ export const page: CourseDetail = {
         preview: "You: Good, I will start with the setup this week.",
         meta: "last week  ·  3 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -375,7 +372,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

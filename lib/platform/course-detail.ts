@@ -200,7 +200,6 @@ export interface QaThread {
   preview: string;
   meta: string;
   answered: boolean;
-  following: boolean;
   unread: boolean;
   /** Not drawn for the threads the screens show only in the list. */
   messages?: QaMessage[];
@@ -323,10 +322,10 @@ export interface CourseDetail {
     listTitle: string;
     ask: string;
     search: string;
-    filters: { id: "all" | "unanswered" | "following"; label: string }[];
+    /** No Following: Kirti removed it from Mentorship Q&A (Nelson, 28–29 Oct 2026). */
+    filters: { id: "all" | "unanswered"; label: string }[];
     threads: QaThread[];
     mentorLine: string;
-    following: string;
     replyPlaceholder: string;
     send: string;
     anonymous: string;

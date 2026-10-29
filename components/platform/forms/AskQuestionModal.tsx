@@ -55,7 +55,6 @@ export function AskQuestionModal({
           preview: `You: ${details.trim()}`,
           meta: where ? `Just now · Module ${where.number}` : "Just now",
           answered: false,
-          following: true,
           unread: false,
           messages: [{ id: "m1", from: "learner", author: "You", body: details.trim(), time: "Just now" }],
         })

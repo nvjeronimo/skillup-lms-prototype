@@ -69,11 +69,6 @@ function ThreadRow({
                 Answered
               </Badge>
             ) : null}
-            {thread.following ? (
-              <Badge variant="outline" color="gray">
-                Following
-              </Badge>
-            ) : null}
           </span>
           {/* The DS text styles are not responsive: the default-open row is Medium on mobile, Semibold beside its conversation. */}
           {selectedFromTablet && !strong ? (
@@ -167,10 +162,11 @@ export function Message({ message, report, onReport }: { message: QaMessage; rep
  * conversation alone under a "Your questions" back link; the page hides the course header
  * and the tab bar for that view, as drawn.
  *
- * The list's search and its All / Unanswered / Following filter work on the sample threads.
+ * The list's search and its All / Unanswered filter work on the sample threads (no Following:
+ * Kirti removed it, Nelson 29 Oct 2026).
  * Only the first thread is drawn with its messages. Ask a question and Report open their modals
  * (23 Oct 2026): an asked question opens at the top of the list for the session. Sending a
- * reply and following are not built: they say so in a toast.
+ * reply is not built: it says so in a toast.
  */
 export function QaTab({ course, threadId }: { course: CourseDetail; threadId: string | null }) {
   const showToast = useLmsStore((s) => s.showToast);
@@ -194,7 +190,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
   const needle = query.trim().toLowerCase();
   const threads = all.filter(
     (t) =>
-      (filter === "all" || (filter === "unanswered" ? !t.answered : t.following)) &&
+      (filter === "all" || !t.answered) &&
       (!needle || t.title.toLowerCase().includes(needle) || t.preview.toLowerCase().includes(needle)),
   );
 
@@ -324,15 +320,6 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                   {`${tab.mentorLine.split(" · ")[0]} · Staff · question post, visible to the course`}
                 </p>
               </div>
-              <Button
-                hierarchy="secondary"
-                size="sm"
-                aria-pressed={current.following}
-                onClick={() => notInPrototype("Following a question")}
-                className="shrink-0 max-md:h-11"
-              >
-                {current.following ? tab.following : "Follow"}
-              </Button>
               <Button
                 hierarchy="tertiary"
                 size="sm"

@@ -376,7 +376,6 @@ export const SIX_SIGMA: CourseDetail = {
     filters: [
       { id: "all", label: "All" },
       { id: "unanswered", label: "Unanswered" },
-      { id: "following", label: "Following" },
     ],
     threads: [
       {
@@ -385,7 +384,6 @@ export const SIX_SIGMA: CourseDetail = {
         preview: "David: Check your subgroup size first — if it is 1, the limits collapse.",
         meta: "2 days ago  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -427,7 +425,6 @@ export const SIX_SIGMA: CourseDetail = {
         preview: "David: Whenever your process is not in control yet.",
         meta: "5 days ago  ·  7 replies  ·  2 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -436,7 +433,6 @@ export const SIX_SIGMA: CourseDetail = {
         preview: "You: Thanks — that clears it up.",
         meta: "last week  ·  3 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -445,12 +441,10 @@ export const SIX_SIGMA: CourseDetail = {
         preview: "You: Asked yesterday, no reply yet.",
         meta: "yesterday  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],
     mentorLine: "David Chen · your mentor · typically responds within 1 day",
-    following: "Following",
     replyPlaceholder: "Write a reply…",
     send: "Send",
     anonymous: "Post anonymously",

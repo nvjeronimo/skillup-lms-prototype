@@ -270,7 +270,6 @@ export const page: CourseDetail = {
         preview: "Tomás: Ask in a one-to-one first, and ask about the channel, not about them.",
         meta: "yesterday  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -312,7 +311,6 @@ export const page: CourseDetail = {
         preview: "Tomás: Yes, if you protect them for the work that needs a live call.",
         meta: "4 days ago  ·  3 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -321,7 +319,6 @@ export const page: CourseDetail = {
         preview: "You: Understood, I had one response time for every channel.",
         meta: "3 days ago  ·  2 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -330,7 +327,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],
