@@ -30,6 +30,14 @@ import { programPageHref } from "@/lib/platform/hrefs";
 import type { MyLearningView } from "@/lib/platform/my-learning";
 import { cn } from "@/lib/utils";
 import { CertificatesSkeleton } from "./CertificatesSkeleton";
+import {
+  CERTIFICATES_VARIANTS,
+  LedgerVariant,
+  ProgramCardVariant,
+  ShelfVariant,
+  type CertificatesVariant,
+} from "./CertificatesVariants";
+import { ProposalPicker } from "./ProposalPicker";
 
 type CertificatesTab = "in-progress" | "earned";
 
@@ -322,6 +330,19 @@ export function CertificatesView() {
   const [tab, setTab] = React.useState<CertificatesTab>("earned");
   const [view, setView] = React.useState<MyLearningView>("grid");
   const [query, setQuery] = React.useState("");
+  // Proposals (Nelson, 29 Oct 2026): `?certs=program|ledger|shelf` draws the tab another way;
+  // the picker shows only when the param is there.
+  const [variant, setVariant] = React.useState<CertificatesVariant | null>(null);
+  React.useEffect(() => {
+    const v = new URLSearchParams(window.location.search).get("certs");
+    if (v !== null) setVariant(CERTIFICATES_VARIANTS.some((x) => x.id === v) ? (v as CertificatesVariant) : "current");
+  }, []);
+  const pickVariant = React.useCallback((v: CertificatesVariant) => {
+    setVariant(v);
+    const url = new URL(window.location.href);
+    url.searchParams.set("certs", v);
+    window.history.replaceState(null, "", url);
+  }, []);
 
   const needle = query.trim().toLowerCase();
   const earned = searchTab(earnedCertificates, (e) => e.certificate.title, needle);
@@ -395,7 +416,9 @@ export function CertificatesView() {
               label="Search certificates"
               className="w-full md:w-[240px] lg:w-[320px]"
             />
-            <ViewToggle view={view} onChange={setView} className="hidden shrink-0 lg:inline-flex" />
+            {variant && variant !== "current" ? null : (
+              <ViewToggle view={view} onChange={setView} className="hidden shrink-0 lg:inline-flex" />
+            )}
           </div>
 
           <div data-arrive={3} role="tabpanel" id={platformPanelId(ID_BASE, tab)} aria-labelledby={platformTabId(ID_BASE, tab)}>
@@ -412,6 +435,17 @@ export function CertificatesView() {
                   title={needle ? `No certificates match “${query.trim()}”` : `No certificates here yet`}
                   description={needle ? "Check the spelling or search for another title." : undefined}
                 />
+              ) : variant && variant !== "current" ? (
+                (() => {
+                  const props = { tab, earned: earnedGroups, progress: progressGroups, earnedProgram };
+                  return variant === "program" ? (
+                    <ProgramCardVariant key={variant + tab} {...props} />
+                  ) : variant === "ledger" ? (
+                    <LedgerVariant key={variant + tab} {...props} />
+                  ) : (
+                    <ShelfVariant key={variant + tab + needle} {...props} />
+                  );
+                })()
               ) : tab === "earned" ? (
                 <div className="flex flex-col gap-layout-stack">
                   {earnedGroups.programs.map((g) => (
@@ -503,6 +537,7 @@ export function CertificatesView() {
           </div>
         </section>
       </div>
+      {variant ? <ProposalPicker variants={CERTIFICATES_VARIANTS} value={variant} onChange={pickVariant} label="Certificates proposals" /> : null}
     </PlatformPage>
   );
 }
