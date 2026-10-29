@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { KeyRound, Trash2, Upload } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Button } from "@/components/atoms/Button";
+import { FilterChip } from "@/components/atoms/FilterChip";
 import { SelectField } from "@/components/atoms/SelectField";
 import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
 import { PlatformPage } from "@/components/platform/PlatformPage";
@@ -84,6 +85,7 @@ function Section({
   step,
   title,
   lead,
+  invented,
   children,
 }: {
   id: string;
@@ -91,11 +93,14 @@ function Section({
   step: number;
   title: string;
   lead: string;
+  /** What Open edX lacks, when the whole section is SkillUp's own (hidden in `?scope=edx`). */
+  invented?: string;
   children: React.ReactNode;
 }) {
   return (
     <section
       data-arrive={step}
+      data-invented={invented}
       aria-labelledby={id}
       className="rounded-card border border-sko-border-subtle bg-sko-bg-page"
     >
@@ -123,9 +128,9 @@ function FieldSkeleton({ label, hint, rows, className }: { label: string; hint?:
   );
 }
 
-function SectionSkeleton({ title, lead, children }: { title: string; lead: string; children: React.ReactNode }) {
+function SectionSkeleton({ title, lead, invented, children }: { title: string; lead: string; invented?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
+    <div data-invented={invented} className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
       <div className="flex flex-col gap-1 border-b border-sko-border-subtle px-4 py-4 md:px-6 md:py-5">
         <Skeleton variant="ghost" text="title-medium-semibold">{title}</Skeleton>
         <Skeleton variant="ghost" text="body-medium-regular">{lead}</Skeleton>
@@ -182,10 +187,25 @@ function EditProfileSkeleton() {
         <FieldSkeleton label="Email" hint="We send a link to the new address before it changes." />
         <FieldSkeleton label="Site language" />
         <FieldSkeleton label="Time zone" hint="Deadlines and live sessions show in this time zone." />
+        <FieldSkeleton label="Year of birth" hint="Only you and SkillUp see this." />
+        <FieldSkeleton label="Gender" hint="Only you and SkillUp see this." />
         <div className="flex flex-col items-start gap-1.5 md:col-span-2">
           <Skeleton variant="ghost" text="body-medium-medium">Password</Skeleton>
           <SkeletonPill size="button-sm" icon className="max-md:h-11">Reset password</SkeletonPill>
           <Skeleton variant="ghost" text="body-small-regular">We email you a link to choose a new one.</Skeleton>
+        </div>
+      </SectionSkeleton>
+      <SectionSkeleton title="Career" lead={CAREER_LEAD} invented={CAREER_INVENTED}>
+        <FieldSkeleton label="Phone" />
+        <FieldSkeleton label="Current work status" />
+        <FieldSkeleton label="Work experience" />
+        <div className="flex flex-col gap-1.5 md:col-span-2">
+          <Skeleton variant="ghost" text="body-medium-medium">Areas of interest</Skeleton>
+          <div className="flex flex-wrap gap-2">
+            {PROFILE_OPTIONS.interests.map((o) => (
+              <SkeletonPill key={o} size="segment">{o}</SkeletonPill>
+            ))}
+          </div>
         </div>
       </SectionSkeleton>
       <div className="flex gap-3 md:justify-end">
@@ -196,13 +216,18 @@ function EditProfileSkeleton() {
   );
 }
 
+const CAREER_LEAD = "Helps us recommend courses for your career. Only you and SkillUp see this.";
+const CAREER_INVENTED = "profile: SkillUp career fields, Open edX has no phone, interests, work status or experience";
+
 /**
  * Edit profile (Nelson, 19 Oct 2026), opened from the profile menu: one page, two sections.
  * - Your profile: what other learners and the instructors see. Open edX profile (learner-profile
  *   MFE): photo, bio, country, language, education, social link, and who can see it (full or limited).
  * - Account: how the learner signs in and how the platform talks to them. Open edX account settings
  *   (account MFE): full name, email (confirmed by email before it changes), password reset by email,
- *   site language, time zone. The username cannot change in Open edX: read-only.
+ *   site language, time zone, year of birth, gender (29 Oct). The username cannot change in Open edX: read-only.
+ * - Career (Nelson, 29 Oct 2026): SkillUp's own fields from the skillup.online profile (phone,
+ *   work status, experience, areas of interest). Not in Open edX: a custom build, tagged invented.
  * In the prototype nothing is sent: Save keeps the values for this visit and says so.
  */
 export function EditProfileView() {
@@ -402,6 +427,22 @@ export function EditProfileView() {
               onChange={set("timeZone")}
             />
           </Field>
+          <Field id="year-of-birth" label="Year of birth" hint="Only you and SkillUp see this.">
+            <Select
+              id="year-of-birth"
+              value={form.yearOfBirth}
+              options={PROFILE_OPTIONS.yearOfBirth}
+              onChange={set("yearOfBirth")}
+            />
+          </Field>
+          <Field id="gender" label="Gender" hint="Only you and SkillUp see this.">
+            <Select
+              id="gender"
+              value={form.gender}
+              options={PROFILE_OPTIONS.gender}
+              onChange={set("gender")}
+            />
+          </Field>
           <div className="flex flex-col items-start gap-1.5 md:col-span-2">
             <p className="sk-text-body-medium-medium text-sko-text-muted">Password</p>
             <Button
@@ -419,8 +460,67 @@ export function EditProfileView() {
           </div>
         </Section>
 
+        <Section
+          id="career-title"
+          step={3}
+          title="Career"
+          lead={CAREER_LEAD}
+          invented={CAREER_INVENTED}
+        >
+          <Field id="phone" label="Phone">
+            <input
+              id="phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              value={form.phone}
+              onChange={(e) => set("phone")(e.target.value)}
+              placeholder="+351 912 345 678"
+              className={FIELD}
+            />
+          </Field>
+          <Field id="work-status" label="Current work status">
+            <Select
+              id="work-status"
+              value={form.workStatus}
+              options={PROFILE_OPTIONS.workStatus}
+              onChange={set("workStatus")}
+            />
+          </Field>
+          <Field id="work-experience" label="Work experience">
+            <Select
+              id="work-experience"
+              value={form.workExperience}
+              options={PROFILE_OPTIONS.workExperience}
+              onChange={set("workExperience")}
+            />
+          </Field>
+          <div role="group" aria-labelledby="interests-label" className="flex flex-col gap-1.5 md:col-span-2">
+            <p id="interests-label" className="sk-text-body-medium-medium text-sko-text-muted">
+              Areas of interest
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {PROFILE_OPTIONS.interests.map((o) => {
+                const on = form.interests.includes(o);
+                return (
+                  <FilterChip
+                    key={o}
+                    label={o}
+                    active={on}
+                    className="max-md:min-h-11"
+                    onClick={() =>
+                      set("interests")(on ? form.interests.filter((i) => i !== o) : [...form.interests, o])
+                    }
+                  />
+                );
+              })}
+            </div>
+            <p className="sk-text-body-medium-regular text-sko-text-subtle">Pick as many as you like.</p>
+          </div>
+        </Section>
+
         {/* The actions: on the right on desktop, both filling on mobile (two buttons side by side fill). */}
-        <div data-arrive={3} className="flex gap-3 md:justify-end">
+        <div data-arrive={4} className="flex gap-3 md:justify-end">
           <Button
             type="button"
             hierarchy="secondary"
