@@ -62,7 +62,9 @@ export function SearchAssistantButton({
         style={halo}
         className={cn(
           !edx && "sk-assistant-halo",
-          "inline-flex shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
+          // relative here, not only through the halo: without it (Open edX scope drops the halo)
+          // the sm hit band is placed on the top bar and every click there opened the search.
+          "relative inline-flex shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
           size === "md"
             ? "size-11"
             : "size-8 before:absolute before:-inset-1.5 before:content-['']",
