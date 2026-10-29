@@ -13,7 +13,7 @@ import type { MyLearningCourse, MyLearningProgram } from "@/lib/platform/my-lear
  * list): one row per course, the columns a learner with many courses scans: the course (picture,
  * title linking to its page, provider, then level and delivery as words), progress, what is next, the effort, and the action as the
  * panel's white "Manage" button. A real table (caption, column headers), from desktop up; below,
- * My Learning shows its grid.
+ * My Learning shows its grid. Columns sit 32 apart (pr-8 on every cell but the last; Nelson, 29 Oct 2026).
  */
 export function HarborCourseTable({
   courses,
@@ -28,10 +28,10 @@ export function HarborCourseTable({
         <caption className="sr-only">Your courses</caption>
         <thead>
           <tr className="text-sko-text-default">
-            <th scope="col" className="py-4 pr-4 sk-text-body-small-semibold">Course</th>
-            <th scope="col" className="w-[200px] py-4 pr-4 sk-text-body-small-semibold">Progress</th>
-            <th scope="col" className="py-4 pr-4 sk-text-body-small-semibold">Up next</th>
-            <th scope="col" className="w-[140px] py-4 pr-4 sk-text-body-small-semibold">Effort</th>
+            <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Course</th>
+            <th scope="col" className="w-[200px] py-4 pr-8 sk-text-body-small-semibold">Progress</th>
+            <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Up next</th>
+            <th scope="col" className="w-[140px] py-4 pr-8 sk-text-body-small-semibold">Effort</th>
             <th scope="col" className="w-[120px] py-4 sk-text-body-small-semibold">
               <span className="sr-only">Action</span>
             </th>
@@ -44,7 +44,7 @@ export function HarborCourseTable({
             const next = "certificate" in c.upNext ? c.upNext.certificate.replace(/^Issued /, "Certificate issued ") : c.upNext.title;
             return (
               <tr key={c.id} className="border-t border-sko-border-subtle">
-                <th scope="row" className="sk-text-body-medium-regular py-3 pr-4">
+                <th scope="row" className="sk-text-body-medium-regular py-3 pr-8">
                   <span className="flex items-center gap-3">
                     {/* Square, 48 (Nelson, 26 Oct 2026): a table row is one line of type high. */}
                     <CourseThumb
@@ -68,7 +68,7 @@ export function HarborCourseTable({
                     </span>
                   </span>
                 </th>
-                <td className="py-3 pr-4">
+                <td className="py-3 pr-8">
                   {pct === null ? (
                     <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
                   ) : (
@@ -83,8 +83,8 @@ export function HarborCourseTable({
                     </span>
                   )}
                 </td>
-                <td className="sk-text-body-medium-regular py-3 pr-4 text-sko-text-muted">{next}</td>
-                <td className="sk-text-body-medium-regular py-3 pr-4 text-sko-text-muted">{c.progressMeta}</td>
+                <td className="sk-text-body-medium-regular py-3 pr-8 text-sko-text-muted">{next}</td>
+                <td className="sk-text-body-medium-regular py-3 pr-8 text-sko-text-muted">{c.progressMeta}</td>
                 <td className="py-3 text-right">
                   {c.href ? (
                     <ButtonLink href={c.href} hierarchy="secondary" size="sm" aria-label={`${c.cta} ${c.title}`}>
@@ -107,8 +107,9 @@ export function HarborCourseTable({
 
 /**
  * The same table for the Programs tab (Nelson, 26 Oct 2026): the program (picture, title linking
- * to its page, partners, then level and delivery as words), progress, how many courses are complete, what is next (the course in
- * progress, the start date, or the certificate), and the action.
+ * to its page, partners, then level and delivery as words), progress with how many courses are complete under the bar (one column
+ * since 29 Oct 2026, Nelson: more room for the title and Up next), what is next (the course in progress, the start date, or the
+ * certificate), and the action.
  */
 export function HarborProgramTable({
   programs,
@@ -123,10 +124,9 @@ export function HarborProgramTable({
         <caption className="sr-only">Your programs</caption>
         <thead>
           <tr className="text-sko-text-default">
-            <th scope="col" className="py-4 pr-4 sk-text-body-small-semibold">Program</th>
-            <th scope="col" className="w-[200px] py-4 pr-4 sk-text-body-small-semibold">Progress</th>
-            <th scope="col" className="w-[190px] py-4 pr-4 sk-text-body-small-semibold">Courses</th>
-            <th scope="col" className="py-4 pr-4 sk-text-body-small-semibold">Up next</th>
+            <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Program</th>
+            <th scope="col" className="w-[220px] py-4 pr-8 sk-text-body-small-semibold">Progress</th>
+            <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Up next</th>
             <th scope="col" className="w-[160px] py-4 sk-text-body-small-semibold">
               <span className="sr-only">Action</span>
             </th>
@@ -138,7 +138,7 @@ export function HarborProgramTable({
             const actionHref = p.actionHref ?? (p.cta === "View Certificate" ? p.href : undefined);
             return (
               <tr key={p.id} className="border-t border-sko-border-subtle">
-                <th scope="row" className="sk-text-body-medium-regular py-3 pr-4">
+                <th scope="row" className="sk-text-body-medium-regular py-3 pr-8">
                   <span className="flex items-center gap-3">
                     <CourseThumb
                       shape="tile"
@@ -162,23 +162,25 @@ export function HarborProgramTable({
                     </span>
                   </span>
                 </th>
-                <td className="py-3 pr-4">
-                  {p.progressPct ? (
-                    <span className="flex items-center gap-2">
-                      <PlatformProgressBar
-                        value={p.progressPct}
-                        tone={p.progressPct >= 100 ? "complete" : "progress"}
-                        label={`${p.title} progress`}
-                        className="flex-1"
-                      />
-                      <span className="sk-text-body-medium-semibold w-10 text-right text-sko-text-default">{p.progressPct}%</span>
-                    </span>
-                  ) : (
-                    <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
-                  )}
+                <td className="py-3 pr-8">
+                  <span className="flex flex-col gap-1">
+                    {p.progressPct ? (
+                      <span className="flex items-center gap-2">
+                        <PlatformProgressBar
+                          value={p.progressPct}
+                          tone={p.progressPct >= 100 ? "complete" : "progress"}
+                          label={`${p.title} progress`}
+                          className="flex-1"
+                        />
+                        <span className="sk-text-body-medium-semibold w-10 text-right text-sko-text-default">{p.progressPct}%</span>
+                      </span>
+                    ) : (
+                      <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
+                    )}
+                    <span className="sk-text-body-small-regular text-sko-text-muted">{p.courses}</span>
+                  </span>
                 </td>
-                <td className="sk-text-body-medium-regular py-3 pr-4 text-sko-text-muted">{p.courses}</td>
-                <td className="sk-text-body-medium-regular py-3 pr-4 text-sko-text-muted">{next}</td>
+                <td className="sk-text-body-medium-regular py-3 pr-8 text-sko-text-muted">{next}</td>
                 <td className="py-3 text-right">
                   {actionHref ? (
                     <ButtonLink href={actionHref} hierarchy="secondary" size="sm" aria-label={`${p.cta} ${p.title}`}>
