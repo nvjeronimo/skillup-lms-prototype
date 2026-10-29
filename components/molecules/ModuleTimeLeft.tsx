@@ -13,7 +13,7 @@ export interface ModuleTimeLeftProps {
  * (Spacing/xs), 8px gap (Spacing/md), no fill, radius or icon. Each segment is
  * body-small/Medium in `text/subtle`; the "·" separators between segments are
  * body-small/Medium in `icon/faint`. The row wraps when the segments are wider
- * than their container (e.g. the 280px sidebar), so it never overflows.
+ * than their container (e.g. the 280 or 320px sidebar), so it never overflows.
  */
 export function ModuleTimeLeft({ segments, className }: ModuleTimeLeftProps) {
   return (

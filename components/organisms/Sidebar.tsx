@@ -451,7 +451,8 @@ export function Sidebar({
     <nav
       className={cn(
         "flex h-full flex-col overflow-hidden bg-sko-bg-page",
-        isMobile ? "w-[320px]" : "w-[280px] rounded-control border border-sko-border-subtle",
+        // 280 until 1280, then 320 like the phone drawer (Nelson, 29 Oct 2026: fewer wrapped titles).
+        isMobile ? "w-[320px]" : "w-[280px] rounded-control border border-sko-border-subtle xl:w-[320px]",
         variantFade,
         className,
       )}
