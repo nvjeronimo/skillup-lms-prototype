@@ -231,7 +231,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
     return (
       <div data-prototype-note className="flex flex-col gap-3">
         <p className="sk-text-label-small-medium uppercase text-sko-text-subtle">Prototype note · sample content</p>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular text-sko-text-subtle">
           The prototype searches this course&apos;s lesson and topic titles and what each topic shows in the player.
           Type one of these and press Enter, or select it:
         </p>
@@ -264,7 +264,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
             Enter ↵
           </Badge>
         </p>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular text-sko-text-subtle">
           Results show after you press Enter. Titles, texts, quiz questions and video transcripts are searched.
         </p>
       </>
@@ -383,7 +383,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
       ) : null}
       {/* The count is about the whole search, so it shows on All only, like the footer. */}
       {accessDenied > 0 && current === "all" ? (
-        <p className="sk-text-body-small-regular text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular text-sko-text-subtle">
           {accessDenied} more {accessDenied === 1 ? "result is" : "results are"} in content that is not open to you yet.
         </p>
       ) : null}

@@ -251,9 +251,10 @@ export function MyLearningCourseCard({
         <div
           // DS List: the footer fills what the titles and the progress leave; grey beside Resume,
           // white with a border beside Start, green when completed (v1.8). Its height hugs.
-          className={cn("flex items-center gap-4 rounded-control", stacked ? "w-full" : "min-w-[250px] flex-1", stripOf(course, hierarchy))}
+          // Narrow stacked rows wrap the action under the title rather than cut a word in it.
+          className={cn("flex flex-wrap items-center gap-4 rounded-control", stacked ? "w-full" : "min-w-[250px] flex-1", stripOf(course, hierarchy))}
         >
-          <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
+          <div className="flex min-w-[9rem] flex-1 flex-col items-start gap-1.5">
             {/* DS v1.11 (Nelson, 16 Oct 2026): the overline and the topic type share one row, 16
                 apart, so the title below has the footer's full width (two lines, then cut). */}
             {/* The overline stays on one line ("Starts with" broke in two at 1280, Nelson 28 Oct 2026). */}
@@ -319,10 +320,11 @@ export function MyLearningCourseCard({
           <span className="sk-text-body-medium-medium line-clamp-2 text-sko-text-default">{nextTitle}</span>
         </div>
       ) : (
-        // The certificate: one line, the date at the right end (DS State=Completed).
-        <div className={cn("flex w-full items-center gap-3 rounded-control", STRIP.completed)}>
+        // The certificate: the date at the right end (DS State=Completed). It drops under the
+        // overline, whole, when the card is too narrow, never cut (desktop text 15, 29 Oct 2026).
+        <div className={cn("flex w-full flex-wrap items-center gap-x-3 gap-y-0.5 rounded-control", STRIP.completed)}>
           <span className={cn(OVERLINE_ON_GREEN, "shrink-0")}>{overline}</span>
-          <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-right text-sko-text-default">{nextTitle}</span>
+          <span className="sk-text-body-medium-medium ml-auto whitespace-nowrap text-sko-text-default">{nextTitle}</span>
         </div>
       )}
       {certificateHref ? (

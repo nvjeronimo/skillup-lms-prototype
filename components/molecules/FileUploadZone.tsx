@@ -84,7 +84,7 @@ export function FileUploadZone({
           Drop files here, or{" "}
           <span className="sk-text-body-medium-semibold text-sko-text-primary">browse files</span>
         </p>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">
+        <p className="sk-text-body-medium-regular text-sko-text-subtle">
           {acceptedTypes.join(", ")} · {maxSizeMB} MB max per file
         </p>
         <input

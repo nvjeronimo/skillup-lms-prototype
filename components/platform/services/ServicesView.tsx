@@ -204,7 +204,7 @@ export function ServicesView() {
                 </p>
               </div>
             </div>
-            <p className="sk-text-body-small-regular flex items-start gap-1.5 rounded-card-inset bg-sko-bg-subtle p-3 text-sko-text-muted">
+            <p className="sk-text-body-medium-regular flex items-start gap-1.5 rounded-card-inset bg-sko-bg-subtle p-3 text-sko-text-muted">
               <Icon icon={MessageCircle} size={16} className="mt-0.5 shrink-0 text-sko-icon-subtle" aria-hidden="true" />
               <span>
                 <span className="sk-text-body-small-semibold text-sko-text-default">{servicesMentor.last.from}:</span> “
@@ -245,7 +245,7 @@ export function ServicesView() {
                   ))}
                 </ul>
               ) : (
-                <p className="sk-text-body-small-regular py-3 text-sko-text-subtle">No open requests.</p>
+                <p className="sk-text-body-medium-regular py-3 text-sko-text-subtle">No open requests.</p>
               )}
             </div>
           </section>
@@ -274,7 +274,7 @@ export function ServicesView() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <h3 className="sk-text-body-large-semibold text-sko-text-default">{item.title}</h3>
-                    <p className="sk-text-body-small-regular text-sko-text-subtle">{item.description}</p>
+                    <p className="sk-text-body-medium-regular text-sko-text-subtle">{item.description}</p>
                   </div>
                   {booked ? (
                     <p className="sk-text-body-small-medium mt-auto text-sko-text-muted">
@@ -303,7 +303,7 @@ export function ServicesView() {
                   <Icon icon={item.icon} size={20} className="shrink-0 text-sko-icon-subtle" aria-hidden="true" />
                   <span className="flex min-w-0 flex-1 flex-col">
                     <span className="sk-text-body-medium-semibold text-sko-text-default">{item.title}</span>
-                    <span className="sk-text-body-small-regular truncate text-sko-text-subtle">{item.description}</span>
+                    <span className="sk-text-body-small-regular text-sko-text-subtle">{item.description}</span>
                   </span>
                   <Icon icon={item.external ? ArrowUpRight : ChevronRight} size={16} className="shrink-0 text-sko-icon-subtle" aria-hidden="true" />
                   {item.external ? <span className="sr-only"> (opens in a new tab)</span> : null}

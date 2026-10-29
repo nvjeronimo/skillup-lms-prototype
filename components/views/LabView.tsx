@@ -249,7 +249,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
               Open in the {sandbox.name}
             </Button>
           </div>
-          <p className="sk-text-body-small-regular text-sko-text-subtle">Prefer your own machine? Download the files and follow the steps below.</p>
+          <p className="sk-text-body-medium-regular text-sko-text-subtle">Prefer your own machine? Download the files and follow the steps below.</p>
         </section>
       ) : null}
 
@@ -354,7 +354,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
             Mark as Complete
           </Button>
           {!ready ? (
-            <p className="sk-text-body-small-regular mt-2 text-sko-text-subtle">
+            <p className="sk-text-body-medium-regular mt-2 text-sko-text-subtle">
               {sandbox ? "Open the sandbox or download the lab files first." : "Download the lab files first."}
             </p>
           ) : null}

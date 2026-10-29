@@ -41,7 +41,7 @@ export function FormField({
       </label>
       {children}
       {hint ? (
-        <p id={`${id}-hint`} className="sk-text-body-small-regular text-sko-text-subtle">
+        <p id={`${id}-hint`} className="sk-text-body-medium-regular text-sko-text-subtle">
           {hint}
         </p>
       ) : null}

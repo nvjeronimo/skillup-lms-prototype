@@ -353,7 +353,7 @@ export function DiscussionView() {
               </ol>
               {current.replies > current.messages.length - 1 ? (
                 // The sample draws the first replies only.
-                <p className="sk-text-body-small-regular flex items-center gap-1.5 px-4 pb-4 text-sko-text-subtle md:px-5 lg:px-6">
+                <p className="sk-text-body-medium-regular flex items-center gap-1.5 px-4 pb-4 text-sko-text-subtle md:px-5 lg:px-6">
                   <Icon icon={MessageSquare} size={16} />
                   {current.replies - (current.messages.length - 1)} more{" "}
                   {current.replies - (current.messages.length - 1) === 1 ? "reply" : "replies"} in the course discussion.

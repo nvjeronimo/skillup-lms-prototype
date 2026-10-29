@@ -96,7 +96,7 @@ export function LiveControlBar({
               {joined} of {total} participants joined
             </span>
           </div>
-          <p className="sk-text-body-small-regular text-sko-text-default">
+          <p className="sk-text-body-medium-regular text-sko-text-default">
             Mute yourself by default · You can leave anytime
           </p>
         </div>
