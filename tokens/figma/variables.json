@@ -2593,8 +2593,8 @@
           "type": "FLOAT",
           "web": null,
           "values": {
-            "Desktop": 10,
-            "Tablet": 10,
+            "Desktop": 12,
+            "Tablet": 12,
             "Mobile": 12
           }
         },
@@ -2603,8 +2603,8 @@
           "type": "FLOAT",
           "web": null,
           "values": {
-            "Desktop": 12,
-            "Tablet": 12,
+            "Desktop": 13,
+            "Tablet": 13,
             "Mobile": 13
           }
         },
@@ -2623,8 +2623,8 @@
           "type": "FLOAT",
           "web": null,
           "values": {
-            "Desktop": 20,
-            "Tablet": 20,
+            "Desktop": 22,
+            "Tablet": 22,
             "Mobile": 24
           }
         },
@@ -2723,8 +2723,8 @@
           "type": "FLOAT",
           "web": null,
           "values": {
-            "Desktop": 14,
-            "Tablet": 14,
+            "Desktop": 15,
+            "Tablet": 15,
             "Mobile": 16
           }
         },
@@ -2823,8 +2823,8 @@
           "type": "FLOAT",
           "web": null,
           "values": {
-            "Desktop": 14,
-            "Tablet": 14,
+            "Desktop": 18,
+            "Tablet": 18,
             "Mobile": 18
           }
         },
