@@ -107,8 +107,9 @@ export function HarborCourseTable({
 
 /**
  * The same table for the Programs tab (Nelson, 26 Oct 2026): the program (picture, title linking
- * to its page, partners, then level and delivery as words), progress, how many courses are complete, what is next (the course in
- * progress, the start date, or the certificate), and the action.
+ * to its page, partners, then level and delivery as words), progress with how many courses are complete under the bar (one column
+ * since 29 Oct 2026, Nelson: more room for the title and Up next), what is next (the course in progress, the start date, or the
+ * certificate), and the action.
  */
 export function HarborProgramTable({
   programs,
@@ -124,8 +125,7 @@ export function HarborProgramTable({
         <thead>
           <tr className="text-sko-text-default">
             <th scope="col" className="py-4 pr-4 sk-text-body-small-semibold">Program</th>
-            <th scope="col" className="w-[200px] py-4 pr-4 sk-text-body-small-semibold">Progress</th>
-            <th scope="col" className="w-[190px] py-4 pr-4 sk-text-body-small-semibold">Courses</th>
+            <th scope="col" className="w-[220px] py-4 pr-4 sk-text-body-small-semibold">Progress</th>
             <th scope="col" className="py-4 pr-4 sk-text-body-small-semibold">Up next</th>
             <th scope="col" className="w-[160px] py-4 sk-text-body-small-semibold">
               <span className="sr-only">Action</span>
@@ -163,21 +163,23 @@ export function HarborProgramTable({
                   </span>
                 </th>
                 <td className="py-3 pr-4">
-                  {p.progressPct ? (
-                    <span className="flex items-center gap-2">
-                      <PlatformProgressBar
-                        value={p.progressPct}
-                        tone={p.progressPct >= 100 ? "complete" : "progress"}
-                        label={`${p.title} progress`}
-                        className="flex-1"
-                      />
-                      <span className="sk-text-body-medium-semibold w-10 text-right text-sko-text-default">{p.progressPct}%</span>
-                    </span>
-                  ) : (
-                    <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
-                  )}
+                  <span className="flex flex-col gap-1">
+                    {p.progressPct ? (
+                      <span className="flex items-center gap-2">
+                        <PlatformProgressBar
+                          value={p.progressPct}
+                          tone={p.progressPct >= 100 ? "complete" : "progress"}
+                          label={`${p.title} progress`}
+                          className="flex-1"
+                        />
+                        <span className="sk-text-body-medium-semibold w-10 text-right text-sko-text-default">{p.progressPct}%</span>
+                      </span>
+                    ) : (
+                      <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
+                    )}
+                    <span className="sk-text-body-small-regular text-sko-text-muted">{p.courses}</span>
+                  </span>
                 </td>
-                <td className="sk-text-body-medium-regular py-3 pr-4 text-sko-text-muted">{p.courses}</td>
                 <td className="sk-text-body-medium-regular py-3 pr-4 text-sko-text-muted">{next}</td>
                 <td className="py-3 text-right">
                   {actionHref ? (
