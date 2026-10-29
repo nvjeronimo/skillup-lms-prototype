@@ -1512,8 +1512,9 @@ button {
 }
 
 /* ============================================================================
-   Open edX scope (?scope=edx, lib/edx-scope; Nelson, 28 Oct 2026). What we invented
-   is tagged data-invented="<theme>: <what Open edX lacks>" and disappears.
+   Open edX scope (lib/edx-scope; Nelson, 28 Oct 2026; the default since 29 Oct). Our
+   improvements and extra features are tagged data-invented="<theme>: <what Open edX lacks>"
+   and show only with "Beyond Open edX" (?scope=full).
    ============================================================================ */
 [data-scope="edx"] [data-invented] {
   display: none !important;
