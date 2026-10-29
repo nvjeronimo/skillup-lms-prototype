@@ -96,7 +96,7 @@ const PASS_ICON: Record<GradeState, { icon: typeof AlertTriangle; className: str
  * border/subtle, radius 12, Elevation/level1; padding 24 / 20 / 16) with the title and the
  * percentage, a sentence that says where the learner stands, the grade bar with its pass mark,
  * the weights table and the graded items of each section.
- * Five Results, derived by `gradeState`: Not started, Below pass, Passing, Submitted below pass
+ * Five Results, derived by `gradeState`: Not started, Below pass, Passing (green bar), Submitted below pass
  * (amber) and Course ended (the only red one). Open edX itself has no failed state: below the
  * pass mark is a warning in every release.
  * The current grade shows as a tooltip under the bar on hover only (Nelson, 27 Oct 2026): the
@@ -131,7 +131,9 @@ export function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["gr
       </div>
 
       <div className="group relative flex flex-col gap-2">
-        <PlatformProgressBar value={grade.percent} label={grade.title} />
+        {/* Passing paints the grade bar green (Nelson, 29 Oct 2026); the sentence and the check
+            icon at the pass mark say so too. Every other state keeps the bg/info fill. */}
+        <PlatformProgressBar value={grade.percent} label={grade.title} tone={state === "passing" ? "complete" : undefined} />
         <span
           aria-hidden
           className="absolute top-0 h-2.5 w-0.5 -translate-x-1/2 bg-sko-bg-inverse"
