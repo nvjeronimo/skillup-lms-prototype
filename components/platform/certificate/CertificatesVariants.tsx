@@ -405,8 +405,10 @@ function LedgerGroup({
 function LedgerRow({ item, program = false }: { item: Item; program?: boolean }) {
   if (!isEarned(item)) return <ProgressRow c={item} />;
   return (
-    <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 py-3 md:grid-cols-[minmax(0,1fr)_160px_150px_auto]">
-      <div className="flex min-w-0 items-center gap-2">
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-1 py-3 md:grid-cols-[auto_minmax(0,1fr)_160px_150px_auto] md:gap-x-4">
+      {/* The sheet, as the earlier rows (Nelson, 29 Oct 2026): beside the title, across the row's lines on mobile. */}
+      <Sheet e={item} className="row-span-4 w-16 self-start md:row-span-1 md:w-20 md:self-center" />
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
         <h4 className={cn("min-w-0 text-sko-text-default md:truncate", program ? "sk-text-body-large-semibold" : "sk-text-body-large-regular")} title={item.certificate.title}>
           {item.certificate.title}
         </h4>
@@ -416,9 +418,9 @@ function LedgerRow({ item, program = false }: { item: Item; program?: boolean })
           </Badge>
         ) : null}
       </div>
-      <p className="sk-text-body-medium-regular col-start-1 text-sko-text-subtle md:col-start-auto">{program ? "Program certificate" : courseOf(item) ?? "Course"}</p>
-      <p className="sk-text-body-medium-regular col-start-1 text-sko-text-subtle md:col-start-auto">{issuedOn(item)}</p>
-      <div className="col-start-2 row-span-3 row-start-1 md:col-start-auto md:row-span-1 md:row-start-auto">
+      <p className="sk-text-body-medium-regular col-start-2 text-sko-text-subtle md:col-start-auto">{program ? "Program certificate" : courseOf(item) ?? "Course"}</p>
+      <p className="sk-text-body-medium-regular col-start-2 text-sko-text-subtle md:col-start-auto">{issuedOn(item)}</p>
+      <div className="col-start-2 pt-1 md:col-start-auto md:pt-0">
         <EarnedActions e={item} />
       </div>
     </div>
