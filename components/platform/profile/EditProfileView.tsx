@@ -85,7 +85,6 @@ function Section({
   step,
   title,
   lead,
-  invented,
   children,
 }: {
   id: string;
@@ -93,14 +92,11 @@ function Section({
   step: number;
   title: string;
   lead: string;
-  /** What Open edX lacks, when the whole section is SkillUp's own (hidden in `?scope=edx`). */
-  invented?: string;
   children: React.ReactNode;
 }) {
   return (
     <section
       data-arrive={step}
-      data-invented={invented}
       aria-labelledby={id}
       className="rounded-card border border-sko-border-subtle bg-sko-bg-page"
     >
@@ -128,9 +124,9 @@ function FieldSkeleton({ label, hint, rows, className }: { label: string; hint?:
   );
 }
 
-function SectionSkeleton({ title, lead, invented, children }: { title: string; lead: string; invented?: string; children: React.ReactNode }) {
+function SectionSkeleton({ title, lead, children }: { title: string; lead: string; children: React.ReactNode }) {
   return (
-    <div data-invented={invented} className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
+    <div className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
       <div className="flex flex-col gap-1 border-b border-sko-border-subtle px-4 py-4 md:px-6 md:py-5">
         <Skeleton variant="ghost" text="title-medium-semibold">{title}</Skeleton>
         <Skeleton variant="ghost" text="body-medium-regular">{lead}</Skeleton>
@@ -195,7 +191,7 @@ function EditProfileSkeleton() {
           <Skeleton variant="ghost" text="body-small-regular">We email you a link to choose a new one.</Skeleton>
         </div>
       </SectionSkeleton>
-      <SectionSkeleton title="Career" lead={CAREER_LEAD} invented={CAREER_INVENTED}>
+      <SectionSkeleton title="Career" lead={CAREER_LEAD}>
         <FieldSkeleton label="Phone" />
         <FieldSkeleton label="Current work status" />
         <FieldSkeleton label="Work experience" />
@@ -217,7 +213,6 @@ function EditProfileSkeleton() {
 }
 
 const CAREER_LEAD = "Helps us recommend courses for your career. Only you and SkillUp see this.";
-const CAREER_INVENTED = "profile: SkillUp career fields, Open edX has no phone, interests, work status or experience";
 
 /**
  * Edit profile (Nelson, 19 Oct 2026), opened from the profile menu: one page, two sections.
@@ -227,7 +222,8 @@ const CAREER_INVENTED = "profile: SkillUp career fields, Open edX has no phone, 
  *   (account MFE): full name, email (confirmed by email before it changes), password reset by email,
  *   site language, time zone, year of birth, gender (29 Oct). The username cannot change in Open edX: read-only.
  * - Career (Nelson, 29 Oct 2026): SkillUp's own fields from the skillup.online profile (phone,
- *   work status, experience, areas of interest). Not in Open edX: a custom build, tagged invented.
+ *   work status, experience, areas of interest), kept in Open edX scope: SkillUp marketing
+ *   needs them (Nelson, 29 Oct 2026).
  * In the prototype nothing is sent: Save keeps the values for this visit and says so.
  */
 export function EditProfileView() {
@@ -465,7 +461,6 @@ export function EditProfileView() {
           step={3}
           title="Career"
           lead={CAREER_LEAD}
-          invented={CAREER_INVENTED}
         >
           <Field id="phone" label="Phone">
             <input
