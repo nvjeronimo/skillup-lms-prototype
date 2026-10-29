@@ -214,6 +214,21 @@ const countLine = (tab: Tab, g: ProgramCertificateGroup<Item>) =>
     ? `${g.courses.length} of ${plural(g.program.total, "course certificate", "course certificates")}`
     : `${plural(g.courses.length, "course", "courses")} in progress`;
 
+/** The column labels over earned rows (desktop): the row grid, its words as labels. */
+function LedgerHeader({ className }: { className?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={cn("sk-text-label-small-medium hidden grid-cols-[minmax(0,1fr)_160px_150px_106px] gap-x-4 text-sko-text-subtle md:grid", className)}
+    >
+      <span>Certificate</span>
+      <span>Type</span>
+      <span>Issued</span>
+      <span />
+    </div>
+  );
+}
+
 /* ── A · Program card ────────────────────────────────────────────────────────────────── */
 
 function ProgramCertificateCard({ tab, group, issued }: { tab: Tab; group: ProgramCertificateGroup<Item>; issued?: EarnedCertificate }) {
@@ -288,10 +303,11 @@ function ProgramCertificateCard({ tab, group, issued }: { tab: Tab; group: Progr
       </div>
       {n ? (
         <div id={panelId} hidden={!open} className="border-t border-sko-border-subtle px-4 md:px-5 lg:px-6">
+          {tab === "earned" ? <LedgerHeader className="pb-1 pt-4" /> : null}
           <ul className="divide-y divide-sko-border-subtle">
             {group.courses.map((item) => (
               <li key={item.id}>
-                <Row item={item} />
+                <LedgerRow item={item} />
               </li>
             ))}
           </ul>
@@ -308,10 +324,11 @@ function OtherCourses({ tab, items, title }: { tab: Tab; items: Item[]; title: s
       <h3 id={`certs-other-${tab}`} className="sk-text-title-medium-semibold py-3 text-sko-text-default">
         {title} <span className="text-sko-text-subtle">· {items.length}</span>
       </h3>
-      <ul className="divide-y divide-sko-border-subtle border-t border-sko-border-subtle">
+      {tab === "earned" ? <LedgerHeader className="border-t border-sko-border-subtle pb-1 pt-4" /> : null}
+      <ul className={cn("divide-y divide-sko-border-subtle", tab !== "earned" && "border-t border-sko-border-subtle")}>
         {items.map((item) => (
           <li key={item.id}>
-            <Row item={item} />
+            <LedgerRow item={item} />
           </li>
         ))}
       </ul>
@@ -390,7 +407,7 @@ function LedgerRow({ item, program = false }: { item: Item; program?: boolean })
   return (
     <div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 py-3 md:grid-cols-[minmax(0,1fr)_160px_150px_auto]">
       <div className="flex min-w-0 items-center gap-2">
-        <h4 className={cn("truncate text-sko-text-default", program ? "sk-text-body-large-semibold" : "sk-text-body-large-regular")} title={item.certificate.title}>
+        <h4 className={cn("min-w-0 text-sko-text-default md:truncate", program ? "sk-text-body-large-semibold" : "sk-text-body-large-regular")} title={item.certificate.title}>
           {item.certificate.title}
         </h4>
         {program ? (
@@ -413,12 +430,7 @@ export function LedgerVariant(p: VariantProps) {
   return (
     <div className="flex flex-col gap-3">
       {p.tab === "earned" ? (
-        <div aria-hidden="true" className="sk-text-label-small-medium hidden grid-cols-[minmax(0,1fr)_160px_150px_106px] gap-x-4 px-[21px] text-sko-text-subtle md:grid">
-          <span>Certificate</span>
-          <span>Type</span>
-          <span>Issued</span>
-          <span />
-        </div>
+<LedgerHeader className="px-[21px]" />
       ) : null}
       {programs.map((g, i) => {
         const issued = p.earnedProgram(g.program.slug);
