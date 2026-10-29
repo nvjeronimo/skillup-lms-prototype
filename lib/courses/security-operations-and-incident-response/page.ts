@@ -281,7 +281,6 @@ export const page: CourseDetail = {
         preview: "David: No. You work on exported log extracts and a sample alert queue.",
         meta: "2 days ago  ·  2 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -308,7 +307,6 @@ export const page: CourseDetail = {
         preview: "David: You run it alone from the scenario pack; your mentor grades your summary.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -317,7 +315,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

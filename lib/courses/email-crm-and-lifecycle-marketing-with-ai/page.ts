@@ -316,7 +316,6 @@ export const page: CourseDetail = {
         preview: "Marcus: No. The course works from files, not from a tool.",
         meta: "2 days ago  ·  3 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -358,7 +357,6 @@ export const page: CourseDetail = {
         preview: "Marcus: It is the suggested order, not a lock.",
         meta: "5 days ago  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -367,7 +365,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

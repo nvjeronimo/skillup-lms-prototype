@@ -278,7 +278,6 @@ export const page: CourseDetail = {
         preview: "David: No. Course 1 assumes you can use a computer and a browser.",
         meta: "3 days ago  ·  2 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -312,7 +311,6 @@ export const page: CourseDetail = {
         preview: "David: Use the Fernhill Bakery case file for the graded version.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -321,7 +319,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

@@ -325,7 +325,6 @@ export const page: CourseDetail = {
         preview: "Samir: Give it your last three sprints as the reference.",
         meta: "yesterday  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -367,7 +366,6 @@ export const page: CourseDetail = {
         preview: "Samir: Yes, if you remove client names and anything confidential.",
         meta: "3 days ago  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -376,7 +374,6 @@ export const page: CourseDetail = {
         preview: "You: Clear now, one buffer at the end of the critical path.",
         meta: "last week  ·  3 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -385,7 +382,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

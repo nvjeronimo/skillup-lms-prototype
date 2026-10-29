@@ -313,7 +313,6 @@ export const page: CourseDetail = {
         preview: `${MENTOR.firstName}: Stop when new interviews stop adding new themes.`,
         meta: "yesterday  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -355,7 +354,6 @@ export const page: CourseDetail = {
         preview: `${MENTOR.firstName}: Yes, if they really do the activity you are studying.`,
         meta: "3 days ago  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -364,7 +362,6 @@ export const page: CourseDetail = {
         preview: "You: That makes sense, I will ask what happened instead.",
         meta: "last week  ·  3 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -373,7 +370,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

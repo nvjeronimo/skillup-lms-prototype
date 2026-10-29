@@ -320,7 +320,6 @@ export const page: CourseDetail = {
         preview: `${MENTOR.firstName}: Add one sentence you would publish and one you would not.`,
         meta: "2 days ago  ·  4 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -362,7 +361,6 @@ export const page: CourseDetail = {
         preview: `${MENTOR.firstName}: Three, split by need or situation.`,
         meta: "4 days ago  ·  3 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -371,7 +369,6 @@ export const page: CourseDetail = {
         preview: "You: Thanks, the Module 1 reading covers it.",
         meta: "last week  ·  2 replies",
         answered: true,
-        following: false,
         unread: false,
       },
       {
@@ -380,7 +377,6 @@ export const page: CourseDetail = {
         preview: "You: Asked yesterday, no reply yet.",
         meta: "yesterday  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

@@ -354,7 +354,6 @@ export const page: CourseDetail = {
         preview: "Marcus: No. The case-study shop in Handouts is enough.",
         meta: "yesterday  ·  3 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -396,7 +395,6 @@ export const page: CourseDetail = {
         preview: "Marcus: Yes, and it will save you time in Module 2.",
         meta: "3 days ago  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -405,7 +403,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

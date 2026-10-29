@@ -319,7 +319,6 @@ export const page: CourseDetail = {
         preview: "Marcus: No. Every exercise can be done on the sample site.",
         meta: "3 days ago  ·  2 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -346,7 +345,6 @@ export const page: CourseDetail = {
         preview: "You: Asked yesterday, no reply yet.",
         meta: "yesterday  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

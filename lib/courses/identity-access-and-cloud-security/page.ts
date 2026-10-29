@@ -281,7 +281,6 @@ export const page: CourseDetail = {
         preview: "David: No. The exercises use exported settings from a sample account.",
         meta: "yesterday  ·  2 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -308,7 +307,6 @@ export const page: CourseDetail = {
         preview: "David: The concepts are provider-neutral.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -317,7 +315,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],

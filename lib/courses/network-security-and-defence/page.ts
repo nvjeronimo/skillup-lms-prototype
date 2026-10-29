@@ -278,7 +278,6 @@ export const page: CourseDetail = {
         preview: "David: No. Every exercise uses diagrams and sample data.",
         meta: "2 days ago  ·  2 replies",
         answered: true,
-        following: true,
         unread: false,
         messages: [
           {
@@ -306,7 +305,6 @@ export const page: CourseDetail = {
         preview: "David: Only telling whether two addresses share a subnet.",
         meta: "last week  ·  2 replies  ·  1 unread",
         answered: true,
-        following: false,
         unread: true,
       },
       {
@@ -315,7 +313,6 @@ export const page: CourseDetail = {
         preview: "You: Asked today, no reply yet.",
         meta: "today  ·  1 reply",
         answered: false,
-        following: false,
         unread: false,
       },
     ],
