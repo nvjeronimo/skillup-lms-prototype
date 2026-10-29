@@ -1,13 +1,14 @@
 import { Skeleton } from "@/components/atoms/Skeleton";
-import { earnedCertificates } from "@/lib/platform/certificates";
+import { earnedCertificates, earnedIssuedValue, groupCertificates } from "@/lib/platform/certificates";
 
 /**
  * Certificates while it loads (motion-matrix §7.9): CertificatesView's column, gaps and text
- * styles. The two tabs on their rule, the search (and the view toggle on desktop), then the
- * Earned tab as it opens: each card drawn as the card is (eyebrow, the sheet at its 1123:794
- * ratio, ghost title and issue line, the actions on the bottom edge, cards of a row one height).
+ * styles. The two tabs on their rule, the search, then the Earned tab as it opens: one Program
+ * card per program (the hero block beside the body: the program certificate line and the
+ * show / hide button, closed), then the Other courses card with one row per certificate.
  */
 export function CertificatesSkeleton() {
+  const groups = groupCertificates(earnedCertificates, earnedIssuedValue);
   return (
     <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
       <div className="flex flex-col gap-2">
@@ -24,28 +25,28 @@ export function CertificatesSkeleton() {
         </div>
         <div className="flex items-center gap-2 md:justify-end">
           <Skeleton variant="block" radius="control" className="h-11 w-full md:h-10 md:w-[240px] lg:w-[320px]" />
-          <Skeleton variant="block" radius="track" className="hidden h-10 w-[98px] shrink-0 lg:block" />
         </div>
-        <div className="grid grid-cols-1 gap-layout-grid md:grid-cols-2 lg:grid-cols-3">
-          {earnedCertificates.map((e) => (
-            <div key={e.id} className="flex">
-              <div className="flex w-full flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]">
-                <Skeleton text="label-small-medium" width={120} />
-                <Skeleton variant="block" radius="card" className="aspect-[1123/794] w-full" />
-                <Skeleton variant="ghost" text="body-large-semibold">{e.certificate.title}</Skeleton>
-                <Skeleton variant="ghost" text="body-medium-regular">
-                  {e.kind === "course" && e.program?.number
-                    ? `${e.certificate.issuedLine} Course ${e.program.number} of ${e.program.total}.`
-                    : e.certificate.issuedLine}
-                </Skeleton>
-                <div className="mt-auto flex items-start gap-1.5">
-                  <Skeleton variant="block" radius="control" className="h-11 min-w-0 flex-1 md:h-9" />
-                  <Skeleton variant="block" radius="control" className="h-11 min-w-0 flex-1 md:h-9" />
-                  <Skeleton variant="block" radius="control" className="size-11 shrink-0 md:size-9" />
-                </div>
+        <div className="flex flex-col gap-layout-grid">
+          {groups.programs.map((g) => (
+            <div key={g.program.slug} className="flex flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page lg:flex-row">
+              <Skeleton variant="block" radius="none" className="h-[194px] w-full lg:w-[42%] lg:shrink-0" />
+              <div className="flex min-w-0 flex-1 flex-col justify-between gap-4 p-4 md:p-5 lg:p-6">
+                <Skeleton variant="ghost" text="title-medium-semibold">Program certificate</Skeleton>
+                <Skeleton variant="block" radius="control" className="h-11 w-full md:h-9" />
               </div>
             </div>
           ))}
+          {groups.standalone.length ? (
+            <div className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:p-6">
+              <Skeleton variant="ghost" text="title-medium-semibold">Other courses</Skeleton>
+              {groups.standalone.map((e) => (
+                <div key={e.id} className="flex items-center gap-4 py-2">
+                  <Skeleton variant="block" radius="control" className="aspect-[1123/794] w-16 shrink-0 md:w-20" />
+                  <Skeleton variant="ghost" text="body-large-regular">{e.certificate.title}</Skeleton>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
