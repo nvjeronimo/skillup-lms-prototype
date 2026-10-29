@@ -60,10 +60,10 @@ const THEME_INIT_SCRIPT = `(function(){var d=document.documentElement;var s={};t
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${montserrat.variable} ${interTight.variable} ${plusJakarta.variable} ${figtree.variable} ${openSans.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${montserrat.variable} ${interTight.variable} ${plusJakarta.variable} ${figtree.variable} ${openSans.variable}`} data-scope="edx" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        {/* ?scope=edx: only what Open edX provides (lib/edx-scope). */}
+        {/* Open edX only by default; ?scope=full shows our extra features (lib/edx-scope). */}
         <script dangerouslySetInnerHTML={{ __html: SCOPE_INIT_SCRIPT }} />
         {/* First visit of a platform page in this session: hold the skeleton from the first
             paint (motion-matrix §7.9; lib/arrival/prepaint). */}

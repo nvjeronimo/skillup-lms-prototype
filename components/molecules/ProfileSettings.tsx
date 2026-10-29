@@ -332,7 +332,11 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   );
 }
 
-/** Accessibility standards: text size and the four switches (the same everywhere). */
+/**
+ * Accessibility standards: text size and the four switches (the same everywhere). Open edX has no
+ * such preferences, but they live in our frontend only (no platform change), so they stay in the
+ * Open edX scope: we can and should ship them (Nelson, 29 Oct 2026).
+ */
 export function AccessibilitySection() {
   const vision = useLmsStore((s) => s.vision);
   const setVision = useLmsStore((s) => s.setVision);
@@ -350,7 +354,6 @@ export function AccessibilitySection() {
       title="Accessibility standards"
       settings
       roomy
-      invented="accessibility: no text size, colour, motion or target preferences in Open edX"
     >
       {/* 16 between items: each toggle row's own 6 of padding + 4 (+ 6 under Text size). */}
       <div className="flex flex-col gap-1">
@@ -388,7 +391,7 @@ export function AccessibilitySection() {
 }
 
 /**
- * The footer (DS "Footer demo purposes only"): the Open edX only switch, Reset demo and Restart first
+ * The footer (DS "Footer demo purposes only"): the Beyond Open edX switch, Reset demo and Restart first
  * steps, prototype only.
  * Shown without `?demo=1` again (Nelson, 21 Oct 2026): testers need it to run the assistant's
  * first steps from the start.
@@ -399,15 +402,16 @@ export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const row = MENU_ROW;
   return (
     <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
-      {/* The Open edX scope (lib/edx-scope; Nelson, 28 Oct 2026): reloads with ?scope=edx|full so the
+      {/* The Open edX scope is the default (lib/edx-scope; Nelson, 29 Oct 2026): this switch opts
+          in to our improvements and extra features. It reloads with ?scope=full|edx so the
           pre-paint script and every hook read the new scope. */}
       <ToggleRow
-        label="Open edX only"
-        hint="Hides what we invented"
-        checked={edx}
+        label="Beyond Open edX"
+        hint="Show our improvements and extra features"
+        checked={!edx}
         onChange={(on) => {
           const url = new URL(window.location.href);
-          url.searchParams.set("scope", on ? "edx" : "full");
+          url.searchParams.set("scope", on ? "full" : "edx");
           window.location.assign(url.toString());
         }}
       />

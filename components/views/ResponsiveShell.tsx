@@ -8,7 +8,6 @@ import { AssistantChatFloating } from "@/components/assistant/AssistantChatFloat
 import { useFloatingAssistant } from "@/lib/assistant/floating";
 import { PageTransitions } from "@/components/views/PageTransitions";
 import { SyntheticPersonasHost } from "@/components/molecules/SyntheticPersonas";
-import { EdxScopeChip } from "@/components/edx-scope/EdxScopeChip";
 import { LOAD_MODE_KEY } from "@/lib/arrival/loadMode";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
@@ -259,7 +258,6 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
         {floatingAssistant ? <AssistantChatFloating /> : <AssistantChat />}
         <PageTransitions />
         <SyntheticPersonasHost />
-        <EdxScopeChip />
       </>
     );
 
