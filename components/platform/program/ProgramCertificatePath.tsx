@@ -1,13 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Award, Check } from "lucide-react";
+import { Award, Check, CheckCircle2, Lock } from "lucide-react";
+import { Badge } from "@/components/atoms/Badge";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import type { CourseLine, Enrolment } from "@/lib/platform/certificate-enrolments";
 import type { EarnedCertificate } from "@/lib/platform/certificates";
+import { programPartnersOf } from "@/lib/platform/my-learning";
+import type { CertificateDocumentData, Program } from "@/lib/platform/program";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import { CertificateDocument, certificateLearner } from "./CertificateDocument";
 
 const MOCK = "No API says whether a program certificate is earned: counted here from the course rows";
 const issuedOn = (e: EarnedCertificate) => e.certificate.document.issuedOn;
@@ -64,52 +68,129 @@ function PathStep({ c, last }: { c: CourseLine; last: boolean }) {
   );
 }
 
-/** The end of the path: the program certificate, earned (green, View + Share) or still ahead. */
-function PathGoal({ e }: { e: Enrolment }) {
+/**
+ * The sheet the learner is working towards, before it is issued: the program's title and
+ * partners on the real certificate layout, with "On completion" where the date and ID go. The
+ * partners and signatories are those of the program's course certificates.
+ */
+function previewDocument(program: Program): CertificateDocumentData {
+  const issued = program.certificates.find((c) => c.status === "issued");
+  const base = issued?.status === "issued" ? issued.document : undefined;
+  return {
+    kind: "program",
+    courseTitle: program.title,
+    summary: `${program.stats.courses}  ·  ${program.stats.duration}`,
+    issuedOn: "On completion",
+    certificateId: "Issued on completion",
+    verifyUrl: "skillup.online/certificates",
+    partnerLogoSrc: base?.partnerLogoSrc,
+    partnerName: base?.partnerName,
+    morePartners: base?.morePartners,
+    signatories: base?.signatories ?? [],
+  };
+}
+
+/**
+ * The end of the path: the Program certificate card (Nelson, 30 Oct 2026: the sheet and what it
+ * gives, from the 23 Oct card, "no card do program certificate"). The sheet on the left (320;
+ * on top below 640 of the card's own width): the real certificate once earned, else a muted
+ * preview with a lock and "Complete all N courses". On the right: "Program certificate" with
+ * Earned, the state line, View + Share once earned, and what the certificate gives. Earned it
+ * sits on bg/success-soft; not yet, inside a dashed border/default.
+ */
+function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: Program }) {
+  const issued = e.issued;
+  const total = e.courses.length;
+  const doc = issued ? issued.certificate.document : previewDocument(program);
+  // The program's partners (its header logos) until issued, then those on the sheet.
+  const programPartners = programPartnersOf(program.slug).filter((p) => p !== "SkillUp");
+  const partners = (
+    !issued && programPartners.length
+      ? programPartners
+      : [doc.partnerName, ...(doc.morePartners ?? []).map((p) => p.name)].filter(Boolean)
+  ) as string[];
   return (
-    <div
-      data-mock={MOCK}
-      className={cn(
-        "flex gap-3 rounded-card p-3 lg:w-[220px] lg:shrink-0 lg:flex-col lg:gap-2",
-        e.issued ? "bg-sko-bg-success-soft" : "border border-dashed border-sko-border-default",
-      )}
-    >
-      <span
-        aria-hidden="true"
+    <div className="[container-type:inline-size]">
+      <div
+        data-mock={MOCK}
         className={cn(
-          "flex size-7 shrink-0 items-center justify-center rounded-pill",
-          e.issued ? "bg-sko-bg-success text-sko-text-on-primary" : "bg-sko-bg-subtle text-sko-icon-muted",
+          "grid gap-4 rounded-card p-4 md:p-5 [@container_(min-width:640px)]:grid-cols-[320px_minmax(0,1fr)] [@container_(min-width:640px)]:gap-6",
+          issued ? "bg-sko-bg-success-soft" : "border border-dashed border-sko-border-default",
         )}
       >
-        <Icon icon={Award} size={16} />
-      </span>
-      <div className="flex min-w-0 flex-col gap-1">
-        <p className="sk-text-body-medium-semibold text-sko-text-default">Program certificate</p>
-        {e.issued ? (
-          <>
-            <span className="sk-text-body-small-regular text-sko-text-subtle">Earned {issuedOn(e.issued)}</span>
-            <div className="flex items-center gap-1.5 pt-1">
-              <ButtonLink
-                href={e.issued.viewHref}
-                hierarchy="primary"
-                size="sm"
-                aria-label={`View certificate: ${e.title}`}
-                className="max-md:h-11"
-              >
-                View
-              </ButtonLink>
-              <CertificateShare
-                target={{ title: e.issued.certificate.title, document: e.issued.certificate.document }}
-                look="icon"
-                up
-              />
+        <div className="relative aspect-[1123/794] w-full max-w-[480px] self-start overflow-hidden rounded-card-inset border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
+          <div className={cn("absolute inset-0", !issued && "opacity-50 grayscale")}>
+            <CertificateDocument
+              data={doc}
+              label={
+                issued
+                  ? `Certificate of completion: ${certificateLearner(doc)}, ${program.title}`
+                  : `Preview of the program certificate: ${program.title}`
+              }
+            />
+          </div>
+          {!issued ? (
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+              <span className="sk-text-body-small-semibold inline-flex items-center gap-1.5 whitespace-nowrap rounded-pill border border-sko-border-subtle bg-sko-bg-page px-3 py-1.5 text-sko-text-default shadow-sm">
+                <Icon icon={Lock} size={14} aria-hidden />
+                Complete all {total} courses
+              </span>
             </div>
-          </>
-        ) : (
-          <span className="sk-text-body-small-regular text-sko-text-subtle">
-            Yours when all {e.courses.length} courses are complete
-          </span>
-        )}
+          ) : null}
+        </div>
+
+        <div className="flex min-w-0 flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "flex size-7 shrink-0 items-center justify-center rounded-pill",
+                  issued ? "bg-sko-bg-success text-sko-text-on-primary" : "bg-sko-bg-subtle text-sko-icon-muted",
+                )}
+              >
+                <Icon icon={Award} size={16} />
+              </span>
+              <p className="sk-text-title-medium-semibold text-sko-text-default">Program certificate</p>
+              {/* Earned: green with the icon and the word, never colour alone (13 Oct 2026). */}
+              {issued ? (
+                <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
+                  Earned
+                </Badge>
+              ) : null}
+            </div>
+            <p className="sk-text-body-medium-regular text-sko-text-subtle">
+              {issued ? `Issued ${issuedOn(issued)}.` : `Yours when all ${total} courses are complete.`}
+            </p>
+          </div>
+          {issued ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <ButtonLink
+                href={issued.viewHref}
+                hierarchy="primary"
+                size="md"
+                aria-label={`View certificate: ${program.title}`}
+                className="max-md:h-11 max-md:flex-1"
+              >
+                View certificate
+              </ButtonLink>
+              <CertificateShare target={{ title: program.title, document: issued.certificate.document }} look="icon" />
+            </div>
+          ) : null}
+          <ul className="sk-text-body-small-regular mt-auto flex flex-col gap-1 text-sko-text-subtle">
+            <li className="inline-flex items-center gap-1.5">
+              <Icon icon={Award} size={16} className="text-sko-icon-subtle" aria-hidden />
+              {partners.length ? `Issued with ${partners.join(" and ")}` : "Issued by SkillUp Online"}
+            </li>
+            <li className="inline-flex items-center gap-1.5">
+              <Icon icon={Check} size={16} className="text-sko-icon-subtle" aria-hidden />A certificate ID anyone can verify
+            </li>
+            <li className="inline-flex items-center gap-1.5">
+              <Icon icon={Check} size={16} className="text-sko-icon-subtle" aria-hidden />
+              Ready to share on LinkedIn
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
@@ -119,11 +200,11 @@ function PathGoal({ e }: { e: Enrolment }) {
  * The path to the program certificate (Nelson, 30 Oct 2026, from the Path proposal of PR 437),
  * at the top of the program's Certificates tab: one step per course in program order (a check
  * and the issue date with View when its certificate is issued, its number and "N% complete" or
- * "Not started" otherwise), joined by a rail that turns green behind each earned course, ending
- * in the program certificate. Across from lg up (the goal 220 on the right); a vertical list
- * below lg, the goal under the last course.
+ * "Not started" otherwise), joined by a rail that turns green behind each earned course, across
+ * from lg up and a vertical list below. Under the steps, the Program certificate card
+ * (ProgramCertificateGoal) at the card's full width.
  */
-export function ProgramCertificatePath({ e }: { e: Enrolment }) {
+export function ProgramCertificatePath({ e, program }: { e: Enrolment; program: Program }) {
   return (
     <section
       aria-labelledby="program-path-title"
@@ -137,14 +218,12 @@ export function ProgramCertificatePath({ e }: { e: Enrolment }) {
           {e.complete} of {e.courses.length} courses complete
         </p>
       </div>
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:gap-4">
-        <ol aria-label={`Courses of ${e.title}`} className="flex flex-col lg:flex-1 lg:flex-row">
-          {e.courses.map((c, i) => (
-            <PathStep key={c.slug} c={c} last={i === e.courses.length - 1} />
-          ))}
-        </ol>
-        <PathGoal e={e} />
-      </div>
+      <ol aria-label={`Courses of ${e.title}`} className="flex flex-col lg:flex-row">
+        {e.courses.map((c, i) => (
+          <PathStep key={c.slug} c={c} last={i === e.courses.length - 1} />
+        ))}
+      </ol>
+      <ProgramCertificateGoal e={e} program={program} />
     </section>
   );
 }

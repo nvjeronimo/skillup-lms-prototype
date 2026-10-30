@@ -147,8 +147,7 @@ function allCourseCertificates(program: Program): ProgramCertificate[] {
 /**
  * Certificates tab (Nelson, 30 Oct 2026): the whole content width (no program panel on this
  * tab), the Section intro, then the path to the program certificate (ProgramCertificatePath:
- * every course in order, ending in the program certificate; it replaced the large Program
- * certificate card of 23 Oct), then "Course certificates": one card per course of the program,
+ * every course in order, then the Program certificate card with the sheet and what it gives), then "Course certificates": one card per course of the program,
  * started or not, three across where the column allows (never under 320; they stack on a
  * phone). Each item is a subgrid of two rows, so the course lines share one height across a
  * row and the cards start level; each card keeps its own height (an issued card with its sheet
@@ -160,7 +159,7 @@ export function CertificatesTab({ program }: { program: Program }) {
   return (
     <div className="flex flex-col gap-layout-stack">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
-      {path ? <ProgramCertificatePath e={path} /> : null}
+      {path ? <ProgramCertificatePath e={path} program={program} /> : null}
       <h3 className="sk-text-body-large-semibold text-sko-text-default">Course certificates</h3>
       <ul
         data-mock="Certificate artwork, IDs and requirements are not readable yet"
