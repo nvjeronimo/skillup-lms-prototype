@@ -51,7 +51,6 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   const textSize = useLmsStore((s) => s.textSize);
   const reduceMotion = useLmsStore((s) => s.reduceMotion);
   const underlineLinks = useLmsStore((s) => s.underlineLinks);
-  const squareCorners = useLmsStore((s) => s.squareCorners);
   const setSkin = useLmsStore((s) => s.setSkin);
   const setDeviceMode = useLmsStore((s) => s.setDeviceMode);
   const largeTargets = useLargeTargets();
@@ -228,7 +227,6 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
   }, [textSize]);
   React.useEffect(() => flag("data-reduce-motion", reduceMotion), [reduceMotion]);
   React.useEffect(() => flag("data-underline-links", underlineLinks), [underlineLinks]);
-  React.useEffect(() => flag("data-square-corners", squareCorners), [squareCorners]);
   // ?direction=studio / harbor / fluent / classic picks the Studio, Harbor or Fluent skin, or SKO (a shareable link).
   React.useEffect(() => {
     const dq = new URLSearchParams(window.location.search).get("direction");
