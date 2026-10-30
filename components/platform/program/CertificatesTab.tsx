@@ -4,14 +4,13 @@ import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
-import { getProgramCertificate } from "@/lib/platform/catalog";
-import { programCertificatePageHref } from "@/lib/platform/hrefs";
 import { useLmsStore } from "@/lib/store";
 import type { Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import { CardShell, SectionIntro } from "./parts";
-import { ProgramCertificateHero } from "./ProgramCertificateHero";
+import { ProgramCertificatePath } from "./ProgramCertificatePath";
+import { programEnrolment } from "@/lib/platform/certificate-enrolments";
 
 /**
  * DS `LMS / Course Detail / Certificate card` (5425:566), the two states the page draws.
@@ -126,54 +125,53 @@ export function CertificateCard({
 }
 
 /**
- * Certificates tab: the Section intro, one card per course the learner has started (the
- * course line, body-medium/Semibold, over its Certificate card) and the note about the courses
- * not started yet. The cards fill the content column two by two (Nelson, 30 Oct 2026; until
- * then 320 columns that left the right of the page empty), Layout/grid-gap apart. A card is
- * never under 320: where two would not fit (a phone, or tablet beside the program panel) they
- * stack at full width. It follows the column, not the viewport, so no breakpoint. Each item is a subgrid of two rows, so the course lines
- * share one height across a row (one wraps, the other not) and the cards start level and
- * share one height too.
- *
- * Above the course cards, the Program certificate first and large (ProgramCertificateHero;
- * Nelson, 23 Oct 2026: it is the goal of the program, so it leads the tab), closed by a 1px
- * rule, then a "Course certificates" heading for the course cards. Until 23 Oct it was a
- * 320 card under a "Proposal: not designed yet" note (10 Oct 2026).
+ * Every course of the program as a certificate card, in program order: its own card when the
+ * program data has one (issued or not earned yet), otherwise a not-earned card that says the
+ * course has not started (Nelson, 30 Oct 2026: "mostrar os cards de todos os cursos"; until
+ * then only the started courses, with a note about the others).
+ */
+function allCourseCertificates(program: Program): ProgramCertificate[] {
+  return program.courses.map((course) => {
+    const own = program.certificates.find((c) => c.courseId === `course-${course.number}`);
+    if (own) return own;
+    return {
+      status: "not-earned" as const,
+      courseId: `course-${course.number}`,
+      courseLabel: `Course ${course.number} · ${course.card.title}`,
+      title: "Not started yet",
+      requirements: [{ title: "Complete the course content", detail: "Not started", percent: 0 }],
+    };
+  });
+}
+
+/**
+ * Certificates tab (Nelson, 30 Oct 2026): the whole content width (no program panel on this
+ * tab), the Section intro, then the path to the program certificate (ProgramCertificatePath:
+ * every course in order, then the Program certificate card with the sheet and what it gives), then "Course certificates": one card per course of the program,
+ * started or not, three across where the column allows (never under 320; they stack on a
+ * phone). Each item is a subgrid of two rows, so the course lines share one height across a
+ * row and the cards start level; each card keeps its own height (an issued card with its sheet
+ * is much taller than a course not started).
  */
 export function CertificatesTab({ program }: { program: Program }) {
-  const programCertificate = getProgramCertificate(program.slug);
+  const path = programEnrolment(program.slug);
+  const cards = allCourseCertificates(program);
   return (
     <div className="flex flex-col gap-layout-stack">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
-      {programCertificate ? (
-        <>
-          <section
-            aria-labelledby="program-certificate-title"
-            className="flex flex-col gap-3 border-b border-sko-border-subtle pb-6"
-          >
-            <h3 id="program-certificate-title" className="sr-only">
-              Program certificate
-            </h3>
-            <ProgramCertificateHero state={programCertificate} />
-          </section>
-          <h3 className="sk-text-body-large-semibold text-sko-text-default">Course certificates</h3>
-        </>
-      ) : null}
-      {/* No course started yet: no list, the note alone (an empty list would still take a gap). */}
-      {program.certificates.length > 0 ? (
-        <ul
-          data-mock="Certificate artwork, IDs and requirements are not readable yet"
-          className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,max(320px,calc((100%-var(--sk-layout-grid-gap))/2))),1fr))] gap-layout-grid"
-        >
-          {program.certificates.map((certificate) => (
-            <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
-              <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">{certificate.courseLabel}</h4>
-              <CertificateCard certificate={certificate} className="h-full" />
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      <p className="sk-text-body-medium-regular text-sko-text-subtle">{program.certificatesNote}</p>
+      {path ? <ProgramCertificatePath e={path} program={program} /> : null}
+      <h3 className="sk-text-body-large-semibold text-sko-text-default">Course certificates</h3>
+      <ul
+        data-mock="Certificate artwork, IDs and requirements are not readable yet"
+        className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,max(320px,calc((100%-2*var(--sk-layout-grid-gap))/3))),1fr))] gap-layout-grid"
+      >
+        {cards.map((certificate) => (
+          <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
+            <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">{certificate.courseLabel}</h4>
+            <CertificateCard certificate={certificate} className="self-start" />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
