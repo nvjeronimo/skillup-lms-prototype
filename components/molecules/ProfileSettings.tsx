@@ -8,7 +8,7 @@ import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";
 import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { cn } from "@/lib/utils";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
-import { useEdxScope } from "@/lib/edx-scope";
+import { setEdxScope, useEdxScope } from "@/lib/edx-scope";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
@@ -403,17 +403,13 @@ export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   return (
     <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
       {/* The Open edX scope is the default (lib/edx-scope; Nelson, 29 Oct 2026): this switch opts
-          in to our improvements and extra features. It reloads with ?scope=full|edx so the
-          pre-paint script and every hook read the new scope. */}
+          in to our improvements and extra features. It switches in place, with no reload, so the
+          page stays where it is and the differences show at once (Nelson, 30 Oct 2026). */}
       <ToggleRow
         label="Beyond Open edX"
         hint="Show our improvements and extra features"
         checked={!edx}
-        onChange={(on) => {
-          const url = new URL(window.location.href);
-          url.searchParams.set("scope", on ? "full" : "edx");
-          window.location.assign(url.toString());
-        }}
+        onChange={(on) => setEdxScope(!on)}
       />
       <button
         type="button"
