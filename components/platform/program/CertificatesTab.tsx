@@ -190,7 +190,11 @@ function allCourseCertificates(program: Program): ProgramCertificate[] {
  * is no path of steps, since a learner may take a program's courses in any order (Nelson,
  * 30 Oct 2026). Each item is a subgrid of two rows, so the course lines share one height
  * across a row and the cards start level; each card keeps its own height.
+ * The course titles carry no "Course n ·" either, for the same reason.
  */
+/** The course's title without "Course n · ": the number reads as an order the program may not have. */
+const withoutNumber = (label: string) => label.replace(/^Course \d+\s*·\s*/, "");
+
 export function CertificatesTab({ program }: { program: Program }) {
   const enrolment = programEnrolment(program.slug);
   const cards = allCourseCertificates(program);
@@ -206,7 +210,7 @@ export function CertificatesTab({ program }: { program: Program }) {
         {cards.map((certificate) => (
           <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
             <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">
-              {certificate.courseLabel}
+              {withoutNumber(certificate.courseLabel)}
             </h4>
             <CertificateCard certificate={certificate} progress={false} className="self-start" />
           </li>
