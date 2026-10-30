@@ -10,6 +10,7 @@ import { SelectField } from "@/components/atoms/SelectField";
 import { Skeleton, SkeletonPill } from "@/components/atoms/Skeleton";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSegmented } from "@/components/platform/PlatformSegmented";
+import { DeleteAccountSection } from "@/components/platform/profile/DeleteAccount";
 import {
   editProfileSeed,
   PROFILE_OPTIONS,
@@ -529,6 +530,10 @@ export function EditProfileView() {
           </Button>
         </div>
       </form>
+      {/* Outside the form: deleting is not saving the profile. */}
+      <div className="sk-page-stack mx-auto mt-layout-section w-full max-w-[880px]">
+        <DeleteAccountSection email={saved.email} />
+      </div>
     </PlatformPage>
   );
 }

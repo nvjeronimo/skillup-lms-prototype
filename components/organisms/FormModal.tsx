@@ -151,6 +151,8 @@ export interface FormModalProps {
   description?: React.ReactNode;
   /** The primary action's label ("Post question", "Send"). */
   submitLabel: string;
+  /** The primary action's tone: "destructive" for an action that deletes (Delete my account). */
+  submitTone?: "brand" | "destructive";
   /** Called with the form valid; the caller closes the modal and confirms in a toast. */
   onSubmit: () => void;
   /** Keeps the primary action disabled until the required fields are filled. */
@@ -183,6 +185,7 @@ export function FormModal({
   title,
   description,
   submitLabel,
+  submitTone = "brand",
   onSubmit,
   canSubmit,
   doneOnly,
@@ -261,7 +264,7 @@ export function FormModal({
                   Cancel
                 </Button>
               )}
-              <Button type="submit" hierarchy="primary" size="md" disabled={!canSubmit} className="max-md:w-full">
+              <Button type="submit" tone={submitTone} hierarchy="primary" size="md" disabled={!canSubmit} className="max-md:w-full">
                 {submitLabel}
               </Button>
             </>
