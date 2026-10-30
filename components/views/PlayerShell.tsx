@@ -328,10 +328,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // in the same viewport as the header one and just reads as duplication.
   // Since 13 Oct 2026 (Figma `Feedback-Mark`) it sits in the feedback row, on the right, and
   // drops under the feedback on a phone: no row of its own. Once the topic is completed the row
-  // is feedback only, because the status is in the header. The one exception is a video on a
-  // phone, where the header shows no status: the completed badge stays in the row there.
+  // is feedback only, because the status is in the header (a video on a phone too, since 30 Oct 2026).
   const endAction =
-    showAction && activeTab === "transcript" && (isCompleted ? isVideo && bp === "mobile" : !measuredMedia)
+    showAction && activeTab === "transcript" && !isCompleted && !measuredMedia
       ? renderAction()
       : null;
 
@@ -624,16 +623,20 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   </div>
                 ) : null}
                 <div className={cn(CONTENT_PX[bp], CONTENT_PB[bp], CONTENT_MEASURE)}>
-                  {/* Topic title below the player (ICP Phase 1 canonical layout).
-                      The top-right action is hidden on mobile — it lives only at
-                      the end of the content there. */}
-                  <div data-arrive={1} className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <h1 className="sk-text-headline-small-semibold min-w-0 text-sko-text-default">
-                      {topic.title}
-                    </h1>
-                    {headerStatus && bp !== "mobile" ? (
-                      <div className="shrink-0">{headerStatus}</div>
-                    ) : null}
+                  {/* Topic header below the player: the type · duration meta row with the completed
+                      status on the right, then the title, on every breakpoint (Nelson, 30 Oct 2026;
+                      ICP Video Topic-Header with the meta row on). No description, as in the ICP. */}
+                  <div data-arrive={1}>
+                    <TopicHeader
+                      type={topic.type}
+                      title={topic.title}
+                      duration={topic.duration}
+                      durationInvented={
+                        NO_EFFORT_FAMILIES.includes(family) ? "duration: no time estimate for this type in Open edX" : undefined
+                      }
+                      showDescription={false}
+                      rightSlot={headerStatus ?? undefined}
+                    />
                   </div>
                   <div data-arrive={2} className="mt-6">
                     {showTabs ? (
