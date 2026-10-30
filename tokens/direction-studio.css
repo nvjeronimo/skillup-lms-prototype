@@ -182,31 +182,8 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
   }
 }
 
-/* Player sidebar, Studio only (Nelson, 25 Oct 2026, a test): each module in its own box. The list
-   sits on the faint ground with 8 of padding and 12 between boxes (was 8; Nelson, 27 Oct 2026: more air between the boxes); a box is a white surface with a
-   1px border/subtle and the nesting radius (the sidebar's control radius − the 8 of padding). It
-   clips with overflow: clip, not hidden, so a sticky module header (the Course Journey) still
-   sticks to the list. Inside a box the closed header needs no hairline. SKO and Gold unchanged. */
-[data-direction="studio"] [data-module-list] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 8px;
-  background-color: var(--color-bg-faint);
-}
+/* Player sidebar: the boxed modules are the standard since 30 Oct 2026 (app/globals.css). Studio
+   keeps its nesting radius: the sidebar's control radius (20) − the list's 8 of padding = 12. */
 [data-direction="studio"] [data-module-box] {
-  flex-shrink: 0;
-  overflow: clip;
-  border: 1px solid var(--color-border-subtle);
   border-radius: calc(var(--sk-radius-control) - 8px);
-  background-color: var(--color-bg-page);
-}
-[data-direction="studio"] [data-module-box] > h3 > button {
-  border-bottom-width: 0;
-  /* No grey band on the module header inside a box (Nelson, 25 Oct 2026): the box already sets the
-     module apart, so the header takes the box's white. */
-  background-color: transparent;
-}
-[data-direction="studio"] [data-module-box] > h3 > button {
-  background-color: var(--color-bg-page);
 }
