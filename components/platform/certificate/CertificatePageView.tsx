@@ -7,7 +7,10 @@ import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
-import { CertificateDocument, certificateLearner } from "@/components/platform/program/CertificateDocument";
+import {
+  CertificateDocument,
+  certificateLearner,
+} from "@/components/platform/program/CertificateDocument";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import type { ProgramCertificateCourse } from "@/lib/platform/catalog";
 import { coursePageHref, programPageHref } from "@/lib/platform/hrefs";
@@ -15,8 +18,8 @@ import type { ProgramCertificate } from "@/lib/platform/program";
 import { MY_LEARNING_HREF, MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 import { useLmsStore } from "@/lib/store";
 
-const CRUMB = "sk-text-body-medium-semibold relative inline-flex items-center after:absolute after:inset-x-0 after:-inset-y-3 after:content-['']";
-
+const CRUMB =
+  "sk-text-body-medium-semibold relative inline-flex items-center after:absolute after:inset-x-0 after:-inset-y-3 after:content-['']";
 
 /** The state of one course on the program certificate page, in the words of the course cards. */
 function courseStatus(percent: number | null): { label: string; color: "success" | "gray" } {
@@ -72,7 +75,10 @@ export function CertificatePageView({
       <nav data-arrive={0} aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 md:gap-x-2">
           <li className="flex items-center gap-1.5 md:gap-2">
-            <Link href={MY_LEARNING_HREF} className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
+            <Link
+              href={MY_LEARNING_HREF}
+              className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}
+            >
               My Learning
             </Link>
             <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
@@ -80,7 +86,10 @@ export function CertificatePageView({
           {program ? (
             <>
               <li className="flex items-center gap-1.5 md:gap-2">
-                <Link href={MY_LEARNING_PROGRAMS_HREF} className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}>
+                <Link
+                  href={MY_LEARNING_PROGRAMS_HREF}
+                  className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}
+                >
                   Programs
                 </Link>
                 <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
@@ -107,7 +116,9 @@ export function CertificatePageView({
       <div data-arrive={1} className="flex flex-col gap-1">
         <h1 className="sk-text-headline-small-semibold text-sko-text-default">{heading}</h1>
         <p className="sk-text-body-medium-regular text-sko-text-subtle">
-          {certificate.status === "issued" ? certificate.issuedLine : `Program certificate · ${certificate.title}`}
+          {certificate.status === "issued"
+            ? certificate.issuedLine
+            : `Program certificate · ${certificate.title}`}
         </p>
       </div>
 
@@ -136,7 +147,10 @@ export function CertificatePageView({
             >
               Download certificate
             </Button>
-            <CertificateShare target={{ title: certificate.title, document: certificate.document }} size="lg" />
+            <CertificateShare
+              target={{ title: certificate.title, document: certificate.document }}
+              size="lg"
+            />
             <ButtonLink href={back.href} hierarchy="secondary" size="lg">
               {back.label}
             </ButtonLink>
@@ -146,11 +160,18 @@ export function CertificatePageView({
             <dl className="mt-2 flex flex-col gap-3">
               <div className="flex flex-col gap-0.5">
                 <dt className="sk-text-body-small-regular text-sko-text-subtle">Issued</dt>
-                <dd className="sk-text-body-medium-semibold text-sko-text-default">{certificate.document.issuedOn}</dd>
+                <dd className="sk-text-body-medium-semibold text-sko-text-default">
+                  {certificate.document.issuedOn}
+                </dd>
               </div>
-              <div data-invented="certificate: Open edX identifies it by its verify UUID, no readable ID" className="flex flex-col gap-0.5">
+              <div
+                data-invented="certificate: Open edX identifies it by its verify UUID, no readable ID"
+                className="flex flex-col gap-0.5"
+              >
                 <dt className="sk-text-body-small-regular text-sko-text-subtle">Certificate ID</dt>
-                <dd className="sk-text-body-medium-semibold text-sko-text-default">{certificate.document.certificateId}</dd>
+                <dd className="sk-text-body-medium-semibold text-sko-text-default">
+                  {certificate.document.certificateId}
+                </dd>
               </div>
               {certificate.document.signatories.length ? (
                 // Who signed it: on the sheet this is small print (audit 16 Oct 2026).
@@ -159,14 +180,18 @@ export function CertificatePageView({
                   {certificate.document.signatories.map((s) => (
                     <dd key={s.name} className="sk-text-body-medium-semibold text-sko-text-default">
                       {s.name}
-                      <span className="sk-text-body-small-regular block text-sko-text-muted">{s.role}</span>
+                      <span className="sk-text-body-small-regular block text-sko-text-muted">
+                        {s.role}
+                      </span>
                     </dd>
                   ))}
                 </div>
               ) : null}
               <div className="flex flex-col gap-0.5">
                 <dt className="sk-text-body-small-regular text-sko-text-subtle">Verify at</dt>
-                <dd className="sk-text-body-medium-semibold break-all text-sko-text-default">{certificate.document.verifyUrl}</dd>
+                <dd className="sk-text-body-medium-semibold break-all text-sko-text-default">
+                  {certificate.document.verifyUrl}
+                </dd>
               </div>
             </dl>
           </div>
@@ -180,7 +205,10 @@ export function CertificatePageView({
             data-mock="No API says whether a program certificate is earned: counted here from the course rows"
             className="flex min-w-0 flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:p-[19px] lg:flex-1 lg:p-[23px]"
           >
-            <h2 id="certificate-missing-title" className="sk-text-headline-small-bold text-sko-text-default">
+            <h2
+              id="certificate-missing-title"
+              className="sk-text-headline-small-bold text-sko-text-default"
+            >
               What is missing
             </h2>
             <ul className="flex flex-col gap-4">
@@ -193,7 +221,10 @@ export function CertificatePageView({
               ))}
             </ul>
             {courses.length > 0 ? (
-              <ol aria-label={`Courses of the program: ${complete} of ${courses.length} complete`} className="flex flex-col">
+              <ol
+                aria-label={`Courses of the program: ${complete} of ${courses.length} complete`}
+                className="flex flex-col"
+              >
                 {courses.map((course) => {
                   const status = courseStatus(course.percent);
                   return (

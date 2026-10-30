@@ -66,7 +66,9 @@ export function CertificateShare({
         size={size}
         leftIcon={copied ? DrawnCheck : Share2}
         iconOnly={look === "icon"}
-        aria-label={look === "icon" ? copiedLabel(copied, `Share certificate: ${target.title}`) : undefined}
+        aria-label={
+          look === "icon" ? copiedLabel(copied, `Share certificate: ${target.title}`) : undefined
+        }
         className={cn(look === "icon" ? "max-md:size-11" : "w-full")}
         {...share.triggerProps}
       >
@@ -81,11 +83,19 @@ export function CertificateShare({
             // Grows out of the button: upward from its top edge, or down from its bottom edge.
             up ? "sk-animate-menu-up bottom-full mb-1" : "sk-animate-menu top-full mt-1",
             look === "button"
-              ? up ? "origin-bottom" : "origin-top"
-              : up ? "origin-bottom-right" : "origin-top-right",
+              ? up
+                ? "origin-bottom"
+                : "origin-top"
+              : up
+                ? "origin-bottom-right"
+                : "origin-top-right",
           )}
         >
-          <ShareMenu onSelect={onSelect} onClose={share.close} className={look === "button" ? "w-full" : undefined} />
+          <ShareMenu
+            onSelect={onSelect}
+            onClose={share.close}
+            className={look === "button" ? "w-full" : undefined}
+          />
         </div>
       ) : null}
     </div>

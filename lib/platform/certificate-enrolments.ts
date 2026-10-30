@@ -5,12 +5,10 @@ import { myLearningCourses, myLearningPrograms } from "./my-learning";
 import { PROGRAMS } from "./program";
 
 /**
- * PROPOSAL (Nelson, 30 Oct 2026: "podemos ter certificados já emitidos em programs ainda em
- * curso e vice versa … a separação não muito intuitiva de programs e single courses").
- * The Certificates page read from what the learner is enrolled in: one entry per program and
- * per course of no program, each with every certificate it can give, earned or not. The
- * proposals in CertificatesProposals all draw from this, so no certificate shows twice and no
- * program is split across tabs.
+ * The Certificates page read from what the learner is enrolled in (Nelson, 30 Oct 2026, PR 437):
+ * one entry per program and per course of no program, each with every certificate it can give,
+ * earned or not, so no certificate shows twice and a program is never split by status.
+ * CertificatesLedger draws its rows from it.
  */
 export type CourseLineState = "earned" | "in-progress" | "not-started";
 
@@ -128,14 +126,3 @@ const singles: Enrolment[] = CATALOG.filter((c) => !c.program && c.percent !== n
 export const enrolments: Enrolment[] = [...programs, ...singles].sort(
   (a, b) => b.latest - a.latest || b.percent - a.percent,
 );
-
-/** Every certificate the learner holds, newest first, each once. */
-export const earnedByDate: EarnedCertificate[] = [...earnedCertificates].sort(
-  (a, b) => earnedIssuedValue(b) - earnedIssuedValue(a),
-);
-
-/** The enrolment a certificate came from (a course of a program: the program). */
-export function enrolmentOf(e: EarnedCertificate): Enrolment | undefined {
-  const slug = e.program?.slug ?? e.id.replace(/^course-/, "");
-  return enrolments.find((x) => x.slug === slug);
-}
