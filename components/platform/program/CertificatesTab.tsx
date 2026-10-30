@@ -126,10 +126,14 @@ export function CertificateCard({
 }
 
 /**
- * Certificates tab: the Section intro, one 320px column per course the learner has started
- * (the course line, body-medium/Semibold, over its Certificate card) and the note about the
- * courses not started yet. Desktop: the columns side by side, 24 apart. Tablet: one under
- * the other at 320, 20 apart. Mobile: at full width, 16 apart.
+ * Certificates tab: the Section intro, one card per course the learner has started (the
+ * course line, body-medium/Semibold, over its Certificate card) and the note about the courses
+ * not started yet. The cards fill the content column two by two (Nelson, 30 Oct 2026; until
+ * then 320 columns that left the right of the page empty), Layout/grid-gap apart. A card is
+ * never under 320: where two would not fit (a phone, or tablet beside the program panel) they
+ * stack at full width. It follows the column, not the viewport, so no breakpoint. Each item is a subgrid of two rows, so the course lines
+ * share one height across a row (one wraps, the other not) and the cards start level and
+ * share one height too.
  *
  * Above the course cards, the Program certificate first and large (ProgramCertificateHero;
  * Nelson, 23 Oct 2026: it is the goal of the program, so it leads the tab), closed by a 1px
@@ -159,12 +163,12 @@ export function CertificatesTab({ program }: { program: Program }) {
       {program.certificates.length > 0 ? (
         <ul
           data-mock="Certificate artwork, IDs and requirements are not readable yet"
-          className="flex flex-wrap items-start gap-layout-grid"
+          className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,max(320px,calc((100%-var(--sk-layout-grid-gap))/2))),1fr))] gap-layout-grid"
         >
           {program.certificates.map((certificate) => (
-            <li key={certificate.courseId} className="flex w-full flex-col gap-2 md:w-[320px]">
-              <h4 className="sk-text-body-medium-semibold text-sko-text-default">{certificate.courseLabel}</h4>
-              <CertificateCard certificate={certificate} />
+            <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
+              <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">{certificate.courseLabel}</h4>
+              <CertificateCard certificate={certificate} className="h-full" />
             </li>
           ))}
         </ul>
