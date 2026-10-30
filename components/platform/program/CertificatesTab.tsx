@@ -4,12 +4,14 @@ import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
+import { Check } from "lucide-react";
 import { useLmsStore } from "@/lib/store";
+import { Icon } from "@/lib/icons";
 import type { Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import { CardShell, SectionIntro } from "./parts";
-import { ProgramCertificatePath } from "./ProgramCertificatePath";
+import { ProgramCertificateGoal } from "./ProgramCertificateGoal";
 import { programEnrolment } from "@/lib/platform/certificate-enrolments";
 
 /**
@@ -31,6 +33,7 @@ export function CertificateCard({
   labelAs = "p",
   label = "Certificate",
   detailsHref,
+  progress = true,
   className,
 }: {
   certificate: ProgramCertificate;
@@ -41,22 +44,50 @@ export function CertificateCard({
   label?: string;
   /** Not earned only: where "View details" goes. Without it the card has no action, as drawn. */
   detailsHref?: string;
+  /**
+   * Not earned only: false drops the requirements' detail and bar, for the program's
+   * Certificates tab, which says what each course gives, not how far along it is (Nelson,
+   * 30 Oct 2026: the progress is already in several places).
+   */
+  progress?: boolean;
 }) {
   const showToast = useLmsStore((s) => s.showToast);
 
   if (certificate.status === "not-earned") {
     return (
       <CardShell label={label} labelAs={labelAs} gap="lg" className={className}>
-        <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
-        <ul className="flex flex-col gap-4">
-          {certificate.requirements.map((req) => (
-            <li key={req.title} className="flex flex-col gap-0.5">
-              <p className="sk-text-body-medium-semibold text-sko-text-default">{req.title}</p>
-              <p className="sk-text-body-small-regular text-sko-text-subtle">{req.detail}</p>
-              <PlatformProgressBar value={req.percent} label={req.title} />
-            </li>
-          ))}
-        </ul>
+        {progress ? (
+          <>
+            <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
+            <ul className="flex flex-col gap-4">
+              {certificate.requirements.map((req) => (
+                <li key={req.title} className="flex flex-col gap-0.5">
+                  <p className="sk-text-body-medium-semibold text-sko-text-default">{req.title}</p>
+                  <p className="sk-text-body-small-regular text-sko-text-subtle">{req.detail}</p>
+                  <PlatformProgressBar value={req.percent} label={req.title} />
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <p className="sk-text-body-large-semibold text-sko-text-default">Not earned yet</p>
+            <p className="sk-text-body-medium-regular text-sko-text-subtle">Issued when you:</p>
+            <ul className="sk-text-body-medium-regular flex flex-col gap-1 text-sko-text-default">
+              {certificate.requirements.map((req) => (
+                <li key={req.title} className="inline-flex items-center gap-1.5">
+                  <Icon
+                    icon={Check}
+                    size={16}
+                    className="shrink-0 text-sko-icon-subtle"
+                    aria-hidden
+                  />
+                  {req.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {detailsHref ? (
           <ButtonLink
             href={detailsHref}
@@ -118,7 +149,11 @@ export function CertificateCard({
           Download
         </Button>
         {/* Share (20 Oct 2026): icon-only, the menu opens above the card's bottom edge. */}
-        <CertificateShare target={{ title: certificate.title, document: certificate.document }} look="icon" up />
+        <CertificateShare
+          target={{ title: certificate.title, document: certificate.document }}
+          look="icon"
+          up
+        />
       </div>
     </CardShell>
   );
@@ -126,8 +161,7 @@ export function CertificateCard({
 
 /**
  * Every course of the program as a certificate card, in program order: its own card when the
- * program data has one (issued or not earned yet), otherwise a not-earned card that says the
- * course has not started (Nelson, 30 Oct 2026: "mostrar os cards de todos os cursos"; until
+ * program data has one (issued or not earned yet), otherwise a not-earned card (Nelson, 30 Oct 2026: "mostrar os cards de todos os cursos"; until
  * then only the started courses, with a note about the others).
  */
 function allCourseCertificates(program: Program): ProgramCertificate[] {
@@ -138,28 +172,32 @@ function allCourseCertificates(program: Program): ProgramCertificate[] {
       status: "not-earned" as const,
       courseId: `course-${course.number}`,
       courseLabel: `Course ${course.number} · ${course.card.title}`,
-      title: "Not started yet",
-      requirements: [{ title: "Complete the course content", detail: "Not started", percent: 0 }],
+      title: "Not earned yet",
+      requirements: [
+        { title: "Reach the passing grade", detail: "Not started", percent: 0 },
+        { title: "Complete the course content", detail: "Not started", percent: 0 },
+      ],
     };
   });
 }
 
 /**
  * Certificates tab (Nelson, 30 Oct 2026): the whole content width (no program panel on this
- * tab), the Section intro, then the path to the program certificate (ProgramCertificatePath:
- * every course in order, then the Program certificate card with the sheet and what it gives), then "Course certificates": one card per course of the program,
- * started or not, three across where the column allows (never under 320; they stack on a
- * phone). Each item is a subgrid of two rows, so the course lines share one height across a
- * row and the cards start level; each card keeps its own height (an issued card with its sheet
- * is much taller than a course not started).
+ * tab), the Section intro, the Program certificate card (ProgramCertificateGoal: the sheet, or
+ * its locked preview, and what it gives), then "Course certificates": one card per course of
+ * the program, started or not, three across where the column allows (never under 320; they
+ * stack on a phone). No progress here: a not-earned card says only what earns it, and there
+ * is no path of steps, since a learner may take a program's courses in any order (Nelson,
+ * 30 Oct 2026). Each item is a subgrid of two rows, so the course lines share one height
+ * across a row and the cards start level; each card keeps its own height.
  */
 export function CertificatesTab({ program }: { program: Program }) {
-  const path = programEnrolment(program.slug);
+  const enrolment = programEnrolment(program.slug);
   const cards = allCourseCertificates(program);
   return (
     <div className="flex flex-col gap-layout-stack">
       <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
-      {path ? <ProgramCertificatePath e={path} program={program} /> : null}
+      {enrolment ? <ProgramCertificateGoal e={enrolment} program={program} /> : null}
       <h3 className="sk-text-body-large-semibold text-sko-text-default">Course certificates</h3>
       <ul
         data-mock="Certificate artwork, IDs and requirements are not readable yet"
@@ -167,8 +205,10 @@ export function CertificatesTab({ program }: { program: Program }) {
       >
         {cards.map((certificate) => (
           <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
-            <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">{certificate.courseLabel}</h4>
-            <CertificateCard certificate={certificate} className="self-start" />
+            <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">
+              {certificate.courseLabel}
+            </h4>
+            <CertificateCard certificate={certificate} progress={false} className="self-start" />
           </li>
         ))}
       </ul>
