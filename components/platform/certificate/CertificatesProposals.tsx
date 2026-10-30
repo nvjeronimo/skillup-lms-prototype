@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Award, CheckCircle2, ChevronDown } from "lucide-react";
+import { Award, CheckCircle2, ChevronDown, ChevronRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { FilterChip } from "@/components/atoms/FilterChip";
 import { CourseTypeBadge } from "@/components/atoms/MetaBadges";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
+import { PlatformSegmented } from "@/components/platform/PlatformSegmented";
 import { enrolments, type CourseLine, type Enrolment } from "@/lib/platform/certificate-enrolments";
 import { earnedIssuedValue, type EarnedCertificate } from "@/lib/platform/certificates";
 import { cn } from "@/lib/utils";
@@ -117,7 +118,7 @@ function ledgerItems(): LedgerItem[] {
 
 function EmptySheet() {
   return (
-    <div className="flex aspect-[1123/794] w-16 shrink-0 items-center justify-center rounded-control border border-dashed border-sko-border-default bg-sko-bg-subtle md:w-20">
+    <div className="flex aspect-[1123/794] w-14 shrink-0 items-center justify-center rounded-control border border-dashed border-sko-border-default bg-sko-bg-subtle md:w-20">
       <Icon icon={Award} size={20} aria-hidden className="text-sko-icon-muted" />
     </div>
   );
@@ -249,11 +250,11 @@ function Ledger({ needle }: { needle: string }) {
 }
 
 /* ── 2 · Ledger by program (Nelson, 30 Oct 2026: "o Ledger mas com a One list a agrupar os
-   cursos do program") ───────────────────────────────────────────────────────────────── */
+   cursos do program"; then: two DS Button groups for the filters, and a better mobile) ─── */
 
 type RowState = "earned" | "in-progress" | "not-started";
-type StatusFilter = "all" | "earned" | "progress";
-type TypeFilter = "all" | "program" | "single";
+type StatusFilter = "all" | "progress" | "earned";
+type TypeFilter = "program" | "single";
 
 interface GroupRow {
   id: string;
@@ -269,7 +270,7 @@ interface GroupRow {
 
 interface Group {
   id: string;
-  kind: "program" | "single";
+  kind: TypeFilter;
   /** A program: its own certificate, the group's first row. */
   header?: GroupRow;
   title: string;
@@ -298,11 +299,11 @@ function groupsOf(): Group[] {
       header: {
         id: `p-${e.slug}`,
         title: e.title,
-        context: `Program certificate · ${plural(e.courses.length, "course", "courses")}`,
+        context: plural(e.courses.length, "course", "courses"),
         earned: e.issued,
         state: e.issued
           ? "earned"
-          : e.complete > 0 || e.courses.some((c) => c.percent > 0)
+          : e.courses.some((c) => c.percent > 0)
             ? "in-progress"
             : "not-started",
         percent: e.percent,
@@ -337,24 +338,38 @@ function groupsOf(): Group[] {
 const stateMatches = (r: GroupRow, s: StatusFilter) =>
   s === "all" || (s === "earned" ? r.state === "earned" : r.state === "in-progress");
 
-/** The rows of a group that pass the filters; the program row leads whenever the group shows. */
+/** The course rows of a group that pass the filters. */
 function visibleRows(g: Group, status: StatusFilter, needle: string) {
   const groupHit = !needle || g.title.toLowerCase().includes(needle);
-  const hit = (r: GroupRow) => groupHit || r.title.toLowerCase().includes(needle);
-  return g.rows.filter((r) => hit(r) && stateMatches(r, status));
+  return g.rows.filter(
+    (r) => (groupHit || r.title.toLowerCase().includes(needle)) && stateMatches(r, status),
+  );
 }
 
-/** One certificate as a row: the sheet (or an empty one), title, status, actions. */
+const headerShows = (g: Group, status: StatusFilter, needle: string) =>
+  !!g.header &&
+  (!needle || g.title.toLowerCase().includes(needle)) &&
+  stateMatches(g.header, status);
+
+/**
+ * One certificate as a row.
+ * Desktop: sheet · title and context · status · actions, under the column labels.
+ * Mobile: a small sheet, then the title, its context and its status in one column; an earned
+ * row keeps View + Share under them, any other row is a link to its page (the whole row, with a
+ * chevron), so it carries no button.
+ */
 function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
+  const linkRow = !r.earned;
   return (
-    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2 py-3 md:grid-cols-[80px_minmax(0,1fr)_220px_200px] md:gap-x-4">
+    <div
+      className={cn(
+        "relative grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1.5 py-3 md:grid-cols-[80px_minmax(0,1fr)_220px_200px] md:items-center md:gap-x-4",
+      )}
+    >
       {r.earned ? (
-        <Sheet
-          e={r.earned}
-          className="row-span-3 w-16 self-start md:row-span-1 md:w-20 md:self-center"
-        />
+        <Sheet e={r.earned} className="row-span-3 w-14 md:row-span-1 md:w-20" />
       ) : (
-        <div className="row-span-3 self-start md:row-span-1 md:self-center">
+        <div className="row-span-3 md:row-span-1">
           <EmptySheet />
         </div>
       )}
@@ -366,15 +381,31 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
             "text-sko-text-default",
           )}
         >
-          <Link href={r.href} className="hover:underline">
+          <Link
+            href={r.href}
+            className={cn(
+              "hover:underline",
+              linkRow && "max-md:after:absolute max-md:after:inset-0 max-md:after:content-['']",
+            )}
+          >
             {r.title}
           </Link>
         </h4>
         <p className="sk-text-body-medium-regular text-sko-text-subtle">{r.context}</p>
       </div>
+      {linkRow ? (
+        <Icon
+          icon={ChevronRight}
+          size={20}
+          aria-hidden
+          className="row-span-2 self-center text-sko-icon-muted md:hidden"
+        />
+      ) : (
+        <span className="md:hidden" />
+      )}
       <div className="col-start-2 flex flex-col gap-1 md:col-start-auto">
         {r.earned ? (
-          <div className="flex flex-col items-start gap-1">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 md:flex-col md:items-start">
             <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
               Earned
             </Badge>
@@ -391,11 +422,16 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
           </>
         )}
       </div>
-      <div className="col-start-2 flex md:col-start-auto md:justify-end">
+      <div
+        className={cn(
+          "col-start-2 md:col-start-auto md:flex md:justify-end",
+          linkRow ? "hidden" : "flex pt-1 md:pt-0",
+        )}
+      >
         {r.earned ? (
           <EarnedActions e={r.earned} primary={lead} />
         ) : (
-          <ButtonLink href={r.href} hierarchy="secondary" size="sm" className="max-md:h-11">
+          <ButtonLink href={r.href} hierarchy="secondary" size="sm">
             {r.action}
           </ButtonLink>
         )}
@@ -404,9 +440,19 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
   );
 }
 
-function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
+/** Below md the course rows start folded: a phone sees each program in one screen first. */
+function useStartsOpen() {
   const [open, setOpen] = React.useState(true);
+  React.useEffect(() => {
+    if (window.matchMedia("(max-width: 767px)").matches) setOpen(false);
+  }, []);
+  return [open, setOpen] as const;
+}
+
+function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
+  const [open, setOpen] = useStartsOpen();
   const panelId = React.useId();
+  const earned = g.rows.filter((r) => r.earned).length;
   return (
     <section aria-label={g.title} data-mock={MOCK} className={cn(CARD, "overflow-hidden")}>
       <div className="bg-sko-bg-subtle px-4 md:px-5">
@@ -419,24 +465,25 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
             aria-expanded={open}
             aria-controls={panelId}
             onClick={() => setOpen((v) => !v)}
-            className="sk-text-body-medium-medium flex w-full items-center justify-between border-y border-sko-border-subtle px-4 py-2.5 text-sko-text-muted hover:bg-sko-bg-hover md:px-5"
+            className="sk-text-body-medium-medium flex min-h-11 w-full items-center justify-between gap-3 border-t border-sko-border-subtle px-4 py-2.5 text-left text-sko-text-muted hover:bg-sko-bg-hover md:min-h-0 md:px-5"
           >
             <span>
-              {g.rows.filter((r) => r.earned).length} of{" "}
-              {plural(g.rows.length, "course certificate", "course certificates")} earned
+              {earned} of {plural(g.rows.length, "course certificate", "course certificates")}{" "}
+              earned
+              {rows.length < g.rows.length ? ` · ${rows.length} shown` : ""}
             </span>
             <Icon
               icon={ChevronDown}
               size={20}
               aria-hidden
-              className={cn("transition-transform", open && "rotate-180")}
+              className={cn("shrink-0 transition-transform", open && "rotate-180")}
             />
           </button>
           {/* The course rows sit one step in, on a rail: they belong to the program above. */}
           <ul
             id={panelId}
             hidden={!open}
-            className="divide-y divide-sko-border-subtle py-1 pl-4 pr-4 md:pl-10 md:pr-5"
+            className="divide-y divide-sko-border-subtle border-t border-sko-border-subtle py-1 pl-4 pr-4 md:pl-10 md:pr-5"
           >
             {rows.map((r) => (
               <li key={r.id} className="border-l-2 border-sko-border-subtle pl-3 md:pl-4">
@@ -451,67 +498,39 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
 }
 
 function GroupedLedger({ needle }: { needle: string }) {
-  const [status, setStatus] = React.useState<StatusFilter>("all");
-  const [type, setType] = React.useState<TypeFilter>("all");
   const groups = React.useMemo(groupsOf, []);
-  const typed = groups.filter((g) => type === "all" || g.kind === type);
-  const count = (s: StatusFilter) =>
-    typed.reduce((n, g) => {
-      const headerHit =
-        g.header &&
-        (!needle || g.title.toLowerCase().includes(needle)) &&
-        stateMatches(g.header, s);
-      return n + visibleRows(g, s, needle).length + (headerHit ? 1 : 0);
-    }, 0);
-  const shown = typed
+  const hasPrograms = groups.some((g) => g.kind === "program");
+  const [type, setType] = React.useState<TypeFilter>(hasPrograms ? "program" : "single");
+  const [status, setStatus] = React.useState<StatusFilter>("all");
+  const shown = groups
+    .filter((g) => g.kind === type)
     .map((g) => ({ g, rows: visibleRows(g, status, needle) }))
-    .filter(
-      ({ g, rows }) =>
-        rows.length ||
-        (g.header &&
-          (!needle || g.title.toLowerCase().includes(needle)) &&
-          stateMatches(g.header, status)),
-    );
+    .filter(({ g, rows }) => rows.length || headerShows(g, status, needle));
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div role="group" aria-label="Status" className="flex flex-wrap gap-2">
-          <FilterChip
-            label="All"
-            count={count("all")}
-            active={status === "all"}
-            onClick={() => setStatus("all")}
-          />
-          <FilterChip
-            label="Earned"
-            count={count("earned")}
-            active={status === "earned"}
-            onClick={() => setStatus("earned")}
-          />
-          <FilterChip
-            label="In progress"
-            count={count("progress")}
-            active={status === "progress"}
-            onClick={() => setStatus("progress")}
-          />
-        </div>
-        <div role="group" aria-label="Type" className="flex flex-wrap gap-2">
-          <FilterChip
-            label="Programs and courses"
-            active={type === "all"}
-            onClick={() => setType("all")}
-          />
-          <FilterChip
-            label="Programs"
-            active={type === "program"}
-            onClick={() => setType("program")}
-          />
-          <FilterChip
-            label="Single courses"
-            active={type === "single"}
-            onClick={() => setType("single")}
-          />
-        </div>
+      {/* Two DS Button groups: what (programs or single courses), then which (all, in progress, earned). */}
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <PlatformSegmented
+          label="Type"
+          options={[
+            { id: "program", label: "Programs" },
+            { id: "single", label: "Single courses" },
+          ]}
+          value={type}
+          onChange={setType}
+          className="max-md:flex max-md:w-full max-md:[&>button]:flex-1"
+        />
+        <PlatformSegmented
+          label="Status"
+          options={[
+            { id: "all", label: "All" },
+            { id: "progress", label: "In progress" },
+            { id: "earned", label: "Earned" },
+          ]}
+          value={status}
+          onChange={setStatus}
+          className="max-md:flex max-md:w-full max-md:[&>button]:flex-1"
+        />
       </div>
       {shown.length ? (
         <>
@@ -529,25 +548,17 @@ function GroupedLedger({ needle }: { needle: string }) {
               g.kind === "program" ? (
                 <ProgramGroup key={g.id} g={g} rows={rows} />
               ) : (
-                <section
+                <ul
                   key={g.id}
-                  aria-labelledby="certs-single"
-                  className={cn(CARD, "overflow-hidden")}
+                  aria-label={g.title}
+                  className={cn(CARD, "divide-y divide-sko-border-subtle px-4 md:px-5")}
                 >
-                  <h3
-                    id="certs-single"
-                    className="sk-text-title-medium-semibold bg-sko-bg-subtle px-4 py-4 text-sko-text-default md:px-5"
-                  >
-                    {g.title} <span className="text-sko-text-subtle">· {rows.length}</span>
-                  </h3>
-                  <ul className="divide-y divide-sko-border-subtle border-t border-sko-border-subtle px-4 md:px-5">
-                    {rows.map((r) => (
-                      <li key={r.id}>
-                        <CertificateRow r={r} />
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+                  {rows.map((r) => (
+                    <li key={r.id}>
+                      <CertificateRow r={r} />
+                    </li>
+                  ))}
+                </ul>
               ),
             )}
           </div>
