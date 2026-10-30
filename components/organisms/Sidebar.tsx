@@ -451,8 +451,11 @@ export function Sidebar({
     <nav
       className={cn(
         "flex h-full flex-col overflow-hidden bg-sko-bg-page",
-        // 280 until 1280, then 320 like the phone drawer (Nelson, 29 Oct 2026: fewer wrapped titles).
-        isMobile ? "w-[320px]" : "w-[280px] rounded-control border border-sko-border-subtle xl:w-[320px]",
+        // 3 of 12 columns of the body, like a col-md-3 on a 24px-gutter grid (Nelson, 30 Oct 2026):
+        // (width − 11 gutters) / 4 + 2 gutters. Never under 280, so tablet titles stay readable.
+        isMobile
+          ? "w-[320px]"
+          : "w-[calc((100%-264px)/4+48px)] min-w-[280px] shrink-0 rounded-control border border-sko-border-subtle",
         variantFade,
         className,
       )}
