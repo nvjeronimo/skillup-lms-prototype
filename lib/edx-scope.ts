@@ -12,6 +12,8 @@ import * as React from "react";
  * `data-invented="<theme>: <what Open edX lacks>"` are hidden by CSS (app/globals.css) with no
  * flash. Logic that cannot be a CSS hide (a nav entry, a dialog on Next, a whole page) reads
  * useEdxScope(), which is true on the server and while hydrating, then follows <html>.
+ * The switch changes the scope live with setEdxScope(): no reload, the page keeps its place so
+ * the differences show in the moment (Nelson, 30 Oct 2026).
  */
 export const SCOPE_COOKIE = "sk-scope";
 
@@ -20,7 +22,12 @@ function readScope(): boolean {
   return document.documentElement.getAttribute("data-scope") === "edx";
 }
 
-const subscribe = () => () => {};
+/** Re-renders the hook's users when <html> data-scope changes (setEdxScope). */
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-scope"] });
+  return () => observer.disconnect();
+}
 
 /** True when the Open edX scope is on (the default; always true on the server). */
 export function useEdxScope(): boolean {
@@ -30,6 +37,24 @@ export function useEdxScope(): boolean {
 /** For non-React code (stores, data modules): the scope as the page loaded. */
 export function isEdxScope(): boolean {
   return readScope();
+}
+
+/**
+ * Turns the Open edX scope on or off in place: writes the cookie, flips <html> data-scope (CSS hides
+ * and every useEdxScope() follow) and drops a `?scope=` from the address so a reload keeps the
+ * choice.
+ */
+export function setEdxScope(edx: boolean) {
+  document.cookie = edx
+    ? `${SCOPE_COOKIE}=; path=/; max-age=0; samesite=lax`
+    : `${SCOPE_COOKIE}=full; path=/; max-age=31536000; samesite=lax`;
+  if (edx) document.documentElement.setAttribute("data-scope", "edx");
+  else document.documentElement.removeAttribute("data-scope");
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("scope")) {
+    url.searchParams.delete("scope");
+    window.history.replaceState(window.history.state, "", url.toString());
+  }
 }
 
 /**
