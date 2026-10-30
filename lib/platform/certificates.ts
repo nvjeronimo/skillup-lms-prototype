@@ -117,27 +117,11 @@ const coursesInProgress: CertificateInProgress[] = CATALOG.filter(
   href: coursePageHref(c.slug),
 }));
 
-export const certificatesInProgress: CertificateInProgress[] = [
-  ...programsInProgress,
-  ...coursesInProgress,
-];
+export const certificatesInProgress: CertificateInProgress[] = [...programsInProgress, ...coursesInProgress];
 
 /* ── Issue dates ─────────────────────────────────────────────────────────────────────── */
 
-const MONTHS = [
-  "january",
-  "february",
-  "march",
-  "april",
-  "may",
-  "june",
-  "july",
-  "august",
-  "september",
-  "october",
-  "november",
-  "december",
-];
+const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 
 /** "30 September 2026" → a sortable number (0 when it does not read as a date). */
 export function issuedOnValue(issuedOn: string): number {
@@ -147,5 +131,4 @@ export function issuedOnValue(issuedOn: string): number {
 }
 
 /** When an earned certificate was issued, for sorting rows newest first. */
-export const earnedIssuedValue = (e: EarnedCertificate) =>
-  issuedOnValue(e.certificate.document.issuedOn);
+export const earnedIssuedValue = (e: EarnedCertificate) => issuedOnValue(e.certificate.document.issuedOn);
