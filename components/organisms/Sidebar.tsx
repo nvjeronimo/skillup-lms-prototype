@@ -452,10 +452,11 @@ export function Sidebar({
       className={cn(
         "flex h-full flex-col overflow-hidden bg-sko-bg-page",
         // 3 of 12 columns of the body, like a col-md-3 on a 24px-gutter grid (Nelson, 30 Oct 2026):
-        // (width − 11 gutters) / 4 + 2 gutters. Never under 280, so tablet titles stay readable.
+        // (width − 11 gutters) / 4 + 2 gutters. Never under 280, so tablet titles stay readable, and
+        // never over 400: the content already stops at 1200 (decision 037).
         isMobile
           ? "w-[320px]"
-          : "w-[calc((100%-264px)/4+48px)] min-w-[280px] shrink-0 rounded-control border border-sko-border-subtle",
+          : "w-[calc((100%-264px)/4+48px)] min-w-[280px] max-w-[400px] shrink-0 rounded-control border border-sko-border-subtle",
         variantFade,
         className,
       )}
