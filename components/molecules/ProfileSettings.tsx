@@ -283,8 +283,6 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   const setSkin = useLmsStore((s) => s.setSkin);
   const theme = useLmsStore((s) => s.theme);
   const setTheme = useLmsStore((s) => s.setTheme);
-  const squareCorners = useLmsStore((s) => s.squareCorners);
-  const setSquareCorners = useLmsStore((s) => s.setSquareCorners);
   return (
     <ProfileSection title="Appearance" settings>
       {/* 16 between items: the toggle row's own 6 of padding + 10. */}
@@ -309,13 +307,6 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
             scroll
           />
         </div>
-        {/* Experiment (Nelson, 21 Oct 2026): square corners everywhere except buttons. */}
-        <ToggleRow
-          label="Square corners"
-          hint="Experimental · buttons keep their corners"
-          checked={squareCorners}
-          onChange={setSquareCorners}
-        />
         {/* On a phone the theme is set here too, with the top bar's own control (Nelson, 27 Oct 2026;
             DS Profile Menu 1.10; supporting text 1.12): label on the left, Theme-Switch md on the right. */}
         {showTheme ? (
