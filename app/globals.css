@@ -1519,3 +1519,29 @@ button {
 [data-scope="edx"] [data-invented] {
   display: none !important;
 }
+
+/* Player sidebar: each module in its own box, in every skin (Nelson, 30 Oct 2026; tried in Studio
+   since 25 Oct). The list sits on the faint ground with 8 of padding and 12 between boxes; a box is a
+   bg/page surface with a 1px border/subtle and Radius/card-inset (8): it sits 8 in from the sidebar's
+   edge, further in than the sidebar's control radius (6), so it keeps its own role (nesting rule,
+   tokens/radius.css). overflow: clip, not hidden, so a sticky module header still sticks to the list.
+   Inside a box the module header has no hairline and no grey band. Studio, Harbor and Fluent set
+   their own radius (and Fluent its padding) in their skin files. */
+[data-module-list] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px;
+  background-color: var(--color-bg-faint);
+}
+[data-module-box] {
+  flex-shrink: 0;
+  overflow: clip;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card-inset);
+  background-color: var(--color-bg-page);
+}
+[data-module-box] > h3 > button {
+  border-bottom-width: 0;
+  background-color: var(--color-bg-page);
+}
