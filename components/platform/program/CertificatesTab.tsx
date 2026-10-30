@@ -10,6 +10,7 @@ import { Icon } from "@/lib/icons";
 import type { CertificateDocumentData, Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
+import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHeader";
 import { CardShell, SectionIntro } from "./parts";
 import { ProgramCertificateGoal } from "./ProgramCertificateGoal";
 import { programEnrolment } from "@/lib/platform/certificate-enrolments";
@@ -247,32 +248,50 @@ export function CertificatesTab({ program }: { program: Program }) {
   const enrolment = programEnrolment(program.slug);
   const cards = allCourseCertificates(program);
   return (
-    <div className="flex flex-col gap-layout-stack">
-      <SectionIntro title={program.certificatesIntro.title} lead={program.certificatesIntro.lead} />
-      {enrolment ? <ProgramCertificateGoal e={enrolment} program={program} /> : null}
-      <h3 className="sk-text-body-large-semibold text-sko-text-default">Course certificates</h3>
-      <ul
-        data-mock="Certificate artwork, IDs and requirements are not readable yet"
-        className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,max(320px,calc((100%-2*var(--sk-layout-grid-gap))/3))),1fr))] gap-layout-grid"
+    <div className="flex flex-col gap-layout-section">
+      <div className="flex flex-col gap-layout-stack">
+        <SectionIntro
+          title={program.certificatesIntro.title}
+          lead={program.certificatesIntro.lead}
+        />
+        {enrolment ? <ProgramCertificateGoal e={enrolment} program={program} /> : null}
+      </div>
+      {/* The course certificates as a section of their own, under the Dashboard's Section header
+          (title + emphasis), a section's gap below the program certificate (Nelson, 30 Oct 2026:
+          the plain h3 looked lost under the card). */}
+      <section
+        aria-labelledby="program-course-certificates"
+        className="flex flex-col gap-layout-stack"
       >
-        {cards.map((certificate) => (
-          <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
-            <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">
-              {withoutNumber(certificate.courseLabel)}
-            </h4>
-            <CertificateCard
-              certificate={certificate}
-              progress={false}
-              preview={
-                certificate.status === "not-earned"
-                  ? coursePreview(program, certificate.courseLabel)
-                  : undefined
-              }
-              className="self-start"
-            />
-          </li>
-        ))}
-      </ul>
+        <PlatformSectionHeader
+          id="program-course-certificates"
+          as="h3"
+          title="Course certificates"
+          emphasis="one per course"
+        />
+        <ul
+          data-mock="Certificate artwork, IDs and requirements are not readable yet"
+          className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,max(320px,calc((100%-2*var(--sk-layout-grid-gap))/3))),1fr))] gap-layout-grid"
+        >
+          {cards.map((certificate) => (
+            <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
+              <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">
+                {withoutNumber(certificate.courseLabel)}
+              </h4>
+              <CertificateCard
+                certificate={certificate}
+                progress={false}
+                preview={
+                  certificate.status === "not-earned"
+                    ? coursePreview(program, certificate.courseLabel)
+                    : undefined
+                }
+                className="self-start"
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

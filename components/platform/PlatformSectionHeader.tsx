@@ -12,6 +12,8 @@ export interface PlatformSectionHeaderProps {
   emphasis?: string;
   /** Optional action on the right: a link when `href` is set, a button otherwise. */
   action?: { label: string; href?: string; onClick?: () => void; invented?: string };
+  /** The heading level: h2 by default, h3 inside a section that already has its h2. */
+  as?: "h2" | "h3";
   className?: string;
 }
 
@@ -31,7 +33,14 @@ const ACTION =
  * The rule under the header, tried on 13 Oct 2026, was withdrawn by Nelson the same day: the
  * header has no padding and no line.
  */
-export function PlatformSectionHeader({ id, title, emphasis, action, className }: PlatformSectionHeaderProps) {
+export function PlatformSectionHeader({
+  id,
+  title,
+  emphasis,
+  action,
+  as: Heading = "h2",
+  className,
+}: PlatformSectionHeaderProps) {
   const actionContent = action ? (
     <>
       {action.label}
@@ -41,22 +50,32 @@ export function PlatformSectionHeader({ id, title, emphasis, action, className }
 
   return (
     <div className={cn("flex items-start justify-between gap-4", className)}>
-      <h2 id={id} className="sk-text-headline-small-bold flex min-w-0 flex-1 flex-wrap items-start gap-x-1.5">
+      <Heading
+        id={id}
+        className="sk-text-headline-small-bold flex min-w-0 flex-1 flex-wrap items-start gap-x-1.5"
+      >
         <span className="whitespace-nowrap text-sko-text-default">{title}</span>
         {emphasis ? (
           <>
             {" "}
-            <span data-heading-em="" className="whitespace-nowrap text-sko-text-subtle">{emphasis}</span>
+            <span data-heading-em="" className="whitespace-nowrap text-sko-text-subtle">
+              {emphasis}
+            </span>
           </>
         ) : null}
-      </h2>
+      </Heading>
       {action ? (
         action.href ? (
           <Link href={action.href} data-invented={action.invented} className={ACTION}>
             {actionContent}
           </Link>
         ) : (
-          <button type="button" onClick={action.onClick} data-invented={action.invented} className={ACTION}>
+          <button
+            type="button"
+            onClick={action.onClick}
+            data-invented={action.invented}
+            className={ACTION}
+          >
             {actionContent}
           </button>
         )
