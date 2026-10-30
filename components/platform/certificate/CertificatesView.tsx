@@ -14,7 +14,7 @@ import {
   type CertificateProgram,
 } from "@/lib/platform/certificates";
 import { CertificatesByProgram } from "./CertificatesByProgram";
-import { CertificatesProposal, ProposalPicker } from "./CertificatesProposals";
+import { CertificatesProposal, PROPOSALS, ProposalPicker } from "./CertificatesProposals";
 import { CertificatesSkeleton } from "./CertificatesSkeleton";
 
 type CertificatesTab = "in-progress" | "earned";
@@ -58,11 +58,11 @@ function searchTab<T extends { kind: "course" | "program"; program?: Certificate
 export function CertificatesView() {
   const [tab, setTab] = React.useState<CertificatesTab>("earned");
   const [query, setQuery] = React.useState("");
-  // PROPOSALS (30 Oct 2026): 0 is the page as it is; 1–4 drop the tabs (CertificatesProposals).
+  // PROPOSALS (30 Oct 2026): 0 is the page as it is; 1–2 drop the tabs (CertificatesProposals).
   const [proposal, setProposal] = React.useState(0);
   React.useEffect(() => {
     const v = parseInt(new URLSearchParams(window.location.search).get("v") ?? "", 10);
-    if (v >= 1 && v <= 5) setProposal(v - 1);
+    if (v >= 1 && v <= PROPOSALS.length) setProposal(v - 1);
   }, []);
   const pick = React.useCallback((i: number) => {
     setProposal(i);
