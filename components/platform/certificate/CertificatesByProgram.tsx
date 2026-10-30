@@ -55,7 +55,7 @@ const courseOf = (i: Item) => (i.program?.number ? `Course ${i.program.number} o
 /* ── Shared pieces ───────────────────────────────────────────────────────────────────── */
 
 /** A small sheet of the certificate, for rows. */
-function Sheet({ e, className }: { e: EarnedCertificate; className?: string }) {
+export function Sheet({ e, className }: { e: EarnedCertificate; className?: string }) {
   return (
     <div
       className={cn(
@@ -74,7 +74,7 @@ function Sheet({ e, className }: { e: EarnedCertificate; className?: string }) {
 }
 
 /** View + Share, the two actions every earned row carries. */
-function EarnedActions({ e, primary = false }: { e: EarnedCertificate; primary?: boolean }) {
+export function EarnedActions({ e, primary = false }: { e: EarnedCertificate; primary?: boolean }) {
   return (
     <div className="flex shrink-0 items-center gap-1.5">
       <ButtonLink
