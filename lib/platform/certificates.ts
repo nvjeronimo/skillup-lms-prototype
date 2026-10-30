@@ -16,8 +16,8 @@ import { PROGRAMS, type ProgramCertificate } from "./program";
  *   program reads it from the program; a course of no program from its own page).
  * - In progress: the courses started and not complete, and the programs not earned yet that
  *   the learner has started, with how far they are.
- * - Both tabs group them by program (Nelson, 26 Oct 2026: "group the course certificates that
- *   belonged to a program"): `groupCertificates` below.
+ * - The page reads them by enrolment since 30 Oct 2026 (certificate-enrolments.ts): a program's
+ *   course rows under its own certificate, then the single courses.
  */
 type Issued = Extract<ProgramCertificate, { status: "issued" }>;
 
@@ -119,7 +119,7 @@ const coursesInProgress: CertificateInProgress[] = CATALOG.filter(
 
 export const certificatesInProgress: CertificateInProgress[] = [...programsInProgress, ...coursesInProgress];
 
-/* ── By program (Nelson, 26 Oct 2026) ─────────────────────────────────────────────────── */
+/* ── Issue dates ─────────────────────────────────────────────────────────────────────── */
 
 const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
 
@@ -130,62 +130,5 @@ export function issuedOnValue(issuedOn: string): number {
   return m && month >= 0 ? Date.UTC(Number(m[3]), month, Number(m[1])) : 0;
 }
 
-/** When an earned certificate was issued, for sorting the program blocks. */
+/** When an earned certificate was issued, for sorting rows newest first. */
 export const earnedIssuedValue = (e: EarnedCertificate) => issuedOnValue(e.certificate.document.issuedOn);
-
-interface Groupable {
-  id: string;
-  kind: "course" | "program";
-  program?: CertificateProgram;
-}
-
-export interface ProgramCertificateGroup<T extends Groupable> {
-  program: CertificateProgram;
-  /** The program's own certificate in this tab: earned (Earned) or on the way (In progress). */
-  programItem?: T;
-  /** Its course certificates in this tab, in course order. */
-  courses: T[];
-}
-
-export interface GroupedCertificates<T extends Groupable> {
-  programs: ProgramCertificateGroup<T>[];
-  /** The course certificates of no program, in the order given. */
-  standalone: T[];
-}
-
-/**
- * One block per program the learner has a certificate in (its own or a course's), then the
- * courses of no program. A block holds the program's certificate, if it is in the list, and its
- * course certificates in course order. Blocks with the program certificate come first, then the
- * one with the most recent certificate (`recency`, when given), then the order given.
- * A program with nothing in the list has no block, so a persona with no program progress shows
- * none.
- */
-export function groupCertificates<T extends Groupable>(
-  items: T[],
-  recency?: (item: T) => number,
-): GroupedCertificates<T> {
-  const bySlug = new Map<string, ProgramCertificateGroup<T>>();
-  const standalone: T[] = [];
-  for (const item of items) {
-    const p = item.program;
-    if (!p) {
-      if (item.kind === "course") standalone.push(item);
-      continue;
-    }
-    let group = bySlug.get(p.slug);
-    if (!group) {
-      group = { program: { slug: p.slug, title: p.title, total: p.total }, courses: [] };
-      bySlug.set(p.slug, group);
-    }
-    if (item.kind === "program") group.programItem = item;
-    else group.courses.push(item);
-  }
-  const groups = [...bySlug.values()];
-  for (const g of groups) g.courses.sort((a, b) => (a.program?.number ?? 0) - (b.program?.number ?? 0));
-  const latest = (g: ProgramCertificateGroup<T>) =>
-    recency ? Math.max(0, ...(g.programItem ? [g.programItem] : []).concat(g.courses).map(recency)) : 0;
-  // Array.prototype.sort is stable: equal blocks keep the order given.
-  groups.sort((a, b) => Number(!!b.programItem) - Number(!!a.programItem) || latest(b) - latest(a));
-  return { programs: groups, standalone };
-}
