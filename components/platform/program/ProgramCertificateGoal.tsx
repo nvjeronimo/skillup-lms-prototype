@@ -45,8 +45,9 @@ function previewDocument(program: Program): CertificateDocumentData {
  * can take a program's courses in any order and the progress already shows elsewhere. The sheet on the left (320;
  * on top below 640 of the card's own width): the real certificate once earned, else a muted
  * preview with a lock and "Complete all N courses". On the right: "Program certificate" with
- * Earned, the state line, View + Share once earned, and what the certificate gives. Earned it
- * sits on bg/success-soft; not yet, inside a dashed border/default.
+ * Earned, the state line, View + Share once earned, and what the certificate gives. Earned or
+ * not, it is a plain card like the course cards below it, bg/page and border/subtle (Nelson,
+ * 30 Oct 2026: no green fill; the Earned badge says it).
  */
 export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: Program }) {
   const issued = e.issued;
@@ -65,7 +66,7 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
         data-mock={MOCK}
         className={cn(
           "grid gap-4 rounded-card p-4 md:p-5 [@container_(min-width:640px)]:grid-cols-[320px_minmax(0,1fr)] [@container_(min-width:640px)]:gap-6",
-          issued ? "bg-sko-bg-success-soft" : "border border-dashed border-sko-border-default",
+          "border border-sko-border-subtle bg-sko-bg-page",
         )}
       >
         <div className="relative aspect-[1123/794] w-full max-w-[480px] self-start overflow-hidden rounded-card-inset border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
