@@ -7,9 +7,7 @@ function Crumb({ text, last = false }: { text: string; last?: boolean }) {
   return (
     <div className="flex items-center gap-1.5 md:gap-2">
       <div className="flex min-h-11 items-center lg:min-h-6">
-        <Skeleton variant="ghost" text="body-medium-semibold">
-          {text}
-        </Skeleton>
+        <Skeleton variant="ghost" text="body-medium-semibold">{text}</Skeleton>
       </div>
       {last ? null : <Skeleton variant="block" width={16} height={16} radius="inner" />}
     </div>
@@ -20,12 +18,8 @@ function Crumb({ text, last = false }: { text: string; last?: boolean }) {
 function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <Skeleton variant="ghost" text="body-small-regular">
-        {label}
-      </Skeleton>
-      <Skeleton variant="ghost" text="body-medium-semibold" className="break-all">
-        {value}
-      </Skeleton>
+      <Skeleton variant="ghost" text="body-small-regular">{label}</Skeleton>
+      <Skeleton variant="ghost" text="body-medium-semibold" className="break-all">{value}</Skeleton>
     </div>
   );
 }
@@ -62,23 +56,15 @@ export function CertificatePageSkeleton({
       </div>
 
       <div className="flex flex-col gap-1">
-        <Skeleton variant="ghost" text="headline-small-semibold">
-          {heading}
-        </Skeleton>
+        <Skeleton variant="ghost" text="headline-small-semibold">{heading}</Skeleton>
         <Skeleton variant="ghost" text="body-medium-regular">
-          {certificate.status === "issued"
-            ? certificate.issuedLine
-            : `Program certificate · ${certificate.title}`}
+          {certificate.status === "issued" ? certificate.issuedLine : `Program certificate · ${certificate.title}`}
         </Skeleton>
       </div>
 
       {certificate.status === "issued" ? (
         <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-          <Skeleton
-            variant="block"
-            radius="card"
-            className="aspect-[1123/794] w-full min-w-0 lg:flex-1"
-          />
+          <Skeleton variant="block" radius="card" className="aspect-[1123/794] w-full min-w-0 lg:flex-1" />
           <div className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
             {[0, 1, 2].map((i) => (
               <Skeleton key={i} variant="block" height={48} radius="control" />
@@ -88,17 +74,11 @@ export function CertificatePageSkeleton({
               <Fact label="Certificate ID" value={certificate.document.certificateId} />
               {certificate.document.signatories.length ? (
                 <div className="flex flex-col gap-0.5">
-                  <Skeleton variant="ghost" text="body-small-regular">
-                    Signed by
-                  </Skeleton>
+                  <Skeleton variant="ghost" text="body-small-regular">Signed by</Skeleton>
                   {certificate.document.signatories.map((s) => (
                     <div key={s.name}>
-                      <Skeleton variant="ghost" text="body-medium-semibold">
-                        {s.name}
-                      </Skeleton>
-                      <Skeleton variant="ghost" text="body-small-regular">
-                        {s.role}
-                      </Skeleton>
+                      <Skeleton variant="ghost" text="body-medium-semibold">{s.name}</Skeleton>
+                      <Skeleton variant="ghost" text="body-small-regular">{s.role}</Skeleton>
                     </div>
                   ))}
                 </div>
@@ -110,18 +90,12 @@ export function CertificatePageSkeleton({
       ) : (
         <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
           <div className="flex min-w-0 flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:p-[19px] lg:flex-1 lg:p-[23px]">
-            <Skeleton variant="ghost" text="headline-small-bold">
-              What is missing
-            </Skeleton>
+            <Skeleton variant="ghost" text="headline-small-bold">What is missing</Skeleton>
             <div className="flex flex-col gap-4">
               {certificate.requirements.map((req) => (
                 <div key={req.title} className="flex flex-col gap-0.5">
-                  <Skeleton variant="ghost" text="body-medium-semibold">
-                    {req.title}
-                  </Skeleton>
-                  <Skeleton variant="ghost" text="body-small-regular">
-                    {req.detail}
-                  </Skeleton>
+                  <Skeleton variant="ghost" text="body-medium-semibold">{req.title}</Skeleton>
+                  <Skeleton variant="ghost" text="body-small-regular">{req.detail}</Skeleton>
                   <Skeleton variant="block" height={8} radius="none" />
                 </div>
               ))}
@@ -134,10 +108,7 @@ export function CertificatePageSkeleton({
                     className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-sko-border-subtle py-3"
                   >
                     <div className="flex min-h-11 min-w-0 items-center md:min-h-6">
-                      <Skeleton
-                        variant="ghost"
-                        text="body-medium-medium"
-                      >{`Course ${course.number} · ${course.title}`}</Skeleton>
+                      <Skeleton variant="ghost" text="body-medium-medium">{`Course ${course.number} · ${course.title}`}</Skeleton>
                     </div>
                     <Skeleton variant="block" width={112} height={24} radius="pill" />
                   </div>
