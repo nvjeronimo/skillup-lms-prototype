@@ -4,10 +4,10 @@ import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { useLmsStore } from "@/lib/store";
 import { Icon } from "@/lib/icons";
-import type { Program, ProgramCertificate } from "@/lib/platform/program";
+import type { CertificateDocumentData, Program, ProgramCertificate } from "@/lib/platform/program";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
 import { CardShell, SectionIntro } from "./parts";
@@ -34,6 +34,7 @@ export function CertificateCard({
   label = "Certificate",
   detailsHref,
   progress = true,
+  preview,
   className,
 }: {
   certificate: ProgramCertificate;
@@ -50,6 +51,11 @@ export function CertificateCard({
    * 30 Oct 2026: the progress is already in several places).
    */
   progress?: boolean;
+  /**
+   * Not earned only: the sheet this course will issue, drawn muted with a lock above the text,
+   * as the Program certificate card does (Nelson, 30 Oct 2026).
+   */
+  preview?: CertificateDocumentData;
 }) {
   const showToast = useLmsStore((s) => s.showToast);
 
@@ -71,6 +77,22 @@ export function CertificateCard({
           </>
         ) : (
           <div className="flex flex-col gap-2">
+            {preview ? (
+              <div className="relative mb-2 aspect-[1123/794] w-full overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
+                <div className="absolute inset-0 opacity-50 grayscale">
+                  <CertificateDocument
+                    data={preview}
+                    label={`Preview of the course certificate: ${preview.courseTitle}`}
+                  />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center p-4">
+                  <span className="sk-text-body-small-semibold inline-flex items-center gap-1.5 whitespace-nowrap rounded-pill border border-sko-border-subtle bg-sko-bg-page px-3 py-1.5 text-sko-text-default shadow-sm">
+                    <Icon icon={Lock} size={14} aria-hidden />
+                    Pass the course
+                  </span>
+                </div>
+              </div>
+            ) : null}
             <p className="sk-text-body-large-semibold text-sko-text-default">Not earned yet</p>
             <p className="sk-text-body-medium-regular text-sko-text-subtle">Issued when you:</p>
             <ul className="sk-text-body-medium-regular flex flex-col gap-1 text-sko-text-default">
@@ -195,6 +217,32 @@ function allCourseCertificates(program: Program): ProgramCertificate[] {
 /** The course's title without "Course n · ": the number reads as an order the program may not have. */
 const withoutNumber = (label: string) => label.replace(/^Course \d+\s*·\s*/, "");
 
+/**
+ * The sheet a course of the program will issue, before it is issued: its title and modules on
+ * the real certificate layout, "On completion" where the date and ID go. Partners and
+ * signatories come from a certificate the program has issued, else none.
+ */
+function coursePreview(program: Program, courseLabel: string): CertificateDocumentData {
+  const issued = program.certificates.find((c) => c.status === "issued");
+  const base = issued?.status === "issued" ? issued.document : undefined;
+  const title = withoutNumber(courseLabel);
+  const course = program.courses.find((c) => c.card.title === title);
+  // "4 modules", or "Module 2 of 4" for the course in progress.
+  const m = course ? /(\d+) modules|of (\d+)/.exec(course.position) : null;
+  const modules = m ? Number(m[1] ?? m[2]) : undefined;
+  return {
+    courseTitle: title,
+    summary: modules ? `${modules} modules` : program.title,
+    issuedOn: "On completion",
+    certificateId: "Issued on completion",
+    verifyUrl: "skillup.online/certificates",
+    partnerLogoSrc: base?.partnerLogoSrc,
+    partnerName: base?.partnerName,
+    morePartners: base?.morePartners,
+    signatories: base?.signatories ?? [],
+  };
+}
+
 export function CertificatesTab({ program }: { program: Program }) {
   const enrolment = programEnrolment(program.slug);
   const cards = allCourseCertificates(program);
@@ -212,7 +260,16 @@ export function CertificatesTab({ program }: { program: Program }) {
             <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">
               {withoutNumber(certificate.courseLabel)}
             </h4>
-            <CertificateCard certificate={certificate} progress={false} className="self-start" />
+            <CertificateCard
+              certificate={certificate}
+              progress={false}
+              preview={
+                certificate.status === "not-earned"
+                  ? coursePreview(program, certificate.courseLabel)
+                  : undefined
+              }
+              className="self-start"
+            />
           </li>
         ))}
       </ul>
