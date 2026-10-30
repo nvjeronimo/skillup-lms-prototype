@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bookmark, Lock, X } from "lucide-react";
+import { Bookmark, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { CourseHeader } from "@/components/molecules/CourseHeader";
 import { ModuleHeader } from "@/components/molecules/ModuleHeader";
@@ -111,22 +111,15 @@ export function Sidebar({
   const currentIndex = ordered.findIndex((t) => t.id === currentTopicId);
   const upNextId = ordered.slice(currentIndex + 1).find((t) => !t.locked && !isDone(t))?.id;
 
-  // What opens a locked row: the topic straight before it. A module locked as a whole also
-  // says it once, under its header: what it waits for is the last topic before the module.
-  const { rowHints, moduleHints } = React.useMemo(() => {
+  // What opens a locked row: the topic straight before it. A locked module carries no note of its
+  // own under its header: each of its rows already says what it waits for (Nelson, 30 Oct 2026).
+  const rowHints = React.useMemo(() => {
     const rowHints = new Map<string, string>();
-    const moduleHints = new Map<string, string>();
     ordered.forEach((t, i) => {
       if (t.locked && i > 0) rowHints.set(t.id, `Unlocks after ${ordered[i - 1].title}`);
     });
-    for (const m of course.modules) {
-      const tops = moduleTopics(m);
-      if (!tops.length || !tops.every((t) => t.locked)) continue;
-      const before = ordered[ordered.indexOf(tops[0]) - 1];
-      if (before) moduleHints.set(m.id, `Opens after ${before.title}`);
-    }
-    return { rowHints, moduleHints };
-  }, [course, ordered]);
+    return rowHints;
+  }, [ordered]);
 
   const overallPct = courseProgressPct(course, completed);
   const doneCount = ordered.filter(isDone).length;
@@ -538,7 +531,6 @@ export function Sidebar({
           const done = tops.filter(isDone).length;
           const complete = tops.length > 0 && done === tops.length;
           const bodyId = `${headingId}-${module.id}`;
-          const moduleHint = moduleHints.get(module.id);
           return (
             <section key={module.id} data-module-box="" aria-labelledby={`${bodyId}-h`}>
               {/* Sticks while its own topics scroll under it, then leaves with them. */}
@@ -554,12 +546,6 @@ export function Sidebar({
                   buttonProps={{ "aria-controls": bodyId, "data-roving": true, "data-module": module.id }}
                 />
               </h3>
-              {moduleHint ? (
-                <p className="sk-text-body-medium-regular flex items-start gap-1.5 border-b border-sko-border-subtle bg-sko-bg-faint px-4 pb-3 text-sko-text-subtle">
-                  <Icon icon={Lock} size={14} className="mt-0.5 shrink-0" />
-                  {moduleHint}
-                </p>
-              ) : null}
               <Collapse open={isOpen} id={bodyId}>
                 {module.lessons ? (
                   module.lessons.map((lesson) => (
