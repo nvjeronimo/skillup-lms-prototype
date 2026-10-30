@@ -125,9 +125,14 @@ export function ProgramDetailView({ program }: { program: Program }) {
             </div>
           ))}
         </div>
-        {/* The Courses tab has no sidebar; the other three share it. It stays mounted (hidden on
-            Courses) and fades in with the panel when it comes back. */}
-        <div data-arrive={3} hidden={active === "courses"} className={cn("md:w-[320px] md:shrink-0", fadeIn)}>
+        {/* Courses and Certificates have no sidebar (Certificates since 30 Oct 2026: it takes the
+            whole width); FAQs and About share it. It stays mounted (hidden on the others) and
+            fades in with the panel when it comes back. */}
+        <div
+          data-arrive={3}
+          hidden={active === "courses" || active === "certificates"}
+          className={cn("md:w-[320px] md:shrink-0", fadeIn)}
+        >
           <ProgramSidebar program={program} />
         </div>
       </div>

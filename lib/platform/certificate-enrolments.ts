@@ -74,34 +74,41 @@ const initialsOf = (title: string) =>
     .map((w) => w[0].toUpperCase())
     .join("");
 
-const programs: Enrolment[] = PROGRAMS.flatMap((p) => {
-  const state = getProgramCertificate(p.slug);
-  if (!state) return [];
+/**
+ * A program as an enrolment, started or not: the Certificates page lists the started ones, the
+ * program page's Certificates tab draws its path from any (Nelson, 30 Oct 2026).
+ */
+export function programEnrolment(slug: string): Enrolment | undefined {
+  const p = PROGRAMS.find((x) => x.slug === slug);
+  const state = p && getProgramCertificate(p.slug);
+  if (!p || !state) return undefined;
   const courses = state.courses.map((c) => line(c.slug, c.title, c.percent ?? null, c.number));
   const issued = programEarned.get(p.slug);
-  if (!issued && !courses.some((c) => c.percent > 0)) return [];
   const card = myLearningPrograms.find((m) => m.id === p.slug);
   const total = courses.length;
-  return [
-    {
-      kind: "program" as const,
-      slug: p.slug,
-      title: p.title,
-      initials: card?.initials ?? initialsOf(p.title),
-      imageSrc: card?.imageSrc,
-      href: programPageHref(p.slug),
-      issued,
-      courses,
-      complete: state.complete,
-      percent: total ? Math.round((state.complete / total) * 100) : 0,
-      latest: Math.max(
-        0,
-        ...[issued, ...courses.map((c) => c.earned)]
-          .filter(Boolean)
-          .map((e) => earnedIssuedValue(e!)),
-      ),
-    },
-  ];
+  return {
+    kind: "program" as const,
+    slug: p.slug,
+    title: p.title,
+    initials: card?.initials ?? initialsOf(p.title),
+    imageSrc: card?.imageSrc,
+    href: programPageHref(p.slug),
+    issued,
+    courses,
+    complete: state.complete,
+    percent: total ? Math.round((state.complete / total) * 100) : 0,
+    latest: Math.max(
+      0,
+      ...[issued, ...courses.map((c) => c.earned)]
+        .filter(Boolean)
+        .map((e) => earnedIssuedValue(e!)),
+    ),
+  };
+}
+
+const programs: Enrolment[] = PROGRAMS.flatMap((p) => {
+  const e = programEnrolment(p.slug);
+  return e && (e.issued || e.courses.some((c) => c.percent > 0)) ? [e] : [];
 });
 
 const singles: Enrolment[] = CATALOG.filter((c) => !c.program && c.percent !== null).map((c) => {
