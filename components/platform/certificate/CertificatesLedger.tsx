@@ -221,13 +221,16 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
         "relative grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1.5 py-3 md:grid-cols-[80px_minmax(0,1fr)_220px_200px] md:items-center md:gap-x-4",
       )}
     >
-      {r.earned ? (
-        <Sheet e={r.earned} className="row-span-3 w-14 md:row-span-1 md:w-20" />
-      ) : (
-        <div className="row-span-3 md:row-span-1">
-          <EmptySheet />
-        </div>
-      )}
+      {/* The thumb opens the course or program page too, as the title does (Nelson, 30 Oct
+          2026); out of the tab order and hidden from readers, since the title link says it. */}
+      <Link
+        href={r.href}
+        tabIndex={-1}
+        aria-hidden="true"
+        className="row-span-3 self-start rounded-control transition-opacity hover:opacity-80 md:row-span-1 md:self-center"
+      >
+        {r.earned ? <Sheet e={r.earned} className="w-14 md:w-20" /> : <EmptySheet />}
+      </Link>
       <div className="flex min-w-0 flex-col gap-0.5">
         {lead ? <CourseTypeBadge value="Program" /> : null}
         <h4
