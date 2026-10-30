@@ -87,7 +87,8 @@ function EarnedActions({ e, primary = false }: { e: EarnedCertificate; primary?:
         aria-label={`View certificate: ${e.certificate.title}`}
         className="max-md:h-11"
       >
-        {primary ? "View certificate" : "View"}
+        {/* Every earned row says what opens (Nelson, 30 Oct 2026); only the hierarchy differs. */}
+        View certificate
       </ButtonLink>
       <CertificateShare
         target={{ title: e.certificate.title, document: e.certificate.document }}
