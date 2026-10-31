@@ -35,6 +35,8 @@ import { cn } from "@/lib/utils";
 const MOCK =
   "No API says whether a program certificate is earned: counted here from the course rows";
 const CARD = "rounded-card border border-sko-border-subtle bg-sko-bg-page";
+const INNER_TOP = "rounded-t-[calc(var(--sk-radius-card)-1px)]";
+const INNER_BOTTOM = "rounded-b-[calc(var(--sk-radius-card)-1px)]";
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 const issuedOn = (e: EarnedCertificate) => e.certificate.document.issuedOn;
 
@@ -312,8 +314,10 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
   const panelId = React.useId();
   const earned = g.rows.filter((r) => r.earned).length;
   return (
-    <section aria-label={g.title} data-mock={MOCK} className={cn(CARD, "overflow-hidden")}>
-      <div className="bg-sko-bg-subtle px-4 md:px-5">
+    // No overflow-hidden: it cut the Share menus off (31 Oct 2026). The header and the toggle round
+    // their own corners instead (card radius minus the 1px border).
+    <section aria-label={g.title} data-mock={MOCK} className={CARD}>
+      <div className={cn("bg-sko-bg-subtle px-4 md:px-5", INNER_TOP, !rows.length && INNER_BOTTOM)}>
         {g.header ? <CertificateRow r={g.header} lead /> : null}
       </div>
       {rows.length ? (
@@ -323,7 +327,10 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
             aria-expanded={open}
             aria-controls={panelId}
             onClick={() => setOpen((v) => !v)}
-            className="sk-text-body-medium-medium flex min-h-11 w-full items-center justify-between gap-3 border-t border-sko-border-subtle px-4 py-2.5 text-left text-sko-text-muted hover:bg-sko-bg-hover md:min-h-0 md:px-5"
+            className={cn(
+              "sk-text-body-medium-medium flex min-h-11 w-full items-center justify-between gap-3 border-t border-sko-border-subtle px-4 py-2.5 text-left text-sko-text-muted hover:bg-sko-bg-hover md:min-h-0 md:px-5",
+              !open && INNER_BOTTOM,
+            )}
           >
             <span>
               {earned} of {plural(g.rows.length, "course certificate", "course certificates")}{" "}
