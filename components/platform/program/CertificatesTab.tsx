@@ -128,7 +128,19 @@ export function CertificateCard({
   }
 
   return (
-    <CardShell label={label} labelAs={labelAs} gap="lg" className={className}>
+    <CardShell
+      label={label}
+      labelAs={labelAs}
+      gap="lg"
+      className={className}
+      // Earned badge as on the Program certificate card, on the eyebrow's row at the far end:
+      // icon + word, never colour alone (Nelson, 31 Oct 2026).
+      aside={
+        <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
+          Earned
+        </Badge>
+      }
+    >
       <div className="relative aspect-[1123/794] w-full overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
         <div className="absolute inset-0">
           <CertificateDocument
@@ -137,13 +149,7 @@ export function CertificateCard({
           />
         </div>
       </div>
-      {/* Earned badge as on the Program certificate card: icon + word, never colour alone (Nelson, 31 Oct 2026). */}
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
-        <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
-          Earned
-        </Badge>
-      </div>
+      <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
       <p className="sk-text-body-medium-regular text-sko-text-subtle">{certificate.issuedLine}</p>
       {/* mt-auto: in a stretched card the actions sit on the bottom edge, level across the row. */}
       <div className="mt-auto flex items-start gap-1.5">

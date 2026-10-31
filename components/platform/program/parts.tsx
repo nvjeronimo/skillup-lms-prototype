@@ -38,10 +38,13 @@ export function CardShell({
   gap = "md",
   mock,
   invented,
+  aside,
   className,
   children,
 }: {
   label: string;
+  /** Sits on the label's row, at the opposite end (the certificate's Earned badge, 31 Oct 2026). */
+  aside?: React.ReactNode;
   /** What on this card has no API yet (shown when the sample-data marks are on). */
   mock?: string;
   /** Hidden in the Open edX scope, with why (`data-invented`, lib/edx-scope). */
@@ -64,7 +67,14 @@ export function CardShell({
         className,
       )}
     >
-      <Label className="sk-text-label-small-medium text-sko-text-default">{label}</Label>
+      {aside ? (
+        <div className="flex items-center justify-between gap-2">
+          <Label className="sk-text-label-small-medium text-sko-text-default">{label}</Label>
+          {aside}
+        </div>
+      ) : (
+        <Label className="sk-text-label-small-medium text-sko-text-default">{label}</Label>
+      )}
       {children}
     </section>
   );
