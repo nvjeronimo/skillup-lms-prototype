@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { DrawnCheck } from "@/components/atoms/DrawnCheck";
@@ -17,7 +18,8 @@ import { cn } from "@/lib/utils";
  * trigger) over the DS ShareMenu.
  * - `look="button"`: Button Secondary with the share icon and the word, on the certificate page.
  * - `look="icon"`: an icon-only Button Secondary next to View and Download, on the Certificate card.
- * `up` opens the menu above the trigger (the card's actions sit at the bottom of the card).
+ * `up` opens the menu above the trigger (the card's actions sit at the bottom of the card), unless
+ * the viewport has no room above it and more below: then it opens down (31 Oct 2026).
  * After a successful Copy link the trigger's icon turns into a check that draws and its label
  * (the word, or the icon button's aria-label) says "Copied" for COPIED_MS (motion-matrix §7.9).
  * The toast says "Link copied" once (its polite status region): no second live region here.
@@ -39,6 +41,18 @@ export function CertificateShare({
   const share = useDisclosure();
   const showToast = useLmsStore((s) => s.showToast);
   const { copied, flash } = useCopiedFlash();
+  const [openUp, setOpenUp] = React.useState(up);
+
+  // Pick the side on open, before paint: above when it fits (or fits better), otherwise below.
+  React.useLayoutEffect(() => {
+    if (!share.open) return;
+    const box = share.containerRef.current?.getBoundingClientRect();
+    if (!up || !box) return setOpenUp(up);
+    const needed = 320; // six ShareMenu rows + padding
+    const above = box.top;
+    const below = window.innerHeight - box.bottom;
+    setOpenUp(above >= needed || above >= below);
+  }, [share.open, share.containerRef, up]);
 
   const onSelect = (channel: ShareChannel) => {
     share.close();
@@ -79,10 +93,10 @@ export function CertificateShare({
             "absolute right-0 z-20",
             look === "button" && "left-0",
             // Grows out of the button: upward from its top edge, or down from its bottom edge.
-            up ? "sk-animate-menu-up bottom-full mb-1" : "sk-animate-menu top-full mt-1",
+            openUp ? "sk-animate-menu-up bottom-full mb-1" : "sk-animate-menu top-full mt-1",
             look === "button"
-              ? up ? "origin-bottom" : "origin-top"
-              : up ? "origin-bottom-right" : "origin-top-right",
+              ? openUp ? "origin-bottom" : "origin-top"
+              : openUp ? "origin-bottom-right" : "origin-top-right",
           )}
         >
           <ShareMenu onSelect={onSelect} onClose={share.close} className={look === "button" ? "w-full" : undefined} />
