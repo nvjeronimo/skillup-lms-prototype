@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
+import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
-import { Check, Lock } from "lucide-react";
+import { Check, CheckCircle2, Lock } from "lucide-react";
 import { useLmsStore } from "@/lib/store";
 import { Icon } from "@/lib/icons";
 import type { CertificateDocumentData, Program, ProgramCertificate } from "@/lib/platform/program";
@@ -136,7 +137,13 @@ export function CertificateCard({
           />
         </div>
       </div>
-      <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
+      {/* Earned badge as on the Program certificate card: icon + word, never colour alone (Nelson, 31 Oct 2026). */}
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
+        <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
+          Earned
+        </Badge>
+      </div>
       <p className="sk-text-body-medium-regular text-sko-text-subtle">{certificate.issuedLine}</p>
       {/* mt-auto: in a stretched card the actions sit on the bottom edge, level across the row. */}
       <div className="mt-auto flex items-start gap-1.5">
