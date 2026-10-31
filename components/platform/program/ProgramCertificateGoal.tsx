@@ -42,8 +42,9 @@ function previewDocument(program: Program): CertificateDocumentData {
  * The Program certificate card, at the top of the program's Certificates tab (Nelson, 30 Oct
  * 2026: the sheet and what it gives, from the 23 Oct card, "no card do program certificate").
  * It stands alone: the path of steps that led to it was removed the same day, since a learner
- * can take a program's courses in any order. Until it is issued, a segmented bar (one segment per
- * course, green once complete) and "N of M courses complete" sit under the state line (31 Oct). The sheet on the left (320;
+ * can take a program's courses in any order. A segmented bar (one segment per course, green once
+ * complete) and "N of M courses complete" sit under the state line (31 Oct), earned or not: all
+ * green once issued. The sheet on the left (320;
  * on top below 640 of the card's own width): the real certificate once earned, else a muted
  * preview with a lock and "Complete all N courses". On the right: "Program certificate" with
  * Earned, the state line, View + Share once earned, and what the certificate gives. Earned or
@@ -121,41 +122,40 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
                 : `Yours when all ${total} courses are complete.`}
             </p>
           </div>
-          {issued ? null : (
-            // One segment per course, in program order, filled as each is completed: how far along,
-            // not a path (any order works). Back on the card at Nelson's ask, 31 Oct 2026.
-            <div className="flex flex-col gap-2">
-              <ol aria-label="Courses towards the certificate" className="flex gap-1">
-                {e.courses.map((c) => (
-                  <li
-                    key={c.slug}
-                    className={cn(
-                      "h-2 min-w-0 flex-1",
-                      // A finished course is a progress at 100%: green (Nelson, 27 Oct 2026).
-                      c.state === "earned"
-                        ? "bg-sko-bg-success"
-                        : c.state === "in-progress"
-                          ? "bg-sko-bg-info-soft"
-                          : "bg-sko-bg-track",
-                    )}
-                  >
-                    <span className="sr-only">
-                      {c.number ? `Course ${c.number}, ` : ""}
-                      {c.title}:{" "}
-                      {c.state === "earned"
-                        ? "complete"
-                        : c.state === "in-progress"
-                          ? `${c.percent}% complete`
-                          : "not started"}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-              <p className="sk-text-body-small-medium text-sko-text-muted">
-                {e.complete} of {total} courses complete
-              </p>
-            </div>
-          )}
+          {/* One segment per course, in program order, filled as each is completed: how far along,
+              not a path (any order works). Back on the card at Nelson's ask, 31 Oct 2026; kept
+              once earned, all green (same day). */}
+          <div className="flex flex-col gap-2">
+            <ol aria-label="Courses towards the certificate" className="flex gap-1">
+              {e.courses.map((c) => (
+                <li
+                  key={c.slug}
+                  className={cn(
+                    "h-2 min-w-0 flex-1",
+                    // A finished course is a progress at 100%: green (Nelson, 27 Oct 2026).
+                    c.state === "earned"
+                      ? "bg-sko-bg-success"
+                      : c.state === "in-progress"
+                        ? "bg-sko-bg-info-soft"
+                        : "bg-sko-bg-track",
+                  )}
+                >
+                  <span className="sr-only">
+                    {c.number ? `Course ${c.number}, ` : ""}
+                    {c.title}:{" "}
+                    {c.state === "earned"
+                      ? "complete"
+                      : c.state === "in-progress"
+                        ? `${c.percent}% complete`
+                        : "not started"}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <p className="sk-text-body-small-medium text-sko-text-muted">
+              {e.complete} of {total} courses complete
+            </p>
+          </div>
           {issued ? (
             <div className="flex flex-wrap items-center gap-2">
               <ButtonLink
