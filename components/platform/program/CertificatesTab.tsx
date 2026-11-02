@@ -5,7 +5,7 @@ import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
-import { Check, CheckCircle2, Lock } from "lucide-react";
+import { Award, Check, Lock } from "lucide-react";
 import { useLmsStore } from "@/lib/store";
 import { Icon } from "@/lib/icons";
 import type { CertificateDocumentData, Program, ProgramCertificate } from "@/lib/platform/program";
@@ -136,7 +136,7 @@ export function CertificateCard({
       // Earned badge as on the Program certificate card, on the eyebrow's row at the far end:
       // icon + word, never colour alone (Nelson, 31 Oct 2026).
       aside={
-        <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
+        <Badge variant="soft" color="success" leftIcon={Award}>
           Earned
         </Badge>
       }
