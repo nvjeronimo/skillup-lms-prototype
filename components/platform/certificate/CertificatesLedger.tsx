@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Award, CheckCircle2, ChevronDown, ChevronRight, Search } from "lucide-react";
+import { Award, ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";
 import { EmptyState } from "@/components/atoms/EmptyState";
@@ -266,7 +266,7 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
       <div className="col-start-2 flex flex-col gap-1 md:col-start-auto">
         {r.earned ? (
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 md:flex-col md:items-start">
-            <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
+            <Badge variant="soft" color="success" leftIcon={Award}>
               Earned
             </Badge>
             <span className="sk-text-body-medium-regular text-sko-text-subtle">

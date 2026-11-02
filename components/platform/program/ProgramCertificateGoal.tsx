@@ -1,6 +1,6 @@
 "use client";
 
-import { Award, Check, CheckCircle2, Lock } from "lucide-react";
+import { Award, Check, Lock } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CertificateShare } from "@/components/platform/certificate/CertificateShare";
@@ -111,7 +111,7 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
               </p>
               {/* Earned: green with the icon and the word, never colour alone (13 Oct 2026). */}
               {issued ? (
-                <Badge variant="soft" color="success" leftIcon={CheckCircle2}>
+                <Badge variant="soft" color="success" leftIcon={Award}>
                   Earned
                 </Badge>
               ) : null}
