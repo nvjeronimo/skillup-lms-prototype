@@ -97,12 +97,14 @@ export function ProgramDetailView({ program }: { program: Program }) {
             the tab's own 12 top padding from tablet up. The tabs grow their target to 44 upwards, so the
             "larger targets" min-height is switched off here. */}
         <div className="mx-auto w-full max-w-[1280px] pl-layout-band-x pt-3 max-md:[&_[role=tab]]:min-h-0 md:px-layout-band-x md:pt-0">
-          {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up, on their own rule. All four panels stay mounted. */}
+          {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up, on their own rule. All four panels stay mounted.
+              The labels are title-medium (text-lg, 18), a step under the course page's (Nelson, 2 Nov 2026). */}
           <PlatformTabs
             tabs={PROGRAM_TABS}
             value={active}
             onChange={selectTab}
             size="responsive"
+            label="title-medium"
             idBase={baseId}
             ariaLabel="Program sections"
           />

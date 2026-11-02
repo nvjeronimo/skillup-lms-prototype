@@ -29,6 +29,12 @@ export interface PlatformTabsProps<T extends string> {
    */
   size?: "md" | "responsive" | "sm";
   /**
+   * The label's text style with `responsive`: `title-large` (20/30, 18/28 on a phone) or
+   * `title-medium`, one step down the ramp (--sk-type-size-text-lg, 18): the program page's
+   * tabs (Nelson, 2 Nov 2026).
+   */
+  label?: "title-large" | "title-medium";
+  /**
    * `own`: the row draws its 1px border/subtle rule itself and scrolls sideways when the
    * tabs do not fit. `parent`: the parent draws the rule as its bottom border and the
    * selected bar sits on it.
@@ -66,6 +72,7 @@ export function PlatformTabs<T extends string>({
   value,
   onChange,
   size = "md",
+  label = "title-large",
   rule = "own",
   panels = "all",
   idBase,
@@ -140,7 +147,9 @@ export function PlatformTabs<T extends string>({
                 on tablet (and on mobile for `md`). `responsive` (the platform-page tabs) is title-large on
                 every breakpoint since 27 Oct 2026 (Nelson): 20/30 on desktop and tablet, 18/28 on a phone. */}
             {responsive ? (
-              <span className="sk-text-title-large-semibold">{tab.label}</span>
+              <span className={label === "title-medium" ? "sk-text-title-medium-semibold" : "sk-text-title-large-semibold"}>
+                {tab.label}
+              </span>
             ) : small ? (
               tab.label
             ) : (
