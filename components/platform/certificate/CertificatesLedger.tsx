@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
  *
  * Two DS Button groups filter it: Programs | Single courses, then All | In progress | Earned.
  * One row per certificate, earned or on the way, under the column labels Certificate and
- * Status. A program is one card: its own certificate leads (bg/subtle), then a bar ("5 of 5
+ * Status. A program is one card: its own certificate leads (on the card's white), then a bar ("5 of 5
  * course certificates earned") shows or hides its course rows, one step in on a rail, every
  * course of the program, not started included. The single courses are one card, earned first.
  * Below md the course rows start folded, and a row with no certificate is a link to its page.
@@ -315,9 +315,10 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
   const earned = g.rows.filter((r) => r.earned).length;
   return (
     // No overflow-hidden: it cut the Share menus off (31 Oct 2026). The header and the toggle round
-    // their own corners instead (card radius minus the 1px border).
+    // their own corners instead (card radius minus the 1px border). The program row sits on the card's
+    // own white like the rest, no bg/subtle band (Nelson, 2 Nov 2026).
     <section aria-label={g.title} data-mock={MOCK} className={CARD}>
-      <div className={cn("bg-sko-bg-subtle px-4 md:px-5", INNER_TOP, !rows.length && INNER_BOTTOM)}>
+      <div className={cn("px-4 md:px-5", INNER_TOP, !rows.length && INNER_BOTTOM)}>
         {g.header ? <CertificateRow r={g.header} lead /> : null}
       </div>
       {rows.length ? (
@@ -351,7 +352,7 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
             className="divide-y divide-sko-border-subtle border-t border-sko-border-subtle py-1 pl-4 pr-4 md:pl-10 md:pr-5"
           >
             {rows.map((r) => (
-              <li key={r.id} className="border-l-2 border-sko-border-subtle pl-3 md:pl-4">
+              <li key={r.id} className="border-l border-sko-border-subtle pl-3 md:pl-4">
                 <CertificateRow r={r} />
               </li>
             ))}
