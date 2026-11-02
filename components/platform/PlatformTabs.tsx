@@ -31,7 +31,7 @@ export interface PlatformTabsProps<T extends string> {
   /**
    * The label's text style with `responsive`: `title-large` (20/30, 18/28 on a phone) or
    * `title-medium`, one step down the ramp (--sk-type-size-text-lg, 18): the program page's
-   * tabs (Nelson, 2 Nov 2026).
+   * and course page's tabs (Nelson, 2 Nov 2026).
    */
   label?: "title-large" | "title-medium";
   /**
