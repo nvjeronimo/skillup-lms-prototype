@@ -300,17 +300,10 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
   );
 }
 
-/** Below md the course rows start folded: a phone sees each program in one screen first. */
-function useStartsOpen() {
-  const [open, setOpen] = React.useState(true);
-  React.useEffect(() => {
-    if (window.matchMedia("(max-width: 767px)").matches) setOpen(false);
-  }, []);
-  return [open, setOpen] as const;
-}
-
 function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
-  const [open, setOpen] = useStartsOpen();
+  // The course rows start folded on every screen: the page reads as one card per program first
+  // (Nelson, 2 Nov 2026; until then only phones started folded).
+  const [open, setOpen] = React.useState(false);
   const panelId = React.useId();
   const earned = g.rows.filter((r) => r.earned).length;
   return (
