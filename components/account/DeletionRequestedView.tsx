@@ -48,12 +48,12 @@ export function DeletionRequestedView() {
   return (
     <AccountShell>
       <div className="flex flex-col gap-3">
-        <span className="inline-flex size-12 items-center justify-center rounded-full bg-sko-bg-success-soft text-sko-icon-success">
+        <span className="inline-flex size-12 items-center justify-center rounded-pill bg-sko-bg-success-soft text-sko-icon-success">
           <Icon icon={CircleCheck} size={24} />
         </span>
         <h1 className="sk-text-headline-small-semibold text-sko-text-default">We received your request</h1>
         <p className="sk-text-body-large-regular text-sko-text-muted">
-          Your account will be deleted on <strong className="font-semibold text-sko-text-default">{deleteOn}</strong>,{" "}
+          Your account will be deleted on <strong className="sk-text-body-large-semibold text-sko-text-default">{deleteOn}</strong>,{" "}
           {GRACE_DAYS} days from today.
         </p>
       </div>

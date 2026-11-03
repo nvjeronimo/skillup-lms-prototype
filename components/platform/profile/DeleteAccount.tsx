@@ -122,7 +122,7 @@ export function DeleteAccountSection({ email }: { email: string }) {
         ) : (
           <>
             <p className="sk-text-body-large-regular text-sko-text-default">
-              We will delete your account on <strong className="font-semibold">{deleteOn}</strong>. We sign you out
+              We will delete your account on <strong className="sk-text-body-large-semibold">{deleteOn}</strong>. We sign you out
               now and send a confirmation to {email}.
             </p>
             <p className="sk-text-body-large-regular text-sko-text-muted">

@@ -35,7 +35,9 @@ import { cn } from "@/lib/utils";
 const MOCK =
   "No API says whether a program certificate is earned: counted here from the course rows";
 const CARD = "rounded-card border border-sko-border-subtle bg-sko-bg-page";
+// token-lint-disable-next-line inner corner = card radius minus the 1 px border (concentric radius rule)
 const INNER_TOP = "rounded-t-[calc(var(--sk-radius-card)-1px)]";
+// token-lint-disable-next-line inner corner = card radius minus the 1 px border (concentric radius rule)
 const INNER_BOTTOM = "rounded-b-[calc(var(--sk-radius-card)-1px)]";
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 const issuedOn = (e: EarnedCertificate) => e.certificate.document.issuedOn;
