@@ -1,5 +1,5 @@
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
-import { coursePageHref, coursePlayerHref, slugify } from "@/lib/platform/hrefs";
+import { certificatePageHref, coursePageHref, coursePlayerHref, slugify } from "@/lib/platform/hrefs";
 import type { ProgramCourse } from "./types";
 
 /**
@@ -58,6 +58,8 @@ export function programCourse(
       // A finished course is reviewed from its page; the others open the player.
       href: card.cta === "Review" ? coursePageHref(slug) : coursePlayerHref(slug),
       detailHref: coursePageHref(slug),
+      // The card's id is course-N, which is no certificate page: the slug is (it went to a 404).
+      certificateHref: certificatePageHref(slug),
     },
     position,
     detail,
