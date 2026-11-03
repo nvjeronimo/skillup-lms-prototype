@@ -198,19 +198,21 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             </div>
             {/* Above the card's pointer link (z-[1]), as the action is. Secondary, not tertiary:
                 tertiary's fill read as a dark patch on the hero and the action got lost (Nelson,
-                3 Nov 2026); the outline says it is a button. */}
+                3 Nov 2026). Icon only (Nelson, 3 Nov 2026): the labelled button took a third of the
+                row and pushed the badges to one per line; the name stays in aria-label and title,
+                and the hit area grows to 44 under md. */}
             <Button
               ref={quickViewButton}
               hierarchy="secondary"
               size="sm"
+              iconOnly
               leftIcon={Eye}
               onClick={() => setQuickView(true)}
               aria-label={`Quick view of ${program.title}`}
+              title="Quick view"
               aria-haspopup="dialog"
-              className={TARGET_44}
-            >
-              Quick view
-            </Button>
+              className="relative z-[2] shrink-0 max-md:before:absolute max-md:before:-inset-1 max-md:before:content-['']"
+            />
           </div>
         </div>
       </div>
