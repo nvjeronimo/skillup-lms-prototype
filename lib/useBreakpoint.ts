@@ -6,18 +6,20 @@ import { useLmsStore } from "./store";
 export type Breakpoint = "mobile" | "tablet" | "desktop";
 
 /**
- * Responsive breakpoint per prototype-flows.md:
- *   mobile:  ≤ 768
- *   tablet:  769–1024
- *   desktop: ≥ 1025
+ * Responsive breakpoint, on the same edges as the Tailwind md (768) and lg (1024) screens:
+ *   mobile:  < 768
+ *   tablet:  768–1023
+ *   desktop: ≥ 1024
+ * prototype-flows.md said ≤ 768 / ≤ 1024, so at exactly 768 the CSS drew the tablet page while
+ * this hook still mounted the phone tab bar over it (Nelson, 3 Nov 2026).
  *
  * The responsive-mode switcher can force a breakpoint via `deviceMode`; when set
  * to anything other than "auto" the forced value wins (window size is ignored).
  */
 function widthBreakpoint(): Breakpoint {
   const w = window.innerWidth;
-  if (w <= 768) return "mobile";
-  if (w <= 1024) return "tablet";
+  if (w < 768) return "mobile";
+  if (w < 1024) return "tablet";
   return "desktop";
 }
 
