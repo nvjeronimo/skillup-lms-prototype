@@ -127,11 +127,12 @@ export function CertificatePageView({
           </div>
 
           <div data-arrive={3} className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
+            {/* Shown in the Open edX scope too (Nelson, 3 Nov 2026): Open edX makes no PDF, only the
+                web certificate, so the download is something to build, not a stock feature. */}
             <Button
               hierarchy="primary"
               size="lg"
               leftIcon={Download}
-              data-invented="certificate: Open edX makes no PDF, only the web certificate"
               onClick={() => showToast("Download certificate is not part of this prototype yet")}
             >
               Download certificate
