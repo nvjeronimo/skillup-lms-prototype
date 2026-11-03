@@ -196,10 +196,12 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
               <DifficultyBadge value={program.difficulty} />
               <CourseCountBadge count={program.courseCount} />
             </div>
-            {/* Above the card's pointer link (z-[1]), as the action is. */}
+            {/* Above the card's pointer link (z-[1]), as the action is. Secondary, not tertiary:
+                tertiary's fill read as a dark patch on the hero and the action got lost (Nelson,
+                3 Nov 2026); the outline says it is a button. */}
             <Button
               ref={quickViewButton}
-              hierarchy="tertiary"
+              hierarchy="secondary"
               size="sm"
               leftIcon={Eye}
               onClick={() => setQuickView(true)}
