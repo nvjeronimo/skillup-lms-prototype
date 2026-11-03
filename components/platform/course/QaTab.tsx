@@ -310,11 +310,12 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
           >
             <div className="flex items-start gap-2 bg-sko-bg-subtle p-3 md:items-center">
               <div className="flex min-w-0 flex-1 flex-col gap-1">
-                {/* The DS texts are 307 and 316 wide inside the header, so both wrap as drawn. */}
-                <h3 id="qa-thread-title" className="sk-text-body-medium-semibold text-sko-text-default md:max-w-[307px]">
+                {/* Title and meta fill the header up to the menu button (Nelson, 3 Nov 2026; the DS
+                    texts were 307 and 316 wide, which wrapped short titles with room to spare). */}
+                <h3 id="qa-thread-title" className="sk-text-body-medium-semibold text-sko-text-default">
                   {current.title}
                 </h3>
-                <p className="sk-text-body-small-regular text-sko-text-subtle md:max-w-[316px]">
+                <p className="sk-text-body-small-regular text-sko-text-subtle">
                   {/* The mentor and the Staff label Open edX shows on a course-team answer; no reply time,
                       which the platform does not know. */}
                   {`${tab.mentorLine.split(" · ")[0]} · Staff · question post, visible to the course`}
