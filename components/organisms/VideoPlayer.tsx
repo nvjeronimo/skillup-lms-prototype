@@ -515,7 +515,7 @@ export function VideoPlayer({
           mobile), so the top padding follows the viewport through --vab-top. */}
       <div
         className={cn(
-          "absolute inset-x-0 bottom-0 z-20 [--vab-top:1rem] min-[769px]:[--vab-top:1.25rem] min-[1025px]:[--vab-top:1.5rem]",
+          "absolute inset-x-0 bottom-0 z-20 [--vab-top:1rem] md:[--vab-top:1.25rem] lg:[--vab-top:1.5rem]",
           pick(
             "px-1 pb-1 pt-2",
             "px-4 pb-4 pt-[var(--vab-top)]",

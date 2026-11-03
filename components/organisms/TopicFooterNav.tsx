@@ -20,7 +20,7 @@ export interface TopicFooterNavProps {
   topicComplete?: boolean;
   onPrevious?: () => void;
   onNext?: () => void;
-  /** Mobile (≤768): title hidden, milestone captions hidden. */
+  /** Mobile (<768): title hidden, milestone captions hidden. */
   compact?: boolean;
   className?: string;
 }
@@ -32,8 +32,8 @@ export interface TopicFooterNavProps {
  * text-tertiary) · Next (`LMS / Course Progression Button`, right-aligned).
  *
  * Responsive rules (also annotated on the Figma component):
- * - Desktop ≥1025 and Tablet 769–1024: the full row above.
- * - Mobile ≤768: same padding and 36px buttons; the topic title is hidden (the
+ * - Desktop ≥1024 and Tablet 768–1023: the full row above.
+ * - Mobile <768: same padding and 36px buttons; the topic title is hidden (the
  *   paginator stays) and milestone captions are hidden. The side columns hug their
  *   buttons (8px gap) and a milestone label may wrap to two lines. Previous is an
  *   icon-only arrow-left button (Figma `3985:61038`, Reading `5685:175603`; Nelson's
