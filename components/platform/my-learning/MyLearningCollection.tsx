@@ -212,16 +212,20 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
 
         {/* Row 2 (Nelson, 13 Oct 2026): the status filter on the left, the search and the Grid /
           List toggle on the right, 24 apart. Mobile: the search at full width, then the filter. */}
+        {/* One row from lg up. On a tablet the filter, the search and the view switch did not fit
+            one row and the switch ran off the right edge (Nelson, 3 Nov 2026): below lg the search
+            and the switch sit on their own row, the switch at its right end (the search keeps the
+            sticky toolbar's 400 cap). */}
         <div
           data-arrive={2}
-          className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6"
+          className="flex flex-col-reverse gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6"
         >
           {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
             pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
             Mobile (Nelson, 13 Oct 2026, Figma 7187:37067): the track fills the width and stays
             put; the segments scroll sideways inside it and the last one is cut at its right edge,
             which is the cue that there is more. No scrollbar is drawn. */}
-          <div className="min-w-0 md:shrink-0">
+          <div className="min-w-0 lg:shrink-0">
             <div
               role="group"
               aria-label={`Filter ${noun} by status`}
@@ -248,13 +252,13 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             </div>
           </div>
           {/* Stuck to the top, the bar keeps the tabs and the filter; the search steps out unless it holds a query. */}
-          <div data-search-slot="" data-keep={query ? "" : undefined} className="flex min-w-0 items-center gap-2">
-            <div data-hide-when-stuck="" data-keep={query ? "" : undefined} className="w-full md:w-auto">
+          <div data-search-slot="" data-keep={query ? "" : undefined} className="flex min-w-0 items-center gap-2 md:justify-between lg:justify-start">
+            <div data-hide-when-stuck="" data-keep={query ? "" : undefined} className="w-full lg:w-auto">
               <SearchField
                 value={query}
                 onChange={setQuery}
                 label={myLearningSearch.placeholder}
-                className="w-full md:w-[240px] lg:w-[320px]"
+                className="w-full lg:w-[320px]"
               />
             </div>
             <ViewToggle
