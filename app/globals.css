@@ -1560,6 +1560,11 @@ button {
   border-radius: var(--sk-radius-card-inset);
   background-color: var(--color-bg-page);
 }
+/* A sticky box sticks inside the list's padding, so top-0 left the header 8px down with topics
+   showing above it (Nelson, 3 Nov 2026): pull it up by the padding, flush with the list's top. */
+[data-module-list] [data-module-box] > h3 {
+  top: -8px;
+}
 [data-module-box] > h3 > button {
   border-bottom-width: 0;
   background-color: var(--color-bg-page);
