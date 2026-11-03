@@ -206,7 +206,8 @@ export function MyLearningCourseCard({
   const overline = next ? "Up next" : "Certificate";
   const nextTitle = "certificate" in course.upNext ? course.upNext.certificate : course.upNext.title;
   // A completed course with a certificate: the grid card also offers the certificate page.
-  const certificateHref = "certificate" in course.upNext ? certificatePageHref(course.id) : null;
+  const certificateHref =
+    "certificate" in course.upNext ? (course.certificateHref ?? certificatePageHref(course.id)) : null;
   const hierarchy: ButtonHierarchy = secondaryAction ? "secondary" : hierarchyOf(course);
   const overlineText = course.progressPct === null ? "Starts with" : overline;
 

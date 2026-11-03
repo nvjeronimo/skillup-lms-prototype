@@ -89,6 +89,9 @@ export interface MyLearningCourse {
   href?: string;
   /** Where the title goes: the course's Course Detail page. */
   detailHref?: string;
+  /** The course's certificate page, when the card's id is not the course slug (a program's
+   *  courses are `course-N`). Without it the card builds the page from its id. */
+  certificateHref?: string;
 }
 
 const COVERS = "/platform/covers";
