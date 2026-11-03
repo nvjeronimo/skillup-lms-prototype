@@ -54,14 +54,14 @@ export function SignInView() {
     return (
       <AccountShell>
         <div className="flex flex-col gap-3">
-          <span className="inline-flex size-12 items-center justify-center rounded-full bg-sko-bg-warning-soft text-sko-icon-warning">
+          <span className="inline-flex size-12 items-center justify-center rounded-pill bg-sko-bg-warning-soft text-sko-icon-warning">
             <Icon icon={CalendarClock} size={24} />
           </span>
           <h1 className="sk-text-headline-small-semibold text-sko-text-default">
             Your account is scheduled for deletion
           </h1>
           <p className="sk-text-body-large-regular text-sko-text-muted">
-            We will delete it on <strong className="font-semibold text-sko-text-default">{deleteOn}</strong>, with
+            We will delete it on <strong className="sk-text-body-large-semibold text-sko-text-default">{deleteOn}</strong>, with
             your courses, progress and certificates.
           </p>
         </div>

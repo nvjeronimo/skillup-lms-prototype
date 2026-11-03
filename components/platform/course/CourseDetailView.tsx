@@ -130,7 +130,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             above (the tab has none of its own); from tablet up the tab's own 12 top padding is enough. */}
         <div className="mx-auto flex w-full max-w-[1280px] items-end pl-layout-band-x pt-3 md:gap-5 md:px-layout-band-x md:pt-0 lg:gap-6">
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up. Their own rule sits on the row's.
-              The labels are title-medium (text-lg, 18), as on the program page (Nelson, 2 Nov 2026). */}
+              The labels are title-medium (18 px), as on the program page (Nelson, 2 Nov 2026). */}
           <PlatformTabs
             tabs={tabs}
             value={active}
