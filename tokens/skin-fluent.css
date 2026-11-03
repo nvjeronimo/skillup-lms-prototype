@@ -362,6 +362,10 @@ html[data-skin="fluent"] [data-glance-title] {
   padding: 4px;
   background-color: var(--color-bg-faint);
 }
+/* The sticky module header pulls up by this list's padding (globals.css). */
+[data-skin="fluent"] [data-module-list] [data-module-box] > h3 {
+  top: -4px;
+}
 [data-skin="fluent"] [data-module-box] {
   flex-shrink: 0;
   overflow: clip;
