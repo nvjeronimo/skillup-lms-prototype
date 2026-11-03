@@ -143,18 +143,18 @@ export function MyLearningSkeleton({ courses, programs }: { courses: number; pro
               <Skeleton variant="block" width={110} height={24} radius="inner" />
             </div>
           </div>
-          <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
+          <div className="flex flex-col-reverse gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
             {/* The status filter, its segments as wide as their labels. */}
-            <div className="min-w-0 md:shrink-0">
+            <div className="min-w-0 lg:shrink-0">
               <div className={cn(MY_LEARNING_FILTER_TRACK, "overflow-hidden")}>
                 {myLearningStatusFilters.map((f) => (
                   <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Skeleton variant="block" radius="control" className="h-10 w-full max-md:h-11 md:w-[240px] lg:w-[320px]" />
-              <Skeleton variant="block" width={98} height={40} radius="track" className="hidden shrink-0 lg:block" />
+            <div className="flex items-center gap-2 md:justify-between lg:justify-start">
+              <Skeleton variant="block" radius="control" className="h-10 w-full max-md:h-11 md:max-w-[400px] lg:w-[320px]" />
+              <Skeleton variant="block" width={138} height={40} radius="track" className="hidden shrink-0 md:block" />
             </div>
           </div>
         </div>
