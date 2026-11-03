@@ -12,8 +12,8 @@ import type { MyLearningCourse, MyLearningProgram } from "@/lib/platform/my-lear
  * Harbor's table view of My Learning (Nelson, 25 Oct 2026, after the DreamHost panel's Websites
  * list): one row per course, the columns a learner with many courses scans: the course (picture,
  * title linking to its page, provider, then level and delivery as words), progress, what is next, the effort, and the action as the
- * panel's white "Manage" button. A real table (caption, column headers), from desktop up; below,
- * My Learning shows its grid. Columns sit 32 apart (pr-8 on every cell but the last; Nelson, 29 Oct 2026).
+ * panel's white "Manage" button. A real table (caption, column headers); on a tablet
+ * (below lg) Up next and Effort sit under the progress bar so the action stays in view. Columns sit 32 apart (pr-8 on every cell but the last; Nelson, 29 Oct 2026).
  */
 export function HarborCourseTable({
   courses,
@@ -24,15 +24,15 @@ export function HarborCourseTable({
 }) {
   return (
     <div className="overflow-x-auto rounded-card border border-sko-border-subtle bg-sko-bg-page px-4 pb-1.5">
-      <table className="w-full min-w-[880px] border-collapse text-left">
+      <table className="w-full border-collapse text-left lg:min-w-[880px]">
         <caption className="sr-only">Your courses</caption>
         <thead>
           <tr className="text-sko-text-default">
             <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Course</th>
             <th scope="col" className="w-[200px] py-4 pr-8 sk-text-body-small-semibold">Progress</th>
-            <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Up next</th>
-            <th scope="col" className="w-[140px] py-4 pr-8 sk-text-body-small-semibold">Effort</th>
-            <th scope="col" className="w-[120px] py-4 sk-text-body-small-semibold">
+            <th scope="col" className="hidden py-4 pr-8 sk-text-body-small-semibold lg:table-cell">Up next</th>
+            <th scope="col" className="hidden w-[140px] py-4 pr-8 sk-text-body-small-semibold lg:table-cell">Effort</th>
+            <th scope="col" className="py-4 sk-text-body-small-semibold lg:w-[120px]">
               <span className="sr-only">Action</span>
             </th>
           </tr>
@@ -69,23 +69,29 @@ export function HarborCourseTable({
                   </span>
                 </th>
                 <td className="py-3 pr-8">
-                  {pct === null ? (
-                    <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <PlatformProgressBar
-                        value={pct}
-                        tone={pct >= 100 ? "complete" : "progress"}
-                        label={`${c.title} progress`}
-                        className="flex-1"
-                      />
-                      <span className="sk-text-body-medium-semibold w-10 text-right text-sko-text-default">{pct}%</span>
-                    </span>
-                  )}
+                  <span className="flex flex-col gap-1">
+                    {pct === null ? (
+                      <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <PlatformProgressBar
+                          value={pct}
+                          tone={pct >= 100 ? "complete" : "progress"}
+                          label={`${c.title} progress`}
+                          className="flex-1"
+                        />
+                        <span className="sk-text-body-medium-semibold w-10 text-right text-sko-text-default">{pct}%</span>
+                      </span>
+                    )}
+                    {/* On a tablet Up next and Effort move under the bar, so the row fits without
+                        scrolling the action out of view (Nelson, 3 Nov 2026). */}
+                    <span className="sk-text-body-small-regular text-sko-text-muted lg:hidden">{next}</span>
+                    <span className="sk-text-body-small-regular text-sko-text-muted lg:hidden">{c.progressMeta}</span>
+                  </span>
                 </td>
-                <td className="sk-text-body-medium-regular py-3 pr-8 text-sko-text-muted">{next}</td>
-                <td className="sk-text-body-medium-regular py-3 pr-8 text-sko-text-muted">{c.progressMeta}</td>
-                <td className="py-3 text-right">
+                <td className="sk-text-body-medium-regular hidden py-3 pr-8 text-sko-text-muted lg:table-cell">{next}</td>
+                <td className="sk-text-body-medium-regular hidden py-3 pr-8 text-sko-text-muted lg:table-cell">{c.progressMeta}</td>
+                <td className="whitespace-nowrap py-3 text-right">
                   {c.href ? (
                     <ButtonLink href={c.href} hierarchy="secondary" size="sm" aria-label={`${c.cta} ${c.title}`}>
                       {c.cta}
@@ -120,14 +126,14 @@ export function HarborProgramTable({
 }) {
   return (
     <div className="overflow-x-auto rounded-card border border-sko-border-subtle bg-sko-bg-page px-4 pb-1.5">
-      <table className="w-full min-w-[880px] border-collapse text-left">
+      <table className="w-full border-collapse text-left lg:min-w-[880px]">
         <caption className="sr-only">Your programs</caption>
         <thead>
           <tr className="text-sko-text-default">
             <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Program</th>
-            <th scope="col" className="w-[220px] py-4 pr-8 sk-text-body-small-semibold">Progress</th>
-            <th scope="col" className="py-4 pr-8 sk-text-body-small-semibold">Up next</th>
-            <th scope="col" className="w-[160px] py-4 sk-text-body-small-semibold">
+            <th scope="col" className="w-[200px] py-4 pr-8 sk-text-body-small-semibold lg:w-[220px]">Progress</th>
+            <th scope="col" className="hidden py-4 pr-8 sk-text-body-small-semibold lg:table-cell">Up next</th>
+            <th scope="col" className="py-4 sk-text-body-small-semibold lg:w-[160px]">
               <span className="sr-only">Action</span>
             </th>
           </tr>
@@ -178,10 +184,12 @@ export function HarborProgramTable({
                       <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
                     )}
                     <span className="sk-text-body-small-regular text-sko-text-muted">{p.courses}</span>
+                    {/* Up next under the bar on a tablet (Nelson, 3 Nov 2026), as the Courses table. */}
+                    {next ? <span className="sk-text-body-small-regular text-sko-text-muted lg:hidden">{next}</span> : null}
                   </span>
                 </td>
-                <td className="sk-text-body-medium-regular py-3 pr-8 text-sko-text-muted">{next}</td>
-                <td className="py-3 text-right">
+                <td className="sk-text-body-medium-regular hidden py-3 pr-8 text-sko-text-muted lg:table-cell">{next}</td>
+                <td className="whitespace-nowrap py-3 text-right">
                   {actionHref ? (
                     <ButtonLink href={actionHref} hierarchy="secondary" size="sm" aria-label={`${p.cta} ${p.title}`}>
                       {p.cta}
