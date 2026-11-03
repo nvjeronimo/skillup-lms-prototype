@@ -13,7 +13,6 @@ import type { ProgramCertificateCourse } from "@/lib/platform/catalog";
 import { coursePageHref, programPageHref } from "@/lib/platform/hrefs";
 import type { ProgramCertificate } from "@/lib/platform/program";
 import { MY_LEARNING_HREF, MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
-import { useLmsStore } from "@/lib/store";
 
 const CRUMB = "sk-text-body-medium-semibold relative inline-flex items-center after:absolute after:inset-x-0 after:-inset-y-3 after:content-['']";
 
@@ -23,6 +22,18 @@ function courseStatus(percent: number | null): { label: string; color: "success"
   if (percent === null) return { label: "Not started", color: "gray" };
   if (percent >= 100) return { label: "Complete", color: "success" };
   return { label: `In progress · ${percent}%`, color: "gray" };
+}
+
+/**
+ * Download: the browser's print dialog with the sheet on one A4 landscape page, no margins. The
+ * page size is set only while printing, so other pages print as before.
+ */
+function printSheet() {
+  const style = document.createElement("style");
+  style.textContent = "@page { size: A4 landscape; margin: 0; }";
+  document.head.appendChild(style);
+  window.addEventListener("afterprint", () => style.remove(), { once: true });
+  window.print();
 }
 
 /**
@@ -58,7 +69,6 @@ export function CertificatePageView({
   courses?: ProgramCertificateCourse[];
   complete?: number;
 }) {
-  const showToast = useLmsStore((s) => s.showToast);
   const heading = kind === "program" && program ? program.title : certificate.title;
   const back =
     kind === "course" && courseSlug
@@ -116,7 +126,7 @@ export function CertificatePageView({
           <div
             data-arrive={2}
             data-mock="Certificate artwork, ID and verification address are sample data"
-            className="relative aspect-[1123/794] w-full min-w-0 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle shadow-sk-card [container-type:inline-size] lg:flex-1"
+            className="sk-print-sheet relative aspect-[1123/794] w-full min-w-0 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle shadow-sk-card [container-type:inline-size] lg:flex-1"
           >
             <div className="absolute inset-0">
               <CertificateDocument
@@ -128,13 +138,10 @@ export function CertificatePageView({
 
           <div data-arrive={3} className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
             {/* Shown in the Open edX scope too (Nelson, 3 Nov 2026): Open edX makes no PDF, only the
-                web certificate, so the download is something to build, not a stock feature. */}
-            <Button
-              hierarchy="primary"
-              size="lg"
-              leftIcon={Download}
-              onClick={() => showToast("Download certificate is not part of this prototype yet")}
-            >
+                web certificate, so the download is something to build, not a stock feature. In the
+                prototype it opens the browser's print dialog ("Save as PDF" makes the file), which
+                prints the sheet alone on one A4 landscape page (globals.css, .sk-print-sheet). */}
+            <Button hierarchy="primary" size="lg" leftIcon={Download} onClick={printSheet}>
               Download certificate
             </Button>
             <CertificateShare target={{ title: certificate.title, document: certificate.document }} size="lg" />
