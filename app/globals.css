@@ -1035,6 +1035,25 @@ button {
   .sk-animate-reveal {
     animation: none;
   }
+  /* The certificate page's Download prints the sheet alone (CertificatePageView sets the A4
+     landscape page while it prints): everything that neither is nor holds the sheet is dropped,
+     and the sheet is lifted to the page's top left, edge to edge (1123:794 is A4's ratio). */
+  body:has(.sk-print-sheet) *:not(.sk-print-sheet, .sk-print-sheet *, :has(.sk-print-sheet)) {
+    display: none !important;
+  }
+  .sk-print-sheet {
+    position: fixed !important;
+    inset: 0 auto auto 0;
+    width: 100% !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    animation: none !important;
+  }
+  .sk-print-sheet::after {
+    content: none !important;
+  }
 }
 
 /* Overlay backdrop — the DS dim is bg/overlay (#0e1a1f at 70% in all 6 modes since 12 Oct 2026, 50% before:
