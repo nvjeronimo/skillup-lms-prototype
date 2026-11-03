@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * Facebook, Copy link, Email. A disclosure (Esc / outside click close, focus returns to the
  * trigger) over the DS ShareMenu.
  * - `look="button"`: Button Secondary with the share icon and the word, on the certificate page.
- * - `look="icon"`: an icon-only Button Secondary next to View and Download, on the Certificate card.
+ * - `look="icon"`: an icon-only Button Secondary next to View, on the Certificate card.
  * `up` opens the menu above the trigger (the card's actions sit at the bottom of the card), unless
  * the viewport has no room above it and more below: then it opens down (31 Oct 2026).
  * After a successful Copy link the trigger's icon turns into a check that draws and its label

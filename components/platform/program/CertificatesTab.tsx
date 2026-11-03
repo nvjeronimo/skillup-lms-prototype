@@ -20,7 +20,8 @@ import { programEnrolment } from "@/lib/platform/certificate-enrolments";
  * DS `LMS / Course Detail / Certificate card` (5425:566), the two states the page draws.
  * Issued: the Certificate document thumbnail (bg/subtle, 1px border/subtle, radius 8), the
  * course title (body-large/Semibold), the issue line (body-medium/Regular, text/subtle) and
- * View (Primary) + Download (Secondary), Button sm, sharing the row with a 6px gap.
+ * View (Primary) + Share (icon), Button sm, sharing the row with a 6px gap. No Download on the
+ * card: it lives on the certificate page, where the document is open (Nelson, 2 Nov 2026).
  * Not earned: the fixed title and the requirements, each a title (body-medium/Semibold), a
  * detail (body-small/Regular, text/subtle) and a progress bar, 16 apart.
  * This is not organisms/CourseCertificate, which is the full certificate page.
@@ -174,16 +175,6 @@ export function CertificateCard({
             View
           </Button>
         )}
-        <Button
-          hierarchy="secondary"
-          size="sm"
-          aria-label={`Download certificate: ${certificate.title}`}
-          data-invented="certificate: Open edX makes no PDF, only the web certificate"
-          onClick={() => showToast("Download certificate is not part of this prototype yet")}
-          className="min-w-0 flex-1 max-md:h-11"
-        >
-          Download
-        </Button>
         {/* Share (20 Oct 2026): icon-only, the menu opens above the card's bottom edge. */}
         <CertificateShare
           target={{ title: certificate.title, document: certificate.document }}
