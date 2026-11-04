@@ -116,6 +116,16 @@ export interface ActivityContent {
   packageSizeLabel?: string;
   /** The worksheet the steps refer to, as the Downloads tab lists it. Without one, the plain worksheet. */
   file?: { name: string; size: string };
+  /**
+   * SCORM only: a real package to play, its launch file under `public/scorm/` ("/scorm/<slug>/index.html").
+   * Without one, the player shows its sample package.
+   */
+  packageUrl?: string;
+  /**
+   * SCORM only: false when the package never reports a status (Studio warns the author; Activity
+   * card C1). The topic then completes by hand, like a reading: Mark as Complete, and Next asks.
+   */
+  reportsCompletion?: boolean;
 }
 
 export interface DiscussionThread {
@@ -1038,7 +1048,9 @@ export function completesByHand(topic: FlatTopic): boolean {
     family === "lessonPage" ||
     // A SCORM package reports its own completion and score (the Open edX SCORM XBlock), so only an
     // activity authored as plain HTML is completed by hand (Figma Activity Row A; 28 Oct 2026).
-    (family === "activity" && getActivity(topic).kind !== "scorm") ||
+    // A package that never reports (Activity card C1) falls back to the same rule.
+    (family === "activity" &&
+      (getActivity(topic).kind !== "scorm" || getActivity(topic).reportsCompletion === false)) ||
     ((family === "video" || family === "podcast") && !isPlaybackMeasured(topic))
   );
 }

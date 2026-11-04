@@ -279,10 +279,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const scormActivity = family === "activity" && getActivity(topic).kind === "scorm";
   // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
   const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
+  // A package that never reports (Activity card C1) has no action of its own: it gets Mark as Complete.
+  const silentPackage = scormActivity && getActivity(topic).reportsCompletion === false;
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
-    family === "activity" ||
+    (family === "activity" && !silentPackage) ||
     (family === "lab" && !partnerLab) ||
     family === "ora";
   // VILT never exposes a manual "Mark as complete". Completion comes from one of

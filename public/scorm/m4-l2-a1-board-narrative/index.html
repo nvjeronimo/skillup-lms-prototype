@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Export to Board Narrative — Practice Activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #00243A;
+    --teal: #2A7B9F;
+    --teal-light: #d6eaf3;
+    --white: #ffffff;
+    --success: #1a7a4a;
+    --warning: #b45309;
+    --error: #9b1c1c;
+    --bg: #f1f1f1;
+    --shadow: 0 10px 34px rgba(0,36,58,0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--navy);
+  }
+
+  body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 16px;
+    min-height: 400px;
+  }
+
+  .stage-wrap {
+    width: 96%;
+    max-width: 1360px;
+  }
+
+  .stage {
+    container-type: inline-size;
+    container-name: stage;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .screen-area {
+    position: relative;
+    flex: 1 1 auto;
+    overflow: hidden;
+    background: var(--white);
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.6cqw;
+    padding: 4cqw 6cqw;
+    overflow: hidden;
+  }
+
+  .screen.active { display: flex; }
+  .screen:focus { outline: none; }
+
+  .screen.list-screen { justify-content: flex-start; gap: 1.1cqw; }
+
+  .list-head { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0.5cqw; }
+
+  .tint-bg { background: var(--teal-light); }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: clamp(22px, 2cqw, 22px);
+    font-weight: 600;
+    color: var(--teal);
+    margin: 0;
+  }
+
+  .eyebrow svg { width: 1.3em; height: 1.3em; stroke: var(--teal); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+
+  h1 {
+    font-size: clamp(30px, 5.6cqw, 54px);
+    font-weight: 700;
+    line-height: 1.12;
+    margin: 0;
+    color: var(--navy);
+  }
+
+  h2 {
+    font-size: clamp(25px, 4cqw, 38px);
+    font-weight: 700;
+    line-height: 1.18;
+    margin: 0;
+    color: var(--navy);
+  }
+
+  p, li, .body-text {
+    font-size: clamp(22px, 2.3cqw, 25px);
+    line-height: 1.42;
+    margin: 0;
+  }
+
+  .subtle { color: var(--teal); }
+
+  .icon {
+    width: clamp(52px, 8.4cqw, 78px);
+    height: clamp(52px, 8.4cqw, 78px);
+    stroke: var(--teal);
+    fill: none;
+    stroke-width: 1.5;
+    flex-shrink: 0;
+  }
+
+  /* Cover screen */
+  .cover-screen {
+    background: var(--navy);
+    color: var(--white);
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1.4cqw;
+    overflow: hidden;
+  }
+
+  .cover-motif {
+    position: absolute;
+    right: -8%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46cqw;
+    height: 46cqw;
+    stroke: var(--teal);
+    opacity: 0.28;
+    fill: none;
+    stroke-width: 1;
+    pointer-events: none;
+  }
+
+  .cover-screen h1 { color: var(--white); max-width: 78%; position: relative; }
+  .cover-screen p { color: var(--teal-light); max-width: 65%; position: relative; }
+  .cover-screen .btn-primary { position: relative; }
+
+  .role-motif {
+    position: absolute;
+    right: -2%;
+    bottom: -14%;
+    width: 30cqw;
+    height: 30cqw;
+    stroke: var(--teal);
+    opacity: 0.22;
+    fill: none;
+    stroke-width: 0.6;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+
+  [data-index="3"] > *, [data-index="1"] > *, [data-index="11"] > * { position: relative; }
+
+  /* Buttons */
+  .btn {
+    font-family: inherit;
+    font-size: clamp(22px, 2.2cqw, 23px);
+    font-weight: 600;
+    padding: 0.6em 1.3em;
+    border-radius: 8px;
+    border: 2px solid var(--navy);
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+    line-height: 1.2;
+  }
+
+  .btn:hover { background: var(--teal-light); }
+  .btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-primary {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+  .btn-primary:hover { background: var(--teal); border-color: var(--teal); }
+
+  .cover-screen .btn-primary {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: var(--white);
+  }
+  .cover-screen .btn-primary:hover { background: var(--white); color: var(--navy); border-color: var(--white); }
+
+  .btn-icon {
+    width: clamp(46px, 4.4cqw, 54px);
+    height: clamp(46px, 4.4cqw, 54px);
+    padding: 0;
+    border-radius: 50%;
+    border: none;
+    background: var(--navy);
+    color: var(--white);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(20px, 2cqw, 22px);
+    cursor: pointer;
+  }
+  .btn-icon:hover { background: var(--teal); }
+  .btn-icon:disabled { background: var(--bg); color: var(--navy); opacity: 0.35; cursor: not-allowed; }
+  .btn-icon:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+  /* How it works grid */
+  .steps-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2cqw; }
+
+  .step-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5cqw;
+    padding: 1.2cqw;
+    background: var(--white);
+    border: 1.5px solid var(--teal-light);
+    border-radius: 12px;
+    border-left: 5px solid var(--teal);
+  }
+
+  .step-card .icon { width: clamp(28px, 4cqw, 36px); height: clamp(28px, 4cqw, 36px); }
+  .step-card .step-label { font-weight: 700; font-size: clamp(22px, 2.1cqw, 23px); }
+  .step-card .step-desc { font-size: clamp(22px, 1.8cqw, 22px); color: var(--navy); opacity: 0.75; }
+
+  /* Stat panel */
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4cqw; }
+
+  .stat-card {
+    background: var(--teal-light);
+    border-radius: 12px;
+    padding: 1.3cqw 1.6cqw;
+    border-left: 5px solid var(--teal);
+  }
+
+  .stat-card .stat-label { font-size: clamp(22px, 1.9cqw, 22px); color: var(--navy); opacity: 0.75; margin-bottom: 0.2em; }
+  .stat-card .stat-value { font-size: clamp(32px, 5.2cqw, 46px); font-weight: 700; color: var(--error); }
+
+  .note-box {
+    border: 1.5px solid var(--teal);
+    border-left: 5px solid var(--teal);
+    border-radius: 10px;
+    padding: 0.8cqw 1.2cqw;
+    background: var(--white);
+  }
+
+  ul.evidence-list { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 0.5cqw; }
+
+  /* Lists inside list-screens */
+  .claim-list, .rank-list, .check-list, .feedback-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7cqw;
+    padding-right: 2px;
+  }
+
+  .claim-card {
+    background: var(--white);
+    border: 1.5px solid var(--teal-light);
+    border-left: 5px solid var(--teal);
+    border-radius: 10px;
+    padding: 0.7cqw 1.1cqw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1cqw;
+    flex-wrap: wrap;
+  }
+
+  .claim-text { font-size: clamp(22px, 1.7cqw, 22px); line-height: 1.3; flex: 1 1 55%; min-width: 260px; }
+
+  .claim-choices { display: flex; gap: 0.6cqw; flex: 0 0 auto; }
+
+  .choice-btn {
+    font-family: inherit;
+    font-size: clamp(22px, 1.5cqw, 22px);
+    font-weight: 600;
+    padding: 0.35em 0.75em;
+    border-radius: 8px;
+    border: 2px solid var(--navy);
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .choice-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .choice-btn[aria-pressed="true"] { background: var(--navy); color: var(--white); }
+
+  .error-msg { flex: 0 0 auto; font-size: clamp(22px, 1.8cqw, 22px); color: var(--error); font-weight: 600; min-height: 1.3em; }
+
+  .feedback-item {
+    display: flex;
+    gap: 0.9cqw;
+    align-items: center;
+    padding: 0.7cqw 1.1cqw;
+    border-radius: 10px;
+    background: var(--white);
+    border: 1.5px solid var(--teal-light);
+  }
+  .feedback-item.is-correct { border-left: 5px solid var(--success); }
+  .feedback-item.is-wrong { border-left: 5px solid var(--error); }
+
+  .feedback-item .status-icon { flex-shrink: 0; width: clamp(26px, 2.4cqw, 30px); height: clamp(26px, 2.4cqw, 30px); }
+  .feedback-item.is-correct .status-icon { stroke: var(--success); }
+  .feedback-item.is-wrong .status-icon { stroke: var(--error); }
+  .feedback-item .fb-text { font-size: clamp(22px, 1.6cqw, 21px); line-height: 1.3; }
+  .fb-label { font-weight: 700; }
+  .feedback-item.is-correct .fb-label { color: var(--success); }
+  .feedback-item.is-wrong .fb-label { color: var(--error); }
+
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9cqw;
+    background: var(--white);
+    border: 1.5px solid var(--teal-light);
+    border-left: 5px solid var(--teal);
+    border-radius: 10px;
+    padding: 0.6cqw 1cqw;
+  }
+
+  .rank-number {
+    flex-shrink: 0;
+    width: clamp(30px, 2.8cqw, 34px);
+    height: clamp(30px, 2.8cqw, 34px);
+    border-radius: 50%;
+    background: var(--teal);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: clamp(22px, 1.6cqw, 21px);
+  }
+
+  .rank-text { flex: 1 1 auto; font-size: clamp(22px, 1.6cqw, 21px); line-height: 1.28; }
+  .rank-controls { display: flex; flex-direction: column; gap: 0.2cqw; }
+
+  .rank-controls button {
+    width: clamp(28px, 2.4cqw, 30px);
+    height: clamp(28px, 2.4cqw, 30px);
+    padding: 0;
+    border-radius: 6px;
+    border: 2px solid var(--navy);
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(14px, 1.4cqw, 16px);
+    line-height: 1;
+  }
+  .rank-controls button:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .rank-controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4cqw; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+  .compare-col { background: var(--white); border: 1.5px solid var(--teal-light); border-radius: 12px; padding: 1cqw 1.2cqw; }
+  .compare-col h3 { font-size: clamp(22px, 1.9cqw, 22px); margin: 0 0 0.5cqw 0; color: var(--teal); }
+  .compare-col ol { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 0.5cqw; }
+  .compare-col li { font-size: clamp(22px, 1.5cqw, 20px); line-height: 1.28; }
+  .rationale { font-size: clamp(22px, 1.4cqw, 19px); color: var(--navy); opacity: 0.75; display: block; margin-top: 0.15em; }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9cqw;
+    background: var(--white);
+    border: 1.5px solid var(--teal-light);
+    border-left: 5px solid var(--teal);
+    border-radius: 10px;
+    padding: 0.7cqw 1.1cqw;
+  }
+
+  .switch {
+    flex-shrink: 0;
+    width: clamp(50px, 4cqw, 54px);
+    height: clamp(28px, 2.3cqw, 30px);
+    border-radius: 999px;
+    border: 2px solid var(--navy);
+    background: var(--white);
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+  }
+  .switch:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+  .switch .knob {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: clamp(20px, 1.7cqw, 22px);
+    height: clamp(20px, 1.7cqw, 22px);
+    border-radius: 50%;
+    background: var(--navy);
+    transition: transform 0.15s ease;
+  }
+  .switch[aria-checked="true"] { background: var(--teal); border-color: var(--teal); }
+  .switch[aria-checked="true"] .knob { background: var(--white); transform: translateX(22px); }
+
+  .check-text { font-size: clamp(22px, 1.6cqw, 21px); line-height: 1.28; }
+  .check-text strong { font-weight: 700; }
+
+  /* Recap */
+  .recap-list { display: flex; flex-direction: column; gap: 0.8cqw; }
+  .recap-item { display: flex; gap: 0.9cqw; align-items: center; background: var(--white); border: 1.5px solid var(--teal-light); border-left: 5px solid var(--success); border-radius: 10px; padding: 0.7cqw 1.1cqw; }
+  .recap-item .icon { width: clamp(28px, 2.6cqw, 32px); height: clamp(28px, 2.6cqw, 32px); stroke: var(--success); flex-shrink: 0; }
+  .recap-item p { flex: 1; }
+
+  .complete-flag {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--success);
+    font-weight: 700;
+    font-size: clamp(22px, 1.9cqw, 22px);
+  }
+  .complete-flag svg { width: 1.3em; height: 1.3em; stroke: var(--success); fill: none; stroke-width: 2.2; flex-shrink: 0; }
+
+  .recap-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; }
+
+  /* Nav bar */
+  .nav-bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.4cqw;
+    padding: 1.1cqw 2.2cqw;
+    border-top: 1.5px solid var(--teal-light);
+    background: var(--white);
+  }
+
+  .progress-wrap { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; gap: 0.4cqw; }
+  .progress-text { font-size: clamp(22px, 1.5cqw, 19px); color: var(--navy); font-weight: 600; }
+  .dot-row { display: flex; gap: 0.5cqw; }
+  .dot {
+    width: clamp(8px, 0.8cqw, 10px);
+    height: clamp(8px, 0.8cqw, 10px);
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--teal);
+  }
+  .dot.is-done { background: var(--teal); }
+  .dot.is-current { background: var(--navy); border-color: var(--navy); width: clamp(10px, 1cqw, 13px); height: clamp(10px, 1cqw, 13px); }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .switch .knob { transition: none; }
+  }
+
+  @container stage (max-width: 640px) {
+    .steps-row { grid-template-columns: repeat(2, 1fr); }
+    .stat-row { grid-template-columns: 1fr; }
+    .compare-row { grid-template-columns: 1fr; }
+    .claim-card { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage-wrap">
+  <div class="stage" id="stage">
+    <div class="screen-area" id="screen-area">
+
+      <!-- 0: Cover -->
+      <section class="screen active cover-screen" data-index="0" tabindex="-1" aria-label="Cover">
+        <svg class="cover-motif" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="95"/><circle cx="100" cy="100" r="68"/><circle cx="100" cy="100" r="40"/>
+        </svg>
+        <h1 id="s0-heading">From export to board narrative</h1>
+        <p>A judgment activity for financial analysts using AI to draft board-ready commentary.</p>
+        <button type="button" class="btn btn-primary" data-action="next">Start activity</button>
+      </section>
+
+      <!-- 1: Learning objective -->
+      <section class="screen tint-bg" data-index="1" tabindex="-1" aria-label="Learning objective">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
+        <h2>What you'll practice</h2>
+        <p>By completing this activity, you will be able to separate AI-supported financial claims from unsupported ones, and prioritize verified movements for a board audience based on materiality, not size alone.</p>
+      </section>
+
+      <!-- 2: How this works -->
+      <section class="screen" data-index="2" tabindex="-1" aria-label="How this activity works">
+        <h2>How this activity works</h2>
+        <p>You'll take on a role, review the evidence exactly as it would appear in a real review, then make two judgment calls of your own.</p>
+        <div class="steps-row">
+          <div class="step-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg>
+            <span class="step-label">Role</span>
+            <span class="step-desc">Who you are</span>
+          </div>
+          <div class="step-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+            <span class="step-label">Context</span>
+            <span class="step-desc">The situation</span>
+          </div>
+          <div class="step-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18M18 3v18M6 8h12M6 16h12"/></svg>
+            <span class="step-label">Evidence</span>
+            <span class="step-desc">What's verified</span>
+          </div>
+          <div class="step-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <span class="step-label">Judgment</span>
+            <span class="step-desc">Your call</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3: Role and context -->
+      <section class="screen tint-bg" data-index="3" tabindex="-1" aria-label="Your role">
+        <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg>Your role</p>
+        <h2>Senior FP&amp;A reviewer, Bramwell Components</h2>
+        <p>The monthly export covers revenue, margin, operating expense, and forecast-to-plan variance across 18 business units. Before the numbers reach the board, you decide what the narrative should say, and what it shouldn't claim.</p>
+      </section>
+
+      <!-- 4: Evidence 1 - numbers -->
+      <section class="screen" data-index="4" tabindex="-1" aria-label="The verified numbers">
+        <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18M18 3v18M6 8h12M6 16h12"/></svg>Evidence</p>
+        <h2>The verified numbers</h2>
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-label">Revenue vs. budget</div>
+            <div class="stat-value">&minus;$14.2M</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Gross margin vs. budget</div>
+            <div class="stat-value">&minus;$3.1M</div>
+          </div>
+        </div>
+        <div class="note-box"><p>These figures come from the finance-approved export. Anything beyond them is unverified.</p></div>
+      </section>
+
+      <!-- 5: Evidence 2 - driver commentary -->
+      <section class="screen" data-index="5" tabindex="-1" aria-label="The approved driver commentary">
+        <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18M18 3v18M6 8h12M6 16h12"/></svg>Evidence</p>
+        <h2>The approved driver commentary</h2>
+        <ul class="evidence-list">
+          <li>Lower shipment volume in two product lines drove most of the revenue shortfall.</li>
+          <li>Expedited freight and unfavorable mix reduced margin.</li>
+          <li>The export does not state why freight expense increased.</li>
+        </ul>
+      </section>
+
+      <!-- 6: Task 1 - classify -->
+      <section class="screen list-screen" data-index="6" tabindex="-1" aria-label="Task one: classify the claims">
+        <div class="list-head">
+          <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>Task 1</p>
+          <h2>Which claims can the narrative make?</h2>
+          <p>An AI-drafted narrative includes these four claims. Using only the evidence you've reviewed, mark each one.</p>
+        </div>
+        <div class="claim-list" id="claim-list"></div>
+        <p class="error-msg" id="task1-error" role="alert"></p>
+      </section>
+
+      <!-- 7: Task 1 feedback -->
+      <section class="screen list-screen" data-index="7" tabindex="-1" aria-label="Task one feedback">
+        <div class="list-head">
+          <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Task 1 review</p>
+          <h2>Why these claims hold up, or don't</h2>
+        </div>
+        <div class="feedback-list" id="task1-feedback"></div>
+      </section>
+
+      <!-- 8: Task 2 - reorder -->
+      <section class="screen list-screen" data-index="8" tabindex="-1" aria-label="Task two: prioritize the narrative">
+        <div class="list-head">
+          <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h11M4 18h6"/></svg>Task 2</p>
+          <h2>What leads the board narrative?</h2>
+          <p>Four verified movements are ready to use. Move each item up or down to order them by what the board most needs to see first.</p>
+        </div>
+        <div class="rank-list" id="rank-list"></div>
+      </section>
+
+      <!-- 9: Task 2 feedback -->
+      <section class="screen list-screen" data-index="9" tabindex="-1" aria-label="Task two feedback">
+        <div class="list-head">
+          <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Task 2 review</p>
+          <h2>How this compares to expert judgment</h2>
+        </div>
+        <div class="compare-row">
+          <div class="compare-col">
+            <h3>Your order</h3>
+            <ol id="your-order"></ol>
+          </div>
+          <div class="compare-col">
+            <h3>Expert order</h3>
+            <ol id="expert-order"></ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10: Validation checklist -->
+      <section class="screen list-screen" data-index="10" tabindex="-1" aria-label="Validation checklist">
+        <div class="list-head">
+          <p class="eyebrow subtle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>Before circulation</p>
+          <h2>Confirm the review is complete</h2>
+        </div>
+        <div class="check-list" id="check-list"></div>
+        <p class="error-msg" id="task3-error" role="alert"></p>
+      </section>
+
+      <!-- 11: Recap -->
+      <section class="screen tint-bg" data-index="11" tabindex="-1" aria-label="Recap">
+        <h2>What you practiced</h2>
+        <div class="recap-list">
+          <div class="recap-item">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <p>You separated a verified fact from an unsupported claim.</p>
+          </div>
+          <div class="recap-item">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <p>You weighed materiality against magnitude in board-level prioritization.</p>
+          </div>
+          <div class="recap-item">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <p>You applied the same governance checks a reviewer runs before circulation.</p>
+          </div>
+        </div>
+        <div class="recap-actions">
+          <div class="complete-flag">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <span>Activity complete</span>
+          </div>
+          <button type="button" class="btn" data-action="restart">Restart activity</button>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="nav-bar">
+      <button type="button" class="btn-icon" data-action="prev" aria-label="Previous screen">&larr;</button>
+      <div class="progress-wrap">
+        <span class="progress-text" id="progress-text" aria-live="polite">Screen 1 of 12</span>
+        <div class="dot-row" id="dot-row" aria-hidden="true"></div>
+      </div>
+      <button type="button" class="btn-icon" data-action="next" aria-label="Next screen">&rarr;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var scormAPI = (function () {
+    var api = null;
+    var version = null;
+
+    function findAPI(win) {
+      var attempts = 0;
+      while (win && attempts < 500) {
+        if (win.API) { api = win.API; version = '1.2'; return true; }
+        if (win.API_1484_11) { api = win.API_1484_11; version = '2004'; return true; }
+        if (win.parent && win.parent !== win) { win = win.parent; attempts++; }
+        else { break; }
+      }
+      return false;
+    }
+
+    function init() {
+      if (!findAPI(window) && window.opener) { findAPI(window.opener); }
+      if (!api) return false;
+      try {
+        if (version === '1.2') {
+          api.LMSInitialize('');
+          api.LMSSetValue('cmi.core.lesson_status', 'incomplete');
+          api.LMSCommit('');
+        } else {
+          api.Initialize('');
+          api.SetValue('cmi.completion_status', 'incomplete');
+          api.Commit('');
+        }
+      } catch (e) { /* LMS not available, activity still works standalone */ }
+      return true;
+    }
+
+    function complete() {
+      if (!api) return;
+      try {
+        if (version === '1.2') {
+          api.LMSSetValue('cmi.core.lesson_status', 'completed');
+          api.LMSCommit('');
+        } else {
+          api.SetValue('cmi.completion_status', 'completed');
+          api.SetValue('cmi.success_status', 'passed');
+          api.Commit('');
+        }
+      } catch (e) { /* no-op */ }
+    }
+
+    function finish() {
+      if (!api) return;
+      try {
+        if (version === '1.2') { api.LMSFinish(''); } else { api.Terminate(''); }
+      } catch (e) { /* no-op */ }
+    }
+
+    init();
+    window.addEventListener('beforeunload', finish);
+    return { complete: complete, finish: finish };
+  })();
+</script>
+<script>
+(function () {
+  var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'));
+  var total = screens.length;
+  var current = 0;
+
+  var prevBtn = document.querySelector('[data-action="prev"]');
+  var nextBtn = document.querySelector('[data-action="next"]');
+  var progressText = document.getElementById('progress-text');
+  var dotRow = document.getElementById('dot-row');
+
+  for (var d = 0; d < total; d++) {
+    var dot = document.createElement('span');
+    dot.className = 'dot';
+    dotRow.appendChild(dot);
+  }
+  var dots = Array.prototype.slice.call(dotRow.querySelectorAll('.dot'));
+
+  var claims = [
+    { id: 'c1', text: 'Consolidated revenue was $14.2 million below budget, driven mainly by lower shipment volume in two product lines.', correct: 'supported', explanation: 'This matches the finance-approved export directly.' },
+    { id: 'c2', text: 'Freight expense increased because of a supplier disruption.', correct: 'revise', explanation: 'The export shows freight expense increased. It does not state why. This turns an unexplained movement into a specific cause.' },
+    { id: 'c3', text: 'Margin underperformance was concentrated in expedited freight costs and unfavorable product mix.', correct: 'supported', explanation: 'This matches the approved driver commentary.' },
+    { id: 'c4', text: 'The full-year outlook will improve now that management\u2019s recovery actions are in place.', correct: 'revise', explanation: 'The export shows recovery actions are documented, not that the outlook will improve. This overstates certainty.' }
+  ];
+  var claimAnswers = {};
+
+  var rankItems = [
+    { id: 'r1', text: 'A $0.4 million variance in a strategic business unit showing recurring deterioration.', modelRank: 3, rationale: 'Included despite its size, because it signals a recurring, strategic problem.' },
+    { id: 'r2', text: 'A $1.2 million one-time timing variance in a non-strategic unit.', modelRank: 4, rationale: 'Deprioritized even though it is numerically larger, because it is one-time and non-strategic.' },
+    { id: 'r3', text: 'Consolidated revenue $14.2 million below budget, concentrated in two product lines.', modelRank: 1, rationale: 'Leads the narrative as the largest, most material movement.' },
+    { id: 'r4', text: 'Gross margin $3.1 million below budget from freight and mix.', modelRank: 2, rationale: 'Second largest movement, directly tied to margin performance.' }
+  ];
+  var currentOrder = ['r1', 'r2', 'r3', 'r4'];
+
+  var checks = [
+    { id: 'v1', label: 'Clarity', desc: 'The narrative is easy to follow and free of jargon.' },
+    { id: 'v2', label: 'Accuracy', desc: 'Totals, signs, periods, and comparisons match the source data.' },
+    { id: 'v3', label: 'Materiality', desc: 'What leads the narrative reflects what matters, not just size.' },
+    { id: 'v4', label: 'Governance controls', desc: 'The source table and prompt are retained with the review file.' }
+  ];
+  var checkState = {};
+
+  function renderClaims() {
+    var list = document.getElementById('claim-list');
+    list.innerHTML = '';
+    claims.forEach(function (c) {
+      var card = document.createElement('div');
+      card.className = 'claim-card';
+      var text = document.createElement('p');
+      text.className = 'claim-text';
+      text.textContent = c.text;
+      var choices = document.createElement('div');
+      choices.className = 'claim-choices';
+
+      var supBtn = document.createElement('button');
+      supBtn.type = 'button';
+      supBtn.className = 'choice-btn';
+      supBtn.textContent = 'Supported';
+      supBtn.setAttribute('aria-pressed', 'false');
+      supBtn.setAttribute('aria-label', 'Mark supported by evidence: ' + c.text);
+
+      var revBtn = document.createElement('button');
+      revBtn.type = 'button';
+      revBtn.className = 'choice-btn';
+      revBtn.textContent = 'Needs revision';
+      revBtn.setAttribute('aria-pressed', 'false');
+      revBtn.setAttribute('aria-label', 'Mark needs revision: ' + c.text);
+
+      supBtn.addEventListener('click', function () {
+        claimAnswers[c.id] = 'supported';
+        supBtn.setAttribute('aria-pressed', 'true');
+        revBtn.setAttribute('aria-pressed', 'false');
+        document.getElementById('task1-error').textContent = '';
+      });
+      revBtn.addEventListener('click', function () {
+        claimAnswers[c.id] = 'revise';
+        revBtn.setAttribute('aria-pressed', 'true');
+        supBtn.setAttribute('aria-pressed', 'false');
+        document.getElementById('task1-error').textContent = '';
+      });
+
+      choices.appendChild(supBtn);
+      choices.appendChild(revBtn);
+      card.appendChild(text);
+      card.appendChild(choices);
+      list.appendChild(card);
+    });
+  }
+
+  function renderTask1Feedback() {
+    var wrap = document.getElementById('task1-feedback');
+    wrap.innerHTML = '';
+    claims.forEach(function (c) {
+      var isCorrect = claimAnswers[c.id] === c.correct;
+      var item = document.createElement('div');
+      item.className = 'feedback-item ' + (isCorrect ? 'is-correct' : 'is-wrong');
+
+      var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      icon.setAttribute('class', 'status-icon');
+      icon.setAttribute('viewBox', '0 0 24 24');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.setAttribute('fill', 'none');
+      icon.setAttribute('stroke-width', '2');
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', isCorrect ? 'M4 12l5 5L20 6' : 'M6 6l12 12M18 6L6 18');
+      icon.appendChild(path);
+
+      var textWrap = document.createElement('p');
+      textWrap.className = 'fb-text';
+      var label = document.createElement('span');
+      label.className = 'fb-label';
+      label.textContent = (c.correct === 'supported' ? 'Supported. ' : 'Needs revision. ');
+      textWrap.appendChild(label);
+      textWrap.appendChild(document.createTextNode(c.explanation));
+
+      item.appendChild(icon);
+      item.appendChild(textWrap);
+      wrap.appendChild(item);
+    });
+  }
+
+  function renderRankList() {
+    var list = document.getElementById('rank-list');
+    list.innerHTML = '';
+    currentOrder.forEach(function (id, idx) {
+      var data = rankItems.filter(function (r) { return r.id === id; })[0];
+      var row = document.createElement('div');
+      row.className = 'rank-item';
+
+      var num = document.createElement('div');
+      num.className = 'rank-number';
+      num.textContent = idx + 1;
+
+      var text = document.createElement('div');
+      text.className = 'rank-text';
+      text.textContent = data.text;
+
+      var controls = document.createElement('div');
+      controls.className = 'rank-controls';
+
+      var upBtn = document.createElement('button');
+      upBtn.type = 'button';
+      upBtn.textContent = '\u25B2';
+      upBtn.setAttribute('aria-label', 'Move up: ' + data.text);
+      upBtn.disabled = idx === 0;
+      upBtn.addEventListener('click', function () {
+        var i = currentOrder.indexOf(id);
+        if (i > 0) {
+          currentOrder.splice(i, 1);
+          currentOrder.splice(i - 1, 0, id);
+          renderRankList();
+        }
+      });
+
+      var downBtn = document.createElement('button');
+      downBtn.type = 'button';
+      downBtn.textContent = '\u25BC';
+      downBtn.setAttribute('aria-label', 'Move down: ' + data.text);
+      downBtn.disabled = idx === currentOrder.length - 1;
+      downBtn.addEventListener('click', function () {
+        var i = currentOrder.indexOf(id);
+        if (i < currentOrder.length - 1) {
+          currentOrder.splice(i, 1);
+          currentOrder.splice(i + 1, 0, id);
+          renderRankList();
+        }
+      });
+
+      controls.appendChild(upBtn);
+      controls.appendChild(downBtn);
+      row.appendChild(num);
+      row.appendChild(text);
+      row.appendChild(controls);
+      list.appendChild(row);
+    });
+  }
+
+  function renderCompare() {
+    var yourOrder = document.getElementById('your-order');
+    var expertOrder = document.getElementById('expert-order');
+    yourOrder.innerHTML = '';
+    expertOrder.innerHTML = '';
+
+    currentOrder.forEach(function (id) {
+      var data = rankItems.filter(function (r) { return r.id === id; })[0];
+      var li = document.createElement('li');
+      li.textContent = data.text;
+      yourOrder.appendChild(li);
+    });
+
+    var sorted = rankItems.slice().sort(function (a, b) { return a.modelRank - b.modelRank; });
+    sorted.forEach(function (data) {
+      var li = document.createElement('li');
+      li.appendChild(document.createTextNode(data.text));
+      var rationale = document.createElement('span');
+      rationale.className = 'rationale';
+      rationale.textContent = data.rationale;
+      li.appendChild(rationale);
+      expertOrder.appendChild(li);
+    });
+  }
+
+  function renderChecklist() {
+    var list = document.getElementById('check-list');
+    list.innerHTML = '';
+    checks.forEach(function (c) {
+      var row = document.createElement('div');
+      row.className = 'check-item';
+
+      var sw = document.createElement('button');
+      sw.type = 'button';
+      sw.className = 'switch';
+      sw.setAttribute('role', 'switch');
+      sw.setAttribute('aria-checked', checkState[c.id] ? 'true' : 'false');
+      sw.setAttribute('aria-label', c.label);
+      var knob = document.createElement('span');
+      knob.className = 'knob';
+      sw.appendChild(knob);
+
+      sw.addEventListener('click', function () {
+        checkState[c.id] = !checkState[c.id];
+        sw.setAttribute('aria-checked', checkState[c.id] ? 'true' : 'false');
+        document.getElementById('task3-error').textContent = '';
+      });
+
+      var text = document.createElement('div');
+      text.className = 'check-text';
+      var strong = document.createElement('strong');
+      strong.textContent = c.label + '. ';
+      text.appendChild(strong);
+      text.appendChild(document.createTextNode(c.desc));
+
+      row.appendChild(sw);
+      row.appendChild(text);
+      list.appendChild(row);
+    });
+  }
+
+  function validateScreen(index) {
+    if (index === 6) {
+      var allAnswered = claims.every(function (c) { return claimAnswers[c.id]; });
+      if (!allAnswered) {
+        document.getElementById('task1-error').textContent = 'Classify all four claims before continuing.';
+        return false;
+      }
+    }
+    if (index === 10) {
+      var allChecked = checks.every(function (c) { return checkState[c.id]; });
+      if (!allChecked) {
+        document.getElementById('task3-error').textContent = 'Confirm all four checks before continuing.';
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function updateDots() {
+    dots.forEach(function (dot, i) {
+      dot.classList.toggle('is-done', i < current);
+      dot.classList.toggle('is-current', i === current);
+    });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= total) return;
+    screens[current].classList.remove('active');
+    current = index;
+    screens[current].classList.add('active');
+
+    if (current === 7) renderTask1Feedback();
+    if (current === 9) renderCompare();
+    if (current === 11) { scormAPI.complete(); }
+
+    progressText.textContent = 'Screen ' + (current + 1) + ' of ' + total;
+    updateDots();
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+
+    screens[current].setAttribute('tabindex', '-1');
+    screens[current].focus();
+  }
+
+  prevBtn.addEventListener('click', function () { goTo(current - 1); });
+  nextBtn.addEventListener('click', function () {
+    if (!validateScreen(current)) return;
+    goTo(current + 1);
+  });
+
+  document.querySelector('[data-action="restart"]').addEventListener('click', function () {
+    claimAnswers = {};
+    currentOrder = ['r1', 'r2', 'r3', 'r4'];
+    checkState = {};
+    renderClaims();
+    renderRankList();
+    renderChecklist();
+    goTo(0);
+  });
+
+  document.querySelectorAll('[data-action="next"]').forEach(function (btn) {
+    if (btn === nextBtn) return;
+    btn.addEventListener('click', function () {
+      if (!validateScreen(current)) return;
+      goTo(current + 1);
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' && document.activeElement === screens[current]) {
+      if (validateScreen(current)) goTo(current + 1);
+    }
+    if (e.key === 'ArrowLeft' && document.activeElement === screens[current]) {
+      goTo(current - 1);
+    }
+  });
+
+  renderClaims();
+  renderRankList();
+  renderChecklist();
+  updateDots();
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>

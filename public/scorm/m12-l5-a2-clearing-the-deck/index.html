@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clearing the Deck — Practice Activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #00243A;
+    --teal: #2A7B9F;
+    --teal-light: #d6eaf3;
+    --white: #ffffff;
+    --success: #1a7a4a;
+    --error: #9b1c1c;
+    --bg: #f1f1f1;
+    --shadow: 0 10px 34px rgba(0,36,58,0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; background: var(--bg); font-family: 'IBM Plex Sans', sans-serif; color: var(--navy); }
+  body { display: flex; align-items: flex-start; justify-content: center; padding: 28px 16px; min-height: 400px; }
+
+  .stage-wrap { width: 96%; max-width: 1360px; }
+
+  .stage {
+    container-type: inline-size; container-name: stage; position: relative; width: 100%;
+    aspect-ratio: 16 / 9; background: var(--white); border-radius: 18px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  .screen-area { position: relative; flex: 1 1 auto; overflow: hidden; background: var(--white); }
+
+  .screen {
+    position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center;
+    gap: 1.5cqw; padding: 4cqw 6cqw; overflow: hidden;
+  }
+  .screen.active { display: flex; }
+  .screen:focus { outline: none; }
+  .screen.list-screen { justify-content: flex-start; gap: 1cqw; }
+
+  .list-head { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0.5cqw; }
+  .panel-bg { background: var(--teal-light); }
+
+  .tag { display: flex; align-items: center; gap: 0.5em; font-size: clamp(22px, 2cqw, 22px); font-weight: 600; color: var(--teal); margin: 0; text-transform: uppercase; letter-spacing: 0.04em; }
+  .tag svg { width: 1.2em; height: 1.2em; stroke: var(--teal); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+
+  h1 { font-size: clamp(30px, 5.6cqw, 54px); font-weight: 700; line-height: 1.12; margin: 0; color: var(--navy); }
+  h2 { font-size: clamp(25px, 4cqw, 38px); font-weight: 700; line-height: 1.18; margin: 0; color: var(--navy); }
+  p, li, .body-text { font-size: clamp(22px, 2.3cqw, 25px); line-height: 1.42; margin: 0; }
+
+  .icon { width: clamp(52px, 8.4cqw, 78px); height: clamp(52px, 8.4cqw, 78px); stroke: var(--teal); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+
+  .cover-screen { background: var(--navy); color: var(--white); align-items: flex-start; justify-content: center; gap: 1.4cqw; overflow: hidden; }
+  .cover-seal {
+    position: absolute; right: -4%; bottom: -6%; width: 40cqw; height: 40cqw;
+    stroke: var(--teal); opacity: 0.3; fill: none; stroke-width: 2.4;
+    pointer-events: none;
+  }
+  .cover-screen h1 { color: var(--white); max-width: 78%; position: relative; }
+  .cover-screen p { color: var(--teal-light); max-width: 66%; position: relative; }
+  .cover-screen .btn-primary { position: relative; }
+
+  .btn {
+    font-family: inherit; font-size: clamp(22px, 2.2cqw, 23px); font-weight: 600; padding: 0.6em 1.3em;
+    border-radius: 6px; border: 2px solid var(--navy); background: var(--white); color: var(--navy);
+    cursor: pointer; line-height: 1.2;
+  }
+  .btn:hover { background: var(--teal-light); }
+  .btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .btn-primary:hover { background: var(--teal); border-color: var(--teal); }
+  .cover-screen .btn-primary { background: var(--teal); border-color: var(--teal); color: var(--white); }
+  .cover-screen .btn-primary:hover { background: var(--white); color: var(--navy); border-color: var(--white); }
+
+  .ref-btn { align-self: flex-start; padding: 0.3em 0.9em; font-size: clamp(22px, 1.6cqw, 22px); }
+
+  .btn-icon {
+    width: clamp(46px, 4.4cqw, 54px); height: clamp(46px, 4.4cqw, 54px); padding: 0; border-radius: 50%;
+    border: none; background: var(--navy); color: var(--white); display: inline-flex; align-items: center;
+    justify-content: center; font-size: clamp(20px, 2cqw, 22px); cursor: pointer;
+  }
+  .btn-icon:hover { background: var(--teal); }
+  .btn-icon:disabled { background: var(--bg); color: var(--navy); opacity: 0.35; cursor: not-allowed; }
+  .btn-icon:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+  .flow-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2cqw; }
+  .flow-card {
+    position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 0.5cqw;
+    padding: 1.2cqw; background: var(--white); border: 1.5px solid var(--teal-light); border-radius: 10px;
+    border-top: 5px solid var(--teal); font-family: inherit; text-align: left;
+  }
+  .flow-card .icon { width: clamp(28px, 4cqw, 36px); height: clamp(28px, 4cqw, 36px); }
+  .flow-card .flow-label { font-weight: 700; font-size: clamp(22px, 2.1cqw, 23px); }
+  .flow-card .flow-desc { font-size: clamp(22px, 1.8cqw, 22px); color: var(--navy); opacity: 0.75; }
+
+  .criteria-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1cqw; }
+  .criteria-card { background: var(--white); border: 1.5px solid var(--teal-light); border-top: 5px solid var(--teal); border-radius: 10px; padding: 0.9cqw 1.1cqw; display: flex; flex-direction: column; gap: 0.3cqw; }
+  .criteria-card .criteria-label { font-weight: 700; font-size: clamp(22px, 1.8cqw, 22px); }
+  .criteria-card .criteria-desc { font-size: clamp(22px, 1.6cqw, 21px); opacity: 0.85; }
+
+  .note-box { border: 1.5px solid var(--teal); border-left: 5px solid var(--teal); border-radius: 8px; padding: 0.8cqw 1.2cqw; background: var(--white); }
+
+  .excerpt-list, .verdict-list, .care-list {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 0.7cqw; padding-right: 2px;
+  }
+
+  .excerpt-card {
+    background: var(--white); border: 1.5px solid var(--teal-light); border-left: 5px solid var(--teal);
+    border-radius: 10px; padding: 0.7cqw 1.1cqw; display: flex; flex-direction: row; align-items: center;
+    justify-content: space-between; gap: 1cqw; flex-wrap: wrap;
+  }
+  .excerpt-text { font-size: clamp(22px, 1.7cqw, 22px); line-height: 1.3; flex: 1 1 55%; min-width: 260px; font-style: italic; }
+  .excerpt-choices { display: flex; gap: 0.6cqw; flex: 0 0 auto; flex-wrap: wrap; }
+
+  .choice-btn {
+    font-family: inherit; font-size: clamp(22px, 1.5cqw, 22px); font-weight: 600; padding: 0.35em 0.75em;
+    border-radius: 6px; border: 2px solid var(--navy); background: var(--white); color: var(--navy);
+    cursor: pointer; white-space: nowrap;
+  }
+  .choice-btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  .choice-btn[aria-pressed="true"] { background: var(--navy); color: var(--white); }
+
+  .error-msg { flex: 0 0 auto; font-size: clamp(22px, 1.8cqw, 22px); color: var(--error); font-weight: 600; min-height: 1.3em; }
+
+  .verdict-item { display: flex; gap: 0.9cqw; align-items: center; padding: 0.7cqw 1.1cqw; border-radius: 10px; background: var(--white); border: 1.5px solid var(--teal-light); }
+  .verdict-item.is-correct { border-left: 5px solid var(--success); }
+  .verdict-item.is-wrong { border-left: 5px solid var(--error); }
+  .verdict-item .status-icon { flex-shrink: 0; width: clamp(26px, 2.4cqw, 30px); height: clamp(26px, 2.4cqw, 30px); }
+  .verdict-item.is-correct .status-icon { stroke: var(--success); }
+  .verdict-item.is-wrong .status-icon { stroke: var(--error); }
+  .verdict-item .vd-text { font-size: clamp(22px, 1.6cqw, 21px); line-height: 1.3; }
+  .vd-label { font-weight: 700; }
+  .verdict-item.is-correct .vd-label { color: var(--success); }
+  .verdict-item.is-wrong .vd-label { color: var(--error); }
+
+  .action-single { flex: 1 1 auto; display: flex; flex-direction: column; gap: 1cqw; justify-content: center; }
+  .action-card { background: var(--white); border: 1.5px solid var(--teal-light); border-left: 5px solid var(--teal); border-radius: 10px; padding: 1.1cqw 1.4cqw; display: flex; flex-direction: column; gap: 0.9cqw; }
+  .action-card .action-excerpt { font-size: clamp(22px, 2cqw, 26px); font-style: italic; }
+  .action-options { display: flex; flex-direction: column; gap: 0.55cqw; }
+  .action-options .choice-btn { width: 100%; white-space: normal; text-align: left; padding: 0.55em 0.9em; }
+
+  .care-item { display: flex; gap: 0.9cqw; align-items: flex-start; background: var(--white); border: 1.5px solid var(--teal-light); border-radius: 10px; padding: 0.7cqw 1.1cqw; }
+  .care-item .num { flex-shrink: 0; width: clamp(28px, 2.6cqw, 32px); height: clamp(28px, 2.6cqw, 32px); border-radius: 50%; background: var(--teal); color: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: clamp(22px, 1.6cqw, 20px); }
+  .care-item p { flex: 1; }
+
+  .recap-list { display: flex; flex-direction: column; gap: 0.8cqw; }
+  .recap-item { display: flex; gap: 0.9cqw; align-items: center; background: var(--white); border: 1.5px solid var(--teal-light); border-left: 5px solid var(--success); border-radius: 10px; padding: 0.7cqw 1.1cqw; }
+  .recap-item .icon { width: clamp(28px, 2.6cqw, 32px); height: clamp(28px, 2.6cqw, 32px); stroke: var(--success); flex-shrink: 0; }
+  .recap-item p { flex: 1; }
+
+  .complete-flag { display: flex; align-items: center; gap: 0.5em; color: var(--success); font-weight: 700; font-size: clamp(22px, 1.9cqw, 22px); }
+  .complete-flag svg { width: 1.3em; height: 1.3em; stroke: var(--success); fill: none; stroke-width: 2.2; flex-shrink: 0; }
+  .recap-actions { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 1cqw; }
+
+  .nav-bar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1.4cqw; padding: 1.1cqw 2.2cqw; border-top: 1.5px solid var(--teal-light); background: var(--white); }
+  .progress-wrap { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; gap: 0.4cqw; }
+  .progress-text { font-size: clamp(22px, 1.5cqw, 19px); color: var(--navy); font-weight: 600; }
+  .progress-track { width: 60%; max-width: 340px; height: 6px; border-radius: 4px; background: var(--teal-light); overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--teal); border-radius: 4px; transition: width 0.2s ease; }
+  @media (prefers-reduced-motion: reduce) { .progress-fill { transition: none; } }
+
+  .overlay { position: absolute; inset: 0; background: rgba(0,36,58,0.6); display: flex; align-items: center; justify-content: center; padding: 3cqw; z-index: 30; }
+  .overlay[hidden] { display: none; }
+  .overlay-panel { background: var(--white); border-radius: 14px; max-width: 94%; max-height: 88%; overflow-y: auto; padding: 1.8cqw 2.2cqw; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 1cqw; }
+  .overlay-header { display: flex; align-items: center; justify-content: space-between; gap: 1cqw; }
+  .overlay-header h3 { font-size: clamp(22px, 2.4cqw, 28px); margin: 0; color: var(--navy); }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  @container stage (max-width: 640px) {
+    .flow-row { grid-template-columns: repeat(2, 1fr); }
+    .criteria-grid { grid-template-columns: 1fr; }
+    .excerpt-card { flex-direction: column; align-items: flex-start; }
+    .recap-actions { flex-direction: column; align-items: flex-start; }
+    .progress-track { width: 40%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage-wrap">
+  <div class="stage" id="stage">
+    <div class="screen-area" id="screen-area">
+
+      <!-- 0: Cover -->
+      <section class="screen active cover-screen" data-index="0" tabindex="-1" aria-label="Cover">
+        <svg class="cover-seal" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="86"/>
+          <circle cx="100" cy="100" r="68"/>
+          <path d="M66 102l22 22 46-46"/>
+        </svg>
+        <h1>Clearing the Deck</h1>
+        <p>A disclosure review activity for AI-assisted investor communications.</p>
+        <button type="button" class="btn btn-primary" data-action="next">Start activity</button>
+      </section>
+
+      <!-- 1: Learning objective -->
+      <section class="screen panel-bg" data-index="1" tabindex="-1" aria-label="Learning objective">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <h2>What you'll practice</h2>
+        <p>By completing this activity, you will be able to judge whether AI-assisted investor communications meet disclosure requirements, and decide the correct next action for the ones that don't.</p>
+      </section>
+
+      <!-- 2: How this works -->
+      <section class="screen" data-index="2" tabindex="-1" aria-label="How this activity works">
+        <h2>How this activity works</h2>
+        <p>You'll take on a role, review the disclosure criteria, then make two review calls of your own.</p>
+        <div class="flow-row">
+          <div class="flow-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg>
+            <span class="flow-label">Role</span><span class="flow-desc">Who you are</span>
+          </div>
+          <div class="flow-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+            <span class="flow-label">Criteria</span><span class="flow-desc">What to check</span>
+          </div>
+          <div class="flow-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <span class="flow-label">Verdict</span><span class="flow-desc">Meets or not</span>
+          </div>
+          <div class="flow-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l3 6 6 1-4.5 4 1 6L12 17l-5.5 3 1-6L3 10l6-1z"/></svg>
+            <span class="flow-label">Action</span><span class="flow-desc">What happens next</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3: Role and context -->
+      <section class="screen panel-bg" data-index="3" tabindex="-1" aria-label="Your role">
+        <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg>Your role</p>
+        <h2>Disclosure reviewer, Larkspur Renewables</h2>
+        <p>An analyst used generative AI to help draft the investor deck for your five-year revenue outlook. Before it goes out, you're reviewing each statement in the deck against your disclosure requirements, then deciding what happens to the ones that don't clear.</p>
+      </section>
+
+      <!-- 4: Evidence: disclosure criteria -->
+      <section class="screen" data-index="4" tabindex="-1" aria-label="Disclosure criteria">
+        <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>Criteria</p>
+        <h2>What a statement has to clear</h2>
+        <div id="criteria-content">
+          <div class="criteria-grid">
+            <div class="criteria-card"><span class="criteria-label">Accurate role</span><span class="criteria-desc">Describes what AI actually did, without implying it validated or independently derived the forecast.</span></div>
+            <div class="criteria-card"><span class="criteria-label">Traceable</span><span class="criteria-desc">Every material statement can be traced back to an approved source, not just polished language.</span></div>
+            <div class="criteria-card"><span class="criteria-label">Material impact</span><span class="criteria-desc">Judged by whether it could affect an investor's decision, not by whether AI touched it.</span></div>
+            <div class="criteria-card"><span class="criteria-label">Reviewed</span><span class="criteria-desc">Confirmed by finance for accuracy, and by legal or compliance for balance and obligations.</span></div>
+          </div>
+          <div class="note-box"><p>A statement can fail on any one of these even if the other three hold.</p></div>
+        </div>
+      </section>
+
+      <!-- 5: Task 1a - classify (excerpts 1-3) -->
+      <section class="screen list-screen" data-index="5" tabindex="-1" aria-label="Task one, part one: review the excerpts">
+        <div class="list-head">
+          <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>Task 1</p>
+          <h2>Does each excerpt clear disclosure?</h2>
+          <button type="button" class="btn ref-btn" data-overlay="criteria">View disclosure criteria</button>
+        </div>
+        <div class="excerpt-list" id="excerpt-list-a"></div>
+        <p class="error-msg" id="task1a-error" role="alert"></p>
+      </section>
+
+      <!-- 6: Task 1b - classify (excerpts 4-6) -->
+      <section class="screen list-screen" data-index="6" tabindex="-1" aria-label="Task one, part two: review the excerpts">
+        <div class="list-head">
+          <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>Task 1, continued</p>
+          <h2>Three more excerpts to review</h2>
+          <button type="button" class="btn ref-btn" data-overlay="criteria">View disclosure criteria</button>
+        </div>
+        <div class="excerpt-list" id="excerpt-list-b"></div>
+        <p class="error-msg" id="task1b-error" role="alert"></p>
+      </section>
+
+      <!-- 7: Task 1 feedback -->
+      <section class="screen list-screen" data-index="7" tabindex="-1" aria-label="Task one feedback">
+        <div class="list-head">
+          <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Task 1 review</p>
+          <h2>Why each excerpt does or doesn't clear</h2>
+        </div>
+        <div class="verdict-list" id="task1-feedback"></div>
+      </section>
+
+      <!-- 8: Task 2, excerpt 1 of 3 -->
+      <section class="screen list-screen" data-index="8" tabindex="-1" aria-label="Task two, excerpt one of three">
+        <div class="list-head">
+          <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l3 6 6 1-4.5 4 1 6L12 17l-5.5 3 1-6L3 10l6-1z"/></svg>Task 2, 1 of 3</p>
+          <h2>This one didn't clear. What happens next?</h2>
+        </div>
+        <div class="action-single" id="action-slot-1"></div>
+        <p class="error-msg" id="task2a-error" role="alert"></p>
+      </section>
+
+      <!-- 9: Task 2, excerpt 2 of 3 -->
+      <section class="screen list-screen" data-index="9" tabindex="-1" aria-label="Task two, excerpt two of three">
+        <div class="list-head">
+          <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l3 6 6 1-4.5 4 1 6L12 17l-5.5 3 1-6L3 10l6-1z"/></svg>Task 2, 2 of 3</p>
+          <h2>This one didn't clear either. What happens next?</h2>
+        </div>
+        <div class="action-single" id="action-slot-2"></div>
+        <p class="error-msg" id="task2b-error" role="alert"></p>
+      </section>
+
+      <!-- 10: Task 2, excerpt 3 of 3 -->
+      <section class="screen list-screen" data-index="10" tabindex="-1" aria-label="Task two, excerpt three of three">
+        <div class="list-head">
+          <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l3 6 6 1-4.5 4 1 6L12 17l-5.5 3 1-6L3 10l6-1z"/></svg>Task 2, 3 of 3</p>
+          <h2>One more. What happens next?</h2>
+        </div>
+        <div class="action-single" id="action-slot-3"></div>
+        <p class="error-msg" id="task2c-error" role="alert"></p>
+      </section>
+
+      <!-- 11: Task 2 feedback -->
+      <section class="screen list-screen" data-index="11" tabindex="-1" aria-label="Task two feedback">
+        <div class="list-head">
+          <p class="tag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Task 2 review</p>
+          <h2>Why each one takes that path</h2>
+        </div>
+        <div class="verdict-list" id="task2-feedback"></div>
+      </section>
+
+      <!-- 12: Before you clear it checklist -->
+      <section class="screen panel-bg" data-index="12" tabindex="-1" aria-label="Before you clear it for release">
+        <h2>Before you clear it for release</h2>
+        <p>Ask yourself these four questions before you sign off.</p>
+        <div class="care-list">
+          <div class="care-item"><span class="num">1</span><p>Does the disclosure describe what AI actually did, without implying it validated or independently produced the forecast?</p></div>
+          <div class="care-item"><span class="num">2</span><p>Can every material statement be traced back to an approved source?</p></div>
+          <div class="care-item"><span class="num">3</span><p>Has materiality been judged by potential impact on an investor's decision, not by whether AI touched the content?</p></div>
+          <div class="care-item"><span class="num">4</span><p>Have finance, legal, and compliance completed a documented review before this goes out?</p></div>
+        </div>
+      </section>
+
+      <!-- 13: Recap -->
+      <section class="screen panel-bg" data-index="13" tabindex="-1" aria-label="Recap">
+        <h2>What you practiced</h2>
+        <div class="recap-list">
+          <div class="recap-item">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <p>You judged AI-assisted investor communications against the disclosure criteria.</p>
+          </div>
+          <div class="recap-item">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <p>You matched excerpts that didn't clear to the correct next action.</p>
+          </div>
+        </div>
+        <div class="recap-actions">
+          <div class="complete-flag">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>
+            <span>Activity complete</span>
+          </div>
+          <button type="button" class="btn" data-action="restart">Restart activity</button>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="nav-bar">
+      <button type="button" class="btn-icon" id="nav-prev-btn" data-action="prev" aria-label="Previous screen">&larr;</button>
+      <div class="progress-wrap">
+        <span class="progress-text" id="progress-text" aria-live="polite">Screen 1 of 14</span>
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+      <button type="button" class="btn-icon" id="nav-next-btn" data-action="next" aria-label="Next screen">&rarr;</button>
+    </div>
+
+    <div class="overlay" id="criteria-overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" hidden>
+      <div class="overlay-panel">
+        <div class="overlay-header">
+          <h3 id="overlay-title">Disclosure criteria</h3>
+          <button type="button" class="btn-icon" id="overlay-close" aria-label="Close reference">&times;</button>
+        </div>
+        <div id="overlay-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'));
+  var total = screens.length;
+  var current = 0;
+
+  var prevBtn = document.getElementById('nav-prev-btn');
+  var nextBtn = document.getElementById('nav-next-btn');
+  var progressText = document.getElementById('progress-text');
+  var progressFill = document.getElementById('progress-fill');
+  var overlayEl = document.getElementById('criteria-overlay');
+  var overlayBody = document.getElementById('overlay-body');
+  var overlayClose = document.getElementById('overlay-close');
+  var lastFocused = null;
+
+  var excerpts = [
+    { id: 'e1', text: 'Management prepared this five-year revenue outlook using internal operating data and standard planning review procedures. Generative AI assisted with drafting the accompanying narrative.', correct: 'meets', explanation: 'This describes AI\u2019s actual role in drafting without implying it validated the forecast or performed independent analysis.' },
+    { id: 'e2', text: 'This forecast reflects an independently derived AI view of the company\u2019s five-year revenue trajectory, validated against market conditions.', correct: 'fails', explanation: 'The forecast came from management-approved planning inputs, not an independent AI derivation, and nothing here supports the validation claim.' },
+    { id: 'e3', text: 'Finance confirmed the revenue figures in this deck against the approved planning model, and legal reviewed the narrative before external distribution.', correct: 'meets', explanation: 'This reflects the documented finance and legal review required before an AI-assisted communication is released.' },
+    { id: 'e4', text: 'Demand is expected to remain strong through year-end.', correct: 'fails', explanation: 'The approved forecast may support growth, but not the certainty implied by \u201cremain strong,\u201d and legal review is needed to decide how it should be qualified.' },
+    { id: 'e5', text: 'The narrative below was lightly polished for clarity. All figures and assumptions are unchanged from the approved planning model.', correct: 'meets', explanation: 'AI only affected sentence structure here, not facts, assumptions, or emphasis, so a separate AI-use statement is not required.' },
+    { id: 'e6', text: 'AI modeling indicates a 94 percent probability that the company will exceed analyst consensus in each of the next five years.', correct: 'fails', explanation: 'This specific probability figure does not trace to any approved source material. It is language the AI introduced without evidence.' }
+  ];
+  var verdictAnswers = {};
+  var verdictLabels = { meets: 'Meets requirement', fails: 'Does not meet' };
+
+  var actions = [
+    { id: 'a1', excerptId: 'e2', slot: 'action-slot-1', errorId: 'task2a-error', correct: 'revise', explanation: 'This can be rewritten to describe AI\u2019s actual role, drafting from management-approved inputs, without removing the underlying forecast.' },
+    { id: 'a2', excerptId: 'e4', slot: 'action-slot-2', errorId: 'task2b-error', correct: 'escalate', explanation: 'Whether this needs softer language or removal is exactly the kind of call legal review makes, not a call the drafting team should make alone.' },
+    { id: 'a3', excerptId: 'e6', slot: 'action-slot-3', errorId: 'task2c-error', correct: 'remove', explanation: 'There is no approved evidence behind this figure, so there is nothing to revise it down to. It has to come out.' }
+  ];
+  var actionOptions = [
+    { id: 'revise', label: 'Revise the language' },
+    { id: 'escalate', label: 'Escalate to legal and compliance' },
+    { id: 'remove', label: 'Remove the claim' }
+  ];
+  var actionAnswers = {};
+
+  function excerptById(id) {
+    return excerpts.filter(function (e) { return e.id === id; })[0];
+  }
+
+  function renderExcerptGroup(containerId, subset) {
+    var list = document.getElementById(containerId);
+    list.innerHTML = '';
+    subset.forEach(function (ex) {
+      var card = document.createElement('div');
+      card.className = 'excerpt-card';
+      var text = document.createElement('p');
+      text.className = 'excerpt-text';
+      text.textContent = '\u201c' + ex.text + '\u201d';
+      var choices = document.createElement('div');
+      choices.className = 'excerpt-choices';
+
+      ['meets', 'fails'].forEach(function (key) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'choice-btn';
+        btn.textContent = verdictLabels[key];
+        btn.setAttribute('aria-pressed', 'false');
+        btn.setAttribute('aria-label', 'Mark as ' + verdictLabels[key] + ': ' + ex.text);
+        btn.addEventListener('click', function () {
+          verdictAnswers[ex.id] = key;
+          Array.prototype.forEach.call(choices.children, function (b) { b.setAttribute('aria-pressed', 'false'); });
+          btn.setAttribute('aria-pressed', 'true');
+          document.getElementById('task1a-error').textContent = '';
+          document.getElementById('task1b-error').textContent = '';
+        });
+        choices.appendChild(btn);
+      });
+
+      card.appendChild(text);
+      card.appendChild(choices);
+      list.appendChild(card);
+    });
+  }
+
+  function renderTask1Feedback() {
+    var wrap = document.getElementById('task1-feedback');
+    wrap.innerHTML = '';
+    excerpts.forEach(function (ex) {
+      var isCorrect = verdictAnswers[ex.id] === ex.correct;
+      var item = document.createElement('div');
+      item.className = 'verdict-item ' + (isCorrect ? 'is-correct' : 'is-wrong');
+
+      var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      icon.setAttribute('class', 'status-icon');
+      icon.setAttribute('viewBox', '0 0 24 24');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.setAttribute('fill', 'none');
+      icon.setAttribute('stroke-width', '2');
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', isCorrect ? 'M4 12l5 5L20 6' : 'M6 6l12 12M18 6L6 18');
+      icon.appendChild(path);
+
+      var textWrap = document.createElement('p');
+      textWrap.className = 'vd-text';
+      var label = document.createElement('span');
+      label.className = 'vd-label';
+      label.textContent = verdictLabels[ex.correct] + '. ';
+      textWrap.appendChild(label);
+      textWrap.appendChild(document.createTextNode(ex.explanation));
+
+      item.appendChild(icon);
+      item.appendChild(textWrap);
+      wrap.appendChild(item);
+    });
+  }
+
+  function renderSingleAction(action) {
+    var slot = document.getElementById(action.slot);
+    slot.innerHTML = '';
+    var ex = excerptById(action.excerptId);
+    var card = document.createElement('div');
+    card.className = 'action-card';
+    var text = document.createElement('p');
+    text.className = 'action-excerpt';
+    text.textContent = '\u201c' + ex.text + '\u201d';
+    var options = document.createElement('div');
+    options.className = 'action-options';
+
+    actionOptions.forEach(function (opt) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'choice-btn';
+      btn.textContent = opt.label;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-label', opt.label + ' for: ' + ex.text);
+      btn.addEventListener('click', function () {
+        actionAnswers[action.id] = opt.id;
+        Array.prototype.forEach.call(options.children, function (b) { b.setAttribute('aria-pressed', 'false'); });
+        btn.setAttribute('aria-pressed', 'true');
+        document.getElementById(action.errorId).textContent = '';
+      });
+      options.appendChild(btn);
+    });
+
+    card.appendChild(text);
+    card.appendChild(options);
+    slot.appendChild(card);
+  }
+
+  function renderTask2Feedback() {
+    var wrap = document.getElementById('task2-feedback');
+    wrap.innerHTML = '';
+    actions.forEach(function (a) {
+      var isCorrect = actionAnswers[a.id] === a.correct;
+      var item = document.createElement('div');
+      item.className = 'verdict-item ' + (isCorrect ? 'is-correct' : 'is-wrong');
+
+      var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      icon.setAttribute('class', 'status-icon');
+      icon.setAttribute('viewBox', '0 0 24 24');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.setAttribute('fill', 'none');
+      icon.setAttribute('stroke-width', '2');
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', isCorrect ? 'M4 12l5 5L20 6' : 'M6 6l12 12M18 6L6 18');
+      icon.appendChild(path);
+
+      var correctLabel = actionOptions.filter(function (o) { return o.id === a.correct; })[0].label;
+      var textWrap = document.createElement('p');
+      textWrap.className = 'vd-text';
+      var label = document.createElement('span');
+      label.className = 'vd-label';
+      label.textContent = correctLabel + '. ';
+      textWrap.appendChild(label);
+      textWrap.appendChild(document.createTextNode(a.explanation));
+
+      item.appendChild(icon);
+      item.appendChild(textWrap);
+      wrap.appendChild(item);
+    });
+  }
+
+  function renderAll() {
+    renderExcerptGroup('excerpt-list-a', excerpts.slice(0, 3));
+    renderExcerptGroup('excerpt-list-b', excerpts.slice(3));
+    actions.forEach(renderSingleAction);
+  }
+
+  function validateScreen(index) {
+    if (index === 5) {
+      var a = excerpts.slice(0, 3).every(function (e) { return verdictAnswers[e.id]; });
+      if (!a) { document.getElementById('task1a-error').textContent = 'Review all three excerpts before continuing.'; return false; }
+    }
+    if (index === 6) {
+      var b = excerpts.slice(3).every(function (e) { return verdictAnswers[e.id]; });
+      if (!b) { document.getElementById('task1b-error').textContent = 'Review all three excerpts before continuing.'; return false; }
+    }
+    if (index === 8) {
+      if (!actionAnswers['a1']) { document.getElementById('task2a-error').textContent = 'Choose an action before continuing.'; return false; }
+    }
+    if (index === 9) {
+      if (!actionAnswers['a2']) { document.getElementById('task2b-error').textContent = 'Choose an action before continuing.'; return false; }
+    }
+    if (index === 10) {
+      if (!actionAnswers['a3']) { document.getElementById('task2c-error').textContent = 'Choose an action before continuing.'; return false; }
+    }
+    return true;
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= total) return;
+    screens[current].classList.remove('active');
+    current = index;
+    screens[current].classList.add('active');
+
+    if (current === 7) renderTask1Feedback();
+    if (current === 11) renderTask2Feedback();
+
+    progressText.textContent = 'Screen ' + (current + 1) + ' of ' + total;
+    progressFill.style.width = (((current + 1) / total) * 100) + '%';
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+
+    screens[current].setAttribute('tabindex', '-1');
+    screens[current].focus();
+  }
+
+  prevBtn.addEventListener('click', function () { goTo(current - 1); });
+  nextBtn.addEventListener('click', function () {
+    if (!validateScreen(current)) return;
+    goTo(current + 1);
+  });
+
+  document.querySelectorAll('[data-action="next"]').forEach(function (btn) {
+    if (btn === nextBtn) return;
+    btn.addEventListener('click', function () {
+      if (!validateScreen(current)) return;
+      goTo(current + 1);
+    });
+  });
+
+  document.querySelector('[data-action="restart"]').addEventListener('click', function () {
+    verdictAnswers = {};
+    actionAnswers = {};
+    renderAll();
+    goTo(0);
+  });
+
+  function openOverlay() {
+    overlayBody.innerHTML = '';
+    overlayBody.appendChild(document.getElementById('criteria-content').cloneNode(true));
+    lastFocused = document.activeElement;
+    overlayEl.hidden = false;
+    overlayClose.focus();
+  }
+  function closeOverlay() {
+    overlayEl.hidden = true;
+    if (lastFocused) lastFocused.focus();
+  }
+  document.querySelectorAll('[data-overlay]').forEach(function (btn) {
+    btn.addEventListener('click', openOverlay);
+  });
+  overlayClose.addEventListener('click', closeOverlay);
+  overlayEl.addEventListener('click', function (e) { if (e.target === overlayEl) closeOverlay(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!overlayEl.hidden) {
+      if (e.key === 'Escape') closeOverlay();
+      return;
+    }
+    if (e.key === 'ArrowRight' && document.activeElement === screens[current]) {
+      if (validateScreen(current)) goTo(current + 1);
+    }
+    if (e.key === 'ArrowLeft' && document.activeElement === screens[current]) {
+      goTo(current - 1);
+    }
+  });
+
+  renderAll();
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>
