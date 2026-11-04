@@ -53,6 +53,17 @@ export interface Topic {
    */
   playbackMeasurable?: boolean;
   /**
+   * Video only: a YouTube video (meeting of 4 Nov 2026; ICP Video Lessons rows 9 and 10). The two
+   * ways a course team can add one in Studio:
+   * - `embed: true` (row 9): the YouTube embed pasted into a Text component. YouTube's own player
+   *   plays it, so nothing is measured: Mark as Complete, and Next asks. No transcript, notes or
+   *   files.
+   * - left out (row 10): the Video component with the YouTube ID. It plays in our player and
+   *   completes by itself, with no transcript. `unavailable: true` is the video removed, made
+   *   private or blocked in the learner's region.
+   */
+  youtube?: { id: string; embed?: boolean; unavailable?: boolean };
+  /**
    * Quizzes: the assignment type of the graded subsection, as the course's grading policy names it
    * in Studio ("Graded quiz", "Final exam"; a Microsoft course says "Knowledge check"). Left out,
    * the quiz is ungraded and its header badge reads "Practice" (Nelson's SKO match review, 28 Oct
@@ -160,7 +171,7 @@ export type NotificationType = "discussion-reply" | "instructor-post" | "course-
 export type NotificationCategory = "all" | "discussions" | "grading" | "updates";
 
 /** Video player lifecycle state for edge-case rendering. */
-export type VideoState = "ready" | "loading" | "error" | "ended";
+export type VideoState = "ready" | "loading" | "error" | "ended" | "unavailable";
 
 export interface NotificationModel {
   id: string;

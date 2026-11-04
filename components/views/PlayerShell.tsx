@@ -8,6 +8,7 @@ import { courseProgressPct } from "@/lib/courses/outline";
 import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { navigateWithTransition } from "@/lib/motion/pageTransition";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
+import { YouTubeEmbed } from "@/components/molecules/YouTubeEmbed";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
@@ -115,6 +116,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Store wiring
   const sidebarExpanded = useLmsStore((s) => s.sidebarExpanded);
   const toggleSidebar = useLmsStore((s) => s.toggleSidebar);
+  // A course package (a SCORM course of one topic) opens with our sidebar collapsed, whatever the
+  // learner chose in other courses (Nelson, 4 Nov 2026); it can still be opened, for this visit.
+  const [packageSidebarOpen, setPackageSidebarOpen] = React.useState(false);
   const mobileDrawerOpen = useLmsStore((s) => s.mobileDrawerOpen);
   const setMobileDrawerOpen = useLmsStore((s) => s.setMobileDrawerOpen);
   const setCurrentTopic = useLmsStore((s) => s.setCurrentTopic);
@@ -248,12 +252,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
     bp === "mobile" ? "Mobile" : bp === "tablet" ? "Tablet" : "Desktop";
   // Tablet now uses the expanded sidebar by default (ICP Phase 1 decision), same
   // as desktop — the user can still collapse it.
-  const sidebarVariant: SidebarVariant = sidebarExpanded ? "Expanded" : "Collapsed";
   const showInlineSidebar = bp !== "mobile";
 
   const family = topicFamily(topic.type);
   const isVideo = family === "video";
   const isLocked = Boolean(topic.locked);
+  // A YouTube video (ICP Video Lessons rows 9 and 10, 4 Nov 2026). Pasted as an embed, YouTube's own
+  // player stands where ours is; added as a Video component, ours plays it, with its picture.
+  const youtube = isVideo ? topic.youtube : undefined;
+  const youtubeEmbed = Boolean(youtube?.embed);
 
 
   // Sticky video heights per viewport (DS Phase-1 §0): full hero → docked band. From tablet up the
@@ -277,6 +284,11 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const partnerLab = getPartnerLab(topic);
   // A SCORM activity plays its package in the page, with no tabs (Figma Activity Row A, 28 Oct 2026).
   const scormActivity = family === "activity" && getActivity(topic).kind === "scorm";
+  // A course package (Activity group D, meeting of 4 Nov 2026): a SCORM course is one topic named
+  // after the course, and the package brings its own menu. Our sidebar starts collapsed, and the
+  // footer has no Previous ("1 of 1" and the course name).
+  const coursePackage = scormActivity && total === 1;
+  const sidebarVariant: SidebarVariant = (coursePackage ? packageSidebarOpen : sidebarExpanded) ? "Expanded" : "Collapsed";
   // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
   const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   // A package that never reports (Activity card C1) has no action of its own: it gets Mark as Complete.
@@ -432,7 +444,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Reading has no Downloads tab (17 Sep decision): its files are linked in the body, and
   // with one option left the tab bar is hidden. A quiz has no tab bar either (Figma A-1 and A-2
   // quiz screens; Nelson's SKO match review, 28 Oct 2026).
-  const tabs = edx
+  // A YouTube embed has no Transcript, Notes or Downloads (row 9): no tab bar.
+  const tabs = edx || youtubeEmbed
     ? [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
     : isVideo
     ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
@@ -511,7 +524,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             bookmarks={bookmarks}
             completed={completedTopics}
             lastCompleted={lastCompleted}
-            onToggleSidebar={toggleSidebar}
+            onToggleSidebar={coursePackage ? () => setPackageSidebarOpen((open) => !open) : toggleSidebar}
             onSelectTopic={navigateTopic}
             onToggleBookmark={toggleBookmark}
           />
@@ -564,10 +577,25 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
                   )}
                 >
+                  {youtubeEmbed && youtube ? (
+                    <YouTubeEmbed
+                      key={topicId}
+                      videoId={youtube.id}
+                      title={topic.title}
+                      heightPx={videoHeight}
+                      docked={videoDocked}
+                    />
+                  ) : (
                   <VideoPlayer
                     key={topicId}
                     // The course picture as the poster (Figma Video Cards 1–3 and 7); Six Sigma's own.
-                    poster={getCatalogCourse(courseSlug)?.imageSrc ?? "/platform/course-six-sigma.jpg"}
+                    // A YouTube video shows its own picture, as the Video component does.
+                    poster={
+                      youtube
+                        ? `https://i.ytimg.com/vi/${encodeURIComponent(youtube.id)}/hqdefault.jpg`
+                        : getCatalogCourse(courseSlug)?.imageSrc ?? "/platform/course-six-sigma.jpg"
+                    }
+                    state={youtube?.unavailable ? "unavailable" : undefined}
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
@@ -605,6 +633,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       track("video_restart", { topicId, from: durationSeconds });
                     }}
                   />
+                  )}
                 </div>
                 {showResume ? (
                   <div className={cn(CONTENT_PX[bp], CONTENT_MEASURE, "pb-1 pt-1")}>
@@ -721,6 +750,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             title={topic.title}
             milestone={milestone}
             previousDisabled={!previous}
+            showPrevious={!coursePackage}
             // On the last topic, Next opens the course-complete dialog: only once the course is done.
             // A topic that asks keeps Next enabled on the last topic too: the answer may finish the course.
             nextDisabled={!next && !courseDone && !asksNow}

@@ -69,7 +69,7 @@ export interface VideoPlayerProps {
    * current time (the first line before it starts). None, or left out: no caption overlay.
    */
   captions?: Pick<TranscriptLine, "ts" | "text">[];
-  /** Lifecycle state for edge-case rendering: ready · loading · error · ended. */
+  /** Lifecycle state for edge-case rendering: ready · loading · error · unavailable · ended. */
   state?: VideoState;
   onRetry?: () => void;
   onReplay?: () => void;
@@ -254,7 +254,7 @@ function ActionButton({
  * Mirrors DS `Video player 16:9` + `_Video actions bar` (9264:576771 / 9264:576129):
  * one row of action buttons around the progress slider, all bound to tokens.
  * Paused: `_Video overlay action` scrim + centred play button. Playing: bar only.
- * Edge states (loading / error / ended) render a centered overlay.
+ * Edge states (loading / error / unavailable / ended) render a centered overlay.
  */
 export function VideoPlayer({
   poster,
@@ -418,7 +418,7 @@ export function VideoPlayer({
           Fit). No real asset is required: a flat brand colour stands in for the video frame (no
           gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
       <div className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2 overflow-hidden bg-sko-bg-primary" aria-hidden>
-        {poster && !started ? (
+        {poster && !started && state !== "unavailable" ? (
           // eslint-disable-next-line @next/next/no-img-element -- a static mock poster
           <img src={poster} alt="" className="h-full w-full object-cover" />
         ) : null}
@@ -471,6 +471,17 @@ export function VideoPlayer({
               </button>
             </>
           ) : null}
+          {state === "unavailable" ? (
+            // A YouTube video removed, made private or blocked in the learner's region (ICP Video
+            // row 10, 4 Nov 2026). Nothing to retry: the platform cannot bring it back.
+            <div className="flex max-w-[400px] flex-col items-center gap-2 px-6">
+              <Icon icon={AlertCircle} size={36} className="text-sko-icon-on-media" />
+              <span className="sk-text-body-large-semibold text-sko-text-on-media">This video isn’t available</span>
+              <span className="sk-text-body-medium-regular text-sko-text-on-media">
+                It may have been removed, made private or blocked in your region. You can go on to the next topic.
+              </span>
+            </div>
+          ) : null}
           {state === "ended" ? (
             <>
               <span className="sk-text-body-large-semibold text-sko-text-on-media">You’ve finished this video</span>
@@ -513,7 +524,9 @@ export function VideoPlayer({
       {/* DS `_Video actions bar` (9264:576129), one row. Padding: lg 3xl/16/16/16, md
           3xl/12/8/12, sm 8/4/4/4. Spacing/3xl is mode-aware (24 desktop, 20 tablet, 16
           mobile), so the top padding follows the viewport through --vab-top. */}
+      {/* An unavailable video has nothing to play: no bar, only its panel (row 10, 4 Nov 2026). */}
       <div
+        hidden={state === "unavailable"}
         className={cn(
           "absolute inset-x-0 bottom-0 z-20 [--vab-top:1rem] md:[--vab-top:1.25rem] lg:[--vab-top:1.5rem]",
           pick(

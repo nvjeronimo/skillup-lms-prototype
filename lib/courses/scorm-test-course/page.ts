@@ -25,6 +25,7 @@ export const page: CourseDetail = {
     done: "0 of 5 topics",
     timeLeft: "~ 1h left",
   },
+  program: { slug: "scorm-and-youtube-tests", title: "SCORM and YouTube Test Program" },
   search: SIX_SIGMA.search,
 
   update: {

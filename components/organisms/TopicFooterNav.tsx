@@ -15,6 +15,8 @@ export interface TopicFooterNavProps {
   title: string;
   milestone?: Milestone;
   previousDisabled?: boolean;
+  /** False on a course package (a SCORM course of one topic): no Previous at all. */
+  showPrevious?: boolean;
   nextDisabled?: boolean;
   /** The current topic is complete: Next turns Brand/Primary. */
   topicComplete?: boolean;
@@ -39,7 +41,8 @@ export interface TopicFooterNavProps {
  *   icon-only arrow-left button (Figma `3985:61038`, Reading `5685:175603`; Nelson's
  *   SKO match review, 28 Oct 2026), named "Previous" for assistive tech.
  * Next always reads "Next" + arrow; naming the next topic in the button is TBD.
- * Previous is disabled on the first topic, never hidden; Next is never hidden.
+ * Previous is disabled on the first topic, and hidden only on a course package (a SCORM course of
+ * one topic, 4 Nov 2026), where there is nothing before it; Next is never hidden.
  */
 export function TopicFooterNav({
   courseSlug = "",
@@ -48,6 +51,7 @@ export function TopicFooterNav({
   title,
   milestone = "Topic",
   previousDisabled = false,
+  showPrevious = true,
   nextDisabled = false,
   onPrevious,
   onNext,
@@ -84,7 +88,7 @@ export function TopicFooterNav({
       )}
     >
       <div className={cn("flex items-center", compact && "flex-none")}>
-        {compact ? (
+        {!showPrevious ? null : compact ? (
           <Button
             variant="neutral"
             size="sm"
