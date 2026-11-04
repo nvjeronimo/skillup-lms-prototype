@@ -8,6 +8,7 @@ import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { Button } from "@/components/atoms/Button";
 import { ProgressRail, type RailItemState } from "@/components/molecules/ProgressRail";
 import { ScormContainer, type ScormState } from "@/components/molecules/ScormContainer";
+import { ScormPackageActivity } from "@/components/views/ScormPackageActivity";
 import { getActivity } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
@@ -37,6 +38,19 @@ export function ActivityView({ topicId }: { topicId: string }) {
   }, [allDone, isCompleted, markComplete, topicId]);
 
   if (!topic || !activity) return null;
+
+  if (activity.kind === "scorm" && activity.packageUrl) {
+    return (
+      <ScormPackageActivity
+        key={topicId}
+        topicId={topicId}
+        title={topic.title}
+        packageUrl={activity.packageUrl}
+        durationLabel={topic.duration.replace(/^approx\.\s*|\s*approx\.$/g, "")}
+        reportsCompletion={activity.reportsCompletion !== false}
+      />
+    );
+  }
 
   if (activity.kind === "scorm") {
     return (

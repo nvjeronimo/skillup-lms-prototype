@@ -81,7 +81,7 @@ outline under the same title.
 | `podcasts` (optional) | a Podcast (`host`, `guest`, `episodeLabel`, `summary`, `chapters`); its length is the topic's `duration` | topic id |
 | `lessonPages` (optional) | a Lesson Page (`intro`, `blocks`; a `video` block and a recording in `sessions` take an optional `transcript` of `{ ts, text }` lines, which captions their player) | topic id |
 | `sessions` (optional) | a VILT-Live Session / VILT-Recording: only the fields that differ from the plain session (`whenLabel`, `host`, `agenda`, …) | topic id |
-| `activities` (optional) | an Activity (`intro`, `steps`, the last step saying what a good result looks like, and `file`: the worksheet the Downloads tab lists); written in `activities.ts` of the folder and listed in `content.ts` | topic id |
+| `activities` (optional) | an Activity (`intro`, `steps`, the last step saying what a good result looks like, and `file`: the worksheet the Downloads tab lists); written in `activities.ts` of the folder and listed in `content.ts`. A real SCORM 1.2 package: `kind: "scorm"` and `packageUrl` (its launch file under `public/scorm/`), plus `reportsCompletion: false` for a package that never reports (see `scorm-test-course/`) | topic id |
 
 A topic with no entry gets plain wording that names no subject (end of `lib/content.ts`), so
 write bodies for the topics a learner lands on (the resume topic, the due assignment) and

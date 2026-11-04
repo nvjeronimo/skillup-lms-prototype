@@ -17,6 +17,7 @@ import networkSecurityAndDefence from "./network-security-and-defence";
 import identityAccessAndCloudSecurity from "./identity-access-and-cloud-security";
 import securityOperationsAndIncidentResponse from "./security-operations-and-incident-response";
 import capstoneSecuringASmallOrganisation from "./capstone-securing-a-small-organisation";
+import scormTestCourse from "./scorm-test-course";
 
 /**
  * The registry of courses with content of their own. To add one, add its folder next to this
@@ -45,6 +46,7 @@ export const COURSES: CourseEntry[] = [
   identityAccessAndCloudSecurity,
   securityOperationsAndIncidentResponse,
   capstoneSecuringASmallOrganisation,
+  scormTestCourse,
 ];
 
 /** Ids and slugs taken by the sample courses of lib/data (Six Sigma topics are "m1-t1", unprefixed). */
