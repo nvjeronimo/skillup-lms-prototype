@@ -299,7 +299,7 @@ export interface MyLearningProgram {
   status?: string;
   /** State=Completed: the date the program certificate was issued (Certificates API). */
   certificateDate?: string;
-  cta: "Resume" | "Start" | "View Certificate";
+  cta: "Resume" | "Start" | "View certificate";
   /** The program page: what the card and its title open. No href: no page in the prototype. */
   href?: string;
   /** What the button opens when it is not the program page: the player of the course in progress. */
@@ -353,7 +353,7 @@ const WRITTEN_PROGRAMS: MyLearningProgram[] = [
   },
   {
     // The completed program (DS `State=Completed`, 13 Oct 2026). Its page since 16 Oct 2026
-    // (lib/programs/data-analytics-foundations); View Certificate opens the program certificate.
+    // (lib/programs/data-analytics-foundations); View certificate opens the program certificate.
     id: "data-analytics-foundations",
     title: "Data Analytics Foundations Certificate",
     delivery: "Flexible Learning",
@@ -369,7 +369,7 @@ const WRITTEN_PROGRAMS: MyLearningProgram[] = [
     imageSrc: `${COVERS}/business-analytics-with-python.jpg`,
     progressPct: 100,
     certificateDate: "30 Sep 2026",
-    cta: "View Certificate",
+    cta: "View certificate",
     href: "/platform/program/data-analytics-foundations",
     actionHref: "/platform/certificate/program/data-analytics-foundations",
   },
@@ -378,7 +378,7 @@ const WRITTEN_PROGRAMS: MyLearningProgram[] = [
 /**
  * A program card at the active persona's progress (Nelson, 25 Oct 2026), counted from the
  * program's course rows (lib/programs carries the persona): N of M complete, the course in
- * progress or up next, Start / Resume / View Certificate.
+ * progress or up next, Start / Resume / View certificate.
  */
 function personaProgramCard(card: MyLearningProgram): MyLearningProgram {
   const program = PROGRAMS.find((p) => p.slug === card.id);
@@ -400,7 +400,7 @@ function personaProgramCard(card: MyLearningProgram): MyLearningProgram {
     actionHref: undefined,
   };
   if (complete === total) {
-    return { ...base, hours: undefined, cta: "View Certificate", certificateDate: card.certificateDate ?? "2 Oct 2026", actionHref: programCertificatePageHref(card.id) };
+    return { ...base, hours: undefined, cta: "View certificate", certificateDate: card.certificateDate ?? "2 Oct 2026", actionHref: programCertificatePageHref(card.id) };
   }
   if (!started) {
     return { ...base, nextDue: undefined, lastStudied: undefined, cta: "Start", status: card.status ?? "Not started" };

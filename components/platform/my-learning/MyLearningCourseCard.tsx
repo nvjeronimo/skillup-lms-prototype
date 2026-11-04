@@ -77,7 +77,7 @@ function CourseTitle({ course }: { course: MyLearningCourse }) {
 }
 
 /* DS v1.6 (15 Oct 2026, Nelson): the hierarchy follows the action, not the card. Resume is
-   always Primary; Start, Review and View Certificate are Secondary. */
+   always Primary; Start, Review and View certificate are Secondary. */
 const hierarchyOf = (course: MyLearningCourse): ButtonHierarchy => (course.cta === "Resume" ? "primary" : "secondary");
 
 /* DS v1.7 (15 Oct 2026, Nelson): the Grid strip is grey (bg/subtle) beside a Primary action and
@@ -92,9 +92,10 @@ const STRIP = {
 const stripOf = (course: MyLearningCourse, hierarchy: ButtonHierarchy) =>
   "certificate" in course.upNext ? STRIP.completed : hierarchy === "primary" ? STRIP.filled : STRIP.outlined;
 
-/* The second action of a completed grid card. Written "View Certificate", as in the DS
-   (Nelson, 13 Oct 2026); the completed program card uses the same label. */
-const CERTIFICATE_CTA = "View Certificate";
+/* The second action of a completed grid card. Sentence case, "View certificate", like every
+   other View certificate in the prototype (Nelson, 4 Nov 2026; Title Case since 13 Oct);
+   the completed program card uses the same label. */
+const CERTIFICATE_CTA = "View certificate";
 
 function CertificateAction({ course, href, className }: { course: MyLearningCourse; href: string; className?: string }) {
   return (
@@ -161,7 +162,7 @@ function Action({
  * up-next block is 250 wide, so the titles take the rest of the row.
  * A complete course (DS `State=Completed`) reads "Completed" with a check over a full green bar, and its strip carries the certificate
  * line ("CERTIFICATE · Issued …") instead of the next unit; the action is Review, and the grid
- * card adds a Secondary "View Certificate" beside it (v1.6).
+ * card adds a Secondary "View certificate" beside it (v1.6).
  * Not started (v1.4): no bar, "Starts with" + the first topic, Start.
  * The thumbnail shows the course image over the initials (DS `Show image`).
  * The action opens the course, so it is a link with the button look (atoms/ButtonLink).
@@ -329,7 +330,7 @@ export function MyLearningCourseCard({
         </div>
       )}
       {certificateHref ? (
-        // DS `State=Completed`, Grid (v1.6, 15 Oct 2026): Review and View Certificate, both
+        // DS `State=Completed`, Grid (v1.6, 15 Oct 2026): Review and View certificate, both
         // Secondary, 12 apart, sharing the width.
         <div className="flex w-full items-center gap-3">
           <Action course={course} hierarchy="secondary" label={actionLabel} onAction={onAction} className="flex-1" />

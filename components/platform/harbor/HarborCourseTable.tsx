@@ -141,7 +141,7 @@ export function HarborProgramTable({
         <tbody>
           {programs.map((p) => {
             const next = p.upNext ?? p.status ?? (p.certificateDate ? `Certificate issued ${p.certificateDate}` : "");
-            const actionHref = p.actionHref ?? (p.cta === "View Certificate" ? p.href : undefined);
+            const actionHref = p.actionHref ?? (p.cta === "View certificate" ? p.href : undefined);
             return (
               <tr key={p.id} className="border-t border-sko-border-subtle">
                 <th scope="row" className="sk-text-body-medium-regular py-3 pr-8">
