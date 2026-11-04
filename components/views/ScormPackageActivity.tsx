@@ -53,15 +53,19 @@ export function ScormPackageActivity({
   const markComplete = useLmsStore((s) => s.markComplete);
   const showToast = useLmsStore((s) => s.showToast);
 
-  // What the package had stored when this visit started: it decides the "picking up" note.
-  const [arrived] = React.useState(() => readScormData(topicId));
-  const [status, setStatus] = React.useState<ScormLessonStatus | undefined>(
-    () => arrived.cmi["cmi.core.lesson_status"] as ScormLessonStatus | undefined,
-  );
-  const [score, setScore] = React.useState<number | undefined>(() => {
+  // Whether the package had stored a visit when this one started: it decides the "picking up" note.
+  // Read after mount, not during render: the server has no localStorage, and a stored visit would
+  // otherwise render an alert the server HTML does not have (a hydration error).
+  const [arrivedLaunched, setArrivedLaunched] = React.useState(false);
+  const [status, setStatus] = React.useState<ScormLessonStatus | undefined>();
+  const [score, setScore] = React.useState<number | undefined>();
+  React.useEffect(() => {
+    const arrived = readScormData(topicId);
+    setArrivedLaunched(arrived.launched);
+    setStatus(arrived.cmi["cmi.core.lesson_status"] as ScormLessonStatus | undefined);
     const raw = arrived.cmi["cmi.core.score.raw"];
-    return raw ? Number(raw) : undefined;
-  });
+    setScore(raw ? Number(raw) : undefined);
+  }, [topicId]);
   const [calls, setCalls] = React.useState<ScormCall[]>([]);
   const [state, setState] = React.useState<ScormState>("loading");
   const [openedAt, setOpenedAt] = React.useState<string>();
@@ -106,7 +110,7 @@ export function ScormPackageActivity({
     showToast("The package's stored data is cleared. It starts from the beginning.");
   }
 
-  const resuming = arrived.launched && !isCompleted && state !== "window";
+  const resuming = arrivedLaunched && !isCompleted && state !== "window";
 
   return (
     <div className="flex flex-col gap-4 py-6">
