@@ -55,12 +55,12 @@ export const PROGRAM_CARD_FRAME = "relative flex overflow-hidden rounded-card bo
  * footer, 60 tall — In progress: on bg/subtle, "Up next" + a Primary "Resume"; Not started:
  * "Not started" over an empty bar, and a white footer (1px border/subtle) with a Badge Gray
  * start date + a Secondary "Start"; Completed: the same white footer with "Certificate
- * issued", the date and a Secondary "View Certificate". The footer is grey beside a Primary
+ * issued", the date and a Secondary "View certificate". The footer is grey beside a Primary
  * action and white beside a Secondary one (Nelson, 15 Oct 2026). The action is a link with
  * the button look (atoms/ButtonLink) when the program has a page, a button otherwise.
  * Completed (DS `State=Completed`, v1.1, 13 Oct 2026): the label reads "Program completed"
  * after a check-circle in icon/success, the bar is full and green (bg/success), and the
- * footer, on bg/subtle, reads "Certificate issued" over the date with "View Certificate".
+ * footer, on bg/subtle, reads "Certificate issued" over the date with "View certificate".
  * Padding of hero and body follows the DS spacing mode: 24 desktop, 20 tablet, 16 mobile.
  * Grid: stacked. The title keeps the height of three lines and is cut at the third (DS change
  * of 10 Oct 2026), so every hero is 248 tall on desktop. The footer has one height in both
@@ -84,7 +84,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
   };
   // Unique name per card (WCAG 2.4.6); the visible label stays first.
   const actionLabel = `${program.cta} ${program.title}`;
-  // DS (15 Oct 2026): Resume is Primary, Start and View Certificate are Secondary.
+  // DS (15 Oct 2026): Resume is Primary, Start and View certificate are Secondary.
   const hierarchy = program.cta === "Resume" ? "primary" : "secondary";
   const completed = program.progressPct >= 100;
   // DS `State=Not started` (13 Oct 2026): the words take the place of "0%".

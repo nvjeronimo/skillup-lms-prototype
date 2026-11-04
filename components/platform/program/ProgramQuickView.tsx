@@ -45,7 +45,7 @@ const SECTION_TITLE = "sk-text-label-small-semibold uppercase text-sko-text-subt
  * - What's included: the Program page's list (courses, hours, projects…; no API, sample-data mark);
  * - About: the overview and the skills. Open edX serves no program marketing text: it is mock
  *   copy until the vendor's catalogue (handoff map §37), so it carries the sample-data mark.
- * Bottom: "Open program page" and the card's own action (Resume, Start, View Certificate).
+ * Bottom: "Open program page" and the card's own action (Resume, Start, View certificate).
  */
 export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewProps) {
   const titleId = React.useId();
