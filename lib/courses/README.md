@@ -17,6 +17,8 @@ lib/courses/
     page.ts         export const page: CourseDetail       /platform/course/<slug>
     content.ts      export const content: CourseContent   topic bodies, byline
     activities.ts   export const activities                the Activity topics, when the course has any
+  scorm-course-packages/
+    index.ts        four courses that are each ONE SCORM package (group D), built by one helper
 lib/programs/
   index.ts          the registry: PROGRAMS, getProgramBySlug
   types.ts          Program and its parts

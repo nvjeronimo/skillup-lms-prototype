@@ -365,7 +365,8 @@ export function getBlockedInfo(topic: FlatTopic): BlockedInfo {
  */
 export function getTranscript(topic: FlatTopic): TranscriptLine[] {
   if (topic.transcript && topic.transcript.length) return topic.transcript;
-  if (topicFamily(topic.type) !== "video") return [];
+  // A YouTube video has no transcript in the player (Vikas, 4 Nov 2026): none is invented for it.
+  if (topicFamily(topic.type) !== "video" || topic.youtube) return [];
 
   const subject = topic.title.replace(/[.\s]+$/, "");
   const mod = topic.moduleTitle;
@@ -1024,6 +1025,8 @@ export function isPlaybackMeasured(topic: FlatTopic): boolean {
   return (
     (family === "video" || family === "podcast") &&
     topic.playbackMeasurable !== false &&
+    // A YouTube embed plays in YouTube's own player: we never see what was watched (row 9).
+    !topic.youtube?.embed &&
     getMediaSeconds(topic) > 0
   );
 }

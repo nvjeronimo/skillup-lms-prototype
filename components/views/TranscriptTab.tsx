@@ -10,6 +10,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { TranscriptLine } from "@/components/molecules/TranscriptLine";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
+import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { CONTENT_BLEED, CONTENT_PX } from "@/lib/contentPadding";
@@ -150,6 +151,34 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   // R8/R10), keeping its arrow while it goes; the leaving pill is inert and click-through.
   const pill = useExitTransition(!following, MOTION_MS.short3);
   const pillDirection = useFrozenWhileClosed(scrollDirection, !following);
+
+  // A YouTube video has no transcript in the player (4 Nov 2026). Embedded (row 9), an Info alert
+  // says its progress is not tracked; either way the feedback row stays, with Mark as Complete
+  // when the shell gives it.
+  if (topic?.youtube) {
+    return (
+      <div className="flex flex-col gap-4 pt-2">
+        {topic.youtube.embed ? (
+          <InlineAlert
+            tone="info"
+            title="Your progress on this video isn’t tracked"
+            description="When you have watched it, select Mark as Complete. If you watch it on YouTube, come back here to mark it complete."
+          />
+        ) : (
+          <p className="sk-text-body-medium-regular text-sko-text-subtle">No transcript available for this video.</p>
+        )}
+        <ContentFeedback
+          className="border-t border-sko-border-subtle"
+          action={endAction ?? undefined}
+          value={feedback}
+          onLike={() => setFeedback(feedback === "like" ? null : "like")}
+          onDislike={() => setFeedback(feedback === "dislike" ? null : "dislike")}
+          onReport={() => showToast("Thanks, we'll take a look.")}
+          license="CC BY-SA 4.0"
+        />
+      </div>
+    );
+  }
 
   if (!topic || !transcript.length) {
     return (

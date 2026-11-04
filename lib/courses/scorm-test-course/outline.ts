@@ -5,7 +5,7 @@ import type { Course } from "@/lib/courses/kit";
  * (meeting of 4 Nov 2026; packages from the content team, GenAI for Finance). One module per
  * package, named after where the package sits in its own course (M4.L2.A1 and so on), plus a
  * reading that says what each package does. Not started, nothing locked, so any topic opens.
- * Reached by address only: it has no card on My Learning.
+ * Course 2 of the SCORM and YouTube Test Program (4 Nov 2026), which My Learning lists.
  */
 export const outline: Course = {
   id: "sct",

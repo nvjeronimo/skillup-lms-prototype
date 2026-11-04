@@ -373,6 +373,24 @@ const WRITTEN_PROGRAMS: MyLearningProgram[] = [
     href: "/platform/program/data-analytics-foundations",
     actionHref: "/platform/certificate/program/data-analytics-foundations",
   },
+  {
+    // The test program of 4 Nov 2026 (lib/programs/scorm-and-youtube-tests): the YouTube and SCORM
+    // test courses in one place, so they can be opened from My Learning (Nelson, 4 Nov 2026).
+    id: "scorm-and-youtube-tests",
+    title: "SCORM and YouTube Test Program",
+    delivery: "Flexible Learning",
+    difficulty: "Beginner",
+    partners: [{ name: "SkillUp" }],
+    courses: "0 of 6 courses complete",
+    courseCount: 6,
+    initials: "ST",
+    imageSrc: `${COVERS}/project-management-with-ai-tools.jpg`,
+    hours: programHours("scorm-and-youtube-tests"),
+    progressPct: 0,
+    status: "Not started",
+    cta: "Start",
+    href: "/platform/program/scorm-and-youtube-tests",
+  },
 ];
 
 /**

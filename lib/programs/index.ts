@@ -2,6 +2,7 @@ import type { Program } from "./types";
 import aiDrivenDigitalMarketing from "./ai-driven-digital-marketing";
 import cybersecurityFundamentals from "./cybersecurity-fundamentals";
 import dataAnalyticsFoundations from "./data-analytics-foundations";
+import scormAndYoutubeTests from "./scorm-and-youtube-tests";
 import { ACTIVE_PERSONA_ID } from "@/lib/persona-active";
 import { certificateTemplate, overlayProgram } from "@/lib/persona-overlay";
 import { getPersona } from "@/lib/personas";
@@ -11,6 +12,7 @@ const WRITTEN: Program[] = [
   aiDrivenDigitalMarketing,
   cybersecurityFundamentals,
   dataAnalyticsFoundations,
+  scormAndYoutubeTests,
 ];
 
 /** The issued certificate a persona's synthesized certificates copy (sheet, signatories). */
