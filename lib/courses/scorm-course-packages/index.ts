@@ -7,7 +7,8 @@ import { SAMPLE_TODAY, todayLabel } from "@/lib/sample-time";
  * of 4 Nov 2026). In the ICP such a course is ONE topic named after the course, with no modules or
  * lessons of ours; it opens the whole package with its own menu, and the course is 0% until the
  * package reports completion, then 100%. The player starts with our sidebar collapsed and the
- * footer reads "1 of 1" with no Previous (PlayerShell, `coursePackage`).
+ * footer reads "1 of 1" with no Previous (PlayerShell, `coursePackage`). The outline is the 3-level
+ * shape (an implicit module, no lesson), so the rail shows the one topic and nothing above it.
  *
  * The packages are the content team's four SCORM 1.2 activities (GenAI for Finance), the same
  * files the SCORM Test Course plays inside units: here each one stands for a whole course. Their
@@ -45,20 +46,17 @@ function coursePackage({ id, slug, title, minutes, cover, activity }: PackageSpe
     modulesCompleted: 0,
     modulesTotal: 1,
     modules: [
+      // 3-level shape (Content Shape Levels): no Module, no Lesson, the one topic straight under the
+      // Course Header, so the collapsed rail shows no M1 / L1 for a course that has neither.
       {
         id: `${id}-m1`,
-        label: "MODULE 01",
-        title,
+        label: "",
+        title: "",
+        implicit: true,
         topicsCompleted: 0,
         topicsTotal: 1,
         isCompleted: false,
-        lessons: [
-          {
-            id: `${id}-m1-l1`,
-            label: "Course package",
-            topics: [{ id: topicId, type: "Activity", title, duration: `${minutes} min approx.`, completed: false }],
-          },
-        ],
+        topics: [{ id: topicId, type: "Activity", title, duration: `${minutes} min approx.`, completed: false }],
       },
     ],
   };
