@@ -598,6 +598,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     }
                     // Every Video topic plays the same SkillUp lesson (5 Nov 2026); YouTube keeps its own picture.
                     src={youtube ? undefined : SAMPLE_VIDEO_SRC}
+                    youtubeId={youtube?.id}
                     state={youtube?.unavailable ? "unavailable" : undefined}
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}

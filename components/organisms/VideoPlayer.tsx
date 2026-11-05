@@ -21,6 +21,7 @@ import { cn, secondsToTs, tsToSeconds } from "@/lib/utils";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { usePlaybackClock } from "@/lib/playback/usePlaybackClock";
+import { useYouTubePlayer } from "@/lib/playback/useYouTubePlayer";
 import type { TranscriptLine, VideoState } from "@/lib/types";
 
 /** DS `_Video actions bar` Size. Set by the caller; the bar never re-sizes itself. */
@@ -37,6 +38,12 @@ export interface VideoPlayerProps {
    * fails to load: the poster or the flat brand colour.
    */
   src?: string;
+  /**
+   * A YouTube video played inside this player (ICP Video Lessons row 10: a Video component with a
+   * YouTube ID). Unlike `src`, YouTube runs the time: the bar drives YouTube's player, and only
+   * the time YouTube reports as played counts towards the 90% (lib/playback/useYouTubePlayer).
+   */
+  youtubeId?: string;
   /**
    * The poster: a photo shown in the frame until playback first starts, as a `<video poster>`
    * (Figma Video Cards 1–3 and 7; Nelson's SKO match review, 28 Oct 2026). Left out: the flat
@@ -264,6 +271,7 @@ function ActionButton({
  */
 export function VideoPlayer({
   src,
+  youtubeId,
   poster,
   durationSeconds = 200,
   currentTime: controlledTime = 0,
@@ -274,7 +282,7 @@ export function VideoPlayer({
   onPause,
   onRestart,
   captions: cues,
-  state = "ready",
+  state: stateProp = "ready",
   onRetry,
   onReplay,
   heightPx,
@@ -283,6 +291,9 @@ export function VideoPlayer({
   className,
 }: VideoPlayerProps) {
   const [playing, setPlaying] = React.useState(false);
+  // A YouTube video that YouTube refuses to play shows the "isn't available" panel (row 10).
+  const [youtubeFailed, setYoutubeFailed] = React.useState(false);
+  const state: VideoState = youtubeFailed ? "unavailable" : stateProp;
   const [speedIdx, setSpeedIdx] = React.useState(1);
   // CC starts off (Figma Video Cards 1–3 and 7; Nelson's SKO match review, 28 Oct 2026): a caption
   // on by default covered the paused frame at 0:00, and the play button once docked.
@@ -296,8 +307,13 @@ export function VideoPlayer({
   // shows at every size) work wherever it is dropped in, and playback moves it without a round
   // trip through the caller. A new `currentTime` (or `seekKey`) from the caller moves it there.
   const [currentTime, setOwnTime] = React.useState(controlledTime);
+  // Every jump, for a player that runs its own media (YouTube): where to, and a key so a jump
+  // to the same place still applies.
+  const [seekRequest, setSeekRequest] = React.useState({ to: controlledTime, key: 0 });
+  const requestSeek = (to: number) => setSeekRequest((r) => ({ to, key: r.key + 1 }));
   React.useEffect(() => {
     setOwnTime(controlledTime);
+    requestSeek(controlledTime);
     if (controlledTime > 0) setStarted(true);
   }, [controlledTime, seekKey]);
   const wrapRef = React.useRef<HTMLDivElement>(null);
@@ -334,7 +350,8 @@ export function VideoPlayer({
     onPause?.(seconds, reason);
   }
   usePlaybackClock({
-    playing: playing && state === "ready",
+    // A YouTube video keeps its own time (below): no simulated clock.
+    playing: playing && state === "ready" && !youtubeId,
     time: currentTime,
     duration: durationSeconds,
     speed: SPEEDS[speedIdx],
@@ -345,6 +362,42 @@ export function VideoPlayer({
     onEnd: () => stop(durationSeconds, "end"),
     onHidden: () => stop(currentTime, "hidden"),
   });
+  // A YouTube video in this player: YouTube's own position is the time.
+  const youtubeHost = React.useRef<HTMLDivElement>(null);
+  useYouTubePlayer({
+    videoId: youtubeId && stateProp !== "unavailable" ? youtubeId : undefined,
+    hostRef: youtubeHost,
+    playing: playing && state === "ready",
+    speed: SPEEDS[speedIdx],
+    volume,
+    muted,
+    seek: seekRequest,
+    onAdvance: (from, to) => {
+      setOwnTime(to);
+      onPlaybackAdvance?.(from, to);
+    },
+    onPosition: (seconds) => setOwnTime(seconds),
+    onEnd: () => {
+      setOwnTime(durationSeconds);
+      stop(durationSeconds, "end");
+    },
+    onError: () => {
+      setYoutubeFailed(true);
+      if (playing) stop(currentTime, "pause");
+    },
+  });
+  // The simulated clock pauses on a hidden tab; a YouTube video does the same.
+  React.useEffect(() => {
+    if (!youtubeId || !playing) return;
+    function onVisibility() {
+      if (document.hidden) stopOnHidden.current();
+    }
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [youtubeId, playing]);
+  const stopOnHidden = React.useRef<() => void>(() => {});
+  stopOnHidden.current = () => stop(currentTime, "hidden");
+
   // The real video follows the clock: same play state, speed and sound, and the same position
   // (within the file, which loops) whenever the two drift apart by more than a second, which is
   // what a seek does.
@@ -387,6 +440,7 @@ export function VideoPlayer({
     const restart = currentTime >= durationSeconds;
     if (restart) {
       setOwnTime(0);
+      requestSeek(0);
       onRestart?.();
     }
     setPlaying(true);
@@ -397,6 +451,7 @@ export function VideoPlayer({
   function seekTo(seconds: number) {
     setStarted(true);
     setOwnTime(seconds);
+    requestSeek(seconds);
     onSeek?.(seconds);
   }
 
@@ -455,6 +510,10 @@ export function VideoPlayer({
           Fit). No real asset is required: a flat brand colour stands in for the video frame (no
           gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
       <div className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2 overflow-hidden bg-sko-bg-primary" aria-hidden>
+        {youtubeId && stateProp !== "unavailable" ? (
+          // YouTube's iframe, under our click layer and bar: it never takes a click itself.
+          <div ref={youtubeHost} className="pointer-events-none absolute inset-0 [&_iframe]:h-full [&_iframe]:w-full" />
+        ) : null}
         {showVideo ? (
           <video
             ref={videoRef}
