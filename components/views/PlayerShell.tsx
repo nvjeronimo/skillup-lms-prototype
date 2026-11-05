@@ -9,6 +9,7 @@ import { Sidebar, type SidebarVariant } from "@/components/organisms/Sidebar";
 import { navigateWithTransition } from "@/lib/motion/pageTransition";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
 import { YouTubeEmbed } from "@/components/molecules/YouTubeEmbed";
+import { SAMPLE_VIDEO_SRC } from "@/lib/playback/sampleVideo";
 import { ResumeBanner } from "@/components/molecules/ResumeBanner";
 import { ContentTabs } from "@/components/organisms/ContentTabs";
 import { TopicHeader } from "@/components/molecules/TopicHeader";
@@ -595,6 +596,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                         ? `https://i.ytimg.com/vi/${encodeURIComponent(youtube.id)}/hqdefault.jpg`
                         : getCatalogCourse(courseSlug)?.imageSrc ?? "/platform/course-six-sigma.jpg"
                     }
+                    // Every Video topic plays the same SkillUp lesson (5 Nov 2026); YouTube keeps its own picture.
+                    src={youtube ? undefined : SAMPLE_VIDEO_SRC}
+                    youtubeId={youtube?.id}
                     state={youtube?.unavailable ? "unavailable" : undefined}
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}
