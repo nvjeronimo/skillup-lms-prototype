@@ -30,6 +30,12 @@ export type VideoPlayerSize = "sm" | "md" | "lg";
 export type PauseReason = "pause" | "end" | "hidden" | "unmount";
 
 export interface VideoPlayerProps {
+  /**
+   * A real video for the picture (lib/playback/sampleVideo). It follows the player's clock, which
+   * still runs the time, the slider and the completion: play, pause, speed, volume and every seek
+   * are passed on, and it loops when the topic is longer than the file. Left out, or when it
+   * fails to load: the poster or the flat brand colour.
+   */
   src?: string;
   /**
    * The poster: a photo shown in the frame until playback first starts, as a `<video poster>`
@@ -250,13 +256,14 @@ function ActionButton({
 }
 
 /**
- * Lightweight video player. A flat brand-colour placeholder (no real asset needed).
+ * Lightweight video player. A flat brand-colour placeholder, or a real file (`src`) that follows its clock.
  * Mirrors DS `Video player 16:9` + `_Video actions bar` (9264:576771 / 9264:576129):
  * one row of action buttons around the progress slider, all bound to tokens.
  * Paused: `_Video overlay action` scrim + centred play button. Playing: bar only.
  * Edge states (loading / error / unavailable / ended) render a centered overlay.
  */
 export function VideoPlayer({
+  src,
   poster,
   durationSeconds = 200,
   currentTime: controlledTime = 0,
@@ -294,6 +301,10 @@ export function VideoPlayer({
     if (controlledTime > 0) setStarted(true);
   }, [controlledTime, seekKey]);
   const wrapRef = React.useRef<HTMLDivElement>(null);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  // A file that fails to load (no signature, offline) leaves the poster in place.
+  const [videoFailed, setVideoFailed] = React.useState(false);
+  const showVideo = Boolean(src) && !videoFailed && state !== "unavailable";
 
   // Classes per size of the action bar, which has three. `auto` is written sm first, then md
   // from 30rem and lg from 40rem of player width. `md` is `auto` without its lg classes: the
@@ -334,6 +345,32 @@ export function VideoPlayer({
     onEnd: () => stop(durationSeconds, "end"),
     onHidden: () => stop(currentTime, "hidden"),
   });
+  // The real video follows the clock: same play state, speed and sound, and the same position
+  // (within the file, which loops) whenever the two drift apart by more than a second, which is
+  // what a seek does.
+  const playingNow = playing && state === "ready";
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (playingNow) video.play().catch(() => {});
+    else video.pause();
+  }, [playingNow, showVideo]);
+  React.useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = SPEEDS[speedIdx];
+  }, [speedIdx, showVideo]);
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.volume = volume / 100;
+    video.muted = muted;
+  }, [volume, muted, showVideo]);
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
+    const target = currentTime % video.duration;
+    if (Math.abs(video.currentTime - target) > 1) video.currentTime = target;
+  }, [currentTime, showVideo]);
+
   // Leaving while playing (another topic, another page) stops playback where it was.
   const stopOnUnmount = React.useRef<() => void>(() => {});
   stopOnUnmount.current = () => {
@@ -418,9 +455,28 @@ export function VideoPlayer({
           Fit). No real asset is required: a flat brand colour stands in for the video frame (no
           gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
       <div className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2 overflow-hidden bg-sko-bg-primary" aria-hidden>
+        {showVideo ? (
+          <video
+            ref={videoRef}
+            src={src}
+            preload="metadata"
+            playsInline
+            loop
+            className="absolute inset-0 h-full w-full object-contain"
+            onError={() => setVideoFailed(true)}
+            onLoadedMetadata={(e) => {
+              const video = e.currentTarget;
+              video.currentTime = currentTime % video.duration;
+              video.playbackRate = SPEEDS[speedIdx];
+              video.volume = volume / 100;
+              video.muted = muted;
+              if (playingNow) video.play().catch(() => {});
+            }}
+          />
+        ) : null}
         {poster && !started && state !== "unavailable" ? (
           // eslint-disable-next-line @next/next/no-img-element -- a static mock poster
-          <img src={poster} alt="" className="h-full w-full object-cover" />
+          <img src={poster} alt="" className="relative h-full w-full object-cover" />
         ) : null}
       </div>
 
