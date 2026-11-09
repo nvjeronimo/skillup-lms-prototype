@@ -10,6 +10,7 @@ import { relativeLabel } from "@/lib/sample-time";
  * - Course 1, YouTube Video Test: the two ways to add a YouTube video (ICP Video rows 9 and 10).
  * - Course 2, SCORM Test Course: the four packages inside units of a course (Activity groups A–C).
  * - Courses 3 to 6: each a whole course delivered as one SCORM package (Activity group D).
+ * - Course 7, Golf Explained: a course package with its own sidebar (added 9 Nov 2026).
  *
  * Nothing is started. Each course row agrees with the outline of its folder under lib/courses.
  */
@@ -20,19 +21,19 @@ const program: Program = {
   imageSrc: "/platform/covers/project-management-with-ai-tools.jpg",
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
-  stats: { courses: "6 courses", duration: "~ 3 hours", org: "SkillUp" },
+  stats: { courses: "7 courses", duration: "~ 3.5 hours", org: "SkillUp" },
   progress: {
     percent: 0,
     label: "Program progress",
     status: "Not started",
     cta: "Start course",
     href: coursePlayerHref("youtube-video-test"),
-    footer: "0 of 6 courses complete",
+    footer: "0 of 7 courses complete",
   },
 
   coursesIntro: {
     title: "Courses in this program",
-    lead: "Six test courses: YouTube videos added the two ways Studio allows, the four SCORM packages inside the units of a course, and the same four packages as whole courses of one topic each. Take them in any order.",
+    lead: "Seven test courses: YouTube videos added the two ways Studio allows, the four SCORM packages inside the units of a course, the same four packages as whole courses of one topic each, and a whole-course package with its own menu. Take them in any order.",
   },
   courses: [
     programCourse(1, "YouTube Video Test", "YT", "ux-research-and-design-thinking", {
@@ -84,6 +85,13 @@ const program: Program = {
       detail: "1 topic · never reports",
       modules: [{ number: 1, title: "Module 1 · Clearing the Deck", complete: false, topics: "1 topic", duration: "15m" }],
     }),
+    programCourse(7, "Golf Explained", "GE", "ux-research-and-design-thinking", {
+      progressMeta: "30 min total",
+      upNext: { title: "Golf Explained", type: "Activity" },
+      position: "1 SCORM package",
+      detail: "1 topic · own menu",
+      modules: [{ number: 1, title: "Module 1 · Golf Explained", complete: false, topics: "1 topic", duration: "30m" }],
+    }),
   ],
 
   certificatesIntro: {
@@ -121,7 +129,7 @@ const program: Program = {
 
   aboutIntro: {
     title: "About this program",
-    lead: "A test program: real SCORM 1.2 packages from the content team and a public YouTube video, played as Open edX would play them.",
+    lead: "A test program: real SCORM 1.2 packages from the content team, a public SCORM sample from Rustici Software and a public YouTube video, played as Open edX would play them.",
   },
   about: [
     {
@@ -131,6 +139,7 @@ const program: Program = {
         "YouTube Video Test: a YouTube embed in a Text component (not tracked: Mark as Complete, and Next asks), the same video as a Video component (tracked: it completes by itself), and a video that is no longer available.",
         "SCORM Test Course: four packages, each inside a unit of one course, with a test panel that shows what each package reports.",
         "The four course packages: a whole course as one SCORM package. One topic named after the course, our sidebar collapsed, 0% until the package reports completion, then 100%.",
+        "Golf Explained: a course package with its own sidebar menu (Rustici Software's public golf sample, CC BY 3.0, with a menu added), to see our collapsed sidebar next to the package's own.",
       ],
       defaultOpen: true,
     },
@@ -147,7 +156,7 @@ const program: Program = {
       relative: relativeLabel("2026-11-04"),
     },
   ],
-  included: ["3 YouTube videos", "4 SCORM packages in units", "4 SCORM course packages", "2 readings"],
+  included: ["3 YouTube videos", "4 SCORM packages in units", "5 SCORM course packages", "2 readings"],
   instructors: [{ name: "Nelson Jerónimo", role: "Design · SkillUp" }],
 };
 
