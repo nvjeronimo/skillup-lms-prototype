@@ -24,6 +24,12 @@ export interface ScormContainerProps {
   onLaunchWindow?: () => void;
   /** Back from the window: the package plays in the page again. */
   onPlayInPage?: () => void;
+  /**
+   * A course package (Activity group D) brings its own menu and navigation: the frame takes this
+   * height in px, the height of the window the player shows, instead of 16:9 (Figma group D;
+   * Nelson, 9 Nov 2026).
+   */
+  frameHeight?: number;
   className?: string;
 }
 
@@ -47,6 +53,7 @@ export function ScormContainer({
   onSkip,
   onLaunchWindow,
   onPlayInPage,
+  frameHeight,
   className,
 }: ScormContainerProps) {
   const frameRef = React.useRef<HTMLDivElement>(null);
@@ -84,19 +91,26 @@ export function ScormContainer({
       ) : null}
 
       {/* DS LMS / Activity · SCORM Frame (20328:3488): r12, shadow-card. In the page it is the
-          package (16:9, at most 52vh tall, scrolling inside); the loading, window and error states
-          centre their text, the error in its own colours. */}
+          package (16:9, at most 52vh tall, scrolling inside; a course package at window height);
+          the loading, window and error states centre their text, the error in its own colours. */}
       <div
         ref={frameRef}
         className={cn(
           "flex w-full flex-col rounded-card border shadow-sk-card",
-          fullscreen ? "h-full overflow-y-auto bg-sko-bg-page" : state === "window" ? "" : "aspect-video max-h-[52vh] overflow-y-auto",
+          fullscreen
+            ? "h-full overflow-y-auto bg-sko-bg-page"
+            : state === "window"
+              ? ""
+              : frameHeight
+                ? "overflow-hidden"
+                : "aspect-video max-h-[52vh] overflow-y-auto",
           state === "error"
             ? "items-center justify-center gap-2 border-sko-border-error bg-sko-bg-error-soft px-10 text-center"
             : state === "running"
               ? "border-sko-border-subtle bg-sko-bg-page"
               : "items-center justify-center gap-2 border-sko-border-subtle bg-sko-bg-subtle px-10 py-8 text-center",
         )}
+        style={frameHeight && !fullscreen && state !== "window" ? { height: frameHeight } : undefined}
         role="group"
         aria-label={title}
         aria-busy={state === "loading" || undefined}
