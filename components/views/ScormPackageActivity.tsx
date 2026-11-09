@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { RotateCcw } from "lucide-react";
+import { FlaskConical, RotateCcw } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { ScormContainer, type ScormState } from "@/components/molecules/ScormContainer";
 import { useLmsStore } from "@/lib/store";
-import { DEFAULT_USER } from "@/lib/data";
+import { DEFAULT_USER, flatTopics, getCourseForTopic } from "@/lib/data";
 import {
   SCORM_DONE,
   clearScormData,
@@ -33,9 +33,22 @@ function scormName(name: string) {
  * back, even when a package writes "incomplete" again on its next launch. A package that never
  * reports (`reportsCompletion: false`, card C1) is completed by hand: Mark as Complete, and Next asks.
  *
+ * A course package (Activity group D: the course is this one topic, and the package brings its own
+ * menu) plays at window height: the frame fills the player's scroll area, so the package's own
+ * navigation is in view once the learner scrolls to it (Figma group D; Nelson, 9 Nov 2026).
+ *
  * Below the package, a test panel shows what the package reported and its last calls. It is a
- * testing aid for this course, not part of the design.
+ * testing aid for this course, not part of the design: a dashed yellow border (accent yellow) and a line saying so.
  */
+
+/** The player's scroll area (or the window): what "window height" means for the frame. */
+function scrollParent(el: HTMLElement | null): HTMLElement | null {
+  for (let p = el?.parentElement; p; p = p.parentElement) {
+    const { overflowY } = getComputedStyle(p);
+    if (overflowY === "auto" || overflowY === "scroll") return p;
+  }
+  return null;
+}
 export function ScormPackageActivity({
   topicId,
   title,
@@ -71,6 +84,25 @@ export function ScormPackageActivity({
   const [openedAt, setOpenedAt] = React.useState<string>();
   // Bumped by Reset: remounts the iframe so the package starts from nothing.
   const [run, setRun] = React.useState(0);
+
+  // Course package: the frame takes the height of the player's scroll area, less the room this
+  // view leaves above and below it (py-6), and never below 360 px.
+  const coursePackage = React.useMemo(() => flatTopics(getCourseForTopic(topicId)).length === 1, [topicId]);
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const [frameHeight, setFrameHeight] = React.useState<number>();
+  React.useEffect(() => {
+    if (!coursePackage) return;
+    const area = scrollParent(rootRef.current);
+    const measure = () => setFrameHeight(Math.max(360, (area ? area.clientHeight : window.innerHeight) - 48));
+    measure();
+    const ro = area ? new ResizeObserver(measure) : null;
+    if (area) ro?.observe(area);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [coursePackage]);
 
   const completedRef = React.useRef(isCompleted);
   completedRef.current = isCompleted;
@@ -113,7 +145,7 @@ export function ScormPackageActivity({
   const resuming = arrivedLaunched && !isCompleted && state !== "window";
 
   return (
-    <div className="flex flex-col gap-4 py-6">
+    <div ref={rootRef} className="flex flex-col gap-4 py-6">
       <p className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-default">
         {state === "window"
           ? "This activity opens in its own window. Your progress is saved as you go, and your completion comes back to this page when you finish."
@@ -164,14 +196,16 @@ export function ScormPackageActivity({
         onSkip={() => showToast("Skipped. You can come back to this activity anytime.")}
         onLaunchWindow={launchWindow}
         onPlayInPage={() => setRun((n) => n + 1)}
+        frameHeight={coursePackage ? frameHeight : undefined}
       >
         <iframe key={run} src={packageUrl} title={title} className="min-h-0 w-full flex-1 border-0" />
       </ScormContainer>
 
-      {/* Test panel: what the package told the platform. A testing aid, not part of the design. */}
+      {/* Test panel: what the package told the platform. A testing aid, not part of the design:
+          dashed yellow border (accent yellow) and a line saying it is for testing and development only (Nelson, 9 Nov 2026). */}
       <section
         aria-label="SCORM test panel"
-        className="flex flex-col gap-3 rounded-card border border-dashed border-sko-border-default p-4"
+        className="flex flex-col gap-3 rounded-card border-2 border-dashed border-sko-bg-accent-yellow p-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="sk-text-body-medium-semibold text-sko-text-default">Test panel · what the package reported</span>
@@ -179,6 +213,10 @@ export function ScormPackageActivity({
             Reset this package
           </Button>
         </div>
+        <p className="sk-text-body-small-regular flex items-center gap-2 text-sko-text-muted">
+          <FlaskConical aria-hidden className="size-4 shrink-0 text-sko-icon-warning" />
+          For testing and development purposes only. Not part of the design, and not in the platform.
+        </p>
         <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
           <dt className="sk-text-body-small-regular text-sko-text-muted">lesson_status</dt>
           <dd className="sk-text-body-small-regular text-sko-text-default">{status ?? "nothing reported"}</dd>
