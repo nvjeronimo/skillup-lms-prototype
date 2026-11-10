@@ -1,0 +1,5 @@
+
+(function() {
+    const data = {"transcripts":[{"name":"captions","cues":[{"start":721,"text":"Prevention of Sexual  Harassment in the Workplace"},{"start":5017,"text":"You have now completed all learning modules for the Prevention of Sexual Harassment at Workplace course."},{"start":10730,"text":"In our final assessment you will demonstrate your understanding of the material"},{"start":14802,"text":"by answering 10 scenario-based questions."},{"start":17906,"text":"You must achieve a score of 80% to successfully pass this assessment"},{"start":21780,"text":"and earn your completion certificate."},{"start":24073,"text":"You have one attempt per question and must answer all questions within one sitting."},{"start":29266,"text":"You will not be allowed to navigate back into previous modules during your attempt."},{"start":34246,"text":"The quiz may be repeated should you fail to pass with the requisite score."},{"start":38451,"text":"Good luck!"}]}]};
+    window.globalLoadJsAsset('story_content/5iD6o86bszv_transcripts.js', JSON.stringify(data));
+})();

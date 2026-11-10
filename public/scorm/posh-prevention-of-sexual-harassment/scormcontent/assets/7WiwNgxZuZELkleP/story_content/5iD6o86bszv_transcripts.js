@@ -1,0 +1,5 @@
+
+(function() {
+    const data = {"transcripts":[{"name":"captions","cues":[{"start":1307,"text":"Key information to remember for recognizing sexual harassment "},{"start":5857,"text":"Sexually inappropriate behaviors or acts can be verbal, non-verbal, or physical in nature. "},{"start":11477,"text":"The two forms of sexual harassment are Quid Pro Quo and hostile environment. "},{"start":17051,"text":"The company’s policies may be gender-neutral."},{"start":19974,"text":" A complainant or alleged perpetrator of sexual harassment could be anyone,"},{"start":24538,"text":"regardless of gender identity or sexual orientation,"},{"start":27762,"text":"and is not limited to exchanges between the opposite sex.  "},{"start":31789,"text":"An alleged perpetrator’s intent does not determine sexual harassment."},{"start":36097,"text":" It is determined only when the complainant or witness"},{"start":39395,"text":"perceives the behavior or act as both unwanted and sexual in nature."}]}]};
+    window.globalLoadJsAsset('story_content/5iD6o86bszv_transcripts.js', JSON.stringify(data));
+})();
