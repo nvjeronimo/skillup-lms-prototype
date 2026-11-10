@@ -1,0 +1,42 @@
+{
+  "version": "3.91.33104.0",
+  "course_id": "6iX2lrt4DbV",
+  "title": "Module 2",
+  "thumbnail": "story_content/thumbnail.jpg",
+  "scenes": [
+    {
+      "title": "Untitled Scene"
+    }
+  ],
+  "slides": [
+    {
+      "id": "6hawVRxdTnQ",
+      "title": "The role of the IC, its reporting process, and interim relief options",
+      "scene_index": "1.1"
+    },
+    {
+      "id": "63ckVcaHBrk",
+      "title": "Guidelines for complainants",
+      "scene_index": "1.2"
+    },
+    {
+      "id": "6Q8vc5qiVdM",
+      "title": "Confidentiality and retaliation to complaints",
+      "scene_index": "1.3"
+    },
+    {
+      "id": "5Ze7Ll2F6iB",
+      "title": "Module 4: Key points",
+      "scene_index": "1.4"
+    }
+  ],
+  "player": {
+    "name": "unified",
+    "width": 980,
+    "height": 671
+  },
+  "stage": {
+    "width": 960,
+    "height": 600
+  }
+}

@@ -1,0 +1,5 @@
+
+(function() {
+    const data = {"transcripts":[{"name":"captions","cues":[{"start":385,"text":"Course overview"},{"start":4872,"text":"The course is divided into five modules which include"},{"start":7839,"text":"key legal information, illustrative and nuanced real-life scenarios, "},{"start":11762,"text":"quick knowledge checks, and a final comprehensive assessment."},{"start":15233,"text":"It should take you one hour or less to complete."},{"start":17533,"text":"Upon conclusion of all modules"},{"start":19682,"text":"and achieving a minimum score of 80% on the final assessment,"},{"start":23774,"text":"you will be awarded a certificate of completion"},{"start":26413,"text":"applicable to your company policy requirements. "}]}]};
+    window.globalLoadJsAsset('story_content/6n2PTXYP3RM_transcripts.js', JSON.stringify(data));
+})();

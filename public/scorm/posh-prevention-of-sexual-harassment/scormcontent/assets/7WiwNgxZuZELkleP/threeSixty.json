@@ -1,0 +1,57 @@
+{
+  "version": "3.91.33104.0",
+  "course_id": "6iX2lrt4DbV",
+  "title": "Module 2",
+  "thumbnail": "story_content/thumbnail.jpg",
+  "scenes": [
+    {
+      "title": "Untitled Scene"
+    }
+  ],
+  "slides": [
+    {
+      "id": "6hawVRxdTnQ",
+      "title": "Module 3: Overview and learning objectives",
+      "scene_index": "1.1"
+    },
+    {
+      "id": "6S1OgKVx6cN",
+      "title": "Three types of behaviors which can be recognized as sexual harassment",
+      "scene_index": "1.2"
+    },
+    {
+      "id": "5lgvceEdPSC",
+      "title": "Determining unwelcome behavior",
+      "scene_index": "1.3"
+    },
+    {
+      "id": "5besd8iTjPa",
+      "title": "Quid Pro Quo sexual harassment",
+      "scene_index": "1.4"
+    },
+    {
+      "id": "68vodWRPolR",
+      "title": "Hostile Work Environment",
+      "scene_index": "1.5"
+    },
+    {
+      "id": "63ckVcaHBrk",
+      "title": "Identifying complainants and alleged perpetrators",
+      "scene_index": "1.6"
+    },
+    {
+      "id": "5Ze7Ll2F6iB",
+      "title": "Importance of understanding the POSH Act",
+      "scene_index": "1.7"
+    }
+  ],
+  "player": {
+    "name": "unified",
+    "width": 980,
+    "height": 671
+  },
+  "stage": {
+    "width": 960,
+    "height": 600
+  }
+}
