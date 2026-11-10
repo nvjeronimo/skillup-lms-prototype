@@ -1,0 +1,27 @@
+{
+  "version": "3.91.33104.0",
+  "course_id": "6iX2lrt4DbV",
+  "title": "Module 2",
+  "thumbnail": "story_content/thumbnail.jpg",
+  "scenes": [
+    {
+      "title": "Untitled Scene"
+    }
+  ],
+  "slides": [
+    {
+      "id": "5Ze7Ll2F6iB",
+      "title": "5.1 Course Key Points",
+      "scene_index": "1.1"
+    }
+  ],
+  "player": {
+    "name": "unified",
+    "width": 980,
+    "height": 671
+  },
+  "stage": {
+    "width": 960,
+    "height": 600
+  }
+}

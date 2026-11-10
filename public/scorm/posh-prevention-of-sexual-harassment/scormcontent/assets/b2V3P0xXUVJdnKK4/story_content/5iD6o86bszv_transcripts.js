@@ -1,0 +1,5 @@
+
+(function() {
+    const data = {"transcripts":[{"name":"captions","cues":[{"start":1186,"text":"In this module,"},{"start":2409,"text":"we covered the various key information that all employees should be aware of when reporting"},{"start":7465,"text":"and preventing sexual harassment in the workplace.    "},{"start":11795,"text":"Reporting is important,"},{"start":13099,"text":"and it is everyone’s responsibility to create a respectful workplace free from sexual harassment."},{"start":19135,"text":"Both complainants and witnesses have guidelines for dealing with and reporting incidents of sexual harassment."},{"start":25219,"text":"Complaints will be evaluated by the IC in a fair and objective manner."},{"start":29681,"text":"Significant penalties can be taken against alleged perpetrators "},{"start":33211,"text":"and retaliation to complaints is a serious offence."},{"start":36823,"text":"Interim reliefs are available to all complainants during the period of inquiry by the IC."}]}]};
+    window.globalLoadJsAsset('story_content/5iD6o86bszv_transcripts.js', JSON.stringify(data));
+})();

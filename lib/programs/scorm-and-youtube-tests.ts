@@ -11,6 +11,7 @@ import { relativeLabel } from "@/lib/sample-time";
  * - Course 2, SCORM Test Course: the four packages inside units of a course (Activity groups A–C).
  * - Courses 3 to 6: each a whole course delivered as one SCORM package (Activity group D).
  * - Course 7, Golf Explained: a course package with its own sidebar (added 9 Nov 2026).
+ * - Courses 8 and 9: the content team's POSH course (Rise) and a Storyline final quiz (10 Nov 2026).
  *
  * Nothing is started. Each course row agrees with the outline of its folder under lib/courses.
  */
@@ -21,19 +22,19 @@ const program: Program = {
   imageSrc: "/platform/covers/project-management-with-ai-tools.jpg",
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
-  stats: { courses: "7 courses", duration: "~ 3.5 hours", org: "SkillUp" },
+  stats: { courses: "9 courses", duration: "~ 4.5 hours", org: "SkillUp" },
   progress: {
     percent: 0,
     label: "Program progress",
     status: "Not started",
     cta: "Start course",
     href: coursePlayerHref("youtube-video-test"),
-    footer: "0 of 7 courses complete",
+    footer: "0 of 9 courses complete",
   },
 
   coursesIntro: {
     title: "Courses in this program",
-    lead: "Seven test courses: YouTube videos added the two ways Studio allows, the four SCORM packages inside the units of a course, the same four packages as whole courses of one topic each, and a whole-course package with its own menu. Take them in any order.",
+    lead: "Nine test courses: YouTube videos added the two ways Studio allows, the four SCORM packages inside the units of a course, the same four packages as whole courses of one topic each, a whole-course package with its own menu, and two real exports from the content team (a Rise course and a Storyline quiz). Take them in any order.",
   },
   courses: [
     programCourse(1, "YouTube Video Test", "YT", "ux-research-and-design-thinking", {
@@ -92,6 +93,20 @@ const program: Program = {
       detail: "1 topic · own menu",
       modules: [{ number: 1, title: "Module 1 · Golf Explained", complete: false, topics: "1 topic", duration: "30m" }],
     }),
+    programCourse(8, "POSH: Prevention of Sexual Harassment", "PO", "leadership-in-remote-teams", {
+      progressMeta: "45 min total",
+      upNext: { title: "POSH: Prevention of Sexual Harassment", type: "Activity" },
+      position: "1 SCORM package",
+      detail: "1 topic · Rise, own menu",
+      modules: [{ number: 1, title: "Module 1 · POSH: Prevention of Sexual Harassment", complete: false, topics: "1 topic", duration: "45m" }],
+    }),
+    programCourse(9, "Final Quiz (Ungraded)", "FQ", "intro-to-product-analytics", {
+      progressMeta: "10 min total",
+      upNext: { title: "Final Quiz (Ungraded)", type: "Activity" },
+      position: "1 SCORM package",
+      detail: "1 topic · POSH final quiz",
+      modules: [{ number: 1, title: "Module 1 · Final Quiz (Ungraded)", complete: false, topics: "1 topic", duration: "10m" }],
+    }),
   ],
 
   certificatesIntro: {
@@ -129,7 +144,7 @@ const program: Program = {
 
   aboutIntro: {
     title: "About this program",
-    lead: "A test program: real SCORM 1.2 packages from the content team, a public SCORM sample from Rustici Software and a public YouTube video, played as Open edX would play them.",
+    lead: "A test program: real SCORM 1.2 packages from the content team, a public SCORM sample from Rustici Software, two real Articulate exports (Rise and Storyline) and a public YouTube video, played as Open edX would play them.",
   },
   about: [
     {
@@ -140,6 +155,8 @@ const program: Program = {
         "SCORM Test Course: four packages, each inside a unit of one course, with a test panel that shows what each package reports.",
         "The four course packages: a whole course as one SCORM package. One topic named after the course, our sidebar collapsed, 0% until the package reports completion, then 100%.",
         "Golf Explained: a course package with its own sidebar menu (Rustici Software's public golf sample, CC BY 3.0, with a menu added), to see our collapsed sidebar next to the package's own.",
+        "POSH: Prevention of Sexual Harassment: the content team's real Rise course, with its own menu and videos, as one course package.",
+        "Final Quiz (Ungraded): the POSH course's final assessment, a separate Storyline package (10 questions, pass mark 80%, repeat as needed), as one course package that reports a score.",
       ],
       defaultOpen: true,
     },
@@ -156,7 +173,7 @@ const program: Program = {
       relative: relativeLabel("2026-11-04"),
     },
   ],
-  included: ["3 YouTube videos", "4 SCORM packages in units", "5 SCORM course packages", "2 readings"],
+  included: ["3 YouTube videos", "4 SCORM packages in units", "7 SCORM course packages", "2 readings"],
   instructors: [{ name: "Nelson Jerónimo", role: "Design · SkillUp" }],
 };
 

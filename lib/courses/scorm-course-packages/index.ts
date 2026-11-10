@@ -20,7 +20,14 @@ import { SAMPLE_TODAY, todayLabel } from "@/lib/sample-time";
  * exports a whole course. Nelson and Navdeep found on 6 Nov that this case had never been tested:
  * our collapsed sidebar next to the package's menu. See public/scorm/golf-explained-rustici.
  *
- * One file for the four, not a folder each (lib/courses/README.md): they differ only in the
+ * Courses 8 and 9 (10 Nov 2026) are the content team's own exports, received from Nelson:
+ * - POSH: Prevention of Sexual Harassment, a whole course exported from Articulate Rise (SCORM 1.2,
+ *   Rustici scormdriver, videos inside): the real case of a package with its own menu.
+ * - Final quiz (ungraded): the POSH course's final assessment, a separate package exported from
+ *   Articulate Storyline (SCORM 1.2, 10 scenario questions, mastery score 80, repeat as often as
+ *   needed). So the real POSH course comes as TWO packages, not one: see Kirti's open question.
+ *
+ * One file for all of them, not a folder each (lib/courses/README.md): they differ only in the
  * package, so `coursePackage` builds the outline, the page and the content of each.
  */
 
@@ -256,6 +263,42 @@ export const scormCoursePackages: CourseEntry[] = [
       steps: [
         { title: "Use its menu", detail: "The package has its own sidebar of sections and pages, next to our collapsed sidebar. On a narrow screen it becomes a drawer behind its hamburger." },
         { title: "Reach the last page", detail: "On the final quiz it reports completed, then passed (70% or more) or failed with the score: the course goes to 100% by itself." },
+      ],
+    },
+  }),
+  coursePackage({
+    id: "pkg6",
+    slug: "posh-prevention-of-sexual-harassment",
+    title: "POSH: Prevention of Sexual Harassment",
+    minutes: 45,
+    cover: "leadership-in-remote-teams",
+    activity: {
+      kind: "scorm",
+      packageUrl: "/scorm/posh-prevention-of-sexual-harassment/scormdriver/indexAPI.html",
+      packageLabel: "SCORM 1.2 package",
+      packageSizeLabel: "99 MB",
+      intro: "A whole course exported from Articulate Rise by the content team, with its own menu of lessons and videos inside. It resumes where you left off and reports completed when its own completion rule is met.",
+      steps: [
+        { title: "Use its menu", detail: "The package has its own sidebar of lessons, next to our collapsed sidebar. On a narrow screen Rise hides it behind its own menu button." },
+        { title: "Finish the course", detail: "When Rise's completion rule is met it reports completed: the course goes to 100% by itself." },
+      ],
+    },
+  }),
+  coursePackage({
+    id: "pkg7",
+    slug: "final-quiz-ungraded",
+    title: "Final Quiz (Ungraded)",
+    minutes: 10,
+    cover: "intro-to-product-analytics",
+    activity: {
+      kind: "scorm",
+      packageUrl: "/scorm/final-quiz-ungraded/index_lms.html",
+      packageLabel: "SCORM 1.2 package",
+      packageSizeLabel: "7 MB",
+      intro: "The final assessment of the POSH course, exported from Articulate Storyline by the content team as a package of its own: 10 scenario questions, pass mark 80%, repeat as often as needed. It reports the score and passed or failed.",
+      steps: [
+        { title: "Answer the questions", detail: "The package connects to the platform when it loads and keeps your answers if you leave." },
+        { title: "Submit the quiz", detail: "It reports the score, then passed (80% or more) or failed. You can retry as often as you like." },
       ],
     },
   }),
