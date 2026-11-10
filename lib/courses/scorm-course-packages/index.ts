@@ -15,6 +15,11 @@ import { SAMPLE_TODAY, todayLabel } from "@/lib/sample-time";
  * topics have ids of their own, so what a package stores here is apart from the other course.
  * Courses 3 to 6 of the SCORM and YouTube Test Program.
  *
+ * Course 7, Golf Explained (9 Nov 2026), is the one package with ITS OWN SIDEBAR: Rustici's public
+ * golf sample (SCORM 1.2, CC BY 3.0) with a course menu added to its launch page, the way Rise
+ * exports a whole course. Nelson and Navdeep found on 6 Nov that this case had never been tested:
+ * our collapsed sidebar next to the package's menu. See public/scorm/golf-explained-rustici.
+ *
  * One file for the four, not a folder each (lib/courses/README.md): they differ only in the
  * package, so `coursePackage` builds the outline, the page and the content of each.
  */
@@ -233,6 +238,24 @@ export const scormCoursePackages: CourseEntry[] = [
       steps: [
         { title: "Go through the course", detail: "The package plays, but it never sends a status." },
         { title: "Mark it complete", detail: "Select Mark as Complete at the end, or answer the question Next asks." },
+      ],
+    },
+  }),
+  coursePackage({
+    id: "pkg5",
+    slug: "golf-explained",
+    title: "Golf Explained",
+    minutes: 30,
+    cover: "ux-research-and-design-thinking",
+    activity: {
+      kind: "scorm",
+      packageUrl: "/scorm/golf-explained-rustici/shared/launchpage.html",
+      packageLabel: "SCORM 1.2 package",
+      packageSizeLabel: "560 KB",
+      intro: "A whole course with its own menu: 15 pages in five sections and a final quiz. Rustici Software's public golf sample, with a course menu added. It resumes where you left off, reports completed on its last page and passed or failed with the quiz score.",
+      steps: [
+        { title: "Use its menu", detail: "The package has its own sidebar of sections and pages, next to our collapsed sidebar. On a narrow screen it becomes a drawer behind its hamburger." },
+        { title: "Reach the last page", detail: "On the final quiz it reports completed, then passed (70% or more) or failed with the score: the course goes to 100% by itself." },
       ],
     },
   }),
