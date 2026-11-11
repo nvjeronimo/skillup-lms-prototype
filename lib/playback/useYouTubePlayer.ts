@@ -39,6 +39,9 @@ declare global {
 }
 
 const ENDED = 0;
+/** Not started yet, or cued: YouTube's seekTo starts playback from these states. */
+const UNSTARTED = -1;
+const CUED = 5;
 /** A step between two reads longer than this is a seek, not playback (it is never counted). */
 const MAX_PLAYED_STEP = 2;
 
@@ -184,7 +187,13 @@ export function useYouTubePlayer({
   React.useEffect(() => {
     last.current = seek.to;
     pending.current = { to: seek.to, since: Date.now() };
-    if (ready) player.current?.seekTo(seek.to, true);
+    const p = player.current;
+    if (!ready || !p) return;
+    // On a video that has not started, seekTo would play it: leave the jump pending, and Play
+    // makes it (above). Paused after playing, seekTo moves the frame and stays paused.
+    const state = p.getPlayerState();
+    if (state === UNSTARTED || state === CUED) return;
+    p.seekTo(seek.to, true);
   }, [ready, seek.to, seek.key]);
 
   // Read YouTube's position while playing.
