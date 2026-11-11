@@ -11,14 +11,11 @@ import { useLmsStore } from "@/lib/store";
 import type { PlatformSection } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
-import { useDemoMode } from "@/lib/demo";
 import { ArrivalContext, useArrivalController } from "@/lib/arrival/useArrival";
 import { PageSkeleton } from "./PageSkeleton";
 import { usePersonaGated } from "@/lib/persona-gate";
 import { useHarbor } from "@/lib/platform/harbor";
 import { HarborRail } from "./harbor/HarborRail";
-
-const SHOW_MOCK_KEY = "sk-platform-show-mock";
 
 /**
  * Shell of every platform page: the page ground is bg/faint, the light
@@ -27,11 +24,6 @@ const SHOW_MOCK_KEY = "sk-platform-show-mock";
  * The page sets its own padding from the layout rhythm (DS Layout/*, Nelson 25 Oct 2026):
  * Dashboard, My Learning and the other section pages use page-x / page-top; Program and Course
  * Detail are full-bleed under the bar and use band-x.
- *
- * Under the page, in the footer, sits the test-build note with the "Show which" switch: it sets
- * `data-show-mock` here, and every block tagged `data-mock="<what has no API>"`
- * gets a dashed outline and a SAMPLE chip (styles in app/globals.css), while the note
- * lists what each one is missing.
  *
  * Arrival (motion-matrix §7.9): on a page's first visit in the session the page shows its
  * `skeleton` for the simulated load (PageSkeleton when it has none), then the content, whose
@@ -60,71 +52,16 @@ export function PlatformPage({
   // Harbor (25 Oct 2026): the sections live in a rail on the left from desktop up.
   const harbor = useHarbor();
   const toast = useLmsStore((s) => s.toast);
-  const demo = useDemoMode();
   // On a phone the sections float at the bottom (PlatformTabBar, Nelson 22 Oct 2026).
   const phone = useBreakpoint() === "mobile";
   // What the last block on the page keeps under it on a phone: the bar (16 + 52, compact since 23 Oct) and 16 of air,
   // plus the safe area.
   const phonePad = "pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))]";
   const clearToast = useLmsStore((s) => s.clearToast);
-  // Remembered per browser; read after mount so the server and first client render agree.
-  const [showMock, setShowMock] = React.useState(false);
-  React.useEffect(() => {
-    try {
-      setShowMock(localStorage.getItem(SHOW_MOCK_KEY) === "1");
-    } catch {
-      /* storage blocked: the switch still works for this visit */
-    }
-  }, []);
-  const toggleMock = () =>
-    setShowMock((on) => {
-      try {
-        localStorage.setItem(SHOW_MOCK_KEY, on ? "0" : "1");
-      } catch {
-        /* see above */
-      }
-      return !on;
-    });
-  // With the marks on, the note lists what each marked block is missing. Read from the
-  // rendered blocks (only the visible ones: a hidden tab panel keeps its markup), and
-  // again when the page changes under it (a tab switch, a search, a new route).
-  const rootRef = React.useRef<HTMLDivElement>(null);
-  const [reasons, setReasons] = React.useState<string[]>([]);
-  React.useEffect(() => {
-    const root = rootRef.current;
-    if (!showMock || !root) {
-      setReasons([]);
-      return;
-    }
-    let timer = 0;
-    const read = () => {
-      const seen = new Set<string>();
-      root.querySelectorAll<HTMLElement>("main [data-mock]").forEach((el) => {
-        if (el.offsetParent !== null && el.dataset.mock) seen.add(el.dataset.mock);
-      });
-      const next = [...seen];
-      setReasons((prev) => (prev.join("|") === next.join("|") ? prev : next));
-    };
-    const schedule = () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(read, 80);
-    };
-    schedule();
-    const main = root.querySelector("main");
-    const observer = new MutationObserver(schedule);
-    if (main) observer.observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden"] });
-    return () => {
-      window.clearTimeout(timer);
-      observer.disconnect();
-    };
-    // The page's <main> is keyed on the route, so a new route is a new element to observe.
-  }, [showMock, pathname]);
   return (
     <div
-      ref={rootRef}
       data-platform-page=""
       className="flex min-h-[100dvh] flex-col overflow-x-clip bg-sko-bg-faint"
-      data-show-mock={showMock ? "" : undefined}
     >
       <PlatformTopbar current={current} />
       {/* Both wrappers grow, so <main> (flex-1) fills a short page and the footer sits at the bottom
@@ -139,7 +76,7 @@ export function PlatformPage({
         id="main"
         tabIndex={-1}
         // The room the floating tab bar needs under the page goes under the
-        // last block of the page: the micro footer, or the test-build note when it shows.
+        // last block of the page: the micro footer.
         className={cn("sk-animate-page flex-1 outline-none", className)}
       >
         <ArrivalContext.Provider value={arrival}>
@@ -154,39 +91,7 @@ export function PlatformPage({
         </ArrivalContext.Provider>
       </main>
       {/* The micro footer of the platform pages (Nelson, 23 Oct 2026); the player has none. */}
-      <PlatformFooter className={cn(!demo && phone && phonePad)} />
-      {/* Test-build note, in the footer (Nelson, 15 Oct 2026). The same dashed warning treatment
-          as the /lab note, so a screenshot of these pages is not read as a promise about the data.
-          On a phone the floating tab bar sits over the bottom: the last block keeps room under it. */}
-      {demo ? (
-      <footer
-        aria-label="Test build"
-        className={cn(
-          "sk-no-print flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-dashed border-sko-border-warning bg-sko-bg-warning-soft px-4 py-2 text-sko-text-warning md:px-8 lg:px-10",
-          phone && phonePad,
-        )}
-      >
-        <p className="sk-text-body-medium-regular">
-          <span className="sk-text-body-medium-semibold">Test build.</span> Most figures on this page are sample data: no
-          API returns them yet. The navigation is not final either: top bar or sidebar is still under study.
-        </p>
-        <button
-          type="button"
-          aria-pressed={showMock}
-          onClick={toggleMock}
-          className="sk-text-body-medium-semibold inline-flex min-h-11 items-center underline underline-offset-2"
-        >
-          {showMock ? "Hide sample-data marks" : "Show which"}
-        </button>
-        {showMock && reasons.length ? (
-          <ul className="sk-text-body-small-regular w-full list-disc pb-1 ps-5">
-            {reasons.map((r) => (
-              <li key={r}>{r}</li>
-            ))}
-          </ul>
-        ) : null}
-      </footer>
-      ) : null}
+      <PlatformFooter className={cn(phone && phonePad)} />
       </div>
       </div>
       {/* One persistent live region for the load (outside the keyed <main>, so it is in the page
