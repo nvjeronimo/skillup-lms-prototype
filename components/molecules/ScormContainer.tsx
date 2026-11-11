@@ -30,6 +30,11 @@ export interface ScormContainerProps {
    * Nelson, 9 Nov 2026).
    */
   frameHeight?: number;
+  /**
+   * A course package with nothing of ours around it: no controls above, no border, no radius, the
+   * frame edge to edge in the content area (Nelson, 11 Nov 2026).
+   */
+  bare?: boolean;
   className?: string;
 }
 
@@ -54,6 +59,7 @@ export function ScormContainer({
   onLaunchWindow,
   onPlayInPage,
   frameHeight,
+  bare = false,
   className,
 }: ScormContainerProps) {
   const frameRef = React.useRef<HTMLDivElement>(null);
@@ -71,7 +77,7 @@ export function ScormContainer({
 
   return (
     <section className={cn("flex flex-col gap-3", className)}>
-      {state !== "error" ? (
+      {state !== "error" && !bare ? (
         <div className="flex flex-wrap items-center justify-end gap-2">
           {inPage ? (
             <>
@@ -96,7 +102,8 @@ export function ScormContainer({
       <div
         ref={frameRef}
         className={cn(
-          "flex w-full flex-col rounded-card border shadow-sk-card",
+          "flex w-full flex-col",
+          bare ? "" : "rounded-card border shadow-sk-card",
           fullscreen
             ? "h-full overflow-y-auto bg-sko-bg-page"
             : state === "window"
@@ -171,7 +178,7 @@ export function ScormContainer({
       ) : null}
 
       {/* Only where it is true: on a small screen (it read as noise on desktop). */}
-      {state !== "error" ? (
+      {state !== "error" && !bare ? (
         <div className="md:hidden">
           <InlineAlert
             tone="info"

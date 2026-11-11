@@ -565,6 +565,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             <div data-arrival-content="">
             {isLocked ? (
               <div data-arrive={0} className={cn(CONTENT_PAD[bp], CONTENT_MEASURE)}>{children}</div>
+            ) : coursePackage ? (
+              // A course package takes the whole content area: no header, no padding, the package's
+              // own menu and title are the page (Nelson, 11 Nov 2026).
+              <div data-arrive={0}>{children}</div>
             ) : isVideo ? (
               <>
                 {/* Sticky player band — the video stays visible at the top and
