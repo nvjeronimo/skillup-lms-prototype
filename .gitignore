@@ -34,6 +34,8 @@ yarn-error.log*
 # playwright / test artifacts
 .playwright-mcp/
 *.png
+# …but a SCORM package's own images ship with it (they were missing from the deploy: 404s in POSH)
+!public/scorm/**/*.png
 .vercel
 
 # local tooling
