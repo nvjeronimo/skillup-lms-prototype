@@ -9,11 +9,11 @@ import { relativeLabel } from "@/lib/sample-time";
  *
  * - Course 1, YouTube Video Test: the two ways to add a YouTube video (ICP Video rows 9 and 10).
  * - Course 2, SCORM Test Course: the four packages inside units of a course (Activity groups A–C).
- * - Courses 3 to 6: each a whole course delivered as one SCORM package (Activity group D).
- * - Course 7, Golf Explained: a course package with its own sidebar (added 9 Nov 2026).
- * - Courses 8 and 9: the content team's POSH course (Rise) and a Storyline final quiz (10 Nov 2026).
- * - Courses 10 and 11: the improved course-package flow, PROPOSED on 11 Nov 2026 (POSH as one
+ * - Courses 3 and 4: the content team's POSH course (Rise) and a Storyline final quiz (10 Nov 2026).
+ * - Courses 5 and 6: the improved course-package flow, PROPOSED on 11 Nov 2026 (POSH as one
  *   package, then as its real two packages). See lib/courses/scorm-course-packages.
+ * Removed on 11 Nov 2026 (Nelson): the four GenAI activities as whole courses and Golf Explained,
+ * which had no zip from SkillUp behind them as courses.
  *
  * Nothing is started. Each course row agrees with the outline of its folder under lib/courses.
  */
@@ -24,19 +24,19 @@ const program: Program = {
   imageSrc: "/platform/covers/project-management-with-ai-tools.jpg",
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
-  stats: { courses: "11 courses", duration: "~ 6 hours", org: "SkillUp" },
+  stats: { courses: "6 courses", duration: "~ 4.5 hours", org: "SkillUp" },
   progress: {
     percent: 0,
     label: "Program progress",
     status: "Not started",
     cta: "Start course",
     href: coursePlayerHref("youtube-video-test"),
-    footer: "0 of 11 courses complete",
+    footer: "0 of 6 courses complete",
   },
 
   coursesIntro: {
     title: "Courses in this program",
-    lead: "Eleven test courses: YouTube videos added the two ways Studio allows, the four SCORM packages inside the units of a course, the same four packages as whole courses of one topic each, a whole-course package with its own menu, two real exports from the content team (a Rise course and a Storyline quiz), and the improved package flow proposed on 11 Nov 2026 (courses 10 and 11). Take them in any order.",
+    lead: "Six test courses: YouTube videos added the two ways Studio allows, the four SCORM packages inside the units of a course, two real exports from the content team (a Rise course and a Storyline quiz), and the improved package flow proposed on 11 Nov 2026 (courses 5 and 6). Take them in any order.",
   },
   courses: [
     programCourse(1, "YouTube Video Test", "YT", "ux-research-and-design-thinking", {
@@ -60,49 +60,14 @@ const program: Program = {
         { number: 5, title: "Module 5 · M12 · Clearing the Deck", complete: false, topics: "1 topic", duration: "15m" },
       ],
     }),
-    programCourse(3, "From Export to Board Narrative", "FE", "business-analytics-with-python", {
-      progressMeta: "15 min total",
-      upNext: { title: "From Export to Board Narrative", type: "Activity" },
-      position: "1 SCORM package",
-      detail: "1 topic",
-      modules: [{ number: 1, title: "Module 1 · From Export to Board Narrative", complete: false, topics: "1 topic", duration: "15m" }],
-    }),
-    programCourse(4, "Reading the Signal", "RS", "intro-to-product-analytics", {
-      progressMeta: "15 min total",
-      upNext: { title: "Reading the Signal", type: "Activity" },
-      position: "1 SCORM package",
-      detail: "1 topic",
-      modules: [{ number: 1, title: "Module 1 · Reading the Signal", complete: false, topics: "1 topic", duration: "15m" }],
-    }),
-    programCourse(5, "Clear the Prompt Queue", "CQ", "project-management-with-ai-tools", {
-      progressMeta: "20 min total",
-      upNext: { title: "Clear the Prompt Queue", type: "Activity" },
-      position: "1 SCORM package",
-      detail: "1 topic",
-      modules: [{ number: 1, title: "Module 1 · Clear the Prompt Queue", complete: false, topics: "1 topic", duration: "20m" }],
-    }),
-    programCourse(6, "Clearing the Deck", "CD", "leadership-in-remote-teams", {
-      progressMeta: "15 min total",
-      upNext: { title: "Clearing the Deck", type: "Activity" },
-      position: "1 SCORM package",
-      detail: "1 topic · never reports",
-      modules: [{ number: 1, title: "Module 1 · Clearing the Deck", complete: false, topics: "1 topic", duration: "15m" }],
-    }),
-    programCourse(7, "Golf Explained", "GE", "ux-research-and-design-thinking", {
-      progressMeta: "30 min total",
-      upNext: { title: "Golf Explained", type: "Activity" },
-      position: "1 SCORM package",
-      detail: "1 topic · own menu",
-      modules: [{ number: 1, title: "Module 1 · Golf Explained", complete: false, topics: "1 topic", duration: "30m" }],
-    }),
-    programCourse(8, "POSH: Prevention of Sexual Harassment", "PO", "leadership-in-remote-teams", {
+    programCourse(3, "POSH: Prevention of Sexual Harassment", "PO", "leadership-in-remote-teams", {
       progressMeta: "45 min total",
       upNext: { title: "POSH: Prevention of Sexual Harassment", type: "Activity" },
       position: "1 SCORM package",
       detail: "1 topic · Rise, own menu",
       modules: [{ number: 1, title: "Module 1 · POSH: Prevention of Sexual Harassment", complete: false, topics: "1 topic", duration: "45m" }],
     }),
-    programCourse(9, "Final Quiz (Ungraded)", "FQ", "intro-to-product-analytics", {
+    programCourse(4, "Final Quiz (Ungraded)", "FQ", "intro-to-product-analytics", {
       progressMeta: "10 min total",
       upNext: { title: "Final Quiz (Ungraded)", type: "Activity" },
       position: "1 SCORM package",
@@ -110,7 +75,7 @@ const program: Program = {
       modules: [{ number: 1, title: "Module 1 · Final Quiz (Ungraded)", complete: false, topics: "1 topic", duration: "10m" }],
     }),
     // Proposal of 11 Nov 2026: one package reports a status, so the card says Started, with no share.
-    programCourse(10, "POSH · proposed flow, one package", "P1", "leadership-in-remote-teams", {
+    programCourse(5, "POSH · proposed flow, one package", "P1", "leadership-in-remote-teams", {
       progressMeta: "45 min total",
       progressPct: 0,
       progressAs: "status",
@@ -120,7 +85,7 @@ const program: Program = {
       detail: "1 topic · proposal: no sidebar or footer of ours",
       modules: [{ number: 1, title: "Module 1 · POSH · proposed flow, one package", complete: false, topics: "1 topic", duration: "45m" }],
     }),
-    programCourse(11, "POSH · proposed flow, two packages", "P2", "intro-to-product-analytics", {
+    programCourse(6, "POSH · proposed flow, two packages", "P2", "intro-to-product-analytics", {
       progressMeta: "55 min total",
       upNext: { title: "POSH: Prevention of Sexual Harassment", type: "Activity" },
       position: "2 SCORM packages",
@@ -150,7 +115,7 @@ const program: Program = {
       id: "faq-2",
       title: "Why does Clearing the Deck never complete by itself?",
       body: [
-        "Its package makes no SCORM calls, so it never tells the platform it is finished. The course falls back to Mark as Complete, and Next asks.",
+        "Its package makes no SCORM calls, so it never tells the platform it is finished. Its unit in the SCORM Test Course falls back to Mark as Complete, and Next asks.",
       ],
     },
     {
@@ -164,7 +129,7 @@ const program: Program = {
 
   aboutIntro: {
     title: "About this program",
-    lead: "A test program: real SCORM 1.2 packages from the content team, a public SCORM sample from Rustici Software, two real Articulate exports (Rise and Storyline) and a public YouTube video, played as Open edX would play them.",
+    lead: "A test program: real SCORM 1.2 packages from the content team, two real Articulate exports (Rise and Storyline) and a public YouTube video, played as Open edX would play them.",
   },
   about: [
     {
@@ -173,9 +138,7 @@ const program: Program = {
       body: [
         "YouTube Video Test: a YouTube embed in a Text component (not tracked: Mark as Complete, and Next asks), the same video as a Video component (tracked: it completes by itself), and a video that is no longer available.",
         "SCORM Test Course: four packages, each inside a unit of one course, with a test panel that shows what each package reports.",
-        "The four course packages: a whole course as one SCORM package. One topic named after the course, our sidebar collapsed, 0% until the package reports completion, then 100%.",
-        "Golf Explained: a course package with its own sidebar menu (Rustici Software's public golf sample, CC BY 3.0, with a menu added), to see our collapsed sidebar next to the package's own.",
-        "POSH: Prevention of Sexual Harassment: the content team's real Rise course, with its own menu and videos, as one course package.",
+        "POSH: Prevention of Sexual Harassment: the content team's real Rise course, with its own menu and videos, as one course package: one topic named after the course, our sidebar collapsed, 0% until the package reports completion, then 100%.",
         "Final Quiz (Ungraded): the POSH course's final assessment, a separate Storyline package (10 questions, pass mark 80%, repeat as needed), as one course package that reports a score.",
         "POSH · proposed flow, one package (proposal, 11 Nov 2026): a SCORM 1.2 package reports a status, never a percentage, so the course says Not started, Started or Completed instead of a share, and in the player nothing of ours surrounds the package: no sidebar, no ring, no footer.",
         "POSH · proposed flow, two packages (proposal, 11 Nov 2026): POSH as it really arrives, the Rise course and the Storyline quiz as two topics with our normal sidebar. Next asks before you leave a package that has not reported completion yet: stay, or continue anyway.",
@@ -195,7 +158,7 @@ const program: Program = {
       relative: relativeLabel("2026-11-04"),
     },
   ],
-  included: ["3 YouTube videos", "4 SCORM packages in units", "7 SCORM course packages", "2 readings"],
+  included: ["3 YouTube videos", "4 SCORM packages in units", "4 SCORM course packages", "2 readings"],
   instructors: [{ name: "Nelson Jerónimo", role: "Design · SkillUp" }],
 };
 

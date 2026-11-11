@@ -3,29 +3,23 @@ import type { Course, CourseActivity, CourseDetail, CourseEntry } from "@/lib/co
 import { SAMPLE_TODAY, todayLabel } from "@/lib/sample-time";
 
 /**
- * Four course packages: a whole course delivered as one SCORM package (Activity group D; meeting
- * of 4 Nov 2026). In the ICP such a course is ONE topic named after the course, with no modules or
+ * Course packages: a whole course delivered as one SCORM package (Activity group D; meeting of
+ * 4 Nov 2026). In the ICP such a course is ONE topic named after the course, with no modules or
  * lessons of ours; it opens the whole package with its own menu, and the course is 0% until the
  * package reports completion, then 100%. The player starts with our sidebar collapsed and the
  * footer reads "1 of 1" with no Previous (PlayerShell, `coursePackage`). The outline is the 3-level
  * shape (an implicit module, no lesson), so the rail shows the one topic and nothing above it.
  *
- * The packages are the content team's four SCORM 1.2 activities (GenAI for Finance), the same
- * files the SCORM Test Course plays inside units: here each one stands for a whole course. Their
- * topics have ids of their own, so what a package stores here is apart from the other course.
- * Courses 3 to 6 of the SCORM and YouTube Test Program.
- *
- * Course 7, Golf Explained (9 Nov 2026), is the one package with ITS OWN SIDEBAR: Rustici's public
- * golf sample (SCORM 1.2, CC BY 3.0) with a course menu added to its launch page, the way Rise
- * exports a whole course. Nelson and Navdeep found on 6 Nov that this case had never been tested:
- * our collapsed sidebar next to the package's menu. See public/scorm/golf-explained-rustici.
- *
- * Courses 8 and 9 (10 Nov 2026) are the content team's own exports, received from Nelson:
+ * Only the content team's own exports, received from Nelson (10 Nov 2026): courses 3 and 4 of the
+ * SCORM and YouTube Test Program.
  * - POSH: Prevention of Sexual Harassment, a whole course exported from Articulate Rise (SCORM 1.2,
  *   Rustici scormdriver, videos inside): the real case of a package with its own menu.
  * - Final quiz (ungraded): the POSH course's final assessment, a separate package exported from
  *   Articulate Storyline (SCORM 1.2, 10 scenario questions, mastery score 80, repeat as often as
  *   needed). So the real POSH course comes as TWO packages, not one: see Kirti's open question.
+ * Removed on 11 Nov 2026 (Nelson): the four GenAI for Finance activities presented as whole courses
+ * and Golf Explained (a Rustici sample with a menu we added). No such course had reached us; the
+ * four activities still play inside the units of the SCORM Test Course.
  *
  * One file for all of them, not a folder each (lib/courses/README.md): they differ only in the
  * package, so `coursePackage` builds the outline, the page and the content of each.
@@ -174,12 +168,7 @@ function coursePackage({ id, slug, title, minutes, cover, activity }: PackageSpe
   };
 }
 
-const REPORTS: CourseActivity["steps"] = [
-  { title: "Start the course", detail: "The package sets its status to incomplete as soon as it loads." },
-  { title: "Reach the last screen", detail: "On its last screen it reports completed: the course goes to 100% by itself." },
-];
-
-/** The content team's POSH course (Articulate Rise, SCORM 1.2): courses 8 and 10. */
+/** The content team's POSH course (Articulate Rise, SCORM 1.2): courses 3 and 5. */
 const POSH_ACTIVITY: CourseActivity = {
   kind: "scorm",
   packageUrl: "/scorm/posh-prevention-of-sexual-harassment/scormdriver/indexAPI.html",
@@ -192,7 +181,7 @@ const POSH_ACTIVITY: CourseActivity = {
   ],
 };
 
-/** POSH's final assessment (Articulate Storyline, SCORM 1.2): courses 9 and 11. */
+/** POSH's final assessment (Articulate Storyline, SCORM 1.2): courses 4 and 6. */
 const QUIZ_ACTIVITY: CourseActivity = {
   kind: "scorm",
   packageUrl: "/scorm/final-quiz-ungraded/index_lms.html",
@@ -206,92 +195,6 @@ const QUIZ_ACTIVITY: CourseActivity = {
 };
 
 export const scormCoursePackages: CourseEntry[] = [
-  coursePackage({
-    id: "pkg1",
-    slug: "from-export-to-board-narrative",
-    title: "From Export to Board Narrative",
-    minutes: 15,
-    cover: "business-analytics-with-python",
-    activity: {
-      kind: "scorm",
-      packageUrl: "/scorm/m4-l2-a1-board-narrative/index.html",
-      packageLabel: "SCORM 1.2 package",
-      packageSizeLabel: "44 KB",
-      intro: "Turn a finance export into a narrative for the board. The package reports incomplete when it starts and completed on its last screen.",
-      steps: REPORTS,
-    },
-  }),
-  coursePackage({
-    id: "pkg2",
-    slug: "reading-the-signal",
-    title: "Reading the Signal",
-    minutes: 15,
-    cover: "intro-to-product-analytics",
-    activity: {
-      kind: "scorm",
-      packageUrl: "/scorm/m5-l4-a1-reading-the-signal/index.html",
-      packageLabel: "SCORM 1.2 package",
-      packageSizeLabel: "44 KB",
-      intro: "Read the signal in a set of figures. The package reports incomplete when it starts and completed on its last screen.",
-      steps: REPORTS,
-    },
-  }),
-  coursePackage({
-    id: "pkg3",
-    slug: "clear-the-prompt-queue",
-    title: "Clear the Prompt Queue",
-    minutes: 20,
-    cover: "project-management-with-ai-tools",
-    activity: {
-      kind: "scorm",
-      packageUrl: "/scorm/m10-l2-a3-clear-the-prompt-queue/index.html",
-      packageLabel: "SCORM 1.2 package",
-      packageSizeLabel: "160 KB",
-      intro: "Work through a queue of prompts with a token budget. The package reports completed when you finish the queue.",
-      steps: [
-        { title: "Start the course", detail: "The package connects to the platform when it loads." },
-        { title: "Finish the queue", detail: "When the queue is done it reports completed: the course goes to 100% by itself." },
-      ],
-    },
-  }),
-  coursePackage({
-    id: "pkg4",
-    slug: "clearing-the-deck",
-    title: "Clearing the Deck",
-    minutes: 15,
-    cover: "leadership-in-remote-teams",
-    activity: {
-      kind: "scorm",
-      packageUrl: "/scorm/m12-l5-a2-clearing-the-deck/index.html",
-      packageLabel: "SCORM 1.2 package",
-      packageSizeLabel: "40 KB",
-      // This package has no SCORM calls at all: it plays, but tells the platform nothing.
-      reportsCompletion: false,
-      intro: "Clear the deck. This package never reports to the platform, so the course is completed by hand.",
-      steps: [
-        { title: "Go through the course", detail: "The package plays, but it never sends a status." },
-        { title: "Mark it complete", detail: "Select Mark as Complete at the end, or answer the question Next asks." },
-      ],
-    },
-  }),
-  coursePackage({
-    id: "pkg5",
-    slug: "golf-explained",
-    title: "Golf Explained",
-    minutes: 30,
-    cover: "ux-research-and-design-thinking",
-    activity: {
-      kind: "scorm",
-      packageUrl: "/scorm/golf-explained-rustici/shared/launchpage.html",
-      packageLabel: "SCORM 1.2 package",
-      packageSizeLabel: "560 KB",
-      intro: "A whole course with its own menu: 15 pages in five sections and a final quiz. Rustici Software's public golf sample, with a course menu added. It resumes where you left off, reports completed on its last page and passed or failed with the quiz score.",
-      steps: [
-        { title: "Use its menu", detail: "The package has its own sidebar of sections and pages, next to our collapsed sidebar. On a narrow screen it becomes a drawer behind its hamburger." },
-        { title: "Reach the last page", detail: "On the final quiz it reports completed, then passed (70% or more) or failed with the score: the course goes to 100% by itself." },
-      ],
-    },
-  }),
   coursePackage({
     id: "pkg6",
     slug: "posh-prevention-of-sexual-harassment",
@@ -311,16 +214,16 @@ export const scormCoursePackages: CourseEntry[] = [
 ];
 
 /**
- * Courses 10 and 11: the improved flow for course packages, PROPOSED on 11 Nov 2026 after the SCORM
+ * Courses 5 and 6: the improved flow for course packages, PROPOSED on 11 Nov 2026 after the SCORM
  * progress check (Jaspinder's question; docs: meeting-2026-11-04-scorm-youtube.md). A SCORM 1.2
  * package reports a status, never a percentage, and when it reports "completed" is the export's
  * setting (POSH: when its Storyline block is finished). Figma: Activity · SCORM, frame "Proposal ·
  * improved package flow". Not decided: these courses are where the proposal is referenced.
  *
- * - Course 10, POSH as one package: the course shows a status (Started) and never a share; in the
+ * - Course 5, POSH as one package: the course shows a status (Started) and never a share; in the
  *   player nothing of ours surrounds the package (no sidebar, no Course Journey, no ring, no
  *   footer). The top bar's close is the way out.
- * - Course 11, POSH as it really arrives, two packages (the Rise course and the Storyline quiz) as
+ * - Course 6, POSH as it really arrives, two packages (the Rise course and the Storyline quiz) as
  *   two topics of one module, with our normal sidebar and footer: Next asks before leaving a package
  *   that has not reported completion yet.
  */
