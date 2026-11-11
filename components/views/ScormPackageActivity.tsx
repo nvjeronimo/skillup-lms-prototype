@@ -85,15 +85,15 @@ export function ScormPackageActivity({
   // Bumped by Reset: remounts the iframe so the package starts from nothing.
   const [run, setRun] = React.useState(0);
 
-  // Course package: the frame takes the height of the player's scroll area, less the room this
-  // view leaves above and below it (py-6), and never below 360 px.
+  // Course package: the frame takes the whole content area, the height of the player's scroll
+  // area (never below 360 px), with nothing of ours above it (Nelson, 11 Nov 2026).
   const coursePackage = React.useMemo(() => flatTopics(getCourseForTopic(topicId)).length === 1, [topicId]);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const [frameHeight, setFrameHeight] = React.useState<number>();
   React.useEffect(() => {
     if (!coursePackage) return;
     const area = scrollParent(rootRef.current);
-    const measure = () => setFrameHeight(Math.max(360, (area ? area.clientHeight : window.innerHeight) - 48));
+    const measure = () => setFrameHeight(Math.max(360, area ? area.clientHeight : window.innerHeight));
     measure();
     const ro = area ? new ResizeObserver(measure) : null;
     if (area) ro?.observe(area);
@@ -143,6 +143,58 @@ export function ScormPackageActivity({
   }
 
   const resuming = arrivedLaunched && !isCompleted && state !== "window";
+
+  /* Test panel: what the package told the platform. A testing aid, not part of the design:
+      dashed yellow border (accent yellow) and a line saying it is for testing and development only (Nelson, 9 Nov 2026). */
+  const testPanel = (
+    <section
+      aria-label="SCORM test panel"
+      className="flex flex-col gap-3 rounded-card border-2 border-dashed border-sko-bg-accent-yellow p-4"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="sk-text-body-medium-semibold text-sko-text-default">Test panel · what the package reported</span>
+        <Button variant="secondary" size="sm" leftIcon={RotateCcw} onClick={reset}>
+          Reset this package
+        </Button>
+      </div>
+      <p className="sk-text-body-small-regular flex items-center gap-2 text-sko-text-muted">
+        <FlaskConical aria-hidden className="size-4 shrink-0 text-sko-icon-warning" />
+        For testing and development purposes only. Not part of the design, and not in the platform.
+      </p>
+      <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
+        <dt className="sk-text-body-small-regular text-sko-text-muted">lesson_status</dt>
+        <dd className="sk-text-body-small-regular text-sko-text-default">{status ?? "nothing reported"}</dd>
+        <dt className="sk-text-body-small-regular text-sko-text-muted">score.raw</dt>
+        <dd className="sk-text-body-small-regular text-sko-text-default">{score ?? "none"}</dd>
+        <dt className="sk-text-body-small-regular text-sko-text-muted">Topic</dt>
+        <dd className="sk-text-body-small-regular text-sko-text-default">
+          {isCompleted ? "complete" : reportsCompletion ? "not complete yet" : "completes by hand (package never reports)"}
+        </dd>
+      </dl>
+      {calls.length ? (
+        <ol className="sk-text-body-small-regular flex flex-col gap-0.5 font-mono text-sko-text-muted">
+          {calls.map((c, i) => (
+            <li key={i} className="truncate">
+              {c.fn}({c.args.map((a) => JSON.stringify(a)).join(", ")}) → {JSON.stringify(c.result)}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="sk-text-body-small-regular text-sko-text-muted">No calls from the package yet.</p>
+      )}
+    </section>
+  );
+
+  if (coursePackage) {
+    return (
+      <div ref={rootRef} className="flex flex-col">
+        <ScormContainer bare title={title} state={state} onRetry={() => setRun((n) => n + 1)} frameHeight={frameHeight}>
+          <iframe key={run} src={packageUrl} title={title} className="min-h-0 w-full flex-1 border-0" />
+        </ScormContainer>
+        <div className="p-6">{testPanel}</div>
+      </div>
+    );
+  }
 
   return (
     <div ref={rootRef} className="flex flex-col gap-4 py-6">
@@ -196,49 +248,11 @@ export function ScormPackageActivity({
         onSkip={() => showToast("Skipped. You can come back to this activity anytime.")}
         onLaunchWindow={launchWindow}
         onPlayInPage={() => setRun((n) => n + 1)}
-        frameHeight={coursePackage ? frameHeight : undefined}
       >
         <iframe key={run} src={packageUrl} title={title} className="min-h-0 w-full flex-1 border-0" />
       </ScormContainer>
 
-      {/* Test panel: what the package told the platform. A testing aid, not part of the design:
-          dashed yellow border (accent yellow) and a line saying it is for testing and development only (Nelson, 9 Nov 2026). */}
-      <section
-        aria-label="SCORM test panel"
-        className="flex flex-col gap-3 rounded-card border-2 border-dashed border-sko-bg-accent-yellow p-4"
-      >
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="sk-text-body-medium-semibold text-sko-text-default">Test panel · what the package reported</span>
-          <Button variant="secondary" size="sm" leftIcon={RotateCcw} onClick={reset}>
-            Reset this package
-          </Button>
-        </div>
-        <p className="sk-text-body-small-regular flex items-center gap-2 text-sko-text-muted">
-          <FlaskConical aria-hidden className="size-4 shrink-0 text-sko-icon-warning" />
-          For testing and development purposes only. Not part of the design, and not in the platform.
-        </p>
-        <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
-          <dt className="sk-text-body-small-regular text-sko-text-muted">lesson_status</dt>
-          <dd className="sk-text-body-small-regular text-sko-text-default">{status ?? "nothing reported"}</dd>
-          <dt className="sk-text-body-small-regular text-sko-text-muted">score.raw</dt>
-          <dd className="sk-text-body-small-regular text-sko-text-default">{score ?? "none"}</dd>
-          <dt className="sk-text-body-small-regular text-sko-text-muted">Topic</dt>
-          <dd className="sk-text-body-small-regular text-sko-text-default">
-            {isCompleted ? "complete" : reportsCompletion ? "not complete yet" : "completes by hand (package never reports)"}
-          </dd>
-        </dl>
-        {calls.length ? (
-          <ol className="sk-text-body-small-regular flex flex-col gap-0.5 font-mono text-sko-text-muted">
-            {calls.map((c, i) => (
-              <li key={i} className="truncate">
-                {c.fn}({c.args.map((a) => JSON.stringify(a)).join(", ")}) → {JSON.stringify(c.result)}
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="sk-text-body-small-regular text-sko-text-muted">No calls from the package yet.</p>
-        )}
-      </section>
+      {testPanel}
     </div>
   );
 }
