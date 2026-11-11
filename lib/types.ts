@@ -114,6 +114,15 @@ export interface Course {
   modulesCompleted: number;
   modulesTotal: number;
   modules: Module[];
+  /**
+   * The improved flow for SCORM course packages, PROPOSED on 11 Nov 2026 after the SCORM progress
+   * check (a 1.2 package reports a status, never a percentage). Only the proposal courses of the
+   * SCORM and YouTube Test Program set it:
+   * - a course that is one package: no sidebar and no footer of ours, the package gets the screen;
+   * - a package topic among others: Next asks before leaving a package that has not reported
+   *   completion yet.
+   */
+  packageFlow?: "proposal";
 }
 
 export interface Note {

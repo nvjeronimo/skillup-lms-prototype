@@ -175,6 +175,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const labLaunch = useLmsStore((s) => s.labLaunch);
   /** The question Next asks on a topic the platform cannot measure (the rule since 12 Oct 2026). */
   const [askOpen, setAskOpen] = React.useState(false);
+  const [packageAskOpen, setPackageAskOpen] = React.useState(false);
   // Sticky video: docks (shrinks) once the content scrolls past the top.
   const [videoDocked, setVideoDocked] = React.useState(false);
   // Docking shrinks the band by up to ~210 px. Without help the browser's scroll anchoring pulled
@@ -294,6 +295,17 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   // A package that never reports (Activity card C1) has no action of its own: it gets Mark as Complete.
   const silentPackage = scormActivity && getActivity(topic).reportsCompletion === false;
+  // The improved package flow, PROPOSED on 11 Nov 2026 (Activity · SCORM proposal frame): only on the
+  // proposal courses of the test program (Course.packageFlow).
+  const packageFlow = activeCourse.packageFlow === "proposal";
+  // A course that is one package: nothing of ours around it. No sidebar, no Course Journey, no
+  // progress ring and no footer: the package brings its own menu, progress and exit, and ours could
+  // only say 0% until the package reports completed. The top bar's close is the way out.
+  const packageAlone = coursePackage && packageFlow;
+  const inlineSidebar = showInlineSidebar && !packageAlone;
+  // A package topic among others: the learner cannot know when the package will report completed,
+  // so Next asks before leaving one that has not (stay, or continue anyway; we cannot mark it).
+  const packageAsks = packageFlow && scormActivity && !coursePackage && !silentPackage;
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
@@ -483,12 +495,16 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         size={topbarSize}
         showNotifications
         notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
-        onMenu={() => {
-          track("mobile_drawer_open");
-          setMobileDrawerOpen(true);
-        }}
+        onMenu={
+          packageAlone
+            ? undefined
+            : () => {
+                track("mobile_drawer_open");
+                setMobileDrawerOpen(true);
+              }
+        }
         menuExpanded={bp === "mobile" && mobileDrawerOpen}
-        progressPct={courseProgressPct(activeCourse, completedTopics)}
+        progressPct={packageAlone ? undefined : courseProgressPct(activeCourse, completedTopics)}
         searchScope={courseSearchScope}
         menuControls={COURSE_DRAWER_ID}
         onBookmark={() => openOverlayPanel("saved")}
@@ -514,8 +530,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           add the sidebar, 24 from the content (16 until Nelson, 25 Oct 2026: more space
           between columns); mobile keeps a smaller gutter so the
           tinted body shows around the single content card. */}
-      <div className={cn("flex min-h-0 flex-1", showInlineSidebar ? "gap-6 p-4" : "p-3")}>
-        {showInlineSidebar ? (
+      <div className={cn("flex min-h-0 flex-1", inlineSidebar ? "gap-6 p-4" : "p-3")}>
+        {inlineSidebar ? (
           <ArrivalContext.Provider value={courseArrival}>
           <Sidebar
             className="sk-vt-player-sidebar"
@@ -750,6 +766,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             </div>
           </div>
 
+          {packageAlone ? null : (
           <TopicFooterNav
             className="sk-vt-player-footer"
             courseSlug={courseSlug}
@@ -767,10 +784,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             onPrevious={() => previous && navigateTopic(previous.id)}
             onNext={() => {
               if (asksNow) setAskOpen(true);
+              else if (packageAsks && !isCompleted && next) setPackageAskOpen(true);
               else if (next) navigateTopic(next.id);
               else if (courseDone) setCompleteOpen(true);
             }}
           />
+          )}
         </main>
         </ArrivalContext.Provider>
       </div>
@@ -872,6 +891,24 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           if (next) navigateTopic(next.id);
         }}
         onClose={() => setAskOpen(false)}
+      />
+
+      <CompletionQuestionModal
+        open={packageAskOpen}
+        variant="package"
+        noun="activity"
+        reason="The activity records its completion by itself, at the point its authors chose: often its last screen or its final check."
+        hasNext={Boolean(next)}
+        onYes={() => setPackageAskOpen(false)}
+        onNotYet={() => {
+          setPackageAskOpen(false);
+          track("package_question", { topicId, answer: "continue" });
+          if (next) navigateTopic(next.id);
+        }}
+        onClose={() => {
+          setPackageAskOpen(false);
+          track("package_question", { topicId, answer: "stay" });
+        }}
       />
 
       <CourseCompleteModal

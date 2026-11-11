@@ -179,6 +179,32 @@ const REPORTS: CourseActivity["steps"] = [
   { title: "Reach the last screen", detail: "On its last screen it reports completed: the course goes to 100% by itself." },
 ];
 
+/** The content team's POSH course (Articulate Rise, SCORM 1.2): courses 8 and 10. */
+const POSH_ACTIVITY: CourseActivity = {
+  kind: "scorm",
+  packageUrl: "/scorm/posh-prevention-of-sexual-harassment/scormdriver/indexAPI.html",
+  packageLabel: "SCORM 1.2 package",
+  packageSizeLabel: "99 MB",
+  intro: "A whole course exported from Articulate Rise by the content team, with its own menu of lessons and videos inside. It resumes where you left off and reports completed when its own completion rule is met.",
+  steps: [
+    { title: "Use its menu", detail: "The package has its own sidebar of lessons, next to our collapsed sidebar. On a narrow screen Rise hides it behind its own menu button." },
+    { title: "Finish the course", detail: "When Rise's completion rule is met it reports completed: the course goes to 100% by itself." },
+  ],
+};
+
+/** POSH's final assessment (Articulate Storyline, SCORM 1.2): courses 9 and 11. */
+const QUIZ_ACTIVITY: CourseActivity = {
+  kind: "scorm",
+  packageUrl: "/scorm/final-quiz-ungraded/index_lms.html",
+  packageLabel: "SCORM 1.2 package",
+  packageSizeLabel: "7 MB",
+  intro: "The final assessment of the POSH course, exported from Articulate Storyline by the content team as a package of its own: 10 scenario questions, pass mark 80%, repeat as often as needed. It reports the score and passed or failed.",
+  steps: [
+    { title: "Answer the questions", detail: "The package connects to the platform when it loads and keeps your answers if you leave." },
+    { title: "Submit the quiz", detail: "It reports the score, then passed (80% or more) or failed. You can retry as often as you like." },
+  ],
+};
+
 export const scormCoursePackages: CourseEntry[] = [
   coursePackage({
     id: "pkg1",
@@ -272,17 +298,7 @@ export const scormCoursePackages: CourseEntry[] = [
     title: "POSH: Prevention of Sexual Harassment",
     minutes: 45,
     cover: "leadership-in-remote-teams",
-    activity: {
-      kind: "scorm",
-      packageUrl: "/scorm/posh-prevention-of-sexual-harassment/scormdriver/indexAPI.html",
-      packageLabel: "SCORM 1.2 package",
-      packageSizeLabel: "99 MB",
-      intro: "A whole course exported from Articulate Rise by the content team, with its own menu of lessons and videos inside. It resumes where you left off and reports completed when its own completion rule is met.",
-      steps: [
-        { title: "Use its menu", detail: "The package has its own sidebar of lessons, next to our collapsed sidebar. On a narrow screen Rise hides it behind its own menu button." },
-        { title: "Finish the course", detail: "When Rise's completion rule is met it reports completed: the course goes to 100% by itself." },
-      ],
-    },
+    activity: POSH_ACTIVITY,
   }),
   coursePackage({
     id: "pkg7",
@@ -290,16 +306,86 @@ export const scormCoursePackages: CourseEntry[] = [
     title: "Final Quiz (Ungraded)",
     minutes: 10,
     cover: "intro-to-product-analytics",
-    activity: {
-      kind: "scorm",
-      packageUrl: "/scorm/final-quiz-ungraded/index_lms.html",
-      packageLabel: "SCORM 1.2 package",
-      packageSizeLabel: "7 MB",
-      intro: "The final assessment of the POSH course, exported from Articulate Storyline by the content team as a package of its own: 10 scenario questions, pass mark 80%, repeat as often as needed. It reports the score and passed or failed.",
-      steps: [
-        { title: "Answer the questions", detail: "The package connects to the platform when it loads and keeps your answers if you leave." },
-        { title: "Submit the quiz", detail: "It reports the score, then passed (80% or more) or failed. You can retry as often as you like." },
-      ],
-    },
+    activity: QUIZ_ACTIVITY,
   }),
 ];
+
+/**
+ * Courses 10 and 11: the improved flow for course packages, PROPOSED on 11 Nov 2026 after the SCORM
+ * progress check (Jaspinder's question; docs: meeting-2026-11-04-scorm-youtube.md). A SCORM 1.2
+ * package reports a status, never a percentage, and when it reports "completed" is the export's
+ * setting (POSH: when its Storyline block is finished). Figma: Activity · SCORM, frame "Proposal ·
+ * improved package flow". Not decided: these courses are where the proposal is referenced.
+ *
+ * - Course 10, POSH as one package: the course shows a status (Started) and never a share; in the
+ *   player nothing of ours surrounds the package (no sidebar, no Course Journey, no ring, no
+ *   footer). The top bar's close is the way out.
+ * - Course 11, POSH as it really arrives, two packages (the Rise course and the Storyline quiz) as
+ *   two topics of one module, with our normal sidebar and footer: Next asks before leaving a package
+ *   that has not reported completion yet.
+ */
+function proposalAlone(): CourseEntry {
+  const entry = coursePackage({
+    id: "pkg8",
+    slug: "posh-proposed-flow-one-package",
+    title: "POSH · proposed flow, one package",
+    minutes: 45,
+    cover: "leadership-in-remote-teams",
+    activity: POSH_ACTIVITY,
+  });
+  entry.outline.packageFlow = "proposal";
+  entry.page.progress = {
+    ...entry.page.progress,
+    // Sample state: the learner has opened the package. Open edX knows it (Begin vs Resume).
+    status: "Started",
+    label: "Course status",
+    eyebrow: "Pick up where you left off",
+    cta: "Resume course",
+    done: "Completes when the package reports it",
+    timeLeft: "~ 45 min",
+  };
+  entry.page.intro = {
+    title: "What this course proposes",
+    lead: "Proposal, 11 Nov 2026: a course that is one SCORM package shows a status, never a percentage, and the package gets the whole screen, with no sidebar or footer of ours.",
+  };
+  entry.page.stats = { ...entry.page.stats, structure: "1 SCORM package · proposal" };
+  return entry;
+}
+
+function proposalTwoPackages(): CourseEntry {
+  const entry = coursePackage({
+    id: "pkg9",
+    slug: "posh-proposed-flow-two-packages",
+    title: "POSH · proposed flow, two packages",
+    minutes: 55,
+    cover: "intro-to-product-analytics",
+    activity: POSH_ACTIVITY,
+  });
+  const mod = entry.outline.modules[0];
+  const [rise] = mod.topics ?? [];
+  const quizId = "pkg9-m1-t2";
+  entry.outline.packageFlow = "proposal";
+  entry.outline.modules = [
+    {
+      ...mod,
+      label: "M1",
+      title: "POSH: Prevention of Sexual Harassment",
+      implicit: false,
+      topicsTotal: 2,
+      topics: [
+        { ...rise, title: "POSH: Prevention of Sexual Harassment", duration: "45 min approx." },
+        { id: quizId, type: "Activity", title: "Final Quiz (Ungraded)", duration: "10 min approx.", completed: false },
+      ],
+    },
+  ];
+  entry.page.modules = modulesFromOutline(entry.outline, [{ duration: "55m", defaultOpen: true }]);
+  entry.page.stats = { ...entry.page.stats, structure: "2 SCORM packages · proposal" };
+  entry.page.intro = {
+    title: "What this course proposes",
+    lead: "Proposal, 11 Nov 2026: POSH as it really arrives, two packages as two topics. Next asks before you leave a package that has not reported completion yet.",
+  };
+  entry.content.activities = { ...entry.content.activities, [quizId]: QUIZ_ACTIVITY };
+  return entry;
+}
+
+scormCoursePackages.push(proposalAlone(), proposalTwoPackages());

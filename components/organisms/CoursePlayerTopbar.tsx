@@ -184,6 +184,8 @@ export function CoursePlayerTopbar({
         )}
       >
         <div className="flex min-w-0 items-center gap-2">
+          {/* No menu, no button: a course package of the proposal flow has no Course Journey. */}
+          {onMenu ? (
           <UtilityButton
             // "Course Journey", which aria-expanded completes (not "Open…" while it is open; Course
             // Journey, promoted by Nelson, 27 Oct 2026).
@@ -196,6 +198,7 @@ export function CoursePlayerTopbar({
           >
             <Icon icon={List} size={20} />
           </UtilityButton>
+          ) : null}
           {progressPct !== undefined ? <ProgressRing pct={progressPct} compact /> : null}
           {searchScope ? <SearchAssistantButton scope={searchScope} size="sm" /> : null}
         </div>

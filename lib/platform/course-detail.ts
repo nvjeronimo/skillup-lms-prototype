@@ -233,6 +233,12 @@ export interface CourseDetail {
   stats: { structure: string; duration: string; org: string };
   progress: {
     percent: number;
+    /**
+     * A course that is one SCORM package (proposal of 11 Nov 2026): the package reports a status,
+     * never a share, so the card shows this word ("Not started", "Started", "Completed") in place
+     * of the percentage and has no bar.
+     */
+    status?: string;
     label: string;
     eyebrow: string;
     cta: string;
