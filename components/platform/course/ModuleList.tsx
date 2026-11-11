@@ -160,7 +160,9 @@ function ModuleRow({
             mod.lessons.map((lesson) => (
               <React.Fragment key={lesson.id}>
                 {/* DS `LMS / Lesson Header`: 26px on desktop and tablet, 34px on mobile. */}
-                <h4 className="sk-text-body-small-medium px-3 py-2 text-sko-text-muted md:pb-0 md:pr-0">{lesson.label}</h4>
+                {lesson.label ? (
+                  <h4 className="sk-text-body-small-medium px-3 py-2 text-sko-text-muted md:pb-0 md:pr-0">{lesson.label}</h4>
+                ) : null}
                 <ul>
                   {lesson.topics.map((topic) => (
                     <TopicRow key={topic.id} topic={topic} href={topicHref(topic.id)} last={topic.id === lastTopicId} />

@@ -66,14 +66,23 @@ export function modulesFromOutline(
       : topics.every((t) => t.locked)
         ? "locked"
         : "incomplete";
+    // A module whose topics sit straight under it (no lessons: the 3- and 4-level shapes, e.g. a
+    // SCORM course package) lists them under one unnamed lesson. Before, it printed "Content to be
+    // provided." although its topics exist (Nelson, 11 Nov 2026).
+    const lessons = mod.lessons?.length
+      ? mod.lessons
+      : mod.topics?.length
+        ? [{ id: `${mod.id}-topics`, label: "", topics: mod.topics }]
+        : [];
     return {
       id: mod.id,
       number: index + 1,
-      title: `Module ${index + 1} · ${mod.title}`,
+      // An implicit module has no title of its own: it takes the course's.
+      title: `Module ${index + 1} · ${mod.title || outline.title}`,
       state,
-      topicCount: `${topics.length} topics`,
+      topicCount: `${topics.length} ${topics.length === 1 ? "topic" : "topics"}`,
       ...extra[index],
-      lessons: (mod.lessons ?? []).map((lesson) => ({
+      lessons: lessons.map((lesson) => ({
         id: lesson.id,
         label: lesson.label,
         topics: lesson.topics.map((t) => ({
