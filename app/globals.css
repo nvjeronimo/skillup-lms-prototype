@@ -1257,44 +1257,6 @@ button {
   transform: translate(-50%, -50%);
 }
 
-/* ============================================================================
-   Platform pages: sample-data marks. The pages under /platform are a test build
-   and most of their figures have no API yet. The note under the top bar has a
-   switch that sets [data-show-mock] on the page; every block tagged
-   data-mock="<what is missing>" then gets a dashed outline and a short SAMPLE
-   chip; the reasons are listed in full in the note (never hover-only). The chip
-   stays short so it does not cover the content it marks. Off by default so the screens can be compared
-   with the Figma frames.
-   ============================================================================ */
-[data-show-mock] [data-mock] {
-  outline: 1px dashed var(--color-border-warning);
-  outline-offset: 3px;
-}
-[data-show-mock] [data-mock]:not(.absolute, .fixed, .sticky) {
-  position: relative;
-}
-[data-show-mock] [data-mock]::after {
-  content: "SAMPLE";
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  z-index: 5;
-  padding: 0 6px;
-  border: 1px dashed var(--color-border-warning);
-  border-radius: var(--sk-radius-control);
-  background: var(--color-bg-warning-soft);
-  color: var(--color-text-warning);
-  font-family: var(--sk-font-body);
-  font-weight: 600;
-  font-size: calc(0.75rem * var(--sk-font-scale, 1));
-  line-height: calc(18px * var(--sk-font-scale, 1));
-  letter-spacing: 0;
-  text-transform: none;
-  text-align: left;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
 /* Rows and lists that only enter (a filter's cross-fade, the rows rising after it). Inside
    a surface that is closing they stay put: the surface's own exit is the only movement.
    Last in the file so it outranks the closed-state rules above, reduced motion included. */
