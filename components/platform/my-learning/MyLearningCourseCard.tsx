@@ -44,7 +44,9 @@ const OVERLINE_ON_GREEN = "sk-text-body-small-semibold uppercase text-sko-text-d
 function Progress({ course, hug = false, className }: { course: MyLearningCourse; hug?: boolean; className?: string }) {
   const pct = course.progressPct ?? 0;
   const complete = pct >= 100;
-  const label = course.progressPct === null ? "Not started" : complete ? "Completed" : `${pct}% complete`;
+  const asStatus = course.progressAs === "status";
+  const label =
+    course.progressPct === null ? "Not started" : complete ? "Completed" : asStatus ? "Started" : `${pct}% complete`;
   return (
     <div className={cn("flex flex-col", className)}>
       {/* Grid: the label fills and the effort sits at the right end. List (`hug`): both hug, 24 apart. */}
@@ -56,7 +58,8 @@ function Progress({ course, hug = false, className }: { course: MyLearningCourse
         <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
       </div>
       {/* DS `State=Not started` (v1.4): no bar, a 0% bar says nothing. */}
-      {course.progressPct === null ? null : (
+      {/* A status card (one SCORM package, proposal of 11 Nov 2026) has no bar: there is no share to show. */}
+      {course.progressPct === null || asStatus ? null : (
         <PlatformProgressBar track="muted" tone={complete ? "complete" : "progress"} value={pct} label={`${course.title} progress`} />
       )}
     </div>

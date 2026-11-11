@@ -24,6 +24,12 @@ export interface CompletionQuestionModalProps {
   onNotYet: () => void;
   /** Close, Esc or the backdrop: no change, remain on the current topic. */
   onClose: () => void;
+  /**
+   * "package": a SCORM package that reports completion by itself has not done so yet (proposal of
+   * 11 Nov 2026). We cannot mark a package complete, so there is no "Yes, completed": the learner
+   * stays on the activity (primary, `onClose`) or continues anyway (`onNotYet`).
+   */
+  variant?: "question" | "package";
 }
 
 /**
@@ -44,6 +50,7 @@ export function CompletionQuestionModal({
   onYes,
   onNotYet,
   onClose,
+  variant = "question",
 }: CompletionQuestionModalProps) {
   const titleId = React.useId();
   const descId = React.useId();
@@ -53,7 +60,8 @@ export function CompletionQuestionModal({
 
   const { mounted, state, onAnimationEnd } = useExitTransition(open, MOTION_MS.short3);
   // "Yes" moves to the next topic, which changes these props: keep the question as it was for the exit.
-  const shown = useFrozenWhileClosed({ noun, reason, hasNext }, open);
+  const shown = useFrozenWhileClosed({ noun, reason, hasNext, variant }, open);
+  const pkg = shown.variant === "package";
 
   if (!mounted) return null;
   const closed = state === "closed";
@@ -99,14 +107,16 @@ export function CompletionQuestionModal({
           </span>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5 pr-10">
             <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
-              Have you completed this {shown.noun}?
+              {pkg ? `This ${shown.noun} hasn't recorded completion yet` : `Have you completed this ${shown.noun}?`}
             </h2>
             <div id={descId} className="sk-text-body-medium-regular flex flex-col gap-3.5 text-sko-text-subtle">
               <p>{shown.reason}</p>
               <p>
-                {shown.hasNext
-                  ? `You can move to the next topic either way and return to this ${shown.noun} anytime.`
-                  : `You can return to this ${shown.noun} anytime.`}
+                {pkg
+                  ? `If you continue now, this topic stays not complete until you come back and finish the ${shown.noun}.`
+                  : shown.hasNext
+                    ? `You can move to the next topic either way and return to this ${shown.noun} anytime.`
+                    : `You can return to this ${shown.noun} anytime.`}
               </p>
             </div>
           </div>
@@ -121,12 +131,25 @@ export function CompletionQuestionModal({
         </div>
 
         <div className="relative flex flex-col gap-3 p-6 pt-8 sm:flex-row-reverse sm:justify-start">
-          <Button variant="primary" size="lg" onClick={onYes}>
-            Yes, completed
-          </Button>
-          <Button variant="secondary" size="lg" onClick={onNotYet}>
-            Not yet
-          </Button>
+          {pkg ? (
+            <>
+              <Button variant="primary" size="lg" onClick={onClose}>
+                Stay on the {shown.noun}
+              </Button>
+              <Button variant="secondary" size="lg" onClick={onNotYet}>
+                Continue anyway
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="primary" size="lg" onClick={onYes}>
+                Yes, completed
+              </Button>
+              <Button variant="secondary" size="lg" onClick={onNotYet}>
+                Not yet
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>

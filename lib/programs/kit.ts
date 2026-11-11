@@ -36,7 +36,7 @@ export function programCourse(
     ...card
   }: Pick<ProgramCourse, "position" | "detail" | "modules" | "defaultOpen"> &
     Pick<MyLearningCourse, "progressMeta"> &
-    Partial<Pick<MyLearningCourse, "progressPct" | "upNext" | "cta" | "href">>,
+    Partial<Pick<MyLearningCourse, "progressPct" | "progressAs" | "upNext" | "cta" | "href">>,
 ): ProgramCourse {
   const slug = slugify(title);
   return {
