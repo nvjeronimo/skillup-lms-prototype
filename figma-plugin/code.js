@@ -99,6 +99,9 @@ figma.showUI(__html__, { width: 380, height: 640, themeColors: true });
     settings: {
       repo: settings.repo || "nvjeronimo/skillup-lms-prototype",
       pkgRepo: settings.pkgRepo || "nvjeronimo/skillup-lms-prd",
+      pkgBase: settings.pkgBase || "main",
+      pkgPath: settings.pkgPath !== undefined ? settings.pkgPath : "03-design-system/dev-token-package/figma",
+      pkgFormat: settings.pkgFormat || "skillup",
       token: settings.token || "",
     },
     json: JSON.stringify(tokens, null, 2) + "\n",
