@@ -10,7 +10,7 @@
   h1 { font-size: 13px; line-height: 20px; margin: 0; font-weight: 600; }
   p { margin: 0; color: var(--figma-color-text-secondary); }
   label { display: flex; flex-direction: column; gap: 4px; font-weight: 500; }
-  input, textarea {
+  input, textarea, select {
     font: inherit; color: inherit; background: var(--figma-color-bg-secondary);
     border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 6px 8px;
   }
@@ -54,12 +54,12 @@
 <details id="setup">
   <summary>GitHub connection</summary>
   <label>Repository <input id="repo" /></label>
-  <label>Dev token package repository <input id="pkgRepo" /></label>
   <label>Access token
     <input id="token" type="password" placeholder="github_pat_…" autocomplete="off" />
   </label>
-  <p>A fine-grained token with access to these two repositories only: Contents and Pull requests,
-    read and write. It stays on this computer (Figma client storage).</p>
+  <p>A fine-grained token with access to these repositories only (the prototype and the package
+    repository below): Contents and Pull requests, read and write. It stays on this computer (Figma
+    client storage).</p>
 </details>
 
 <button id="publish" disabled>Publish tokens</button>
@@ -67,9 +67,23 @@
 
 <section class="download">
   <h1>Update the dev token package</h1>
-  <p>Opens a pull request on the docs repository with the same export in
-    <code>dev-token-package/figma/variables.json</code>. Its check regenerates the package CSS; a
-    person merges it, because the package goes to the dev team.</p>
+  <p>Opens a pull request with the same export on the package repository, in one commit. Nobody
+    merges it automatically: the tokens go to the dev team, so a person reviews and merges.</p>
+  <details id="pkgSetup">
+    <summary>Package repository: <span id="pkgWhere"></span></summary>
+    <label>Repository (owner/name) <input id="pkgRepo" /></label>
+    <label>Base branch <input id="pkgBase" placeholder="main" /></label>
+    <label>Folder <input id="pkgPath" placeholder="tokens" /></label>
+    <label>Format
+      <select id="pkgFormat">
+        <option value="skillup">SkillUp JSON: folder/variables.json</option>
+        <option value="dtcg">W3C DTCG: folder/&lt;collection&gt;/&lt;mode&gt;.tokens.json</option>
+      </select>
+    </label>
+    <p>Files that do not exist yet are created. In DTCG, a mode file that Figma no longer has is
+      removed. Our docs repository regenerates the CSS in a check; another repository uses its own
+      build.</p>
+  </details>
   <button id="package" class="secondary" disabled>Open the package pull request</button>
 </section>
 
@@ -88,7 +102,7 @@
   const FILE = "tokens/figma/variables.json";
   let next = null, current = null, user = "";
 
-  const PKG_FILE = "03-design-system/dev-token-package/figma/variables.json";
+  const DOCS_REPO = "nvjeronimo/skillup-lms-prd";
   const api = async (path, init = {}, repo = $("repo").value.trim()) => {
     const res = await fetch(`https://api.github.com/repos/${repo}${path}`, {
       ...init,
@@ -164,13 +178,28 @@
     $("status").className = `status${error ? " error" : ""}`;
     $("status")[html ? "innerHTML" : "textContent"] = text;
   }
+  const pkg = () => ({
+    repo: $("pkgRepo").value.trim(),
+    base: $("pkgBase").value.trim() || "main",
+    path: $("pkgPath").value.trim().replace(/^\/+|\/+$/g, ""),
+    format: $("pkgFormat").value,
+  });
+  function showWhere() {
+    const p = pkg();
+    $("pkgWhere").textContent = `${p.repo} · ${p.base} · ${p.path || "(root)"}/${p.format === "dtcg" ? "*.tokens.json" : "variables.json"}`;
+  }
   function saveSettings() {
-    parent.postMessage({ pluginMessage: { type: "save-settings", settings: { repo: $("repo").value.trim(), pkgRepo: $("pkgRepo").value.trim(), token: $("token").value.trim() } } }, "*");
+    const p = pkg();
+    parent.postMessage({ pluginMessage: { type: "save-settings", settings: {
+      repo: $("repo").value.trim(), token: $("token").value.trim(),
+      pkgRepo: p.repo, pkgBase: p.base, pkgPath: p.path, pkgFormat: p.format,
+    } } }, "*");
+    showWhere();
   }
 
   $("token").addEventListener("change", () => { saveSettings(); refresh(); });
   $("repo").addEventListener("change", () => { saveSettings(); refresh(); });
-  $("pkgRepo").addEventListener("change", saveSettings);
+  for (const id of ["pkgRepo", "pkgBase", "pkgPath", "pkgFormat"]) $(id).addEventListener("change", saveSettings);
 
   $("publish").addEventListener("click", async () => {
     $("publish").disabled = true;
@@ -220,43 +249,96 @@
     }));
   }
 
-  // The dev token package in the docs repository: same JSON, its own pull request, never merged
-  // by a machine (the package goes to the dev team).
+  // The dev token package: the same export on a repository of your choice (ours by default, or the
+  // dev team's), as variables.json or as DTCG files, in one commit through the Git data API so new
+  // files are created and removed mode files are deleted. Never merged by a machine.
+  const normal = (text) => { try { return JSON.stringify(JSON.parse(text)); } catch (e) { return text; } };
+  async function packageFiles(p) {
+    const join = (f) => (p.path ? `${p.path}/${f}` : f);
+    if (p.format === "dtcg")
+      return toDtcg(JSON.parse(next)).map((f) => ({ path: join(f.path.replace(/^skillup-tokens-dtcg\//, "")), text: f.text }));
+    return [{ path: join("variables.json"), text: next }];
+  }
+  async function readBlob(repo, sha) {
+    return fromBase64((await api(`/git/blobs/${sha}`, {}, repo)).content);
+  }
+
   $("package").addEventListener("click", async () => {
     $("package").disabled = true;
-    const repo = $("pkgRepo").value.trim();
+    const p = pkg();
     const note = $("note").value.trim() || "Token update from Figma";
     try {
+      if (!/^[\w.-]+\/[\w.-]+$/.test(p.repo)) throw new Error("Write the package repository as owner/name.");
       status("Reading the package…");
-      const file = await api(`/contents/${PKG_FILE}?ref=main`, {}, repo);
-      if (tokensOnly(JSON.parse(fromBase64(file.content))) === tokensOnly(JSON.parse(next))) {
-        status("The dev token package already has these tokens: nothing to open.");
+      const head = await api(`/git/ref/heads/${encodeURIComponent(p.base).replace(/%2F/g, "/")}`, {}, p.repo);
+      const commit = await api(`/git/commits/${head.object.sha}`, {}, p.repo);
+      const tree = await api(`/git/trees/${commit.tree.sha}?recursive=1`, {}, p.repo);
+      if (tree.truncated) throw new Error("The repository tree is too large to read in one call.");
+      const existing = new Map(tree.tree.filter((e) => e.type === "blob").map((e) => [e.path, e.sha]));
+
+      const files = await packageFiles(p);
+      const changes = [];
+      for (const f of files) {
+        const sha = existing.get(f.path);
+        if (!sha) { changes.push({ path: f.path, content: f.text, label: `+ ${f.path}` }); continue; }
+        const old = await readBlob(p.repo, sha);
+        let same;
+        try {
+          same = p.format === "dtcg" ? normal(old) === normal(f.text)
+            : tokensOnly(JSON.parse(old)) === tokensOnly(JSON.parse(f.text));
+        } catch (e) { same = false; }
+        if (!same) changes.push({ path: f.path, content: f.text, label: `~ ${f.path}` });
+      }
+      if (p.format === "dtcg") {
+        const ours = new Set(files.map((f) => f.path));
+        const prefix = p.path ? `${p.path}/` : "";
+        for (const path of existing.keys())
+          if (path.startsWith(prefix) && path.endsWith(".tokens.json") && !ours.has(path))
+            changes.push({ path, sha: null, label: `− ${path}` });
+      }
+      if (!changes.length) {
+        status(`${p.repo} already has these tokens: nothing to open.`);
         $("package").disabled = false;
         return;
       }
+
+      status(`Committing ${changes.length} file(s)…`);
+      const newTree = await api("/git/trees", {
+        method: "POST",
+        body: JSON.stringify({
+          base_tree: commit.tree.sha,
+          tree: changes.map((c) => ("sha" in c
+            ? { path: c.path, mode: "100644", type: "blob", sha: null }
+            : { path: c.path, mode: "100644", type: "blob", content: c.content })),
+        }),
+      }, p.repo);
+      const made = await api("/git/commits", {
+        method: "POST",
+        body: JSON.stringify({ message: `tokens(package): ${note}`, tree: newTree.sha, parents: [head.object.sha] }),
+      }, p.repo);
       const stamp = new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15);
       const branch = `tokens/package-${stamp}`;
       status("Creating the branch…");
-      const main = await api("/git/ref/heads/main", {}, repo);
-      await api("/git/refs", { method: "POST", body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: main.object.sha }) }, repo);
-      status("Sending the tokens…");
-      await api(`/contents/${PKG_FILE}`, {
-        method: "PUT",
-        body: JSON.stringify({ message: `tokens(package): ${note}`, content: toBase64(next), branch, sha: file.sha }),
-      }, repo);
+      await api("/git/refs", { method: "POST", body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: made.sha }) }, p.repo);
       status("Opening the pull request…");
+      const ours = p.repo.toLowerCase() === DOCS_REPO;
       const pr = await api("/pulls", {
         method: "POST",
         body: JSON.stringify({
           title: `tokens(package): ${note}`,
           head: branch,
-          base: "main",
-          body: `Dev token package exported from the SKO Design System in Figma by ${user}.\n\n> ${note}\n\n` +
-            "The **Dev token package** check regenerates `css/` from this export and commits it to this branch. " +
-            "Nobody merges it automatically: review the CSS diff, then merge.",
+          base: p.base,
+          body: `Design tokens exported from the SKO Design System in Figma by ${user} ` +
+            `(${p.format === "dtcg" ? "W3C DTCG format" : "SkillUp format, skillup-figma-tokens/1"}).\n\n> ${note}\n\n` +
+            (ours
+              ? "The **Dev token package** check regenerates `css/` from this export and commits it to this branch. "
+              : "Generate the code tokens from these files with this repository's own build. ") +
+            "Nobody merges it automatically: review the diff, then merge.\n\n" +
+            `<details><summary>Files</summary>\n\n${changes.map((c) => `- ${c.label}`).join("\n")}\n</details>`,
         }),
-      }, repo);
-      status(`Package pull request <a href="${esc(pr.html_url)}" target="_blank">#${pr.number}</a> is open. Its check adds the CSS in about a minute; merge it when it looks right.`, false, true);
+      }, p.repo);
+      status(`Package pull request <a href="${esc(pr.html_url)}" target="_blank">#${pr.number}</a> is open on ${esc(p.repo)}` +
+        (ours ? ". Its check adds the CSS in about a minute; merge it when it looks right." : ". Review it and merge."), false, true);
     } catch (e) {
       status(e.message, true);
     }
@@ -423,6 +505,10 @@
       user = msg.user;
       $("repo").value = msg.settings.repo;
       $("pkgRepo").value = msg.settings.pkgRepo;
+      $("pkgBase").value = msg.settings.pkgBase;
+      $("pkgPath").value = msg.settings.pkgPath;
+      $("pkgFormat").value = msg.settings.pkgFormat;
+      showWhere();
       $("token").value = msg.settings.token;
       refresh();
     }

@@ -24,8 +24,8 @@ Dev Mode) and needs an Organization plan; the `*.figma.tsx` files stay ready for
 2. Menu → Plugins → Development → **Import plugin from manifest…** → pick
    `figma-plugin/manifest.json` from a clone of this repository.
 3. Create a GitHub **fine-grained token**: github.com → Settings → Developer settings →
-   Fine-grained tokens → Generate. Repository access: only `nvjeronimo/skillup-lms-prototype` and `nvjeronimo/skillup-lms-prd`
-   (the second one only for the dev token package).
+   Fine-grained tokens → Generate. Repository access: only `nvjeronimo/skillup-lms-prototype` and
+   the package repository (`nvjeronimo/skillup-lms-prd` by default, or the dev team's).
    Permissions: **Contents** read and write, **Pull requests** read and write. Copy it.
 4. Run the plugin (Plugins → Development → SkillUp · Publish tokens), open **GitHub connection**
    and paste the token. It is kept in Figma's client storage on that computer only.
@@ -42,12 +42,29 @@ If a check fails the PR stays open with the failing step: nothing reaches the pr
 
 ## Update the dev token package
 
-**Open the package pull request** sends the same export to the docs repository
-(`03-design-system/dev-token-package/figma/variables.json`, on a `tokens/package-*` branch). The
-**Dev token package** check there regenerates `css/` and commits it to the branch. It never merges:
-the package goes to the dev team, so a person reviews the CSS diff and merges. If the package
-already has these tokens (the file key and the order of the entries do not count), the plugin
-says so and opens nothing.
+**Open the package pull request** sends the same export to a package repository in one commit,
+on a `tokens/package-*` branch, and opens a pull request. It never merges: the tokens go to the dev
+team, so a person reviews the diff and merges. If the repository already has these tokens (the file
+key and the order of the entries do not count), the plugin says so and opens nothing.
+
+Where it goes is set under **Package repository** in that section, and kept on this computer:
+
+| Setting | Default (our docs repository) | For the dev team's own repository |
+|---|---|---|
+| Repository | `nvjeronimo/skillup-lms-prd` | their `owner/name` on GitHub |
+| Base branch | `main` | the branch their pull requests go to (e.g. `develop`) |
+| Folder | `03-design-system/dev-token-package/figma` | where the token files live (e.g. `src/tokens`) |
+| Format | SkillUp JSON: `<folder>/variables.json` | SkillUp JSON, or W3C DTCG: `<folder>/<collection>/<mode>.tokens.json` + `text-styles.tokens.json` |
+
+- Files that do not exist yet are created, so the first pull request can start an empty folder.
+- In DTCG, a `*.tokens.json` inside the folder that the export no longer has (a mode removed in
+  Figma) is deleted in the same commit. Files outside the folder are never touched.
+- On our docs repository the **Dev token package** check regenerates `css/` and commits it to the
+  branch. On another repository the plugin only sends the token files: that repository's own
+  build (Style Dictionary, for instance) turns them into code.
+- The GitHub token needs access to that repository too (Contents and Pull requests, read and
+  write). The plugin talks to GitHub only (`api.github.com`); GitLab, Azure DevOps or Bitbucket
+  repositories can use **Download the JSON** instead.
 
 ## Download the JSON
 
