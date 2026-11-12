@@ -41,11 +41,11 @@ const program: Program = {
   },
   courses: [
     programCourse(1, "YouTube Video Test", "YT", "ux-research-and-design-thinking", {
-      progressMeta: "30 min total",
+      progressMeta: "40 min total",
       upNext: { title: "What each video tests", type: "Reading" },
       position: "1 module",
-      detail: "2 topics",
-      modules: [{ number: 1, title: "Module 1 · YouTube videos in the player", complete: false, topics: "2 topics", duration: "25m" }],
+      detail: "3 topics",
+      modules: [{ number: 1, title: "Module 1 · YouTube videos in the player", complete: false, topics: "3 topics", duration: "35m" }],
       defaultOpen: true,
     }),
     programCourse(2, "SCORM Test Course", "SC", "business-analytics-with-python", {
@@ -137,7 +137,7 @@ const program: Program = {
       id: "about-1",
       title: "What each course tests",
       body: [
-        "YouTube Video Test: a YouTube embed in a Text component (not tracked: Mark as Complete, and Next asks; back from YouTube, the alert asks to mark it complete).",
+        "YouTube Video Test: a YouTube embed in a Text component (not tracked: Mark as Complete, and Next asks; back from YouTube, the alert asks to mark it complete), and a lesson page with text, the embed and a quick check.",
         "SCORM Test Course: four packages, each inside a unit of one course, with a test panel that shows what each package reports.",
         "POSH: Prevention of Sexual Harassment: the content team's real Rise course, with its own menu and videos, as one course package: one topic named after the course, our sidebar collapsed, 0% until the package reports completion, then 100%.",
         "Final Quiz (Ungraded): the POSH course's final assessment, a separate Storyline package (10 questions, pass mark 80%, repeat as needed), as one course package that reports a score.",

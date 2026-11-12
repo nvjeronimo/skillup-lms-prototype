@@ -10,7 +10,7 @@ export const content: CourseContent = {
   quiz: [],
   articles: {
     "ytt-m1-t1": {
-      lede: "This course exists to test a YouTube video in the player. A course team adds it by pasting YouTube’s official embed code into a Text component in Studio.",
+      lede: "This course exists to test a YouTube video in the player. A course team adds it by pasting YouTube’s official embed code into a Text component in Studio. The last topic puts the same video in a unit with a text and a quick check.",
       sections: [
         {
           heading: "How a YouTube video is added",
@@ -35,6 +35,53 @@ export const content: CourseContent = {
         "An embed is never measured: Mark as Complete, and Next asks.",
         "Back from YouTube, the alert asks to mark it complete.",
         "Videos that must stay off YouTube go to Azure.",
+      ],
+    },
+  },
+  // Topic 3 (12 Nov 2026): one Open edX unit with three components, as a course team builds it in
+  // Studio: a Text component, a Text component with YouTube's embed code, and a Problem component
+  // (a single-choice question, ungraded). The page completes with Mark as Complete, like row 9.
+  lessonPages: {
+    "ytt-m1-t3": {
+      intro:
+        "One unit, three components: a short text, a YouTube video in its official embed, and a quick check. This is how a course team mixes a YouTube video with its own material.",
+      blocks: [
+        {
+          kind: "text",
+          heading: "Before you watch",
+          paragraphs: [
+            "The video below shows the settings a site can pass to YouTube's embedded player. Two things to look for: which controls stay on the player whatever the site asks, and where the YouTube logo takes you when you select it.",
+            "You can watch it here or on YouTube. Either way, nothing is recorded about what you watched, so this page completes when you select Mark as Complete.",
+          ],
+        },
+        {
+          kind: "video",
+          title: "YouTube Developers Live: Embedded Web Player Customization",
+          durationLabel: "22m 24s",
+          youtubeId: "M7lc1UVf-VE",
+        },
+        {
+          kind: "knowledge-check",
+          question: "A course needs a video that must not open on youtube.com. Where should it be uploaded?",
+          options: [
+            {
+              id: "a",
+              label: "To YouTube, with the logo hidden by a player setting",
+              feedback: "No player setting removes the logo or its link, and covering it is not allowed.",
+            },
+            {
+              id: "b",
+              label: "To Azure, as a SkillUp video",
+              correct: true,
+              feedback: "Correct. A file SkillUp owns goes to Azure and plays in our player, where its progress is tracked.",
+            },
+            {
+              id: "c",
+              label: "To YouTube, as an unlisted video",
+              feedback: "An unlisted video still opens on youtube.com from the logo.",
+            },
+          ],
+        },
       ],
     },
   },

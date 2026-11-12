@@ -31,7 +31,7 @@ export const outline: Course = {
       label: "MODULE 01",
       title: "YouTube videos in the player",
       topicsCompleted: 0,
-      topicsTotal: 2,
+      topicsTotal: 3,
       isCompleted: false,
       lessons: [
         {
@@ -53,6 +53,19 @@ export const outline: Course = {
               completed: false,
               playbackMeasurable: false,
               youtube: { id: VIDEO_ID, embed: true },
+            },
+          ],
+        },
+        {
+          id: "ytt-m1-l3",
+          label: "A unit with several components",
+          topics: [
+            {
+              id: "ytt-m1-t3",
+              type: "Lesson Page",
+              title: "Text, a YouTube video and a quick check",
+              duration: "10 min approx.",
+              completed: false,
             },
           ],
         },
