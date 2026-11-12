@@ -6,6 +6,7 @@ import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { VideoPlayer } from "@/components/organisms/VideoPlayer";
+import { YouTubeEmbed } from "@/components/molecules/YouTubeEmbed";
 import { useLmsStore } from "@/lib/store";
 import { cn, durationToSeconds } from "@/lib/utils";
 import type { LessonBlock, QuizOption } from "@/lib/content";
@@ -109,10 +110,17 @@ function Block({ block }: { block: LessonBlock }) {
     case "video":
       return (
         <figure className="flex flex-col gap-2">
-          {/* Video unit/asset — same player component as any Video topic. */}
-          <EmbeddedVideo block={block} />
+          {/* Video unit/asset — same player component as any Video topic; a YouTube embed keeps
+              YouTube's own player, untouched (decision 041). */}
+          {block.youtubeId ? (
+            <YouTubeEmbed videoId={block.youtubeId} title={block.title} />
+          ) : (
+            <EmbeddedVideo block={block} />
+          )}
           <figcaption className="sk-text-body-small-regular text-sko-text-subtle">
-            Video · {block.durationLabel} · transcript available
+            {block.youtubeId
+              ? `YouTube video · ${block.durationLabel} · progress not tracked`
+              : `Video · ${block.durationLabel}${block.transcript?.length ? " · transcript available" : ""}`}
           </figcaption>
         </figure>
       );

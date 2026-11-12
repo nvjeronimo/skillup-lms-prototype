@@ -1241,7 +1241,9 @@ export function getAssignmentBrief(topic: FlatTopic): AssignmentBrief {
  */
 export type LessonBlock =
   | { kind: "text"; heading?: string; paragraphs: string[] }
-  | { kind: "video"; title: string; durationLabel: string; transcript?: TranscriptCue[] }
+  // youtubeId: a YouTube embed pasted into the same Text component (decision 041): YouTube's own
+  // player, never measured, no transcript.
+  | { kind: "video"; title: string; durationLabel: string; transcript?: TranscriptCue[]; youtubeId?: string }
   | { kind: "image"; caption: string; alt: string }
   | { kind: "file"; name: string; fileKind: "pdf" | "doc" | "data"; size: string }
   | { kind: "callout"; tone: "info" | "warning"; title: string; body: string }
