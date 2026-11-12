@@ -1,6 +1,6 @@
 {
   "format": "skillup-figma-tokens/1",
-  "fileKey": "c7EUDrQwP8si08aPipDSIV",
+  "fileKey": null,
   "collections": [
     {
       "name": "1. SKO-Semantics 🎨",
@@ -9,10 +9,12 @@
         "SKO Dark",
         "Gold Light",
         "Gold Dark",
-        "Red Light",
-        "Red Dark",
         "Studio Light",
-        "Studio Dark"
+        "Studio Dark",
+        "Harbor Light",
+        "Harbor Dark",
+        "Fluent Light",
+        "Fluent Dark"
       ],
       "variables": [
         {
@@ -24,10 +26,12 @@
             "SKO Dark": 6,
             "Gold Light": 6,
             "Gold Dark": 6,
-            "Red Light": 6,
-            "Red Dark": 6,
             "Studio Light": 6,
-            "Studio Dark": 6
+            "Studio Dark": 6,
+            "Harbor Light": 6,
+            "Harbor Dark": 6,
+            "Fluent Light": 6,
+            "Fluent Dark": 6
           }
         },
         {
@@ -39,10 +43,12 @@
             "SKO Dark": 3,
             "Gold Light": 3,
             "Gold Dark": 3,
-            "Red Light": 3,
-            "Red Dark": 3,
             "Studio Light": 3,
-            "Studio Dark": 3
+            "Studio Dark": 3,
+            "Harbor Light": 3,
+            "Harbor Dark": 3,
+            "Fluent Light": 3,
+            "Fluent Dark": 3
           }
         },
         {
@@ -54,10 +60,12 @@
             "SKO Dark": "Montserrat",
             "Gold Light": "Montserrat",
             "Gold Dark": "Montserrat",
-            "Red Light": "Montserrat",
-            "Red Dark": "Montserrat",
             "Studio Light": "Montserrat",
-            "Studio Dark": "Montserrat"
+            "Studio Dark": "Montserrat",
+            "Harbor Light": "Plus Jakarta Sans",
+            "Harbor Dark": "Plus Jakarta Sans",
+            "Fluent Light": "Open Sans",
+            "Fluent Dark": "Open Sans"
           }
         },
         {
@@ -69,10 +77,12 @@
             "SKO Dark": "Montserrat",
             "Gold Light": "Montserrat",
             "Gold Dark": "Montserrat",
-            "Red Light": "Montserrat",
-            "Red Dark": "Montserrat",
             "Studio Light": "Montserrat",
-            "Studio Dark": "Montserrat"
+            "Studio Dark": "Montserrat",
+            "Harbor Light": "Figtree",
+            "Harbor Dark": "Figtree",
+            "Fluent Light": "Open Sans",
+            "Fluent Dark": "Open Sans"
           }
         },
         {
@@ -84,10 +94,12 @@
             "SKO Dark": "Merriweather",
             "Gold Light": "Merriweather",
             "Gold Dark": "Merriweather",
-            "Red Light": "Merriweather",
-            "Red Dark": "Merriweather",
             "Studio Light": "Merriweather",
-            "Studio Dark": "Merriweather"
+            "Studio Dark": "Merriweather",
+            "Harbor Light": "Merriweather",
+            "Harbor Dark": "Merriweather",
+            "Fluent Light": "Merriweather",
+            "Fluent Dark": "Merriweather"
           }
         },
         {
@@ -99,10 +111,12 @@
             "SKO Dark": "#eaf1f4",
             "Gold Light": "#13282f",
             "Gold Dark": "#eaf1f4",
-            "Red Light": "#13282f",
-            "Red Dark": "#eaf1f4",
             "Studio Light": "#131720",
-            "Studio Dark": "#eef0f3"
+            "Studio Dark": "#eef0f3",
+            "Harbor Light": "#071c27",
+            "Harbor Dark": "#f3f6f8",
+            "Fluent Light": "#242424",
+            "Fluent Dark": "#ffffff"
           }
         },
         {
@@ -114,10 +128,12 @@
             "SKO Dark": "#b3c0c7",
             "Gold Light": "#39414c",
             "Gold Dark": "#b3c0c7",
-            "Red Light": "#39414c",
-            "Red Dark": "#b3c0c7",
             "Studio Light": "#3b4150",
-            "Studio Dark": "#c4c9d1"
+            "Studio Dark": "#c4c9d1",
+            "Harbor Light": "#434f58",
+            "Harbor Dark": "#c9d2d9",
+            "Fluent Light": "#424242",
+            "Fluent Dark": "#d6d6d6"
           }
         },
         {
@@ -129,10 +145,12 @@
             "SKO Dark": "#93a3ab",
             "Gold Light": "#4f5b69",
             "Gold Dark": "#93a3ab",
-            "Red Light": "#4f5b69",
-            "Red Dark": "#93a3ab",
             "Studio Light": "#545a68",
-            "Studio Dark": "#9ca3ae"
+            "Studio Dark": "#9ca3ae",
+            "Harbor Light": "#56626b",
+            "Harbor Dark": "#9aa7b1",
+            "Fluent Light": "#616161",
+            "Fluent Dark": "#adadad"
           }
         },
         {
@@ -144,10 +162,12 @@
             "SKO Dark": "#cdeaf6",
             "Gold Light": "#553600",
             "Gold Dark": "#ffe4a9",
-            "Red Light": "#67151a",
-            "Red Dark": "#ffd5d0",
             "Studio Light": "#044150",
-            "Studio Dark": "#d3eef5"
+            "Studio Dark": "#d3eef5",
+            "Harbor Light": "#071c27",
+            "Harbor Dark": "#e6f1fe",
+            "Fluent Light": "#242424",
+            "Fluent Dark": "#ffffff"
           }
         },
         {
@@ -159,10 +179,12 @@
             "SKO Dark": "#6cc0e0",
             "Gold Light": "#553600",
             "Gold Dark": "#ffd07a",
-            "Red Light": "#88262a",
-            "Red Dark": "#ff8985",
             "Studio Light": "#0a5266",
-            "Studio Dark": "#8fd0e0"
+            "Studio Dark": "#8fd0e0",
+            "Harbor Light": "#0062c4",
+            "Harbor Dark": "#6cb4ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#62abf5"
           }
         },
         {
@@ -174,10 +196,12 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0b1d23"
+            "Studio Dark": "#0b1d23",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#071c27",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#ffffff"
           }
         },
         {
@@ -189,10 +213,12 @@
             "SKO Dark": "#72d99a",
             "Gold Light": "#1f7643",
             "Gold Dark": "#72d99a",
-            "Red Light": "#1f7643",
-            "Red Dark": "#72d99a",
             "Studio Light": "#1f7643",
-            "Studio Dark": "#72d99a"
+            "Studio Dark": "#72d99a",
+            "Harbor Light": "#00695c",
+            "Harbor Dark": "#34d399",
+            "Fluent Light": "#0e700e",
+            "Fluent Dark": "#54b054"
           }
         },
         {
@@ -204,10 +230,12 @@
             "SKO Dark": "#fab929",
             "Gold Light": "#85580e",
             "Gold Dark": "#fab929",
-            "Red Light": "#85580e",
-            "Red Dark": "#fab929",
             "Studio Light": "#85580e",
-            "Studio Dark": "#fab929"
+            "Studio Dark": "#fab929",
+            "Harbor Light": "#85580e",
+            "Harbor Dark": "#fab929",
+            "Fluent Light": "#85580e",
+            "Fluent Dark": "#fab929"
           }
         },
         {
@@ -219,10 +247,12 @@
             "SKO Dark": "#f3afb0",
             "Gold Light": "#b62226",
             "Gold Dark": "#f3afb0",
-            "Red Light": "#b62226",
-            "Red Dark": "#f3afb0",
             "Studio Light": "#b62226",
-            "Studio Dark": "#f3afb0"
+            "Studio Dark": "#f3afb0",
+            "Harbor Light": "#c62828",
+            "Harbor Dark": "#f87171",
+            "Fluent Light": "#b10e1c",
+            "Fluent Dark": "#dc626d"
           }
         },
         {
@@ -234,10 +264,12 @@
             "SKO Dark": "#ffffff",
             "Gold Light": "#ffffff",
             "Gold Dark": "#ffffff",
-            "Red Light": "#ffffff",
-            "Red Dark": "#ffffff",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#ffffff"
+            "Studio Dark": "#ffffff",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#ffffff",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#ffffff"
           }
         },
         {
@@ -249,10 +281,12 @@
             "SKO Dark": "#606b7a",
             "Gold Light": "#b9c4ce",
             "Gold Dark": "#606b7a",
-            "Red Light": "#b9c4ce",
-            "Red Dark": "#606b7a",
             "Studio Light": "#b9c4ce",
-            "Studio Dark": "#5d6470"
+            "Studio Dark": "#5d6470",
+            "Harbor Light": "#a1a1aa",
+            "Harbor Dark": "#3a4854",
+            "Fluent Light": "#bdbdbd",
+            "Fluent Dark": "#525252"
           }
         },
         {
@@ -264,10 +298,12 @@
             "SKO Dark": "#0086c9",
             "Gold Light": "#0086c9",
             "Gold Dark": "#0086c9",
-            "Red Light": "#0086c9",
-            "Red Dark": "#0086c9",
             "Studio Light": "#0086c9",
-            "Studio Dark": "#0086c9"
+            "Studio Dark": "#0086c9",
+            "Harbor Light": "#0073ec",
+            "Harbor Dark": "#4da3ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#115ea3"
           }
         },
         {
@@ -279,10 +315,12 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0e1a1f"
+            "Studio Dark": "#0e1a1f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#0e1a1f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#0e1a1f"
           }
         },
         {
@@ -294,10 +332,12 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0e1a1f"
+            "Studio Dark": "#0e1a1f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#0e1a1f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#0e1a1f"
           }
         },
         {
@@ -309,10 +349,12 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#13282f",
             "Gold Dark": "#13282f",
-            "Red Light": "#13282f",
-            "Red Dark": "#13282f",
             "Studio Light": "#13282f",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#13282f",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#13282f",
+            "Fluent Dark": "#13282f"
           }
         },
         {
@@ -324,10 +366,12 @@
             "SKO Dark": "#40c075",
             "Gold Light": "#33a864",
             "Gold Dark": "#40c075",
-            "Red Light": "#33a864",
-            "Red Dark": "#40c075",
             "Studio Light": "#33a864",
-            "Studio Dark": "#40c075"
+            "Studio Dark": "#40c075",
+            "Harbor Light": "#00897b",
+            "Harbor Dark": "#34d399",
+            "Fluent Light": "#107c10",
+            "Fluent Dark": "#54b054"
           }
         },
         {
@@ -339,10 +383,12 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#20242d"
+            "Studio Dark": "#20242d",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#17212a",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#292929"
           }
         },
         {
@@ -354,10 +400,12 @@
             "SKO Dark": "#122228",
             "Gold Light": "#f3f5fa",
             "Gold Dark": "#122228",
-            "Red Light": "#f3f5fa",
-            "Red Dark": "#122228",
             "Studio Light": "#eceef1",
-            "Studio Dark": "#272c36"
+            "Studio Dark": "#272c36",
+            "Harbor Light": "#f4f6f8",
+            "Harbor Dark": "#1e2a34",
+            "Fluent Light": "#fafafa",
+            "Fluent Dark": "#1f1f1f"
           }
         },
         {
@@ -369,10 +417,12 @@
             "SKO Dark": "#16282f",
             "Gold Light": "#f8f9fa",
             "Gold Dark": "#16282f",
-            "Red Light": "#f8f9fa",
-            "Red Dark": "#16282f",
             "Studio Light": "#f3f4f6",
-            "Studio Dark": "#0d0f13"
+            "Studio Dark": "#0d0f13",
+            "Harbor Light": "#f7f9fa",
+            "Harbor Dark": "#0b1218",
+            "Fluent Light": "#f5f5f5",
+            "Fluent Dark": "#141414"
           }
         },
         {
@@ -384,10 +434,12 @@
             "SKO Dark": "#25383f",
             "Gold Light": "#e1e7ec",
             "Gold Dark": "#25383f",
-            "Red Light": "#e1e7ec",
-            "Red Dark": "#25383f",
             "Studio Light": "#e1e7ec",
-            "Studio Dark": "#323844"
+            "Studio Dark": "#323844",
+            "Harbor Light": "#f0f0f0",
+            "Harbor Dark": "#26333e",
+            "Fluent Light": "#f0f0f0",
+            "Fluent Dark": "#333333"
           }
         },
         {
@@ -399,10 +451,12 @@
             "SKO Dark": "#0f2c38",
             "Gold Light": "#ffda8f",
             "Gold Dark": "#2a2f25",
-            "Red Light": "#ffd5d0",
-            "Red Dark": "#28252a",
             "Studio Light": "#e3f3f6",
-            "Studio Dark": "#12303a"
+            "Studio Dark": "#12303a",
+            "Harbor Light": "#d9eafc",
+            "Harbor Dark": "#0f3257",
+            "Fluent Light": "#ebf3fc",
+            "Fluent Dark": "#0c3b5e"
           }
         },
         {
@@ -414,10 +468,12 @@
             "SKO Dark": "#4aa3c7",
             "Gold Light": "#553600",
             "Gold Dark": "#ffd07a",
-            "Red Light": "#88262a",
-            "Red Dark": "#ff8985",
             "Studio Light": "#044150",
-            "Studio Dark": "#8fd0e0"
+            "Studio Dark": "#8fd0e0",
+            "Harbor Light": "#006cdd",
+            "Harbor Dark": "#4da3ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#115ea3"
           }
         },
         {
@@ -429,10 +485,12 @@
             "SKO Dark": "#2e2410",
             "Gold Light": "#fff9eb",
             "Gold Dark": "#2e2410",
-            "Red Light": "#fff9eb",
-            "Red Dark": "#2e2410",
             "Studio Light": "#fff2d4",
-            "Studio Dark": "#2e2410"
+            "Studio Dark": "#2e2410",
+            "Harbor Light": "#fff2d4",
+            "Harbor Dark": "#2e2410",
+            "Fluent Light": "#fff2d4",
+            "Fluent Dark": "#2e2410"
           }
         },
         {
@@ -444,10 +502,12 @@
             "SKO Dark": "#102b1d",
             "Gold Light": "#e4fced",
             "Gold Dark": "#102b1d",
-            "Red Light": "#e4fced",
-            "Red Dark": "#102b1d",
             "Studio Light": "#e4fced",
-            "Studio Dark": "#102b1d"
+            "Studio Dark": "#102b1d",
+            "Harbor Light": "#e0f7f4",
+            "Harbor Dark": "#102b1d",
+            "Fluent Light": "#f1faf1",
+            "Fluent Dark": "#102b1d"
           }
         },
         {
@@ -459,10 +519,12 @@
             "SKO Dark": "#34191b",
             "Gold Light": "#fce8e8",
             "Gold Dark": "#34191b",
-            "Red Light": "#fce8e8",
-            "Red Dark": "#34191b",
             "Studio Light": "#fce8e8",
-            "Studio Dark": "#34191b"
+            "Studio Dark": "#34191b",
+            "Harbor Light": "#ffeded",
+            "Harbor Dark": "#34191b",
+            "Fluent Light": "#fdf3f4",
+            "Fluent Dark": "#34191b"
           }
         },
         {
@@ -474,10 +536,12 @@
             "SKO Dark": "#6cc0e0",
             "Gold Light": "#ffe4a9",
             "Gold Dark": "#ffe4a9",
-            "Red Light": "#ffa19d",
-            "Red Dark": "#ffa19d",
             "Studio Light": "#0a5266",
-            "Studio Dark": "#b4e2ed"
+            "Studio Dark": "#b4e2ed",
+            "Harbor Light": "#0058b8",
+            "Harbor Dark": "#82bfff",
+            "Fluent Light": "#115ea3",
+            "Fluent Dark": "#0f6cbd"
           }
         },
         {
@@ -489,10 +553,12 @@
             "SKO Dark": "#e26567",
             "Gold Light": "#da3336",
             "Gold Dark": "#e26567",
-            "Red Light": "#da3336",
-            "Red Dark": "#e26567",
             "Studio Light": "#da3336",
-            "Studio Dark": "#e26567"
+            "Studio Dark": "#e26567",
+            "Harbor Light": "#d32f2f",
+            "Harbor Dark": "#e26567",
+            "Fluent Light": "#c50f1f",
+            "Fluent Dark": "#e26567"
           }
         },
         {
@@ -504,10 +570,12 @@
             "SKO Dark": "#2d9c5b",
             "Gold Light": "#1f7643",
             "Gold Dark": "#2d9c5b",
-            "Red Light": "#1f7643",
-            "Red Dark": "#2d9c5b",
             "Studio Light": "#1f7643",
-            "Studio Dark": "#2d9c5b"
+            "Studio Dark": "#2d9c5b",
+            "Harbor Light": "#00796b",
+            "Harbor Dark": "#2d9c5b",
+            "Fluent Light": "#107c10",
+            "Fluent Dark": "#2d9c5b"
           }
         },
         {
@@ -519,10 +587,12 @@
             "SKO Dark": "#f9c654",
             "Gold Light": "#f9c654",
             "Gold Dark": "#f9c654",
-            "Red Light": "#f9c654",
-            "Red Dark": "#f9c654",
             "Studio Light": "#f9c654",
-            "Studio Dark": "#f9c654"
+            "Studio Dark": "#f9c654",
+            "Harbor Light": "#f9c654",
+            "Harbor Dark": "#f9c654",
+            "Fluent Light": "#f9c654",
+            "Fluent Dark": "#f9c654"
           }
         },
         {
@@ -534,10 +604,12 @@
             "SKO Dark": "#8995a6",
             "Gold Light": "#8995a6",
             "Gold Dark": "#8995a6",
-            "Red Light": "#8995a6",
-            "Red Dark": "#8995a6",
             "Studio Light": "#8995a6",
-            "Studio Dark": "#7d8593"
+            "Studio Dark": "#7d8593",
+            "Harbor Light": "#8b8b94",
+            "Harbor Dark": "#6b7883",
+            "Fluent Light": "#616161",
+            "Fluent Dark": "#adadad"
           }
         },
         {
@@ -549,10 +621,12 @@
             "SKO Dark": "#2c3d45",
             "Gold Light": "#d5dce2",
             "Gold Dark": "#2c3d45",
-            "Red Light": "#d5dce2",
-            "Red Dark": "#2c3d45",
             "Studio Light": "#e2e4e9",
-            "Studio Dark": "#3a404d"
+            "Studio Dark": "#3a404d",
+            "Harbor Light": "#e3e3e3",
+            "Harbor Dark": "#2d3b47",
+            "Fluent Light": "#e0e0e0",
+            "Fluent Dark": "#525252"
           }
         },
         {
@@ -564,10 +638,12 @@
             "SKO Dark": "#215477",
             "Gold Light": "#c89536",
             "Gold Dark": "#724c00",
-            "Red Light": "#ffa19d",
-            "Red Dark": "#390003",
             "Studio Light": "#c5e3ea",
-            "Studio Dark": "#2b5561"
+            "Studio Dark": "#2b5561",
+            "Harbor Light": "#b3d4f7",
+            "Harbor Dark": "#1d4d80",
+            "Fluent Light": "#b4d6fa",
+            "Fluent Dark": "#0e4775"
           }
         },
         {
@@ -579,10 +655,12 @@
             "SKO Dark": 32,
             "Gold Light": 32,
             "Gold Dark": 32,
-            "Red Light": 32,
-            "Red Dark": 32,
             "Studio Light": 32,
-            "Studio Dark": 32
+            "Studio Dark": 32,
+            "Harbor Light": 32,
+            "Harbor Dark": 32,
+            "Fluent Light": 32,
+            "Fluent Dark": 32
           }
         },
         {
@@ -594,10 +672,12 @@
             "SKO Dark": "#1f233e0d",
             "Gold Light": "#1f233e0d",
             "Gold Dark": "#1f233e0d",
-            "Red Light": "#1f233e0d",
-            "Red Dark": "#1f233e0d",
             "Studio Light": "#1f233e0d",
-            "Studio Dark": "#1f233e0d"
+            "Studio Dark": "#1f233e0d",
+            "Harbor Light": "#1f233e0d",
+            "Harbor Dark": "#1f233e0d",
+            "Fluent Light": "#1f233e0d",
+            "Fluent Dark": "#1f233e0d"
           }
         },
         {
@@ -609,10 +689,12 @@
             "SKO Dark": "#741b1d",
             "Gold Light": "#f3afb0",
             "Gold Dark": "#741b1d",
-            "Red Light": "#f3afb0",
-            "Red Dark": "#741b1d",
             "Studio Light": "#f3afb0",
-            "Studio Dark": "#741b1d"
+            "Studio Dark": "#741b1d",
+            "Harbor Light": "#f3afb0",
+            "Harbor Dark": "#741b1d",
+            "Fluent Light": "#f3afb0",
+            "Fluent Dark": "#741b1d"
           }
         },
         {
@@ -624,10 +706,12 @@
             "SKO Dark": "#996816",
             "Gold Light": "#ffebbd",
             "Gold Dark": "#996816",
-            "Red Light": "#ffebbd",
-            "Red Dark": "#996816",
             "Studio Light": "#ffebbd",
-            "Studio Dark": "#996816"
+            "Studio Dark": "#996816",
+            "Harbor Light": "#ffebbd",
+            "Harbor Dark": "#996816",
+            "Fluent Light": "#ffebbd",
+            "Fluent Dark": "#996816"
           }
         },
         {
@@ -639,10 +723,12 @@
             "SKO Dark": "#1b6440",
             "Gold Light": "#aaedc2",
             "Gold Dark": "#1b6440",
-            "Red Light": "#aaedc2",
-            "Red Dark": "#1b6440",
             "Studio Light": "#aaedc2",
-            "Studio Dark": "#1b6440"
+            "Studio Dark": "#1b6440",
+            "Harbor Light": "#aaedc2",
+            "Harbor Dark": "#1b6440",
+            "Fluent Light": "#aaedc2",
+            "Fluent Dark": "#1b6440"
           }
         },
         {
@@ -654,10 +740,12 @@
             "SKO Dark": "#53666e",
             "Gold Light": "#8995a6",
             "Gold Dark": "#53666e",
-            "Red Light": "#8995a6",
-            "Red Dark": "#53666e",
             "Studio Light": "#8995a6",
-            "Studio Dark": "#4f5663"
+            "Studio Dark": "#4f5663",
+            "Harbor Light": "#a1a1aa",
+            "Harbor Dark": "#5f6b74",
+            "Fluent Light": "#bdbdbd",
+            "Fluent Dark": "#5c5c5c"
           }
         },
         {
@@ -669,10 +757,12 @@
             "SKO Dark": "#25383f",
             "Gold Light": "#b9c4ce",
             "Gold Dark": "#25383f",
-            "Red Light": "#b9c4ce",
-            "Red Dark": "#25383f",
             "Studio Light": "#b9c4ce",
-            "Studio Dark": "#323844"
+            "Studio Dark": "#323844",
+            "Harbor Light": "#d4d4d8",
+            "Harbor Dark": "#25383f",
+            "Fluent Light": "#e0e0e0",
+            "Fluent Dark": "#25383f"
           }
         },
         {
@@ -684,10 +774,12 @@
             "SKO Dark": "#93a3ab",
             "Gold Light": "#606b7a",
             "Gold Dark": "#93a3ab",
-            "Red Light": "#606b7a",
-            "Red Dark": "#93a3ab",
             "Studio Light": "#606b7a",
-            "Studio Dark": "#9ca3ae"
+            "Studio Dark": "#9ca3ae",
+            "Harbor Light": "#56626b",
+            "Harbor Dark": "#9aa7b1",
+            "Fluent Light": "#707070",
+            "Fluent Dark": "#adadad"
           }
         },
         {
@@ -699,10 +791,12 @@
             "SKO Dark": "#2c3d45",
             "Gold Light": "#b9c4ce",
             "Gold Dark": "#2c3d45",
-            "Red Light": "#b9c4ce",
-            "Red Dark": "#2c3d45",
             "Studio Light": "#b9c4ce",
-            "Studio Dark": "#3d4350"
+            "Studio Dark": "#3d4350",
+            "Harbor Light": "#d4d4d8",
+            "Harbor Dark": "#3a4854",
+            "Fluent Light": "#d1d1d1",
+            "Fluent Dark": "#525252"
           }
         },
         {
@@ -714,10 +808,12 @@
             "SKO Dark": "#16282f",
             "Gold Light": "#13282f",
             "Gold Dark": "#16282f",
-            "Red Light": "#13282f",
-            "Red Dark": "#16282f",
             "Studio Light": "#13282f",
-            "Studio Dark": "#272c36"
+            "Studio Dark": "#272c36",
+            "Harbor Light": "#111111",
+            "Harbor Dark": "#16282f",
+            "Fluent Light": "#242424",
+            "Fluent Dark": "#16282f"
           }
         },
         {
@@ -729,10 +825,12 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#553600",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#67151a",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0b1d23"
+            "Studio Dark": "#0b1d23",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#071c27",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#ffffff"
           }
         },
         {
@@ -744,10 +842,12 @@
             "SKO Dark": "#ffffff",
             "Gold Light": "#ffffff",
             "Gold Dark": "#ffffff",
-            "Red Light": "#ffffff",
-            "Red Dark": "#ffffff",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#ffffff"
+            "Studio Dark": "#ffffff",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#ffffff",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#ffffff"
           }
         },
         {
@@ -759,10 +859,12 @@
             "SKO Dark": "#f8f9fa",
             "Gold Light": "#f8f9fa",
             "Gold Dark": "#f8f9fa",
-            "Red Light": "#f8f9fa",
-            "Red Dark": "#f8f9fa",
             "Studio Light": "#f8f9fa",
-            "Studio Dark": "#f8f9fa"
+            "Studio Dark": "#f8f9fa",
+            "Harbor Light": "#f8f9fa",
+            "Harbor Dark": "#f8f9fa",
+            "Fluent Light": "#f8f9fa",
+            "Fluent Dark": "#f8f9fa"
           }
         },
         {
@@ -774,10 +876,12 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#13282f",
             "Gold Dark": "#13282f",
-            "Red Light": "#13282f",
-            "Red Dark": "#13282f",
             "Studio Light": "#13282f",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#13282f",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#13282f",
+            "Fluent Dark": "#13282f"
           }
         },
         {
@@ -789,10 +893,12 @@
             "SKO Dark": "#062c41",
             "Gold Light": "#ffffff",
             "Gold Dark": "#062c41",
-            "Red Light": "#ffffff",
-            "Red Dark": "#062c41",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0d0f13"
+            "Studio Dark": "#0d0f13",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#062c41",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#062c41"
           }
         },
         {
@@ -804,18 +910,18 @@
             "SKO Dark": "#eaf1f4",
             "Gold Light": "#13282f",
             "Gold Dark": "#eaf1f4",
-            "Red Light": "#13282f",
-            "Red Dark": "#eaf1f4",
             "Studio Light": "#131720",
-            "Studio Dark": "#eef0f3"
+            "Studio Dark": "#eef0f3",
+            "Harbor Light": "#111111",
+            "Harbor Dark": "#f3f6f8",
+            "Fluent Light": "#292929",
+            "Fluent Dark": "#ffffff"
           },
           "aliases": {
             "SKO Light": "text/default",
             "SKO Dark": "text/default",
             "Gold Light": "text/default",
             "Gold Dark": "text/default",
-            "Red Light": "text/default",
-            "Red Dark": "text/default",
             "Studio Light": "text/default"
           }
         },
@@ -828,20 +934,24 @@
             "SKO Dark": "#ffffff",
             "Gold Light": "#ffffff",
             "Gold Dark": "#ffffff",
-            "Red Light": "#ffffff",
-            "Red Dark": "#ffffff",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#ffffff"
+            "Studio Dark": "#ffffff",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#ffffff",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#ffffff"
           },
           "aliases": {
             "SKO Light": "text/on-media",
             "SKO Dark": "text/on-media",
             "Gold Light": "text/on-media",
             "Gold Dark": "text/on-media",
-            "Red Light": "text/on-media",
-            "Red Dark": "text/on-media",
             "Studio Light": "text/on-media",
-            "Studio Dark": "text/on-media"
+            "Studio Dark": "text/on-media",
+            "Harbor Light": "text/on-media",
+            "Harbor Dark": "text/on-media",
+            "Fluent Light": "text/on-media",
+            "Fluent Dark": "text/on-media"
           }
         },
         {
@@ -853,18 +963,18 @@
             "SKO Dark": "#eaf1f4",
             "Gold Light": "#13282f",
             "Gold Dark": "#eaf1f4",
-            "Red Light": "#13282f",
-            "Red Dark": "#eaf1f4",
             "Studio Light": "#131720",
-            "Studio Dark": "#eef0f3"
+            "Studio Dark": "#eef0f3",
+            "Harbor Light": "#111111",
+            "Harbor Dark": "#f3f6f8",
+            "Fluent Light": "#242424",
+            "Fluent Dark": "#ffffff"
           },
           "aliases": {
             "SKO Light": "text/default",
             "SKO Dark": "text/default",
             "Gold Light": "text/default",
             "Gold Dark": "text/default",
-            "Red Light": "text/default",
-            "Red Dark": "text/default",
             "Studio Light": "text/default",
             "Studio Dark": "text/default"
           }
@@ -878,18 +988,18 @@
             "SKO Dark": "#4aa3c7",
             "Gold Light": "#553600",
             "Gold Dark": "#ffd07a",
-            "Red Light": "#88262a",
-            "Red Dark": "#ff8985",
             "Studio Light": "#0a5266",
-            "Studio Dark": "#8fd0e0"
+            "Studio Dark": "#8fd0e0",
+            "Harbor Light": "#006cdd",
+            "Harbor Dark": "#4da3ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#62abf5"
           },
           "aliases": {
             "SKO Light": "bg/primary",
             "SKO Dark": "bg/primary",
             "Gold Light": "bg/primary",
-            "Gold Dark": "bg/primary",
-            "Red Light": "bg/primary",
-            "Red Dark": "bg/primary"
+            "Gold Dark": "bg/primary"
           }
         },
         {
@@ -901,10 +1011,12 @@
             "SKO Dark": "#215477",
             "Gold Light": "#c89536",
             "Gold Dark": "#724c00",
-            "Red Light": "#ffa19d",
-            "Red Dark": "#390003",
             "Studio Light": "#acd5f4",
-            "Studio Dark": "#2b5561"
+            "Studio Dark": "#2b5561",
+            "Harbor Light": "#b3d4f7",
+            "Harbor Dark": "#1d4d80",
+            "Fluent Light": "#b4d6fa",
+            "Fluent Dark": "#0e4775"
           }
         },
         {
@@ -916,20 +1028,22 @@
             "SKO Dark": "#f3afb0",
             "Gold Light": "#b62226",
             "Gold Dark": "#f3afb0",
-            "Red Light": "#b62226",
-            "Red Dark": "#f3afb0",
             "Studio Light": "#b62226",
-            "Studio Dark": "#f3afb0"
+            "Studio Dark": "#f3afb0",
+            "Harbor Light": "#c62828",
+            "Harbor Dark": "#f87171",
+            "Fluent Light": "#c50f1f",
+            "Fluent Dark": "#dc626d"
           },
           "aliases": {
             "SKO Light": "text/error",
             "SKO Dark": "text/error",
             "Gold Light": "text/error",
             "Gold Dark": "text/error",
-            "Red Light": "text/error",
-            "Red Dark": "text/error",
             "Studio Light": "text/error",
-            "Studio Dark": "text/error"
+            "Studio Dark": "text/error",
+            "Harbor Dark": "text/error",
+            "Fluent Dark": "text/error"
           }
         },
         {
@@ -941,20 +1055,22 @@
             "SKO Dark": "#72d99a",
             "Gold Light": "#1f7643",
             "Gold Dark": "#72d99a",
-            "Red Light": "#1f7643",
-            "Red Dark": "#72d99a",
             "Studio Light": "#1f7643",
-            "Studio Dark": "#72d99a"
+            "Studio Dark": "#72d99a",
+            "Harbor Light": "#00796b",
+            "Harbor Dark": "#34d399",
+            "Fluent Light": "#107c10",
+            "Fluent Dark": "#54b054"
           },
           "aliases": {
             "SKO Light": "text/success",
             "SKO Dark": "text/success",
             "Gold Light": "text/success",
             "Gold Dark": "text/success",
-            "Red Light": "text/success",
-            "Red Dark": "text/success",
             "Studio Light": "text/success",
-            "Studio Dark": "text/success"
+            "Studio Dark": "text/success",
+            "Harbor Dark": "text/success",
+            "Fluent Dark": "text/success"
           }
         },
         {
@@ -966,20 +1082,24 @@
             "SKO Dark": "#fab929",
             "Gold Light": "#85580e",
             "Gold Dark": "#fab929",
-            "Red Light": "#85580e",
-            "Red Dark": "#fab929",
             "Studio Light": "#85580e",
-            "Studio Dark": "#fab929"
+            "Studio Dark": "#fab929",
+            "Harbor Light": "#85580e",
+            "Harbor Dark": "#fab929",
+            "Fluent Light": "#85580e",
+            "Fluent Dark": "#fab929"
           },
           "aliases": {
             "SKO Light": "text/warning",
             "SKO Dark": "text/warning",
             "Gold Light": "text/warning",
             "Gold Dark": "text/warning",
-            "Red Light": "text/warning",
-            "Red Dark": "text/warning",
             "Studio Light": "text/warning",
-            "Studio Dark": "text/warning"
+            "Studio Dark": "text/warning",
+            "Harbor Light": "text/warning",
+            "Harbor Dark": "text/warning",
+            "Fluent Light": "text/warning",
+            "Fluent Dark": "text/warning"
           }
         },
         {
@@ -991,20 +1111,22 @@
             "SKO Dark": "#0086c9",
             "Gold Light": "#0086c9",
             "Gold Dark": "#0086c9",
-            "Red Light": "#0086c9",
-            "Red Dark": "#0086c9",
             "Studio Light": "#0086c9",
-            "Studio Dark": "#0086c9"
+            "Studio Dark": "#0086c9",
+            "Harbor Light": "#0073ec",
+            "Harbor Dark": "#4da3ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#115ea3"
           },
           "aliases": {
             "SKO Light": "bg/info",
             "SKO Dark": "bg/info",
             "Gold Light": "bg/info",
             "Gold Dark": "bg/info",
-            "Red Light": "bg/info",
-            "Red Dark": "bg/info",
             "Studio Light": "bg/info",
-            "Studio Dark": "bg/info"
+            "Studio Dark": "bg/info",
+            "Harbor Dark": "bg/info",
+            "Fluent Dark": "bg/info"
           }
         },
         {
@@ -1016,18 +1138,18 @@
             "SKO Dark": "#eaf1f4",
             "Gold Light": "#13282f",
             "Gold Dark": "#eaf1f4",
-            "Red Light": "#13282f",
-            "Red Dark": "#eaf1f4",
             "Studio Light": "#131720",
-            "Studio Dark": "#eef0f3"
+            "Studio Dark": "#eef0f3",
+            "Harbor Light": "#111111",
+            "Harbor Dark": "#f3f6f8",
+            "Fluent Light": "#242424",
+            "Fluent Dark": "#ffffff"
           },
           "aliases": {
             "SKO Light": "text/default",
             "SKO Dark": "text/default",
             "Gold Light": "text/default",
-            "Gold Dark": "text/default",
-            "Red Light": "text/default",
-            "Red Dark": "text/default"
+            "Gold Dark": "text/default"
           }
         },
         {
@@ -1039,18 +1161,18 @@
             "SKO Dark": "#b3c0c7",
             "Gold Light": "#39414c",
             "Gold Dark": "#b3c0c7",
-            "Red Light": "#39414c",
-            "Red Dark": "#b3c0c7",
             "Studio Light": "#3b4150",
-            "Studio Dark": "#c4c9d1"
+            "Studio Dark": "#c4c9d1",
+            "Harbor Light": "#2f323d",
+            "Harbor Dark": "#c9d2d9",
+            "Fluent Light": "#424242",
+            "Fluent Dark": "#d6d6d6"
           },
           "aliases": {
             "SKO Light": "text/muted",
             "SKO Dark": "text/muted",
             "Gold Light": "text/muted",
             "Gold Dark": "text/muted",
-            "Red Light": "text/muted",
-            "Red Dark": "text/muted",
             "Studio Light": "text/muted"
           }
         },
@@ -1063,18 +1185,18 @@
             "SKO Dark": "#93a3ab",
             "Gold Light": "#4f5b69",
             "Gold Dark": "#93a3ab",
-            "Red Light": "#4f5b69",
-            "Red Dark": "#93a3ab",
             "Studio Light": "#545a68",
-            "Studio Dark": "#9ca3ae"
+            "Studio Dark": "#9ca3ae",
+            "Harbor Light": "#56626b",
+            "Harbor Dark": "#9aa7b1",
+            "Fluent Light": "#616161",
+            "Fluent Dark": "#adadad"
           },
           "aliases": {
             "SKO Light": "text/subtle",
             "SKO Dark": "text/subtle",
             "Gold Light": "text/subtle",
             "Gold Dark": "text/subtle",
-            "Red Light": "text/subtle",
-            "Red Dark": "text/subtle",
             "Studio Light": "text/subtle"
           }
         },
@@ -1087,18 +1209,18 @@
             "SKO Dark": "#4aa3c7",
             "Gold Light": "#553600",
             "Gold Dark": "#ffd07a",
-            "Red Light": "#88262a",
-            "Red Dark": "#ff8985",
             "Studio Light": "#0a5266",
-            "Studio Dark": "#8fd0e0"
+            "Studio Dark": "#8fd0e0",
+            "Harbor Light": "#0073ec",
+            "Harbor Dark": "#6cb4ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#62abf5"
           },
           "aliases": {
             "SKO Light": "bg/primary",
             "SKO Dark": "bg/primary",
             "Gold Light": "bg/primary",
-            "Gold Dark": "bg/primary",
-            "Red Light": "bg/primary",
-            "Red Dark": "bg/primary"
+            "Gold Dark": "bg/primary"
           }
         },
         {
@@ -1110,19 +1232,23 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0b1d23"
+            "Studio Dark": "#0b1d23",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#071c27",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#ffffff"
           },
           "aliases": {
             "SKO Light": "text/on-primary",
             "SKO Dark": "text/on-primary",
             "Gold Light": "text/on-primary",
             "Gold Dark": "text/on-primary",
-            "Red Light": "text/on-primary",
-            "Red Dark": "text/on-primary",
-            "Studio Light": "text/on-primary"
+            "Studio Light": "text/on-primary",
+            "Harbor Light": "text/on-primary",
+            "Harbor Dark": "text/on-primary",
+            "Fluent Light": "text/on-primary",
+            "Fluent Dark": "text/on-primary"
           }
         },
         {
@@ -1134,20 +1260,24 @@
             "SKO Dark": "#ffffff",
             "Gold Light": "#ffffff",
             "Gold Dark": "#ffffff",
-            "Red Light": "#ffffff",
-            "Red Dark": "#ffffff",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#ffffff"
+            "Studio Dark": "#ffffff",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#ffffff",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#ffffff"
           },
           "aliases": {
             "SKO Light": "text/on-media",
             "SKO Dark": "text/on-media",
             "Gold Light": "text/on-media",
             "Gold Dark": "text/on-media",
-            "Red Light": "text/on-media",
-            "Red Dark": "text/on-media",
             "Studio Light": "text/on-media",
-            "Studio Dark": "text/on-media"
+            "Studio Dark": "text/on-media",
+            "Harbor Light": "text/on-media",
+            "Harbor Dark": "text/on-media",
+            "Fluent Light": "text/on-media",
+            "Fluent Dark": "text/on-media"
           }
         },
         {
@@ -1159,20 +1289,22 @@
             "SKO Dark": "#f3afb0",
             "Gold Light": "#b62226",
             "Gold Dark": "#f3afb0",
-            "Red Light": "#b62226",
-            "Red Dark": "#f3afb0",
             "Studio Light": "#b62226",
-            "Studio Dark": "#f3afb0"
+            "Studio Dark": "#f3afb0",
+            "Harbor Light": "#c62828",
+            "Harbor Dark": "#f87171",
+            "Fluent Light": "#c50f1f",
+            "Fluent Dark": "#dc626d"
           },
           "aliases": {
             "SKO Light": "text/error",
             "SKO Dark": "text/error",
             "Gold Light": "text/error",
             "Gold Dark": "text/error",
-            "Red Light": "text/error",
-            "Red Dark": "text/error",
             "Studio Light": "text/error",
-            "Studio Dark": "text/error"
+            "Studio Dark": "text/error",
+            "Harbor Dark": "text/error",
+            "Fluent Dark": "text/error"
           }
         },
         {
@@ -1184,18 +1316,18 @@
             "SKO Dark": "#72d99a",
             "Gold Light": "#1f7643",
             "Gold Dark": "#72d99a",
-            "Red Light": "#1f7643",
-            "Red Dark": "#72d99a",
             "Studio Light": "#1f7643",
-            "Studio Dark": "#72d99a"
+            "Studio Dark": "#72d99a",
+            "Harbor Light": "#00897b",
+            "Harbor Dark": "#34d399",
+            "Fluent Light": "#107c10",
+            "Fluent Dark": "#54b054"
           },
           "aliases": {
             "SKO Light": "text/success",
             "SKO Dark": "text/success",
             "Gold Light": "text/success",
             "Gold Dark": "text/success",
-            "Red Light": "text/success",
-            "Red Dark": "text/success",
             "Studio Light": "text/success",
             "Studio Dark": "text/success"
           }
@@ -1209,20 +1341,24 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0e1a1f"
+            "Studio Dark": "#0e1a1f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#0e1a1f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#0e1a1f"
           },
           "aliases": {
             "SKO Light": "text/on-success",
             "SKO Dark": "text/on-success",
             "Gold Light": "text/on-success",
             "Gold Dark": "text/on-success",
-            "Red Light": "text/on-success",
-            "Red Dark": "text/on-success",
             "Studio Light": "text/on-success",
-            "Studio Dark": "text/on-success"
+            "Studio Dark": "text/on-success",
+            "Harbor Light": "text/on-success",
+            "Harbor Dark": "text/on-success",
+            "Fluent Light": "text/on-success",
+            "Fluent Dark": "text/on-success"
           }
         },
         {
@@ -1234,20 +1370,24 @@
             "SKO Dark": "#fab929",
             "Gold Light": "#85580e",
             "Gold Dark": "#fab929",
-            "Red Light": "#85580e",
-            "Red Dark": "#fab929",
             "Studio Light": "#85580e",
-            "Studio Dark": "#fab929"
+            "Studio Dark": "#fab929",
+            "Harbor Light": "#85580e",
+            "Harbor Dark": "#fab929",
+            "Fluent Light": "#85580e",
+            "Fluent Dark": "#fab929"
           },
           "aliases": {
             "SKO Light": "text/warning",
             "SKO Dark": "text/warning",
             "Gold Light": "text/warning",
             "Gold Dark": "text/warning",
-            "Red Light": "text/warning",
-            "Red Dark": "text/warning",
             "Studio Light": "text/warning",
-            "Studio Dark": "text/warning"
+            "Studio Dark": "text/warning",
+            "Harbor Light": "text/warning",
+            "Harbor Dark": "text/warning",
+            "Fluent Light": "text/warning",
+            "Fluent Dark": "text/warning"
           }
         },
         {
@@ -1259,20 +1399,22 @@
             "SKO Dark": "#6cc0e0",
             "Gold Light": "#044150",
             "Gold Dark": "#6cc0e0",
-            "Red Light": "#044150",
-            "Red Dark": "#6cc0e0",
             "Studio Light": "#044150",
-            "Studio Dark": "#6cc0e0"
+            "Studio Dark": "#6cc0e0",
+            "Harbor Light": "#0073ec",
+            "Harbor Dark": "#6cb4ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#62abf5"
           },
           "aliases": {
             "SKO Light": "text/info",
             "SKO Dark": "text/info",
             "Gold Light": "text/info",
             "Gold Dark": "text/info",
-            "Red Light": "text/info",
-            "Red Dark": "text/info",
             "Studio Light": "text/info",
-            "Studio Dark": "text/info"
+            "Studio Dark": "text/info",
+            "Harbor Dark": "text/info",
+            "Fluent Dark": "text/info"
           }
         },
         {
@@ -1284,10 +1426,12 @@
             "SKO Dark": "#42aea3",
             "Gold Light": "#1f655e",
             "Gold Dark": "#42aea3",
-            "Red Light": "#1f655e",
-            "Red Dark": "#42aea3",
             "Studio Light": "#1f655e",
-            "Studio Dark": "#42aea3"
+            "Studio Dark": "#42aea3",
+            "Harbor Light": "#1f655e",
+            "Harbor Dark": "#42aea3",
+            "Fluent Light": "#1f655e",
+            "Fluent Dark": "#42aea3"
           }
         },
         {
@@ -1299,10 +1443,12 @@
             "SKO Dark": "#044150",
             "Gold Light": "#aaeeeb",
             "Gold Dark": "#044150",
-            "Red Light": "#aaeeeb",
-            "Red Dark": "#044150",
             "Studio Light": "#e8fffe",
-            "Studio Dark": "#044150"
+            "Studio Dark": "#044150",
+            "Harbor Light": "#e8fffe",
+            "Harbor Dark": "#044150",
+            "Fluent Light": "#e8fffe",
+            "Fluent Dark": "#044150"
           }
         },
         {
@@ -1314,10 +1460,12 @@
             "SKO Dark": "#aaeeeb",
             "Gold Light": "#044150",
             "Gold Dark": "#aaeeeb",
-            "Red Light": "#044150",
-            "Red Dark": "#aaeeeb",
             "Studio Light": "#044150",
-            "Studio Dark": "#aaeeeb"
+            "Studio Dark": "#aaeeeb",
+            "Harbor Light": "#044150",
+            "Harbor Dark": "#aaeeeb",
+            "Fluent Light": "#044150",
+            "Fluent Dark": "#aaeeeb"
           }
         },
         {
@@ -1329,10 +1477,12 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#13282f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#13282f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#13282f"
           }
         },
         {
@@ -1344,10 +1494,12 @@
             "SKO Dark": "#2d9c5b",
             "Gold Light": "#1f7643",
             "Gold Dark": "#2d9c5b",
-            "Red Light": "#1f7643",
-            "Red Dark": "#2d9c5b",
             "Studio Light": "#1f7643",
-            "Studio Dark": "#2d9c5b"
+            "Studio Dark": "#2d9c5b",
+            "Harbor Light": "#1f7643",
+            "Harbor Dark": "#2d9c5b",
+            "Fluent Light": "#1f7643",
+            "Fluent Dark": "#2d9c5b"
           }
         },
         {
@@ -1359,10 +1511,12 @@
             "SKO Dark": "#17523a",
             "Gold Light": "#e4fced",
             "Gold Dark": "#17523a",
-            "Red Light": "#e4fced",
-            "Red Dark": "#17523a",
             "Studio Light": "#e4fced",
-            "Studio Dark": "#17523a"
+            "Studio Dark": "#17523a",
+            "Harbor Light": "#e4fced",
+            "Harbor Dark": "#17523a",
+            "Fluent Light": "#e4fced",
+            "Fluent Dark": "#17523a"
           }
         },
         {
@@ -1374,10 +1528,12 @@
             "SKO Dark": "#aaedc2",
             "Gold Light": "#17523a",
             "Gold Dark": "#aaedc2",
-            "Red Light": "#17523a",
-            "Red Dark": "#aaedc2",
             "Studio Light": "#17523a",
-            "Studio Dark": "#aaedc2"
+            "Studio Dark": "#aaedc2",
+            "Harbor Light": "#17523a",
+            "Harbor Dark": "#aaedc2",
+            "Fluent Light": "#17523a",
+            "Fluent Dark": "#aaedc2"
           }
         },
         {
@@ -1389,10 +1545,12 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0e1a1f"
+            "Studio Dark": "#0e1a1f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#0e1a1f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#0e1a1f"
           }
         },
         {
@@ -1404,10 +1562,12 @@
             "SKO Dark": "#e26567",
             "Gold Light": "#b62226",
             "Gold Dark": "#e26567",
-            "Red Light": "#b62226",
-            "Red Dark": "#e26567",
             "Studio Light": "#b62226",
-            "Studio Dark": "#e26567"
+            "Studio Dark": "#e26567",
+            "Harbor Light": "#b62226",
+            "Harbor Dark": "#e26567",
+            "Fluent Light": "#b62226",
+            "Fluent Dark": "#e26567"
           }
         },
         {
@@ -1419,10 +1579,12 @@
             "SKO Dark": "#60191a",
             "Gold Light": "#fce8e8",
             "Gold Dark": "#60191a",
-            "Red Light": "#fce8e8",
-            "Red Dark": "#60191a",
             "Studio Light": "#fce8e8",
-            "Studio Dark": "#60191a"
+            "Studio Dark": "#60191a",
+            "Harbor Light": "#fce8e8",
+            "Harbor Dark": "#60191a",
+            "Fluent Light": "#fce8e8",
+            "Fluent Dark": "#60191a"
           }
         },
         {
@@ -1434,10 +1596,12 @@
             "SKO Dark": "#e8797b",
             "Gold Light": "#60191a",
             "Gold Dark": "#e8797b",
-            "Red Light": "#60191a",
-            "Red Dark": "#e8797b",
             "Studio Light": "#60191a",
-            "Studio Dark": "#e8797b"
+            "Studio Dark": "#e8797b",
+            "Harbor Light": "#60191a",
+            "Harbor Dark": "#e8797b",
+            "Fluent Light": "#60191a",
+            "Fluent Dark": "#e8797b"
           }
         },
         {
@@ -1449,10 +1613,12 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#13282f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#13282f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#13282f"
           }
         },
         {
@@ -1464,10 +1630,12 @@
             "SKO Dark": "#f9c654",
             "Gold Light": "#f9c654",
             "Gold Dark": "#f9c654",
-            "Red Light": "#f9c654",
-            "Red Dark": "#f9c654",
             "Studio Light": "#f9c654",
-            "Studio Dark": "#f9c654"
+            "Studio Dark": "#f9c654",
+            "Harbor Light": "#f9c654",
+            "Harbor Dark": "#f9c654",
+            "Fluent Light": "#f9c654",
+            "Fluent Dark": "#f9c654"
           }
         },
         {
@@ -1479,10 +1647,12 @@
             "SKO Dark": "#85580e",
             "Gold Light": "#fff9eb",
             "Gold Dark": "#85580e",
-            "Red Light": "#fff9eb",
-            "Red Dark": "#85580e",
             "Studio Light": "#fff9eb",
-            "Studio Dark": "#85580e"
+            "Studio Dark": "#85580e",
+            "Harbor Light": "#fff9eb",
+            "Harbor Dark": "#85580e",
+            "Fluent Light": "#fff9eb",
+            "Fluent Dark": "#85580e"
           }
         },
         {
@@ -1494,10 +1664,12 @@
             "SKO Dark": "#ffebbd",
             "Gold Light": "#85580e",
             "Gold Dark": "#ffebbd",
-            "Red Light": "#85580e",
-            "Red Dark": "#ffebbd",
             "Studio Light": "#85580e",
-            "Studio Dark": "#ffebbd"
+            "Studio Dark": "#ffebbd",
+            "Harbor Light": "#85580e",
+            "Harbor Dark": "#ffebbd",
+            "Fluent Light": "#85580e",
+            "Fluent Dark": "#ffebbd"
           }
         },
         {
@@ -1509,10 +1681,12 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#13282f",
             "Gold Dark": "#13282f",
-            "Red Light": "#13282f",
-            "Red Dark": "#13282f",
             "Studio Light": "#13282f",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#13282f",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#13282f",
+            "Fluent Dark": "#13282f"
           }
         },
         {
@@ -1524,10 +1698,12 @@
             "SKO Dark": "#0e1a1fb2",
             "Gold Light": "#0e1a1fb2",
             "Gold Dark": "#0e1a1fb2",
-            "Red Light": "#0e1a1fb2",
-            "Red Dark": "#0e1a1fb2",
             "Studio Light": "#0e1a1fb2",
-            "Studio Dark": "#0d0f13b3"
+            "Studio Dark": "#0d0f13b3",
+            "Harbor Light": "#0e1a1fb2",
+            "Harbor Dark": "#0e1a1fb2",
+            "Fluent Light": "#0e1a1fb2",
+            "Fluent Dark": "#0e1a1fb2"
           }
         },
         {
@@ -1539,10 +1715,12 @@
             "SKO Dark": "#0e1a1f33",
             "Gold Light": "#0e1a1f33",
             "Gold Dark": "#0e1a1f33",
-            "Red Light": "#0e1a1f33",
-            "Red Dark": "#0e1a1f33",
             "Studio Light": "#0e1a1f33",
-            "Studio Dark": "#0d0f1333"
+            "Studio Dark": "#0d0f1333",
+            "Harbor Light": "#0e1a1f33",
+            "Harbor Dark": "#0e1a1f33",
+            "Fluent Light": "#0e1a1f33",
+            "Fluent Dark": "#0e1a1f33"
           }
         },
         {
@@ -1554,10 +1732,12 @@
             "SKO Dark": "#ffffff4d",
             "Gold Light": "#ffffff4d",
             "Gold Dark": "#ffffff4d",
-            "Red Light": "#ffffff4d",
-            "Red Dark": "#ffffff4d",
             "Studio Light": "#ffffff4d",
-            "Studio Dark": "#ffffff4d"
+            "Studio Dark": "#ffffff4d",
+            "Harbor Light": "#ffffff4d",
+            "Harbor Dark": "#ffffff4d",
+            "Fluent Light": "#ffffff4d",
+            "Fluent Dark": "#ffffff4d"
           }
         },
         {
@@ -1569,20 +1749,24 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#13282f",
             "Gold Dark": "#13282f",
-            "Red Light": "#13282f",
-            "Red Dark": "#13282f",
             "Studio Light": "#13282f",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#13282f",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#13282f",
+            "Fluent Dark": "#13282f"
           },
           "aliases": {
             "SKO Light": "text/on-fixed",
             "SKO Dark": "text/on-fixed",
             "Gold Light": "text/on-fixed",
             "Gold Dark": "text/on-fixed",
-            "Red Light": "text/on-fixed",
-            "Red Dark": "text/on-fixed",
             "Studio Light": "text/on-fixed",
-            "Studio Dark": "text/on-fixed"
+            "Studio Dark": "text/on-fixed",
+            "Harbor Light": "text/on-fixed",
+            "Harbor Dark": "text/on-fixed",
+            "Fluent Light": "text/on-fixed",
+            "Fluent Dark": "text/on-fixed"
           }
         },
         {
@@ -1594,19 +1778,21 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0d0f13"
+            "Studio Dark": "#0d0f13",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#17212a",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#292929"
           },
           "aliases": {
             "SKO Light": "bg/page",
             "SKO Dark": "bg/page",
             "Gold Light": "bg/page",
             "Gold Dark": "bg/page",
-            "Red Light": "bg/page",
-            "Red Dark": "bg/page",
-            "Studio Light": "bg/page"
+            "Studio Light": "bg/page",
+            "Harbor Dark": "bg/page",
+            "Fluent Dark": "bg/page"
           }
         },
         {
@@ -1618,20 +1804,24 @@
             "SKO Dark": "#aaeeeb",
             "Gold Light": "#044150",
             "Gold Dark": "#aaeeeb",
-            "Red Light": "#044150",
-            "Red Dark": "#aaeeeb",
             "Studio Light": "#044150",
-            "Studio Dark": "#aaeeeb"
+            "Studio Dark": "#aaeeeb",
+            "Harbor Light": "#044150",
+            "Harbor Dark": "#aaeeeb",
+            "Fluent Light": "#044150",
+            "Fluent Dark": "#aaeeeb"
           },
           "aliases": {
             "SKO Light": "text/accent-teal",
             "SKO Dark": "text/accent-teal",
             "Gold Light": "text/accent-teal",
             "Gold Dark": "text/accent-teal",
-            "Red Light": "text/accent-teal",
-            "Red Dark": "text/accent-teal",
             "Studio Light": "text/accent-teal",
-            "Studio Dark": "text/accent-teal"
+            "Studio Dark": "text/accent-teal",
+            "Harbor Light": "text/accent-teal",
+            "Harbor Dark": "text/accent-teal",
+            "Fluent Light": "text/accent-teal",
+            "Fluent Dark": "text/accent-teal"
           }
         },
         {
@@ -1643,20 +1833,24 @@
             "SKO Dark": "#42aea3",
             "Gold Light": "#1f655e",
             "Gold Dark": "#42aea3",
-            "Red Light": "#1f655e",
-            "Red Dark": "#42aea3",
             "Studio Light": "#1f655e",
-            "Studio Dark": "#42aea3"
+            "Studio Dark": "#42aea3",
+            "Harbor Light": "#1f655e",
+            "Harbor Dark": "#42aea3",
+            "Fluent Light": "#1f655e",
+            "Fluent Dark": "#42aea3"
           },
           "aliases": {
             "SKO Light": "bg/accent-teal",
             "SKO Dark": "bg/accent-teal",
             "Gold Light": "bg/accent-teal",
             "Gold Dark": "bg/accent-teal",
-            "Red Light": "bg/accent-teal",
-            "Red Dark": "bg/accent-teal",
             "Studio Light": "bg/accent-teal",
-            "Studio Dark": "bg/accent-teal"
+            "Studio Dark": "bg/accent-teal",
+            "Harbor Light": "bg/accent-teal",
+            "Harbor Dark": "bg/accent-teal",
+            "Fluent Light": "bg/accent-teal",
+            "Fluent Dark": "bg/accent-teal"
           }
         },
         {
@@ -1668,10 +1862,12 @@
             "SKO Dark": "#0f595d",
             "Gold Light": "#aaeeeb",
             "Gold Dark": "#0f595d",
-            "Red Light": "#aaeeeb",
-            "Red Dark": "#0f595d",
             "Studio Light": "#aaeeeb",
-            "Studio Dark": "#0f595d"
+            "Studio Dark": "#0f595d",
+            "Harbor Light": "#aaeeeb",
+            "Harbor Dark": "#0f595d",
+            "Fluent Light": "#aaeeeb",
+            "Fluent Dark": "#0f595d"
           }
         },
         {
@@ -1683,20 +1879,24 @@
             "SKO Dark": "#aaedc2",
             "Gold Light": "#17523a",
             "Gold Dark": "#aaedc2",
-            "Red Light": "#17523a",
-            "Red Dark": "#aaedc2",
             "Studio Light": "#17523a",
-            "Studio Dark": "#aaedc2"
+            "Studio Dark": "#aaedc2",
+            "Harbor Light": "#17523a",
+            "Harbor Dark": "#aaedc2",
+            "Fluent Light": "#17523a",
+            "Fluent Dark": "#aaedc2"
           },
           "aliases": {
             "SKO Light": "text/accent-green",
             "SKO Dark": "text/accent-green",
             "Gold Light": "text/accent-green",
             "Gold Dark": "text/accent-green",
-            "Red Light": "text/accent-green",
-            "Red Dark": "text/accent-green",
             "Studio Light": "text/accent-green",
-            "Studio Dark": "text/accent-green"
+            "Studio Dark": "text/accent-green",
+            "Harbor Light": "text/accent-green",
+            "Harbor Dark": "text/accent-green",
+            "Fluent Light": "text/accent-green",
+            "Fluent Dark": "text/accent-green"
           }
         },
         {
@@ -1708,20 +1908,24 @@
             "SKO Dark": "#2d9c5b",
             "Gold Light": "#1f7643",
             "Gold Dark": "#2d9c5b",
-            "Red Light": "#1f7643",
-            "Red Dark": "#2d9c5b",
             "Studio Light": "#1f7643",
-            "Studio Dark": "#2d9c5b"
+            "Studio Dark": "#2d9c5b",
+            "Harbor Light": "#1f7643",
+            "Harbor Dark": "#2d9c5b",
+            "Fluent Light": "#1f7643",
+            "Fluent Dark": "#2d9c5b"
           },
           "aliases": {
             "SKO Light": "bg/accent-green",
             "SKO Dark": "bg/accent-green",
             "Gold Light": "bg/accent-green",
             "Gold Dark": "bg/accent-green",
-            "Red Light": "bg/accent-green",
-            "Red Dark": "bg/accent-green",
             "Studio Light": "bg/accent-green",
-            "Studio Dark": "bg/accent-green"
+            "Studio Dark": "bg/accent-green",
+            "Harbor Light": "bg/accent-green",
+            "Harbor Dark": "bg/accent-green",
+            "Fluent Light": "bg/accent-green",
+            "Fluent Dark": "bg/accent-green"
           }
         },
         {
@@ -1733,10 +1937,12 @@
             "SKO Dark": "#1b6440",
             "Gold Light": "#aaedc2",
             "Gold Dark": "#1b6440",
-            "Red Light": "#aaedc2",
-            "Red Dark": "#1b6440",
             "Studio Light": "#aaedc2",
-            "Studio Dark": "#1b6440"
+            "Studio Dark": "#1b6440",
+            "Harbor Light": "#aaedc2",
+            "Harbor Dark": "#1b6440",
+            "Fluent Light": "#aaedc2",
+            "Fluent Dark": "#1b6440"
           }
         },
         {
@@ -1748,20 +1954,24 @@
             "SKO Dark": "#e8797b",
             "Gold Light": "#60191a",
             "Gold Dark": "#e8797b",
-            "Red Light": "#60191a",
-            "Red Dark": "#e8797b",
             "Studio Light": "#60191a",
-            "Studio Dark": "#e8797b"
+            "Studio Dark": "#e8797b",
+            "Harbor Light": "#60191a",
+            "Harbor Dark": "#e8797b",
+            "Fluent Light": "#60191a",
+            "Fluent Dark": "#e8797b"
           },
           "aliases": {
             "SKO Light": "text/accent-red",
             "SKO Dark": "text/accent-red",
             "Gold Light": "text/accent-red",
             "Gold Dark": "text/accent-red",
-            "Red Light": "text/accent-red",
-            "Red Dark": "text/accent-red",
             "Studio Light": "text/accent-red",
-            "Studio Dark": "text/accent-red"
+            "Studio Dark": "text/accent-red",
+            "Harbor Light": "text/accent-red",
+            "Harbor Dark": "text/accent-red",
+            "Fluent Light": "text/accent-red",
+            "Fluent Dark": "text/accent-red"
           }
         },
         {
@@ -1773,20 +1983,24 @@
             "SKO Dark": "#e26567",
             "Gold Light": "#b62226",
             "Gold Dark": "#e26567",
-            "Red Light": "#b62226",
-            "Red Dark": "#e26567",
             "Studio Light": "#b62226",
-            "Studio Dark": "#e26567"
+            "Studio Dark": "#e26567",
+            "Harbor Light": "#b62226",
+            "Harbor Dark": "#e26567",
+            "Fluent Light": "#b62226",
+            "Fluent Dark": "#e26567"
           },
           "aliases": {
             "SKO Light": "bg/accent-red",
             "SKO Dark": "bg/accent-red",
             "Gold Light": "bg/accent-red",
             "Gold Dark": "bg/accent-red",
-            "Red Light": "bg/accent-red",
-            "Red Dark": "bg/accent-red",
             "Studio Light": "bg/accent-red",
-            "Studio Dark": "bg/accent-red"
+            "Studio Dark": "bg/accent-red",
+            "Harbor Light": "bg/accent-red",
+            "Harbor Dark": "bg/accent-red",
+            "Fluent Light": "bg/accent-red",
+            "Fluent Dark": "bg/accent-red"
           }
         },
         {
@@ -1798,10 +2012,12 @@
             "SKO Dark": "#741b1d",
             "Gold Light": "#e8797b",
             "Gold Dark": "#741b1d",
-            "Red Light": "#e8797b",
-            "Red Dark": "#741b1d",
             "Studio Light": "#e8797b",
-            "Studio Dark": "#741b1d"
+            "Studio Dark": "#741b1d",
+            "Harbor Light": "#e8797b",
+            "Harbor Dark": "#741b1d",
+            "Fluent Light": "#e8797b",
+            "Fluent Dark": "#741b1d"
           }
         },
         {
@@ -1813,20 +2029,24 @@
             "SKO Dark": "#ffebbd",
             "Gold Light": "#85580e",
             "Gold Dark": "#ffebbd",
-            "Red Light": "#85580e",
-            "Red Dark": "#ffebbd",
             "Studio Light": "#85580e",
-            "Studio Dark": "#ffebbd"
+            "Studio Dark": "#ffebbd",
+            "Harbor Light": "#85580e",
+            "Harbor Dark": "#ffebbd",
+            "Fluent Light": "#85580e",
+            "Fluent Dark": "#ffebbd"
           },
           "aliases": {
             "SKO Light": "text/accent-yellow",
             "SKO Dark": "text/accent-yellow",
             "Gold Light": "text/accent-yellow",
             "Gold Dark": "text/accent-yellow",
-            "Red Light": "text/accent-yellow",
-            "Red Dark": "text/accent-yellow",
             "Studio Light": "text/accent-yellow",
-            "Studio Dark": "text/accent-yellow"
+            "Studio Dark": "text/accent-yellow",
+            "Harbor Light": "text/accent-yellow",
+            "Harbor Dark": "text/accent-yellow",
+            "Fluent Light": "text/accent-yellow",
+            "Fluent Dark": "text/accent-yellow"
           }
         },
         {
@@ -1838,20 +2058,24 @@
             "SKO Dark": "#f9c654",
             "Gold Light": "#f9c654",
             "Gold Dark": "#f9c654",
-            "Red Light": "#f9c654",
-            "Red Dark": "#f9c654",
             "Studio Light": "#f9c654",
-            "Studio Dark": "#f9c654"
+            "Studio Dark": "#f9c654",
+            "Harbor Light": "#f9c654",
+            "Harbor Dark": "#f9c654",
+            "Fluent Light": "#f9c654",
+            "Fluent Dark": "#f9c654"
           },
           "aliases": {
             "SKO Light": "bg/accent-yellow",
             "SKO Dark": "bg/accent-yellow",
             "Gold Light": "bg/accent-yellow",
             "Gold Dark": "bg/accent-yellow",
-            "Red Light": "bg/accent-yellow",
-            "Red Dark": "bg/accent-yellow",
             "Studio Light": "bg/accent-yellow",
-            "Studio Dark": "bg/accent-yellow"
+            "Studio Dark": "bg/accent-yellow",
+            "Harbor Light": "bg/accent-yellow",
+            "Harbor Dark": "bg/accent-yellow",
+            "Fluent Light": "bg/accent-yellow",
+            "Fluent Dark": "bg/accent-yellow"
           }
         },
         {
@@ -1863,10 +2087,12 @@
             "SKO Dark": "#996816",
             "Gold Light": "#ffebbd",
             "Gold Dark": "#996816",
-            "Red Light": "#ffebbd",
-            "Red Dark": "#996816",
             "Studio Light": "#ffebbd",
-            "Studio Dark": "#996816"
+            "Studio Dark": "#996816",
+            "Harbor Light": "#ffebbd",
+            "Harbor Dark": "#996816",
+            "Fluent Light": "#ffebbd",
+            "Fluent Dark": "#996816"
           }
         },
         {
@@ -1878,20 +2104,24 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#13282f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#13282f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#13282f"
           },
           "aliases": {
             "SKO Light": "text/on-accent-teal",
             "SKO Dark": "text/on-accent-teal",
             "Gold Light": "text/on-accent-teal",
             "Gold Dark": "text/on-accent-teal",
-            "Red Light": "text/on-accent-teal",
-            "Red Dark": "text/on-accent-teal",
             "Studio Light": "text/on-accent-teal",
-            "Studio Dark": "text/on-accent-teal"
+            "Studio Dark": "text/on-accent-teal",
+            "Harbor Light": "text/on-accent-teal",
+            "Harbor Dark": "text/on-accent-teal",
+            "Fluent Light": "text/on-accent-teal",
+            "Fluent Dark": "text/on-accent-teal"
           }
         },
         {
@@ -1903,20 +2133,24 @@
             "SKO Dark": "#0e1a1f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#0e1a1f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#0e1a1f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#0e1a1f"
+            "Studio Dark": "#0e1a1f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#0e1a1f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#0e1a1f"
           },
           "aliases": {
             "SKO Light": "text/on-accent-green",
             "SKO Dark": "text/on-accent-green",
             "Gold Light": "text/on-accent-green",
             "Gold Dark": "text/on-accent-green",
-            "Red Light": "text/on-accent-green",
-            "Red Dark": "text/on-accent-green",
             "Studio Light": "text/on-accent-green",
-            "Studio Dark": "text/on-accent-green"
+            "Studio Dark": "text/on-accent-green",
+            "Harbor Light": "text/on-accent-green",
+            "Harbor Dark": "text/on-accent-green",
+            "Fluent Light": "text/on-accent-green",
+            "Fluent Dark": "text/on-accent-green"
           }
         },
         {
@@ -1928,20 +2162,24 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#ffffff",
             "Gold Dark": "#13282f",
-            "Red Light": "#ffffff",
-            "Red Dark": "#13282f",
             "Studio Light": "#ffffff",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#ffffff",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#ffffff",
+            "Fluent Dark": "#13282f"
           },
           "aliases": {
             "SKO Light": "text/on-accent-red",
             "SKO Dark": "text/on-accent-red",
             "Gold Light": "text/on-accent-red",
             "Gold Dark": "text/on-accent-red",
-            "Red Light": "text/on-accent-red",
-            "Red Dark": "text/on-accent-red",
             "Studio Light": "text/on-accent-red",
-            "Studio Dark": "text/on-accent-red"
+            "Studio Dark": "text/on-accent-red",
+            "Harbor Light": "text/on-accent-red",
+            "Harbor Dark": "text/on-accent-red",
+            "Fluent Light": "text/on-accent-red",
+            "Fluent Dark": "text/on-accent-red"
           }
         },
         {
@@ -1953,20 +2191,24 @@
             "SKO Dark": "#13282f",
             "Gold Light": "#13282f",
             "Gold Dark": "#13282f",
-            "Red Light": "#13282f",
-            "Red Dark": "#13282f",
             "Studio Light": "#13282f",
-            "Studio Dark": "#13282f"
+            "Studio Dark": "#13282f",
+            "Harbor Light": "#13282f",
+            "Harbor Dark": "#13282f",
+            "Fluent Light": "#13282f",
+            "Fluent Dark": "#13282f"
           },
           "aliases": {
             "SKO Light": "text/on-accent-yellow",
             "SKO Dark": "text/on-accent-yellow",
             "Gold Light": "text/on-accent-yellow",
             "Gold Dark": "text/on-accent-yellow",
-            "Red Light": "text/on-accent-yellow",
-            "Red Dark": "text/on-accent-yellow",
             "Studio Light": "text/on-accent-yellow",
-            "Studio Dark": "text/on-accent-yellow"
+            "Studio Dark": "text/on-accent-yellow",
+            "Harbor Light": "text/on-accent-yellow",
+            "Harbor Dark": "text/on-accent-yellow",
+            "Fluent Light": "text/on-accent-yellow",
+            "Fluent Dark": "text/on-accent-yellow"
           }
         },
         {
@@ -1978,10 +2220,12 @@
             "SKO Dark": "#044150",
             "Gold Light": "#acd5f4",
             "Gold Dark": "#044150",
-            "Red Light": "#acd5f4",
-            "Red Dark": "#044150",
             "Studio Light": "#acd5f4",
-            "Studio Dark": "#044150"
+            "Studio Dark": "#044150",
+            "Harbor Light": "#e5f1fd",
+            "Harbor Dark": "#0b1218",
+            "Fluent Light": "#ebf3fc",
+            "Fluent Dark": "#141414"
           }
         },
         {
@@ -1993,10 +2237,12 @@
             "SKO Dark": "#6cc0e0",
             "Gold Light": "#044150",
             "Gold Dark": "#6cc0e0",
-            "Red Light": "#044150",
-            "Red Dark": "#6cc0e0",
             "Studio Light": "#044150",
-            "Studio Dark": "#6cc0e0"
+            "Studio Dark": "#6cc0e0",
+            "Harbor Light": "#0062c4",
+            "Harbor Dark": "#6cb4ff",
+            "Fluent Light": "#0f6cbd",
+            "Fluent Dark": "#62abf5"
           }
         },
         {
@@ -2008,10 +2254,12 @@
             "SKO Dark": "#215477",
             "Gold Light": "#51bffc",
             "Gold Dark": "#215477",
-            "Red Light": "#51bffc",
-            "Red Dark": "#215477",
             "Studio Light": "#51bffc",
-            "Studio Dark": "#215477"
+            "Studio Dark": "#215477",
+            "Harbor Light": "#51bffc",
+            "Harbor Dark": "#215477",
+            "Fluent Light": "#51bffc",
+            "Fluent Dark": "#215477"
           }
         },
         {
@@ -2023,10 +2271,12 @@
             "SKO Dark": "#06aed4",
             "Gold Light": "#0e7090",
             "Gold Dark": "#06aed4",
-            "Red Light": "#0e7090",
-            "Red Dark": "#06aed4",
             "Studio Light": "#0e7090",
-            "Studio Dark": "#06aed4"
+            "Studio Dark": "#06aed4",
+            "Harbor Light": "#0e7090",
+            "Harbor Dark": "#06aed4",
+            "Fluent Light": "#0e7090",
+            "Fluent Dark": "#06aed4"
           }
         },
         {
@@ -2038,10 +2288,12 @@
             "SKO Dark": "#2e90fa",
             "Gold Light": "#175cd3",
             "Gold Dark": "#2e90fa",
-            "Red Light": "#175cd3",
-            "Red Dark": "#2e90fa",
             "Studio Light": "#175cd3",
-            "Studio Dark": "#2e90fa"
+            "Studio Dark": "#2e90fa",
+            "Harbor Light": "#175cd3",
+            "Harbor Dark": "#2e90fa",
+            "Fluent Light": "#175cd3",
+            "Fluent Dark": "#2e90fa"
           }
         },
         {
@@ -2053,10 +2305,12 @@
             "SKO Dark": "#8098f9",
             "Gold Light": "#3538cd",
             "Gold Dark": "#8098f9",
-            "Red Light": "#3538cd",
-            "Red Dark": "#8098f9",
             "Studio Light": "#3538cd",
-            "Studio Dark": "#8098f9"
+            "Studio Dark": "#8098f9",
+            "Harbor Light": "#3538cd",
+            "Harbor Dark": "#8098f9",
+            "Fluent Light": "#3538cd",
+            "Fluent Dark": "#8098f9"
           }
         },
         {
@@ -2068,10 +2322,12 @@
             "SKO Dark": "#a48afb",
             "Gold Light": "#6927da",
             "Gold Dark": "#a48afb",
-            "Red Light": "#6927da",
-            "Red Dark": "#a48afb",
             "Studio Light": "#6927da",
-            "Studio Dark": "#a48afb"
+            "Studio Dark": "#a48afb",
+            "Harbor Light": "#6927da",
+            "Harbor Dark": "#a48afb",
+            "Fluent Light": "#6927da",
+            "Fluent Dark": "#a48afb"
           }
         },
         {
@@ -2083,10 +2339,12 @@
             "SKO Dark": "#9b8afb",
             "Gold Light": "#5925dc",
             "Gold Dark": "#9b8afb",
-            "Red Light": "#5925dc",
-            "Red Dark": "#9b8afb",
             "Studio Light": "#5925dc",
-            "Studio Dark": "#9b8afb"
+            "Studio Dark": "#9b8afb",
+            "Harbor Light": "#5925dc",
+            "Harbor Dark": "#9b8afb",
+            "Fluent Light": "#5925dc",
+            "Fluent Dark": "#9b8afb"
           }
         },
         {
@@ -2098,10 +2356,12 @@
             "SKO Dark": "#d444f1",
             "Gold Light": "#9f1ab1",
             "Gold Dark": "#d444f1",
-            "Red Light": "#9f1ab1",
-            "Red Dark": "#d444f1",
             "Studio Light": "#9f1ab1",
-            "Studio Dark": "#d444f1"
+            "Studio Dark": "#d444f1",
+            "Harbor Light": "#9f1ab1",
+            "Harbor Dark": "#d444f1",
+            "Fluent Light": "#9f1ab1",
+            "Fluent Dark": "#d444f1"
           }
         },
         {
@@ -2113,10 +2373,12 @@
             "SKO Dark": "#ee46bc",
             "Gold Light": "#c11574",
             "Gold Dark": "#ee46bc",
-            "Red Light": "#c11574",
-            "Red Dark": "#ee46bc",
             "Studio Light": "#c11574",
-            "Studio Dark": "#ee46bc"
+            "Studio Dark": "#ee46bc",
+            "Harbor Light": "#c11574",
+            "Harbor Dark": "#ee46bc",
+            "Fluent Light": "#c11574",
+            "Fluent Dark": "#ee46bc"
           }
         },
         {
@@ -2128,10 +2390,12 @@
             "SKO Dark": "#ef6820",
             "Gold Light": "#b93815",
             "Gold Dark": "#ef6820",
-            "Red Light": "#b93815",
-            "Red Dark": "#ef6820",
             "Studio Light": "#b93815",
-            "Studio Dark": "#ef6820"
+            "Studio Dark": "#ef6820",
+            "Harbor Light": "#b93815",
+            "Harbor Dark": "#ef6820",
+            "Fluent Light": "#b93815",
+            "Fluent Dark": "#ef6820"
           }
         },
         {
@@ -2143,10 +2407,12 @@
             "SKO Dark": "#85580e",
             "Gold Light": "#ffebbd",
             "Gold Dark": "#85580e",
-            "Red Light": "#ffebbd",
-            "Red Dark": "#85580e",
             "Studio Light": "#fdd988",
-            "Studio Dark": "#85580e"
+            "Studio Dark": "#85580e",
+            "Harbor Light": "#fdd988",
+            "Harbor Dark": "#85580e",
+            "Fluent Light": "#fdd988",
+            "Fluent Dark": "#85580e"
           }
         },
         {
@@ -2158,18 +2424,18 @@
             "SKO Dark": "#25383f",
             "Gold Light": "#e1e7ec",
             "Gold Dark": "#25383f",
-            "Red Light": "#e1e7ec",
-            "Red Dark": "#25383f",
             "Studio Light": "#e1e7ec",
-            "Studio Dark": "#272c36"
+            "Studio Dark": "#272c36",
+            "Harbor Light": "#ecf1fa",
+            "Harbor Dark": "#1e2a34",
+            "Fluent Light": "#f0f0f0",
+            "Fluent Dark": "#1f1f1f"
           },
           "aliases": {
             "SKO Light": "bg/muted",
             "SKO Dark": "bg/muted",
             "Gold Light": "bg/muted",
             "Gold Dark": "bg/muted",
-            "Red Light": "bg/muted",
-            "Red Dark": "bg/muted",
             "Studio Light": "bg/muted"
           }
         },
@@ -2182,18 +2448,18 @@
             "SKO Dark": "#25383f",
             "Gold Light": "#e1e7ec",
             "Gold Dark": "#25383f",
-            "Red Light": "#e1e7ec",
-            "Red Dark": "#25383f",
             "Studio Light": "#e1e7ec",
-            "Studio Dark": "#323844"
+            "Studio Dark": "#323844",
+            "Harbor Light": "#f0f0f0",
+            "Harbor Dark": "#26333e",
+            "Fluent Light": "#f5f5f5",
+            "Fluent Dark": "#3d3d3d"
           },
           "aliases": {
             "SKO Light": "bg/muted",
             "SKO Dark": "bg/muted",
             "Gold Light": "bg/muted",
             "Gold Dark": "bg/muted",
-            "Red Light": "bg/muted",
-            "Red Dark": "bg/muted",
             "Studio Light": "bg/muted",
             "Studio Dark": "bg/muted"
           }
@@ -2579,16 +2845,6 @@
           }
         },
         {
-          "name": "Type/weight/bold-italic",
-          "type": "STRING",
-          "web": null,
-          "values": {
-            "Desktop": "Bold italic",
-            "Tablet": "Bold italic",
-            "Mobile": "Bold italic"
-          }
-        },
-        {
           "name": "Type/size/text-2xs",
           "type": "FLOAT",
           "web": null,
@@ -2596,6 +2852,16 @@
             "Desktop": 12,
             "Tablet": 12,
             "Mobile": 12
+          }
+        },
+        {
+          "name": "Type/weight/bold-italic",
+          "type": "STRING",
+          "web": null,
+          "values": {
+            "Desktop": "Bold italic",
+            "Tablet": "Bold italic",
+            "Mobile": "Bold italic"
           }
         },
         {
@@ -2829,16 +3095,6 @@
           }
         },
         {
-          "name": "Container/gap",
-          "type": "FLOAT",
-          "web": null,
-          "values": {
-            "Desktop": 24,
-            "Tablet": 16,
-            "Mobile": 12
-          }
-        },
-        {
           "name": "Container/gutter",
           "type": "FLOAT",
           "web": null,
@@ -2846,6 +3102,16 @@
             "Desktop": 32,
             "Tablet": 24,
             "Mobile": 16
+          }
+        },
+        {
+          "name": "Container/gap",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "Desktop": 24,
+            "Tablet": 16,
+            "Mobile": 12
           }
         },
         {
@@ -2906,121 +3172,81 @@
         {
           "name": "Radius/none",
           "type": "FLOAT",
-          "web": "var(--rounded-none)",
+          "web": "rounded-none",
           "values": {
             "Desktop": 0,
             "Tablet": 0,
             "Mobile": 0
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-none",
-            "Tablet": "Radius/fixed-none",
-            "Mobile": "Radius/fixed-none"
           }
         },
         {
           "name": "Radius/inner",
           "type": "FLOAT",
-          "web": "var(--rounded-inner)",
+          "web": "rounded-inner",
           "values": {
             "Desktop": 2,
             "Tablet": 2,
             "Mobile": 2
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-xxs",
-            "Tablet": "Radius/fixed-xxs",
-            "Mobile": "Radius/fixed-xxs"
           }
         },
         {
           "name": "Radius/control",
           "type": "FLOAT",
-          "web": "var(--rounded-control)",
+          "web": "rounded-control",
           "values": {
             "Desktop": 6,
             "Tablet": 6,
             "Mobile": 6
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-sm",
-            "Tablet": "Radius/fixed-sm",
-            "Mobile": "Radius/fixed-sm"
           }
         },
         {
           "name": "Radius/card",
           "type": "FLOAT",
-          "web": "var(--rounded-card)",
+          "web": "rounded-card",
           "values": {
             "Desktop": 12,
             "Tablet": 12,
             "Mobile": 12
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-xl",
-            "Tablet": "Radius/fixed-xl",
-            "Mobile": "Radius/fixed-xl"
           }
         },
         {
           "name": "Radius/surface",
           "type": "FLOAT",
-          "web": "var(--rounded-surface)",
+          "web": "rounded-surface",
           "values": {
             "Desktop": 16,
             "Tablet": 16,
             "Mobile": 16
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-2xl",
-            "Tablet": "Radius/fixed-2xl",
-            "Mobile": "Radius/fixed-2xl"
           }
         },
         {
           "name": "Radius/pill",
           "type": "FLOAT",
-          "web": "var(--rounded-pill)",
+          "web": "rounded-pill",
           "values": {
             "Desktop": 9999,
             "Tablet": 9999,
             "Mobile": 9999
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-full",
-            "Tablet": "Radius/fixed-full",
-            "Mobile": "Radius/fixed-full"
           }
         },
         {
           "name": "Radius/card-inset",
           "type": "FLOAT",
-          "web": "var(--rounded-card-inset)",
+          "web": "rounded-card-inset",
           "values": {
             "Desktop": 8,
             "Tablet": 8,
             "Mobile": 8
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-md",
-            "Tablet": "Radius/fixed-md",
-            "Mobile": "Radius/fixed-md"
           }
         },
         {
           "name": "Radius/track",
           "type": "FLOAT",
-          "web": "var(--rounded-track)",
+          "web": "rounded-track",
           "values": {
             "Desktop": 10,
             "Tablet": 10,
             "Mobile": 10
-          },
-          "aliases": {
-            "Desktop": "Radius/fixed-lg",
-            "Tablet": "Radius/fixed-lg",
-            "Mobile": "Radius/fixed-lg"
           }
         },
         {
@@ -3281,6 +3507,150 @@
           }
         }
       ]
+    },
+    {
+      "name": "4. Skin shape",
+      "modes": [
+        "SKO",
+        "Gold",
+        "Studio",
+        "Harbor",
+        "Fluent",
+        "Square"
+      ],
+      "variables": [
+        {
+          "name": "Shape/inner",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 2,
+            "Gold": 2,
+            "Studio": 8,
+            "Harbor": 8,
+            "Fluent": 4,
+            "Square": 0
+          }
+        },
+        {
+          "name": "Shape/control",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 6,
+            "Gold": 6,
+            "Studio": 20,
+            "Harbor": 10,
+            "Fluent": 4,
+            "Square": 0
+          }
+        },
+        {
+          "name": "Shape/card",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 12,
+            "Gold": 12,
+            "Studio": 36,
+            "Harbor": 16,
+            "Fluent": 8,
+            "Square": 0
+          }
+        },
+        {
+          "name": "Shape/surface",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 16,
+            "Gold": 16,
+            "Studio": 40,
+            "Harbor": 20,
+            "Fluent": 12,
+            "Square": 0
+          }
+        },
+        {
+          "name": "Shape/card-inset",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 8,
+            "Gold": 8,
+            "Studio": 32,
+            "Harbor": 12,
+            "Fluent": 4,
+            "Square": 0
+          }
+        },
+        {
+          "name": "Shape/track",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 10,
+            "Gold": 10,
+            "Studio": 9999,
+            "Harbor": 9999,
+            "Fluent": 8,
+            "Square": 0
+          }
+        },
+        {
+          "name": "Shape/pill",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 9999,
+            "Gold": 9999,
+            "Studio": 9999,
+            "Harbor": 9999,
+            "Fluent": 9999,
+            "Square": 9999
+          }
+        },
+        {
+          "name": "Shape/none",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "SKO": 0,
+            "Gold": 0,
+            "Studio": 0,
+            "Harbor": 0,
+            "Fluent": 0,
+            "Square": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Scope",
+      "modes": [
+        "Open edX only",
+        "Beyond Open edX"
+      ],
+      "variables": [
+        {
+          "name": "scope/beyond-edx",
+          "type": "BOOLEAN",
+          "web": null,
+          "values": {
+            "Open edX only": false,
+            "Beyond Open edX": true
+          }
+        },
+        {
+          "name": "scope/open-edx-only",
+          "type": "BOOLEAN",
+          "web": null,
+          "values": {
+            "Open edX only": true,
+            "Beyond Open edX": false
+          }
+        }
+      ]
     }
   ],
   "textStyles": [
@@ -3302,6 +3672,7 @@
         "fontSize": "Type/size/display-2xl",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-2xl",
         "lineHeight": "Type/line-height/display-2xl"
       }
     },
@@ -3323,6 +3694,7 @@
         "fontSize": "Type/size/display-2xl",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-2xl",
         "lineHeight": "Type/line-height/display-2xl"
       }
     },
@@ -3344,6 +3716,7 @@
         "fontSize": "Type/size/display-2xl",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-2xl",
         "lineHeight": "Type/line-height/display-2xl"
       }
     },
@@ -3365,6 +3738,7 @@
         "fontSize": "Type/size/display-2xl",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-2xl",
         "lineHeight": "Type/line-height/display-2xl"
       }
     },
@@ -3386,6 +3760,7 @@
         "fontSize": "Type/size/display-xl",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xl",
         "lineHeight": "Type/line-height/display-xl"
       }
     },
@@ -3407,6 +3782,7 @@
         "fontSize": "Type/size/display-xl",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xl",
         "lineHeight": "Type/line-height/display-xl"
       }
     },
@@ -3428,6 +3804,7 @@
         "fontSize": "Type/size/display-xl",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xl",
         "lineHeight": "Type/line-height/display-xl"
       }
     },
@@ -3449,6 +3826,7 @@
         "fontSize": "Type/size/display-xl",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xl",
         "lineHeight": "Type/line-height/display-xl"
       }
     },
@@ -3470,6 +3848,7 @@
         "fontSize": "Type/size/display-lg",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-lg",
         "lineHeight": "Type/line-height/display-lg"
       }
     },
@@ -3491,6 +3870,7 @@
         "fontSize": "Type/size/display-lg",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-lg",
         "lineHeight": "Type/line-height/display-lg"
       }
     },
@@ -3512,6 +3892,7 @@
         "fontSize": "Type/size/display-lg",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-lg",
         "lineHeight": "Type/line-height/display-lg"
       }
     },
@@ -3533,6 +3914,7 @@
         "fontSize": "Type/size/display-lg",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-lg",
         "lineHeight": "Type/line-height/display-lg"
       }
     },
@@ -3554,6 +3936,7 @@
         "fontSize": "Type/size/display-md",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-md",
         "lineHeight": "Type/line-height/display-md"
       }
     },
@@ -3575,6 +3958,7 @@
         "fontSize": "Type/size/display-md",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-md",
         "lineHeight": "Type/line-height/display-md"
       }
     },
@@ -3596,6 +3980,7 @@
         "fontSize": "Type/size/display-md",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-md",
         "lineHeight": "Type/line-height/display-md"
       }
     },
@@ -3617,6 +4002,7 @@
         "fontSize": "Type/size/display-md",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-md",
         "lineHeight": "Type/line-height/display-md"
       }
     },
@@ -3638,6 +4024,7 @@
         "fontSize": "Type/size/display-sm",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-sm",
         "lineHeight": "Type/line-height/display-sm"
       }
     },
@@ -3659,6 +4046,7 @@
         "fontSize": "Type/size/display-sm",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-sm",
         "lineHeight": "Type/line-height/display-sm"
       }
     },
@@ -3680,6 +4068,7 @@
         "fontSize": "Type/size/display-sm",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-sm",
         "lineHeight": "Type/line-height/display-sm"
       }
     },
@@ -3701,6 +4090,7 @@
         "fontSize": "Type/size/display-sm",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-sm",
         "lineHeight": "Type/line-height/display-sm"
       }
     },
@@ -3722,6 +4112,7 @@
         "fontSize": "Type/size/display-xs",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xs",
         "lineHeight": "Type/line-height/display-xs"
       }
     },
@@ -3743,6 +4134,7 @@
         "fontSize": "Type/size/display-xs",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xs",
         "lineHeight": "Type/line-height/display-xs"
       }
     },
@@ -3764,6 +4156,7 @@
         "fontSize": "Type/size/display-xs",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xs",
         "lineHeight": "Type/line-height/display-xs"
       }
     },
@@ -3785,6 +4178,7 @@
         "fontSize": "Type/size/display-xs",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/display",
+        "paragraphSpacing": "Type/size/display-xs",
         "lineHeight": "Type/line-height/display-xs"
       }
     },
@@ -3806,6 +4200,7 @@
         "fontSize": "Type/size/text-xl",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xl",
         "lineHeight": "Type/line-height/text-xl"
       }
     },
@@ -3827,6 +4222,7 @@
         "fontSize": "Type/size/text-xl",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xl",
         "lineHeight": "Type/line-height/text-xl"
       }
     },
@@ -3848,6 +4244,7 @@
         "fontSize": "Type/size/text-xl",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xl",
         "lineHeight": "Type/line-height/text-xl"
       }
     },
@@ -3869,6 +4266,7 @@
         "fontSize": "Type/size/text-xl",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xl",
         "lineHeight": "Type/line-height/text-xl"
       }
     },
@@ -3890,6 +4288,7 @@
         "fontSize": "Type/size/text-lg",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-lg",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -3911,6 +4310,7 @@
         "fontSize": "Type/size/text-lg",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-lg",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -3932,6 +4332,7 @@
         "fontSize": "Type/size/text-lg",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-lg",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -3953,6 +4354,7 @@
         "fontSize": "Type/size/text-lg",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-lg",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -3974,6 +4376,7 @@
         "fontSize": "Type/size/text-md",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-md",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -3995,6 +4398,7 @@
         "fontSize": "Type/size/text-md",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-md",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -4016,6 +4420,7 @@
         "fontSize": "Type/size/text-md",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-md",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -4037,6 +4442,7 @@
         "fontSize": "Type/size/text-md",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-md",
         "lineHeight": "Type/line-height/text-md"
       }
     },
@@ -4058,6 +4464,7 @@
         "fontSize": "Type/size/text-sm",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-sm",
         "lineHeight": "Type/line-height/text-sm"
       }
     },
@@ -4079,6 +4486,7 @@
         "fontSize": "Type/size/text-sm",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-sm",
         "lineHeight": "Type/line-height/text-sm"
       }
     },
@@ -4100,6 +4508,7 @@
         "fontSize": "Type/size/text-sm",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-sm",
         "lineHeight": "Type/line-height/text-sm"
       }
     },
@@ -4121,6 +4530,7 @@
         "fontSize": "Type/size/text-sm",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-sm",
         "lineHeight": "Type/line-height/text-sm"
       }
     },
@@ -4128,7 +4538,7 @@
       "name": "body-small/Regular",
       "fontFamily": "Montserrat",
       "fontStyle": "Regular",
-      "fontSize": 12,
+      "fontSize": 13,
       "lineHeight": {
         "unit": "PIXELS",
         "value": 18
@@ -4142,6 +4552,7 @@
         "fontSize": "Type/size/text-xs",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xs",
         "lineHeight": "Type/line-height/text-xs"
       }
     },
@@ -4149,7 +4560,7 @@
       "name": "body-small/Medium",
       "fontFamily": "Montserrat",
       "fontStyle": "Medium",
-      "fontSize": 12,
+      "fontSize": 13,
       "lineHeight": {
         "unit": "PIXELS",
         "value": 18
@@ -4163,6 +4574,7 @@
         "fontSize": "Type/size/text-xs",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xs",
         "lineHeight": "Type/line-height/text-xs"
       }
     },
@@ -4170,7 +4582,7 @@
       "name": "body-small/Semibold",
       "fontFamily": "Montserrat",
       "fontStyle": "SemiBold",
-      "fontSize": 12,
+      "fontSize": 13,
       "lineHeight": {
         "unit": "PIXELS",
         "value": 18
@@ -4184,6 +4596,7 @@
         "fontSize": "Type/size/text-xs",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xs",
         "lineHeight": "Type/line-height/text-xs"
       }
     },
@@ -4191,7 +4604,7 @@
       "name": "body-small/Bold",
       "fontFamily": "Montserrat",
       "fontStyle": "Bold",
-      "fontSize": 12,
+      "fontSize": 13,
       "lineHeight": {
         "unit": "PIXELS",
         "value": 18
@@ -4205,6 +4618,7 @@
         "fontSize": "Type/size/text-xs",
         "fontStyle": "Type/weight/bold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-xs",
         "lineHeight": "Type/line-height/text-xs"
       }
     },
@@ -4212,7 +4626,7 @@
       "name": "label-small/Regular",
       "fontFamily": "Montserrat",
       "fontStyle": "Regular",
-      "fontSize": 12,
+      "fontSize": 13,
       "lineHeight": {
         "unit": "PIXELS",
         "value": 18
@@ -4226,6 +4640,7 @@
         "fontSize": "Type/size/text-xs",
         "fontStyle": "Type/weight/regular",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-2xs",
         "lineHeight": "Type/line-height/text-xs"
       }
     },
@@ -4233,7 +4648,7 @@
       "name": "label-small/Medium",
       "fontFamily": "Montserrat",
       "fontStyle": "Medium",
-      "fontSize": 12,
+      "fontSize": 13,
       "lineHeight": {
         "unit": "PIXELS",
         "value": 18
@@ -4247,6 +4662,7 @@
         "fontSize": "Type/size/text-xs",
         "fontStyle": "Type/weight/medium",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-2xs",
         "lineHeight": "Type/line-height/text-xs"
       }
     },
@@ -4254,7 +4670,7 @@
       "name": "label-small/Semibold",
       "fontFamily": "Montserrat",
       "fontStyle": "SemiBold",
-      "fontSize": 12,
+      "fontSize": 13,
       "lineHeight": {
         "unit": "PIXELS",
         "value": 18
@@ -4268,6 +4684,7 @@
         "fontSize": "Type/size/text-xs",
         "fontStyle": "Type/weight/semibold",
         "fontFamily": "Type/family/body",
+        "paragraphSpacing": "Type/size/text-2xs",
         "lineHeight": "Type/line-height/text-xs"
       }
     }
