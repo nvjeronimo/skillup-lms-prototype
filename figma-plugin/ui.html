@@ -78,8 +78,8 @@
   <p>Saves the same export on this computer, without GitHub: for the dev token package
     (<code>figma/variables.json</code>) or another tool.</p>
   <label class="check"><input type="checkbox" id="dtcg" />
-    <span>Also the standard format (W3C DTCG): a zip with one file per collection and mode, and the
-      text styles, for Style Dictionary or Tokens Studio.</span></label>
+    <span>Also the standard format (W3C DTCG): one zip with variables.json and one file per
+      collection and mode, and the text styles, for Style Dictionary or Tokens Studio.</span></label>
   <button id="download" class="secondary" disabled>Download variables.json</button>
 </section>
 
@@ -206,6 +206,20 @@
     }
   });
 
+  // The tokens alone, for comparing two exports: no file key, and collections, variables and text
+  // styles in name order, so an export that only differs in metadata or order counts as the same.
+  function tokensOnly(data) {
+    const sorted = (v) =>
+      Array.isArray(v) ? v.map(sorted)
+      : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, sorted(v[k])]))
+      : v;
+    const byName = (a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+    return JSON.stringify(sorted({
+      collections: [...data.collections].sort(byName).map((c) => ({ ...c, variables: [...c.variables].sort(byName) })),
+      textStyles: [...data.textStyles].sort(byName),
+    }));
+  }
+
   // The dev token package in the docs repository: same JSON, its own pull request, never merged
   // by a machine (the package goes to the dev team).
   $("package").addEventListener("click", async () => {
@@ -215,8 +229,8 @@
     try {
       status("Reading the package…");
       const file = await api(`/contents/${PKG_FILE}?ref=main`, {}, repo);
-      if (JSON.stringify(JSON.parse(fromBase64(file.content))) === JSON.stringify(JSON.parse(next))) {
-        status("The dev token package already has these tokens.");
+      if (tokensOnly(JSON.parse(fromBase64(file.content))) === tokensOnly(JSON.parse(next))) {
+        status("The dev token package already has these tokens: nothing to open.");
         $("package").disabled = false;
         return;
       }
@@ -380,17 +394,23 @@
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
+  // One file per click: Figma lets a plugin start one download per click, so with the DTCG box
+  // ticked variables.json goes inside the zip instead of as a second download.
   $("download").addEventListener("click", () => {
     try {
-      save(new Blob([next], { type: "application/json" }), "variables.json");
-      if ($("dtcg").checked) setTimeout(() => save(zip(toDtcg(JSON.parse(next))), "skillup-tokens-dtcg.zip"), 400);
-      status($("dtcg").checked ? "Saved variables.json and skillup-tokens-dtcg.zip (your Downloads folder)." : "Saved variables.json (your Downloads folder).");
+      if ($("dtcg").checked) {
+        save(zip([{ path: "variables.json", text: next }, ...toDtcg(JSON.parse(next))]), "skillup-tokens.zip");
+        status("Saved skillup-tokens.zip (your Downloads folder): variables.json and the skillup-tokens-dtcg folder.");
+      } else {
+        save(new Blob([next], { type: "application/json" }), "variables.json");
+        status("Saved variables.json (your Downloads folder).");
+      }
     } catch (e) {
       status(`Could not save the files: ${e.message}`, true);
     }
   });
   $("dtcg").addEventListener("change", () => {
-    $("download").textContent = $("dtcg").checked ? "Download variables.json + DTCG zip" : "Download variables.json";
+    $("download").textContent = $("dtcg").checked ? "Download skillup-tokens.zip" : "Download variables.json";
   });
 
   onmessage = (event) => {

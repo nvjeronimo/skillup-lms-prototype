@@ -46,14 +46,16 @@ If a check fails the PR stays open with the failing step: nothing reaches the pr
 (`03-design-system/dev-token-package/figma/variables.json`, on a `tokens/package-*` branch). The
 **Dev token package** check there regenerates `css/` and commits it to the branch. It never merges:
 the package goes to the dev team, so a person reviews the CSS diff and merges. If the package
-already has these tokens, the plugin says so and opens nothing.
+already has these tokens (the file key and the order of the entries do not count), the plugin
+says so and opens nothing.
 
 ## Download the JSON
 
 **Download variables.json** saves the export on this computer, no GitHub needed: the same file
 the prototype and the dev token package read (format `skillup-figma-tokens/1`).
 
-Tick **Also the standard format (W3C DTCG)** to get `skillup-tokens-dtcg.zip` as well:
+Tick **Also the standard format (W3C DTCG)** to get one `skillup-tokens.zip` instead (Figma starts
+only one download per click): `variables.json` plus a `skillup-tokens-dtcg/` folder with
 
 - one `*.tokens.json` per collection and mode (`sko-semantics/sko-light`, `responsive/mobile`,
   `motion/value`, `skin-shape/harbor`…), in the DTCG draft format that Style Dictionary 4 and
