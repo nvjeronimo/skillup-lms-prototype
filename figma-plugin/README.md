@@ -24,7 +24,8 @@ Dev Mode) and needs an Organization plan; the `*.figma.tsx` files stay ready for
 2. Menu → Plugins → Development → **Import plugin from manifest…** → pick
    `figma-plugin/manifest.json` from a clone of this repository.
 3. Create a GitHub **fine-grained token**: github.com → Settings → Developer settings →
-   Fine-grained tokens → Generate. Repository access: only `nvjeronimo/skillup-lms-prototype`.
+   Fine-grained tokens → Generate. Repository access: only `nvjeronimo/skillup-lms-prototype` and `nvjeronimo/skillup-lms-prd`
+   (the second one only for the dev token package).
    Permissions: **Contents** read and write, **Pull requests** read and write. Copy it.
 4. Run the plugin (Plugins → Development → SkillUp · Publish tokens), open **GitHub connection**
    and paste the token. It is kept in Figma's client storage on that computer only.
@@ -39,11 +40,38 @@ Dev Mode) and needs an Organization plan; the `*.figma.tsx` files stay ready for
 
 If a check fails the PR stays open with the failing step: nothing reaches the prototype.
 
+## Update the dev token package
+
+**Open the package pull request** sends the same export to the docs repository
+(`03-design-system/dev-token-package/figma/variables.json`, on a `tokens/package-*` branch). The
+**Dev token package** check there regenerates `css/` and commits it to the branch. It never merges:
+the package goes to the dev team, so a person reviews the CSS diff and merges. If the package
+already has these tokens, the plugin says so and opens nothing.
+
+## Download the JSON
+
+**Download variables.json** saves the export on this computer, no GitHub needed: the same file
+the prototype and the dev token package read (format `skillup-figma-tokens/1`).
+
+Tick **Also the standard format (W3C DTCG)** to get `skillup-tokens-dtcg.zip` as well:
+
+- one `*.tokens.json` per collection and mode (`sko-semantics/sko-light`, `responsive/mobile`,
+  `motion/value`, `skin-shape/harbor`…), in the DTCG draft format that Style Dictionary 4 and
+  Tokens Studio read;
+- aliases inside a collection stay `{group.token}` references; aliases across collections are
+  resolved;
+- `text-styles.tokens.json`: the 47 text styles as typography tokens, with font family and size
+  referring to `Type/*`, so they follow the responsive mode you load;
+- `5. Scope` is left out (a Figma review switch, not a token for code).
+
+Load one mode file per collection. Tested on 12 Nov 2026 with Style Dictionary 4 (`css/variables`):
+its CSS `font` shorthand has no letter-spacing, so read `letterSpacing` from the token if needed.
+
 ## What is generated, and what is not
 
 | Figma | CSS (`tokens/generated/`) | Used by |
 |---|---|---|
-| 1. SKO-Semantics 🎨, colours, 8 modes | `colors.css`: `--color-*` per SKO / Gold / Red / Studio × light / dark | every `bg-sko-*`, `text-sko-*`, `border-sko-*` |
+| 1. SKO-Semantics 🎨, colours, 10 modes | `colors.css`: `--color-*` per SKO / Gold / Studio / Harbor / Fluent × light / dark | every `bg-sko-*`, `text-sko-*`, `border-sko-*` |
 | 2. Responsive 📐 `Radius/*` roles | `radius.css`: `--sk-radius-*` | `rounded-control`, `rounded-card`… |
 | 2. Responsive 📐 `Type/*` + the 47 text styles | `typography.css`: `--sk-type-*` (Desktop / Tablet / Mobile) and `.sk-text-*` | every text class |
 | 2. Responsive 📐 `Spacing/*`, `Container/*` | `spacing.css`: `--sk-space-*`, `--sk-container-*` | nothing yet: components use Tailwind's 4px scale (`tokens/spacing.md`) |

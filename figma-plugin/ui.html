@@ -32,6 +32,10 @@
   a { color: var(--figma-color-text-brand); }
   details summary { cursor: pointer; color: var(--figma-color-text-secondary); }
   details[open] { display: flex; flex-direction: column; gap: 8px; }
+  .download { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--figma-color-border); }
+  button.secondary { background: var(--figma-color-bg-secondary); color: var(--figma-color-text); border: 1px solid var(--figma-color-border); }
+  .check { flex-direction: row; align-items: flex-start; gap: 6px; font-weight: 400; }
+  .check input { margin: 2px 0 0; }
 </style>
 
 <h1>Publish tokens</h1>
@@ -50,23 +54,43 @@
 <details id="setup">
   <summary>GitHub connection</summary>
   <label>Repository <input id="repo" /></label>
+  <label>Dev token package repository <input id="pkgRepo" /></label>
   <label>Access token
     <input id="token" type="password" placeholder="github_pat_…" autocomplete="off" />
   </label>
-  <p>A fine-grained token with access to this repository only: Contents and Pull requests, read and
-    write. It stays on this computer (Figma client storage).</p>
+  <p>A fine-grained token with access to these two repositories only: Contents and Pull requests,
+    read and write. It stays on this computer (Figma client storage).</p>
 </details>
 
 <button id="publish" disabled>Publish tokens</button>
 <div class="status" id="status"></div>
+
+<section class="download">
+  <h1>Update the dev token package</h1>
+  <p>Opens a pull request on the docs repository with the same export in
+    <code>dev-token-package/figma/variables.json</code>. Its check regenerates the package CSS; a
+    person merges it, because the package goes to the dev team.</p>
+  <button id="package" class="secondary" disabled>Open the package pull request</button>
+</section>
+
+<section class="download">
+  <h1>Download the JSON</h1>
+  <p>Saves the same export on this computer, without GitHub: for the dev token package
+    (<code>figma/variables.json</code>) or another tool.</p>
+  <label class="check"><input type="checkbox" id="dtcg" />
+    <span>Also the standard format (W3C DTCG): a zip with one file per collection and mode, and the
+      text styles, for Style Dictionary or Tokens Studio.</span></label>
+  <button id="download" class="secondary" disabled>Download variables.json</button>
+</section>
 
 <script>
   const $ = (id) => document.getElementById(id);
   const FILE = "tokens/figma/variables.json";
   let next = null, current = null, user = "";
 
-  const api = async (path, init = {}) => {
-    const res = await fetch(`https://api.github.com/repos/${$("repo").value.trim()}${path}`, {
+  const PKG_FILE = "03-design-system/dev-token-package/figma/variables.json";
+  const api = async (path, init = {}, repo = $("repo").value.trim()) => {
+    const res = await fetch(`https://api.github.com/repos/${repo}${path}`, {
       ...init,
       headers: {
         Accept: "application/vnd.github+json",
@@ -115,6 +139,7 @@
 
   async function refresh() {
     $("publish").disabled = true;
+    $("package").disabled = !$("token").value.trim();
     if (!$("token").value.trim()) {
       $("summary").textContent = "Add the GitHub token to compare with what is published.";
       $("setup").open = true;
@@ -140,11 +165,12 @@
     $("status")[html ? "innerHTML" : "textContent"] = text;
   }
   function saveSettings() {
-    parent.postMessage({ pluginMessage: { type: "save-settings", settings: { repo: $("repo").value.trim(), token: $("token").value.trim() } } }, "*");
+    parent.postMessage({ pluginMessage: { type: "save-settings", settings: { repo: $("repo").value.trim(), pkgRepo: $("pkgRepo").value.trim(), token: $("token").value.trim() } } }, "*");
   }
 
   $("token").addEventListener("change", () => { saveSettings(); refresh(); });
   $("repo").addEventListener("change", () => { saveSettings(); refresh(); });
+  $("pkgRepo").addEventListener("change", saveSettings);
 
   $("publish").addEventListener("click", async () => {
     $("publish").disabled = true;
@@ -180,14 +206,203 @@
     }
   });
 
+  // The dev token package in the docs repository: same JSON, its own pull request, never merged
+  // by a machine (the package goes to the dev team).
+  $("package").addEventListener("click", async () => {
+    $("package").disabled = true;
+    const repo = $("pkgRepo").value.trim();
+    const note = $("note").value.trim() || "Token update from Figma";
+    try {
+      status("Reading the package…");
+      const file = await api(`/contents/${PKG_FILE}?ref=main`, {}, repo);
+      if (JSON.stringify(JSON.parse(fromBase64(file.content))) === JSON.stringify(JSON.parse(next))) {
+        status("The dev token package already has these tokens.");
+        $("package").disabled = false;
+        return;
+      }
+      const stamp = new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15);
+      const branch = `tokens/package-${stamp}`;
+      status("Creating the branch…");
+      const main = await api("/git/ref/heads/main", {}, repo);
+      await api("/git/refs", { method: "POST", body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: main.object.sha }) }, repo);
+      status("Sending the tokens…");
+      await api(`/contents/${PKG_FILE}`, {
+        method: "PUT",
+        body: JSON.stringify({ message: `tokens(package): ${note}`, content: toBase64(next), branch, sha: file.sha }),
+      }, repo);
+      status("Opening the pull request…");
+      const pr = await api("/pulls", {
+        method: "POST",
+        body: JSON.stringify({
+          title: `tokens(package): ${note}`,
+          head: branch,
+          base: "main",
+          body: `Dev token package exported from the SKO Design System in Figma by ${user}.\n\n> ${note}\n\n` +
+            "The **Dev token package** check regenerates `css/` from this export and commits it to this branch. " +
+            "Nobody merges it automatically: review the CSS diff, then merge.",
+        }),
+      }, repo);
+      status(`Package pull request <a href="${esc(pr.html_url)}" target="_blank">#${pr.number}</a> is open. Its check adds the CSS in about a minute; merge it when it looks right.`, false, true);
+    } catch (e) {
+      status(e.message, true);
+    }
+    $("package").disabled = false;
+  });
+
+  // <dtcg> The standard format (Design Tokens Community Group draft, as Style Dictionary 4 and
+  // Tokens Studio read it): one file per collection and mode, aliases kept as {group.token}
+  // references, plus the text styles as typography tokens. 5. Scope is a Figma review switch,
+  // not a token for code, so booleans are left out.
+  const slug = (s) => s.replace(/^\d+\.\s*/, "").replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "").toLowerCase();
+  const ref = (name) => `{${name.split("/").join(".")}}`;
+  const WEIGHTS = { thin: 100, extralight: 200, light: 300, regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800, black: 900 };
+  const weight = (style) => WEIGHTS[String(style).toLowerCase().replace(/italic|\s|-/g, "")] || 400;
+  function dtcgToken(v, value, alias) {
+    const n = v.name;
+    if (alias) return { $value: ref(alias) };
+    if (v.type === "COLOR") return { $type: "color", $value: value };
+    if (v.type === "FLOAT") {
+      if (n.startsWith("duration/")) return { $type: "duration", $value: `${value}ms` };
+      return { $type: "dimension", $value: `${value}px` };
+    }
+    if (v.type === "STRING") {
+      if (/^(Font-Family|Type\/family)\//.test(n)) return { $type: "fontFamily", $value: value };
+      if (n.startsWith("Type/weight/")) return { $type: "fontWeight", $value: weight(value), $extensions: { "com.figma": { style: value } } };
+      if (n.startsWith("easing/")) {
+        const m = String(value).match(/cubic-bezier\(([^)]+)\)/);
+        return { $type: "cubicBezier", $value: m ? m[1].split(",").map(Number) : [0, 0, 1, 1] };
+      }
+      return { $value: value };
+    }
+    return null;
+  }
+  function put(tree, name, token) {
+    const parts = name.split("/");
+    let node = tree;
+    for (const p of parts.slice(0, -1)) node = node[p] = node[p] || {};
+    node[parts[parts.length - 1]] = token;
+  }
+  function toDtcg(data) {
+    const files = [];
+    for (const c of data.collections) {
+      for (const mode of c.modes) {
+        const tree = {};
+        let count = 0;
+        for (const v of c.variables) {
+          const t = dtcgToken(v, v.values[mode], v.aliases && v.aliases[mode]);
+          if (!t) continue;
+          if (v.web) t.$extensions = { ...(t.$extensions || {}), "com.figma": { ...((t.$extensions || {})["com.figma"] || {}), codeSyntax: v.web } };
+          put(tree, v.name, t);
+          count++;
+        }
+        if (count) files.push({ path: `${slug(c.name)}/${slug(mode)}.tokens.json`, json: tree });
+      }
+    }
+    const styles = {};
+    for (const s of data.textStyles) {
+      const size = s.fontSize;
+      const lh = s.lineHeight === "auto" ? 1.2 : s.lineHeight.unit === "PERCENT" ? s.lineHeight.value / 100 : s.lineHeight.value / size;
+      const ls = s.letterSpacing.unit === "PERCENT" ? `${s.letterSpacing.value / 100}em` : `${s.letterSpacing.value}px`;
+      put(styles, s.name, {
+        $type: "typography",
+        $value: {
+          fontFamily: s.bound.fontFamily ? ref(s.bound.fontFamily) : s.fontFamily,
+          fontSize: s.bound.fontSize ? ref(s.bound.fontSize) : `${size}px`,
+          fontWeight: weight(s.fontStyle),
+          lineHeight: Math.round(lh * 10000) / 10000,
+          letterSpacing: ls,
+        },
+        $extensions: { "com.figma": { fontStyle: s.fontStyle, textCase: s.textCase } },
+      });
+    }
+    files.push({ path: "text-styles.tokens.json", json: styles });
+    const readme = [
+      "# SKO Design System tokens (W3C DTCG format)",
+      "",
+      `Exported from Figma (file ${data.fileKey || "SKO Design System"}) by the SkillUp Publish tokens plugin.`,
+      "",
+      "- One file per collection and mode: load ONE mode file per collection (e.g. sko-semantics/sko-light",
+      "  + responsive/desktop + motion/value + skin-shape/sko + text-styles) into Style Dictionary.",
+      "- Aliases inside a collection are kept as {group.token} references; aliases across collections are",
+      "  resolved to their value.",
+      "- text-styles.tokens.json refers to Type/* in responsive/<mode>: its sizes follow the mode you load.",
+      "  lineHeight is a ratio of the font size (desktop values). Style Dictionary's CSS font shorthand has",
+      "  no letter-spacing: read letterSpacing from the token if you use that format.",
+      "- 5. Scope (Open edX only / Beyond Open edX) is a Figma review switch and is not exported.",
+      "- The same export in the SkillUp format is variables.json (what the dev token package reads).",
+      "",
+    ].join("\n");
+    files.push({ path: "README.md", text: readme });
+    return files.map((f) => ({ path: `skillup-tokens-dtcg/${f.path}`, text: f.text || JSON.stringify(f.json, null, 2) + "\n" }));
+  }
+
+  // A zip without compression (store), enough for a handful of JSON files.
+  const CRC = (() => {
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+    return t;
+  })();
+  const crc32 = (bytes) => { let c = 0xffffffff; for (const b of bytes) c = CRC[(c ^ b) & 0xff] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; };
+  function zip(entries) {
+    const enc = new TextEncoder();
+    const chunks = [], central = [];
+    let offset = 0;
+    const d = new Date();
+    const time = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+    const date = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+    for (const e of entries) {
+      const name = enc.encode(e.path), data = enc.encode(e.text), crc = crc32(data);
+      const local = new DataView(new ArrayBuffer(30));
+      [[0, 0x04034b50, 4], [4, 20, 2], [6, 0x0800, 2], [8, 0, 2], [10, time, 2], [12, date, 2], [14, crc, 4], [18, data.length, 4], [22, data.length, 4], [26, name.length, 2], [28, 0, 2]]
+        .forEach(([o, v, n]) => (n === 4 ? local.setUint32(o, v, true) : local.setUint16(o, v, true)));
+      const cen = new DataView(new ArrayBuffer(46));
+      [[0, 0x02014b50, 4], [4, 20, 2], [6, 20, 2], [8, 0x0800, 2], [10, 0, 2], [12, time, 2], [14, date, 2], [16, crc, 4], [20, data.length, 4], [24, data.length, 4], [28, name.length, 2], [30, 0, 2], [32, 0, 2], [34, 0, 2], [36, 0, 2], [38, 0, 4], [42, offset, 4]]
+        .forEach(([o, v, n]) => (n === 4 ? cen.setUint32(o, v, true) : cen.setUint16(o, v, true)));
+      chunks.push(new Uint8Array(local.buffer), name, data);
+      central.push(new Uint8Array(cen.buffer), name);
+      offset += 30 + name.length + data.length;
+    }
+    const size = central.reduce((s, c) => s + c.length, 0);
+    const end = new DataView(new ArrayBuffer(22));
+    [[0, 0x06054b50, 4], [4, 0, 2], [6, 0, 2], [8, entries.length, 2], [10, entries.length, 2], [12, size, 4], [16, offset, 4], [20, 0, 2]]
+      .forEach(([o, v, n]) => (n === 4 ? end.setUint32(o, v, true) : end.setUint16(o, v, true)));
+    return new Blob([...chunks, ...central, new Uint8Array(end.buffer)], { type: "application/zip" });
+  }
+  // </dtcg>
+
+  function save(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  }
+  $("download").addEventListener("click", () => {
+    try {
+      save(new Blob([next], { type: "application/json" }), "variables.json");
+      if ($("dtcg").checked) setTimeout(() => save(zip(toDtcg(JSON.parse(next))), "skillup-tokens-dtcg.zip"), 400);
+      status($("dtcg").checked ? "Saved variables.json and skillup-tokens-dtcg.zip (your Downloads folder)." : "Saved variables.json (your Downloads folder).");
+    } catch (e) {
+      status(`Could not save the files: ${e.message}`, true);
+    }
+  });
+  $("dtcg").addEventListener("change", () => {
+    $("download").textContent = $("dtcg").checked ? "Download variables.json + DTCG zip" : "Download variables.json";
+  });
+
   onmessage = (event) => {
     const msg = event.data.pluginMessage;
     if (!msg) return;
     if (msg.type === "error") { $("summary").textContent = "Could not read the variables."; status(msg.message, true); }
     if (msg.type === "ready") {
       next = msg.json;
+      $("download").disabled = false;
       user = msg.user;
       $("repo").value = msg.settings.repo;
+      $("pkgRepo").value = msg.settings.pkgRepo;
       $("token").value = msg.settings.token;
       refresh();
     }

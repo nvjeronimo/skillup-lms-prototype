@@ -1,7 +1,8 @@
 // SkillUp · Publish tokens — a development plugin for the SKO Design System file.
 // It reads the variables and text styles, shows what changed since the last publish, and opens a
 // pull request with tokens/figma/variables.json on the prototype repository. A GitHub Action there
-// generates the CSS, checks the build and merges; Vercel deploys. See README.md.
+// generates the CSS, checks the build and merges; Vercel deploys. It can also open a pull request
+// for the dev token package (docs repo) and download the JSON, in our format or W3C DTCG. See README.md.
 
 async function exportTokens() {
   const cols = await figma.variables.getLocalVariableCollectionsAsync();
@@ -88,14 +89,18 @@ async function exportTokens() {
 
 const SETTINGS_KEY = "skillup-publish-tokens/settings";
 
-figma.showUI(__html__, { width: 380, height: 560, themeColors: true });
+figma.showUI(__html__, { width: 380, height: 640, themeColors: true });
 
 (async () => {
   const settings = (await figma.clientStorage.getAsync(SETTINGS_KEY)) || {};
   const tokens = await exportTokens();
   figma.ui.postMessage({
     type: "ready",
-    settings: { repo: settings.repo || "nvjeronimo/skillup-lms-prototype", token: settings.token || "" },
+    settings: {
+      repo: settings.repo || "nvjeronimo/skillup-lms-prototype",
+      pkgRepo: settings.pkgRepo || "nvjeronimo/skillup-lms-prd",
+      token: settings.token || "",
+    },
     json: JSON.stringify(tokens, null, 2) + "\n",
     user: currentUserName(),
   });
