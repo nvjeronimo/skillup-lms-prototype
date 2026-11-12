@@ -97,7 +97,7 @@ figma.showUI(__html__, { width: 380, height: 560, themeColors: true });
     type: "ready",
     settings: { repo: settings.repo || "nvjeronimo/skillup-lms-prototype", token: settings.token || "" },
     json: JSON.stringify(tokens, null, 2) + "\n",
-    user: figma.currentUser ? figma.currentUser.name : "a designer",
+    user: currentUserName(),
   });
 })().catch((e) => figma.ui.postMessage({ type: "error", message: String(e && e.message ? e.message : e) }));
 
@@ -105,3 +105,13 @@ figma.ui.onmessage = async (msg) => {
   if (msg.type === "save-settings") await figma.clientStorage.setAsync(SETTINGS_KEY, msg.settings);
   if (msg.type === "close") figma.closePlugin();
 };
+
+// The name of whoever publishes, for the pull request. Needs "currentuser" in the manifest's
+// permissions; without it Figma throws, so fall back to a neutral name instead of failing.
+function currentUserName() {
+  try {
+    return figma.currentUser ? figma.currentUser.name : "a designer";
+  } catch (e) {
+    return "a designer";
+  }
+}
