@@ -35,7 +35,7 @@
   --sk-layout-grid-gap: 32px;
   --sk-container-text-max-width: 1200px;
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1023px) {
   :root {
     --sk-space-3xl: 20px;
     --sk-space-4xl: 24px;
@@ -58,7 +58,7 @@
     --sk-layout-grid-gap: 24px;
   }
   }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   :root {
     --sk-space-2xl: 16px;
     --sk-space-3xl: 16px;

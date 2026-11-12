@@ -29,7 +29,7 @@
   --sk-type-size-display-2xl: 4.5rem;
   --sk-type-line-height-text-2xs: 1.125rem;
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1023px) {
   :root {
     --sk-type-line-height-display-md: 2.375rem;
     --sk-type-line-height-display-lg: 2.75rem;
@@ -41,7 +41,7 @@
     --sk-type-size-display-2xl: 3.75rem;
   }
   }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   :root {
     --sk-type-line-height-text-sm: 1.5rem;
     --sk-type-line-height-text-md: 1.625rem;
