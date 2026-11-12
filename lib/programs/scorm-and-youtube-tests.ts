@@ -7,7 +7,8 @@ import { relativeLabel } from "@/lib/sample-time";
  * 4 Nov 2026 asked to cover before ICP Phase 1 goes live (Nelson, 4 Nov 2026). Not a SkillUp
  * program and not in Figma: the page is the Program page with this content.
  *
- * - Course 1, YouTube Video Test: the two ways to add a YouTube video (ICP Video rows 9 and 10).
+ * - Course 1, YouTube Video Test: a YouTube video in YouTube's official embed (ICP Video row 9; row 10,
+ *   YouTube inside our player, withdrawn on 12 Nov 2026).
  * - Course 2, SCORM Test Course: the four packages inside units of a course (Activity groups A–C).
  * - Courses 3 and 4: the content team's POSH course (Rise) and a Storyline final quiz (10 Nov 2026).
  * - Courses 5 and 6: the improved course-package flow, PROPOSED on 11 Nov 2026 (POSH as one
@@ -36,15 +37,15 @@ const program: Program = {
 
   coursesIntro: {
     title: "Courses in this program",
-    lead: "Six test courses: YouTube videos added the two ways Studio allows, the four SCORM packages inside the units of a course, two real exports from the content team (a Rise course and a Storyline quiz), and the improved package flow proposed on 11 Nov 2026 (courses 5 and 6). Take them in any order.",
+    lead: "Six test courses: a YouTube video in YouTube’s official embed, the four SCORM packages inside the units of a course, two real exports from the content team (a Rise course and a Storyline quiz), and the improved package flow proposed on 11 Nov 2026 (courses 5 and 6). Take them in any order.",
   },
   courses: [
     programCourse(1, "YouTube Video Test", "YT", "ux-research-and-design-thinking", {
-      progressMeta: "1 hour total",
+      progressMeta: "30 min total",
       upNext: { title: "What each video tests", type: "Reading" },
       position: "1 module",
-      detail: "4 topics",
-      modules: [{ number: 1, title: "Module 1 · YouTube videos in the player", complete: false, topics: "4 topics", duration: "1h 07m" }],
+      detail: "2 topics",
+      modules: [{ number: 1, title: "Module 1 · YouTube videos in the player", complete: false, topics: "2 topics", duration: "25m" }],
       defaultOpen: true,
     }),
     programCourse(2, "SCORM Test Course", "SC", "business-analytics-with-python", {
@@ -136,7 +137,7 @@ const program: Program = {
       id: "about-1",
       title: "What each course tests",
       body: [
-        "YouTube Video Test: a YouTube embed in a Text component (not tracked: Mark as Complete, and Next asks), the same video as a Video component (tracked: it completes by itself), and a video that is no longer available.",
+        "YouTube Video Test: a YouTube embed in a Text component (not tracked: Mark as Complete, and Next asks; back from YouTube, the alert asks to mark it complete).",
         "SCORM Test Course: four packages, each inside a unit of one course, with a test panel that shows what each package reports.",
         "POSH: Prevention of Sexual Harassment: the content team's real Rise course, with its own menu and videos, as one course package: one topic named after the course, our sidebar collapsed, 0% until the package reports completion, then 100%.",
         "Final Quiz (Ungraded): the POSH course's final assessment, a separate Storyline package (10 questions, pass mark 80%, repeat as needed), as one course package that reports a score.",
@@ -158,7 +159,7 @@ const program: Program = {
       relative: relativeLabel("2026-11-04"),
     },
   ],
-  included: ["3 YouTube videos", "4 SCORM packages in units", "4 SCORM course packages", "2 readings"],
+  included: ["1 YouTube video", "4 SCORM packages in units", "4 SCORM course packages", "2 readings"],
   instructors: [{ name: "Nelson Jerónimo", role: "Design · SkillUp" }],
 };
 

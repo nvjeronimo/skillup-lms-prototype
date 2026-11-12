@@ -68,6 +68,24 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
   // Mark as Complete, when the player shell shows it: it sits in the feedback row below.
   const endAction = React.useContext(TopicEndActionContext);
+  // Back from YouTube (12 Nov 2026, Kirti and the tech team): an embedded YouTube video can always
+  // be opened on youtube.com, and nothing is recorded there. When the learner leaves the tab and
+  // comes back while the topic is not complete, the Info alert asks them to mark it complete.
+  // visibilitychange, not window blur: a click into the iframe blurs the window too.
+  const embedded = Boolean(topic?.youtube?.embed);
+  const [backFromAway, setBackFromAway] = React.useState(false);
+  React.useEffect(() => {
+    setBackFromAway(false);
+    if (!embedded) return;
+    let left = false;
+    function onVisibility() {
+      if (document.hidden) left = true;
+      else if (left) setBackFromAway(true);
+    }
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [embedded, topicId]);
+  const askToMark = backFromAway && Boolean(endAction);
   // DS Transcript Line `Device` variant: mobile stacks the active line's note pill.
   const bp = useBreakpoint();
   const lineDevice = bp === "mobile" ? "mobile" : "desktop";
@@ -153,17 +171,25 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   const pillDirection = useFrozenWhileClosed(scrollDirection, !following);
 
   // A YouTube video has no transcript in the player (4 Nov 2026). Embedded (row 9), an Info alert
-  // says its progress is not tracked; either way the feedback row stays, with Mark as Complete
-  // when the shell gives it.
+  // says its progress is not tracked, and asks to mark it complete when the learner comes back to
+  // the tab; the feedback row stays, with Mark as Complete when the shell gives it.
   if (topic?.youtube) {
     return (
       <div className="flex flex-col gap-4 pt-2">
         {topic.youtube.embed ? (
-          <InlineAlert
-            tone="info"
-            title="Your progress on this video isn’t tracked"
-            description="When you have watched it, select Mark as Complete. If you watch it on YouTube, come back here to mark it complete."
-          />
+          askToMark ? (
+            <InlineAlert
+              tone="info"
+              title="Welcome back. Did you finish the video?"
+              description="Your progress on YouTube isn’t tracked. If you watched it to the end, select Mark as Complete below."
+            />
+          ) : (
+            <InlineAlert
+              tone="info"
+              title="Your progress on this video isn’t tracked"
+              description="When you have watched it, select Mark as Complete. If you watch it on YouTube, come back here to mark it complete."
+            />
+          )
         ) : (
           <p className="sk-text-body-medium-regular text-sko-text-subtle">No transcript available for this video.</p>
         )}

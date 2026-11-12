@@ -10,20 +10,20 @@ export const content: CourseContent = {
   quiz: [],
   articles: {
     "ytt-m1-t1": {
-      lede: "This course exists to test YouTube videos in the player. The same public video is added the two ways a course team can add one in Studio, and a third topic shows a video that is no longer there.",
+      lede: "This course exists to test a YouTube video in the player. A course team adds it by pasting YouTube’s official embed code into a Text component in Studio.",
       sections: [
         {
-          heading: "The two ways to add a YouTube video",
+          heading: "How a YouTube video is added",
           paragraphs: [
             "Embedded in a Text component: the course team pastes YouTube's embed code. YouTube's own player plays it, with its share button, its quality menu and its logo, which opens the video on youtube.com. We never learn what was watched, so the topic completes with Mark as Complete, and Next asks.",
-            "Added as a Video component with its YouTube ID: our player plays it. Playback is measured, so the topic completes by itself once 90% of the video has played. A YouTube video has no transcript in the player, so there are no captions.",
+            "YouTube inside our own player was withdrawn on 12 Nov 2026. YouTube’s policies require its logo and the link to youtube.com to stay visible and clickable; no player setting removes them, and covering the logo or sandboxing the frame is not allowed. Videos that must not open on YouTube are uploaded to Azure instead, and play in our player.",
           ],
         },
         {
           heading: "What to check",
           paragraphs: [
-            "On the embed, that the Info alert under the video says progress is not tracked, that there are no Transcript, Notes or Downloads tabs, and that Next asks whether you have finished the video.",
-            "On the Video component, that the video's own picture shows before it plays and that the topic completes by itself. On the last topic, that the player says the video is not available and you can still move on.",
+            "That the Info alert under the video says progress is not tracked, that there are no Transcript, Notes or Downloads tabs, and that Next asks whether you have finished the video.",
+            "Open the video on youtube.com from its logo, then come back to this tab: until the topic is complete, the alert asks whether you finished the video and points to Mark as Complete.",
           ],
         },
       ],
@@ -33,8 +33,8 @@ export const content: CourseContent = {
       },
       takeaways: [
         "An embed is never measured: Mark as Complete, and Next asks.",
-        "A Video component with a YouTube ID completes by itself.",
-        "Neither has a transcript in the player.",
+        "Back from YouTube, the alert asks to mark it complete.",
+        "Videos that must stay off YouTube go to Azure.",
       ],
     },
   },

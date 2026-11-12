@@ -4,7 +4,7 @@ import { outline } from "./outline";
 import { SAMPLE_TODAY, todayLabel } from "@/lib/sample-time";
 
 /**
- * "YouTube Video Test": one module, four topics (a reading and three YouTube videos), not
+ * "YouTube Video Test": one module, two topics (a reading and a YouTube embed), not
  * started, ungraded. Course 1 of the SCORM and YouTube Test Program. Self-paced: no dates beyond
  * the course opening (decision 036). Parts the test does not need come from SIX_SIGMA.
  */
@@ -14,7 +14,7 @@ export const page: CourseDetail = {
   imageSrc: "/platform/covers/ux-research-and-design-thinking.jpg",
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
-  stats: { structure: "1 module · 4 topics", duration: "~ 1 hour", org: "SkillUp · YOUTUBE-TEST" },
+  stats: { structure: "1 module · 2 topics", duration: "~ 30 min", org: "SkillUp · YOUTUBE-TEST" },
   progress: {
     percent: 0,
     label: "Course progress",
@@ -22,21 +22,21 @@ export const page: CourseDetail = {
     cta: "Start course",
     href: playerHref(outline),
     notPassing: "Ungraded · completion only",
-    done: "0 of 4 topics",
-    timeLeft: "~ 1h left",
+    done: "0 of 2 topics",
+    timeLeft: "~ 30m left",
   },
   program: { slug: "scorm-and-youtube-tests", title: "SCORM and YouTube Test Program" },
   search: SIX_SIGMA.search,
 
   update: {
     title: "Course update",
-    body: "A test course: the same public YouTube video added as an embed in a Text component and as a Video component, and a video that is no longer available.",
+    body: "A test course: a public YouTube video in YouTube’s official embed. YouTube inside our own player was withdrawn on 12 Nov 2026."
   },
   intro: {
     title: "What this course tests",
-    lead: "How YouTube videos behave in the player: which ones complete by themselves, which ones ask, and what a learner sees when a video has gone.",
+    lead: "How a YouTube embed behaves in the player: progress is not tracked, the learner marks it complete, and Next asks."
   },
-  modules: modulesFromOutline(outline, [{ duration: "1h 07m", defaultOpen: true }]),
+  modules: modulesFromOutline(outline, [{ duration: "25m", defaultOpen: true }]),
   mentor: SIX_SIGMA.mentor,
   team: {
     label: "Course team",
@@ -48,7 +48,7 @@ export const page: CourseDetail = {
     courseId: outline.slug,
     courseLabel: outline.title,
     title: "No certificate for a test course",
-    requirements: [{ title: "Complete the course content", detail: "0 of 4 topics · 0%", percent: 0 }],
+    requirements: [{ title: "Complete the course content", detail: "0 of 2 topics · 0%", percent: 0 }],
   },
   handouts: { label: "Handouts", items: [] },
   upcomingDates: { label: "Upcoming dates", items: [], cta: "All dates" },
@@ -56,10 +56,10 @@ export const page: CourseDetail = {
 
   progressTab: {
     title: "Your progress",
-    completion: { title: "Course completion", complete: 0, incomplete: 4, locked: 0 },
+    completion: { title: "Course completion", complete: 0, incomplete: 2, locked: 0 },
     passAlert: {
       title: "This course is not graded",
-      body: "It completes when all four topics are complete.",
+      body: "It completes when both topics are complete.",
     },
     grade: {
       title: "Your grade",

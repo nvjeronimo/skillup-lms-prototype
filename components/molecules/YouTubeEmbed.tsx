@@ -4,7 +4,9 @@ import { cn } from "@/lib/utils";
  * A YouTube video as a course team pastes it into a Text component in Studio (ICP Video Lessons
  * row 9, meeting of 4 Nov 2026): YouTube's own player in an iframe. We cannot restyle it, and we
  * never learn what was watched, so the topic completes by hand. The YouTube logo in the player
- * opens the video on youtube.com (whether that can be blocked is Vikas's discovery ticket).
+ * opens the video on youtube.com, and that cannot be blocked: YouTube's policies keep the logo
+ * and its link visible and clickable (tech team's discovery, Kirti, 12 Nov 2026). The only YouTube
+ * option since then; row 10 (YouTube inside our player) was withdrawn.
  *
  * The frame takes the place and the sticky docking of our VideoPlayer: same ground, same radius.
  * youtube-nocookie.com, so YouTube sets no cookie until the learner plays the video.

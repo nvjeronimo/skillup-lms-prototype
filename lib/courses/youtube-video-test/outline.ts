@@ -2,8 +2,10 @@ import type { Course } from "@/lib/courses/kit";
 
 /**
  * "YouTube Video Test": a course made to test YouTube videos in the player (meeting of 4 Nov 2026;
- * ICP Video Lessons rows 9 and 10). One module: a reading that says what to check, then the same
- * public YouTube video added the two ways Studio allows, then a video that is no longer there.
+ * ICP Video Lessons row 9). One module: a reading that says what to check, then a public YouTube
+ * video in YouTube's official embed. Row 10 (YouTube inside our player) and its "no longer
+ * available" topic were withdrawn on 12 Nov 2026: YouTube's policies keep the logo and its link
+ * visible and clickable, so the official embed stays (tech team via Kirti; Nelson decided).
  * Course 1 of the SCORM and YouTube Test Program. Not started, nothing locked.
  *
  * The video is "YouTube Developers Live: Embedded Web Player Customization" (Google for
@@ -29,7 +31,7 @@ export const outline: Course = {
       label: "MODULE 01",
       title: "YouTube videos in the player",
       topicsCompleted: 0,
-      topicsTotal: 4,
+      topicsTotal: 2,
       isCompleted: false,
       lessons: [
         {
@@ -51,28 +53,6 @@ export const outline: Course = {
               completed: false,
               playbackMeasurable: false,
               youtube: { id: VIDEO_ID, embed: true },
-            },
-          ],
-        },
-        {
-          id: "ytt-m1-l3",
-          label: "Video component with a YouTube ID",
-          topics: [
-            {
-              id: "ytt-m1-t3",
-              type: "Video",
-              title: "YouTube in our player: progress tracked",
-              duration: "22m 24s",
-              completed: false,
-              youtube: { id: VIDEO_ID },
-            },
-            {
-              id: "ytt-m1-t4",
-              type: "Video",
-              title: "A YouTube video that is no longer available",
-              duration: "22m 24s",
-              completed: false,
-              youtube: { id: VIDEO_ID, unavailable: true },
             },
           ],
         },
