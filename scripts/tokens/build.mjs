@@ -18,7 +18,8 @@
  *     --sk-layout-* (the page rhythm: space between sections, columns and cards, 25 Oct 2026)
  *   2. Responsive 📐 Type/* + text styles   → typography.css  --sk-type-* and .sk-text-* classes
  *   3. Motion                      → motion.css      --motion-*
- * Responsive modes follow lib/useBreakpoint.ts: Desktop by default, Tablet ≤ 1024, Mobile ≤ 768,
+ * Responsive modes follow lib/useBreakpoint.ts: Desktop ≥ 1024 by default, Tablet 768–1023 (max-width 1023),
+ * Mobile < 768 (max-width 767), the edges agreed on 3 Nov 2026 (PR 465),
  * and a forced device preview ([data-device]) last so it wins over the window width.
  */
 import fs from "node:fs";
@@ -107,8 +108,8 @@ function responsive(vars, cssName, unit) {
   let css = block(":root", lines(vars, "Desktop"));
   const tablet = changes("Tablet", "Desktop");
   const mobile = changes("Mobile", "Desktop");
-  if (tablet.length) css += `@media screen and (max-width: 1024px) {\n${block(":root", lines(tablet, "Tablet")).replace(/^/gm, "  ")}}\n`;
-  if (mobile.length) css += `@media screen and (max-width: 768px) {\n${block(":root", lines(mobile, "Mobile")).replace(/^/gm, "  ")}}\n`;
+  if (tablet.length) css += `@media screen and (max-width: 1023px) {\n${block(":root", lines(tablet, "Tablet")).replace(/^/gm, "  ")}}\n`;
+  if (mobile.length) css += `@media screen and (max-width: 767px) {\n${block(":root", lines(mobile, "Mobile")).replace(/^/gm, "  ")}}\n`;
   for (const m of ["Desktop", "Tablet", "Mobile"]) css += block(`[data-device="${m.toLowerCase()}"]`, lines(aware, m));
   return css;
 }
