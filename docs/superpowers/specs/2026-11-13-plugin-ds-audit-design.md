@@ -144,14 +144,14 @@ GitHub token, the settings and the variable reading. That was my call, stated to
     the branch point. That merge is never pushed: `github.token` may not push a commit that
     changes `.github/workflows/*`, and a held sync would hit that as soon as `main` changed a
     workflow. A conflict only in `tokens/generated` is settled by building the CSS from the merged
-    JSON; any other conflict fails the job with the file list. The sync job does not write
+    JSON (the CSS is rebuilt after every merge in the runner); any other conflict fails the job with the file list. The sync job does not write
     `usage.json`.
   - `token-usage.yml` is the only writer of `usage.json`. It runs on push to `main` and also when
     a "Tokens from Figma" run on a `tokens/figma-*` branch completes (`workflow_run`): the sync is
     merged with `github.token`, and a merge made with that token triggers no push workflow, so
     without `workflow_run` the map would stay stale after a token publish.
   - On push to `main` (paths `app/**`, `components/**`, `lib/**`, `stories/**`, `tokens/**`,
-    `tailwind.config.ts`), a job runs `--write`. If the file changed, it commits
+    `tailwind.config.ts`, `scripts/tokens/**`), a job runs `--write`. If the file changed, it commits
     "chore(tokens): usage map" as github-actions[bot] straight to `main`.
   - In `tokens.yml`, a step runs `--against tokens/figma/variables.json` on the PR branch (a fresh
     scan, not the committed map), before "Merge the Figma sync". What happens when it finds a

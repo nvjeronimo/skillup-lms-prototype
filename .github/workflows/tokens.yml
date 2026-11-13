@@ -62,7 +62,8 @@ jobs:
       # Every check below runs on the branch merged with main, here in the runner only (nothing is
       # pushed): a code PR merged since the branch point may have removed a use (re-running this job
       # then releases a held sync) or added one. A conflict only in tokens/generated is settled by
-      # building the CSS again from the merged JSON; any other conflict stops the job.
+      # building the CSS again from the merged JSON (it is always rebuilt after the merge); any other
+      # conflict stops the job.
       - name: Merge main here, for the checks only
         if: env.FIGMA_SYNC == 'true'
         run: |
@@ -70,15 +71,20 @@ jobs:
           if ! git merge --no-edit origin/main; then
             conflicts="$(git diff --name-only --diff-filter=U)"
             if [ -n "$conflicts" ] && ! echo "$conflicts" | grep -qv '^tokens/generated/'; then
-              node scripts/tokens/build.mjs
+              git checkout --ours tokens/generated
               git add tokens/generated
               git commit --no-edit
             else
-              git merge --abort
+              git merge --abort || true
               echo "::error::Merging main into this sync branch conflicts in: $(echo $conflicts). Publish again from the plugin, or resolve the merge by hand."
               exit 1
             fi
           fi
+          # Two clean textual merges (JSON and CSS) need not give the CSS build.mjs makes from the
+          # merged JSON, so the CSS is always built again here. Local only, like the merge.
+          node scripts/tokens/build.mjs
+          git add tokens/generated
+          git diff --cached --quiet || git commit -qm "tokens: CSS for the merged export (runner only)"
 
       - name: Generate the CSS (pull requests that are not a Figma sync)
         if: env.FIGMA_SYNC != 'true'
