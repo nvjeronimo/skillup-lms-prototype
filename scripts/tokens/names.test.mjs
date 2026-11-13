@@ -35,9 +35,38 @@ describe("tokenCssNames", () => {
       ],
     };
     expect(tokenCssNames(fixture)).toEqual([
-      { figma: "1. SKO-Semantics/text/x", css: "--color-x" },
-      { figma: "1. SKO-Semantics/text/on-inverse", css: "--color-text-on-inverse" },
+      { figma: "1. SKO-Semantics/text/x", css: "--color-x", from: "web" },
+      { figma: "1. SKO-Semantics/text/on-inverse", css: "--color-text-on-inverse", from: "name" },
     ]);
     expect(cssNameOf(fixture).get("1. SKO-Semantics/text/on-inverse")).toEqual(["--color-text-on-inverse"]);
+  });
+
+  it("from: web only where the CSS name came from the Web code syntax (colours, motion)", () => {
+    const fixture = {
+      collections: [
+        {
+          name: "2. Responsive",
+          modes: ["Desktop"],
+          variables: [
+            { name: "Radius/card", type: "FLOAT", web: "var(--anything)", values: {} },
+            { name: "Layout/gutter", type: "FLOAT", web: "var(--sk-layout-gutter)", values: {} },
+          ],
+        },
+        {
+          name: "3. Motion",
+          modes: ["Value"],
+          variables: [
+            { name: "duration/short2", type: "FLOAT", web: "var(--motion-duration-short2)", values: {} },
+            { name: "easing/x", type: "STRING", web: null, values: {} },
+          ],
+        },
+      ],
+    };
+    expect(tokenCssNames(fixture).map((e) => [e.css, e.from])).toEqual([
+      ["--sk-radius-card", "name"],
+      ["--sk-layout-gutter", "name"],
+      ["--motion-duration-short2", "web"],
+      ["--motion-easing-x", "name"],
+    ]);
   });
 });

@@ -47,7 +47,7 @@ describe("scanCode", () => {
   });
   it("dynamic var counts every token with the prefix", () => {
     expect(scan().dynamic).toContain("--sk-radius-");
-    const u = buildUsage(data, scan(), "abc");
+    const u = buildUsage(data, scan(), "blob");
     expect(u.tokens["2. Responsive/Radius/card"].files).toBe(1);
     expect(u.tokens["2. Responsive/Radius/pill"].files).toBe(1);
   });
@@ -62,19 +62,25 @@ describe("scanCode", () => {
 
 describe("buildUsage", () => {
   it("has the format, every token, and the unused ones at 0 files", () => {
-    const u = buildUsage(data, scan(), "abc");
+    const u = buildUsage(data, scan(), "blob");
     expect(u.format).toBe("skillup-token-usage/1");
-    expect(u.commit).toBe("abc");
-    expect(u.tokens["1. Colors/text/default"]).toEqual({ css: ["--color-text-default"], files: 3 });
+    expect(Object.keys(u)).toEqual(["format", "variablesBlob", "tokens", "dynamic", "unknownCss"]);
+    expect(u.variablesBlob).toBe("blob");
+    expect(u.tokens["1. Colors/text/default"]).toEqual({ css: ["--color-text-default"], files: 3, from: "web" });
     expect(u.tokens["1. Colors/bg/unused"].files).toBe(0);
+  });
+  it("from says where the CSS name came from: web for a colour with Web syntax, name for radius", () => {
+    const u = buildUsage(data, scan(), "blob");
+    expect(u.tokens["1. Colors/bg/page"].from).toBe("web");
+    expect(u.tokens["2. Responsive/Radius/card"].from).toBe("name");
   });
   it("unknownCss lists a var no token or hand-written file defines", () => {
     const withUnknown = scanCode(
       [...collectFiles(FX), { path: "app/old.tsx", text: 'x = "var(--color-undefined-thing)"' }],
       tw,
     );
-    expect(buildUsage(data, withUnknown, "abc").unknownCss).toEqual(["--color-undefined-thing"]);
-    expect(buildUsage(data, scan(), "abc").unknownCss).toEqual([]);
+    expect(buildUsage(data, withUnknown, "blob").unknownCss).toEqual(["--color-undefined-thing"]);
+    expect(buildUsage(data, scan(), "blob").unknownCss).toEqual([]);
   });
 });
 

@@ -204,12 +204,16 @@ function pathsFor(css, scan) {
   return paths;
 }
 
-export function buildUsage(data, scan, commit, variablesBlob = null) {
+/**
+ * No commit SHA in the map: after a squash merge it would name a commit that is not on main, and it
+ * would make every rebuild differ. Freshness is `variablesBlob` against the variables.json on main.
+ */
+export function buildUsage(data, scan, variablesBlob = null) {
   const names = tokenCssNames(data);
   const produced = new Set(names.map((n) => n.css));
   const tokens = {};
-  for (const { figma, css } of names) {
-    const entry = (tokens[figma] ??= { css: [], files: 0, _paths: new Set() });
+  for (const { figma, css, from } of names) {
+    const entry = (tokens[figma] ??= { css: [], files: 0, from, _paths: new Set() });
     entry.css.push(css);
     for (const p of pathsFor(css, scan)) entry._paths.add(p);
   }
@@ -219,7 +223,7 @@ export function buildUsage(data, scan, commit, variablesBlob = null) {
   }
   const sorted = Object.fromEntries(Object.keys(tokens).sort().map((k) => [k, tokens[k]]));
   const unknownCss = [...scan.used.keys()].filter((c) => !produced.has(c) && !scan.declared.has(c)).sort();
-  return { format: FORMAT, commit, variablesBlob, tokens: sorted, dynamic: scan.dynamic, unknownCss };
+  return { format: FORMAT, variablesBlob, tokens: sorted, dynamic: scan.dynamic, unknownCss };
 }
 
 /**
@@ -273,7 +277,7 @@ function main(argv) {
   const scan = scanCode(collectFiles(root), tw);
   const varsPath = path.join(root, "tokens/figma/variables.json");
   const git = (...a) => execFileSync("git", a, { cwd: root, encoding: "utf8" }).trim();
-  const fresh = () => buildUsage(readJson(varsPath), scan, git("rev-parse", "HEAD"), git("hash-object", "tokens/figma/variables.json"));
+  const fresh = () => buildUsage(readJson(varsPath), scan, git("hash-object", "tokens/figma/variables.json"));
   const outPath = path.join(root, "tokens/usage.json");
   const serialise = (u) => `${JSON.stringify(u, null, 2)}\n`;
 
@@ -286,7 +290,7 @@ function main(argv) {
     try {
       have = readJson(outPath);
     } catch {}
-    if (!have || serialise({ ...have, commit: "" }) !== serialise({ ...now, commit: "" })) {
+    if (!have || serialise(have) !== serialise(now)) {
       console.error("tokens/usage.json is stale: run `npm run tokens:usage`");
       process.exit(1);
     }
