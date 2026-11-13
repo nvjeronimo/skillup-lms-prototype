@@ -41,10 +41,14 @@ plan and the code go in one PR.
   - the file is `tokens/usage.json`;
   - its format string is `"skillup-token-usage/1"`;
   - each key is `"<Figma collection name>/<Figma variable name>"`;
-  - each value is `{ "css": string[], "files": number }`;
-  - the top-level fields are `"commit"`, `"variablesBlob"` (the git blob SHA of the
-    `tokens/figma/variables.json` it was built from, `git hash-object`), `"dynamic"` and
-    `"unknownCss"`.
+  - each value is `{ "css": string[], "files": number, "from": "web" | "name" }`: `from` is
+    `"web"` when the CSS name is the Web code syntax (colours and motion that have one) and
+    `"name"` when it is derived from the Figma name (radius, spacing, type, `Layout/*`,
+    `Container/*`, and colours or motion without Web syntax);
+  - the top-level fields are `"format"`, `"variablesBlob"` (the git blob SHA of the
+    `tokens/figma/variables.json` it was built from, `git hash-object`), `"tokens"`, `"dynamic"`
+    and `"unknownCss"`. There is no `"commit"` field: after a squash merge it would name a commit
+    that is not on `main`, and it made every rebuild differ.
 - **What the scan covers:**
   - folders `app/`, `components/`, `lib/`, `stories/`;
   - file types `.ts`, `.tsx`, `.css`;
@@ -58,7 +62,10 @@ plan and the code go in one PR.
 - **What blocks publishing:** Publish, the package PR and the download are blocked only by
   `alias-missing` and `mode-missing`.
 - **Rename with the same CSS name:** a token used in code whose Figma name changed but whose Web
-  code syntax is unchanged is **not** a finding.
+  code syntax is unchanged is **not** a finding when its CSS name comes from that syntax
+  (`from: "web"`). When the CSS name is derived from the Figma name (`from: "name"`), a rename
+  changes the CSS name, so it is a finding even if the Web syntax stayed; and for `from: "web"`, a
+  changed Web syntax is a finding even if the name stayed. The plugin and the CI guard agree.
 - **Variables without Web code syntax:** a warning, never a blocker.
 - **Publish status:** `getPublishStatusAsync()` runs under a 10 000 ms total limit. If the limit
   is reached, the pending item reads "not checked" and goes into `notCovered`.
@@ -148,14 +155,16 @@ plan and the code go in one PR.
 **Interfaces:**
 - Consumes: `tokenCssNames`, `cssNameOf` (Task 1).
 - Produces, all exported from `usage.mjs`:
-  - `tailwindMap(configText: string) -> Map<string /*class fragment*/, string /*--css*/>`.
+  - `tailwindMap(configText: string) -> Map<string /*class fragment*/, Set<string /*--css*/>>`.
+    - Two theme sections can share a key (`borderRadius.surface`, `translate.surface`): the
+      fragment keeps every CSS name, and a class use counts all of them.
     - The fragment is the nested keys joined with `-`, with `DEFAULT` dropped. Examples:
       `colors.sko["text-default"]` → `sko-text-default`, `borderRadius.card` → `card`.
     - A class uses the fragment when the code holds `-<fragment>` followed by a character that is
       not `[\w-]`.
   - `scanCode(files: Array<{path, text}>, tw: Map) -> { used: Map<string /*css*/, Set<string /*path*/>>, dynamic: string[] /*prefixes*/ }`.
     - It sees `var(--x)`, Tailwind fragments, and `var(--prefix-${…})`, which goes into `dynamic`.
-  - `buildUsage(data, scan, commit: string) -> object`, in the shape set in Global Constraints.
+  - `buildUsage(data, scan, variablesBlob: string) -> object`, in the shape set in Global Constraints.
     - `files` is the number of distinct paths.
     - A dynamic prefix adds its paths to every CSS name that starts with it.
     - `unknownCss` lists the used names that no token produces and no hand-written
@@ -164,9 +173,9 @@ plan and the code go in one PR.
     code (dynamic prefixes included) that `tokenCssNames(data)` no longer produces and no
     hand-written `tokens/*.css` declares.
 - CLI:
-  - `--write` writes `tokens/usage.json`, with `commit` = `git rev-parse HEAD` and
+  - `--write` writes `tokens/usage.json`, with
     `variablesBlob` = `git hash-object tokens/figma/variables.json`.
-  - `--check` exits 1 if the file differs from a fresh build, ignoring `commit`.
+  - `--check` exits 1 if the file differs from a fresh build.
   - `--against <variables.json> [--report <file.md>]` exits 0 **always**.
     - It appends `blocked=true|false` to `$GITHUB_OUTPUT` when that variable is set.
     - With `--report`, it writes Markdown: a table of token CSS name and files, then the line

@@ -105,14 +105,23 @@ GitHub token, the settings and the variable reading. That was my call, stated to
   ```json
   {
     "format": "skillup-token-usage/1",
-    "commit": "<sha of main it was built from>",
+    "variablesBlob": "<git blob SHA of the tokens/figma/variables.json it was built from>",
     "tokens": {
-      "<Figma collection>/<Figma variable name>": { "css": ["--color-text-default"], "files": 42 }
+      "<Figma collection>/<Figma variable name>": { "css": ["--color-text-default"], "files": 42, "from": "web" }
     },
+    "dynamic": ["--sk-radius-"],
     "unknownCss": ["--sk-old-thing"]
   }
   ```
 
+  - There is no commit SHA: after a squash merge it would name a commit that is not on `main`,
+    and it would make every rebuild differ. Freshness is `variablesBlob` (§5.4).
+  - `from` says where the CSS name came from: `"web"` when it is the Web code syntax (colours
+    and motion that have one), `"name"` when it is derived from the Figma name (radius, spacing,
+    type, `Layout/*`, `Container/*`, and colours or motion without Web syntax). The plugin uses it
+    to judge a rename the way the build does (§5.4).
+  - A Tailwind key that two theme sections share (`borderRadius.surface` and
+    `translate.surface`) counts as a use of both CSS names.
   - `files` is a count, not a list, to keep the file small. With `--verbose` the script prints
     the files.
   - A name built at runtime (`var(--sk-radius-${role})`) counts as a use of every token whose CSS
@@ -129,8 +138,11 @@ GitHub token, the settings and the variable reading. That was my call, stated to
     produced any more. It compares **CSS names**, so a Figma rename that keeps the Web code syntax
     passes.
 - **Workflow:**
-  - In `tokens.yml`, on a Figma sync branch, `--write` runs next to "Generate the CSS" and the map
-    is committed with the CSS. This matters: the sync is merged with `github.token`, and a merge
+  - In `tokens.yml`, on a Figma sync branch, the job first merges `origin/main` into the branch,
+    so the map and the guard see the code on `main` now, not the code at the branch point. A
+    conflict only in `tokens/usage.json` takes `main`'s copy (it is regenerated next); any other
+    conflict fails the job with the file list. Then `--write` runs next to "Generate the CSS" and
+    the map is committed and pushed with the CSS (and the merge). This matters: the sync is merged with `github.token`, and a merge
     made with that token triggers no other workflow, so a push-to-`main` job alone would never
     see a token publish.
   - On push to `main` (paths `app/**`, `components/**`, `lib/**`, `stories/**`, `tokens/**`,
@@ -186,7 +198,9 @@ names what was covered.
 | Alias to a deleted variable, or to a variable from a library that is not available | Blocker |
 | A mode with no value (`valuesByMode` missing a mode of its collection) | Blocker |
 | A token used in code (`usage.json` on `main`) that is missing from Figma now: deleted or renamed | Blocker |
-| A token used in code whose Figma name changed but whose Web code syntax is the same | Not a finding (the code is unaffected) |
+| A token used in code whose CSS name comes from the Web code syntax (`from: "web"`: colours, motion) whose Figma name changed but whose Web code syntax is the same | Not a finding (the code is unaffected) |
+| A token used in code whose CSS name comes from the Web code syntax and whose Web code syntax changed, even with the same Figma name | Blocker (the CSS name the code uses is gone) |
+| A token used in code whose CSS name is derived from the Figma name (`from: "name"`: radius, spacing, type, `Layout/*`, `Container/*`) whose Figma name changed, even with the same Web code syntax | Blocker (the build derives a new CSS name) |
 | A variable in an exported collection with no Web code syntax (40 today: Skin shape, Scope, `Radius/fixed-*`, `Type/family/*`, `Type/weight/*`, `Stroke/*`, the non-colour values in the colour collection) | Warning. The prototype build derives or skips these, so nothing breaks; the dev team's package may want a name. A blocker here would make "not ready" the normal case. |
 | `unknownCss` in `usage.json` (code uses a CSS var no token produces) | Warning. It is code debt, not a DS problem, and it must not stop a DS publish. |
 | Tokens in Figma that differ from `tokens/figma/variables.json` on `main` (the diff the Publish tab already shows) | Pending |
@@ -204,11 +218,18 @@ copies the variable name.
 
 - The plugin fetches `tokens/usage.json` from the prototype's `main` through the contents API.
   Usage is keyed by Figma name, so the plugin compares names with no mapping.
-- To find a token "gone from Figma", the plugin matches by Figma name first, then by Web code
-  syntax against the live variables, so a rename that keeps the CSS name is not reported.
-- If the file is missing, or was built from a commit older than the last commit that touched
-  `variables.json` (the same commit or a later one is fine), the plugin shows "code usage not checked: the
-  usage map is out of date". That counts as not covered, never as passing.
+- To find a token "gone from Figma", the plugin follows each entry's `from`, so it agrees with
+  the CI guard (which compares the CSS names `names.mjs` derives) and needs no copy of the
+  mapping:
+  - `from: "web"`: a live exported variable must carry a Web code syntax (with `var()` stripped)
+    that is in the entry's `css`, whatever its Figma name. A rename that keeps the syntax is not
+    reported; a changed syntax is.
+  - `from: "name"`: a live variable with the same name must exist in a collection with the same
+    number prefix. A rename is reported even if the Web syntax stayed, because the build derives
+    the CSS name from the Figma name.
+- If the file is missing, its `format` is not `skillup-token-usage/1`, or its `variablesBlob` is
+  not the blob SHA of the `variables.json` on `main` now, the plugin shows "code usage" under not
+  covered, never as passing.
 
 ### 5.5 A token removed in Figma that the code still uses
 
@@ -222,7 +243,8 @@ Decided by Nelson on 13 Nov (option A): **the sync pull request waits.**
   "merge after the code no longer uses them". The other checks (build, lint) still run and
   report as usual.
 - The PR is merged by hand once a code PR removes the uses. Re-running the job after that code
-  PR is on `main` lets it auto-merge.
+  PR is on `main` lets it auto-merge: the job merges `main` into the sync branch first, so the
+  guard scans the code without those uses.
 - The plugin does not block **Publish** for this. Before publishing, the Audit tab already shows
   it as a blocker. After publishing, the plugin's result line says the PR is waiting and why.
 
