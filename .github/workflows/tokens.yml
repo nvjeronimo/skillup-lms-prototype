@@ -50,7 +50,8 @@ jobs:
       - name: Commit the generated CSS to the sync branch
         if: env.FIGMA_SYNC == 'true'
         run: |
-          git add tokens/generated
+          node scripts/tokens/usage.mjs --write
+          git add tokens/generated tokens/usage.json
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
@@ -79,6 +80,19 @@ jobs:
           cat token-report.md >> "$GITHUB_STEP_SUMMARY"
           gh pr comment ${{ github.event.pull_request.number }} --body-file token-report.md
 
+      # A sync whose JSON drops a CSS name the code still uses is held, whatever
+      # TOKENS_AUTO_MERGE says. The job does not fail; the pull request gets a comment.
+      - name: Tokens still used in code
+        id: guard
+        run: |
+          git fetch origin main
+          git show origin/main:tokens/figma/variables.json > base-variables.json
+          node scripts/tokens/usage.mjs --against tokens/figma/variables.json --base base-variables.json --report guard.md
+
+      - name: Say why the sync is held
+        if: steps.guard.outputs.blocked == 'true'
+        run: gh pr comment ${{ github.event.pull_request.number }} --body-file guard.md
+
       - name: Merge the Figma sync
-        if: env.FIGMA_SYNC == 'true' && vars.TOKENS_AUTO_MERGE != 'false'
+        if: env.FIGMA_SYNC == 'true' && vars.TOKENS_AUTO_MERGE != 'false' && steps.guard.outputs.blocked != 'true'
         run: gh pr merge ${{ github.event.pull_request.number }} --squash --delete-branch

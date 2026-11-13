@@ -1,0 +1,52 @@
+# Keeps tokens/usage.json (which Figma tokens the code uses) fresh after code changes on main.
+# This job is not the only writer: the Figma sync job in tokens.yml also refreshes the map, and a
+# merge made with github.token does not trigger this workflow (GitHub does not start workflows
+# from events caused by that token), so a sync merge never reaches here.
+name: Token usage map
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "components/**"
+      - "lib/**"
+      - "stories/**"
+      - "tokens/**"
+      - "tailwind.config.ts"
+      - "scripts/tokens/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: token-usage
+  cancel-in-progress: false
+
+jobs:
+  usage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Write the usage map
+        run: node scripts/tokens/usage.mjs --write
+
+      - name: Commit it when it changed
+        run: |
+          if ! git diff --quiet tokens/usage.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+            git add tokens/usage.json
+            git commit -m "chore(tokens): usage map"
+            git pull --rebase origin main
+            git push
+          fi
