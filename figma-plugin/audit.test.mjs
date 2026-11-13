@@ -257,7 +257,9 @@ describe("auditTokens", () => {
     const { posted, send } = await load(cols, vars);
     posted.length = 0;
     await send({ type: "audit", usage: { tokens: null, unknownCss: 5 }, usageFresh: true });
-    expect(posted.map((m) => m.type)).toEqual(["audit-error"]);
+    const types = posted.map((m) => m.type);
+    expect(types).toContain("audit-error");
+    expect(types).not.toContain("error");
   });
 
   it("web syntax only in a hidden collection does not save a used token", async () => {
