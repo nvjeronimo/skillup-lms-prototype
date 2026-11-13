@@ -51,19 +51,46 @@ Kept on purpose:
 React 19 changes made: `RefObject<T | null>` in hook signatures, `useRef` needs its argument,
 `inert` is a boolean prop.
 
-### Route check (Vite dev build, 13 Nov 2026)
+### Route check (13 Nov 2026)
 
-All page routes, the two redirects and the four not-found cases were opened on the Vite dev build
-and on the live Next build (lms-prototype-mu.vercel.app): same final URL, document title, h1 and
-page text on every route. In dev, React Router logs the `notFound()` signal it catches. Not yet
-compared screen by screen.
+- **Cold load, every route** (Vite dev vs the live Next build at lms-prototype-mu.vercel.app, 1280
+  wide, light): same final URL, document title, h1 and `<main>` on all 28 page routes, both
+  redirects and the four not-found cases. Visible text length equal, or within 3 characters
+  (blank lines; first 40 lines compared, equal).
+- **Navigation inside the app:** topic → Next (no reload, sidebar scroll kept, title updates),
+  back button, course `?tab=` switch keeping the scroll, My Learning tab in the URL.
+- **Topic types:** Reading, Video, Practice Quiz open as on the live build.
+- **Phone, dark, Harbor skin:** Dashboard screenshots match; Figtree and Plus Jakarta Sans load
+  from Google Fonts.
+- **Not checked:** SCORM and YouTube topics, every skin, the pre-paint flash on a production
+  build, the console during load (the hook attached after load). In dev, React Router logs the
+  `notFound()` signal it catches.
 
 ### Open
 
 - Vercel: the project's framework preset must read Vite (vercel.json sets it). The sample video
   keeps its variable name (`NEXT_PUBLIC_SAMPLE_VIDEO_SRC`, allowed by `envPrefix`).
-- `api/assistant.ts` not yet tried on a Vercel deployment.
+- `api/assistant.ts` not yet tried on a Vercel deployment (runtime imports carry `.js` for Node
+  ESM). In `vite` dev there is no function: the chat answers from its script.
 - One chunk of 2.2 MB: split the routes with lazy imports.
 - `"use client"` directives are inert now; remove them when each file is converted.
 - Pre-existing test failure on main: `lib/personas.test.ts` (the SCORM and YouTube test program
   has no persona mapping).
+
+## Step 2–3 pilot (13 Nov 2026)
+
+- `components/v1/base-components/buttons/Button.tsx` + `Button.module.css`: DS Button 1.4 with
+  the Batch 1 props (`type` brand/destructive/success/neutral, `hierarchy`, `size` sm–xl,
+  `iconLeading`, `iconTrailing`, `htmlType`, `loading`, `fullWidth`). `ButtonLink.tsx`: the same
+  look on a link. `neutral` is the prototype's grey outline; check it against Button 1.4
+  Type=Neutral. Not yet: the Done check, Link Button, Icon Button.
+- Pilot page: `/account/sign-in` (`SignInView`, `AccountShell`) in CSS Modules. Measured against
+  the live build: button 454×44, same fill, radius 6, label padding; card 520×376, same padding,
+  radius, shadow and gap.
+- Recipe: one `.module.css` per component; DS type styles stay the global `sk-text-*` classes
+  (tokens/generated/typography.css); colours, radius and motion read the token custom
+  properties; `md:` → `@media (min-width: 768px)`, `lg:` → `@media (min-width: 1024px)`,
+  `max-md:` → the phone rule outside the query; hover inside `@media (hover: hover)`.
+- `FormField` / `FIELD` (organisms/FormModal) and `SkillUpLogo` are still Tailwind: bottom-up.
+- Token lint (`scripts/check-tokens.mjs`) does not read `.module.css` yet: extend it before the
+  fan-out, or it keeps passing while checking nothing.

@@ -1,10 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { useRouter, useSearchParams } from "@/lib/router";
 import { CalendarClock } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
-import { ButtonLink } from "@/components/atoms/ButtonLink";
+import { Button } from "@/components/v1/base-components/buttons/Button";
+import { ButtonLink } from "@/components/v1/base-components/buttons/ButtonLink";
 import { AccountShell } from "@/components/account/AccountShell";
 import { FIELD, FormField } from "@/components/organisms/FormModal";
 import { useEdxScope } from "@/lib/edx-scope";
@@ -21,6 +19,7 @@ import {
   readDeletionRequest,
   requestDeletion,
 } from "@/lib/account-deletion";
+import styles from "./SignInView.module.css";
 
 /**
  * A stand-in for the Open edX sign-in page (the authn MFE), so the deletion flow can be tried
@@ -53,30 +52,30 @@ export function SignInView() {
   if (step === "scheduled" && pending) {
     return (
       <AccountShell>
-        <div className="flex flex-col gap-3">
-          <span className="inline-flex size-12 items-center justify-center rounded-pill bg-sko-bg-warning-soft text-sko-icon-warning">
+        <div className={styles.stack3}>
+          <span className={styles.badge}>
             <Icon icon={CalendarClock} size={24} />
           </span>
-          <h1 className="sk-text-headline-small-semibold text-sko-text-default">
+          <h1 className={`sk-text-headline-small-semibold ${styles.title}`}>
             Your account is scheduled for deletion
           </h1>
-          <p className="sk-text-body-large-regular text-sko-text-muted">
-            We will delete it on <strong className="sk-text-body-large-semibold text-sko-text-default">{deleteOn}</strong>, with
+          <p className={`sk-text-body-large-regular ${styles.text}`}>
+            We will delete it on <strong className={`sk-text-body-large-semibold ${styles.strong}`}>{deleteOn}</strong>, with
             your courses, progress and certificates.
           </p>
         </div>
 
         {edx ? (
           <>
-            <p className="sk-text-body-large-regular text-sko-text-muted">
+            <p className={`sk-text-body-large-regular ${styles.text}`}>
               You can&rsquo;t sign in while the deletion is pending. To keep your account, contact SkillUp support
               before {deleteOn}.
             </p>
-            <div className="flex flex-col gap-2 md:flex-row md:justify-end">
-              <Button type="button" hierarchy="secondary" className="max-md:w-full" onClick={() => setStep("form")}>
+            <div className={styles.actions}>
+              <Button hierarchy="secondary" className={styles.action} onClick={() => setStep("form")}>
                 Back
               </Button>
-              <ButtonLink href={SUPPORT_HREF} hierarchy="primary" className="max-md:w-full">
+              <ButtonLink href={SUPPORT_HREF} hierarchy="primary" className={styles.action}>
                 Contact support
               </ButtonLink>
             </div>
@@ -84,20 +83,19 @@ export function SignInView() {
         ) : (
           <div
             data-invented="account deletion: Open edX locks a retiring account out; only support can cancel the request"
-            className="flex flex-col gap-6"
+            className={styles.stack6}
           >
-            <p className="sk-text-body-large-regular text-sko-text-muted">
+            <p className={`sk-text-body-large-regular ${styles.text}`}>
               If you sign in, we cancel the deletion and your account is active again, with everything as you left
               it. If you want it deleted, keep the deletion and don&rsquo;t sign in.
             </p>
-            <div className="flex flex-col gap-2 md:flex-row md:justify-end">
-              <ButtonLink href={DELETION_REQUESTED_HREF} hierarchy="secondary" className="max-md:w-full">
+            <div className={styles.actions}>
+              <ButtonLink href={DELETION_REQUESTED_HREF} hierarchy="secondary" className={styles.action}>
                 Keep the deletion
               </ButtonLink>
               <Button
-                type="button"
                 hierarchy="primary"
-                className="max-md:w-full"
+                className={styles.action}
                 onClick={() => {
                   cancelDeletion();
                   showToast("Deletion cancelled. Your account is active again.");
@@ -115,9 +113,9 @@ export function SignInView() {
 
   return (
     <AccountShell>
-      <h1 className="sk-text-headline-small-semibold text-sko-text-default">Sign in</h1>
+      <h1 className={`sk-text-headline-small-semibold ${styles.title}`}>Sign in</h1>
       <form
-        className="flex flex-col gap-5"
+        className={styles.form}
         onSubmit={(e) => {
           e.preventDefault();
           if (readDeletionRequest()) {
@@ -149,7 +147,7 @@ export function SignInView() {
             className={FIELD}
           />
         </FormField>
-        <Button type="submit" hierarchy="primary" className="w-full" disabled={!email || !password}>
+        <Button htmlType="submit" hierarchy="primary" fullWidth disabled={!email || !password}>
           Sign in
         </Button>
       </form>

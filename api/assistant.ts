@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { buildSystemPrompt } from "../lib/assistant/model-reply";
-import { createRateLimiter } from "../lib/assistant/rate-limit";
-import { parseRequest } from "../lib/assistant/request";
+import { buildSystemPrompt } from "../lib/assistant/model-reply.js";
+import { createRateLimiter } from "../lib/assistant/rate-limit.js";
+import { parseRequest } from "../lib/assistant/request.js";
 
 /**
  * The assistant with a model behind it. Used only when ANTHROPIC_API_KEY is set; without it
