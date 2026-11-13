@@ -36,8 +36,47 @@
   button.secondary { background: var(--figma-color-bg-secondary); color: var(--figma-color-text); border: 1px solid var(--figma-color-border); }
   .check { flex-direction: row; align-items: flex-start; gap: 6px; font-weight: 400; }
   .check input { margin: 2px 0 0; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--figma-color-border); margin: -4px 0 0; }
+  .tabs button {
+    background: none; color: var(--figma-color-text-secondary); border-radius: 6px 6px 0 0;
+    padding: 6px 12px; border-bottom: 2px solid transparent;
+  }
+  .tabs button[aria-selected="true"] { color: var(--figma-color-text); border-bottom-color: var(--figma-color-bg-brand); }
+  .tab { display: flex; flex-direction: column; gap: 12px; }
+  .tab[hidden] { display: none; }
+  .verdict { font-size: 13px; line-height: 20px; font-weight: 600; }
+  .verdict.bad { color: var(--figma-color-text-danger); }
+  .auditbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .auditbar .btns { display: flex; gap: 6px; }
+  .group h2 { font-size: 12px; line-height: 18px; margin: 0 0 4px; font-weight: 600; }
+  .group > div, .group details > div { padding: 2px 0; }
+  .finding { cursor: pointer; }
+  .finding:hover { text-decoration: underline; }
+  .group details summary { font-weight: 600; color: var(--figma-color-text); }
+  .group details[open] { display: block; }
+  .copied { color: var(--figma-color-text-secondary); min-height: 18px; }
 </style>
 
+<div class="tabs" role="tablist">
+  <button id="tabPublish" role="tab" aria-selected="true">Publish</button>
+  <button id="tabAudit" role="tab" aria-selected="false">Audit</button>
+</div>
+
+<div class="tab" id="paneAudit" hidden>
+  <div class="auditbar">
+    <span class="verdict" id="verdict">Waiting for the variables…</span>
+    <span class="btns">
+      <button id="auditRun" class="secondary" disabled>Run again</button>
+      <button id="auditCancel" class="secondary" hidden>Cancel</button>
+    </span>
+  </div>
+  <p id="auditProgress" hidden></p>
+  <p id="covered"></p>
+  <div id="auditGroups"></div>
+  <div class="copied" id="copied"></div>
+</div>
+
+<div class="tab" id="panePublish">
 <h1>Publish tokens</h1>
 <p>Sends the variables and text styles of this file to the prototype. A pull request opens; the
   build generates the CSS, checks it and merges, and the prototype and Storybook update.</p>
@@ -96,6 +135,7 @@
       collection and mode, and the text styles, for Style Dictionary or Tokens Studio.</span></label>
   <button id="download" class="secondary" disabled>Download variables.json</button>
 </section>
+</div>
 
 <script>
   const $ = (id) => document.getElementById(id);
@@ -108,12 +148,16 @@
       ...init,
       headers: {
         Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${$("token").value.trim()}`,
+        ...($("token").value.trim() ? { Authorization: `Bearer ${$("token").value.trim()}` } : {}),
         "X-GitHub-Api-Version": "2022-11-28",
         ...(init.body ? { "Content-Type": "application/json" } : {}),
       },
     });
-    if (!res.ok) throw new Error(`GitHub ${res.status} on ${path}: ${(await res.json().catch(() => ({}))).message || res.statusText}`);
+    if (!res.ok) {
+      const err = new Error(`GitHub ${res.status} on ${path}: ${(await res.json().catch(() => ({}))).message || res.statusText}`);
+      err.status = res.status;
+      throw err;
+    }
     return res.json();
   };
   const toBase64 = (text) => {
@@ -151,28 +195,50 @@
     return lines;
   }
 
+  // Reading needs no token (the prototype repository is public); only Publish and the package PR do.
+  let usage = null, usageFresh = false, diffCount = null, lineCount = 0, report = null, problems = [], running = false;
   async function refresh() {
-    $("publish").disabled = true;
-    $("package").disabled = !$("token").value.trim();
-    if (!$("token").value.trim()) {
-      $("summary").textContent = "Add the GitHub token to compare with what is published.";
-      $("setup").open = true;
-      return;
-    }
+    updateButtons();
+    diffCount = null; usage = null; usageFresh = false; lineCount = 0;
+    if (!$("token").value.trim()) $("setup").open = true;
     try {
       const file = await api(`/contents/${FILE}?ref=main`);
       current = file;
       const lines = diff(JSON.parse(fromBase64(file.content)), JSON.parse(next));
-      $("summary").textContent = lines.length ? `${lines.length} change(s) since the last publish` : "Nothing changed since the last publish.";
+      lineCount = lines.length;
+      diffCount = lines.length;
+      $("summary").textContent = (lines.length ? `${lines.length} change(s) since the last publish` : "Nothing changed since the last publish.") +
+        ($("token").value.trim() ? "" : " Add the GitHub token to publish.");
       $("changes").hidden = !lines.length;
       $("changes").innerHTML = lines
         .map((l) => `<div>${l.color ? `<span class="swatch" style="background:${esc(l.color)}"></span> ` : ""}${esc(l.text)}</div>`)
         .join("");
-      $("publish").disabled = !lines.length;
     } catch (e) {
+      current = null;
       $("summary").textContent = "Could not read the published tokens.";
       status(e.message, true);
     }
+    // The usage map: absent (404) or any error means "not covered", never a failure of the plugin.
+    try {
+      const f = await api("/contents/tokens/usage.json?ref=main");
+      usage = JSON.parse(f.content ? fromBase64(f.content) : await readBlob($("repo").value.trim(), f.sha));
+      usageFresh = !!(current && usage && typeof usage.variablesBlob === "string" && usage.variablesBlob === current.sha);
+    } catch (e) {
+      usage = null;
+      usageFresh = false;
+    }
+    updateButtons();
+  }
+  // Publish, the package PR and the download are blocked only when the export itself would be wrong.
+  const blocked = () => problems.length > 0 || !!(report && report.publishBlocked);
+  const BLOCK_MSG = "Fix the broken token(s) in the Audit tab first: the export would be wrong.";
+  function updateButtons() {
+    const hasToken = !!$("token").value.trim();
+    const bad = blocked();
+    $("publish").disabled = bad || !hasToken || !current || !lineCount;
+    $("package").disabled = bad || !hasToken;
+    $("download").disabled = bad || !next;
+    if (bad) status(BLOCK_MSG, true);
   }
   function status(text, error = false, html = false) {
     $("status").className = `status${error ? " error" : ""}`;
@@ -228,10 +294,12 @@
             `<details><summary>Changes the plugin saw</summary>\n\n${[...$("changes").children].map((d) => `- ${d.textContent.trim()}`).join("\n")}\n</details>`,
         }),
       });
-      status(`Pull request <a href="${esc(pr.html_url)}" target="_blank">#${pr.number}</a> is open. The prototype updates when its checks pass (about 3 minutes).`, false, true);
+      const waiting = report ? new Set(report.blockers.filter((f) => f.check === "used-gone").map((f) => `${f.collection}/${f.name}`)).size : 0;
+      status(`Pull request <a href="${esc(pr.html_url)}" target="_blank">#${pr.number}</a> is open. The prototype updates when its checks pass (about 3 minutes).` +
+        (waiting ? ` It will wait before merging: ${waiting} token(s) are still used in the prototype's code (see the PR comment).` : ""), false, true);
     } catch (e) {
       status(e.message, true);
-      $("publish").disabled = false;
+      updateButtons();
     }
   });
 
@@ -298,7 +366,7 @@
       }
       if (!changes.length) {
         status(`${p.repo} already has these tokens: nothing to open.`);
-        $("package").disabled = false;
+        updateButtons();
         return;
       }
 
@@ -342,7 +410,7 @@
     } catch (e) {
       status(e.message, true);
     }
-    $("package").disabled = false;
+    updateButtons();
   });
 
   // <dtcg> The standard format (Design Tokens Community Group draft, as Style Dictionary 4 and
@@ -495,13 +563,111 @@
     $("download").textContent = $("dtcg").checked ? "Download skillup-tokens.zip" : "Download variables.json";
   });
 
-  onmessage = (event) => {
+  // ---- Audit tab ----
+  function showTab(name) {
+    const audit = name === "audit";
+    $("paneAudit").hidden = !audit;
+    $("panePublish").hidden = audit;
+    $("tabAudit").setAttribute("aria-selected", String(audit));
+    $("tabPublish").setAttribute("aria-selected", String(!audit));
+  }
+  $("tabPublish").addEventListener("click", () => showTab("publish"));
+  $("tabAudit").addEventListener("click", () => showTab("audit"));
+
+  const label = (f) => {
+    const parts = [f.collection, f.name].filter(Boolean);
+    return parts.length === 2 && parts[0] === parts[1] ? parts[0] : parts.join("/");
+  };
+  const group = (title, items, folded) => {
+    if (!items.length) return "";
+    const rows = items.map((f) => {
+      const l = label(f);
+      return l ? `<div class="finding" data-copy="${esc(l)}" title="Click to copy">${esc(l)}: ${esc(f.text)}</div>` : `<div>${esc(f.text)}</div>`;
+    }).join("");
+    return folded
+      ? `<div class="group"><details><summary>${esc(title)} (${items.length})</summary>${rows}</details></div>`
+      : `<div class="group"><h2>${esc(title)}</h2>${rows}</div>`;
+  };
+  function renderReport(r) {
+    if (r.notCovered.includes("cancelled")) {
+      $("verdict").className = "verdict";
+      $("verdict").textContent = "Audit cancelled.";
+      $("covered").textContent = "Press Run again to read the variables.";
+      $("auditGroups").innerHTML = "";
+      return;
+    }
+    const notCovered = r.notCovered.slice();
+    const pending = r.pending.slice();
+    if (diffCount === null) notCovered.push("prototype sync");
+    else if (diffCount > 0) pending.unshift({ check: "unsent", collection: "", name: "", text: `${diffCount} token change(s) not sent to the prototype` });
+    $("verdict").className = `verdict${r.blockers.length ? " bad" : ""}`;
+    $("verdict").textContent = r.blockers.length ? `Not ready: ${r.blockers.length} blocker(s)` : "Ready for developers (tokens)";
+    $("covered").textContent = `Covered: ${r.covered.join(", ")}. Not covered yet: ${notCovered.join(", ")}.`;
+    $("auditGroups").innerHTML = group("Pending", pending) + group("Blockers", r.blockers) + group("Warnings", r.warnings, true) + group("Suggestions", r.suggestions, true);
+  }
+  function setRunning(on) {
+    running = on;
+    $("auditRun").disabled = on || !next;
+    $("auditCancel").hidden = !on;
+    $("auditProgress").hidden = !on;
+    if (on) {
+      $("auditProgress").textContent = "Reading the collections…";
+      $("verdict").className = "verdict";
+      $("verdict").textContent = "Auditing…";
+    }
+  }
+  function runAudit() {
+    report = null;
+    setRunning(true);
+    parent.postMessage({ pluginMessage: { type: "audit", usage, usageFresh } }, "*");
+  }
+  $("auditRun").addEventListener("click", async () => {
+    if (running) return;
+    setRunning(true);
+    await refresh();
+    runAudit();
+  });
+  $("auditCancel").addEventListener("click", () => parent.postMessage({ pluginMessage: { type: "audit-cancel" } }, "*"));
+
+  function copyText(text) {
+    const done = () => { $("copied").textContent = "Copied"; setTimeout(() => { $("copied").textContent = ""; }, 1500); };
+    const fallback = () => {
+      const t = document.createElement("textarea");
+      t.value = text;
+      document.body.appendChild(t);
+      t.select();
+      try { document.execCommand("copy"); done(); } catch (e) { $("copied").textContent = "Could not copy"; }
+      t.remove();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+    else fallback();
+  }
+  $("auditGroups").addEventListener("click", (e) => {
+    const row = e.target.closest && e.target.closest("[data-copy]");
+    if (row) copyText(row.getAttribute("data-copy"));
+  });
+
+  onmessage = async (event) => {
     const msg = event.data.pluginMessage;
     if (!msg) return;
     if (msg.type === "error") { $("summary").textContent = "Could not read the variables."; status(msg.message, true); }
+    if (msg.type === "audit-progress") $("auditProgress").textContent = `Reading collection ${Math.min(msg.done + 1, msg.total)} of ${msg.total}`;
+    if (msg.type === "audit-result") {
+      setRunning(false);
+      report = msg.report;
+      renderReport(report);
+      updateButtons();
+    }
+    if (msg.type === "audit-error") {
+      setRunning(false);
+      $("verdict").className = "verdict bad";
+      $("verdict").textContent = "The audit could not run.";
+      $("covered").textContent = msg.message;
+      $("auditGroups").innerHTML = "";
+    }
     if (msg.type === "ready") {
       next = msg.json;
-      $("download").disabled = false;
+      problems = msg.problems || [];
       user = msg.user;
       $("repo").value = msg.settings.repo;
       $("pkgRepo").value = msg.settings.pkgRepo;
@@ -510,7 +676,9 @@
       $("pkgFormat").value = msg.settings.pkgFormat;
       showWhere();
       $("token").value = msg.settings.token;
-      refresh();
+      updateButtons();
+      await refresh();
+      runAudit();
     }
   };
 </script>
