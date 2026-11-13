@@ -25,6 +25,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { colorName, isColor, isRadius, isSpacing, isType, motionName, radiusName, spacingName, typeName } from "./names.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SOURCE = path.join(root, "tokens/figma/variables.json");
@@ -46,10 +47,9 @@ const block = (selector, lines) => (lines.length ? `${selector} {\n${lines.map((
 /* ---- Colours ---------------------------------------------------------------------------- */
 function colors() {
   const c = col("1.");
-  // The CSS name is the Web code syntax from Figma; a token without one follows the same rule
-  // (DS "text/on-inverse" → --color-text-on-inverse).
-  const name = (v) => (v.web ? v.web.replace(/^var\((--[^)]+)\)$/, "$1") : `--color-${v.name.replace(/\//g, "-")}`);
-  const tokens = c.variables.filter((v) => v.type === "COLOR");
+  // CSS names come from names.mjs (the Web code syntax set in Figma, else --color-<name>).
+  const name = colorName;
+  const tokens = c.variables.filter(isColor);
   const mode = (m) => new Map(tokens.map((v) => [name(v), v.values[m]]));
   const decl = (map, keys) => keys.map((k) => `${k}: ${map.get(k)};`);
   const diff = (a, b) => [...a.keys()].filter((k) => a.get(k) !== b.get(k));
@@ -116,28 +116,21 @@ function responsive(vars, cssName, unit) {
 
 function radius() {
   // The role tokens (Radius/control, Radius/card…), not the fixed-* scale they alias.
-  const vars = R().variables.filter((v) => /^Radius\/(?!fixed-)/.test(v.name));
+  const vars = R().variables.filter(isRadius);
   return header("collection 2. Responsive 📐, Radius/* roles") + "\n" +
-    responsive(vars, (v) => `--sk-radius-${v.name.split("/")[1]}`, px);
+    responsive(vars, radiusName, px);
 }
 
 function spacing() {
-  const vars = R().variables.filter((v) => /^(Spacing|Container|Layout)\//.test(v.name));
-  const name = (v) => {
-    const [group, key] = v.name.split("/");
-    if (group === "Spacing") return `--sk-space-${key}`;
-    if (group === "Layout") return `--sk-layout-${key}`;
-    return `--sk-container-${key}`;
-  };
-  return header("collection 2. Responsive 📐, Spacing/*, Container/* and Layout/*") + "\n" + responsive(vars, name, px);
+  const vars = R().variables.filter(isSpacing);
+  return header("collection 2. Responsive 📐, Spacing/*, Container/* and Layout/*") + "\n" + responsive(vars, spacingName, px);
 }
 
 function typography() {
-  const vars = R().variables.filter((v) => /^Type\/(size|line-height)\//.test(v.name));
-  const name = (v) => `--sk-type-${v.name.split("/")[1]}-${v.name.split("/")[2]}`;
+  const vars = R().variables.filter(isType);
   let css = header("collection 2. Responsive 📐 Type/*, and the 47 text styles");
   css += "\n/* Sizes in rem, so the browser's own text size scales the ramp; --sk-font-scale multiplies on top. */\n";
-  css += responsive(vars, name, rem);
+  css += responsive(vars, typeName, rem);
   const weight = { Regular: 400, Medium: 500, SemiBold: 600, Semibold: 600, Bold: 700 };
   css += "\n/* One class per DS text style: .sk-text-{style}-{weight}. */\n";
   for (const s of data.textStyles) {
@@ -166,8 +159,7 @@ function motion() {
     if (v.name.startsWith("distance/")) return `${x}px`;
     return x;
   };
-  const name = (v) => (v.web ? v.web.replace(/^var\((--[^)]+)\)$/, "$1") : `--motion-${v.name.replace(/\//g, "-")}`);
-  return header("collection 3. Motion") + "\n" + block(":root", c.variables.map((v) => `${name(v)}: ${unit(v)};`));
+  return header("collection 3. Motion") + "\n" + block(":root", c.variables.map((v) => `${motionName(v)}: ${unit(v)};`));
 }
 
 const files = { "colors.css": colors(), "radius.css": radius(), "spacing.css": spacing(), "typography.css": typography(), "motion.css": motion() };
