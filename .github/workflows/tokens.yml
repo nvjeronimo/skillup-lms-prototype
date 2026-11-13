@@ -84,6 +84,7 @@ jobs:
       # TOKENS_AUTO_MERGE says. The job does not fail; the pull request gets a comment.
       - name: Tokens still used in code
         id: guard
+        if: env.FIGMA_SYNC == 'true'
         run: |
           git fetch origin main
           git show origin/main:tokens/figma/variables.json > base-variables.json
