@@ -95,7 +95,11 @@ function walkObject(s, i, keys, onString) {
   }
 }
 
-/** Class fragment ("sko-text-default", "card") → CSS custom property ("--color-text-default"). */
+/**
+ * Class fragment ("sko-text-default", "card") → the CSS custom properties it can stand for. Two
+ * sections can share a key (borderRadius.surface and translate.surface): the class alone does not
+ * say which, so every candidate counts (over-counting is fine).
+ */
 export function tailwindMap(configText) {
   const map = new Map();
   const at = configText.search(/\bextend\s*:\s*\{/);
@@ -105,7 +109,9 @@ export function tailwindMap(configText) {
     if (!m) return;
     // keys[0] is the theme section (colors, borderRadius…): it is not part of the class.
     const fragment = keys.slice(1).filter((k) => k !== "DEFAULT").join("-");
-    if (fragment) map.set(fragment, m[1]);
+    if (!fragment) return;
+    if (!map.has(fragment)) map.set(fragment, new Set());
+    map.get(fragment).add(m[1]);
   });
   return map;
 }
@@ -163,7 +169,7 @@ export function scanCode(files, tw) {
   };
   const fragments = [...tw].map(([frag, css]) => ({
     frag,
-    css,
+    css: [...css],
     re: new RegExp(`-${escapeRe(frag)}(?![\\w-])`),
   }));
   for (const { path: p, text } of files) {
@@ -175,7 +181,7 @@ export function scanCode(files, tw) {
       else if (m[1].length > 2) add(m[1], p);
     }
     for (const { frag, css, re } of fragments) {
-      if (text.includes(`-${frag}`) && re.test(text)) add(css, p);
+      if (text.includes(`-${frag}`) && re.test(text)) for (const c of css) add(c, p);
     }
   }
   // A dynamic prefix also marks the files in `dynamicFiles`, kept apart so buildUsage can spread them.

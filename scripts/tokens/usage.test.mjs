@@ -16,11 +16,21 @@ const files = (css) => [...(scan().used.get(css) ?? [])];
 
 describe("tailwindMap", () => {
   it("joins nested keys after the section key, drops DEFAULT, keeps only var() strings", () => {
-    expect(tw.get("sko-text-default")).toBe("--color-text-default");
-    expect(tw.get("card")).toBe("--sk-radius-card");
-    expect(tw.get("short2")).toBe("--motion-short2");
+    expect([...tw.get("sko-text-default")]).toEqual(["--color-text-default"]);
+    expect([...tw.get("card")]).toEqual(["--sk-radius-card"]);
+    expect([...tw.get("short2")]).toEqual(["--motion-short2"]);
     expect(tw.has("big")).toBe(false);
     expect([...tw.keys()].some((k) => k === "" || k.includes("DEFAULT"))).toBe(false);
+  });
+  it("two sections with the same key keep both CSS names, and a class counts every candidate", () => {
+    const tc = tailwindMap(fs.readFileSync(path.join(FX, "tailwind.collide.ts"), "utf8"));
+    expect([...tc.get("surface")].sort()).toEqual(["--motion-distance-surface", "--sk-radius-surface"]);
+    expect([...tc.get("short2")].sort()).toEqual(["--motion-delay-short2", "--motion-duration-short2"]);
+    const s = scanCode([{ path: "a.tsx", text: '<div className="rounded-surface duration-short2" />' }], tc);
+    expect(s.used.has("--sk-radius-surface")).toBe(true);
+    expect(s.used.has("--motion-distance-surface")).toBe(true);
+    expect(s.used.has("--motion-duration-short2")).toBe(true);
+    expect(s.used.has("--motion-delay-short2")).toBe(true);
   });
 });
 
