@@ -53,8 +53,10 @@ React 19 changes made: `RefObject<T | null>` in hook signatures, `useRef` needs 
 
 ### Route check (Vite dev build, 13 Nov 2026)
 
-All 28 page routes, the two redirects and the three not-found cases open with their title, `<main>`
-and no console error. Not yet compared screen by screen with the Next build.
+All page routes, the two redirects and the four not-found cases were opened on the Vite dev build
+and on the live Next build (lms-prototype-mu.vercel.app): same final URL, document title, h1 and
+page text on every route. In dev, React Router logs the `notFound()` signal it catches. Not yet
+compared screen by screen.
 
 ### Open
 

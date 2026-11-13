@@ -54,7 +54,7 @@ import * as PlatformServices from "@/app/platform/services/page";
 const page = (path: string | undefined, file: RouteFile, extra: Partial<RouteObject> = {}): RouteObject => ({
   ...(path === undefined ? { index: true } : { path }),
   element: <Page file={file} />,
-  handle: handleOf(file),
+  handle: { ...handleOf(file), sameSegment: path === undefined },
   ...extra,
 } as RouteObject);
 

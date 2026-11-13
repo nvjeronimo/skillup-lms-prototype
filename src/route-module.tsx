@@ -19,7 +19,12 @@ export type RouteFile = {
 };
 
 /** What a route carries for the title: its metadata, read in `<DocumentTitle />`. */
-export type RouteHandle = { metadata?: Metadata; generateMetadata?: MetaFn };
+export type RouteHandle = {
+  metadata?: Metadata;
+  generateMetadata?: MetaFn;
+  /** An index page shares its layout's segment: Next applies that layout's template only below it. */
+  sameSegment?: boolean;
+};
 
 export const handleOf = (file: RouteFile): RouteHandle => ({
   metadata: file.metadata,
@@ -83,16 +88,22 @@ export function DocumentTitle() {
   const matches = useMatches();
   const title = React.useMemo(() => {
     let template: string | undefined;
+    let outer: string | undefined; // the template in force above the parent layout
+    let parentSetTemplate = false;
     let result: string | undefined;
     for (const m of matches) {
       const h = m.handle as RouteHandle | undefined;
-      if (!h) continue;
-      const meta = h.generateMetadata ? h.generateMetadata({ params: m.params as Params }) : h.metadata;
+      const meta = h && (h.generateMetadata ? h.generateMetadata({ params: m.params as Params }) : h.metadata);
       const t = meta?.title;
-      if (!t) continue;
-      const own = titleText(t, template);
-      if (own) result = own;
-      if (typeof t === "object" && "template" in t) template = t.template;
+      if (t) {
+        const own = titleText(t, h?.sameSegment && parentSetTemplate ? outer : template);
+        if (own) result = own;
+      }
+      parentSetTemplate = !!t && typeof t === "object" && "template" in t;
+      if (parentSetTemplate) {
+        outer = template;
+        template = (t as { template: string }).template;
+      }
     }
     return result;
   }, [matches]);
