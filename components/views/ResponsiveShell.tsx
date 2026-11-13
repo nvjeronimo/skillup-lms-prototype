@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
 import { AssistantChatFloating } from "@/components/assistant/AssistantChatFloating";

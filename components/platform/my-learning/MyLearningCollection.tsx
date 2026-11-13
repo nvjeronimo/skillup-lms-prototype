@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "@/lib/router";
 import { Search } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { CourseRowCard } from "@/components/platform/CourseRowCard";

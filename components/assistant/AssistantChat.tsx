@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/lib/router";
 import { isAssistantPath, pageContextFromPath } from "@/lib/assistant/page-context";
 import { nextStep } from "@/lib/assistant/next-step";
 import { buildSnapshot } from "@/lib/assistant/snapshot";

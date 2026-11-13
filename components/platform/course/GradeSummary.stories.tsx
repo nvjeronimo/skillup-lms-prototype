@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SIX_SIGMA } from "@/lib/courses/sample-page";
 import { CompletionCard, GradeSummary } from "./ProgressTab";
 

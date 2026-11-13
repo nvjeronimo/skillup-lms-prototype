@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ArrowRight, Award, Check, CheckCircle2, Circle, Clock, Download, Hourglass, Lock, PlayCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";

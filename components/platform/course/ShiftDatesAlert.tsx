@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { Button } from "@/components/atoms/Button";
 import { CourseAlert } from "./CourseAlert";
 import { courseDetailHref } from "@/lib/platform/course-detail";

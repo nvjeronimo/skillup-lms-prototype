@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/lib/router";
 import { Badge } from "@/components/atoms/Badge";
 import type { DashboardDueItem } from "@/lib/platform/dashboard";
 import { cn } from "@/lib/utils";

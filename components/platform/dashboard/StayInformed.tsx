@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { AlertCircle, LifeBuoy, Megaphone, type LucideIcon } from "lucide-react";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import { Icon } from "@/lib/icons";

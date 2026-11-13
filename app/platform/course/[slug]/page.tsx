@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from "@/lib/router";
+import { notFound } from "@/lib/router";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { CourseDetailView } from "@/components/platform/course/CourseDetailView";
 import { CourseSkeleton } from "@/components/platform/course/CourseSkeleton";

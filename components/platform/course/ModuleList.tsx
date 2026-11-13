@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { Check, ChevronDown, Lock } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { CompletionStatus } from "@/components/atoms/CompletionStatus";

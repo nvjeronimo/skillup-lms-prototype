@@ -11,6 +11,7 @@ on:
       - "components/**"
       - ".storybook/**"
       - "app/globals.css"
+      - "lib/**"
       - "tailwind.config.ts"
   workflow_dispatch:
 

@@ -42,7 +42,6 @@ export function PlatformFooter({ className }: { className?: string }) {
           {/* Open edX's own logo file (Nelson, 23 Oct 2026), 14 tall. It carries its own navy and
               magenta fills, so it reads on light and dark pages alike. */}
           <span className="flex border-l border-sko-border-subtle pl-2 md:pl-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/open-edx-logo.svg" alt="Powered by Open edX" width={48} height={14} className="h-3.5 w-auto" />
           </span>
         </div>

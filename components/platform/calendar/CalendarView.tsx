@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { AlertCircle, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, Flag, List, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { ArrivalCount } from "@/components/atoms/ArrivalCount";
@@ -25,7 +25,7 @@ import {
 } from "@/lib/platform/calendar";
 import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import { YOUR_TIME, dueBadgeLabel, formatDay, formatTime } from "@/lib/sample-time";
 import { coursePageHref, slugify } from "@/lib/platform/hrefs";

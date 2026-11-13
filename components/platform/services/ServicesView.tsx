@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/lib/router";
+import { useRouter } from "@/lib/router";
 import { ArrowUpRight, ChevronRight, MessageCircle } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Badge } from "@/components/atoms/Badge";

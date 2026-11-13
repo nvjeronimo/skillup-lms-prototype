@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { Suspense } from "react";
 import { LabTopbar } from "@/components/lab/LabTopbar";
 

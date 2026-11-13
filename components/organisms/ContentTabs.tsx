@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";

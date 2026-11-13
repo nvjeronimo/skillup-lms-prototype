@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { usePathname, useSearchParams } from "@/lib/router";
 import { CalendarDays, Flag, House, Layers } from "lucide-react";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { Icon } from "@/lib/icons";

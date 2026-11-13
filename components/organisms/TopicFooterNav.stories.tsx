@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TopicFooterNav } from "./TopicFooterNav";
 
 const meta: Meta<typeof TopicFooterNav> = {

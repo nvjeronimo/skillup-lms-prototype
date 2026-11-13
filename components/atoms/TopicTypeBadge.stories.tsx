@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TopicTypeBadge, ALL_TOPIC_TYPES } from "./TopicTypeBadge";
 
 const meta: Meta<typeof TopicTypeBadge> = {

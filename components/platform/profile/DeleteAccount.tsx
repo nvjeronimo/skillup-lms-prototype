@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { FIELD, FormField, FormModal } from "@/components/organisms/FormModal";

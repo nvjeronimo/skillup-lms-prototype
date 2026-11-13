@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TranscriptLine } from "./TranscriptLine";
 
 const meta: Meta<typeof TranscriptLine> = {

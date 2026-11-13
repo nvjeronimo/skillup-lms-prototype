@@ -39,7 +39,6 @@ export const FadeImage = React.forwardRef<HTMLImageElement, FadeImageProps>(func
   }, [src]);
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- alt passes through from the caller
     <img
       ref={setRefs}
       src={src}

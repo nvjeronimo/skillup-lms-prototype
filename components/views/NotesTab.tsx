@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { Info, Search, StickyNote } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { NoteItem } from "@/components/molecules/NoteItem";

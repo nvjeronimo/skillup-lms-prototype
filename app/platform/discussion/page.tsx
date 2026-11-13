@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { DiscussionSkeleton, DiscussionView } from "@/components/platform/discussion/DiscussionView";
 import { pageTitle } from "@/lib/utils";

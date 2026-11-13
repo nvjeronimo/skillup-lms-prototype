@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/lib/router";
 import { PlatformTopbar } from "./PlatformTopbar";
 import { PlatformTabBar } from "./PlatformTabBar";
 import { PlatformFooter } from "./PlatformFooter";

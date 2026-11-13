@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ChevronRight, Download } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Badge } from "@/components/atoms/Badge";

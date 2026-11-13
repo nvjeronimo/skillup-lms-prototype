@@ -1,6 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
   "installCommand": "pnpm install --ignore-scripts",
-  "buildCommand": "next build",
-  "framework": "nextjs"
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/favicon.ico", "destination": "/icon.svg" },
+    { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
+  ]
 }

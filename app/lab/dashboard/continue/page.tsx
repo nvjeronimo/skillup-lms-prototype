@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { View } from "./View";
 
 export const metadata: Metadata = { title: "Dashboard · A Continue first" };

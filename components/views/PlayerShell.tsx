@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "@/lib/router";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import type { SearchScope } from "@/components/platform/harbor/HarborSearch";
 import { courseProgressPct } from "@/lib/courses/outline";

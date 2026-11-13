@@ -192,10 +192,8 @@ export function ProviderBadge({
         chip === "page" ? "bg-sko-bg-page" : "bg-sko-bg-subtle",
       )}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={logo.light} alt={value} className={cn("h-4 w-auto", logo.dark && "sk-logo-light")} />
       {logo.dark ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img src={logo.dark} alt="" aria-hidden="true" className="sk-logo-dark h-4 w-auto" />
       ) : null}
     </span>

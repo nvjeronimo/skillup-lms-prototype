@@ -200,7 +200,7 @@ function startCascade(
  * simulated load when it is a first visit and the load is on, then shows the content and
  * starts the cascade inside `rootRef` in the same task (no frame of un-animated content).
  */
-export function useArrivalController(pathname: string, rootRef: React.RefObject<HTMLElement>): ArrivalState {
+export function useArrivalController(pathname: string, rootRef: React.RefObject<HTMLElement | null>): ArrivalState {
   const [state, setState] = React.useState<Omit<ArrivalState, "observe">>(SETTLED);
   // One observer for the page: the cascade and every counter, bar and ring (review M2).
   const [registry] = React.useState(() => createObserverRegistry(viewportObserver));
@@ -312,7 +312,7 @@ export type ArrivalTrigger = {
   decided: boolean;
 };
 
-export function useArrivalTrigger(ref: React.RefObject<Element>): ArrivalTrigger {
+export function useArrivalTrigger(ref: React.RefObject<Element | null>): ArrivalTrigger {
   const { first, released, decided, arming, observe } = useArrival();
   const [phase, setPhase] = React.useState<"idle" | "armed" | "go" | "done">("idle");
   const used = React.useRef(false);
@@ -359,7 +359,7 @@ export function useArrivalTrigger(ref: React.RefObject<Element>): ArrivalTrigger
  * first visit; otherwise (revisit, reduced motion, server) it is the figure itself.
  * `counting` tells the caller to keep the final value for screen readers (ArrivalCount).
  */
-export function useArrivalCount<T extends Element>(value: string): { ref: React.RefObject<T>; text: string; counting: boolean } {
+export function useArrivalCount<T extends Element>(value: string): { ref: React.RefObject<T | null>; text: string; counting: boolean } {
   const ref = React.useRef<T>(null);
   const trigger = useArrivalTrigger(ref);
   return { ref, ...useCountText(value, trigger) };
@@ -398,7 +398,7 @@ export function useCountText(value: string, { armed, go }: ArrivalTrigger): { te
  */
 export function useArrivalValue<T extends Element>(
   target: number,
-): { ref: React.RefObject<T>; value: number; armed: boolean; trigger: ArrivalTrigger } {
+): { ref: React.RefObject<T | null>; value: number; armed: boolean; trigger: ArrivalTrigger } {
   const ref = React.useRef<T>(null);
   const trigger = useArrivalTrigger(ref);
   return { ref, value: trigger.armed ? 0 : target, armed: trigger.armed, trigger };
@@ -413,7 +413,7 @@ export function useArrivalValue<T extends Element>(
  */
 export function useArrivalRing<T extends Element>(
   pct: number,
-): { ref: React.RefObject<T>; shown: number; transition: string; trigger: ArrivalTrigger; decided: boolean } {
+): { ref: React.RefObject<T | null>; shown: number; transition: string; trigger: ArrivalTrigger; decided: boolean } {
   const { ref, armed, trigger } = useArrivalValue<T>(pct);
   const [phase, setPhase] = React.useState<RingPhase>("settled");
   const last = React.useRef(pct);

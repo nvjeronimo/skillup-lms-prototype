@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { CourseThumb } from "@/components/platform/my-learning/CourseThumb";

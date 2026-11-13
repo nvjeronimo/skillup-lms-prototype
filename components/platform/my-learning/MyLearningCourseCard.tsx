@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/lib/router";
 import { CheckCircle2 } from "lucide-react";
 import { Button, type ButtonHierarchy } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";

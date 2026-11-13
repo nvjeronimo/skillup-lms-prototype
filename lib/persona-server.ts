@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies } from "@/lib/router";
 import { PERSONA_COOKIE, parsePersonaId, type PersonaId } from "./personas";
 
 /**

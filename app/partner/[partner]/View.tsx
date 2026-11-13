@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@/lib/router";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { getPartnerLab } from "@/lib/content";
 import { getTopic } from "@/lib/data";

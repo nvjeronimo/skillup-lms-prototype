@@ -47,7 +47,7 @@ export function useDialog<T extends HTMLElement = HTMLDivElement>(
   open: boolean,
   onClose: () => void,
   { initialFocusRef, inertOutside = true, closeOnEscape = true }: UseDialogOptions = {},
-): React.RefObject<T> {
+): React.RefObject<T | null> {
   const ref = React.useRef<T>(null);
   // Keep the latest onClose without re-running the effects on every render.
   const onCloseRef = React.useRef(onClose);

@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { buildSystemPrompt } from "@/lib/assistant/model-reply";
-import { createRateLimiter } from "@/lib/assistant/rate-limit";
-import { parseRequest } from "@/lib/assistant/request";
+import { buildSystemPrompt } from "../lib/assistant/model-reply";
+import { createRateLimiter } from "../lib/assistant/rate-limit";
+import { parseRequest } from "../lib/assistant/request";
 
 /**
  * The assistant with a model behind it. Used only when ANTHROPIC_API_KEY is set; without it
@@ -14,8 +14,7 @@ import { parseRequest } from "@/lib/assistant/request";
  * - The limiter counts per serverless instance. The real ceiling is the spend limit set on
  *   the key in the Anthropic console (DEPLOY.md).
  */
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+// A Vercel Function (Node.js runtime) with Web-standard handlers; no Next.js route segment.
 
 const MODEL = process.env.ASSISTANT_MODEL ?? "claude-sonnet-5-5";
 // To the first byte from the API, and for the whole answer: a stream that stalls is cut.

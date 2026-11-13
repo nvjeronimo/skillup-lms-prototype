@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { useRouter, useSearchParams } from "@/lib/router";
 import { ArrowLeft, MessageSquare, Plus, Search } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { EmptyState } from "@/components/atoms/EmptyState";

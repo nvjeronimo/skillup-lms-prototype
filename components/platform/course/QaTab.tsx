@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ArrowLeft, MoreHorizontal } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Badge } from "@/components/atoms/Badge";
@@ -9,7 +9,7 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { CONTENT_PENDING } from "@/lib/platform/program";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { useLmsStore } from "@/lib/store";
 import { AskQuestionModal } from "@/components/platform/forms/AskQuestionModal";
 import { ReportMessageModal } from "@/components/platform/forms/ReportMessageModal";

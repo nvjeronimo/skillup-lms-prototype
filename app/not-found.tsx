@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { DASHBOARD_HREF, MY_LEARNING_HREF } from "@/lib/platform/routes";

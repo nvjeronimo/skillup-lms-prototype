@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { usePathname, useRouter, useSearchParams } from "@/lib/router";
 import { Loader2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { SelectField } from "@/components/atoms/SelectField";
@@ -55,7 +55,7 @@ function useCourseSearch(active: boolean, slug: string) {
   const [accessDenied, setAccessDenied] = React.useState(0);
   const [filter, setFilter] = React.useState<Filter>(isFilter(urlFilter) ? urlFilter : "all");
   const [open, setOpen] = React.useState(false);
-  const timer = React.useRef<number>();
+  const timer = React.useRef<number | undefined>(undefined);
 
   const writeUrl = React.useCallback(
     (q: string, f: Filter) => {

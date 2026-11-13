@@ -37,7 +37,6 @@ function Line({
 function Signatory({ name, role, signatureSrc }: CertificateDocumentData["signatories"][number]) {
   return (
     <div className="flex flex-col items-center text-center" style={{ width: u(240), gap: u(6) }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={signatureSrc} alt="" className={INK} style={{ width: u(166), height: u(34) }} />
       <span className="w-full border-t border-sko-border-subtle" />
       <Line size={16} leading={24} className="sk-text-body-large-semibold text-sko-text-default">
@@ -109,12 +108,10 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
                 In partnership with
               </Line>
               <span className="flex items-center justify-center" style={{ width: u(104), height: u(41) }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={data.partnerLogoSrc} alt="" style={{ width: u(75), height: u(28) }} />
               </span>
               {(data.morePartners ?? []).map((p) => (
                 <span key={p.name} className="flex items-center justify-center" style={{ width: u(104), height: u(41) }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={p.logoSrc} alt="" style={{ width: u(75), height: u(28), objectFit: "contain" }} />
                 </span>
               ))}
@@ -194,7 +191,6 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
                   {data.verifyUrl}
                 </Line>
               </div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/platform/certificate-qr.svg"
                 alt=""

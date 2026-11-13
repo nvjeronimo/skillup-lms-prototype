@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { Button } from "@/components/atoms/Button";
 import { CourseThumb } from "@/components/platform/my-learning/CourseThumb";

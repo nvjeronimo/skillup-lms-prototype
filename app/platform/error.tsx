@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { AlertTriangle } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { Button } from "@/components/atoms/Button";

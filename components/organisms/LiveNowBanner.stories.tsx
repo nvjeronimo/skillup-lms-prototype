@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LiveNowBanner } from "./LiveNowBanner";
 
 const meta: Meta<typeof LiveNowBanner> = {

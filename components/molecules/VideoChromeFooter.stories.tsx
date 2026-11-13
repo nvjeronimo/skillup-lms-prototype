@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { VideoChromeFooter } from "./VideoChromeFooter";
 
 const meta: Meta<typeof VideoChromeFooter> = {

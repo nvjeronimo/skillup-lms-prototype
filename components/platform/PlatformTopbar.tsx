@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/lib/router";
+import { useRouter } from "@/lib/router";
 import { Bell, ChevronDown } from "lucide-react";
 import { Icon, Menu02 } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ArrowDownRight, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { ArrivalCount } from "@/components/atoms/ArrivalCount";

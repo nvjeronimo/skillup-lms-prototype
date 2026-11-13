@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { Award, ExternalLink, LogOut, RotateCcw, UserPen } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { useLargeTargets, useLmsStore, type Skin } from "@/lib/store";

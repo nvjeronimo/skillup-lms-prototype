@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { usePathname, useRouter, useSearchParams } from "@/lib/router";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { personaIds, personas } from "@/lib/lab/dashboard-mock";
 import { cn } from "@/lib/utils";

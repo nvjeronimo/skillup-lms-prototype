@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sidebar } from "./Sidebar";
 import { course } from "@/lib/data";
 import type { Course } from "@/lib/types";

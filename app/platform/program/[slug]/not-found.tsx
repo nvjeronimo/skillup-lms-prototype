@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/lib/router";
 import { SearchX } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
 

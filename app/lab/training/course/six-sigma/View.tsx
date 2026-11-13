@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { useSearchParams } from "@/lib/router";
 import { ArrowLeft, Play } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { MockTag } from "@/components/lab/MockTag";

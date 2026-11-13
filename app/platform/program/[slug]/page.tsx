@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from "@/lib/router";
+import { notFound } from "@/lib/router";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { ProgramDetailView } from "@/components/platform/program/ProgramDetailView";
 import { ProgramSkeleton } from "@/components/platform/program/ProgramSkeleton";

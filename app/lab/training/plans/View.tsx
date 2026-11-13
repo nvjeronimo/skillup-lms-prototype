@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { useSearchParams } from "@/lib/router";
 import { DemoAction } from "@/components/lab/training/DemoAction";
 import { MockTag } from "@/components/lab/MockTag";
 import { MOCK, type Enrolment } from "@/lib/lab/dashboard-mock";

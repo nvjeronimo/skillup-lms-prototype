@@ -534,7 +534,6 @@ export function VideoPlayer({
           />
         ) : null}
         {poster && !started && state !== "unavailable" ? (
-          // eslint-disable-next-line @next/next/no-img-element -- a static mock poster
           <img src={poster} alt="" className="relative h-full w-full object-cover" />
         ) : null}
       </div>

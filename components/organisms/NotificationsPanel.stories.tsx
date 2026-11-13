@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { notifications } from "@/lib/data";
 

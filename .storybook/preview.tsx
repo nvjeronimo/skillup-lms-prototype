@@ -1,17 +1,11 @@
-import type { Preview } from "@storybook/react";
+import type { Preview } from "@storybook/react-vite";
 import React from "react";
-import { Montserrat } from "next/font/google";
+import { MemoryRouter } from "react-router";
 // Import the Tailwind-built global stylesheet so every `bg-sko-*` / `text-sko-*` /
 // layout utility is available in Storybook exactly as in the app. globals.css also
 // @imports the color + typography token stylesheets.
 import "../app/globals.css";
 import "./storybook.css";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-  display: "swap",
-});
 
 const preview: Preview = {
   parameters: {
@@ -36,10 +30,14 @@ const preview: Preview = {
     },
   },
   decorators: [
+    // Components link and navigate through React Router (lib/router): a memory router stands in
+    // for the app's browser router in every story.
     (Story) => (
-      <div className={montserrat.variable} style={{ fontFamily: "var(--sk-font-body)" }}>
-        <Story />
-      </div>
+      <MemoryRouter>
+        <div style={{ fontFamily: "var(--sk-font-body)" }}>
+          <Story />
+        </div>
+      </MemoryRouter>
     ),
   ],
 };

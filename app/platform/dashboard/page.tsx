@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { DashboardView } from "@/components/platform/dashboard/DashboardView";
 import { dashboardResumeRowsFor } from "@/lib/platform/dashboard-resume";
 import { pageTitle } from "@/lib/utils";

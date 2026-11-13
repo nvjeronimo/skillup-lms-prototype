@@ -66,11 +66,9 @@ jobs:
       - name: Types
         run: ./node_modules/.bin/tsc --noEmit
       - name: Lint
-        run: ./node_modules/.bin/next lint
+        run: ./node_modules/.bin/eslint . --ext .ts,.tsx
       - name: Build the prototype
-        run: ./node_modules/.bin/next build
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
+        run: ./node_modules/.bin/vite build
 
       - name: What changes on the page
         run: |
