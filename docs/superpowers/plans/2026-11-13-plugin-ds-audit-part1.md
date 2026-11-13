@@ -42,7 +42,9 @@ plan and the code go in one PR.
   - its format string is `"skillup-token-usage/1"`;
   - each key is `"<Figma collection name>/<Figma variable name>"`;
   - each value is `{ "css": string[], "files": number }`;
-  - the top-level fields are `"commit"`, `"dynamic"` and `"unknownCss"`.
+  - the top-level fields are `"commit"`, `"variablesBlob"` (the git blob SHA of the
+    `tokens/figma/variables.json` it was built from, `git hash-object`), `"dynamic"` and
+    `"unknownCss"`.
 - **What the scan covers:**
   - folders `app/`, `components/`, `lib/`, `stories/`;
   - file types `.ts`, `.tsx`, `.css`;
@@ -162,7 +164,8 @@ plan and the code go in one PR.
     code (dynamic prefixes included) that `tokenCssNames(data)` no longer produces and no
     hand-written `tokens/*.css` declares.
 - CLI:
-  - `--write` writes `tokens/usage.json`, with `commit` = `git rev-parse HEAD`.
+  - `--write` writes `tokens/usage.json`, with `commit` = `git rev-parse HEAD` and
+    `variablesBlob` = `git hash-object tokens/figma/variables.json`.
   - `--check` exits 1 if the file differs from a fresh build, ignoring `commit`.
   - `--against <variables.json> [--report <file.md>]` exits 0 **always**.
     - It appends `blocked=true|false` to `$GITHUB_OUTPUT` when that variable is set.
@@ -318,11 +321,11 @@ plan and the code go in one PR.
     package PR still need one.
   - A 404 on `usage.json` means `usage = null`.
 - [ ] **Step 2: Freshness.**
-  - `lastVars` = `GET /commits?path=tokens/figma/variables.json&sha=main&per_page=1`, then
-    `[0].sha`.
-  - `GET /compare/${lastVars}...${usage.commit}`.
-  - `usageFresh = ["identical","ahead"].includes(status)`.
-  - Any error means `usageFresh = false`.
+  - `usageFresh = usage.variablesBlob === <the "sha" of tokens/figma/variables.json from the
+    contents API on main>`. The plugin already reads that file in `refresh()`.
+  - A missing field or any error means `usageFresh = false`.
+  - Not commit ancestry: a squash-merged sync puts a commit on `main` that the branch commit
+    stored in `usage.commit` is not an ancestor of.
 - [ ] **Step 3: Tab bar and Audit view.**
   - Add a tab bar **Publish | Audit** above the existing content. The current content is the
     Publish tab.
