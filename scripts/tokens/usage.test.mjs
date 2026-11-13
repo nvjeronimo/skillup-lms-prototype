@@ -70,12 +70,20 @@ describe("buildUsage", () => {
 
 describe("missingAgainst", () => {
   it("--against passes a rename that keeps the web name", () => {
-    expect(missingAgainst(scan(), json("variables.renamed.json"))).toEqual([]);
+    expect(missingAgainst(scan(), json("variables.renamed.json"), data)).toEqual([]);
   });
   it("--against reports a removed token with its files", () => {
-    expect(missingAgainst(scan(), json("variables.removed.json"))).toEqual([
+    expect(missingAgainst(scan(), json("variables.removed.json"), data)).toEqual([
       { css: "--color-bg-page", files: ["tokens/skin-x.css"] },
     ]);
+  });
+});
+
+describe("local custom properties", () => {
+  it("local custom property used in code is not reported by --against", () => {
+    const s = scanCode([...collectFiles(FX), { path: "app/local.tsx", text: 'x = "var(--sk-halo-angle)"' }], tw);
+    expect(missingAgainst(s, json("variables.removed.json"), data).map((m) => m.css)).toEqual(["--color-bg-page"]);
+    expect(missingAgainst(s, data, data)).toEqual([]);
   });
 });
 
@@ -84,12 +92,17 @@ describe("CLI --against", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "usage-"));
     const out = path.join(dir, "out");
     fs.writeFileSync(out, "");
-    const r = spawnSync("node", [path.join(here, "usage.mjs"), "--root", FX, "--against", path.join(FX, vars), ...extra.map((x) => x.replace("$DIR", dir))], {
+    const r = spawnSync("node", [path.join(here, "usage.mjs"), "--root", FX, "--against", path.join(FX, vars), "--base", path.join(FX, "variables.json"), ...extra.map((x) => x.replace("$DIR", dir))], {
       env: { ...process.env, GITHUB_OUTPUT: out },
       encoding: "utf8",
     });
     return { r, out: fs.readFileSync(out, "utf8"), dir };
   };
+  it("--against without --base exits 2", () => {
+    const r = spawnSync("node", [path.join(here, "usage.mjs"), "--root", FX, "--against", path.join(FX, "variables.json")], { encoding: "utf8" });
+    expect(r.status).toBe(2);
+    expect(r.stderr).toContain("--base");
+  });
   it("--against with no missing names writes blocked=false", () => {
     const { r, out } = run("variables.json");
     expect(r.status).toBe(0);

@@ -1,11 +1,11 @@
 /**
  * Which Figma tokens does the prototype's code use? Writes tokens/usage.json (read by the "Publish
  * tokens" plugin) and guards token PRs: `--against <variables.json>` reports CSS names the code still
- * uses but the new JSON no longer produces.
+ * uses that the base JSON produced and the new JSON no longer does.
  *
  *   node scripts/tokens/usage.mjs --write
  *   node scripts/tokens/usage.mjs --check
- *   node scripts/tokens/usage.mjs --against tokens/figma/variables.json [--report guard.md]
+ *   node scripts/tokens/usage.mjs --against <new variables.json> --base <old variables.json> [--report guard.md]
  *   (all modes: --root <dir> to scan another tree; default is the repository)
  *
  * Over-counting use is fine, under-counting is a bug: it would hide a blocker.
@@ -215,17 +215,23 @@ export function buildUsage(data, scan, commit, variablesBlob = null) {
   return { format: FORMAT, commit, variablesBlob, tokens: sorted, dynamic: scan.dynamic, unknownCss };
 }
 
-/** CSS names used in code (dynamic prefixes included) that `data` no longer produces. */
-export function missingAgainst(scan, data) {
-  const produced = new Set(tokenCssNames(data).map((n) => n.css));
+/**
+ * CSS names used in code (dynamic prefixes included) that the base JSON produced and the new JSON
+ * does not, and no hand-written tokens/*.css declares. Names no token ever produced (local custom
+ * properties) are never reported: they stay in `unknownCss`.
+ */
+export function missingAgainst(scan, newData, baseData) {
+  const base = new Set(tokenCssNames(baseData).map((n) => n.css));
+  const produced = new Set(tokenCssNames(newData).map((n) => n.css));
   const known = (c) => produced.has(c) || scan.declared.has(c);
   const out = [];
   for (const [css, ps] of scan.used) {
-    if (!known(css)) out.push({ css, files: [...ps].sort() });
+    if (base.has(css) && !known(css)) out.push({ css, files: [...ps].sort() });
   }
   for (const [prefix, ps] of scan.dynamicFiles) {
-    const any = [...produced, ...scan.declared].some((c) => c.startsWith(prefix));
-    if (!any) out.push({ css: `${prefix}*`, files: [...ps].sort() });
+    const inBase = [...base].some((c) => c.startsWith(prefix));
+    const inNew = [...produced, ...scan.declared].some((c) => c.startsWith(prefix));
+    if (inBase && !inNew) out.push({ css: `${prefix}*`, files: [...ps].sort() });
   }
   return out.sort((a, b) => (a.css < b.css ? -1 : 1));
 }
@@ -275,13 +281,17 @@ function main(argv) {
     }
     console.log("tokens/usage.json is up to date");
   } else if (arg("--against")) {
-    const missing = missingAgainst(scan, readJson(path.resolve(arg("--against"))));
+    if (!arg("--base")) {
+      console.error("usage: usage.mjs --against <new variables.json> --base <old variables.json> [--report <file.md>]");
+      process.exit(2);
+    }
+    const missing = missingAgainst(scan, readJson(path.resolve(arg("--against"))), readJson(path.resolve(arg("--base"))));
     console.log(`${missing.length} CSS name(s) used in code are not produced by that JSON`);
     for (const m of missing) console.log(`  ${m.css}  (${m.files.join(", ")})`);
     if (arg("--report")) fs.writeFileSync(arg("--report"), reportMarkdown(missing));
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `blocked=${missing.length > 0}\n`);
   } else {
-    console.error("usage: usage.mjs --write | --check | --against <variables.json> [--report <file.md>]");
+    console.error("usage: usage.mjs --write | --check | --against <new.json> --base <old.json> [--report <file.md>]");
     process.exit(2);
   }
 }
