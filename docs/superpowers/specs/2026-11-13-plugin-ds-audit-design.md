@@ -138,13 +138,18 @@ GitHub token, the settings and the variable reading. That was my call, stated to
     produced any more. It compares **CSS names**, so a Figma rename that keeps the Web code syntax
     passes.
 - **Workflow:**
-  - In `tokens.yml`, on a Figma sync branch, the job first merges `origin/main` into the branch,
-    so the map and the guard see the code on `main` now, not the code at the branch point. A
-    conflict only in `tokens/usage.json` takes `main`'s copy (it is regenerated next); any other
-    conflict fails the job with the file list. Then `--write` runs next to "Generate the CSS" and
-    the map is committed and pushed with the CSS (and the merge). This matters: the sync is merged with `github.token`, and a merge
-    made with that token triggers no other workflow, so a push-to-`main` job alone would never
-    see a token publish.
+  - In `tokens.yml`, on a Figma sync branch, the job commits only the generated CSS on top of
+    the branch and pushes it. It then merges `origin/main` **in the runner only** (decision A,
+    13 Nov), so the build, the checks and the guard see the code on `main` now, not the code at
+    the branch point. That merge is never pushed: `github.token` may not push a commit that
+    changes `.github/workflows/*`, and a held sync would hit that as soon as `main` changed a
+    workflow. A conflict only in `tokens/generated` is settled by building the CSS from the merged
+    JSON; any other conflict fails the job with the file list. The sync job does not write
+    `usage.json`.
+  - `token-usage.yml` is the only writer of `usage.json`. It runs on push to `main` and also when
+    a "Tokens from Figma" run on a `tokens/figma-*` branch completes (`workflow_run`): the sync is
+    merged with `github.token`, and a merge made with that token triggers no push workflow, so
+    without `workflow_run` the map would stay stale after a token publish.
   - On push to `main` (paths `app/**`, `components/**`, `lib/**`, `stories/**`, `tokens/**`,
     `tailwind.config.ts`), a job runs `--write`. If the file changed, it commits
     "chore(tokens): usage map" as github-actions[bot] straight to `main`.

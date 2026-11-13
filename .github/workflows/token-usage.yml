@@ -1,7 +1,7 @@
-# Keeps tokens/usage.json (which Figma tokens the code uses) fresh after code changes on main.
-# This job is not the only writer: the Figma sync job in tokens.yml also refreshes the map, and a
-# merge made with github.token does not trigger this workflow (GitHub does not start workflows
-# from events caused by that token), so a sync merge never reaches here.
+# Keeps tokens/usage.json (which Figma tokens the code uses) fresh on main. It is the only writer
+# of that file. A Figma sync is merged by tokens.yml with github.token, and a merge made with that
+# token starts no push workflow, so this job also runs when a "Tokens from Figma" run on a sync
+# branch finishes (workflow_run): by then the sync is merged, and --check finds the map stale.
 name: Token usage map
 
 on:
@@ -15,6 +15,9 @@ on:
       - "tokens/**"
       - "tailwind.config.ts"
       - "scripts/tokens/**"
+  workflow_run:
+    workflows: ["Tokens from Figma"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -26,9 +29,13 @@ concurrency:
 
 jobs:
   usage:
+    if: github.event_name != 'workflow_run' || startsWith(github.event.workflow_run.head_branch, 'tokens/figma-')
     runs-on: ubuntu-latest
     steps:
+      # Always main, never the pull request's code: workflow_run checks out the default branch.
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4

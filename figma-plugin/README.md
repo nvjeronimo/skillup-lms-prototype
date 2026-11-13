@@ -102,9 +102,12 @@ cannot be read, is listed as not covered too.
 prototype's code still uses, the Action does not merge the pull request, whatever the auto-merge
 setting says, and comments with the tokens and the files. The plugin says it after Publish.
 Remove those uses in a code pull request, merge it, then re-run the "Tokens from Figma" job on the
-waiting pull request: the job merges `main` into the sync branch first, so it sees the code without
-those uses, and merges. If that merge conflicts (anything but `tokens/usage.json`, which is
-regenerated), the job fails and says which files: publish again from the plugin.
+waiting pull request: the job merges `main` into the sync branch first (in the runner only, it
+does not push that merge), so it sees the code without those uses, and merges. If that merge
+conflicts (anything but `tokens/generated`, which is built again), the job fails and says which
+files: publish again from the plugin. After a sync is merged, the "Token usage map" job refreshes
+`tokens/usage.json` on `main`; until it finishes (about a minute) the Audit tab lists code usage as
+not covered.
 
 A rename counts the way the build names the CSS. Colours and motion take their CSS name from the
 Web code syntax, so renaming them in Figma is fine while the syntax stays. Radius, spacing, type,
