@@ -114,8 +114,9 @@ export function tailwindMap(configText) {
 
 const SCAN_DIRS = ["app", "components", "lib", "stories"];
 const SCAN_EXT = /\.(ts|tsx|css)$/;
-const SKIP_DIRS = new Set(["node_modules", ".next", "generated"]);
+const SKIP_DIRS = new Set(["node_modules", ".next"]);
 const SKIP_FILES = new Set(["stories/figmaTokens.ts"]);
+const SKIP_PATHS = new Set(["tokens/generated"]); // generated CSS: not scanned
 const HAND_WRITTEN = /^tokens\/[^/]+\.css$/;
 
 /** Reads the files the scan covers, with paths relative to `root` and "/" separators. */
@@ -131,7 +132,7 @@ export function collectFiles(root) {
     for (const e of fs.readdirSync(abs, { withFileTypes: true })) {
       const r = `${rel}/${e.name}`;
       if (e.isDirectory()) {
-        if (!SKIP_DIRS.has(e.name)) walk(r);
+        if (!SKIP_DIRS.has(e.name) && !SKIP_PATHS.has(r)) walk(r);
       } else if (SCAN_EXT.test(e.name)) read(r);
     }
   };
@@ -216,24 +217,28 @@ export function buildUsage(data, scan, commit, variablesBlob = null) {
 }
 
 /**
- * CSS names used in code (dynamic prefixes included) that the base JSON produced and the new JSON
- * does not, and no hand-written tokens/*.css declares. Names no token ever produced (local custom
- * properties) are never reported: they stay in `unknownCss`.
+ * CSS names used in code (directly, via Tailwind or a dynamic prefix) that the base JSON produced and
+ * the new JSON does not. A hand-written tokens/*.css declaring the name does not exempt it: skin files
+ * only override, the generated :root value is what disappears. Names no token ever produced (local
+ * custom properties) are never reported: they stay in `unknownCss`.
  */
 export function missingAgainst(scan, newData, baseData) {
   const base = new Set(tokenCssNames(baseData).map((n) => n.css));
   const produced = new Set(tokenCssNames(newData).map((n) => n.css));
-  const known = (c) => produced.has(c) || scan.declared.has(c);
-  const out = [];
-  for (const [css, ps] of scan.used) {
-    if (base.has(css) && !known(css)) out.push({ css, files: [...ps].sort() });
+  const gone = new Map();
+  const add = (css, ps) => {
+    if (!gone.has(css)) gone.set(css, new Set());
+    for (const p of ps) gone.get(css).add(p);
+  };
+  for (const css of base) {
+    if (produced.has(css)) continue;
+    add(css, scan.used.get(css) ?? []);
+    for (const [prefix, ps] of scan.dynamicFiles) if (css.startsWith(prefix)) add(css, ps);
   }
-  for (const [prefix, ps] of scan.dynamicFiles) {
-    const inBase = [...base].some((c) => c.startsWith(prefix));
-    const inNew = [...produced, ...scan.declared].some((c) => c.startsWith(prefix));
-    if (inBase && !inNew) out.push({ css: `${prefix}*`, files: [...ps].sort() });
-  }
-  return out.sort((a, b) => (a.css < b.css ? -1 : 1));
+  return [...gone]
+    .filter(([, ps]) => ps.size > 0)
+    .map(([css, ps]) => ({ css, files: [...ps].sort() }))
+    .sort((a, b) => (a.css < b.css ? -1 : 1));
 }
 
 // ── CLI ──────────────────────────────────────────────────────────────────────

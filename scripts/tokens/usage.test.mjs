@@ -55,7 +55,7 @@ describe("buildUsage", () => {
     const u = buildUsage(data, scan(), "abc");
     expect(u.format).toBe("skillup-token-usage/1");
     expect(u.commit).toBe("abc");
-    expect(u.tokens["1. Colors/text/default"]).toEqual({ css: ["--color-text-default"], files: 2 });
+    expect(u.tokens["1. Colors/text/default"]).toEqual({ css: ["--color-text-default"], files: 3 });
     expect(u.tokens["1. Colors/bg/unused"].files).toBe(0);
   });
   it("unknownCss lists a var no token or hand-written file defines", () => {
@@ -76,6 +76,21 @@ describe("missingAgainst", () => {
     expect(missingAgainst(scan(), json("variables.removed.json"), data)).toEqual([
       { css: "--color-bg-page", files: ["tokens/skin-x.css"] },
     ]);
+  });
+});
+
+describe("missingAgainst, removals", () => {
+  it("a dynamic prefix reports each removed name, not the prefix", () => {
+    expect(missingAgainst(scan(), json("variables.no-pill.json"), data)).toEqual([
+      { css: "--sk-radius-pill", files: ["app/page.tsx"] },
+    ]);
+  });
+  it("a token removed from Figma is reported even when a skin file declares it", () => {
+    expect(fs.readFileSync(path.join(FX, "tokens/skin-x.css"), "utf8")).toContain("--color-bg-page:");
+    expect(missingAgainst(scan(), json("variables.removed.json"), data).map((m) => m.css)).toContain("--color-bg-page");
+  });
+  it("a folder named generated outside tokens/ is scanned", () => {
+    expect(files("--color-text-default")).toContain("app/generated/z.tsx");
   });
 });
 
