@@ -109,7 +109,8 @@ describe("auditTokens", () => {
     expect(r.publishBlocked).toBe(true);
   });
 
-  const usageOld = { tokens: { "2. Responsive 📐/Radius/old": { css: ["--sk-radius-old"], files: 3 } }, unknownCss: [] };
+  const FORMAT = "skillup-token-usage/1";
+  const usageOld = { format: FORMAT, tokens: { "2. Responsive 📐/Radius/old": { css: ["--sk-radius-old"], files: 3, from: "name" } }, unknownCss: [] };
 
   it("used-gone is a blocker but not a publish blocker", async () => {
     const { cols, vars } = one();
@@ -133,16 +134,46 @@ describe("auditTokens", () => {
   it("rename with same web syntax is not used-gone", async () => {
     const { cols, vars } = one({}, { name: "color/renamed", codeSyntax: { WEB: "var(--color-x)" } });
     const { ctx } = await load(cols, vars);
-    const usage = { tokens: { "1. Colour/color/x": { css: ["--color-x"], files: 5 } }, unknownCss: [] };
+    const usage = { format: FORMAT, tokens: { "1. Colour/color/x": { css: ["--color-x"], files: 5, from: "web" } }, unknownCss: [] };
     const r = await ctx.auditTokens({ usage, usageFresh: true });
     expect(checks(r.blockers)).toEqual([]);
     expect(r.verdict).toBe("ready");
   });
 
+  it("same name, web changed is used-gone (colour: the CSS name came from the Web syntax)", async () => {
+    const { cols, vars } = one({}, { codeSyntax: { WEB: "var(--color-new)" } });
+    const { ctx } = await load(cols, vars);
+    const usage = { format: FORMAT, tokens: { "1. Colour/color/x": { css: ["--color-x"], files: 4, from: "web" } }, unknownCss: [] };
+    const r = await ctx.auditTokens({ usage, usageFresh: true });
+    expect(r.blockers).toHaveLength(1);
+    expect(r.blockers[0]).toMatchObject({ check: "used-gone", collection: "1. Colour", name: "color/x" });
+  });
+
+  it("Layout rename with web kept is used-gone (the CSS name comes from the Figma name)", async () => {
+    const v = vr({ id: "l", name: "Layout/gutter-new", variableCollectionId: "c2", resolvedType: "FLOAT", valuesByMode: { m1: 24, m2: 24 }, codeSyntax: { WEB: "var(--sk-layout-gutter)" } });
+    const c = col({ id: "c2", name: "2. Responsive", variableIds: ["l"] });
+    const { ctx } = await load([c], [v]);
+    const usage = { format: FORMAT, tokens: { "2. Responsive/Layout/gutter": { css: ["--sk-layout-gutter"], files: 6, from: "name" } }, unknownCss: [] };
+    const r = await ctx.auditTokens({ usage, usageFresh: true });
+    expect(r.blockers).toHaveLength(1);
+    expect(r.blockers[0]).toMatchObject({ check: "used-gone", collection: "2. Responsive", name: "Layout/gutter" });
+  });
+
+  it("a usage map in another format is not covered", async () => {
+    const { cols, vars } = one();
+    const { ctx } = await load(cols, vars);
+    for (const format of [undefined, "skillup-token-usage/2"]) {
+      const r = await ctx.auditTokens({ usage: { ...usageOld, format }, usageFresh: true });
+      expect(r.notCovered).toContain("code usage");
+      expect(r.covered).not.toContain("code usage");
+      expect(checks(r.blockers)).toEqual([]);
+    }
+  });
+
   it("an entry with no files is not a finding", async () => {
     const { cols, vars } = one();
     const { ctx } = await load(cols, vars);
-    const usage = { tokens: { "1. Colour/color/unused": { css: ["--color-unused"], files: 0 } }, unknownCss: [] };
+    const usage = { format: FORMAT, tokens: { "1. Colour/color/unused": { css: ["--color-unused"], files: 0, from: "web" } }, unknownCss: [] };
     const r = await ctx.auditTokens({ usage, usageFresh: true });
     expect(checks(r.blockers)).toEqual([]);
   });
@@ -167,7 +198,7 @@ describe("auditTokens", () => {
   it("unknownCss entries are warnings", async () => {
     const { cols, vars } = one();
     const { ctx } = await load(cols, vars);
-    const r = await ctx.auditTokens({ usage: { tokens: {}, unknownCss: ["--sk-old-thing"] }, usageFresh: true });
+    const r = await ctx.auditTokens({ usage: { format: FORMAT, tokens: {}, unknownCss: ["--sk-old-thing"] }, usageFresh: true });
     expect(r.warnings).toEqual([{ check: "unknown-css", collection: "", name: "--sk-old-thing", text: "used in code, but no token produces it" }]);
     expect(r.verdict).toBe("ready");
   });
@@ -256,7 +287,7 @@ describe("auditTokens", () => {
     const { cols, vars } = one();
     const { posted, send } = await load(cols, vars);
     posted.length = 0;
-    await send({ type: "audit", usage: { tokens: null, unknownCss: 5 }, usageFresh: true });
+    await send({ type: "audit", usage: { format: "skillup-token-usage/1", tokens: null, unknownCss: 5 }, usageFresh: true });
     const types = posted.map((m) => m.type);
     expect(types).toContain("audit-error");
     expect(types).not.toContain("error");
@@ -266,7 +297,7 @@ describe("auditTokens", () => {
     const h = vr({ id: "p", name: "prim", variableCollectionId: "h", codeSyntax: { WEB: "var(--color-x)" } });
     const hidden = col({ id: "h", name: "0. Primitives", hiddenFromPublishing: true, variableIds: ["p"] });
     const { ctx } = await load([hidden], [h]);
-    const usage = { tokens: { "1. Colour/color/x": { css: ["--color-x"], files: 2 } }, unknownCss: [] };
+    const usage = { format: FORMAT, tokens: { "1. Colour/color/x": { css: ["--color-x"], files: 2, from: "web" } }, unknownCss: [] };
     const r = await ctx.auditTokens({ usage, usageFresh: true });
     expect(checks(r.blockers)).toEqual(["used-gone"]);
   });

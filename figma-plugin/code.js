@@ -195,7 +195,8 @@ async function readPublishStatuses(items, timeoutMs) {
 async function auditTokens(opts) {
   opts = opts || {};
   const usage = opts.usage || null;
-  const useUsage = !!(usage && opts.usageFresh === true);
+  // A map in a format this plugin does not know is read as no map: "code usage" not covered.
+  const useUsage = !!(usage && usage.format === "skillup-token-usage/1" && opts.usageFresh === true);
   const timeoutMs = opts.publishStatusTimeoutMs !== undefined ? opts.publishStatusTimeoutMs : 10000;
   const onProgress = opts.onProgress || function () {};
   const isCancelled = opts.isCancelled || function () { return false; };
@@ -260,9 +261,15 @@ async function auditTokens(opts) {
       }
       if (colName === null) colName = key.slice(0, Math.max(key.indexOf("/"), 0));
       const varName = key.slice(colName.length + 1);
-      const sameName = live.some(({ v, col }) => v.name === varName && numberPrefix(col.name) === numberPrefix(colName));
-      const sameWeb = (entry.css || []).some((n) => liveWeb.has(n));
-      if (!sameName && !sameWeb) {
+      // Match the way the build names it (entry.from, written by scripts/tokens/names.mjs):
+      // "web": the CSS name is the Web code syntax, so a live exported variable must still carry
+      //   it, whatever its Figma name (a rename that keeps it is fine, a changed syntax is not);
+      // "name": the CSS name comes from the Figma name, so the same name must still exist in the
+      //   collection with the same number prefix (a rename breaks the code even if Web syntax stays).
+      const found = entry.from === "web"
+        ? (entry.css || []).some((n) => liveWeb.has(n))
+        : live.some(({ v, col }) => v.name === varName && numberPrefix(col.name) === numberPrefix(colName));
+      if (!found) {
         findings.push({ check: "used-gone", collection: colName, name: varName, text: "used in code (" + plural(entry.files, "file", "files") + "), gone from Figma" });
       }
     }
