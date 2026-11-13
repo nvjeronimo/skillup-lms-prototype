@@ -219,7 +219,11 @@ plan and the code go in one PR.
     `node scripts/tokens/usage.mjs --write` first and add `tokens/usage.json` to the
     `git add`.
   - Add a step `id: guard`, "Tokens still used in code", before "Merge the Figma sync":
-    `node scripts/tokens/usage.mjs --against tokens/figma/variables.json --report guard.md`.
+    `git show origin/main:tokens/figma/variables.json > base-variables.json` (the job already
+    fetches `origin/main`; fetch it before this step if needed), then
+    `node scripts/tokens/usage.mjs --against tokens/figma/variables.json --base base-variables.json --report guard.md`.
+    `--base` is required: only names a token used to produce and no longer does are reported
+    (local custom properties are not tokens).
   - Add a step: if `steps.guard.outputs.blocked == 'true'`, run
     `gh pr comment <n> --body-file guard.md`.
   - Change the merge step's `if:` so it also requires `steps.guard.outputs.blocked != 'true'`.
