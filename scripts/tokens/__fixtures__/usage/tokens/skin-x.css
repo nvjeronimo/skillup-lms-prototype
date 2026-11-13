@@ -1,0 +1,2 @@
+:root { --color-skin-own: red; }
+.x { background: var(--color-bg-page); color: var(--color-skin-own); }
