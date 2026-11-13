@@ -46,6 +46,20 @@ async function modeProblems(v, col, getVar) {
     const id = aliasIdOf(raw);
     if (id && !(await getVar(id))) {
       out.push({ check: "alias-missing", collection: col.name, name: v.name, mode: m.name, text: "alias to a variable that no longer exists (mode " + m.name + ")" });
+    } else if (id) {
+      // Follow the chain: a cycle never ends, so it can never export a value.
+      const seen = new Set([v.id]);
+      let cur = await getVar(id);
+      while (cur) {
+        if (seen.has(cur.id)) {
+          out.push({ check: "alias-missing", collection: col.name, name: v.name, mode: m.name, text: "alias loop (mode " + m.name + ")" });
+          break;
+        }
+        seen.add(cur.id);
+        const val = cur.valuesByMode[m.modeId] !== undefined ? cur.valuesByMode[m.modeId] : cur.valuesByMode[Object.keys(cur.valuesByMode)[0]];
+        const nid = aliasIdOf(val);
+        cur = nid ? await getVar(nid) : null;
+      }
     }
   }
   return out;
@@ -56,7 +70,7 @@ async function exportTokens() {
   const colById = new Map(cols.map((c) => [c.id, c]));
 
   async function resolve(v, modeId, depth = 0) {
-    if (depth > 20) throw new Error("alias loop at " + v.name);
+    if (depth > 20) return null; // an alias loop; reported as alias-missing in problems
     const col = colById.get(v.variableCollectionId);
     const m = v.valuesByMode[modeId] !== undefined ? modeId : col ? col.defaultModeId : Object.keys(v.valuesByMode)[0];
     const val = v.valuesByMode[m];
@@ -138,7 +152,6 @@ async function exportTokens() {
   return { format: "skillup-figma-tokens/1", fileKey: figma.fileKey || null, collections, textStyles, problems };
 }
 
-
 // ---- The audit (tokens only; later parts add layers, components and docs) ----
 
 function numberPrefix(name) {
@@ -159,13 +172,13 @@ function plural(n, one, many) {
 
 // Reads every variable's publish status under ONE shared time limit. Returns the statuses, or
 // null when the limit was reached or any status could not be read (then it is "not checked").
-async function readPublishStatuses(vars, timeoutMs) {
+async function readPublishStatuses(items, timeoutMs) {
   let timer;
   const timeout = new Promise((resolve) => {
     timer = setTimeout(() => resolve("timeout"), timeoutMs);
   });
   const all = Promise.all(
-    vars.map(async (v) => {
+    items.map(async (v) => {
       try {
         return typeof v.getPublishStatusAsync === "function" ? await v.getPublishStatusAsync() : null;
       } catch (e) {
@@ -232,7 +245,8 @@ async function auditTokens(opts) {
   if (useUsage) {
     covered.push("code usage");
     const liveWeb = new Set();
-    for (const { v } of live) {
+    for (const { v, col } of live) {
+      if (col.hiddenFromPublishing) continue;
       const css = webCssName(v);
       if (css) liveWeb.add(css);
     }
@@ -262,13 +276,19 @@ async function auditTokens(opts) {
   if (isCancelled()) return cancelledReport();
 
   const exported = live.filter((x) => !x.col.hiddenFromPublishing);
-  const statuses = await readPublishStatuses(exported.map((x) => x.v), timeoutMs);
+  const exportedCols = cols.filter((c) => !c.hiddenFromPublishing);
+  const statuses = await readPublishStatuses(exported.map((x) => x.v).concat(exportedCols), timeoutMs);
   if (statuses === null) {
     notCovered.push("library publish status");
   } else {
     exported.forEach((x, i) => {
       if (statuses[i] === "UNPUBLISHED") findings.push({ check: "unpublished", collection: x.col.name, name: x.v.name, text: "not published to the library" });
       else if (statuses[i] === "CHANGED") findings.push({ check: "unpublished", collection: x.col.name, name: x.v.name, text: "changed since the last library publish" });
+    });
+    exportedCols.forEach((c, j) => {
+      const st = statuses[exported.length + j];
+      if (st === "UNPUBLISHED") findings.push({ check: "unpublished", collection: c.name, name: c.name, text: "collection not published to the library" });
+      else if (st === "CHANGED") findings.push({ check: "unpublished", collection: c.name, name: c.name, text: "collection changed since the last library publish" });
     });
   }
   notCovered.push(later);
@@ -326,7 +346,7 @@ figma.ui.onmessage = async (msg) => {
       });
       figma.ui.postMessage({ type: "audit-result", report });
     } catch (e) {
-      figma.ui.postMessage({ type: "error", message: String(e && e.message ? e.message : e) });
+      figma.ui.postMessage({ type: "audit-error", message: String(e && e.message ? e.message : e) });
     }
   }
   if (msg.type === "audit-cancel") auditCancelled = true;

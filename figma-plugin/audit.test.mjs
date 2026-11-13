@@ -9,7 +9,7 @@ const code = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.ur
 const MODES = [{ modeId: "m1", name: "Light" }, { modeId: "m2", name: "Dark" }];
 
 function col(over) {
-  return { id: "c1", name: "1. Colour", modes: MODES, defaultModeId: "m1", hiddenFromPublishing: false, variableIds: [], ...over };
+  return { id: "c1", name: "1. Colour", modes: MODES, defaultModeId: "m1", hiddenFromPublishing: false, variableIds: [], getPublishStatusAsync: async () => "CURRENT", ...over };
 }
 function vr(over) {
   return {
@@ -229,6 +229,44 @@ describe("auditTokens", () => {
     const r = await ctx.auditTokens({});
     expect(r.suggestions.map((f) => f.name)).toEqual(["blue/900"]);
     expect(r.warnings).toEqual([]);
+  });
+
+  it("an unpublished collection is one pending finding named after the collection", async () => {
+    const { cols, vars } = one({ getPublishStatusAsync: async () => "UNPUBLISHED" });
+    const { ctx } = await load(cols, vars);
+    const r = await ctx.auditTokens({});
+    expect(r.pending).toHaveLength(1);
+    expect(r.pending[0]).toMatchObject({ check: "unpublished", collection: "1. Colour", name: "1. Colour" });
+  });
+
+  it("an alias cycle does not stop the plugin and blocks publishing", async () => {
+    const cyc = (id, to) => vr({ id, name: id, valuesByMode: { m1: { type: "VARIABLE_ALIAS", id: to }, m2: { type: "VARIABLE_ALIAS", id: to } } });
+    const cols = [col({ variableIds: ["a", "b"] })];
+    const vars = [cyc("a", "b"), cyc("b", "a")];
+    const { ctx, posted } = await load(cols, vars);
+    expect(posted.some((m) => m.type === "ready")).toBe(true);
+    const t = await ctx.exportTokens();
+    expect(checks(t.problems)).toContain("alias-missing");
+    expect(t.problems[0].text).toMatch(/alias loop/);
+    const r = await ctx.auditTokens({});
+    expect(r.publishBlocked).toBe(true);
+  });
+
+  it("a failing audit posts audit-error, not error", async () => {
+    const { cols, vars } = one();
+    const { posted, send } = await load(cols, vars);
+    posted.length = 0;
+    await send({ type: "audit", usage: { tokens: null, unknownCss: 5 }, usageFresh: true });
+    expect(posted.map((m) => m.type)).toEqual(["audit-error"]);
+  });
+
+  it("web syntax only in a hidden collection does not save a used token", async () => {
+    const h = vr({ id: "p", name: "prim", variableCollectionId: "h", codeSyntax: { WEB: "var(--color-x)" } });
+    const hidden = col({ id: "h", name: "0. Primitives", hiddenFromPublishing: true, variableIds: ["p"] });
+    const { ctx } = await load([hidden], [h]);
+    const usage = { tokens: { "1. Colour/color/x": { css: ["--color-x"], files: 2 } }, unknownCss: [] };
+    const r = await ctx.auditTokens({ usage, usageFresh: true });
+    expect(checks(r.blockers)).toEqual(["used-gone"]);
   });
 
   it("verdict ready when no blockers", async () => {
