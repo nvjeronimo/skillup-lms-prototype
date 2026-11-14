@@ -109,3 +109,9 @@
     color: var(--color-text-error);
   }
 }
+
+/* Studio: a card inside the player's content card takes the control radius
+   (tokens/direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] [data-player-content]) .drop.drop {
+  border-radius: var(--sk-radius-control);
+}

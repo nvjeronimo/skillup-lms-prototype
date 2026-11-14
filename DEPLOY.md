@@ -2,7 +2,7 @@
 
 Share two live links with the team:
 
-- **Prototype** (Next.js app) → a Vercel project
+- **Prototype** (Vite app) → a Vercel project
 - **Storybook** (component library) → a second Vercel project, same repo
 
 Both auto-redeploy on every `git push`.
@@ -33,7 +33,7 @@ That creates `github.com/<you>/skillup-lms-prototype` and pushes `main`.
 ## 2. Deploy the prototype to Vercel
 
 1. Go to **vercel.com → Add New… → Project** and **Import** the GitHub repo.
-2. Vercel auto-detects **Next.js** + **pnpm** — leave everything default.
+2. `vercel.json` sets the **Vite** preset, `vite build` and the `dist` output; the assistant runs as a Vercel Function (`api/assistant.ts`).
 3. Click **Deploy**. ~1 min later you get a URL like `https://skillup-lms-prototype.vercel.app`.
 
 `/` redirects to the active video lesson, so the URL opens straight into the player.
@@ -77,7 +77,7 @@ Both are **public** (no login needed) and live on Vercel.
 
 - `vercel.json` sets `installCommand: "pnpm install --ignore-scripts"`. Vercel's pnpm
   treats un-approved dependency build scripts (esbuild, sharp, …) as a hard error in CI;
-  those native builds aren't needed for `next build`, so we skip them. This is the
+  those native builds aren't needed for `vite build`, so we skip them. This is the
   reliable cross-environment fix.
 
 ## The assistant

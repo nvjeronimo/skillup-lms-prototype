@@ -1,9 +1,8 @@
 import type { Preview } from "@storybook/react-vite";
 import React from "react";
 import { MemoryRouter } from "react-router";
-// Import the Tailwind-built global stylesheet so every `bg-sko-*` / `text-sko-*` /
-// layout utility is available in Storybook exactly as in the app. globals.css also
-// @imports the color + typography token stylesheets.
+// The global stylesheet (tokens, the base reset, the sk-* helpers), as in the app; each
+// component brings its own CSS Module.
 import "../app/globals.css";
 import "./storybook.css";
 

@@ -11,8 +11,8 @@ on:
       - "components/**"
       - ".storybook/**"
       - "app/globals.css"
+      - "app/reset.css"
       - "lib/**"
-      - "tailwind.config.ts"
   workflow_dispatch:
 
 permissions:

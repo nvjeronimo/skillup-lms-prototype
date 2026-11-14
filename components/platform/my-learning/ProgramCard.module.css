@@ -166,8 +166,7 @@
 }
 @media (max-width: 767.98px) {
   .quickView::before {
-    --tw-content: '';
-    content: var(--tw-content);
+    content: "";
     position: absolute;
     inset: -4px;
   }
@@ -282,8 +281,7 @@
 }
 @media (max-width: 767.98px) {
   .action::before {
-    --tw-content: '';
-    content: var(--tw-content);
+    content: "";
     position: absolute;
     inset-inline: 0px;
     top: -4px;

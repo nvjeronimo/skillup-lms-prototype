@@ -92,8 +92,8 @@ React 19 changes made: `RefObject<T | null>` in hook signatures, `useRef` needs 
   properties; `md:` → `@media (min-width: 768px)`, `lg:` → `@media (min-width: 1024px)`,
   `max-md:` → the phone rule outside the query; hover inside `@media (hover: hover)`.
 - `FormField` / `FIELD` (organisms/FormModal) and `SkillUpLogo` are still Tailwind: bottom-up.
-- Token lint (`scripts/check-tokens.mjs`) does not read `.module.css` yet: extend it before the
-  fan-out, or it keeps passing while checking nothing.
+- Token lint (`scripts/check-tokens.mjs`) reads the `.module.css` files too (247 stylesheets);
+  its Tailwind-class rules now find nothing to check.
 
 ## Conversion rules (step 4, every file)
 
@@ -144,3 +144,31 @@ Checks before you finish (all must pass):
   with `--theme dark`. The base (port 4600) is the build before the conversion.
 - Hover and focus are not in the checker: read each `hover:` / `focus-visible:` you translated
   once more against the original.
+
+## Step 4 done (14 Nov 2026): every file in CSS Modules, Tailwind removed
+
+- **Ten parallel branches** (`mig/g01`–`g10`, one folder group each), each compared element by
+  element (box + ~50 computed styles) against the build from before the conversion, at 1280 /
+  800 / 375, light and dark; then a second pass for the skins.
+- **Skins:** `tokens/direction-studio.css`, `skin-harbor.css` and `skin-fluent.css` selected on
+  utility names (`.rounded-control`, `.rounded-card.p-4`, `.rounded-track.bg-sko-bg-track`, …).
+  Each converted element now carries the matching skin rule in its own module, under
+  `:global([data-direction="studio"])` / `:global([data-skin="harbor"|"fluent"])`. The old
+  utility-keyed rules in tokens/ no longer match anything (left for reference; to delete).
+  A card inside the player's content card is found by `[data-player-content]` (or `main#main`
+  in a few modules) instead of the old `.rounded-card .rounded-card`.
+- **Square corners** (`tokens/square-corners.css`): nothing sets `data-square-corners` any more;
+  not carried over.
+- **Tailwind removed:** `app/reset.css` is its preflight written out, plus the focus-ring gap
+  that sat in its base layer. Hover rules use `(hover: hover) and (pointer: fine)`, as
+  Tailwind's hoverOnlyWhenSupported emitted. `outline-none` became
+  `:not(:focus-visible) { outline: … }` so the global focus ring still shows where it did.
+- **Final check** (production build vs the pre-conversion build): see the PR.
+
+### Known approximations
+- A few Studio rules guess the context the old ancestor class gave: InlineAlert Hint (control
+  radius), SidebarToggle inside nav/aside/section, the 32 px avatar in the profile trigger, the
+  First steps card in the floating assistant, cards under `main#main`.
+- Menus opened inside platform cards (CardOverflowMenu, ShareMenu) do not take Studio's nested
+  radius or Harbor/Fluent's nested hairline: only visible with a menu open in those skins.
+- Unchanged original quirks the agents found are listed in their reports (PR).

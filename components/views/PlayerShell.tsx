@@ -553,6 +553,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           id="main"
           tabIndex={-1}
           className={styles.content}
+          // A hook for the skins: Studio gives a card inside this content card the control radius
+          // (tokens/direction-studio.css, "a card inside a card"), now that it has no utility class.
+          data-player-content=""
         >
           <div
             ref={bodyRef}

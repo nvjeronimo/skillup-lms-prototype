@@ -42,8 +42,7 @@
 
 /* The title link: its ::after covers the card, so the whole card opens the course. */
 .titleLink::after {
-  --tw-content: '';
-  content: var(--tw-content);
+  content: "";
   position: absolute;
   inset: 0px;
 }
@@ -94,8 +93,7 @@
 }
 @media (max-width: 767.98px) {
   .action::before {
-    --tw-content: '';
-    content: var(--tw-content);
+    content: "";
     position: absolute;
     inset-inline: 0px;
     top: -4px;

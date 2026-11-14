@@ -41,3 +41,9 @@
   border-color: transparent;
   box-shadow: var(--sk-shadow-card);
 }
+
+/* Studio: a card inside the player's content card takes the control radius
+   (tokens/direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] [data-player-content]) .emptyState.emptyState {
+  border-radius: var(--sk-radius-control);
+}

@@ -1,6 +1,6 @@
 # SkillUp LMS — Prototype + Mini Storybook
 
-A Next.js 14 prototype of the SkillUp LMS **Video lesson flow** (Transcript / Notes /
+A prototype of the SkillUp LMS **Video lesson flow** (Transcript / Notes /
 Downloads tabs, sidebar collapse, notes-on-transcript, right-overlay panels) plus a
 **mini Storybook** documenting ~30 reusable UUI Extension components.
 
@@ -9,12 +9,18 @@ no hardcoded hex, no raw `font-size` / `font-weight`.
 
 ## Tech stack
 
-- **Next.js 14** (App Router) + **React 18** + **TypeScript**
-- **Tailwind CSS 3** — an `lms` color scale that maps every utility to a CSS variable in `tokens/colors.css`
-- **Storybook 8** (`@storybook/nextjs`) + a11y + interactions addons
+The development team's stack (since 14 Nov 2026; MIGRATION.md tells the move):
+
+- **Vite 8** + **React 19** + **React Router 7** + **TypeScript**. The pages stay as files under
+  `app/` (one route each, `src/routes.tsx`); `lib/router` gives them `Link`, `useRouter`,
+  `notFound` and `redirect`.
+- **CSS Modules**: one `Name.module.css` beside each component. Colour, type, radius, spacing and
+  motion come from the token custom properties (`tokens/`); the DS type styles are the global
+  `sk-text-*` classes; `app/reset.css` is the base reset.
+- **Storybook 10** (`@storybook/react-vite`) + a11y and docs addons
 - **Zustand** for client state
 - **lucide-react** for icons (stroke-weight rule enforced centrally)
-- **Inter** (body) + **Montserrat** (display) via `next/font/google`
+- **Montserrat** and the skins' families from Google Fonts (`index.html`)
 
 ## Getting started
 

@@ -182,6 +182,7 @@
 :global([data-reduce-motion]) .button:active { transform: none; }
 
 .spin {
+  /* token-lint-disable-next-line a spinner turns at a constant 1s */
   animation: spin 1s linear infinite;
 }
 @keyframes spin {
