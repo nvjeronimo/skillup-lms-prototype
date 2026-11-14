@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { usePathname } from "@/lib/router";
 import { isAssistantPath, pageContextFromPath } from "@/lib/assistant/page-context";
@@ -16,6 +14,8 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { ASSISTANT_OPEN_EVENT } from "@/lib/assistant/bus";
 import { AssistantWindow } from "./AssistantWindow";
+import { cn } from "@/lib/utils";
+import styles from "./AssistantChat.module.css";
 
 const OPEN_KEY = "sk-assistant-open";
 const PHONE = "(max-width: 767px)";
@@ -224,7 +224,7 @@ function Chat({ pathname }: { pathname: string }) {
   return (
     <>
       {/* The window opening by itself leaves the focus on the page: this is how it is heard. */}
-      <p role="status" className="sr-only">
+      <p role="status" className="sk-sr-only">
         {open && selfOpened
           ? `SkillUp Assistant opened: ${firstSteps.left} first steps to get you started.`
           : ""}
@@ -252,8 +252,8 @@ function Chat({ pathname }: { pathname: string }) {
           scope={inPlayer ? "course" : "platform"}
           className={
             isPhone
-              ? "sk-animate-sheet fixed inset-0 z-[45]"
-              : "sk-animate-pop fixed z-[45] w-[420px] max-w-[calc(100vw-48px)] origin-top"
+              ? cn("sk-animate-sheet", styles.sheet)
+              : cn("sk-animate-pop", styles.panel)
           }
           style={
             isPhone

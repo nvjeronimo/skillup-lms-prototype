@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { Loader2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { BUTTON_DONE_MS, showsDoneCheck } from "@/lib/motion/feedback";
 import { buttonClassName, buttonIconSize, type ButtonProps } from "./buttonStyles";
+import styles from "./Button.module.css";
 
 export { buttonClassName, buttonIconSize } from "./buttonStyles";
 export type {
@@ -81,7 +80,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   }, [showCheck]);
 
   const spinner = loading ? (
-    <Icon icon={Loader2} size={iconSize} className="animate-spin" aria-hidden="true" />
+    <Icon icon={Loader2} size={iconSize} className="sk-spin" aria-hidden="true" />
   ) : showCheck ? (
     // Lucide's Check, drawn: pathLength 1 lets sk-draw-check-immediate dash the whole stroke.
     <svg
@@ -94,7 +93,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="shrink-0"
+      className={styles.check}
     >
       <path d="M20 6 9 17l-5-5" pathLength={1} className="sk-draw-check-immediate" />
     </svg>
@@ -115,12 +114,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         <>
           {spinner}
           {/* The icon gives way to the spinner or check; what it carried stays for assistive tech. */}
-          <span className="sr-only">{children}</span>
+          <span className="sk-sr-only">{children}</span>
         </>
       ) : (
         <>
           {spinner ?? (leftIcon ? <Icon icon={leftIcon} size={iconSize} /> : null)}
-          {hasLabel ? <span className="px-0.5">{children}</span> : null}
+          {hasLabel ? <span className={styles.label}>{children}</span> : null}
           {iconOnly ? children : null}
           {rightIcon ? <Icon icon={rightIcon} size={iconSize} /> : null}
         </>
@@ -133,7 +132,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   return (
     <>
       {button}
-      <span className="sr-only" aria-live="polite">
+      <span className="sk-sr-only" aria-live="polite">
         {showCheck ? "Done" : ""}
       </span>
     </>

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn, iconStroke } from "@/lib/utils";
+import styles from "./SidebarToggle.module.css";
 
 export interface SidebarToggleProps {
   expanded: boolean;
@@ -41,10 +42,7 @@ export function SidebarToggle({ expanded, onToggle, className }: SidebarTogglePr
       onClick={onToggle}
       aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
       aria-expanded={expanded}
-      className={cn(
-        "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-inner text-sko-border-default transition-colors duration-short4 hover:bg-sko-bg-subtle",
-        className,
-      )}
+      className={cn(styles.toggle, className)}
     >
       <SidebarToggleGlyph expanded={expanded} />
     </button>

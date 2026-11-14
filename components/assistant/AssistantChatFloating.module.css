@@ -1,0 +1,42 @@
+/* Where the window goes (it takes these as its className). A phone: a full-screen sheet. The panel
+   layout: a 420 panel under the top bar's Assistant button, from the top. Otherwise a 380 card
+   above the launcher, growing out of the launcher's corner. */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+}
+.panel {
+  position: fixed;
+  z-index: 45;
+  width: 420px;
+  max-width: calc(100vw - 48px);
+  transform-origin: top;
+}
+.card {
+  position: fixed;
+  z-index: 45;
+  width: 380px;
+  max-width: calc(100vw - 48px);
+}
+.fromLeft {
+  transform-origin: bottom left;
+}
+.fromRight {
+  transform-origin: bottom right;
+}
+/* The launcher (it takes these as its className): fixed, one layer under the sheet on a phone
+   while the sheet is on screen. */
+.launcher {
+  position: fixed;
+}
+.underSheet {
+  z-index: 44;
+}
+.onTop {
+  z-index: 45;
+}
+.hiddenLauncher {
+  pointer-events: none;
+  opacity: 0;
+}

@@ -1,0 +1,14 @@
+/* Where the window goes (it takes these as its className). A phone: a full-screen sheet. Wider: a
+   420 panel hung under its opener, from the top (its top and left come inline). */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+}
+.panel {
+  position: fixed;
+  z-index: 45;
+  width: 420px;
+  max-width: calc(100vw - 48px);
+  transform-origin: top;
+}

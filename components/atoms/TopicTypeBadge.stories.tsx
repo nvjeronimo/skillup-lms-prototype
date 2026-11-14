@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TopicTypeBadge, ALL_TOPIC_TYPES } from "./TopicTypeBadge";
+import styles from "./TopicTypeBadge.stories.module.css";
 
 const meta: Meta<typeof TopicTypeBadge> = {
   title: "Atoms/Badge (Topic Types)",
@@ -19,7 +20,7 @@ export const Default: Story = {};
 
 export const AllTypes: Story = {
   render: () => (
-    <div className="flex max-w-xl flex-wrap gap-2">
+    <div className={styles.wrapRow}>
       {ALL_TOPIC_TYPES.map((t) => (
         <TopicTypeBadge key={t} type={t} />
       ))}

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { cn } from "@/lib/utils";
+import styles from "./ModuleInfo.module.css";
 
 export interface ModuleInfoProps {
   /** Module number eyebrow, e.g. "MODULE 01". */
@@ -33,8 +34,8 @@ export function ModuleInfo({
 }: ModuleInfoProps) {
   if (isCompleted && showTopicProgress) {
     return (
-      <span className={cn("flex items-center gap-2", className)}>
-        <span className="sk-text-label-small-medium text-sko-text-subtle">{label}</span>
+      <span className={cn(styles.row, className)}>
+        <span className={cn("sk-text-label-small-medium", styles.label)}>{label}</span>
         <Badge variant="soft" color="success">
           Completed
         </Badge>
@@ -44,14 +45,14 @@ export function ModuleInfo({
   return (
     // 18px row: pinned to the Overline height (label-small, 12/18 since the
     // no-text-below-12 decision) so the Caption separator dot centres inside it.
-    <span className={cn("flex h-[18px] items-center gap-2", className)}>
-      <span className="sk-text-label-small-medium text-sko-text-subtle">{label}</span>
+    <span className={cn(styles.row, styles.pinned, className)}>
+      <span className={cn("sk-text-label-small-medium", styles.label)}>{label}</span>
       {showTopicProgress ? (
         <>
-          <span className="sk-text-body-small-medium text-sko-text-disabled" aria-hidden>
+          <span className={cn("sk-text-body-small-medium", styles.separator)} aria-hidden>
             ·
           </span>
-          <span className="sk-text-label-small-medium text-sko-text-subtle">
+          <span className={cn("sk-text-label-small-medium", styles.label)}>
             {topicsCompleted} of {topicsTotal} topics
           </span>
         </>

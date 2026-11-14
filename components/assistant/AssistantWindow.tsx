@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import {
   ArrowDown,
@@ -26,6 +24,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { isNearEnd } from "@/lib/motion/scroll";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { cn, scrollBehavior } from "@/lib/utils";
+import styles from "./AssistantWindow.module.css";
 
 export interface AssistantWindowProps {
   id: string;
@@ -84,7 +83,7 @@ const AI_NOTICE = "AI-generated responses may contain errors. Do not write perso
 const SCRIPTED_CAPTION = "Prototype: scripted answer.";
 
 /* Who speaks, above each message (DS v1.2). */
-const WHO = "sk-text-body-small-regular uppercase text-sko-text-subtle";
+const WHO = cn("sk-text-body-small-regular", styles.who);
 
 /**
  * The assistant's chat: a floating card above its launcher, a full-screen sheet on a phone.
@@ -284,13 +283,9 @@ export function AssistantWindow({
         }
       }}
       className={cn(
-        "flex flex-col overflow-hidden bg-sko-bg-page",
-        modal
-          ? ""
-          : panel
-            ? "rounded-surface border-2 border-sko-border-primary-soft shadow-xl"
-            : "rounded-card border border-sko-border-subtle shadow-xl",
-        !open && "pointer-events-none",
+        styles.window,
+        modal ? "" : panel ? styles.panel : styles.floating,
+        !open && styles.closed,
         className,
       )}
     >
@@ -302,15 +297,15 @@ export function AssistantWindow({
         <header
           onPointerDown={drag.onPointerDown}
           className={cn(
-            "flex shrink-0 items-center justify-between gap-3 border-b border-sko-border-subtle px-5 py-3",
-            modal && "touch-none",
+            styles.panelHeader,
+            modal && styles.dragHandle,
           )}
         >
-          <h2 className="sk-text-title-medium-semibold inline-flex items-center gap-2 text-sko-text-default">
-            <AssistantGlyph size={20} className="text-sko-icon-primary" />
+          <h2 className={cn("sk-text-title-medium-semibold", styles.panelTitle)}>
+            <AssistantGlyph size={20} className={styles.headerGlyph} />
             Assistant
           </h2>
-          <div className="flex items-center gap-3">
+          <div className={styles.panelActions}>
             <Button
               hierarchy="secondary"
               size="sm"
@@ -324,7 +319,7 @@ export function AssistantWindow({
             >
               New chat
             </Button>
-            <span aria-hidden className="h-8 w-px bg-sko-border-subtle" />
+            <span aria-hidden className={styles.divider} />
             <Button
               hierarchy="secondary"
               size="sm"
@@ -340,21 +335,21 @@ export function AssistantWindow({
           data-theme="dark"
           onPointerDown={drag.onPointerDown}
           className={cn(
-            "flex shrink-0 flex-col gap-4 bg-sko-bg-subtle p-4 md:p-5",
-            modal && "touch-none",
+            styles.bandHeader,
+            modal && styles.dragHandle,
           )}
         >
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="sk-text-body-large-medium inline-flex items-center gap-3 text-sko-text-default">
+          <div className={styles.bandRow}>
+            <h2 className={cn("sk-text-body-large-medium", styles.bandTitle)}>
               <span
                 aria-hidden
-                className="inline-flex size-10 items-center justify-center rounded-control bg-sko-bg-primary-soft"
+                className={styles.bandMark}
               >
-                <AssistantGlyph size={20} className="text-sko-icon-primary" />
+                <AssistantGlyph size={20} className={styles.headerGlyph} />
               </span>
-              <span className={cn(greet && "sr-only")}>SkillUp Assistant</span>
+              <span className={cn(greet && "sk-sr-only")}>SkillUp Assistant</span>
             </h2>
-            <div className="flex items-center gap-2">
+            <div className={styles.bandActions}>
               {messages.length && !showSteps ? (
                 <Button
                   hierarchy="secondary"
@@ -379,7 +374,7 @@ export function AssistantWindow({
             </div>
           </div>
           {greet ? (
-            <p className="sk-text-headline-small-semibold text-sko-text-default" aria-hidden>
+            <p className={cn("sk-text-headline-small-semibold", styles.textDefault)} aria-hidden>
               Hey {firstName}
               <br />
               How can we help?
@@ -389,7 +384,7 @@ export function AssistantWindow({
       )}
 
       {firstSteps ? (
-        <div className="px-5 pt-3">
+        <div className={styles.tabs}>
           <PlatformTabs
             tabs={VIEWS}
             value={view}
@@ -407,7 +402,7 @@ export function AssistantWindow({
           role="tabpanel"
           id={platformPanelId(tabsId, "first-steps")}
           aria-labelledby={platformTabId(tabsId, "first-steps")}
-          className="sk-scroll flex-1 overflow-y-auto p-5"
+          className={cn("sk-scroll", styles.stepsPanel)}
         >
           <FirstStepsView
             {...firstSteps}
@@ -426,16 +421,16 @@ export function AssistantWindow({
           role={firstSteps ? "tabpanel" : undefined}
           id={firstSteps ? platformPanelId(tabsId, "ask") : undefined}
           aria-labelledby={firstSteps ? platformTabId(tabsId, "ask") : undefined}
-          className="flex min-h-0 flex-1 flex-col"
+          className={styles.askPanel}
         >
-          <div className="relative flex min-h-0 flex-1 flex-col">
+          <div className={styles.logWrap}>
             <div
               ref={logRef}
               onScroll={onLogScroll}
               role="log"
               aria-live="off"
               aria-label="Conversation"
-              className="sk-scroll flex flex-1 flex-col gap-4 overflow-y-auto p-5"
+              className={cn("sk-scroll", styles.log)}
             >
               {empty.mounted ? (
                 <div
@@ -443,52 +438,52 @@ export function AssistantWindow({
                   aria-hidden={empty.state === "closed" || undefined}
                   {...inertProps(empty.state === "closed")}
                   onAnimationEnd={empty.onAnimationEnd}
-                  className="sk-animate-fade flex flex-col gap-4"
+                  className={cn("sk-animate-fade", styles.empty)}
                 >
                   {panel ? (
-                    <div className="flex flex-col gap-6 pt-2">
-                      <div className="flex flex-col gap-1">
+                    <div className={styles.panelIntro}>
+                      <div className={styles.greeting}>
                         {/* No icon before the greeting (Nelson, 27 Oct 2026). */}
-                        <p className="sk-text-headline-small-semibold text-sko-text-default">
+                        <p className={cn("sk-text-headline-small-semibold", styles.textDefault)}>
                           Hi {firstName}!
                         </p>
-                        <p className="sk-text-title-large-regular text-sko-text-muted">
+                        <p className={cn("sk-text-title-large-regular", styles.textMuted)}>
                           Explore a topic or chat below
                         </p>
                       </div>
                       {next ? <NextStepCard text={next.text} action={next.action} /> : null}
                       {topic ? (
-                        <div className="flex flex-col gap-2">
+                        <div className={styles.topicView}>
                           <button
                             type="button"
                             onClick={() => setTopicId(null)}
                             aria-label={`${topic.label}: back to the topics`}
-                            className="inline-flex min-h-11 items-center gap-3 self-start rounded-control pr-3 text-left transition-colors hover:bg-sko-bg-hover"
+                            className={styles.back}
                           >
                             <Icon
                               icon={ChevronLeft}
                               size={20}
-                              className="text-sko-icon-subtle"
+                              className={styles.chevron}
                               aria-hidden
                             />
                             <span
                               aria-hidden
-                              className="inline-flex size-10 items-center justify-center rounded-pill bg-sko-bg-primary-soft"
+                              className={styles.topicIcon}
                             >
-                              <Icon icon={topic.icon} size={20} className="text-sko-icon-primary" />
+                              <Icon icon={topic.icon} size={20} className={styles.iconPrimary} />
                             </span>
-                            <span className="sk-text-body-large-medium text-sko-text-default">
+                            <span className={cn("sk-text-body-large-medium", styles.textDefault)}>
                               {topic.label}
                             </span>
                           </button>
-                          <ul className="flex flex-col divide-y divide-sko-border-subtle">
+                          <ul className={styles.questions}>
                             {topic.questions.map((question) => (
                               <li key={question}>
                                 <button
                                   type="button"
                                   onClick={() => send(question)}
                                   disabled={answering}
-                                  className="sk-text-body-large-regular flex min-h-12 w-full items-center px-4 py-3 text-left text-sko-text-default transition-colors hover:bg-sko-bg-hover"
+                                  className={cn("sk-text-body-large-regular", styles.question)}
                                 >
                                   {question}
                                 </button>
@@ -497,27 +492,27 @@ export function AssistantWindow({
                           </ul>
                         </div>
                       ) : (
-                        <ul className="flex flex-col gap-1">
+                        <ul className={styles.topics}>
                           {topics.map((t) => (
                             <li key={t.id}>
                               <button
                                 type="button"
                                 onClick={() => setTopicId(t.id)}
-                                className="flex min-h-12 w-full items-center gap-3 rounded-control px-2 py-1.5 text-left transition-colors hover:bg-sko-bg-hover"
+                                className={styles.topic}
                               >
                                 <span
                                   aria-hidden
-                                  className="inline-flex size-10 items-center justify-center rounded-pill bg-sko-bg-primary-soft"
+                                  className={styles.topicIcon}
                                 >
-                                  <Icon icon={t.icon} size={20} className="text-sko-icon-primary" />
+                                  <Icon icon={t.icon} size={20} className={styles.iconPrimary} />
                                 </span>
-                                <span className="sk-text-body-large-medium flex-1 text-sko-text-default">
+                                <span className={cn("sk-text-body-large-medium", styles.topicLabel)}>
                                   {t.label}
                                 </span>
                                 <Icon
                                   icon={ChevronRight}
                                   size={20}
-                                  className="text-sko-icon-subtle"
+                                  className={styles.chevron}
                                   aria-hidden
                                 />
                               </button>
@@ -529,17 +524,17 @@ export function AssistantWindow({
                   ) : (
                     <>
                       {next ? <NextStepCard text={next.text} action={next.action} /> : null}
-                      <p className="sk-text-body-medium-regular text-sko-text-muted">
+                      <p className={cn("sk-text-body-medium-regular", styles.textMuted)}>
                         Ask me about the platform or your courses.
                       </p>
-                      <ul className="flex flex-wrap gap-2">
+                      <ul className={styles.suggestions}>
                         {suggestions.map((s) => (
                           <li key={s}>
                             <button
                               type="button"
                               onClick={() => send(s)}
                               disabled={answering}
-                              className="sk-text-body-small-medium min-h-11 rounded-pill bg-sko-bg-primary-soft px-3 py-1.5 text-left text-sko-text-primary"
+                              className={cn("sk-text-body-small-medium", styles.suggestion)}
                             >
                               {s}
                             </button>
@@ -558,14 +553,14 @@ export function AssistantWindow({
                   <div
                     key={m.id}
                     className={cn(
-                      "flex max-w-[85%] flex-col items-end gap-1 self-end",
+                      styles.mine,
                       arrived(m.id) && "sk-animate-rise sk-enter-only",
                     )}
                   >
                     <span className={WHO}>
-                      Me<span className="sr-only">:</span>
+                      Me<span className="sk-sr-only">:</span>
                     </span>
-                    <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary-soft px-4 py-3 text-sko-text-default">
+                    <p className={cn("sk-text-body-medium-regular", styles.mineBubble)}>
                       {m.text}
                     </p>
                   </div>
@@ -573,21 +568,21 @@ export function AssistantWindow({
                   <div
                     key={m.id}
                     className={cn(
-                      "flex max-w-[92%] flex-col gap-3 self-start",
+                      styles.answer,
                       arrived(m.id) && !streamedIds.has(m.id) && "sk-animate-rise sk-enter-only",
                     )}
                   >
-                    <div className="flex flex-col gap-1">
+                    <div className={styles.answerText}>
                       <span className={WHO}>
-                        Assistant<span className="sr-only">:</span>
+                        Assistant<span className="sk-sr-only">:</span>
                       </span>
                       {/* DS v1.2: the answer is on bg/primary, in text/on-primary. */}
-                      <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
+                      <p className={cn("sk-text-body-medium-regular", styles.answerBubble)}>
                         {m.text}
                       </p>
                     </div>
                     {m.actions?.length ? (
-                      <ul className="flex flex-col items-start gap-2">
+                      <ul className={styles.actions}>
                         {m.actions.map((a, i) => (
                           <li
                             key={a.id}
@@ -609,7 +604,7 @@ export function AssistantWindow({
                               href={a.href}
                               hierarchy="secondary"
                               size="sm"
-                              className="!h-auto min-h-9 py-1.5"
+                              className={styles.actionButton}
                             >
                               {a.label}
                             </ButtonLink>
@@ -620,7 +615,7 @@ export function AssistantWindow({
                     {/* The DS moved the AI notice under the input (Copy row). A scripted answer keeps
                   its own line: a test participant must not take it for the model. */}
                     {m.source !== "model" ? (
-                      <p className="sk-text-body-small-regular text-sko-text-subtle">
+                      <p className={cn("sk-text-body-small-regular", styles.textSubtle)}>
                         {SCRIPTED_CAPTION}
                       </p>
                     ) : null}
@@ -631,11 +626,11 @@ export function AssistantWindow({
               {/* The answering bubble: mounted once per answer, it keeps its element while the
             streamed text grows into it (the text itself is never animated). */}
               {answering ? (
-                <div className="sk-animate-rise sk-enter-only flex max-w-[92%] flex-col gap-1 self-start">
+                <div className={cn("sk-animate-rise sk-enter-only", styles.answering)}>
                   <span aria-hidden className={WHO}>
                     Assistant
                   </span>
-                  <p className="sk-text-body-medium-regular whitespace-pre-line rounded-control bg-sko-bg-primary px-4 py-3 text-sko-text-on-primary">
+                  <p className={cn("sk-text-body-medium-regular", styles.answerBubble)}>
                     {streaming ? (
                       streaming
                     ) : (
@@ -652,12 +647,12 @@ export function AssistantWindow({
               <div ref={endRef} />
             </div>
             {pill ? (
-              <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
+              <div className={styles.pillBar}>
                 <Button
                   hierarchy="secondary"
                   size="sm"
                   leftIcon={ArrowDown}
-                  className="sk-animate-rise sk-enter-only pointer-events-auto shadow-md"
+                  className={cn("sk-animate-rise sk-enter-only", styles.pill)}
                   onClick={() => {
                     following.current = true;
                     setPill(false);
@@ -671,15 +666,15 @@ export function AssistantWindow({
           </div>
 
           {/* What a screen reader hears: the status, then the finished answer once. */}
-          <p aria-live="polite" className="sr-only">
+          <p aria-live="polite" className="sk-sr-only">
             {answering ? "Thinking…" : last?.role === "assistant" ? last.text : ""}
           </p>
 
           {panel ? (
             <>
-              <form onSubmit={submit} className="px-4 pb-4 pt-2">
-                <div className="flex h-12 items-center gap-2 rounded-pill border border-sko-border-subtle bg-sko-bg-page pl-5 pr-1.5 transition-colors focus-within:border-sko-border-primary">
-                  <label htmlFor={inputId} className="sr-only">
+              <form onSubmit={submit} className={styles.panelForm}>
+                <div className={styles.panelField}>
+                  <label htmlFor={inputId} className="sk-sr-only">
                     Your question
                   </label>
                   <input
@@ -690,19 +685,19 @@ export function AssistantWindow({
                     maxLength={MAX_QUESTION}
                     autoComplete="off"
                     placeholder="What can I help you with today?"
-                    className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus-visible:!shadow-none focus-visible:!outline-none"
+                    className={cn("sk-text-body-large-regular", styles.panelInput)}
                   />
                   <button
                     type="submit"
                     aria-label="Send"
                     disabled={answering || !draft.trim()}
-                    className="inline-flex size-9 shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover disabled:text-sko-icon-faint"
+                    className={styles.panelSend}
                   >
                     <Icon icon={Send} size={20} />
                   </button>
                 </div>
               </form>
-              <p className="sk-text-body-medium-regular border-t border-sko-border-subtle px-5 py-3 text-sko-text-subtle">
+              <p className={cn("sk-text-body-medium-regular", styles.panelNotice)}>
                 {AI_NOTICE}
               </p>
             </>
@@ -710,9 +705,9 @@ export function AssistantWindow({
             <>
               <form
                 onSubmit={submit}
-                className="flex items-center gap-2 border-t border-sko-border-subtle px-3 pb-2 pt-3"
+                className={styles.form}
               >
-                <label htmlFor={inputId} className="sr-only">
+                <label htmlFor={inputId} className="sk-sr-only">
                   Your question
                 </label>
                 <input
@@ -723,19 +718,19 @@ export function AssistantWindow({
                   maxLength={MAX_QUESTION}
                   autoComplete="off"
                   placeholder="Ask about the platform or your courses…"
-                  className="sk-text-body-medium-regular h-11 min-w-0 flex-1 rounded-control border border-sko-border-subtle bg-sko-bg-subtle px-4 text-sko-text-default outline-none transition-colors placeholder:text-sko-text-placeholder focus:border-sko-border-primary"
+                  className={cn("sk-text-body-medium-regular", styles.input)}
                 />
                 <button
                   type="submit"
                   aria-label="Send"
                   disabled={answering || !draft.trim()}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary text-sko-text-on-primary transition-colors hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover disabled:bg-sko-bg-muted disabled:text-sko-text-disabled"
+                  className={styles.send}
                 >
                   <Icon icon={Send} size={20} />
                 </button>
               </form>
               {/* DS Copy row (v1.2): the notice for every answer, under the input. */}
-              <p className="sk-text-body-medium-regular px-3 pb-3 text-sko-text-subtle">
+              <p className={cn("sk-text-body-medium-regular", styles.notice)}>
                 {AI_NOTICE}
               </p>
             </>
@@ -744,7 +739,7 @@ export function AssistantWindow({
       )}
 
       {/* A first step ticking, said once, whichever tab is shown. */}
-      <p aria-live="polite" className="sr-only">
+      <p aria-live="polite" className="sk-sr-only">
         {ticked}
       </p>
     </div>

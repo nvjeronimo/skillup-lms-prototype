@@ -1,0 +1,9 @@
+/* The window's size in the stories: the floating card, and a phone. */
+.card {
+  width: 380px;
+  height: 600px;
+}
+.phone {
+  width: 375px;
+  height: 640px;
+}

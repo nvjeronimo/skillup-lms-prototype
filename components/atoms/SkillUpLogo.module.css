@@ -1,0 +1,12 @@
+/* The SkillUp logos: two images swapped by [data-theme] (.sk-logo-light / .sk-logo-dark,
+   app/globals.css). The wrapper takes the caller's className (its height): :where(). */
+:where(.logo) {
+  display: inline-block;
+}
+.image {
+  height: 100%;
+  width: auto;
+}
+.light {
+  display: block;
+}

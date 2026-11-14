@@ -1,0 +1,35 @@
+/* LMS / Completion Status. The root takes the caller's className: resting rules in :where(). */
+:where(.status) {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+/* Done: bg/success circle + icon/on-success check. */
+:where(.done) {
+  background-color: var(--color-bg-success);
+  color: var(--color-icon-on-success);
+}
+/* Locked: bg/muted circle + icon/muted lock. */
+:where(.locked) {
+  background-color: var(--color-bg-muted);
+  color: var(--color-icon-muted);
+}
+/* In Progress: a 2px border/info ring with a half dot. */
+:where(.inProgress) {
+  border-width: 2px;
+  border-color: var(--color-border-info);
+}
+/* Pending: a 1.5px (Stroke/icon) border/default ring on an opaque bg/page disc. */
+:where(.pending) {
+  border-width: 1.5px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+.half {
+  width: 50%;
+  height: 50%;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-info);
+}

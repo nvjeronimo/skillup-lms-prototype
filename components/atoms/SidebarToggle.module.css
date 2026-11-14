@@ -1,0 +1,20 @@
+/* DS sidebar-expand-collapse-toggle: 24×24, radius inner, the glyph in border/default. The button
+   takes the caller's className: resting rules at 0,0,1 (:where + the element). */
+:where(.toggle):is(button) {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-inner);
+  color: var(--color-border-default);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+@media (hover: hover) and (pointer: fine) {
+  .toggle:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}

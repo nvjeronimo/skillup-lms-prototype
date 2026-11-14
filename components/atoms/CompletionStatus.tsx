@@ -2,6 +2,7 @@ import * as React from "react";
 import { Check, Lock } from "lucide-react";
 import { cn, iconStroke } from "@/lib/utils";
 import type { CompletionState } from "@/lib/types";
+import styles from "./CompletionStatus.module.css";
 
 export interface CompletionStatusProps {
   state: CompletionState;
@@ -22,7 +23,7 @@ export interface CompletionStatusProps {
  */
 export function CompletionStatus({ state, size = 18, animate = false, className }: CompletionStatusProps) {
   const stroke = iconStroke(size);
-  const base = "inline-flex items-center justify-center rounded-pill shrink-0";
+  const base = styles.status;
   const dims = { width: size, height: size };
 
   if (state === "Done") {
@@ -34,7 +35,7 @@ export function CompletionStatus({ state, size = 18, animate = false, className 
         aria-label="Completed"
         className={cn(
           base,
-          "bg-sko-bg-success text-sko-icon-on-success",
+          styles.done,
           animate && "sk-animate-fade sk-enter-only",
           className,
         )}
@@ -68,7 +69,7 @@ export function CompletionStatus({ state, size = 18, animate = false, className 
       <span
         role="img"
         aria-label="Locked"
-        className={cn(base, "bg-sko-bg-muted text-sko-icon-muted", className)}
+        className={cn(base, styles.locked, className)}
         style={dims}
       >
         <Lock size={Math.round(size * (13 / 18))} strokeWidth={stroke} />
@@ -86,14 +87,14 @@ export function CompletionStatus({ state, size = 18, animate = false, className 
       className={cn(
         base,
         state === "In Progress"
-          ? "border-2 border-sko-border-info"
-          : "border-[1.5px] border-sko-border-default bg-sko-bg-page",
+          ? styles.inProgress
+          : styles.pending,
         className,
       )}
       style={dims}
     >
       {state === "In Progress" ? (
-        <span className="h-1/2 w-1/2 rounded-pill bg-sko-bg-info" />
+        <span className={styles.half} />
       ) : null}
     </span>
   );

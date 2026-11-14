@@ -3,6 +3,7 @@
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import styles from "./Button.module.css";
 
 /** DS Button `Type` (Button / Link Button / Icon Button). */
 export type ButtonTone = "brand" | "destructive" | "success";
@@ -46,109 +47,62 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   done?: boolean;
 }
 
-/* Colour per Type × Hierarchy, as bound in Button 21851:7608 and Link Button 21851:7679.
-   Strokes are INSIDE in the DS, so they are drawn as inset rings and add no width.
-   Forced colors (Windows High Contrast) drops box-shadows, so every ring also gets a real
-   1px border there (the forced-colors:border* classes), or outline buttons lose their edge. */
-const PRIMARY_DISABLED = cn(
-  "disabled:bg-sko-bg-muted disabled:text-sko-text-disabled disabled:ring-1 disabled:ring-inset disabled:ring-sko-border-subtle",
-  "disabled:forced-colors:border disabled:forced-colors:border-solid disabled:forced-colors:border-sko-border-subtle",
-);
-const OUTLINE_DISABLED =
-  "disabled:ring-sko-border-subtle disabled:forced-colors:border-sko-border-subtle disabled:text-sko-text-disabled";
-const GHOST_DISABLED = "disabled:text-sko-text-disabled";
-/* Brand icons take icon/primary while enabled; disabled icons inherit the label colour.
-   `:not(:disabled)` rather than `:enabled`: the same on a <button>, and it also matches the
-   <a> of atoms/ButtonLink, which `:enabled` never does. */
-const BRAND_ICON = "[&:not(:disabled)_svg]:text-sko-icon-primary";
-/* Link Button (DS 15 Oct 2026): a 1px bottom stroke in every state, on the icon token of
-   its tone (border/disabled when Disabled); radius 0. Hover has no fill: the label and the
-   stroke darken (LINK_TONE). Focused: bg/faint and radius 6. */
-/* sk-link-button: under "larger targets" its 44 is a hit area around it (globals.css), not its
+/* Colour per Type × Hierarchy, as bound in Button 21851:7608 and Link Button 21851:7679: the
+   module classes of Button.module.css (which holds the rules and their notes). Strokes are
+   inset rings (`outline`) with a real border under forced colors (`forcedBorder`). */
+const PRIMARY_DISABLED = styles.primaryDisabled;
+const OUTLINE_DISABLED = styles.outlineDisabled;
+const GHOST_DISABLED = styles.ghostDisabled;
+/* Brand icons take icon/primary while enabled; disabled icons inherit the label colour. */
+const BRAND_ICON = styles.iconPrimary;
+/* Link Button: a 1px bottom stroke on the icon token of its tone; radius 0; focused bg/faint.
+   sk-link-button: under "larger targets" its 44 is a hit area around it (globals.css), not its
    height, so the line stays 4 under the label as in the DS (Nelson, 23 Oct 2026). */
-const LINK =
-  "sk-link-button border-b bg-transparent focus-visible:rounded-control focus-visible:bg-sko-bg-faint disabled:text-sko-text-disabled disabled:border-sko-border-disabled";
+const LINK = cn("sk-link-button", styles.link);
 const LINK_TONE = {
-  brand: "text-sko-text-primary border-sko-icon-primary hover:text-sko-text-on-primary-soft hover:border-sko-icon-default [&:not(:disabled):hover_svg]:text-sko-icon-default",
-  subtle: "text-sko-text-subtle border-sko-icon-subtle hover:text-sko-text-muted hover:border-sko-icon-muted",
-  destructive: "text-sko-text-error border-sko-icon-error hover:text-sko-text-accent-red hover:border-sko-icon-accent-red",
-  success: "text-sko-text-success border-sko-icon-success hover:text-sko-text-accent-green hover:border-sko-icon-accent-green",
+  brand: cn(styles.linkBrand, styles.iconDefaultOnHover),
+  subtle: styles.linkSubtle,
+  destructive: styles.linkDestructive,
+  success: styles.linkSuccess,
 };
 
 /* The outline buttons on hover: every type fills with its own soft colour and keeps its text
-   and icon colours (Nelson, 12 Oct 2026). The Icon Button does the same since that evening;
-   before, it hovered on a faint grey. Applied in buttonClassName, not in VARIANT: `cn` does
-   not merge Tailwind classes, so only one hover fill may be emitted. */
+   and icon colours (Nelson, 12 Oct 2026). The Icon Button does the same since that evening. */
 const OUTLINE_HOVER: Record<ButtonTone, string> = {
-  brand: "hover:bg-sko-bg-primary-soft",
-  destructive: "hover:bg-sko-bg-error-soft",
-  success: "hover:bg-sko-bg-success-soft",
+  brand: styles.hoverBrand,
+  destructive: styles.hoverDestructive,
+  success: styles.hoverSuccess,
 };
 /* The icons of the Destructive and Success outline buttons take their icon token, as the
-   Brand ones do (DS, 12 Oct 2026; they were bound to bg/error and bg/success). */
-const ERROR_ICON = "[&:not(:disabled)_svg]:text-sko-icon-error";
-const SUCCESS_ICON = "[&:not(:disabled)_svg]:text-sko-icon-success";
+   Brand ones do (DS, 12 Oct 2026). */
+const ERROR_ICON = styles.iconError;
+const SUCCESS_ICON = styles.iconSuccess;
+/* An inside stroke, and its real border under forced colors. */
+const OUTLINE = cn(styles.stroke, styles.forcedBorder);
 
 const VARIANT: Record<ButtonTone, Record<ButtonHierarchy, string>> = {
   brand: {
-    // Teal fill → yellow hover, dark text on hover (handoff brand-aware rule).
-    primary: cn(
-      "bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover",
-      PRIMARY_DISABLED,
-    ),
-    secondary: cn(
-      "bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary",
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-primary",
-      BRAND_ICON,
-      OUTLINE_DISABLED,
-    ),
-    tertiary: cn("bg-sko-bg-page text-sko-text-primary hover:bg-sko-bg-hover", BRAND_ICON, GHOST_DISABLED),
+    primary: cn(styles.brandPrimary, PRIMARY_DISABLED),
+    secondary: cn(styles.brandSecondary, OUTLINE, BRAND_ICON, OUTLINE_DISABLED),
+    tertiary: cn(styles.brandTertiary, BRAND_ICON, GHOST_DISABLED),
     link: cn(LINK, LINK_TONE.brand, BRAND_ICON),
     "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
   destructive: {
-    // Hover pending DS-03: the V2 hover binds border/error-soft as a fill; bg/error-soft is its role-correct match.
-    primary: cn(
-      "bg-sko-bg-error text-sko-text-on-error hover:bg-sko-bg-error-soft hover:text-sko-text-error",
-      PRIMARY_DISABLED,
-    ),
-    secondary: cn(
-      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error",
-      ERROR_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-error",
-      OUTLINE_DISABLED,
-    ),
+    primary: cn(styles.destructivePrimary, PRIMARY_DISABLED),
+    secondary: cn(styles.destructiveSecondary, OUTLINE, ERROR_ICON, OUTLINE_DISABLED),
     // No Destructive/Tertiary in the DS: falls back to Destructive/Secondary.
-    tertiary: cn(
-      "bg-sko-bg-page text-sko-text-error ring-1 ring-inset ring-sko-border-error",
-      ERROR_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-error",
-      OUTLINE_DISABLED,
-    ),
+    tertiary: cn(styles.destructiveSecondary, OUTLINE, ERROR_ICON, OUTLINE_DISABLED),
     link: cn(LINK, LINK_TONE.destructive),
     // The grey link exists only as Brand/Secondary.
     "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
   success: {
-    // Hover pending DS-03 (the V2 Success/Primary Hover is defective): bg/success-soft + text/success.
-    primary: cn(
-      "bg-sko-bg-success text-sko-text-on-success [&:not(:disabled)_svg]:text-sko-icon-on-success",
-      "hover:bg-sko-bg-success-soft hover:text-sko-text-success [&:not(:disabled):hover_svg]:text-sko-icon-success",
-      PRIMARY_DISABLED,
-    ),
-    secondary: cn(
-      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success",
-      SUCCESS_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-success",
-      OUTLINE_DISABLED,
-    ),
+    // The icon colours (on-success, success on hover) ride on successPrimary itself.
+    primary: cn(styles.successPrimary, PRIMARY_DISABLED),
+    secondary: cn(styles.successSecondary, OUTLINE, SUCCESS_ICON, OUTLINE_DISABLED),
     // No Success/Tertiary in the DS: falls back to Success/Secondary.
-    tertiary: cn(
-      "bg-sko-bg-page text-sko-text-success ring-1 ring-inset ring-sko-border-success",
-      SUCCESS_ICON,
-      "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-success",
-      OUTLINE_DISABLED,
-    ),
+    tertiary: cn(styles.successSecondary, OUTLINE, SUCCESS_ICON, OUTLINE_DISABLED),
     link: cn(LINK, LINK_TONE.success),
     "link-subtle": cn(LINK, LINK_TONE.subtle),
   },
@@ -162,16 +116,10 @@ const isLegacyStyle = (v: ButtonVariant | undefined): v is LegacyStyle =>
   v === "neutral" || v === "destructive" || v === "utility";
 const LEGACY: Record<LegacyStyle, string> = {
   // Neutral grey outline, e.g. the footer "Previous".
-  neutral: cn(
-    "bg-transparent text-sko-text-subtle ring-1 ring-inset ring-sko-border-default hover:bg-sko-bg-subtle disabled:opacity-50",
-    "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-default",
-  ),
+  neutral: cn(styles.legacyNeutral, OUTLINE),
   // Grey stroke, red label, error-soft hover, e.g. LiveControlBar "Leave session".
-  destructive: cn(
-    "bg-transparent text-sko-text-error ring-1 ring-inset ring-sko-border-default hover:bg-sko-bg-error-soft disabled:opacity-50",
-    "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-default",
-  ),
-  utility: "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-hover disabled:opacity-50",
+  destructive: cn(styles.legacyDestructive, OUTLINE),
+  utility: styles.legacyUtility,
 };
 
 const VARIANT_ALIAS: Record<Exclude<ButtonVariant, LegacyStyle>, { tone: ButtonTone; hierarchy: ButtonHierarchy }> = {
@@ -180,37 +128,35 @@ const VARIANT_ALIAS: Record<Exclude<ButtonVariant, LegacyStyle>, { tone: ButtonT
   tertiary: { tone: "brand", hierarchy: "tertiary" },
 };
 
-/* DS State=Focused: a 2px border/focus-gap, then a 2px ring in the tone colour. */
+/* DS State=Focused: a 2px border/focus-gap, then a 2px ring in the tone colour (--btn-ring). */
 const FOCUS_RING: Record<ButtonTone, string> = {
-  brand: "[--btn-ring:var(--color-border-primary)]",
-  destructive: "[--btn-ring:var(--color-border-error)]",
-  success: "[--btn-ring:var(--color-border-success)]",
+  brand: styles.ringBrand,
+  destructive: styles.ringDestructive,
+  success: styles.ringSuccess,
 };
 
-/* ._Button_Structure 21851:7567 and ._Icon Button_Structure 21851:7599.
-   The label sits in a 2px "Text padding" frame, rendered as the px-0.5 span below. */
+/* ._Button_Structure 21851:7567 and ._Icon Button_Structure 21851:7599 (sizes in the module).
+   The label sits in a 2px "Text padding" frame, rendered as the label span in Button. */
 const SIZE: Record<
   ButtonSize,
   { pad: string; text: string; icon: number; square: string; squareIcon: number; squareSvg: string }
 > = {
   // 36 tall, 8/12 padding, 4 gap, body-medium/Semibold, 20 icon.
-  sm: { pad: "h-9 px-3 gap-1", text: "sk-text-body-medium-semibold", icon: 20, square: "h-9 w-9", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
+  sm: { pad: styles.sm, text: "sk-text-body-medium-semibold", icon: 20, square: styles.squareSm, squareIcon: 20, squareSvg: styles.squareSvgSm },
   // 44 tall, 12/12 padding, 4 gap, body-medium/Semibold, 20 icon.
-  md: { pad: "h-11 px-3 gap-1", text: "sk-text-body-medium-semibold", icon: 20, square: "h-11 w-11", squareIcon: 20, squareSvg: "[&_svg]:size-5" },
+  md: { pad: styles.md, text: "sk-text-body-medium-semibold", icon: 20, square: styles.squareMd, squareIcon: 20, squareSvg: styles.squareSvgSm },
   // 48 tall, 12/16 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only).
-  lg: { pad: "h-12 px-4 gap-1.5", text: "sk-text-body-large-semibold", icon: 20, square: "h-12 w-12", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
+  lg: { pad: styles.lg, text: "sk-text-body-large-semibold", icon: 20, square: styles.squareLg, squareIcon: 24, squareSvg: styles.squareSvgLg },
   // 56 tall, 16/20 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only).
-  xl: { pad: "h-14 px-5 gap-1.5", text: "sk-text-body-large-semibold", icon: 20, square: "h-14 w-14", squareIcon: 24, squareSvg: "[&_svg]:size-6" },
+  xl: { pad: styles.xl, text: "sk-text-body-large-semibold", icon: 20, square: styles.squareXl, squareIcon: 24, squareSvg: styles.squareSvgLg },
 };
 
-/* ._Link Button_Structure 21851:7588: sm 26 (body-small), md 28, lg 32 (xl maps to lg).
-   4/2 padding, 4 gap, radius 0, 1px bottom stroke (the LINK border-b). The bottom padding
-   is 3px so the stroke keeps the 26/28/32 heights: 4 between the label and the line. */
+/* ._Link Button_Structure 21851:7588: sm 26 (body-small), md 28, lg 32 (xl maps to lg). */
 const LINK_SIZE: Record<ButtonSize, { pad: string; text: string; icon: number }> = {
-  sm: { pad: "h-[26px] px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-small-semibold", icon: 16 },
-  md: { pad: "h-7 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-medium-semibold", icon: 16 },
-  lg: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
-  xl: { pad: "h-8 px-0.5 pt-1 pb-[3px] gap-1", text: "sk-text-body-large-semibold", icon: 20 },
+  sm: { pad: styles.linkSm, text: "sk-text-body-small-semibold", icon: 16 },
+  md: { pad: styles.linkMd, text: "sk-text-body-medium-semibold", icon: 16 },
+  lg: { pad: styles.linkLg, text: "sk-text-body-large-semibold", icon: 20 },
+  xl: { pad: styles.linkLg, text: "sk-text-body-large-semibold", icon: 20 },
 };
 
 export interface ButtonStyleProps {
@@ -253,18 +199,18 @@ export function buttonClassName({
   const s = SIZE[size];
   const l = LINK_SIZE[size];
   return cn(
-    // Press: a .98 scale in short2 (motion-matrix §7.6). sk-press-scale pins it under reduced motion.
-    "sk-press-scale inline-flex items-center justify-center transition-[color,background-color,border-color,text-decoration-color,fill,stroke,transform] duration-short4 active:scale-[.98] active:duration-short2 disabled:pointer-events-none",
-    "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--btn-ring)]",
+    // Press: a .98 scale in short2 (motion-matrix §7.6). sk-press-scale marks the pressable.
+    "sk-press-scale",
+    styles.button,
     FOCUS_RING[legacy === "destructive" ? "destructive" : legacy ? "brand" : t],
     // sk-button: the Square corners experiment keeps the radius of every button.
-    isLink ? "rounded-none" : "sk-button rounded-control",
+    isLink ? styles.square : cn("sk-button", styles.cornered),
     iconOnly ? cn(s.square, s.squareSvg) : isLink ? l.pad : s.pad,
     isLink ? l.text : s.text,
     legacy ? LEGACY[legacy] : VARIANT[t][h],
     // Secondary, and the Destructive / Success Tertiary that fall back to it.
     !legacy && (h === "secondary" || (h === "tertiary" && t !== "brand")) && OUTLINE_HOVER[t],
-    loading && "pointer-events-none",
+    loading && styles.loading,
     className,
   );
 }

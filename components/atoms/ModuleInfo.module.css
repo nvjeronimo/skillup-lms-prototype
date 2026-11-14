@@ -1,0 +1,16 @@
+/* DS LMS / Module Info: one row, 8px gap. The root takes the caller's className: :where(). */
+:where(.row) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* 18px row: pinned to the Overline height so the Caption separator dot centres inside it. */
+:where(.pinned) {
+  height: 18px;
+}
+.label {
+  color: var(--color-text-subtle);
+}
+.separator {
+  color: var(--color-text-disabled);
+}

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ArrowRight, Plus, X } from "lucide-react";
 import { Button, type ButtonHierarchy, type ButtonTone } from "./Button";
+import styles from "./Button.stories.module.css";
 
 const meta: Meta<typeof Button> = {
   title: "Atoms/Button",
@@ -48,7 +49,7 @@ export const IconOnly: Story = {
 
 export const Sizes: Story = {
   render: (args) => (
-    <div className="flex items-center gap-3">
+    <div className={styles.row}>
       <Button {...args} size="sm">
         Small
       </Button>
@@ -84,9 +85,9 @@ const LINKS: Array<[ButtonTone, ButtonHierarchy]> = [
 
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className={styles.stack}>
       {[false, true].map((disabled) => (
-        <div key={String(disabled)} className="flex flex-wrap items-center gap-3">
+        <div key={String(disabled)} className={styles.wrapRow}>
           {COMBOS.map(([tone, hierarchy]) => (
             <Button
               key={`${tone}-${hierarchy}`}
@@ -100,14 +101,14 @@ export const AllVariants: Story = {
           ))}
         </div>
       ))}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className={styles.wrapRow}>
         {LINKS.map(([tone, hierarchy]) => (
           <Button key={`${tone}-${hierarchy}`} tone={tone} hierarchy={hierarchy} rightIcon={ArrowRight}>
             {`${tone} ${hierarchy}`}
           </Button>
         ))}
       </div>
-      <div className="flex flex-wrap items-center gap-3">
+      <div className={styles.wrapRow}>
         <Button variant="neutral">Neutral (legacy)</Button>
         <Button variant="destructive">Destructive (legacy)</Button>
         <Button variant="utility">Utility (legacy)</Button>
