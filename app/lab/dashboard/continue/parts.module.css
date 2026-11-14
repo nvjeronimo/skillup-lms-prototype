@@ -1,0 +1,97 @@
+/* Links styled as DS Button (Brand): Button renders a <button>, navigation needs <a>. */
+.primary,
+.secondary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.primary {
+  height: 48px;
+  gap: 6px;
+  padding-inline: 20px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.secondary {
+  gap: 4px;
+  padding-inline: 16px;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  /* The 1px inside stroke (a Tailwind ring), kept under the focus ring. */
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-primary), 0 0 #0000;
+}
+.text {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-primary);
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .primary:hover {
+    background: var(--color-bg-primary-hover);
+    color: var(--color-text-on-primary-hover);
+  }
+  .secondary:hover,
+  .text:hover {
+    background: var(--color-bg-faint);
+  }
+}
+.primary:focus-visible,
+.text:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 #0000,
+    0 0 #0000,
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--color-border-primary);
+}
+.secondary:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    inset 0 0 0 0 #fff,
+    inset 0 0 0 1px var(--color-border-primary),
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--color-border-primary);
+}
+@media (forced-colors: active) {
+  .secondary {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-border-primary);
+  }
+}
+
+/* Topic-count progress: the bar, then the visible "16 of 42 topics · 38%". */
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bar {
+  overflow: hidden;
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-track);
+}
+.barMd { height: 10px; }
+.barSm { height: 6px; }
+.fill {
+  height: 100%;
+  border-radius: var(--sk-radius-pill);
+}
+.fillDone { background: var(--color-bg-success); }
+.fillInfo { background: var(--color-bg-info); }
+.label { color: var(--color-text-muted); }

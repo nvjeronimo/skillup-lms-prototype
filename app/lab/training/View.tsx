@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { useSearchParams } from "@/lib/router";
@@ -9,6 +7,7 @@ import { MockTag } from "@/components/lab/MockTag";
 import { getPlan, type PlanDay, type TrainingPlan } from "@/lib/lab/training-plan";
 import { MOCK } from "@/lib/lab/dashboard-mock";
 import { cn } from "@/lib/utils";
+import styles from "./View.module.css";
 
 /**
  * Today, distilled: one session and one button; the week as seven marks; the next three things.
@@ -19,34 +18,34 @@ export function TrainingToday() {
   const plan = getPlan(params.get("persona"));
 
   return (
-    <main id="main" tabIndex={-1} className="mx-auto w-full max-w-[880px] flex-1 px-4 pb-16 pt-10 outline-none md:px-8 md:pt-16">
-      <h1 className="sr-only">Today</h1>
+    <main id="main" tabIndex={-1} className={styles.main}>
+      <h1 className="sk-sr-only">Today</h1>
 
       <section aria-labelledby="today-h">
         <p className="tb-body-s tb-c-ink2">Tuesday 30 September</p>
         {plan.today ? (
           <>
-            <h2 id="today-h" className="tb-display mt-3">
+            <h2 id="today-h" className={`tb-display ${styles.title}`}>
               {plan.today.title}
             </h2>
-            <p className="tb-body tb-c-ink2 mt-3">
+            <p className={`tb-body tb-c-ink2 ${styles.meta}`}>
               {plan.today.course} · {plan.today.kind} · {plan.today.minutes} min
             </p>
-            <Link href={plan.today.href} className="tb-btn tb-btn-primary mt-8 w-full sm:w-auto">
+            <Link href={plan.today.href} className={`tb-btn tb-btn-primary ${styles.start}`}>
               <Icon icon={Play} size={18} aria-hidden="true" />
               {plan.status.tone === "not-started" ? "Start your plan" : "Start session"}
             </Link>
           </>
         ) : (
-          <h2 id="today-h" className="tb-display mt-3">
+          <h2 id="today-h" className={`tb-display ${styles.title}`}>
             Rest day
           </h2>
         )}
         <StatusLine plan={plan} />
       </section>
 
-      <section aria-labelledby="week-h" className="tb-rule-t mt-12 pt-8">
-        <div className="flex items-baseline justify-between gap-4">
+      <section aria-labelledby="week-h" className={`tb-rule-t ${styles.week}`}>
+        <div className={styles.weekHead}>
           <h2 id="week-h" className="tb-h2">
             This week
           </h2>
@@ -56,16 +55,16 @@ export function TrainingToday() {
       </section>
 
       {plan.then.length > 0 ? (
-        <section aria-labelledby="next-h" className="tb-rule-t mt-10 pt-8">
+        <section aria-labelledby="next-h" className={`tb-rule-t ${styles.next}`}>
           <h2 id="next-h" className="tb-h2">
             Coming up
           </h2>
-          <ul className="mt-3">
+          <ul className={styles.nextList}>
             {plan.then.map((s) => (
-              <li key={s.id} className="tb-rule-b flex items-baseline gap-4 py-3 last:border-b-0">
-                <span className="tb-body-s tb-c-ink2 w-10 flex-none">{(s as typeof s & { day?: string }).day}</span>
-                <span className="min-w-0 flex-1">
-                  <span className="tb-body tb-strong block">{s.title}</span>
+              <li key={s.id} className={`tb-rule-b ${styles.nextItem}`}>
+                <span className={`tb-body-s tb-c-ink2 ${styles.nextDay}`}>{(s as typeof s & { day?: string }).day}</span>
+                <span className={styles.nextBody}>
+                  <span className={`tb-body tb-strong ${styles.nextTitle}`}>{s.title}</span>
                   <span className="tb-body-s tb-c-ink2">
                     {s.state === "live" ? (s.time === "Live now" ? "Live now" : `Live session · ${s.time}`) : `${s.kind} · ${s.minutes} min`}
                     {s.state === "moved" ? " · moved from last week" : ""}
@@ -77,7 +76,7 @@ export function TrainingToday() {
         </section>
       ) : null}
 
-      <div className="mt-12">
+      <div className={styles.mock}>
         <MockTag reason={`Week plan, sessions and dates — ${MOCK.pace}`} />
       </div>
     </main>
@@ -87,10 +86,10 @@ export function TrainingToday() {
 /** One sentence on how the plan stands. After a break, it says what moved and offers to change the days. */
 function StatusLine({ plan }: { plan: TrainingPlan }) {
   if (plan.status.tone !== "replanned" || !plan.replan) {
-    return <p className="tb-body tb-c-ink2 mt-8">{plan.status.line}</p>;
+    return <p className={`tb-body tb-c-ink2 ${styles.status}`}>{plan.status.line}</p>;
   }
   return (
-    <div className="mt-8">
+    <div className={styles.status}>
       <p className="tb-body tb-c-ink2">
         You were away for a while, so we moved {plan.replan.moved} sessions into this week. Nothing was dropped.
       </p>
@@ -114,26 +113,26 @@ const DAY_WORD: Record<DayState, string> = { done: "done", today: "today", plann
 /** Seven days, one mark each. The only lime on the page is today. */
 function WeekMarks({ days }: { days: PlanDay[] }) {
   return (
-    <ol className="mt-5 grid grid-cols-7 gap-1" aria-label="This week, day by day">
+    <ol className={styles.marks} aria-label="This week, day by day">
       {days.map((d) => {
         const st = dayState(d);
         const n = d.sessions.filter((x) => x.state !== "missed").length;
         return (
-          <li key={d.key} aria-current={d.isToday ? "date" : undefined} className="flex flex-col items-center gap-2">
+          <li key={d.key} aria-current={d.isToday ? "date" : undefined} className={styles.markDay}>
             <span className={cn("tb-body-s", d.isToday ? "tb-strong tb-c-ink" : "tb-c-ink2")}>{d.short}</span>
             <span
               aria-hidden
               className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full",
+                styles.mark,
                 st === "today" && "tb-bg-lime",
                 st === "done" && "tb-bg-ink",
                 st === "planned" && "tb-mark-plan",
               )}
             >
               {st === "done" ? <Icon icon={Check} size={18} aria-hidden="true" /> : null}
-              {st === "rest" ? <span className="h-1 w-1 rounded-full" style={{ background: "var(--tb-ink-3)" }} /> : null}
+              {st === "rest" ? <span className={styles.restDot} style={{ background: "var(--tb-ink-3)" }} /> : null}
             </span>
-            <span className="sr-only">
+            <span className="sk-sr-only">
               {d.date}, {DAY_WORD[st]}
               {st !== "rest" ? `, ${n} session${n === 1 ? "" : "s"}` : ""}
             </span>
@@ -163,11 +162,11 @@ function DayPicker() {
         Change days
       </button>
       {open ? (
-        <div id={panelId} className="tb-sheet mt-2 p-4">
+        <div id={panelId} className={`tb-sheet ${styles.picker}`}>
           <p className="tb-body-s tb-c-ink2" id={`${panelId}-l`}>
             Which days can you study this week?
           </p>
-          <ul className="mt-3 grid grid-cols-7 gap-1" aria-labelledby={`${panelId}-l`}>
+          <ul className={styles.pickDays} aria-labelledby={`${panelId}-l`}>
             {PICK_DAYS.map((d) => {
               const on = days.includes(d);
               return (
@@ -176,7 +175,7 @@ function DayPicker() {
                     type="button"
                     aria-pressed={on}
                     onClick={() => toggle(d)}
-                    className={cn("tb-label flex min-h-[44px] w-full items-center justify-center rounded-sm", on ? "tb-bg-ink" : "tb-mark-plan")}
+                    className={cn("tb-label", styles.pickDay, on ? "tb-bg-ink" : "tb-mark-plan")}
                   >
                     {d}
                   </button>
@@ -184,7 +183,7 @@ function DayPicker() {
               );
             })}
           </ul>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className={styles.pickActions}>
             <button
               type="button"
               disabled={picked.length === 0}

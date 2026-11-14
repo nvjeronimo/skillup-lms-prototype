@@ -1,0 +1,48 @@
+/* The Training Block · Plans: pick which plan to continue. */
+.main {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 880px;
+  flex: 1 1 0%;
+  padding: 32px 16px 64px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.list { margin-top: 16px; }
+.empty { margin-top: 24px; }
+.group { margin-top: 40px; }
+.single { margin-top: 24px; }
+.mock { margin-top: 40px; }
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-block: 20px;
+}
+.rowMain { min-width: 0; }
+.titleLink {
+  margin-block: -10px;
+  display: inline-block;
+  padding-block: 10px;
+}
+@media (hover: hover) {
+  .titleLink:hover { text-decoration-line: underline; }
+}
+.status { margin-top: 4px; }
+.action { flex: none; }
+
+@media (min-width: 640px) {
+  .row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+}
+@media (min-width: 768px) {
+  .main {
+    padding-inline: 32px;
+    padding-top: 48px;
+  }
+}

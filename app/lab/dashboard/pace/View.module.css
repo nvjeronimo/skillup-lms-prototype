@@ -1,0 +1,298 @@
+/* Direction B · Pace + this week. Phone first; tablet from 768, desktop from 1024. */
+.main {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1152px;
+  flex: 1 1 0%;
+  padding: 24px 16px;
+}
+
+/* Text roles: colour only; the DS type style sets the rest. */
+.heading { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+.lede { margin-top: 4px; color: var(--color-text-muted); }
+.stacked { margin-top: 4px; color: var(--color-text-default); }
+.gapNote { margin-top: 2px; color: var(--color-text-muted); }
+.emptyNote { margin-top: 8px; color: var(--color-text-muted); }
+.dueLate { color: var(--color-text-warning); }
+
+.card {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+}
+
+/* ── Pace panel ── */
+.panel { margin-top: 24px; }
+.panelCalm { border-color: var(--color-border-subtle); }
+.panelBehind { border-color: var(--color-border-warning-soft); }
+.panelGrid {
+  display: grid;
+  gap: 24px;
+}
+.panelMain {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 20px;
+}
+.paceHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.shrinkable { min-width: 0; }
+.circle {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.circleNotStarted { background: var(--color-bg-primary-soft); color: var(--color-icon-primary); }
+.circleOnTrack { background: var(--color-bg-success-soft); color: var(--color-icon-success); }
+.circleAhead { background: var(--color-bg-info-soft); color: var(--color-icon-info); }
+.circleBehind { background: var(--color-bg-warning-soft); color: var(--color-icon-warning); }
+.labelNotStarted { color: var(--color-text-primary); }
+.labelOnTrack { color: var(--color-text-success); }
+.labelAhead { color: var(--color-text-info); }
+.labelBehind { color: var(--color-text-warning); }
+.mockPanel { margin-top: 20px; }
+
+/* ── Up next ── */
+.upNext {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-subtle);
+  padding: 16px;
+}
+.topic {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fullWidth { width: 100%; }
+
+/* ── Catch-up plan ── */
+.catchUp {
+  border: 1px solid var(--color-border-warning-soft);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-warning-soft);
+  padding: 16px;
+}
+.steps {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mockStep { margin-top: 4px; }
+.textLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text-primary);
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
+}
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.stepNumber {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-page);
+  color: var(--color-text-warning);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-warning), 0 0 #0000;
+}
+.stepBody {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+
+/* ── This week ── */
+.section { margin-top: 40px; }
+.weekGrid {
+  margin-top: 12px;
+  display: grid;
+  gap: 16px;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dueList {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.dueList > :not([hidden]) ~ :not([hidden]),
+.courses > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 0;
+  border-color: var(--color-border-subtle);
+}
+.dueItem {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-block: 12px;
+}
+.dueItem:first-child { padding-top: 0; }
+.dueItem:last-child { padding-bottom: 0; }
+.dueOverdue {
+  margin-inline: -8px;
+  border-left-width: 4px;
+  border-color: var(--color-border-warning);
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-warning-soft);
+  padding-inline: 12px;
+}
+.dueOverdue:first-child { padding-top: 12px; }
+.dueOverdue:last-child { padding-bottom: 12px; }
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.dueCta {
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+.mockCard { margin-top: 16px; }
+
+.goalHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.goalBar { margin-top: 12px; }
+.bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-track);
+}
+.fill {
+  height: 100%;
+  border-radius: var(--sk-radius-pill);
+}
+.fillSuccess { background: var(--color-bg-success); }
+.fillInfo { background: var(--color-bg-info); }
+.daysLabel { margin-top: 12px; color: var(--color-text-subtle); }
+.days {
+  margin-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border-radius: var(--sk-radius-control);
+  padding-block: 6px;
+}
+.dayOn { background: var(--color-bg-success-soft); color: var(--color-text-success); }
+.dayOff { background: var(--color-bg-faint); color: var(--color-text-subtle); }
+.dayToday { box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-strong), 0 0 #0000; }
+.dayMark {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-strong);
+}
+.goalCta {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.liveList {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.liveItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.selfStart { align-self: flex-start; }
+
+/* ── Your courses ── */
+.courses {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+}
+.courseRow {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+/* ── Progress ── */
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.progressHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .main { padding: 32px; }
+  .card { padding: 24px; }
+  .dueItem {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .dueCta { align-self: center; }
+  .courseRow {
+    grid-template-columns: minmax(0, 1fr) 200px auto;
+    align-items: center;
+    gap: 24px;
+  }
+  .courseCta { justify-self: end; }
+}
+@media (min-width: 1024px) {
+  .panelGrid { grid-template-columns: minmax(0, 1fr) 340px; }
+  .weekGrid { grid-template-columns: minmax(0, 1fr) 380px; }
+}

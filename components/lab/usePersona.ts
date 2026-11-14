@@ -1,5 +1,3 @@
-"use client";
-
 import { useSearchParams } from "@/lib/router";
 import { getPersona, type Persona } from "@/lib/lab/dashboard-mock";
 

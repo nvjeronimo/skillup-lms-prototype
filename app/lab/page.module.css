@@ -1,0 +1,60 @@
+.main {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 896px;
+  flex: 1 1 0%;
+  padding: 16px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.lede {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+}
+.section {
+  margin-top: 32px;
+  color: var(--color-text-default);
+}
+.list {
+  margin-top: 12px;
+  display: grid;
+  gap: 12px;
+}
+.card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .card:hover {
+    border-color: var(--color-border-primary);
+  }
+}
+.name {
+  color: var(--color-text-default);
+}
+.hero {
+  color: var(--color-text-muted);
+}
+.serves {
+  color: var(--color-text-subtle);
+}
+@media (min-width: 768px) {
+  .main {
+    padding: 32px;
+  }
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

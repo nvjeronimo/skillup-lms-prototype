@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { ArrowRight, Award, Check, CheckCircle2, Circle, Clock, Download, Hourglass, Lock, PlayCircle } from "lucide-react";
@@ -13,6 +11,7 @@ import { MockTag } from "@/components/lab/MockTag";
 import { usePersona } from "@/components/lab/usePersona";
 import { nextAction, type Enrolment, type EnrolmentStatus } from "@/lib/lab/dashboard-mock";
 import type { TopicType } from "@/lib/types";
+import styles from "./View.module.css";
 
 /* ── Helpers ───────────────────────────────────────────────────────────────────────── */
 
@@ -56,17 +55,12 @@ function activityLine(e: Enrolment): string {
   return `Last activity: ${e.lastActive.charAt(0).toLowerCase()}${e.lastActive.slice(1)}`;
 }
 
-const FOCUS =
-  "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]";
-
 /** A link dressed as DS Button Brand (md, 44px). Button renders a <button>, so links get this. */
 function linkButton(hierarchy: "primary" | "secondary") {
   return cn(
-    "sk-text-body-medium-semibold inline-flex h-11 shrink-0 items-center justify-center gap-1 rounded-control px-3 transition-colors duration-short4",
-    FOCUS,
-    hierarchy === "primary"
-      ? "bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
-      : "bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary hover:bg-sko-bg-faint forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-primary",
+    "sk-text-body-medium-semibold",
+    styles.linkButton,
+    hierarchy === "primary" ? styles.linkPrimary : styles.linkSecondary,
   );
 }
 
@@ -78,34 +72,34 @@ function PickUp({ e }: { e: Enrolment }) {
   return (
     <section
       aria-labelledby="pickup-h"
-      className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 shadow-sk-card md:flex-row md:items-center md:gap-6"
+      className={styles.pickUp}
     >
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <h2 id="pickup-h" className="sk-text-body-small-semibold uppercase tracking-wide text-sko-text-subtle">
+      <div className={styles.pickUpMain}>
+        <h2 id="pickup-h" className={`sk-text-body-small-semibold ${styles.eyebrow}`}>
           {starting ? "Start here" : "Pick up"}
         </h2>
-        <p className="sk-text-body-large-semibold text-sko-text-default">{e.title}</p>
+        <p className={`sk-text-body-large-semibold ${styles.heading}`}>{e.title}</p>
         {e.nextTopic ? (
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="sk-text-body-medium-regular text-sko-text-muted">{starting ? "First topic:" : "Next:"}</span>
+          <p className={styles.nextLine}>
+            <span className={`sk-text-body-medium-regular ${styles.muted}`}>{starting ? "First topic:" : "Next:"}</span>
             <TopicTypeBadge type={e.nextTopic.type as TopicType} />
-            <span className="sk-text-body-medium-medium min-w-0 text-sko-text-default">{e.nextTopic.title}</span>
+            <span className={`sk-text-body-medium-medium ${styles.nextTitle}`}>{e.nextTopic.title}</span>
           </p>
         ) : null}
         {stale ? (
-          <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-warning">
-            <Icon icon={Clock} size={16} className="shrink-0 text-sko-icon-warning" aria-hidden="true" />
+          <p className={`sk-text-body-medium-medium ${styles.iconLine} ${styles.warning}`}>
+            <Icon icon={Clock} size={16} className={`${styles.lineIcon} ${styles.iconWarning}`} aria-hidden="true" />
             Last activity {e.lastActive} — pick up with one topic.
           </p>
         ) : !starting ? (
-          <p className="sk-text-body-medium-regular text-sko-text-subtle">{activityLine(e)}</p>
+          <p className={`sk-text-body-medium-regular ${styles.subtle}`}>{activityLine(e)}</p>
         ) : null}
       </div>
       {e.nextTopic ? (
-        <Link href={e.nextTopic.href} className={cn(linkButton("primary"), "self-start md:self-auto")}>
-          <span className="px-0.5">{starting ? "Start course" : "Continue"}</span>
+        <Link href={e.nextTopic.href} className={cn(linkButton("primary"), styles.pickUpCta)}>
+          <span className={styles.label}>{starting ? "Start course" : "Continue"}</span>
           <Icon icon={ArrowRight} size={20} aria-hidden="true" />
-          <span className="sr-only">: {e.title}</span>
+          <span className="sk-sr-only">: {e.title}</span>
         </Link>
       ) : null}
     </section>
@@ -125,11 +119,11 @@ function Summary({ enrolments }: { enrolments: Enrolment[] }) {
   // Nothing begun yet: a sentence instead of a row of zeros.
   if (inProgress === 0 && completed === 0) {
     return (
-      <section aria-labelledby="summary-h" className="flex flex-col gap-1">
-        <h2 id="summary-h" className="sr-only">
+      <section aria-labelledby="summary-h" className={styles.stack}>
+        <h2 id="summary-h" className="sk-sr-only">
           Where you stand
         </h2>
-        <p className="sk-text-body-large-regular text-sko-text-muted">
+        <p className={`sk-text-body-large-regular ${styles.muted}`}>
           You have {notStarted === 1 ? "one course" : `${notStarted} courses`} ready to start, and
           nothing here is timed — begin with one topic whenever you are ready.
         </p>
@@ -144,22 +138,22 @@ function Summary({ enrolments }: { enrolments: Enrolment[] }) {
   ];
   return (
     <section aria-labelledby="summary-h">
-      <h2 id="summary-h" className="sr-only">
+      <h2 id="summary-h" className="sk-sr-only">
         Where you stand
       </h2>
-      <dl className="flex flex-wrap gap-x-8 gap-y-3">
+      <dl className={styles.summary}>
         {items.map((it) => (
-          <div key={it.label} className="flex flex-col-reverse">
-            <dt className="sk-text-body-medium-regular text-sko-text-muted">
+          <div key={it.label} className={styles.figure}>
+            <dt className={`sk-text-body-medium-regular ${styles.muted}`}>
               {it.label}
-              {it.note ? <span className="text-sko-text-subtle"> · {it.note}</span> : null}
+              {it.note ? <span className={styles.subtle}> · {it.note}</span> : null}
             </dt>
-            <dd className="sk-text-headline-small-semibold text-sko-text-default">{it.value}</dd>
+            <dd className={`sk-text-headline-small-semibold ${styles.heading}`}>{it.value}</dd>
           </div>
         ))}
-        <div className="flex flex-col-reverse">
-          <dt className="sk-text-body-medium-regular text-sko-text-muted">Enrolled</dt>
-          <dd className="sk-text-headline-small-semibold text-sko-text-subtle">{enrolments.length}</dd>
+        <div className={styles.figure}>
+          <dt className={`sk-text-body-medium-regular ${styles.muted}`}>Enrolled</dt>
+          <dd className={`sk-text-headline-small-semibold ${styles.subtle}`}>{enrolments.length}</dd>
         </div>
       </dl>
     </section>
@@ -172,28 +166,28 @@ function CertLine({ e }: { e: Enrolment }) {
   switch (e.cert) {
     case "downloadable":
       return (
-        <Button hierarchy="secondary" size="md" leftIcon={Download} className="self-start">
-          Download certificate<span className="sr-only">: {e.title}</span>
+        <Button hierarchy="secondary" size="md" leftIcon={Download} className={styles.selfStart}>
+          Download certificate<span className="sk-sr-only">: {e.title}</span>
         </Button>
       );
     case "generating":
       return (
-        <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-default">
-          <Icon icon={Hourglass} size={16} className="shrink-0 text-sko-icon-primary" aria-hidden="true" />
+        <p className={`sk-text-body-medium-medium ${styles.iconLine} ${styles.heading}`}>
+          <Icon icon={Hourglass} size={16} className={`${styles.lineIcon} ${styles.iconPrimary}`} aria-hidden="true" />
           Certificate being prepared
         </p>
       );
     case "audit_passing":
       return (
-        <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-success">
-          <Icon icon={Award} size={16} className="shrink-0 text-sko-icon-success" aria-hidden="true" />
+        <p className={`sk-text-body-medium-medium ${styles.iconLine} ${styles.success}`}>
+          <Icon icon={Award} size={16} className={`${styles.lineIcon} ${styles.iconSuccess}`} aria-hidden="true" />
           Passing — finish to earn it
         </p>
       );
     default:
       return (
-        <p className="sk-text-body-medium-regular flex items-center gap-1.5 text-sko-text-subtle">
-          <Icon icon={Award} size={16} className="shrink-0 text-sko-icon-muted" aria-hidden="true" />
+        <p className={`sk-text-body-medium-regular ${styles.iconLine} ${styles.subtle}`}>
+          <Icon icon={Award} size={16} className={`${styles.lineIcon} ${styles.iconMuted}`} aria-hidden="true" />
           Certificate on completion
         </p>
       );
@@ -207,34 +201,34 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
   const headingId = `card-${e.id}`;
 
   return (
-    <li className="flex">
+    <li className={styles.cardItem}>
       <article
         aria-labelledby={headingId}
-        className="flex w-full flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 shadow-sk-card"
+        className={styles.card}
       >
-        <div className="flex flex-col items-start gap-2">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className={styles.cardHead}>
+          <div className={styles.badges}>
             <Badge color={s.color} variant="soft" leftIcon={s.icon}>
               {s.label}
             </Badge>
             {e.program ? (
-              <span className="sk-text-body-small-medium text-sko-text-subtle">Program · {e.program.value}</span>
+              <span className={`sk-text-body-small-medium ${styles.subtle}`}>Program · {e.program.value}</span>
             ) : null}
           </div>
           {e.program?.mock ? <MockTag reason={e.program.mock} /> : null}
-          <h3 id={headingId} className="sk-text-body-large-semibold text-sko-text-default">
+          <h3 id={headingId} className={`sk-text-body-large-semibold ${styles.heading}`}>
             {e.title}
           </h3>
-          <p className="sk-text-body-small-regular text-sko-text-subtle">
+          <p className={`sk-text-body-small-regular ${styles.subtle}`}>
             {e.provider} · {e.selfPaced ? "Self-paced" : "Instructor-paced"}
           </p>
         </div>
 
         {showProgress ? (
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="sk-text-body-medium-semibold text-sko-text-default">{e.pct}% complete</span>
-              <span className="sk-text-body-small-regular text-sko-text-subtle">
+          <div className={styles.progress}>
+            <div className={styles.progressHead}>
+              <span className={`sk-text-body-medium-semibold ${styles.heading}`}>{e.pct}% complete</span>
+              <span className={`sk-text-body-small-regular ${styles.subtle}`}>
                 {e.topicsDone} of {e.topicsTotal} topics
               </span>
             </div>
@@ -245,45 +239,45 @@ function EnrolmentCard({ e }: { e: Enrolment }) {
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuetext={`${e.pct}% complete, ${e.topicsDone} of ${e.topicsTotal} topics`}
-              className="h-2 overflow-hidden rounded-pill bg-sko-bg-track"
+              className={styles.bar}
             >
-              <div className={cn("h-full rounded-pill", e.pct >= 100 ? "bg-sko-bg-success" : "bg-sko-bg-info")} style={{ width: `${e.pct}%` }} />
+              <div className={cn(styles.fill, e.pct >= 100 ? styles.fillDone : styles.fillInfo)} style={{ width: `${e.pct}%` }} />
             </div>
           </div>
         ) : null}
 
         {e.status === "locked" && e.lockedBy ? (
-          <div className="flex items-start gap-2 rounded-control bg-sko-bg-subtle px-3 py-2">
-            <Icon icon={Lock} size={16} className="mt-0.5 shrink-0 text-sko-icon-muted" aria-hidden="true" />
-            <p className="sk-text-body-medium-regular text-sko-text-muted">
-              <span className="sk-text-body-medium-semibold text-sko-text-default">Unlocks after {e.lockedBy}.</span> Finish that
+          <div className={styles.locked}>
+            <Icon icon={Lock} size={16} className={styles.lockIcon} aria-hidden="true" />
+            <p className={`sk-text-body-medium-regular ${styles.muted}`}>
+              <span className={`sk-text-body-medium-semibold ${styles.heading}`}>Unlocks after {e.lockedBy}.</span> Finish that
               course and this one opens.
             </p>
           </div>
         ) : e.nextTopic && e.status !== "completed" ? (
-          <div className="flex min-w-0 flex-col items-start gap-1 rounded-control bg-sko-bg-subtle px-3 py-2">
-            <span className="sk-text-body-small-semibold text-sko-text-subtle">
+          <div className={styles.upNext}>
+            <span className={`sk-text-body-small-semibold ${styles.subtle}`}>
               {e.status === "not-started" ? "First topic" : "Up next"}
             </span>
-            <span className="sk-text-body-medium-medium w-full text-sko-text-default">{e.nextTopic.title}</span>
+            <span className={`sk-text-body-medium-medium ${styles.upNextTitle}`}>{e.nextTopic.title}</span>
             <TopicTypeBadge type={e.nextTopic.type as TopicType} />
           </div>
         ) : null}
 
-        <div className="mt-auto flex flex-col gap-3">
+        <div className={styles.cardFoot}>
           {stale ? (
-            <p className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-warning">
-              <Icon icon={Clock} size={16} className="shrink-0 text-sko-icon-warning" aria-hidden="true" />
+            <p className={`sk-text-body-medium-medium ${styles.iconLine} ${styles.warning}`}>
+              <Icon icon={Clock} size={16} className={`${styles.lineIcon} ${styles.iconWarning}`} aria-hidden="true" />
               {activityLine(e)}
             </p>
           ) : e.status !== "locked" ? (
-            <p className="sk-text-body-small-regular text-sko-text-subtle">{activityLine(e)}</p>
+            <p className={`sk-text-body-small-regular ${styles.subtle}`}>{activityLine(e)}</p>
           ) : null}
           <CertLine e={e} />
           {e.nextTopic && (e.status === "in-progress" || e.status === "not-started") ? (
-            <Link href={e.nextTopic.href} className={cn(linkButton("secondary"), "self-start")}>
-              <span className="px-0.5">{e.status === "not-started" ? "Start course" : "Continue"}</span>
-              <span className="sr-only">: {e.title}</span>
+            <Link href={e.nextTopic.href} className={cn(linkButton("secondary"), styles.selfStart)}>
+              <span className={styles.label}>{e.status === "not-started" ? "Start course" : "Continue"}</span>
+              <span className="sk-sr-only">: {e.title}</span>
             </Link>
           ) : null}
         </div>
@@ -299,33 +293,33 @@ function Certificates({ enrolments }: { enrolments: Enrolment[] }) {
   const passing = enrolments.filter((e) => e.cert === "audit_passing");
 
   return (
-    <section aria-labelledby="certs-h" className="flex flex-col gap-4">
-      <h2 id="certs-h" className="sk-text-title-medium-semibold text-sko-text-default">
+    <section aria-labelledby="certs-h" className={styles.section}>
+      <h2 id="certs-h" className={`sk-text-title-medium-semibold ${styles.heading}`}>
         Certificates
       </h2>
       {earned.length === 0 ? (
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>
           No certificates yet. Each course gives you one when you pass it, and it will wait for you here.
         </p>
       ) : (
-        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+        <ul className={styles.certGrid}>
           {earned.map((e) => (
             <li
               key={e.id}
-              className="flex items-start gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4"
+              className={styles.cert}
             >
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
+              <span className={styles.certIcon}>
                 <Icon icon={Award} size={20} aria-hidden="true" />
               </span>
-              <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
-                <p className="sk-text-body-medium-semibold text-sko-text-default">{e.title}</p>
+              <div className={styles.certBody}>
+                <p className={`sk-text-body-medium-semibold ${styles.heading}`}>{e.title}</p>
                 {e.cert === "downloadable" ? (
                   <Button hierarchy="secondary" size="md" leftIcon={Download}>
-                    Download<span className="sr-only"> certificate: {e.title}</span>
+                    Download<span className="sk-sr-only"> certificate: {e.title}</span>
                   </Button>
                 ) : (
-                  <p className="sk-text-body-medium-regular flex items-center gap-1.5 text-sko-text-muted">
-                    <Icon icon={Hourglass} size={16} className="shrink-0 text-sko-icon-muted" aria-hidden="true" />
+                  <p className={`sk-text-body-medium-regular ${styles.iconLine} ${styles.muted}`}>
+                    <Icon icon={Hourglass} size={16} className={`${styles.lineIcon} ${styles.iconMuted}`} aria-hidden="true" />
                     Being prepared — it will be ready to download here.
                   </p>
                 )}
@@ -335,12 +329,12 @@ function Certificates({ enrolments }: { enrolments: Enrolment[] }) {
         </ul>
       )}
       {passing.length > 0 ? (
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>
           On the way:{" "}
           {passing.map((e, i) => (
             <React.Fragment key={e.id}>
               {i > 0 ? ", " : null}
-              <span className="sk-text-body-medium-semibold text-sko-text-default">{e.title}</span>
+              <span className={`sk-text-body-medium-semibold ${styles.heading}`}>{e.title}</span>
             </React.Fragment>
           ))}{" "}
           — you are passing; finish the course to earn the certificate.
@@ -374,12 +368,12 @@ export function View() {
   const nothingStarted = counts["in-progress"] === 0 && counts.completed === 0;
 
   return (
-    <main id="main" tabIndex={-1} className="outline-none mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 md:p-8 xl:max-w-[1264px]">
-      <header className="flex flex-col gap-1">
-        <h1 className="sk-text-headline-medium-semibold text-sko-text-default">
+    <main id="main" tabIndex={-1} className={styles.main}>
+      <header className={styles.stack}>
+        <h1 className={`sk-text-headline-medium-semibold ${styles.heading}`}>
           {nothingStarted ? `Welcome, ${persona.firstName}` : `Your learning, ${persona.firstName}`}
         </h1>
-        <p className="sk-text-body-large-regular text-sko-text-muted">
+        <p className={`sk-text-body-large-regular ${styles.muted}`}>
           {nothingStarted
             ? "Everything you are enrolled in, in one place."
             : `Where you stand across ${all.length} ${all.length === 1 ? "course" : "courses"}.`}
@@ -390,13 +384,13 @@ export function View() {
 
       <Summary enrolments={all} />
 
-      <section aria-labelledby="courses-h" className="flex flex-col gap-4">
-        <h2 id="courses-h" className="sk-text-title-medium-semibold text-sko-text-default">
+      <section aria-labelledby="courses-h" className={styles.section}>
+        <h2 id="courses-h" className={`sk-text-title-medium-semibold ${styles.heading}`}>
           Your courses
         </h2>
 
         {all.length > 1 ? (
-          <div role="group" aria-label="Show courses by status" className="flex flex-wrap gap-2">
+          <div role="group" aria-label="Show courses by status" className={styles.filters}>
             {FILTERS.map((f) => {
               const on = filter === f.id;
               return (
@@ -406,16 +400,14 @@ export function View() {
                   aria-pressed={on}
                   onClick={() => setFilter(f.id)}
                   className={cn(
-                    "sk-text-body-medium-semibold inline-flex h-11 items-center gap-1.5 rounded-pill px-4 transition-colors duration-short4",
-                    FOCUS,
-                    on
-                      ? "bg-sko-bg-primary text-sko-text-on-primary"
-                      : "bg-sko-bg-page text-sko-text-default ring-1 ring-inset ring-sko-border-default hover:bg-sko-bg-faint forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-default",
+                    "sk-text-body-medium-semibold",
+                    styles.filterPill,
+                    on ? styles.filterOn : styles.filterOff,
                   )}
                 >
                   {on ? <Icon icon={Check} size={16} aria-hidden="true" /> : null}
                   {f.label}
-                  <span className={on ? "sk-text-body-medium-regular" : "sk-text-body-medium-regular text-sko-text-subtle"}>
+                  <span className={on ? "sk-text-body-medium-regular" : `sk-text-body-medium-regular ${styles.subtle}`}>
                     {counts[f.id]}
                   </span>
                 </button>
@@ -424,21 +416,21 @@ export function View() {
           </div>
         ) : null}
 
-        <p role="status" aria-live="polite" className="sk-text-body-medium-regular text-sko-text-muted">
+        <p role="status" aria-live="polite" className={`sk-text-body-medium-regular ${styles.muted}`}>
           Showing {shown.length} {shown.length === 1 ? "course" : "courses"}
           {filter === "all" ? "" : ` · ${filterLabel}`}
           {filter === "not-started" && all.some((e) => e.status === "locked") ? " (includes locked courses)" : ""}
         </p>
 
         {shown.length > 0 ? (
-          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <ul className={styles.courseGrid}>
             {shown.map((e) => (
               <EnrolmentCard key={e.id} e={e} />
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col items-start gap-3 rounded-card border border-dashed border-sko-border-default p-6">
-            <p className="sk-text-body-large-medium text-sko-text-default">No {filterLabel.toLowerCase()} courses right now.</p>
+          <div className={styles.noMatch}>
+            <p className={`sk-text-body-large-medium ${styles.heading}`}>No {filterLabel.toLowerCase()} courses right now.</p>
             <Button hierarchy="secondary" size="md" onClick={() => setFilter("all")}>
               Show all courses
             </Button>

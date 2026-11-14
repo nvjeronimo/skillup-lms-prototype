@@ -1,0 +1,115 @@
+/* The Training Block · Today. Type, colour and controls come from the world's tb-* classes. */
+.main {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 880px;
+  flex: 1 1 0%;
+  padding: 40px 16px 64px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.title { margin-top: 12px; }
+.meta { margin-top: 12px; }
+.start {
+  margin-top: 32px;
+  width: 100%;
+}
+.status { margin-top: 32px; }
+
+.week {
+  margin-top: 48px;
+  padding-top: 32px;
+}
+.weekHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.next {
+  margin-top: 40px;
+  padding-top: 32px;
+}
+.nextList { margin-top: 12px; }
+.nextItem {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-block: 12px;
+}
+/* The Tailwind original also had last:border-b-0, but the world's tb-rule-b ([data-world] .tb-rule-b,
+   loaded later) won, so the last row keeps its rule: kept as rendered. */
+.nextDay {
+  width: 40px;
+  flex: none;
+}
+.nextBody {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.nextTitle { display: block; }
+.mock { margin-top: 48px; }
+
+/* Seven days, one mark each. */
+.marks {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.markDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.mark {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+.restDot {
+  height: 4px;
+  width: 4px;
+  border-radius: 9999px;
+}
+
+/* "Change days" picker. */
+.picker {
+  margin-top: 8px;
+  padding: 16px;
+}
+.pickDays {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.pickDay {
+  display: flex;
+  min-height: 44px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+.pickActions {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .start { width: auto; }
+}
+@media (min-width: 768px) {
+  .main {
+    padding-inline: 32px;
+    padding-top: 64px;
+  }
+}

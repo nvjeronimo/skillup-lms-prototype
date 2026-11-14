@@ -1,0 +1,43 @@
+/* The Training Block world: room under the content for the phone tab bar (gone from 768). */
+.world {
+  display: flex;
+  min-height: 100dvh;
+  flex: 1 1 0%;
+  flex-direction: column;
+  padding-bottom: 80px;
+}
+.navFallback { height: 64px; }
+
+/* Plan skeleton: the single column's shape while the persona is read. */
+.main {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 880px;
+  flex: 1 1 0%;
+  padding: 40px 16px 64px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.bone { border-radius: 2px; }
+.boneTitle {
+  margin-top: 16px;
+  height: 64px;
+  width: 75%;
+}
+.boneButton {
+  margin-top: 32px;
+  height: 52px;
+  width: 192px;
+}
+.boneBlock {
+  margin-top: 48px;
+  height: 96px;
+}
+
+@media (min-width: 768px) {
+  .world { padding-bottom: 0; }
+  .main {
+    padding-inline: 32px;
+    padding-top: 64px;
+  }
+}

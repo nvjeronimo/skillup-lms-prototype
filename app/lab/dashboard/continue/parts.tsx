@@ -2,28 +2,14 @@ import * as React from "react";
 import Link from "@/lib/router";
 import { cn } from "@/lib/utils";
 import type { CertStatus, DueItem, Enrolment, LiveSession } from "@/lib/lab/dashboard-mock";
+import styles from "./parts.module.css";
 
 /* Links styled as DS Button (Brand). Button.tsx renders a <button>; navigation needs <a>. */
-const FOCUS =
-  "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]";
+export const linkPrimary = cn(styles.primary, "sk-text-body-large-semibold");
 
-export const linkPrimary = cn(
-  "inline-flex min-h-[44px] h-12 items-center justify-center gap-1.5 rounded-control px-5 transition-colors",
-  "sk-text-body-large-semibold bg-sko-bg-primary text-sko-text-on-primary hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover",
-  FOCUS,
-);
+export const linkSecondary = cn(styles.secondary, "sk-text-body-medium-semibold");
 
-export const linkSecondary = cn(
-  "inline-flex min-h-[44px] items-center justify-center gap-1 rounded-control px-4 transition-colors",
-  "sk-text-body-medium-semibold bg-sko-bg-page text-sko-text-primary ring-1 ring-inset ring-sko-border-primary hover:bg-sko-bg-faint",
-  "forced-colors:border forced-colors:border-solid forced-colors:border-sko-border-primary",
-  FOCUS,
-);
-
-export const linkText = cn(
-  "inline-flex min-h-[44px] items-center gap-1 rounded-control text-sko-text-primary underline underline-offset-4 transition-[color,background-color,border-color,box-shadow] hover:bg-sko-bg-faint",
-  FOCUS,
-);
+export const linkText = styles.text;
 
 export { Link };
 
@@ -40,7 +26,7 @@ export function TopicProgress({
   const { pct, topicsDone, topicsTotal, title } = enrolment;
   const label = `${topicsDone} of ${topicsTotal} topics · ${pct}%`;
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
+    <div className={cn(styles.progress, className)}>
       <div
         role="progressbar"
         aria-label={`${title} progress`}
@@ -48,12 +34,12 @@ export function TopicProgress({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuetext={label}
-        className={cn("overflow-hidden rounded-pill bg-sko-bg-track", size === "md" ? "h-2.5" : "h-1.5")}
+        className={cn(styles.bar, size === "md" ? styles.barMd : styles.barSm)}
       >
         {/* DS rule: progress bars fill with bg/info. */}
-        <div className={cn("h-full rounded-pill", pct >= 100 ? "bg-sko-bg-success" : "bg-sko-bg-info")} style={{ width: `${pct}%` }} />
+        <div className={cn(styles.fill, pct >= 100 ? styles.fillDone : styles.fillInfo)} style={{ width: `${pct}%` }} />
       </div>
-      <p className={cn(size === "md" ? "sk-text-body-medium-medium" : "sk-text-body-small-medium", "text-sko-text-muted")}>{label}</p>
+      <p className={cn(size === "md" ? "sk-text-body-medium-medium" : "sk-text-body-small-medium", styles.label)}>{label}</p>
     </div>
   );
 }

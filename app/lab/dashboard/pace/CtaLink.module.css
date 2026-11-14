@@ -1,0 +1,69 @@
+/* A link with Button md styling (44px): Brand Primary, Brand Secondary, Success Primary. */
+.cta {
+  --btn-ring: var(--color-border-primary);
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  padding-inline: 12px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.cta:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 #0000,
+    0 0 #0000,
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--btn-ring);
+}
+.label {
+  padding-inline: 2px;
+}
+
+.primary {
+  background: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+/* Secondary: the 1px inside stroke (a Tailwind ring), kept under the focus ring. */
+.secondary {
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-primary), 0 0 #0000;
+}
+.secondary:focus-visible {
+  box-shadow:
+    inset 0 0 0 0 #fff,
+    inset 0 0 0 1px var(--color-border-primary),
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--btn-ring);
+}
+.success {
+  --btn-ring: var(--color-border-success);
+  background: var(--color-bg-success);
+  color: var(--color-text-on-success);
+}
+@media (hover: hover) {
+  .primary:hover {
+    background: var(--color-bg-primary-hover);
+    color: var(--color-text-on-primary-hover);
+  }
+  .secondary:hover {
+    background: var(--color-bg-faint);
+  }
+  .success:hover {
+    background: var(--color-bg-success-soft);
+    color: var(--color-text-success);
+  }
+}
+@media (forced-colors: active) {
+  .secondary {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-border-primary);
+  }
+}
