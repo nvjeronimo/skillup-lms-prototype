@@ -23,7 +23,8 @@
   background: var(--color-bg-page);
   color: var(--color-text-primary);
   /* The 1px inside stroke (a Tailwind ring), kept under the focus ring. */
-  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-primary), 0 0 #0000;
+  --ring-color: var(--color-border-primary);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--ring-color), 0 0 #0000;
 }
 .text {
   display: inline-flex;
@@ -38,7 +39,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .primary:hover {
     background: var(--color-bg-primary-hover);
     color: var(--color-text-on-primary-hover);
@@ -63,7 +64,7 @@
   outline-offset: 2px;
   box-shadow:
     inset 0 0 0 0 #fff,
-    inset 0 0 0 1px var(--color-border-primary),
+    inset 0 0 0 1px var(--ring-color),
     0 0 0 2px var(--color-border-focus-gap),
     0 0 0 4px var(--color-border-primary);
 }
@@ -95,3 +96,32 @@
 .fillDone { background: var(--color-bg-success); }
 .fillInfo { background: var(--color-bg-info); }
 .label { color: var(--color-text-muted); }
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio and Harbor: every one-line control link is a pill. */
+:global([data-direction="studio"]) .primary,
+:global([data-direction="studio"]) .secondary,
+:global([data-direction="studio"]) .text,
+:global([data-skin="harbor"]) .primary,
+:global([data-skin="harbor"]) .secondary,
+:global([data-skin="harbor"]) .text {
+  border-radius: 9999px;
+}
+/* Harbor and Fluent: the secondary is neutral (their ring-inset ring-sko-border-primary rule). */
+:global([data-skin="harbor"]) .secondary {
+  --ring-color: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+:global([data-skin="harbor"]) .secondary:hover {
+  --ring-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+:global([data-skin="fluent"]) .secondary {
+  --ring-color: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+:global([data-skin="fluent"]) .secondary:hover {
+  --ring-color: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
+}

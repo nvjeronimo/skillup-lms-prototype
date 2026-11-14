@@ -33,12 +33,13 @@
 .secondary {
   background: var(--color-bg-page);
   color: var(--color-text-primary);
-  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-primary), 0 0 #0000;
+  --ring-color: var(--color-border-primary);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--ring-color), 0 0 #0000;
 }
 .secondary:focus-visible {
   box-shadow:
     inset 0 0 0 0 #fff,
-    inset 0 0 0 1px var(--color-border-primary),
+    inset 0 0 0 1px var(--ring-color),
     0 0 0 2px var(--color-border-focus-gap),
     0 0 0 4px var(--btn-ring);
 }
@@ -47,7 +48,7 @@
   background: var(--color-bg-success);
   color: var(--color-text-on-success);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .primary:hover {
     background: var(--color-bg-primary-hover);
     color: var(--color-text-on-primary-hover);
@@ -66,4 +67,29 @@
     border-style: solid;
     border-color: var(--color-border-primary);
   }
+}
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio and Harbor: every one-line control link is a pill. */
+:global([data-direction="studio"]) .cta,
+:global([data-skin="harbor"]) .cta {
+  border-radius: 9999px;
+}
+/* Harbor and Fluent: the secondary is neutral (their ring-inset ring-sko-border-primary rule). */
+:global([data-skin="harbor"]) .secondary {
+  --ring-color: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+:global([data-skin="harbor"]) .secondary:hover {
+  --ring-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+:global([data-skin="fluent"]) .secondary {
+  --ring-color: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+:global([data-skin="fluent"]) .secondary:hover {
+  --ring-color: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
 }

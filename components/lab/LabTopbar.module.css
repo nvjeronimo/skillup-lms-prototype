@@ -81,7 +81,7 @@
 .navLinkIdle {
   color: var(--color-text-muted);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .navLinkIdle:hover {
     background: var(--color-bg-faint);
   }
@@ -92,4 +92,22 @@
   .header {
     padding-inline: 24px;
   }
+}
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio and Harbor: one-line controls (the logo link, the nav links, the persona select) are pills. */
+:global([data-direction="studio"]) .home,
+:global([data-direction="studio"]) .navLink,
+:global([data-direction="studio"]) .select,
+:global([data-skin="harbor"]) .home,
+:global([data-skin="harbor"]) .navLink,
+:global([data-skin="harbor"]) .select {
+  border-radius: 9999px;
+}
+/* Fluent: the select is an Input, a Stroke1 frame with the accessible stroke along the bottom. */
+:global([data-skin="fluent"]) .select {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
 }

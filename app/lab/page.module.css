@@ -36,7 +36,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .card:hover {
     border-color: var(--color-border-primary);
   }
@@ -57,4 +57,16 @@
   .list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio: a 16-padded card takes 23 inside and a 44 radius, and floats on a soft shadow with no
+   border (on hover too: the Studio rule outranked hover:border-sko-border-primary). */
+:global([data-direction="studio"]) .card,
+:global([data-direction="studio"]) .card:hover {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
 }
