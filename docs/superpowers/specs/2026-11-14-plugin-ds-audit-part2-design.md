@@ -85,7 +85,10 @@ The audit runs in **both files** (Nelson, 14 Nov, option A):
 ### 5.1 Which file the plugin is in
 
 - **Role** (Claude's call): the DS file key is a constant in `code.js`. In that file the role is
-  `library`; anywhere else it is `screens`. The Audit tab shows the role on its first line
+  `library`; anywhere else it is `screens`. `figma.fileKey` can be null in a development plugin
+  without the private plugin API; then a file whose local collections include an exported one
+  whose name starts with "1." is `library`. The `clientStorage` keys use the file key, or the
+  file name when the key is null. The Audit tab shows the role on its first line
   ("Auditing the DS library" / "Auditing screens"). No override in part 2.
 - In a `screens` file the Publish tab says "Publish runs in the SKO Design System" and its
   button stays disabled. The part 1 token checks run only in the `library` role.
@@ -100,6 +103,26 @@ At the top of the Audit tab, three choices:
 The last choice per file is kept in `clientStorage` under a key that includes the file key. The
 "covered" line names the scope ("whole file", "3 of 18 pages", "selection: 4 layers").
 
+### 5.2a What stays out (Nelson, 14 Nov, option A)
+
+Some layers carry raw values on purpose: partner and Open edX logos, illustrations, components
+on "In review", archive or doc pages in the DS, and Nelson's exploration pages in the ICP, where
+local copies are intentional.
+- **Excluded pages, per file:** a list kept in `clientStorage` (key includes the file key) and
+  edited in the Audit tab as a checklist under the scope picker. On the first run in a file it
+  is pre-filled with the pages whose names contain, ignoring case:
+  - in the DS: "in review", "archive", "arquivo", "cover", "start here";
+  - in any screens file: "discovery - nelsonj", "history", "histórico".
+  Nelson edits it from there. The defaults are a starting point, not a rule.
+- **A marker per component:** a component or component set whose Figma description contains
+  `[audit:skip]` is not walked, nor are instances of it (they are skipped anyway). Use it for
+  logos and illustrations.
+- Excluded pages and skipped components produce no findings, and "Whole file" means "every page
+  not excluded". The covered line says how many were left out ("2 pages and 6 components left
+  out"), so a clean verdict never hides them.
+- For `unused-token` (§5.6), excluded pages and skipped components are still read for bindings
+  (Claude's call): a token used only on a logo is still used.
+
 ### 5.3 What is walked
 
 - **Library role:** every `COMPONENT_SET` and every `COMPONENT` not inside a set, on the pages in
@@ -110,8 +133,9 @@ The last choice per file is kept in `clientStorage` under a key that includes th
   and radius come from the component, and an override set by hand on an instance is left for a
   later part (Claude's call). Local components on the ICP are walked like screens.
 - **Selection:** the selected nodes and their layers, with the same instance rule for the role.
-- **Hidden layers** (`visible: false`) are skipped and counted in the covered line (Claude's
-  call: they do not reach the developers as drawn).
+- **Hidden layers** (`visible: false`) (Claude's call): in the library role they are walked,
+  because a boolean property (Show image, the Scope layers, optional badges) turns them on and
+  they ship. In the screens role they are skipped and counted in the covered line.
 - The walk yields to Figma every 500 nodes (Claude's call; tune after measuring) and reports
   progress as "page N of M, X layers".
 
@@ -130,6 +154,9 @@ The last choice per file is kept in `clientStorage` under a key that includes th
 - 0 needs no token (padding 0, radius 0): not a finding (Claude's call).
 - A colour bound to a primitive (a hidden-collection variable) instead of a semantic token is
   out of scope for part 2; it is a part 3 rule.
+- Layer findings never disable Publish (Claude's call): Publish sends the token JSON, which layer
+  problems do not make wrong. `publishBlocked` keeps part 1's meaning (`alias-missing`,
+  `mode-missing`).
 - The verdict follows part 1: any blocker means "not ready". In the library role a single
   hand-set colour inside a component blocks (Nelson, 14 Nov: the component reaches the developers
   wrong).
@@ -153,13 +180,15 @@ Each `hand-*` finding carries the token that would replace it, when one exists:
 
 "No use" must mean no use in either file, or it misleads (a token used only on ICP screens
 would look unused in the DS).
-- The **screens** run, when its scope is the whole file, stores in `clientStorage` the `key`s of
-  every library variable it saw bound, with the file key and the date.
+- Every **screens** run whose scope is the whole file stores in `clientStorage` the `key`s of
+  every library variable it saw bound, under that file's key, with the file name and date. So
+  the ICP, the Mobile App file or any other consumer counts (Claude's call: a list per file, not
+  only "the latest ICP run").
 - The **library** run, when its scope is the whole file, collects the local variables bound
   anywhere in the DS file (all layers, not only components, plus aliases from other variables
-  and text-style bindings). A token is `unused-token` when it is in neither that set nor the
-  latest stored ICP set.
-- If no whole-file ICP run is stored, or it is older than 7 days, the covered line says "use on
+  and text-style bindings). A token is `unused-token` when it is in neither that set nor any
+  stored screens set; the covered line names the files those sets came from.
+- If no whole-file run of the ICP is stored, or the newest is older than 7 days, the covered line says "use on
   screens not covered" and `unused-token` is not run (Claude's call: a partial answer is worse
   than none).
 - Primitives (hidden collections) are already handled by part 1 (`unused-primitive`).
