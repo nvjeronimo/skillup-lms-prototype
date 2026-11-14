@@ -1,0 +1,85 @@
+.entry { padding-top: 24px; padding-bottom: 24px; }
+.stack { display: flex; flex-direction: column; gap: 24px; padding-top: 24px; padding-bottom: 24px; }
+
+/* Mode A-2 (bucket): the problem's own header, printed once for the whole set. */
+.problemHeader { display: flex; flex-direction: column; gap: 4px; }
+.problemPrompt { color: var(--color-text-default); }
+.problemPoints { color: var(--color-text-subtle); }
+.hintCollapse { margin-top: -16px; }
+.hintInner { padding-top: 16px; }
+/* DS Next Hint: a link button with a 1px bottom stroke in every state (border/disabled once
+   the hints run out). */
+.nextHint { border-bottom-width: 1px; padding: 4px 2px; }
+.nextHintDone { cursor: not-allowed; border-color: var(--color-border-disabled); color: var(--color-text-disabled); }
+.nextHintActive { border-color: var(--color-border-primary); color: var(--color-text-primary); }
+.hints { display: flex; flex-direction: column; gap: 4px; }
+.hint { color: var(--color-text-default); }
+
+/* Mode B: a stepper */
+.stepper { display: flex; scroll-margin-top: 16px; flex-direction: column; gap: 24px; padding-top: 24px; padding-bottom: 24px; }
+.stepNext { display: flex; justify-content: flex-end; }
+.outstanding { text-align: center; color: var(--color-text-subtle); }
+
+/* Entry header and results summary cards */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: var(--sk-shadow-card);
+  padding: 24px;
+}
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.title { color: var(--color-text-default); }
+/* Meta facts: Badge Soft sm Gray. */
+.facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.entryNote { color: var(--color-text-muted); }
+
+.summaryHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.summaryLabel { text-transform: uppercase; color: var(--color-text-primary); }
+.summaryTitle { margin-top: 4px; color: var(--color-text-default); }
+/* Score-Group: 20/24 padding, 20 gap. */
+.score { display: flex; align-items: center; gap: 20px; border-radius: var(--sk-radius-control); padding: 20px 24px; }
+.scoreNeutral { background-color: var(--color-bg-subtle); }
+.scorePassed { background-color: var(--color-bg-success-soft); }
+.scoreNotPassed { background-color: var(--color-bg-warning-soft); }
+.scoreWithheld { color: var(--color-text-subtle); }
+.scorePct { font-variant-numeric: tabular-nums; }
+.scoreText { display: flex; flex-direction: column; gap: 4px; }
+.toneNeutral { color: var(--color-text-default); }
+.tonePassed { color: var(--color-text-success); }
+.toneNotPassed { color: var(--color-text-warning); }
+.summaryFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 16px;
+  row-gap: 12px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 16px;
+}
+.attempts { color: var(--color-text-subtle); }
+.summaryActions { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 767.98px) {
+  .summaryActions > * { flex: 1 1 0%; }
+}
+
+/* Graded assignment: brief + file upload + submit */
+.graded { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; padding-bottom: 24px; }
+.brief {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: var(--sk-shadow-card);
+  padding: 20px;
+}
+.briefLabel { margin-bottom: 8px; color: var(--color-text-primary); }
+.briefText { color: var(--color-text-muted); }
+.requirements { margin-top: 12px; list-style-type: disc; padding-left: 20px; color: var(--color-text-muted); }
+.submitRow { display: flex; justify-content: flex-end; }

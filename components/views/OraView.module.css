@@ -1,0 +1,229 @@
+.root { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; padding-bottom: 24px; }
+
+/* Text colours shared by the steps */
+.default { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+.primary { color: var(--color-text-primary); }
+.success { color: var(--color-text-success); }
+.warning { color: var(--color-text-warning); }
+.eyebrow { text-transform: uppercase; color: var(--color-text-subtle); }
+
+/* Stepper. Below sm it is Size=Compact: the current step keeps its label and takes the free
+   width, every other step shows only its circle. */
+.stepper {
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.step { display: flex; min-width: 0; align-items: center; gap: 8px; padding: 16px; }
+@media (min-width: 640px) {
+  .step { flex: 1 1 0%; }
+}
+.stepCurrent { flex: 1 1 0%; }
+@media (max-width: 639.98px) {
+  .stepOther { padding-left: 12px; padding-right: 12px; }
+}
+.stepRuled { border-left-width: 1px; border-color: var(--color-border-subtle); }
+.stepCurrentBg { background-color: var(--color-bg-primary-soft); }
+.stepDoneBg { background-color: var(--color-bg-page); }
+.stepTodoBg { background-color: var(--color-bg-faint); }
+.stepMark {
+  display: inline-flex;
+  height: 26px;
+  width: 26px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.stepMarkDone { background-color: var(--color-bg-success); color: var(--color-icon-on-media); }
+.stepMarkCurrent { background-color: var(--color-bg-primary); color: var(--color-text-on-primary); }
+.stepMarkTodo { background-color: var(--color-bg-subtle); color: var(--color-text-subtle); }
+.stepLabel { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Compact: the label stays for screen readers only (sk-sr-only, below sm). */
+@media (max-width: 639.98px) {
+  .stepLabelCompact {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* Rubric */
+.rubric { display: flex; flex-direction: column; gap: 8px; }
+.rubricList { display: flex; flex-direction: column; gap: 4px; }
+.rubricRow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.rubricPoints { flex-shrink: 0; color: var(--color-text-primary); }
+
+/* Response, waiting and grade cards */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: var(--sk-shadow-card);
+  padding: 20px;
+}
+.badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* DS LMS / ORA · Upload State=Uploaded (20328:3584): file row p 8/12, meta gap 2. */
+.upload { display: flex; flex-direction: column; gap: 12px; }
+.uploadedFile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-success-soft);
+  padding: 8px 12px;
+}
+.uploadedFileText { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.uploadedFileName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-text-default); }
+.replace { margin-left: auto; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.descriptionInput {
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding: 8px 12px;
+  color: var(--color-text-default);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* Tailwind's outline-none lost to the global :focus-visible ring (app/globals.css); this module
+   loads after it, so it steps aside on focus to keep that ring. */
+.descriptionInput:not(:focus-visible) { outline: 2px solid transparent; outline-offset: 2px; }
+.descriptionInput:focus-visible { border-color: var(--color-border-primary); }
+
+/* DS State=Empty (20328:3584) */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-style: dashed;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-subtle);
+  padding: 24px 20px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .dropzone:hover { border-color: var(--color-border-primary); }
+}
+.dropzone:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--color-border-primary);
+}
+
+/* DS LMS / ORA · Submit Gate (20344:3359): p16, gap 8, warning fill + stroke, IRREVERSIBLE tag. */
+.gate {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-warning);
+  background-color: var(--color-bg-warning-soft);
+  padding: 16px;
+}
+.gateTag {
+  align-self: flex-start;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-warning);
+  padding: 4px 8px;
+  color: var(--color-text-warning);
+}
+.gateActions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; }
+@media (max-width: 767.98px) {
+  .gateActions > * { flex: 1 1 0%; }
+}
+.submitRow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+/* DS LMS / ORA · Waiting Panel Kind=Awaiting grade (20328:3591): p24, gap 6. */
+.waiting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-primary-soft);
+  padding: 24px;
+  text-align: center;
+}
+.demo { display: flex; flex-wrap: wrap; gap: 8px; border-top-width: 1px; border-color: var(--color-border-subtle); padding-top: 16px; }
+
+/* Grade */
+.grade {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-success-soft);
+  padding: 20px;
+}
+.breakdown { display: flex; flex-direction: column; gap: 6px; }
+.breakdownList { display: flex; flex-direction: column; gap: 6px; }
+.breakdownRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  padding: 8px 12px;
+}
+.breakdownScore { flex-shrink: 0; }
+.feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-primary-soft);
+  padding: 16px;
+}
+.feedbackLabel { text-transform: uppercase; color: var(--color-text-primary); }
+
+/* An Open Response at the end of a reading */
+.openResponse { display: flex; flex-direction: column; gap: 16px; }
+.openResponseIntro { max-width: var(--sk-container-text-max-width, 1200px); text-wrap: pretty; color: var(--color-text-muted); }
+.required { color: var(--color-text-error); }
+.responseInput {
+  width: 100%;
+  resize: vertical;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding: 8px 12px;
+  color: var(--color-text-default);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* outline-none, but the global :focus-visible ring still wins on focus, as it did. */
+.responseInput:not(:focus-visible) { outline: 2px solid transparent; outline-offset: 2px; }
+.responseInput::placeholder { color: var(--color-text-placeholder); }
+.responseInput:focus { border-color: var(--color-border-primary); }
+.responseInput:read-only { background-color: var(--color-bg-subtle); }
+.draftRow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 4px; }

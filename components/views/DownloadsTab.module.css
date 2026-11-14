@@ -1,0 +1,30 @@
+.empty { padding-top: 12px; padding-bottom: 12px; }
+.list { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+.footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 12px;
+}
+/* Download all: a link-style button, underlined by a 1px border/primary-coloured rule. */
+.downloadAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom-width: 1px;
+  border-color: var(--color-icon-primary);
+  padding: 4px 2px 3px;
+  color: var(--color-text-primary);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .downloadAll:hover { border-color: var(--color-icon-default); color: var(--color-text-on-primary-soft); }
+}
+.downloadAll:focus-visible { border-radius: var(--sk-radius-control); background-color: var(--color-bg-faint); }
+.downloadAll:hover svg { color: var(--color-icon-default); }
+.downloadIcon { color: var(--color-icon-primary); }
+.downloadLabel { padding-left: 2px; padding-right: 2px; }

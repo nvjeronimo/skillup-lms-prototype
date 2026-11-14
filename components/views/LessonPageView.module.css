@@ -1,0 +1,3 @@
+.root { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; padding-bottom: 24px; }
+.badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.intro { color: var(--color-text-default); }

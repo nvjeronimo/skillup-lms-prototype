@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { usePathname, useRouter } from "@/lib/router";
 import { navigateWithTransition, settlePageTransition, shouldTransitionClick } from "@/lib/motion/pageTransition";
