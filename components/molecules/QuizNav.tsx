@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { ArrowLeft, ArrowRight, ChevronLeft } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import styles from "./QuizNav.module.css";
 
 /**
  * DS `LMS / Quiz · Nav`. Quiz-level navigation, and the one place where the two
@@ -30,10 +29,7 @@ export interface QuizNavStackedProps {
 export function QuizNavStacked({ onPrevious, onNext, className }: QuizNavStackedProps) {
   return (
     <div
-      className={cn(
-        "flex flex-wrap items-center justify-between gap-3 border-t border-sko-border-subtle pt-4",
-        className,
-      )}
+      className={cn(styles.stacked, className)}
     >
       <Button variant="secondary" leftIcon={ArrowLeft} onClick={onPrevious}>
         Previous
@@ -83,8 +79,8 @@ export function QuizNavStepper({
   return (
     // DS `LMS / Quiz · Stepper Bar`, Mode=With Back only: the bar row, then a
     // 1px border/subtle rule, 12px apart.
-    <div className={cn("flex flex-col gap-3", className)}>
-      <div className="flex items-end gap-4">
+    <div className={cn(styles.stepper, className)}>
+      <div className={styles.bar}>
         {/* A link button (Link Button Brand/Secondary): visible "Back"
             label, 20px chevron in icon/faint, no box. Disabled follows the
             Link Button Disabled state (text/disabled). */}
@@ -93,12 +89,12 @@ export function QuizNavStepper({
           onClick={onBack}
           disabled={!onBack}
           className={cn(
-            "sk-text-body-medium-semibold inline-flex h-5 shrink-0 items-center gap-1 rounded-inner",
-            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
-            onBack ? "text-sko-text-subtle" : "cursor-not-allowed text-sko-text-disabled",
+            "sk-text-body-medium-semibold",
+            styles.back,
+            onBack ? styles.backEnabled : styles.backDisabled,
           )}
         >
-          <Icon icon={ChevronLeft} size={20} className={onBack ? "text-sko-icon-faint" : undefined} />
+          <Icon icon={ChevronLeft} size={20} className={onBack ? styles.backIcon : undefined} />
           Back
         </button>
 
@@ -108,12 +104,12 @@ export function QuizNavStepper({
             DS track bg/strong fails 1.4.11 against bg/info (2.26:1 light,
             2.82:1 dark), and the bar is the only place the answered share
             shows. */}
-        <div className="flex min-w-0 flex-1 flex-col items-end gap-2">
-          <span className="sk-text-body-small-medium text-sko-text-muted">
+        <div className={styles.progress}>
+          <span className={`sk-text-body-small-medium ${styles.counter}`}>
             Question {current} of {total}
           </span>
           <div
-            className="h-2 w-full bg-sko-bg-track"
+            className={styles.track}
             role="progressbar"
             aria-valuenow={value}
             aria-valuemin={0}
@@ -121,14 +117,14 @@ export function QuizNavStepper({
             aria-label={`Quiz progress: ${value}% complete`}
           >
             <div
-              className="h-full w-full origin-left bg-sko-bg-info transition-transform duration-short4 ease-standard"
+              className={styles.fill}
               style={{ transform: `scaleX(${value / 100})` }}
             />
           </div>
         </div>
       </div>
 
-      <div className="h-px bg-sko-border-subtle" />
+      <div className={styles.rule} />
     </div>
   );
 }

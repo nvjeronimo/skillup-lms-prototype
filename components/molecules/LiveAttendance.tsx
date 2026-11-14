@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./LiveAttendance.module.css";
 
 export interface LiveAttendanceProps {
   live: number;
@@ -11,18 +12,18 @@ export interface LiveAttendanceProps {
 /** Live session attendance indicator: X of Y live + recording status. */
 export function LiveAttendance({ live, total, recording = false, className }: LiveAttendanceProps) {
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn(styles.row, className)}>
       {/* Decision 012: LIVE is green, never red (red is for errors). Badge Soft Success pair; the dot
           pulses (sk-live-dot) and stops under reduced motion, the word stays. */}
-      <span className="inline-flex items-center gap-1.5 rounded-pill bg-sko-bg-success-soft px-2 py-0.5">
-        <span className="sk-live-dot h-2 w-2 rounded-pill bg-sko-bg-success" aria-hidden />
-        <span className="sk-text-body-small-semibold text-sko-text-success">LIVE</span>
+      <span className={styles.live}>
+        <span className={`sk-live-dot ${styles.dot}`} aria-hidden />
+        <span className={`sk-text-body-small-semibold ${styles.liveLabel}`}>LIVE</span>
       </span>
-      <span className="sk-text-body-small-regular text-sko-text-muted">
+      <span className={`sk-text-body-small-regular ${styles.count}`}>
         {live} of {total} participants
       </span>
       {recording ? (
-        <span className="sk-text-label-small-medium rounded-inner bg-sko-bg-subtle px-1.5 py-0.5 text-sko-text-subtle">
+        <span className={`sk-text-label-small-medium ${styles.recording}`}>
           Recording
         </span>
       ) : null}

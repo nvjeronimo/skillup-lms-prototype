@@ -1,0 +1,143 @@
+/* The phone tab bar: a track floating 16 above the bottom edge; its items controls, More a card. */
+.bar {
+  position: fixed;
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  left: 16px;
+  z-index: 30;
+  max-width: calc(100vw - 5.5rem);
+  border-radius: var(--sk-radius-track);
+  padding: 4px;
+}
+.list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.slot {
+  display: flex;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  transition-property: background-color, color, transform;
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+  transition-duration: var(--motion-duration-short2);
+}
+.item:active {
+  transform: scale(0.96);
+}
+/* The current tab: a wide segment with its label beside the icon. */
+.itemOn {
+  gap: 16px;
+  background-color: var(--color-bg-primary-soft);
+  padding-inline: 12px;
+  color: var(--color-text-on-primary-soft);
+}
+/* The others: 44 × 44 icons. */
+.itemOff {
+  width: 44px;
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) {
+  .itemOff:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.label {
+  white-space: nowrap;
+}
+
+.icon {
+  position: relative;
+}
+/* The count: Badge Soft sm Info. */
+.count {
+  position: absolute;
+  right: -10px;
+  top: -6px;
+  display: inline-flex;
+  height: 16px;
+  min-width: 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-info-soft);
+  padding-inline: 4px;
+  color: var(--color-text-info);
+}
+
+.more {
+  position: relative;
+  display: flex;
+}
+.morePanel {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  z-index: 10;
+  margin-bottom: 8px;
+  width: 224px;
+  transform-origin: bottom right;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  padding: 4px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+.moreList {
+  display: flex;
+  flex-direction: column;
+}
+/* A row of the More panel: 44 tall, Radius/card-inset. */
+.row {
+  display: flex;
+  min-height: 44px;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--sk-radius-card-inset);
+  padding-inline: 12px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .row:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.rowOn {
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-on-primary-soft);
+}
+.rowOff {
+  color: var(--color-text-default);
+}
+.rowLabel {
+  min-width: 0;
+  flex: 1 1 0%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Skins (tokens/skin-harbor.css, tokens/direction-studio.css, tokens/square-corners.css selected
+   the Tailwind classes these elements had; the same rules here). Harbor and Studio: the items are
+   one-line controls, pills. */
+:global([data-skin="harbor"]) .item,
+:global([data-direction="studio"]) .item {
+  border-radius: 9999px;
+}
+/* Square corners: the panel and its rows square; the count is a shape and stays round. */
+:global(html[data-square-corners]) :is(.morePanel, .row) {
+  border-radius: 0 !important;
+}
+:global([data-square-corners]) .count {
+  --sk-radius-pill: 9999px;
+}

@@ -1,0 +1,56 @@
+/* A YouTube video: no transcript, an Info alert and the feedback row. */
+.youtube { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
+.noTranscriptVideo { color: var(--color-text-subtle); }
+.feedbackYoutube { border-top-width: 1px; border-color: var(--color-border-subtle); }
+.noTranscript { padding: 32px 4px; text-align: center; color: var(--color-text-subtle); }
+
+.root { position: relative; }
+
+/* Controls row below the tabs: Language (left) · Add Note (right). */
+.controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; padding-bottom: 8px; }
+.language { display: flex; align-items: center; gap: 6px; color: var(--color-text-muted); }
+.selectWrap { position: relative; }
+.select {
+  min-height: 24px;
+  appearance: none;
+  background-color: transparent;
+  padding-right: 20px;
+  color: var(--color-text-default);
+}
+.selectChevron {
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-icon-subtle);
+}
+
+/* DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary. */
+.addNote {
+  display: inline-flex;
+  height: 28px;
+  align-items: center;
+  gap: 4px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-primary);
+  padding-left: 2px;
+  padding-right: 2px;
+  color: var(--color-text-primary);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .addNote:hover { border-color: var(--color-icon-default); color: var(--color-text-on-primary-soft); }
+}
+.addNote:focus-visible { border-radius: var(--sk-radius-control); background-color: var(--color-bg-faint); }
+.addNote:hover svg { color: var(--color-icon-default); }
+.addNoteIcon { color: var(--color-icon-primary); }
+.addNoteLabel { padding-left: 2px; padding-right: 2px; }
+
+.lines { position: relative; display: flex; flex-direction: column; padding-top: 8px; padding-bottom: 8px; }
+.syncPill { position: absolute; left: 0; right: 0; bottom: 16px; z-index: 10; display: flex; justify-content: center; }
+.syncPillClosed { pointer-events: none; }
+
+.feedback { margin-top: 8px; border-top-width: 1px; border-color: var(--color-border-subtle); }

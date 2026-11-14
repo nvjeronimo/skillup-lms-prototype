@@ -1,0 +1,35 @@
+/* Bookmark toggle. The button's resting rules sit at 0,0,1 (:where + the element), enough to
+   beat the reset's `button` rules and never a caller's class. */
+:where(.bookmark):is(button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  padding: 4px;
+  transition-property: color, background-color;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+:where(.on):is(button) {
+  color: var(--color-icon-primary);
+}
+:where(.off):is(button) {
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .bookmark:hover {
+    background-color: var(--color-bg-primary-soft);
+  }
+}
+/* The fill is a colour (transparent ↔ currentColor), so it eases with the stroke. */
+.icon {
+  transition-property: fill;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.filled {
+  fill: currentColor;
+}
+.empty {
+  fill: transparent;
+}

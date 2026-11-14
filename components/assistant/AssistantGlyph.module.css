@@ -1,0 +1,4 @@
+/* The assistant's small mark, sized like an icon. Takes the caller's className: :where(). */
+:where(.glyph) {
+  flex-shrink: 0;
+}

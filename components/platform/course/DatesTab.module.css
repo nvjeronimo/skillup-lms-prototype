@@ -1,0 +1,81 @@
+.tab { display: flex; flex-direction: column; gap: var(--sk-layout-stack-gap); }
+.timeline { display: flex; flex-direction: column; gap: 12px; }
+.default { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+
+/* Content divider, Type=Text: the label between two 1px rules, 8 apart. */
+.divider { display: flex; align-items: center; gap: 8px; }
+.dividerRule { flex: 1 1 0%; border-top-width: 1px; border-color: var(--color-border-subtle); }
+
+/* The card of date rows: 15 + the 1px border = the DS 16. */
+.card {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+
+/* Date-Row: one grid; the date cell moves from the content column to its own column from tablet up. */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 4px;
+  padding-bottom: 16px;
+  padding-top: 12px;
+}
+.spine { position: absolute; bottom: 0; left: 7px; width: 2px; background-color: var(--color-bg-muted); }
+.spineFirst { top: 16px; }
+.spineRest { top: 0; }
+/* The 12px dot, ringed 2px in bg/page (Tailwind's ring-2 with its empty offset layer). */
+.dot {
+  position: absolute;
+  left: 2px;
+  top: 16px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--sk-radius-pill);
+  box-shadow: 0 0 0 0 #fff, 0 0 0 2px var(--color-bg-page), 0 0 #0000;
+}
+.dotComplete { background-color: var(--color-bg-success); }
+.dotOverdue { background-color: var(--color-bg-warning); }
+.dotMuted { background-color: var(--color-bg-muted); }
+.when {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+}
+.content {
+  grid-column-start: 2;
+  grid-row-start: 2;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.badges { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px; }
+.flexItem { display: flex; }
+@media (min-width: 768px) {
+  .row { grid-template-columns: 104px 16px minmax(0, 1fr); row-gap: 0; padding-bottom: 20px; }
+  .spine { left: 123px; }
+  .dot { left: 118px; }
+  .when {
+    grid-column-start: 1;
+    grid-row: span 2 / span 2;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    align-self: flex-start;
+  }
+  .content { grid-column-start: 3; grid-row-start: 1; }
+}
+@media (min-width: 1024px) {
+  .row { padding-bottom: 24px; }
+}

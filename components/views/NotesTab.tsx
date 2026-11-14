@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { useRouter } from "@/lib/router";
 import { Info, Search, StickyNote } from "lucide-react";
@@ -10,6 +8,7 @@ import { EmptyState } from "@/components/atoms/EmptyState";
 import { useLmsStore } from "@/lib/store";
 import { tsToSeconds } from "@/lib/utils";
 import { staggerStyle } from "@/lib/motion/stagger";
+import styles from "./NotesTab.module.css";
 
 export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug: string }) {
   const router = useRouter();
@@ -52,7 +51,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
   // No notes at all for this topic → dedicated empty state (matches DS copy).
   if (notes.length === 0) {
     return (
-      <div className="py-3">
+      <div className={styles.empty}>
         <EmptyState
           icon={StickyNote}
           title="No notes yet for this lesson"
@@ -63,21 +62,21 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
   }
 
   return (
-    <div className="flex flex-col gap-3 py-3">
+    <div className={styles.root}>
       {/* DS Input field Size=sm, Type=Search (Focused: 2px border/primary). */}
-      <div className="flex items-center gap-2 rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 transition-[border-color,box-shadow] focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary">
-        <Icon icon={Search} size={20} className="text-sko-icon-faint" />
+      <div className={styles.search}>
+        <Icon icon={Search} size={20} className={styles.searchIcon} />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search notes…"
-          className="sk-text-body-large-regular flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder"
+          className={`sk-text-body-large-regular ${styles.searchInput}`}
           aria-label="Search notes"
         />
       </div>
 
       {allTags.length ? (
-        <div ref={chipsRef} className="flex flex-wrap gap-1.5">
+        <div ref={chipsRef} className={styles.tags}>
           <FilterChip label="All" active={!activeTag} onClick={() => setActiveTag(null)} />
           {allTags.map((tag) => (
             <FilterChip
@@ -91,7 +90,7 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
       ) : null}
 
       {/* A new tag cross-fades the list; the notes rise one after the other. */}
-      <div key={activeTag ?? ""} className="sk-animate-fade sk-enter-only flex flex-col gap-3">
+      <div key={activeTag ?? ""} className={`sk-animate-fade sk-enter-only ${styles.list}`}>
         {filtered.length ? (
           filtered.map((note, i) => (
             <div key={note.id} className="sk-animate-rise sk-rise-nudge sk-enter-only" style={staggerStyle(i, filtered.length)}>
@@ -115,15 +114,15 @@ export function NotesTab({ topicId, courseSlug }: { topicId: string; courseSlug:
             </div>
           ))
         ) : (
-          <p className="sk-text-body-medium-regular py-6 text-center text-sko-text-subtle">
+          <p className={`sk-text-body-medium-regular ${styles.noMatch}`}>
             No notes match your filter.
           </p>
         )}
       </div>
 
-      <div className="mt-2 flex items-start gap-2 rounded-control bg-sko-bg-subtle px-3 py-2.5">
-        <Icon icon={Info} size={16} className="mt-0.5 text-sko-icon-subtle" />
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+      <div className={styles.hint}>
+        <Icon icon={Info} size={16} className={styles.hintIcon} />
+        <p className={`sk-text-body-medium-regular ${styles.hintText}`}>
           Create notes from the Transcript tab: click <span className="sk-text-body-medium-semibold">+ Note</span> on any line.
         </p>
       </div>

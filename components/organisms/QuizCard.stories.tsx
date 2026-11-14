@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { QuizCard } from "./QuizCard";
+import styles from "./QuizCard.stories.module.css";
 
 const EXPLANATION =
   "Six Sigma is a data-driven methodology for reducing variation. Fewer defects follow from a more predictable process; speed and headcount are outcomes, never the goal.";
@@ -34,7 +35,7 @@ const meta: Meta<typeof QuizCard> = {
   argTypes: { state: { control: "select", options: STATES } },
   decorators: [
     (Story) => (
-      <div className="max-w-xl">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

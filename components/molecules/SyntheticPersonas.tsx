@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Users } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -18,6 +16,7 @@ import {
 } from "@/lib/persona-settings";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import styles from "./SyntheticPersonas.module.css";
 
 /*
  * Synthetic personas (Nelson, 25 Oct 2026: "Coloca o botão no submenu do profile para selecionar
@@ -51,8 +50,7 @@ function conditionLabels(conditions: PersonaConditions): string[] {
 }
 
 /** The menu row (DS Profile Menu row: 44 tall, 16 icon, body-medium/Medium text/muted), a group of its own. */
-const MENU_ROW =
-  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-control px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
+const MENU_ROW = `sk-text-body-medium-medium ${styles.menuRow}`;
 
 /**
  * The profile menu's "Synthetic personas" row and, under it, who the prototype is showing
@@ -61,7 +59,7 @@ const MENU_ROW =
 export function PersonasMenuRow({ onDone }: { onDone?: () => void }) {
   const active = useActivePersona();
   return (
-    <div className="flex flex-col gap-1 border-t border-sko-border-subtle px-4 py-3">
+    <div className={styles.group}>
       <button
         type="button"
         aria-haspopup="dialog"
@@ -72,10 +70,10 @@ export function PersonasMenuRow({ onDone }: { onDone?: () => void }) {
         }}
       >
         <Icon icon={Users} size={16} />
-        <span className="flex-1">Synthetic personas</span>
+        <span className={styles.menuLabel}>Synthetic personas</span>
       </button>
       {active ? (
-        <p className="sk-text-body-small-regular px-3 text-sko-text-subtle">
+        <p className={`sk-text-body-small-regular ${styles.viewingAs}`}>
           Viewing as {firstNameOf(active.name)} ({active.id})
         </p>
       ) : null}
@@ -148,8 +146,8 @@ function SyntheticPersonasDialog({ open, onClose }: { open: boolean; onClose: ()
       secondaryAction={{ label: "Clear", onClick: clear, disabled: !ACTIVE_PERSONA_ID && !picked }}
     >
       {/* One choice: a radio group, real inputs under one name, so the arrow keys move the choice natively. */}
-      <fieldset className="flex flex-col gap-2">
-        <legend className="sr-only">Personas</legend>
+      <fieldset className={styles.list}>
+        <legend className="sk-sr-only">Personas</legend>
         {PERSONAS.map((p) => {
           const checked = picked === p.id;
           const labels = conditionLabels(p.conditions);
@@ -157,10 +155,7 @@ function SyntheticPersonasDialog({ open, onClose }: { open: boolean; onClose: ()
           return (
             <label
               key={p.id}
-              className={cn(
-                "flex cursor-pointer items-start gap-3 rounded-control border px-3 py-2.5 transition-colors",
-                checked ? "border-sko-border-primary bg-sko-bg-primary-soft" : "border-sko-border-subtle hover:bg-sko-bg-hover",
-              )}
+              className={cn(styles.option, checked ? styles.checked : styles.unchecked)}
             >
               <input
                 type="radio"
@@ -169,17 +164,17 @@ function SyntheticPersonasDialog({ open, onClose }: { open: boolean; onClose: ()
                 checked={checked}
                 onChange={() => setPicked(p.id)}
                 aria-describedby={summaryId}
-                className="mt-0.5 size-4 shrink-0 accent-[var(--color-bg-primary)]"
+                className={styles.radio}
               />
-              <span className="flex min-w-0 flex-1 flex-col gap-1">
-                <span className="sk-text-body-medium-semibold text-sko-text-default">
-                  {p.name} <span className="sk-text-body-medium-regular text-sko-text-subtle">· {p.id}</span>
+              <span className={styles.details}>
+                <span className={`sk-text-body-medium-semibold ${styles.name}`}>
+                  {p.name} <span className={`sk-text-body-medium-regular ${styles.id}`}>· {p.id}</span>
                 </span>
-                <span className="sk-text-body-small-medium text-sko-text-muted">{p.archetype}</span>
-                <span id={summaryId} className="sk-text-body-small-regular text-sko-text-subtle">
+                <span className={`sk-text-body-small-medium ${styles.archetype}`}>{p.archetype}</span>
+                <span id={summaryId} className={`sk-text-body-small-regular ${styles.summary}`}>
                   {p.summary}
                 </span>
-                <span className="flex flex-wrap gap-1 pt-0.5">
+                <span className={styles.badges}>
                   {labels.length ? (
                     labels.map((l) => (
                       <Badge key={l} color="gray" size="sm">
@@ -197,7 +192,7 @@ function SyntheticPersonasDialog({ open, onClose }: { open: boolean; onClose: ()
           );
         })}
       </fieldset>
-      <p className="sk-text-body-small-regular text-sko-text-subtle">
+      <p className={`sk-text-body-small-regular ${styles.note}`}>
         Apply reloads the page. Clear goes back to John Smith and to the settings you had before.
       </p>
     </FormModal>

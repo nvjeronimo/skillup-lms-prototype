@@ -1,6 +1,8 @@
 import Link from "@/lib/router";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
+import { cn } from "@/lib/utils";
+import styles from "./JumpTile.module.css";
 
 export interface JumpTileProps {
   icon: LucideIcon;
@@ -11,8 +13,7 @@ export interface JumpTileProps {
   onClick?: () => void;
 }
 
-const TILE =
-  "sk-press-card flex h-full w-full flex-col items-start gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 text-left transition-colors hover:border-sko-border-primary";
+const TILE = cn("sk-press-card", styles.tile);
 
 /**
  * DS `LMS / Platform / Jump tile` (6382:3302): a shortcut tile ("Jump somewhere"). Icon 20
@@ -23,11 +24,11 @@ const TILE =
 export function JumpTile({ icon, title, description, href, onClick }: JumpTileProps) {
   const content = (
     <>
-      <span className="flex rounded-control bg-sko-bg-primary-soft p-2">
-        <Icon icon={icon} size={20} className="text-sko-icon-primary" aria-hidden="true" />
+      <span className={styles.iconBox}>
+        <Icon icon={icon} size={20} className={styles.icon} aria-hidden="true" />
       </span>
-      <span className="sk-text-body-medium-semibold w-full text-sko-text-default">{title}</span>
-      <span className="sk-text-body-small-regular w-full text-sko-text-subtle">{description}</span>
+      <span className={cn("sk-text-body-medium-semibold", styles.title)}>{title}</span>
+      <span className={cn("sk-text-body-small-regular", styles.description)}>{description}</span>
     </>
   );
   return href ? (

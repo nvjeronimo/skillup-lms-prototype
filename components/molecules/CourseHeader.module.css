@@ -1,0 +1,49 @@
+/* DS `LMS / Sidebar / Course Header`: 16/16/8/16 padding, 4px between rows. */
+.compact {
+  display: flex;
+  justify-content: center;
+  padding: 16px 8px 8px;
+}
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px 16px 8px;
+}
+.divider {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.column {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+.rows {
+  gap: 4px;
+}
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.eyebrow {
+  min-width: 0;
+  color: var(--color-text-subtle);
+}
+.eyebrowFolding {
+  padding-bottom: 4px;
+}
+.eyebrowFill {
+  flex: 1 1 0%;
+}
+.title {
+  color: var(--color-text-default);
+}
+.partners {
+  color: var(--color-text-muted);
+}
+.partnersFolding {
+  padding-top: 4px;
+}

@@ -1,0 +1,94 @@
+/* The Training Block's own navigation: a slim bar on desktop, a thumb-reach tab bar on phones. */
+.bar {
+  margin-inline: auto;
+  display: flex;
+  height: 64px;
+  width: 100%;
+  max-width: 1280px;
+  align-items: center;
+  gap: 24px;
+  padding-inline: 16px;
+}
+.home {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+.logo { height: 20px; }
+.nav {
+  display: none;
+  flex: 1 1 0%;
+}
+.navList {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+.navItem {
+  position: relative;
+  display: inline-flex;
+  min-height: 64px;
+  align-items: center;
+  padding-inline: 12px;
+}
+.currentRule {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 4px;
+}
+.who {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.name { display: none; }
+.avatar {
+  display: inline-flex;
+  height: 40px;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+/* Phone tab bar. */
+.tabBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+}
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.tab {
+  display: flex;
+  min-height: 64px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.tabIcon {
+  display: inline-flex;
+  height: 28px;
+  width: 48px;
+  align-items: center;
+  justify-content: center;
+}
+.tabIconPill { border-radius: 9999px; }
+
+@media (min-width: 768px) {
+  .bar { padding-inline: 32px; }
+  .nav { display: block; }
+  .who { margin-left: 0; }
+  .tabBar { display: none; }
+}
+@media (min-width: 1024px) {
+  .name { display: inline; }
+}

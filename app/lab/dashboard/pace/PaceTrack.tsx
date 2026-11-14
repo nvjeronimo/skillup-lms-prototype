@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import type { PaceTrackData } from "./pace-data";
+import styles from "./PaceTrack.module.css";
 
 export interface PaceTrackProps extends PaceTrackData {
   /** Colours the gap between you and the cohort amber when behind. */
@@ -30,16 +31,16 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
           : "You are in the same module as your cohort.";
 
   return (
-    <figure className={cn("flex flex-col gap-2", className)}>
-      <div aria-hidden="true" className="flex flex-col gap-1.5">
+    <figure className={cn(styles.track, className)}>
+      <div aria-hidden="true" className={styles.drawing}>
         {/* You marker */}
-        <div className="grid gap-1" style={cols}>
+        <div className={styles.row} style={cols}>
           {modules.map((m) => (
-            <div key={m} className="flex justify-center">
+            <div key={m} className={styles.cell}>
               {m === youCol ? (
-                <span className="sk-text-body-small-semibold inline-flex flex-col items-center text-sko-text-primary">
-                  <span className="rounded-pill bg-sko-bg-primary px-2 text-sko-text-on-primary">You</span>
-                  <span className="h-1.5 w-0.5 bg-sko-bg-primary" />
+                <span className={`sk-text-body-small-semibold ${styles.marker} ${styles.youMarker}`}>
+                  <span className={styles.youPill}>You</span>
+                  <span className={`${styles.stem} ${styles.youStem}`} />
                 </span>
               ) : null}
             </div>
@@ -47,7 +48,7 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
         </div>
 
         {/* Module segments */}
-        <div className="grid gap-1" style={cols}>
+        <div className={styles.row} style={cols}>
           {modules.map((m) => {
             const done = you > 0 && m < you;
             const current = you > 0 && m === you;
@@ -56,11 +57,11 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
               <span
                 key={m}
                 className={cn(
-                  "h-3 rounded-inner",
-                  done && "bg-sko-bg-primary",
-                  current && "bg-sko-bg-primary-soft ring-2 ring-inset ring-sko-border-primary",
-                  gap && "border border-dashed border-sko-border-warning bg-sko-bg-warning-soft",
-                  !done && !current && !gap && "bg-sko-bg-track",
+                  styles.segment,
+                  done && styles.done,
+                  current && styles.current,
+                  gap && styles.gap,
+                  !done && !current && !gap && styles.todo,
                 )}
               />
             );
@@ -68,22 +69,22 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
         </div>
 
         {/* Module numbers */}
-        <div className="grid gap-1" style={cols}>
+        <div className={styles.row} style={cols}>
           {modules.map((m) => (
-            <span key={m} className="sk-text-body-small-medium text-center text-sko-text-subtle">
+            <span key={m} className={`sk-text-body-small-medium ${styles.number}`}>
               M{m}
             </span>
           ))}
         </div>
 
         {/* Cohort marker */}
-        <div className="grid gap-1" style={cols}>
+        <div className={styles.row} style={cols}>
           {modules.map((m) => (
-            <div key={m} className="flex justify-center">
+            <div key={m} className={styles.cell}>
               {m === cohort ? (
-                <span className="sk-text-body-small-semibold inline-flex flex-col items-center text-sko-text-muted">
-                  <span className="h-1.5 w-0.5 bg-sko-bg-strong" />
-                  <span className="rounded-pill bg-sko-bg-page px-2 ring-1 ring-inset ring-sko-border-strong">
+                <span className={`sk-text-body-small-semibold ${styles.marker} ${styles.cohortMarker}`}>
+                  <span className={`${styles.stem} ${styles.cohortStem}`} />
+                  <span className={styles.cohortPill}>
                     Cohort
                   </span>
                 </span>
@@ -93,8 +94,8 @@ export function PaceTrack({ you, cohort, total, behind, className }: PaceTrackPr
         </div>
       </div>
 
-      <figcaption className="sk-text-body-medium-regular text-sko-text-muted">
-        <span className="sk-text-body-medium-semibold text-sko-text-default">{youText}</span>
+      <figcaption className={`sk-text-body-medium-regular ${styles.caption}`}>
+        <span className={`sk-text-body-medium-semibold ${styles.captionStrong}`}>{youText}</span>
         {" · "}
         {cohortText}. {gapText}
       </figcaption>

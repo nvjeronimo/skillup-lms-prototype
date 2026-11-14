@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Ban } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
+import styles from "./NotInEdx.module.css";
 
 /**
  * What a whole page shows in the Open edX scope when Open edX has nothing behind it
@@ -8,7 +9,7 @@ import { EmptyState } from "@/components/atoms/EmptyState";
  */
 export function NotInEdx({ title, reason }: { title: string; reason: string }) {
   return (
-    <div className="mx-auto w-full max-w-[720px] px-4 py-12">
+    <div className={styles.page}>
       <EmptyState icon={Ban} titleAs="h1" title={`${title} is not in Open edX`} description={reason} />
     </div>
   );

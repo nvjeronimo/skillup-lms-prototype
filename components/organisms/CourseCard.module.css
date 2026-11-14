@@ -1,0 +1,136 @@
+/* My Learning row: blocks stacked below xl (1280), one DS List row (padding 16, gap 24) from xl. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0 transparent, 0 0 transparent, var(--sk-shadow-card);
+  padding: 16px;
+}
+/* Stacked: padding-right 40 keeps the titles clear of the pinned 32px overflow trigger. */
+.head {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  gap: 16px;
+  padding-right: 40px;
+}
+/* DS thumb: bg/primary-soft, initials text/primary. */
+.thumb {
+  display: inline-flex;
+  height: 80px;
+  width: 80px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+.titles {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.progressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.percent {
+  flex-shrink: 0;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+.estimation {
+  text-align: right;
+  color: var(--color-text-subtle);
+}
+/* DS up-next: padding 8/12, gap 16, radius control, bg/subtle. */
+.upNext {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 16px;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  padding: 8px 12px;
+}
+.upNextContent {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.upNextLabel {
+  color: var(--color-text-subtle);
+}
+.upNextTitle {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+.resume {
+  flex-shrink: 0;
+}
+/* Stacked: pinned top-right so the menu opens under its trigger; xl: back in the row. */
+.menu {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+@media (min-width: 1280px) {
+  .card {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
+  .head {
+    gap: 24px;
+    padding-right: 0;
+  }
+  .progress {
+    width: 280px;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+  /* A guard, no DS value. */
+  .upNext {
+    max-width: 320px;
+  }
+  .menu {
+    position: static;
+  }
+}

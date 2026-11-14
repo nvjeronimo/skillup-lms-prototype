@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { OverallProgress } from "./OverallProgress";
+import styles from "./OverallProgress.stories.module.css";
 
 const meta: Meta<typeof OverallProgress> = {
   title: "Molecules/Overall Progress",
@@ -17,7 +18,7 @@ export const Desktop: Story = {
   args: { device: "Desktop" },
   decorators: [
     (Story) => (
-      <div className="w-[280px] border border-sko-border-subtle bg-sko-bg-page">
+      <div className={styles.sidebar}>
         <Story />
       </div>
     ),

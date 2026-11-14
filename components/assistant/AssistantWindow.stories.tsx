@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AssistantWindow } from "./AssistantWindow";
+import styles from "./AssistantWindow.stories.module.css";
 
 const SUGGESTIONS = [
   "What is due this week?",
@@ -21,7 +22,7 @@ const meta: Meta<typeof AssistantWindow> = {
     suggestions: SUGGESTIONS,
     firstName: "John",
     modal: false,
-    className: "h-[600px] w-[380px]",
+    className: styles.card,
     onAsk: () => {},
     onClear: () => {},
     onClose: () => {},
@@ -72,7 +73,7 @@ export const ScriptedNote: Story = {
 };
 
 export const Mobile: Story = {
-  args: { modal: true, className: "h-[640px] w-[375px]" },
+  args: { modal: true, className: styles.phone },
 };
 
 const ROWS = [

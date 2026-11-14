@@ -1,0 +1,263 @@
+/* DS `LMS / Profile Menu`. */
+
+/* The panel: 288 wide, 8 under the trigger, scrolls inside when the window is short, grows out of
+   the trigger's corner (top right). */
+.panel {
+  transform-origin: top right;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 50;
+  display: flex;
+  max-height: calc(100dvh - 88px);
+  width: 288px;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* The skin dots: 10px, in the skin's colour (the dot carries the skin's data attributes). */
+.dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: var(--sk-radius-pill);
+}
+.dotIconPrimary {
+  background-color: var(--color-icon-primary);
+}
+.dotAccentYellow {
+  background-color: var(--color-icon-accent-yellow);
+}
+.dotPrimary {
+  background-color: var(--color-bg-primary);
+}
+
+/* A menu group: a rule above (not on the first), 16 at the sides; 12 top and bottom, 16 when
+   roomy. */
+.section {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-inline: 16px;
+  padding-block: 12px;
+}
+.section:first-child {
+  border-top-width: 0;
+}
+.roomy {
+  padding-block: 16px;
+}
+.sectionTitle {
+  margin-bottom: 8px;
+  color: var(--color-text-subtle);
+}
+.settingsTitle {
+  margin-bottom: 16px;
+}
+
+/* The link groups (Sign out, SkillUp Online, the footer): section padding and a rule above. */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px 16px;
+}
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* A menu row: 44 tall, 16px icon, body-medium/Medium text/muted. */
+.menuRow {
+  display: flex;
+  min-height: 44px;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  padding-inline: 12px;
+  text-align: left;
+  color: var(--color-text-muted);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .menuRow:hover {
+    background-color: var(--color-bg-subtle);
+    color: var(--color-text-default);
+  }
+}
+.signOutIcon {
+  color: var(--color-icon-error);
+}
+
+/* DS Toggle (1102:4208) Default · sm · Text: a 36×20 track (padding 2), a 16px knob, 8 to the
+   label, top-aligned. */
+.toggleRow {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  padding: 6px 4px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .toggleRow:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.track {
+  display: inline-flex;
+  height: 20px;
+  width: 36px;
+  flex-shrink: 0;
+  align-items: center;
+  border-radius: var(--sk-radius-pill);
+  padding: 2px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.trackOn {
+  justify-content: flex-end;
+  background-color: var(--color-bg-primary);
+}
+/* Off: a 1px inset border/default ring (the bg/muted track and white knob are about 1.25:1
+   against bg/page, below WCAG 1.4.11's 3:1; DS defect BA-11). Inset, so the box stays 36×20. */
+.trackOff {
+  justify-content: flex-start;
+  background-color: var(--color-bg-muted);
+  box-shadow: inset 0 0 0 1px var(--color-border-default);
+}
+/* Knob: 16px, Elevation/level2 (Tailwind's `shadow`). */
+.knob {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--sk-radius-pill);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+.knobOn {
+  background-color: var(--color-icon-on-primary);
+}
+.knobOff {
+  background-color: var(--color-bg-on-media);
+}
+.toggleText {
+  display: flex;
+  flex-direction: column;
+}
+.label {
+  color: var(--color-text-muted);
+}
+.hint {
+  color: var(--color-text-subtle);
+}
+
+/* DS `Button group` (1046:10171): a track (padding 4, gap 2, radius 8); the pressed segment on
+   bg/page with 1px border/subtle and text/primary, the others text/subtle. */
+.segmented {
+  display: flex;
+  gap: 2px;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-track);
+  padding: 4px;
+}
+/* One row that scrolls sideways, without a scrollbar. */
+.scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+.segment {
+  display: inline-flex;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-radius: var(--sk-radius-control);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.segmentScroll {
+  flex-shrink: 0;
+}
+/* min-width 0: a segment may shrink below its text, which then ends with an ellipsis. */
+.segmentFill {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.segmentPad {
+  gap: 8px;
+  padding-inline: 10px;
+}
+/* The brand skins' own tighter gap and padding (declared after the default, so it wins). */
+.skinSegment {
+  gap: 6px;
+  padding-inline: 12px;
+}
+.segmentOn {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+.segmentOff {
+  border-color: transparent;
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) {
+  .segmentOff:hover {
+    background-color: var(--color-bg-subtle);
+    color: var(--color-text-default);
+  }
+}
+
+/* Appearance: 16 between items (the toggle row's own 6 of padding + 10). */
+.appearance {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-inline: 4px;
+}
+.skinName {
+  white-space: nowrap;
+}
+.themeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-inline: 4px;
+}
+.themeText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+/* Accessibility standards: 16 between items (each toggle row's own 6 + 4, + 6 under Text size). */
+.accessibility {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.textSize {
+  margin-bottom: 6px;
+}

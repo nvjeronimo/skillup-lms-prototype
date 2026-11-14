@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FileItem } from "./FileItem";
+import styles from "./FileItem.stories.module.css";
 
 const meta: Meta<typeof FileItem> = {
   title: "Molecules/File Item",
@@ -15,7 +16,7 @@ const meta: Meta<typeof FileItem> = {
   argTypes: { type: { control: "select", options: ["PDF", "DOCX", "XLSX", "PPTX", "ZIP"] } },
   decorators: [
     (Story) => (
-      <div className="max-w-xl">
+      <div className={styles.column}>
         <Story />
       </div>
     ),
@@ -31,7 +32,7 @@ export const XLSX: Story = { args: { type: "XLSX", name: "Six-Sigma-data-pack.xl
 
 export const AllTypes: Story = {
   render: () => (
-    <div className="flex max-w-xl flex-col gap-2">
+    <div className={styles.list}>
       <FileItem type="PDF" name="DMAIC-overview.pdf" size="145 KB" />
       <FileItem type="DOCX" name="Discovery-template.docx" size="62 KB" />
       <FileItem type="XLSX" name="Six-Sigma-data-pack.xlsx" size="210 KB" />

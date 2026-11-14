@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Badge, type BadgeColor } from "@/components/atoms/Badge";
 import { cn } from "@/lib/utils";
+import styles from "./parts.module.css";
 
 /**
  * DS `LMS / Course Detail / Section intro` (5456:852): the section heading
@@ -11,18 +12,18 @@ export function SectionIntro({ title, lead }: { title: string; lead?: string }) 
   // (Figma 03 · Course Detail; Nelson, 28 Oct 2026). Other titles stay plain.
   const learn = /^(What you'll )(learn)$/.exec(title);
   return (
-    <div className="flex flex-col gap-1.5">
-      <h2 className="sk-text-headline-small-bold text-sko-text-default">
+    <div className={styles.intro}>
+      <h2 className={`sk-text-headline-small-bold ${styles.introTitle}`}>
         {learn ? (
           <>
             {learn[1]}
-            <em className="italic">{learn[2]}</em>
+            <em className={styles.introEm}>{learn[2]}</em>
           </>
         ) : (
           title
         )}
       </h2>
-      {lead ? <p className="sk-text-body-large-regular text-sko-text-muted">{lead}</p> : null}
+      {lead ? <p className={`sk-text-body-large-regular ${styles.introLead}`}>{lead}</p> : null}
     </div>
   );
 }
@@ -62,18 +63,18 @@ export function CardShell({
       data-invented={invented}
       className={cn(
         // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
-        "flex flex-col rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]",
-        gap === "lg" ? "gap-3" : "gap-2",
+        styles.card,
+        gap === "lg" ? styles.gapLg : styles.gapMd,
         className,
       )}
     >
       {aside ? (
-        <div className="flex items-center justify-between gap-2">
-          <Label className="sk-text-label-small-medium text-sko-text-default">{label}</Label>
+        <div className={styles.labelRow}>
+          <Label className={`sk-text-label-small-medium ${styles.label}`}>{label}</Label>
           {aside}
         </div>
       ) : (
-        <Label className="sk-text-label-small-medium text-sko-text-default">{label}</Label>
+        <Label className={`sk-text-label-small-medium ${styles.label}`}>{label}</Label>
       )}
       {children}
     </section>
@@ -101,25 +102,25 @@ export interface SidebarDate {
  */
 export function SidebarDateList({ dates }: { dates: SidebarDate[] }) {
   return (
-    <ul className="flex flex-col">
+    <ul className={styles.dates}>
       {dates.map((date, index) => (
         <li
           key={date.id}
           className={cn(
-            "flex items-center gap-3 py-3",
-            index < dates.length - 1 && "border-b border-sko-border-subtle",
+            styles.date,
+            index < dates.length - 1 && styles.dateRule,
           )}
         >
           <span
             aria-hidden
-            className="flex h-12 w-11 shrink-0 flex-col items-center justify-center rounded-control bg-sko-bg-subtle"
+            className={styles.tile}
           >
-            <span className="sk-text-body-large-semibold text-sko-text-default">{date.day}</span>
-            <span className="sk-text-body-small-semibold text-sko-text-subtle">{date.month}</span>
+            <span className={`sk-text-body-large-semibold ${styles.day}`}>{date.day}</span>
+            <span className={`sk-text-body-small-semibold ${styles.month}`}>{date.month}</span>
           </span>
-          <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
-            <p className="sk-text-body-medium-semibold text-sko-text-default">{date.title}</p>
-            <p className="sk-text-body-small-regular text-sko-text-subtle">
+          <div className={styles.dateBody}>
+            <p className={`sk-text-body-medium-semibold ${styles.dateTitle}`}>{date.title}</p>
+            <p className={`sk-text-body-small-regular ${styles.dateDetail}`}>
               <time dateTime={date.iso}>{date.detail}</time>
             </p>
             <Badge variant="outline" color={date.relativeColor ?? "gray"}>

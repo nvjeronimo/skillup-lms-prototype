@@ -1,0 +1,82 @@
+/* DS LMS / Inline Alert: padding 16, gap 12, 2px top rule. The root takes the caller's
+   className, so its resting rules sit in :where(). */
+:where(.alert) {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+}
+/* The 2px top rule in the tone colour (Info, Success, Warning, Error, Answer). */
+:where(.rule) {
+  border-top-width: 2px;
+}
+:where(.ruleError) {
+  border-color: var(--color-border-error);
+}
+:where(.rulePrimary) {
+  border-color: var(--color-border-primary);
+}
+:where(.ruleSuccess) {
+  border-color: var(--color-border-success);
+}
+:where(.ruleWarning) {
+  border-color: var(--color-border-warning);
+}
+/* Hint: no rule, rounded 8, on bg/primary-soft. */
+:where(.hint) {
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-primary-soft);
+}
+/* Surface=page: on bg/faint. Surface=subtle: on bg/page (bg/faint disappears on grey). */
+:where(.onPage) {
+  background-color: var(--color-bg-faint);
+}
+:where(.onSubtle) {
+  background-color: var(--color-bg-page);
+}
+/* Only the icon carries the tone. */
+.icon {
+  flex-shrink: 0;
+}
+.fgPrimary {
+  color: var(--color-text-primary);
+}
+.fgError {
+  color: var(--color-icon-error);
+}
+.fgMuted {
+  color: var(--color-icon-muted);
+}
+.fgSuccess {
+  color: var(--color-icon-success);
+}
+.fgWarning {
+  color: var(--color-icon-warning);
+}
+.body {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.title {
+  color: var(--color-text-default);
+}
+.text {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+}
+/* DS Copy gap is 2 with a 4px-padded Link button; a bare button needs 6. */
+.action {
+  margin-top: 6px;
+}
+.dismiss {
+  flex-shrink: 0;
+  color: var(--color-text-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .dismiss:hover {
+    color: var(--color-text-default);
+  }
+}

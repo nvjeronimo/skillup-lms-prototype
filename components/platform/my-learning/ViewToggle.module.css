@@ -1,0 +1,70 @@
+/* DS Button group, icon only: a bg/track track (padding 4, gap 2) holding 44 × 32 segments. */
+.track {
+  display: inline-flex;
+  gap: 2px;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-track);
+  padding: 4px;
+}
+.segment {
+  display: inline-flex;
+  height: 32px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.pressed {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  color: var(--color-icon-primary);
+}
+.rest {
+  border-color: transparent;
+  color: var(--color-icon-subtle);
+}
+@media (hover: hover) {
+  .rest:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+
+/* Skins: tokens/skin-harbor.css and skin-fluent.css restyle a .rounded-track.bg-sko-bg-track and
+   its segments; Studio (direction-studio.css) makes a segment of a track a pill. */
+:global([data-skin="harbor"]) .track,
+:global([data-skin="fluent"]) .track {
+  background-color: var(--color-bg-muted);
+}
+:global([data-skin="harbor"]) .track > .segment {
+  border-radius: 9999px;
+  border-color: transparent;
+  color: var(--color-text-subtle);
+  font-weight: 500;
+}
+:global([data-skin="harbor"]) .track > .segment[aria-pressed="true"] {
+  border-color: transparent;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: var(--sk-shadow-harbor-pill);
+}
+:global([data-skin="fluent"]) .track > .segment {
+  border-color: transparent;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+:global([data-skin="fluent"]) .track > .segment[aria-pressed="true"] {
+  border-color: var(--sk-fluent-stroke1);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: none;
+}
+:global([data-direction="studio"]) .segment {
+  border-radius: 9999px;
+}

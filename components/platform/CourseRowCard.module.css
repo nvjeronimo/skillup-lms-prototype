@@ -1,0 +1,208 @@
+/* DS Course-Row: the course card, a bar with its position and the modules toggle, the modules. */
+.frame {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--sk-shadow-card);
+}
+
+/* Which card shows at which width. The card's own display is in :where(), so these decide it. */
+.cardDesktop {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .cardDesktop { display: flex; }
+}
+.cardTablet {
+  display: none;
+}
+@media (min-width: 768px) {
+  .cardTablet { display: flex; }
+}
+@media (min-width: 1024px) {
+  .cardTablet,
+  .cardBelowDesktop { display: none; }
+}
+@media (min-width: 768px) {
+  .cardPhone { display: none; }
+}
+
+/* The bar: the position and the detail, the toggle at the end. */
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px 16px;
+}
+.texts {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 2px;
+}
+.position {
+  color: var(--color-text-default);
+}
+.detail {
+  color: var(--color-text-subtle);
+}
+.detailCompact {
+  width: 100%;
+}
+@media (max-width: 767.98px) {
+  /* A row fixed at Compact in a 327 grid cell: the toggle stays on the position's line, the
+     detail takes the whole width under them. */
+  .barCompact {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .textsCompact {
+    display: contents;
+  }
+  .positionCompact {
+    min-width: 0;
+    flex: 1 1 0%;
+  }
+  .detailCompact {
+    order: 9999;
+  }
+  .detailResponsive {
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .detailResponsive {
+    min-width: 0;
+    flex: 1 1 0%;
+  }
+}
+
+/* DS Toggle: a gray link button with a chevron; 20 tall as drawn, a 44 target. */
+.toggle {
+  margin-block: -12px;
+  display: inline-flex;
+  min-height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .toggle:hover {
+    color: var(--color-text-default);
+  }
+}
+.toggleIcon {
+  color: var(--color-icon-subtle);
+}
+
+/* The modules. */
+.modules {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-faint);
+  padding: 16px;
+}
+.moduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pending {
+  color: var(--color-text-subtle);
+}
+.moduleCurrent {
+  padding-top: 4px;
+}
+.module {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+.moduleNumber {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.moduleNumberDone {
+  background-color: var(--color-bg-success);
+  color: var(--color-icon-on-success);
+}
+.moduleNumberOpen {
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-on-primary-soft);
+}
+.moduleTexts {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+}
+.moduleTitle {
+  color: var(--color-text-default);
+}
+.moduleMeta {
+  color: var(--color-text-subtle);
+}
+.moduleEnd {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css, square-corners.css selected
+   the Tailwind classes these had: the row .rounded-card.border, the module .rounded-card.border.p-[15px]
+   inside it, the toggle .rounded-control, the number [aria-hidden].rounded-pill). The row's rules
+   are doubled: they held over a caller's hover border (My Learning) as the token rules did. */
+:global([data-direction="studio"]) .frame.frame {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-direction="studio"]) .frame .module {
+  padding: 23px;
+  border-radius: var(--sk-radius-control);
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .frame.frame,
+:global([data-skin="fluent"] [data-platform-page]) .frame.frame {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-skin="harbor"] [data-platform-page]) .frame .module,
+:global([data-skin="fluent"] [data-platform-page]) .frame .module {
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+}
+:global([data-skin="harbor"]) .toggle,
+:global([data-direction="studio"]) .toggle {
+  border-radius: 9999px;
+}
+:global(html[data-square-corners]) :is(.frame, .module) {
+  border-radius: 0 !important;
+}
+:global([data-square-corners]) .moduleNumber {
+  --sk-radius-pill: 9999px;
+}

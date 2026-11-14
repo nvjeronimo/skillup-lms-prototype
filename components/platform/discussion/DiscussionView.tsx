@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { useRouter, useSearchParams } from "@/lib/router";
@@ -27,6 +25,7 @@ import { NewPostModal } from "@/components/platform/forms/NewPostModal";
 import { ReportMessageModal } from "@/components/platform/forms/ReportMessageModal";
 import { sessionAdditions, useSessionAdditions } from "@/lib/platform/session-additions";
 import { cn } from "@/lib/utils";
+import styles from "./DiscussionView.module.css";
 
 const COURSES = [...new Map(discussionThreads.map((t) => [t.courseSlug, t.course])).entries()];
 
@@ -38,21 +37,21 @@ const COURSES = [...new Map(discussionThreads.map((t) => [t.courseSlug, t.course
 function InboxRow({ thread, selected, selectedFromTablet }: { thread: DiscussionThread; selected: boolean; selectedFromTablet: boolean }) {
   const unread = thread.unread > 0;
   return (
-    <li className="border-b border-sko-border-subtle last:border-b-0">
+    <li className={styles.inboxItem}>
       <Link
         href={discussionHref(thread.id)}
         scroll={false}
         aria-current={selected ? "true" : undefined}
         className={cn(
-          "flex items-start gap-2 px-[11px] py-3 transition-colors focus-visible:-outline-offset-2",
-          selected && "bg-sko-bg-primary-soft",
-          selectedFromTablet && "md:bg-sko-bg-primary-soft",
-          !selected && "hover:bg-sko-bg-faint",
+          styles.inboxRow,
+          selected && styles.inboxRowSelected,
+          selectedFromTablet && styles.inboxRowSelectedFromTablet,
+          !selected && styles.inboxRowIdle,
         )}
       >
-        <span className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="sk-text-body-small-medium truncate text-sko-text-subtle">{thread.course}</span>
-          <span className="flex flex-wrap items-start gap-1">
+        <span className={styles.rowText}>
+          <span className={cn("sk-text-body-small-medium", styles.oneLine, styles.subtle)}>{thread.course}</span>
+          <span className={styles.flags}>
             <Badge variant="outline" color="gray">
               {thread.kind === "question" ? "Question" : "Discussion"}
             </Badge>
@@ -62,18 +61,18 @@ function InboxRow({ thread, selected, selectedFromTablet }: { thread: Discussion
               </Badge>
             ) : null}
           </span>
-          <span className={cn("text-sko-text-default", unread || selected ? "sk-text-body-medium-semibold" : "sk-text-body-medium-medium")}>
+          <span className={cn(styles.ink, unread || selected ? "sk-text-body-medium-semibold" : "sk-text-body-medium-medium")}>
             {thread.title}
           </span>
-          <span className="sk-text-body-small-regular truncate text-sko-text-muted">{thread.preview}</span>
-          <span className="sk-text-body-small-regular text-sko-text-subtle">
+          <span className={cn("sk-text-body-small-regular", styles.oneLine, styles.muted)}>{thread.preview}</span>
+          <span className={cn("sk-text-body-small-regular", styles.subtle)}>
             {thread.meta} · {thread.replies} {thread.replies === 1 ? "reply" : "replies"}
           </span>
         </span>
         {unread ? (
-          <span className="sk-text-body-small-semibold mt-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-pill bg-sko-bg-primary px-1.5 text-sko-text-on-primary">
+          <span className={cn("sk-text-body-small-semibold", styles.unread)}>
             {thread.unread}
-            <span className="sr-only"> unread</span>
+            <span className="sk-sr-only"> unread</span>
           </span>
         ) : null}
       </Link>
@@ -84,13 +83,13 @@ function InboxRow({ thread, selected, selectedFromTablet }: { thread: Discussion
 /** A message bubble while it loads: the author line, the bubble with its ghost text, the time line. */
 function MessageSkeleton({ message }: { message: DiscussionThread["messages"][number] }) {
   const bubble = (
-    <div className="sk-text-body-medium-regular select-none rounded-control bg-sko-bg-muted px-3 py-2 text-transparent max-md:self-stretch md:max-w-[420px]">
+    <div className={cn("sk-text-body-medium-regular", styles.bubbleGhost)}>
       {message.body}
     </div>
   );
   if (message.from === "learner") {
     return (
-      <div aria-hidden="true" className="flex flex-col items-end gap-1">
+      <div aria-hidden="true" className={styles.mineSkeleton}>
         <Skeleton variant="ghost" text="body-small-medium">{message.author}</Skeleton>
         {bubble}
         <Skeleton variant="ghost" text="body-small-regular">{message.time}</Skeleton>
@@ -98,10 +97,10 @@ function MessageSkeleton({ message }: { message: DiscussionThread["messages"][nu
     );
   }
   return (
-    <div aria-hidden="true" className="flex items-start gap-2">
+    <div aria-hidden="true" className={styles.theirsSkeleton}>
       <Skeleton variant="circle" size={32} />
-      <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
-        <div className="flex flex-wrap items-center gap-1">
+      <div className={styles.theirsSkeletonText}>
+        <div className={styles.authorLine}>
           <Skeleton variant="ghost" text="body-small-medium">{message.author}</Skeleton>
           {message.label ? <SkeletonPill>{message.label}</SkeletonPill> : null}
           {message.accepted ? <SkeletonPill>Accepted answer</SkeletonPill> : null}
@@ -125,75 +124,76 @@ export function DiscussionSkeleton() {
   const explicit = discussionThreads.find((t) => t.id === threadId);
   const current = explicit ?? discussionThreads[0];
   return (
-    <div className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20">
-      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
-        <div className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
-          <div className="flex flex-col gap-1">
+    <div className={styles.page}>
+      <div className={cn("sk-page-stack", styles.stack)}>
+        <div className={cn(styles.head, explicit && styles.phoneHidden)}>
+          <div className={styles.stack1}>
             <Skeleton variant="ghost" text="headline-large-bold">Discussion across your courses.</Skeleton>
           </div>
-          <SkeletonPill size="button-md" icon className="md:h-11">New post</SkeletonPill>
+          <SkeletonPill size="button-md" icon className={styles.newPostGhost}>New post</SkeletonPill>
         </div>
-        <div className="flex flex-col gap-6 md:flex-row md:items-start">
+        <div className={styles.columns}>
           <div
             className={cn(
-              "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[340px] md:shrink-0 lg:w-[380px]",
-              explicit && "max-md:hidden",
+              styles.card,
+              styles.listCard,
+              explicit && styles.phoneHidden,
             )}
           >
-            <div className="flex flex-col gap-3 bg-sko-bg-subtle px-[11px] py-3">
-              <Skeleton variant="block" radius="control" className="h-11 md:h-10" />
-              <div className="flex flex-col gap-1">
+            <div className={styles.tools}>
+              <Skeleton variant="block" radius="control" className={styles.fieldGhost} />
+              <div className={styles.stack1}>
                 <Skeleton variant="ghost" text="body-small-medium">Course</Skeleton>
-                <Skeleton variant="block" radius="control" className="h-11 md:h-10" />
+                <Skeleton variant="block" radius="control" className={styles.fieldGhost} />
               </div>
-              <div className="inline-flex max-w-full gap-0.5 self-start overflow-hidden rounded-track bg-sko-bg-track p-1">
+              <div className={styles.segmentTrack}>
                 {discussionFilters.map((f) => (
-                  <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
+                  <SkeletonPill key={f.id} size="segment" className={styles.segmentGhost}>{f.label}</SkeletonPill>
                 ))}
               </div>
             </div>
-            <div className="border-t border-sko-border-subtle">
+            <div className={styles.rows}>
               {discussionThreads.map((t) => (
-                <div key={t.id} className="flex items-start gap-2 border-b border-sko-border-subtle px-[11px] py-3 last:border-b-0">
-                  <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <Skeleton variant="ghost" text="body-small-medium" className="truncate">{t.course}</Skeleton>
-                    <div className="flex flex-wrap items-start gap-1">
+                <div key={t.id} className={styles.rowGhost}>
+                  <div className={styles.rowText}>
+                    <Skeleton variant="ghost" text="body-small-medium" className={styles.oneLine}>{t.course}</Skeleton>
+                    <div className={styles.flags}>
                       <SkeletonPill>{t.kind === "question" ? "Question" : "Discussion"}</SkeletonPill>
                       {t.answered ? <SkeletonPill>Answered</SkeletonPill> : null}
                     </div>
                     <Skeleton variant="ghost" text={t.unread > 0 ? "body-medium-semibold" : "body-medium-medium"}>{t.title}</Skeleton>
-                    <Skeleton variant="ghost" text="body-small-regular" className="truncate">{t.preview}</Skeleton>
+                    <Skeleton variant="ghost" text="body-small-regular" className={styles.oneLine}>{t.preview}</Skeleton>
                     <Skeleton variant="ghost" text="body-small-regular">
                       {`${t.meta} · ${t.replies} ${t.replies === 1 ? "reply" : "replies"}`}
                     </Skeleton>
                   </div>
-                  {t.unread > 0 ? <Skeleton variant="block" width={20} height={20} radius="pill" className="mt-0.5" /> : null}
+                  {t.unread > 0 ? <Skeleton variant="block" width={20} height={20} radius="pill" className={styles.unreadGhost} /> : null}
                 </div>
               ))}
             </div>
           </div>
-          <div className={cn("min-w-0 flex-1 flex-col gap-4", explicit ? "flex" : "hidden md:flex")}>
-            <SkeletonPill size="button-sm" icon className="self-start max-md:h-11 md:hidden">All conversations</SkeletonPill>
-            <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
-              <div className="flex flex-col gap-3 bg-sko-bg-subtle p-3 md:flex-row md:items-start md:justify-between">
-                <div className="flex min-w-0 flex-col gap-1">
+          <div className={cn(styles.threadColumn, explicit ? styles.threadColumnShown : styles.threadColumnFromTablet)}>
+            <SkeletonPill size="button-sm" icon className={styles.backGhost}>All conversations</SkeletonPill>
+            <div className={cn(styles.card, styles.threadCard)}>
+              <div className={styles.threadHead}>
+                <div className={styles.threadTitle}>
                   <Skeleton variant="ghost" text="body-small-medium">{`${current.course} · ${current.topic}`}</Skeleton>
                   <Skeleton variant="ghost" text="title-medium-semibold">{current.title}</Skeleton>
                 </div>
               </div>
-              <div className="flex flex-col gap-4 p-4 md:p-5 lg:p-6">
+              <div className={styles.messages}>
                 {current.messages.map((m) => (
                   <MessageSkeleton key={m.id} message={m} />
                 ))}
               </div>
               {current.replies > current.messages.length - 1 ? (
-                <div className="px-4 pb-4 md:px-5 lg:px-6">
+                <div className={styles.moreReplies}>
                   <Skeleton text="body-small-regular" width="60%" />
                 </div>
               ) : null}
-              <div className="flex items-center gap-2 border-t border-sko-border-subtle p-3">
-                <Skeleton variant="block" radius="control" className="h-11 min-w-0 flex-1 md:h-10" />
-                <SkeletonPill size="button-sm" className="max-md:h-11">Reply</SkeletonPill>
+              <div className={styles.replyBar}>
+                <Skeleton variant="block" radius="control" className={cn(styles.fieldGhost, styles.fill)} />
+                <SkeletonPill size="button-sm" className={styles.phoneTall}>Reply</SkeletonPill>
               </div>
             </div>
           </div>
@@ -239,41 +239,42 @@ export function DiscussionView() {
   const current = explicit ?? threads[0] ?? all[0];
 
   return (
-    <div className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20">
-      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
-        <div data-arrive={0} className={cn("flex flex-wrap items-end justify-between gap-4", explicit && "max-md:hidden")}>
-          <div className="flex flex-col gap-1">
-            <h1 className="sk-text-headline-large-bold text-sko-text-default">
-              Discussion <span data-heading-em="" className="text-sko-text-subtle">across your courses.</span>
+    <div className={styles.page}>
+      <div className={cn("sk-page-stack", styles.stack)}>
+        <div data-arrive={0} className={cn(styles.head, explicit && styles.phoneHidden)}>
+          <div className={styles.stack1}>
+            <h1 className={cn("sk-text-headline-large-bold", styles.ink)}>
+              Discussion <span data-heading-em="" className={styles.subtle}>across your courses.</span>
             </h1>
             {/* No subtitle: there is no private learner-to-mentor channel, and Mentorship Q&A is on hold
                 (Nelson, 28 Oct 2026). */}
           </div>
-          <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => setPosting(true)} className="max-md:h-11">
+          <Button hierarchy="secondary" size="md" leftIcon={Plus} onClick={() => setPosting(true)} className={styles.phoneTall}>
             New post
           </Button>
         </div>
 
-        <div className="flex flex-col gap-6 md:flex-row md:items-start" data-mock="Discussions come one course at a time (Discussions API); this inbox merges them">
+        <div className={styles.columns} data-mock="Discussions come one course at a time (Discussions API); this inbox merges them">
           <section
             data-arrive={1}
             aria-labelledby="discussion-list-title"
             className={cn(
-              "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[340px] md:shrink-0 lg:w-[380px]",
-              explicit && "max-md:hidden",
+              styles.card,
+              styles.listCard,
+              explicit && styles.phoneHidden,
             )}
           >
-            <h2 id="discussion-list-title" className="sr-only">
+            <h2 id="discussion-list-title" className="sk-sr-only">
               Conversations
             </h2>
-            <div className="flex flex-col gap-3 bg-sko-bg-subtle px-[11px] py-3">
+            <div className={styles.tools}>
               <SearchField value={query} onChange={setQuery} label="Search discussions" />
-              <label className="flex flex-col gap-1">
-                <span className="sk-text-body-small-medium text-sko-text-subtle">Course</span>
+              <label className={styles.stack1}>
+                <span className={cn("sk-text-body-small-medium", styles.subtle)}>Course</span>
                 <SelectField
                   value={course}
                   onChange={(e) => setCourse(e.target.value)}
-                  className="sk-text-body-medium-regular h-11 rounded-control border border-sko-border-default bg-sko-bg-page pl-3.5 text-sko-text-default transition-colors focus:border-sko-border-primary focus:outline-none md:h-10"
+                  className={cn("sk-text-body-medium-regular", styles.courseSelect)}
                 >
                   <option value="all">All courses</option>
                   {COURSES.map(([slug, title]) => (
@@ -286,7 +287,7 @@ export function DiscussionView() {
               <PlatformSegmented label="Filter conversations" options={[...discussionFilters]} value={filter} onChange={setFilter} />
             </div>
             {threads.length ? (
-              <ul className="border-t border-sko-border-subtle">
+              <ul className={styles.rows}>
                 {threads.map((t) => (
                   <InboxRow key={t.id} thread={t} selected={explicit?.id === t.id} selectedFromTablet={!explicit && current.id === t.id} />
                 ))}
@@ -315,69 +316,69 @@ export function DiscussionView() {
                       {query.trim() ? "Clear search" : "Show all conversations"}
                     </Button>
                   }
-                  className="rounded-none border-0 border-t px-4 py-8"
+                  className={styles.empty}
                 />
               </div>
             )}
           </section>
 
-          <div data-arrive={2} className={cn("min-w-0 flex-1 flex-col gap-4", explicit ? "flex" : "hidden md:flex")}>
+          <div data-arrive={2} className={cn(styles.threadColumn, explicit ? styles.threadColumnShown : styles.threadColumnFromTablet)}>
             <ButtonLink
               href={discussionHref()}
               scroll={false}
               hierarchy="link-subtle"
               size="sm"
               leftIcon={ArrowLeft}
-              className="self-start !border-b-0 max-md:min-h-11 md:hidden"
+              className={styles.back}
             >
               All conversations
             </ButtonLink>
-            <section aria-labelledby="discussion-thread-title" className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
-              <div className="flex flex-col gap-3 bg-sko-bg-subtle p-3 md:flex-row md:items-start md:justify-between">
-                <div className="flex min-w-0 flex-col gap-1">
-                  <p className="sk-text-body-small-medium text-sko-text-subtle">
-                    <Link href={coursePageHref(current.courseSlug)} className="hover:underline">
+            <section aria-labelledby="discussion-thread-title" className={cn(styles.card, styles.threadCard)}>
+              <div className={styles.threadHead}>
+                <div className={styles.threadTitle}>
+                  <p className={cn("sk-text-body-small-medium", styles.subtle)}>
+                    <Link href={coursePageHref(current.courseSlug)} className={styles.courseLink}>
                       {current.course}
                     </Link>{" "}
                     · {current.topic}
                   </p>
-                  <h2 id="discussion-thread-title" className="sk-text-title-medium-semibold text-sko-text-default">
+                  <h2 id="discussion-thread-title" className={cn("sk-text-title-medium-semibold", styles.ink)}>
                     {current.title}
                   </h2>
                 </div>
               </div>
-              <ol aria-label="Messages" className="flex flex-col gap-4 p-4 md:p-5 lg:p-6">
+              <ol aria-label="Messages" className={styles.messages}>
                 {current.messages.map((m) => (
                   <Message key={m.id} message={m} report="Report" onReport={() => setReporting(true)} />
                 ))}
               </ol>
               {current.replies > current.messages.length - 1 ? (
                 // The sample draws the first replies only.
-                <p className="sk-text-body-medium-regular flex items-center gap-1.5 px-4 pb-4 text-sko-text-subtle md:px-5 lg:px-6">
+                <p className={cn("sk-text-body-medium-regular", styles.moreReplies, styles.moreRepliesNote)}>
                   <Icon icon={MessageSquare} size={16} />
                   {current.replies - (current.messages.length - 1)} more{" "}
                   {current.replies - (current.messages.length - 1) === 1 ? "reply" : "replies"} in the course discussion.
                 </p>
               ) : null}
               <form
-                className="flex items-center gap-2 border-t border-sko-border-subtle p-3"
+                className={styles.replyBar}
                 onSubmit={(e) => {
                   e.preventDefault();
                   notInPrototype("Sending a reply");
                 }}
               >
-                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm transition-[border-color,box-shadow] focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
-                  <span className="sr-only">Write a reply</span>
+                <label className={styles.replyField}>
+                  <span className="sk-sr-only">Write a reply</span>
                   <input
                     type="text"
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
                     placeholder="Write a reply…"
                     autoComplete="off"
-                    className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default placeholder:text-sko-text-placeholder focus:outline-none"
+                    className={cn("sk-text-body-large-regular", styles.replyInput)}
                   />
                 </label>
-                <Button type="submit" size="sm" className="shrink-0 max-md:h-11">
+                <Button type="submit" size="sm" className={styles.replyButton}>
                   Reply
                 </Button>
               </form>

@@ -1,0 +1,94 @@
+/* A topic that is not in the course: the app's own 404, with the way back. */
+.notFound {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background-color: var(--color-bg-faint);
+  padding: 48px 16px;
+  text-align: center;
+}
+/* outline-none, but the global :focus-visible ring still wins on focus, as it did. */
+.notFound:not(:focus-visible) { outline: 2px solid transparent; outline-offset: 2px; }
+.notFoundText { display: flex; max-width: 480px; flex-direction: column; gap: 8px; }
+.notFoundTitle { color: var(--color-text-default); }
+.notFoundBody { color: var(--color-text-muted); }
+.notFoundActions { display: flex; width: 100%; max-width: 480px; flex-direction: column; gap: 12px; }
+@media (min-width: 640px) {
+  .notFoundActions { width: auto; flex-direction: row; }
+}
+
+/* Discuss this topic: the course-level Discussions panel on this topic's thread. */
+.discuss {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+  padding: 12px 16px;
+}
+.discussInfo { display: flex; align-items: center; gap: 10px; }
+.discussIcon { color: var(--color-text-primary); }
+.discussText { display: flex; flex-direction: column; }
+.discussTitle { color: var(--color-text-default); }
+.discussHint { color: var(--color-text-subtle); }
+
+.shell { display: flex; height: 100dvh; flex-direction: column; background-color: var(--color-bg-subtle); }
+/* The bar's view-transition-name makes it a stacking context: z 30 as the platform top bar,
+   under the drawer (40) and modals. */
+.topbar { position: relative; z-index: 30; }
+
+/* Body: sidebar 24 from the content; mobile keeps a smaller gutter. */
+.body { display: flex; min-height: 0; flex: 1 1 0%; }
+.bodyWithSidebar { gap: 24px; padding: 16px; }
+.bodyAlone { padding: 12px; }
+.content {
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+/* outline-none, but the global :focus-visible ring still wins on focus, as it did. */
+.content:not(:focus-visible) { outline: 2px solid transparent; outline-offset: 2px; }
+.contentScroll { flex: 1 1 0%; overflow-y: auto; overflow-anchor: none; }
+
+/* Sticky player band: the video stays visible at the top and docks once the content scrolls. */
+.videoBand {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: var(--color-bg-page);
+  transition-property: padding;
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+  transition-duration: var(--motion-duration-short4);
+  container-type: inline-size;
+}
+.videoBandDocked { padding: 0 0 8px; }
+.videoBandFull { padding-bottom: 12px; }
+.resume { padding-top: 4px; padding-bottom: 4px; }
+.videoBody { margin-top: 24px; }
+
+/* Under the topic header: a partner lab 12 below it; a Reading (and a SCORM activity) a 1px
+   rule 32 below it; every other type 24. */
+.bodyPartnerLab { margin-top: 12px; }
+.bodyRuled { margin-top: 32px; border-top-width: 1px; border-color: var(--color-border-subtle); padding-top: 8px; }
+.bodyDefault { margin-top: 24px; }
+
+/* The mobile course drawer */
+.drawer { position: fixed; inset: 0; z-index: 40; }
+.drawerClosed { pointer-events: none; }
+.drawerBackdrop { position: absolute; inset: 0; }
+.drawerPanel { position: absolute; left: 0; top: 0; height: 100%; touch-action: pan-y; }

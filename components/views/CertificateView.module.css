@@ -1,0 +1,15 @@
+.page { display: flex; min-height: 100dvh; flex-direction: column; background-color: var(--color-bg-subtle); }
+/* Brand stage: bg/primary with its own text pair. */
+.stage {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background-color: var(--color-bg-primary);
+  padding: 48px 16px;
+}
+/* outline-none, but the global :focus-visible ring still wins on focus, as it did. */
+.stage:not(:focus-visible) { outline: 2px solid transparent; outline-offset: 2px; }
+.stageTitle { color: var(--color-text-on-primary); }

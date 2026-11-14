@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { collection, colorVar, type FigmaVariable } from "./figmaTokens";
+import styles from "./Foundations.Colors.stories.module.css";
 
 /**
  * Every colour token of the SKO DS (collection 1. SKO-Semantics 🎨), grouped by the element it
@@ -21,20 +22,20 @@ const GROUPS = [
 function Swatch({ token }: { token: FigmaVariable }) {
   const cssVar = colorVar(token);
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-sko-border-subtle p-2">
+    <div className={styles.swatch}>
       <span
-        className="h-12 w-12 shrink-0 rounded-md border border-sko-border-subtle"
+        className={styles.sample}
         style={{ background: `var(${cssVar})` }}
       />
-      <span className="min-w-0">
-        <span className="sk-text-body-medium-semibold block text-sko-text-default">{token.name}</span>
-        <span className="sk-text-body-small-regular block text-sko-text-subtle">{cssVar}</span>
-        <span className="mt-1 flex flex-wrap gap-1">
+      <span className={styles.meta}>
+        <span className={`sk-text-body-medium-semibold ${styles.name}`}>{token.name}</span>
+        <span className={`sk-text-body-small-regular ${styles.cssVar}`}>{cssVar}</span>
+        <span className={styles.chips}>
           {semantics.modes.map((mode) => (
             <span
               key={mode}
               title={`${mode} ${token.values[mode]}${token.aliases?.[mode] ? ` (= ${token.aliases[mode]})` : ""}`}
-              className="h-3 w-3 rounded-sm border border-sko-border-subtle"
+              className={styles.chip}
               style={{ background: String(token.values[mode]) }}
             />
           ))}
@@ -46,16 +47,16 @@ function Swatch({ token }: { token: FigmaVariable }) {
 
 function ColorTokens() {
   return (
-    <div className="flex flex-col gap-6 bg-sko-bg-page p-6">
-      <p className="sk-text-body-small-regular text-sko-text-subtle">
+    <div className={styles.page}>
+      <p className={`sk-text-body-small-regular ${styles.subtle}`}>
         {colours.length} tokens · chips in mode order: {semantics.modes.join(", ")}
       </p>
       {GROUPS.map((g) => (
         <section key={g.group}>
-          <h2 className="sk-text-title-medium-semibold mb-3 text-sko-text-default">
+          <h2 className={`sk-text-title-medium-semibold ${styles.groupTitle}`}>
             {g.group} · {g.tokens.length}
           </h2>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={styles.swatches}>
             {g.tokens.map((t) => (
               <Swatch key={t.name} token={t} />
             ))}

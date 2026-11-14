@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "@/lib/router";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
@@ -26,6 +24,7 @@ import { ModuleList } from "./ModuleList";
 import { ProgressTab } from "./ProgressTab";
 import { QaTab } from "./QaTab";
 import { NONE, useSessionAdditions } from "@/lib/platform/session-additions";
+import styles from "./CourseDetailView.module.css";
 
 /**
  * Course Detail, self-paced (Figma handoff 6146:10226; Course 6406:39255, Progress
@@ -81,8 +80,8 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
 
   const panels: Record<CourseTabId, React.ReactNode> = {
     course: (
-      <div className="flex flex-col gap-layout-column md:flex-row md:items-start">
-        <div data-arrive={2} className="flex min-w-0 flex-1 flex-col gap-layout-stack">
+      <div className={styles.coursePanel}>
+        <div data-arrive={2} className={styles.main}>
           {/* Open edX shows Shift due dates on the course outline as on the Dates tab. No due dates
               are configured on SkillUp courses, so only where the course has a Dates tab (decision 036). */}
           {hasDatesTab(course) && course.datesTab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
@@ -90,7 +89,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
           <SectionIntro title={course.intro.title} lead={course.intro.lead} />
           <ModuleList modules={course.modules} topicHref={links.byId} />
         </div>
-        <div data-arrive={3} className="md:w-[320px] md:shrink-0">
+        <div data-arrive={3} className={styles.side}>
           <CourseSidebar course={course} />
         </div>
       </div>
@@ -107,7 +106,7 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
         <div data-arrive={0}>
           <CourseHeader course={course} />
         </div>
-        <div data-arrive={1} className="mx-auto w-full max-w-[1280px] px-layout-band-x pb-8 pt-6 md:pb-12 md:pt-8 lg:pb-20 lg:pt-10">
+        <div data-arrive={1} className={styles.body}>
           <div data-mock="Not designed yet: what this page shows under the header for a course hosted by a partner">
             <InlineAlert tone="info" title={course.hosted.dialog.title} description={course.hosted.dialog.body} />
           </div>
@@ -119,16 +118,16 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
   return (
     <>
       <div data-arrive={0}>
-        <CourseHeader course={course} className={cn(openThread && "max-md:hidden")} />
+        <CourseHeader course={course} className={cn(openThread && styles.hideOnPhone)} />
       </div>
       {/* With the header out of the mobile conversation view, the page keeps its one heading. */}
-      {openThread ? <h1 className="sr-only md:hidden">{course.title}</h1> : null}
+      {openThread ? <h1 className={`sk-sr-only ${styles.phoneOnly}`}>{course.title}</h1> : null}
 
-      <div data-arrive={1} className={cn("border-b border-sko-border-subtle bg-sko-bg-page", openThread && "max-md:hidden")}>
+      <div data-arrive={1} className={cn(styles.tabBand, openThread && styles.hideOnPhone)}>
         {/* The room above the tabs equals the tab's own room to its bar (Nelson, 26 Oct 2026): the band's
             edge to the label's cap height = the baseline to the bottom of the bar, about 20. Mobile: 12
             above (the tab has none of its own); from tablet up the tab's own 12 top padding is enough. */}
-        <div className="mx-auto flex w-full max-w-[1280px] items-end pl-layout-band-x pt-3 md:gap-5 md:px-layout-band-x md:pt-0 lg:gap-6">
+        <div className={styles.tabRow}>
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up. Their own rule sits on the row's.
               The labels are title-medium (18 px), as on the program page (Nelson, 2 Nov 2026). */}
           <PlatformTabs
@@ -139,17 +138,17 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
             label="title-medium"
             idBase={baseId}
             ariaLabel="Course sections"
-            className="-mb-px min-w-0 flex-1"
+            className={styles.tabs}
           />
-          <CourseSearch label={course.search.placeholder} topicHref={course.progress.href} slug={course.slug} variant="popup" className="hidden w-[320px] shrink-0 pb-[7px] pt-2 md:block" />
+          <CourseSearch label={course.search.placeholder} topicHref={course.progress.href} slug={course.slug} variant="popup" className={styles.search} />
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-[1280px] px-layout-band-x pb-8 pt-6 md:pb-12 md:pt-8 lg:pb-20 lg:pt-10">
+      <div className={styles.body}>
         {/* Mobile: the search sits above every tab, not only Course (asked by Nelson on 8 Oct;
             the Figma screens draw it on the Course tab only). Not on an open Q&A conversation. */}
         {openThread ? null : (
-          <div data-arrive={1} className="mb-4 md:hidden">
+          <div data-arrive={1} className={`${styles.phoneSearch} ${styles.phoneOnly}`}>
             <CourseSearch
               label={course.search.placeholder}
               topicHref={course.progress.href}

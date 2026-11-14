@@ -1,12 +1,13 @@
 import Link from "@/lib/router";
 import { SearchX } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
+import styles from "./not-found.module.css";
 
 /** An unknown program slug: say so and point back to My Learning. */
 export default function ProgramNotFound() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-sko-bg-faint p-6">
-      <div className="w-full max-w-xl bg-sko-bg-page">
+    <div className={styles.page}>
+      <div className={styles.panel}>
         <EmptyState
           icon={SearchX}
           titleAs="h1"
@@ -15,7 +16,7 @@ export default function ProgramNotFound() {
           action={
             <Link
               href="/platform/my-learning?tab=programs"
-              className="sk-text-body-medium-semibold inline-flex min-h-11 items-center text-sko-text-primary underline underline-offset-2"
+              className={`sk-text-body-medium-semibold ${styles.link}`}
             >
               See your programs
             </Link>

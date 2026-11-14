@@ -1,0 +1,36 @@
+/* DS `LMS / Module Header`: 12px gap, 12/16 padding, on bg/faint. */
+.header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--color-bg-faint);
+  padding: 12px 16px;
+  text-align: left;
+}
+/* Only State=Collapsed carries the 1px bottom hairline. */
+.collapsed {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.labels {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 8px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.chevron {
+  flex-shrink: 0;
+  color: var(--color-border-default);
+  transition-property: transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+/* Points up when the group is open: the arrow shows the way out. */
+.open {
+  transform: rotate(180deg);
+}

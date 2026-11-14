@@ -1,0 +1,506 @@
+/*
+ * Video player + DS _Video actions bar. The bar has three sizes: sm, lg, and `auto`, which is
+ * sm first, then md from 30rem and lg from 40rem of player width (container queries on the
+ * player). `md` is sm plus the 30rem classes only. The *MdUp / *LgUp classes below are those
+ * container-query additions; they come after the sm classes they override.
+ */
+
+/* ── DS _Video action button: 32×32, padding 8, radius control ─────────────── */
+.actionWrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.action {
+  position: relative;
+  display: inline-flex;
+  height: 32px;
+  min-width: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  padding: 8px;
+}
+/* Larger touch targets keep the 32 square and extend the hit area to 44 high (8 above, 4
+   below) and 1px each side, half the 2px gap. */
+[data-large-targets] .action {
+  min-height: 32px;
+  min-width: 32px;
+}
+[data-large-targets] .action::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -4px;
+  top: -8px;
+}
+/* Speed and CC: 4 of side padding lets "CC" and "1×" fit in the 32 minimum. */
+.actionLabelKind {
+  padding-inline: 4px;
+}
+/* On-state (CC while captions are on): bg/on-media + text/on-fixed, no hover. */
+.actionActive {
+  background-color: var(--color-bg-on-media);
+  color: var(--color-text-on-fixed);
+}
+/* Type = icon: icon/on-media. Type = Playback speed / Subtitles/CC: text/on-media. */
+.actionIcon {
+  background-color: var(--color-bg-overlay-soft);
+  color: var(--color-icon-on-media);
+}
+.actionText {
+  background-color: var(--color-bg-overlay-soft);
+  color: var(--color-text-on-media);
+}
+/* State=Hover: bg/on-media-soft + backdrop blur 4. */
+.actionHover {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .actionHover:hover {
+    background-color: var(--color-bg-on-media-soft);
+    backdrop-filter: blur(4px);
+  }
+}
+/* The volume button from lg: the group carries the hover, the button keeps bg/overlay-soft. */
+@container (min-width: 40rem) {
+  @media (hover: hover) {
+    .volumeToneLgUp:hover {
+      background-color: var(--color-bg-overlay-soft);
+      backdrop-filter: none;
+    }
+  }
+}
+/* The Solid icons: the closed shape of the lucide glyph is filled. */
+.solid > path:first-child,
+.solid > polygon,
+.solid > rect {
+  fill: currentColor;
+}
+
+/* DS _Video action tooltip, shown while its button is hovered or focused. Elevation/level4
+   geometry on --color-shadow-default. */
+.tooltip {
+  pointer-events: none;
+  visibility: hidden;
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-inverse);
+  padding: 4px 8px;
+  color: var(--color-text-on-inverse);
+  opacity: 0;
+  transition-property: opacity;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+  box-shadow:
+    0 0 transparent,
+    0 0 transparent,
+    0 2px 2px -1px var(--color-shadow-default),
+    0 4px 6px -2px var(--color-shadow-default),
+    0 12px 16px -4px var(--color-shadow-default);
+}
+@media (hover: hover) {
+  .action:hover ~ .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+.action:focus-visible ~ .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.alignStart {
+  left: 0;
+}
+.alignCenter {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.alignEnd {
+  right: 0;
+}
+
+/* ── The player ─────────────────────────────────────────────── */
+/* The ground is bg/subtle: a player wider than 16:9 shows it on both sides. */
+.player {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg-subtle);
+  transition-property: height, border-radius, box-shadow;
+  transition-duration: var(--motion-duration-short4);
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+}
+.sizeQueries {
+  container-type: inline-size;
+}
+/* No explicit height: a capped 16:9 band. */
+.band {
+  aspect-ratio: 16 / 9;
+  max-height: 34vh;
+}
+/* Docked: square top, rounded bottom (it is flush to the top). */
+.docked {
+  border-bottom-right-radius: var(--sk-radius-card);
+  border-bottom-left-radius: var(--sk-radius-card);
+  border-top-left-radius: var(--sk-radius-none);
+  border-top-right-radius: var(--sk-radius-none);
+}
+.undocked {
+  border-radius: var(--sk-radius-card);
+}
+/* The picture: a 16:9 frame fitted in the player's height and centred. */
+.picture {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+  transform: translateX(-50%);
+  overflow: hidden;
+  background-color: var(--color-bg-primary);
+}
+.youtube {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.youtube iframe {
+  height: 100%;
+  width: 100%;
+}
+.video {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+.poster {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+/* The full-size click layer; while paused, the DS _Video overlay action. */
+.clickLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scrim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-bg-overlay);
+}
+.bigPlay {
+  position: relative;
+  display: inline-flex;
+  height: 64px;
+  width: 64px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-overlay-soft);
+  color: var(--color-icon-on-media);
+  box-shadow: 0 0 transparent, 0 0 transparent, inset 0 0 0 1px color-mix(in srgb, var(--color-bg-on-media) 12%, transparent);
+  backdrop-filter: blur(16px);
+}
+/* Edge states: loading, error, unavailable, ended. */
+.status {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: var(--color-bg-overlay);
+  text-align: center;
+}
+.iconOnMedia {
+  color: var(--color-icon-on-media);
+}
+.textOnMedia {
+  color: var(--color-text-on-media);
+}
+.fixedButton {
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-fixed);
+  padding: 6px 12px;
+  color: var(--color-text-on-fixed);
+}
+.replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.iconOnFixed {
+  color: var(--color-icon-on-fixed);
+}
+.unavailable {
+  display: flex;
+  max-width: 400px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 24px;
+}
+
+/* Captions: centred with auto margins, just above the action bar. */
+.caption {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  z-index: 10;
+  margin-inline: auto;
+  width: fit-content;
+  max-width: 94%;
+  overflow: hidden;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-overlay);
+  text-align: center;
+}
+.captionSm {
+  bottom: 74px;
+}
+.captionLg {
+  bottom: 80px;
+}
+.captionText {
+  display: block;
+  padding: 4px 12px;
+  color: var(--color-text-on-media);
+}
+
+/* ── DS _Video actions bar. Spacing/3xl is mode-aware: 16 phone, 20 tablet, 24 desktop. ── */
+.bar {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 20;
+  --vab-top: 1rem;
+}
+@media (min-width: 768px) {
+  .bar {
+    --vab-top: 1.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .bar {
+    --vab-top: 1.5rem;
+  }
+}
+.barSm {
+  padding: 8px 4px 4px;
+}
+.barLg {
+  padding: var(--vab-top) 16px 16px;
+}
+.row {
+  display: flex;
+  align-items: center;
+}
+.rowSm {
+  flex-wrap: wrap;
+  column-gap: 2px;
+  row-gap: 8px;
+}
+.rowLg {
+  gap: 4px;
+}
+/* sm: Volume next to Play, the rest on the right. */
+.order2 {
+  order: 2;
+}
+.order3 {
+  order: 3;
+}
+.hide {
+  display: none;
+}
+/* lg: the volume group, button + 40×4 slider, gap 4, right pad 8; the group takes the hover. */
+.volume {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  border-radius: var(--sk-radius-control);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.volumeLg {
+  gap: 4px;
+  padding-right: 8px;
+}
+@media (hover: hover) {
+  .volumeLg:hover {
+    background-color: var(--color-bg-on-media-soft);
+    backdrop-filter: blur(4px);
+  }
+}
+/* Range inputs: the track is the content box (clipped background), the padding the hit area. */
+.range {
+  box-sizing: content-box;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: var(--sk-radius-none);
+  background-color: transparent;
+  background-clip: content-box;
+}
+/* 4px track inside a 24px hit area. */
+.volumeSlider {
+  height: 4px;
+  width: 40px;
+  padding-block: 10px;
+}
+/* DS volume slider handle: 12px round bg/on-media. */
+.volumeSlider::-webkit-slider-thumb {
+  height: 12px;
+  width: 12px;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-on-media);
+}
+.volumeSlider::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  border-radius: var(--sk-radius-pill);
+  border-width: 0;
+  background-color: var(--color-bg-on-media);
+}
+/* DS Video progress: elapsed · slider · time left, gap 8. */
+.progress {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+.progressSm {
+  order: -9999;
+  flex-basis: 100%;
+  padding-inline: 4px;
+}
+.progressLg {
+  flex: 1 1 0%;
+  padding-inline: 8px;
+}
+.time {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-on-media);
+}
+/* 8px track; the thumb is its straight 8px end. */
+.seek {
+  height: 8px;
+  width: 100%;
+  min-width: 0;
+}
+.seek::-webkit-slider-thumb {
+  height: 8px;
+  width: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: var(--sk-radius-none);
+  background-color: var(--color-bg-on-media);
+}
+.seek::-moz-range-thumb {
+  height: 8px;
+  width: 8px;
+  border-radius: var(--sk-radius-none);
+  border-width: 0;
+  background-color: var(--color-bg-on-media);
+}
+/* sm: always 44 high, all of it above the track's own line. */
+.seekSm {
+  margin-top: -26px;
+  padding-bottom: 5px;
+  padding-top: 31px;
+}
+/* md and lg: 24 high, or 44 with larger touch targets on, centred on the row. */
+.seekLg {
+  padding-block: 8px;
+}
+[data-large-targets] .seekLg {
+  margin-block: -6px;
+  padding-block: 18px;
+}
+/* sm: the Actions frame grows, which sends the next buttons to the right. */
+.spacerSm {
+  order: 1;
+  flex: 1 1 0%;
+}
+
+/* ── auto / md from 30rem of player width ─────────────────────── */
+@container (min-width: 30rem) {
+  .captionMdUp {
+    bottom: 80px;
+  }
+  .barMdUp {
+    padding: var(--vab-top) 12px 8px;
+  }
+  .rowMdUp {
+    flex-wrap: nowrap;
+  }
+  .orderMdUp {
+    order: 0;
+  }
+  .progressMdUp {
+    order: 0;
+    flex: 1 1 0%;
+    flex-basis: 0px;
+  }
+  .seekMdUp {
+    margin-top: 0;
+    padding-block: 8px;
+  }
+  [data-large-targets] .seekMdUp {
+    margin-block: -6px;
+    padding-block: 18px;
+  }
+  .spacerMdUp {
+    display: none;
+  }
+}
+/* ── auto from 40rem of player width ──────────────────────────── */
+@container (min-width: 40rem) {
+  .barLgUp {
+    padding-inline: 16px;
+    padding-bottom: 16px;
+  }
+  .rowLgUp {
+    column-gap: 4px;
+  }
+  .volumeLgUp {
+    gap: 4px;
+    padding-right: 8px;
+  }
+  .showLgUp {
+    display: block;
+  }
+  .progressLgUp {
+    padding-inline: 8px;
+  }
+}
+@container (min-width: 40rem) {
+  @media (hover: hover) {
+    .volumeLgUp:hover {
+      background-color: var(--color-bg-on-media-soft);
+      backdrop-filter: blur(4px);
+    }
+  }
+}

@@ -1,0 +1,6 @@
+/* Story layout: the four sizes on one baseline row. */
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}

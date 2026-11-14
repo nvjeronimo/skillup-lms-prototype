@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Ban, Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -15,6 +13,7 @@ import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { DemoOnly } from "@/lib/demo";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./ActivityView.module.css";
 
 export function ActivityView({ topicId }: { topicId: string }) {
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
@@ -69,7 +68,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
   // has no Open edX block behind it, so the body says so; a SCORM activity above is native.
   if (edx) {
     return (
-      <div className="py-6">
+      <div className={styles.empty}>
         <EmptyState
           icon={Ban}
           title="Checklist activities are not in Open edX"
@@ -94,7 +93,7 @@ export function ActivityView({ topicId }: { topicId: string }) {
   );
 
   return (
-    <div className="flex flex-col gap-6 py-6">
+    <div className={styles.checklist}>
       <ProgressRail
         states={railStates}
         currentIndex={currentIdx}
@@ -106,9 +105,9 @@ export function ActivityView({ topicId }: { topicId: string }) {
         onJump={(i) => toggle(i)}
       />
 
-      <p className="sk-text-body-large-regular text-sko-text-muted">{activity.intro}</p>
+      <p className={`sk-text-body-large-regular ${styles.intro}`}>{activity.intro}</p>
 
-      <ol className="flex flex-col gap-2">
+      <ol className={styles.steps}>
         {activity.steps.map((s, i) => {
           const isDone = done.has(i);
           return (
@@ -117,27 +116,16 @@ export function ActivityView({ topicId }: { topicId: string }) {
                 type="button"
                 onClick={() => toggle(i)}
                 aria-pressed={isDone}
-                className={cn(
-                  "flex w-full items-start gap-3 rounded-card border p-4 text-left transition-colors",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
-                  isDone
-                    ? "border-sko-border-success bg-sko-bg-success-soft"
-                    : "border-sko-border-subtle hover:border-sko-border-default",
-                )}
+                className={cn(styles.step, isDone ? styles.stepDone : styles.stepPending)}
               >
                 <span
-                  className={cn(
-                    "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill",
-                    isDone
-                      ? "bg-sko-bg-success text-sko-text-on-media"
-                      : "border-2 border-sko-border-default",
-                  )}
+                  className={cn(styles.check, isDone ? styles.checkDone : styles.checkPending)}
                 >
                   {isDone ? <Icon icon={Check} size={12} /> : null}
                 </span>
                 <span>
-                  <span className="sk-text-body-medium-semibold block text-sko-text-default">{s.title}</span>
-                  <span className="sk-text-body-medium-regular mt-0.5 block text-sko-text-muted">
+                  <span className={`sk-text-body-medium-semibold ${styles.stepTitle}`}>{s.title}</span>
+                  <span className={`sk-text-body-medium-regular ${styles.stepDetail}`}>
                     {s.detail}
                   </span>
                 </span>
@@ -192,16 +180,16 @@ function SamplePackage({
   const done = answers.length >= SCENARIOS.length;
   const scenario = SCENARIOS[answers.length];
   return (
-    <div className="flex flex-col gap-4 p-6 text-left md:p-8">
-      <div className="flex items-center justify-between gap-4">
-        <span className="sk-text-body-medium-regular text-sko-text-muted">
+    <div className={styles.package}>
+      <div className={styles.packageHeader}>
+        <span className={`sk-text-body-medium-regular ${styles.packageMuted}`}>
           {done ? "Results" : `Scenario ${answers.length + 1} of ${SCENARIOS.length}`}
         </span>
-        <span className="sk-text-body-medium-regular truncate text-sko-text-muted">{title}</span>
+        <span className={`sk-text-body-medium-regular ${styles.packageTitle}`}>{title}</span>
       </div>
       {done ? (
         <>
-          <p className="sk-text-headline-small-semibold text-sko-text-default">
+          <p className={`sk-text-headline-small-semibold ${styles.packageStrong}`}>
             You got {answers.filter(Boolean).length} of {SCENARIOS.length} scenarios right.
           </p>
           <div>
@@ -212,8 +200,8 @@ function SamplePackage({
         </>
       ) : (
         <>
-          <p className="sk-text-title-large-semibold text-sko-text-default">{scenario.prompt}</p>
-          <div className="flex flex-wrap gap-3">
+          <p className={`sk-text-title-large-semibold ${styles.packageStrong}`}>{scenario.prompt}</p>
+          <div className={styles.options}>
             {scenario.options.map((o, i) => (
               <Button key={o} variant="secondary" size="lg" onClick={() => onAnswer(i === scenario.answer)}>
                 {o}
@@ -222,7 +210,7 @@ function SamplePackage({
           </div>
         </>
       )}
-      <p className="sk-text-body-medium-regular text-sko-text-muted">
+      <p className={`sk-text-body-medium-regular ${styles.packageMuted}`}>
         Sample package content: the author builds this in their tool; the platform only plays it.
       </p>
     </div>
@@ -293,8 +281,8 @@ function ScormActivity({
     score === undefined && Boolean(arrived?.answers.length) && record.answers.length > 0 && state !== "window";
 
   return (
-    <div className="flex flex-col gap-4 py-6">
-      <p className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-default">
+    <div className={styles.scorm}>
+      <p className={`sk-text-body-large-regular ${styles.scormIntro}`}>
         {state === "window"
           ? "This activity opens in its own window. Your progress is saved as you go, and your completion and score come back to this page when you finish."
           : "This activity plays below. Your progress is saved as you go, and it reports your completion and score to the course when you finish."}
@@ -343,7 +331,7 @@ function ScormActivity({
 
       {/* Demo affordances: the error state, and a result arriving from the package window. */}
       <DemoOnly>
-        <div className="flex flex-wrap gap-2">
+        <div className={styles.demo}>
           {state !== "error" ? (
             <Button variant="secondary" size="sm" onClick={() => setState("error")}>
               Simulate load failure

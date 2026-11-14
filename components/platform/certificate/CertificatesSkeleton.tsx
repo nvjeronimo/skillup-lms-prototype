@@ -1,5 +1,6 @@
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { enrolments } from "@/lib/platform/certificate-enrolments";
+import styles from "./CertificatesSkeleton.module.css";
 
 /**
  * Certificates while it loads (motion-matrix §7.9): CertificatesView's column, gaps and text
@@ -9,8 +10,8 @@ import { enrolments } from "@/lib/platform/certificate-enrolments";
 export function CertificatesSkeleton() {
   const programs = enrolments.filter((e) => e.kind === "program");
   return (
-    <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
-      <div className="flex flex-col gap-2">
+    <div className={`sk-page-stack ${styles.column}`}>
+      <div className={styles.intro}>
         <Skeleton variant="ghost" text="headline-large-bold">
           My Certificates
         </Skeleton>
@@ -19,43 +20,43 @@ export function CertificatesSkeleton() {
         </Skeleton>
       </div>
 
-      <div className="flex flex-col gap-layout-stack">
-        <div className="flex items-center gap-2 md:justify-end">
+      <div className={styles.section}>
+        <div className={styles.searchRow}>
           <Skeleton
             variant="block"
             radius="control"
-            className="h-11 w-full md:h-10 md:w-[240px] lg:w-[320px]"
+            className={styles.search}
           />
         </div>
-        <div className="flex flex-col gap-2 md:flex-row md:justify-between">
+        <div className={styles.filters}>
           <Skeleton
             variant="block"
             radius="track"
-            className="h-[52px] w-full md:h-10 md:w-[252px]"
+            className={styles.filterType}
           />
           <Skeleton
             variant="block"
             radius="track"
-            className="h-[52px] w-full md:h-10 md:w-[266px]"
+            className={styles.filterStatus}
           />
         </div>
-        <div className="flex flex-col gap-layout-grid">
+        <div className={styles.groups}>
           {programs.map((e) => (
             <div
               key={e.slug}
-              className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
+              className={styles.card}
             >
-              <div className="flex items-center gap-3 bg-sko-bg-subtle px-4 py-3 md:gap-4 md:px-5">
+              <div className={styles.cardHead}>
                 <Skeleton
                   variant="block"
                   radius="control"
-                  className="aspect-[1123/794] w-14 shrink-0 md:w-20"
+                  className={styles.thumb}
                 />
                 <Skeleton variant="ghost" text="title-medium-semibold">
                   {e.title}
                 </Skeleton>
               </div>
-              <div className="border-t border-sko-border-subtle px-4 py-2.5 md:px-5">
+              <div className={styles.cardBar}>
                 <Skeleton text="body-medium-medium" width={220} />
               </div>
             </div>

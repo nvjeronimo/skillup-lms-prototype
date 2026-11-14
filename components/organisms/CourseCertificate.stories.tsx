@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CourseCertificate } from "./CourseCertificate";
+import styles from "./CourseCertificate.stories.module.css";
 
 const meta: Meta<typeof CourseCertificate> = {
   title: "Organisms/Course Certificate",
@@ -16,7 +17,7 @@ const meta: Meta<typeof CourseCertificate> = {
   },
   decorators: [
     (Story) => (
-      <div className="bg-sko-text-on-primary-soft p-8">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

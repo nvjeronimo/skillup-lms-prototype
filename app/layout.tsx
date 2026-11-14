@@ -1,6 +1,7 @@
 import { Outlet, ScrollRestoration } from "react-router";
 import type { Metadata } from "@/lib/router";
 import "./globals.css";
+import styles from "./layout.module.css";
 import { ResponsiveShell } from "@/components/views/ResponsiveShell";
 import { ARRIVAL_INIT_SCRIPT } from "@/lib/arrival/prepaint";
 import { SCOPE_INIT_SCRIPT } from "@/lib/edx-scope";
@@ -44,7 +45,7 @@ export default function RootLayout() {
           renders <main id="main" tabIndex={-1}>. */}
       <a
         href="#main"
-        className="sk-text-body-medium-semibold sr-only rounded-control border border-sko-border-primary bg-sko-bg-page px-4 py-3 text-sko-text-primary shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:inline-flex focus:min-h-[44px] focus:items-center focus:px-4 focus:py-3"
+        className={`sk-text-body-medium-semibold sk-sr-only ${styles.skip}`}
       >
         Skip to content
       </a>

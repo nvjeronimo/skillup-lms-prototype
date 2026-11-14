@@ -1,6 +1,7 @@
 import * as React from "react";
 import { inertProps } from "@/lib/inert";
 import { cn } from "@/lib/utils";
+import styles from "./Collapse.module.css";
 
 export interface CollapseProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -24,12 +25,12 @@ export function Collapse({ open, children, className, ...rest }: CollapseProps) 
       aria-hidden={!open || undefined}
       {...inertProps(!open)}
       className={cn(
-        "grid transition-[grid-template-rows] duration-medium2 ease-standard",
-        open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        styles.fold,
+        open ? styles.open : styles.closed,
         className,
       )}
     >
-      <div className="sk-collapse-body min-h-0 overflow-hidden">{children}</div>
+      <div className={cn("sk-collapse-body", styles.body)}>{children}</div>
     </div>
   );
 }

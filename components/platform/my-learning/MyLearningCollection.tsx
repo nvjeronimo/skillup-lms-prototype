@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "@/lib/router";
 import { Search } from "lucide-react";
@@ -31,20 +29,19 @@ import { ProgramCard } from "./ProgramCard";
 import { StickyToolbar } from "@/components/platform/StickyToolbar";
 import { SearchField } from "./SearchField";
 import { ViewToggle } from "./ViewToggle";
+import styles from "./MyLearningCollection.module.css";
 
 const ID_BASE = "my-learning";
 
 /* Grid: 3 columns on desktop, 2 on tablet, 1 on mobile, grid-gap apart (DS Layout/*). */
 /* The status filter's track (DS Button group); its skeleton reuses it. */
-export const MY_LEARNING_FILTER_TRACK =
-  "flex w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1 [scrollbar-width:none] md:inline-flex md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden";
-export const MY_LEARNING_GRID =
-  "grid grid-cols-1 gap-layout-grid md:grid-cols-2 lg:grid-cols-3";
+export const MY_LEARNING_FILTER_TRACK = styles.filterTrack;
+export const MY_LEARNING_GRID = styles.grid;
 /* List: one column, grid-gap apart; from a tablet up since 23 Oct 2026 (Nelson). */
-const LIST = "hidden flex-col gap-layout-grid md:flex";
+const LIST = styles.list;
 
 /* The row is the target of its card's title link: it shows it on hover, as the card did. */
-const ROW_HOVER = "min-w-0 transition-colors has-[h3_a:hover]:border-sko-border-default";
+const ROW_HOVER = styles.row;
 /* A card coming into the list rises a nudge (4px), one after the other (staggerStyle). */
 const ROW_ENTER = "sk-animate-rise sk-rise-nudge sk-enter-only";
 
@@ -183,15 +180,15 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
   );
 
   return (
-    <section aria-label="My courses and programs" className="flex flex-col gap-layout-stack">
+    <section aria-label="My courses and programs" className={styles.collection}>
       {/* The tabs and the filter row stay at hand: stuck to the top on scroll up (StickyToolbar). */}
-      <StickyToolbar bleed className="flex flex-col gap-6">
+      <StickyToolbar bleed className={styles.toolbar}>
         {/* Row 1: the tabs on their 1px border/subtle rule, across the whole width.
           The Size=sm tabs already grow their target to 44 upwards, so the "larger targets"
           min-height is switched off on them: it would make the 32px row 44 tall. */}
         <div
           data-arrive={1}
-          className="border-b border-sko-border-subtle pt-2 max-md:[&_[role=tab]]:min-h-0"
+          className={styles.tabsRow}
         >
           {/* DS Horizontal tabs with a count badge: Size=sm on mobile, md from tablet up. The rule
             is the border of this row, and only the selected panel is rendered. */}
@@ -218,14 +215,14 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             sticky toolbar's 400 cap). */}
         <div
           data-arrive={2}
-          className="flex flex-col-reverse gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6"
+          className={styles.filterRow}
         >
           {/* DS `Button group`: a bg/muted track (padding 4, gap 2, radius 8); the pressed segment is a
             pill on bg/page with 1px border/subtle and text/primary. Segments 32 tall, 44 on mobile.
             Mobile (Nelson, 13 Oct 2026, Figma 7187:37067): the track fills the width and stays
             put; the segments scroll sideways inside it and the last one is cut at its right edge,
             which is the cue that there is more. No scrollbar is drawn. */}
-          <div className="min-w-0 lg:shrink-0">
+          <div className={styles.filterSlot}>
             <div
               role="group"
               aria-label={`Filter ${noun} by status`}
@@ -240,10 +237,9 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
                   // A segment reached with the keyboard comes into the track when it was cut off.
                   onFocus={(e) => scrollToElement(e.currentTarget, "nearest")}
                   className={cn(
-                    "sk-text-body-medium-semibold h-8 shrink-0 whitespace-nowrap rounded-control border px-4 transition-colors max-md:h-11",
-                    status === item.id
-                      ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
-                      : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+                    "sk-text-body-medium-semibold",
+                    styles.segment,
+                    status === item.id ? styles.segmentPressed : styles.segmentRest,
                   )}
                 >
                   {item.label}
@@ -252,20 +248,20 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             </div>
           </div>
           {/* Stuck to the top, the bar keeps the tabs and the filter; the search steps out unless it holds a query. */}
-          <div data-search-slot="" data-keep={query ? "" : undefined} className="flex min-w-0 items-center gap-2 md:justify-between lg:justify-start">
-            <div data-hide-when-stuck="" data-keep={query ? "" : undefined} className="w-full lg:w-auto">
+          <div data-search-slot="" data-keep={query ? "" : undefined} className={styles.searchSlot}>
+            <div data-hide-when-stuck="" data-keep={query ? "" : undefined} className={styles.searchHolder}>
               <SearchField
                 value={query}
                 onChange={setQuery}
                 label={myLearningSearch.placeholder}
-                className="w-full lg:w-[320px]"
+                className={styles.search}
               />
             </div>
             <ViewToggle
               view={view}
               withTable
               onChange={(next) => setParam("view", next, MY_LEARNING_DEFAULT_VIEW)}
-              className="hidden shrink-0 md:inline-flex"
+              className={styles.viewToggle}
             />
           </div>
         </div>
@@ -278,9 +274,9 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
         aria-labelledby={platformTabId(ID_BASE, tab)}
       >
         {/* The card titles are h3: this h2 (the tab's own name) keeps the outline h1 → h2 → h3. */}
-        <h2 className="sr-only">{myLearningTabs.find((t) => t.id === tab)?.label ?? noun}</h2>
+        <h2 className="sk-sr-only">{myLearningTabs.find((t) => t.id === tab)?.label ?? noun}</h2>
         {/* Tells assistive tech how many cards the search or the filter left. */}
-        <p role="status" className="sr-only">
+        <p role="status" className="sk-sr-only">
           {needle
             ? `${shown} ${noun} match “${query.trim()}”`
             : status !== "all"
@@ -303,12 +299,12 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
           ) : tab === "courses" ? (
             <>
               {tableView ? (
-                <div className="hidden md:block">
+                <div className={styles.table}>
                   <HarborCourseTable courses={courses.map((r) => r.card)} onAction={(c) => notInPrototype(c.cta)} />
                 </div>
               ) : null}
               {/* items-start: an opened row does not stretch the rows of its line. */}
-              <ul className={cn(MY_LEARNING_GRID, "items-start", (listView || tableView) && "md:hidden")}>
+              <ul className={cn(MY_LEARNING_GRID, styles.gridTop, (listView || tableView) && styles.hideFromTablet)}>
                 {courses.map((row, i) => (
                   <CourseRowCard
                     key={row.card.id}
@@ -343,15 +339,15 @@ export function MyLearningCollection({ courseRows }: { courseRows: MyLearningCou
             <>
               {/* Every program card has the same height, whatever its state or title (useEqualHeights). */}
               {tableView ? (
-                <div className="hidden md:block">
+                <div className={styles.table}>
                   <HarborProgramTable programs={programs} onAction={(p) => notInPrototype(p.cta)} />
                 </div>
               ) : null}
-              <ul className={cn(MY_LEARNING_GRID, "items-start", (listView || tableView) && "md:hidden")}>
+              <ul className={cn(MY_LEARNING_GRID, styles.gridTop, (listView || tableView) && styles.hideFromTablet)}>
                 {programs.map((program, i) => (
                   <li
                     key={program.id}
-                    className={cn("min-w-0", ROW_ENTER)}
+                    className={cn(styles.programItem, ROW_ENTER)}
                     style={staggerStyle(i, programs.length)}
                   >
                     <ProgramCard

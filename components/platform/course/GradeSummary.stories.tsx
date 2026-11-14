@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SIX_SIGMA } from "@/lib/courses/sample-page";
 import { CompletionCard, GradeSummary } from "./ProgressTab";
+import styles from "./GradeSummary.stories.module.css";
 
 /**
  * The edge cases of the Progress tab (Nelson, 27 Oct 2026): the five Results of DS
@@ -32,7 +33,7 @@ const meta: Meta<typeof GradeSummary> = {
   title: "Platform/Course Detail/Grade Summary",
   component: GradeSummary,
   parameters: { layout: "padded" },
-  decorators: [(Story) => <div className="max-w-[816px]">{Story()}</div>],
+  decorators: [(Story) => <div className={styles.frame}>{Story()}</div>],
 };
 export default meta;
 
@@ -55,7 +56,7 @@ export const CourseEnded: Story = { args: { grade: withProject(64, 60, { courseE
 
 export const CompletionStates: StoryObj<typeof CompletionCard> = {
   render: () => (
-    <div className="flex flex-col gap-6">
+    <div className={styles.states}>
       <CompletionCard completion={{ ...completion, complete: 0, incomplete: 42, locked: 0 }} />
       <CompletionCard completion={completion} />
       <CompletionCard completion={{ ...completion, complete: 16, incomplete: 23, locked: 3 }} />

@@ -1,0 +1,84 @@
+/* DS Section intro: the heading and its lead, 6 apart. */
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.introTitle {
+  color: var(--color-text-default);
+}
+.introEm {
+  font-style: italic;
+}
+.introLead {
+  color: var(--color-text-muted);
+}
+
+/* DS Card shell: bg/page, 1px border/subtle, radius card; 15 + the 1px border = the DS 16. */
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+.gapMd {
+  gap: 8px;
+}
+.gapLg {
+  gap: 12px;
+}
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.label {
+  color: var(--color-text-default);
+}
+
+/* Sidebar card, Type=Dates: rows split by 1px rules. */
+.dates {
+  display: flex;
+  flex-direction: column;
+}
+.date {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.dateRule {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.tile {
+  display: flex;
+  height: 48px;
+  width: 44px;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+}
+.day,
+.dateTitle {
+  color: var(--color-text-default);
+}
+.month,
+.dateDetail {
+  color: var(--color-text-subtle);
+}
+.dateBody {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}

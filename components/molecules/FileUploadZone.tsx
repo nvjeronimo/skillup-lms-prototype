@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { Check, UploadCloud, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./FileUploadZone.module.css";
 
 export interface UploadedFile {
   id: string;
@@ -46,8 +45,8 @@ export function FileUploadZone({
   const doneCount = uploadedFiles.filter((f) => f.status === "done").length;
 
   return (
-    <div className={cn("flex flex-col gap-4", className)}>
-      <p className="sk-text-body-large-semibold text-sko-text-default">Upload files</p>
+    <div className={cn(styles.zone, className)}>
+      <p className={`sk-text-body-large-semibold ${styles.heading}`}>Upload files</p>
 
       <div
         role="button"
@@ -70,21 +69,16 @@ export function FileUploadZone({
             inputRef.current?.click();
           }
         }}
-        className={cn(
-          "flex flex-col items-center gap-3 rounded-card border-2 border-dashed px-8 py-6 text-center transition-colors",
-          dragOver
-            ? "border-sko-border-primary bg-sko-bg-primary-soft"
-            : "border-sko-border-primary bg-sko-bg-primary-soft",
-        )}
+        className={cn(styles.drop, dragOver ? styles.dragOver : styles.dropIdle)}
       >
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-pill border border-sko-border-subtle bg-sko-bg-page text-sko-icon-primary">
+        <span className={styles.dropIcon}>
           <Icon icon={UploadCloud} size={22} />
         </span>
-        <p className="sk-text-body-medium-medium text-sko-text-muted">
+        <p className={`sk-text-body-medium-medium ${styles.prompt}`}>
           Drop files here, or{" "}
-          <span className="sk-text-body-medium-semibold text-sko-text-primary">browse files</span>
+          <span className={`sk-text-body-medium-semibold ${styles.browse}`}>browse files</span>
         </p>
-        <p className="sk-text-body-medium-regular text-sko-text-subtle">
+        <p className={`sk-text-body-medium-regular ${styles.limits}`}>
           {acceptedTypes.join(", ")} · {maxSizeMB} MB max per file
         </p>
         <input
@@ -97,39 +91,39 @@ export function FileUploadZone({
       </div>
 
       <div aria-live="polite">
-        <p className="sk-text-body-medium-regular mb-2 text-sko-text-muted">
+        <p className={`sk-text-body-medium-regular ${styles.uploadedLabel}`}>
           Uploaded files{" "}
-          <span className="sk-text-body-medium-semibold text-sko-text-default">
+          <span className={`sk-text-body-medium-semibold ${styles.count}`}>
             {doneCount} of {requiredCount} required
           </span>
         </p>
-        <div className="flex flex-col gap-2">
+        <div className={styles.files}>
           {uploadedFiles.map((f) => (
             <div
               key={f.id}
-              className="flex items-center gap-3 rounded-control border border-sko-border-subtle p-3"
+              className={styles.file}
             >
-              <span className="sk-text-label-small-semibold inline-flex h-8 min-w-8 shrink-0 px-1 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-text-primary">
+              <span className={`sk-text-label-small-semibold ${styles.type}`}>
                 {f.type}
               </span>
-              <div className="min-w-0 flex-1">
-                <p className="sk-text-body-medium-semibold truncate text-sko-text-default">{f.name}</p>
-                <p className="sk-text-body-small-regular text-sko-text-subtle">{f.size}</p>
+              <div className={styles.fileText}>
+                <p className={`sk-text-body-medium-semibold ${styles.name}`}>{f.name}</p>
+                <p className={`sk-text-body-small-regular ${styles.size}`}>{f.size}</p>
               </div>
               {f.status === "done" ? (
-                <span className="sk-text-body-small-medium inline-flex items-center gap-1 text-sko-text-success">
+                <span className={`sk-text-body-small-medium ${styles.done}`}>
                   <Icon icon={Check} size={14} /> Uploaded
                 </span>
               ) : f.status === "uploading" ? (
-                <span className="sk-text-body-small-medium text-sko-text-subtle">Uploading…</span>
+                <span className={`sk-text-body-small-medium ${styles.uploading}`}>Uploading…</span>
               ) : (
-                <span className="sk-text-body-small-medium text-sko-text-error">Failed</span>
+                <span className={`sk-text-body-small-medium ${styles.failed}`}>Failed</span>
               )}
               <button
                 type="button"
                 onClick={() => onRemove?.(f.id)}
                 aria-label={`Remove ${f.name}`}
-                className="text-sko-text-subtle transition-colors hover:text-sko-text-error"
+                className={styles.remove}
               >
                 <Icon icon={X} size={16} />
               </button>

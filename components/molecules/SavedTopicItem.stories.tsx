@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SavedTopicItem } from "./SavedTopicItem";
+import styles from "./SavedTopicItem.stories.module.css";
 
 const meta: Meta<typeof SavedTopicItem> = {
   title: "Molecules/Saved Topic Item",
@@ -15,7 +16,7 @@ const meta: Meta<typeof SavedTopicItem> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[440px]">
+      <div className={styles.panel}>
         <Story />
       </div>
     ),

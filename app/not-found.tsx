@@ -2,6 +2,7 @@ import type { Metadata } from "@/lib/router";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { DASHBOARD_HREF, MY_LEARNING_HREF } from "@/lib/platform/routes";
+import styles from "./not-found.module.css";
 
 export const metadata: Metadata = { title: "Page not found" };
 
@@ -14,16 +15,16 @@ export default function NotFound() {
     <main
       id="main"
       tabIndex={-1}
-      className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 bg-sko-bg-faint px-4 py-12 text-center outline-none"
+      className={styles.page}
     >
-      <SkillUpLogo className="h-6" />
-      <div className="flex max-w-[480px] flex-col gap-2">
-        <h1 className="sk-text-headline-small-semibold text-sko-text-default">This page is not here</h1>
-        <p className="sk-text-body-large-regular text-sko-text-muted">
+      <SkillUpLogo className={styles.logo} />
+      <div className={styles.copy}>
+        <h1 className={`sk-text-headline-small-semibold ${styles.title}`}>This page is not here</h1>
+        <p className={`sk-text-body-large-regular ${styles.text}`}>
           The address may be mistyped, or the page may not be part of this prototype yet.
         </p>
       </div>
-      <div className="flex w-full max-w-[480px] flex-col gap-3 sm:w-auto sm:flex-row">
+      <div className={styles.actions}>
         <ButtonLink href={DASHBOARD_HREF} hierarchy="primary" size="lg">
           Go to the dashboard
         </ButtonLink>

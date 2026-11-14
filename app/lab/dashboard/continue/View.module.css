@@ -1,0 +1,233 @@
+/* Direction A · Continue first. Phone first; tablet from 768, desktop from 1024. */
+.main {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1024px;
+  flex: 1 1 0%;
+  padding: 24px 16px 48px;
+}
+.empty { background: var(--color-bg-page); }
+
+/* Text roles: colour (and the space above); the DS type style sets the rest. */
+.heading { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+.lede { margin-top: 4px; color: var(--color-text-muted); }
+.stacked { margin-top: 4px; color: var(--color-text-default); }
+.meta { margin-top: 4px; color: var(--color-text-subtle); }
+.detail { margin-top: 2px; color: var(--color-text-muted); }
+.note { margin-top: 8px; color: var(--color-text-muted); }
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: var(--color-text-subtle);
+}
+.eyebrowPrimary {
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: var(--color-text-primary);
+}
+
+.greeting { margin-bottom: 20px; }
+
+/* ── Resume card ── */
+.resume {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+}
+.resumeLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.resumeMain {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 16px;
+}
+.away {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border: 1px solid var(--color-border-warning-soft);
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-warning-soft);
+  padding: 8px 12px;
+  color: var(--color-text-warning);
+}
+.awayIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: var(--color-icon-warning);
+}
+.upNext {
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-subtle);
+  padding: 16px;
+}
+.upNextTopic {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.resumeSide {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.fullWidth { width: 100%; }
+
+/* ── Also in progress ── */
+.also { margin-top: 32px; }
+.alsoList {
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+}
+.alsoList > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 0;
+  border-color: var(--color-border-subtle);
+}
+.alsoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+.alsoMain {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.nextLine {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+  color: var(--color-text-muted);
+}
+.alsoCta { width: 100%; }
+
+.rest {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+  color: var(--color-text-muted);
+}
+
+/* ── Around your learning ── */
+.around { margin-top: 40px; }
+.cards {
+  margin-top: 12px;
+  display: grid;
+  gap: 16px;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+}
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-default);
+}
+.cardIcon { color: var(--color-icon-primary); }
+.earned {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+}
+.earnedIcon {
+  flex-shrink: 0;
+  color: var(--color-icon-success);
+}
+.goalDays {
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
+}
+.goalDay {
+  height: 8px;
+  flex: 1 1 0%;
+  border-radius: var(--sk-radius-pill);
+}
+.goalDayDone { background: var(--color-bg-primary); }
+.goalDayOpen { background: var(--color-bg-track); }
+.comingList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.comingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.comingItemRuled {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 12px;
+}
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding-inline: 32px;
+    padding-top: 40px;
+  }
+  .greeting { margin-bottom: 24px; }
+  .resume { padding: 24px; }
+  .alsoRow {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
+  .alsoProgress {
+    width: 176px;
+    flex-shrink: 0;
+  }
+  .alsoCta { width: auto; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .comingUp { grid-column: span 2 / span 2; }
+}
+@media (min-width: 1024px) {
+  .resume { padding: 32px; }
+  .resumeLayout {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 40px;
+  }
+  .resumeSide {
+    width: 288px;
+    flex-shrink: 0;
+  }
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .comingUp { grid-column: span 1 / span 1; }
+}

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ChevronDown, Download } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -7,6 +5,7 @@ import { inertProps } from "@/lib/inert";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
+import styles from "./VideoChromeFooter.module.css";
 
 export interface VideoLicense {
   holder: string;
@@ -67,19 +66,16 @@ export function VideoChromeFooter({
   return (
     <div
       ref={wrapRef}
-      className={cn(
-        "flex flex-wrap items-center justify-between gap-3 border-b border-sko-border-subtle px-4 py-2.5",
-        className,
-      )}
+      className={cn(styles.footer, className)}
     >
-      <p className="sk-text-body-medium-regular text-sko-text-subtle">
-        <a href={license.url} className="text-sko-text-primary hover:underline">
+      <p className={`sk-text-body-medium-regular ${styles.licence}`}>
+        <a href={license.url} className={styles.licenceLink}>
           {license.type}
         </a>
       </p>
 
-      <div className="flex items-center gap-4">
-        <div className="relative">
+      <div className={styles.actions}>
+        <div className={styles.anchor}>
           <button
             type="button"
             aria-haspopup="listbox"
@@ -88,7 +84,7 @@ export function VideoChromeFooter({
               setLangOpen((o) => !o);
               setDlOpen(false);
             }}
-            className="sk-text-body-medium-semibold inline-flex items-center gap-1 text-sko-text-muted transition-colors hover:text-sko-text-default"
+            className={`sk-text-body-medium-semibold ${styles.languageTrigger}`}
           >
             {currentLanguage}
             <Icon icon={ChevronDown} size={14} />
@@ -100,7 +96,7 @@ export function VideoChromeFooter({
               onTransitionEnd={lang.onTransitionEnd}
               aria-hidden={!langOpen || undefined}
               {...inertProps(!langOpen)}
-              className="sk-animate-menu origin-top-right absolute right-0 z-20 mt-1 w-36 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
+              className={`sk-animate-menu ${styles.menu} ${styles.languageMenu}`}
             >
               {availableLanguages.map((l) => (
                 <li key={l.code} role="option" aria-selected={l.code === currentLanguage}>
@@ -111,14 +107,14 @@ export function VideoChromeFooter({
                       setLangOpen(false);
                     }}
                     className={cn(
-                      "sk-text-body-medium-medium flex w-full items-center justify-between rounded-card-inset px-3 py-2 text-left transition-colors hover:bg-sko-bg-subtle",
-                      l.code === currentLanguage
-                        ? "text-sko-text-primary"
-                        : "text-sko-text-default",
+                      "sk-text-body-medium-medium",
+                      styles.option,
+                      styles.languageOption,
+                      l.code === currentLanguage ? styles.current : styles.other,
                     )}
                   >
                     {l.label}
-                    <span className="sk-text-body-small-regular text-sko-text-subtle">{l.code}</span>
+                    <span className={`sk-text-body-small-regular ${styles.code}`}>{l.code}</span>
                   </button>
                 </li>
               ))}
@@ -126,7 +122,7 @@ export function VideoChromeFooter({
           ) : null}
         </div>
 
-        <div className="relative">
+        <div className={styles.anchor}>
           <button
             type="button"
             aria-haspopup="menu"
@@ -136,10 +132,10 @@ export function VideoChromeFooter({
               setLangOpen(false);
             }}
             // DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
-            className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
+            className={`sk-text-body-medium-semibold ${styles.link}`}
           >
-            <Icon icon={Download} size={16} className="text-sko-icon-primary" />
-            <span className="px-0.5">Download transcript</span>
+            <Icon icon={Download} size={16} className={styles.linkIcon} />
+            <span className={styles.linkLabel}>Download transcript</span>
           </button>
           {dl.mounted ? (
             <ul
@@ -148,7 +144,7 @@ export function VideoChromeFooter({
               onTransitionEnd={dl.onTransitionEnd}
               aria-hidden={!dlOpen || undefined}
               {...inertProps(!dlOpen)}
-              className="sk-animate-menu origin-top-right absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg"
+              className={`sk-animate-menu ${styles.menu} ${styles.downloadMenu}`}
             >
               {(["srt", "txt"] as const).map((fmt) => (
                 <li key={fmt} role="none">
@@ -159,7 +155,7 @@ export function VideoChromeFooter({
                       onDownloadTranscript?.(fmt);
                       setDlOpen(false);
                     }}
-                    className="sk-text-body-medium-medium block w-full rounded-card-inset px-3 py-2 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
+                    className={`sk-text-body-medium-medium ${styles.option} ${styles.formatOption}`}
                   >
                     .{fmt}
                   </button>

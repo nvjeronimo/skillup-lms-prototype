@@ -1,0 +1,103 @@
+.scorm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* The XBlock's two controls, above the frame, right-aligned. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* DS LMS / Activity · SCORM Frame (20328:3488): r12, shadow-card. */
+.frame {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+.framed {
+  border-width: 1px;
+  border-radius: var(--sk-radius-card);
+  box-shadow: var(--sk-shadow-card);
+}
+/* Size: fullscreen; a course package at window height (inline); else 16:9, at most 52vh tall,
+   scrolling inside. */
+.fullscreen {
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--color-bg-page);
+}
+.clip {
+  overflow: hidden;
+}
+.ratio {
+  aspect-ratio: 16 / 9;
+  max-height: 52vh;
+  overflow-y: auto;
+}
+/* State: the error in its own colours; running is the package; loading and window centre their
+   text. Declared after the sizes: the state's ground wins over fullscreen's. */
+.error {
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-color: var(--color-border-error);
+  background-color: var(--color-bg-error-soft);
+  padding-inline: 40px;
+  text-align: center;
+}
+.running {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.message {
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+  padding: 32px 40px;
+  text-align: center;
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+.errorText {
+  color: var(--color-text-error);
+}
+.errorDetail {
+  max-width: 448px;
+  color: var(--color-text-error);
+}
+.title {
+  color: var(--color-text-default);
+}
+/* Try again / Skip for now: on a phone they share the full width. */
+.errorActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+@media (max-width: 767.98px) {
+  .errorActions {
+    width: 100%;
+  }
+  .errorActions > * {
+    flex: 1 1 0%;
+  }
+}
+.windowAction {
+  padding-top: 8px;
+}
+/* Only on a small screen. */
+@media (min-width: 768px) {
+  .phoneOnly {
+    display: none;
+  }
+}

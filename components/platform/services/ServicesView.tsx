@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { useRouter } from "@/lib/router";
@@ -35,11 +33,11 @@ import { Icon } from "@/lib/icons";
 import { formatDay, formatTime } from "@/lib/sample-time";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import styles from "./ServicesView.module.css";
 
-const CARD = "rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-5 lg:p-6";
-const EYEBROW = "sk-text-label-small-semibold uppercase text-sko-text-subtle";
-const LINK =
-  "sk-text-body-medium-semibold inline-flex min-h-6 items-center gap-1 self-start text-sko-text-primary underline-offset-4 hover:underline max-md:min-h-11";
+const CARD = styles.card;
+const EYEBROW = cn("sk-text-label-small-semibold", styles.eyebrow);
+const LINK = cn("sk-text-body-medium-semibold", styles.link);
 
 /** The action of a service: a link (an internal page or a new tab) or a button. */
 function ServiceAction({ item, onAction, className }: { item: ServiceItem; onAction: (item: ServiceItem) => void; className?: string }) {
@@ -47,7 +45,7 @@ function ServiceAction({ item, onAction, className }: { item: ServiceItem; onAct
     <>
       {item.action}
       {item.external ? <Icon icon={ArrowUpRight} size={16} aria-hidden="true" /> : null}
-      {item.external ? <span className="sr-only"> (opens in a new tab)</span> : null}
+      {item.external ? <span className="sk-sr-only"> (opens in a new tab)</span> : null}
     </>
   );
   return item.href ? (
@@ -64,15 +62,15 @@ function ServiceAction({ item, onAction, className }: { item: ServiceItem; onAct
 /** One open request: subject, number and course, its state. */
 function RequestRow({ request }: { request: SupportRequest }) {
   return (
-    <li className="flex items-start justify-between gap-3 border-t border-sko-border-subtle py-3 first:border-t-0">
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <p className="sk-text-body-medium-semibold text-sko-text-default">{request.subject}</p>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">
+    <li className={styles.request}>
+      <div className={styles.requestText}>
+        <p className={cn("sk-text-body-medium-semibold", styles.ink)}>{request.subject}</p>
+        <p className={cn("sk-text-body-small-regular", styles.subtle)}>
           Request {request.number} · {request.opened}
           {request.course ? ` · ${request.course}` : ""}
         </p>
       </div>
-      <Badge color={request.status.color} className="shrink-0">
+      <Badge color={request.status.color} className={styles.noShrink}>
         {request.status.label}
       </Badge>
     </li>
@@ -85,20 +83,20 @@ function RequestRow({ request }: { request: SupportRequest }) {
  */
 function ServicesSkeleton() {
   return (
-    <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+    <div className={cn("sk-page-stack", styles.stack)}>
       <Skeleton variant="ghost" text="headline-large-bold">Here to help.</Skeleton>
-      <div className="grid gap-layout-column lg:grid-cols-2">
+      <div className={styles.helpGrid}>
         {["Your mentor", "Support"].map((label) => (
-          <div key={label} className={cn(CARD, "flex flex-col gap-4")}>
+          <div key={label} className={cn(CARD, styles.cardGap4)}>
             <Skeleton variant="ghost" text="label-small-semibold">{label}</Skeleton>
-            <div className="flex items-start gap-4">
+            <div className={styles.person}>
               <Skeleton variant="circle" size={48} />
-              <div className="flex flex-col gap-1">
+              <div className={styles.stack1}>
                 <Skeleton variant="ghost" text="title-large-semibold">{servicesMentor.name}</Skeleton>
                 <Skeleton variant="ghost" text="body-medium-regular">{servicesMentor.role}</Skeleton>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className={styles.skeletonActions}>
               <SkeletonPill size="button-md">Ask your mentor</SkeletonPill>
               <SkeletonPill size="button-md">Your discussions</SkeletonPill>
             </div>
@@ -106,9 +104,9 @@ function ServicesSkeleton() {
         ))}
       </div>
       <Skeleton variant="ghost" text="headline-small-bold">Included with your program</Skeleton>
-      <div className="grid gap-layout-grid md:grid-cols-3">
+      <div className={styles.includedGrid}>
         {includedServices.map((item) => (
-          <div key={item.id} className={cn(CARD, "flex flex-col gap-3")}>
+          <div key={item.id} className={cn(CARD, styles.cardGap3)}>
             <Skeleton variant="block" width={40} height={40} radius="control" />
             <Skeleton variant="ghost" text="body-large-semibold">{item.title}</Skeleton>
             <Skeleton variant="ghost" text="body-small-regular">{item.description}</Skeleton>
@@ -180,63 +178,63 @@ export function ServicesView() {
   return (
     <PlatformPage
       current="services"
-      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
+      className={styles.page}
       skeleton={<ServicesSkeleton />}
     >
-      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
-        <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
-          Here <span data-heading-em="" className="text-sko-text-subtle">to help.</span>
+      <div className={cn("sk-page-stack", styles.stack)}>
+        <h1 data-arrive={0} className={cn("sk-text-headline-large-bold", styles.ink)}>
+          Here <span data-heading-em="" className={styles.subtle}>to help.</span>
         </h1>
 
         {/* 1 · Help now */}
-        <div data-arrive={1} className="grid items-stretch gap-layout-column lg:grid-cols-2">
-          <section aria-labelledby="services-mentor" data-mock={servicesMentor.mock} className={cn(CARD, "flex flex-col gap-4")}>
+        <div data-arrive={1} className={cn(styles.helpGrid, styles.stretch)}>
+          <section aria-labelledby="services-mentor" data-mock={servicesMentor.mock} className={cn(CARD, styles.cardGap4)}>
             <p className={EYEBROW}>Your mentor</p>
-            <div className="flex items-start gap-4">
+            <div className={styles.person}>
               <Avatar name={servicesMentor.name} size="lg" />
-              <div className="flex min-w-0 flex-col gap-1">
-                <h2 id="services-mentor" className="sk-text-title-large-semibold text-sko-text-default">
+              <div className={styles.personText}>
+                <h2 id="services-mentor" className={cn("sk-text-title-large-semibold", styles.ink)}>
                   {servicesMentor.name}
                 </h2>
-                <p className="sk-text-body-medium-regular text-sko-text-subtle">
+                <p className={cn("sk-text-body-medium-regular", styles.subtle)}>
                   {/* The eyebrow already says "Your mentor". */}
                   {servicesMentor.role.replace(/^Your mentor · /, "")} · {servicesMentor.promise}
                 </p>
               </div>
             </div>
-            <p className="sk-text-body-medium-regular flex items-start gap-1.5 rounded-card-inset bg-sko-bg-subtle p-3 text-sko-text-muted">
-              <Icon icon={MessageCircle} size={16} className="mt-0.5 shrink-0 text-sko-icon-subtle" aria-hidden="true" />
+            <p className={cn("sk-text-body-medium-regular", styles.lastMessage)}>
+              <Icon icon={MessageCircle} size={16} className={styles.lastMessageIcon} aria-hidden="true" />
               <span>
-                <span className="sk-text-body-small-semibold text-sko-text-default">{servicesMentor.last.from}:</span> “
+                <span className={cn("sk-text-body-small-semibold", styles.ink)}>{servicesMentor.last.from}:</span> “
                 {servicesMentor.last.text}” · {servicesMentor.last.when}
               </span>
             </p>
-            <div className="mt-auto flex flex-col gap-2 sm:flex-row">
+            <div className={styles.mentorActions}>
               {/* Asking the mentor is the course's Mentorship Q&A: question posts in the course discussions, public to the course (Open edX has no private messages, 28 Oct 2026). */}
-              <ButtonLink href={`${coursePageHref("ai-driven-content-and-brand-communication")}?tab=qa`} size="md" className="max-md:h-11">
+              <ButtonLink href={`${coursePageHref("ai-driven-content-and-brand-communication")}?tab=qa`} size="md" className={styles.phoneTall}>
                 Ask your mentor
               </ButtonLink>
-              <ButtonLink href={discussionHref()} hierarchy="secondary" size="md" className="max-md:h-11">
+              <ButtonLink href={discussionHref()} hierarchy="secondary" size="md" className={styles.phoneTall}>
                 Your discussions
               </ButtonLink>
             </div>
           </section>
 
-          <section aria-labelledby="services-support" data-mock={supportMock} className={cn(CARD, "flex flex-col gap-4")}>
+          <section aria-labelledby="services-support" data-mock={supportMock} className={cn(CARD, styles.cardGap4)}>
             <p className={EYEBROW}>Support</p>
-            <div className="flex flex-col gap-1">
-              <h2 id="services-support" className="sk-text-title-large-semibold text-sko-text-default">
+            <div className={styles.stack1}>
+              <h2 id="services-support" className={cn("sk-text-title-large-semibold", styles.ink)}>
                 Something not working?
               </h2>
-              <p className="sk-text-body-medium-regular text-sko-text-subtle">{contactSupport.description}</p>
+              <p className={cn("sk-text-body-medium-regular", styles.subtle)}>{contactSupport.description}</p>
             </div>
-            <div className="flex flex-col gap-x-4 gap-y-2 sm:flex-row sm:items-center">
-              <Button hierarchy="secondary" size="md" onClick={() => setContacting(true)} className="max-md:h-11">
+            <div className={styles.supportActions}>
+              <Button hierarchy="secondary" size="md" onClick={() => setContacting(true)} className={styles.phoneTall}>
                 {contactSupport.action}
               </Button>
-              <ServiceAction item={helpCenter} onAction={onAction} className="sm:self-center" />
+              <ServiceAction item={helpCenter} onAction={onAction} className={styles.helpCenter} />
             </div>
-            <div className="mt-auto flex flex-col gap-1">
+            <div className={styles.requests}>
               <h3 className={EYEBROW}>Your requests</h3>
               {requests.length ? (
                 <ul>
@@ -245,24 +243,24 @@ export function ServicesView() {
                   ))}
                 </ul>
               ) : (
-                <p className="sk-text-body-medium-regular py-3 text-sko-text-subtle">No open requests.</p>
+                <p className={cn("sk-text-body-medium-regular", styles.noRequests)}>No open requests.</p>
               )}
             </div>
           </section>
         </div>
 
         {/* 2 · Included with your program */}
-        <section data-arrive={2} aria-labelledby="services-included" className="flex flex-col gap-4">
+        <section data-arrive={2} aria-labelledby="services-included" className={styles.section4}>
           <PlatformSectionHeader id="services-included" title="Included" emphasis="with your program" />
-          <ul data-mock={includedMock} className="grid gap-layout-grid md:grid-cols-3">
+          <ul data-mock={includedMock} className={styles.includedGrid}>
             {includedServices.map((item) => {
               const booked = item.id === "cv" ? cvBooked : undefined;
               return (
-                <li key={item.id} className={cn(CARD, "flex flex-col gap-3")}>
-                  <div className="flex items-start justify-between gap-3">
+                <li key={item.id} className={cn(CARD, styles.cardGap3)}>
+                  <div className={styles.includedTop}>
                     <span
                       aria-hidden
-                      className="inline-flex size-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary"
+                      className={styles.includedIcon}
                     >
                       <Icon icon={item.icon} size={20} />
                     </span>
@@ -272,16 +270,16 @@ export function ServicesView() {
                       <Badge color={item.status.color}>{item.status.label}</Badge>
                     ) : null}
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <h3 className="sk-text-body-large-semibold text-sko-text-default">{item.title}</h3>
-                    <p className="sk-text-body-medium-regular text-sko-text-subtle">{item.description}</p>
+                  <div className={styles.stack1}>
+                    <h3 className={cn("sk-text-body-large-semibold", styles.ink)}>{item.title}</h3>
+                    <p className={cn("sk-text-body-medium-regular", styles.subtle)}>{item.description}</p>
                   </div>
                   {booked ? (
-                    <p className="sk-text-body-small-medium mt-auto text-sko-text-muted">
+                    <p className={cn("sk-text-body-small-medium", styles.bookedNote)}>
                       {formatDay(booked.date)}, {formatTime(booked.time)} · in your Calendar
                     </p>
                   ) : (
-                    <ServiceAction item={item} onAction={onAction} className="mt-auto" />
+                    <ServiceAction item={item} onAction={onAction} className={styles.pushDown} />
                   )}
                 </li>
               );
@@ -290,27 +288,26 @@ export function ServicesView() {
         </section>
 
         {/* 3 · More from SkillUp: quiet one-line links */}
-        <section data-arrive={3} aria-labelledby="services-more" className="flex flex-col gap-3">
-          <h2 id="services-more" className="sk-text-body-large-semibold text-sko-text-default">
+        <section data-arrive={3} aria-labelledby="services-more" className={styles.section3}>
+          <h2 id="services-more" className={cn("sk-text-body-large-semibold", styles.ink)}>
             More from SkillUp
           </h2>
           {/* One 1fr column on a phone: an implicit column sized to the longest description ran the
               rows past the screen and hid their chevrons (Nelson, 28 Oct 2026). */}
-          <ul data-mock={moreMock} className="grid grid-cols-1 border-t border-sko-border-subtle sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
+          <ul data-mock={moreMock} className={styles.moreList}>
             {moreServices.map((item) => {
               const inner = (
                 <>
-                  <Icon icon={item.icon} size={20} className="shrink-0 text-sko-icon-subtle" aria-hidden="true" />
-                  <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="sk-text-body-medium-semibold text-sko-text-default">{item.title}</span>
-                    <span className="sk-text-body-small-regular text-sko-text-subtle">{item.description}</span>
+                  <Icon icon={item.icon} size={20} className={styles.moreIcon} aria-hidden="true" />
+                  <span className={styles.moreText}>
+                    <span className={cn("sk-text-body-medium-semibold", styles.ink)}>{item.title}</span>
+                    <span className={cn("sk-text-body-small-regular", styles.subtle)}>{item.description}</span>
                   </span>
-                  <Icon icon={item.external ? ArrowUpRight : ChevronRight} size={16} className="shrink-0 text-sko-icon-subtle" aria-hidden="true" />
-                  {item.external ? <span className="sr-only"> (opens in a new tab)</span> : null}
+                  <Icon icon={item.external ? ArrowUpRight : ChevronRight} size={16} className={styles.moreIcon} aria-hidden="true" />
+                  {item.external ? <span className="sk-sr-only"> (opens in a new tab)</span> : null}
                 </>
               );
-              const row =
-                "flex min-h-14 w-full items-center gap-3 border-b border-sko-border-subtle px-1 py-3 text-left transition-colors hover:bg-sko-bg-hover";
+              const row = styles.moreRow;
               return (
                 <li key={item.id}>
                   {item.href ? (

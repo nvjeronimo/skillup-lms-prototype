@@ -2,6 +2,7 @@ import * as React from "react";
 import { Icon, topicTypeIcon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import type { TopicType } from "@/lib/types";
+import styles from "./SavedTopicItem.module.css";
 
 export interface SavedTopicItemProps {
   topicType: TopicType;
@@ -27,27 +28,24 @@ export function SavedTopicItem({
 }: SavedTopicItemProps) {
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span className={styles.iconChip}>
         <Icon icon={topicTypeIcon(topicType)} size={18} />
       </span>
-      <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-1.5">
-          <span className="sk-text-body-small-semibold text-sko-text-primary">{topicType}</span>
-          <span className="sk-text-body-small-regular text-sko-text-subtle">· {duration}</span>
+      <span className={styles.body}>
+        <span className={styles.meta}>
+          <span className={`sk-text-body-small-semibold ${styles.type}`}>{topicType}</span>
+          <span className={`sk-text-body-small-regular ${styles.duration}`}>· {duration}</span>
         </span>
-        <span className="sk-text-body-medium-semibold mt-0.5 block text-sko-text-default">{title}</span>
-        <span className="sk-text-body-small-regular mt-0.5 block text-sko-text-subtle">{path}</span>
-        <span className="sk-text-body-small-regular mt-1 block text-sko-text-subtle">
+        <span className={`sk-text-body-medium-semibold ${styles.title}`}>{title}</span>
+        <span className={`sk-text-body-small-regular ${styles.path}`}>{path}</span>
+        <span className={`sk-text-body-small-regular ${styles.saved}`}>
           Bookmarked {savedAt}
         </span>
       </span>
     </>
   );
 
-  const classes = cn(
-    "flex w-full gap-3 bg-sko-bg-page px-6 py-4 text-left transition-colors hover:bg-sko-bg-faint",
-    className,
-  );
+  const classes = cn(styles.item, className);
 
   if (href) {
     return (

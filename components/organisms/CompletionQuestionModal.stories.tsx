@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CompletionQuestionModal } from "./CompletionQuestionModal";
+import styles from "./CompletionQuestionModal.stories.module.css";
 
 const meta: Meta<typeof CompletionQuestionModal> = {
   title: "Organisms/Completion Question Modal",
@@ -16,7 +17,7 @@ const meta: Meta<typeof CompletionQuestionModal> = {
   },
   decorators: [
     (Story) => (
-      <div className="h-[600px]">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

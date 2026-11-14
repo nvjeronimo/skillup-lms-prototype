@@ -1,0 +1,33 @@
+/* Course Type: words only, text/primary for Program and text/subtle for Course. */
+.courseType {
+  display: inline-flex;
+  align-items: center;
+}
+.program {
+  color: var(--color-text-primary);
+}
+.course {
+  color: var(--color-text-subtle);
+}
+/* Provider Type=Logo: the 16-tall artwork on a chip with a 1px border/subtle inside, Radius/control,
+   padding 7 + the border's 1: 32 tall. */
+.logoChip {
+  display: inline-flex;
+  height: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 7px;
+}
+.chipPage {
+  background-color: var(--color-bg-page);
+}
+.chipSubtle {
+  background-color: var(--color-bg-subtle);
+}
+.logo {
+  height: 16px;
+  width: auto;
+}

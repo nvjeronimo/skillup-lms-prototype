@@ -2,6 +2,7 @@ import Link from "@/lib/router";
 import { Badge } from "@/components/atoms/Badge";
 import type { DashboardDueItem } from "@/lib/platform/dashboard";
 import { cn } from "@/lib/utils";
+import styles from "./DueItem.module.css";
 
 /**
  * DS `LMS/Platform/Dashboard/Due-Item`: one assignment deadline in "Due this week" (live
@@ -16,31 +17,31 @@ import { cn } from "@/lib/utils";
  */
 export function DueItem({ day, when, urgency, title, meta, status, href }: Omit<DashboardDueItem, "id">) {
   return (
-    <li className="sk-press-card relative flex items-start gap-3 border-b border-sko-border-subtle p-4 shadow-sk-card last:border-b-0 md:px-5">
-      <div className="flex w-[60px] shrink-0 flex-col items-center text-center">
+    <li className={cn("sk-press-card", styles.item)}>
+      <div className={styles.date}>
         <span
           className={cn(
             "sk-text-headline-small-bold",
-            urgency === "today" ? "text-sko-text-warning" : "text-sko-text-default",
+            urgency === "today" ? styles.dayToday : styles.dayUpcoming,
           )}
         >
           {day}
         </span>
-        <span className="sk-text-label-small-semibold text-sko-text-subtle">{when}</span>
+        <span className={cn("sk-text-label-small-semibold", styles.when)}>{when}</span>
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <div className="flex items-start gap-0.5">
-          <p className="sk-text-body-medium-semibold min-w-0 flex-1 text-sko-text-default">
+      <div className={styles.content}>
+        <div className={styles.titleRow}>
+          <p className={cn("sk-text-body-medium-semibold", styles.title)}>
             {/* The title opens the assignment in the player; the whole row is its target (44 at least). */}
-            <Link href={href} className="hover:underline after:absolute after:inset-0 after:content-['']">
+            <Link href={href} className={styles.link}>
               {title}
             </Link>
           </p>
-          <Badge color={status.color} className="shrink-0 whitespace-nowrap">
+          <Badge color={status.color} className={styles.badge}>
             {status.label}
           </Badge>
         </div>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">{meta}</p>
+        <p className={cn("sk-text-body-small-regular", styles.meta)}>{meta}</p>
       </div>
     </li>
   );

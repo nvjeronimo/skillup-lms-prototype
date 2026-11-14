@@ -1,0 +1,70 @@
+.rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  padding: 12px 16px;
+}
+.label {
+  color: var(--color-text-default);
+}
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.dot {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-radius: var(--sk-radius-pill);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.dot:focus-visible {
+  outline: 2px solid var(--color-border-primary);
+  outline-offset: 2px;
+}
+.done {
+  border-color: var(--color-border-success);
+  background-color: var(--color-bg-success-soft);
+  color: var(--color-text-success);
+}
+.error {
+  border-color: var(--color-border-error);
+  background-color: var(--color-bg-error-soft);
+  color: var(--color-text-error);
+}
+.flagged {
+  border-color: var(--color-border-warning);
+  background-color: var(--color-bg-warning-soft);
+  color: var(--color-text-warning);
+}
+.current {
+  border-color: var(--color-border-primary);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+.pending {
+  border-color: var(--color-border-default);
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) {
+  .pending:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+/* The current item when it has a state: a 2px border/primary ring, 1px off the dot. The 1px gap
+   is white (#fff, Tailwind's default ring-offset colour, kept as it was). */
+.currentRing {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--color-border-primary);
+}

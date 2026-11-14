@@ -2,6 +2,7 @@ import Link from "@/lib/router";
 import { ArrowRight } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./PlatformSectionHeader.module.css";
 
 export interface PlatformSectionHeaderProps {
   /** id of the <h2>, so the section can point at it with aria-labelledby. */
@@ -22,8 +23,7 @@ export interface PlatformSectionHeaderProps {
    icon/subtle rule under the whole button (the rule is the link's underline). 28 tall as
    drawn; the target grows to 44 on mobile, and the negative margin keeps the header at the
    title's height. */
-const ACTION =
-  "sk-text-body-medium-semibold inline-flex shrink-0 items-center justify-center gap-1 border-b border-sko-icon-subtle px-0.5 py-1 text-sko-text-subtle transition-colors md:h-7 hover:border-sko-text-default hover:text-sko-text-default max-md:-my-2 max-md:min-h-11";
+const ACTION = cn("sk-text-body-medium-semibold", styles.action);
 
 /**
  * DS `LMS / Platform / Section header` (6382:3172): section title for the platform pages.
@@ -44,21 +44,21 @@ export function PlatformSectionHeader({
   const actionContent = action ? (
     <>
       {action.label}
-      <Icon icon={ArrowRight} size={16} className="text-sko-icon-subtle" aria-hidden="true" />
+      <Icon icon={ArrowRight} size={16} className={styles.actionIcon} aria-hidden="true" />
     </>
   ) : null;
 
   return (
-    <div className={cn("flex items-start justify-between gap-4", className)}>
+    <div className={cn(styles.header, className)}>
       <Heading
         id={id}
-        className="sk-text-headline-small-bold flex min-w-0 flex-1 flex-wrap items-start gap-x-1.5"
+        className={cn("sk-text-headline-small-bold", styles.title)}
       >
-        <span className="whitespace-nowrap text-sko-text-default">{title}</span>
+        <span className={styles.titleMain}>{title}</span>
         {emphasis ? (
           <>
             {" "}
-            <span data-heading-em="" className="whitespace-nowrap text-sko-text-subtle">
+            <span data-heading-em="" className={styles.titleEm}>
               {emphasis}
             </span>
           </>

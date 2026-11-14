@@ -1,0 +1,73 @@
+.root { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; padding-bottom: 24px; }
+.badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* Audio surface: a waveform stands in for the video frame. */
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: var(--sk-shadow-card);
+  padding: 20px;
+}
+/* A flat brand tint (no gradients). */
+.waveform {
+  display: flex;
+  height: 96px;
+  align-items: flex-end;
+  gap: 3px;
+  overflow: hidden;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-primary-soft);
+  padding: 12px 16px;
+}
+.bar { flex: 1 1 0%; border-radius: var(--sk-radius-inner); }
+/* Progress fill is bg/info, never bg/primary; the unplayed track is bg/track. */
+.barPlayed { background-color: var(--color-bg-info); }
+.barUnplayed { background-color: var(--color-bg-track); }
+
+.scrubber { width: 100%; accent-color: var(--color-bg-info); }
+/* With larger touch targets on (the mobile default) the slider is 44 high. */
+[data-large-targets] .scrubber { min-height: 44px; }
+
+.controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.controlGroup { display: flex; align-items: center; gap: 8px; }
+.time { margin-left: 4px; color: var(--color-text-subtle); }
+
+.meta { display: flex; flex-direction: column; gap: 4px; }
+.host { color: var(--color-text-muted); }
+.summary { color: var(--color-text-muted); }
+
+/* Chapters behave like transcript lines: click to seek. */
+.chapters { display: flex; flex-direction: column; gap: 8px; }
+.chaptersTitle { color: var(--color-text-default); }
+.chapterList { display: flex; flex-direction: column; gap: 4px; }
+.chapter {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  padding: 8px 12px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.chapter:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--color-border-primary);
+}
+.chapterActive { background-color: var(--color-bg-primary-soft); }
+@media (hover: hover) {
+  .chapterIdle:hover { background-color: var(--color-bg-subtle); }
+}
+.chapterTs { font-variant-numeric: tabular-nums; }
+.chapterTsIdle { color: var(--color-text-subtle); }
+.chapterTextActive { color: var(--color-text-primary); }
+.chapterLabelIdle { color: var(--color-text-default); }

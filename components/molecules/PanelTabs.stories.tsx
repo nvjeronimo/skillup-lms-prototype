@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import * as React from "react";
 import { PanelTabs } from "./PanelTabs";
+import styles from "./PanelTabs.stories.module.css";
 
 const meta: Meta<typeof PanelTabs> = {
   title: "Molecules/Panel Tabs",
@@ -9,7 +10,7 @@ const meta: Meta<typeof PanelTabs> = {
   parameters: { layout: "padded" },
   decorators: [
     (Story) => (
-      <div className="w-[440px]">
+      <div className={styles.panel}>
         <Story />
       </div>
     ),

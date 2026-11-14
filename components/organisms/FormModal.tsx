@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
@@ -11,11 +9,11 @@ import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { useRovingRadio } from "@/lib/useRovingRadio";
 import { cn } from "@/lib/utils";
+import styles from "./FormModal.module.css";
 
 /* DS Input field, Size=md with a label (as EditProfileView and NoteEditorModal): bg/page, 1px
    border/default, Radius/control, padding 10/14, body-large/Regular, 44 tall; focus border/primary. */
-export const FIELD =
-  "sk-text-body-large-regular min-h-11 w-full rounded-control border border-sko-border-default bg-sko-bg-page px-3.5 py-2.5 text-sko-text-default shadow-sm placeholder:text-sko-text-placeholder transition-[border-color,box-shadow] focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
+export const FIELD = `sk-text-body-large-regular ${styles.field}`;
 
 /** A labelled field: the label (body-medium/Medium, text/muted), the control, an optional hint. */
 export function FormField({
@@ -34,14 +32,14 @@ export function FormField({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className="sk-text-body-medium-medium text-sko-text-muted">
+    <div className={cn(styles.formField, className)}>
+      <label htmlFor={id} className={`sk-text-body-medium-medium ${styles.label}`}>
         {label}
-        {optional ? <span className="text-sko-text-subtle"> (optional)</span> : null}
+        {optional ? <span className={styles.optional}> (optional)</span> : null}
       </label>
       {children}
       {hint ? (
-        <p id={`${id}-hint`} className="sk-text-body-medium-regular text-sko-text-subtle">
+        <p id={`${id}-hint`} className={`sk-text-body-medium-regular ${styles.hint}`}>
           {hint}
         </p>
       ) : null}
@@ -64,7 +62,7 @@ export function FormSelect({
   placeholder?: string;
 }) {
   return (
-    <SelectField id={id} value={value} onChange={(e) => onChange(e.target.value)} className={cn(FIELD, !value && "text-sko-text-placeholder")}>
+    <SelectField id={id} value={value} onChange={(e) => onChange(e.target.value)} className={cn(FIELD, !value && styles.empty)}>
       {placeholder ? (
         <option value="" disabled>
           {placeholder}
@@ -104,14 +102,14 @@ export function ChoiceGroup<T extends string>({
   const index = options.findIndex((o) => o.value === value);
   const roving = useRovingRadio(options.length, index, (i) => onChange(options[i].value));
   return (
-    <fieldset className="flex flex-col gap-1.5">
-      <legend id={legendId} className="sk-text-body-medium-medium mb-1.5 text-sko-text-muted">
+    <fieldset className={styles.fieldset}>
+      <legend id={legendId} className={`sk-text-body-medium-medium ${styles.legend}`}>
         {legend}
       </legend>
       <div
         role="radiogroup"
         aria-labelledby={legendId}
-        className={cn("grid gap-1.5", columns === 2 && "md:grid-cols-2", columns === 3 && "grid-cols-3")}
+        className={cn(styles.choices, columns === 2 && styles.columns2, columns === 3 && styles.columns3)}
       >
         {options.map((o, i) => {
           const checked = o.value === value;
@@ -124,17 +122,15 @@ export function ChoiceGroup<T extends string>({
               {...roving.itemProps(i)}
               onClick={() => onChange(o.value)}
               className={cn(
-                "flex min-h-11 items-center justify-between gap-2 rounded-control border px-3 py-2.5 text-left transition-colors",
-                checked
-                  ? "border-sko-border-primary bg-sko-bg-primary-soft text-sko-text-default"
-                  : "border-sko-border-subtle text-sko-text-muted hover:bg-sko-bg-hover",
+                styles.choice,
+                checked ? styles.choiceChecked : styles.choiceUnchecked,
               )}
             >
-              <span className="flex min-w-0 flex-col">
+              <span className={styles.choiceText}>
                 <span className="sk-text-body-medium-medium">{o.label}</span>
-                {o.hint ? <span className="sk-text-body-small-regular text-sko-text-subtle">{o.hint}</span> : null}
+                {o.hint ? <span className={`sk-text-body-small-regular ${styles.choiceHint}`}>{o.hint}</span> : null}
               </span>
-              {checked ? <Icon icon={Check} size={18} className="shrink-0 text-sko-icon-primary" aria-hidden /> : null}
+              {checked ? <Icon icon={Check} size={18} className={styles.choiceCheck} aria-hidden /> : null}
             </button>
           );
         })}
@@ -207,9 +203,9 @@ export function FormModal({
       data-state={state}
       aria-hidden={closed || undefined}
       {...inertProps(closed)}
-      className={cn("fixed inset-0 z-[60] flex items-center justify-center md:p-6", closed && "pointer-events-none")}
+      className={cn(styles.root, closed && styles.closed)}
     >
-      <div className="sk-backdrop sk-animate-fade absolute inset-0" onClick={onClose} onAnimationEnd={onAnimationEnd} aria-hidden />
+      <div className={`sk-backdrop sk-animate-fade ${styles.backdrop}`} onClick={onClose} onAnimationEnd={onAnimationEnd} aria-hidden />
       <form
         role="dialog"
         aria-modal="true"
@@ -221,29 +217,29 @@ export function FormModal({
           if (doneOnly) onClose();
           else if (canSubmit) onSubmit();
         }}
-        className="sk-animate-pop relative flex h-full w-full origin-center flex-col overflow-hidden bg-sko-bg-page shadow-xl md:h-auto md:max-h-[min(720px,calc(100dvh-48px))] md:max-w-[560px] md:rounded-surface md:border md:border-sko-border-subtle"
+        className={`sk-animate-pop ${styles.dialog}`}
       >
-        <header className="flex shrink-0 items-start gap-3 border-b border-sko-border-subtle p-4 md:px-6">
-          <div className="flex min-w-0 flex-1 flex-col gap-1 pt-1.5">
-            <h2 id={titleId} className="sk-text-title-medium-semibold text-sko-text-default">
+        <header className={styles.header}>
+          <div className={styles.heading}>
+            <h2 id={titleId} className={`sk-text-title-medium-semibold ${styles.title}`}>
               {title}
             </h2>
             {description ? (
-              <p id={descId} className="sk-text-body-medium-regular text-sko-text-muted">
+              <p id={descId} className={`sk-text-body-medium-regular ${styles.description}`}>
                 {description}
               </p>
             ) : null}
           </div>
-          <Button hierarchy="secondary" size="md" iconOnly leftIcon={X} type="button" onClick={onClose} aria-label="Close" className="shrink-0" />
+          <Button hierarchy="secondary" size="md" iconOnly leftIcon={X} type="button" onClick={onClose} aria-label="Close" className={styles.close} />
         </header>
 
-        <div data-mock={mock} className="sk-scroll flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-4 md:p-6">
+        <div data-mock={mock} className={`sk-scroll ${styles.body}`}>
           {children}
         </div>
 
-        <footer className="flex shrink-0 flex-col-reverse gap-2 border-t border-sko-border-subtle p-4 md:flex-row md:items-center md:justify-end md:px-6">
+        <footer className={styles.footer}>
           {doneOnly ? (
-            <Button type="submit" hierarchy="primary" size="md" className="max-md:w-full">
+            <Button type="submit" hierarchy="primary" size="md" className={styles.action}>
               {submitLabel}
             </Button>
           ) : (
@@ -255,16 +251,16 @@ export function FormModal({
                   size="md"
                   onClick={secondaryAction.onClick}
                   disabled={secondaryAction.disabled}
-                  className="max-md:w-full"
+                  className={styles.action}
                 >
                   {secondaryAction.label}
                 </Button>
               ) : (
-                <Button type="button" hierarchy="tertiary" size="md" onClick={onClose} className="max-md:w-full">
+                <Button type="button" hierarchy="tertiary" size="md" onClick={onClose} className={styles.action}>
                   Cancel
                 </Button>
               )}
-              <Button type="submit" tone={submitTone} hierarchy="primary" size="md" disabled={!canSubmit} className="max-md:w-full">
+              <Button type="submit" tone={submitTone} hierarchy="primary" size="md" disabled={!canSubmit} className={styles.action}>
                 {submitLabel}
               </Button>
             </>

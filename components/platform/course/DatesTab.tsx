@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
@@ -9,15 +7,16 @@ import type { CourseDate, CourseDateState, CourseDetail } from "@/lib/platform/c
 import { cn } from "@/lib/utils";
 import { topicLinks } from "@/lib/platform/topic-links";
 import { ShiftDatesAlert } from "./ShiftDatesAlert";
+import styles from "./DatesTab.module.css";
 
 /* The 12px dot of the spine. The DS binds icon/success and icon/warning as its fill; the bg
    roles of the same colours stand in, since an icon token is not a fill here. Past due is amber,
    never red (Nelson, 28 Oct 2026): a missed suggested date can still be shifted. */
 const DOT: Record<CourseDateState, string> = {
-  complete: "bg-sko-bg-success",
-  overdue: "bg-sko-bg-warning",
-  upcoming: "bg-sko-bg-muted",
-  locked: "bg-sko-bg-muted",
+  complete: styles.dotComplete,
+  overdue: styles.dotOverdue,
+  upcoming: styles.dotMuted,
+  locked: styles.dotMuted,
 };
 
 const STATE_LABEL: Record<CourseDateState, string> = {
@@ -30,10 +29,10 @@ const STATE_LABEL: Record<CourseDateState, string> = {
 /** DS `Content divider`, Type=Text: the label (body-medium/Medium, text/subtle) between two 1px rules, 8 apart. */
 function Divider({ children, as: Tag = "p" }: { children: React.ReactNode; as?: "p" | "h3" }) {
   return (
-    <div className="flex items-center gap-2">
-      <span aria-hidden className="flex-1 border-t border-sko-border-subtle" />
-      <Tag className="sk-text-body-medium-medium text-sko-text-subtle">{children}</Tag>
-      <span aria-hidden className="flex-1 border-t border-sko-border-subtle" />
+    <div className={styles.divider}>
+      <span aria-hidden className={styles.dividerRule} />
+      <Tag className={`sk-text-body-medium-medium ${styles.subtle}`}>{children}</Tag>
+      <span aria-hidden className={styles.dividerRule} />
     </div>
   );
 }
@@ -49,43 +48,43 @@ function Divider({ children, as: Tag = "p" }: { children: React.ReactNode; as?: 
  */
 function DateRow({ item, href, first }: { item: CourseDate; href: string; first: boolean }) {
   return (
-    <li className="relative grid grid-cols-[16px_minmax(0,1fr)] gap-x-3 gap-y-1 pb-4 pt-3 md:grid-cols-[104px_16px_minmax(0,1fr)] md:gap-y-0 md:pb-5 lg:pb-6">
+    <li className={styles.row}>
       <span
         aria-hidden
-        className={cn("absolute bottom-0 left-[7px] w-0.5 bg-sko-bg-muted md:left-[123px]", first ? "top-4" : "top-0")}
+        className={cn(styles.spine, first ? styles.spineFirst : styles.spineRest)}
       />
       <span
         aria-hidden
         className={cn(
-          "absolute left-0.5 top-4 size-3 rounded-pill ring-2 ring-sko-bg-page md:left-[118px]",
+          styles.dot,
           DOT[item.state],
         )}
       />
-      <p className="col-start-2 row-start-1 flex flex-wrap items-center gap-x-1.5 md:col-start-1 md:row-span-2 md:flex-col md:items-start md:gap-0.5 md:self-start">
-        <time dateTime={item.iso} className="sk-text-body-medium-semibold text-sko-text-default">
+      <p className={styles.when}>
+        <time dateTime={item.iso} className={`sk-text-body-medium-semibold ${styles.default}`}>
           {item.date}
         </time>
-        <span className="sk-text-body-small-regular text-sko-text-subtle">{item.time}</span>
-        <span className="sr-only">{STATE_LABEL[item.state]}</span>
+        <span className={`sk-text-body-small-regular ${styles.subtle}`}>{item.time}</span>
+        <span className="sk-sr-only">{STATE_LABEL[item.state]}</span>
       </p>
-      <div className="col-start-2 row-start-2 flex min-w-0 flex-col items-start gap-1 md:col-start-3 md:row-start-1">
-        <ul aria-label="Type and status" className="flex flex-wrap items-start gap-1">
+      <div className={styles.content}>
+        <ul aria-label="Type and status" className={styles.badges}>
           {item.badges.map((badge) => (
-            <li key={badge.label} className="flex">
+            <li key={badge.label} className={styles.flexItem}>
               <Badge variant="outline" color={badge.color}>
                 {badge.label}
               </Badge>
             </li>
           ))}
         </ul>
-        <p className="sk-text-body-medium-semibold text-sko-text-default">
+        <p className={`sk-text-body-medium-semibold ${styles.default}`}>
           {item.assignmentType && !item.title.toLowerCase().includes(item.assignmentType.toLowerCase())
             ? `${item.assignmentType}: `
             : null}
           {item.title}
         </p>
         {item.description ? (
-          <p className="sk-text-body-medium-regular text-sko-text-muted">{item.description}</p>
+          <p className={`sk-text-body-medium-regular ${styles.muted}`}>{item.description}</p>
         ) : null}
         {item.link ? (
           <ButtonLink
@@ -108,7 +107,7 @@ function DateCard({ items, href, label }: { items: CourseDate[]; href: (title: s
     <ol
       aria-label={label}
       // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
-      className="rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]"
+      className={styles.card}
     >
       {items.map((item, index) => (
         <DateRow key={item.id} item={item} href={href(item.title)} first={index === 0} />
@@ -128,13 +127,13 @@ export function DatesTab({ course }: { course: CourseDetail }) {
   const tab = course.datesTab;
   const links = React.useMemo(() => topicLinks(course.slug, course.progress.href), [course.slug, course.progress.href]);
   return (
-    <div className="flex flex-col gap-layout-stack">
-      <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
+    <div className={styles.tab}>
+      <h2 className={`sk-text-headline-medium-bold ${styles.default}`}>{tab.title}</h2>
 
       {/* Only for a learner who is behind the suggested schedule. */}
       {tab.missedAlert ? <ShiftDatesAlert courseSlug={course.slug} /> : null}
 
-      <div className="flex flex-col gap-3">
+      <div className={styles.timeline}>
         <Divider as="h3">{tab.pastLabel}</Divider>
         <DateCard items={tab.past} href={links.byTitle} label={tab.pastLabel} />
         <Divider>
@@ -144,7 +143,7 @@ export function DatesTab({ course }: { course: CourseDetail }) {
         <DateCard items={tab.upcoming} href={links.byTitle} label={tab.upcomingLabel} />
       </div>
 
-      <p className="sk-text-body-medium-regular text-sko-text-subtle">{tab.timezoneNote}</p>
+      <p className={`sk-text-body-medium-regular ${styles.subtle}`}>{tab.timezoneNote}</p>
     </div>
   );
 }

@@ -1,0 +1,42 @@
+/* The Six Sigma course plan: continue this course, and see what is left. */
+.main {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 880px;
+  flex: 1 1 0%;
+  padding: 24px 16px 64px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.back { gap: 6px; }
+.header { margin-top: 16px; }
+.title { text-wrap: balance; }
+.status { margin-top: 12px; }
+.replan { margin-top: 8px; }
+
+.next {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 24px;
+}
+.nextMain { min-width: 0; }
+.nextMeta { margin-top: 4px; }
+.cta { flex: none; }
+.plan { margin-top: 48px; }
+.mock { margin-top: 40px; }
+
+@media (min-width: 640px) {
+  .next {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+@media (min-width: 768px) {
+  .main {
+    padding-inline: 32px;
+    padding-top: 40px;
+  }
+}

@@ -1,0 +1,36 @@
+/* Test panel: what the package told the platform. A testing aid, not part of the design:
+   dashed yellow border (accent yellow). */
+.testPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border-width: 2px;
+  border-style: dashed;
+  border-color: var(--color-bg-accent-yellow);
+  padding: 16px;
+}
+.testPanelHeader { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.testPanelTitle { color: var(--color-text-default); }
+.testPanelNote { display: flex; align-items: center; gap: 8px; color: var(--color-text-muted); }
+.testPanelNoteIcon { width: 16px; height: 16px; flex-shrink: 0; color: var(--color-icon-warning); }
+.report { display: grid; grid-template-columns: max-content 1fr; column-gap: 16px; row-gap: 4px; }
+.reportTerm { color: var(--color-text-muted); }
+.reportValue { color: var(--color-text-default); }
+.calls {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: var(--color-text-muted);
+}
+.call { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.noCalls { color: var(--color-text-muted); }
+
+/* A course package: the package fills the panel, the test panel below it. */
+.packageRoot { display: flex; flex-direction: column; }
+.frame { min-height: 0; width: 100%; flex: 1 1 0%; border-width: 0; }
+.packagePanel { padding: 24px; }
+
+.root { display: flex; flex-direction: column; gap: 16px; padding-top: 24px; padding-bottom: 24px; }
+.intro { max-width: var(--sk-container-text-max-width, 1200px); text-wrap: pretty; color: var(--color-text-default); }

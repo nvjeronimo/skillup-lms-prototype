@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./AssistantGlyph.module.css";
 
 /**
  * The assistant's small mark: the DS "SkillUp AI Assistant Mark - V2" (Figma 23495:201816; Nelson,
@@ -17,7 +18,7 @@ export function AssistantGlyph({ size = 16, className }: { size?: number; classN
       viewBox="4 3 42 44"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn("shrink-0", className)}
+      className={cn(styles.glyph, className)}
     >
       <path
         fillRule="evenodd"

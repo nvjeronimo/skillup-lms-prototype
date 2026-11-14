@@ -1,0 +1,12 @@
+/* The two selects side by side from tablet up. */
+.pair {
+  display: grid;
+  gap: 20px;
+}
+@media (min-width: 768px) {
+  .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* The message field grows by hand, vertically only. */
+.textarea {
+  resize: vertical;
+}

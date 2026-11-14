@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./FilterChip.module.css";
 
 export interface FilterChipProps {
   label: string;
@@ -20,10 +21,9 @@ export function FilterChip({ label, count, active = false, onClick, className }:
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "sk-text-body-medium-medium inline-flex items-center gap-1.5 rounded-pill px-3 py-1 transition-colors",
-        active
-          ? "bg-sko-bg-primary-soft text-sko-text-primary"
-          : "bg-sko-bg-subtle text-sko-text-muted hover:bg-sko-bg-hover",
+        "sk-text-body-medium-medium",
+        styles.chip,
+        active ? styles.active : styles.inactive,
         className,
       )}
     >
@@ -32,7 +32,7 @@ export function FilterChip({ label, count, active = false, onClick, className }:
         <span
           className={cn(
             "sk-text-body-small-semibold",
-            active ? "text-sko-text-primary" : "text-sko-text-subtle",
+            active ? styles.countActive : styles.countInactive,
           )}
         >
           {count}

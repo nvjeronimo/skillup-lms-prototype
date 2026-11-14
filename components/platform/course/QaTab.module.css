@@ -1,0 +1,254 @@
+.default { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+
+/* Thread-Row: padding 12, a 1px rule under it (none under the last). */
+.thread { border-bottom-width: 1px; border-color: var(--color-border-subtle); }
+.thread:last-child { border-bottom-width: 0; }
+/* The DS stroke is inside the card: the side padding gives the 1px back. */
+.threadLink {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 11px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.threadLink:focus-visible { outline-offset: -2px; }
+.selected { background-color: var(--color-bg-primary-soft); }
+@media (min-width: 768px) {
+  .selectedFromTablet { background-color: var(--color-bg-primary-soft); }
+}
+@media (hover: hover) {
+  .hoverable:hover { background-color: var(--color-bg-faint); }
+}
+.threadText { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 4px; }
+.flags { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px; }
+.wideInline { display: none; }
+@media (min-width: 768px) {
+  .phoneOnly { display: none; }
+  .wideInline { display: inline; }
+}
+.preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+.unreadWrap { padding-top: 8px; }
+.unreadDot { display: block; width: 8px; height: 8px; border-radius: var(--sk-radius-pill); background-color: var(--color-bg-primary); }
+
+/* Message: bubbles hug their text up to 420px; on mobile they fill the column. */
+.learner { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.mentor { display: flex; align-items: flex-start; gap: 8px; }
+.mentorBody { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; align-items: flex-start; gap: 4px; }
+.authorLine { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.bubble { border-radius: var(--sk-radius-control); padding: 8px 12px; }
+.bubbleLearner {
+  border-bottom-right-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.bubbleMentor {
+  border-bottom-left-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-default);
+}
+@media (max-width: 767.98px) {
+  .bubble { align-self: stretch; }
+}
+@media (min-width: 768px) {
+  .bubble { max-width: 420px; }
+}
+.messageFoot { display: flex; align-items: center; gap: 8px; }
+/* The target is grown by the ::before band, so the 44px minimum of the larger-targets setting is not needed on the box. */
+.report {
+  position: relative;
+  color: var(--color-text-subtle);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.report::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  top: -13px;
+  bottom: -13px;
+}
+@media (hover: hover) {
+  .report:hover { color: var(--color-text-default); }
+}
+[data-large-targets] .report { min-height: 0; min-width: 0; }
+
+/* The tab */
+.tab { display: flex; flex-direction: column; gap: var(--sk-layout-stack-gap); }
+.intro { display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 767.98px) {
+  .introHidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+.inlineLink { color: var(--color-text-primary); text-decoration-line: underline; text-underline-offset: 2px; }
+.layout { display: flex; flex-direction: column; gap: 16px; }
+
+/* The list of questions: 320 on tablet, 360 on desktop. */
+.list {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+@media (max-width: 767.98px) {
+  .hideOnPhone { display: none; }
+  .touchHeight { height: 44px; }
+}
+.listHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background-color: var(--color-bg-subtle);
+  padding: 12px 11px;
+}
+.listSearch { padding: 12px 11px; }
+.listFilters { padding-left: 11px; padding-right: 11px; padding-bottom: 12px; }
+
+/* DS Button group: a bg/track track, padding 4, gap 2; the pressed segment on bg/page. */
+.segments {
+  display: inline-flex;
+  gap: 2px;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-track);
+  padding: 4px;
+}
+.segment {
+  height: 32px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  padding-left: 16px;
+  padding-right: 16px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (max-width: 767.98px) {
+  .segment { height: 44px; }
+}
+.segmentOn { border-color: var(--color-border-subtle); background-color: var(--color-bg-page); color: var(--color-text-primary); }
+.segmentOff { border-color: transparent; color: var(--color-text-subtle); }
+@media (hover: hover) {
+  .segmentOff:hover { background-color: var(--color-bg-subtle); color: var(--color-text-default); }
+}
+.threads { border-top-width: 1px; border-color: var(--color-border-subtle); }
+.empty { border-top-width: 1px; border-color: var(--color-border-subtle); padding: 12px; color: var(--color-text-subtle); }
+
+/* The conversation: alone on mobile once a question is opened, beside the list from tablet up. */
+.conversation { min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 16px; }
+.shown { display: flex; }
+.shownFromTablet { display: none; }
+.back { align-self: flex-start; border-bottom-width: 0 !important; }
+@media (max-width: 767.98px) {
+  .back { min-height: 44px; }
+}
+.threadCard {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.threadHead { display: flex; align-items: flex-start; gap: 8px; background-color: var(--color-bg-subtle); padding: 12px; }
+.threadHeading { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 4px; }
+/* An inset 1px border/default ring (Tailwind's ring-1 ring-inset with its empty layers). */
+.menuButton {
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-default), 0 0 #0000;
+}
+/* Focused, the Button's own focus ring is added to the inset ring, not swapped for it (as the
+   Tailwind ring composed with the Button's focus shadow). --btn-ring is set by the Button. */
+.menuButton:focus-visible {
+  box-shadow:
+    inset 0 0 0 0 #fff,
+    inset 0 0 0 1px var(--color-border-default),
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--btn-ring);
+}
+@media (max-width: 767.98px) {
+  .menuButton { width: 44px; height: 44px; }
+}
+.messages { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
+.pending { padding: 16px; color: var(--color-text-subtle); }
+
+/* The reply form */
+.reply {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px;
+}
+.replyRow { display: flex; align-items: center; gap: 8px; }
+.replyField {
+  display: flex;
+  height: 44px;
+  min-width: 0;
+  flex: 1 1 0%;
+  align-items: center;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding-left: 12px;
+  padding-right: 12px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition-property: border-color, box-shadow;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.replyField:focus-within {
+  border-color: var(--color-border-primary);
+  box-shadow: 0 0 0 0 #fff, 0 0 0 1px var(--color-border-primary), 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.replyInput { min-width: 0; flex: 1 1 0%; background-color: transparent; color: var(--color-text-default); }
+.replyInput::placeholder { color: var(--color-text-placeholder); }
+.replyInput:focus { outline: 2px solid transparent; outline-offset: 2px; }
+.send { flex-shrink: 0; }
+@media (max-width: 767.98px) {
+  .send { height: 44px; }
+}
+.anonymous { display: flex; align-items: center; gap: 4px; align-self: flex-start; color: var(--color-text-subtle); }
+@media (max-width: 767.98px) {
+  .anonymous { min-height: 44px; }
+}
+.checkbox { width: 13px; height: 13px; border-radius: var(--sk-radius-inner); accent-color: var(--color-bg-primary); }
+
+@media (min-width: 768px) {
+  .layout { flex-direction: row; align-items: flex-start; }
+  .list { width: 320px; flex-shrink: 0; }
+  .shownFromTablet { display: flex; }
+  .back { display: none; }
+  .threadHead { align-items: center; }
+  .messages { padding: 20px; }
+  .pending { padding: 20px; }
+  .replyField { height: 40px; }
+}
+@media (min-width: 1024px) {
+  .list { width: 360px; }
+  .messages { padding: 24px; }
+  .pending { padding: 24px; }
+}

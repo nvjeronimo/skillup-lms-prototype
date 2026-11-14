@@ -1,0 +1,5 @@
+/* Story layout. */
+.row {
+  display: flex;
+  gap: 8px;
+}

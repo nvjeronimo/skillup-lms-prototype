@@ -1,0 +1,225 @@
+/* The page column: band-x sides, 1280 wide, blocks 32 apart. */
+.page {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  flex-direction: column;
+  gap: 32px;
+  padding-left: var(--sk-layout-band-x);
+  padding-right: var(--sk-layout-band-x);
+  padding-bottom: 32px;
+  padding-top: 24px;
+}
+
+/* Breadcrumb: the target is 44 tall at the drawn 20px height. */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 4px;
+}
+.crumbItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.crumbItemShrink {
+  min-width: 0;
+}
+.crumbLast {
+  display: flex;
+  align-items: center;
+}
+.crumb {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.crumb::after {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: -12px;
+  bottom: -12px;
+  content: "";
+}
+.crumbLink {
+  color: var(--color-text-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .crumbLink:hover {
+    color: var(--color-text-default);
+  }
+}
+.crumbShrink {
+  min-width: 0;
+}
+.crumbCurrent {
+  color: var(--color-text-primary);
+}
+.chevron {
+  color: var(--color-icon-muted);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.textDefault {
+  color: var(--color-text-default);
+}
+.textSubtle {
+  color: var(--color-text-subtle);
+}
+.textMuted {
+  color: var(--color-text-muted);
+}
+
+/* The sheet (or what is missing) and the 320 column beside it. */
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-column-gap);
+}
+.sheet {
+  position: relative;
+  aspect-ratio: 1123/794;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+  box-shadow: var(--sk-shadow-card);
+  container-type: inline-size;
+}
+.sheetFill {
+  position: absolute;
+  inset: 0px;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* The facts beside the sheet. */
+.facts {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.signatoryRole {
+  display: block;
+  color: var(--color-text-muted);
+}
+.verifyUrl {
+  word-break: break-all;
+  color: var(--color-text-default);
+}
+
+/* Not earned: the card of what is missing (15 / 19 / 23 + the 1px border). */
+.missing {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+.requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.requirement {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.courses {
+  display: flex;
+  flex-direction: column;
+}
+.course {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 12px;
+  row-gap: 4px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.courseLink {
+  display: inline-flex;
+  min-height: 44px;
+  min-width: 0;
+  align-items: center;
+  color: var(--color-text-default);
+}
+@media (hover: hover) {
+  .courseLink:hover {
+    text-decoration-line: underline;
+  }
+}
+.courseBadge {
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-bottom: 48px;
+  }
+  .crumbs {
+    column-gap: 8px;
+  }
+  .crumbItem {
+    gap: 8px;
+  }
+  .missing {
+    padding: 19px;
+  }
+  .courseLink {
+    min-height: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding-bottom: 80px;
+    padding-top: 24px;
+  }
+  .layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .sheet,
+  .missing {
+    flex: 1 1 0%;
+  }
+  .missing {
+    padding: 23px;
+  }
+  .side {
+    width: 320px;
+    flex-shrink: 0;
+  }
+}

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import {
@@ -34,6 +32,7 @@ import {
 import { CtaLink } from "./CtaLink";
 import { PaceTrack } from "./PaceTrack";
 import { ACTIVE_DAYS, TOPICS_TO_NEXT_MODULE, TRACK, WEEK_DAYS } from "./pace-data";
+import styles from "./View.module.css";
 
 type PaceKind = "not-started" | "on-track" | "ahead" | "behind";
 
@@ -43,27 +42,27 @@ const PACE: Record<
 > = {
   "not-started": {
     icon: Flag,
-    circle: "bg-sko-bg-primary-soft text-sko-icon-primary",
-    label: "text-sko-text-primary",
-    panel: "border-sko-border-subtle",
+    circle: styles.circleNotStarted,
+    label: styles.labelNotStarted,
+    panel: styles.panelCalm,
   },
   "on-track": {
     icon: CheckCircle2,
-    circle: "bg-sko-bg-success-soft text-sko-icon-success",
-    label: "text-sko-text-success",
-    panel: "border-sko-border-subtle",
+    circle: styles.circleOnTrack,
+    label: styles.labelOnTrack,
+    panel: styles.panelCalm,
   },
   ahead: {
     icon: TrendingUp,
-    circle: "bg-sko-bg-info-soft text-sko-icon-info",
-    label: "text-sko-text-info",
-    panel: "border-sko-border-subtle",
+    circle: styles.circleAhead,
+    label: styles.labelAhead,
+    panel: styles.panelCalm,
   },
   behind: {
     icon: Clock,
-    circle: "bg-sko-bg-warning-soft text-sko-icon-warning",
-    label: "text-sko-text-warning",
-    panel: "border-sko-border-warning-soft",
+    circle: styles.circleBehind,
+    label: styles.labelBehind,
+    panel: styles.panelBehind,
   },
 };
 
@@ -85,7 +84,7 @@ function paceKind(p: Persona): PaceKind {
   return p.pace.value.state;
 }
 
-const card = "rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:p-6";
+const card = styles.card;
 
 /* ── Page ─────────────────────────────────────────────────────────────────────────────── */
 
@@ -95,11 +94,11 @@ export function View() {
   const next = nextAction(p);
 
   return (
-    <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:px-8 md:py-8">
-      <h1 className="sk-text-headline-medium-semibold text-sko-text-default">
+    <main id="main" tabIndex={-1} className={styles.main}>
+      <h1 className={`sk-text-headline-medium-semibold ${styles.heading}`}>
         {kind === "not-started" ? `Welcome, ${p.firstName}` : `Your week, ${p.firstName}`}
       </h1>
-      <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">
+      <p className={`sk-text-body-large-regular ${styles.lede}`}>
         {kind === "not-started"
           ? "Here is where your courses stand and how to begin."
           : "Where you are against your cohort, and what to do this week."}
@@ -131,20 +130,20 @@ function PacePanel({ p, kind, next }: { p: Persona; kind: PaceKind; next?: Enrol
   };
 
   return (
-    <section aria-labelledby="pace-h" className={cn(card, "mt-6 border", s.panel)}>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="flex min-w-0 flex-col gap-5">
-          <div className="flex items-start gap-3">
-            <span className={cn("inline-flex size-12 shrink-0 items-center justify-center rounded-pill", s.circle)}>
+    <section aria-labelledby="pace-h" className={cn(card, styles.panel, s.panel)}>
+      <div className={styles.panelGrid}>
+        <div className={styles.panelMain}>
+          <div className={styles.paceHead}>
+            <span className={cn(styles.circle, s.circle)}>
               <Icon icon={s.icon} size={24} aria-hidden="true" />
             </span>
-            <div className="min-w-0">
-              <h2 id="pace-h" className="sk-text-body-medium-semibold text-sko-text-muted">
+            <div className={styles.shrinkable}>
+              <h2 id="pace-h" className={`sk-text-body-medium-semibold ${styles.muted}`}>
                 Your pace{course ? ` · ${course}` : ""}
               </h2>
               <p className={cn("sk-text-headline-small-semibold", s.label)}>{stateLabel}</p>
-              <p className="sk-text-body-large-regular mt-1 text-sko-text-default">{p.pace.value.detail}.</p>
-              <p className="sk-text-body-medium-regular mt-1 text-sko-text-muted">{message[kind]}</p>
+              <p className={`sk-text-body-large-regular ${styles.stacked}`}>{p.pace.value.detail}.</p>
+              <p className={`sk-text-body-medium-regular ${styles.lede}`}>{message[kind]}</p>
             </div>
           </div>
 
@@ -156,7 +155,7 @@ function PacePanel({ p, kind, next }: { p: Persona; kind: PaceKind; next?: Enrol
         <UpNext kind={kind} next={next} />
       </div>
 
-      {p.pace.mock ? <MockTag layout="block" reason={p.pace.mock} className="mt-5" /> : null}
+      {p.pace.mock ? <MockTag layout="block" reason={p.pace.mock} className={styles.mockPanel} /> : null}
     </section>
   );
 }
@@ -166,21 +165,21 @@ function UpNext({ kind, next }: { kind: PaceKind; next?: Enrolment }) {
   const starting = next.status === "not-started";
   const ctaLabel = starting ? "Start course" : kind === "behind" ? "Resume where you left off" : "Resume";
   return (
-    <div className="flex flex-col gap-3 rounded-control bg-sko-bg-subtle p-4">
-      <h3 className="sk-text-body-medium-semibold text-sko-text-muted">{starting ? "Start here" : "Up next"}</h3>
-      <div className="flex flex-col gap-1">
+    <div className={styles.upNext}>
+      <h3 className={`sk-text-body-medium-semibold ${styles.muted}`}>{starting ? "Start here" : "Up next"}</h3>
+      <div className={styles.topic}>
         <TopicTypeBadge type={next.nextTopic.type as TopicType} />
-        <p className="sk-text-body-large-semibold text-sko-text-default">{next.nextTopic.title}</p>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">{next.title}</p>
+        <p className={`sk-text-body-large-semibold ${styles.heading}`}>{next.nextTopic.title}</p>
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>{next.title}</p>
       </div>
       {!starting ? (
         <Progress label={`${next.title} progress`} pct={next.pct} caption={`${next.topicsDone} of ${next.topicsTotal} topics`} />
       ) : null}
-      <CtaLink href={next.nextTopic.href} icon={ArrowRight} className="w-full" aria-label={`${ctaLabel}: ${next.title}`}>
+      <CtaLink href={next.nextTopic.href} icon={ArrowRight} className={styles.fullWidth} aria-label={`${ctaLabel}: ${next.title}`}>
         {ctaLabel}
       </CtaLink>
       {starting ? (
-        <p className="sk-text-body-small-regular text-sko-text-muted">The first topic is short. There is no deadline to beat.</p>
+        <p className={`sk-text-body-small-regular ${styles.muted}`}>The first topic is short. There is no deadline to beat.</p>
       ) : null}
     </div>
   );
@@ -194,46 +193,46 @@ function CatchUpPlan({ p }: { p: Persona }) {
   const recording = p.live.value.find((l) => l.state === "recording");
 
   return (
-    <div className="rounded-card border border-sko-border-warning-soft bg-sko-bg-warning-soft p-4">
-      <h3 className="sk-text-body-large-semibold text-sko-text-default">Your catch-up plan</h3>
-      <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">
+    <div className={styles.catchUp}>
+      <h3 className={`sk-text-body-large-semibold ${styles.heading}`}>Your catch-up plan</h3>
+      <p className={`sk-text-body-medium-regular ${styles.gapNote}`}>
         Start with step 1. One step today is enough.
       </p>
-      <ol className="mt-3 flex flex-col gap-3">
+      <ol className={styles.steps}>
         {next?.nextTopic ? (
           <PlanStep n={1}>
-            <p className="sk-text-body-medium-semibold text-sko-text-default">
+            <p className={`sk-text-body-medium-semibold ${styles.heading}`}>
               Finish {topics} topics to reach Module {track.you + 1}
             </p>
-            <p className="sk-text-body-medium-regular text-sko-text-muted">Start with “{next.nextTopic.title}”.</p>
-            <MockTag reason={MOCK.pace} className="mt-1" />
+            <p className={`sk-text-body-medium-regular ${styles.muted}`}>Start with “{next.nextTopic.title}”.</p>
+            <MockTag reason={MOCK.pace} className={styles.mockStep} />
           </PlanStep>
         ) : null}
         {overdue ? (
           <PlanStep n={2}>
-            <p className="sk-text-body-medium-semibold text-sko-text-default">{overdue.title}</p>
-            <p className="sk-text-body-medium-regular text-sko-text-muted">{overdue.dueLabel}. It sits right after step 1.</p>
+            <p className={`sk-text-body-medium-semibold ${styles.heading}`}>{overdue.title}</p>
+            <p className={`sk-text-body-medium-regular ${styles.muted}`}>{overdue.dueLabel}. It sits right after step 1.</p>
             <Link
               href={overdue.href}
-              className="sk-text-body-medium-semibold inline-flex min-h-[44px] items-center gap-1 text-sko-text-primary underline underline-offset-4"
+              className={`sk-text-body-medium-semibold ${styles.textLink}`}
             >
               {DUE_VERB[overdue.kind]}
-              <span className="sr-only">: {overdue.title}</span>
+              <span className="sk-sr-only">: {overdue.title}</span>
             </Link>
           </PlanStep>
         ) : null}
         {recording ? (
           <PlanStep n={3}>
-            <p className="sk-text-body-medium-semibold text-sko-text-default">Watch the session you missed</p>
-            <p className="sk-text-body-medium-regular text-sko-text-muted">
+            <p className={`sk-text-body-medium-semibold ${styles.heading}`}>Watch the session you missed</p>
+            <p className={`sk-text-body-medium-regular ${styles.muted}`}>
               {recording.title} · Recording available · {recording.when.replace(/^Recorded [^·]+· /, "")}
             </p>
             <Link
               href="#"
-              className="sk-text-body-medium-semibold inline-flex min-h-[44px] items-center gap-1 text-sko-text-primary underline underline-offset-4"
+              className={`sk-text-body-medium-semibold ${styles.textLink}`}
             >
               Watch recording
-              <span className="sr-only">: {recording.title}</span>
+              <span className="sk-sr-only">: {recording.title}</span>
             </Link>
           </PlanStep>
         ) : null}
@@ -244,15 +243,15 @@ function CatchUpPlan({ p }: { p: Persona }) {
 
 function PlanStep({ n, children }: { n: number; children: React.ReactNode }) {
   return (
-    <li className="flex items-start gap-3">
+    <li className={styles.step}>
       <span
         aria-hidden="true"
-        className="sk-text-body-medium-semibold inline-flex size-7 shrink-0 items-center justify-center rounded-pill bg-sko-bg-page text-sko-text-warning ring-1 ring-inset ring-sko-border-warning"
+        className={`sk-text-body-medium-semibold ${styles.stepNumber}`}
       >
         {n}
       </span>
-      <div className="min-w-0 flex-1">
-        <span className="sr-only">Step {n}: </span>
+      <div className={styles.stepBody}>
+        <span className="sk-sr-only">Step {n}: </span>
         {children}
       </div>
     </li>
@@ -263,13 +262,13 @@ function PlanStep({ n, children }: { n: number; children: React.ReactNode }) {
 
 function ThisWeek({ p, kind }: { p: Persona; kind: PaceKind }) {
   return (
-    <section aria-labelledby="week-h" className="mt-10">
-      <h2 id="week-h" className="sk-text-title-medium-semibold text-sko-text-default">
+    <section aria-labelledby="week-h" className={styles.section}>
+      <h2 id="week-h" className={`sk-text-title-medium-semibold ${styles.heading}`}>
         This week
       </h2>
-      <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className={styles.weekGrid}>
         <DueList p={p} />
-        <div className="flex flex-col gap-4">
+        <div className={styles.side}>
           <WeeklyGoal p={p} kind={kind} />
           <LiveList p={p} />
         </div>
@@ -282,41 +281,41 @@ function DueList({ p }: { p: Persona }) {
   const items = [...p.due.value].sort((a, b) => DUE_ORDER[a.state] - DUE_ORDER[b.state]);
   return (
     <div className={card}>
-      <h3 className="sk-text-body-large-semibold text-sko-text-default">Due</h3>
+      <h3 className={`sk-text-body-large-semibold ${styles.heading}`}>Due</h3>
       {items.length === 0 ? (
-        <p className="sk-text-body-medium-regular mt-2 text-sko-text-muted">
+        <p className={`sk-text-body-medium-regular ${styles.emptyNote}`}>
           Nothing is due this week. Deadlines will show here, soonest first.
         </p>
       ) : (
-        <ul className="mt-3 flex flex-col divide-y divide-sko-border-subtle">
+        <ul className={styles.dueList}>
           {items.map((d) => {
             const b = DUE_BADGE[d.state];
             return (
               <li
                 key={d.id}
                 className={cn(
-                  "flex flex-col gap-3 py-3 first:pt-0 last:pb-0 md:flex-row md:items-center md:justify-between",
-                  d.state === "overdue" && "-mx-2 rounded-control border-l-4 border-sko-border-warning bg-sko-bg-warning-soft px-3 first:pt-3 last:pb-3",
+                  styles.dueItem,
+                  d.state === "overdue" && styles.dueOverdue,
                 )}
               >
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
+                <div className={styles.shrinkable}>
+                  <div className={styles.badges}>
                     <Badge color={b.color} variant="outline" leftIcon={b.icon}>
                       {b.label}
                     </Badge>
-                    <span className="sk-text-body-small-medium text-sko-text-subtle">
+                    <span className={`sk-text-body-small-medium ${styles.subtle}`}>
                       {d.kind} · {d.course}
                     </span>
                   </div>
-                  <p className="sk-text-body-medium-semibold mt-1 text-sko-text-default">{d.title}</p>
-                  <p className={cn("sk-text-body-medium-regular", d.state === "overdue" ? "text-sko-text-warning" : "text-sko-text-muted")}>
+                  <p className={`sk-text-body-medium-semibold ${styles.stacked}`}>{d.title}</p>
+                  <p className={cn("sk-text-body-medium-regular", d.state === "overdue" ? styles.dueLate : styles.muted)}>
                     {d.state === "overdue" ? d.dueLabel : `Due ${d.dueLabel}`}
                   </p>
                 </div>
                 <CtaLink
                   href={d.href}
                   variant={d.state === "upcoming" ? "secondary" : "primary"}
-                  className="shrink-0 self-start md:self-center"
+                  className={styles.dueCta}
                   aria-label={`${DUE_VERB[d.kind]}: ${d.title}`}
                 >
                   {DUE_VERB[d.kind]}
@@ -326,7 +325,7 @@ function DueList({ p }: { p: Persona }) {
           })}
         </ul>
       )}
-      {p.due.mock ? <MockTag layout="block" reason={p.due.mock} className="mt-4" /> : null}
+      {p.due.mock ? <MockTag layout="block" reason={p.due.mock} className={styles.mockCard} /> : null}
     </div>
   );
 }
@@ -348,13 +347,13 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
 
   return (
     <div className={card}>
-      <div className="flex items-baseline justify-between gap-2">
-        <h3 className="sk-text-body-large-semibold text-sko-text-default">Weekly goal</h3>
-        <span className="sk-text-body-medium-semibold text-sko-text-default">
+      <div className={styles.goalHead}>
+        <h3 className={`sk-text-body-large-semibold ${styles.heading}`}>Weekly goal</h3>
+        <span className={`sk-text-body-medium-semibold ${styles.heading}`}>
           {daysDone} of {daysTarget} days
         </span>
       </div>
-      <p className="sk-text-body-medium-regular mt-1 text-sko-text-muted">{line}</p>
+      <p className={`sk-text-body-medium-regular ${styles.lede}`}>{line}</p>
 
       <div
         role="progressbar"
@@ -363,16 +362,16 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
         aria-valuemax={daysTarget}
         aria-valuenow={Math.min(daysDone, daysTarget)}
         aria-valuetext={`${daysDone} of ${daysTarget} days`}
-        className="mt-3 h-2 overflow-hidden rounded-pill bg-sko-bg-track"
+        className={`${styles.bar} ${styles.goalBar}`}
       >
         <div
-          className={cn("h-full rounded-pill", met ? "bg-sko-bg-success" : "bg-sko-bg-info")}
+          className={cn(styles.fill, met ? styles.fillSuccess : styles.fillInfo)}
           style={{ width: `${Math.min(100, (daysDone / Math.max(daysTarget, 1)) * 100)}%` }}
         />
       </div>
 
-      <p className="sk-text-body-small-medium mt-3 text-sko-text-subtle">Last 7 days</p>
-      <ul aria-label="Active days, last 7 days" className="mt-1 grid grid-cols-7 gap-1">
+      <p className={`sk-text-body-small-medium ${styles.daysLabel}`}>Last 7 days</p>
+      <ul aria-label="Active days, last 7 days" className={styles.days}>
         {WEEK_DAYS.map((d, i) => {
           const on = active.has(i);
           const today = i === WEEK_DAYS.length - 1;
@@ -380,18 +379,18 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
             <li
               key={d.short}
               className={cn(
-                "flex flex-col items-center gap-0.5 rounded-control py-1.5",
-                on ? "bg-sko-bg-success-soft text-sko-text-success" : "bg-sko-bg-faint text-sko-text-subtle",
-                today && "ring-1 ring-inset ring-sko-border-strong",
+                styles.day,
+                on ? styles.dayOn : styles.dayOff,
+                today && styles.dayToday,
               )}
             >
               <span className="sk-text-body-small-medium" aria-hidden="true">
                 {d.short}
               </span>
-              <span aria-hidden="true" className="inline-flex size-4 items-center justify-center">
-                {on ? <Icon icon={Check} size={14} /> : <span className="size-1.5 rounded-pill bg-sko-bg-strong" />}
+              <span aria-hidden="true" className={styles.dayMark}>
+                {on ? <Icon icon={Check} size={14} /> : <span className={styles.dot} />}
               </span>
-              <span className="sr-only">
+              <span className="sk-sr-only">
                 {d.long}: {on ? "learned" : "no activity"}
               </span>
             </li>
@@ -400,11 +399,11 @@ function WeeklyGoal({ p, kind }: { p: Persona; kind: PaceKind }) {
       </ul>
 
       {!met && next?.nextTopic ? (
-        <CtaLink href={next.nextTopic.href} variant="secondary" className="mt-4 w-full">
+        <CtaLink href={next.nextTopic.href} variant="secondary" className={styles.goalCta}>
           {kind === "not-started" ? "Do a 10-minute start" : "Learn today"}
         </CtaLink>
       ) : null}
-      {p.weeklyGoal.mock ? <MockTag layout="block" reason={p.weeklyGoal.mock} className="mt-4" /> : null}
+      {p.weeklyGoal.mock ? <MockTag layout="block" reason={p.weeklyGoal.mock} className={styles.mockCard} /> : null}
     </div>
   );
 }
@@ -422,11 +421,11 @@ function LiveList({ p }: { p: Persona }) {
 
   return (
     <div className={card}>
-      <h3 className="sk-text-body-large-semibold text-sko-text-default">Live sessions</h3>
+      <h3 className={`sk-text-body-large-semibold ${styles.heading}`}>Live sessions</h3>
       {items.length === 0 ? (
-        <p className="sk-text-body-medium-regular mt-2 text-sko-text-muted">No live sessions are scheduled for your courses.</p>
+        <p className={`sk-text-body-medium-regular ${styles.emptyNote}`}>No live sessions are scheduled for your courses.</p>
       ) : (
-        <ul className="mt-3 flex flex-col gap-4">
+        <ul className={styles.liveList}>
           {items.map((l) => {
             const b = LIVE_BADGE[l.state];
             const cta =
@@ -436,17 +435,17 @@ function LiveList({ p }: { p: Persona }) {
                   ? { label: "Watch recording", variant: "secondary" as const }
                   : { label: "View details", variant: "secondary" as const };
             return (
-              <li key={l.id} className="flex flex-col gap-2">
+              <li key={l.id} className={styles.liveItem}>
                 <div>
                   <Badge color={b.color} variant={l.state === "live" ? "soft" : "outline"} leftIcon={b.icon}>
                     {b.label}
                   </Badge>
-                  <p className="sk-text-body-medium-semibold mt-1 text-sko-text-default">{l.title}</p>
-                  <p className="sk-text-body-medium-regular text-sko-text-muted">
+                  <p className={`sk-text-body-medium-semibold ${styles.stacked}`}>{l.title}</p>
+                  <p className={`sk-text-body-medium-regular ${styles.muted}`}>
                     {l.when} · {l.course} · with {l.host}
                   </p>
                 </div>
-                <CtaLink href="#" variant={cta.variant} className="self-start" aria-label={`${cta.label}: ${l.title}`}>
+                <CtaLink href="#" variant={cta.variant} className={styles.selfStart} aria-label={`${cta.label}: ${l.title}`}>
                   {cta.label}
                 </CtaLink>
               </li>
@@ -454,7 +453,7 @@ function LiveList({ p }: { p: Persona }) {
           })}
         </ul>
       )}
-      {p.live.mock ? <MockTag layout="block" reason={p.live.mock} className="mt-4" /> : null}
+      {p.live.mock ? <MockTag layout="block" reason={p.live.mock} className={styles.mockCard} /> : null}
     </div>
   );
 }
@@ -470,11 +469,11 @@ const STATUS_BADGE: Record<Enrolment["status"], { color: BadgeColor; label: stri
 
 function YourCourses({ enrolments }: { enrolments: Enrolment[] }) {
   return (
-    <section aria-labelledby="courses-h" className="mt-10">
-      <h2 id="courses-h" className="sk-text-title-medium-semibold text-sko-text-default">
+    <section aria-labelledby="courses-h" className={styles.section}>
+      <h2 id="courses-h" className={`sk-text-title-medium-semibold ${styles.heading}`}>
         Your courses
       </h2>
-      <ul className="mt-3 flex flex-col divide-y divide-sko-border-subtle rounded-card border border-sko-border-subtle bg-sko-bg-page">
+      <ul className={styles.courses}>
         {enrolments.map((e) => (
           <CourseRow key={e.id} e={e} />
         ))}
@@ -497,18 +496,18 @@ function CourseRow({ e }: { e: Enrolment }) {
           : null;
 
   return (
-    <li className="grid gap-3 p-4 md:grid-cols-[minmax(0,1fr)_200px_auto] md:items-center md:gap-6">
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
+    <li className={styles.courseRow}>
+      <div className={styles.shrinkable}>
+        <div className={styles.badges}>
           <Badge color={s.color} variant="outline" leftIcon={s.icon}>
             {s.label}
           </Badge>
           {e.cert === "generating" ? (
-            <span className="sk-text-body-small-medium text-sko-text-subtle">Certificate being prepared</span>
+            <span className={`sk-text-body-small-medium ${styles.subtle}`}>Certificate being prepared</span>
           ) : null}
         </div>
-        <p className="sk-text-body-large-semibold mt-1 text-sko-text-default">{e.title}</p>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+        <p className={`sk-text-body-large-semibold ${styles.stacked}`}>{e.title}</p>
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>
           {e.status === "locked" && e.lockedBy
             ? `Opens after you finish ${e.lockedBy}`
             : e.nextTopic && e.status !== "completed"
@@ -524,7 +523,7 @@ function CourseRow({ e }: { e: Enrolment }) {
         complete={e.status === "completed"}
       />
 
-      <div className="md:justify-self-end">
+      <div className={styles.courseCta}>
         {cta ? (
           <CtaLink href={cta.href} variant="secondary" icon={cta.icon} aria-label={`${cta.label}: ${e.title}`}>
             {cta.label}
@@ -550,10 +549,10 @@ function Progress({
 }) {
   const v = Math.max(0, Math.min(100, pct));
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center justify-between gap-2">
-        <span className="sk-text-body-small-medium text-sko-text-muted">{caption}</span>
-        <span className="sk-text-body-small-semibold text-sko-text-default">{v}%</span>
+    <div className={styles.progress}>
+      <div className={styles.progressHead}>
+        <span className={`sk-text-body-small-medium ${styles.muted}`}>{caption}</span>
+        <span className={`sk-text-body-small-semibold ${styles.heading}`}>{v}%</span>
       </div>
       <div
         role="progressbar"
@@ -561,10 +560,10 @@ function Progress({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={v}
-        className="h-2 overflow-hidden rounded-pill bg-sko-bg-track"
+        className={styles.bar}
       >
         <div
-          className={cn("h-full rounded-pill", complete ? "bg-sko-bg-success" : "bg-sko-bg-info")}
+          className={cn(styles.fill, complete ? styles.fillSuccess : styles.fillInfo)}
           style={{ width: `${v}%` }}
         />
       </div>

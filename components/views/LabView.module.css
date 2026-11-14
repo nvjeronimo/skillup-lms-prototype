@@ -1,0 +1,78 @@
+.prerequisites { list-style-type: disc; padding-left: 20px; }
+
+/* Partner lab */
+.partner { display: flex; flex-direction: column; gap: 12px; border-top-width: 1px; border-color: var(--color-border-subtle); padding-top: 12px; }
+.partnerIntro { color: var(--color-text-default); }
+/* LTI "Open tool in: Inline": 800 px high by default (`inline_height`). */
+.inlineFrame {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+.inlineFrameBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: var(--color-bg-faint);
+  padding: 8px 8px 8px 16px;
+}
+.inlineFrameTitle { min-width: 0; color: var(--color-text-default); }
+.inlineFrameContent { display: block; height: 800px; width: 100%; background-color: var(--color-bg-subtle); }
+
+/* Download lab */
+.download { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; padding-bottom: 24px; }
+.badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.intro { color: var(--color-text-muted); }
+.sandbox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-primary-soft);
+  padding: 16px;
+}
+.sectionTitle { color: var(--color-text-default); }
+.sandboxNote { color: var(--color-text-muted); }
+.sandboxAlt { color: var(--color-text-subtle); }
+.section { display: flex; flex-direction: column; gap: 12px; }
+.sectionHeader { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+
+/* DS LMS / Lab · File Row (20328:3330): p 8/12, file-type chip, meta gap 2. */
+.files { display: flex; flex-direction: column; gap: 8px; }
+.file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  padding: 8px 12px;
+}
+.fileDownloaded { border-color: var(--color-border-success); background-color: var(--color-bg-success-soft); }
+.filePending { border-color: var(--color-border-subtle); background-color: var(--color-bg-page); }
+.fileInfo { display: flex; min-width: 0; align-items: center; gap: 12px; }
+.fileText { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.fileName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-text-default); }
+.fileSize { color: var(--color-text-subtle); }
+
+/* DS LMS / Numbered Step (20328:3297): 22px circle. */
+.steps { display: flex; flex-direction: column; gap: 8px; }
+.step { display: flex; gap: 12px; }
+.stepNumber {
+  display: inline-flex;
+  height: 22px;
+  width: 22px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+.stepText { color: var(--color-text-muted); }
+.completeHint { margin-top: 8px; color: var(--color-text-subtle); }

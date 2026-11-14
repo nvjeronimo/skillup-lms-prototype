@@ -1,0 +1,114 @@
+/*
+ * The assistant's launcher, 48px round. The button takes the caller's className (its place and
+ * layer), so its resting rules sit at 0,0,1 (:where + the element): enough to beat the reset's
+ * `button` rules, never a caller's class. That is also how a caller that places it (fixed,
+ * absolute, sticky) wins over the "relative" the badge needs.
+ */
+:where(.launcher):is(button) {
+  position: relative;
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  transition-property: transform, box-shadow, background-color, color;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* Open: a round close button on bg/primary. */
+:where(.open):is(button) {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+  box-shadow:
+    0 0 transparent,
+    0 0 transparent,
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+/* Closed: the mark, lifted by a drop shadow that follows its round shape. */
+:where(.shut):is(button) {
+  filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+}
+/* Hover lifts it a little, a press pushes it in (faster); the colour of the open state eases with
+   it. Reduced motion keeps only the colour: the scale is pinned below. */
+@media (hover: hover) and (pointer: fine) {
+  .launcher:hover {
+    transform: scale(1.04);
+  }
+  .open:hover {
+    background-color: var(--color-bg-primary-hover);
+    color: var(--color-text-on-primary-hover);
+  }
+}
+.launcher:active {
+  transform: scale(0.96);
+  transition-duration: var(--motion-duration-short2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .launcher:hover,
+  .launcher:active {
+    transform: scale(1);
+  }
+}
+:global([data-reduce-motion]) .launcher:hover,
+:global([data-reduce-motion]) .launcher:active {
+  transform: scale(1);
+}
+
+/* Both faces are always there: the mark and the close cross cross-fade and turn a quarter. */
+.face {
+  position: absolute;
+  inset: 0;
+  transition-property: opacity, transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.crossFace {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.faceShown {
+  transform: rotate(0deg);
+  opacity: 1;
+}
+.markHidden {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+.crossHidden {
+  transform: rotate(-90deg);
+  opacity: 0;
+}
+.mark {
+  position: relative;
+  display: block;
+  width: 48px;
+  height: 48px;
+}
+/* The count of first steps, on bg/primary (bg/info fails AA under its 12px number). */
+.badge {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  display: inline-flex;
+  height: 20px;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-primary);
+  padding-left: 4px;
+  padding-right: 4px;
+  color: var(--color-text-on-primary);
+  transition-property: opacity;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.badgeHidden {
+  opacity: 0;
+}
+.badgeShown {
+  opacity: 1;
+}

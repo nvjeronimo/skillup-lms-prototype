@@ -1,0 +1,138 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.closed {
+  pointer-events: none;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+}
+.dialog {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  transform-origin: center;
+  overflow: hidden;
+  border-radius: var(--sk-radius-surface);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0 transparent, 0 0 transparent, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px 20px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.close {
+  display: inline-flex;
+  height: 32px;
+  width: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-subtle);
+}
+.close,
+.reason,
+.details {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .close:hover,
+  .reasonIdle:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 24px;
+}
+.legend {
+  margin-bottom: 10px;
+  display: block;
+  color: var(--color-text-muted);
+}
+.reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.reason {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-width: 1px;
+  border-radius: var(--sk-radius-control);
+  padding: 10px 12px;
+  text-align: left;
+}
+.reasonSelected {
+  border-color: var(--color-border-primary);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-default);
+}
+.reasonIdle {
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-muted);
+}
+.check {
+  flex-shrink: 0;
+  color: var(--color-icon-primary);
+}
+.field {
+  display: block;
+}
+.fieldLabel {
+  margin-bottom: 6px;
+  display: block;
+  color: var(--color-text-muted);
+}
+.optional {
+  color: var(--color-text-subtle);
+}
+.details {
+  width: 100%;
+  resize: none;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding: 8px 12px;
+  color: var(--color-text-default);
+}
+.details:focus {
+  border-color: var(--color-border-primary);
+}
+/* outline-none, except where the global :focus-visible ring (app/globals.css) took over. */
+.details:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px 20px;
+}

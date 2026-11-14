@@ -1,17 +1,16 @@
-"use client";
-
 import * as React from "react";
 import { Lock } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { getTopic } from "@/lib/data";
+import styles from "./LockedView.module.css";
 
 export function LockedView({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
   return (
-    <div className="mx-auto max-w-xl py-10">
+    <div className={styles.root}>
       {/* LMS / Empty State has no Locked kind: drop its card border and radius here. */}
       <EmptyState
-        className="rounded-none border-0"
+        className={styles.emptyState}
         icon={Lock}
         titleAs="h1"
         title="This topic is locked"

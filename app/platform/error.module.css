@@ -1,0 +1,30 @@
+/* The platform error page: one Empty State card centred on the page, with its two ways out. */
+.page {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-faint);
+  padding: 24px;
+}
+.panel {
+  width: 100%;
+  max-width: 576px;
+  background: var(--color-bg-page);
+}
+.link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--color-text-primary);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}

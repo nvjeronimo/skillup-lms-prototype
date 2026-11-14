@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -8,6 +6,7 @@ import { Collapse } from "@/components/atoms/Collapse";
 import { useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { cn, iconStroke } from "@/lib/utils";
 import { useRovingRadio } from "@/lib/useRovingRadio";
+import styles from "./QuizCard.module.css";
 import type { QuizOption } from "@/lib/content";
 import {
   QuizFooterActions,
@@ -90,7 +89,7 @@ const DEFAULT_OPTIONS: QuizOption[] = [
 /** The marker's dot or tick growing in from its centre. */
 /* The mark grows from half size with a fade, never from nothing (scale 0): it settles into the
    box instead of popping out of it (Emil Kowalski review, 22 Oct 2026). */
-const MARK_MOTION = "transition-[transform,opacity] duration-short3 ease-standard-decelerate";
+const MARK_MOTION = styles.mark;
 
 /**
  * The answer marker — DS Checkbox `Type=Radio` (circle) / `Type=Checkbox` (square).
@@ -128,28 +127,24 @@ function OptionMarker({
     <span
       aria-hidden
       className={cn(
-        "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border transition-colors duration-short3 ease-standard",
-        multiSelect ? "rounded-inner" : "rounded-pill",
-        checked
-          ? "border-transparent bg-sko-bg-primary"
-          : disabled
-            ? "border-sko-border-disabled bg-sko-bg-faint opacity-40"
-            : "border-sko-border-default bg-sko-bg-page",
+        styles.marker,
+        multiSelect ? styles.markerCheckbox : styles.markerRadio,
+        checked ? styles.markerChecked : disabled ? styles.markerDisabled : styles.markerIdle,
       )}
     >
       {multiSelect ? (
         <Icon
           icon={Check}
           size={12}
-          className={cn("text-sko-icon-on-primary", MARK_MOTION, checked ? "scale-100 opacity-100" : "scale-50 opacity-0")}
+          className={cn(MARK_MOTION, checked ? styles.markOn : styles.markOff)}
         />
       ) : (
         // The dot is filled with icon/on-primary: bg-current takes it from the text colour.
         <span
           className={cn(
-            "h-1.5 w-1.5 rounded-pill bg-current text-sko-icon-on-primary",
+            styles.markDot,
             MARK_MOTION,
-            checked ? "scale-100 opacity-100" : "scale-50 opacity-0",
+            checked ? styles.markOn : styles.markOff,
           )}
         />
       )}
@@ -274,25 +269,25 @@ const OPTION_ROW: Record<
   OptionState,
   { box: string; marker?: "tick" | "cross"; note?: string; noteTone?: string }
 > = {
-  Unanswered: { box: "bg-sko-bg-page text-sko-text-default" },
-  Selected: { box: "bg-sko-bg-primary-soft text-sko-text-default" },
-  Disabled: { box: "bg-sko-bg-page text-sko-text-default" },
+  Unanswered: { box: styles.rowUnanswered },
+  Selected: { box: styles.rowSelected },
+  Disabled: { box: styles.rowDisabled },
   Correct: {
-    box: "bg-sko-bg-success-soft text-sko-text-success",
+    box: styles.rowCorrect,
     marker: "tick",
   },
   Incorrect: {
-    box: "bg-sko-bg-error-soft text-sko-text-error",
+    box: styles.rowIncorrect,
     marker: "cross",
   },
   Missed: {
-    box: "bg-sko-bg-success-soft text-sko-text-success",
+    box: styles.rowMissed,
     note: "This should be selected",
   },
   "Correctly unselected": {
-    box: "bg-sko-bg-page text-sko-text-default",
+    box: styles.rowUnselected,
     note: "Un-selected is correct",
-    noteTone: "text-sko-text-subtle",
+    noteTone: styles.noteSubtle,
   },
 };
 
@@ -303,7 +298,7 @@ const OPTION_ROW: Record<
  */
 function DrawnCheck({ animate }: { animate: boolean }) {
   if (!animate)
-    return <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" aria-hidden />;
+    return <Icon icon={Check} size={24} className={styles.tick} aria-hidden />;
   return (
     <svg
       aria-hidden
@@ -315,7 +310,7 @@ function DrawnCheck({ animate }: { animate: boolean }) {
       strokeWidth={iconStroke(24)}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="shrink-0 text-sko-icon-success"
+      className={styles.tick}
     >
       <path className="sk-draw-check-immediate" d="M4 12l5 5L20 6" pathLength={1} />
     </svg>
@@ -406,18 +401,18 @@ export function QuizCard({
     <div
       id={id}
       className={cn(
-        "flex flex-col gap-5 rounded-card border border-sko-border-subtle bg-sko-bg-page p-6 shadow-sk-card",
+        styles.card,
         className,
       )}
     >
       {/* DS `Platform prompt` frame: the Instruction with the points line 4px
           under it. */}
       {showPlatformPrompt || showPoints ? (
-        <div className="flex flex-col gap-1">
+        <div className={styles.prompt}>
           {/* The block's display_name. Authored text — it differs per course,
               and in ours it is the same generic line above every question. */}
           {showPlatformPrompt ? (
-            <span className="sk-text-body-large-semibold text-sko-text-default">
+            <span className={`sk-text-body-large-semibold ${styles.ink}`}>
               {platformPrompt}
             </span>
           ) : null}
@@ -425,7 +420,7 @@ export function QuizCard({
           {/* `.problem-progress`. Empty in every course we can read, so off in
               A-1. In the bucket it carries the score for the whole set. */}
           {showPoints ? (
-            <span className="sk-text-body-small-medium text-sko-text-subtle">
+            <span className={`sk-text-body-small-medium ${styles.subtle}`}>
               {typeof pointsEarned === "number"
                 ? `${pointsEarned}/${points} points (${graded ? "graded" : "ungraded"})`
                 : `${points} point${points === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -443,20 +438,20 @@ export function QuizCard({
       <div
         key={stepKey}
         className={cn(
-          "flex flex-col gap-5",
+          styles.question,
           stepKey !== undefined &&
             (stepDirection === "next" ? "sk-animate-step-next" : "sk-animate-step-prev"),
         )}
       >
         {/* body-large/Medium in text/default in all nine states, prompt or not. */}
-        <h3 id={questionId} className="sk-text-body-large-medium text-sko-text-default">
+        <h3 id={questionId} className={`sk-text-body-large-medium ${styles.ink}`}>
           {question}
         </h3>
 
         {multiSelect ? (
           <span
             id={hintId}
-            className="sk-text-label-small-medium -mt-2 uppercase tracking-wide text-sko-text-subtle"
+            className={`sk-text-label-small-medium ${styles.selectAll}`}
           >
             Select all that apply
           </span>
@@ -466,7 +461,7 @@ export function QuizCard({
           role={multiSelect ? "group" : "radiogroup"}
           aria-labelledby={questionId}
           aria-describedby={multiSelect ? hintId : undefined}
-          className="flex flex-col gap-2"
+          className={styles.options}
         >
           {options.map((opt, i) => {
             const isSelected = selectedIds.includes(opt.id);
@@ -487,10 +482,10 @@ export function QuizCard({
                   aria-checked={isSelected}
                   data-option-state={rowState}
                   className={cn(
-                    "sk-text-body-medium-regular flex w-full items-start gap-3 rounded-control border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors duration-short3 ease-standard",
-                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
+                    "sk-text-body-medium-regular",
+                    styles.option,
                     row.box,
-                    plain && !revealed ? "hover:bg-sko-bg-subtle" : null,
+                    plain && !revealed ? styles.optionHover : null,
                   )}
                 >
                   <OptionMarker
@@ -498,10 +493,10 @@ export function QuizCard({
                     checked={isSelected}
                     disabled={rowState === "Disabled"}
                   />
-                  <span className="flex-1">{opt.label}</span>
+                  <span className={styles.optionLabel}>{opt.label}</span>
                   {/* A text marker where a tick would mislead. */}
                   {showNote ? (
-                    <span className={cn("sk-text-body-small-medium mt-0.5 shrink-0", row.noteTone)}>
+                    <span className={cn("sk-text-body-small-medium", styles.note, row.noteTone)}>
                       {row.note}
                     </span>
                   ) : null}
@@ -510,7 +505,7 @@ export function QuizCard({
                   {showMarker === "tick" ? (
                     <>
                       <DrawnCheck animate={animateVerdict} />
-                      <span className="sr-only">, correct</span>
+                      <span className="sk-sr-only">, correct</span>
                     </>
                   ) : null}
                   {showMarker === "cross" ? (
@@ -519,12 +514,12 @@ export function QuizCard({
                         icon={X}
                         size={24}
                         className={cn(
-                          "shrink-0 text-sko-icon-error",
+                          styles.cross,
                           animateVerdict && "sk-animate-fade",
                         )}
                         aria-hidden
                       />
-                      <span className="sr-only">, incorrect</span>
+                      <span className="sk-sr-only">, incorrect</span>
                     </>
                   ) : null}
                 </button>
@@ -559,11 +554,12 @@ export function QuizCard({
           closes the same way on Reset. The -mt-5/pt-5 pair cancels the card's
           gap while it is closed, so a closed explanation takes no space. */}
         {solution ? (
-          <Collapse open={state === "Answer revealed"} className="-mt-5">
+          <Collapse open={state === "Answer revealed"} className={styles.collapseGap}>
             <div
               className={cn(
-                "pt-5 transition-opacity duration-medium2 ease-standard-decelerate",
-                state === "Answer revealed" ? "opacity-100" : "opacity-0",
+                styles.collapseBody,
+                styles.solution,
+                state === "Answer revealed" ? styles.solutionShown : styles.solutionHidden,
               )}
             >
               <InlineAlert tone="answer" title="Answer" description={solution} />
@@ -581,8 +577,8 @@ export function QuizCard({
           exhaustion, never on first use — with three hints authored it stays
           live after the first press. */}
         {hints.length > 0 ? (
-          <Collapse open={hintOpen} className="-mt-5">
-            <div className="pt-5">
+          <Collapse open={hintOpen} className={styles.collapseGap}>
+            <div className={styles.collapseBody}>
               <InlineAlert
                 tone="hint"
                 title=""
@@ -594,20 +590,19 @@ export function QuizCard({
                     // DS Next Hint: a link button with a 1px bottom stroke in every
                     // state (border/disabled once the hints run out).
                     className={cn(
-                      "sk-text-body-medium-semibold border-b px-0.5 py-1",
-                      shownHintIndex + 1 >= hints.length
-                        ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
-                        : "border-sko-border-primary text-sko-text-primary",
+                      "sk-text-body-medium-semibold",
+                      styles.nextHint,
+                      shownHintIndex + 1 >= hints.length ? styles.nextHintDone : styles.nextHintLive,
                     )}
                   >
                     Next Hint
                   </button>
                 }
               >
-                <ol className="flex flex-col gap-1">
+                <ol className={styles.hints}>
                   {hints.slice(0, shownHintIndex + 1).map((h, i) => (
-                    <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
-                      <span className="sk-text-body-medium-semibold text-sko-text-default">
+                    <li key={i} className={`sk-text-body-medium-regular ${styles.ink}`}>
+                      <span className={`sk-text-body-medium-semibold ${styles.ink}`}>
                         Hint ({i + 1} of {hints.length}):{" "}
                       </span>
                       {h}

@@ -1,0 +1,88 @@
+/* DS Skeleton. The sweep, the line and the ghost are global (.sk-skeleton*, app/globals.css).
+   Every root takes the caller's className, so its resting rules sit in :where(). */
+:where(.radiusNone) {
+  border-radius: var(--sk-radius-none);
+}
+:where(.radiusInner) {
+  border-radius: var(--sk-radius-inner);
+}
+:where(.radiusControl) {
+  border-radius: var(--sk-radius-control);
+}
+:where(.radiusCard) {
+  border-radius: var(--sk-radius-card);
+}
+:where(.radiusTrack) {
+  border-radius: var(--sk-radius-track);
+}
+:where(.radiusPill) {
+  border-radius: var(--sk-radius-pill);
+}
+:where(.ghost) {
+  user-select: none;
+}
+:where(.circle) {
+  flex-shrink: 0;
+}
+.lineBar {
+  border-radius: var(--sk-radius-inner);
+}
+
+/* SkeletonPill: the label invisible on bg/muted, with the Badge's, a segment's or a Button's
+   padding and height. */
+:where(.pill) {
+  display: inline-flex;
+  flex-shrink: 0;
+  user-select: none;
+  align-items: center;
+  white-space: nowrap;
+  background-color: var(--color-bg-muted);
+  color: transparent;
+}
+/* Badge sm 22, md 24. */
+:where(.pillSm) {
+  height: 22px;
+  border-radius: var(--sk-radius-pill);
+  padding-left: 8px;
+  padding-right: 8px;
+}
+:where(.pillMd) {
+  height: 24px;
+  border-radius: var(--sk-radius-pill);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+/* A segment: 32, 44 on a phone. */
+:where(.pillSegment) {
+  height: 32px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: transparent;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+@media (max-width: 767.98px) {
+  :where(.pillSegment) {
+    height: 44px;
+  }
+}
+/* A Button: sm 36, md 44 (buttonStyles). */
+:where(.pillButtonSm) {
+  height: 36px;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  padding-left: 12px;
+  padding-right: 12px;
+}
+:where(.pillButtonMd) {
+  height: 44px;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  padding-left: 12px;
+  padding-right: 12px;
+}
+/* A button's leading 20px icon. */
+.pillIcon {
+  width: 20px;
+  height: 20px;
+}

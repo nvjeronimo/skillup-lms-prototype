@@ -1,0 +1,159 @@
+/* The module rows, 12 apart. */
+.list { display: flex; flex-direction: column; gap: 12px; }
+
+/* Module-Number: a 32px circle. */
+.number {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.numberComplete { background-color: var(--color-bg-success); color: var(--color-icon-on-success); }
+.numberIncomplete { background-color: var(--color-bg-primary-soft); color: var(--color-text-on-primary-soft); }
+.numberLocked { background-color: var(--color-bg-subtle); color: var(--color-text-subtle); }
+
+.default { color: var(--color-text-default); }
+.subtle { color: var(--color-text-subtle); }
+
+/* Topic-Row. relative: the topic link's ::after covers the row, so the whole row is the target. */
+.topic { position: relative; display: flex; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+/* The DS rule is inside the row: the 1px comes off the bottom padding. */
+.topicRuled {
+  border-bottom-width: 1px;
+  border-style: dashed;
+  border-color: var(--color-border-subtle);
+  padding-bottom: 11px;
+}
+.status { display: flex; height: 24px; flex-shrink: 0; align-items: center; }
+.topicBody { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; align-items: flex-start; gap: 4px; }
+.topicTitle { min-width: 0; }
+.topicLink {
+  color: var(--color-text-on-primary-soft);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.topicLink::after { content: ""; position: absolute; inset: 0; }
+@media (hover: hover) {
+  .topicLink:hover { color: var(--color-text-primary); }
+}
+.topicMeta { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+@media (min-width: 768px) {
+  .topic { align-items: center; padding-top: 16px; padding-bottom: 16px; }
+  .topicRuled { padding-bottom: 15px; }
+  .topicBody { flex-direction: row; align-items: center; gap: 8px; }
+  .topicTitle { flex: 1 1 0%; }
+}
+
+/* Module-Row: 15 + the 1px border = the DS 16. */
+.module {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  padding: 15px;
+  text-align: left;
+}
+.header:focus-visible { outline-offset: -2px; }
+.headerOpen {
+  border-bottom-right-radius: var(--sk-radius-none);
+  border-bottom-left-radius: var(--sk-radius-none);
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.heading { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 2px; }
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 4px;
+  row-gap: 2px;
+  color: var(--color-text-subtle);
+}
+/* The lock reason is text below desktop and the lock's tooltip on desktop (still in the name). */
+@media (min-width: 1024px) {
+  .lockReason {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+.trailing { display: flex; flex-shrink: 0; align-items: center; gap: 2px; }
+.lock {
+  position: relative;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-muted);
+  color: var(--color-icon-muted);
+}
+.tooltip {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  z-index: 10;
+  margin-top: 8px;
+  display: none;
+  width: max-content;
+  max-width: 300px;
+  transform: translateX(-50%);
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-inverse);
+  padding: 8px 12px;
+  text-align: center;
+  color: var(--color-text-on-inverse);
+}
+@media (min-width: 1024px) {
+  .header:focus-visible .tooltip { display: block; }
+}
+@media (min-width: 1024px) and (hover: hover) {
+  .header:hover .tooltip { display: block; }
+}
+.arrow {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-inverse);
+}
+.chevron {
+  color: var(--color-icon-faint);
+  transition-property: transform;
+  transition-duration: var(--motion-duration-short4);
+  transition-timing-function: var(--motion-easing-standard);
+}
+.chevronOpen { transform: rotate(180deg); }
+
+/* The Topics slot. */
+.topics { padding: 4px 15px; }
+.lesson { padding: 8px 12px; color: var(--color-text-muted); }
+.pending { padding-top: 12px; padding-bottom: 12px; color: var(--color-text-subtle); }
+@media (min-width: 768px) {
+  .topics { padding-left: 19px; padding-right: 19px; }
+  .lesson { padding-bottom: 0; padding-right: 0; }
+}

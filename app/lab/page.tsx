@@ -1,5 +1,6 @@
 import type { Metadata } from "@/lib/router";
 import Link from "@/lib/router";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = { title: "Explorations" };
 
@@ -12,22 +13,22 @@ const DASHBOARD = [
 
 export default function LabIndex() {
   return (
-    <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-4xl flex-1 p-4 md:p-8">
-      <h1 className="sk-text-headline-medium-semibold text-sko-text-default">Explorations</h1>
-      <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">
+    <main id="main" tabIndex={-1} className={styles.main}>
+      <h1 className={`sk-text-headline-medium-semibold ${styles.title}`}>Explorations</h1>
+      <p className={`sk-text-body-large-regular ${styles.lede}`}>
         Directions to compare before one is chosen and brought into Figma. Switch persona in the top bar.
       </p>
-      <h2 className="sk-text-title-medium-semibold mt-8 text-sko-text-default">Dashboard / Home</h2>
-      <ul className="mt-3 grid gap-3 md:grid-cols-2">
+      <h2 className={`sk-text-title-medium-semibold ${styles.section}`}>Dashboard / Home</h2>
+      <ul className={styles.list}>
         {DASHBOARD.map((d) => (
           <li key={d.slug}>
             <Link
               href={`/lab/dashboard/${d.slug}`}
-              className="flex h-full flex-col gap-1 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-primary"
+              className={styles.card}
             >
-              <span className="sk-text-body-large-semibold text-sko-text-default">{d.name}</span>
-              <span className="sk-text-body-medium-regular text-sko-text-muted">{d.hero}</span>
-              <span className="sk-text-body-small-medium text-sko-text-subtle">For: {d.serves}</span>
+              <span className={`sk-text-body-large-semibold ${styles.name}`}>{d.name}</span>
+              <span className={`sk-text-body-medium-regular ${styles.hero}`}>{d.hero}</span>
+              <span className={`sk-text-body-small-medium ${styles.serves}`}>For: {d.serves}</span>
             </Link>
           </li>
         ))}

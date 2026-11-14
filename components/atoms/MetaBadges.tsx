@@ -3,6 +3,7 @@ import { CalendarCheck, Clock, Layers, Video } from "lucide-react";
 import type { LucideIcon, LucideProps } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./Badge";
+import styles from "./MetaBadges.module.css";
 
 /**
  * Course Type — Program / Course (DS `LMS / Course Type Badge`, 19975:538072, v1.1).
@@ -17,8 +18,9 @@ export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
   return (
     <span
       className={cn(
-        "sk-text-body-small-semibold inline-flex items-center",
-        program ? "text-sko-text-primary" : "text-sko-text-subtle",
+        "sk-text-body-small-semibold",
+        styles.courseType,
+        program ? styles.program : styles.course,
       )}
     >
       {value}
@@ -188,13 +190,13 @@ export function ProviderBadge({
     // DS 1.4 (23 Oct 2026): 1px border/subtle inside, Radius/control (6), padding 8; 32 tall with the 16px artwork.
     <span
       className={cn(
-        "inline-flex h-8 shrink-0 items-center rounded-control border border-sko-border-subtle p-[7px]",
-        chip === "page" ? "bg-sko-bg-page" : "bg-sko-bg-subtle",
+        styles.logoChip,
+        chip === "page" ? styles.chipPage : styles.chipSubtle,
       )}
     >
-      <img src={logo.light} alt={value} className={cn("h-4 w-auto", logo.dark && "sk-logo-light")} />
+      <img src={logo.light} alt={value} className={cn(styles.logo, logo.dark && "sk-logo-light")} />
       {logo.dark ? (
-        <img src={logo.dark} alt="" aria-hidden="true" className="sk-logo-dark h-4 w-auto" />
+        <img src={logo.dark} alt="" aria-hidden="true" className={cn("sk-logo-dark", styles.logo)} />
       ) : null}
     </span>
   );

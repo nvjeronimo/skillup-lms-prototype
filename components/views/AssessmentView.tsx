@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { useRouter, useSearchParams } from "@/lib/router";
 import { QuizCard } from "@/components/organisms/QuizCard";
@@ -33,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { scrollToElement } from "@/lib/scrollToElement";
 import { useCountUp } from "@/lib/useCountUp";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./AssessmentView.module.css";
 
 export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId: string; courseSlug?: string }) {
   const topic = getTopic(topicId);
@@ -205,7 +204,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
 
   if (phase !== "quiz") {
     return (
-      <div className="py-6">
+      <div className={styles.entry}>
         <QuizEntryHeader
           topic={topic}
           config={config}
@@ -420,14 +419,14 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     const bucketHints = questions.find((q) => q.hints?.length)?.hints ?? [];
 
     return (
-      <div className="flex flex-col gap-6 py-6">
+      <div className={styles.stack}>
         {/* The problem's own header, printed once for the whole set. The points
             line carries the score after submitting. */}
-        <div className="flex flex-col gap-1">
-          <span className="sk-text-body-large-semibold text-sko-text-default">
+        <div className={styles.problemHeader}>
+          <span className={`sk-text-body-large-semibold ${styles.problemPrompt}`}>
             {config.bucketPrompt}
           </span>
-          <span className="sk-text-body-small-medium text-sko-text-subtle">
+          <span className={`sk-text-body-small-medium ${styles.problemPoints}`}>
             {submitted
               ? `${earned}/${total} points (${graded ? "graded" : "ungraded"})`
               : `${total} point${total === 1 ? "" : "s"} possible (${graded ? "graded" : "ungraded"})`}
@@ -449,8 +448,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
         {/* One hint for the whole set, not one per question: in the bucket the
             demand hints belong to the problem, and the problem is the quiz. */}
         {bucketHints.length ? (
-          <Collapse open={bucketHintIndex >= 0} className="-mt-4">
-            <div className="pt-4">
+          <Collapse open={bucketHintIndex >= 0} className={styles.hintCollapse}>
+            <div className={styles.hintInner}>
               <InlineAlert
                 tone="hint"
                 title=""
@@ -462,20 +461,19 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
                     // DS Next Hint: a link button with a 1px bottom stroke in every
                     // state (border/disabled once the hints run out).
                     className={cn(
-                      "sk-text-body-medium-semibold border-b px-0.5 py-1",
-                      bucketHintShown + 1 >= bucketHints.length
-                        ? "cursor-not-allowed border-sko-border-disabled text-sko-text-disabled"
-                        : "border-sko-border-primary text-sko-text-primary",
+                      "sk-text-body-medium-semibold",
+                      styles.nextHint,
+                      bucketHintShown + 1 >= bucketHints.length ? styles.nextHintDone : styles.nextHintActive,
                     )}
                   >
                     Next Hint
                   </button>
                 }
               >
-                <ol className="flex flex-col gap-1">
+                <ol className={styles.hints}>
                   {bucketHints.slice(0, bucketHintShown + 1).map((h, i) => (
-                    <li key={i} className="sk-text-body-medium-regular text-sko-text-default">
-                      <span className="sk-text-body-medium-semibold text-sko-text-default">
+                    <li key={i} className={`sk-text-body-medium-regular ${styles.hint}`}>
+                      <span className={`sk-text-body-medium-semibold ${styles.hint}`}>
                         Hint ({i + 1} of {bucketHints.length}):{" "}
                       </span>
                       {h}
@@ -517,7 +515,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   /* ---- Mode A-1: one problem per question, one Submit each ---- */
   if (isModeA) {
     return (
-      <div className="flex flex-col gap-6 py-6">
+      <div className={styles.stack}>
         {questions.map((_, i) => (
           <QuizCard key={i} {...cardPropsFor(i)} />
         ))}
@@ -533,7 +531,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   /* ---- Mode B: a stepper, nav at the top, results in place at the end ---- */
   const stepProps = cardPropsFor(index);
   return (
-    <div ref={stepRef} className="flex scroll-mt-4 flex-col gap-6 py-6">
+    <div ref={stepRef} className={styles.stepper}>
       {/* DS: `Show progress` nests the Stepper Bar (Mode=With Back only) inside
           the card, after the Platform prompt and before the Question. */}
       {/* The question body is keyed on the step inside the card, so each
@@ -562,7 +560,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           is the problem's, and `Show next` is mode B chrome that ships off. */}
       {/* It fades in once the answer is checked (short3, opacity only), mounted on the change. */}
       {answers[index].revealed ? (
-        <div className="sk-animate-fade-short3 sk-enter-only flex justify-end">
+        <div className={`sk-animate-fade-short3 sk-enter-only ${styles.stepNext}`}>
           <Button
             variant="primary"
             size="md"
@@ -580,7 +578,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           nothing. The count comes from submitted answers only. Framed as what
           is still to come rather than what is missing. */}
       {!allAnswered ? (
-        <p className="sk-text-body-medium-regular text-center text-sko-text-subtle">
+        <p className={`sk-text-body-medium-regular ${styles.outstanding}`}>
           {total - answeredCount} of {total} still to submit. Each answer counts once you submit it.
         </p>
       ) : null}
@@ -649,16 +647,16 @@ function QuizEntryHeader({
       : null;
 
   return (
-    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
-      <div className="flex flex-wrap items-center gap-2">
+    <section className={styles.card}>
+      <div className={styles.row}>
         <Badge color="brand">{config.label}</Badge>
         {weight ? <Badge color={weight.color}>{weight.label}</Badge> : null}
       </div>
 
-      <h3 className="sk-text-title-medium-semibold text-sko-text-default">{topic.title}</h3>
+      <h3 className={`sk-text-title-medium-semibold ${styles.title}`}>{topic.title}</h3>
 
       {/* Meta facts: Badge Soft sm Gray. */}
-      <ul className="flex flex-wrap gap-2">
+      <ul className={styles.facts}>
         {facts.map((f) => (
           <li key={f.label} data-invented={f.invented}>
             <Badge color="gray">{f.label}</Badge>
@@ -673,12 +671,12 @@ function QuizEntryHeader({
           description="Each answer is locked in for that attempt once you submit it."
         />
       ) : (
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+        <p className={`sk-text-body-medium-regular ${styles.entryNote}`}>
           Check your understanding before moving on. You can retake this as many times as you like.
         </p>
       )}
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className={styles.row}>
         <Button variant="primary" size="md" onClick={onStart}>
           {resumed ? "Resume quiz" : `Start ${config.label.toLowerCase()}`}
         </Button>
@@ -733,18 +731,18 @@ function QuizSummary({
   // DS Results=Withheld: `show_correctness: never` masks the score too, so the
   // summary says what was recorded and never prints a percentage.
   const withheld = Boolean(config.resultsWithheld);
-  const tone = edx ? "text-sko-text-default" : passed ? "text-sko-text-success" : "text-sko-text-warning";
+  const tone = edx ? styles.toneNeutral : passed ? styles.tonePassed : styles.toneNotPassed;
   const incorrectIdx = outcomes
     .map((o, i) => (o === false ? i : -1))
     .filter((i) => i >= 0);
 
   return (
-    <div className="flex flex-col gap-6 py-6">
-      <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
-        <div className="flex items-start justify-between gap-4">
+    <div className={styles.stack}>
+      <section className={styles.card}>
+        <div className={styles.summaryHeader}>
           <div>
-            <p className="sk-text-body-small-semibold uppercase text-sko-text-primary">{config.label}</p>
-            <h3 className="sk-text-body-large-semibold mt-1 text-sko-text-default">{topic.title}</h3>
+            <p className={`sk-text-body-small-semibold ${styles.summaryLabel}`}>{config.label}</p>
+            <h3 className={`sk-text-body-large-semibold ${styles.summaryTitle}`}>{topic.title}</h3>
           </div>
           <Badge
             size="md"
@@ -757,26 +755,26 @@ function QuizSummary({
 
         {/* Score-Group: 20/24 padding, 20 gap, Radius/fixed-lg (10). */}
         {withheld ? (
-          <div className="flex items-center gap-5 rounded-control bg-sko-bg-subtle px-6 py-5">
+          <div className={cn(styles.score, styles.scoreNeutral)}>
             {/* No release line: resultsWithheld is `show_correctness: never`,
                 so the results are never released. */}
-            <p className="sk-text-body-large-semibold text-sko-text-subtle">
+            <p className={`sk-text-body-large-semibold ${styles.scoreWithheld}`}>
               {result.total} of {result.total} answered
             </p>
           </div>
         ) : (
           <div
             className={cn(
-              "flex items-center gap-5 rounded-control px-6 py-5",
-              edx ? "bg-sko-bg-subtle" : passed ? "bg-sko-bg-success-soft" : "bg-sko-bg-warning-soft",
+              styles.score,
+              edx ? styles.scoreNeutral : passed ? styles.scorePassed : styles.scoreNotPassed,
             )}
           >
             {/* Screen readers get the final score once, not every step of the count. */}
-            <span className={cn("sk-text-headline-large-bold tabular-nums", tone)}>
+            <span className={cn("sk-text-headline-large-bold", styles.scorePct, tone)}>
               <span aria-hidden>{shownPct}%</span>
-              <span className="sr-only">{pct}%</span>
+              <span className="sk-sr-only">{pct}%</span>
             </span>
-            <div className="flex flex-col gap-1">
+            <div className={styles.scoreText}>
               <p className={cn("sk-text-body-large-semibold", tone)}>
                 You scored {result.score} / {result.total}
               </p>
@@ -795,10 +793,10 @@ function QuizSummary({
             incorrect" already names how many were wrong and takes the learner
             straight to them, so a row of circles adds nothing on a long quiz. */}
 
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-sko-border-subtle pt-4">
+        <div className={styles.summaryFooter}>
           {withheld ? (
             <>
-              <p className="sk-text-body-medium-medium text-sko-text-subtle">Your answers are saved</p>
+              <p className={`sk-text-body-medium-medium ${styles.attempts}`}>Your answers are saved</p>
               {onNextTopic ? (
                 <Button variant="primary" onClick={onNextTopic}>
                   Next topic
@@ -807,14 +805,14 @@ function QuizSummary({
             </>
           ) : (
             <>
-              <p className="sk-text-body-medium-medium text-sko-text-subtle">
+              <p className={`sk-text-body-medium-medium ${styles.attempts}`}>
                 {result.attempts} {result.attempts === 1 ? "attempt" : "attempts"}
                 {typeof config.maxAttempts === "number" &&
                 config.maxAttempts <= ATTEMPTS_DISPLAY_CEILING
                   ? ` · ${config.maxAttempts - result.attempts} left`
                   : ""}
               </p>
-              <div className="flex flex-wrap gap-2 max-md:[&>*]:flex-1">
+              <div className={styles.summaryActions}>
                 {incorrectIdx.length && !attemptsExhausted ? (
                   <Button variant="primary" onClick={() => onRetryIncorrect(incorrectIdx)}>
                     Retry incorrect ({incorrectIdx.length})
@@ -844,11 +842,11 @@ function GradedSubmission({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
   const assignment = topic ? getAssignmentBrief(topic) : null;
   return (
-    <div className="flex flex-col gap-8 py-6">
-      <section className="rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-        <p className="sk-text-label-small-medium mb-2 text-sko-text-primary">Assignment brief</p>
-        <p className="sk-text-body-large-regular text-sko-text-muted">{assignment?.brief}</p>
-        <ul className="sk-text-body-medium-regular mt-3 list-disc pl-5 text-sko-text-muted">
+    <div className={styles.graded}>
+      <section className={styles.brief}>
+        <p className={`sk-text-label-small-medium ${styles.briefLabel}`}>Assignment brief</p>
+        <p className={`sk-text-body-large-regular ${styles.briefText}`}>{assignment?.brief}</p>
+        <ul className={`sk-text-body-medium-regular ${styles.requirements}`}>
           {assignment?.requirements.map((requirement) => <li key={requirement}>{requirement}</li>)}
         </ul>
       </section>
@@ -862,7 +860,7 @@ function GradedSubmission({ topicId }: { topicId: string }) {
       ) : (
         <>
           <FileUploadZone requiredCount={1} uploadedFiles={[]} />
-          <div className="flex justify-end">
+          <div className={styles.submitRow}>
             <Button variant="primary" size="lg" onClick={() => setSubmitted(true)}>
               Submit assignment
             </Button>

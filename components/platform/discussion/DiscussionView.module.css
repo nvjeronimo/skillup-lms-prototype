@@ -1,0 +1,455 @@
+/* Discussion (/platform/discussion): the inbox beside the open conversation. */
+.page {
+  padding-left: var(--sk-layout-page-x);
+  padding-right: var(--sk-layout-page-x);
+  padding-bottom: 48px;
+  padding-top: var(--sk-layout-page-top);
+}
+.stack {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.ink {
+  color: var(--color-text-default);
+}
+.muted {
+  color: var(--color-text-muted);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+.oneLine {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stack1 {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.columns {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.card {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.tools {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--color-bg-subtle);
+  padding-left: 11px;
+  padding-right: 11px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.fieldGhost {
+  height: 44px;
+}
+.fill {
+  min-width: 0px;
+  flex: 1 1 0%;
+}
+.segmentTrack {
+  display: inline-flex;
+  max-width: 100%;
+  gap: 2px;
+  align-self: flex-start;
+  overflow: hidden;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-track);
+  padding: 4px;
+}
+.segmentGhost {
+  background-color: transparent;
+}
+.courseSelect {
+  height: 44px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding-left: 14px;
+  color: var(--color-text-default);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.rows {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.inboxItem {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.inboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding-left: 11px;
+  padding-right: 11px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.inboxRowSelected {
+  background-color: var(--color-bg-primary-soft);
+}
+.rowGhost {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 11px;
+  padding-right: 11px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.rowText {
+  display: flex;
+  min-width: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 4px;
+}
+.flags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 4px;
+}
+.unread {
+  margin-top: 2px;
+  display: inline-flex;
+  height: 20px;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-primary);
+  padding-left: 6px;
+  padding-right: 6px;
+  color: var(--color-text-on-primary);
+}
+.unreadGhost {
+  margin-top: 2px;
+}
+/* The empty inbox: a band under the tools, not a card. EmptyState's own px-8 and py-12: its px-8
+   won over the px-4 passed here (Tailwind order), so only py-8 and the border are set. */
+.empty {
+  border-radius: var(--sk-radius-none);
+  border-width: 0px;
+  border-top-width: 1px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+.threadColumn {
+  min-width: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 16px;
+}
+.threadColumnShown {
+  display: flex;
+}
+.threadColumnFromTablet {
+  display: none;
+}
+.back {
+  align-self: flex-start;
+  border-bottom-width: 0px !important;
+}
+.backGhost {
+  align-self: flex-start;
+}
+.threadHead {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--color-bg-subtle);
+  padding: 12px;
+}
+.threadTitle {
+  display: flex;
+  min-width: 0px;
+  flex-direction: column;
+  gap: 4px;
+}
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+.moreReplies {
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 16px;
+}
+.moreRepliesNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-subtle);
+}
+.replyBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px;
+}
+.replyField {
+  display: flex;
+  height: 44px;
+  min-width: 0px;
+  flex: 1 1 0%;
+  align-items: center;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding-left: 12px;
+  padding-right: 12px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition-property: border-color,box-shadow;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.replyInput {
+  min-width: 0px;
+  flex: 1 1 0%;
+  background-color: transparent;
+  color: var(--color-text-default);
+}
+.replyButton {
+  flex-shrink: 0;
+}
+.mineSkeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.theirsSkeleton {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.theirsSkeletonText {
+  display: flex;
+  min-width: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.authorLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.bubbleGhost {
+  user-select: none;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-muted);
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: transparent;
+}
+.courseSelect:focus {
+  border-color: var(--color-border-primary);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.inboxItem:last-child {
+  border-bottom-width: 0px;
+}
+.inboxRow:focus-visible {
+  outline-offset: -2px;
+}
+.rowGhost:last-child {
+  border-bottom-width: 0px;
+}
+/* The reply field focuses as the DS Input: border/primary and a 1px primary ring. */
+.replyField:focus-within {
+  border-color: var(--color-border-primary);
+  box-shadow: 0 0 0 0 #fff, 0 0 0 1px var(--color-border-primary), 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.replyInput::placeholder {
+  color: var(--color-text-placeholder);
+}
+.replyInput:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .inboxRowIdle:hover {
+    background-color: var(--color-bg-faint);
+  }
+  .courseLink:hover {
+    text-decoration-line: underline;
+  }
+}
+@media (max-width: 767.98px) {
+  .phoneHidden {
+    display: none;
+  }
+  .phoneTall {
+    height: 44px;
+  }
+  .back {
+    min-height: 44px;
+  }
+  .backGhost {
+    height: 44px;
+  }
+  .replyButton {
+    height: 44px;
+  }
+  .bubbleGhost {
+    align-self: stretch;
+  }
+}
+@media (min-width: 768px) {
+  .page {
+    padding-bottom: 64px;
+  }
+  .newPostGhost {
+    height: 44px;
+  }
+  .columns {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .listCard {
+    width: 340px;
+    flex-shrink: 0;
+  }
+  .fieldGhost {
+    height: 40px;
+  }
+  .courseSelect {
+    height: 40px;
+  }
+  .inboxRowSelectedFromTablet {
+    background-color: var(--color-bg-primary-soft);
+  }
+  .threadColumnFromTablet {
+    display: flex;
+  }
+  .back {
+    display: none;
+  }
+  .backGhost {
+    display: none;
+  }
+  .threadHead {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .messages {
+    padding: 20px;
+  }
+  .moreReplies {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .replyField {
+    height: 40px;
+  }
+  .bubbleGhost {
+    max-width: 420px;
+  }
+}
+@media (min-width: 1024px) {
+  .page {
+    padding-bottom: 80px;
+  }
+  .listCard {
+    width: 380px;
+  }
+  .messages {
+    padding: 24px;
+  }
+  .moreReplies {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Skin hooks that matched the Tailwind classes (tokens/skin-harbor.css, skin-fluent.css,
+   direction-studio.css).
+   Cards (rounded-card border): borderless on the card shadow in Harbor and Fluent, Studio's shadow
+   in Studio; both panels have a 12 band flush with their edge (p-3, px-[11px] + the border), so
+   Studio gives them 12 + 20 = 32. The empty inbox is a card inside a card: a hairline and no
+   shadow in Harbor and Fluent, the control radius in Studio. */
+[data-skin="harbor"] [data-platform-page] .card,
+[data-skin="fluent"] [data-platform-page] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-direction="studio"] .card {
+  border-radius: 32px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+[data-skin="harbor"] [data-platform-page] .listCard .empty,
+[data-skin="fluent"] [data-platform-page] .listCard .empty {
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+}
+[data-direction="studio"] .listCard .empty {
+  border-radius: var(--sk-radius-control);
+}
+/* One-line fields (the course select, the reply field around its input) are pills in Harbor and
+   Studio; Fluent's Input is a Stroke1 frame with the accessible stroke along the bottom. */
+[data-skin="harbor"] .courseSelect,
+[data-skin="harbor"] .replyField,
+[data-direction="studio"] .courseSelect,
+[data-direction="studio"] .replyField {
+  border-radius: 9999px;
+}
+[data-skin="fluent"] .courseSelect,
+[data-skin="fluent"] .replyField {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+/* A bg/track segment row (the loading filters) sits on bg/muted in Harbor and Fluent; in Studio
+   its segments are pills. */
+[data-skin="harbor"] .segmentTrack,
+[data-skin="fluent"] .segmentTrack {
+  background-color: var(--color-bg-muted);
+}
+[data-direction="studio"] .segmentTrack > :global(.rounded-control) {
+  border-radius: 9999px;
+}

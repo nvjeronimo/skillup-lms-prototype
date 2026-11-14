@@ -1,0 +1,41 @@
+/* Any unknown address: the logo, two lines and the two ways back, centred on the page. */
+.page {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: var(--color-bg-faint);
+  padding: 48px 16px;
+  text-align: center;
+}
+.logo {
+  height: 24px;
+}
+.copy {
+  display: flex;
+  max-width: 480px;
+  flex-direction: column;
+  gap: 8px;
+}
+.title { color: var(--color-text-default); }
+.text { color: var(--color-text-muted); }
+
+/* Phone: the two actions stack, full width. From 640 they sit side by side. */
+.actions {
+  display: flex;
+  width: 100%;
+  max-width: 480px;
+  flex-direction: column;
+  gap: 12px;
+}
+@media (min-width: 640px) {
+  .actions { width: auto; flex-direction: row; }
+}
+/* Tailwind's outline-none, at zero specificity: the old utility came before globals.css's
+   :focus-visible ring, so the ring still showed when main took focus from the skip link. */
+:where(.page) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}

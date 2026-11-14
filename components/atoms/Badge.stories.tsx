@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Check } from "lucide-react";
 import { Badge, type BadgeColor, type BadgeSize, type BadgeVariant } from "./Badge";
+import styles from "./Badge.stories.module.css";
 
 const COLORS: BadgeColor[] = [
   "gray",
@@ -41,9 +42,9 @@ export const WithLeadingIcon: Story = { args: { leftIcon: Check } };
 /** Badge Style × Color at Size=sm, label only and with a leading icon. */
 export const Matrix: Story = {
   render: () => (
-    <div className="flex flex-col gap-3">
+    <div className={styles.stack}>
       {VARIANTS.map((variant) => (
-        <div key={variant} className="flex flex-wrap items-center gap-2">
+        <div key={variant} className={styles.wrapRow}>
           {COLORS.map((color) => (
             <Badge key={color} variant={variant} color={color}>
               {color}
@@ -62,7 +63,7 @@ export const Matrix: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className={styles.wrapRow}>
       {SIZES.map((size) => (
         <Badge key={size} size={size} color="brand">
           {size}

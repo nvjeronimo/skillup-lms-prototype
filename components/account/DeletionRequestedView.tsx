@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { useRouter } from "@/lib/router";
@@ -20,6 +18,7 @@ import {
   formatDay,
   readDeletionRequest,
 } from "@/lib/account-deletion";
+import styles from "./DeletionRequestedView.module.css";
 
 /**
  * After "Delete my account" (next-release item 3, Nelson 30 Oct 2026): the request is
@@ -47,44 +46,44 @@ export function DeletionRequestedView() {
 
   return (
     <AccountShell>
-      <div className="flex flex-col gap-3">
-        <span className="inline-flex size-12 items-center justify-center rounded-pill bg-sko-bg-success-soft text-sko-icon-success">
+      <div className={styles.stack3}>
+        <span className={styles.badge}>
           <Icon icon={CircleCheck} size={24} />
         </span>
-        <h1 className="sk-text-headline-small-semibold text-sko-text-default">We received your request</h1>
-        <p className="sk-text-body-large-regular text-sko-text-muted">
-          Your account will be deleted on <strong className="sk-text-body-large-semibold text-sko-text-default">{deleteOn}</strong>,{" "}
+        <h1 className={`sk-text-headline-small-semibold ${styles.title}`}>We received your request</h1>
+        <p className={`sk-text-body-large-regular ${styles.text}`}>
+          Your account will be deleted on <strong className={`sk-text-body-large-semibold ${styles.strong}`}>{deleteOn}</strong>,{" "}
           {GRACE_DAYS} days from today.
         </p>
       </div>
 
-      <section aria-labelledby="next-title" className="flex flex-col gap-3">
-        <h2 id="next-title" className="sk-text-title-medium-semibold text-sko-text-default">
+      <section aria-labelledby="next-title" className={styles.stack3}>
+        <h2 id="next-title" className={`sk-text-title-medium-semibold ${styles.title}`}>
           What happens next
         </h2>
-        <ol className="flex flex-col gap-4 border-l border-sko-border-subtle pl-4">
+        <ol className={styles.steps}>
           {steps.map((s) => (
-            <li key={s.when} className="flex flex-col gap-0.5">
-              <span className="sk-text-body-medium-semibold text-sko-text-default">{s.when}</span>
-              <span className="sk-text-body-medium-regular text-sko-text-muted">{s.what}</span>
+            <li key={s.when} className={styles.step}>
+              <span className={`sk-text-body-medium-semibold ${styles.title}`}>{s.when}</span>
+              <span className={`sk-text-body-medium-regular ${styles.text}`}>{s.what}</span>
             </li>
           ))}
         </ol>
       </section>
 
-      <div className="flex flex-col gap-2 md:flex-row md:justify-end">
+      <div className={styles.actions}>
         {edx ? (
-          <ButtonLink href={SUPPORT_HREF} hierarchy="secondary" className="max-md:w-full">
+          <ButtonLink href={SUPPORT_HREF} hierarchy="secondary" className={styles.action}>
             Contact support
           </ButtonLink>
         ) : null}
-        <ButtonLink href={SIGN_IN_HREF} hierarchy="primary" className="max-md:w-full">
+        <ButtonLink href={SIGN_IN_HREF} hierarchy="primary" className={styles.action}>
           Go to sign in
         </ButtonLink>
       </div>
 
       {/* Prototype only: put the account back without going through sign in. */}
-      <p className="sk-text-body-small-regular border-t border-sko-border-subtle pt-4 text-sko-text-subtle">
+      <p className={`sk-text-body-small-regular ${styles.note}`}>
         Prototype:{" "}
         <Button
           type="button"
@@ -97,7 +96,7 @@ export function DeletionRequestedView() {
         >
           restore the account
         </Button>{" "}
-        · <Link href={`${SIGN_IN_HREF}?account=pending-deletion`} className="underline">test link</Link>
+        · <Link href={`${SIGN_IN_HREF}?account=pending-deletion`} className={styles.noteLink}>test link</Link>
       </p>
     </AccountShell>
   );

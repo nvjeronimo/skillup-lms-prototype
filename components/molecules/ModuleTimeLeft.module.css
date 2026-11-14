@@ -1,0 +1,13 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-block: 4px;
+}
+.separator {
+  color: var(--color-icon-faint);
+}
+.segment {
+  color: var(--color-text-subtle);
+}

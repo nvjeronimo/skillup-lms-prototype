@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
 import { Copy } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { FIELD, FormField, FormModal } from "@/components/organisms/FormModal";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import styles from "./CalendarSyncModal.module.css";
 
 /** A sample private feed address: one per learner, revocable. */
 const FEED = "webcal://learn.skillup.online/calendar/feed/js-7f3a9c.ics";
@@ -44,34 +43,34 @@ export function CalendarSyncModal({ open, onClose }: { open: boolean; onClose: (
     >
       <fieldset
         data-invented="calendar: Open edX syncs assignment dates per course, with no choice of what goes in"
-        className="flex flex-col gap-1.5"
+        className={styles.what}
       >
-        <legend className="sk-text-body-medium-medium mb-1.5 text-sko-text-muted">What to include</legend>
+        <legend className={cn("sk-text-body-medium-medium", styles.legend)}>What to include</legend>
         {WHAT.map((w) => (
           <label
             key={w.id}
             className={cn(
-              "flex min-h-11 cursor-pointer items-center gap-3 rounded-control border px-3 py-2.5 transition-colors",
-              on[w.id] ? "border-sko-border-primary bg-sko-bg-primary-soft" : "border-sko-border-subtle hover:bg-sko-bg-hover",
+              styles.option,
+              on[w.id] ? styles.optionOn : styles.optionOff,
             )}
           >
             <input
               type="checkbox"
               checked={on[w.id]}
               onChange={(e) => setOn((o) => ({ ...o, [w.id]: e.target.checked }))}
-              className="size-4 shrink-0 rounded-inner accent-[var(--color-bg-primary)]"
+              className={styles.checkbox}
             />
-            <span className="flex min-w-0 flex-col">
-              <span className="sk-text-body-medium-medium text-sko-text-default">{w.label}</span>
-              <span className="sk-text-body-small-regular text-sko-text-subtle">{w.hint}</span>
+            <span className={styles.optionText}>
+              <span className={cn("sk-text-body-medium-medium", styles.optionLabel)}>{w.label}</span>
+              <span className={cn("sk-text-body-small-regular", styles.optionHint)}>{w.hint}</span>
             </span>
           </label>
         ))}
       </fieldset>
 
-      <div className="flex flex-col gap-1.5">
-        <p className="sk-text-body-medium-medium text-sko-text-muted">Add it to</p>
-        <div className="grid gap-2 md:grid-cols-3">
+      <div className={styles.apps}>
+        <p className={cn("sk-text-body-medium-medium", styles.appsLabel)}>Add it to</p>
+        <div className={styles.appGrid}>
           {APPS.map((app) => (
             <Button key={app} type="button" hierarchy="secondary" size="md" onClick={() => showToast(`Opening ${app}…`)}>
               {app}
@@ -81,8 +80,8 @@ export function CalendarSyncModal({ open, onClose }: { open: boolean; onClose: (
       </div>
 
       <FormField id={`${id}-feed`} label="Or copy the feed address" hint="Private to you. Anyone with it can see your dates.">
-        <div className="flex gap-2">
-          <input id={`${id}-feed`} value={FEED} readOnly aria-describedby={`${id}-feed-hint`} className={cn(FIELD, "min-w-0 flex-1 bg-sko-bg-muted text-sko-text-subtle shadow-none")} />
+        <div className={styles.feedRow}>
+          <input id={`${id}-feed`} value={FEED} readOnly aria-describedby={`${id}-feed-hint`} className={cn(FIELD, styles.feed)} />
           <Button
             type="button"
             hierarchy="secondary"
@@ -92,7 +91,7 @@ export function CalendarSyncModal({ open, onClose }: { open: boolean; onClose: (
               void navigator.clipboard?.writeText(FEED).catch(() => undefined);
               showToast("Feed address copied");
             }}
-            className="shrink-0 max-md:h-11"
+            className={styles.copy}
           >
             Copy
           </Button>

@@ -1,0 +1,94 @@
+/* DS Avatar (19:1012). Resting rules on the root (which takes the caller's className) sit in
+   :where(), so a caller's class wins. */
+:where(.avatar) {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--color-text-primary);
+}
+.circle {
+  border-radius: var(--sk-radius-pill);
+}
+.square {
+  border-radius: var(--sk-radius-control);
+}
+/* Size variants: the box, the Text=True stroke width (0.5 / 0.75 / 1 / 1 px) and the online dot
+   (6 / 8 / 10 / 12 px). */
+.xs {
+  width: 24px;
+  height: 24px;
+}
+.sm {
+  width: 32px;
+  height: 32px;
+}
+.md {
+  width: 40px;
+  height: 40px;
+}
+.lg {
+  width: 48px;
+  height: 48px;
+}
+.border05 {
+  border-width: 0.5px;
+}
+.border075 {
+  border-width: 0.75px;
+}
+.border1 {
+  border-width: 1px;
+}
+/* An image sits on bg/primary-soft. */
+.withImage {
+  background-color: var(--color-bg-primary-soft);
+}
+/* Initials (DS Text=True): bg/muted fill with a border/subtle stroke inside. */
+.initials {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-muted);
+}
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* DS _Avatar online indicator: 1.5px bg/page stroke drawn OUTSIDE the dot, so a ring (outside
+   the box) rather than a border (inside it). Three layers, as the ring it replaces. */
+.dot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--sk-radius-pill);
+  box-shadow: 0 0 0 0 white, 0 0 0 1.5px var(--color-bg-page), 0 0 transparent;
+}
+.dotXs {
+  width: 6px;
+  height: 6px;
+}
+.dotSm {
+  width: 8px;
+  height: 8px;
+}
+.dotMd {
+  width: 10px;
+  height: 10px;
+}
+.dotLg {
+  width: 12px;
+  height: 12px;
+}
+/* The DS binds icon/success-strong; bg/success is kept so the colourblind-safe blocks remap it. */
+.online {
+  background-color: var(--color-bg-success);
+}
+/* token-lint-disable-next-line DS Avatar has no Offline status; grey dot kept at its previous value */
+.offline {
+  background-color: var(--color-icon-faint);
+}

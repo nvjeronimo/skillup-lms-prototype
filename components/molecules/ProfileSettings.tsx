@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { Award, ExternalLink, LogOut, RotateCcw, UserPen } from "lucide-react";
@@ -9,6 +7,7 @@ import { restartFirstSteps } from "@/lib/first-steps/useFirstSteps";
 import { cn } from "@/lib/utils";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 import { setEdxScope, useEdxScope } from "@/lib/edx-scope";
+import styles from "./ProfileSettings.module.css";
 
 /*
  * The profile menu, one standard for the platform pages and the player (Nelson, 16 Oct 2026;
@@ -21,16 +20,16 @@ import { setEdxScope, useEdxScope } from "@/lib/edx-scope";
 /** The brand skins: SKO, Gold (tokens/colors.css), Studio (tokens/direction-studio.css), Harbor
  *  (tokens/skin-harbor.css) and Fluent (tokens/skin-fluent.css). Red went on 26 Oct 2026. */
 export const PROFILE_SKINS: { skin: Skin; label: string; dot: string }[] = [
-  // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/primary
-  { skin: "teal", label: "SKO", dot: "bg-sko-icon-primary" },
-  // token-lint-disable-next-line DS _Dot (Icon=Dot) binds icon/accent-yellow
-  { skin: "gold", label: "Gold", dot: "bg-sko-icon-accent-yellow" },
+  // DS _Dot (Icon=Dot) binds icon/primary
+  { skin: "teal", label: "SKO", dot: styles.dotIconPrimary },
+  // DS _Dot (Icon=Dot) binds icon/accent-yellow
+  { skin: "gold", label: "Gold", dot: styles.dotAccentYellow },
   // Studio (experimental, Nelson 22 Oct 2026): took Sea's place; its dot is Studio's own primary, the logo's deep teal.
-  { skin: "studio", label: "Studio", dot: "bg-sko-bg-primary" },
+  { skin: "studio", label: "Studio", dot: styles.dotPrimary },
   // Harbor (Nelson, 25 Oct 2026): a hosting-panel look; its dot is its own primary, black.
-  { skin: "harbor", label: "Harbor", dot: "bg-sko-bg-primary" },
+  { skin: "harbor", label: "Harbor", dot: styles.dotPrimary },
   // Fluent (Nelson, 25 Oct 2026): Fluent 2 web; its dot is its own brand blue.
-  { skin: "fluent", label: "Fluent", dot: "bg-sko-bg-primary" },
+  { skin: "fluent", label: "Fluent", dot: styles.dotPrimary },
 ];
 
 /**
@@ -46,7 +45,7 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
       data-skin={skin === "teal" || skin === "harbor" || skin === "fluent" ? skin : undefined}
       data-direction={skin === "studio" ? "studio" : undefined}
       data-theme={skin === "teal" && theme === "dark" ? "dark" : undefined}
-      className={cn("size-2.5 shrink-0 rounded-pill", dot)}
+      className={cn(styles.dot, dot)}
     />
   );
 }
@@ -55,8 +54,7 @@ function SkinDot({ skin, dot }: { skin: Skin; dot: string }) {
  * The menu's panel: 288 wide, scrolls inside when the window is short. It hangs under the
  * avatar and grows out of the trigger's corner (top right).
  */
-export const PROFILE_PANEL =
-  "sk-animate-menu origin-top-right absolute right-0 top-[calc(100%+8px)] z-50 flex max-h-[calc(100dvh-88px)] w-72 flex-col overflow-y-auto overflow-x-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-xl";
+export const PROFILE_PANEL = `sk-animate-menu ${styles.panel}`;
 
 /**
  * A menu group. `settings` (DS Profile Menu 1.12, Nelson, 27 Oct 2026): Appearance and
@@ -78,8 +76,8 @@ export function ProfileSection({
   invented?: string;
 }) {
   return (
-    <div data-invented={invented} className={cn("border-t border-sko-border-subtle px-4 first:border-t-0", roomy ? "py-4" : "py-3")}>
-      <p className={cn("sk-text-label-small-medium text-sko-text-subtle", settings ? "mb-4" : "mb-2")}>{title}</p>
+    <div data-invented={invented} className={cn(styles.section, roomy && styles.roomy)}>
+      <p className={cn("sk-text-label-small-medium", styles.sectionTitle, settings && styles.settingsTitle)}>{title}</p>
       {children}
     </div>
   );
@@ -89,8 +87,7 @@ export function ProfileSection({
 export const SKILLUP_ONLINE_URL = "https://skillup.online";
 
 /** A menu row: 44 tall, 16px icon, body-medium/Medium text/muted (as the footer rows). */
-const MENU_ROW =
-  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-2 rounded-control px-3 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle hover:text-sko-text-default";
+const MENU_ROW = `sk-text-body-medium-medium ${styles.menuRow}`;
 
 /**
  * DS Profile Menu 1.8 (Nelson, 24 Oct 2026): the Profile section (Edit profile, Certificates)
@@ -102,7 +99,7 @@ const MENU_ROW =
 export function ProfileLinks({ onDone }: { onDone?: () => void }) {
   return (
     <ProfileSection title="Profile">
-      <div className="flex flex-col gap-2">
+      <div className={styles.rows}>
         <Link href="/platform/profile" className={MENU_ROW} onClick={onDone}>
           <Icon icon={UserPen} size={16} />
           Edit profile
@@ -121,7 +118,7 @@ export function ProfileLinks({ onDone }: { onDone?: () => void }) {
 export function SignOutLink({ onDone }: { onDone?: () => void }) {
   const showToast = useLmsStore((s) => s.showToast);
   return (
-    <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
+    <div className={styles.group}>
       <button
         type="button"
         className={MENU_ROW}
@@ -130,7 +127,7 @@ export function SignOutLink({ onDone }: { onDone?: () => void }) {
           onDone?.();
         }}
       >
-        <Icon icon={LogOut} size={16} className="text-sko-icon-error" />
+        <Icon icon={LogOut} size={16} className={styles.signOutIcon} />
         Sign out
       </button>
     </div>
@@ -139,11 +136,11 @@ export function SignOutLink({ onDone }: { onDone?: () => void }) {
 
 export function SkillUpOnlineLink({ onDone }: { onDone?: () => void }) {
   return (
-    <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
+    <div className={styles.group}>
       <a href={SKILLUP_ONLINE_URL} target="_blank" rel="noopener noreferrer" className={MENU_ROW} onClick={onDone}>
         <Icon icon={ExternalLink} size={16} />
         SkillUp Online
-        <span className="sr-only"> (opens in a new tab)</span>
+        <span className="sk-sr-only"> (opens in a new tab)</span>
       </a>
     </div>
   );
@@ -171,7 +168,7 @@ export function ToggleRow({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-start gap-2 rounded-control px-1 py-1.5 text-left transition-colors hover:bg-sko-bg-subtle"
+      className={styles.toggleRow}
     >
       {/* Track: bg/primary on, bg/muted off; the knob sits right when on. The off track
           adds a 1px inset border/default ring: the DS bg/muted track and white knob are
@@ -179,27 +176,20 @@ export function ToggleRow({
           Accessibility Standards switches). The ring is inset, so the box stays 36×20. */}
       <span
         aria-hidden
-        className={cn(
-          "inline-flex h-5 w-9 shrink-0 items-center rounded-pill p-0.5 transition-colors",
-          checked
-            ? "justify-end bg-sko-bg-primary"
-            : "justify-start bg-sko-bg-muted ring-1 ring-inset ring-sko-border-default",
-        )}
+        className={cn(styles.track, checked ? styles.trackOn : styles.trackOff)}
       >
         {/* Knob: 16px, Elevation/level2 (= Tailwind `shadow`). */}
         <span
           className={cn(
-            "size-4 rounded-pill shadow",
-            checked
-              ? // token-lint-disable-next-line DS toggle knob binds icon/on-primary
-                "bg-sko-icon-on-primary"
-              : "bg-sko-bg-on-media",
+            styles.knob,
+            // DS toggle knob binds icon/on-primary when on.
+            checked ? styles.knobOn : styles.knobOff,
           )}
         />
       </span>
-      <span className="flex flex-col">
-        <span className="sk-text-body-medium-medium text-sko-text-muted">{label}</span>
-        {hint ? <span className="sk-text-body-medium-regular text-sko-text-subtle">{hint}</span> : null}
+      <span className={styles.toggleText}>
+        <span className={`sk-text-body-medium-medium ${styles.label}`}>{label}</span>
+        {hint ? <span className={`sk-text-body-medium-regular ${styles.hint}`}>{hint}</span> : null}
       </span>
     </button>
   );
@@ -242,10 +232,7 @@ export function Segmented<T extends string>({
       ref={trackRef}
       role="group"
       aria-label={label}
-      className={cn(
-        "flex gap-0.5 rounded-track bg-sko-bg-track p-1",
-        scroll && "overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-      )}
+      className={cn(styles.segmented, scroll && styles.scroll)}
     >
       {options.map((o) => (
         <button
@@ -257,14 +244,13 @@ export function Segmented<T extends string>({
           className={cn(
             // min-w-0: a segment may shrink below its text, which then ends with an ellipsis (Nelson,
             // 23 Oct 2026: the four brand skins overflowed the 288 panel in Studio).
-            "inline-flex h-8 items-center justify-center rounded-control border transition-colors",
-            scroll ? "shrink-0" : "min-w-0 flex-1",
-            // An option can set its own padding and gap (the four brand skins need tighter ones).
-            o.className?.includes("px-") ? null : "gap-2 px-2.5",
+            styles.segment,
+            scroll ? styles.segmentScroll : styles.segmentFill,
+            // The default gap and padding; an option's own class can override them (the brand
+            // skins need tighter ones: styles.skinSegment, declared after it).
+            styles.segmentPad,
             o.className ?? "sk-text-body-medium-semibold",
-            value === o.value
-              ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
-              : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+            value === o.value ? styles.segmentOn : styles.segmentOff,
           )}
         >
           {o.label}
@@ -286,19 +272,19 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
   return (
     <ProfileSection title="Appearance" settings>
       {/* 16 between items: the toggle row's own 6 of padding + 10. */}
-      <div className="flex flex-col gap-2.5">
-        <div className="flex flex-col gap-1.5 px-1">
-          <span className="sk-text-body-medium-medium text-sko-text-muted">Brand skin</span>
+      <div className={styles.appearance}>
+        <div className={styles.field}>
+          <span className={`sk-text-body-medium-medium ${styles.label}`}>Brand skin</span>
           <Segmented
             label="Brand skin"
             options={PROFILE_SKINS.map((s) => ({
               value: s.skin,
               // Five skins in the 288 panel: one row that scrolls, each name in full.
-              className: "sk-text-body-medium-semibold gap-1.5 px-3",
+              className: `sk-text-body-medium-semibold ${styles.skinSegment}`,
               label: (
                 <>
                   <SkinDot skin={s.skin} dot={s.dot} />
-                  <span className="whitespace-nowrap">{s.label}</span>
+                  <span className={styles.skinName}>{s.label}</span>
                 </>
               ),
             }))}
@@ -310,10 +296,10 @@ export function AppearanceSection({ showTheme = false }: { showTheme?: boolean }
         {/* On a phone the theme is set here too, with the top bar's own control (Nelson, 27 Oct 2026;
             DS Profile Menu 1.10; supporting text 1.12): label on the left, Theme-Switch md on the right. */}
         {showTheme ? (
-          <div className="flex items-center justify-between gap-3 px-1">
-            <span className="flex min-w-0 flex-col">
-              <span className="sk-text-body-medium-medium text-sko-text-muted">Theme</span>
-              <span className="sk-text-body-medium-regular text-sko-text-subtle">Light and Dark</span>
+          <div className={styles.themeRow}>
+            <span className={styles.themeText}>
+              <span className={`sk-text-body-medium-medium ${styles.label}`}>Theme</span>
+              <span className={`sk-text-body-medium-regular ${styles.hint}`}>Light and Dark</span>
             </span>
             <ThemeSwitch value={theme} onChange={setTheme} size="md" />
           </div>
@@ -347,9 +333,9 @@ export function AccessibilitySection() {
       roomy
     >
       {/* 16 between items: each toggle row's own 6 of padding + 4 (+ 6 under Text size). */}
-      <div className="flex flex-col gap-1">
-        <div className="mb-1.5 flex flex-col gap-1.5 px-1">
-          <span className="sk-text-body-medium-medium text-sko-text-muted">Text size</span>
+      <div className={styles.accessibility}>
+        <div className={`${styles.field} ${styles.textSize}`}>
+          <span className={`sk-text-body-medium-medium ${styles.label}`}>Text size</span>
           <Segmented
             label="Text size"
             options={sizes.map((sz, i) => ({
@@ -392,7 +378,7 @@ export function ProfileFooter({ onDone }: { onDone?: () => void }) {
   const edx = useEdxScope();
   const row = MENU_ROW;
   return (
-    <div className="flex flex-col gap-2 border-t border-sko-border-subtle px-4 py-3">
+    <div className={styles.group}>
       {/* The Open edX scope is the default (lib/edx-scope; Nelson, 29 Oct 2026): this switch opts
           in to our improvements and extra features. It switches in place, with no reload, so the
           page stays where it is and the differences show at once (Nelson, 30 Oct 2026). */}

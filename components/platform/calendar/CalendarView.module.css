@@ -1,0 +1,571 @@
+/* Calendar (/platform/calendar): Agenda or Month, the next 7 days and calendar sync. */
+.page {
+  padding-left: var(--sk-layout-page-x);
+  padding-right: var(--sk-layout-page-x);
+  padding-bottom: 48px;
+  padding-top: var(--sk-layout-page-top);
+}
+.stack {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.ink {
+  color: var(--color-text-default);
+}
+.muted {
+  color: var(--color-text-muted);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+.primaryInk {
+  color: var(--color-text-primary);
+}
+.upper {
+  text-transform: uppercase;
+}
+.oneLine {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.listCard {
+  overflow: hidden;
+}
+.emptyCard {
+  padding: 20px;
+  color: var(--color-text-subtle);
+}
+.sideCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+.tileDeadline {
+  background-color: var(--color-bg-warning-soft);
+  color: var(--color-icon-warning);
+}
+.tileLive {
+  background-color: var(--color-bg-success-soft);
+  color: var(--color-icon-success);
+}
+.tileCourse {
+  background-color: var(--color-bg-info-soft);
+  color: var(--color-icon-info);
+}
+.dotDeadline {
+  background-color: var(--color-bg-warning);
+}
+.dotLive {
+  background-color: var(--color-bg-success);
+}
+.dotCourse {
+  background-color: var(--color-bg-info);
+}
+.eventRowLive {
+  position: relative;
+}
+.eventRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px;
+}
+.eventText {
+  display: flex;
+  min-width: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+}
+.eventBadgesPhone {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.eventBadges {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.tile {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+}
+.eventLabel {
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.timeCase {
+  text-transform: none;
+}
+.agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.agendaDay {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.monthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.monthNav {
+  display: flex;
+  gap: 4px;
+}
+.monthNavButton {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-icon-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.monthTable {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.weekHead {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.dayCell {
+  height: 112px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 6px;
+  vertical-align: top;
+}
+.dayCellPad {
+  background-color: var(--color-bg-faint);
+}
+.dayStack {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 4px;
+}
+.dayNumber {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.dayNumberToday {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.monthEvent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: var(--sk-radius-inner);
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  color: var(--color-text-default);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.monthEventDone {
+  color: var(--color-text-subtle);
+  text-decoration-line: line-through;
+}
+.monthEventMissed {
+  color: var(--color-text-warning);
+}
+.monthEventDot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: var(--sk-radius-pill);
+}
+.moreDates {
+  padding-left: 4px;
+  padding-right: 4px;
+  color: var(--color-text-subtle);
+}
+.compact {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.weekHeadCompact {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.abbr {
+  text-decoration-line: none;
+}
+.compactCell {
+  padding: 2px;
+  text-align: center;
+}
+.compactDay {
+  display: flex;
+  height: 48px;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.compactDaySelected {
+  background-color: var(--color-bg-primary-soft);
+}
+.dots {
+  display: flex;
+  height: 6px;
+  gap: 2px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--sk-radius-pill);
+}
+.dotsGhost {
+  height: 6px;
+}
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.weekDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.weekDayToday {
+  background-color: var(--color-bg-primary-soft);
+}
+.missed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.missedAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-top-width: 2px;
+  background-color: var(--color-bg-page);
+  padding: 16px;
+}
+.missedAlertGhost {
+  border-color: var(--color-border-subtle);
+}
+.missedAlertWarning {
+  border-color: var(--color-border-warning);
+}
+.missedIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: var(--color-icon-warning);
+}
+.iconNudge {
+  margin-top: 2px;
+}
+.stackHalf {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.missedRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px;
+}
+.shiftButton {
+  flex-shrink: 0;
+}
+.columns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-column-gap);
+}
+.main {
+  display: flex;
+  min-width: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.filterSwitch {
+  min-width: 0px;
+}
+.viewSwitch {
+  flex-shrink: 0;
+}
+.segmentTrack {
+  gap: 2px;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-track);
+  padding: 4px;
+}
+.filterTrackGhost {
+  display: inline-flex;
+  min-width: 0px;
+  max-width: 100%;
+  overflow: hidden;
+}
+.viewTrackGhost {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.segmentGhost {
+  background-color: transparent;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-side-gap);
+}
+.syncHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.syncIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: var(--color-icon-primary);
+}
+.subscribe {
+  align-self: flex-start;
+}
+.subscribeGhost {
+  align-self: flex-start;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 16px;
+  row-gap: 4px;
+}
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-subtle);
+}
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--sk-radius-pill);
+}
+.eventRow:last-child {
+  border-bottom-width: 0px;
+}
+/* The whole row is the title's target (44 at least), as the Dashboard rows. */
+.eventLink::after {
+  content: '';
+  position: absolute;
+  inset: 0px;
+}
+.dayCell:last-child {
+  border-right-width: 0px;
+}
+.missedRow:last-child {
+  border-bottom-width: 0px;
+}
+@media (hover: hover) {
+  .eventLink:hover {
+    text-decoration-line: underline;
+  }
+  .monthNavButton:hover {
+    background-color: var(--color-bg-subtle);
+  }
+  .monthEvent:hover {
+    background-color: var(--color-bg-subtle);
+  }
+  .compactDayIdle:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+@media (max-width: 767.98px) {
+  .eventBadges {
+    display: none;
+  }
+  .shiftButton {
+    height: 44px;
+    width: 100%;
+  }
+  .shiftGhost {
+    width: 100%;
+  }
+  .viewGhost {
+    width: 44px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .phoneSrOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  .fromTablet {
+    display: none;
+  }
+  .subscribe {
+    height: 44px;
+  }
+}
+@media (min-width: 768px) {
+  .page {
+    padding-bottom: 64px;
+  }
+  .eventRow {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .eventBadgesPhone {
+    display: none;
+  }
+  .monthNavButton {
+    width: 36px;
+    height: 36px;
+  }
+  .missedRow {
+    flex-direction: row;
+    align-items: center;
+  }
+  .shiftGhost {
+    height: 36px;
+  }
+  .phoneOnly {
+    display: none;
+  }
+  .subscribeGhost {
+    height: 36px;
+  }
+}
+@media (min-width: 1024px) {
+  .page {
+    padding-bottom: 80px;
+  }
+  .columns {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .side {
+    width: 320px;
+    flex-shrink: 0;
+  }
+  .sideSticky {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+/* Skin hooks that matched the Tailwind classes (tokens/skin-harbor.css, skin-fluent.css,
+   direction-studio.css).
+   Cards (rounded-card border): borderless on the card shadow in Harbor and Fluent, Studio's shadow
+   in Studio; the side cards (p-4) take 24 inside (23 + the border) and a 44 radius in Studio. */
+[data-skin="harbor"] [data-platform-page] .card,
+[data-skin="fluent"] [data-platform-page] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-direction="studio"] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+[data-direction="studio"] .sideCard {
+  padding: 23px;
+  border-radius: 44px;
+}
+/* One-line control buttons (rounded-control) are pills in Harbor and Studio: the month arrows; the
+   phone month's day buttons too in Studio (Harbor leaves out a flex-col button). */
+[data-skin="harbor"] .monthNavButton,
+[data-direction="studio"] .monthNavButton,
+[data-direction="studio"] .compactDay {
+  border-radius: 9999px;
+}
+/* A bg/track segment row (the loading filters) sits on bg/muted in Harbor and Fluent; in Studio
+   its segments are pills. */
+[data-skin="harbor"] .segmentTrack,
+[data-skin="fluent"] .segmentTrack {
+  background-color: var(--color-bg-muted);
+}
+[data-direction="studio"] .segmentTrack > :global(.rounded-control) {
+  border-radius: 9999px;
+}
