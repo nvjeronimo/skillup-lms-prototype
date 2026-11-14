@@ -117,7 +117,11 @@ local copies are intentional.
   edited in the Audit tab as a checklist under the scope picker. On the first run in a file it
   is pre-filled with the pages whose names contain, ignoring case:
   - in the DS: "in review", "archive", "arquivo", "cover", "start here";
-  - in any screens file: "discovery - nelsonj", "history", "histórico".
+  - in any screens file: "cover", "history", "histórico", **and every page in a group whose
+    divider page names "discovery" or "archive"**. The ICP groups pages under divider pages
+    ("DISCOVERY - NelsonJ. ———", "ARCHIVE ———"), up to the next "---" page; the pages inside
+    are called "New Flow - V1", "V6 - Full Pages", and so on, so matching on their own names would
+    miss them (checked on the ICP, 14 Nov).
   Nelson edits it from there. The defaults are a starting point, not a rule.
 - **A marker per component:** a component or component set whose Figma description contains
   `[audit:skip]` is not walked, nor are instances of it (they are skipped anyway). Use it for
@@ -231,8 +235,11 @@ would look unused in the DS).
 
 ## 7. Not verified when this was written
 
-- How `devStatus` reads on a marked section and on the frames inside it, and on nodes inside a
-  marked frame (to check read-only on the ICP before the plan's first task).
+- Checked read-only on the ICP, 14 Nov: `devStatus` reads without error; the marks sit on
+  top-level frames (3 of 18 on "Platform Pages - Ready for Dev 🟢", 1 on "Phase 1 · Video
+  Lessons"); layers inside a marked frame read `null`, so "inside Ready for dev" is decided by
+  the nearest marked ancestor. Page names saying "Ready for Dev" are not a reliable signal: those
+  pages also hold WIP frames. No marked section was found, so the section rule is untested.
 
 - The ICP's node count and how long a whole-file walk takes.
 - Whether `getStyledTextSegments` is fast enough on long text nodes.
