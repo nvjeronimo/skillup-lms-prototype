@@ -24,11 +24,23 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .option:hover {
     background-color: var(--color-bg-subtle);
   }
 }
 .icon {
   color: var(--color-text-subtle);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .menu {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .menu,
+:global([data-skin="fluent"] [data-platform-page]) .menu {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
 }

@@ -39,7 +39,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .item:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -56,7 +56,7 @@
 .report {
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .report:hover {
     color: var(--color-text-warning);
   }
@@ -70,7 +70,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .report:hover .reportGlyph {
     color: var(--color-icon-warning);
   }
@@ -81,4 +81,11 @@
 }
 .action {
   flex-shrink: 0;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control on the item buttons); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .item,
+:global([data-skin="harbor"]) .item {
+  border-radius: 9999px;
 }

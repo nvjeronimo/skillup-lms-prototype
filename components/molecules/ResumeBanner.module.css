@@ -29,3 +29,21 @@
   align-items: center;
   gap: 8px;
 }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .banner {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .banner,
+:global([data-skin="fluent"] [data-platform-page]) .banner {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .banner {
+  border-radius: var(--sk-radius-control);
+}

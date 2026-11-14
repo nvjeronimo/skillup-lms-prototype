@@ -22,7 +22,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .menuRow:hover {
     background-color: var(--color-bg-subtle);
     color: var(--color-text-default);
@@ -61,7 +61,7 @@
 .unchecked {
   border-color: var(--color-border-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .unchecked:hover {
     background-color: var(--color-bg-hover);
   }
@@ -96,4 +96,11 @@
   flex-wrap: wrap;
   gap: 4px;
   padding-top: 2px;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control on the menu row); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .menuRow,
+:global([data-skin="harbor"]) .menuRow {
+  border-radius: 9999px;
 }

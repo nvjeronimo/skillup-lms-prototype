@@ -30,7 +30,7 @@
   border-color: transparent;
   color: var(--color-text-muted);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .inactive:hover {
     color: var(--color-text-default);
   }

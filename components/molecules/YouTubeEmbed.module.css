@@ -33,3 +33,11 @@
   transform: translateX(-50%);
   border-width: 0;
 }
+
+/* Skins: tokens/direction-studio.css selected this file's Tailwind .rounded-card; the same rule here. */
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .undocked {
+  border-radius: var(--sk-radius-control);
+}

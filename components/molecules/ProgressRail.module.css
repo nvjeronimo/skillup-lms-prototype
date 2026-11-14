@@ -58,7 +58,7 @@
   border-color: var(--color-border-default);
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .pending:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -67,4 +67,22 @@
    is white (#fff, Tailwind's default ring-offset colour, kept as it was). */
 .currentRing {
   box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--color-border-primary);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .rail {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .rail,
+:global([data-skin="fluent"] [data-platform-page]) .rail {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .rail {
+  border-radius: var(--sk-radius-control);
 }

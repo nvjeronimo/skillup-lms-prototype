@@ -44,3 +44,13 @@
   align-items: center;
   justify-content: space-between;
 }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (textarea.border); the same rules here, after the component's own. */
+/* Fluent's Input: a Stroke1 frame, the accessible stroke along the bottom, white inside (it
+   held over the focus colour). */
+:global([data-skin="fluent"]) textarea.reply {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}

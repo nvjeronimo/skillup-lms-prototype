@@ -52,3 +52,10 @@
 .attempts {
   color: var(--color-text-subtle);
 }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control on the review link); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .review,
+:global([data-skin="harbor"]) .review {
+  border-radius: 9999px;
+}

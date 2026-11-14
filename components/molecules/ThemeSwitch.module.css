@@ -57,8 +57,15 @@
   border-color: transparent;
   color: var(--color-icon-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .off:hover {
     color: var(--color-icon-default);
   }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control segments in a rounded-track); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .segment,
+:global([data-skin="harbor"]) .segment {
+  border-radius: 9999px;
 }
