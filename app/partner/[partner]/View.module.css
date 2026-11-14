@@ -1,0 +1,38 @@
+/* The partner stand-in: a centred note on bg/subtle that says this is not a SkillUp screen. */
+.page {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--color-bg-subtle);
+  padding: 24px;
+  text-align: center;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+/* The "Lab not found" fallback: the two lines at the top left. */
+.missing {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.eyebrow {
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.title { color: var(--color-text-default); }
+.text {
+  max-width: 520px;
+  color: var(--color-text-muted);
+}
+.missingText { color: var(--color-text-muted); }
+.alert {
+  width: 100%;
+  max-width: 520px;
+  text-align: left;
+}

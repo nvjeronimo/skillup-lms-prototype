@@ -1,0 +1,37 @@
+/* Any unknown address: the logo, two lines and the two ways back, centred on the page. */
+.page {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: var(--color-bg-faint);
+  padding: 48px 16px;
+  text-align: center;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.logo {
+  height: 24px;
+}
+.copy {
+  display: flex;
+  max-width: 480px;
+  flex-direction: column;
+  gap: 8px;
+}
+.title { color: var(--color-text-default); }
+.text { color: var(--color-text-muted); }
+
+/* Phone: the two actions stack, full width. From 640 they sit side by side. */
+.actions {
+  display: flex;
+  width: 100%;
+  max-width: 480px;
+  flex-direction: column;
+  gap: 12px;
+}
+@media (min-width: 640px) {
+  .actions { width: auto; flex-direction: row; }
+}

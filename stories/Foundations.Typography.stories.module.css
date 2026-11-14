@@ -1,0 +1,23 @@
+/* Foundations / Typography: one row per text style, grouped by family. */
+.page { display: flex; flex-direction: column; gap: 24px; padding: 24px; }
+.family { display: flex; flex-direction: column; gap: 16px; }
+.familyTitle { color: var(--color-text-default); }
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-bottom: 12px;
+}
+.label { width: 288px; flex-shrink: 0; }
+.cssClass {
+  display: block;
+  color: var(--color-text-subtle);
+}
+.styleName {
+  display: block;
+  text-transform: none;
+  color: var(--color-text-subtle);
+}
+.sample { color: var(--color-text-default); }

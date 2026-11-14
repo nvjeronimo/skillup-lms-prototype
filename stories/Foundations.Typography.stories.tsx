@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { collection, textStyles, type FigmaTextStyle } from "./figmaTokens";
+import styles from "./Foundations.Typography.stories.module.css";
 
 /**
  * The SKO DS text styles, read from tokens/figma/variables.json (the file the "Publish tokens"
@@ -33,24 +34,24 @@ const FAMILIES = [...new Set(textStyles.map((s) => s.name.split("/")[0]))];
 function Row({ s }: { s: FigmaTextStyle }) {
   const cls = className(s);
   return (
-    <div className="flex items-baseline gap-6 border-b border-sko-border-subtle pb-3">
-      <div className="w-72 shrink-0">
-        <code className="sk-text-body-small-regular block text-sko-text-subtle">.{cls}</code>
-        <span className="sk-text-label-small-regular block normal-case text-sko-text-subtle">
+    <div className={styles.row}>
+      <div className={styles.label}>
+        <code className={`sk-text-body-small-regular ${styles.cssClass}`}>.{cls}</code>
+        <span className={`sk-text-label-small-regular ${styles.styleName}`}>
           {s.name} · {metrics(s)}
         </span>
       </div>
-      <span className={`${cls} text-sko-text-default`}>The quick brown fox jumps over</span>
+      <span className={`${cls} ${styles.sample}`}>The quick brown fox jumps over</span>
     </div>
   );
 }
 
 function TypeRamp() {
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className={styles.page}>
       {FAMILIES.map((family) => (
-        <section key={family} className="flex flex-col gap-4">
-          <h2 className="sk-text-title-medium-semibold text-sko-text-default">{family}</h2>
+        <section key={family} className={styles.family}>
+          <h2 className={`sk-text-title-medium-semibold ${styles.familyTitle}`}>{family}</h2>
           {textStyles
             .filter((s) => s.name.startsWith(`${family}/`))
             .map((s) => (

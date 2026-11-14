@@ -1,0 +1,60 @@
+/* Foundations / Spacing: spacing bars per mode, container values, radius squares. */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 24px;
+}
+.sectionTitle {
+  margin-bottom: 4px;
+  color: var(--color-text-default);
+}
+.lede {
+  margin-bottom: 16px;
+  color: var(--color-text-subtle);
+}
+.subtle { color: var(--color-text-subtle); }
+.default { color: var(--color-text-default); }
+
+.spacingList { display: flex; flex-direction: column; gap: 12px; }
+.containerList { display: flex; flex-direction: column; gap: 8px; }
+.row { display: flex; align-items: center; gap: 16px; }
+.name {
+  width: 112px;
+  flex-shrink: 0;
+  color: var(--color-text-subtle);
+}
+.containerName {
+  width: 192px;
+  flex-shrink: 0;
+  color: var(--color-text-subtle);
+}
+.bars { display: flex; flex-direction: column; gap: 4px; }
+.bar { display: flex; align-items: center; gap: 8px; }
+.mode {
+  width: 12px;
+  color: var(--color-text-subtle);
+}
+.barFill {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--color-bg-primary);
+}
+
+.radii { display: flex; flex-wrap: wrap; gap: 24px; }
+.radius {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.square {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-bg-primary-soft);
+}
+.radiusLabel {
+  text-transform: none;
+  color: var(--color-text-subtle);
+}
