@@ -1,5 +1,3 @@
-"use client";
-
 import { Award, Check, Lock } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
@@ -11,6 +9,7 @@ import type { CertificateDocumentData, Program } from "@/lib/platform/program";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { CertificateDocument, certificateLearner } from "./CertificateDocument";
+import styles from "./ProgramCertificateGoal.module.css";
 
 const MOCK =
   "No API says whether a program certificate is earned: counted here from the course rows";
@@ -63,16 +62,13 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
       : [doc.partnerName, ...(doc.morePartners ?? []).map((p) => p.name)].filter(Boolean)
   ) as string[];
   return (
-    <div className="[container-type:inline-size]">
+    <div className={styles.goal}>
       <div
         data-mock={MOCK}
-        className={cn(
-          "grid gap-4 rounded-card p-4 md:p-5 [@container_(min-width:640px)]:grid-cols-[320px_minmax(0,1fr)] [@container_(min-width:640px)]:gap-6",
-          "border border-sko-border-subtle bg-sko-bg-page",
-        )}
+        className={styles.card}
       >
-        <div className="relative aspect-[1123/794] w-full max-w-[480px] self-start overflow-hidden rounded-card-inset border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
-          <div className={cn("absolute inset-0", !issued && "opacity-50 grayscale")}>
+        <div className={styles.sheet}>
+          <div className={cn(styles.sheetFill, !issued && styles.muted)}>
             <CertificateDocument
               data={doc}
               label={
@@ -83,8 +79,8 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
             />
           </div>
           {!issued ? (
-            <div className="absolute inset-0 flex items-center justify-center p-4">
-              <span className="sk-text-body-small-semibold inline-flex items-center gap-1.5 whitespace-nowrap rounded-pill border border-sko-border-subtle bg-sko-bg-page px-3 py-1.5 text-sko-text-default shadow-sm">
+            <div className={styles.lockLayer}>
+              <span className={`sk-text-body-small-semibold ${styles.lock}`}>
                 <Icon icon={Lock} size={14} aria-hidden />
                 Complete all {total} courses
               </span>
@@ -92,21 +88,19 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
           ) : null}
         </div>
 
-        <div className="flex min-w-0 flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <div className="flex flex-wrap items-center gap-2">
+        <div className={styles.info}>
+          <div className={styles.head}>
+            <div className={styles.titleRow}>
               <span
                 aria-hidden="true"
                 className={cn(
-                  "flex size-7 shrink-0 items-center justify-center rounded-pill",
-                  issued
-                    ? "bg-sko-bg-success text-sko-text-on-primary"
-                    : "bg-sko-bg-subtle text-sko-icon-muted",
+                  styles.medal,
+                  issued ? styles.medalEarned : styles.medalPending,
                 )}
               >
                 <Icon icon={Award} size={16} />
               </span>
-              <p className="sk-text-title-medium-semibold text-sko-text-default">
+              <p className={`sk-text-title-medium-semibold ${styles.title}`}>
                 Program certificate
               </p>
               {/* Earned: green with the icon and the word, never colour alone (13 Oct 2026). */}
@@ -116,7 +110,7 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
                 </Badge>
               ) : null}
             </div>
-            <p className="sk-text-body-medium-regular text-sko-text-subtle">
+            <p className={`sk-text-body-medium-regular ${styles.state}`}>
               {issued
                 ? `Issued ${issuedOn(issued)}.`
                 : `Yours when all ${total} courses are complete.`}
@@ -125,22 +119,22 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
           {/* One segment per course, in program order, filled as each is completed: how far along,
               not a path (any order works). Back on the card at Nelson's ask, 31 Oct 2026; kept
               once earned, all green (same day). */}
-          <div className="flex flex-col gap-2">
-            <ol aria-label="Courses towards the certificate" className="flex gap-1">
+          <div className={styles.progress}>
+            <ol aria-label="Courses towards the certificate" className={styles.segments}>
               {e.courses.map((c) => (
                 <li
                   key={c.slug}
                   className={cn(
-                    "h-2 min-w-0 flex-1",
+                    styles.segment,
                     // A finished course is a progress at 100%: green (Nelson, 27 Oct 2026).
                     c.state === "earned"
-                      ? "bg-sko-bg-success"
+                      ? styles.segmentEarned
                       : c.state === "in-progress"
-                        ? "bg-sko-bg-info-soft"
-                        : "bg-sko-bg-track",
+                        ? styles.segmentInProgress
+                        : styles.segmentNotStarted,
                   )}
                 >
-                  <span className="sr-only">
+                  <span className="sk-sr-only">
                     {c.number ? `Course ${c.number}, ` : ""}
                     {c.title}:{" "}
                     {c.state === "earned"
@@ -152,18 +146,18 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
                 </li>
               ))}
             </ol>
-            <p className="sk-text-body-small-medium text-sko-text-muted">
+            <p className={`sk-text-body-small-medium ${styles.count}`}>
               {e.complete} of {total} courses complete
             </p>
           </div>
           {issued ? (
-            <div className="flex flex-wrap items-center gap-2">
+            <div className={styles.actions}>
               <ButtonLink
                 href={issued.viewHref}
                 hierarchy="primary"
                 size="md"
                 aria-label={`View certificate: ${program.title}`}
-                className="max-md:h-11 max-md:flex-1"
+                className={styles.view}
               >
                 View certificate
               </ButtonLink>
@@ -173,19 +167,19 @@ export function ProgramCertificateGoal({ e, program }: { e: Enrolment; program: 
               />
             </div>
           ) : null}
-          <ul className="sk-text-body-small-regular mt-auto flex flex-col gap-1 text-sko-text-subtle">
-            <li className="inline-flex items-center gap-1.5">
-              <Icon icon={Award} size={16} className="text-sko-icon-subtle" aria-hidden />
+          <ul className={`sk-text-body-small-regular ${styles.gives}`}>
+            <li className={styles.give}>
+              <Icon icon={Award} size={16} className={styles.giveIcon} aria-hidden />
               {partners.length
                 ? `Issued with ${partners.join(" and ")}`
                 : "Issued by SkillUp Online"}
             </li>
-            <li className="inline-flex items-center gap-1.5">
-              <Icon icon={Check} size={16} className="text-sko-icon-subtle" aria-hidden />A
+            <li className={styles.give}>
+              <Icon icon={Check} size={16} className={styles.giveIcon} aria-hidden />A
               certificate ID anyone can verify
             </li>
-            <li className="inline-flex items-center gap-1.5">
-              <Icon icon={Check} size={16} className="text-sko-icon-subtle" aria-hidden />
+            <li className={styles.give}>
+              <Icon icon={Check} size={16} className={styles.giveIcon} aria-hidden />
               Ready to share on LinkedIn
             </li>
           </ul>

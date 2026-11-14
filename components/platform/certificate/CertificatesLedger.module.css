@@ -1,0 +1,284 @@
+/* A card of the ledger: bg/page, 1px border/subtle, radius card. */
+.card {
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+/* Inner corners: the card radius minus its 1px border (concentric radius rule). */
+.innerTop {
+  border-top-left-radius: calc(var(--sk-radius-card) - 1px);
+  border-top-right-radius: calc(var(--sk-radius-card) - 1px);
+}
+.innerBottom {
+  border-bottom-right-radius: calc(var(--sk-radius-card) - 1px);
+  border-bottom-left-radius: calc(var(--sk-radius-card) - 1px);
+}
+.textDefault {
+  color: var(--color-text-default);
+}
+.textSubtle {
+  color: var(--color-text-subtle);
+}
+
+/* A small sheet of the certificate, and the empty one of a row with none yet. */
+.sheet {
+  position: relative;
+  aspect-ratio: 1123/794;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--sk-radius-control);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+  container-type: inline-size;
+}
+.sheetFill {
+  position: absolute;
+  inset: 0px;
+}
+.thumbSize {
+  width: 56px;
+}
+.emptySheet {
+  display: flex;
+  aspect-ratio: 1123/794;
+  width: 56px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  border: 1px dashed var(--color-border-default);
+  background-color: var(--color-bg-subtle);
+}
+.mutedIcon {
+  color: var(--color-icon-muted);
+}
+
+/* View + Share. */
+.earnedActions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+/* One certificate as a row: sheet · title · status · actions (desktop, under the column labels). */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: flex-start;
+  column-gap: 12px;
+  row-gap: 6px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.thumbLink {
+  grid-row: span 3 / span 3;
+  align-self: flex-start;
+  border-radius: var(--sk-radius-control);
+  transition-property: opacity;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.titleBlock {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.chevron {
+  grid-row: span 2 / span 2;
+  align-self: center;
+  color: var(--color-icon-muted);
+}
+.status {
+  grid-column-start: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.earned {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 4px;
+}
+.actionsCell {
+  grid-column-start: 2;
+}
+.actionsHidden {
+  display: none;
+}
+.actionsShown {
+  display: flex;
+  padding-top: 4px;
+}
+@media (hover: hover) {
+  .thumbLink:hover {
+    opacity: 0.8;
+  }
+  .titleLink:hover {
+    text-decoration-line: underline;
+  }
+}
+
+/* A program: its certificate, then the bar that shows or hides its course rows. */
+.programHead {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.toggle {
+  display: flex;
+  min-height: 44px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 10px 16px;
+  text-align: left;
+  color: var(--color-text-muted);
+}
+@media (hover: hover) {
+  .toggle:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.toggleIcon {
+  flex-shrink: 0;
+  transition-property: transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.toggleIconOpen {
+  transform: rotate(180deg);
+}
+/* The course rows, one step in on a rail. */
+.courses {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 4px 16px;
+}
+.courses > :not([hidden]) ~ :not([hidden]),
+.single > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 0px;
+  border-color: var(--color-border-subtle);
+}
+.course {
+  border-left-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 12px;
+}
+.single {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* The ledger: the two Button groups, the column labels, the cards. */
+.ledger {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.columns {
+  display: none;
+  grid-template-columns: 80px minmax(0, 1fr) 220px 200px;
+  column-gap: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: var(--color-text-subtle);
+}
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-grid-gap);
+}
+
+@media (max-width: 767.98px) {
+  .view {
+    height: 44px;
+  }
+  /* A row with no certificate is a link to its page: the whole row. */
+  .rowLink::after {
+    position: absolute;
+    inset: 0px;
+    content: "";
+  }
+  .segmented {
+    display: flex;
+    width: 100%;
+  }
+  .segmented > button {
+    flex: 1 1 0%;
+  }
+}
+
+@media (min-width: 768px) {
+  .thumbSize,
+  .emptySheet {
+    width: 80px;
+  }
+  .row {
+    grid-template-columns: 80px minmax(0, 1fr) 220px 200px;
+    align-items: center;
+    column-gap: 16px;
+  }
+  .thumbLink {
+    grid-row: span 1 / span 1;
+    align-self: center;
+  }
+  .mobileOnly {
+    display: none;
+  }
+  .status {
+    grid-column-start: auto;
+  }
+  .earned {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .actionsCell {
+    grid-column-start: auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .actionsShown {
+    padding-top: 0px;
+  }
+  .programHead {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .toggle {
+    min-height: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .courses {
+    padding-left: 40px;
+    padding-right: 20px;
+  }
+  .course {
+    padding-left: 16px;
+  }
+  .single {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .filters {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .columns {
+    display: grid;
+  }
+}

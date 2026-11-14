@@ -1,0 +1,77 @@
+/* A tab's main column: its blocks are stack-gap apart. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+
+/* The tab bar: bg/page across the page on a 1px border/subtle rule (an inset shadow). */
+.bar {
+  background-color: var(--color-bg-page);
+  box-shadow: inset 0 -1px 0 0 var(--color-border-subtle);
+}
+@media (forced-colors: active) {
+  .bar {
+    border-bottom-width: 1px;
+    border-color: var(--color-border-subtle);
+  }
+}
+.barInner {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: var(--sk-layout-band-x);
+  padding-top: 12px;
+}
+
+/* The body: the tab panels and, on FAQs and About, the 320 sidebar. */
+.body {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  flex-direction: column;
+  gap: var(--sk-layout-column-gap);
+  padding-left: var(--sk-layout-band-x);
+  padding-right: var(--sk-layout-band-x);
+  padding-bottom: 32px;
+  padding-top: 32px;
+}
+.main {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+
+@media (max-width: 767.98px) {
+  /* The tabs grow their target to 44 upwards: the "larger targets" min-height is off here. */
+  .barInner [role="tab"] {
+    min-height: 0px;
+  }
+}
+
+@media (min-width: 768px) {
+  .barInner {
+    padding-left: var(--sk-layout-band-x);
+    padding-right: var(--sk-layout-band-x);
+    padding-top: 0px;
+  }
+  .body {
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: 48px;
+    padding-top: 32px;
+  }
+  .aside {
+    width: 320px;
+    flex-shrink: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .body {
+    padding-bottom: 80px;
+    padding-top: 40px;
+  }
+}

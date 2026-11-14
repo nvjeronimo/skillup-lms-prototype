@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { BookOpen, ChevronRight } from "lucide-react";
@@ -13,11 +11,12 @@ import { useLmsStore } from "@/lib/store";
 import type { Program } from "@/lib/platform/program";
 import { MY_LEARNING_PROGRAMS_HREF } from "@/lib/platform/routes";
 import { FadeImage } from "@/components/atoms/FadeImage";
+import styles from "./ProgramHeader.module.css";
 
 /* Breadcrumb item (DS `_Breadcrumb button base`): body-medium/Semibold, text/subtle; the
    current page is text/primary. 20px tall as drawn. The target is 44px below desktop and
    24px on desktop (WCAG 2.5.8); the negative margin keeps the breadcrumb at its drawn height. */
-const CRUMB = "sk-text-body-medium-semibold relative inline-flex items-center after:absolute after:inset-x-0 after:-inset-y-3 after:content-['']";
+const CRUMB = `sk-text-body-medium-semibold ${styles.crumb}`;
 
 /**
  * DS `LMS/Platform/Course-Detail/Course-Header`, Kind=Program, on its three breakpoints: the
@@ -52,12 +51,12 @@ export function ProgramHeader({ program }: { program: Program }) {
     <header
       data-theme="dark"
       data-skin={mounted && skin !== "teal" ? skin : undefined}
-      className="relative overflow-hidden bg-sko-bg-subtle"
+      className={styles.header}
     >
-      <div className="relative mx-auto w-full max-w-[1280px] px-layout-band-x pb-6 pt-4 md:pb-8 lg:pb-10 lg:pt-5">
+      <div className={styles.inner}>
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-[103px] -top-[100px] size-[273px] rounded-pill opacity-[0.35] md:-right-[73px] md:-top-[110px] lg:-right-[100px] lg:-top-[100px] lg:size-[360px]"
+          className={styles.hatch}
           style={{
             backgroundImage:
               "repeating-linear-gradient(45deg, var(--color-border-primary) 0 1px, transparent 1px 7.07px)",
@@ -65,43 +64,43 @@ export function ProgramHeader({ program }: { program: Program }) {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-[56px] top-[256px] size-[147px] rounded-pill bg-sko-bg-primary opacity-[0.12] md:left-auto md:right-[205px] md:top-[29px] md:size-[220px] lg:right-[280px] lg:top-[60px]"
+          className={styles.dot}
         />
 
-        <nav aria-label="Breadcrumb" className="relative">
-          <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 md:gap-x-2">
-            <li className="flex items-center gap-1.5 md:gap-2">
+        <nav aria-label="Breadcrumb" className={styles.nav}>
+          <ol className={styles.crumbs}>
+            <li className={styles.crumbItem}>
               <Link
                 href="/platform/my-learning"
-                className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}
+                className={`${CRUMB} ${styles.crumbLink}`}
               >
                 My Learning
               </Link>
-              <Icon icon={ChevronRight} size={16} aria-hidden className="text-sko-icon-muted" />
+              <Icon icon={ChevronRight} size={16} aria-hidden className={styles.chevron} />
             </li>
-            <li className="flex items-center gap-1.5 md:gap-2">
+            <li className={styles.crumbItem}>
               {/* Programs is a tab of My Learning. */}
               <Link
                 href={MY_LEARNING_PROGRAMS_HREF}
-                className={`${CRUMB} text-sko-text-subtle transition-colors hover:text-sko-text-default`}
+                className={`${CRUMB} ${styles.crumbLink}`}
               >
                 Programs
               </Link>
-              <Icon icon={ChevronRight} size={16} aria-hidden className="hidden text-sko-icon-muted lg:block" />
+              <Icon icon={ChevronRight} size={16} aria-hidden className={styles.chevronLast} />
             </li>
             {/* Below desktop the DS breadcrumb stops at the parent: the title is the <h1> right under it. */}
-            <li className="hidden min-w-0 items-center lg:flex">
-              <span aria-current="page" className={`${CRUMB} text-sko-text-primary`}>
+            <li className={styles.crumbCurrentItem}>
+              <span aria-current="page" className={`${CRUMB} ${styles.crumbCurrent}`}>
                 {program.title}
               </span>
             </li>
           </ol>
         </nav>
 
-        <div className="relative mt-4 flex flex-col gap-4 md:flex-row md:items-start md:gap-6 lg:mt-[18.75px] lg:gap-10 lg:pt-6">
-          <div className="flex min-w-0 flex-1 flex-col gap-4 lg:min-h-[228.75px] lg:gap-0">
+        <div className={styles.content}>
+          <div className={styles.titleBlock}>
             {/* Below desktop the row is 36 tall: it is where the partner logos sit on a course. */}
-            <div className="flex h-9 items-center justify-between gap-2 lg:h-auto lg:py-3">
+            <div className={styles.typeRow}>
               <CourseTypeBadge value="Program" />
               {/* DS Course-Header Kind=Program (1.1): the partner logos at the end of the row,
                   Provider-Partner-Badge Type=Logo, Theme=Dark (the band is data-theme="dark"); the
@@ -110,10 +109,10 @@ export function ProgramHeader({ program }: { program: Program }) {
                 <ul
                   aria-label="Partners"
                   data-mock="Partner logos have no field: org is the platform's own key"
-                  className="flex items-center gap-2"
+                  className={styles.partners}
                 >
                   {partners.map((partner) => (
-                    <li key={partner} className="flex">
+                    <li key={partner} className={styles.badgeItem}>
                       <ProviderBadge value={partner} type="logo" chip="page" />
                     </li>
                   ))}
@@ -121,38 +120,38 @@ export function ProgramHeader({ program }: { program: Program }) {
               ) : null}
             </div>
 
-            <div className="flex items-start gap-4">
+            <div className={styles.titleRow}>
               {/* The cover fades in over its bg/muted placeholder once loaded (motion-matrix §7.9): the
                   placeholder is the frame, so it stays behind the image and if the image fails. */}
               <span
-                className="hidden size-[88px] shrink-0 overflow-hidden rounded-card bg-sko-bg-muted md:block"
+                className={styles.cover}
               >
-                <FadeImage src={program.imageSrc} alt="" className="block size-full object-cover" />
+                <FadeImage src={program.imageSrc} alt="" className={styles.coverImage} />
               </span>
-              <h1 className="sk-text-headline-large-semibold min-w-0 flex-1 text-sko-text-default">
+              <h1 className={`sk-text-headline-large-semibold ${styles.title}`}>
                 {program.title}
               </h1>
             </div>
 
-            <ul aria-label="Format and level" className="flex flex-wrap items-start gap-2 lg:py-3">
-              <li className="flex">
+            <ul aria-label="Format and level" className={styles.format}>
+              <li className={styles.badgeItem}>
                 <DeliveryModeBadge value={program.deliveryMode} />
               </li>
-              <li className="flex">
+              <li className={styles.badgeItem}>
                 <DifficultyBadge value={program.difficulty} />
               </li>
             </ul>
 
-            <ul aria-label="Program facts" className="flex flex-wrap items-center gap-2 py-3">
+            <ul aria-label="Program facts" className={styles.facts}>
               {stats.map((stat, i) => (
-                <li key={stat} className="flex items-center gap-2">
+                <li key={stat} className={styles.fact}>
                   {i > 0 ? (
-                    <span aria-hidden className="h-[19px] border-l border-sko-border-default" />
+                    <span aria-hidden className={styles.factRule} />
                   ) : null}
                   {/* The DS row is 19 tall (the height of its separators); the 20px line is centred on it. */}
-                  <span className="sk-text-body-medium-regular flex h-[19px] items-center gap-1.5 text-sko-text-default">
+                  <span className={`sk-text-body-medium-regular ${styles.factText}`}>
                     {i === 0 ? (
-                      <Icon icon={BookOpen} size={18} aria-hidden className="text-sko-icon-default" />
+                      <Icon icon={BookOpen} size={18} aria-hidden className={styles.factIcon} />
                     ) : null}
                     {stat}
                   </span>
@@ -165,10 +164,10 @@ export function ProgramHeader({ program }: { program: Program }) {
             data-mock="Program progress is not sent by the Course Home APIs"
             aria-label={program.progress.label}
             // The DS stroke is inside the card and the CSS border is outside the padding: 15 + 1 = the DS 16.
-            className="flex w-full shrink-0 flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
+            className={styles.progress}
           >
-            <div className="flex items-end justify-between gap-3">
-              <p className="sk-text-headline-medium-bold text-sko-text-default">
+            <div className={styles.progressTop}>
+              <p className={`sk-text-headline-medium-bold ${styles.percent}`}>
                 <ArrivalCount value={`${program.progress.percent}%`} />
               </p>
               <ProgressCardLabel complete={program.progress.percent >= 100} label={program.progress.label} />
@@ -179,11 +178,11 @@ export function ProgramHeader({ program }: { program: Program }) {
               label={program.progress.label}
               tone={program.progress.percent >= 100 ? "complete" : "progress"}
             />
-            <p className="sk-text-body-small-regular text-sko-text-subtle">{program.progress.status}</p>
-            <ButtonLink href={program.progress.href} size="lg" className="w-full">
+            <p className={`sk-text-body-small-regular ${styles.note}`}>{program.progress.status}</p>
+            <ButtonLink href={program.progress.href} size="lg" className={styles.cta}>
               {program.progress.cta}
             </ButtonLink>
-            <p className="sk-text-body-small-regular text-sko-text-subtle">{program.progress.footer}</p>
+            <p className={`sk-text-body-small-regular ${styles.note}`}>{program.progress.footer}</p>
           </section>
         </div>
       </div>

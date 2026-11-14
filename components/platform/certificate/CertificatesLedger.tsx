@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { Award, ChevronDown, ChevronRight, Search } from "lucide-react";
@@ -18,6 +16,7 @@ import {
 import { enrolments, type CourseLine, type Enrolment } from "@/lib/platform/certificate-enrolments";
 import { earnedIssuedValue, type EarnedCertificate } from "@/lib/platform/certificates";
 import { cn } from "@/lib/utils";
+import styles from "./CertificatesLedger.module.css";
 
 /**
  * The Certificates ledger (Nelson, 30 Oct 2026; chosen from the proposals of PR 437: the Ledger,
@@ -34,11 +33,10 @@ import { cn } from "@/lib/utils";
  */
 const MOCK =
   "No API says whether a program certificate is earned: counted here from the course rows";
-const CARD = "rounded-card border border-sko-border-subtle bg-sko-bg-page";
-// token-lint-disable-next-line inner corner = card radius minus the 1 px border (concentric radius rule)
-const INNER_TOP = "rounded-t-[calc(var(--sk-radius-card)-1px)]";
-// token-lint-disable-next-line inner corner = card radius minus the 1 px border (concentric radius rule)
-const INNER_BOTTOM = "rounded-b-[calc(var(--sk-radius-card)-1px)]";
+const CARD = styles.card;
+/* Inner corners: card radius minus the 1 px border (concentric radius rule). */
+const INNER_TOP = styles.innerTop;
+const INNER_BOTTOM = styles.innerBottom;
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 const issuedOn = (e: EarnedCertificate) => e.certificate.document.issuedOn;
 
@@ -66,11 +64,11 @@ function Sheet({ e, className }: { e: EarnedCertificate; className?: string }) {
   return (
     <div
       className={cn(
-        "relative aspect-[1123/794] shrink-0 overflow-hidden rounded-control border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]",
+        styles.sheet,
         className,
       )}
     >
-      <div className="absolute inset-0">
+      <div className={styles.sheetFill}>
         <CertificateDocument
           data={e.certificate.document}
           label={`Certificate of completion: ${certificateLearner(e.certificate.document)}, ${e.certificate.title}`}
@@ -83,13 +81,13 @@ function Sheet({ e, className }: { e: EarnedCertificate; className?: string }) {
 /** View + Share, the two actions every earned row carries. */
 function EarnedActions({ e, primary = false }: { e: EarnedCertificate; primary?: boolean }) {
   return (
-    <div className="flex shrink-0 items-center gap-1.5">
+    <div className={styles.earnedActions}>
       <ButtonLink
         href={e.viewHref}
         hierarchy={primary ? "primary" : "secondary"}
         size="sm"
         aria-label={`View certificate: ${e.certificate.title}`}
-        className="max-md:h-11"
+        className={styles.view}
       >
         {/* Every earned row says what opens (Nelson, 30 Oct 2026); only the hierarchy differs. */}
         View certificate
@@ -105,8 +103,8 @@ function EarnedActions({ e, primary = false }: { e: EarnedCertificate; primary?:
 
 function EmptySheet() {
   return (
-    <div className="flex aspect-[1123/794] w-14 shrink-0 items-center justify-center rounded-control border border-dashed border-sko-border-default bg-sko-bg-subtle md:w-20">
-      <Icon icon={Award} size={20} aria-hidden className="text-sko-icon-muted" />
+    <div className={styles.emptySheet}>
+      <Icon icon={Award} size={20} aria-hidden className={styles.mutedIcon} />
     </div>
   );
 }
@@ -221,9 +219,7 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
   const linkRow = !r.earned;
   return (
     <div
-      className={cn(
-        "relative grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1.5 py-3 md:grid-cols-[80px_minmax(0,1fr)_220px_200px] md:items-center md:gap-x-4",
-      )}
+      className={styles.row}
     >
       {/* The thumb opens the course or program page too, as the title does (Nelson, 30 Oct
           2026); out of the tab order and hidden from readers, since the title link says it. */}
@@ -231,63 +227,63 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
         href={r.href}
         tabIndex={-1}
         aria-hidden="true"
-        className="row-span-3 self-start rounded-control transition-opacity hover:opacity-80 md:row-span-1 md:self-center"
+        className={styles.thumbLink}
       >
-        {r.earned ? <Sheet e={r.earned} className="w-14 md:w-20" /> : <EmptySheet />}
+        {r.earned ? <Sheet e={r.earned} className={styles.thumbSize} /> : <EmptySheet />}
       </Link>
-      <div className="flex min-w-0 flex-col gap-0.5">
+      <div className={styles.titleBlock}>
         {lead ? <CourseTypeBadge value="Program" /> : null}
         <h4
           className={cn(
             lead ? "sk-text-title-medium-semibold" : "sk-text-body-large-regular",
-            "text-sko-text-default",
+            styles.textDefault,
           )}
         >
           <Link
             href={r.href}
             className={cn(
-              "hover:underline",
-              linkRow && "max-md:after:absolute max-md:after:inset-0 max-md:after:content-['']",
+              styles.titleLink,
+              linkRow && styles.rowLink,
             )}
           >
             {r.title}
           </Link>
         </h4>
-        <p className="sk-text-body-medium-regular text-sko-text-subtle">{r.context}</p>
+        <p className={`sk-text-body-medium-regular ${styles.textSubtle}`}>{r.context}</p>
       </div>
       {linkRow ? (
         <Icon
           icon={ChevronRight}
           size={20}
           aria-hidden
-          className="row-span-2 self-center text-sko-icon-muted md:hidden"
+          className={cn(styles.chevron, styles.mobileOnly)}
         />
       ) : (
-        <span className="md:hidden" />
+        <span className={styles.mobileOnly} />
       )}
-      <div className="col-start-2 flex flex-col gap-1 md:col-start-auto">
+      <div className={styles.status}>
         {r.earned ? (
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 md:flex-col md:items-start">
+          <div className={styles.earned}>
             <Badge variant="soft" color="success" leftIcon={Award}>
               Earned
             </Badge>
-            <span className="sk-text-body-medium-regular text-sko-text-subtle">
+            <span className={`sk-text-body-medium-regular ${styles.textSubtle}`}>
               {issuedOn(r.earned)}
             </span>
           </div>
         ) : r.state === "not-started" ? (
-          <span className="sk-text-body-medium-regular text-sko-text-subtle">Not started</span>
+          <span className={`sk-text-body-medium-regular ${styles.textSubtle}`}>Not started</span>
         ) : (
           <>
             <PlatformProgressBar value={r.percent} label={`${r.title}: ${r.progress}`} />
-            <span className="sk-text-body-small-regular text-sko-text-subtle">{r.progress}</span>
+            <span className={`sk-text-body-small-regular ${styles.textSubtle}`}>{r.progress}</span>
           </>
         )}
       </div>
       <div
         className={cn(
-          "col-start-2 md:col-start-auto md:flex md:justify-end",
-          linkRow ? "hidden" : "flex pt-1 md:pt-0",
+          styles.actionsCell,
+          linkRow ? styles.actionsHidden : styles.actionsShown,
         )}
       >
         {r.earned ? (
@@ -313,7 +309,7 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
     // their own corners instead (card radius minus the 1px border). The program row sits on the card's
     // own white like the rest, no bg/subtle band (Nelson, 2 Nov 2026).
     <section aria-label={g.title} data-mock={MOCK} className={CARD}>
-      <div className={cn("px-4 md:px-5", INNER_TOP, !rows.length && INNER_BOTTOM)}>
+      <div className={cn(styles.programHead, INNER_TOP, !rows.length && INNER_BOTTOM)}>
         {g.header ? <CertificateRow r={g.header} lead /> : null}
       </div>
       {rows.length ? (
@@ -324,7 +320,8 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
             aria-controls={panelId}
             onClick={() => setOpen((v) => !v)}
             className={cn(
-              "sk-text-body-medium-medium flex min-h-11 w-full items-center justify-between gap-3 border-t border-sko-border-subtle px-4 py-2.5 text-left text-sko-text-muted hover:bg-sko-bg-hover md:min-h-0 md:px-5",
+              "sk-text-body-medium-medium",
+              styles.toggle,
               !open && INNER_BOTTOM,
             )}
           >
@@ -337,17 +334,17 @@ function ProgramGroup({ g, rows }: { g: Group; rows: GroupRow[] }) {
               icon={ChevronDown}
               size={20}
               aria-hidden
-              className={cn("shrink-0 transition-transform", open && "rotate-180")}
+              className={cn(styles.toggleIcon, open && styles.toggleIconOpen)}
             />
           </button>
           {/* The course rows sit one step in, on a rail: they belong to the program above. */}
           <ul
             id={panelId}
             hidden={!open}
-            className="divide-y divide-sko-border-subtle border-t border-sko-border-subtle py-1 pl-4 pr-4 md:pl-10 md:pr-5"
+            className={styles.courses}
           >
             {rows.map((r) => (
-              <li key={r.id} className="border-l border-sko-border-subtle pl-3 md:pl-4">
+              <li key={r.id} className={styles.course}>
                 <CertificateRow r={r} />
               </li>
             ))}
@@ -368,9 +365,9 @@ export function CertificatesLedger({ needle }: { needle: string }) {
     .map((g) => ({ g, rows: visibleRows(g, status, needle) }))
     .filter(({ g, rows }) => rows.length || headerShows(g, status, needle));
   return (
-    <div className="flex flex-col gap-4">
+    <div className={styles.ledger}>
       {/* Two DS Button groups: what (programs or single courses), then which (all, in progress, earned). */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div className={styles.filters}>
         <PlatformSegmented
           label="Type"
           options={[
@@ -379,7 +376,7 @@ export function CertificatesLedger({ needle }: { needle: string }) {
           ]}
           value={type}
           onChange={setType}
-          className="max-md:flex max-md:w-full max-md:[&>button]:flex-1"
+          className={styles.segmented}
         />
         <PlatformSegmented
           label="Status"
@@ -390,21 +387,21 @@ export function CertificatesLedger({ needle }: { needle: string }) {
           ]}
           value={status}
           onChange={setStatus}
-          className="max-md:flex max-md:w-full max-md:[&>button]:flex-1"
+          className={styles.segmented}
         />
       </div>
       {shown.length ? (
         <>
           <div
             aria-hidden="true"
-            className="sk-text-label-small-medium hidden grid-cols-[80px_minmax(0,1fr)_220px_200px] gap-x-4 px-5 text-sko-text-subtle md:grid"
+            className={`sk-text-label-small-medium ${styles.columns}`}
           >
             <span />
             <span>Certificate</span>
             <span>Status</span>
             <span />
           </div>
-          <div className="flex flex-col gap-layout-grid">
+          <div className={styles.groups}>
             {shown.map(({ g, rows }) =>
               g.kind === "program" ? (
                 <ProgramGroup key={g.id} g={g} rows={rows} />
@@ -412,7 +409,7 @@ export function CertificatesLedger({ needle }: { needle: string }) {
                 <ul
                   key={g.id}
                   aria-label={g.title}
-                  className={cn(CARD, "divide-y divide-sko-border-subtle px-4 md:px-5")}
+                  className={cn(CARD, styles.single)}
                 >
                   {rows.map((r) => (
                     <li key={r.id}>

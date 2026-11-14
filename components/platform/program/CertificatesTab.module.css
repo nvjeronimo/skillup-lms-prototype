@@ -1,0 +1,138 @@
+.textDefault {
+  color: var(--color-text-default);
+}
+.textSubtle {
+  color: var(--color-text-subtle);
+}
+
+/* Not earned, with progress: the requirements, 16 apart. */
+.requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.requirement {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Not earned, without progress: the muted preview and what earns it. */
+.notEarned {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* The Certificate document thumbnail: bg/subtle, 1px border/subtle, radius card, sheet ratio. */
+.sheet {
+  position: relative;
+  aspect-ratio: 1123/794;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+  container-type: inline-size;
+}
+.previewSheet {
+  margin-bottom: 8px;
+}
+.sheetFill {
+  position: absolute;
+  inset: 0px;
+}
+.sheetMuted {
+  position: absolute;
+  inset: 0px;
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+.lockLayer {
+  position: absolute;
+  inset: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  border-radius: var(--sk-radius-pill);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 6px 12px;
+  color: var(--color-text-default);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--color-text-default);
+}
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.checkIcon {
+  flex-shrink: 0;
+  color: var(--color-icon-subtle);
+}
+.details {
+  width: 100%;
+}
+
+/* Issued: View + Share on the card's bottom edge, level across a row of stretched cards. */
+.actions {
+  margin-top: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.view {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+
+/* The tab: the intro and the program certificate, then the course certificates. */
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+/* Three across where the column allows, never under 320; each item a two-row subgrid. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(320px, calc((100% - 2 * var(--sk-layout-grid-gap)) / 3))), 1fr));
+  gap: var(--sk-layout-grid-gap);
+}
+.item {
+  grid-row: span 2 / span 2;
+  display: grid;
+  grid-template-rows: subgrid;
+  gap: 8px;
+}
+.courseTitle {
+  align-self: flex-end;
+  color: var(--color-text-default);
+}
+.card {
+  align-self: flex-start;
+}
+
+@media (max-width: 767.98px) {
+  .details,
+  .view {
+    height: 44px;
+  }
+}

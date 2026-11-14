@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
@@ -15,6 +13,7 @@ import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHead
 import { CardShell, SectionIntro } from "./parts";
 import { ProgramCertificateGoal } from "./ProgramCertificateGoal";
 import { programEnrolment } from "@/lib/platform/certificate-enrolments";
+import styles from "./CertificatesTab.module.css";
 
 /**
  * DS `LMS / Course Detail / Certificate card` (5425:566), the two states the page draws.
@@ -67,44 +66,44 @@ export function CertificateCard({
       <CardShell label={label} labelAs={labelAs} gap="lg" className={className}>
         {progress ? (
           <>
-            <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
-            <ul className="flex flex-col gap-4">
+            <p className={`sk-text-body-large-semibold ${styles.textDefault}`}>{certificate.title}</p>
+            <ul className={styles.requirements}>
               {certificate.requirements.map((req) => (
-                <li key={req.title} className="flex flex-col gap-0.5">
-                  <p className="sk-text-body-medium-semibold text-sko-text-default">{req.title}</p>
-                  <p className="sk-text-body-small-regular text-sko-text-subtle">{req.detail}</p>
+                <li key={req.title} className={styles.requirement}>
+                  <p className={`sk-text-body-medium-semibold ${styles.textDefault}`}>{req.title}</p>
+                  <p className={`sk-text-body-small-regular ${styles.textSubtle}`}>{req.detail}</p>
                   <PlatformProgressBar value={req.percent} label={req.title} />
                 </li>
               ))}
             </ul>
           </>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className={styles.notEarned}>
             {preview ? (
-              <div className="relative mb-2 aspect-[1123/794] w-full overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
-                <div className="absolute inset-0 opacity-50 grayscale">
+              <div className={`${styles.sheet} ${styles.previewSheet}`}>
+                <div className={styles.sheetMuted}>
                   <CertificateDocument
                     data={preview}
                     label={`Preview of the course certificate: ${preview.courseTitle}`}
                   />
                 </div>
-                <div className="absolute inset-0 flex items-center justify-center p-4">
-                  <span className="sk-text-body-small-semibold inline-flex items-center gap-1.5 whitespace-nowrap rounded-pill border border-sko-border-subtle bg-sko-bg-page px-3 py-1.5 text-sko-text-default shadow-sm">
+                <div className={styles.lockLayer}>
+                  <span className={`sk-text-body-small-semibold ${styles.lock}`}>
                     <Icon icon={Lock} size={14} aria-hidden />
                     Pass the course
                   </span>
                 </div>
               </div>
             ) : null}
-            <p className="sk-text-body-large-semibold text-sko-text-default">Not earned yet</p>
-            <p className="sk-text-body-medium-regular text-sko-text-subtle">Issued when you:</p>
-            <ul className="sk-text-body-medium-regular flex flex-col gap-1 text-sko-text-default">
+            <p className={`sk-text-body-large-semibold ${styles.textDefault}`}>Not earned yet</p>
+            <p className={`sk-text-body-medium-regular ${styles.textSubtle}`}>Issued when you:</p>
+            <ul className={`sk-text-body-medium-regular ${styles.checks}`}>
               {certificate.requirements.map((req) => (
-                <li key={req.title} className="inline-flex items-center gap-1.5">
+                <li key={req.title} className={styles.check}>
                   <Icon
                     icon={Check}
                     size={16}
-                    className="shrink-0 text-sko-icon-subtle"
+                    className={styles.checkIcon}
                     aria-hidden
                   />
                   {req.title}
@@ -119,7 +118,7 @@ export function CertificateCard({
             hierarchy="secondary"
             size="sm"
             aria-label={`View details: ${label}`}
-            className="w-full max-md:h-11"
+            className={styles.details}
           >
             View details
           </ButtonLink>
@@ -142,25 +141,25 @@ export function CertificateCard({
         </Badge>
       }
     >
-      <div className="relative aspect-[1123/794] w-full overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-subtle [container-type:inline-size]">
-        <div className="absolute inset-0">
+      <div className={styles.sheet}>
+        <div className={styles.sheetFill}>
           <CertificateDocument
             data={certificate.document}
             label={`Certificate of completion: ${certificateLearner(certificate.document)}, ${certificate.title}`}
           />
         </div>
       </div>
-      <p className="sk-text-body-large-semibold text-sko-text-default">{certificate.title}</p>
-      <p className="sk-text-body-medium-regular text-sko-text-subtle">{certificate.issuedLine}</p>
+      <p className={`sk-text-body-large-semibold ${styles.textDefault}`}>{certificate.title}</p>
+      <p className={`sk-text-body-medium-regular ${styles.textSubtle}`}>{certificate.issuedLine}</p>
       {/* mt-auto: in a stretched card the actions sit on the bottom edge, level across the row. */}
-      <div className="mt-auto flex items-start gap-1.5">
+      <div className={styles.actions}>
         {certificate.viewHref ? (
           <ButtonLink
             href={certificate.viewHref}
             hierarchy="primary"
             size="sm"
             aria-label={`View certificate: ${certificate.title}`}
-            className="min-w-0 flex-1 max-md:h-11"
+            className={styles.view}
           >
             View
           </ButtonLink>
@@ -170,7 +169,7 @@ export function CertificateCard({
             size="sm"
             aria-label={`View certificate: ${certificate.title}`}
             onClick={() => showToast("View certificate is not part of this prototype yet")}
-            className="min-w-0 flex-1 max-md:h-11"
+            className={styles.view}
           >
             View
           </Button>
@@ -252,8 +251,8 @@ export function CertificatesTab({ program }: { program: Program }) {
   const enrolment = programEnrolment(program.slug);
   const cards = allCourseCertificates(program);
   return (
-    <div className="flex flex-col gap-layout-section">
-      <div className="flex flex-col gap-layout-stack">
+    <div className={styles.tab}>
+      <div className={styles.stack}>
         <SectionIntro
           title={program.certificatesIntro.title}
           lead={program.certificatesIntro.lead}
@@ -265,7 +264,7 @@ export function CertificatesTab({ program }: { program: Program }) {
           the plain h3 looked lost under the card). */}
       <section
         aria-labelledby="program-course-certificates"
-        className="flex flex-col gap-layout-stack"
+        className={styles.stack}
       >
         <PlatformSectionHeader
           id="program-course-certificates"
@@ -275,11 +274,11 @@ export function CertificatesTab({ program }: { program: Program }) {
         />
         <ul
           data-mock="Certificate artwork, IDs and requirements are not readable yet"
-          className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,max(320px,calc((100%-2*var(--sk-layout-grid-gap))/3))),1fr))] gap-layout-grid"
+          className={styles.cards}
         >
           {cards.map((certificate) => (
-            <li key={certificate.courseId} className="row-span-2 grid grid-rows-subgrid gap-2">
-              <h4 className="sk-text-body-medium-semibold self-end text-sko-text-default">
+            <li key={certificate.courseId} className={styles.item}>
+              <h4 className={`sk-text-body-medium-semibold ${styles.courseTitle}`}>
                 {withoutNumber(certificate.courseLabel)}
               </h4>
               <CertificateCard
@@ -290,7 +289,7 @@ export function CertificatesTab({ program }: { program: Program }) {
                     ? coursePreview(program, certificate.courseLabel)
                     : undefined
                 }
-                className="self-start"
+                className={styles.card}
               />
             </li>
           ))}

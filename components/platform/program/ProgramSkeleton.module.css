@@ -1,0 +1,89 @@
+/* ProgramDetailView's tab bar and body column, with their paddings. */
+.bar {
+  background-color: var(--color-bg-page);
+  box-shadow: inset 0 -1px 0 0 var(--color-border-subtle);
+}
+.body {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  flex-direction: column;
+  gap: var(--sk-layout-column-gap);
+  padding-left: var(--sk-layout-band-x);
+  padding-right: var(--sk-layout-band-x);
+  padding-bottom: 32px;
+  padding-top: 32px;
+}
+.main {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* A Course-Row: its closed height (--row) plus, open, its modules (--mod each). */
+.courseRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 24px;
+  --mod: 137.75px;
+  --row: 413px;
+}
+.courseRowTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.courseRowBar {
+  margin-top: auto;
+}
+
+@media (min-width: 768px) {
+  .body {
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: 48px;
+    padding-top: 32px;
+  }
+  .aside {
+    width: 320px;
+    flex-shrink: 0;
+  }
+  .courseRow {
+    --mod: 96.75px;
+    --row: 391px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .body {
+    padding-bottom: 80px;
+    padding-top: 40px;
+  }
+  .courseRow {
+    --mod: 91.25px;
+    --row: 193px;
+  }
+}
