@@ -1,6 +1,6 @@
 # DS audit in the Publish tokens plugin, part 2: bindings and hand-set values
 
-Date: 14 Nov 2026 · Status: draft, waiting for Nelson's approval · Scope: `figma-plugin/` in
+Date: 14 Nov 2026 · Status: approved by Nelson on 14 Nov (with the Ready for dev scope) · Scope: `figma-plugin/` in
 `skillup-lms-prototype` · Builds on part 1 (`2026-11-13-plugin-ds-audit-design.md`, PR 491)
 
 Part 2 of 5 (see part 1 for the order). Part 1 checks the tokens themselves. Part 2 checks the
@@ -95,9 +95,14 @@ The audit runs in **both files** (Nelson, 14 Nov, option A):
 
 ### 5.2 The scope picker
 
-At the top of the Audit tab, three choices:
+At the top of the Audit tab, four choices:
+- **Ready for dev** (screens role only, and its default; Nelson, 14 Nov): every node whose Figma
+  dev status (`node.devStatus.type`) is `READY_FOR_DEV`, on any page, plus everything inside a
+  marked section (Claude's call; how `devStatus` behaves on a marked section with frames inside
+  is checked on the ICP before building, §7). The plugin only reads the mark: it never sets or
+  clears it, and marking stays with Nelson;
 - **Whole file** (default in the DS);
-- **Pages**: a checklist of the file's pages (default in the ICP: the current page);
+- **Pages**: a checklist of the file's pages;
 - **Selection**: what is selected now, with a count; disabled when nothing is selected.
 
 The last choice per file is kept in `clientStorage` under a key that includes the file key. The
@@ -144,11 +149,11 @@ local copies are intentional.
 | Check | When it fires | Library role | Screens role |
 |---|---|---|---|
 | `binding-missing` | A bound variable id resolves to `null` (deleted, or from a library that is not available) | Blocker | Blocker |
-| `hand-colour` | A visible SOLID fill or stroke with no colour binding | Blocker | Warning |
-| `hand-spacing` | Auto-layout padding (4 sides) or gap (`itemSpacing`, `counterAxisSpacing`) not bound, and not 0 | Blocker | Warning |
-| `hand-radius` | Corner radius (or any of the four) not bound, and not 0 | Blocker | Warning |
-| `hand-stroke` | Stroke weight not bound, on a node with a visible stroke | Blocker | Warning |
-| `no-text-style` | A text node (or a segment) with no text style | Blocker | Warning |
+| `hand-colour` | A visible SOLID fill or stroke with no colour binding | Blocker | Blocker inside Ready for dev, else Warning |
+| `hand-spacing` | Auto-layout padding (4 sides) or gap (`itemSpacing`, `counterAxisSpacing`) not bound, and not 0 | Blocker | Blocker inside Ready for dev, else Warning |
+| `hand-radius` | Corner radius (or any of the four) not bound, and not 0 | Blocker | Blocker inside Ready for dev, else Warning |
+| `hand-stroke` | Stroke weight not bound, on a node with a visible stroke | Blocker | Blocker inside Ready for dev, else Warning |
+| `no-text-style` | A text node (or a segment) with no text style | Blocker | Blocker inside Ready for dev, else Warning |
 | `unused-token` | A DS token no layer in either file uses (§5.6) | Suggestion | not run |
 
 - 0 needs no token (padding 0, radius 0): not a finding (Claude's call).
@@ -157,6 +162,10 @@ local copies are intentional.
 - Layer findings never disable Publish (Claude's call): Publish sends the token JSON, which layer
   problems do not make wrong. `publishBlocked` keeps part 1's meaning (`alias-missing`,
   `mode-missing`).
+- In the screens role a hand-set value blocks only inside a node marked Ready for dev (or inside
+  a marked section), whatever scope was chosen (Nelson, 14 Nov): a screen marked ready with a
+  loose colour tells the developers something untrue. Elsewhere it stays a warning (option 1).
+  So the ICP verdict answers "is what I handed to the developers clean?".
 - The verdict follows part 1: any blocker means "not ready". In the library role a single
   hand-set colour inside a component blocks (Nelson, 14 Nov: the component reaches the developers
   wrong).
@@ -221,6 +230,9 @@ would look unused in the DS).
 - The UI layout of the scope picker, within the part 1 tab style.
 
 ## 7. Not verified when this was written
+
+- How `devStatus` reads on a marked section and on the frames inside it, and on nodes inside a
+  marked frame (to check read-only on the ICP before the plan's first task).
 
 - The ICP's node count and how long a whole-file walk takes.
 - Whether `getStyledTextSegments` is fast enough on long text nodes.
