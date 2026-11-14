@@ -39,7 +39,7 @@
   transition-duration: var(--motion-duration-short3);
 }
 .topicLink::after { content: ""; position: absolute; inset: 0; }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .topicLink:hover { color: var(--color-text-primary); }
 }
 .topicMeta { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
@@ -128,7 +128,7 @@
 @media (min-width: 1024px) {
   .header:focus-visible .tooltip { display: block; }
 }
-@media (min-width: 1024px) and (hover: hover) {
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .header:hover .tooltip { display: block; }
 }
 .arrow {
@@ -156,4 +156,21 @@
 @media (min-width: 768px) {
   .topics { padding-left: 19px; padding-right: 19px; }
   .lesson { padding-bottom: 0; padding-right: 0; }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border on the row; .rounded-card.p-[15px] on its header button, a card in a card); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .module {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .module,
+:global([data-skin="fluent"] [data-platform-page]) .module {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .header {
+  padding: 23px;
+  border-radius: var(--sk-radius-control);
 }

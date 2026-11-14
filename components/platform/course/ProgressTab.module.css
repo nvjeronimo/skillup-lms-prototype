@@ -86,7 +86,7 @@
   transition-duration: var(--motion-duration-short3);
   transition-timing-function: var(--motion-easing-standard);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .bar:hover .gradeTip { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -157,3 +157,29 @@
 }
 .itemTitle { min-width: 0; color: var(--color-text-default); }
 .itemScore { flex-shrink: 0; }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border.p-[15px]); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .grade {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .grade,
+:global([data-skin="fluent"] [data-platform-page]) .grade {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .completion {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .completion,
+:global([data-skin="fluent"] [data-platform-page]) .completion {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

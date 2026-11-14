@@ -44,7 +44,7 @@
   top: -12px;
   bottom: -12px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .handout:hover { color: var(--color-text-primary); }
 }
 [data-large-targets] .handout { min-height: 0; min-width: 0; }
@@ -66,3 +66,18 @@
 }
 .toolText { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 2px; }
 .chevron { flex-shrink: 0; color: var(--color-icon-muted); }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border.p-[15px]); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .mentor {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .mentor,
+:global([data-skin="fluent"] [data-platform-page]) .mentor {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
