@@ -15,7 +15,8 @@
     "test": "vitest run",
     "tokens:build": "node scripts/tokens/build.mjs",
     "tokens:check": "node scripts/tokens/build.mjs --check",
-    "tokens:compare": "node scripts/tokens/compare.mjs"
+    "tokens:compare": "node scripts/tokens/compare.mjs",
+    "tokens:usage": "node scripts/tokens/usage.mjs --write"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.133.0",

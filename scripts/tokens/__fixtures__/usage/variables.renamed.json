@@ -1,0 +1,62 @@
+{
+  "format": "skillup-figma-tokens/1",
+  "fileKey": null,
+  "collections": [
+    {
+      "name": "1. Colors",
+      "modes": [
+        "Light"
+      ],
+      "variables": [
+        {
+          "name": "text/body",
+          "type": "COLOR",
+          "web": "var(--color-text-default)",
+          "values": {
+            "Light": "#000000"
+          }
+        },
+        {
+          "name": "bg/page",
+          "type": "COLOR",
+          "web": "var(--color-bg-page)",
+          "values": {
+            "Light": "#ffffff"
+          }
+        },
+        {
+          "name": "bg/unused",
+          "type": "COLOR",
+          "web": "var(--color-bg-unused)",
+          "values": {
+            "Light": "#eeeeee"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Responsive",
+      "modes": [
+        "Desktop"
+      ],
+      "variables": [
+        {
+          "name": "Radius/card",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "Desktop": 12
+          }
+        },
+        {
+          "name": "Radius/pill",
+          "type": "FLOAT",
+          "web": null,
+          "values": {
+            "Desktop": 999
+          }
+        }
+      ]
+    }
+  ]
+}

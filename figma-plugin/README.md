@@ -66,6 +66,55 @@ Where it goes is set under **Package repository** in that section, and kept on t
   write). The plugin talks to GitHub only (`api.github.com`); GitLab, Azure DevOps or Bitbucket
   repositories can use **Download the JSON** instead.
 
+## Audit before publishing the library
+
+The **Audit** tab reads every variable of the file (read only: it never changes Figma) and says
+whether the tokens are ready for developers. It runs once when the plugin opens, and again with
+**Run again**; **Cancel** stops it. Reading the published tokens needs no GitHub token; only
+Publish and the package pull request do.
+
+Three weights:
+
+- **Blocker.** The verdict reads "Not ready: N blocker(s)". Two blockers also stop the export,
+  because the JSON would be wrong: an alias to a variable that no longer exists, and a mode with
+  no value. While one of those exists, Publish, the package pull request and the download are
+  disabled. The export is read when the plugin opens: once Run again finds them fixed, reopen
+  the plugin to export the fixed tokens. The third blocker is a token the prototype's code still
+  uses that is gone from Figma (see below): it does not stop Publish. After Publish opens a pull
+  request, Publish stays off until the plugin is reopened, so the same export never opens two.
+- **Pending.** Things that are not wrong but not finished: token changes not sent to the
+  prototype yet, and variables or collections not published to the Figma library. One line per
+  kind, with a count; click it to see the names.
+- **Warning** and **Suggestion** (folded, with a count): no Web code syntax, a CSS variable that
+  code uses but no token produces, a collection at Figma's 10-mode limit, no description, all
+  scopes, and primitives that nothing aliases. They never stop anything.
+
+Click a finding to copy `collection/name`.
+
+**What "covered" means.** The line under the verdict names what the audit looked at and what it
+did not. Today it covers the tokens, and the code usage when `tokens/usage.json` on `main` was
+built from the same `variables.json` that is on `main` now. If that file is missing or older,
+"code usage" moves to "not covered": nothing is guessed. Layers, components and docs are not
+covered yet. A library publish status that does not answer in 10 seconds, or a prototype that
+cannot be read, is listed as not covered too.
+
+**Why a sync pull request can wait.** If Publish removes or renames a token whose CSS name the
+prototype's code still uses, the Action does not merge the pull request, whatever the auto-merge
+setting says, and comments with the tokens and the files. The plugin says it after Publish.
+Remove those uses in a code pull request, merge it, then re-run the "Tokens from Figma" job on the
+waiting pull request: the job merges `main` into the sync branch first (in the runner only, it
+does not push that merge), so it sees the code without those uses, and merges. If that merge
+conflicts (anything but `tokens/generated`, which is built again), the job fails and says which
+files: publish again from the plugin. After a sync is merged, the "Token usage map" job refreshes
+`tokens/usage.json` on `main`; until it finishes (about a minute) the Audit tab lists code usage as
+not covered.
+
+A rename counts the way the build names the CSS. Colours and motion take their CSS name from the
+Web code syntax (or, without one, from the Figma name), so renaming them in Figma is fine while the
+syntax stays, and the plugin and the Action judge it the same way. Radius, spacing, type,
+`Layout/*` and `Container/*` take it from the Figma name, so renaming one that code uses is a
+blocker even if its Web syntax stayed.
+
 ## Download the JSON
 
 **Download variables.json** saves the export on this computer, no GitHub needed: the same file

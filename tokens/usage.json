@@ -1,0 +1,1381 @@
+{
+  "format": "skillup-token-usage/1",
+  "variablesBlob": "cc6ceda81999348080f75196d6c741170e19e9d0",
+  "tokens": {
+    "1. SKO-Semantics 🎨/bg/accent-green": {
+      "css": [
+        "--color-bg-accent-green"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/accent-green-soft": {
+      "css": [
+        "--color-bg-accent-green-soft"
+      ],
+      "files": 4,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/accent-red": {
+      "css": [
+        "--color-bg-accent-red"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/accent-red-soft": {
+      "css": [
+        "--color-bg-accent-red-soft"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/accent-teal": {
+      "css": [
+        "--color-bg-accent-teal"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/accent-teal-soft": {
+      "css": [
+        "--color-bg-accent-teal-soft"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/accent-yellow": {
+      "css": [
+        "--color-bg-accent-yellow"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/accent-yellow-soft": {
+      "css": [
+        "--color-bg-accent-yellow-soft"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/error": {
+      "css": [
+        "--color-bg-error"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/error-soft": {
+      "css": [
+        "--color-bg-error-soft"
+      ],
+      "files": 10,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/faint": {
+      "css": [
+        "--color-bg-faint"
+      ],
+      "files": 44,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/fixed": {
+      "css": [
+        "--color-bg-fixed"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/fixed-subtle": {
+      "css": [
+        "--color-bg-fixed-subtle"
+      ],
+      "files": 0,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/hover": {
+      "css": [
+        "--color-bg-hover"
+      ],
+      "files": 20,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/info": {
+      "css": [
+        "--color-bg-info"
+      ],
+      "files": 14,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/info-soft": {
+      "css": [
+        "--color-bg-info-soft"
+      ],
+      "files": 6,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/inverse": {
+      "css": [
+        "--color-bg-inverse"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/muted": {
+      "css": [
+        "--color-bg-muted"
+      ],
+      "files": 26,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/on-media": {
+      "css": [
+        "--color-bg-on-media"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/on-media-soft": {
+      "css": [
+        "--color-bg-on-media-soft"
+      ],
+      "files": 1,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/bg/overlay": {
+      "css": [
+        "--color-bg-overlay"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/overlay-soft": {
+      "css": [
+        "--color-bg-overlay-soft"
+      ],
+      "files": 1,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/bg/page": {
+      "css": [
+        "--color-bg-page"
+      ],
+      "files": 120,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/primary": {
+      "css": [
+        "--color-bg-primary"
+      ],
+      "files": 39,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/primary-hover": {
+      "css": [
+        "--color-bg-primary-hover"
+      ],
+      "files": 7,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/primary-soft": {
+      "css": [
+        "--color-bg-primary-soft"
+      ],
+      "files": 59,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/strong": {
+      "css": [
+        "--color-bg-strong"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/subtle": {
+      "css": [
+        "--color-bg-subtle"
+      ],
+      "files": 84,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/success": {
+      "css": [
+        "--color-bg-success"
+      ],
+      "files": 23,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/success-soft": {
+      "css": [
+        "--color-bg-success-soft"
+      ],
+      "files": 21,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/track": {
+      "css": [
+        "--color-bg-track"
+      ],
+      "files": 21,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/warning": {
+      "css": [
+        "--color-bg-warning"
+      ],
+      "files": 5,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/warning-muted": {
+      "css": [
+        "--color-bg-warning-muted"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/bg/warning-soft": {
+      "css": [
+        "--color-bg-warning-soft"
+      ],
+      "files": 14,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-green": {
+      "css": [
+        "--color-border-accent-green"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-green-soft": {
+      "css": [
+        "--color-border-accent-green-soft"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-red": {
+      "css": [
+        "--color-border-accent-red"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-red-soft": {
+      "css": [
+        "--color-border-accent-red-soft"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-teal": {
+      "css": [
+        "--color-border-accent-teal"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-teal-soft": {
+      "css": [
+        "--color-border-accent-teal-soft"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-yellow": {
+      "css": [
+        "--color-border-accent-yellow"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/accent-yellow-soft": {
+      "css": [
+        "--color-border-accent-yellow-soft"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/default": {
+      "css": [
+        "--color-border-default"
+      ],
+      "files": 44,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/disabled": {
+      "css": [
+        "--color-border-disabled"
+      ],
+      "files": 4,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/error": {
+      "css": [
+        "--color-border-error"
+      ],
+      "files": 6,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/error-soft": {
+      "css": [
+        "--color-border-error-soft"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/focus-gap": {
+      "css": [
+        "--color-border-focus-gap"
+      ],
+      "files": 7,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/info": {
+      "css": [
+        "--color-border-info"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/info-soft": {
+      "css": [
+        "--color-border-info-soft"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/inverse": {
+      "css": [
+        "--color-border-inverse"
+      ],
+      "files": 0,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/primary": {
+      "css": [
+        "--color-border-primary"
+      ],
+      "files": 55,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/primary-muted": {
+      "css": [
+        "--color-border-primary-muted"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/primary-soft": {
+      "css": [
+        "--color-border-primary-soft"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/strong": {
+      "css": [
+        "--color-border-strong"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/subtle": {
+      "css": [
+        "--color-border-subtle"
+      ],
+      "files": 132,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/success": {
+      "css": [
+        "--color-border-success"
+      ],
+      "files": 9,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/success-soft": {
+      "css": [
+        "--color-border-success-soft"
+      ],
+      "files": 7,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/warning": {
+      "css": [
+        "--color-border-warning"
+      ],
+      "files": 10,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/border/warning-soft": {
+      "css": [
+        "--color-border-warning-soft"
+      ],
+      "files": 5,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/accent-green": {
+      "css": [
+        "--color-icon-accent-green"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/accent-red": {
+      "css": [
+        "--color-icon-accent-red"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/accent-teal": {
+      "css": [
+        "--color-icon-accent-teal"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/accent-yellow": {
+      "css": [
+        "--color-icon-accent-yellow"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/default": {
+      "css": [
+        "--color-icon-default"
+      ],
+      "files": 13,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/error": {
+      "css": [
+        "--color-icon-error"
+      ],
+      "files": 8,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/faint": {
+      "css": [
+        "--color-icon-faint"
+      ],
+      "files": 13,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/info": {
+      "css": [
+        "--color-icon-info"
+      ],
+      "files": 5,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/muted": {
+      "css": [
+        "--color-icon-muted"
+      ],
+      "files": 15,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/on-accent-green": {
+      "css": [
+        "--color-icon-on-accent-green"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/on-accent-red": {
+      "css": [
+        "--color-icon-on-accent-red"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/on-accent-teal": {
+      "css": [
+        "--color-icon-on-accent-teal"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/on-accent-yellow": {
+      "css": [
+        "--color-icon-on-accent-yellow"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/on-fixed": {
+      "css": [
+        "--color-icon-on-fixed"
+      ],
+      "files": 1,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/icon/on-media": {
+      "css": [
+        "--color-icon-on-media"
+      ],
+      "files": 6,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/on-primary": {
+      "css": [
+        "--color-icon-on-primary"
+      ],
+      "files": 4,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/on-success": {
+      "css": [
+        "--color-icon-on-success"
+      ],
+      "files": 4,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/primary": {
+      "css": [
+        "--color-icon-primary"
+      ],
+      "files": 38,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/subtle": {
+      "css": [
+        "--color-icon-subtle"
+      ],
+      "files": 22,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/success": {
+      "css": [
+        "--color-icon-success"
+      ],
+      "files": 18,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/success-strong": {
+      "css": [
+        "--color-icon-success-strong"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/icon/warning": {
+      "css": [
+        "--color-icon-warning"
+      ],
+      "files": 13,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/shadow/default": {
+      "css": [
+        "--color-shadow-default"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/accent-blue": {
+      "css": [
+        "--color-text-accent-blue"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-cyan": {
+      "css": [
+        "--color-text-accent-cyan"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-fuchsia": {
+      "css": [
+        "--color-text-accent-fuchsia"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-green": {
+      "css": [
+        "--color-text-accent-green"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/accent-indigo": {
+      "css": [
+        "--color-text-accent-indigo"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-orange": {
+      "css": [
+        "--color-text-accent-orange"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-pink": {
+      "css": [
+        "--color-text-accent-pink"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-purple": {
+      "css": [
+        "--color-text-accent-purple"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-red": {
+      "css": [
+        "--color-text-accent-red"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/accent-teal": {
+      "css": [
+        "--color-text-accent-teal"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/accent-violet": {
+      "css": [
+        "--color-text-accent-violet"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/accent-yellow": {
+      "css": [
+        "--color-text-accent-yellow"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/default": {
+      "css": [
+        "--color-text-default"
+      ],
+      "files": 132,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/disabled": {
+      "css": [
+        "--color-text-disabled"
+      ],
+      "files": 8,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/error": {
+      "css": [
+        "--color-text-error"
+      ],
+      "files": 16,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/info": {
+      "css": [
+        "--color-text-info"
+      ],
+      "files": 3,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/muted": {
+      "css": [
+        "--color-text-muted"
+      ],
+      "files": 89,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-accent-green": {
+      "css": [
+        "--color-text-on-accent-green"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-accent-red": {
+      "css": [
+        "--color-text-on-accent-red"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-accent-teal": {
+      "css": [
+        "--color-text-on-accent-teal"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-accent-yellow": {
+      "css": [
+        "--color-text-on-accent-yellow"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-error": {
+      "css": [
+        "--color-text-on-error"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-fixed": {
+      "css": [
+        "--color-text-on-fixed"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-inverse": {
+      "css": [
+        "--color-text-on-inverse"
+      ],
+      "files": 3,
+      "from": "name"
+    },
+    "1. SKO-Semantics 🎨/text/on-media": {
+      "css": [
+        "--color-text-on-media"
+      ],
+      "files": 4,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-primary": {
+      "css": [
+        "--color-text-on-primary"
+      ],
+      "files": 18,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-primary-hover": {
+      "css": [
+        "--color-text-on-primary-hover"
+      ],
+      "files": 7,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-primary-soft": {
+      "css": [
+        "--color-text-on-primary-soft"
+      ],
+      "files": 20,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-success": {
+      "css": [
+        "--color-text-on-success"
+      ],
+      "files": 4,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/on-warning": {
+      "css": [
+        "--color-text-on-warning"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/placeholder": {
+      "css": [
+        "--color-text-placeholder"
+      ],
+      "files": 9,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/primary": {
+      "css": [
+        "--color-text-primary"
+      ],
+      "files": 74,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/subtle": {
+      "css": [
+        "--color-text-subtle"
+      ],
+      "files": 127,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/success": {
+      "css": [
+        "--color-text-success"
+      ],
+      "files": 20,
+      "from": "web"
+    },
+    "1. SKO-Semantics 🎨/text/warning": {
+      "css": [
+        "--color-text-warning"
+      ],
+      "files": 16,
+      "from": "web"
+    },
+    "2. Responsive 📐/Container/content-max-width": {
+      "css": [
+        "--sk-container-content-max-width"
+      ],
+      "files": 1,
+      "from": "name"
+    },
+    "2. Responsive 📐/Container/content-padding": {
+      "css": [
+        "--sk-container-content-padding"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Container/gap": {
+      "css": [
+        "--sk-container-gap"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Container/gutter": {
+      "css": [
+        "--sk-container-gutter"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Container/max-width": {
+      "css": [
+        "--sk-container-max-width"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Container/text-max-width": {
+      "css": [
+        "--sk-container-text-max-width"
+      ],
+      "files": 10,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/band-x": {
+      "css": [
+        "--sk-layout-band-x"
+      ],
+      "files": 9,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/column-gap": {
+      "css": [
+        "--sk-layout-column-gap"
+      ],
+      "files": 11,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/grid-gap": {
+      "css": [
+        "--sk-layout-grid-gap"
+      ],
+      "files": 5,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/page-top": {
+      "css": [
+        "--sk-layout-page-top"
+      ],
+      "files": 7,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/page-x": {
+      "css": [
+        "--sk-layout-page-x"
+      ],
+      "files": 8,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/section-gap": {
+      "css": [
+        "--sk-layout-section-gap"
+      ],
+      "files": 13,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/side-gap": {
+      "css": [
+        "--sk-layout-side-gap"
+      ],
+      "files": 3,
+      "from": "name"
+    },
+    "2. Responsive 📐/Layout/stack-gap": {
+      "css": [
+        "--sk-layout-stack-gap"
+      ],
+      "files": 16,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/card": {
+      "css": [
+        "--sk-radius-card"
+      ],
+      "files": 93,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/card-inset": {
+      "css": [
+        "--sk-radius-card-inset"
+      ],
+      "files": 17,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/control": {
+      "css": [
+        "--sk-radius-control"
+      ],
+      "files": 93,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/inner": {
+      "css": [
+        "--sk-radius-inner"
+      ],
+      "files": 26,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/none": {
+      "css": [
+        "--sk-radius-none"
+      ],
+      "files": 61,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/pill": {
+      "css": [
+        "--sk-radius-pill"
+      ],
+      "files": 70,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/surface": {
+      "css": [
+        "--sk-radius-surface"
+      ],
+      "files": 18,
+      "from": "name"
+    },
+    "2. Responsive 📐/Radius/track": {
+      "css": [
+        "--sk-radius-track"
+      ],
+      "files": 31,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/10xl": {
+      "css": [
+        "--sk-space-10xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/11xl": {
+      "css": [
+        "--sk-space-11xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/2xl": {
+      "css": [
+        "--sk-space-2xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/3xl": {
+      "css": [
+        "--sk-space-3xl"
+      ],
+      "files": 1,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/4xl": {
+      "css": [
+        "--sk-space-4xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/5xl": {
+      "css": [
+        "--sk-space-5xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/6xl": {
+      "css": [
+        "--sk-space-6xl"
+      ],
+      "files": 1,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/7xl": {
+      "css": [
+        "--sk-space-7xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/8xl": {
+      "css": [
+        "--sk-space-8xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/9xl": {
+      "css": [
+        "--sk-space-9xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/lg": {
+      "css": [
+        "--sk-space-lg"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/md": {
+      "css": [
+        "--sk-space-md"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/none": {
+      "css": [
+        "--sk-space-none"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/sm": {
+      "css": [
+        "--sk-space-sm"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/xl": {
+      "css": [
+        "--sk-space-xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/xs": {
+      "css": [
+        "--sk-space-xs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Spacing/xxs": {
+      "css": [
+        "--sk-space-xxs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/display-2xl": {
+      "css": [
+        "--sk-type-line-height-display-2xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/display-lg": {
+      "css": [
+        "--sk-type-line-height-display-lg"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/display-md": {
+      "css": [
+        "--sk-type-line-height-display-md"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/display-sm": {
+      "css": [
+        "--sk-type-line-height-display-sm"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/display-xl": {
+      "css": [
+        "--sk-type-line-height-display-xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/display-xs": {
+      "css": [
+        "--sk-type-line-height-display-xs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/text-2xs": {
+      "css": [
+        "--sk-type-line-height-text-2xs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/text-lg": {
+      "css": [
+        "--sk-type-line-height-text-lg"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/text-md": {
+      "css": [
+        "--sk-type-line-height-text-md"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/text-sm": {
+      "css": [
+        "--sk-type-line-height-text-sm"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/text-xl": {
+      "css": [
+        "--sk-type-line-height-text-xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/line-height/text-xs": {
+      "css": [
+        "--sk-type-line-height-text-xs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/display-2xl": {
+      "css": [
+        "--sk-type-size-display-2xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/display-lg": {
+      "css": [
+        "--sk-type-size-display-lg"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/display-md": {
+      "css": [
+        "--sk-type-size-display-md"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/display-sm": {
+      "css": [
+        "--sk-type-size-display-sm"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/display-xl": {
+      "css": [
+        "--sk-type-size-display-xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/display-xs": {
+      "css": [
+        "--sk-type-size-display-xs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/text-2xs": {
+      "css": [
+        "--sk-type-size-text-2xs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/text-lg": {
+      "css": [
+        "--sk-type-size-text-lg"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/text-md": {
+      "css": [
+        "--sk-type-size-text-md"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/text-sm": {
+      "css": [
+        "--sk-type-size-text-sm"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/text-xl": {
+      "css": [
+        "--sk-type-size-text-xl"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "2. Responsive 📐/Type/size/text-xs": {
+      "css": [
+        "--sk-type-size-text-xs"
+      ],
+      "files": 0,
+      "from": "name"
+    },
+    "3. Motion/distance/enter": {
+      "css": [
+        "--motion-distance-enter"
+      ],
+      "files": 2,
+      "from": "web"
+    },
+    "3. Motion/distance/nudge": {
+      "css": [
+        "--motion-distance-nudge"
+      ],
+      "files": 9,
+      "from": "web"
+    },
+    "3. Motion/distance/surface": {
+      "css": [
+        "--motion-distance-surface"
+      ],
+      "files": 17,
+      "from": "web"
+    },
+    "3. Motion/duration/long2": {
+      "css": [
+        "--motion-duration-long2"
+      ],
+      "files": 5,
+      "from": "web"
+    },
+    "3. Motion/duration/medium2": {
+      "css": [
+        "--motion-duration-medium2"
+      ],
+      "files": 6,
+      "from": "web"
+    },
+    "3. Motion/duration/short2": {
+      "css": [
+        "--motion-duration-short2"
+      ],
+      "files": 12,
+      "from": "web"
+    },
+    "3. Motion/duration/short3": {
+      "css": [
+        "--motion-duration-short3"
+      ],
+      "files": 12,
+      "from": "web"
+    },
+    "3. Motion/duration/short4": {
+      "css": [
+        "--motion-duration-short4"
+      ],
+      "files": 21,
+      "from": "web"
+    },
+    "3. Motion/easing/emphasized": {
+      "css": [
+        "--motion-easing-emphasized"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "3. Motion/easing/linear": {
+      "css": [
+        "--motion-easing-linear"
+      ],
+      "files": 1,
+      "from": "web"
+    },
+    "3. Motion/easing/standard": {
+      "css": [
+        "--motion-easing-standard"
+      ],
+      "files": 16,
+      "from": "web"
+    },
+    "3. Motion/easing/standard-accelerate": {
+      "css": [
+        "--motion-easing-standard-accelerate"
+      ],
+      "files": 0,
+      "from": "web"
+    },
+    "3. Motion/easing/standard-decelerate": {
+      "css": [
+        "--motion-easing-standard-decelerate"
+      ],
+      "files": 11,
+      "from": "web"
+    }
+  },
+  "dynamic": [
+    "--sk-radius-"
+  ],
+  "unknownCss": [
+    "--btn-ring",
+    "--font-figtree",
+    "--font-inter-tight",
+    "--font-montserrat",
+    "--font-open-sans",
+    "--font-plus-jakarta",
+    "--font-tb-display",
+    "--font-tb-text",
+    "--mod",
+    "--row",
+    "--sk-arrive-delay",
+    "--sk-font-scale",
+    "--sk-halo-angle",
+    "--sk-halo-delay",
+    "--sk-halo-direction",
+    "--sk-ring-angle",
+    "--sk-ring-empty",
+    "--sk-stuck",
+    "--vab-top"
+  ]
+}
