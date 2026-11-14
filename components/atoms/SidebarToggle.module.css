@@ -18,3 +18,9 @@
     background-color: var(--color-bg-subtle);
   }
 }
+
+/* Studio (tokens/direction-studio.css): in the corner of a large container that borrows the control
+   radius (the player's course rail, a <nav>), it takes the control radius (36 − 16 = 20). */
+:global([data-direction="studio"]) :is(nav, aside, section) .toggle.toggle {
+  border-radius: var(--sk-radius-control);
+}

@@ -33,3 +33,9 @@
 .empty {
   fill: transparent;
 }
+
+/* Studio and Harbor: a one-line control is a pill (tokens/direction-studio.css, skin-harbor.css). */
+:global([data-direction="studio"]) button.bookmark.bookmark,
+:global([data-skin="harbor"]) button.bookmark.bookmark {
+  border-radius: 9999px;
+}

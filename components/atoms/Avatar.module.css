@@ -92,3 +92,11 @@
 .offline {
   background-color: var(--color-icon-faint);
 }
+
+/* Studio (tokens/direction-studio.css, `.rounded-track .rounded-control`): the square avatar inside
+   the profile trigger (DemoControlsMenu, a pill track; its 32px avatar, the compact one is 24 in a
+   plain button) is a pill too. The trigger no longer carries the class, so a 32px square avatar in
+   a button takes it. */
+:global([data-direction="studio"]) :is(button, a) .face.square.sm {
+  border-radius: 9999px;
+}

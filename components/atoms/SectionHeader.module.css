@@ -29,3 +29,10 @@
 .collapsed {
   transform: rotate(-90deg);
 }
+
+/* Studio and Harbor: the collapsible row is a one-line button, so a pill
+   (tokens/direction-studio.css, skin-harbor.css). */
+:global([data-direction="studio"]) button.toggle.toggle,
+:global([data-skin="harbor"]) button.toggle.toggle {
+  border-radius: 9999px;
+}
