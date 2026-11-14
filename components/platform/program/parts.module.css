@@ -82,3 +82,17 @@
   align-items: flex-start;
   gap: 2px;
 }
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): their rules selected the
+   Tailwind classes this element had (.rounded-card.border.p-[15px]); they are repeated here for the module class. */
+:global([data-direction="studio"]) .card {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .card,
+:global([data-skin="fluent"] [data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

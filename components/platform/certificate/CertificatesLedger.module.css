@@ -114,7 +114,7 @@
   display: flex;
   padding-top: 4px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .thumbLink:hover {
     opacity: 0.8;
   }
@@ -141,7 +141,7 @@
   text-align: left;
   color: var(--color-text-muted);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .toggle:hover {
     background-color: var(--color-bg-hover);
   }
@@ -281,4 +281,22 @@
   .columns {
     display: grid;
   }
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): their rules selected the
+   Tailwind classes this element had (.rounded-card.border); they are repeated here for the module class. */
+:global([data-direction="studio"]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .card,
+:global([data-skin="fluent"] [data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* The thumb link of a row with no certificate (an <a>.rounded-control holding only an icon) was a
+   pill in Studio and Harbor; one holding a sheet (paragraphs, flex columns) was not. */
+:global([data-direction="studio"]) .thumbLinkEmpty,
+:global([data-skin="harbor"]) .thumbLinkEmpty {
+  border-radius: 9999px;
 }

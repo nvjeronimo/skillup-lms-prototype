@@ -227,7 +227,7 @@ function CertificateRow({ r, lead = false }: { r: GroupRow; lead?: boolean }) {
         href={r.href}
         tabIndex={-1}
         aria-hidden="true"
-        className={styles.thumbLink}
+        className={cn(styles.thumbLink, !r.earned && styles.thumbLinkEmpty)}
       >
         {r.earned ? <Sheet e={r.earned} className={styles.thumbSize} /> : <EmptySheet />}
       </Link>

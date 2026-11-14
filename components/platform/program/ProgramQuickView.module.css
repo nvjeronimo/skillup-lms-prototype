@@ -299,3 +299,10 @@
     padding-right: 24px;
   }
 }
+
+/* Skins: the dialog sits inside the Program card (.rounded-card, not .p-1), so in Studio its
+   .rounded-card-inset boxes took the control radius (tokens/direction-studio.css). */
+:global([data-direction="studio"]) .courses,
+:global([data-direction="studio"]) .certificate {
+  border-radius: var(--sk-radius-control);
+}
