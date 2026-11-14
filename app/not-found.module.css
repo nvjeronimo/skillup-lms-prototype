@@ -36,6 +36,9 @@
 /* Tailwind's outline-none, at zero specificity: the old utility came before globals.css's
    :focus-visible ring, so the ring still showed when main took focus from the skip link. */
 :where(.page) {
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+:where(.page):not(:focus-visible) {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }

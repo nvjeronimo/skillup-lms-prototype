@@ -1,12 +1,15 @@
 /* Direction A · Continue first. Phone first; tablet from 768, desktop from 1024. */
 .main {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
   margin-inline: auto;
   width: 100%;
   max-width: 1024px;
   flex: 1 1 0%;
   padding: 24px 16px 48px;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 .empty { background: var(--color-bg-page); }
 

@@ -1,12 +1,15 @@
 /* Direction C · Live + today: the dashboard as an agenda. Phone first; 768 and 1024 up. */
 .main {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
   margin-inline: auto;
   width: 100%;
   max-width: 1024px;
   flex: 1 1 0%;
   padding: 24px 16px;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 /* Text roles: colour (and the space above); the DS type style sets the rest. */

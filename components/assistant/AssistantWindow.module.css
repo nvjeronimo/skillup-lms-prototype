@@ -434,6 +434,9 @@
 /* No outline at rest. At 0,0,0, as the utility it replaces was below the global :focus-visible
    outline (globals.css): that outline still shows on the floating card's field when focused. */
 :where(.panelInput, .input) {
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+:where(.panelInput:not(:focus-visible), .input):not(:focus-visible) {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }

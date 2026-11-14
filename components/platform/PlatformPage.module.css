@@ -25,6 +25,9 @@
 }
 .main {
   flex: 1 1 0%;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }

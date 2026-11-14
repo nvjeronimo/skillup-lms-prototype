@@ -27,11 +27,14 @@
   background-color: var(--color-bg-subtle);
   padding: 12px;
   color: var(--color-text-default);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.reply:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 .reply::placeholder {
   color: var(--color-text-subtle);

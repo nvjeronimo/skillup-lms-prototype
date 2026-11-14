@@ -1,11 +1,14 @@
 .main {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
   margin-inline: auto;
   width: 100%;
   max-width: 896px;
   flex: 1 1 0%;
   padding: 16px;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 .title {
   color: var(--color-text-default);

@@ -1,7 +1,5 @@
 /* Direction D · Portfolio overview. Phone first; 768, 1024 and 1280 up. */
 .main {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
   margin-inline: auto;
   display: flex;
   width: 100%;
@@ -10,6 +8,11 @@
   flex-direction: column;
   gap: 32px;
   padding: 16px;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 /* Text roles: colour only; the DS type style sets the rest. */
