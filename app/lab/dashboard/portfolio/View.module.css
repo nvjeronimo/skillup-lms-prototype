@@ -56,7 +56,8 @@
 .linkSecondary {
   background: var(--color-bg-page);
   color: var(--color-text-primary);
-  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-primary), 0 0 #0000;
+  --ring-color: var(--color-border-primary);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--ring-color), 0 0 #0000;
 }
 .label { padding-inline: 2px; }
 
@@ -82,7 +83,7 @@
   box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-default), 0 0 #0000;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .linkPrimary:hover {
     background: var(--color-bg-primary-hover);
     color: var(--color-text-on-primary-hover);
@@ -107,7 +108,7 @@
   outline-offset: 2px;
   box-shadow:
     inset 0 0 0 0 #fff,
-    inset 0 0 0 1px var(--color-border-primary),
+    inset 0 0 0 1px var(--ring-color),
     0 0 0 2px var(--color-border-focus-gap),
     0 0 0 4px var(--color-border-primary);
 }
@@ -344,4 +345,39 @@
 }
 @media (min-width: 1280px) {
   .main { max-width: 1264px; }
+}
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio and Harbor: every one-line control link is a pill. */
+:global([data-direction="studio"]) .linkButton,
+:global([data-skin="harbor"]) .linkButton {
+  border-radius: 9999px;
+}
+/* Studio: 16-padded cards take 23 inside and a 44 radius; surfaces float on a shadow, no border
+   (the dashed no-match zone keeps its border). */
+:global([data-direction="studio"]) .pickUp,
+:global([data-direction="studio"]) .card,
+:global([data-direction="studio"]) .cert {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+/* Harbor and Fluent: the secondary is neutral (their ring-inset ring-sko-border-primary rule). */
+:global([data-skin="harbor"]) .linkSecondary {
+  --ring-color: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+:global([data-skin="harbor"]) .linkSecondary:hover {
+  --ring-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+:global([data-skin="fluent"]) .linkSecondary {
+  --ring-color: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+:global([data-skin="fluent"]) .linkSecondary:hover {
+  --ring-color: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
 }

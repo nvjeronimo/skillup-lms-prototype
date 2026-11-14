@@ -15,7 +15,7 @@
 .licenceLink {
   color: var(--color-text-primary);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .licenceLink:hover {
     text-decoration-line: underline;
   }
@@ -37,7 +37,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .languageTrigger:hover {
     color: var(--color-text-default);
   }
@@ -72,7 +72,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .option:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -110,7 +110,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .link:hover {
     border-color: var(--color-icon-default);
     color: var(--color-text-on-primary-soft);
@@ -128,4 +128,23 @@
 }
 .linkLabel {
   padding-inline: 2px;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border on the menus); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .menu {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .menu,
+:global([data-skin="fluent"] [data-platform-page]) .menu {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .menu,
+:global([data-direction="studio"] main#main) .option {
+  border-radius: var(--sk-radius-control);
 }

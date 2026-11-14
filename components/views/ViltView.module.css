@@ -114,3 +114,13 @@
   color: var(--color-text-muted);
   box-shadow: inset 0 0 0 1px var(--color-border-default);
 }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .agenda.agenda { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .preLive.preLive { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .liveSurface.liveSurface { border-radius: var(--sk-radius-control); }
+:global([data-direction="studio"]) .recordingSurface.recordingSurface { border-radius: var(--sk-radius-control); }

@@ -299,3 +299,23 @@
   .panelGrid { grid-template-columns: minmax(0, 1fr) 340px; }
   .weekGrid { grid-template-columns: minmax(0, 1fr) 380px; }
 }
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio: 16-padded cards take 23 inside (at every width) and a 44 radius; the catch-up plan sits
+   in the pace card's corner, so it takes the control radius. Surfaces float on a soft shadow, the
+   border goes (the behind panel's amber too). */
+:global([data-direction="studio"]) .card,
+:global([data-direction="studio"]) .catchUp {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global([data-direction="studio"]) .card .catchUp {
+  border-radius: var(--sk-radius-control);
+}
+:global([data-direction="studio"]) .card,
+:global([data-direction="studio"]) .catchUp,
+:global([data-direction="studio"]) .courses {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}

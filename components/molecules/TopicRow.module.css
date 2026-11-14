@@ -35,7 +35,7 @@
 .active {
   background-color: var(--color-bg-primary-soft);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .idle:hover {
     background-color: var(--color-bg-subtle);
   }

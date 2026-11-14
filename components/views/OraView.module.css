@@ -124,7 +124,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .dropzone:hover { border-color: var(--color-border-primary); }
 }
 .dropzone:focus-visible {
@@ -227,3 +227,23 @@
 .responseInput:focus { border-color: var(--color-border-primary); }
 .responseInput:read-only { background-color: var(--color-bg-subtle); }
 .draftRow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 4px; }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .stepper.stepper { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .card.card { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .dropzone.dropzone { border-radius: var(--sk-radius-control); }
+:global([data-direction="studio"]) .gate.gate { border-radius: var(--sk-radius-control); padding: 23px; border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .waiting.waiting { border-radius: var(--sk-radius-control); }
+:global([data-direction="studio"]) .grade.grade { border-radius: var(--sk-radius-control); }
+:global([data-direction="studio"]) .feedback.feedback { border-radius: var(--sk-radius-control); padding: 23px; }
+/* Studio and Harbor: a one-line field is a pill. */
+:global([data-direction="studio"]) .descriptionInput.descriptionInput { border-radius: 9999px; }
+:global([data-skin="harbor"]) .descriptionInput.descriptionInput { border-radius: 9999px; }
+/* Fluent: Stroke1 frame with the accessible stroke along the bottom edge, white inside (it beat
+   the focus border and the read-only fill before). */
+:global([data-skin="fluent"]) .descriptionInput.descriptionInput { border-color: var(--sk-fluent-stroke1); border-bottom-color: var(--color-border-default); background-color: var(--color-bg-page); }
+:global([data-skin="fluent"]) .responseInput.responseInput { border-color: var(--sk-fluent-stroke1); border-bottom-color: var(--color-border-default); background-color: var(--color-bg-page); }

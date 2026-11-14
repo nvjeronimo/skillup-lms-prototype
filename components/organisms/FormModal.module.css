@@ -91,7 +91,7 @@ select.field {
   border-color: var(--color-border-subtle);
   color: var(--color-text-muted);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .choiceUnchecked:hover {
     background-color: var(--color-bg-hover);
   }
@@ -209,4 +209,20 @@ select.field {
     align-items: center;
     justify-content: flex-end;
   }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (FIELD: an input or select .rounded-control.border, a one-line control). Their rules, kept here. */
+/* Studio, Harbor: a one-line field is a pill (inputs and selects; a textarea keeps its radius). */
+:global([data-direction="studio"]) input.field,
+:global([data-skin="harbor"]) input.field,
+:global([data-direction="studio"]) select.field,
+:global([data-skin="harbor"]) select.field {
+  border-radius: 9999px;
+}
+/* Fluent: Stroke1 frame with the accessible stroke along the bottom; held over :focus, as before. */
+:global([data-skin="fluent"]) .field.field {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
 }

@@ -20,7 +20,7 @@
 @media (min-width: 768px) {
   .selectedFromTablet { background-color: var(--color-bg-primary-soft); }
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .hoverable:hover { background-color: var(--color-bg-faint); }
 }
 .threadText { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 4px; }
@@ -80,7 +80,7 @@
   top: -13px;
   bottom: -13px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .report:hover { color: var(--color-text-default); }
 }
 [data-large-targets] .report { min-height: 0; min-width: 0; }
@@ -150,7 +150,7 @@
 }
 .segmentOn { border-color: var(--color-border-subtle); background-color: var(--color-bg-page); color: var(--color-text-primary); }
 .segmentOff { border-color: transparent; color: var(--color-text-subtle); }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .segmentOff:hover { background-color: var(--color-bg-subtle); color: var(--color-text-default); }
 }
 .threads { border-top-width: 1px; border-color: var(--color-border-subtle); }
@@ -251,4 +251,61 @@
   .list { width: 360px; }
   .messages { padding: 24px; }
   .pending { padding: 24px; }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border with .p-3 / .px-[11px] bands, .rounded-track.bg-sko-bg-track and its .rounded-control segments, the reply field's .rounded-control.border around its input); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) :is(.list, .threadCard) {
+  border-radius: 32px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) :is(.list, .threadCard),
+:global([data-skin="fluent"] [data-platform-page]) :is(.list, .threadCard) {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .segment,
+:global([data-skin="harbor"]) .segment {
+  border-radius: 9999px;
+}
+:global([data-direction="studio"]) .replyField,
+:global([data-skin="harbor"]) .replyField {
+  border-radius: 9999px;
+}
+:global([data-skin="fluent"]) .replyField.replyField {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+:global([data-skin="harbor"]) .segments,
+:global([data-skin="fluent"]) .segments {
+  background-color: var(--color-bg-muted);
+}
+:global([data-skin="harbor"]) .segments > .segment {
+  border-radius: 9999px;
+  border-color: transparent;
+  color: var(--color-text-subtle);
+  font-weight: 500;
+}
+:global([data-skin="harbor"]) .segments > .segmentOn {
+  border-color: transparent;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: var(--sk-shadow-harbor-pill);
+}
+:global([data-skin="fluent"]) .segments > .segment {
+  border-color: transparent;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+:global([data-skin="fluent"]) .segments > .segmentOn {
+  border-color: var(--sk-fluent-stroke1);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: none;
 }

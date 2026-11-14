@@ -472,3 +472,31 @@
 .panelSend:disabled {
   color: var(--color-icon-faint);
 }
+
+/* ── Skins (copied from tokens/direction-studio.css, skin-harbor.css, skin-fluent.css, which
+   selected the Tailwind classes these elements had) ── */
+/* Studio and Harbor: one-line buttons and fields are pills. */
+:global([data-direction="studio"]) :is(.back, .topic, .send, .input),
+:global([data-skin="harbor"]) :is(.back, .topic, .send, .input) {
+  border-radius: 9999px;
+}
+/* The floating card: no border, a soft shadow. */
+:global([data-direction="studio"]) .floating.floating {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .floating.floating,
+:global([data-skin="fluent"] [data-platform-page]) .floating.floating {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* Studio: the First steps card sits in the floating card's corner, so it takes the control radius. */
+:global([data-direction="studio"]) .floating .stepsPanel > div > div:first-child {
+  border-radius: var(--sk-radius-control);
+}
+/* Fluent: the field is Fluent's Input, a Stroke1 frame with the accessible stroke along the bottom. */
+:global([data-skin="fluent"]) .input.input {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}

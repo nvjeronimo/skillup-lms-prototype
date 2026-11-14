@@ -45,3 +45,13 @@
 }
 .hintIcon { margin-top: 2px; color: var(--color-icon-subtle); }
 .hintText { color: var(--color-text-muted); }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio and Harbor: the search field wrapper is a pill. Harbor: no border, on bg/track. Fluent:
+   Stroke1 frame, accessible bottom stroke, white (all over the focus-within border). */
+:global([data-direction="studio"]) .search.search { border-radius: 9999px; }
+:global([data-skin="harbor"]) .search.search { border-radius: 9999px; }
+:global([data-skin="harbor"]) .search.search { border-color: transparent; background-color: var(--color-bg-track); }
+:global([data-skin="fluent"]) .search.search { border-color: var(--sk-fluent-stroke1); border-bottom-color: var(--color-border-default); background-color: var(--color-bg-page); }

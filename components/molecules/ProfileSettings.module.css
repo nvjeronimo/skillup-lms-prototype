@@ -88,7 +88,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .menuRow:hover {
     background-color: var(--color-bg-subtle);
     color: var(--color-text-default);
@@ -112,7 +112,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .toggleRow:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -218,7 +218,7 @@
   border-color: transparent;
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .segmentOff:hover {
     background-color: var(--color-bg-subtle);
     color: var(--color-text-default);
@@ -260,4 +260,55 @@
 }
 .textSize {
   margin-bottom: 6px;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border, rounded-control, rounded-track bg-sko-bg-track); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .panel {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .panel,
+:global([data-skin="fluent"] [data-platform-page]) .panel {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .menuRow,
+:global([data-direction="studio"]) .segment,
+:global([data-skin="harbor"]) .menuRow,
+:global([data-skin="harbor"]) .segment {
+  border-radius: 9999px;
+}
+
+/* The Segmented track (a bg/track row of segments): Harbor and Fluent show it as one group on
+   bg/muted, the pressed segment raised. */
+:global([data-skin="harbor"]) .segmented,
+:global([data-skin="fluent"]) .segmented {
+  background-color: var(--color-bg-muted);
+}
+:global([data-skin="harbor"]) .segmented > .segment {
+  border-radius: 9999px;
+  border-color: transparent;
+  color: var(--color-text-subtle);
+  font-weight: 500;
+}
+:global([data-skin="harbor"]) .segmented > .segment[aria-pressed="true"] {
+  border-color: transparent;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: var(--sk-shadow-harbor-pill);
+}
+:global([data-skin="fluent"]) .segmented > .segment {
+  border-color: transparent;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+:global([data-skin="fluent"]) .segmented > .segment[aria-pressed="true"] {
+  border-color: var(--sk-fluent-stroke1);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: none;
 }

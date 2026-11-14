@@ -79,3 +79,18 @@
 @media (min-width: 1024px) {
   .row { padding-bottom: 24px; }
 }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border.p-[15px]); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .card {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .card,
+:global([data-skin="fluent"] [data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

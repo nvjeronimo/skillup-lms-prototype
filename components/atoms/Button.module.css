@@ -383,3 +383,33 @@
 .check {
   flex-shrink: 0;
 }
+
+/* ── Skins (copied from tokens/direction-studio.css and tokens/skin-harbor.css / skin-fluent.css,
+   which selected the Tailwind classes this button had). Same selector shapes, so they outrank the
+   button's own rules (and a caller's class) as they did before. ── */
+/* Studio and Harbor: every one-line button is a pill; one that holds paragraphs, a column or a
+   list keeps the control radius. Link Buttons (radius 0) never matched. */
+:global([data-direction="studio"])
+  :is(button, a).cornered:not(:has(p, .flex-col, ul, ol, h2, h3, h4), [data-option-state]),
+:global([data-skin="harbor"])
+  :is(button, a).cornered:not(.flex-col, :has(p, .flex-col, ul, ol, h2, h3, h4), [data-option-state]) {
+  border-radius: 9999px;
+}
+/* Harbor: Brand Secondary is the panel's white pill with a light ring and ink text. */
+:global([data-skin="harbor"]) .brandSecondary.brandSecondary.brandSecondary {
+  --btn-stroke: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+:global([data-skin="harbor"]) .brandSecondary.brandSecondary.brandSecondary:hover {
+  --btn-stroke: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+/* Fluent: Brand Secondary is Fluent's default button, Stroke1 and neutral ink. */
+:global([data-skin="fluent"]) .brandSecondary.brandSecondary.brandSecondary {
+  --btn-stroke: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+:global([data-skin="fluent"]) .brandSecondary.brandSecondary.brandSecondary:hover {
+  --btn-stroke: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
+}

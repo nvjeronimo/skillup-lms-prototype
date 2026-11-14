@@ -29,7 +29,7 @@
   display: inline-block;
   padding-block: 10px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .titleLink:hover { text-decoration-line: underline; }
 }
 .status { margin-top: 4px; }

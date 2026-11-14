@@ -145,7 +145,7 @@
   outline-offset: 2px;
   outline-color: var(--color-border-primary);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .optionHover:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -193,4 +193,21 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the card .rounded-card.border, inside the player's <main> .rounded-card). Their rules, kept here. */
+:global([data-direction="studio"]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .card,
+:global([data-skin="fluent"] [data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* Studio: a card inside a card takes the control radius; the question card sits in the player's
+   <main> card (PlayerShell), which carried .rounded-card. */
+:global([data-direction="studio"] main) .card {
+  border-radius: var(--sk-radius-control);
 }

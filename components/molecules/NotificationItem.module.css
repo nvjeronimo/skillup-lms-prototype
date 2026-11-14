@@ -10,7 +10,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .item:hover {
     background-color: var(--color-bg-faint);
   }

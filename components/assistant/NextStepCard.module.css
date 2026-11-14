@@ -25,3 +25,9 @@
   padding-top: 6px;
   padding-bottom: 6px;
 }
+
+/* Studio (tokens/direction-studio.css): a large container that borrows the control radius takes
+   the card radius. */
+:global([data-direction="studio"]) section.card {
+  border-radius: var(--sk-radius-card);
+}

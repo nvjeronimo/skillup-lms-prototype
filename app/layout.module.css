@@ -25,3 +25,10 @@
   white-space: normal;
   padding: 12px 16px;
 }
+
+/* Skins (tokens/direction-studio.css and skin-harbor.css selected the Tailwind class
+   .rounded-control on a one-line link): the skip link is a pill there. */
+:global([data-direction="studio"]) .skip,
+:global([data-skin="harbor"]) .skip {
+  border-radius: 9999px;
+}

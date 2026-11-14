@@ -46,8 +46,30 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .download:hover {
     background-color: var(--color-bg-primary-soft);
   }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border, rounded-control); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .download,
+:global([data-skin="harbor"]) .download {
+  border-radius: 9999px;
+}
+:global([data-direction="studio"]) .item {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .item,
+:global([data-skin="fluent"] [data-platform-page]) .item {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .item {
+  border-radius: var(--sk-radius-control);
 }

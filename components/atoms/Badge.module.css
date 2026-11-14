@@ -324,3 +324,22 @@
 .liveGap {
   margin-right: 6px;
 }
+
+/* ── Skins (copied from tokens/skin-harbor.css / skin-fluent.css, which selected the ring + text
+   classes Modern Brand had): a neutral ring and ink text. ── */
+:global([data-skin="harbor"]) .modernBrand.modernBrand.modernBrand {
+  --badge-stroke: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+:global([data-skin="harbor"]) .modernBrand.modernBrand.modernBrand:hover {
+  --badge-stroke: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+:global([data-skin="fluent"]) .modernBrand.modernBrand.modernBrand {
+  --badge-stroke: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+:global([data-skin="fluent"]) .modernBrand.modernBrand.modernBrand:hover {
+  --badge-stroke: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
+}

@@ -21,7 +21,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .downloadAll:hover { border-color: var(--color-icon-default); color: var(--color-text-on-primary-soft); }
 }
 .downloadAll:focus-visible { border-radius: var(--sk-radius-control); background-color: var(--color-bg-faint); }

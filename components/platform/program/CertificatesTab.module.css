@@ -136,3 +136,11 @@
     height: 44px;
   }
 }
+
+/* Skins: the sheet is a .rounded-card.border inside the card shell (.rounded-card). Studio: the
+   control radius and the floating surface; Harbor and Fluent keep the nested card's hairline. */
+:global([data-direction="studio"]) .sheet {
+  border-radius: var(--sk-radius-control);
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}

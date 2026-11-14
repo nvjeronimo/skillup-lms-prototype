@@ -104,7 +104,7 @@
 .optionRight { background-color: var(--color-bg-success-soft); color: var(--color-text-success); }
 .optionWrong { background-color: var(--color-bg-error-soft); color: var(--color-text-error); }
 .optionIdle { background-color: var(--color-bg-page); color: var(--color-text-default); }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .optionOpen:hover { background-color: var(--color-bg-subtle); }
 }
 .optionLabel { flex: 1 1 0%; }
@@ -113,3 +113,14 @@
 .optionIconWrong { flex-shrink: 0; color: var(--color-icon-error); }
 .feedbackRight { color: var(--color-text-success); }
 .feedbackWrong { color: var(--color-text-error); }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .check.check { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .image.image { border-radius: var(--sk-radius-control); }
+/* Studio and Harbor: a one-line control is a pill. */
+:global([data-direction="studio"]) .option.option { border-radius: 9999px; }
+:global([data-skin="harbor"]) .option.option { border-radius: 9999px; }

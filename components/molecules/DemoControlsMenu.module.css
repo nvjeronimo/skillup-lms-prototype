@@ -10,7 +10,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .trigger:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -74,7 +74,7 @@
 .pillOff {
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .pillOff:hover {
     background-color: var(--color-bg-subtle);
     color: var(--color-text-default);
@@ -112,7 +112,7 @@
 .optionOff {
   color: var(--color-text-muted);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .optionOff:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -157,7 +157,7 @@
 .switchOff {
   color: var(--color-text-muted);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .switchOff:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -165,4 +165,19 @@
 .note {
   padding-inline: 4px;
   color: var(--color-text-subtle);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control, rounded-track); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .pill,
+:global([data-direction="studio"]) .triggerCompact,
+:global([data-direction="studio"]) .option,
+:global([data-skin="harbor"]) .pill,
+:global([data-skin="harbor"]) .triggerCompact,
+:global([data-skin="harbor"]) .option {
+  border-radius: 9999px;
+}
+/* The avatar's rounded-control square sat inside the rounded-track trigger: a pill in Studio. */
+:global([data-direction="studio"]) .triggerFull > :first-child > :first-child {
+  border-radius: 9999px;
 }

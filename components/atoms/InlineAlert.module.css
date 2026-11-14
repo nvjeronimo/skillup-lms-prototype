@@ -80,3 +80,11 @@
     color: var(--color-text-default);
   }
 }
+
+/* Studio (tokens/direction-studio.css): a card with 16 inside takes 23 (+1) inside. Its radius
+   would be 44, but the hint only shows inside the assessment's card, and a card in a card takes
+   the control radius (`.rounded-card .rounded-card`); the ancestor no longer carries that class. */
+:global([data-direction="studio"]) .hint.hint {
+  padding: 23px;
+  border-radius: var(--sk-radius-control);
+}

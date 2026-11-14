@@ -105,3 +105,27 @@
 @media (min-width: 1024px) {
   .passedAlert { margin-bottom: 24px; }
 }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border, with p-[15px] on the alert); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .alert {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .alert,
+:global([data-skin="fluent"] [data-platform-page]) .alert {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .module {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .module,
+:global([data-skin="fluent"] [data-platform-page]) .module {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

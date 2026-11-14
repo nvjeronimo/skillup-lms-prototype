@@ -92,3 +92,21 @@
 .drawerClosed { pointer-events: none; }
 .drawerBackdrop { position: absolute; inset: 0; }
 .drawerPanel { position: absolute; left: 0; top: 0; height: 100%; touch-action: pan-y; }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: surfaces float on a soft shadow, the border goes. */
+:global([data-direction="studio"]) .content.content { border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .discuss.discuss { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+/* The content card is the ".rounded-card" ancestor of Studio's nested-card rule
+   ([data-direction="studio"] .rounded-card .rounded-card / .rounded-card:not(.p-1) .rounded-card-inset):
+   every card in a topic (alerts, quiz cards, the video, file rows, empty states) took the control
+   radius from it. This bridge keeps that for descendants still on Tailwind's class names; once a
+   descendant is a module, it needs its own rule (e.g. under [data-arrival-content]). */
+:global([data-direction="studio"]) .content :global(.rounded-card),
+:global([data-direction="studio"]) .content :global(.rounded-card-inset) {
+  border-radius: var(--sk-radius-control);
+}

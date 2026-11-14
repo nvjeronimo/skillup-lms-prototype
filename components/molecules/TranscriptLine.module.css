@@ -32,7 +32,7 @@
   background-color: var(--color-bg-primary-soft);
   box-shadow: inset 3px 0 0 var(--color-border-primary);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .idle:hover {
     background-color: var(--color-bg-subtle);
   }

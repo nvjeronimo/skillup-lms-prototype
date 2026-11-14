@@ -29,3 +29,15 @@
   width: 100%;
   color: var(--color-text-muted);
 }
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): a bordered card floats on
+   a soft shadow instead. */
+:global([data-direction="studio"]) .emptyState.emptyState {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .emptyState.emptyState,
+:global([data-skin="fluent"] [data-platform-page]) .emptyState.emptyState {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
