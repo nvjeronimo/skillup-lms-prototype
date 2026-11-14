@@ -1,0 +1,60 @@
+.footer {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* DS `LMS / Topic · Author & Updated Date`: on a phone the date wraps under the author, 12 below;
+   from 640 it sits beside it, bottom-aligned, 16 apart. */
+.byline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 16px;
+}
+@media (min-width: 640px) {
+  .byline {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 16px;
+  }
+}
+.author {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 0%;
+  align-items: center;
+  gap: 12px;
+}
+.authorText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.name {
+  color: var(--color-text-default);
+}
+.role {
+  color: var(--color-text-muted);
+}
+.updated {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+/* The feedback row: a rule above and below; 12 under the byline, none in Open edX scope. */
+.feedback {
+  border-block-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.feedbackAfterByline {
+  margin-top: 12px;
+}
+[data-scope="edx"] .feedbackAfterByline {
+  margin-top: 0;
+}

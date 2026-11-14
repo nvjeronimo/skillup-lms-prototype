@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CourseHeader } from "./CourseHeader";
+import styles from "./CourseHeader.stories.module.css";
 
 const meta: Meta<typeof CourseHeader> = {
   title: "Molecules/Course Header (Sidebar)",
@@ -15,7 +16,7 @@ const meta: Meta<typeof CourseHeader> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[280px] border border-sko-border-subtle bg-sko-bg-page">
+      <div className={styles.sidebar}>
         <Story />
       </div>
     ),
@@ -34,7 +35,7 @@ export const Collapsed: Story = {
   args: { compact: true, expanded: false },
   decorators: [
     (Story) => (
-      <div className="w-[72px] border border-sko-border-subtle bg-sko-bg-page">
+      <div className={styles.rail}>
         <Story />
       </div>
     ),

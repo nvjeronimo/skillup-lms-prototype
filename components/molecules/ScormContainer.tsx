@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { ExternalLink, Maximize2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { cn } from "@/lib/utils";
+import styles from "./ScormContainer.module.css";
 
 /** loading → running in the page; `window` while it runs in its own window; `error` when it fails. */
 export type ScormState = "loading" | "running" | "window" | "error";
@@ -76,9 +75,9 @@ export function ScormContainer({
   const inPage = state === "loading" || state === "running";
 
   return (
-    <section className={cn("flex flex-col gap-3", className)}>
+    <section className={cn(styles.scorm, className)}>
       {state !== "error" && !bare ? (
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className={styles.controls}>
           {inPage ? (
             <>
               <Button variant="secondary" size="sm" rightIcon={ExternalLink} onClick={onLaunchWindow}>
@@ -102,20 +101,10 @@ export function ScormContainer({
       <div
         ref={frameRef}
         className={cn(
-          "flex w-full flex-col",
-          bare ? "" : "rounded-card border shadow-sk-card",
-          fullscreen
-            ? "h-full overflow-y-auto bg-sko-bg-page"
-            : state === "window"
-              ? ""
-              : frameHeight
-                ? "overflow-hidden"
-                : "aspect-video max-h-[52vh] overflow-y-auto",
-          state === "error"
-            ? "items-center justify-center gap-2 border-sko-border-error bg-sko-bg-error-soft px-10 text-center"
-            : state === "running"
-              ? "border-sko-border-subtle bg-sko-bg-page"
-              : "items-center justify-center gap-2 border-sko-border-subtle bg-sko-bg-subtle px-10 py-8 text-center",
+          styles.frame,
+          !bare && styles.framed,
+          fullscreen ? styles.fullscreen : state === "window" ? "" : frameHeight ? styles.clip : styles.ratio,
+          state === "error" ? styles.error : state === "running" ? styles.running : styles.message,
         )}
         style={frameHeight && !fullscreen && state !== "window" ? { height: frameHeight } : undefined}
         role="group"
@@ -124,20 +113,20 @@ export function ScormContainer({
       >
         {state === "loading" ? (
           <>
-            <span className="sk-text-body-large-semibold text-sko-text-muted">Loading activity…</span>
-            <span className="sk-text-body-medium-regular text-sko-text-muted">
+            <span className={`sk-text-body-large-semibold ${styles.muted}`}>Loading activity…</span>
+            <span className={`sk-text-body-medium-regular ${styles.muted}`}>
               Interactive packages can take a few seconds to start.
             </span>
           </>
         ) : state === "error" ? (
           <>
-            <span className="sk-text-body-large-semibold text-sko-text-error">
+            <span className={`sk-text-body-large-semibold ${styles.errorText}`}>
               This activity couldn&rsquo;t load
             </span>
-            <span className="sk-text-body-medium-regular max-w-md text-sko-text-error">
+            <span className={`sk-text-body-medium-regular ${styles.errorDetail}`}>
               Our activity server didn&rsquo;t respond. Your progress elsewhere is safe.
             </span>
-            <div className="flex flex-wrap justify-center gap-2 pt-2 max-md:w-full max-md:[&>*]:flex-1">
+            <div className={styles.errorActions}>
               <Button variant="primary" size="md" onClick={onRetry}>
                 Try again
               </Button>
@@ -149,17 +138,17 @@ export function ScormContainer({
         ) : state === "window" ? (
           // Row B (B2): the package is open in its own window; this page waits for its result.
           <>
-            <span className="sk-text-body-large-semibold text-sko-text-default">{title}</span>
-            <span className="sk-text-body-medium-regular text-sko-text-muted">
+            <span className={`sk-text-body-large-semibold ${styles.title}`}>{title}</span>
+            <span className={`sk-text-body-medium-regular ${styles.muted}`}>
               Opens in a new window{durationLabel ? ` · about ${durationLabel}` : ""}
             </span>
-            <div className="pt-2">
+            <div className={styles.windowAction}>
               <Button variant="secondary" size="md" rightIcon={ExternalLink} onClick={onLaunchWindow}>
                 Open the activity window
               </Button>
             </div>
             {openedAt ? (
-              <span className="sk-text-body-small-regular text-sko-text-muted">
+              <span className={`sk-text-body-small-regular ${styles.muted}`}>
                 Opened in a new window {openedAt}
               </span>
             ) : null}
@@ -179,7 +168,7 @@ export function ScormContainer({
 
       {/* Only where it is true: on a small screen (it read as noise on desktop). */}
       {state !== "error" && !bare ? (
-        <div className="md:hidden">
+        <div className={styles.phoneOnly}>
           <InlineAlert
             tone="info"
             title="Best viewed on a larger screen"

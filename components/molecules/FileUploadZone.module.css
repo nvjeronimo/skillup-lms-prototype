@@ -1,0 +1,111 @@
+.zone {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.heading,
+.count {
+  color: var(--color-text-default);
+}
+/* The drop target: a dashed border on a soft fill. */
+.drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border-width: 2px;
+  border-style: dashed;
+  border-radius: var(--sk-radius-card);
+  padding: 24px 32px;
+  text-align: center;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* Idle and dragging over look the same today (both border/primary on bg/primary-soft). */
+.dropIdle,
+.dragOver {
+  border-color: var(--color-border-primary);
+  background-color: var(--color-bg-primary-soft);
+}
+.dropIcon {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-page);
+  color: var(--color-icon-primary);
+}
+.prompt,
+.uploadedLabel {
+  color: var(--color-text-muted);
+}
+.browse {
+  color: var(--color-text-primary);
+}
+.limits,
+.size,
+.uploading,
+.remove {
+  color: var(--color-text-subtle);
+}
+.uploadedLabel {
+  margin-bottom: 8px;
+}
+.files {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-control);
+  padding: 12px;
+}
+.type {
+  display: inline-flex;
+  height: 32px;
+  min-width: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-primary-soft);
+  padding-inline: 4px;
+  color: var(--color-text-primary);
+}
+.fileText {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+.done {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text-success);
+}
+.failed {
+  color: var(--color-text-error);
+}
+.remove {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .remove:hover {
+    color: var(--color-text-error);
+  }
+}

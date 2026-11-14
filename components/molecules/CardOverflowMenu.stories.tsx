@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CardOverflowMenu } from "./CardOverflowMenu";
+import styles from "./CardOverflowMenu.stories.module.css";
 
 const meta: Meta<typeof CardOverflowMenu> = {
   title: "Molecules/Card Overflow Menu",
@@ -8,7 +9,7 @@ const meta: Meta<typeof CardOverflowMenu> = {
   parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <div className="flex h-48 w-48 items-start justify-end">
+      <div className={styles.stage}>
         <Story />
       </div>
     ),

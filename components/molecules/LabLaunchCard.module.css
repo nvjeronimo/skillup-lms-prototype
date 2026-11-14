@@ -1,0 +1,47 @@
+/* Everything centred; padding 24 on a phone, 32 on a tablet, 40 on a desktop; gap 8. */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-width: 1px;
+  border-radius: var(--sk-radius-card);
+  padding: 24px;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .card {
+    padding: 32px;
+  }
+}
+@media (min-width: 1024px) {
+  .card {
+    padding: 40px;
+  }
+}
+.default {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+}
+.unavailable {
+  border-color: var(--color-border-error);
+  background-color: var(--color-bg-error-soft);
+}
+.provider {
+  display: contents;
+}
+.text {
+  color: var(--color-text-default);
+}
+.errorText {
+  color: var(--color-text-error);
+}
+/* The action sits 8 lower. */
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+}

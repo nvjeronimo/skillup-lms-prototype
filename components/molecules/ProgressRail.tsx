@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { Check, X, Flag } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./ProgressRail.module.css";
 
 export type RailItemState = "pending" | "current" | "done" | "error" | "flagged";
 
@@ -38,15 +37,12 @@ export function ProgressRail({
 
   return (
     <div
-      className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page px-4 py-3",
-        className,
-      )}
+      className={cn(styles.rail, className)}
       role="group"
       aria-label={label}
     >
-      <span className="sk-text-body-medium-medium text-sko-text-default">{label}</span>
-      <ol className="flex flex-wrap items-center gap-1.5">
+      <span className={`sk-text-body-medium-medium ${styles.label}`}>{label}</span>
+      <ol className={styles.dots}>
         {states.map((s, i) => {
           const isCurrent = i === currentIndex;
           return (
@@ -57,18 +53,18 @@ export function ProgressRail({
                 aria-label={`${itemLabel} ${i + 1}: ${s}`}
                 aria-current={isCurrent ? "step" : undefined}
                 className={cn(
-                  "sk-text-body-small-medium flex h-7 w-7 items-center justify-center rounded-pill border transition-colors",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
+                  "sk-text-body-small-medium",
+                  styles.dot,
                   s === "done"
-                    ? "border-sko-border-success bg-sko-bg-success-soft text-sko-text-success"
+                    ? styles.done
                     : s === "error"
-                      ? "border-sko-border-error bg-sko-bg-error-soft text-sko-text-error"
+                      ? styles.error
                       : s === "flagged"
-                        ? "border-sko-border-warning bg-sko-bg-warning-soft text-sko-text-warning"
+                        ? styles.flagged
                         : isCurrent
-                          ? "border-sko-border-primary bg-sko-bg-primary-soft text-sko-text-primary"
-                          : "border-sko-border-default text-sko-text-subtle hover:bg-sko-bg-subtle",
-                  isCurrent && s !== "pending" ? "ring-2 ring-sko-border-primary ring-offset-1" : "",
+                          ? styles.current
+                          : styles.pending,
+                  isCurrent && s !== "pending" && styles.currentRing,
                 )}
               >
                 {s === "done" ? (

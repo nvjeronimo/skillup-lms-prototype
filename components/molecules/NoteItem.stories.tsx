@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { NoteItem } from "./NoteItem";
+import styles from "./NoteItem.stories.module.css";
 
 const meta: Meta<typeof NoteItem> = {
   title: "Molecules/Note Item",
@@ -16,7 +17,7 @@ const meta: Meta<typeof NoteItem> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-2xl">
+      <div className={styles.column}>
         <Story />
       </div>
     ),
