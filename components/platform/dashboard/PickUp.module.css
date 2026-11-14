@@ -39,7 +39,7 @@
   background-color: var(--color-bg-subtle);
   color: var(--color-text-default);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .optionOff:hover {
     background-color: var(--color-bg-hover);
   }
@@ -80,7 +80,7 @@
   color: var(--color-text-default);
   text-underline-offset: 2px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .headline:hover {
     text-decoration-line: underline;
   }

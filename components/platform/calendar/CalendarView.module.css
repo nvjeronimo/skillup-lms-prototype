@@ -441,7 +441,7 @@
 .missedRow:last-child {
   border-bottom-width: 0px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .eventLink:hover {
     text-decoration-line: underline;
   }

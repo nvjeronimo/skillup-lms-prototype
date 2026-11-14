@@ -207,7 +207,7 @@
 .request:first-child {
   border-top-width: 0px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .link:hover {
     text-decoration-line: underline;
   }

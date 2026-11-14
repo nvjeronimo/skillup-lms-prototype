@@ -27,7 +27,7 @@
   border-color: transparent;
   color: var(--color-icon-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .rest:hover {
     background-color: var(--color-bg-subtle);
   }

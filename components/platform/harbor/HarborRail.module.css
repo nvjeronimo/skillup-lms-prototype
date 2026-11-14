@@ -86,7 +86,7 @@
     display: block;
   }
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .itemIdle:hover {
     background-color: var(--color-bg-hover);
   }

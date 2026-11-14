@@ -125,7 +125,7 @@
 }
 
 /* ── Hover ─────────────────────────────────────────────── */
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .brand.primary:hover {
     background: var(--color-bg-primary-hover);
     color: var(--color-text-on-primary-hover);

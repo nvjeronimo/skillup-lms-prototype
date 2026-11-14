@@ -72,7 +72,7 @@
 .tabOff {
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .tabOff:hover {
     color: var(--color-text-default);
   }

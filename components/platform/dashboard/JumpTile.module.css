@@ -15,7 +15,7 @@
   /* No transition here: the tile had transition-colors, but the global sk-press-card comes after
      Tailwind's utilities and its transition (short2, decelerate) is the one that applied. */
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .tile:hover {
     border-color: var(--color-border-primary);
   }

@@ -93,7 +93,7 @@
   border-color: transparent;
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .segmentRest:hover {
     background-color: var(--color-bg-subtle);
     color: var(--color-text-default);

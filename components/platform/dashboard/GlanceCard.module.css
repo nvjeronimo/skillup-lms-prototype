@@ -55,7 +55,7 @@
   inset: 0;
   border-radius: var(--sk-radius-card-inset);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .link:hover {
     text-decoration-line: underline;
   }

@@ -188,7 +188,7 @@
   outline: 2px solid transparent !important;
   outline-offset: 2px !important;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .ask:hover {
     background-color: var(--color-bg-subtle);
   }

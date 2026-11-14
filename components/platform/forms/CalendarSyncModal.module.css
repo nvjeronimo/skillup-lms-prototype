@@ -28,7 +28,7 @@
 .optionOff {
   border-color: var(--color-border-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .optionOff:hover {
     background-color: var(--color-bg-hover);
   }

@@ -140,7 +140,7 @@
   -webkit-line-clamp: 3;
   min-height: 3lh;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .titleLink:hover {
     text-decoration-line: underline;
   }

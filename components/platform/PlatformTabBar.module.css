@@ -44,7 +44,7 @@
   width: 44px;
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .itemOff:hover {
     background-color: var(--color-bg-hover);
   }
@@ -107,7 +107,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .row:hover {
     background-color: var(--color-bg-hover);
   }

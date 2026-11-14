@@ -40,7 +40,7 @@
 @media (min-width: 768px) {
   .action { height: 28px; }
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .action:hover {
     border-color: var(--color-text-default);
     color: var(--color-text-default);
