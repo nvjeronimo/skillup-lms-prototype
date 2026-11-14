@@ -154,9 +154,40 @@ async function exportTokens() {
 
 // ---- The audit (tokens only; later parts add layers, components and docs) ----
 
-function numberPrefix(name) {
-  const i = String(name).indexOf(" ");
-  return i < 0 ? String(name) : String(name).slice(0, i);
+// The build's Figma → CSS name mapping, copied from scripts/tokens/names.mjs (the plugin cannot
+// import it). audit.test.mjs checks both give the same names for the committed variables.json.
+// `data` has the shape of tokens/figma/variables.json: [{ figma, css }].
+function tokenCssNames(data) {
+  const unvar = (web) => web.replace(/^var\((--[^)]+)\)$/, "$1");
+  const colorName = (v) => (v.web ? unvar(v.web) : "--color-" + v.name.replace(/\//g, "-"));
+  const motionName = (v) => (v.web ? unvar(v.web) : "--motion-" + v.name.replace(/\//g, "-"));
+  const isRadius = (v) => /^Radius\/(?!fixed-)/.test(v.name);
+  const radiusName = (v) => "--sk-radius-" + v.name.split("/")[1];
+  const isSpacing = (v) => /^(Spacing|Container|Layout)\//.test(v.name);
+  const spacingName = (v) => {
+    const [group, key] = v.name.split("/");
+    if (group === "Spacing") return "--sk-space-" + key;
+    if (group === "Layout") return "--sk-layout-" + key;
+    return "--sk-container-" + key;
+  };
+  const isType = (v) => /^Type\/(size|line-height)\//.test(v.name);
+  const typeName = (v) => "--sk-type-" + v.name.split("/")[1] + "-" + v.name.split("/")[2];
+  const collection = (prefix) => data.collections.find((x) => x.name.startsWith(prefix));
+  const out = [];
+  const add = (c, vars, name) => {
+    for (const v of vars) out.push({ figma: c.name + "/" + v.name, css: name(v) });
+  };
+  const colors = collection("1.");
+  if (colors) add(colors, colors.variables.filter((v) => v.type === "COLOR"), colorName);
+  const responsive = collection("2.");
+  if (responsive) {
+    add(responsive, responsive.variables.filter(isRadius), radiusName);
+    add(responsive, responsive.variables.filter(isSpacing), spacingName);
+    add(responsive, responsive.variables.filter(isType), typeName);
+  }
+  const motion = collection("3.");
+  if (motion) add(motion, motion.variables, motionName);
+  return out;
 }
 
 function webCssName(v) {
@@ -245,12 +276,14 @@ async function auditTokens(opts) {
 
   if (useUsage) {
     covered.push("code usage");
-    const liveWeb = new Set();
-    for (const { v, col } of live) {
-      if (col.hiddenFromPublishing) continue;
-      const css = webCssName(v);
-      if (css) liveWeb.add(css);
-    }
+    // The CSS names the live exported variables give, built exactly as the build builds them, so
+    // the plugin and the CI guard agree on what "gone" means: a CSS name the code uses that no live
+    // variable produces any more.
+    const liveData = { collections: cols.filter((c) => !c.hiddenFromPublishing).map((c) => ({
+      name: c.name,
+      variables: live.filter((x) => x.col === c).map(({ v }) => ({ name: v.name, type: v.resolvedType, web: (v.codeSyntax && v.codeSyntax.WEB) || null })),
+    })) };
+    const liveCss = new Set(tokenCssNames(liveData).map((t) => t.css));
     for (const key of Object.keys(usage.tokens || {})) {
       const entry = usage.tokens[key];
       if (!entry || !(entry.files > 0)) continue;
@@ -261,14 +294,7 @@ async function auditTokens(opts) {
       }
       if (colName === null) colName = key.slice(0, Math.max(key.indexOf("/"), 0));
       const varName = key.slice(colName.length + 1);
-      // Match the way the build names it (entry.from, written by scripts/tokens/names.mjs):
-      // "web": the CSS name is the Web code syntax, so a live exported variable must still carry
-      //   it, whatever its Figma name (a rename that keeps it is fine, a changed syntax is not);
-      // "name": the CSS name comes from the Figma name, so the same name must still exist in the
-      //   collection with the same number prefix (a rename breaks the code even if Web syntax stays).
-      const found = entry.from === "web"
-        ? (entry.css || []).some((n) => liveWeb.has(n))
-        : live.some(({ v, col }) => v.name === varName && numberPrefix(col.name) === numberPrefix(colName));
+      const found = (entry.css || []).some((n) => liveCss.has(n));
       if (!found) {
         findings.push({ check: "used-gone", collection: colName, name: varName, text: "used in code (" + plural(entry.files, "file", "files") + "), gone from Figma" });
       }

@@ -118,8 +118,8 @@ GitHub token, the settings and the variable reading. That was my call, stated to
     and it would make every rebuild differ. Freshness is `variablesBlob` (§5.4).
   - `from` says where the CSS name came from: `"web"` when it is the Web code syntax (colours
     and motion that have one), `"name"` when it is derived from the Figma name (radius, spacing,
-    type, `Layout/*`, `Container/*`, and colours or motion without Web syntax). The plugin uses it
-    to judge a rename the way the build does (§5.4).
+    type, `Layout/*`, `Container/*`, and colours or motion without Web syntax). It is information
+    for people; since 14 Nov the plugin no longer reads it (§5.4).
   - A Tailwind key that two theme sections share (`borderRadius.surface` and
     `translate.surface`) counts as a use of both CSS names.
   - `files` is a count, not a list, to keep the file small. With `--verbose` the script prints
@@ -223,15 +223,18 @@ copies the variable name.
 
 - The plugin fetches `tokens/usage.json` from the prototype's `main` through the contents API.
   Usage is keyed by Figma name, so the plugin compares names with no mapping.
-- To find a token "gone from Figma", the plugin follows each entry's `from`, so it agrees with
-  the CI guard (which compares the CSS names `names.mjs` derives) and needs no copy of the
-  mapping:
-  - `from: "web"`: a live exported variable must carry a Web code syntax (with `var()` stripped)
-    that is in the entry's `css`, whatever its Figma name. A rename that keeps the syntax is not
-    reported; a changed syntax is.
-  - `from: "name"`: a live variable with the same name must exist in a collection with the same
-    number prefix. A rename is reported even if the Web syntax stayed, because the build derives
-    the CSS name from the Figma name.
+- To find a token "gone from Figma", the plugin builds the CSS names of the live exported
+  variables with a copy of the `names.mjs` mapping (a test keeps the two equal on the committed
+  `variables.json`) and reports an entry when none of its `css` names is produced any more. It
+  agrees with the CI guard, which compares the same CSS names:
+  - a colour or motion token renamed in Figma with its Web code syntax kept is not reported; one
+    whose syntax changes is, and so is one that gains a syntax with another name;
+  - a colour that loses its Web syntax is reported only if the name derived from its Figma name
+    differs from the old syntax;
+  - radius, spacing, type, `Layout/*` and `Container/*` take the CSS name from the Figma name, so a
+    rename is reported even if the Web syntax stayed.
+  (Until 14 Nov the plugin followed each entry's `from` instead; that missed the third case and
+  flagged the fourth wrongly.)
 - If the file is missing, its `format` is not `skillup-token-usage/1`, or its `variablesBlob` is
   not the blob SHA of the `variables.json` on `main` now, the plugin shows "code usage" under not
   covered, never as passing.

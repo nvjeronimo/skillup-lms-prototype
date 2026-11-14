@@ -110,7 +110,8 @@ files: publish again from the plugin. After a sync is merged, the "Token usage m
 not covered.
 
 A rename counts the way the build names the CSS. Colours and motion take their CSS name from the
-Web code syntax, so renaming them in Figma is fine while the syntax stays. Radius, spacing, type,
+Web code syntax (or, without one, from the Figma name), so renaming them in Figma is fine while the
+syntax stays, and the plugin and the Action judge it the same way. Radius, spacing, type,
 `Layout/*` and `Container/*` take it from the Figma name, so renaming one that code uses is a
 blocker even if its Web syntax stayed.
 

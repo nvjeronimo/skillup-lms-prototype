@@ -293,6 +293,24 @@ describe("auditTokens", () => {
     expect(types).not.toContain("error");
   });
 
+  it("a colour that gains a Web syntax with another name is used-gone (the CSS name changes)", async () => {
+    const { cols, vars } = one({}, { codeSyntax: { WEB: "var(--color-y)" } });
+    const { ctx } = await load(cols, vars);
+    const usage = { format: FORMAT, tokens: { "1. Colour/color/x": { css: ["--color-x"], files: 2, from: "name" } }, unknownCss: [] };
+    const r = await ctx.auditTokens({ usage, usageFresh: true });
+    expect(r.blockers).toHaveLength(1);
+    expect(r.blockers[0]).toMatchObject({ check: "used-gone", collection: "1. Colour", name: "color/x" });
+  });
+
+  it("a colour that loses its Web syntax but derives the same CSS name is not used-gone", async () => {
+    // "text/x" without Web syntax derives --color-text-x, the name its old syntax gave.
+    const { cols, vars } = one({}, { name: "text/x", codeSyntax: {} });
+    const { ctx } = await load(cols, vars);
+    const usage = { format: FORMAT, tokens: { "1. Colour/text/x": { css: ["--color-text-x"], files: 2, from: "web" } }, unknownCss: [] };
+    const r = await ctx.auditTokens({ usage, usageFresh: true });
+    expect(checks(r.blockers)).toEqual([]);
+  });
+
   it("web syntax only in a hidden collection does not save a used token", async () => {
     const h = vr({ id: "p", name: "prim", variableCollectionId: "h", codeSyntax: { WEB: "var(--color-x)" } });
     const hidden = col({ id: "h", name: "0. Primitives", hiddenFromPublishing: true, variableIds: ["p"] });
@@ -329,5 +347,18 @@ describe("auditTokens", () => {
     await send({ type: "audit", usage: null, usageFresh: false });
     expect(posted.map((m) => m.type)).toEqual(["audit-progress", "audit-result"]);
     expect(posted[1].report.verdict).toBe("ready");
+  });
+});
+
+describe("tokenCssNames in the plugin", () => {
+  it("gives the same CSS names as scripts/tokens/names.mjs for the committed variables.json", async () => {
+    const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+    const data = JSON.parse(fs.readFileSync(path.join(root, "tokens/figma/variables.json"), "utf8"));
+    const { tokenCssNames } = await import(path.join(root, "scripts/tokens/names.mjs"));
+    const { ctx } = await load([], []);
+    const fromPlugin = JSON.parse(JSON.stringify(ctx.tokenCssNames(data))).map(({ figma, css }) => ({ figma, css }));
+    const fromBuild = tokenCssNames(data).map(({ figma, css }) => ({ figma, css }));
+    expect(fromBuild.length).toBeGreaterThan(50);
+    expect(fromPlugin).toEqual(fromBuild);
   });
 });
