@@ -66,6 +66,41 @@ button {
   }
 }
 
+/* Global helpers that replace Tailwind's (CSS Modules move, 14 Nov 2026). Plain CSS, outside
+   any layer, so they hold once Tailwind is gone. */
+/* Visually hidden, still read by assistive tech (Tailwind's sr-only). */
+.sk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+/* Undo sk-sr-only (Tailwind's not-sr-only), e.g. a skip link on focus. */
+.sk-not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+/* A loading spinner (Tailwind's animate-spin). */
+@keyframes sk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sk-spin {
+  animation: sk-spin 1s linear infinite;
+}
+
 /* Thin scrollbar for scroll regions — DS Vertical Scroll: 6px wide
    (Scrollbar/width), radius 3 (Scrollbar/radius), no visible track, thumb in
    border/default: thumb colour pending DS rebind (FND-18).

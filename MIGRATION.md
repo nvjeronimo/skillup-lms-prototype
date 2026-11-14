@@ -94,3 +94,53 @@ React 19 changes made: `RefObject<T | null>` in hook signatures, `useRef` needs 
 - `FormField` / `FIELD` (organisms/FormModal) and `SkillUpLogo` are still Tailwind: bottom-up.
 - Token lint (`scripts/check-tokens.mjs`) does not read `.module.css` yet: extend it before the
   fan-out, or it keeps passing while checking nothing.
+
+## Conversion rules (step 4, every file)
+
+The goal: a file uses no Tailwind utility, and every page looks and behaves exactly as before.
+Tailwind stays installed until the last file is done (its reset, preflight, still applies: write
+the modules assuming it).
+
+1. **One `Name.module.css` next to `Name.tsx`**, imported as `styles`. Class names in camelCase
+   by role (`.card`, `.title`, `.actions`), never by look (`.flexCol`, `.mt4`).
+2. **Keep the DOM.** No element added, removed or reordered: the checker compares element by
+   element. `space-y-*` / `divide-*` become child selectors (`.list > * + *`), not wrappers.
+3. **Global classes stay global:** the DS type styles `sk-text-*` (tokens/generated/typography.css)
+   and the project's own helpers in app/globals.css and tokens/*.css (`sk-*`, `tb-*`, …). Replace
+   Tailwind's `sr-only` / `not-sr-only` / `animate-spin` with the globals `sk-sr-only` /
+   `sk-not-sr-only` / `sk-spin`. Do not edit app/globals.css or tokens/: report what you need.
+4. **Values from tokens, as tailwind.config.ts maps them:** `sko-*` colours → `var(--color-*)`
+   (`bg-sko-bg-page` → `var(--color-bg-page)`); `rounded-control` → `var(--sk-radius-control)`;
+   `layout-*` spacing → `var(--sk-layout-*)`; `shadow-sk-card` → `var(--sk-shadow-card)`;
+   `duration-short4` → `var(--motion-duration-short4)`; `ease-standard` →
+   `var(--motion-easing-standard)`; `max-w-text` → `var(--sk-container-text-max-width, 1200px)`.
+   Tailwind's own scale in px (`p-4` = 16px, `gap-1.5` = 6px, `text-sm` = 14px/20px,
+   `shadow-sm` = `0 1px 2px 0 rgb(0 0 0 / 0.05)`). Never a new hex colour.
+5. **Breakpoints:** `md:` → `@media (min-width: 768px)`, `lg:` → `@media (min-width: 1024px)`,
+   `xl:` → 1280, `sm:` → 640; `max-md:` → `@media (max-width: 767.98px)`, `max-lg:` → 1023.98.
+6. **States:** `hover:` → inside `@media (hover: hover)` (the config sets
+   hoverOnlyWhenSupported); `focus-visible:`, `active:`, `disabled:`, `group-hover:` (a
+   `.group:hover .x` with the group's own module class), `peer-*`, `aria-*:`, `data-[…]:`,
+   `has-[…]:`, arbitrary `[&_svg]:` variants → the matching selectors. `dark:` is
+   `@media (prefers-color-scheme: dark)` here (no darkMode in the config): keep that meaning.
+   `forced-colors:` → `@media (forced-colors: active)`. `motion-reduce:` →
+   `@media (prefers-reduced-motion: reduce)`.
+7. **Class strings built in code** (`cn(...)`, constants like `FIELD`, maps by variant) become
+   module classes joined the same way. A `className` prop passed down from a parent keeps
+   working: the parent passes its own module class.
+8. **Exported class constants used by other files** (e.g. `FIELD` from organisms/FormModal):
+   keep the export name; its value becomes the module class.
+9. **Remove `"use client"`** from every file you convert (it means nothing under Vite).
+10. **Do not change props, behaviour, copy or tokens.** If something looks wrong, leave it and
+    report it.
+
+Checks before you finish (all must pass):
+- `node <migtools>/tailwind-left.mjs . <your files>` → 0 left (a word inside user-facing copy
+  that happens to be a utility name is a false positive: say so).
+- `./node_modules/.bin/tsc --noEmit`, `./node_modules/.bin/eslint . --ext .ts,.tsx`,
+  `./node_modules/.bin/vite build`.
+- `node <migtools>/compare.mjs --base http://localhost:4600 --cand http://localhost:<your port>
+  --routes <routes where your components render> --widths 1280,800,375` → All match, and once
+  with `--theme dark`. The base (port 4600) is the build before the conversion.
+- Hover and focus are not in the checker: read each `hover:` / `focus-visible:` you translated
+  once more against the original.
