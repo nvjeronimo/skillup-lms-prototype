@@ -1,0 +1,148 @@
+.frame {
+  overflow-x: auto;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 6px;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.headRow {
+  color: var(--color-text-default);
+}
+/* Columns sit 32 apart: pr-8 on every cell but the last. */
+.colHead {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  padding-right: 32px;
+}
+.colHeadLast {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.colProgress {
+  width: 200px;
+}
+.colEffort {
+  width: 140px;
+}
+.desktopOnly {
+  display: none;
+}
+.row {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.cell {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-right: 32px;
+}
+.cellMuted {
+  color: var(--color-text-muted);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+/* 48 square on Radius/inner (over the thumb's own Radius/control). */
+.thumb {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: var(--sk-radius-inner);
+}
+.itemText {
+  display: flex;
+  min-width: 0px;
+  flex-direction: column;
+}
+.titleLink {
+  color: var(--color-text-default);
+  text-underline-offset: 2px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.meta {
+  color: var(--color-text-subtle);
+}
+.provider {
+  color: var(--color-text-primary);
+}
+.progressStack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.notStarted {
+  color: var(--color-text-subtle);
+}
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bar {
+  flex: 1 1 0%;
+}
+.pct {
+  width: 40px;
+  text-align: right;
+  color: var(--color-text-default);
+}
+.note {
+  color: var(--color-text-muted);
+}
+.actionCell {
+  white-space: nowrap;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: right;
+}
+/* Desktop: Up next and Effort get their own columns; on a tablet they sit under the bar. */
+@media (min-width: 1024px) {
+  .table {
+    min-width: 880px;
+  }
+  .colProgressWide {
+    width: 220px;
+  }
+  .colAction {
+    width: 120px;
+  }
+  .colActionWide {
+    width: 160px;
+  }
+  .desktopOnly {
+    display: table-cell;
+  }
+  .tabletOnly {
+    display: none;
+  }
+}
+@media (hover: hover) {
+  .titleLink:hover {
+    text-decoration-line: underline;
+  }
+}
+
+/* Skin hooks that matched the Tailwind classes (rounded-card + border): Harbor and Fluent cards are
+   borderless on Radius/card's soft shadow (tokens/skin-harbor.css, skin-fluent.css); Studio
+   surfaces float on its own shadow (tokens/direction-studio.css). */
+[data-skin="harbor"] [data-platform-page] .frame,
+[data-skin="fluent"] [data-platform-page] .frame {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-direction="studio"] .frame {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
