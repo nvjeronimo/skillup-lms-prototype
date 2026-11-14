@@ -1,0 +1,180 @@
+/* ── Collapsed: the 72 rail of dots ───────────────────────────── */
+.dot {
+  position: relative;
+  width: 100%;
+}
+.dotBookmark {
+  pointer-events: none;
+  position: absolute;
+  right: 6px;
+  top: 4px;
+  color: var(--color-text-primary);
+}
+.rail {
+  display: flex;
+  height: 100%;
+  width: 72px;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding-block: 16px;
+}
+.railHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+.railScroll {
+  width: 100%;
+  flex: 1 1 0%;
+  overflow-y: auto;
+}
+.railModule {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-block: 8px;
+}
+.railLesson {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.railTopics {
+  width: 100%;
+}
+/* The topic flyout beside a dot, placed by the inline style. */
+.flyout {
+  position: fixed;
+  z-index: 70;
+}
+.flyoutBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 6px 6px 6px 12px;
+  box-shadow: 0 0 transparent, 0 0 transparent, var(--sk-shadow-elevation-3);
+}
+.flyoutTopic {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+.flyoutTitle {
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+
+/* ── Expanded and Mobile ──────────────────────────────────────── */
+.panel {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--color-bg-page);
+}
+.panelMobile {
+  width: 320px;
+}
+/* 3 of 12 columns of the body on a 24px-gutter grid: (width − 11 gutters) / 4 + 2 gutters,
+   never under 280 and never over 400 (decision 037). */
+.panelDesktop {
+  width: calc((100% - 264px) / 4 + 48px);
+  min-width: 280px;
+  max-width: 400px;
+  flex-shrink: 0;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.mobileHeader {
+  display: flex;
+  height: 56px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 16px;
+  padding-right: 8px;
+}
+.ink {
+  color: var(--color-text-default);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+.success {
+  color: var(--color-text-success);
+}
+.close {
+  display: inline-flex;
+  height: 44px;
+  width: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-icon-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .close:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 4px 16px 12px;
+}
+.progressText {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+}
+.list {
+  flex: 1 1 0%;
+  overflow-y: auto;
+}
+.implicitModule {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-block: 8px;
+}
+/* Sticks while its own topics scroll under it, then leaves with them. */
+.moduleHeading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.lessonHeading {
+  padding: 16px 16px 4px;
+  color: var(--color-text-default);
+}

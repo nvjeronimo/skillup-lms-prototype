@@ -1,0 +1,95 @@
+/* Certificate of completion: 720 wide at most, centred. shadow-sk-card won over shadow-lg in
+   the Tailwind build (the later rule), so the card shadow is the one kept. */
+.certificate {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 720px;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0 transparent, 0 0 transparent, var(--sk-shadow-card);
+}
+/* Green header band + check. */
+.band {
+  display: flex;
+  height: 96px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-success);
+}
+.check {
+  display: inline-flex;
+  height: 64px;
+  width: 64px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-page);
+  color: var(--color-icon-success);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+.eyebrow {
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.ink {
+  color: var(--color-text-default);
+}
+.muted {
+  color: var(--color-text-muted);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 24px 32px;
+}
+/* DS: one centred wrapping row of four md buttons, gap 16, padding 24/32. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 24px 32px;
+}
+.share {
+  position: relative;
+}
+.shareMenu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  z-index: 20;
+  margin-bottom: 4px;
+  transform-origin: bottom right;
+}

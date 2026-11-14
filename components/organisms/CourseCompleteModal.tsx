@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -9,6 +7,7 @@ import { useExitTransition } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
+import styles from "./CourseCompleteModal.module.css";
 
 export interface CourseCompleteModalProps {
   open: boolean;
@@ -45,11 +44,11 @@ export function CourseCompleteModal({
       data-state={state}
       aria-hidden={closed || undefined}
       {...inertProps(closed)}
-      className={cn("fixed inset-0 z-[60] flex items-center justify-center p-4", closed && "pointer-events-none")}
+      className={cn(styles.root, closed && styles.closed)}
     >
       {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
       <div
-        className="sk-backdrop sk-animate-fade absolute inset-0"
+        className={`sk-backdrop sk-animate-fade ${styles.backdrop}`}
         onClick={onClose}
         onAnimationEnd={onAnimationEnd}
         aria-hidden
@@ -58,36 +57,36 @@ export function CourseCompleteModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="sk-animate-pop relative w-full max-w-[440px] origin-center overflow-hidden rounded-surface border border-sko-border-subtle bg-sko-bg-page text-center shadow-xl"
+        className={`sk-animate-pop ${styles.dialog}`}
       >
         {/* Close row: DS pt 16 / pr 16, right-aligned, 60 high (16 + 44). */}
-        <div className="flex justify-end pr-4 pt-4">
+        <div className={styles.closeRow}>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+            className={styles.close}
           >
             <Icon icon={X} size={24} />
           </button>
         </div>
 
         {/* Content: DS padding 4/32/24/32, gap 12, centred. */}
-        <div className="flex flex-col items-center gap-3 px-8 pb-6 pt-1">
-          <span className="inline-flex h-16 w-16 items-center justify-center rounded-pill bg-sko-bg-success text-sko-icon-on-media">
+        <div className={styles.content}>
+          <span className={styles.check}>
             <Icon icon={Check} size={32} />
           </span>
-          <h2 id={titleId} className="sk-text-headline-small-semibold text-sko-text-default">
+          <h2 id={titleId} className={`sk-text-headline-small-semibold ${styles.title}`}>
             Course complete!
           </h2>
-          <p className="sk-text-body-medium-regular text-sko-text-muted">
-            You&rsquo;ve completed <span className="text-sko-text-default">{courseTitle}</span>. Grab
+          <p className={`sk-text-body-medium-regular ${styles.text}`}>
+            You&rsquo;ve completed <span className={styles.course}>{courseTitle}</span>. Grab
             your certificate, jump to the next one, or head back.
           </p>
         </div>
 
         {/* Actions: DS padding 16/24/24/24, gap 8; all three are Size=md. */}
-        <div className="flex flex-col gap-2 px-6 pb-6 pt-4">
+        <div className={styles.actions}>
           <Button ref={primaryRef} variant="primary" size="md" onClick={onNextCourse}>
             Go to next course
           </Button>

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { notifications } from "@/lib/data";
+import styles from "./NotificationsPanel.stories.module.css";
 
 const meta: Meta<typeof NotificationsPanel> = {
   title: "Organisms/Notifications Panel",
@@ -15,7 +16,7 @@ const meta: Meta<typeof NotificationsPanel> = {
   },
   decorators: [
     (Story) => (
-      <div className="h-[700px]">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

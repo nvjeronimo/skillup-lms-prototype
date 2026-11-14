@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
 import { VideoPlayer } from "./VideoPlayer";
+import styles from "./VideoPlayer.stories.module.css";
 
 const meta: Meta<typeof VideoPlayer> = {
   title: "Organisms/Video Player",
@@ -14,7 +15,7 @@ const meta: Meta<typeof VideoPlayer> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-3xl">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),
@@ -43,7 +44,7 @@ export const SizeMedium: Story = {
   args: { state: "ready", size: "md" },
   decorators: [
     (Story) => (
-      <div className="max-w-xl">
+      <div className={styles.md}>
         <Story />
       </div>
     ),
@@ -58,7 +59,7 @@ export const SizeSmall: Story = {
   args: { state: "ready", size: "sm" },
   decorators: [
     (Story) => (
-      <div className="max-w-[343px]">
+      <div className={styles.sm}>
         <Story />
       </div>
     ),

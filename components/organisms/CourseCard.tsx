@@ -7,6 +7,7 @@ import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { CardOverflowMenu } from "@/components/molecules/CardOverflowMenu";
 import { cn } from "@/lib/utils";
 import type { TopicType } from "@/lib/types";
+import styles from "./CourseCard.module.css";
 
 export interface CourseCardProps {
   title: string;
@@ -51,24 +52,24 @@ export function CourseCard({
   return (
     <div
       className={cn(
-        "relative flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-4 xl:flex-row xl:items-center xl:gap-6",
+        styles.card,
         className,
       )}
     >
       {/* Stacked: pr-10 keeps the titles clear of the pinned 32px overflow trigger. */}
-      <div className="flex min-w-0 flex-1 gap-4 pr-10 xl:gap-6 xl:pr-0">
+      <div className={styles.head}>
         {/* DS thumb: bg/primary-soft, Initials text/primary. List 79px (Grid 86px). */}
-        <span className="sk-text-headline-small-semibold inline-flex h-20 w-20 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-text-primary">
+        <span className={`sk-text-headline-small-semibold ${styles.thumb}`}>
           {initials}
         </span>
         {/* DS titles: vertical, gap 2 — Course Type badge, Title, Meta-Row. */}
-        <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
+        <div className={styles.titles}>
           <CourseTypeBadge value={courseType} />
-          <h2 className="sk-text-body-large-semibold text-sko-text-default">{title}</h2>
+          <h2 className={`sk-text-body-large-semibold ${styles.title}`}>{title}</h2>
           {/* DS Meta-Row: gap 16 — Provider badge, then badges (gap 8). */}
-          <div className="flex flex-wrap items-center gap-4">
+          <div className={styles.metaRow}>
             <ProviderBadge value={provider} />
-            <div className="flex flex-wrap items-center gap-2">
+            <div className={styles.badges}>
               <DifficultyBadge value={difficulty} />
               <DeliveryModeBadge value={deliveryMode} />
             </div>
@@ -77,12 +78,12 @@ export function CourseCard({
       </div>
 
       {/* DS progress: own column, 280 wide in List (gap 6); gap 8 when stacked. */}
-      <div className="flex flex-col gap-2 xl:w-[280px] xl:shrink-0 xl:gap-1.5">
+      <div className={styles.progress}>
         {/* "Est. completion:" rather than the full "Estimated completion:" so the label
             fits the 280px List column; if it still does not, it wraps right-aligned. */}
-        <div className="flex items-center justify-between gap-2">
-          <span className="sk-text-body-large-semibold shrink-0 whitespace-nowrap text-sko-text-default">{progressPct}% complete</span>
-          <span className="sk-text-body-medium-regular text-right text-sko-text-subtle">Est. completion: {estimation}</span>
+        <div className={styles.progressRow}>
+          <span className={`sk-text-body-large-semibold ${styles.percent}`}>{progressPct}% complete</span>
+          <span className={`sk-text-body-medium-regular ${styles.estimation}`}>Est. completion: {estimation}</span>
         </div>
         <PlatformProgressBar value={progressPct} label={`${title} progress`} track="muted" />
       </div>
@@ -90,11 +91,11 @@ export function CourseCard({
       {upNext ? (
         /* DS up-next: horizontal, centred, padding 8/12, gap 16, radius 8, bg/subtle.
            xl:max-w-[320px] is a guard, no DS value. */
-        <div className="flex min-w-0 items-center gap-4 rounded-control bg-sko-bg-subtle px-3 py-2 xl:max-w-[320px]">
+        <div className={styles.upNext}>
           {/* DS Next-Content: vertical, gap 6 — Overline, Next-Title (1 line), Topic-Types badge. */}
-          <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-            <span className="sk-text-label-small-semibold text-sko-text-subtle">Up next</span>
-            <span className="sk-text-body-medium-medium w-full truncate text-sko-text-default">{upNext.title}</span>
+          <div className={styles.upNextContent}>
+            <span className={`sk-text-label-small-semibold ${styles.upNextLabel}`}>Up next</span>
+            <span className={`sk-text-body-medium-medium ${styles.upNextTitle}`}>{upNext.title}</span>
             <TopicTypeBadge type={upNext.type} />
           </div>
           {/* DS cta-slot (List): Buttons/Button Size=lg, Hierarchy=Secondary. */}
@@ -105,7 +106,7 @@ export function CourseCard({
               hierarchy="secondary"
               size="lg"
               aria-label={`Resume ${title}`}
-              className="shrink-0"
+              className={styles.resume}
             >
               Resume
             </ButtonLink>
@@ -115,7 +116,7 @@ export function CourseCard({
               size="lg"
               onClick={onResume}
               aria-label={`Resume ${title}`}
-              className="shrink-0"
+              className={styles.resume}
             >
               Resume
             </Button>
@@ -125,7 +126,7 @@ export function CourseCard({
 
       {/* Stacked: pinned top-right so the menu (right-0) opens under its trigger.
           xl: back in the row as its last item. */}
-      <div className="absolute right-4 top-4 xl:static">
+      <div className={styles.menu}>
         <CardOverflowMenu itemLabel={title} />
       </div>
     </div>

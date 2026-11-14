@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sidebar } from "./Sidebar";
 import { course } from "@/lib/data";
 import type { Course } from "@/lib/types";
+import styles from "./Sidebar.stories.module.css";
 
 /**
  * 3-level shape (Course → Direct Topic Rows): a single `implicit` module holds
@@ -52,7 +53,7 @@ const meta: Meta<typeof Sidebar> = {
   argTypes: { variant: { control: "radio", options: ["Expanded", "Collapsed", "Mobile"] } },
   decorators: [
     (Story) => (
-      <div className="h-[700px]">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

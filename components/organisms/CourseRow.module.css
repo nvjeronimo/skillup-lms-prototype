@@ -1,0 +1,102 @@
+/* The DS stroke is inside the row and the CSS border outside the padding: 19 / 15 + 1 = 20 / 16. */
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  padding: 15px 19px;
+  box-shadow: 0 0 transparent, 0 0 transparent, var(--sk-shadow-card);
+}
+/* A title that links to the course: the border darkens while that link is hovered. (The
+   original transition-colors lost to .sk-press-card's own transition, so it is not kept.) */
+.linked:has(span a:hover) {
+  border-color: var(--color-border-default);
+}
+.thumb {
+  margin-top: -15px;
+  margin-bottom: -15px;
+  margin-left: -19px;
+  width: 118px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  align-items: center;
+  gap: 12px;
+}
+.text {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+}
+.lines {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.next {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-subtle);
+}
+.title {
+  min-width: 0;
+}
+.titleDefault {
+  color: var(--color-text-default);
+}
+.titleLocked {
+  color: var(--color-text-muted);
+}
+/* The title link covers the whole row. */
+.titleLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+@media (hover: hover) {
+  .titleLink:hover {
+    text-decoration-line: underline;
+  }
+}
+.context {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.actionsActive {
+  flex-shrink: 0;
+}
+.bar {
+  width: 140px;
+}
+.action {
+  position: relative;
+  z-index: 1;
+}
+.unlock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-warning);
+}
+.lockIcon {
+  color: var(--color-icon-warning);
+}

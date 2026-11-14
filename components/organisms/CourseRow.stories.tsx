@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CourseRow } from "./CourseRow";
+import styles from "./CourseRow.stories.module.css";
 
 const meta: Meta<typeof CourseRow> = {
   title: "Organisms/Course Row",
@@ -14,7 +15,7 @@ const meta: Meta<typeof CourseRow> = {
   argTypes: { state: { control: "radio", options: ["Active", "Locked", "Available"] } },
   decorators: [
     (Story) => (
-      <div className="max-w-3xl">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),
@@ -32,7 +33,7 @@ export const Available: Story = { args: { state: "Available" } };
 
 export const List: Story = {
   render: () => (
-    <div className="flex max-w-3xl flex-col gap-2">
+    <div className={styles.list}>
       <CourseRow title="Digital Marketing Fundamentals" state="Active" progressPct={0} />
       <CourseRow title="AI-Driven Content and Brand Comms" state="Locked" />
       <CourseRow title="Digital Marketing Fundamentals" state="Available" />

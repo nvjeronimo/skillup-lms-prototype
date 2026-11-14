@@ -1,0 +1,196 @@
+/* ── OptionMarker: DS Checkbox Size=sm, 16×16, 1px stroke ───────── */
+.marker {
+  margin-top: 2px;
+  display: inline-flex;
+  height: 16px;
+  width: 16px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-duration: var(--motion-duration-short3);
+  transition-timing-function: var(--motion-easing-standard);
+}
+.markerCheckbox {
+  border-radius: var(--sk-radius-inner);
+}
+.markerRadio {
+  border-radius: var(--sk-radius-pill);
+}
+.markerChecked {
+  border-color: transparent;
+  background-color: var(--color-bg-primary);
+}
+.markerDisabled {
+  border-color: var(--color-border-disabled);
+  background-color: var(--color-bg-faint);
+  opacity: 0.4;
+}
+.markerIdle {
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+/* The tick or the dot grows in from its centre (short3, standard-decelerate). */
+.mark {
+  color: var(--color-icon-on-primary);
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-duration-short3);
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+}
+/* The dot is filled with icon/on-primary through currentColor. */
+.markDot {
+  height: 6px;
+  width: 6px;
+  border-radius: var(--sk-radius-pill);
+  background-color: currentColor;
+}
+.markOn {
+  transform: scale(1);
+  opacity: 1;
+}
+.markOff {
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+/* ── Option rows ────────────────────────────────────────────── */
+.rowUnanswered,
+.rowDisabled,
+.rowUnselected {
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+}
+.rowSelected {
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-default);
+}
+.rowCorrect,
+.rowMissed {
+  background-color: var(--color-bg-success-soft);
+  color: var(--color-text-success);
+}
+.rowIncorrect {
+  background-color: var(--color-bg-error-soft);
+  color: var(--color-text-error);
+}
+.noteSubtle {
+  color: var(--color-text-subtle);
+}
+.tick {
+  flex-shrink: 0;
+  color: var(--color-icon-success);
+}
+.cross {
+  flex-shrink: 0;
+  color: var(--color-icon-error);
+}
+
+/* ── The card ───────────────────────────────────────────────── */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 24px;
+  box-shadow: 0 0 transparent, 0 0 transparent, var(--sk-shadow-card);
+}
+.prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ink {
+  color: var(--color-text-default);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.selectAll {
+  margin-top: -8px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: var(--color-text-subtle);
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.option {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px 16px 12px 12px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-duration: var(--motion-duration-short3);
+  transition-timing-function: var(--motion-easing-standard);
+}
+.option:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--color-border-primary);
+}
+@media (hover: hover) {
+  .optionHover:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.optionLabel {
+  flex: 1 1 0%;
+}
+.note {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+/* A closed Collapse takes no space: the -20/+20 pair cancels the card's gap. */
+.collapseGap {
+  margin-top: -20px;
+}
+.collapseBody {
+  padding-top: 20px;
+}
+.solution {
+  transition-property: opacity;
+  transition-duration: var(--motion-duration-medium2);
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+}
+.solutionShown {
+  opacity: 1;
+}
+.solutionHidden {
+  opacity: 0;
+}
+/* DS Next Hint: a link button with a 1px bottom stroke in every state. */
+.nextHint {
+  border-bottom-width: 1px;
+  padding: 4px 2px;
+}
+.nextHintDone {
+  cursor: not-allowed;
+  border-color: var(--color-border-disabled);
+  color: var(--color-text-disabled);
+}
+.nextHintLive {
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+.hints {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

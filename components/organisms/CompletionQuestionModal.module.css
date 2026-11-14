@@ -1,0 +1,116 @@
+/* At the bottom on a phone, centred from 640. */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+}
+.closed {
+  pointer-events: none;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+}
+.dialog {
+  position: relative;
+  width: 100%;
+  max-width: 544px;
+  transform-origin: center;
+  overflow: hidden;
+  border-radius: var(--sk-radius-surface);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0 transparent, 0 0 transparent, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+/* DS Background pattern decorative (Circles): 336 square, centred on the featured icon,
+   hairline rings that fade out from the middle. */
+.pattern {
+  pointer-events: none;
+  position: absolute;
+  left: -120px;
+  top: -120px;
+  height: 336px;
+  width: 336px;
+  color: var(--color-border-subtle);
+  mask-image: radial-gradient(closest-side, black, transparent);
+}
+.head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 24px 0;
+}
+.featured {
+  display: inline-flex;
+  height: 48px;
+  width: 48px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+.text {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 40px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--color-text-subtle);
+}
+.close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  display: inline-flex;
+  height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .close:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+/* lg actions 32 below; stacked with the primary first on a phone, right aligned from 640. */
+.actions {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px 24px 24px;
+}
+@media (min-width: 640px) {
+  .root {
+    align-items: center;
+  }
+  .head {
+    flex-direction: row;
+  }
+  .actions {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+  }
+}
