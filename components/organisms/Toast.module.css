@@ -70,3 +70,19 @@
 .dismissIcon {
   color: var(--color-icon-muted);
 }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the toast .rounded-card.border.p-4). Their rules, kept here. */
+:global([data-direction="studio"]) .toast {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-direction="studio"]) .toast {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global([data-skin="harbor"] [data-platform-page]) .toast,
+:global([data-skin="fluent"] [data-platform-page]) .toast {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

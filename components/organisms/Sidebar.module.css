@@ -139,7 +139,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .close:hover {
     background-color: var(--color-bg-hover);
   }
@@ -177,4 +177,29 @@
 .lessonHeading {
   padding: 16px 16px 4px;
   color: var(--color-text-default);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the close .rounded-control button, the desktop <nav> .rounded-control, the rail .rounded-card.border). Their rules, kept here. */
+:global([data-direction="studio"]) .close,
+:global([data-skin="harbor"]) .close {
+  border-radius: 9999px;
+}
+/* Studio: a large container that borrows the control radius takes the card radius. */
+:global([data-direction="studio"]) .panelDesktop {
+  border-radius: var(--sk-radius-card);
+}
+/* …and what sits in its corner and had .rounded-inner (the collapse toggle, atoms/SidebarToggle)
+   takes the control radius. The toggle's own class is another module's: named by its label. */
+:global([data-direction="studio"]) .panelDesktop :global(button[aria-label="Collapse sidebar"]) {
+  border-radius: var(--sk-radius-control);
+}
+:global([data-direction="studio"]) .rail {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .rail,
+:global([data-skin="fluent"] [data-platform-page]) .rail {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
 }

@@ -139,7 +139,7 @@
 .removeTag {
   color: var(--color-icon-faint);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .close:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -211,4 +211,20 @@
   .body {
     padding: 24px;
   }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the close .rounded-control button, the tags .rounded-control.border wrapper of an input, the textarea .border). Their rules, kept here. */
+:global([data-direction="studio"]) .close,
+:global([data-skin="harbor"]) .close,
+:global([data-direction="studio"]) .tags,
+:global([data-skin="harbor"]) .tags {
+  border-radius: 9999px;
+}
+/* Fluent: the tags box and the note field are Fluent Inputs; held over :focus, as before. */
+:global([data-skin="fluent"]) .tags,
+:global([data-skin="fluent"]) .textarea.textarea {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
 }

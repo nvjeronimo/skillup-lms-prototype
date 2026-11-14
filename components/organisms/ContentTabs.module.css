@@ -98,7 +98,7 @@
 .optionIdle {
   color: var(--color-text-on-primary-soft);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .optionIdle:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -140,7 +140,7 @@
 .tabIdle {
   color: var(--color-text-subtle);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .tabIdle:hover {
     color: var(--color-text-default);
   }
@@ -192,4 +192,20 @@
   align-items: center;
   gap: 12px;
   padding-right: 4px;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the select trigger .rounded-control button, the menu .rounded-card.border). Their rules, kept here. */
+:global([data-direction="studio"]) .trigger,
+:global([data-skin="harbor"]) .trigger {
+  border-radius: 9999px;
+}
+:global([data-direction="studio"]) .menu {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .menu,
+:global([data-skin="fluent"] [data-platform-page]) .menu {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
 }

@@ -36,7 +36,7 @@
   border-color: var(--color-border-default);
   background-color: var(--color-bg-page);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .utility:hover {
     background-color: var(--color-bg-hover);
   }
@@ -175,4 +175,15 @@
 }
 .userName {
   color: var(--color-text-default);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the utility and account .rounded-control buttons). Their rules, kept here. */
+:global([data-direction="studio"]) .utility,
+:global([data-skin="harbor"]) .utility,
+:global([data-direction="studio"]) .mobileAccount,
+:global([data-skin="harbor"]) .mobileAccount,
+:global([data-direction="studio"]) .account,
+:global([data-skin="harbor"]) .account {
+  border-radius: 9999px;
 }

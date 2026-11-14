@@ -59,7 +59,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .actionHover:hover {
     background-color: var(--color-bg-on-media-soft);
     backdrop-filter: blur(4px);
@@ -67,7 +67,7 @@
 }
 /* The volume button from lg: the group carries the hover, the button keeps bg/overlay-soft. */
 @container (min-width: 40rem) {
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .volumeToneLgUp:hover {
       background-color: var(--color-bg-overlay-soft);
       backdrop-filter: none;
@@ -105,7 +105,7 @@
     0 4px 6px -2px var(--color-shadow-default),
     0 12px 16px -4px var(--color-shadow-default);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .action:hover ~ .tooltip {
     visibility: visible;
     opacity: 1;
@@ -344,7 +344,7 @@
   gap: 4px;
   padding-right: 8px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .volumeLg:hover {
     background-color: var(--color-bg-on-media-soft);
     backdrop-filter: blur(4px);
@@ -497,10 +497,26 @@
   }
 }
 @container (min-width: 40rem) {
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .volumeLgUp:hover {
       background-color: var(--color-bg-on-media-soft);
       backdrop-filter: blur(4px);
     }
   }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the action, Retry and Replay .rounded-control buttons; the volume group, a .rounded-control holding its range input; the undocked .rounded-card, which in the player sits inside the <main> card). Their rules, kept here. */
+:global([data-direction="studio"]) .action,
+:global([data-skin="harbor"]) .action,
+:global([data-direction="studio"]) .volume,
+:global([data-skin="harbor"]) .volume,
+:global([data-direction="studio"]) .fixedButton,
+:global([data-skin="harbor"]) .fixedButton {
+  border-radius: 9999px;
+}
+/* Studio: a card inside a card takes the control radius. In the player the player sits in the
+   <main> card (PlayerShell), which carried .rounded-card. */
+:global([data-direction="studio"] main) .undocked {
+  border-radius: var(--sk-radius-control);
 }

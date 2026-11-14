@@ -89,7 +89,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .close:hover {
     background-color: var(--color-bg-subtle);
   }
@@ -113,4 +113,15 @@
     flex-direction: row-reverse;
     justify-content: flex-start;
   }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the close .rounded-control button, the dialog .rounded-surface.border). Their rules, kept here. */
+:global([data-direction="studio"]) .close,
+:global([data-skin="harbor"]) .close {
+  border-radius: 9999px;
+}
+:global([data-direction="studio"]) .dialog {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
 }

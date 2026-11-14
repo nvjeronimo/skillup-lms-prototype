@@ -65,7 +65,7 @@
   position: absolute;
   inset: 0;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .titleLink:hover {
     text-decoration-line: underline;
   }
@@ -99,4 +99,16 @@
 }
 .lockIcon {
   color: var(--color-icon-warning);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the row .rounded-card.border). Their rules, kept here. */
+:global([data-direction="studio"]) .row {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .row,
+:global([data-skin="fluent"] [data-platform-page]) .row {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
 }
