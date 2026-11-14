@@ -41,7 +41,7 @@
   transition-timing-function: var(--motion-easing-standard);
   transition-duration: var(--motion-duration-short3);
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .addNote:hover { border-color: var(--color-icon-default); color: var(--color-text-on-primary-soft); }
 }
 .addNote:focus-visible { border-radius: var(--sk-radius-control); background-color: var(--color-bg-faint); }

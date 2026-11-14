@@ -25,7 +25,7 @@
 }
 .stepDone { border-color: var(--color-border-success); background-color: var(--color-bg-success-soft); }
 .stepPending { border-color: var(--color-border-subtle); }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .stepPending:hover { border-color: var(--color-border-default); }
 }
 .check {
@@ -58,3 +58,11 @@
 .scorm { display: flex; flex-direction: column; gap: 16px; padding-top: 24px; padding-bottom: 24px; }
 .scormIntro { max-width: var(--sk-container-text-max-width, 1200px); text-wrap: pretty; color: var(--color-text-default); }
 .demo { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. A p-4 card takes 23 of padding; the border goes for a soft shadow (over the
+   done / hover border too). */
+:global([data-direction="studio"]) .step.step { border-radius: var(--sk-radius-control); padding: 23px; border-color: transparent; box-shadow: var(--sk-shadow-studio); }
