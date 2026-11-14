@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { usePathname, useRouter, useSearchParams } from "@/lib/router";
@@ -27,6 +25,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { useSheetDrag } from "@/lib/useSheetDrag";
 import { cn } from "@/lib/utils";
+import styles from "./CourseSearch.module.css";
 
 type Filter = "all" | SearchContentType;
 const TYPES: SearchContentType[] = ["Text", "Video", "Quiz", "Lesson"];
@@ -160,7 +159,7 @@ function Excerpt({ text, query }: { text: string; query: string }) {
     const at = match.index ?? 0;
     if (at > last) pieces.push(part.slice(last, at));
     pieces.push(
-      <strong key={at} className="sk-text-body-medium-semibold text-sko-text-default">
+      <strong key={at} className={`sk-text-body-medium-semibold ${styles.default}`}>
         {match[0]}
       </strong>,
     );
@@ -188,27 +187,27 @@ function ResultRow({
     <li>
       <Link
         href={href}
-        className="flex items-start gap-3 rounded-control p-3 transition-colors hover:bg-sko-bg-subtle focus-visible:bg-sko-bg-subtle"
+        className={styles.result}
       >
-        <span className="flex w-[60px] shrink-0">
+        <span className={styles.resultType}>
           <Badge color="gray" size="sm">
             {result.type}
           </Badge>
         </span>
-        <span className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="sk-text-body-medium-semibold text-sko-text-default">{result.title}</span>
+        <span className={styles.resultText}>
+          <span className={`sk-text-body-medium-semibold ${styles.default}`}>{result.title}</span>
           {result.text ? (
-            <span className="sk-text-body-medium-regular text-sko-text-muted">
+            <span className={`sk-text-body-medium-regular ${styles.muted}`}>
               <Excerpt text={result.text} query={query} />
             </span>
           ) : null}
-          <span className="sk-text-body-small-regular text-sko-text-subtle">{result.location.join("  ›  ")}</span>
+          <span className={`sk-text-body-small-regular ${styles.subtle}`}>{result.location.join("  ›  ")}</span>
           {matches && compact ? (
-            <span className="sk-text-body-small-medium text-sko-text-subtle">{matches}</span>
+            <span className={`sk-text-body-small-medium ${styles.subtle}`}>{matches}</span>
           ) : null}
         </span>
         {matches && !compact ? (
-          <span className="sk-text-body-small-medium shrink-0 text-sko-text-subtle">{matches}</span>
+          <span className={`sk-text-body-small-medium ${styles.noShrink} ${styles.subtle}`}>{matches}</span>
         ) : null}
       </Link>
     </li>
@@ -229,22 +228,22 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
   // content answers. In the product an empty field shows nothing.
   if (view === "none") {
     return (
-      <div data-prototype-note className="flex flex-col gap-3">
-        <p className="sk-text-label-small-medium uppercase text-sko-text-subtle">Prototype note · sample content</p>
-        <p className="sk-text-body-medium-regular text-sko-text-subtle">
+      <div data-prototype-note className={styles.stack}>
+        <p className={`sk-text-label-small-medium ${styles.eyebrow}`}>Prototype note · sample content</p>
+        <p className={`sk-text-body-medium-regular ${styles.subtle}`}>
           The prototype searches this course&apos;s lesson and topic titles and what each topic shows in the player.
           Type one of these and press Enter, or select it:
         </p>
-        <ul className="flex flex-col gap-1">
+        <ul className={styles.samples}>
           {searchSamples(search.slug).map((sample) => (
             <li key={sample.query}>
               <button
                 type="button"
                 onClick={() => search.runSample(sample.query)}
-                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-control px-3 text-left transition-colors hover:bg-sko-bg-subtle md:min-h-9"
+                className={styles.sample}
               >
-                <span className="sk-text-body-medium-semibold text-sko-text-primary">{sample.query}</span>
-                <span className="sk-text-body-small-regular text-sko-text-subtle">{sample.gives}</span>
+                <span className={`sk-text-body-medium-semibold ${styles.primary}`}>{sample.query}</span>
+                <span className={`sk-text-body-small-regular ${styles.subtle}`}>{sample.gives}</span>
               </button>
             </li>
           ))}
@@ -256,15 +255,15 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
   if (view === "hint") {
     return (
       <>
-        <p className="flex items-center justify-between gap-3">
-          <span className="sk-text-body-medium-medium min-w-0 text-sko-text-default">
+        <p className={styles.hint}>
+          <span className={`sk-text-body-medium-medium ${styles.hintText}`}>
             Search this course for “{typed}”
           </span>
-          <Badge color="gray" size="sm" className="shrink-0">
+          <Badge color="gray" size="sm" className={styles.noShrink}>
             Enter ↵
           </Badge>
         </p>
-        <p className="sk-text-body-medium-regular text-sko-text-subtle">
+        <p className={`sk-text-body-medium-regular ${styles.subtle}`}>
           Results show after you press Enter. Titles, texts, quiz questions and video transcripts are searched.
         </p>
       </>
@@ -273,8 +272,8 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
 
   if (view === "loading") {
     return (
-      <p role="status" className="sk-text-body-medium-medium flex h-[68px] items-center justify-center gap-3 text-sko-text-muted">
-        <Icon icon={Loader2} size={20} className="animate-spin text-sko-icon-primary motion-reduce:animate-none" aria-hidden="true" />
+      <p role="status" className={`sk-text-body-medium-medium ${styles.loading}`}>
+        <Icon icon={Loader2} size={20} className={`sk-spin ${styles.spinner}`} aria-hidden="true" />
         Searching…
       </p>
     );
@@ -301,9 +300,9 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
 
   if (total === 0) {
     return (
-      <div role="status" className="flex flex-col gap-3">
-        <p className="sk-text-body-large-semibold text-sko-text-default">No results for “{query}”</p>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+      <div role="status" className={styles.stack}>
+        <p className={`sk-text-body-large-semibold ${styles.default}`}>No results for “{query}”</p>
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>
           Check the spelling, or try fewer or different words. The search looks in titles, texts, quiz questions
           and video transcripts of this course.
         </p>
@@ -329,18 +328,18 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
 
   return (
     <>
-      <p role="status" className="sk-text-body-medium-medium text-sko-text-subtle">
+      <p role="status" className={`sk-text-body-medium-medium ${styles.subtle}`}>
         {heading}
       </p>
       {/* The platform shows the types only when the results have more than one. */}
       {counts.length > 1 ? (
         compact ? (
-          <label className="flex flex-col">
-            <span className="sr-only">Show results of type</span>
+          <label className={styles.column}>
+            <span className="sk-sr-only">Show results of type</span>
             <SelectField
               value={current}
               onChange={(event) => search.selectFilter(event.target.value as Filter)}
-              className="sk-text-body-medium-semibold h-11 rounded-control border border-sko-border-primary bg-sko-bg-page pl-3.5 text-sko-text-primary"
+              className={`sk-text-body-medium-semibold ${styles.typeSelect}`}
             >
               {tabs.map((tab) => (
                 <option key={tab.id} value={tab.id}>
@@ -362,7 +361,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
         )
       ) : null}
       <ul
-        className={cn("flex flex-col gap-1", !compact && "sk-scroll max-h-[min(614px,55vh)] overflow-y-auto")}
+        className={cn(styles.results, !compact && `sk-scroll ${styles.resultsScroll}`)}
         aria-label={heading}
       >
         {shown.map((result) => (
@@ -370,8 +369,8 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
         ))}
       </ul>
       {current === "all" ? (
-        <div className="flex min-h-7 items-center justify-between gap-3">
-          <p className="sk-text-body-small-regular text-sko-text-subtle">
+        <div className={styles.footer}>
+          <p className={`sk-text-body-small-regular ${styles.subtle}`}>
             Showing {results.length} of {total}
           </p>
           {results.length < total ? (
@@ -383,7 +382,7 @@ function SearchPanel({ search, topicHref, compact }: { search: Search; topicHref
       ) : null}
       {/* The count is about the whole search, so it shows on All only, like the footer. */}
       {accessDenied > 0 && current === "all" ? (
-        <p className="sk-text-body-medium-regular text-sko-text-subtle">
+        <p className={`sk-text-body-medium-regular ${styles.subtle}`}>
           {accessDenied} more {accessDenied === 1 ? "result is" : "results are"} in content that is not open to you yet.
         </p>
       ) : null}
@@ -499,19 +498,19 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
             onAnimationEnd={sheet.onAnimationEnd}
             aria-hidden={!sheetOpen || undefined}
             {...inertProps(!sheetOpen)}
-            className="sk-animate-sheet fixed inset-0 z-[60] flex flex-col bg-sko-bg-page"
+            className={`sk-animate-sheet ${styles.sheet}`}
           >
             <form
               role="search"
               onSubmit={onSubmit}
               onPointerDown={sheetDrag.onPointerDown}
-              className="flex touch-none items-center gap-3 border-b border-sko-border-subtle p-4"
+              className={styles.sheetBar}
             >
               <SearchField
                 value={search.text}
                 onChange={search.change}
                 label={label}
-                className="min-w-0 flex-1"
+                className={styles.sheetField}
                 inputRef={sheetInputRef}
                 inputProps={{ name: "q", enterKeyHint: "search" }}
               />
@@ -519,7 +518,7 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
                 Cancel
               </Button>
             </form>
-            <div className="sk-scroll flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4">
+            <div className={`sk-scroll ${styles.sheetBody}`}>
               <SearchPanel search={search} topicHref={topicHref} compact />
             </div>
           </div>
@@ -534,7 +533,7 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
     <div ref={rootRef} className={className}>
      {/* The popup hangs from the field itself, 8 under it, whatever padding the row gives this block. */}
      <div
-      className="relative"
+      className={styles.anchor}
       onKeyDown={(event) => {
         if (event.key === "Escape" && search.open) {
           event.stopPropagation();
@@ -562,7 +561,7 @@ export function CourseSearch({ label, topicHref, slug, variant, className }: Cou
           onTransitionEnd={popup.onTransitionEnd}
           aria-hidden={!showPopup || undefined}
           {...inertProps(!showPopup)}
-          className="sk-animate-menu origin-top-right absolute right-0 top-full z-30 mt-2 flex w-[560px] max-w-[calc(100vw-48px)] flex-col gap-3 rounded-card border border-sko-border-default bg-sko-bg-page p-4 shadow-2xl"
+          className={`sk-animate-menu ${styles.popup}`}
         >
           <SearchPanel search={shownSearch} topicHref={topicHref} />
         </section>

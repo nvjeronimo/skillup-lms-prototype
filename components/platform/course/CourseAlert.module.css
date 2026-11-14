@@ -1,0 +1,78 @@
+/* DS Alert, Size=Floating: the DS stroke is inside the alert and the CSS border outside the
+   padding, so 15 + 1 = the DS 16. Shadow: Tailwind's shadow-sm with its empty ring layers. */
+.alert {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  padding: 15px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.leaving { pointer-events: none; }
+@media (min-width: 768px) {
+  .responsive { flex-direction: row; }
+}
+
+.brand { border-color: var(--color-border-primary-muted); background-color: var(--color-bg-primary-soft); }
+.warning { border-color: var(--color-border-warning-soft); background-color: var(--color-bg-warning-soft); }
+.success { border-color: var(--color-border-success-soft); background-color: var(--color-bg-success-soft); }
+
+/* The featured icon: 20px inside two rings, 28px at 30% and 38px at 10%. */
+.featured {
+  position: relative;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.iconBrand { color: var(--color-icon-primary); }
+.iconWarning { color: var(--color-icon-warning); }
+.iconSuccess { color: var(--color-icon-success); }
+.ringInner,
+.ringOuter {
+  position: absolute;
+  border-radius: var(--sk-radius-pill);
+  border-width: 2px;
+  border-color: currentColor;
+}
+.ringInner { width: 28px; height: 28px; opacity: 0.3; }
+.ringOuter { width: 38px; height: 38px; opacity: 0.1; }
+
+.content { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; align-items: flex-start; gap: 12px; }
+.copy { display: flex; flex-direction: column; gap: 4px; }
+@media (min-width: 768px) {
+  .copyClearsClose { padding-right: 32px; }
+}
+.titleMuted { color: var(--color-text-muted); }
+.titleResponsive { color: var(--color-text-muted); }
+@media (min-width: 768px) {
+  .titleResponsive { color: var(--color-text-default); }
+}
+.body { color: var(--color-text-muted); }
+
+/* The 36px close button, 8 from the corner (44px, 4 from it, on mobile). */
+.close {
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  display: flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-icon-muted);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .close:hover { color: var(--color-icon-default); }
+}
+@media (max-width: 767.98px) {
+  .close { right: 3px; top: 3px; width: 44px; height: 44px; }
+}

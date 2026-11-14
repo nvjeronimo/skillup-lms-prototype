@@ -1,0 +1,159 @@
+/* Shared text and icon colours. */
+.textDefault { color: var(--color-text-default); }
+.textMuted { color: var(--color-text-muted); }
+.textSubtle { color: var(--color-text-subtle); }
+.textSuccess { color: var(--color-text-success); }
+.textWarning { color: var(--color-text-warning); }
+.textError { color: var(--color-text-error); }
+.iconWarning { color: var(--color-icon-warning); }
+.iconSuccess { color: var(--color-icon-success); }
+.iconError { color: var(--color-icon-error); }
+
+/* The tab: the main column beside the 320 sidebar from tablet up. */
+.panel { display: flex; flex-direction: column; gap: var(--sk-layout-column-gap); }
+.main { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: var(--sk-layout-stack-gap); }
+.aside { display: flex; flex-direction: column; gap: 16px; }
+@media (min-width: 768px) {
+  .panel { flex-direction: row; align-items: flex-start; }
+  .aside { width: 320px; flex-shrink: 0; }
+}
+
+/* Completion card: 15 / 19 / 23 + the 1px border = the DS 16 / 20 / 24. */
+.completion {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+.completionText { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; align-items: flex-start; gap: 8px; }
+.completionTitleRow { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; row-gap: 4px; }
+.ring { position: relative; display: flex; width: 92px; height: 92px; flex-shrink: 0; align-items: center; justify-content: center; }
+.ringSvg { width: 92px; height: 92px; transform: rotate(-90deg); }
+.ringValue { position: absolute; color: var(--color-text-default); }
+
+/* Grade summary. Shadows: Tailwind's shadow-sm with its empty ring layers. */
+.grade {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+@media (min-width: 768px) {
+  .completion { gap: 20px; padding: 19px; }
+  .grade { padding: 19px; }
+}
+@media (min-width: 1024px) {
+  .completion { gap: 24px; padding: 23px; }
+  .grade { padding: 23px; }
+}
+.gradeHead { display: flex; flex-direction: column; gap: 8px; }
+.titleRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+/* The bar with its pass mark; the current grade as a tooltip on hover. */
+.bar { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.passMark {
+  position: absolute;
+  top: 0;
+  height: 10px;
+  width: 2px;
+  transform: translateX(-50%);
+  background-color: var(--color-bg-inverse);
+}
+.gradeTip {
+  pointer-events: none;
+  position: absolute;
+  top: 16px;
+  z-index: 10;
+  transform: translateX(-50%);
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 4px 8px;
+  color: var(--color-text-default);
+  opacity: 0;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition-property: opacity;
+  transition-duration: var(--motion-duration-short3);
+  transition-timing-function: var(--motion-easing-standard);
+}
+@media (hover: hover) {
+  .bar:hover .gradeTip { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gradeTip { transition-property: none; }
+}
+.passLabelRow { position: relative; height: 18px; }
+.passLabel {
+  position: absolute;
+  top: 0;
+  display: flex;
+  transform: translateX(-50%);
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+
+/* The weights table. On mobile the two middle columns drop out into the row header. */
+.table { width: 100%; border-collapse: separate; border-spacing: 0 0; text-align: left; }
+.headRow { height: 36px; color: var(--color-text-subtle); }
+.headType {
+  border-top-left-radius: var(--sk-radius-control);
+  border-bottom-left-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  padding: 8px 4px 8px 12px;
+}
+.headCell { padding: 8px 0; text-align: right; background-color: var(--color-bg-subtle); }
+.headWeighted {
+  border-top-right-radius: var(--sk-radius-control);
+  border-bottom-right-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  padding: 8px 8px 8px 4px;
+  text-align: right;
+}
+.rowType { padding: 12px 4px 12px 12px; text-align: left; vertical-align: top; color: var(--color-text-default); }
+.cell { padding-top: 12px; padding-bottom: 12px; text-align: right; vertical-align: top; color: var(--color-text-muted); }
+.weighted { padding: 12px 8px 12px 4px; text-align: right; vertical-align: top; color: var(--color-text-muted); }
+/* The DS rule is inside the row: the 1px comes off the top padding. */
+.rule { border-top-width: 1px; border-color: var(--color-border-subtle); padding-top: 11px !important; }
+.wideOnly { display: none; }
+@media (min-width: 768px) {
+  .table { table-layout: fixed; }
+  .headType { width: 170px; padding-left: 16px; }
+  .headWeighted { padding-right: 12px; }
+  .rowType { padding-left: 16px; }
+  .weighted { padding-right: 12px; }
+  .wideOnly { display: table-cell; }
+  .phoneOnly { display: none; }
+}
+
+/* The graded items of each section. */
+.sections { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
+.sectionTitle {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-bottom: 4px;
+  color: var(--color-text-default);
+}
+.items { display: flex; flex-direction: column; gap: 6px; }
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-bottom: 4px;
+}
+.itemTitle { min-width: 0; color: var(--color-text-default); }
+.itemScore { flex-shrink: 0; }

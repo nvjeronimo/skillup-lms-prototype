@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { Check, ChevronDown, Lock } from "lucide-react";
@@ -10,6 +8,7 @@ import { CONTENT_PENDING } from "@/lib/platform/program";
 import type { CourseModule, CourseTopic } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
 import { Collapse } from "@/components/atoms/Collapse";
+import styles from "./ModuleList.module.css";
 
 /**
  * DS `LMS/Platform/Course-Detail/Module-Number`: a 32px circle with the position — bg/primary-soft
@@ -21,10 +20,11 @@ function ModuleNumber({ mod }: { mod: CourseModule }) {
     <span
       aria-hidden
       className={cn(
-        "sk-text-body-medium-semibold flex size-8 shrink-0 items-center justify-center rounded-pill",
-        mod.state === "complete" && "bg-sko-bg-success text-sko-icon-on-success",
-        mod.state === "incomplete" && "bg-sko-bg-primary-soft text-sko-text-on-primary-soft",
-        mod.state === "locked" && "bg-sko-bg-subtle text-sko-text-subtle",
+        "sk-text-body-medium-semibold",
+        styles.number,
+        mod.state === "complete" && styles.numberComplete,
+        mod.state === "incomplete" && styles.numberIncomplete,
+        mod.state === "locked" && styles.numberLocked,
       )}
     >
       {mod.state === "complete" ? <Icon icon={Check} size={16} /> : mod.number}
@@ -46,30 +46,31 @@ function TopicRow({ topic, href, last }: { topic: CourseTopic; href: string; las
       className={cn(
         // relative: the topic link's ::after stretches over the row, so the whole row is the target
         // (72–96 px tall on mobile) and not only the title's 20 px line.
-        "sk-press-card relative flex items-start gap-2 py-3 md:items-center md:py-4",
+        "sk-press-card",
+        styles.topic,
         // The DS rule is inside the row: the 1px comes off the bottom padding.
-        !last && "border-b border-dashed border-sko-border-subtle pb-[11px] md:pb-[15px]",
+        !last && styles.topicRuled,
       )}
     >
-      <span className="flex h-6 shrink-0 items-center">
+      <span className={styles.status}>
         <CompletionStatus state={topic.state} />
       </span>
-      <div className="flex min-w-0 flex-1 flex-col items-start gap-1 md:flex-row md:items-center md:gap-2">
+      <div className={styles.topicBody}>
         {locked ? (
-          <span className="sk-text-body-large-medium min-w-0 text-sko-text-subtle md:flex-1">{topic.title}</span>
+          <span className={`sk-text-body-large-medium ${styles.topicTitle} ${styles.subtle}`}>{topic.title}</span>
         ) : (
-          <span className="min-w-0 md:flex-1">
+          <span className={styles.topicTitle}>
             <Link
               href={href}
-              className="sk-text-body-large-medium text-sko-text-on-primary-soft underline underline-offset-2 transition-colors after:absolute after:inset-0 after:content-[''] hover:text-sko-text-primary"
+              className={`sk-text-body-large-medium ${styles.topicLink}`}
             >
               {topic.title}
             </Link>
           </span>
         )}
-        <span className="flex shrink-0 items-center gap-2">
+        <span className={styles.topicMeta}>
           <TopicTypeBadge type={topic.type} />
-          <span className="sk-text-body-small-regular text-sko-text-subtle">{topic.duration}</span>
+          <span className={`sk-text-body-small-regular ${styles.subtle}`}>{topic.duration}</span>
         </span>
       </div>
     </li>
@@ -104,7 +105,7 @@ function ModuleRow({
   const lastTopicId = topics[topics.length - 1]?.id;
 
   return (
-    <li className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
+    <li className={styles.module}>
       <h3>
         <button
           type="button"
@@ -114,32 +115,32 @@ function ModuleRow({
           onClick={onToggle}
           className={cn(
             // The DS stroke is inside the row and the CSS border is outside the padding: 15 + 1 = the DS 16.
-            "group flex w-full items-center gap-3 rounded-card p-[15px] text-left focus-visible:-outline-offset-2",
-            open && "rounded-b-none border-b border-sko-border-subtle",
+            styles.header,
+            open && styles.headerOpen,
           )}
         >
           <ModuleNumber mod={mod} />
-          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="sk-text-body-large-semibold text-sko-text-default">{mod.title}</span>
-            <span className="sk-text-body-small-regular flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sko-text-subtle">
+          <span className={styles.heading}>
+            <span className={`sk-text-body-large-semibold ${styles.default}`}>{mod.title}</span>
+            <span className={`sk-text-body-small-regular ${styles.meta}`}>
               <span>{mod.topicCount}</span>
               <span aria-hidden data-invented="effort: no module durations authored in Open edX">·</span>
               <span data-invented="effort: no module durations authored in Open edX">{mod.duration}</span>
             </span>
             {locked && mod.lockReason ? (
-              <span className="sk-text-body-small-regular text-sko-text-subtle lg:sr-only">{mod.lockReason}</span>
+              <span className={`sk-text-body-small-regular ${styles.subtle} ${styles.lockReason}`}>{mod.lockReason}</span>
             ) : null}
           </span>
-          <span className="flex shrink-0 items-center gap-0.5">
+          <span className={styles.trailing}>
             {locked ? (
-              <span className="relative flex size-8 items-center justify-center rounded-pill bg-sko-bg-muted text-sko-icon-muted">
+              <span className={styles.lock}>
                 <Icon icon={Lock} size={13} aria-hidden />
                 {mod.lockReason ? (
                   <span
                     aria-hidden
-                    className="sk-text-body-small-semibold pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden w-max max-w-[300px] -translate-x-1/2 rounded-control bg-sko-bg-inverse px-3 py-2 text-center text-sko-text-on-inverse lg:group-hover:block lg:group-focus-visible:block"
+                    className={`sk-text-body-small-semibold ${styles.tooltip}`}
                   >
-                    <span className="absolute -top-1 left-1/2 size-2.5 -translate-x-1/2 rotate-45 rounded-inner bg-sko-bg-inverse" />
+                    <span className={styles.arrow} />
                     {mod.lockReason}
                   </span>
                 ) : null}
@@ -149,19 +150,19 @@ function ModuleRow({
               icon={ChevronDown}
               size={20}
               aria-hidden
-              className={cn("text-sko-icon-faint transition-transform duration-short4 ease-standard", open && "rotate-180")}
+              className={cn(styles.chevron, open && styles.chevronOpen)}
             />
           </span>
         </button>
       </h3>
       <Collapse open={open} id={panelId} role="region" aria-labelledby={buttonId}>
-        <div className="px-[15px] py-1 md:px-[19px]">
+        <div className={styles.topics}>
           {mod.lessons?.length ? (
             mod.lessons.map((lesson) => (
               <React.Fragment key={lesson.id}>
                 {/* DS `LMS / Lesson Header`: 26px on desktop and tablet, 34px on mobile. */}
                 {lesson.label ? (
-                  <h4 className="sk-text-body-small-medium px-3 py-2 text-sko-text-muted md:pb-0 md:pr-0">{lesson.label}</h4>
+                  <h4 className={`sk-text-body-small-medium ${styles.lesson}`}>{lesson.label}</h4>
                 ) : null}
                 <ul>
                   {lesson.topics.map((topic) => (
@@ -171,7 +172,7 @@ function ModuleRow({
               </React.Fragment>
             ))
           ) : (
-            <p className="sk-text-body-medium-regular py-3 text-sko-text-subtle">{CONTENT_PENDING}</p>
+            <p className={`sk-text-body-medium-regular ${styles.pending}`}>{CONTENT_PENDING}</p>
           )}
         </div>
       </Collapse>
@@ -206,7 +207,7 @@ export function ModuleList({
   return (
     <ol
       data-mock="Module and topic durations are null in every payload; the unlock reason is not sent by the outline"
-      className="flex flex-col gap-3"
+      className={styles.list}
     >
       {modules.map((mod) => (
         <ModuleRow

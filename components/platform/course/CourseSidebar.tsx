@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ArrowRight, Bookmark, CalendarPlus, ChevronRight, Megaphone, MessageCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -12,6 +10,7 @@ import { useLmsStore } from "@/lib/store";
 import { courseDetailHref, hasDatesTab, type CourseDetail, type CourseToolId } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
 import { WeeklyGoalCard } from "./WeeklyGoalCard";
+import styles from "./CourseSidebar.module.css";
 
 /* DS icons bookmark, announcement-02, calendar-plus-01 (Untitled UI) → lucide equivalents. */
 const TOOL_ICON: Record<CourseToolId, LucideIcon> = {
@@ -45,17 +44,17 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
   const qaHref = courseDetailHref(course.slug, "qa");
 
   return (
-    <aside aria-label="Course details" className={cn("flex flex-col gap-4", className)}>
+    <aside aria-label="Course details" className={cn(styles.sidebar, className)}>
       <section
         data-theme="dark"
         data-skin={mounted && skin !== "teal" ? skin : undefined}
         data-mock="No mentor field on the Course Home APIs"
-        className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-primary-soft p-[15px]"
+        className={styles.mentor}
       >
-        <h2 className="sk-text-label-small-medium text-sko-text-default">{course.mentor.label}</h2>
-        <p className="sk-text-body-large-semibold text-sko-text-default">{course.mentor.title}</p>
-        <p className="sk-text-body-medium-regular text-sko-text-default">{course.mentor.body}</p>
-        <ButtonLink href={qaHref} scroll={false} hierarchy="secondary" size="sm" className="w-full max-md:h-11">
+        <h2 className={`sk-text-label-small-medium ${styles.default}`}>{course.mentor.label}</h2>
+        <p className={`sk-text-body-large-semibold ${styles.default}`}>{course.mentor.title}</p>
+        <p className={`sk-text-body-medium-regular ${styles.default}`}>{course.mentor.body}</p>
+        <ButtonLink href={qaHref} scroll={false} hierarchy="secondary" size="sm" className={styles.fullAction}>
           {course.mentor.cta}
         </ButtonLink>
       </section>
@@ -66,13 +65,13 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
         mock="No instructor or author field on the Course Home APIs"
         invented="team: no instructor or author field in Open edX"
       >
-        <ul className="flex flex-col gap-layout-side">
+        <ul className={styles.people}>
           {course.team.people.map((person) => (
-            <li key={person.name} className="flex items-center gap-2">
+            <li key={person.name} className={styles.person}>
               <Avatar name={person.name} size="md" />
-              <div className="flex min-w-0 flex-1 flex-col">
-                <p className="sk-text-body-medium-semibold text-sko-text-default">{person.name}</p>
-                <p className="sk-text-body-medium-regular text-sko-text-subtle">{person.role}</p>
+              <div className={styles.personText}>
+                <p className={`sk-text-body-medium-semibold ${styles.default}`}>{person.name}</p>
+                <p className={`sk-text-body-medium-regular ${styles.subtle}`}>{person.role}</p>
               </div>
             </li>
           ))}
@@ -83,7 +82,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
           hierarchy="secondary"
           size="sm"
           leftIcon={MessageCircle}
-          className="w-full max-md:h-11"
+          className={styles.fullAction}
         >
           {course.team.cta}
         </ButtonLink>
@@ -97,14 +96,14 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
       <CardShell label={course.handouts.label} gap="lg">
         {/* Spacing/3xl between the links (24 on desktop, 20 below 1024), as in Figma; each link's
             44 target is a band drawn around its line, so the list keeps its rhythm (Nelson, 28 Oct 2026). */}
-        <ul className="flex flex-col items-start gap-[var(--sk-space-3xl)]">
+        <ul className={styles.handouts}>
           {course.handouts.items.map((item) => (
-            <li key={item} className="flex">
+            <li key={item} className={styles.flexItem}>
               {/* No files in the prototype: say so instead of a dead link. */}
               <button
                 type="button"
                 onClick={() => notInPrototype(item)}
-                className="sk-text-body-medium-medium relative text-left text-sko-text-on-primary-soft underline underline-offset-2 transition-colors before:absolute before:-inset-x-1 before:-inset-y-3 before:content-[''] hover:text-sko-text-primary [[data-large-targets]_&]:min-h-0 [[data-large-targets]_&]:min-w-0"
+                className={`sk-text-body-medium-medium ${styles.handout}`}
               >
                 {item}
               </button>
@@ -123,7 +122,7 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
             hierarchy="link"
             size="sm"
             rightIcon={ArrowRight}
-            className="self-start"
+            className={styles.selfStart}
           >
             {course.upcomingDates.cta}
           </ButtonLink>
@@ -131,25 +130,25 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
       ) : null}
 
       <CardShell label={course.tools.label} gap="lg" mock="Tool descriptions are ours; the outline sends a title and a URL">
-        <ul className="flex flex-col">
+        <ul className={styles.tools}>
           {course.tools.items.map((tool, index) => (
-            <li key={tool.id} className={cn(index < course.tools.items.length - 1 && "border-b border-sko-border-subtle")}>
+            <li key={tool.id} className={cn(index < course.tools.items.length - 1 && styles.toolDivider)}>
               <button
                 type="button"
                 onClick={() => notInPrototype(tool.title)}
-                className="flex w-full items-center gap-3 py-3 text-left"
+                className={styles.tool}
               >
                 <span
                   aria-hidden
-                  className="flex size-9 shrink-0 items-center justify-center rounded-control bg-sko-bg-subtle text-sko-icon-default"
+                  className={styles.toolIcon}
                 >
                   <Icon icon={TOOL_ICON[tool.id]} size={18} />
                 </span>
-                <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                  <span className="sk-text-body-medium-semibold text-sko-text-default">{tool.title}</span>
-                  <span className="sk-text-body-small-regular text-sko-text-subtle">{tool.description}</span>
+                <span className={styles.toolText}>
+                  <span className={`sk-text-body-medium-semibold ${styles.default}`}>{tool.title}</span>
+                  <span className={`sk-text-body-small-regular ${styles.subtle}`}>{tool.description}</span>
                 </span>
-                <Icon icon={ChevronRight} size={16} aria-hidden className="shrink-0 text-sko-icon-muted" />
+                <Icon icon={ChevronRight} size={16} aria-hidden className={styles.chevron} />
               </button>
             </li>
           ))}
