@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/lib/router";
 import { PlatformTopbar } from "./PlatformTopbar";
 import { PlatformTabBar } from "./PlatformTabBar";
 import { PlatformFooter } from "./PlatformFooter";
@@ -16,6 +14,7 @@ import { PageSkeleton } from "./PageSkeleton";
 import { usePersonaGated } from "@/lib/persona-gate";
 import { useHarbor } from "@/lib/platform/harbor";
 import { HarborRail } from "./harbor/HarborRail";
+import styles from "./PlatformPage.module.css";
 
 /**
  * Shell of every platform page: the page ground is bg/faint, the light
@@ -56,19 +55,19 @@ export function PlatformPage({
   const phone = useBreakpoint() === "mobile";
   // What the last block on the page keeps under it on a phone: the bar (16 + 52, compact since 23 Oct) and 16 of air,
   // plus the safe area.
-  const phonePad = "pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))]";
+  const phonePad = styles.phonePad;
   const clearToast = useLmsStore((s) => s.clearToast);
   return (
     <div
       data-platform-page=""
-      className="flex min-h-[100dvh] flex-col overflow-x-clip bg-sko-bg-faint"
+      className={styles.page}
     >
       <PlatformTopbar current={current} />
       {/* Both wrappers grow, so <main> (flex-1) fills a short page and the footer sits at the bottom
           of the screen on every device (Nelson, 26 Oct 2026); the panel layout puts the rail beside. */}
-      <div className={cn("flex flex-1 flex-col", harbor && "lg:flex-row lg:items-stretch")}>
+      <div className={cn(styles.body, harbor && styles.bodyHarbor)}>
       {harbor ? <HarborRail current={current} /> : null}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className={styles.column}>
       {/* A new route's content comes in (a fade and a 4px nudge); the bar above stays still. */}
       <main
         key={pathname}
@@ -77,7 +76,7 @@ export function PlatformPage({
         tabIndex={-1}
         // The room the floating tab bar needs under the page goes under the
         // last block of the page: the micro footer.
-        className={cn("sk-animate-page flex-1 outline-none", className)}
+        className={cn("sk-animate-page", styles.main, className)}
       >
         <ArrivalContext.Provider value={arrival}>
           {/* Rendered by the server and until the controller has decided (it only shows under
@@ -91,12 +90,12 @@ export function PlatformPage({
         </ArrivalContext.Provider>
       </main>
       {/* The micro footer of the platform pages (Nelson, 23 Oct 2026); the player has none. */}
-      <PlatformFooter className={cn(phone && phonePad)} />
+      <PlatformFooter className={cn(styles.footer, phone && phonePad)} />
       </div>
       </div>
       {/* One persistent live region for the load (outside the keyed <main>, so it is in the page
           before its text changes): "Loading…" while the skeleton shows, empty after. */}
-      <p role="status" className="sr-only">
+      <p role="status" className="sk-sr-only">
         {arrival.decided && arrival.first && !arrival.released ? "Loading…" : ""}
       </p>
       {phone ? <PlatformTabBar current={current} /> : null}

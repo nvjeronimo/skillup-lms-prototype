@@ -2,6 +2,7 @@ import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn, iconStroke } from "@/lib/utils";
+import styles from "./EmptyState.module.css";
 
 export interface EmptyStateProps {
   icon: LucideIcon;
@@ -23,17 +24,14 @@ export interface EmptyStateProps {
 export function EmptyState({ icon, title, description, action, titleAs: Title = "p", className }: EmptyStateProps) {
   return (
     <div
-      className={cn(
-        "flex flex-col items-center justify-center gap-4 rounded-card border border-sko-border-subtle px-8 py-12 text-center",
-        className,
-      )}
+      className={cn(styles.emptyState, className)}
     >
-      <span className="inline-flex h-14 w-14 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span className={styles.pictograph}>
         <Icon icon={icon} size={28} strokeWidth={iconStroke(28)} />
       </span>
-      <Title className="sk-text-body-large-medium text-sko-text-default">{title}</Title>
+      <Title className={cn("sk-text-body-large-medium", styles.title)}>{title}</Title>
       {description ? (
-        <p className="sk-text-body-medium-medium w-full text-sko-text-muted">{description}</p>
+        <p className={cn("sk-text-body-medium-medium", styles.description)}>{description}</p>
       ) : null}
       {action ? <div>{action}</div> : null}
     </div>

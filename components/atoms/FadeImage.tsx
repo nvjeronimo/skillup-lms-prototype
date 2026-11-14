@@ -1,8 +1,7 @@
-"use client";
-
 import * as React from "react";
 import { arrivalAfter, arrivalAtMount, isShown, type ImageArrival } from "@/lib/motion/imageArrival";
 import { cn } from "@/lib/utils";
+import styles from "./FadeImage.module.css";
 
 // useLayoutEffect on the client (a cached image is shown before the first paint), useEffect on the server.
 const useIsoLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
@@ -39,7 +38,6 @@ export const FadeImage = React.forwardRef<HTMLImageElement, FadeImageProps>(func
   }, [src]);
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- alt passes through from the caller
     <img
       ref={setRefs}
       src={src}
@@ -53,7 +51,7 @@ export const FadeImage = React.forwardRef<HTMLImageElement, FadeImageProps>(func
         setState((s) => arrivalAfter(s, "error"));
         onError?.(e);
       }}
-      className={cn("sk-fade-image", isShown(state) ? "opacity-100" : "opacity-0", className)}
+      className={cn("sk-fade-image", isShown(state) ? styles.shown : styles.pending, className)}
     />
   );
 });

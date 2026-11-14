@@ -1,0 +1,415 @@
+/*
+ * DS Button (atoms/Button, atoms/ButtonLink): Button (Type × Hierarchy), Link Button and Icon
+ * Button, with the classes buttonStyles.ts picks for the old props (tone, hierarchy, variant,
+ * size, iconOnly, loading).
+ *
+ * Specificity: a caller's own class must keep winning over the button's (a width, a height at
+ * one breakpoint, `md:hidden`, a padding). So the resting rules are written
+ * `:where(.x):is(button, a)`: specificity 0,0,1, enough to beat the reset's `button` / `a` rules
+ * (it loads before), never a caller's class. State rules (hover, focus, active, disabled) keep
+ * the specificity they had as Tailwind variants, one class plus the pseudo-class.
+ *
+ * Strokes are INSIDE in the DS: inset rings that add no width. They keep the three layers the
+ * Tailwind ring had (offset, ring, no shadow), so the computed values stay the same.
+ * Forced colors (Windows High Contrast) drops box-shadows, so every ring also gets a real 1px
+ * border there, or outline buttons lose their edge.
+ */
+
+/* ── Base ─────────────────────────────────────────────────────────── */
+/* Press: a .98 scale in short2 (motion-matrix §7.6), pinned under reduced motion below. */
+:where(.button):is(button, a) {
+  --btn-ring-offset-shadow: 0 0 transparent;
+  --btn-ring-shadow: 0 0 transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+:where(.loading):is(button, a) {
+  pointer-events: none;
+}
+
+/* DS State=Focused: a 2px border/focus-gap, then a 2px ring in the tone colour (--btn-ring). */
+:where(.ringBrand):is(button, a) {
+  --btn-ring: var(--color-border-primary);
+}
+:where(.ringDestructive):is(button, a) {
+  --btn-ring: var(--color-border-error);
+}
+:where(.ringSuccess):is(button, a) {
+  --btn-ring: var(--color-border-success);
+}
+
+/* Corners: sk-button (beside it) keeps the radius under the Square corners experiment. */
+:where(.cornered):is(button, a) {
+  border-radius: var(--sk-radius-control);
+}
+:where(.square):is(button, a) {
+  border-radius: var(--sk-radius-none);
+}
+
+/* ── Sizes ── ._Button_Structure 21851:7567 and ._Icon Button_Structure 21851:7599.
+   The label sits in a 2px "Text padding" frame (.label). */
+/* 36 tall, 8/12 padding, 4 gap, body-medium/Semibold, 20 icon. */
+:where(.sm):is(button, a) {
+  height: 36px;
+  padding-left: 12px;
+  padding-right: 12px;
+  gap: 4px;
+}
+/* 44 tall, 12/12 padding, 4 gap, body-medium/Semibold, 20 icon. */
+:where(.md):is(button, a) {
+  height: 44px;
+  padding-left: 12px;
+  padding-right: 12px;
+  gap: 4px;
+}
+/* 48 tall, 12/16 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only). */
+:where(.lg):is(button, a) {
+  height: 48px;
+  padding-left: 16px;
+  padding-right: 16px;
+  gap: 6px;
+}
+/* 56 tall, 16/20 padding, 6 gap, body-large/Semibold, 20 icon (24 icon-only). */
+:where(.xl):is(button, a) {
+  height: 56px;
+  padding-left: 20px;
+  padding-right: 20px;
+  gap: 6px;
+}
+/* Icon Button squares: 20px icon at sm/md, 24px at lg/xl. */
+:where(.squareSm):is(button, a) {
+  height: 36px;
+  width: 36px;
+}
+:where(.squareMd):is(button, a) {
+  height: 44px;
+  width: 44px;
+}
+:where(.squareLg):is(button, a) {
+  height: 48px;
+  width: 48px;
+}
+:where(.squareXl):is(button, a) {
+  height: 56px;
+  width: 56px;
+}
+/* ._Link Button_Structure 21851:7588: sm 26 (body-small), md 28, lg 32 (xl maps to lg).
+   4/2 padding, 4 gap, radius 0, 1px bottom stroke. The bottom padding is 3px so the stroke
+   keeps the 26/28/32 heights: 4 between the label and the line. */
+:where(.linkSm):is(button, a),
+:where(.linkMd):is(button, a),
+:where(.linkLg):is(button, a) {
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 4px;
+  padding-bottom: 3px;
+  gap: 4px;
+}
+:where(.linkSm):is(button, a) {
+  height: 26px;
+}
+:where(.linkMd):is(button, a) {
+  height: 28px;
+}
+:where(.linkLg):is(button, a) {
+  height: 32px;
+}
+
+/* ── Colour per Type × Hierarchy, as bound in Button 21851:7608 and Link Button 21851:7679 ── */
+/* Outline buttons: the inside stroke, its colour from --btn-stroke. A caller that lifts an outline
+   button (the assistant's "New message" pill) sets --btn-shadow: it is drawn under the stroke, as
+   a shadow utility composed with the ring before; the focus ring replaces it. */
+:where(.stroke):is(button, a) {
+  --btn-ring-offset-shadow: inset 0 0 0 0 white;
+  --btn-ring-shadow: inset 0 0 0 1px var(--btn-stroke);
+  box-shadow: var(--btn-ring-offset-shadow), var(--btn-ring-shadow), var(--btn-shadow, 0 0 transparent);
+}
+
+/* Brand: teal fill → yellow hover, dark text on hover (handoff brand-aware rule). */
+:where(.brandPrimary):is(button, a) {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+:where(.brandSecondary):is(button, a) {
+  --btn-stroke: var(--color-border-primary);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+:where(.brandTertiary):is(button, a) {
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+/* Destructive. Hover pending DS-03: the V2 hover binds border/error-soft as a fill; bg/error-soft
+   is its role-correct match. No Destructive/Tertiary in the DS: it falls back to Secondary. */
+:where(.destructivePrimary):is(button, a) {
+  background-color: var(--color-bg-error);
+  color: var(--color-text-on-error);
+}
+:where(.destructiveSecondary):is(button, a) {
+  --btn-stroke: var(--color-border-error);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-error);
+}
+/* Success. Hover pending DS-03 (the V2 Success/Primary Hover is defective): bg/success-soft +
+   text/success. No Success/Tertiary in the DS: it falls back to Secondary. */
+:where(.successPrimary):is(button, a) {
+  background-color: var(--color-bg-success);
+  color: var(--color-text-on-success);
+}
+:where(.successSecondary):is(button, a) {
+  --btn-stroke: var(--color-border-success);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-success);
+}
+
+/* Link Button (DS 15 Oct 2026): a 1px bottom stroke in every state, on the icon token of its
+   tone (border/disabled when Disabled); radius 0. Hover has no fill: the label and the stroke
+   darken. Focused: bg/faint and radius 6. sk-link-button (beside it): under "larger targets"
+   its 44 is a hit area around it (globals.css), not its height. */
+:where(.link):is(button, a) {
+  border-bottom-width: 1px;
+  background-color: transparent;
+}
+:where(.linkBrand):is(button, a) {
+  border-color: var(--color-icon-primary);
+  color: var(--color-text-primary);
+}
+:where(.linkSubtle):is(button, a) {
+  border-color: var(--color-icon-subtle);
+  color: var(--color-text-subtle);
+}
+:where(.linkDestructive):is(button, a) {
+  border-color: var(--color-icon-error);
+  color: var(--color-text-error);
+}
+:where(.linkSuccess):is(button, a) {
+  border-color: var(--color-icon-success);
+  color: var(--color-text-success);
+}
+
+/* Styles kept outside Button: `neutral` has no equivalent in it yet; `destructive` and `utility`
+   stay UUI gray-neutral by design (decision 003). No DS disabled state: 50% opacity. */
+/* Neutral grey outline, e.g. the footer "Previous". */
+:where(.legacyNeutral):is(button, a) {
+  --btn-stroke: var(--color-border-default);
+  background-color: transparent;
+  color: var(--color-text-subtle);
+}
+/* Grey stroke, red label, error-soft hover, e.g. LiveControlBar "Leave session". */
+:where(.legacyDestructive):is(button, a) {
+  --btn-stroke: var(--color-border-default);
+  background-color: transparent;
+  color: var(--color-text-error);
+}
+:where(.legacyUtility):is(button, a) {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+}
+
+/* ── Hover (only where the device can hover) ──────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .linkBrand:hover {
+    border-color: var(--color-icon-default);
+  }
+  .linkSuccess:hover {
+    border-color: var(--color-icon-accent-green);
+  }
+  .linkDestructive:hover {
+    border-color: var(--color-icon-accent-red);
+  }
+  .linkSubtle:hover {
+    border-color: var(--color-icon-muted);
+  }
+  .legacyDestructive:hover,
+  .hoverDestructive:hover,
+  .destructivePrimary:hover {
+    background-color: var(--color-bg-error-soft);
+  }
+  .brandTertiary:hover,
+  .legacyUtility:hover {
+    background-color: var(--color-bg-hover);
+  }
+  .brandPrimary:hover {
+    background-color: var(--color-bg-primary-hover);
+  }
+  .hoverBrand:hover {
+    background-color: var(--color-bg-primary-soft);
+  }
+  .legacyNeutral:hover {
+    background-color: var(--color-bg-subtle);
+  }
+  .hoverSuccess:hover,
+  .successPrimary:hover {
+    background-color: var(--color-bg-success-soft);
+  }
+  .linkSuccess:hover {
+    color: var(--color-text-accent-green);
+  }
+  .linkDestructive:hover {
+    color: var(--color-text-accent-red);
+  }
+  .destructivePrimary:hover {
+    color: var(--color-text-error);
+  }
+  .linkSubtle:hover {
+    color: var(--color-text-muted);
+  }
+  .brandPrimary:hover {
+    color: var(--color-text-on-primary-hover);
+  }
+  .linkBrand:hover {
+    color: var(--color-text-on-primary-soft);
+  }
+  .successPrimary:hover {
+    color: var(--color-text-success);
+  }
+}
+
+/* ── Focus, press, disabled ───────────────────────────────────────── */
+.link:focus-visible {
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-faint);
+}
+.button:focus-visible {
+  box-shadow:
+    var(--btn-ring-offset-shadow, 0 0 transparent),
+    var(--btn-ring-shadow, 0 0 transparent),
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--btn-ring);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.button:active {
+  transform: scale(0.98);
+  transition-duration: var(--motion-duration-short2);
+}
+.button:disabled {
+  pointer-events: none;
+}
+.link:disabled {
+  border-color: var(--color-border-disabled);
+}
+.primaryDisabled:disabled {
+  background-color: var(--color-bg-muted);
+}
+.primaryDisabled:disabled,
+.outlineDisabled:disabled,
+.ghostDisabled:disabled,
+.link:disabled {
+  color: var(--color-text-disabled);
+}
+.legacyNeutral:disabled,
+.legacyDestructive:disabled,
+.legacyUtility:disabled {
+  opacity: 0.5;
+}
+.primaryDisabled:disabled {
+  --btn-ring-offset-shadow: inset 0 0 0 0 white;
+  --btn-ring-shadow: inset 0 0 0 1px var(--btn-stroke);
+  box-shadow: var(--btn-ring-offset-shadow), var(--btn-ring-shadow), var(--btn-shadow, 0 0 transparent);
+}
+.primaryDisabled:disabled,
+.outlineDisabled:disabled {
+  --btn-stroke: var(--color-border-subtle);
+}
+
+/* Reduced motion: the press holds still (sk-press-scale did this for the Tailwind scale). */
+@media (prefers-reduced-motion: reduce) {
+  .button:active {
+    transform: scale(1);
+  }
+}
+:global([data-reduce-motion]) .button:active {
+  transform: scale(1);
+}
+
+/* Windows High Contrast drops box-shadows: the rings become a real 1px border. */
+@media (forced-colors: active) {
+  .forcedBorder {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--btn-stroke);
+  }
+  .primaryDisabled:disabled {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-border-subtle);
+  }
+  .outlineDisabled:disabled {
+    border-color: var(--color-border-subtle);
+  }
+}
+
+/* Icons. Brand icons take icon/primary while enabled; disabled icons inherit the label colour.
+   `:not(:disabled)` rather than `:enabled`: the same on a <button>, and it also matches the <a>
+   of atoms/ButtonLink, which `:enabled` never does. */
+.iconDefaultOnHover:not(:disabled):hover svg {
+  color: var(--color-icon-default);
+}
+.successPrimary:not(:disabled):hover svg {
+  color: var(--color-icon-success);
+}
+.iconError:not(:disabled) svg {
+  color: var(--color-icon-error);
+}
+.successPrimary:not(:disabled) svg {
+  color: var(--color-icon-on-success);
+}
+.iconPrimary:not(:disabled) svg {
+  color: var(--color-icon-primary);
+}
+.iconSuccess:not(:disabled) svg {
+  color: var(--color-icon-success);
+}
+.squareSvgSm svg {
+  width: 20px;
+  height: 20px;
+}
+.squareSvgLg svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* The label's 2px "Text padding" frame. */
+.label {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+/* The Done check (Lucide's Check, drawn). */
+.check {
+  flex-shrink: 0;
+}
+
+/* ── Skins (copied from tokens/direction-studio.css and tokens/skin-harbor.css / skin-fluent.css,
+   which selected the Tailwind classes this button had). Same selector shapes, so they outrank the
+   button's own rules (and a caller's class) as they did before. ── */
+/* Studio and Harbor: every one-line button is a pill; one that holds paragraphs, a column or a
+   list keeps the control radius. Link Buttons (radius 0) never matched. */
+:global([data-direction="studio"])
+  :is(button, a).cornered:not(:has(p, .flex-col, ul, ol, h2, h3, h4), [data-option-state]),
+:global([data-skin="harbor"])
+  :is(button, a).cornered:not(.flex-col, :has(p, .flex-col, ul, ol, h2, h3, h4), [data-option-state]) {
+  border-radius: 9999px;
+}
+/* Harbor: Brand Secondary is the panel's white pill with a light ring and ink text. */
+:global([data-skin="harbor"]) .brandSecondary.brandSecondary.brandSecondary {
+  --btn-stroke: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+:global([data-skin="harbor"]) .brandSecondary.brandSecondary.brandSecondary:hover {
+  --btn-stroke: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+/* Fluent: Brand Secondary is Fluent's default button, Stroke1 and neutral ink. */
+:global([data-skin="fluent"]) .brandSecondary.brandSecondary.brandSecondary {
+  --btn-stroke: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+:global([data-skin="fluent"]) .brandSecondary.brandSecondary.brandSecondary:hover {
+  --btn-stroke: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
+}

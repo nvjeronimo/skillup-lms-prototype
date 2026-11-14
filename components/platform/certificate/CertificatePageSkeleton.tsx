@@ -1,12 +1,13 @@
 import { Skeleton } from "@/components/atoms/Skeleton";
 import type { ProgramCertificateCourse } from "@/lib/platform/catalog";
 import type { ProgramCertificate } from "@/lib/platform/program";
+import styles from "./CertificatePageSkeleton.module.css";
 
 /** A breadcrumb item and its chevron: 44 tall below desktop (its target), 24 on desktop. */
 function Crumb({ text, last = false }: { text: string; last?: boolean }) {
   return (
-    <div className="flex items-center gap-1.5 md:gap-2">
-      <div className="flex min-h-11 items-center lg:min-h-6">
+    <div className={styles.crumb}>
+      <div className={styles.crumbTarget}>
         <Skeleton variant="ghost" text="body-medium-semibold">{text}</Skeleton>
       </div>
       {last ? null : <Skeleton variant="block" width={16} height={16} radius="inner" />}
@@ -17,9 +18,9 @@ function Crumb({ text, last = false }: { text: string; last?: boolean }) {
 /** A label over its value, as the facts list beside the sheet draws them. */
 function Fact({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className={styles.fact}>
       <Skeleton variant="ghost" text="body-small-regular">{label}</Skeleton>
-      <Skeleton variant="ghost" text="body-medium-semibold" className="break-all">{value}</Skeleton>
+      <Skeleton variant="ghost" text="body-medium-semibold" className={styles.breakAll}>{value}</Skeleton>
     </div>
   );
 }
@@ -43,8 +44,8 @@ export function CertificatePageSkeleton({
 }) {
   const heading = kind === "program" && program ? program.title : certificate.title;
   return (
-    <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-layout-band-x pb-8 pt-6 md:pb-12 lg:pb-20 lg:pt-6">
-      <div className="flex flex-wrap items-center gap-x-1.5 md:gap-x-2">
+    <div className={styles.page}>
+      <div className={styles.crumbs}>
         <Crumb text="My Learning" />
         {program ? (
           <>
@@ -55,7 +56,7 @@ export function CertificatePageSkeleton({
         <Crumb text={kind === "program" ? "Program certificate" : "Certificate"} last />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className={styles.heading}>
         <Skeleton variant="ghost" text="headline-small-semibold">{heading}</Skeleton>
         <Skeleton variant="ghost" text="body-medium-regular">
           {certificate.status === "issued" ? certificate.issuedLine : `Program certificate · ${certificate.title}`}
@@ -63,17 +64,17 @@ export function CertificatePageSkeleton({
       </div>
 
       {certificate.status === "issued" ? (
-        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-          <Skeleton variant="block" radius="card" className="aspect-[1123/794] w-full min-w-0 lg:flex-1" />
-          <div className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
+        <div className={styles.layout}>
+          <Skeleton variant="block" radius="card" className={styles.sheet} />
+          <div className={styles.side}>
             {[0, 1, 2].map((i) => (
               <Skeleton key={i} variant="block" height={48} radius="control" />
             ))}
-            <div className="mt-2 flex flex-col gap-3">
+            <div className={styles.facts}>
               <Fact label="Issued" value={certificate.document.issuedOn} />
               <Fact label="Certificate ID" value={certificate.document.certificateId} />
               {certificate.document.signatories.length ? (
-                <div className="flex flex-col gap-0.5">
+                <div className={styles.fact}>
                   <Skeleton variant="ghost" text="body-small-regular">Signed by</Skeleton>
                   {certificate.document.signatories.map((s) => (
                     <div key={s.name}>
@@ -88,12 +89,12 @@ export function CertificatePageSkeleton({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-          <div className="flex min-w-0 flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:p-[19px] lg:flex-1 lg:p-[23px]">
+        <div className={styles.layout}>
+          <div className={styles.missing}>
             <Skeleton variant="ghost" text="headline-small-bold">What is missing</Skeleton>
-            <div className="flex flex-col gap-4">
+            <div className={styles.requirements}>
               {certificate.requirements.map((req) => (
-                <div key={req.title} className="flex flex-col gap-0.5">
+                <div key={req.title} className={styles.fact}>
                   <Skeleton variant="ghost" text="body-medium-semibold">{req.title}</Skeleton>
                   <Skeleton variant="ghost" text="body-small-regular">{req.detail}</Skeleton>
                   <Skeleton variant="block" height={8} radius="none" />
@@ -101,13 +102,13 @@ export function CertificatePageSkeleton({
               ))}
             </div>
             {courses.length > 0 ? (
-              <div className="flex flex-col">
+              <div className={styles.courses}>
                 {courses.map((course) => (
                   <div
                     key={course.slug}
-                    className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-sko-border-subtle py-3"
+                    className={styles.course}
                   >
-                    <div className="flex min-h-11 min-w-0 items-center md:min-h-6">
+                    <div className={styles.courseTitle}>
                       <Skeleton variant="ghost" text="body-medium-medium">{`Course ${course.number} · ${course.title}`}</Skeleton>
                     </div>
                     <Skeleton variant="block" width={112} height={24} radius="pill" />
@@ -116,7 +117,7 @@ export function CertificatePageSkeleton({
               </div>
             ) : null}
           </div>
-          <div className="flex flex-col gap-3 lg:w-[320px] lg:shrink-0">
+          <div className={styles.side}>
             <Skeleton variant="block" height={48} radius="control" />
             <Skeleton variant="ghost" text="body-medium-regular">
               The certificate appears on this page once every course of the program is complete.

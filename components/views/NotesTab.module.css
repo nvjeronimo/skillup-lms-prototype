@@ -1,0 +1,57 @@
+.empty { padding-top: 12px; padding-bottom: 12px; }
+.root { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+
+/* DS Input field Size=sm, Type=Search (Focused: 2px border/primary). */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding: 8px 12px;
+  transition-property: border-color, box-shadow;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.search:focus-within {
+  border-color: var(--color-border-primary);
+  box-shadow: 0 0 0 1px var(--color-border-primary);
+}
+.searchIcon { color: var(--color-icon-faint); }
+.searchInput {
+  flex: 1 1 0%;
+  background-color: transparent;
+  color: var(--color-text-default);
+}
+/* Tailwind's outline-none lost to the global :focus-visible ring (app/globals.css, emitted after
+   the utilities); this module loads after globals, so it steps aside on focus to keep that. */
+.searchInput:not(:focus-visible) { outline: 2px solid transparent; outline-offset: 2px; }
+.searchInput::placeholder { color: var(--color-text-placeholder); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.list { display: flex; flex-direction: column; gap: 12px; }
+.noMatch { padding-top: 24px; padding-bottom: 24px; text-align: center; color: var(--color-text-subtle); }
+
+.hint {
+  margin-top: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  padding: 10px 12px;
+}
+.hintIcon { margin-top: 2px; color: var(--color-icon-subtle); }
+.hintText { color: var(--color-text-muted); }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio and Harbor: the search field wrapper is a pill. Harbor: no border, on bg/track. Fluent:
+   Stroke1 frame, accessible bottom stroke, white (all over the focus-within border). */
+:global([data-direction="studio"]) .search.search { border-radius: 9999px; }
+:global([data-skin="harbor"]) .search.search { border-radius: 9999px; }
+:global([data-skin="harbor"]) .search.search { border-color: transparent; background-color: var(--color-bg-track); }
+:global([data-skin="fluent"]) .search.search { border-color: var(--sk-fluent-stroke1); border-bottom-color: var(--color-border-default); background-color: var(--color-bg-page); }

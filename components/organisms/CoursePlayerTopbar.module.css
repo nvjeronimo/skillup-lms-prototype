@@ -1,0 +1,189 @@
+/* DS Buttons/Button utility, Size=sm: a 32px square, radius control, 20px icon in icon/subtle.
+   Hover bg/hover. Secondary adds a 1px border/default outline on bg/page. */
+.utility {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-icon-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* DS Button close X, Size=lg: 44px. */
+.large {
+  height: 44px;
+  width: 44px;
+  border-radius: var(--sk-radius-control);
+}
+/* 32px, with a 44-tall hit band 3 past each side. */
+.small {
+  position: relative;
+  height: 32px;
+  width: 32px;
+  border-radius: var(--sk-radius-control);
+}
+.small::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: -6px;
+  bottom: -6px;
+}
+.secondary {
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+@media (hover: hover) and (pointer: fine) {
+  .utility:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.bell {
+  position: relative;
+}
+.dot {
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  height: 8px;
+  width: 8px;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-primary);
+}
+.logo {
+  height: 24px;
+}
+
+/* Mobile: three equal columns, 56 tall, padding 0/8/0/12. */
+.mobileBar {
+  display: grid;
+  height: 56px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding-left: 12px;
+  padding-right: 8px;
+}
+.mobileStart {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+.mobileLogo {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+}
+.mobileEnd {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.mobileAccount {
+  display: flex;
+  align-items: center;
+  border-radius: var(--sk-radius-control);
+}
+
+/* Desktop (padding 8/16/8/24) and Tablet (8/16/8/20): 60 tall. */
+.bar {
+  display: flex;
+  height: 60px;
+  align-items: center;
+  gap: 16px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding-right: 16px;
+}
+.barDesktop {
+  padding-left: 24px;
+}
+.barTablet {
+  padding-left: 20px;
+}
+.start {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  align-items: center;
+}
+.startDesktop {
+  gap: 32px;
+}
+.startTablet {
+  gap: 24px;
+}
+.logoLink {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+.breadcrumb {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+.chevron {
+  flex-shrink: 0;
+  color: var(--color-icon-faint);
+}
+.crumb {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.crumbCurrent {
+  color: var(--color-text-primary);
+}
+.crumbParent {
+  color: var(--color-text-subtle);
+}
+/* The Assistant button keeps its word next to the mark in the player bar, also while the pill
+   rests at its compact width (the pill hides it below a 220 container). */
+.search [data-assistant-anchor] > span {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+.end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+}
+.userName {
+  color: var(--color-text-default);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the utility and account .rounded-control buttons). Their rules, kept here. */
+:global([data-direction="studio"]) .utility,
+:global([data-skin="harbor"]) .utility,
+:global([data-direction="studio"]) .mobileAccount,
+:global([data-skin="harbor"]) .mobileAccount,
+:global([data-direction="studio"]) .account,
+:global([data-skin="harbor"]) .account {
+  border-radius: 9999px;
+}

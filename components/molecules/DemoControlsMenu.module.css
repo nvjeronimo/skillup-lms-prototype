@@ -1,0 +1,183 @@
+.root {
+  position: relative;
+}
+
+/* The profile button. */
+.trigger {
+  display: flex;
+  align-items: center;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+/* Compact (phone): a bare 24px avatar with a 44-tall hit band, 3 past each side. */
+.triggerCompact {
+  position: relative;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+}
+.triggerCompact::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: -10px;
+  bottom: -10px;
+}
+/* Desktop and tablet: a 32px avatar and the name. */
+.triggerFull {
+  margin-left: 4px;
+  gap: 8px;
+  border-radius: var(--sk-radius-track);
+  padding: 4px;
+}
+/* DS Topbar v1.8 `Avatar label group`: the name over the role. */
+.who {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  padding-right: 4px;
+  text-align: left;
+}
+.name {
+  color: var(--color-text-default);
+}
+.role {
+  color: var(--color-text-subtle);
+}
+
+/* Preview device: four icon pills. */
+.pills {
+  display: flex;
+  gap: 4px;
+}
+.pill {
+  display: inline-flex;
+  height: 32px;
+  flex: 1 1 0%;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.pillOn {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.pillOff {
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pillOff:hover {
+    background-color: var(--color-bg-subtle);
+    color: var(--color-text-default);
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stackLoose {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* A row of the Content Shape Levels and Playback lists. */
+.option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  padding: 8px 12px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.optionOn {
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+.optionOff {
+  color: var(--color-text-muted);
+}
+@media (hover: hover) and (pointer: fine) {
+  .optionOff:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.check {
+  flex-shrink: 0;
+}
+
+/* Quiz mode, Lab launch, Completion: a bordered row of segments. */
+.labelled {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 4px;
+}
+.fieldLabel {
+  flex: 1 1 0%;
+  color: var(--color-text-muted);
+}
+.switch {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-control);
+}
+.switchOption {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.switchAB {
+  padding: 4px 10px;
+}
+.switchFill {
+  flex: 1 1 0%;
+  padding: 4px 8px;
+}
+.switchOn {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.switchOff {
+  color: var(--color-text-muted);
+}
+@media (hover: hover) and (pointer: fine) {
+  .switchOff:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.note {
+  padding-inline: 4px;
+  color: var(--color-text-subtle);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control, rounded-track); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .pill,
+:global([data-direction="studio"]) .triggerCompact,
+:global([data-direction="studio"]) .option,
+:global([data-skin="harbor"]) .pill,
+:global([data-skin="harbor"]) .triggerCompact,
+:global([data-skin="harbor"]) .option {
+  border-radius: 9999px;
+}
+/* The avatar's rounded-control square sat inside the rounded-track trigger: a pill in Studio. */
+:global([data-direction="studio"]) .triggerFull > :first-child > :first-child {
+  border-radius: 9999px;
+}

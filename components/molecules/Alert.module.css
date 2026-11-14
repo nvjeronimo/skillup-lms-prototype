@@ -1,0 +1,76 @@
+/* DS Alert, Color=Brand, Size=Floating (see Alert.tsx). */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border: 1px solid var(--color-border-primary-muted);
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-primary-soft);
+  padding: 16px;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* The featured icon: a 20px info-circle inside two rings, 28 and 38 wide at 30% and 10%. */
+.featured {
+  position: relative;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.ringInner,
+.ringOuter {
+  position: absolute;
+  border: 2px solid var(--color-border-primary);
+  border-radius: var(--sk-radius-pill);
+}
+.ringInner {
+  inset: -4px;
+  opacity: 0.3;
+}
+.ringOuter {
+  inset: -9px;
+  opacity: 0.1;
+}
+.icon {
+  position: relative;
+  color: var(--color-icon-primary);
+}
+
+.body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 4px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.text {
+  color: var(--color-text-muted);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border p-4); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .alert {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global([data-direction="studio"]) .alert {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .alert,
+:global([data-skin="fluent"] [data-platform-page]) .alert {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .alert {
+  border-radius: var(--sk-radius-control);
+}

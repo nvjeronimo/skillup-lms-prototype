@@ -1,0 +1,126 @@
+/* File type chip */
+.chip { flex-shrink: 0; border-radius: var(--sk-radius-control); border-width: 1px; padding: 4px 6px; }
+.chipSuccess { border-color: var(--color-border-success); color: var(--color-text-success); }
+.chipSubtle { border-color: var(--color-border-subtle); color: var(--color-text-primary); }
+.chipPrimary { border-color: var(--color-border-primary); color: var(--color-text-primary); }
+
+/* Option radio (16) */
+.radio {
+  display: inline-flex;
+  height: 16px;
+  width: 16px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.radioChecked { background-color: var(--color-bg-primary); }
+.radioDisabled { border-width: 1px; border-color: var(--color-border-disabled); background-color: var(--color-bg-faint); opacity: 0.4; }
+.radioIdle { border-width: 1px; border-color: var(--color-border-default); background-color: var(--color-bg-page); }
+/* The dot is a glyph, so it takes the icon token through currentColor. */
+.radioDot {
+  height: 6px;
+  width: 6px;
+  border-radius: var(--sk-radius-pill);
+  background-color: currentColor;
+  color: var(--color-icon-on-primary);
+}
+
+.blocks { display: flex; flex-direction: column; gap: 32px; }
+
+/* Text block */
+.text { display: flex; flex-direction: column; gap: 8px; }
+.heading { color: var(--color-text-default); }
+.paragraph { max-width: var(--sk-container-text-max-width, 1200px); text-wrap: pretty; color: var(--color-text-muted); }
+
+/* Video and image blocks */
+.figure { display: flex; flex-direction: column; gap: 8px; }
+.caption { color: var(--color-text-subtle); }
+.image {
+  display: flex;
+  aspect-ratio: 16 / 7;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-subtle);
+}
+.imageIcon { color: var(--color-text-subtle); }
+
+/* File block */
+.file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 8px 12px;
+}
+.fileInfo { display: flex; min-width: 0; align-items: center; gap: 12px; }
+.fileText { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.fileName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-text-default); }
+.fileSize { color: var(--color-text-subtle); }
+
+/* Knowledge check */
+.check {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 20px;
+  box-shadow: var(--sk-shadow-card);
+}
+.checkLabel { text-transform: uppercase; color: var(--color-text-primary); }
+.checkQuestion { color: var(--color-text-default); }
+.options { display: flex; flex-direction: column; gap: 8px; }
+/* DS LMS / Quiz · Option Row (20318:705157): p 12/16/12/12, gap 12, r8, border/subtle. */
+.option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px 16px 12px 12px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.option:focus-visible {
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--color-border-primary);
+}
+.optionRight { background-color: var(--color-bg-success-soft); color: var(--color-text-success); }
+.optionWrong { background-color: var(--color-bg-error-soft); color: var(--color-text-error); }
+.optionIdle { background-color: var(--color-bg-page); color: var(--color-text-default); }
+@media (hover: hover) and (pointer: fine) {
+  .optionOpen:hover { background-color: var(--color-bg-subtle); }
+}
+.optionLabel { flex: 1 1 0%; }
+.optionMissed { flex-shrink: 0; }
+.optionIconRight { flex-shrink: 0; color: var(--color-icon-success); }
+.optionIconWrong { flex-shrink: 0; color: var(--color-icon-error); }
+.feedbackRight { color: var(--color-text-success); }
+.feedbackWrong { color: var(--color-text-error); }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .check.check { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .image.image { border-radius: var(--sk-radius-control); }
+/* Studio and Harbor: a one-line control is a pill. */
+:global([data-direction="studio"]) .option.option { border-radius: 9999px; }
+:global([data-skin="harbor"]) .option.option { border-radius: 9999px; }

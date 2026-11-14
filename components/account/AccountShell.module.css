@@ -1,0 +1,29 @@
+/* The signed-out account pages: the logo and one card in the middle. Tablet and up from 768. */
+.page {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  background: var(--color-bg-subtle);
+  padding: 40px 16px;
+}
+.logo {
+  height: 32px;
+}
+.card {
+  margin-top: 32px;
+  display: flex;
+  width: 100%;
+  max-width: 520px;
+  flex-direction: column;
+  gap: 24px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-surface);
+  background: var(--color-bg-page);
+  padding: 24px;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+@media (min-width: 768px) {
+  .page { padding-block: 64px; }
+  .card { padding: 32px; }
+}

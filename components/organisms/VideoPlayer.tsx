@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import {
   AlertCircle,
@@ -18,6 +16,7 @@ import {
 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn, secondsToTs, tsToSeconds } from "@/lib/utils";
+import styles from "./VideoPlayer.module.css";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { usePlaybackClock } from "@/lib/playback/usePlaybackClock";
@@ -113,12 +112,6 @@ export interface VideoPlayerProps {
 
 const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
 const SKIP_SECONDS = 10;
-/** Drops the lg (40rem) container-query classes of an `auto` class list. */
-const withoutLg = (classes: string) =>
-  classes
-    .split(" ")
-    .filter((c) => !c.startsWith("[@container(min-width:40rem)]"))
-    .join(" ");
 /** DS timestamps are two-digit minutes ("00:00", "08:24"). */
 const clock = (seconds: number) => secondsToTs(seconds).padStart(5, "0");
 /** A caption is one short line: a longer transcript line is cut at a word and ends with "…". */
@@ -145,19 +138,18 @@ function captionAt(cues: Pick<TranscriptLine, "ts" | "text">[], seconds: number)
  * below, which is the sm bar's own padding) and by 1px on each side, half the 2px gap, so
  * two neighbours never overlap.
  */
-const ACTION_LAYOUT =
-  "peer relative inline-flex h-8 min-w-8 items-center justify-center rounded-control p-2 [[data-large-targets]_&]:min-h-8 [[data-large-targets]_&]:min-w-8 [[data-large-targets]_&]:before:absolute [[data-large-targets]_&]:before:-inset-x-px [[data-large-targets]_&]:before:-bottom-1 [[data-large-targets]_&]:before:-top-2 [[data-large-targets]_&]:before:content-['']";
+const ACTION_LAYOUT = styles.action;
 /**
  * The DS bar uses the Solid icons (play, pause, skip-back, skip-forward, volume-max): the
  * closed shape of the lucide glyph is filled, the open strokes (volume waves) stay lines.
  */
-const SOLID = "[&>path:first-child]:fill-current [&>polygon]:fill-current [&>rect]:fill-current";
+const SOLID = styles.solid;
 /** Colour, Type = icon (Play, Skip, Maximize): 16px icon in icon/on-media. Volume uses VOLUME_TONE. */
-const ACTION_ICON = "bg-sko-bg-overlay-soft text-sko-icon-on-media";
+const ACTION_ICON = styles.actionIcon;
 /** Colour, Type = Playback speed / Subtitles/CC: body-small/Semibold text/on-media. */
-const ACTION_LABEL = "bg-sko-bg-overlay-soft text-sko-text-on-media";
+const ACTION_LABEL = styles.actionText;
 /** State=Hover (only while the button is not active): bg/on-media-soft + backdrop-blur-sm. */
-const ACTION_HOVER = "transition-colors hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm";
+const ACTION_HOVER = styles.actionHover;
 /**
  * DS `_Video volume slider` (9264:575621 rest / 9264:575737 hover), lg only: on hover the
  * whole group takes bg/on-media-soft and the inner volume button keeps bg/overlay-soft, so
@@ -165,31 +157,22 @@ const ACTION_HOVER = "transition-colors hover:bg-sko-bg-on-media-soft hover:back
  * every other action: that is what the ready-for-dev screens show (the DS component draws
  * it bg/on-media-soft at rest; the screens override it).
  */
-const VOLUME_TONE_GROUP = "bg-sko-bg-overlay-soft text-sko-icon-on-media";
-/** The same button under a container query: its own hover below lg, the group's from lg. */
-const VOLUME_TONE_AUTO =
-  "bg-sko-bg-overlay-soft text-sko-icon-on-media transition-colors hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm [@container(min-width:40rem)]:hover:bg-sko-bg-overlay-soft [@container(min-width:40rem)]:hover:backdrop-blur-none";
+const VOLUME_TONE_GROUP = styles.actionIcon;
+/** The same button under a container query: its own hover below lg, the group's from lg (added to sm's tone). */
+const VOLUME_TONE_LG_UP = styles.volumeToneLgUp;
 /**
  * DS `Progress slider`: no handle, the 8px bg/on-media line is its own end (an 8px square
  * at 00:00). The thumb is that end: 8px, bg/on-media. Track, line and end are straight
  * (DS, 13 Oct 2026: the video sliders end straight like every progress bar).
  */
-const SEEK_THUMB =
-  "[&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-none [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
+const SEEK_THUMB = styles.seek;
 /** DS volume slider handle: 12px round bg/on-media thumb (WebKit + Firefox). The 4px track under it is straight. */
-const VOLUME_THUMB =
-  "[&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:bg-sko-bg-on-media [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-sko-bg-on-media";
-/**
- * DS Elevation/level4 geometry (2/2/-1, 4/6/-2, 12/16/-4) on the DS shadow colour.
- * The prototype has no elevation tokens yet, so the three layers share --color-shadow-default.
- */
-const ELEVATION_LEVEL4 =
-  "shadow-[0_2px_2px_-1px_var(--color-shadow-default),0_4px_6px_-2px_var(--color-shadow-default),0_12px_16px_-4px_var(--color-shadow-default)]";
+const VOLUME_THUMB = styles.volumeSlider;
 
 const TOOLTIP_ALIGN = {
-  start: "left-0",
-  center: "left-1/2 -translate-x-1/2",
-  end: "right-0",
+  start: styles.alignStart,
+  center: styles.alignCenter,
+  end: styles.alignEnd,
 } as const;
 
 interface ActionButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "type"> {
@@ -229,7 +212,7 @@ function ActionButton({
   ...rest
 }: ActionButtonProps) {
   return (
-    <span data-invented={invented} className={cn("relative inline-flex shrink-0", wrapClassName)}>
+    <span data-invented={invented} className={cn(styles.actionWrap, wrapClassName)}>
       <button
         type="button"
         aria-label={label}
@@ -237,9 +220,9 @@ function ActionButton({
           ACTION_LAYOUT,
           // Speed and CC are 32 wide in the DS: 4 of side padding lets "CC" and "1×" fit in
           // the 32 minimum, and a longer speed ("1.25×") still grows the button.
-          kind === "label" && "sk-text-body-small-semibold px-1",
+          kind === "label" && cn("sk-text-body-small-semibold", styles.actionLabelKind),
           active
-            ? "bg-sko-bg-on-media text-sko-text-on-fixed"
+            ? styles.actionActive
             : tone ?? cn(kind === "label" ? ACTION_LABEL : ACTION_ICON, ACTION_HOVER),
           className,
         )}
@@ -250,9 +233,9 @@ function ActionButton({
       <span
         aria-hidden
         className={cn(
-          "sk-text-body-medium-semibold pointer-events-none invisible absolute bottom-full mb-2 whitespace-nowrap rounded-control bg-sko-bg-inverse px-2 py-1 text-sko-text-on-inverse opacity-0 transition-opacity",
-          "peer-hover:visible peer-hover:opacity-100 peer-focus-visible:visible peer-focus-visible:opacity-100",
-          ELEVATION_LEVEL4,
+          // Shown while its button (the previous sibling) is hovered or focused; Elevation/level4.
+          "sk-text-body-medium-semibold",
+          styles.tooltip,
           TOOLTIP_ALIGN[align],
         )}
       >
@@ -322,11 +305,11 @@ export function VideoPlayer({
   const [videoFailed, setVideoFailed] = React.useState(false);
   const showVideo = Boolean(src) && !videoFailed && state !== "unavailable";
 
-  // Classes per size of the action bar, which has three. `auto` is written sm first, then md
-  // from 30rem and lg from 40rem of player width. `md` is `auto` without its lg classes: the
-  // md row needs 480px, so a forced md player falls back to sm on a phone.
-  const pick = (sm: string, lg: string, auto: string) =>
-    size === "lg" ? lg : size === "sm" ? sm : size === "md" ? withoutLg(auto) : auto;
+  // Classes per size of the action bar, which has three. `auto` is sm, then what md adds from
+  // 30rem (`mdUp`) and lg from 40rem (`lgUp`) of player width. `md` is sm + mdUp, without the lg
+  // classes: the md row needs 480px, so a forced md player falls back to sm on a phone.
+  const pick = (sm: string, lg: string, mdUp = "", lgUp = "") =>
+    size === "lg" ? lg : size === "sm" ? sm : size === "md" ? cn(sm, mdUp) : cn(sm, mdUp, lgUp);
   const pct = durationSeconds > 0 ? Math.min(100, (currentTime / durationSeconds) * 100) : 0;
   const audible = muted ? 0 : volume;
   const caption = cues ? captionAt(cues, currentTime) : null;
@@ -489,14 +472,14 @@ export function VideoPlayer({
       className={cn(
         // The ground is bg/subtle, as the player on the Video screens: the picture is fitted
         // inside it, so a player wider than 16:9 shows the ground on both sides.
-        "relative w-full overflow-hidden bg-sko-bg-subtle transition-[height,border-radius,box-shadow] duration-short4 ease-standard-decelerate",
-        (size === "auto" || size === "md") && "[container-type:inline-size]",
+        styles.player,
+        (size === "auto" || size === "md") && styles.sizeQueries,
         // An explicit height drives the sticky full→docked shrink; otherwise
         // fall back to a capped 16:9 band (Storybook / non-sticky usage).
-        heightPx ? "" : "aspect-video max-h-[34vh]",
+        heightPx ? "" : styles.band,
         // Docked treatment: square top, rounded bottom (it's flush to the top).
         // Radius as on the screens: 8 on a phone, 6 from tablet up (the DS component alone draws 12).
-        docked ? "rounded-b-card rounded-t-none md:rounded-b-card" : "rounded-card md:rounded-card",
+        docked ? styles.docked : styles.undocked,
         className,
       )}
       style={{
@@ -509,10 +492,10 @@ export function VideoPlayer({
       {/* The picture: a 16:9 frame fitted in the player's height and centred (Figma: image fill,
           Fit). No real asset is required: a flat brand colour stands in for the video frame (no
           gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
-      <div className="absolute inset-y-0 left-1/2 aspect-video max-w-full -translate-x-1/2 overflow-hidden bg-sko-bg-primary" aria-hidden>
+      <div className={styles.picture} aria-hidden>
         {youtubeId && stateProp !== "unavailable" ? (
           // YouTube's iframe, under our click layer and bar: it never takes a click itself.
-          <div ref={youtubeHost} className="pointer-events-none absolute inset-0 [&_iframe]:h-full [&_iframe]:w-full" />
+          <div ref={youtubeHost} className={styles.youtube} />
         ) : null}
         {showVideo ? (
           <video
@@ -521,7 +504,7 @@ export function VideoPlayer({
             preload="metadata"
             playsInline
             loop
-            className="absolute inset-0 h-full w-full object-contain"
+            className={styles.video}
             onError={() => setVideoFailed(true)}
             onLoadedMetadata={(e) => {
               const video = e.currentTarget;
@@ -534,8 +517,7 @@ export function VideoPlayer({
           />
         ) : null}
         {poster && !started && state !== "unavailable" ? (
-          // eslint-disable-next-line @next/next/no-img-element -- a static mock poster
-          <img src={poster} alt="" className="relative h-full w-full object-cover" />
+          <img src={poster} alt="" className={styles.poster} />
         ) : null}
       </div>
 
@@ -548,12 +530,12 @@ export function VideoPlayer({
           type="button"
           onClick={togglePlay}
           aria-label={playing ? "Pause" : "Play"}
-          className="absolute inset-0 z-10 flex items-center justify-center"
+          className={styles.clickLayer}
         >
           {!playing ? (
             <>
-              <span className="absolute inset-0 bg-sko-bg-overlay" aria-hidden />
-              <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-pill bg-sko-bg-overlay-soft text-sko-icon-on-media shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--color-bg-on-media)_12%,transparent)] backdrop-blur-lg">
+              <span className={styles.scrim} aria-hidden />
+              <span className={styles.bigPlay}>
                 <Icon icon={Play} size={20} className={SOLID} />
               </span>
             </>
@@ -563,24 +545,24 @@ export function VideoPlayer({
         <div
           role="status"
           aria-live="polite"
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-sko-bg-overlay text-center"
+          className={styles.status}
         >
           {state === "loading" ? (
             <>
-              <Loader2 size={36} strokeWidth={2} className="animate-spin text-sko-icon-on-media" />
-              <span className="sk-text-body-medium-medium text-sko-text-on-media">Loading video…</span>
+              <Loader2 size={36} strokeWidth={2} className={`sk-spin ${styles.iconOnMedia}`} />
+              <span className={`sk-text-body-medium-medium ${styles.textOnMedia}`}>Loading video…</span>
             </>
           ) : null}
           {state === "error" ? (
             <>
-              <Icon icon={AlertCircle} size={36} className="text-sko-icon-on-media" />
-              <span className="sk-text-body-medium-medium text-sko-text-on-media">
+              <Icon icon={AlertCircle} size={36} className={styles.iconOnMedia} />
+              <span className={`sk-text-body-medium-medium ${styles.textOnMedia}`}>
                 Couldn’t load this video.
               </span>
               <button
                 type="button"
                 onClick={onRetry}
-                className="sk-text-body-medium-semibold rounded-control bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
+                className={`sk-text-body-medium-semibold ${styles.fixedButton}`}
               >
                 Retry
               </button>
@@ -589,23 +571,23 @@ export function VideoPlayer({
           {state === "unavailable" ? (
             // A YouTube video removed, made private or blocked in the learner's region (ICP Video
             // row 10, 4 Nov 2026). Nothing to retry: the platform cannot bring it back.
-            <div className="flex max-w-[400px] flex-col items-center gap-2 px-6">
-              <Icon icon={AlertCircle} size={36} className="text-sko-icon-on-media" />
-              <span className="sk-text-body-large-semibold text-sko-text-on-media">This video isn’t available</span>
-              <span className="sk-text-body-medium-regular text-sko-text-on-media">
+            <div className={styles.unavailable}>
+              <Icon icon={AlertCircle} size={36} className={styles.iconOnMedia} />
+              <span className={`sk-text-body-large-semibold ${styles.textOnMedia}`}>This video isn’t available</span>
+              <span className={`sk-text-body-medium-regular ${styles.textOnMedia}`}>
                 It may have been removed, made private or blocked in your region. You can go on to the next topic.
               </span>
             </div>
           ) : null}
           {state === "ended" ? (
             <>
-              <span className="sk-text-body-large-semibold text-sko-text-on-media">You’ve finished this video</span>
+              <span className={`sk-text-body-large-semibold ${styles.textOnMedia}`}>You’ve finished this video</span>
               <button
                 type="button"
                 onClick={onReplay}
-                className="sk-text-body-medium-semibold inline-flex items-center gap-1.5 rounded-control bg-sko-bg-fixed px-3 py-1.5 text-sko-text-on-fixed"
+                className={`sk-text-body-medium-semibold ${styles.fixedButton} ${styles.replay}`}
               >
-                <Icon icon={RotateCcw} size={16} className="text-sko-icon-on-fixed" /> Replay
+                <Icon icon={RotateCcw} size={16} className={styles.iconOnFixed} /> Replay
               </button>
             </>
           ) : null}
@@ -622,15 +604,15 @@ export function VideoPlayer({
             // Centred with auto margins, not left-1/2: that halves the width the text can
             // use and wraps the caption into a column that a short player clips.
             // pointer-events-none: on sm the caption sits over the seek slider's taller touch area.
-            "pointer-events-none absolute inset-x-0 z-10 mx-auto w-fit max-w-[94%] overflow-hidden rounded-control bg-sko-bg-overlay text-center",
+            styles.caption,
             // Sits just above the action bar: 70 tall on sm, at most 72 on md and lg since the bar
             // follows the DS. At the old 112 a wrapped caption left the top of a short phone player.
-            pick("bottom-[74px]", "bottom-20", "bottom-[74px] [@container(min-width:30rem)]:bottom-20"),
+            pick(styles.captionSm, styles.captionLg, styles.captionMdUp),
           )}
         >
           {/* One bg/overlay layer, on the wrapper. At 70% (12 Oct 2026) it keeps white text at
               6.56:1 over a white frame; at 50% it took two layers to stay above 4.5:1. */}
-          <span className="sk-text-body-medium-medium block px-3 py-1 text-sko-text-on-media">
+          <span className={`sk-text-body-medium-medium ${styles.captionText}`}>
             {shownCaption}
           </span>
         </div>
@@ -643,12 +625,8 @@ export function VideoPlayer({
       <div
         hidden={state === "unavailable"}
         className={cn(
-          "absolute inset-x-0 bottom-0 z-20 [--vab-top:1rem] md:[--vab-top:1.25rem] lg:[--vab-top:1.5rem]",
-          pick(
-            "px-1 pb-1 pt-2",
-            "px-4 pb-4 pt-[var(--vab-top)]",
-            "px-1 pb-1 pt-2 [@container(min-width:30rem)]:px-3 [@container(min-width:30rem)]:pb-2 [@container(min-width:30rem)]:pt-[var(--vab-top)] [@container(min-width:40rem)]:px-4 [@container(min-width:40rem)]:pb-4",
-          ),
+          styles.bar,
+          pick(styles.barSm, styles.barLg, styles.barMdUp, styles.barLgUp),
         )}
         style={{
           background: "linear-gradient(to top, var(--color-bg-overlay), transparent)",
@@ -659,12 +637,8 @@ export function VideoPlayer({
             reaches), and `order` puts Volume next to Play and the rest on the right. */}
         <div
           className={cn(
-            "flex items-center",
-            pick(
-              "flex-wrap gap-x-0.5 gap-y-2",
-              "gap-1",
-              "flex-wrap gap-x-0.5 gap-y-2 [@container(min-width:30rem)]:flex-nowrap [@container(min-width:40rem)]:gap-x-1",
-            ),
+            styles.row,
+            pick(styles.rowSm, styles.rowLg, styles.rowMdUp, styles.rowLgUp),
           )}
         >
           <ActionButton label={playing ? "Pause" : "Play"} onClick={togglePlay} align="start">
@@ -675,7 +649,7 @@ export function VideoPlayer({
             tooltip="Skip back"
             onClick={() => skip(-SKIP_SECONDS)}
             invented="skip: the stock Open edX player has no skip buttons"
-            wrapClassName={pick("order-2", "", "order-2 [@container(min-width:30rem)]:order-none")}
+            wrapClassName={pick(styles.order2, "", styles.orderMdUp)}
           >
             <Icon icon={SkipBack} size={16} className={SOLID} />
           </ActionButton>
@@ -684,7 +658,7 @@ export function VideoPlayer({
             tooltip="Skip forward"
             onClick={() => skip(SKIP_SECONDS)}
             invented="skip: the stock Open edX player has no skip buttons"
-            wrapClassName={pick("order-2", "", "order-2 [@container(min-width:30rem)]:order-none")}
+            wrapClassName={pick(styles.order2, "", styles.orderMdUp)}
           >
             <Icon icon={SkipForward} size={16} className={SOLID} />
           </ActionButton>
@@ -692,19 +666,15 @@ export function VideoPlayer({
               md and sm: the volume button alone (it mutes). */}
           <div
             className={cn(
-              "group/vol flex shrink-0 items-center rounded-control transition-colors",
-              pick(
-                "",
-                "gap-1 pr-2 hover:bg-sko-bg-on-media-soft hover:backdrop-blur-sm",
-                "[@container(min-width:40rem)]:gap-1 [@container(min-width:40rem)]:pr-2 [@container(min-width:40rem)]:hover:bg-sko-bg-on-media-soft [@container(min-width:40rem)]:hover:backdrop-blur-sm",
-              ),
+              styles.volume,
+              pick("", styles.volumeLg, "", styles.volumeLgUp),
             )}
           >
             {/* Toggle button: constant name, state carried by aria-pressed. */}
             <ActionButton
               label="Mute"
               aria-pressed={audible === 0}
-              tone={pick(cn(ACTION_ICON, ACTION_HOVER), VOLUME_TONE_GROUP, VOLUME_TONE_AUTO)}
+              tone={pick(cn(ACTION_ICON, ACTION_HOVER), VOLUME_TONE_GROUP, "", VOLUME_TONE_LG_UP)}
               onClick={toggleMute}
             >
               <Icon icon={volumeIcon} size={16} className={SOLID} />
@@ -718,9 +688,9 @@ export function VideoPlayer({
               aria-label="Volume"
               // 4px track inside a 24px hit area, as on Seek.
               className={cn(
-                "box-content h-1 w-10 cursor-pointer appearance-none rounded-none bg-transparent bg-clip-content py-2.5",
+                styles.range,
                 VOLUME_THUMB,
-                pick("hidden", "", "hidden [@container(min-width:40rem)]:block"),
+                pick(styles.hide, "", "", styles.showLgUp),
               )}
               style={{
                 backgroundImage: `linear-gradient(to right, var(--color-bg-on-media) ${audible}%, var(--color-bg-on-media-soft) ${audible}%)`,
@@ -733,15 +703,11 @@ export function VideoPlayer({
               "-08:24"). tabular-nums keeps the slider from jittering as digits change. */}
           <div
             className={cn(
-              "flex min-w-0 items-center gap-2",
-              pick(
-                "order-first basis-full px-1",
-                "flex-1 px-2",
-                "order-first basis-full px-1 [@container(min-width:30rem)]:order-none [@container(min-width:30rem)]:flex-1 [@container(min-width:30rem)]:basis-0 [@container(min-width:40rem)]:px-2",
-              ),
+              styles.progress,
+              pick(styles.progressSm, styles.progressLg, styles.progressMdUp, styles.progressLgUp),
             )}
           >
-            <span className="sk-text-body-small-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
+            <span className={`sk-text-body-small-semibold ${styles.time}`}>
               {clock(currentTime)}
             </span>
             <input
@@ -761,19 +727,15 @@ export function VideoPlayer({
               className={cn(
                 // bg-transparent: a range input is white by default, which hid the unplayed part
                 // of the track (bg/on-media-soft is translucent).
-                "box-content h-2 w-full min-w-0 cursor-pointer appearance-none rounded-none bg-transparent bg-clip-content",
+                styles.range,
                 SEEK_THUMB,
-                pick(
-                  "-mt-[26px] pb-[5px] pt-[31px]",
-                  "py-2 [[data-large-targets]_&]:-my-1.5 [[data-large-targets]_&]:py-[18px]",
-                  "-mt-[26px] pb-[5px] pt-[31px] [@container(min-width:30rem)]:mt-0 [@container(min-width:30rem)]:py-2 [@container(min-width:30rem)]:[[data-large-targets]_&]:-my-1.5 [@container(min-width:30rem)]:[[data-large-targets]_&]:py-[18px]",
-                ),
+                pick(styles.seekSm, styles.seekLg, styles.seekMdUp),
               )}
               style={{
                 backgroundImage: `linear-gradient(to right, var(--color-bg-on-media) ${pct}%, var(--color-bg-on-media-soft) ${pct}%)`,
               }}
             />
-            <span className="sk-text-body-small-semibold shrink-0 whitespace-nowrap tabular-nums text-sko-text-on-media">
+            <span className={`sk-text-body-small-semibold ${styles.time}`}>
               {/* DS `Timestamp end`: the time left, with a minus ("-08:24"). */}
               {`-${clock(Math.max(0, durationSeconds - currentTime))}`}
             </span>
@@ -782,7 +744,7 @@ export function VideoPlayer({
           {/* sm: the DS `Actions` frame grows, which sends the next buttons to the right. */}
           <span
             aria-hidden
-            className={pick("order-1 flex-1", "hidden", "order-1 flex-1 [@container(min-width:30rem)]:hidden")}
+            className={pick(styles.spacerSm, styles.hide, styles.spacerMdUp)}
           />
           <ActionButton
             kind="label"
@@ -790,7 +752,7 @@ export function VideoPlayer({
             label={`Playback speed, ${SPEEDS[speedIdx]}×`}
             tooltip="Playback speed"
             onClick={() => setSpeedIdx((i) => (i + 1) % SPEEDS.length)}
-            wrapClassName={pick("order-3", "", "order-3 [@container(min-width:30rem)]:order-none")}
+            wrapClassName={pick(styles.order3, "", styles.orderMdUp)}
           >
             {/* DS Type=Playback speed: the number, then the 8px `playback-x` icon (1.5 stroke). */}
             {SPEEDS[speedIdx]}
@@ -803,7 +765,7 @@ export function VideoPlayer({
             active={captions}
             aria-pressed={captions}
             onClick={() => setCaptions((c) => !c)}
-            wrapClassName={pick("order-3", "", "order-3 [@container(min-width:30rem)]:order-none")}
+            wrapClassName={pick(styles.order3, "", styles.orderMdUp)}
           >
             CC
           </ActionButton>
@@ -811,7 +773,7 @@ export function VideoPlayer({
             label={fullscreen ? "Exit fullscreen" : "Fullscreen"}
             onClick={toggleFullscreen}
             align="end"
-            wrapClassName={pick("order-3", "", "order-3 [@container(min-width:30rem)]:order-none")}
+            wrapClassName={pick(styles.order3, "", styles.orderMdUp)}
           >
             <Icon icon={fullscreen ? Minimize2 : Maximize2} size={16} />
           </ActionButton>

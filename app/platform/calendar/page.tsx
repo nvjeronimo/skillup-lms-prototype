@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { CalendarView } from "@/components/platform/calendar/CalendarView";
 import { pageTitle } from "@/lib/utils";
 

@@ -1,9 +1,8 @@
-"use client";
-
 import { Badge } from "@/components/atoms/Badge";
 import { ArrivalCountFrom } from "@/components/atoms/ArrivalCount";
 import { useArrivalValue } from "@/lib/arrival/useArrival";
 import { cn } from "@/lib/utils";
+import styles from "./PlatformProgressBar.module.css";
 
 export interface PlatformProgressBarProps {
   /** 0–100. */
@@ -66,15 +65,15 @@ export function PlatformProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       className={cn(
-        height === 4 ? "h-1" : "h-2",
-        "bg-sko-bg-track",
-        showValue ? "min-w-0 flex-1" : className,
+        styles.bar,
+        height === 4 && styles.thin,
+        showValue ? styles.barInRow : className,
       )}
     >
       <div
         className={cn(
-          "h-full origin-left transition-transform duration-long2 ease-standard-decelerate",
-          done ? "bg-sko-bg-success" : "bg-sko-bg-info",
+          styles.fill,
+          done ? styles.fillComplete : styles.fillProgress,
         )}
         style={{ width: `${fill}%`, transform: arrival.armed ? "scaleX(0)" : undefined }}
       />
@@ -84,10 +83,10 @@ export function PlatformProgressBar({
   if (!showValue) return bar;
 
   return (
-    <div className={cn("flex items-center gap-3", className)}>
+    <div className={cn(styles.withValue, className)}>
       {bar}
       {/* The progressbar already carries the value. */}
-      <span aria-hidden="true" className="sk-text-body-medium-medium shrink-0 text-sko-text-muted">
+      <span aria-hidden="true" className={cn("sk-text-body-medium-medium", styles.value)}>
         <ArrivalCountFrom value={`${pct}%`} trigger={arrival.trigger} />
       </span>
     </div>
@@ -105,6 +104,6 @@ export function ProgressCardLabel({ complete, label }: { complete: boolean; labe
       Completed
     </Badge>
   ) : (
-    <p className="sk-text-body-small-regular text-sko-text-subtle">{label}</p>
+    <p className={cn("sk-text-body-small-regular", styles.cardLabel)}>{label}</p>
   );
 }

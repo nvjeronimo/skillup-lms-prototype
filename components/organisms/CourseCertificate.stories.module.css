@@ -1,0 +1,5 @@
+/* Story frame: the certificate on a tinted ground. */
+.frame {
+  background-color: var(--color-text-on-primary-soft);
+  padding: 32px;
+}

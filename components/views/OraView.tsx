@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -16,6 +14,7 @@ import {
 import { getTopic } from "@/lib/data";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import styles from "./OraView.module.css";
 
 /**
  * ORA — the only topic type the learner returns to over days or weeks.
@@ -54,7 +53,7 @@ export function OraView({ topicId }: { topicId: string }) {
   const step: OraStep = !submitted ? "response" : "grade";
 
   return (
-    <div className="flex flex-col gap-8 py-6">
+    <div className={styles.root}>
       <Stepper step={step} submitted={submitted} graded={graded} />
 
       {step === "response" ? (
@@ -90,40 +89,36 @@ function Stepper({ step, submitted, graded }: { step: OraStep; submitted: boolea
     // until .sk-text-body-medium-bold exists, CT-22). Below sm it is
     // Size=Compact: the current step keeps its label and takes the free width,
     // every other step shows only its circle.
-    <ol className="flex overflow-hidden rounded-card border border-sko-border-subtle">
+    <ol className={styles.stepper}>
       {steps.map((s, i) => {
         const isCurrent = s.id === step;
         return (
           <li
             key={s.id}
             className={cn(
-              "flex min-w-0 items-center gap-2 p-4 sm:flex-1",
-              isCurrent ? "flex-1" : "max-sm:px-3",
-              i > 0 && "border-l border-sko-border-subtle",
-              isCurrent ? "bg-sko-bg-primary-soft" : s.done ? "bg-sko-bg-page" : "bg-sko-bg-faint",
+              styles.step,
+              isCurrent ? styles.stepCurrent : styles.stepOther,
+              i > 0 && styles.stepRuled,
+              isCurrent ? styles.stepCurrentBg : s.done ? styles.stepDoneBg : styles.stepTodoBg,
             )}
           >
             <span
               className={cn(
-                "inline-flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-pill",
-                s.done
-                  ? "bg-sko-bg-success text-sko-icon-on-media"
-                  : isCurrent
-                    ? "bg-sko-bg-primary text-sko-text-on-primary"
-                    : "bg-sko-bg-subtle text-sko-text-subtle",
+                styles.stepMark,
+                s.done ? styles.stepMarkDone : isCurrent ? styles.stepMarkCurrent : styles.stepMarkTodo,
               )}
             >
               {s.done ? <Icon icon={Check} size={16} /> : <span className="sk-text-body-medium-semibold">{i + 1}</span>}
             </span>
             <span
               className={cn(
-                "truncate",
-                !isCurrent && "max-sm:sr-only",
+                styles.stepLabel,
+                !isCurrent && styles.stepLabelCompact,
                 s.done
-                  ? "sk-text-body-medium-semibold text-sko-text-success"
+                  ? cn("sk-text-body-medium-semibold", styles.success)
                   : isCurrent
-                    ? "sk-text-body-medium-semibold text-sko-text-primary"
-                    : "sk-text-body-medium-medium text-sko-text-subtle",
+                    ? cn("sk-text-body-medium-semibold", styles.primary)
+                    : cn("sk-text-body-medium-medium", styles.subtle),
               )}
             >
               {s.label}
@@ -137,15 +132,15 @@ function Stepper({ step, submitted, graded }: { step: OraStep; submitted: boolea
 
 function Rubric({ ora }: { ora: OraContent }) {
   return (
-    <div className="flex flex-col gap-2">
-      <span className="sk-text-label-small-medium text-sko-text-subtle">
+    <div className={styles.rubric}>
+      <span className={`sk-text-label-small-medium ${styles.subtle}`}>
         Rubric · {oraMaxPoints(ora)} points
       </span>
-      <ul className="flex flex-col gap-1">
+      <ul className={styles.rubricList}>
         {ora.criteria.map((c) => (
-          <li key={c.id} className="flex items-baseline justify-between gap-3">
-            <span className="sk-text-body-medium-regular text-sko-text-muted">{c.label}</span>
-            <span className="sk-text-body-medium-medium shrink-0 text-sko-text-primary">
+          <li key={c.id} className={styles.rubricRow}>
+            <span className={`sk-text-body-medium-regular ${styles.muted}`}>{c.label}</span>
+            <span className={`sk-text-body-medium-medium ${styles.rubricPoints}`}>
               {c.maxPoints} pts
             </span>
           </li>
@@ -163,14 +158,14 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
   const ready = Boolean(file) && description.trim().length > 0;
 
   return (
-    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+    <section className={styles.card}>
       {/* No due date: SkillUp sets none (decision 036). */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className={styles.badges}>
         <Badge tone="brand">Graded by the course team</Badge>
       </div>
 
-      <p className="sk-text-body-large-regular text-sko-text-muted">{ora.brief}</p>
-      <p className="sk-text-body-medium-regular text-sko-text-muted">{ora.deliverable}</p>
+      <p className={`sk-text-body-large-regular ${styles.muted}`}>{ora.brief}</p>
+      <p className={`sk-text-body-medium-regular ${styles.muted}`}>{ora.deliverable}</p>
 
       <Rubric ora={ora} />
 
@@ -182,21 +177,21 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
 
       {/* Upload + the description edX requires per file. */}
       {file ? (
-        <div className="flex flex-col gap-3">
+        <div className={styles.upload}>
           {/* DS LMS / ORA · Upload State=Uploaded (20328:3584): file row p 8/12,
               no icon, meta gap 2, trailing Replace. */}
-          <div className="flex items-center gap-3 rounded-control bg-sko-bg-success-soft px-3 py-2">
-            <div className="flex min-w-0 flex-col gap-0.5">
+          <div className={styles.uploadedFile}>
+            <div className={styles.uploadedFileText}>
               {/* DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22). */}
-              <span className="sk-text-body-medium-semibold truncate text-sko-text-default">{file}</span>
-              <span className="sk-text-body-small-regular text-sko-text-subtle">2.4 MB · uploaded</span>
+              <span className={`sk-text-body-medium-semibold ${styles.uploadedFileName}`}>{file}</span>
+              <span className={`sk-text-body-small-regular ${styles.subtle}`}>2.4 MB · uploaded</span>
             </div>
             {/* Hidden while the Submit Gate is open: files can't be replaced once confirming. */}
             {!confirming ? (
               <Button
                 variant="secondary"
                 size="sm"
-                className="ml-auto"
+                className={styles.replace}
                 onClick={() => {
                   setFile(null);
                   setDescription("");
@@ -207,15 +202,15 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
               </Button>
             ) : null}
           </div>
-          <label className="flex flex-col gap-1.5">
-            <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
+          <label className={styles.field}>
+            <span className={`sk-text-body-small-medium ${styles.eyebrow}`}>
               Description (required for each file)
             </span>
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Control plan with chart and response actions"
-              className="sk-text-body-medium-regular rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none transition-colors focus-visible:border-sko-border-primary"
+              className={`sk-text-body-medium-regular ${styles.descriptionInput}`}
             />
           </label>
         </div>
@@ -223,14 +218,14 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
         <button
           type="button"
           onClick={() => setFile("Control_plan_NJ.pdf")}
-          className="flex flex-col items-center gap-1.5 rounded-card border border-dashed border-sko-border-default bg-sko-bg-subtle px-5 py-6 transition-colors hover:border-sko-border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary"
+          className={styles.dropzone}
         >
           {/* DS State=Empty (20328:3584): no icon; prompt body-medium/Bold
               (semibold until .sk-text-body-medium-bold exists, CT-22). */}
-          <span className="sk-text-body-medium-semibold text-sko-text-primary">
+          <span className={`sk-text-body-medium-semibold ${styles.primary}`}>
             Drag &amp; drop or browse files
           </span>
-          <span className="sk-text-body-small-regular text-sko-text-subtle">
+          <span className={`sk-text-body-small-regular ${styles.subtle}`}>
             {ora.acceptedTypes.join(" ")} · max 500 MB total
           </span>
         </button>
@@ -241,18 +236,18 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
         // fill + stroke, IRREVERSIBLE tag. Tag and title are Bold in the DS —
         // semibold until .sk-text-body-small-bold / .sk-text-body-large-bold exist (CT-22).
         // It rises into the place of the Submit button (short4, entrance only).
-        <div className="sk-animate-rise sk-enter-only flex flex-col gap-2 rounded-card border border-sko-border-warning bg-sko-bg-warning-soft p-4">
-          <span className="sk-text-body-small-semibold self-start rounded-control border border-sko-border-warning px-2 py-1 text-sko-text-warning">
+        <div className={`sk-animate-rise sk-enter-only ${styles.gate}`}>
+          <span className={`sk-text-body-small-semibold ${styles.gateTag}`}>
             IRREVERSIBLE
           </span>
-          <span className="sk-text-body-large-semibold text-sko-text-warning">
+          <span className={`sk-text-body-large-semibold ${styles.warning}`}>
             Submit your response?
           </span>
-          <p className="sk-text-body-medium-regular text-sko-text-warning">
+          <p className={`sk-text-body-medium-regular ${styles.warning}`}>
             After you submit, you cannot edit or replace your files. Your submission goes to the
             course team for grading.
           </p>
-          <div className="flex flex-wrap gap-2 pt-1 max-md:[&>*]:flex-1">
+          <div className={styles.gateActions}>
             <Button variant="primary" size="md" onClick={() => onSubmit(file!)}>
               Yes, submit
             </Button>
@@ -262,12 +257,12 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
           </div>
         </div>
       ) : (
-        <div className="flex flex-wrap items-center gap-3">
+        <div className={styles.submitRow}>
           <Button variant="primary" size="lg" disabled={!ready} onClick={() => setConfirming(true)}>
             Submit response
           </Button>
           {file && !ready ? (
-            <span className="sk-text-body-small-regular text-sko-text-subtle">
+            <span className={`sk-text-body-small-regular ${styles.subtle}`}>
               Add a description to continue.
             </span>
           ) : null}
@@ -280,15 +275,15 @@ function ResponseStep({ ora, onSubmit }: { ora: OraContent; onSubmit: (name: str
 /* ---- Waiting: everything done, now it depends on the course team ---- */
 function WaitingStep({ onSimulate }: { onSimulate: () => void }) {
   return (
-    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+    <section className={styles.card}>
       {/* DS LMS / ORA · Waiting Panel Kind=Awaiting grade (20328:3591): p24,
           gap 6, r10, no icon; title body-large/Bold (semibold until
           .sk-text-body-large-bold exists, CT-22). */}
-      <div className="flex flex-col items-center gap-1.5 rounded-card bg-sko-bg-primary-soft p-6 text-center">
-        <span className="sk-text-body-large-semibold text-sko-text-primary">
+      <div className={styles.waiting}>
+        <span className={`sk-text-body-large-semibold ${styles.primary}`}>
           Waiting for the course team
         </span>
-        <span className="sk-text-body-medium-regular text-sko-text-primary">
+        <span className={`sk-text-body-medium-regular ${styles.primary}`}>
           Your mentor grades your work on the rubric
         </span>
       </div>
@@ -299,7 +294,7 @@ function WaitingStep({ onSimulate }: { onSimulate: () => void }) {
         description="Response submitted. You'll get a notification when your grade is released."
       />
 
-      <div className="flex flex-wrap gap-2 border-t border-sko-border-subtle pt-4">
+      <div className={styles.demo}>
         <Button variant="secondary" size="sm" onClick={onSimulate}>
           Simulate staff grade
         </Button>
@@ -320,35 +315,36 @@ function GradeStep({ ora, score }: { ora: OraContent; score: number }) {
   }));
 
   return (
-    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+    <section className={styles.card}>
       {/* DS LMS / ORA · Grade Panel Score (20328:3634): p20, gap 2, r10.
           Score is headline-medium/Bold — semibold until
           .sk-text-headline-medium-bold exists (CT-22). */}
-      <div className="flex flex-col items-center gap-0.5 rounded-card bg-sko-bg-success-soft p-5">
-        <span className="sk-text-headline-medium-semibold text-sko-text-success">
+      <div className={styles.grade}>
+        <span className={`sk-text-headline-medium-semibold ${styles.success}`}>
           {score} / {max}
         </span>
-        <span className="sk-text-body-small-medium text-sko-text-success">
+        <span className={`sk-text-body-small-medium ${styles.success}`}>
           {pct}% · graded by the course team
         </span>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
+      <div className={styles.breakdown}>
+        <span className={`sk-text-body-small-medium ${styles.eyebrow}`}>
           Breakdown · score per criterion
         </span>
-        <ul className="flex flex-col gap-1.5">
+        <ul className={styles.breakdownList}>
           {breakdown.map((b) => (
             <li
               key={b.label}
-              className="flex items-center justify-between gap-3 rounded-control bg-sko-bg-subtle px-3 py-2"
+              className={styles.breakdownRow}
             >
-              <span className="sk-text-body-medium-regular text-sko-text-default">{b.label}</span>
+              <span className={`sk-text-body-medium-regular ${styles.default}`}>{b.label}</span>
               <span
                 className={cn(
                   // DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22).
-                  "sk-text-body-medium-semibold shrink-0",
-                  b.got === b.max ? "text-sko-text-success" : "text-sko-text-warning",
+                  "sk-text-body-medium-semibold",
+                  styles.breakdownScore,
+                  b.got === b.max ? styles.success : styles.warning,
                 )}
               >
                 {b.got} / {b.max}
@@ -358,11 +354,11 @@ function GradeStep({ ora, score }: { ora: OraContent; score: number }) {
         </ul>
       </div>
 
-      <div className="flex flex-col gap-1 rounded-card bg-sko-bg-primary-soft p-4">
-        <span className="sk-text-body-small-medium uppercase text-sko-text-primary">
+      <div className={styles.feedback}>
+        <span className={`sk-text-body-small-medium ${styles.feedbackLabel}`}>
           Feedback from the course team
         </span>
-        <p className="sk-text-body-medium-regular text-sko-text-primary">
+        <p className={`sk-text-body-medium-regular ${styles.primary}`}>
           “Clear chart and well-structured limits. The response plan could name an owner for each trigger.”
         </p>
       </div>
@@ -393,19 +389,19 @@ export function ReadingOpenResponseBlock({ topicId, openResponse }: { topicId: s
   const words = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
 
   return (
-    <section className="flex flex-col gap-4">
-      <h2 className="sk-text-title-large-bold text-sko-text-default">Your turn</h2>
-      <p className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-muted">{openResponse.intro}</p>
+    <section className={styles.openResponse}>
+      <h2 className={`sk-text-title-large-bold ${styles.default}`}>Your turn</h2>
+      <p className={`sk-text-body-large-regular ${styles.openResponseIntro}`}>{openResponse.intro}</p>
 
       <Stepper step={submitted ? "grade" : "response"} submitted={submitted} graded={graded} />
 
       {openResponse.prompts.map((prompt, i) => (
-        <label key={prompt} className="flex flex-col gap-1.5">
-          <span className="sk-text-body-medium-regular text-sko-text-muted">
+        <label key={prompt} className={styles.field}>
+          <span className={`sk-text-body-medium-regular ${styles.muted}`}>
             {i + 1} · {prompt}
           </span>
-          <span className="sk-text-body-medium-medium text-sko-text-default">
-            Your response<span className="text-sko-text-error" aria-hidden>*</span>
+          <span className={`sk-text-body-medium-medium ${styles.default}`}>
+            Your response<span className={styles.required} aria-hidden>*</span>
           </span>
           <textarea
             value={answers[i]}
@@ -417,10 +413,10 @@ export function ReadingOpenResponseBlock({ topicId, openResponse }: { topicId: s
               setAnswers((prev) => prev.map((a, j) => (j === i ? text : a)));
             }}
             placeholder="Write your response here…"
-            className="sk-text-body-large-regular w-full resize-y rounded-control border border-sko-border-default bg-sko-bg-page px-3 py-2 text-sko-text-default outline-none transition-colors placeholder:text-sko-text-placeholder focus:border-sko-border-primary read-only:bg-sko-bg-subtle"
+            className={`sk-text-body-large-regular ${styles.responseInput}`}
           />
           {!submitted ? (
-            <span className="flex flex-wrap items-center gap-3 pt-1">
+            <span className={styles.draftRow}>
               <Button
                 variant="secondary"
                 size="sm"
@@ -432,7 +428,7 @@ export function ReadingOpenResponseBlock({ topicId, openResponse }: { topicId: s
                 Save draft
               </Button>
               {savedAt[i] ? (
-                <span role="status" className="sk-text-body-small-regular text-sko-text-subtle">
+                <span role="status" className={`sk-text-body-small-regular ${styles.subtle}`}>
                   Draft saved at {savedAt[i]} · {words(answers[i])} words
                 </span>
               ) : null}
@@ -463,15 +459,15 @@ export function ReadingOpenResponseBlock({ topicId, openResponse }: { topicId: s
           </>
         )
       ) : confirming ? (
-        <div className="sk-animate-rise sk-enter-only flex flex-col gap-2 rounded-card border border-sko-border-warning bg-sko-bg-warning-soft p-4">
-          <span className="sk-text-body-small-semibold self-start rounded-control border border-sko-border-warning px-2 py-1 text-sko-text-warning">
+        <div className={`sk-animate-rise sk-enter-only ${styles.gate}`}>
+          <span className={`sk-text-body-small-semibold ${styles.gateTag}`}>
             IRREVERSIBLE
           </span>
-          <span className="sk-text-body-large-semibold text-sko-text-warning">Submit your responses?</span>
-          <p className="sk-text-body-medium-regular text-sko-text-warning">
+          <span className={`sk-text-body-large-semibold ${styles.warning}`}>Submit your responses?</span>
+          <p className={`sk-text-body-medium-regular ${styles.warning}`}>
             After you submit, you cannot edit your answers. They go to the course team for grading.
           </p>
-          <div className="flex flex-wrap gap-2 pt-1 max-md:[&>*]:flex-1">
+          <div className={styles.gateActions}>
             <Button
               variant="primary"
               size="md"
@@ -489,12 +485,12 @@ export function ReadingOpenResponseBlock({ topicId, openResponse }: { topicId: s
           </div>
         </div>
       ) : (
-        <div className="flex flex-wrap items-center gap-3">
+        <div className={styles.submitRow}>
           <Button variant="primary" size="md" disabled={!ready} onClick={() => setConfirming(true)}>
             Submit
           </Button>
           {!ready ? (
-            <span className="sk-text-body-small-regular text-sko-text-subtle">Answer both prompts to submit.</span>
+            <span className={`sk-text-body-small-regular ${styles.subtle}`}>Answer both prompts to submit.</span>
           ) : null}
         </div>
       )}

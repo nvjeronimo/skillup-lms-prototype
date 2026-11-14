@@ -1,5 +1,3 @@
-"use client";
-
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { PlatformSectionHeader } from "@/components/platform/PlatformSectionHeader";
 import {
@@ -20,6 +18,8 @@ import { PickUp } from "./PickUp";
 import { StayInformed } from "./StayInformed";
 import { openAssistant } from "@/lib/assistant/bus";
 import { deadlinesThisWeek } from "@/lib/platform/calendar";
+import { cn } from "@/lib/utils";
+import styles from "./DashboardView.module.css";
 
 /**
  * Platform Dashboard (Figma handoff cards 01–03 of 6408:35150: desktop 6408:72361, tablet
@@ -45,7 +45,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
   return (
     <PlatformPage
       current="dashboard"
-      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
+      className={styles.page}
       skeleton={
         <DashboardSkeleton
           due={dashboardDue.length}
@@ -55,16 +55,16 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
       }
     >
       {/* The frames are drawn at 1280; wider windows keep the 1200 content width. */}
-      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+      <div className={cn("sk-page-stack", styles.stack)}>
         {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
         {/* Always one line (Nelson, 23 Oct 2026): a very long name is cut with an ellipsis. */}
-        <div data-arrive={0} className="flex flex-col gap-2">
+        <div data-arrive={0} className={styles.greeting}>
           {/* No icon before the greeting (Nelson, 27 Oct 2026). */}
-          <h1 className="sk-text-headline-large-bold flex items-center truncate whitespace-nowrap text-sko-text-default">
-            <span className="truncate">
+          <h1 className={cn("sk-text-headline-large-bold", styles.title)}>
+            <span className={styles.titleText}>
               {/* Good morning / afternoon / evening, by the learner's local time (26 Oct 2026). */}
               {salutation}{" "}
-              <span data-heading-em="" className="text-sko-text-subtle">
+              <span data-heading-em="" className={styles.name}>
                 {platformUser.firstName}.
               </span>
             </span>
@@ -73,17 +73,17 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           <p
             data-invented="assistant: no AI assistant or deadline count in Open edX"
             data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)"
-            className="sk-text-body-large-regular text-sko-text-muted"
+            className={cn("sk-text-body-large-regular", styles.tip)}
           >
             {deadlinesThisWeek === 1 ? "One deadline is" : `${deadlinesThisWeek} deadlines are`} coming
             up this week. I can help you plan them.{" "}
             <button
               type="button"
               onClick={() => openAssistant("Help me plan my deadlines this week")}
-              className="sk-text-body-large-semibold inline-flex items-center gap-1 align-bottom text-sko-text-primary"
+              className={cn("sk-text-body-large-semibold", styles.tipLink)}
             >
               {/* The assistant's mark after the words (Nelson, 27 Oct 2026): this link opens the assistant. */}
-              <span className="underline underline-offset-2">Plan my week</span>
+              <span className={styles.tipLinkLabel}>Plan my week</span>
               <AssistantGlyph size={20} />
             </button>
           </p>
@@ -94,11 +94,11 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
         </div>
 
         {/* Pick up beside Stay informed. */}
-        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-stretch">
+        <div className={cn(styles.row, styles.rowStretch)}>
           <section
             data-arrive={2}
             aria-labelledby="dashboard-pickup-title"
-            className="flex min-w-0 flex-col gap-4 lg:flex-1"
+            className={styles.main}
           >
             <PlatformSectionHeader
               id="dashboard-pickup-title"
@@ -108,15 +108,15 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             />
             <PickUp resume={resume} titleId="dashboard-pickup-title" />
           </section>
-          <StayInformed className="flex flex-col lg:w-[400px] lg:shrink-0 lg:pt-12" />
+          <StayInformed className={styles.side} />
         </div>
 
         {/* Due this week beside Jump somewhere (one tile a row there). */}
-        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
+        <div className={cn(styles.row, styles.rowStart)}>
           <section
             data-arrive={3}
             aria-labelledby="dashboard-due-title"
-            className="flex min-w-0 flex-col gap-4 lg:flex-1"
+            className={styles.main}
           >
             <PlatformSectionHeader
               id="dashboard-due-title"
@@ -126,7 +126,7 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
             />
             <ul
               data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)"
-              className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
+              className={styles.dueList}
             >
               {dashboardDue.map(({ id, ...item }) => (
                 <DueItem key={id} {...item} />
@@ -136,15 +136,15 @@ export function DashboardView({ resume }: { resume: DashboardResumeRow[] }) {
           <section
             data-arrive={4}
             aria-labelledby="dashboard-jump-title"
-            className="flex flex-col gap-4 lg:w-[400px] lg:shrink-0"
+            className={styles.jump}
           >
             <PlatformSectionHeader id="dashboard-jump-title" title="Jump" emphasis="somewhere" />
             <ul
               data-mock="The Discussion count needs the notifications flag switched on"
-              className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-1"
+              className={styles.jumpList}
             >
               {dashboardJump.map((tile) => (
-                <li key={tile.id} className="min-w-0">
+                <li key={tile.id} className={styles.jumpItem}>
                   <JumpTile
                     icon={tile.icon}
                     title={tile.title}

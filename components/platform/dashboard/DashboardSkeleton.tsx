@@ -1,11 +1,13 @@
 import { Skeleton } from "@/components/atoms/Skeleton";
+import { cn } from "@/lib/utils";
+import styles from "./DashboardSkeleton.module.css";
 
 /** A section header (DS Section header): the headline-small title, the action on the right. */
 function HeaderSkeleton({ action = true }: { action?: boolean }) {
   return (
-    <div className="flex items-start justify-between gap-4">
-      <Skeleton text="headline-small-bold" width={220} className="max-w-[60%]" />
-      {action ? <Skeleton text="body-medium-semibold" width={104} className="md:h-7" /> : null}
+    <div className={styles.header}>
+      <Skeleton text="headline-small-bold" width={220} className={styles.max60} />
+      {action ? <Skeleton text="body-medium-semibold" width={104} className={styles.actionLine} /> : null}
     </div>
   );
 }
@@ -17,57 +19,57 @@ function HeaderSkeleton({ action = true }: { action?: boolean }) {
  */
 export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: number; jump: number }) {
   return (
-    <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+    <div className={cn("sk-page-stack", styles.stack)}>
       {/* Greeting: one line from tablet up, two on a phone; then the assistant's tip. */}
-      <div className="flex flex-col gap-2">
+      <div className={styles.greeting}>
         <div>
-          <Skeleton text="headline-large-bold" width={420} className="max-w-[70%]" />
-          <Skeleton text="headline-large-bold" width="35%" className="md:hidden" />
+          <Skeleton text="headline-large-bold" width={420} className={styles.max70} />
+          <Skeleton text="headline-large-bold" width="35%" className={styles.phoneOnly} />
         </div>
-        <Skeleton text="body-large-regular" width={520} className="max-w-[90%]" />
+        <Skeleton text="body-large-regular" width={520} className={styles.max90} />
       </div>
 
       {/* Today at a glance: title, then four stats (value · label · detail). */}
-      <div className="flex min-w-0 flex-col gap-4 rounded-card bg-sko-bg-page p-4 md:gap-5 md:p-5 lg:p-6">
+      <div className={styles.glance}>
         <Skeleton text="label-small-semibold" width={120} />
-        <div className="flex justify-between gap-2 md:grid md:grid-cols-4 md:gap-5 lg:gap-6">
+        <div className={styles.stats}>
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="flex min-w-0 flex-col gap-1">
+            <div key={i} className={styles.stat}>
               <Skeleton text="headline-medium-bold" width={40} />
-              <Skeleton text="label-small-semibold" width={96} className="max-w-full" />
-              <Skeleton text="body-small-medium" width={80} className="max-w-full" />
+              <Skeleton text="label-small-semibold" width={96} className={styles.maxFull} />
+              <Skeleton text="body-small-medium" width={80} className={styles.maxFull} />
             </div>
           ))}
         </div>
       </div>
 
       {/* Pick up (the list beside the chosen course) beside Stay informed (400). */}
-      <div className="flex flex-col gap-layout-column lg:flex-row lg:items-stretch">
-        <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
+      <div className={cn(styles.row, styles.rowStretch)}>
+        <div className={styles.main}>
           <HeaderSkeleton />
-          <div className="grid gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-2 lg:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
-            <div className="flex flex-col gap-2">
+          <div className={styles.pickup}>
+            <div className={styles.options}>
               {Array.from({ length: resume }, (_, i) => (
-                <div key={i} className="flex min-h-16 flex-col justify-center gap-0.5 rounded-inner bg-sko-bg-subtle px-4 py-3">
+                <div key={i} className={styles.option}>
                   <Skeleton text="body-medium-semibold" width="80%" />
                   <Skeleton text="body-small-regular" width={96} />
                 </div>
               ))}
             </div>
-            <div className="flex min-w-0 flex-col gap-4 rounded-inner bg-sko-bg-subtle p-5 md:p-6">
-              <Skeleton variant="block" radius="inner" className="aspect-[3/1] w-full" />
+            <div className={styles.panel}>
+              <Skeleton variant="block" radius="inner" className={styles.cover} />
               <Skeleton text="title-large-semibold" width="70%" />
               <Skeleton text="body-medium-regular" width="55%" />
               <Skeleton variant="block" height={8} radius="none" />
-              <div className="flex gap-3">
+              <div className={styles.buttons}>
                 <Skeleton variant="block" width={104} height={44} radius="control" />
                 <Skeleton variant="block" width={128} height={44} radius="control" />
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col lg:w-[400px] lg:shrink-0 lg:pt-12">
-          <div className="flex h-full flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-5">
+        <div className={styles.side}>
+          <div className={styles.informed}>
             <Skeleton text="title-medium-semibold" width={140} />
             <Skeleton variant="block" height={36} radius="none" />
             {[0, 1, 2, 3].map((i) => (
@@ -78,17 +80,17 @@ export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: 
       </div>
 
       {/* Due this week beside Jump somewhere (400, one tile a row there). */}
-      <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-        <div className="flex min-w-0 flex-col gap-4 lg:flex-1">
+      <div className={cn(styles.row, styles.rowStart)}>
+        <div className={styles.main}>
           <HeaderSkeleton />
-          <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+          <div className={styles.due}>
             {Array.from({ length: due }, (_, i) => (
-              <div key={i} className="flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5">
-                <div className="flex w-[60px] shrink-0 flex-col">
+              <div key={i} className={styles.dueItem}>
+                <div className={styles.dueDate}>
                   <Skeleton text="headline-small-bold" width={32} />
                   <Skeleton text="label-small-semibold" width={48} />
                 </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className={styles.dueContent}>
                   <Skeleton text="body-medium-semibold" width="80%" />
                   <Skeleton text="body-small-regular" width="60%" />
                 </div>
@@ -97,11 +99,11 @@ export function DashboardSkeleton({ due, resume, jump }: { due: number; resume: 
             ))}
           </div>
         </div>
-        <div className="flex flex-col gap-4 lg:w-[400px] lg:shrink-0">
+        <div className={styles.jump}>
           <HeaderSkeleton action={false} />
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-1">
+          <div className={styles.tiles}>
             {Array.from({ length: jump }, (_, i) => (
-              <div key={i} className="flex flex-col items-start gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
+              <div key={i} className={styles.tile}>
                 <Skeleton variant="block" width={36} height={36} radius="control" />
                 <Skeleton text="body-medium-semibold" width="60%" />
                 <Skeleton text="body-small-regular" width="90%" />

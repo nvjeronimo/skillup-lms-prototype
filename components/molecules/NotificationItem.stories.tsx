@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { NotificationItem } from "./NotificationItem";
+import styles from "./NotificationItem.stories.module.css";
 
 const meta: Meta<typeof NotificationItem> = {
   title: "Molecules/Notification Item",
@@ -21,7 +22,7 @@ const meta: Meta<typeof NotificationItem> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[440px]">
+      <div className={styles.panel}>
         <Story />
       </div>
     ),

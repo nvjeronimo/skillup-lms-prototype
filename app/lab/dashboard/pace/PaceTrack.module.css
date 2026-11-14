@@ -1,0 +1,82 @@
+/* You vs your cohort across the modules: markers above and below one segment per module. */
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.drawing {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.row {
+  display: grid;
+  gap: 4px;
+}
+.cell {
+  display: flex;
+  justify-content: center;
+}
+.marker {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.youMarker {
+  color: var(--color-text-primary);
+}
+.cohortMarker {
+  color: var(--color-text-muted);
+}
+.youPill {
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-primary);
+  padding-inline: 8px;
+  color: var(--color-text-on-primary);
+}
+.cohortPill {
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-page);
+  padding-inline: 8px;
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-strong), 0 0 #0000;
+}
+.stem {
+  height: 6px;
+  width: 2px;
+}
+.youStem {
+  background: var(--color-bg-primary);
+}
+.cohortStem {
+  background: var(--color-bg-strong);
+}
+
+.segment {
+  height: 12px;
+  border-radius: var(--sk-radius-inner);
+}
+.done {
+  background: var(--color-bg-primary);
+}
+.current {
+  background: var(--color-bg-primary-soft);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 2px var(--color-border-primary), 0 0 #0000;
+}
+.gap {
+  border: 1px dashed var(--color-border-warning);
+  background: var(--color-bg-warning-soft);
+}
+.todo {
+  background: var(--color-bg-track);
+}
+
+.number {
+  text-align: center;
+  color: var(--color-text-subtle);
+}
+.caption {
+  color: var(--color-text-muted);
+}
+.captionStrong {
+  color: var(--color-text-default);
+}

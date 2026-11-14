@@ -1,0 +1,71 @@
+/* Decision 028's Button group: segments 6 inside a 10 track with 4 of padding. */
+.group {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 2px;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-muted);
+  padding: 4px;
+}
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-radius: var(--sk-radius-control);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* The visible segment stays small; an invisible band makes the target 44 tall and reaches 6 past
+   the track's outer edge (globals.css lets [data-hit-band] skip the 44 × 44 minimum). */
+.segment::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.segment:first-child::before {
+  left: -6px;
+}
+.segment:last-child::before {
+  right: -6px;
+}
+.sm {
+  width: 24px;
+  height: 24px;
+}
+.sm::before {
+  top: -10px;
+  bottom: -10px;
+}
+.md {
+  width: 32px;
+  height: 32px;
+}
+.md::before {
+  top: -6px;
+  bottom: -6px;
+}
+.on {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  color: var(--color-icon-default);
+}
+.off {
+  border-color: transparent;
+  color: var(--color-icon-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .off:hover {
+    color: var(--color-icon-default);
+  }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control segments in a rounded-track); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .segment,
+:global([data-skin="harbor"]) .segment {
+  border-radius: 9999px;
+}

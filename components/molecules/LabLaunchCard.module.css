@@ -1,0 +1,65 @@
+/* Everything centred; padding 24 on a phone, 32 on a tablet, 40 on a desktop; gap 8. */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-width: 1px;
+  border-radius: var(--sk-radius-card);
+  padding: 24px;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .card {
+    padding: 32px;
+  }
+}
+@media (min-width: 1024px) {
+  .card {
+    padding: 40px;
+  }
+}
+.default {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+}
+.unavailable {
+  border-color: var(--color-border-error);
+  background-color: var(--color-bg-error-soft);
+}
+.provider {
+  display: contents;
+}
+.text {
+  color: var(--color-text-default);
+}
+.errorText {
+  color: var(--color-text-error);
+}
+/* The action sits 8 lower. */
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .card,
+:global([data-skin="fluent"] [data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .card {
+  border-radius: var(--sk-radius-control);
+}

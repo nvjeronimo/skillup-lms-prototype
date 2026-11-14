@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { LayoutGrid, List, Table2, type LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import type { MyLearningView } from "@/lib/platform/my-learning";
 import { cn } from "@/lib/utils";
+import styles from "./ViewToggle.module.css";
 
 export interface ViewToggleProps {
   view: MyLearningView;
@@ -36,7 +35,7 @@ export function ViewToggle({ view, onChange, withTable = false, className }: Vie
     <div
       role="group"
       aria-label="View"
-      className={cn("inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1", className)}
+      className={cn(styles.track, className)}
     >
       {options.map((option) => {
         const pressed = option.view === view;
@@ -48,10 +47,8 @@ export function ViewToggle({ view, onChange, withTable = false, className }: Vie
             aria-label={option.label}
             onClick={() => onChange(option.view)}
             className={cn(
-              "inline-flex h-8 w-11 items-center justify-center rounded-control border transition-colors",
-              pressed
-                ? "border-sko-border-subtle bg-sko-bg-page text-sko-icon-primary"
-                : "border-transparent text-sko-icon-subtle hover:bg-sko-bg-subtle",
+              styles.segment,
+              pressed ? styles.pressed : styles.rest,
             )}
           >
             <Icon icon={option.icon} size={20} aria-hidden="true" />

@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { collection, type FigmaVariable } from "./figmaTokens";
+import styles from "./Foundations.Spacing.stories.module.css";
 
 /**
  * SKO DS spacing, container and radius variables (collection 2. Responsive 📐, modes Desktop /
@@ -24,23 +25,23 @@ function modeLabel(v: FigmaVariable) {
 
 function Foundations() {
   return (
-    <div className="flex flex-col gap-8 p-6">
+    <div className={styles.page}>
       <section>
-        <h2 className="sk-text-title-medium-semibold mb-1 text-sko-text-default">Spacing</h2>
-        <p className="sk-text-body-medium-regular mb-4 text-sko-text-subtle">
+        <h2 className={`sk-text-title-medium-semibold ${styles.sectionTitle}`}>Spacing</h2>
+        <p className={`sk-text-body-medium-regular ${styles.lede}`}>
           4pt grid with a 6px half-step. From Spacing/2xl up the value shrinks on Tablet and
           Mobile (bars: {MODES.map((m) => `${short(m)} = ${m}`).join(", ")}). CSS: --sk-space-*.
         </p>
-        <div className="flex flex-col gap-3">
+        <div className={styles.spacingList}>
           {SPACING.map((s) => (
-            <div key={s.name} className="flex items-center gap-4">
-              <code className="sk-text-body-small-regular w-28 shrink-0 text-sko-text-subtle">{s.name}</code>
-              <span className="sk-text-body-small-regular w-28 shrink-0 text-sko-text-subtle">{modeLabel(s)}</span>
-              <div className="flex flex-col gap-1">
+            <div key={s.name} className={styles.row}>
+              <code className={`sk-text-body-small-regular ${styles.name}`}>{s.name}</code>
+              <span className={`sk-text-body-small-regular ${styles.name}`}>{modeLabel(s)}</span>
+              <div className={styles.bars}>
                 {px(s).map((value, i) => (
-                  <div key={MODES[i]} className="flex items-center gap-2">
-                    <span className="sk-text-label-small-regular w-3 text-sko-text-subtle">{short(MODES[i])}</span>
-                    <span className="h-2 rounded-sm bg-sko-bg-primary" style={{ width: value }} />
+                  <div key={MODES[i]} className={styles.bar}>
+                    <span className={`sk-text-label-small-regular ${styles.mode}`}>{short(MODES[i])}</span>
+                    <span className={styles.barFill} style={{ width: value }} />
                   </div>
                 ))}
               </div>
@@ -50,15 +51,15 @@ function Foundations() {
       </section>
 
       <section>
-        <h2 className="sk-text-title-medium-semibold mb-1 text-sko-text-default">Container</h2>
-        <p className="sk-text-body-medium-regular mb-4 text-sko-text-subtle">
+        <h2 className={`sk-text-title-medium-semibold ${styles.sectionTitle}`}>Container</h2>
+        <p className={`sk-text-body-medium-regular ${styles.lede}`}>
           Page inset, the gap between items inside a container, and the content column width. CSS: --sk-container-*.
         </p>
-        <div className="flex flex-col gap-2">
+        <div className={styles.containerList}>
           {CONTAINER.map((c) => (
-            <div key={c.name} className="flex items-center gap-4">
-              <code className="sk-text-body-small-regular w-48 shrink-0 text-sko-text-subtle">{c.name}</code>
-              <span className="sk-text-body-small-regular text-sko-text-default">
+            <div key={c.name} className={styles.row}>
+              <code className={`sk-text-body-small-regular ${styles.containerName}`}>{c.name}</code>
+              <span className={`sk-text-body-small-regular ${styles.default}`}>
                 {MODES.map((m) => `${short(m)} ${c.values[m]}`).join(" · ")}
               </span>
             </div>
@@ -67,22 +68,22 @@ function Foundations() {
       </section>
 
       <section>
-        <h2 className="sk-text-title-medium-semibold mb-1 text-sko-text-default">Radius roles</h2>
-        <p className="sk-text-body-medium-regular mb-4 text-sko-text-subtle">
+        <h2 className={`sk-text-title-medium-semibold ${styles.sectionTitle}`}>Radius roles</h2>
+        <p className={`sk-text-body-medium-regular ${styles.lede}`}>
           Chosen by what the element is, never by its size (tokens/radius.css). The square renders the
           live CSS variable, so it follows the Studio look and the square-corners switch.
         </p>
-        <div className="flex flex-wrap gap-6">
+        <div className={styles.radii}>
           {RADII.map((r) => {
             const role = r.name.split("/")[1];
             return (
-              <div key={r.name} className="flex flex-col items-center gap-2">
+              <div key={r.name} className={styles.radius}>
                 <span
-                  className="h-16 w-16 border border-sko-border-primary bg-sko-bg-primary-soft"
+                  className={styles.square}
                   style={{ borderRadius: `var(--sk-radius-${role})` }}
                 />
-                <code className="sk-text-body-small-regular text-sko-text-subtle">{r.name}</code>
-                <span className="sk-text-label-small-regular normal-case text-sko-text-subtle">
+                <code className={`sk-text-body-small-regular ${styles.subtle}`}>{r.name}</code>
+                <span className={`sk-text-label-small-regular ${styles.radiusLabel}`}>
                   {Number(r.values[MODES[0]]) >= 9999 ? "full" : modeLabel(r)} · rounded-{role}
                   {r.aliases?.[MODES[0]] ? ` · = ${r.aliases[MODES[0]]}` : ""}
                 </span>

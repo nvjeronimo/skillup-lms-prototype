@@ -1,0 +1,38 @@
+/* DS LMS / Section Header: a 40px (minimum) row on bg/subtle, radius 6, 16px side padding; the
+   18px title line centres at 11px. The row takes the caller's className, so its resting rules sit
+   at 0,0,1 (:where + the element: enough to beat the reset's `button` rules). */
+:where(.row):is(div, button) {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  padding: 11px 16px;
+}
+:where(.toggle):is(button) {
+  width: 100%;
+  text-align: left;
+}
+.label {
+  color: var(--color-text-muted);
+}
+/* The caret: a "▾" glyph that turns a quarter when the section is collapsed. */
+.caret {
+  display: inline-block;
+  color: var(--color-text-subtle);
+  transition-property: transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Studio and Harbor: the collapsible row is a one-line button, so a pill
+   (tokens/direction-studio.css, skin-harbor.css). */
+:global([data-direction="studio"]) button.toggle.toggle,
+:global([data-skin="harbor"]) button.toggle.toggle {
+  border-radius: 9999px;
+}

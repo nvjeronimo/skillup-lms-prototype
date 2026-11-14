@@ -19,9 +19,9 @@ import { MOTION_MS } from "./motion/tokens";
  */
 export interface SheetDragOptions {
   /** The surface that moves. */
-  panelRef: React.RefObject<HTMLElement>;
+  panelRef: React.RefObject<HTMLElement | null>;
   /** Optional dim behind it: its opacity follows the drag. */
-  backdropRef?: React.RefObject<HTMLElement>;
+  backdropRef?: React.RefObject<HTMLElement | null>;
   /** Axis of the dismiss gesture: "y" for a bottom sheet, "x" for a side drawer or panel. */
   axis: "x" | "y";
   /** Direction that dismisses: 1 = down / right, -1 = up / left. */

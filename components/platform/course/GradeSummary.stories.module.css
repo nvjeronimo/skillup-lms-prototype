@@ -1,0 +1,3 @@
+/* The story frame: the main column of the Progress tab at most. */
+.frame { max-width: 816px; }
+.states { display: flex; flex-direction: column; gap: 24px; }

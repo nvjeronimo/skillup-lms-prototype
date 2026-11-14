@@ -1,0 +1,48 @@
+/* Blocks 32 apart, 24 above and below. */
+.article { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; padding-bottom: 24px; }
+.lede { max-width: var(--sk-container-text-max-width, 1200px); text-wrap: pretty; color: var(--color-text-default); }
+.section { display: flex; flex-direction: column; gap: 8px; }
+.heading { color: var(--color-text-default); }
+.paragraph { max-width: var(--sk-container-text-max-width, 1200px); text-wrap: pretty; color: var(--color-text-muted); }
+
+/* Pull quote */
+.quote { display: flex; gap: 12px; padding-top: 8px; padding-bottom: 8px; }
+.quoteIcon { margin-top: 2px; flex-shrink: 0; color: var(--color-icon-primary); }
+.quoteBody { display: flex; flex-direction: column; gap: 8px; }
+.quoteText { max-width: var(--sk-container-text-max-width, 1200px); text-wrap: pretty; color: var(--color-text-primary); }
+.quoteAttribution { color: var(--color-text-muted); }
+
+/* Key takeaways */
+.takeaways {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-muted);
+  padding: 22px 24px;
+}
+.takeawaysLabel { text-transform: uppercase; color: var(--color-text-subtle); }
+.takeawayList { display: flex; flex-direction: column; gap: 12px; }
+.takeaway { display: flex; gap: 14px; }
+.takeawayNumber { width: 16px; flex-shrink: 0; color: var(--color-text-primary); }
+.takeawayText { color: var(--color-text-default); }
+
+/* Files: links in the body. */
+.files { display: flex; flex-direction: column; gap: 4px; }
+.fileLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-primary);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+.fileMeta { color: var(--color-text-subtle); text-decoration-line: none; }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .takeaways.takeaways { border-radius: var(--sk-radius-control); }

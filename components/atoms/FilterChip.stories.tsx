@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FilterChip } from "./FilterChip";
+import styles from "./FilterChip.stories.module.css";
 
 const meta: Meta<typeof FilterChip> = {
   title: "Atoms/Filter Chip",
@@ -17,7 +18,7 @@ export const Inactive: Story = { args: { active: false, label: "Topics", count: 
 
 export const Group: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className={styles.row}>
       <FilterChip label="All" count={5} active />
       <FilterChip label="Topics" count={3} />
       <FilterChip label="Notes" count={2} />

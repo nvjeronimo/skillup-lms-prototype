@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { ChevronDown, Download, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./TranscriptControls.module.css";
 
 export interface TranscriptControlsProps {
   showLanguage?: boolean;
@@ -38,16 +37,16 @@ export function TranscriptControls({
   className,
 }: TranscriptControlsProps) {
   return (
-    <div className={cn("flex items-center gap-3", className)}>
+    <div className={cn(styles.controls, className)}>
       {showLanguage ? (
-        <label className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-muted">
-          <span className="hidden sm:inline">Language:</span>
-          <span className="relative">
+        <label className={`sk-text-body-medium-medium ${styles.language}`}>
+          <span className={styles.languageLabel}>Language:</span>
+          <span className={styles.selectWrap}>
             <select
               aria-label="Caption language"
               value={currentLanguage}
               onChange={(e) => onLanguageChange?.(e.target.value)}
-              className="sk-text-body-medium-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
+              className={`sk-text-body-medium-medium ${styles.select}`}
             >
               {LANGS.map((l) => (
                 <option key={l.code} value={l.code}>
@@ -58,7 +57,7 @@ export function TranscriptControls({
             <ChevronDown
               size={14}
               strokeWidth={1.5}
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-icon-subtle"
+              className={styles.chevron}
             />
           </span>
         </label>
@@ -69,10 +68,10 @@ export function TranscriptControls({
           type="button"
           onClick={onDownload}
           aria-label="Download transcript"
-          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
+          className={`sk-text-body-medium-semibold ${styles.link}`}
         >
-          <Icon icon={Download} size={16} className="text-sko-icon-primary" />
-          <span className="hidden px-0.5 md:inline">Download transcript</span>
+          <Icon icon={Download} size={16} className={styles.linkIcon} />
+          <span className={styles.downloadLabel}>Download transcript</span>
         </button>
       ) : null}
 
@@ -80,10 +79,10 @@ export function TranscriptControls({
         <button
           type="button"
           onClick={onAddNote}
-          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
+          className={`sk-text-body-medium-semibold ${styles.link}`}
         >
-          <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
-          <span className="px-0.5">Add Note</span>
+          <Icon icon={Plus} size={16} className={styles.linkIcon} />
+          <span className={styles.linkLabel}>Add Note</span>
         </button>
       ) : null}
     </div>

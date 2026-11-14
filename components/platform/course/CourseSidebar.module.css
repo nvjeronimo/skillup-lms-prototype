@@ -1,0 +1,83 @@
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+/* Mentor card, pinned to the dark mode: 15 + the 1px border = the DS 16. */
+.mentor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-primary-soft);
+  padding: 15px;
+}
+.default { color: var(--color-text-default); }
+.subtle { color: var(--color-text-subtle); }
+.fullAction { width: 100%; }
+@media (max-width: 767.98px) {
+  .fullAction { height: 44px; }
+}
+.selfStart { align-self: flex-start; }
+
+.people { display: flex; flex-direction: column; gap: var(--sk-layout-side-gap); }
+.person { display: flex; align-items: center; gap: 8px; }
+.personText { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; }
+
+/* Handouts: Spacing/3xl between the links; each link's 44 target is the ::before band. */
+.handouts { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sk-space-3xl); }
+.flexItem { display: flex; }
+.handout {
+  position: relative;
+  text-align: left;
+  color: var(--color-text-on-primary-soft);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.handout::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: -12px;
+  bottom: -12px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .handout:hover { color: var(--color-text-primary); }
+}
+[data-large-targets] .handout { min-height: 0; min-width: 0; }
+
+/* Course tools */
+.tools { display: flex; flex-direction: column; }
+.toolDivider { border-bottom-width: 1px; border-color: var(--color-border-subtle); }
+.tool { display: flex; width: 100%; align-items: center; gap: 12px; padding-top: 12px; padding-bottom: 12px; text-align: left; }
+.toolIcon {
+  display: flex;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  color: var(--color-icon-default);
+}
+.toolText { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 2px; }
+.chevron { flex-shrink: 0; color: var(--color-icon-muted); }
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border.p-[15px]); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .mentor {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .mentor,
+:global([data-skin="fluent"] [data-platform-page]) .mentor {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

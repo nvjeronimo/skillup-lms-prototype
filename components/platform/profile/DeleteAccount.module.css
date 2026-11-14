@@ -1,0 +1,91 @@
+/* Delete account: the last section of Edit profile, and its two-step modal. */
+.card {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ink {
+  color: var(--color-text-default);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+.muted {
+  color: var(--color-text-muted);
+}
+.deleteButton {
+  flex-shrink: 0;
+}
+.loses {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.losesList {
+  display: flex;
+  list-style-type: disc;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 20px;
+  color: var(--color-text-muted);
+}
+.ack {
+  display: flex;
+  cursor: pointer;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px;
+}
+.ackBox {
+  margin-top: 2px;
+  height: 20px;
+  width: 20px;
+  flex-shrink: 0;
+  accent-color: var(--color-bg-primary);
+}
+@media (max-width: 767.98px) {
+  .deleteButton {
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+}
+
+/* Skin hooks that matched the Tailwind card classes (rounded-card border): Harbor and Fluent cards
+   are borderless on the card shadow; a Studio surface floats on Studio's shadow. */
+[data-skin="harbor"] [data-platform-page] .card,
+[data-skin="fluent"] [data-platform-page] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-direction="studio"] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}

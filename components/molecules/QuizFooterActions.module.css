@@ -1,0 +1,61 @@
+/* Secondary actions left, the primary right, bottom-aligned (counter-axis MAX); 8 gaps. */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+.secondary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+/* "Draft saved", where Save draft was. */
+.status {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+.saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-success);
+}
+/* The platform's review-btn: visually hidden (sk-sr-only) until focused. */
+.review {
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-primary);
+}
+.review:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  padding: 8px 12px;
+}
+.review:focus-visible {
+  outline: 2px solid var(--color-border-primary);
+  outline-offset: 2px;
+}
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.attempts {
+  color: var(--color-text-subtle);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control on the review link); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .review,
+:global([data-skin="harbor"]) .review {
+  border-radius: 9999px;
+}

@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "@/lib/router";
 import { PlatformTabs, platformPanelId, platformTabId } from "@/components/platform/PlatformTabs";
 import {
   DEFAULT_PROGRAM_TAB,
@@ -19,6 +17,7 @@ import { useHasChanged } from "@/lib/motion/useHasChanged";
 import { cn } from "@/lib/utils";
 import { useEdxScope } from "@/lib/edx-scope";
 import { SectionIntro } from "./parts";
+import styles from "./ProgramDetailView.module.css";
 
 /**
  * Program page (Figma handoff frame 6728:15050: Courses, Certificates, FAQs and About on
@@ -38,7 +37,7 @@ import { SectionIntro } from "./parts";
  *
  */
 /* A tab's main column: its blocks are stack-gap apart (DS Layout/*, Nelson 25 Oct 2026). */
-const PANEL = "flex flex-col gap-layout-stack";
+const PANEL = styles.panel;
 
 export function ProgramDetailView({ program }: { program: Program }) {
   const router = useRouter();
@@ -92,11 +91,11 @@ export function ProgramDetailView({ program }: { program: Program }) {
 
       {/* The bar is bg/page across the page, on a 1px border/subtle rule (an inset shadow, as the
           tabs' own rule, so the bar keeps its height: 48, and 44 on mobile). */}
-      <div data-arrive={1} className="bg-sko-bg-page shadow-[inset_0_-1px_0_0_var(--color-border-subtle)] forced-colors:border-b forced-colors:border-sko-border-subtle">
+      <div data-arrive={1} className={styles.bar}>
         {/* The room above the tabs equals the tab's own room to its bar (Nelson, 26 Oct 2026): 12 on mobile,
             the tab's own 12 top padding from tablet up. The tabs grow their target to 44 upwards, so the
             "larger targets" min-height is switched off here. */}
-        <div className="mx-auto w-full max-w-[1280px] pl-layout-band-x pt-3 max-md:[&_[role=tab]]:min-h-0 md:px-layout-band-x md:pt-0">
+        <div className={styles.barInner}>
           {/* DS Horizontal tabs: Size=sm on mobile, md from tablet up, on their own rule. All four panels stay mounted.
               The labels are title-medium (18 px), as on the course page (Nelson, 2 Nov 2026). */}
           <PlatformTabs
@@ -111,8 +110,8 @@ export function ProgramDetailView({ program }: { program: Program }) {
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-layout-column px-layout-band-x pb-8 pt-8 md:flex-row md:items-start md:pb-12 md:pt-8 lg:pb-20 lg:pt-10">
-        <div data-arrive={2} className="min-w-0 flex-1">
+      <div className={styles.body}>
+        <div data-arrive={2} className={styles.main}>
           {PROGRAM_TABS.map((tab) => (
             <div
               key={tab.id}
@@ -133,7 +132,7 @@ export function ProgramDetailView({ program }: { program: Program }) {
         <div
           data-arrive={3}
           hidden={active === "courses" || active === "certificates"}
-          className={cn("md:w-[320px] md:shrink-0", fadeIn)}
+          className={cn(styles.aside, fadeIn)}
         >
           <ProgramSidebar program={program} />
         </div>

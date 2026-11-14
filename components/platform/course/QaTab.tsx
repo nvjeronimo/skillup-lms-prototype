@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ArrowLeft, MoreHorizontal } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Badge } from "@/components/atoms/Badge";
@@ -9,7 +7,7 @@ import { Button } from "@/components/atoms/Button";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { CONTENT_PENDING } from "@/lib/platform/program";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { useLmsStore } from "@/lib/store";
 import { AskQuestionModal } from "@/components/platform/forms/AskQuestionModal";
 import { ReportMessageModal } from "@/components/platform/forms/ReportMessageModal";
@@ -17,6 +15,7 @@ import { NONE, sessionAdditions, useSessionAdditions } from "@/lib/platform/sess
 import { courseDetailHref, type CourseDetail, type QaMessage, type QaThread } from "@/lib/platform/course-detail";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { cn } from "@/lib/utils";
+import styles from "./QaTab.module.css";
 
 type QaFilter = CourseDetail["qaTab"]["filters"][number]["id"];
 
@@ -46,21 +45,21 @@ function ThreadRow({
 }) {
   const strong = selected || thread.unread;
   return (
-    <li className={cn("border-b border-sko-border-subtle last:border-b-0", className)} style={style}>
+    <li className={cn(styles.thread, className)} style={style}>
       <Link
         href={href}
         scroll={false}
         aria-current={selected ? "true" : undefined}
         className={cn(
           // The DS stroke is inside the card: the side padding gives the 1px back, so the text keeps its drawn width.
-          "flex items-start gap-2 px-[11px] py-3 transition-colors focus-visible:-outline-offset-2",
-          selected && "bg-sko-bg-primary-soft",
-          selectedFromTablet && "md:bg-sko-bg-primary-soft",
-          !selected && "hover:bg-sko-bg-faint",
+          styles.threadLink,
+          selected && styles.selected,
+          selectedFromTablet && styles.selectedFromTablet,
+          !selected && styles.hoverable,
         )}
       >
-        <span className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="flex flex-wrap items-start gap-1">
+        <span className={styles.threadText}>
+          <span className={styles.flags}>
             <Badge variant="outline" color="gray">
               Question
             </Badge>
@@ -73,25 +72,25 @@ function ThreadRow({
           {/* The DS text styles are not responsive: the default-open row is Medium on mobile, Semibold beside its conversation. */}
           {selectedFromTablet && !strong ? (
             <>
-              <span className="sk-text-body-medium-medium text-sko-text-default md:hidden">{thread.title}</span>
-              <span aria-hidden className="sk-text-body-medium-semibold hidden text-sko-text-default md:inline">
+              <span className={`sk-text-body-medium-medium ${styles.default} ${styles.phoneOnly}`}>{thread.title}</span>
+              <span aria-hidden className={`sk-text-body-medium-semibold ${styles.wideInline} ${styles.default}`}>
                 {thread.title}
               </span>
             </>
           ) : (
             <span
-              className={cn("text-sko-text-default", strong ? "sk-text-body-medium-semibold" : "sk-text-body-medium-medium")}
+              className={cn(styles.default, strong ? "sk-text-body-medium-semibold" : "sk-text-body-medium-medium")}
             >
               {thread.title}
             </span>
           )}
-          <span className="sk-text-body-small-regular truncate text-sko-text-muted">{thread.preview}</span>
-          <span className="sk-text-body-small-regular text-sko-text-subtle">{thread.meta}</span>
+          <span className={`sk-text-body-small-regular ${styles.preview}`}>{thread.preview}</span>
+          <span className={`sk-text-body-small-regular ${styles.subtle}`}>{thread.meta}</span>
         </span>
         {thread.unread ? (
-          <span className="pt-2">
-            <span className="block size-2 rounded-pill bg-sko-bg-primary" />
-            <span className="sr-only">Unread</span>
+          <span className={styles.unreadWrap}>
+            <span className={styles.unreadDot} />
+            <span className="sk-sr-only">Unread</span>
           </span>
         ) : null}
       </Link>
@@ -109,21 +108,21 @@ function ThreadRow({
 export function Message({ message, report, onReport }: { message: QaMessage; report: string; onReport: () => void }) {
   if (message.from === "learner") {
     return (
-      <li className="flex flex-col items-end gap-1">
-        <p className="sk-text-body-small-medium text-sko-text-default">{message.author}</p>
-        <p className="sk-text-body-medium-regular rounded-control rounded-br-inner bg-sko-bg-primary px-3 py-2 text-sko-text-on-primary max-md:self-stretch md:max-w-[420px]">
+      <li className={styles.learner}>
+        <p className={`sk-text-body-small-medium ${styles.default}`}>{message.author}</p>
+        <p className={`sk-text-body-medium-regular ${styles.bubble} ${styles.bubbleLearner}`}>
           {message.body}
         </p>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">{message.time}</p>
+        <p className={`sk-text-body-small-regular ${styles.subtle}`}>{message.time}</p>
       </li>
     );
   }
   return (
-    <li className="flex items-start gap-2">
+    <li className={styles.mentor}>
       <Avatar name={message.author} size="sm" />
-      <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
-        <p className="flex flex-wrap items-center gap-1">
-          <span className="sk-text-body-small-medium text-sko-text-default">{message.author}</span>
+      <div className={styles.mentorBody}>
+        <p className={styles.authorLine}>
+          <span className={`sk-text-body-small-medium ${styles.default}`}>{message.author}</span>
           {message.label ? (
             <Badge variant="outline" color="gray">
               {message.label}
@@ -135,16 +134,16 @@ export function Message({ message, report, onReport }: { message: QaMessage; rep
             </Badge>
           ) : null}
         </p>
-        <p className="sk-text-body-medium-regular rounded-control rounded-bl-inner bg-sko-bg-subtle px-3 py-2 text-sko-text-default max-md:self-stretch md:max-w-[420px]">
+        <p className={`sk-text-body-medium-regular ${styles.bubble} ${styles.bubbleMentor}`}>
           {message.body}
         </p>
-        <p className="flex items-center gap-2">
-          <span className="sk-text-body-small-regular text-sko-text-subtle">{message.time}</span>
+        <p className={styles.messageFoot}>
+          <span className={`sk-text-body-small-regular ${styles.subtle}`}>{message.time}</span>
           <button
             type="button"
             onClick={onReport}
             // The target is grown by the ::before band, so the 44px minimum of the larger-targets setting is not needed on the box.
-            className="sk-text-body-small-regular relative text-sko-text-subtle underline underline-offset-2 transition-colors hover:text-sko-text-default before:absolute before:-inset-x-2 before:-inset-y-[13px] before:content-[''] [[data-large-targets]_&]:min-h-0 [[data-large-targets]_&]:min-w-0"
+            className={`sk-text-body-small-regular ${styles.report}`}
           >
             {report}
           </button>
@@ -195,50 +194,50 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
   );
 
   return (
-    <div className="flex flex-col gap-layout-stack">
-      <div className={cn("flex flex-col gap-1", explicit && "max-md:sr-only")}>
-        <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
+    <div className={styles.tab}>
+      <div className={cn(styles.intro, explicit && styles.introHidden)}>
+        <h2 className={`sk-text-headline-medium-bold ${styles.default}`}>{tab.title}</h2>
         {/* Nelson, 28 Oct 2026: Open edX has no private messages, so Q&A is the learner's question
             posts in the course discussions, public to the course and answered by its mentors
             (LMS-HANDOFF/edx-mentorship-qa.md, option D). It replaces "Private between you and your
             mentor" (21 Oct 2026). */}
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>
           Your questions to the course mentors. They are posts in the course discussions, so everyone in the
           course can read them and the answers. For open conversations, use{" "}
-          <Link href="/platform/discussion" className="text-sko-text-primary underline underline-offset-2">
+          <Link href="/platform/discussion" className={styles.inlineLink}>
             Discussion
           </Link>
           .
         </p>
       </div>
 
-      <div className="flex flex-col gap-4 md:flex-row md:items-start">
+      <div className={styles.layout}>
         <section
           aria-labelledby="qa-list-title"
           className={cn(
-            "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page md:w-[320px] md:shrink-0 lg:w-[360px]",
-            explicit && "max-md:hidden",
+            styles.list,
+            explicit && styles.hideOnPhone,
           )}
         >
-          <div className="flex items-center justify-between gap-2 bg-sko-bg-subtle px-[11px] py-3">
-            <h3 id="qa-list-title" className="sk-text-body-medium-semibold text-sko-text-default">
+          <div className={styles.listHead}>
+            <h3 id="qa-list-title" className={`sk-text-body-medium-semibold ${styles.default}`}>
               {tab.listTitle}
             </h3>
-            <Button hierarchy="secondary" size="sm" onClick={() => setAsking(true)} className="max-md:h-11">
+            <Button hierarchy="secondary" size="sm" onClick={() => setAsking(true)} className={styles.touchHeight}>
               {tab.ask}
             </Button>
           </div>
-          <div className="px-[11px] py-3">
+          <div className={styles.listSearch}>
             <SearchField value={query} onChange={setQuery} label={tab.search} />
           </div>
-          <div className="px-[11px] pb-3">
+          <div className={styles.listFilters}>
             {/* DS `Button group` v2.0 (11 Oct 2026): a bg/muted track, padding 4, gap 2, radius 8; the pressed
                 segment is a pill on bg/page with 1px border/subtle and text/primary. Until then the segments
                 were joined and the pressed one sat on bg/primary. */}
             <div
               role="group"
               aria-label="Filter questions"
-              className="inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1"
+              className={styles.segments}
             >
               {tab.filters.map((item) => (
                 <button
@@ -250,10 +249,9 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                     setFilter(item.id);
                   }}
                   className={cn(
-                    "sk-text-body-medium-semibold h-8 rounded-control border px-4 transition-colors max-md:h-11",
-                    filter === item.id
-                      ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
-                      : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+                    "sk-text-body-medium-semibold",
+                    styles.segment,
+                    filter === item.id ? styles.segmentOn : styles.segmentOff,
                   )}
                 >
                   {item.label}
@@ -271,7 +269,7 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
             }}
           >
             {threads.length ? (
-              <ul className="border-t border-sko-border-subtle">
+              <ul className={styles.threads}>
                 {threads.map((thread, i) => (
                   <ThreadRow
                     key={thread.id}
@@ -285,37 +283,37 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                 ))}
               </ul>
             ) : (
-              <p role="status" className="sk-text-body-medium-regular border-t border-sko-border-subtle p-3 text-sko-text-subtle">
+              <p role="status" className={`sk-text-body-medium-regular ${styles.empty}`}>
                 No questions match.
               </p>
             )}
           </div>
         </section>
 
-        <div className={cn("min-w-0 flex-1 flex-col gap-4", explicit ? "flex" : "hidden md:flex")}>
+        <div className={cn(styles.conversation, explicit ? styles.shown : styles.shownFromTablet)}>
           <ButtonLink
             href={courseDetailHref(course.slug, "qa")}
             scroll={false}
             hierarchy="link-subtle"
             size="sm"
             leftIcon={ArrowLeft}
-            className="self-start !border-b-0 max-md:min-h-11 md:hidden"
+            className={styles.back}
           >
             {tab.back}
           </ButtonLink>
 
           <section
             aria-labelledby="qa-thread-title"
-            className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page"
+            className={styles.threadCard}
           >
-            <div className="flex items-start gap-2 bg-sko-bg-subtle p-3 md:items-center">
-              <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className={styles.threadHead}>
+              <div className={styles.threadHeading}>
                 {/* Title and meta fill the header up to the menu button (Nelson, 3 Nov 2026; the DS
                     texts were 307 and 316 wide, which wrapped short titles with room to spare). */}
-                <h3 id="qa-thread-title" className="sk-text-body-medium-semibold text-sko-text-default">
+                <h3 id="qa-thread-title" className={`sk-text-body-medium-semibold ${styles.default}`}>
                   {current.title}
                 </h3>
-                <p className="sk-text-body-small-regular text-sko-text-subtle">
+                <p className={`sk-text-body-small-regular ${styles.subtle}`}>
                   {/* The mentor and the Staff label Open edX shows on a course-team answer; no reply time,
                       which the platform does not know. */}
                   {`${tab.mentorLine.split(" · ")[0]} · Staff · question post, visible to the course`}
@@ -327,14 +325,14 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                 iconOnly
                 aria-label="More actions: copy link, report"
                 onClick={() => notInPrototype("The question menu")}
-                className="shrink-0 ring-1 ring-inset ring-sko-border-default max-md:size-11"
+                className={styles.menuButton}
               >
                 <MoreHorizontal size={20} aria-hidden />
               </Button>
             </div>
 
             {current.messages?.length ? (
-              <ol aria-label="Messages" className="flex flex-col gap-4 p-4 md:p-5 lg:p-6">
+              <ol aria-label="Messages" className={styles.messages}>
                 {current.messages.map((message) => (
                   <Message
                     key={message.id}
@@ -345,34 +343,34 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
                 ))}
               </ol>
             ) : (
-              <p className="sk-text-body-medium-regular p-4 text-sko-text-subtle md:p-5 lg:p-6">{CONTENT_PENDING}</p>
+              <p className={`sk-text-body-medium-regular ${styles.pending}`}>{CONTENT_PENDING}</p>
             )}
 
             <form
-              className="flex flex-col gap-2 border-t border-sko-border-subtle p-3"
+              className={styles.reply}
               onSubmit={(event) => {
                 event.preventDefault();
                 notInPrototype("Sending a reply");
               }}
             >
-              <div className="flex items-center gap-2">
-                <label className="flex h-11 min-w-0 flex-1 items-center rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm transition-[border-color,box-shadow] focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary md:h-10">
-                  <span className="sr-only">{tab.replyPlaceholder}</span>
+              <div className={styles.replyRow}>
+                <label className={styles.replyField}>
+                  <span className="sk-sr-only">{tab.replyPlaceholder}</span>
                   <input
                     type="text"
                     value={reply}
                     onChange={(event) => setReply(event.target.value)}
                     placeholder={tab.replyPlaceholder}
                     autoComplete="off"
-                    className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default placeholder:text-sko-text-placeholder focus:outline-none"
+                    className={`sk-text-body-large-regular ${styles.replyInput}`}
                   />
                 </label>
-                <Button type="submit" size="sm" className="shrink-0 max-md:h-11">
+                <Button type="submit" size="sm" className={styles.send}>
                   {tab.send}
                 </Button>
               </div>
-              <label className="sk-text-body-small-regular flex items-center gap-1 self-start text-sko-text-subtle max-md:min-h-11">
-                <input type="checkbox" className="size-[13px] rounded-inner accent-[var(--color-bg-primary)]" />
+              <label className={`sk-text-body-small-regular ${styles.anonymous}`}>
+                <input type="checkbox" className={styles.checkbox} />
                 {tab.anonymous}
               </label>
             </form>

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Share2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
@@ -11,6 +9,7 @@ import { useDisclosure } from "@/lib/useDisclosure";
 import { copiedLabel } from "@/lib/motion/feedback";
 import { useCopiedFlash } from "@/lib/motion/useCopiedFlash";
 import { cn } from "@/lib/utils";
+import styles from "./CertificateShare.module.css";
 
 /**
  * Share an issued certificate (Nelson, 20 Oct 2026): Add to LinkedIn profile, LinkedIn, X,
@@ -74,14 +73,14 @@ export function CertificateShare({
   };
 
   return (
-    <div ref={share.containerRef} className={cn("relative", className)}>
+    <div ref={share.containerRef} className={cn(styles.share, className)}>
       <Button
         hierarchy="secondary"
         size={size}
         leftIcon={copied ? DrawnCheck : Share2}
         iconOnly={look === "icon"}
         aria-label={look === "icon" ? copiedLabel(copied, `Share certificate: ${target.title}`) : undefined}
-        className={cn(look === "icon" ? "max-md:size-11" : "w-full")}
+        className={cn(look === "icon" ? styles.icon : styles.full)}
         {...share.triggerProps}
       >
         {look === "icon" ? null : copiedLabel(copied, "Share certificate")}
@@ -90,16 +89,16 @@ export function CertificateShare({
         <div
           {...share.panelProps}
           className={cn(
-            "absolute right-0 z-20",
-            look === "button" && "left-0",
+            styles.menu,
+            look === "button" && styles.stretch,
             // Grows out of the button: upward from its top edge, or down from its bottom edge.
-            openUp ? "sk-animate-menu-up bottom-full mb-1" : "sk-animate-menu top-full mt-1",
+            openUp ? cn("sk-animate-menu-up", styles.up) : cn("sk-animate-menu", styles.down),
             look === "button"
-              ? openUp ? "origin-bottom" : "origin-top"
-              : openUp ? "origin-bottom-right" : "origin-top-right",
+              ? openUp ? styles.originBottom : styles.originTop
+              : openUp ? styles.originBottomRight : styles.originTopRight,
           )}
         >
-          <ShareMenu onSelect={onSelect} onClose={share.close} className={look === "button" ? "w-full" : undefined} />
+          <ShareMenu onSelect={onSelect} onClose={share.close} className={look === "button" ? styles.full : undefined} />
         </div>
       ) : null}
     </div>

@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { Bell, Bookmark, ChevronRight, List, MessagesSquare, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
@@ -13,6 +11,7 @@ import { useLmsStore } from "@/lib/store";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 import { HarborSearch, type SearchScope } from "@/components/platform/harbor/HarborSearch";
 import { SearchAssistantButton } from "@/components/platform/harbor/SearchAssistantButton";
+import styles from "./CoursePlayerTopbar.module.css";
 
 export type TopbarSize = "Desktop" | "Tablet" | "Mobile";
 
@@ -97,11 +96,9 @@ function UtilityButton({
       data-hit-band={large ? undefined : ""}
       {...aria}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center text-sko-icon-subtle transition-colors hover:bg-sko-bg-hover",
-        large
-          ? "h-11 w-11 rounded-control"
-          : "relative h-8 w-8 rounded-control before:absolute before:-inset-x-[3px] before:-inset-y-1.5 before:content-['']",
-        hierarchy === "secondary" && "border border-sko-border-default bg-sko-bg-page",
+        styles.utility,
+        large ? styles.large : styles.small,
+        hierarchy === "secondary" && styles.secondary,
         className,
       )}
     >
@@ -157,11 +154,11 @@ export function CoursePlayerTopbar({
   // The unread dot pops when it appears (a new notification), not when the bar first paints.
   const dotPop = useHasChanged(notificationsCount > 0) ? "sk-animate-badge-pop" : undefined;
   const bell = (
-    <span className="relative">
+    <span className={styles.bell}>
       <Icon icon={Bell} size={20} />
       {notificationsCount > 0 ? (
         <span
-          className={cn(dotPop, "absolute -right-0.5 -top-0.5 h-2 w-2 rounded-pill bg-sko-bg-primary")}
+          className={cn(dotPop, styles.dot)}
           aria-hidden
         />
       ) : null}
@@ -179,11 +176,11 @@ export function CoursePlayerTopbar({
     return (
       <header
         className={cn(
-          "grid h-14 grid-cols-3 items-center gap-2 border-b border-sko-border-subtle bg-sko-bg-page pl-3 pr-2",
+          styles.mobileBar,
           className,
         )}
       >
-        <div className="flex min-w-0 items-center gap-2">
+        <div className={styles.mobileStart}>
           {/* No menu, no button: a course package of the proposal flow has no Course Journey. */}
           {onMenu ? (
           <UtilityButton
@@ -205,18 +202,18 @@ export function CoursePlayerTopbar({
         <Link
           href="/platform/dashboard"
           aria-label="SkillUp, Dashboard"
-          className="flex min-h-11 items-center justify-center justify-self-center"
+          className={styles.mobileLogo}
         >
-          <SkillUpLogo className="h-6" />
+          <SkillUpLogo className={styles.logo} />
         </Link>
-        <div className="flex items-center justify-end gap-1.5">
+        <div className={styles.mobileEnd}>
           {showBookmark ? (
             <UtilityButton label="Saved items" onClick={onBookmark}>
               <Icon icon={Bookmark} size={20} />
             </UtilityButton>
           ) : null}
           {accountMenu ?? (
-            <button type="button" aria-label="Account" className="flex items-center rounded-control">
+            <button type="button" aria-label="Account" className={styles.mobileAccount}>
               <Avatar name={userName} src={userAvatarUrl} size="xs" shape="square" />
             </button>
           )}
@@ -233,27 +230,28 @@ export function CoursePlayerTopbar({
       className={cn(
         // DS padding 8/16/8/24 (Desktop) · 8/16/8/20 (Tablet); the 60px height with
         // items-center covers the 8px vertical padding.
-        "flex h-[60px] items-center gap-4 border-b border-sko-border-subtle bg-sko-bg-page",
-        isDesktop ? "pl-6 pr-4" : "pl-5 pr-4",
+        styles.bar,
+        isDesktop ? styles.barDesktop : styles.barTablet,
         className,
       )}
     >
-      <div className={cn("flex min-w-0 flex-1 items-center", isDesktop ? "gap-8" : "gap-6")}>
-        <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex shrink-0 items-center">
-          <SkillUpLogo className="h-6" />
+      <div className={cn(styles.start, isDesktop ? styles.startDesktop : styles.startTablet)}>
+        <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className={styles.logoLink}>
+          <SkillUpLogo className={styles.logo} />
         </Link>
 
         {isDesktop && breadcrumb.length ? (
-          <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2">
+          <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
             {breadcrumb.map((seg, i) => (
               <React.Fragment key={seg}>
                 {i > 0 ? (
-                  <Icon icon={ChevronRight} size={16} className="shrink-0 text-sko-icon-faint" />
+                  <Icon icon={ChevronRight} size={16} className={styles.chevron} />
                 ) : null}
                 <span
                   className={cn(
-                    "sk-text-body-medium-semibold truncate",
-                    i === breadcrumb.length - 1 ? "text-sko-text-primary" : "text-sko-text-subtle",
+                    "sk-text-body-medium-semibold",
+                    styles.crumb,
+                    i === breadcrumb.length - 1 ? styles.crumbCurrent : styles.crumbParent,
                   )}
                 >
                   {seg}
@@ -272,11 +270,11 @@ export function CoursePlayerTopbar({
           // in the player bar, also while the pill rests at its compact width (Nelson's SKO match
           // review, 28 Oct 2026). The pill hides the word below a 220 container for the narrow tabs
           // bar; this undoes it here only.
-          className="[&_[data-assistant-anchor]>span]:not-sr-only"
+          className={styles.search}
         />
       ) : null}
 
-      <div className="flex items-center gap-2">
+      <div className={styles.end}>
         {searchScope && !isDesktop ? <SearchAssistantButton scope={searchScope} size="sm" /> : null}
         {showNotifications ? (
           <UtilityButton label={notificationsLabel} onClick={onNotifications}>
@@ -307,9 +305,9 @@ export function CoursePlayerTopbar({
           // Account button: 32px square avatar (PR #9 squares the profile avatar to
           // match the topbar icon buttons and CTAs; the DS `Avatar label group` draws a
           // 24px circle), 8px gap, name in body-medium/Semibold.
-          <button type="button" aria-label="Account" className="flex items-center gap-2 rounded-control">
+          <button type="button" aria-label="Account" className={styles.account}>
             <Avatar name={userName} src={userAvatarUrl} size="sm" shape="square" />
-            <span className="sk-text-body-medium-semibold text-sko-text-default">{userName}</span>
+            <span className={`sk-text-body-medium-semibold ${styles.userName}`}>{userName}</span>
           </button>
         )}
 

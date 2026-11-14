@@ -2,6 +2,7 @@ import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { Button, type ButtonSize } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import styles from "./CourseProgressionButton.module.css";
 
 export type Milestone = "Topic" | "Module" | "Course";
 
@@ -55,14 +56,15 @@ export function CourseProgressionButton({
 
   const isCourse = milestone === "Course";
   return (
-    <span className={cn("flex items-center gap-3", compact && "min-w-0", className)}>
+    <span className={cn(styles.group, compact && styles.groupCompact, className)}>
       {!compact ? (
         <span
           className={cn(
             // Shown only when the footer row is at least 36rem wide (the nav is the
             // container): on a tablet next to the sidebar there is no room for it.
-            "sk-text-body-small-medium hidden shrink-0 whitespace-nowrap uppercase [@container(min-width:36rem)]:inline",
-            isCourse ? "text-sko-text-success" : "text-sko-text-primary",
+            "sk-text-body-small-medium",
+            styles.caption,
+            isCourse ? styles.captionCourse : styles.captionModule,
           )}
         >
           {isCourse ? "Course completed" : "Module completed"}
@@ -76,7 +78,7 @@ export function CourseProgressionButton({
         disabled={disabled}
         onClick={onClick}
         // Mobile: the label may take two lines; the button grows instead of clipping it.
-        className={compact ? "!h-auto min-h-9 py-1.5 text-left" : "shrink-0 whitespace-nowrap"}
+        className={compact ? styles.buttonCompact : styles.buttonFull}
       >
         {isCourse ? "Go to next Course" : "Go to next Module"}
       </Button>

@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { AlertCircle, CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, ClipboardCheck, Flag, List, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { ArrivalCount } from "@/components/atoms/ArrivalCount";
@@ -25,7 +23,7 @@ import {
 } from "@/lib/platform/calendar";
 import { Icon } from "@/lib/icons";
 import { useLmsStore } from "@/lib/store";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import { YOUR_TIME, dueBadgeLabel, formatDay, formatTime } from "@/lib/sample-time";
 import { coursePageHref, slugify } from "@/lib/platform/hrefs";
@@ -34,6 +32,7 @@ import { useDemoMode } from "@/lib/demo";
 import { CalendarSyncModal } from "@/components/platform/forms/CalendarSyncModal";
 import { useSessionAdditions } from "@/lib/platform/session-additions";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./CalendarView.module.css";
 
 type Filter = (typeof calendarFilters)[number]["id"];
 type View = "agenda" | "month";
@@ -41,9 +40,9 @@ type View = "agenda" | "month";
 /* One look per kind: the icon tile and the badge. Deadlines are warning (as the Dashboard's
    Due item), live sessions success (ADR 012: live is green), course dates info. */
 const KIND: Record<CalendarKind, { icon: LucideIcon; tile: string; dot: string }> = {
-  deadline: { icon: ClipboardCheck, tile: "bg-sko-bg-warning-soft text-sko-icon-warning", dot: "bg-sko-bg-warning" },
-  live: { icon: Video, tile: "bg-sko-bg-success-soft text-sko-icon-success", dot: "bg-sko-bg-success" },
-  course: { icon: Flag, tile: "bg-sko-bg-info-soft text-sko-icon-info", dot: "bg-sko-bg-info" },
+  deadline: { icon: ClipboardCheck, tile: styles.tileDeadline, dot: styles.dotDeadline },
+  live: { icon: Video, tile: styles.tileLive, dot: styles.dotLive },
+  course: { icon: Flag, tile: styles.tileCourse, dot: styles.dotCourse },
 };
 
 const WEEKDAY = new Intl.DateTimeFormat("en-GB", { weekday: "short" });
@@ -82,38 +81,38 @@ function agendaDays(events: CalendarEvent[]) {
 
 /** One date: kind tile, the label and time over the title (a link) and its course, the status on the right. */
 /* An event row's layout, shared by the row and its skeleton. */
-const EVENT_ROW = "flex items-start gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:px-5";
-const EVENT_TEXT = "flex min-w-0 flex-1 flex-col gap-0.5";
-const EVENT_BADGES_PHONE = "mt-1 flex flex-wrap gap-1 md:hidden";
-const EVENT_BADGES = "flex shrink-0 flex-col items-end gap-1 max-md:hidden";
+const EVENT_ROW = styles.eventRow;
+const EVENT_TEXT = styles.eventText;
+const EVENT_BADGES_PHONE = styles.eventBadgesPhone;
+const EVENT_BADGES = styles.eventBadges;
 /* The day list and a day's card, shared by the Agenda and its skeleton. */
-const AGENDA = "flex flex-col gap-5";
-const AGENDA_DAY = "flex flex-col gap-2";
-const AGENDA_CARD = "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page";
+const AGENDA = styles.agenda;
+const AGENDA_DAY = styles.agendaDay;
+const AGENDA_CARD = cn(styles.card, styles.listCard);
 
 function EventRow({ event }: { event: CalendarEvent }) {
   const demo = useDemoMode();
   const k = KIND[event.kind];
   return (
     <li
-      className={cn("sk-press-card relative", EVENT_ROW)}
+      className={cn("sk-press-card", styles.eventRowLive, EVENT_ROW)}
       data-mock={event.outOfMvp ? "Live sessions are not in Open edX, and VILT is out of the MVP" : undefined}
     >
-      <span aria-hidden className={cn("inline-flex size-10 shrink-0 items-center justify-center rounded-control", k.tile)}>
+      <span aria-hidden className={cn(styles.tile, k.tile)}>
         <Icon icon={k.icon} size={20} />
       </span>
       <div className={EVENT_TEXT}>
-        <p className="sk-text-body-small-semibold uppercase text-sko-text-subtle">
+        <p className={cn("sk-text-body-small-semibold", styles.eventLabel)}>
           {event.label}
-          {event.time ? <span className="normal-case"> · {formatTime(event.time)} · {YOUR_TIME}</span> : null}
+          {event.time ? <span className={styles.timeCase}> · {formatTime(event.time)} · {YOUR_TIME}</span> : null}
         </p>
-        <p className="sk-text-body-medium-semibold text-sko-text-default">
+        <p className={cn("sk-text-body-medium-semibold", styles.ink)}>
           {/* The whole row is the title's target (44 at least), as the Dashboard rows. */}
-          <Link href={event.href} className="hover:underline after:absolute after:inset-0 after:content-['']">
+          <Link href={event.href} className={styles.eventLink}>
             {event.title}
           </Link>
         </p>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">{event.course}</p>
+        <p className={cn("sk-text-body-small-regular", styles.subtle)}>{event.course}</p>
         {/* Mobile: the status sits under the text, so the title keeps the width. */}
         <span className={EVENT_BADGES_PHONE}>
           {statusBadge(event)}
@@ -141,7 +140,7 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
   const days = agendaDays(events);
   if (!days.length) {
     return (
-      <p role="status" className="sk-text-body-medium-regular rounded-card border border-sko-border-subtle bg-sko-bg-page p-5 text-sko-text-subtle">
+      <p role="status" className={cn("sk-text-body-medium-regular", styles.card, styles.emptyCard)}>
         Nothing coming up for this filter.
       </p>
     );
@@ -152,8 +151,8 @@ function Agenda({ events }: { events: CalendarEvent[] }) {
         const h = dayHeading(day);
         return (
           <li key={day} className={AGENDA_DAY}>
-            <h3 className="sk-text-title-medium-semibold text-sko-text-default">
-              {h.lead} {h.rest ? <span className="text-sko-text-subtle">{h.rest}</span> : null}
+            <h3 className={cn("sk-text-title-medium-semibold", styles.ink)}>
+              {h.lead} {h.rest ? <span className={styles.subtle}>{h.rest}</span> : null}
             </h3>
             <ul className={AGENDA_CARD}>
               {dayEvents.map((e) => (
@@ -185,15 +184,15 @@ const WEEK_HEADS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 /** The month's name and the previous / next buttons, shared by both month views. */
 function MonthHeader({ month, onMonth }: { month: string; onMonth: (delta: number) => void }) {
   return (
-    <div className="flex items-center justify-between gap-2 border-b border-sko-border-subtle px-4 py-3">
-      <h3 className="sk-text-title-medium-semibold text-sko-text-default" aria-live="polite">
+    <div className={styles.monthHeader}>
+      <h3 className={cn("sk-text-title-medium-semibold", styles.ink)} aria-live="polite">
         {MONTH.format(parseDay(`${month}-01`))}
       </h3>
-      <div className="flex gap-1">
-        <button type="button" aria-label="Previous month" onClick={() => onMonth(-1)} className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle md:size-9">
+      <div className={styles.monthNav}>
+        <button type="button" aria-label="Previous month" onClick={() => onMonth(-1)} className={styles.monthNavButton}>
           <Icon icon={ChevronLeft} size={20} />
         </button>
-        <button type="button" aria-label="Next month" onClick={() => onMonth(1)} className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-subtle md:size-9">
+        <button type="button" aria-label="Next month" onClick={() => onMonth(1)} className={styles.monthNavButton}>
           <Icon icon={ChevronRight} size={20} />
         </button>
       </div>
@@ -207,13 +206,13 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
   const heads = WEEK_HEADS;
 
   return (
-    <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+    <div className={cn(styles.card, styles.listCard)}>
       <MonthHeader month={month} onMonth={onMonth} />
-      <table className="w-full table-fixed border-collapse">
+      <table className={styles.monthTable}>
         <thead>
           <tr>
             {heads.map((h) => (
-              <th key={h} scope="col" className="sk-text-body-small-semibold border-b border-sko-border-subtle py-2 text-center uppercase text-sko-text-subtle">
+              <th key={h} scope="col" className={cn("sk-text-body-small-semibold", styles.weekHead)}>
                 {h}
               </th>
             ))}
@@ -226,14 +225,15 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
                 const list = day ? events.filter((e) => e.date === day) : [];
                 const today = day === CALENDAR_TODAY;
                 return (
-                  <td key={d} className={cn("h-28 border-b border-r border-sko-border-subtle p-1.5 align-top last:border-r-0", !day && "bg-sko-bg-faint")}>
+                  <td key={d} className={cn(styles.dayCell, !day && styles.dayCellPad)}>
                     {day ? (
-                      <div className="flex h-full flex-col gap-1">
+                      <div className={styles.dayStack}>
                         <span
                           aria-current={today ? "date" : undefined}
                           className={cn(
-                            "sk-text-body-small-semibold inline-flex size-6 items-center justify-center rounded-pill",
-                            today ? "bg-sko-bg-primary text-sko-text-on-primary" : "text-sko-text-subtle",
+                            "sk-text-body-small-semibold",
+                            styles.dayNumber,
+                            today ? styles.dayNumberToday : styles.subtle,
                           )}
                         >
                           {Number(day.slice(8))}
@@ -244,17 +244,18 @@ function Month({ events, month, onMonth }: { events: CalendarEvent[]; month: str
                             href={e.href}
                             title={`${e.label}: ${e.title}`}
                             className={cn(
-                              "sk-text-body-small-medium flex items-center gap-1 truncate rounded-inner px-1 py-0.5 text-sko-text-default transition-colors hover:bg-sko-bg-subtle",
+                              "sk-text-body-small-medium",
+                              styles.monthEvent,
                               // Done: struck through. Past due: in the warning ink, not struck — it still needs doing.
-                              e.complete && "text-sko-text-subtle line-through",
-                              isMissed(e) && "text-sko-text-warning",
+                              e.complete && styles.monthEventDone,
+                              isMissed(e) && styles.monthEventMissed,
                             )}
                           >
-                            <span aria-hidden className={cn("size-1.5 shrink-0 rounded-pill", KIND[e.kind].dot)} />
-                            <span className="truncate">{e.title}</span>
+                            <span aria-hidden className={cn(styles.monthEventDot, KIND[e.kind].dot)} />
+                            <span className={styles.oneLine}>{e.title}</span>
                           </Link>
                         ))}
-                        {list.length > 2 ? <span className="sk-text-body-small-regular px-1 text-sko-text-subtle">+{list.length - 2} more</span> : null}
+                        {list.length > 2 ? <span className={cn("sk-text-body-small-regular", styles.moreDates)}>+{list.length - 2} more</span> : null}
                       </div>
                     ) : null}
                   </td>
@@ -284,15 +285,15 @@ function MonthCompact({ events, month, onMonth }: { events: CalendarEvent[]; mon
   const h = dayHeading(selected);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+    <div className={styles.compact}>
+      <div className={cn(styles.card, styles.listCard)}>
         <MonthHeader month={month} onMonth={onMonth} />
-        <table className="w-full table-fixed border-collapse">
+        <table className={styles.monthTable}>
           <thead>
             <tr>
               {WEEK_HEADS.map((d) => (
-                <th key={d} scope="col" className="sk-text-label-small-semibold py-2 text-center uppercase text-sko-text-subtle">
-                  <abbr title={d} className="no-underline">{d.slice(0, 1)}</abbr>
+                <th key={d} scope="col" className={cn("sk-text-label-small-semibold", styles.weekHeadCompact)}>
+                  <abbr title={d} className={styles.abbr}>{d.slice(0, 1)}</abbr>
                 </th>
               ))}
             </tr>
@@ -308,7 +309,7 @@ function MonthCompact({ events, month, onMonth }: { events: CalendarEvent[]; mon
                   const isSelected = day === selected;
                   const missed = list.some(isMissed);
                   return (
-                    <td key={d} className="p-0.5 text-center">
+                    <td key={d} className={styles.compactCell}>
                       <button
                         type="button"
                         onClick={() => setPicked(day)}
@@ -316,21 +317,22 @@ function MonthCompact({ events, month, onMonth }: { events: CalendarEvent[]; mon
                         aria-current={today ? "date" : undefined}
                         aria-label={`${DAY_MONTH.format(parseDay(day))}${list.length ? `, ${list.length} ${list.length === 1 ? "date" : "dates"}` : ", no dates"}${missed ? ", missed deadline" : ""}`}
                         className={cn(
-                          "flex h-12 w-full flex-col items-center justify-center gap-1 rounded-control transition-colors",
-                          isSelected ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-hover",
+                          styles.compactDay,
+                          isSelected ? styles.compactDaySelected : styles.compactDayIdle,
                         )}
                       >
                         <span
                           className={cn(
-                            "sk-text-body-small-semibold inline-flex size-6 items-center justify-center rounded-pill",
-                            today ? "bg-sko-bg-primary text-sko-text-on-primary" : isSelected ? "text-sko-text-primary" : "text-sko-text-default",
+                            "sk-text-body-small-semibold",
+                            styles.dayNumber,
+                            today ? styles.dayNumberToday : isSelected ? styles.primaryInk : styles.ink,
                           )}
                         >
                           {Number(day.slice(8))}
                         </span>
-                        <span aria-hidden className="flex h-1.5 gap-0.5">
+                        <span aria-hidden className={styles.dots}>
                           {kinds.map((k) => (
-                            <span key={k} className={cn("size-1.5 rounded-pill", KIND[k].dot)} />
+                            <span key={k} className={cn(styles.dot, KIND[k].dot)} />
                           ))}
                         </span>
                       </button>
@@ -343,8 +345,8 @@ function MonthCompact({ events, month, onMonth }: { events: CalendarEvent[]; mon
         </table>
       </div>
       <section aria-live="polite" aria-label={`${h.lead} ${h.rest}`.trim()} className={AGENDA_DAY}>
-        <h3 className="sk-text-title-medium-semibold text-sko-text-default">
-          {h.lead} {h.rest ? <span className="text-sko-text-subtle">{h.rest}</span> : null}
+        <h3 className={cn("sk-text-title-medium-semibold", styles.ink)}>
+          {h.lead} {h.rest ? <span className={styles.subtle}>{h.rest}</span> : null}
         </h3>
         {dayEvents.length ? (
           <ul className={AGENDA_CARD}>
@@ -353,7 +355,7 @@ function MonthCompact({ events, month, onMonth }: { events: CalendarEvent[]; mon
             ))}
           </ul>
         ) : (
-          <p className="sk-text-body-medium-regular rounded-card border border-sko-border-subtle bg-sko-bg-page p-5 text-sko-text-subtle">
+          <p className={cn("sk-text-body-medium-regular", styles.card, styles.emptyCard)}>
             Nothing on this day.
           </p>
         )}
@@ -366,20 +368,20 @@ function MonthCompact({ events, month, onMonth }: { events: CalendarEvent[]; mon
 function WeekStrip({ events }: { events: CalendarEvent[] }) {
   const days = Array.from({ length: 7 }, (_, i) => addDays(CALENDAR_TODAY, i));
   return (
-    <ol className="grid grid-cols-7 gap-1">
+    <ol className={styles.week}>
       {days.map((day) => {
         const kinds = [...new Set(events.filter((e) => e.date === day && !e.complete).map((e) => e.kind))];
         const today = day === CALENDAR_TODAY;
         return (
-          <li key={day} className={cn("flex flex-col items-center gap-1 rounded-control py-2", today && "bg-sko-bg-primary-soft")}>
-            <span className="sk-text-body-small-medium text-sko-text-subtle">{WEEKDAY.format(parseDay(day))}</span>
-            <span className={cn("sk-text-title-medium-semibold", today ? "text-sko-text-primary" : "text-sko-text-default")}>{Number(day.slice(8))}</span>
-            <span className="flex h-1.5 gap-0.5" aria-hidden>
+          <li key={day} className={cn(styles.weekDay, today && styles.weekDayToday)}>
+            <span className={cn("sk-text-body-small-medium", styles.subtle)}>{WEEKDAY.format(parseDay(day))}</span>
+            <span className={cn("sk-text-title-medium-semibold", today ? styles.primaryInk : styles.ink)}>{Number(day.slice(8))}</span>
+            <span className={styles.dots} aria-hidden>
               {kinds.map((k) => (
-                <span key={k} className={cn("size-1.5 rounded-pill", KIND[k].dot)} />
+                <span key={k} className={cn(styles.dot, KIND[k].dot)} />
               ))}
             </span>
-            <span className="sr-only">{kinds.length ? `${kinds.length} kind${kinds.length > 1 ? "s" : ""} of date` : "Nothing"}</span>
+            <span className="sk-sr-only">{kinds.length ? `${kinds.length} kind${kinds.length > 1 ? "s" : ""} of date` : "Nothing"}</span>
           </li>
         );
       })}
@@ -414,9 +416,9 @@ function EventRowSkeleton({ event, demo }: { event: CalendarEvent; demo: boolean
     <div className={EVENT_ROW}>
       <Skeleton variant="block" width={40} height={40} radius="control" />
       <div className={EVENT_TEXT}>
-        <Skeleton variant="ghost" text="body-small-semibold" className="uppercase">
+        <Skeleton variant="ghost" text="body-small-semibold" className={styles.upper}>
           {event.label}
-          {event.time ? <span className="normal-case"> · {formatTime(event.time)} · {YOUR_TIME}</span> : null}
+          {event.time ? <span className={styles.timeCase}> · {formatTime(event.time)} · {YOUR_TIME}</span> : null}
         </Skeleton>
         <Skeleton variant="ghost" text="body-medium-semibold">{event.title}</Skeleton>
         <Skeleton variant="ghost" text="body-small-regular">{event.course}</Skeleton>
@@ -439,46 +441,46 @@ function CalendarSkeleton() {
   const all = twoCourses ? [...calendarEvents, secondMissedEvent] : calendarEvents;
   const missed = missedByCourse(all);
   return (
-    <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+    <div className={cn("sk-page-stack", styles.stack)}>
       <Skeleton variant="ghost" text="headline-large-bold">What’s coming up.</Skeleton>
       {missed.length ? (
-        <div className="flex flex-col gap-3">
-          <div className="flex items-start gap-3 border-t-2 border-sko-border-subtle bg-sko-bg-page p-4">
-            <Skeleton variant="circle" size={20} className="mt-0.5" />
-            <div className="flex flex-col gap-0.5">
+        <div className={styles.missed}>
+          <div className={cn(styles.missedAlert, styles.missedAlertGhost)}>
+            <Skeleton variant="circle" size={20} className={styles.iconNudge} />
+            <div className={styles.stackHalf}>
               <Skeleton variant="ghost" text="body-medium-semibold">{SHIFT_DATES.title}</Skeleton>
               <Skeleton variant="ghost" text="body-medium-regular">{SHIFT_DATES.body}</Skeleton>
             </div>
           </div>
-          <div className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+          <div className={cn(styles.card, styles.listCard)}>
             {missed.map(({ course, items }) => (
-              <div key={course} className="flex flex-col gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:flex-row md:items-center">
-                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <div key={course} className={styles.missedRow}>
+                <div className={styles.eventText}>
                   <Skeleton variant="ghost" text="body-medium-semibold">{course}</Skeleton>
                   <Skeleton variant="ghost" text="body-small-regular">
                     {items.map((e) => `${e.title} · was due ${formatDay(e.date)}`).join(" · ")}
                   </Skeleton>
                 </div>
-                <SkeletonPill size="segment" className="max-md:w-full md:h-9">{SHIFT_DATES.button}</SkeletonPill>
+                <SkeletonPill size="segment" className={styles.shiftGhost}>{SHIFT_DATES.button}</SkeletonPill>
               </div>
             ))}
           </div>
         </div>
       ) : null}
-      <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-        <div className="flex min-w-0 flex-1 flex-col gap-layout-stack">
-          <div className="flex items-center justify-between gap-3">
-            <div className="inline-flex min-w-0 max-w-full gap-0.5 overflow-hidden rounded-track bg-sko-bg-track p-1">
+      <div className={styles.columns}>
+        <div className={styles.main}>
+          <div className={styles.toolbar}>
+            <div className={cn(styles.segmentTrack, styles.filterTrackGhost)}>
               {calendarFilters.map((f) => (
-                <SkeletonPill key={f.id} size="segment" className="bg-transparent">{f.label}</SkeletonPill>
+                <SkeletonPill key={f.id} size="segment" className={styles.segmentGhost}>{f.label}</SkeletonPill>
               ))}
             </div>
-            <div className="inline-flex shrink-0 gap-0.5 rounded-track bg-sko-bg-track p-1">
-              <SkeletonPill size="segment" className="bg-transparent max-md:w-11 max-md:px-0">
-                <span className="max-md:sr-only">Agenda</span>
+            <div className={cn(styles.segmentTrack, styles.viewTrackGhost)}>
+              <SkeletonPill size="segment" className={cn(styles.segmentGhost, styles.viewGhost)}>
+                <span className={styles.phoneSrOnly}>Agenda</span>
               </SkeletonPill>
-              <SkeletonPill size="segment" className="bg-transparent max-md:w-11 max-md:px-0">
-                <span className="max-md:sr-only">Month</span>
+              <SkeletonPill size="segment" className={cn(styles.segmentGhost, styles.viewGhost)}>
+                <span className={styles.phoneSrOnly}>Month</span>
               </SkeletonPill>
             </div>
           </div>
@@ -498,32 +500,32 @@ function CalendarSkeleton() {
             })}
           </div>
         </div>
-        <div className="flex flex-col gap-layout-side lg:w-[320px] lg:shrink-0">
-          <div className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
+        <div className={styles.side}>
+          <div className={cn(styles.card, styles.sideCard)}>
             <Skeleton variant="ghost" text="title-medium-semibold">Next 7 days</Skeleton>
-            <div className="grid grid-cols-7 gap-1">
+            <div className={styles.week}>
               {Array.from({ length: 7 }, (_, i) => (
-                <div key={i} className="flex flex-col items-center gap-1 py-2">
+                <div key={i} className={styles.weekDay}>
                   <Skeleton text="body-small-medium" width={24} />
                   <Skeleton text="title-medium-semibold" width={20} />
-                  <span className="h-1.5" />
+                  <span className={styles.dotsGhost} />
                 </div>
               ))}
             </div>
             <Skeleton text="body-small-regular" width="60%" />
             <Skeleton text="body-small-regular" width="90%" />
           </div>
-          <div className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
-            <div className="flex items-start gap-3">
-              <Skeleton variant="circle" size={20} className="mt-0.5" />
-              <div className="flex flex-col gap-0.5">
+          <div className={cn(styles.card, styles.sideCard)}>
+            <div className={styles.syncHead}>
+              <Skeleton variant="circle" size={20} className={styles.iconNudge} />
+              <div className={styles.stackHalf}>
                 <Skeleton variant="ghost" text="body-medium-semibold">Add to your calendar</Skeleton>
                 <Skeleton variant="ghost" text="body-small-regular">
                   Your deadlines and sessions in Google, Outlook or Apple Calendar, kept up to date.
                 </Skeleton>
               </div>
             </div>
-            <SkeletonPill size="segment" className="self-start md:h-9">Subscribe</SkeletonPill>
+            <SkeletonPill size="segment" className={styles.subscribeGhost}>Subscribe</SkeletonPill>
           </div>
         </div>
       </div>
@@ -595,12 +597,12 @@ export function CalendarView() {
   return (
     <PlatformPage
       current="calendar"
-      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
+      className={styles.page}
       skeleton={<CalendarSkeleton />}
     >
-      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
-        <h1 data-arrive={0} className="sk-text-headline-large-bold text-sko-text-default">
-          What&rsquo;s <span data-heading-em="" className="text-sko-text-subtle">coming up.</span>
+      <div className={cn("sk-page-stack", styles.stack)}>
+        <h1 data-arrive={0} className={cn("sk-text-headline-large-bold", styles.ink)}>
+          What&rsquo;s <span data-heading-em="" className={styles.subtle}>coming up.</span>
         </h1>
 
         {visibleMissed.length ? (
@@ -609,26 +611,26 @@ export function CalendarView() {
           // Primary "Shift due dates" (reset_course_deadlines is one course per call, no confirmation).
           // After a shift: the platform's toast with "View all dates", and the row goes. Its link opens the
           // course page: a self-paced course has no Dates tab (decision 036).
-          <section data-arrive={1} aria-labelledby="calendar-missed" data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)" className="flex flex-col gap-3">
-            <div className="flex items-start gap-3 border-t-2 border-sko-border-warning bg-sko-bg-page p-4">
-              <Icon icon={AlertCircle} size={20} className="mt-0.5 shrink-0 text-sko-icon-warning" />
-              <div className="flex flex-col gap-0.5">
-                <h2 id="calendar-missed" className="sk-text-body-medium-semibold text-sko-text-default">
+          <section data-arrive={1} aria-labelledby="calendar-missed" data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036)" className={styles.missed}>
+            <div className={cn(styles.missedAlert, styles.missedAlertWarning)}>
+              <Icon icon={AlertCircle} size={20} className={styles.missedIcon} />
+              <div className={styles.stackHalf}>
+                <h2 id="calendar-missed" className={cn("sk-text-body-medium-semibold", styles.ink)}>
                   {SHIFT_DATES.title}
                 </h2>
-                <p className="sk-text-body-medium-regular text-sko-text-muted">{SHIFT_DATES.body}</p>
+                <p className={cn("sk-text-body-medium-regular", styles.muted)}>{SHIFT_DATES.body}</p>
               </div>
             </div>
-            <ul className="overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page">
+            <ul className={cn(styles.card, styles.listCard)}>
               {visibleMissed.map(({ course, items }) => (
-                <li key={course} className="flex flex-col gap-3 border-b border-sko-border-subtle p-4 last:border-b-0 md:flex-row md:items-center">
-                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <p className="sk-text-body-medium-semibold text-sko-text-default">{course}</p>
-                    <p className="sk-text-body-medium-regular text-sko-text-subtle">
+                <li key={course} className={styles.missedRow}>
+                  <div className={styles.eventText}>
+                    <p className={cn("sk-text-body-medium-semibold", styles.ink)}>{course}</p>
+                    <p className={cn("sk-text-body-medium-regular", styles.subtle)}>
                       {items.map((e) => `${e.title} · was due ${formatDay(e.date)}`).join(" · ")}
                     </p>
                   </div>
-                  <Button size="sm" className="shrink-0 max-md:h-11 max-md:w-full" onClick={() => shift(course)}>
+                  <Button size="sm" className={styles.shiftButton} onClick={() => shift(course)}>
                     {SHIFT_DATES.button}
                   </Button>
                 </li>
@@ -637,18 +639,18 @@ export function CalendarView() {
           </section>
         ) : null}
 
-        <div className="flex flex-col gap-layout-column lg:flex-row lg:items-start">
-          <section data-arrive={2} aria-label="Dates" className="flex min-w-0 flex-1 flex-col gap-layout-stack">
+        <div className={styles.columns}>
+          <section data-arrive={2} aria-label="Dates" className={styles.main}>
             {/* The two controls side by side on every breakpoint (Nelson, 23 Oct 2026): the kind filter
                 takes the room and scrolls sideways if it must; the view switch is icons only below md. */}
             {/* Stuck to the top on scroll up (StickyToolbar, Nelson 24 Oct 2026). */}
-            <StickyToolbar className="flex items-center justify-between gap-3">
+            <StickyToolbar className={styles.toolbar}>
               <PlatformSegmented
                 label="Show"
                 options={filters}
                 value={filter}
                 onChange={setFilter}
-                className="min-w-0"
+                className={styles.filterSwitch}
               />
               <PlatformSegmented
                 label="View"
@@ -659,16 +661,16 @@ export function CalendarView() {
                 ]}
                 value={view}
                 onChange={(v) => setView(v as View)}
-                className="shrink-0"
+                className={styles.viewSwitch}
               />
             </StickyToolbar>
             <div data-mock="Example: SkillUp courses have no due dates configured, only start and end (meeting 28 Oct 2026, decision 036); the Dates API also serves one course at a time">
               {view === "month" ? (
                 <>
-                  <div className="max-md:hidden">
+                  <div className={styles.fromTablet}>
                     <Month events={events} month={month} onMonth={shiftMonth} />
                   </div>
-                  <div className="md:hidden">
+                  <div className={styles.phoneOnly}>
                     <MonthCompact events={events} month={month} onMonth={shiftMonth} />
                   </div>
                 </>
@@ -680,13 +682,13 @@ export function CalendarView() {
 
           {/* On desktop the side column stays in view while the long agenda scrolls (audit, 25 Oct
               2026: the agenda ran 153% of the first viewport beside a column of 48%). */}
-          <aside data-arrive={3} aria-label="This week and calendar sync" className="flex flex-col gap-layout-side lg:sticky lg:top-6 lg:w-[320px] lg:shrink-0">
-            <section aria-labelledby="calendar-week" className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4">
-              <h2 id="calendar-week" className="sk-text-title-medium-semibold text-sko-text-default">
+          <aside data-arrive={3} aria-label="This week and calendar sync" className={cn(styles.side, styles.sideSticky)}>
+            <section aria-labelledby="calendar-week" className={cn(styles.card, styles.sideCard)}>
+              <h2 id="calendar-week" className={cn("sk-text-title-medium-semibold", styles.ink)}>
                 Next 7 days
               </h2>
               <WeekStrip events={weekEvents} />
-              <p className="sk-text-body-small-regular text-sko-text-subtle">
+              <p className={cn("sk-text-body-small-regular", styles.subtle)}>
                 <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "deadline").length)} /> deadlines
                 <span data-invented="live: no live-session schedule in Open edX">
                   {" "}
@@ -694,13 +696,13 @@ export function CalendarView() {
                   <ArrivalCount value={String(thisWeek.filter((e) => e.kind === "live").length)} /> live sessions
                 </span>
               </p>
-              <ul className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
+              <ul className={styles.legend} aria-label="Legend">
                 {(["deadline", "live", "course"] as const).map((k) => (
                   <li
                     key={k}
                     data-invented={k === "live" ? "live: no live-session schedule in Open edX" : undefined}
-                    className="sk-text-body-small-regular inline-flex items-center gap-1.5 text-sko-text-subtle">
-                    <span aria-hidden className={cn("size-2 rounded-pill", KIND[k].dot)} />
+                    className={cn("sk-text-body-small-regular", styles.legendItem)}>
+                    <span aria-hidden className={cn(styles.legendDot, KIND[k].dot)} />
                     {k === "deadline" ? "Deadline" : k === "live" ? "Live session" : "Course date"}
                   </li>
                 ))}
@@ -709,20 +711,20 @@ export function CalendarView() {
             <section
               aria-labelledby="calendar-sync"
               data-mock="Calendar sync is Phase 3 (feature deltas)"
-              className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4"
+              className={cn(styles.card, styles.sideCard)}
             >
-              <div className="flex items-start gap-3">
-                <Icon icon={CalendarPlus} size={20} className="mt-0.5 shrink-0 text-sko-icon-primary" />
-                <div className="flex flex-col gap-0.5">
-                  <h2 id="calendar-sync" className="sk-text-body-medium-semibold text-sko-text-default">
+              <div className={styles.syncHead}>
+                <Icon icon={CalendarPlus} size={20} className={styles.syncIcon} />
+                <div className={styles.stackHalf}>
+                  <h2 id="calendar-sync" className={cn("sk-text-body-medium-semibold", styles.ink)}>
                     Add to your calendar
                   </h2>
-                  <p className="sk-text-body-medium-regular text-sko-text-subtle">
+                  <p className={cn("sk-text-body-medium-regular", styles.subtle)}>
                     Your deadlines and sessions in Google, Outlook or Apple Calendar, kept up to date.
                   </p>
                 </div>
               </div>
-              <Button hierarchy="secondary" size="sm" className="self-start max-md:h-11" onClick={() => setSyncing(true)}>
+              <Button hierarchy="secondary" size="sm" className={styles.subscribe} onClick={() => setSyncing(true)}>
                 Subscribe
               </Button>
             </section>

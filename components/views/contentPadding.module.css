@@ -1,0 +1,21 @@
+/* DS `Container/content-padding`: 24 desktop / 20 tablet / 16 mobile (Spacing/3xl). The class is
+   picked from useBreakpoint() (contentPadding.ts), not a media query, so it follows the forced
+   device preview. */
+.padDesktop { padding: 24px; }
+.padTablet { padding: 20px; }
+.padMobile { padding: 16px; }
+.pxDesktop { padding-left: 24px; padding-right: 24px; }
+.pxTablet { padding-left: 20px; padding-right: 20px; }
+.pxMobile { padding-left: 16px; padding-right: 16px; }
+.ptDesktop { padding-top: 24px; }
+.ptTablet { padding-top: 20px; }
+.ptMobile { padding-top: 16px; }
+.pbDesktop { padding-bottom: 24px; }
+.pbTablet { padding-bottom: 20px; }
+.pbMobile { padding-bottom: 16px; }
+/* A full-width row inside the padded section bleeds out by the same amount. */
+.bleedDesktop { margin-left: -24px; margin-right: -24px; }
+.bleedTablet { margin-left: -20px; margin-right: -20px; }
+.bleedMobile { margin-left: -16px; margin-right: -16px; }
+/* The measure of a topic's content: 1200, centred, padding outside it (content-box). */
+.measure { margin-left: auto; margin-right: auto; box-sizing: content-box; max-width: 1200px; }

@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DiscussionPrompt } from "./DiscussionPrompt";
+import styles from "./DiscussionPrompt.stories.module.css";
 
 const meta: Meta<typeof DiscussionPrompt> = {
   title: "Molecules/Discussion Prompt",
@@ -13,7 +14,7 @@ const meta: Meta<typeof DiscussionPrompt> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-2xl">
+      <div className={styles.column}>
         <Story />
       </div>
     ),

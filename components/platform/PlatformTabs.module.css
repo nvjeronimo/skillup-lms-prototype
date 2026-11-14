@@ -1,0 +1,150 @@
+/* DS Horizontal tabs, Type=Underline: a tablist of label (+ count badge) tabs over a 2px bar. */
+.tablist {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+.tablistSmall,
+.tablistResponsive {
+  gap: 12px;
+}
+@media (min-width: 768px) {
+  .tablistResponsive { gap: 32px; }
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-inline: 4px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* Size=sm: 32 tall with 12 under the label; an invisible band grows the target to 44 upwards. */
+.tabSmall {
+  height: 32px;
+  padding-bottom: 12px;
+}
+.tabSmall::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: -12px;
+  bottom: 0;
+}
+:global([data-large-targets]) .tabSmall::before {
+  top: -12px;
+}
+/* responsive: Size=sm on a phone (the same band), md from tablet up. */
+.tabResponsive {
+  padding-bottom: 12px;
+}
+@media (max-width: 767.98px) {
+  .tabResponsive::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: -12px;
+    bottom: 0;
+  }
+}
+@media (min-width: 768px) {
+  .tabResponsive {
+    height: auto;
+    padding-block: 12px;
+  }
+}
+.tabMedium {
+  padding-block: 12px;
+}
+/* The scrolling row clips an outline drawn outside the tab. */
+.tabInset:focus-visible {
+  outline-offset: -2px;
+}
+.tabOn {
+  color: var(--color-text-primary);
+}
+.tabOff {
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tabOff:hover {
+    color: var(--color-text-default);
+  }
+}
+
+/* md: headline-small below desktop, title-large from desktop. */
+@media (min-width: 1024px) {
+  .labelBelowDesktop { display: none; }
+}
+.labelDesktop {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .labelDesktop { display: inline; }
+}
+/* responsive: the sm badge on a phone, the md one from tablet up. Doubled: they must beat the
+   Badge's own display, wherever its stylesheet lands. */
+@media (min-width: 768px) {
+  .badgePhone.badgePhone { display: none; }
+}
+.badgeTablet.badgeTablet {
+  display: none;
+}
+@media (min-width: 768px) {
+  .badgeTablet.badgeTablet { display: inline-flex; }
+}
+
+/* The selected bar: per tab until the sliding bar has measured, then one bar for the row. */
+.indicator {
+  position: absolute;
+  inset-inline: 0;
+  height: 2px;
+  border-top-left-radius: var(--sk-radius-inner);
+  border-top-right-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-primary);
+}
+.slider {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  height: 2px;
+  border-top-left-radius: var(--sk-radius-inner);
+  border-top-right-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-primary);
+}
+.sliderAnimate {
+  transition-property: transform, width;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.onRule {
+  bottom: 0;
+}
+.onParentRule {
+  bottom: -1px;
+}
+
+/* The row with its own rule: an inset shadow (a real border in forced colours); it scrolls sideways. */
+.scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-shadow: 0 0 #0000, 0 0 #0000, inset 0 -1px 0 0 var(--color-border-subtle);
+}
+@media (forced-colors: active) {
+  .scroller {
+    border-bottom-width: 1px;
+    border-color: var(--color-border-subtle);
+  }
+}
+
+/* Harbor (tokens/skin-harbor.css selected these bars by their Tailwind class): ink, not brand. */
+:global([data-skin="harbor"]) [role="tab"] > .indicator,
+:global([data-skin="harbor"]) [role="tablist"] > .slider {
+  background-color: var(--color-text-default);
+}

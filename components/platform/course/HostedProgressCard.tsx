@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ExternalLink, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -14,6 +12,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./HostedProgressCard.module.css";
 
 /**
  * The Progress card of a course that runs on a partner's platform (Figma I1 6792:139729 and
@@ -38,26 +37,26 @@ export function HostedProgressCard({ course, hosted }: { course: CourseDetail; h
   return (
     <section
       aria-label={course.progress.label}
-      className="flex w-full shrink-0 flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px] md:w-[320px] lg:w-[360px]"
+      className={styles.card}
     >
       <div
         data-invented="hosted: Open edX gets no progress back from the partner"
-        className="flex items-end justify-between gap-3"
+        className={styles.cardHead}
       >
-        <p className="sk-text-headline-medium-bold text-sko-text-default">
+        <p className={`sk-text-headline-medium-bold ${styles.default}`}>
           {started ? (
             <>
               <span aria-hidden>—</span>
-              <span className="sr-only">Not available</span>
+              <span className="sk-sr-only">Not available</span>
             </>
           ) : (
             "0%"
           )}
         </p>
-        <p className="sk-text-body-small-regular text-sko-text-subtle">{course.progress.label}</p>
+        <p className={`sk-text-body-small-regular ${styles.subtle}`}>{course.progress.label}</p>
       </div>
       {edx ? null : <PlatformProgressBar value={0} label={course.progress.label} />}
-      <p className="sk-text-body-small-regular text-sko-text-subtle">{copy.eyebrow}</p>
+      <p className={`sk-text-body-small-regular ${styles.subtle}`}>{copy.eyebrow}</p>
       {started || skipDialog || edx ? (
         <ButtonLink
           ref={actionRef}
@@ -66,13 +65,13 @@ export function HostedProgressCard({ course, hosted }: { course: CourseDetail; h
           rel="noopener"
           size="lg"
           rightIcon={started || edx ? ExternalLink : undefined}
-          className="w-full"
+          className={styles.cta}
           onClick={() => markStarted(course.slug)}
         >
           {copy.cta}
         </ButtonLink>
       ) : (
-        <Button size="lg" className="w-full" onClick={() => setDialogOpen(true)}>
+        <Button size="lg" className={styles.cta} onClick={() => setDialogOpen(true)}>
           {copy.cta}
         </Button>
       )}
@@ -127,11 +126,11 @@ function LeavingDialog({
       data-state={state}
       aria-hidden={closed || undefined}
       {...inertProps(closed)}
-      className={cn("fixed inset-0 z-[60] flex items-center justify-center p-4", closed && "pointer-events-none")}
+      className={cn(styles.overlay, closed && styles.closed)}
     >
       {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
       <div
-        className="sk-backdrop sk-animate-fade absolute inset-0"
+        className={`sk-backdrop sk-animate-fade ${styles.backdrop}`}
         onClick={onClose}
         onAnimationEnd={onAnimationEnd}
         aria-hidden
@@ -141,20 +140,20 @@ function LeavingDialog({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={bodyId}
-        className="sk-animate-pop relative w-full max-w-[544px] origin-center overflow-hidden rounded-surface bg-sko-bg-page shadow-xl"
+        className={`sk-animate-pop ${styles.dialog}`}
       >
-        <div className="flex flex-col gap-4 px-4 pt-4 md:flex-row md:px-6 md:pt-6">
+        <div className={styles.dialogHead}>
           <span
             aria-hidden
-            className="inline-flex size-12 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-icon-primary"
+            className={styles.featured}
           >
             <Icon icon={ExternalLink} size={24} />
           </span>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5 pr-10 md:pr-8">
-            <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
+          <div className={styles.dialogText}>
+            <h2 id={titleId} className={`sk-text-body-large-semibold ${styles.default}`}>
               {hosted.dialog.title}
             </h2>
-            <p id={bodyId} className="sk-text-body-medium-regular text-sko-text-subtle">
+            <p id={bodyId} className={`sk-text-body-medium-regular ${styles.subtle}`}>
               {hosted.dialog.body}
             </p>
           </div>
@@ -163,22 +162,22 @@ function LeavingDialog({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 inline-flex size-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+          className={styles.close}
         >
           <Icon icon={X} size={24} />
         </button>
 
-        <div className="flex flex-col gap-3 px-4 pb-4 pt-6 md:flex-row md:items-center md:justify-between md:px-6 md:pb-6 md:pt-8">
-          <label className="sk-text-body-medium-medium flex min-h-11 items-center gap-2 text-sko-text-muted md:min-h-0">
+        <div className={styles.dialogFoot}>
+          <label className={`sk-text-body-medium-medium ${styles.dontShow}`}>
             <input
               type="checkbox"
               checked={skipDialog}
               onChange={(event) => setSkipDialog(event.target.checked)}
-              className="size-4 accent-[var(--color-bg-primary)]"
+              className={styles.checkbox}
             />
             {hosted.dialog.dontShowAgain}
           </label>
-          <div className="flex flex-col-reverse gap-3 md:flex-row">
+          <div className={styles.actions}>
             <Button hierarchy="secondary" size="md" onClick={onClose}>
               {hosted.dialog.cancel}
             </Button>

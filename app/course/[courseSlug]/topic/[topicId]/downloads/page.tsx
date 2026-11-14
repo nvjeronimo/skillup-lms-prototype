@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { DownloadsTab } from "@/components/views/DownloadsTab";
 import { getTopic } from "@/lib/data";
 import { pageTitle } from "@/lib/utils";

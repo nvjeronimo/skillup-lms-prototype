@@ -2,6 +2,7 @@ import * as React from "react";
 import { Info } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./Alert.module.css";
 
 export interface AlertProps {
   /** The alert's text: one short line, body-medium Semibold. */
@@ -25,21 +26,18 @@ export function Alert({ title, children, className }: AlertProps) {
   return (
     <section
       aria-labelledby={id}
-      className={cn(
-        "flex items-start gap-4 rounded-card border border-sko-border-primary-muted bg-sko-bg-primary-soft p-4 shadow-sm",
-        className,
-      )}
+      className={cn(styles.alert, className)}
     >
-      <span aria-hidden="true" className="relative inline-flex size-5 shrink-0 items-center justify-center">
-        <span className="absolute -inset-1 rounded-pill border-2 border-sko-border-primary opacity-30" />
-        <span className="absolute -inset-[9px] rounded-pill border-2 border-sko-border-primary opacity-10" />
-        <Icon icon={Info} size={20} className="relative text-sko-icon-primary" />
+      <span aria-hidden="true" className={styles.featured}>
+        <span className={styles.ringInner} />
+        <span className={styles.ringOuter} />
+        <Icon icon={Info} size={20} className={styles.icon} />
       </span>
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <p id={id} className="sk-text-body-medium-semibold text-sko-text-default">
+      <div className={styles.body}>
+        <p id={id} className={`sk-text-body-medium-semibold ${styles.title}`}>
           {title}
         </p>
-        {children ? <div className="sk-text-body-medium-regular text-sko-text-muted">{children}</div> : null}
+        {children ? <div className={`sk-text-body-medium-regular ${styles.text}`}>{children}</div> : null}
       </div>
     </section>
   );

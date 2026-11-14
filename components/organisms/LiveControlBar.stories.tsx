@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LiveControlBar } from "./LiveControlBar";
 
 const meta: Meta<typeof LiveControlBar> = {

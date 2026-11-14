@@ -1,0 +1,77 @@
+/* Mode A: Previous / Next at the foot of the quiz, under a rule. */
+.stacked {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 16px;
+}
+
+/* Mode B, DS `LMS / Quiz · Stepper Bar` (With Back): the bar row, then a 1px rule, 12 apart. */
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+/* Link Button Brand/Secondary: a visible "Back", no box. */
+.back {
+  display: inline-flex;
+  height: 20px;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-inner);
+}
+.back:focus-visible {
+  outline: 2px solid var(--color-border-primary);
+  outline-offset: 2px;
+}
+.backEnabled {
+  color: var(--color-text-subtle);
+}
+.backDisabled {
+  cursor: not-allowed;
+  color: var(--color-text-disabled);
+}
+.backIcon {
+  color: var(--color-icon-faint);
+}
+/* Progress bar, Label=Top: the counter 8 above the track, right-aligned. */
+.progress {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.counter {
+  color: var(--color-text-muted);
+}
+.track {
+  height: 8px;
+  width: 100%;
+  background-color: var(--color-bg-track);
+}
+/* Fill bg/info, square ends; it grows by scaleX (inline) from the left edge. */
+.fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  background-color: var(--color-bg-info);
+  transition-property: transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.rule {
+  height: 1px;
+  background-color: var(--color-border-subtle);
+}

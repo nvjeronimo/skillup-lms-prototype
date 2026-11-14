@@ -1,12 +1,11 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
 import { useTabIndicator } from "@/lib/useTabIndicator";
 import type { TabSlug } from "@/lib/store";
+import styles from "./ContentTabs.module.css";
 
 export interface ContentTab {
   slug: TabSlug;
@@ -31,7 +30,7 @@ export interface ContentTabsProps {
 /** Count pill (DS Mobile Tab Select › Count badge): bg/primary-soft + text/primary in every row. */
 function CountBadge({ n }: { n: number }) {
   return (
-    <span className="sk-text-body-small-medium inline-flex items-center rounded-pill bg-sko-bg-primary-soft px-2 py-0.5 text-sko-text-primary">
+    <span className={`sk-text-body-small-medium ${styles.countBadge}`}>
       {n}
     </span>
   );
@@ -54,35 +53,35 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
   const current = tabs.find((t) => t.slug === active) ?? tabs[0];
   const indicator = useTabIndicator(active, tabs.length);
 
-  const heading = <h2 className="sr-only">{current.label}</h2>;
+  const heading = <h2 className="sk-sr-only">{current.label}</h2>;
 
   if (variant === "select") {
     return (
       <>
-        <div className={cn("flex items-center justify-between gap-3", className)}>
-          <nav ref={containerRef} aria-label="Topic content" className="relative flex-1">
+        <div className={cn(styles.selectRow, className)}>
+          <nav ref={containerRef} aria-label="Topic content" className={styles.selectNav}>
             <button
               type="button"
               {...triggerProps}
               className={cn(
-                "sk-text-body-medium-semibold flex w-full items-center justify-between gap-2 rounded-control border bg-sko-bg-page px-3 py-2.5 transition-colors",
-                open
-                  ? "border-sko-border-primary text-sko-text-primary"
-                  : "border-sko-border-default text-sko-text-default",
+                "sk-text-body-medium-semibold",
+                styles.trigger,
+                styles.colors,
+                open ? styles.triggerOpen : styles.triggerClosed,
               )}
             >
-              <span className="flex min-w-0 items-center gap-2">
-                <span className="truncate">{current.label}</span>
+              <span className={styles.triggerLabel}>
+                <span className={styles.ellipsis}>{current.label}</span>
                 {typeof current.count === "number" ? <CountBadge n={current.count} /> : null}
-                <span className="sr-only">, switch topic content</span>
+                <span className="sk-sr-only">, switch topic content</span>
               </span>
               <ChevronDown
                 size={16}
                 strokeWidth={1.5}
                 aria-hidden
                 className={cn(
-                  "shrink-0 transition-transform duration-short4 ease-standard",
-                  open ? "rotate-180 text-sko-text-primary" : "text-sko-text-subtle",
+                  styles.chevron,
+                  open ? styles.chevronOpen : styles.chevronClosed,
                 )}
               />
             </button>
@@ -90,7 +89,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
             {mounted ? (
               <ul
                 {...panelProps}
-                className="sk-animate-menu origin-top absolute left-0 right-0 top-[calc(100%+4px)] z-30 overflow-hidden rounded-card border border-sko-border-primary bg-sko-bg-page p-1 shadow-lg"
+                className={`sk-animate-menu ${styles.menu}`}
               >
                 {tabs.map((t) => {
                   const selected = t.slug === active;
@@ -101,13 +100,13 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                         aria-current={selected ? "page" : undefined}
                         onClick={close}
                         className={cn(
-                          "sk-text-body-medium-semibold flex w-full items-center gap-2 rounded-card-inset px-3 py-2.5 text-left transition-colors",
-                          selected
-                            ? "bg-sko-bg-primary-soft text-sko-text-primary"
-                            : "text-sko-text-on-primary-soft hover:bg-sko-bg-subtle",
+                          "sk-text-body-medium-semibold",
+                          styles.option,
+                          styles.colors,
+                          selected ? styles.optionSelected : styles.optionIdle,
                         )}
                       >
-                        <span className="truncate">{t.label}</span>
+                        <span className={styles.ellipsis}>{t.label}</span>
                         {typeof t.count === "number" ? <CountBadge n={t.count} /> : null}
                       </Link>
                     </li>
@@ -127,25 +126,25 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
     <>
       <div
         className={cn(
-          "flex items-center justify-between gap-3 border-b border-sko-border-subtle",
+          styles.row,
           className,
         )}
       >
-        <nav aria-label="Topic content" className="overflow-x-auto overflow-y-hidden">
-          <ul ref={indicator.rowRef} className="relative flex items-center gap-3">
+        <nav aria-label="Topic content" className={styles.tabsNav}>
+          <ul ref={indicator.rowRef} className={styles.tabs}>
             {tabs.map((tab) => {
               const isActive = tab.slug === active;
               return (
-                <li key={tab.slug} className="shrink-0">
+                <li key={tab.slug} className={styles.tabItem}>
                   <Link
                     href={tab.href}
                     aria-current={isActive ? "page" : undefined}
                     data-tab-active={isActive}
                     className={cn(
-                      "sk-text-body-medium-semibold relative flex shrink-0 items-center gap-2 px-1 pb-3 pt-0 transition-colors",
-                      isActive
-                        ? "text-sko-text-primary"
-                        : "text-sko-text-subtle hover:text-sko-text-default",
+                      "sk-text-body-medium-semibold",
+                      styles.tab,
+                      styles.colors,
+                      isActive ? styles.tabActive : styles.tabIdle,
                     )}
                   >
                     {tab.label}
@@ -153,10 +152,9 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                       <span
                         className={cn(
                           // DS Badge Soft sm: Brand on the current tab, Gray on the others.
-                          "sk-text-body-small-medium inline-flex items-center rounded-pill px-2 py-0.5",
-                          isActive
-                            ? "bg-sko-bg-primary-soft text-sko-text-primary"
-                            : "bg-sko-bg-faint text-sko-text-muted",
+                          "sk-text-body-small-medium",
+                          styles.tabCount,
+                          isActive ? styles.tabCountActive : styles.tabCountIdle,
                         )}
                       >
                         {tab.count}
@@ -168,7 +166,7 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
                     {isActive && !indicator.box ? (
                       <span
                         aria-hidden
-                        className="absolute inset-x-0 -bottom-px h-0.5 rounded-t-inner bg-sko-bg-primary"
+                        className={styles.bar}
                       />
                     ) : null}
                   </Link>
@@ -179,15 +177,15 @@ export function ContentTabs({ tabs, active, rightSlot, variant = "tabs", classNa
               <li
                 aria-hidden
                 className={cn(
-                  "pointer-events-none absolute -bottom-px left-0 h-0.5 rounded-t-inner bg-sko-bg-primary",
-                  indicator.animate && "transition-[transform,width] duration-short4 ease-standard",
+                  styles.slidingBar,
+                  indicator.animate && styles.slidingBarAnimate,
                 )}
                 style={indicator.style}
               />
             ) : null}
           </ul>
         </nav>
-        {rightSlot ? <div className="flex shrink-0 items-center gap-3 pr-1">{rightSlot}</div> : null}
+        {rightSlot ? <div className={styles.right}>{rightSlot}</div> : null}
       </div>
       {heading}
     </>

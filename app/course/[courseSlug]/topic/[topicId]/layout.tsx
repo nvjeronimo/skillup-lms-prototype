@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { PlayerShell } from "@/components/views/PlayerShell";
 import { getTopic } from "@/lib/data";
 import { pageTitle } from "@/lib/utils";

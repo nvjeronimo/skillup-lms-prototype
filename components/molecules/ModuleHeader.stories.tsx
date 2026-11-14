@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ModuleHeader } from "./ModuleHeader";
+import styles from "./ModuleHeader.stories.module.css";
 
 const meta: Meta<typeof ModuleHeader> = {
   title: "Molecules/Module Header",
@@ -16,7 +17,7 @@ const meta: Meta<typeof ModuleHeader> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[280px] border border-sko-border-subtle bg-sko-bg-page">
+      <div className={styles.sidebar}>
         <Story />
       </div>
     ),

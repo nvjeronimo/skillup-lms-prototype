@@ -1,0 +1,37 @@
+/* The shell of every platform page: bar, main, footer; the Harbor rail beside from desktop up. */
+.page {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  overflow-x: clip;
+  background-color: var(--color-bg-faint);
+}
+.body {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+@media (min-width: 1024px) {
+  .bodyHarbor {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+.column {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+.main {
+  flex: 1 1 0%;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+/* On a phone: the floating tab bar (16 + 52) and 16 of air, plus the safe area, under the footer. */
+.footer.phonePad {
+  padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+}

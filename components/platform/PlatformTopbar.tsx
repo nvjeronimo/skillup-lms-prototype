@@ -1,8 +1,6 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/lib/router";
+import { useRouter } from "@/lib/router";
 import { Bell, ChevronDown } from "lucide-react";
 import { Icon, Menu02 } from "@/lib/icons";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
@@ -35,14 +33,15 @@ import { HarborSearch } from "./harbor/HarborSearch";
 import { SearchAssistantButton } from "./harbor/SearchAssistantButton";
 import { ThemeSwitch } from "@/components/molecules/ThemeSwitch";
 import { SidebarToggleGlyph } from "@/components/atoms/SidebarToggle";
+import styles from "./PlatformTopbar.module.css";
 
 /** The compact menu rows: Current = bg/primary-soft + text/primary. */
 function itemClass(current: boolean) {
   return cn(
-    "flex items-center gap-1.5 rounded-control px-3 py-2 transition-colors",
+    styles.item,
     current
-      ? "sk-text-body-medium-semibold bg-sko-bg-primary-soft text-sko-text-primary"
-      : "sk-text-body-medium-medium text-sko-text-subtle hover:bg-sko-bg-faint hover:text-sko-text-default",
+      ? cn("sk-text-body-medium-semibold", styles.itemCurrent)
+      : cn("sk-text-body-medium-medium", styles.itemRest),
   );
 }
 
@@ -54,8 +53,9 @@ function itemClass(current: boolean) {
  */
 function tabClass(current: boolean) {
   return cn(
-    "sk-text-body-large-semibold relative flex items-center gap-2 px-1 transition-colors",
-    current ? "text-sko-text-primary" : "text-sko-text-subtle hover:text-sko-text-default",
+    "sk-text-body-large-semibold",
+    styles.tab,
+    current ? styles.tabCurrent : styles.tabRest,
   );
 }
 
@@ -99,13 +99,13 @@ function SectionLinks({
             {tabs && isCurrent ? (
               <span
                 aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-[3px] rounded-t-inner bg-sko-bg-primary"
+                className={styles.currentBar}
               />
             ) : null}
           </>
         );
         return (
-          <li key={s.id} className={tabs ? "flex" : undefined}>
+          <li key={s.id} className={tabs ? styles.tabSlot : undefined}>
             {s.href ? (
               <Link
                 href={s.href}
@@ -175,7 +175,7 @@ function Initials() {
   return (
     <span
       aria-hidden
-      className="sk-text-body-medium-semibold inline-flex size-8 shrink-0 items-center justify-center rounded-control border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle"
+      className={cn("sk-text-body-medium-semibold", styles.initials)}
     >
       {platformUser.initials}
     </span>
@@ -229,7 +229,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
       aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}
       aria-haspopup="dialog"
       onClick={() => openOverlayPanel("notifications")}
-      className="group relative inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover lg:size-8"
+      className={styles.bell}
     >
       <Icon icon={Bell} size={20} />
       {unread ? (
@@ -237,7 +237,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
           aria-hidden
           className={cn(
             dotPop,
-            "absolute right-[11px] top-[10px] size-2 rounded-pill bg-sko-bg-info ring-2 ring-sko-bg-page transition-colors group-hover:ring-sko-bg-muted lg:right-[5px] lg:top-1",
+            styles.dot,
           )}
         />
       ) : null}
@@ -252,7 +252,7 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
 
   return (
     <>
-      <header data-chrome="" className="sk-no-print relative z-30 border-b border-sko-border-subtle bg-sko-bg-page">
+      <header data-chrome="" className={cn("sk-no-print", styles.header)}>
         {/* Desktop. The logo and the actions keep the bar's edges; the sections and the search
             sit in a middle column of Container/content-max-width (1200) that starts where the page
             content starts, so they line up with it (Nelson, 27 Oct 2026). The logo column is
@@ -261,48 +261,46 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
             Harbor keeps its panel layout. */}
         <div
           className={cn(
-            "hidden h-[71px] items-center px-6",
-            harbor
-              ? "justify-between gap-6 lg:flex xl:gap-4 min-[1440px]:gap-6"
-              : "grid-cols-[max(104px,calc((100%_-_var(--sk-container-content-max-width))/2_-_24px))_minmax(min-content,var(--sk-container-content-max-width))_minmax(max-content,1fr)] gap-x-6 lg:grid",
+            styles.desktop,
+            harbor ? styles.desktopHarbor : styles.desktopColumns,
           )}
         >
           {harbor ? (
             // Harbor (Nelson, 25 Oct 2026, after the DreamHost panel): the menu button folds the
             // rail on the left, where the sections are; the middle of the bar is the search pill.
-            <div className="flex flex-1 basis-0 items-center gap-2">
+            <div className={styles.harborStart}>
               <button
                 type="button"
                 onClick={toggleHarborRail}
                 aria-label={railExpanded ? "Collapse the navigation" : "Expand the navigation"}
                 aria-expanded={railExpanded}
-                className="-ml-2.5 inline-flex size-11 items-center justify-center rounded-control text-sko-border-default transition-colors hover:bg-sko-bg-hover"
+                className={cn(styles.iconButton, styles.railToggle)}
               >
                 {/* The ICP sidebar's own panel glyph (Nelson, 26 Oct 2026): left pane filled when the rail is open. */}
                 <SidebarToggleGlyph expanded={railExpanded} />
               </button>
-              <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className="flex min-h-11 items-center">
-                <SkillUpLogo className="h-[30px]" />
+              <Link href="/platform/dashboard" aria-label="SkillUp, Dashboard" className={styles.logoLink}>
+                <SkillUpLogo className={styles.logo} />
               </Link>
             </div>
           ) : (
             <Link
               href="/platform/dashboard"
               aria-label="SkillUp, Dashboard"
-              className="flex min-h-11 shrink-0 items-center justify-self-start"
+              className={cn(styles.logoLink, styles.logoLinkStart)}
             >
-              <SkillUpLogo className="h-[30px]" />
+              <SkillUpLogo className={styles.logo} />
             </Link>
           )}
           {harbor ? (
             <HarborSearch width={420} />
           ) : (
-            <div className="flex min-w-0 items-center justify-between gap-6 self-stretch xl:gap-4 min-[1440px]:gap-6">
-              <nav aria-label="Platform" className="self-stretch [&_a]:whitespace-nowrap">
+            <div className={styles.middle}>
+              <nav aria-label="Platform" className={styles.nav}>
                 <SectionLinks
                   current={current}
                   look="tabs"
-                  className="flex h-full items-stretch gap-3 min-[1440px]:gap-6"
+                  className={styles.tabList}
                 />
               </nav>
               {/* Every skin has the search + Assistant pill (Nelson, 26 Oct 2026): at the end of the
@@ -312,39 +310,39 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
               {/* The pill's own width (240 at rest) must not set the column's minimum, or the column
                   outgrows the bar at 1280 and pushes the actions off screen (27 Oct 2026): it sits
                   in a box that contributes no width (contain: inline-size) and shrinks into it. */}
-              <div className="hidden min-w-0 flex-1 justify-end [contain:inline-size] xl:flex">
+              <div className={styles.searchSlot}>
                 <HarborSearch width={340} />
               </div>
             </div>
           )}
-          <div className={cn("flex items-center gap-3", harbor ? "flex-1 basis-0 justify-end" : "justify-self-end")}>
-            <span className="flex items-center gap-3">
+          <div className={cn(styles.actions, harbor ? styles.actionsHarbor : styles.actionsEnd)}>
+            <span className={styles.actionGroup}>
               {/* Where the pill does not fit (the tabs bar below 1280): its button and sheet. */}
-              {harbor ? null : <SearchAssistantButton size="sm" className="xl:hidden" />}
+              {harbor ? null : <SearchAssistantButton size="sm" className={styles.searchButton} />}
               {bell}
               {themeSwitch}
             </span>
-            <div ref={profile.containerRef} className="relative">
+            <div ref={profile.containerRef} className={styles.profile}>
               <button
                 type="button"
                 {...profile.triggerProps}
                 aria-label={`${platformUser.name}, account`}
-                className="flex items-center gap-2 rounded-control p-1 text-left transition-colors hover:bg-sko-bg-hover"
+                className={styles.profileButton}
               >
                 <Initials />
                 {/* The name and role give way to the search button below 1280 (Nelson, 26 Oct 2026). */}
-                <span className="hidden flex-col whitespace-nowrap xl:flex">
-                  <span className="sk-text-body-small-semibold text-sko-text-default">
+                <span className={styles.profileName}>
+                  <span className={cn("sk-text-body-small-semibold", styles.name)}>
                     {platformUser.name}
                   </span>
                   <span
                     data-invented="plan: no subscription tier in Open edX"
-                    className="sk-text-label-small-regular text-sko-text-subtle"
+                    className={cn("sk-text-label-small-regular", styles.role)}
                   >
                     {platformUser.role}
                   </span>
                 </span>
-                <Icon icon={ChevronDown} size={16} className="text-sko-icon-default" />
+                <Icon icon={ChevronDown} size={16} className={styles.chevron} />
               </button>
               {profile.mounted ? (
                 <ProfilePanel panelProps={profile.panelProps} onDone={profile.close} />
@@ -357,14 +355,14 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
         {/* DS Compact (Topbar 1.8, Nelson 21 Oct 2026): 64 with the rule, padding 8 / 16; the controls are
           44px targets, centred. Menu · logo on the left (as the player bar), Notifications · Theme ·
           learner on the right. The menu's icon sits on the 16px edge, the logo 8 after it. */}
-        <div className="flex h-[63px] items-center justify-between px-4 lg:hidden">
-          <div className="flex items-center">
+        <div className={styles.compact}>
+          <div className={styles.compactStart}>
             <div ref={menu.containerRef} hidden={phone}>
               <button
                 type="button"
                 {...menu.triggerProps}
                 aria-label="Platform sections"
-                className="-ml-2.5 inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover"
+                className={cn(styles.iconButton, styles.menuButton)}
               >
                 <Icon icon={Menu02} size={24} />
               </button>
@@ -374,13 +372,13 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
                 <nav
                   {...menu.panelProps}
                   aria-label="Platform"
-                  className="sk-animate-menu-y origin-top absolute inset-x-0 top-full border-b border-sko-border-subtle bg-sko-bg-page px-4 py-3 shadow-lg"
+                  className={cn("sk-animate-menu-y", styles.menuPanel)}
                 >
                   <SectionLinks
                     current={current}
                     onPick={menu.close}
-                    className="flex flex-col gap-1"
-                    itemClassName="min-h-11 w-full"
+                    className={styles.menuList}
+                    itemClassName={styles.menuItem}
                   />
                 </nav>
               ) : null}
@@ -388,24 +386,24 @@ export function PlatformTopbar({ current }: { current: PlatformSection | null })
             <Link
               href="/platform/dashboard"
               aria-label="SkillUp, Dashboard"
-              className={cn("flex min-h-11 items-center", !phone && "-ml-0.5")}
+              className={cn(styles.logoLink, !phone && styles.logoLinkNudge)}
             >
-              <SkillUpLogo className="h-[30px]" />
+              <SkillUpLogo className={styles.logo} />
             </Link>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="flex items-center gap-1">
+          <div className={styles.compactEnd}>
+            <span className={styles.compactGroup}>
               <SearchAssistantButton size="sm" />
               {bell}
               {/* Too little room on a phone: the switch moves to the profile menu, as in the player (Nelson, 28 Oct 2026). */}
               {phone ? null : themeSwitch}
             </span>
-            <div ref={profileCompact.containerRef} className="relative">
+            <div ref={profileCompact.containerRef} className={styles.profile}>
               <button
                 type="button"
                 {...profileCompact.triggerProps}
                 aria-label={`${platformUser.name}, account`}
-                className="inline-flex size-11 items-center justify-center rounded-control transition-colors hover:bg-sko-bg-hover"
+                className={styles.compactProfileButton}
               >
                 <Initials />
               </button>

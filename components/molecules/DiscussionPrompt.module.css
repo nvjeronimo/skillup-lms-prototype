@@ -1,0 +1,59 @@
+/* DS `LMS / Discussion Prompt` (19975:537927). */
+.prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 16px 24px;
+}
+.duration,
+.count {
+  color: var(--color-text-subtle);
+}
+.question {
+  color: var(--color-text-default);
+}
+.helper {
+  color: var(--color-text-muted);
+}
+.reply {
+  min-height: 120px;
+  width: 100%;
+  resize: none;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  padding: 12px;
+  color: var(--color-text-default);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.reply:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.reply::placeholder {
+  color: var(--color-text-subtle);
+}
+.reply:focus {
+  border-color: var(--color-border-primary);
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (textarea.border); the same rules here, after the component's own. */
+/* Fluent's Input: a Stroke1 frame, the accessible stroke along the bottom, white inside (it
+   held over the focus colour). */
+:global([data-skin="fluent"]) textarea.reply {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}

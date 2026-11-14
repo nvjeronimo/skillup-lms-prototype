@@ -2,6 +2,7 @@ import * as React from "react";
 import { Edit3, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./TranscriptLine.module.css";
 
 export interface TranscriptLineProps {
   ts: string;
@@ -49,7 +50,7 @@ export function TranscriptLine({
   duration,
   device = "desktop",
   readOnly = false,
-  padX = "px-4",
+  padX = styles.padX,
   onSeek,
   onAddNote,
   onEditNote,
@@ -60,11 +61,7 @@ export function TranscriptLine({
     return (
       // A span (block), so the quote can also sit inside a button (the note item opens on click).
       <span
-        className={cn(
-          "sk-text-body-medium-regular block px-4 py-3 text-sko-text-default",
-          active ? "bg-sko-bg-primary-soft shadow-[inset_3px_0_0_var(--color-border-primary)]" : "",
-          className,
-        )}
+        className={cn("sk-text-body-medium-regular", styles.quote, active && styles.active, className)}
       >
         {text}
       </span>
@@ -73,44 +70,39 @@ export function TranscriptLine({
     <div
       className={cn(
         // The active fill and its 3px bar ease in and out together (short3, standard).
-        "group flex items-start gap-3 py-3 transition-[background-color,box-shadow] duration-short3 ease-standard",
+        styles.line,
         padX,
-        stacked && "flex-col",
-        active
-          ? "bg-sko-bg-primary-soft shadow-[inset_3px_0_0_var(--color-border-primary)]"
-          : "hover:bg-sko-bg-subtle",
+        stacked && styles.stacked,
+        active ? styles.active : styles.idle,
         className,
       )}
     >
       <button
         type="button"
         onClick={onSeek}
-        className={cn("flex min-w-0 items-start gap-3 text-left", stacked ? "w-full" : "flex-1")}
+        className={cn(styles.seek, stacked ? styles.seekFull : styles.seekFill)}
       >
         {/* Timecode: dot (only when the line has a note) + timestamp, grouped. */}
-        <span className="flex shrink-0 items-center gap-3">
+        <span className={styles.timecode}>
           {hasNote ? (
             // Dot fill = icon/primary through currentColor: the token lint keeps icon tokens out of bg utilities.
             <span
-              className="size-2 shrink-0 rounded-pill bg-current text-sko-icon-primary"
+              className={styles.noteDot}
               data-invented="notes: Open edX notes cannot anchor to a transcript line"
               aria-label="Has note"
               role="img"
             />
           ) : null}
           <span
-            className={cn(
-              "sk-text-body-small-medium whitespace-nowrap",
-              active ? "text-sko-text-on-primary-soft" : "text-sko-text-subtle",
-            )}
+            className={cn("sk-text-body-small-medium", active ? styles.tsActive : styles.ts)}
           >
             {ts}
           </span>
         </span>
-        <span className="sk-text-body-medium-regular min-w-0 flex-1 text-sko-text-default">
+        <span className={`sk-text-body-medium-regular ${styles.text}`}>
           {text}
           {showDuration && duration ? (
-            <span className="sk-text-body-small-regular ml-2 text-sko-text-subtle">{duration}</span>
+            <span className={`sk-text-body-small-regular ${styles.duration}`}>{duration}</span>
           ) : null}
         </span>
       </button>
@@ -121,7 +113,7 @@ export function TranscriptLine({
           onClick={hasNote ? onEditNote : onAddNote}
           aria-label={`${hasNote ? "Edit" : "Add"} note at ${ts}`}
           data-invented="notes: Open edX notes cannot anchor to a transcript line"
-          className="sk-text-body-small-semibold flex shrink-0 items-center gap-1 self-start rounded-pill bg-sko-bg-primary-soft py-1 pl-2 pr-3 text-sko-text-primary"
+          className={`sk-text-body-small-semibold ${styles.notePill}`}
         >
           <Icon icon={hasNote ? Edit3 : Plus} size={14} />
           {hasNote ? "Edit" : "Note"}

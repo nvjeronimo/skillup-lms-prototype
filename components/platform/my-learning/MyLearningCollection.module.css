@@ -1,0 +1,244 @@
+/* The Collection of My Learning: the sticky toolbar (tabs, filter row) over the cards. */
+.collection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Row 1: the tabs on their rule. On a phone the sm tabs keep their 32 row (the "larger targets"
+   min-height is switched off on them). */
+.tabsRow {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 8px;
+}
+@media (max-width: 767.98px) {
+  .tabsRow [role="tab"] {
+    min-height: 0px;
+  }
+}
+
+/* Row 2: the filter, then the search and the view switch; one row from lg up. */
+.filterRow {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .filterRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+}
+.filterSlot {
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .filterSlot {
+    flex-shrink: 0;
+  }
+}
+
+/* The status filter's track (DS Button group); its skeleton reuses it. On a phone it fills the
+   width and the segments scroll sideways inside it, with no scrollbar. */
+.filterTrack {
+  display: flex;
+  width: 100%;
+  gap: 2px;
+  overflow-x: auto;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-track);
+  padding: 4px;
+  scrollbar-width: none;
+}
+.filterTrack::-webkit-scrollbar {
+  display: none;
+}
+@media (min-width: 768px) {
+  .filterTrack {
+    display: inline-flex;
+    width: auto;
+    overflow: visible;
+  }
+}
+.segment {
+  height: 32px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  padding-inline: 16px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (max-width: 767.98px) {
+  .segment {
+    height: 44px;
+  }
+}
+.segmentPressed {
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+.segmentRest {
+  border-color: transparent;
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .segmentRest:hover {
+    background-color: var(--color-bg-subtle);
+    color: var(--color-text-default);
+  }
+}
+
+.searchSlot {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+@media (min-width: 768px) {
+  .searchSlot {
+    justify-content: space-between;
+  }
+}
+@media (min-width: 1024px) {
+  .searchSlot {
+    justify-content: flex-start;
+  }
+}
+.searchHolder {
+  width: 100%;
+}
+.search {
+  width: 100%;
+}
+@media (min-width: 1024px) {
+  .searchHolder {
+    width: auto;
+  }
+  .search {
+    width: 320px;
+  }
+}
+/* Doubled: it hides the toggle's own inline-flex below a tablet, wherever that stylesheet lands. */
+.viewToggle.viewToggle {
+  display: none;
+  flex-shrink: 0;
+}
+@media (min-width: 768px) {
+  .viewToggle.viewToggle {
+    display: inline-flex;
+  }
+}
+
+/* The table (from a tablet up). */
+.table {
+  display: none;
+}
+@media (min-width: 768px) {
+  .table {
+    display: block;
+  }
+}
+
+/* Grid: 3 columns on desktop, 2 on tablet, 1 on a phone, grid-gap apart. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: var(--sk-layout-grid-gap);
+}
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* items-start: an opened row does not stretch the rows of its line. */
+.gridTop {
+  align-items: flex-start;
+}
+@media (min-width: 768px) {
+  .hideFromTablet {
+    display: none;
+  }
+}
+/* List: one column, grid-gap apart, from a tablet up. */
+.list {
+  display: none;
+  flex-direction: column;
+  gap: var(--sk-layout-grid-gap);
+}
+@media (min-width: 768px) {
+  .list {
+    display: flex;
+  }
+}
+
+/* The row is the target of its card's title link: it shows it on hover, as the card did. */
+.row {
+  min-width: 0;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.row:has(h3 a:hover) {
+  border-color: var(--color-border-default);
+}
+.programItem {
+  min-width: 0;
+}
+
+/* Skins: tokens/skin-harbor.css and skin-fluent.css restyle a .rounded-track.bg-sko-bg-track and
+   its segments; Studio (direction-studio.css) makes a segment of a track a pill, and Harbor every
+   one-line button. */
+:global([data-skin="harbor"]) .filterTrack,
+:global([data-skin="fluent"]) .filterTrack {
+  background-color: var(--color-bg-muted);
+}
+:global([data-skin="harbor"]) .filterTrack > .segment {
+  border-radius: 9999px;
+  border-color: transparent;
+  color: var(--color-text-subtle);
+  font-weight: 500;
+}
+:global([data-skin="harbor"]) .filterTrack > .segment[aria-pressed="true"] {
+  border-color: transparent;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: var(--sk-shadow-harbor-pill);
+}
+:global([data-skin="fluent"]) .filterTrack > .segment {
+  border-color: transparent;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+:global([data-skin="fluent"]) .filterTrack > .segment[aria-pressed="true"] {
+  border-color: var(--sk-fluent-stroke1);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-weight: 600;
+  box-shadow: none;
+}
+:global([data-direction="studio"]) .segment {
+  border-radius: 9999px;
+}
+/* …and so is anything else with the control radius in the track (the skeleton's pills). */
+:global([data-direction="studio"]) .filterTrack :global(.rounded-control) {
+  border-radius: 9999px;
+}

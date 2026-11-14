@@ -1,6 +1,4 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@/lib/router";
 import { getPersona, type Persona } from "@/lib/lab/dashboard-mock";
 
 /** The persona picked with ?persona=noah|maya|dev|priya (default Maya, the baseline). */

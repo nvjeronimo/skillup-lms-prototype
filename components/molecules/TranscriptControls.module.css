@@ -1,0 +1,83 @@
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.language {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+}
+/* "Language:" from 640 up. */
+.languageLabel {
+  display: none;
+}
+@media (min-width: 640px) {
+  .languageLabel {
+    display: inline;
+  }
+}
+.selectWrap {
+  position: relative;
+}
+.select {
+  min-height: 24px;
+  appearance: none;
+  background-color: transparent;
+  padding-right: 20px;
+  color: var(--color-text-default);
+}
+.chevron {
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-icon-subtle);
+}
+
+/* DS Link Button (Brand · Primary · md): a 1px bottom stroke in border/primary; 28 tall,
+   border-box. */
+.link {
+  display: inline-flex;
+  height: 28px;
+  align-items: center;
+  gap: 4px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-primary);
+  padding-inline: 2px;
+  color: var(--color-text-primary);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    border-color: var(--color-icon-default);
+    color: var(--color-text-on-primary-soft);
+  }
+}
+.link:focus-visible {
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-faint);
+}
+.linkIcon {
+  color: var(--color-icon-primary);
+}
+.link:hover svg {
+  color: var(--color-icon-default);
+}
+.linkLabel {
+  padding-inline: 2px;
+}
+/* "Download transcript" from 768 up; the icon alone below. */
+.downloadLabel {
+  display: none;
+  padding-inline: 2px;
+}
+@media (min-width: 768px) {
+  .downloadLabel {
+    display: inline;
+  }
+}

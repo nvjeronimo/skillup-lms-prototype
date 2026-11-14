@@ -1,0 +1,286 @@
+/* Services (/platform/services). */
+.page {
+  padding-left: var(--sk-layout-page-x);
+  padding-right: var(--sk-layout-page-x);
+  padding-bottom: 48px;
+  padding-top: var(--sk-layout-page-top);
+}
+.stack {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.ink {
+  color: var(--color-text-default);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+.noShrink {
+  flex-shrink: 0;
+}
+.card {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 16px;
+}
+.cardGap4 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cardGap3 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.eyebrow {
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.link {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  color: var(--color-text-primary);
+  text-underline-offset: 4px;
+}
+.pushDown {
+  margin-top: auto;
+}
+.request {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.requestText {
+  display: flex;
+  min-width: 0px;
+  flex-direction: column;
+  gap: 2px;
+}
+.helpGrid {
+  display: grid;
+  gap: var(--sk-layout-column-gap);
+}
+.stretch {
+  align-items: stretch;
+}
+.person {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.personText {
+  display: flex;
+  min-width: 0px;
+  flex-direction: column;
+  gap: 4px;
+}
+.stack1 {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.skeletonActions {
+  display: flex;
+  gap: 8px;
+}
+.includedGrid {
+  display: grid;
+  gap: var(--sk-layout-grid-gap);
+}
+.lastMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  border-radius: var(--sk-radius-card-inset);
+  background-color: var(--color-bg-subtle);
+  padding: 12px;
+  color: var(--color-text-muted);
+}
+.lastMessageIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: var(--color-icon-subtle);
+}
+.mentorActions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.supportActions {
+  display: flex;
+  flex-direction: column;
+  column-gap: 16px;
+  row-gap: 8px;
+}
+.requests {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.noRequests {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: var(--color-text-subtle);
+}
+.section4 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.section3 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.includedTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.includedIcon {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-icon-primary);
+}
+.bookedNote {
+  margin-top: auto;
+  color: var(--color-text-muted);
+}
+.moreList {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.moreIcon {
+  flex-shrink: 0;
+  color: var(--color-icon-subtle);
+}
+.moreText {
+  display: flex;
+  min-width: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+.moreRow {
+  display: flex;
+  min-height: 56px;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.request:first-child {
+  border-top-width: 0px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    text-decoration-line: underline;
+  }
+  .moreRow:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+@media (max-width: 767.98px) {
+  .link {
+    min-height: 44px;
+  }
+  .phoneTall {
+    height: 44px;
+  }
+}
+@media (min-width: 640px) {
+  .helpCenter {
+    align-self: center;
+  }
+  .mentorActions {
+    flex-direction: row;
+  }
+  .supportActions {
+    flex-direction: row;
+    align-items: center;
+  }
+  .moreList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+@media (min-width: 768px) {
+  .page {
+    padding-bottom: 64px;
+  }
+  .card {
+    padding: 20px;
+  }
+  .includedGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .page {
+    padding-bottom: 80px;
+  }
+  .card {
+    padding: 24px;
+  }
+  .helpGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .moreList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Skin hooks that matched the Tailwind card classes (rounded-card border p-4 md:p-5 lg:p-6):
+   Harbor and Fluent cards are borderless on the card shadow (tokens/skin-harbor.css,
+   skin-fluent.css); a Studio card takes 24 inside (23 + the 1px border) and a 44 radius, and
+   floats on Studio's shadow (tokens/direction-studio.css). */
+[data-skin="harbor"] [data-platform-page] .card,
+[data-skin="fluent"] [data-platform-page] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-direction="studio"] .card {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+/* …and an inset inside a Studio card takes the control radius. */
+[data-direction="studio"] .card .lastMessage {
+  border-radius: var(--sk-radius-control);
+}

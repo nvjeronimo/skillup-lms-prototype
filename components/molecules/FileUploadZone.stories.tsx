@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FileUploadZone } from "./FileUploadZone";
+import styles from "./FileUploadZone.stories.module.css";
 
 const meta: Meta<typeof FileUploadZone> = {
   title: "Molecules/File Upload Zone",
@@ -8,7 +9,7 @@ const meta: Meta<typeof FileUploadZone> = {
   parameters: { layout: "padded" },
   decorators: [
     (Story) => (
-      <div className="max-w-xl">
+      <div className={styles.column}>
         <Story />
       </div>
     ),

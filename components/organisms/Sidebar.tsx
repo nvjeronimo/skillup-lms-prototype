@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Bookmark, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -12,6 +10,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { TopicRow } from "@/components/molecules/TopicRow";
 import { ProgressRing } from "@/components/molecules/OverallProgress";
 import { cn } from "@/lib/utils";
+import styles from "./Sidebar.module.css";
 import { track } from "@/lib/analytics";
 import { inertProps } from "@/lib/inert";
 import { HOVER_CLOSE_GRACE_MS, MOTION_MS } from "@/lib/motion/tokens";
@@ -286,7 +285,7 @@ export function Sidebar({
     const Dot = (topic: Topic) => (
       <li
         key={topic.id}
-        className="relative w-full"
+        className={styles.dot}
         onMouseEnter={(e) => openFlyout(topic, e.currentTarget)}
         onMouseLeave={scheduleClose}
         onFocus={(e) => {
@@ -316,7 +315,7 @@ export function Sidebar({
           onClick={() => onSelectTopic?.(topic.id)}
         />
         {bookmarks.has(topic.id) ? (
-          <span aria-hidden className="pointer-events-none absolute right-1.5 top-1 text-sko-text-primary">
+          <span aria-hidden className={styles.dotBookmark}>
             <Bookmark size={12} fill="currentColor" strokeWidth={1} />
           </span>
         ) : null}
@@ -326,32 +325,32 @@ export function Sidebar({
       <>
         <nav
           className={cn(
-            "flex h-full w-[72px] flex-col items-center overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page py-4",
+            styles.rail,
             variantFade,
             className,
           )}
           aria-label="Course Journey"
         >
-          <div className="flex flex-col items-center gap-2 pb-3">
+          <div className={styles.railHead}>
             <SidebarToggle expanded={false} onToggle={onToggleSidebar} />
             <ProgressRing pct={overallPct} />
-            <span className="sr-only">{progressLine}</span>
+            <span className="sk-sr-only">{progressLine}</span>
           </div>
-          <div ref={scrollRef} onScroll={(e) => (savedScrollTop = e.currentTarget.scrollTop)} className="sk-scroll w-full flex-1 overflow-y-auto">
+          <div ref={scrollRef} onScroll={(e) => (savedScrollTop = e.currentTarget.scrollTop)} className={`sk-scroll ${styles.railScroll}`}>
             {course.modules.map((module) => {
               const n = modules.indexOf(module) + 1;
               return (
                 <section
                   key={module.id}
                   aria-label={module.implicit ? course.title : `Module ${n}: ${module.title}`}
-                  className="flex w-full flex-col items-center gap-1.5 border-t border-sko-border-subtle py-2"
+                  className={styles.railModule}
                 >
                   {module.implicit ? null : (
                     <p
                       aria-hidden
                       className={cn(
                         "sk-text-label-small-semibold",
-                        moduleDone(module) ? "text-sko-text-success" : "text-sko-text-subtle",
+                        moduleDone(module) ? styles.success : styles.subtle,
                       )}
                     >
                       M{n}
@@ -359,15 +358,15 @@ export function Sidebar({
                   )}
                   {module.lessons ? (
                     module.lessons.map((lesson, j) => (
-                      <ol key={lesson.id} aria-label={`Lesson ${j + 1}: ${lesson.label}`} className="flex w-full flex-col items-center gap-1.5">
-                        <li aria-hidden className="sk-text-label-small-medium text-sko-text-subtle">
+                      <ol key={lesson.id} aria-label={`Lesson ${j + 1}: ${lesson.label}`} className={styles.railLesson}>
+                        <li aria-hidden className={`sk-text-label-small-medium ${styles.subtle}`}>
                           L{j + 1}
                         </li>
                         {lesson.topics.map(Dot)}
                       </ol>
                     ))
                   ) : (
-                    <ol className="w-full">{moduleTopics(module).map(Dot)}</ol>
+                    <ol className={styles.railTopics}>{moduleTopics(module).map(Dot)}</ol>
                   )}
                 </section>
               );
@@ -381,7 +380,7 @@ export function Sidebar({
             onTransitionEnd={flyoutPresence.onTransitionEnd}
             aria-hidden={flyoutClosing || undefined}
             {...inertProps(flyoutClosing)}
-            className="sk-animate-flyout fixed z-[70]"
+            className={`sk-animate-flyout ${styles.flyout}`}
             style={{ top: shownFlyout.top, left: shownFlyout.left + 6 }}
             onMouseEnter={keepOpen}
             onMouseLeave={scheduleClose}
@@ -394,16 +393,16 @@ export function Sidebar({
               }
             }}
           >
-            <div className="flex items-center gap-2 rounded-control border border-sko-border-subtle bg-sko-bg-page py-1.5 pl-3 pr-1.5 shadow-sk-elevation-3">
+            <div className={styles.flyoutBox}>
               <button
                 type="button"
                 onClick={() => {
                   onSelectTopic?.(shownFlyout.topic.id);
                   setFlyout(null);
                 }}
-                className="flex min-w-0 flex-col items-start text-left"
+                className={styles.flyoutTopic}
               >
-                <span className="sk-text-body-medium-medium whitespace-nowrap text-sko-text-default">
+                <span className={`sk-text-body-medium-medium ${styles.flyoutTitle}`}>
                   {shownFlyout.topic.title}
                 </span>
                 <TopicTypeBadge type={shownFlyout.topic.type} />
@@ -443,28 +442,28 @@ export function Sidebar({
   return (
     <nav
       className={cn(
-        "flex h-full flex-col overflow-hidden bg-sko-bg-page",
+        styles.panel,
         // 3 of 12 columns of the body, like a col-md-3 on a 24px-gutter grid (Nelson, 30 Oct 2026):
         // (width − 11 gutters) / 4 + 2 gutters. Never under 280, so tablet titles stay readable, and
         // never over 400: the content already stops at 1200 (decision 037).
         isMobile
-          ? "w-[320px]"
-          : "w-[calc((100%-264px)/4+48px)] min-w-[280px] max-w-[400px] shrink-0 rounded-control border border-sko-border-subtle",
+          ? styles.panelMobile
+          : styles.panelDesktop,
         variantFade,
         className,
       )}
       aria-labelledby={isMobile ? mobileTitleId : headingId}
     >
       {isMobile && onCloseMobile ? (
-        <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-sko-border-subtle pl-4 pr-2">
-          <h2 id={mobileTitleId} className="sk-text-body-large-semibold text-sko-text-default">
+        <div className={styles.mobileHeader}>
+          <h2 id={mobileTitleId} className={`sk-text-body-large-semibold ${styles.ink}`}>
             Course Journey
           </h2>
           <button
             type="button"
             onClick={onCloseMobile}
             aria-label="Close Course Journey"
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-sko-icon-subtle transition-colors hover:bg-sko-bg-hover"
+            className={styles.close}
           >
             <Icon icon={X} size={24} />
           </button>
@@ -482,24 +481,24 @@ export function Sidebar({
         condensed={condensed}
       />
       {isMobile ? null : (
-        <h2 id={headingId} className="sr-only">
+        <h2 id={headingId} className="sk-sr-only">
           Course Journey
         </h2>
       )}
 
-      <div className="flex items-center gap-3 border-b border-sko-border-subtle px-4 pb-3 pt-1">
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <span className="sk-text-label-small-semibold text-sko-text-subtle">Overall progress</span>
+      <div className={styles.progress}>
+        <div className={styles.progressText}>
+          <span className={`sk-text-label-small-semibold ${styles.subtle}`}>Overall progress</span>
           <span
             className={cn(
               "sk-text-body-small-semibold",
-              overallPct >= 100 ? "text-sko-text-success" : "text-sko-text-default",
+              overallPct >= 100 ? styles.success : styles.ink,
             )}
           >
             {progressLine}
           </span>
           {progressDetail ? (
-            <span className="sk-text-body-small-regular text-sko-text-subtle">{progressDetail}</span>
+            <span className={`sk-text-body-small-regular ${styles.subtle}`}>{progressDetail}</span>
           ) : null}
         </div>
         <ProgressRing pct={overallPct} />
@@ -516,12 +515,12 @@ export function Sidebar({
           if ((e.target as HTMLElement).matches(ROVING)) roving.current = e.target as HTMLElement;
         }}
         data-module-list=""
-        className="sk-scroll flex-1 overflow-y-auto"
+        className={`sk-scroll ${styles.list}`}
       >
         {course.modules.map((module) => {
           if (module.implicit) {
             return (
-              <ol key={module.id} data-module-box="" className="border-b border-sko-border-subtle py-2">
+              <ol key={module.id} data-module-box="" className={styles.implicitModule}>
                 {moduleTopics(module).map(renderTopic)}
               </ol>
             );
@@ -534,7 +533,7 @@ export function Sidebar({
           return (
             <section key={module.id} data-module-box="" aria-labelledby={`${bodyId}-h`}>
               {/* Sticks while its own topics scroll under it, then leaves with them. */}
-              <h3 id={`${bodyId}-h`} className="sticky top-0 z-[1]">
+              <h3 id={`${bodyId}-h`} className={styles.moduleHeading}>
                 <ModuleHeader
                   label={module.label}
                   title={module.title}
@@ -550,7 +549,7 @@ export function Sidebar({
                 {module.lessons ? (
                   module.lessons.map((lesson) => (
                     <div key={lesson.id}>
-                      <h4 className="sk-text-body-small-semibold px-4 pb-1 pt-4 text-sko-text-default">{lesson.label}</h4>
+                      <h4 className={`sk-text-body-small-semibold ${styles.lessonHeading}`}>{lesson.label}</h4>
                       <ol>{lesson.topics.map(renderTopic)}</ol>
                     </div>
                   ))

@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LiveNowBanner } from "./LiveNowBanner";
+import styles from "./LiveNowBanner.stories.module.css";
 
 const meta: Meta<typeof LiveNowBanner> = {
   title: "Organisms/Live Now Banner",
@@ -14,7 +15,7 @@ const meta: Meta<typeof LiveNowBanner> = {
   argTypes: { state: { control: "radio", options: ["Live", "Upcoming"] } },
   decorators: [
     (Story) => (
-      <div className="max-w-3xl">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

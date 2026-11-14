@@ -1,12 +1,11 @@
-"use client";
-
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { Button } from "@/components/atoms/Button";
 import { CourseAlert } from "./CourseAlert";
 import { courseDetailHref } from "@/lib/platform/course-detail";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import { useLmsStore } from "@/lib/store";
+import styles from "./ShiftDatesAlert.module.css";
 
 /**
  * Open edX `ShiftDatesAlert` on the course page (Course and Dates tabs): the warning alert with the
@@ -29,7 +28,7 @@ export function ShiftDatesAlert({ courseSlug, className }: { courseSlug: string;
       action={
         <Button
           size="sm"
-          className="max-md:h-11 max-md:w-full"
+          className={styles.action}
           onClick={() => {
             setShifted(true);
             showToast(SHIFT_DATES.toast, {

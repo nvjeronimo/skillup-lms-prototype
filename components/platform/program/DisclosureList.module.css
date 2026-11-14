@@ -1,0 +1,113 @@
+/* Every row after the first sits under a 1px rule: 1 + 15 / 19 / 23 = 16 / 20 / 24 above it. */
+.rowRule {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 15px;
+}
+
+/* The accordion button: its hit area padded to 44 without moving the layout. */
+.trigger {
+  margin-top: -10px;
+  margin-bottom: -10px;
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: left;
+}
+.title {
+  min-width: 0;
+  flex: 1 1 0%;
+  color: var(--color-text-default);
+}
+.icons {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--color-icon-faint);
+}
+
+/* Plus and minus cross-fade with a quarter turn (short4, standard). */
+.icon {
+  position: absolute;
+  inset: 0px;
+  transition-property: opacity, transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.iconShown {
+  transform: rotate(0deg);
+  opacity: 1;
+}
+.plusHidden {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+.minusHidden {
+  transform: rotate(-90deg);
+  opacity: 0;
+}
+
+/* The body: 4 under the title, paragraphs 16 apart, short of the icon. */
+.body {
+  padding-right: 32px;
+  padding-top: 4px;
+  color: var(--color-text-subtle);
+}
+.body > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 16px;
+  margin-bottom: 0px;
+}
+
+/* The card of rows: padding and row gap 16 / 20 / 24 (mobile / tablet / desktop). */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .rowRule {
+    padding-top: 19px;
+  }
+  .trigger {
+    gap: 16px;
+  }
+  .body {
+    padding-right: 40px;
+  }
+  .list {
+    gap: 20px;
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rowRule {
+    padding-top: 23px;
+  }
+  .list {
+    padding: 24px;
+  }
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): their rules selected the
+   Tailwind classes this element had (.rounded-card.border.p-4.md:p-5.lg:p-6: the p-4 rule comes last in Studio, so 23 / 44 at every width); they are repeated here for the module class. */
+:global([data-direction="studio"]) .list {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .list,
+:global([data-skin="fluent"] [data-platform-page]) .list {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

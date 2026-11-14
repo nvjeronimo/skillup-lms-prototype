@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "@/lib/router";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import type { SearchScope } from "@/components/platform/harbor/HarborSearch";
 import { courseProgressPct } from "@/lib/courses/outline";
@@ -36,7 +34,7 @@ import { useLmsStore, type TabSlug } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
-import { CONTENT_MEASURE, CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "@/lib/contentPadding";
+import { CONTENT_MEASURE, CONTENT_PAD, CONTENT_PB, CONTENT_PT, CONTENT_PX } from "./contentPadding";
 import { useDialog } from "@/lib/useDialog";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { useSheetDrag } from "@/lib/useSheetDrag";
@@ -84,6 +82,7 @@ import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
 import { ArrivalContext, useArrivalController, useCourseArrival } from "@/lib/arrival/useArrival";
 import { courseArrivalPath, topicArrivalPath } from "@/lib/arrival/visits";
 import { TopicSkeleton } from "./TopicSkeleton";
+import styles from "./PlayerShell.module.css";
 
 
 export interface PlayerShellProps {
@@ -230,15 +229,15 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       <main
         id="main"
         tabIndex={-1}
-        className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 bg-sko-bg-faint px-4 py-12 text-center outline-none"
+        className={styles.notFound}
       >
-        <div className="flex max-w-[480px] flex-col gap-2">
-          <h1 className="sk-text-headline-small-semibold text-sko-text-default">This topic is not in the course</h1>
-          <p className="sk-text-body-large-regular text-sko-text-muted">
+        <div className={styles.notFoundText}>
+          <h1 className={`sk-text-headline-small-semibold ${styles.notFoundTitle}`}>This topic is not in the course</h1>
+          <p className={`sk-text-body-large-regular ${styles.notFoundBody}`}>
             The link may be old or mistyped. The course page lists every topic and where you left off.
           </p>
         </div>
-        <div className="flex w-full max-w-[480px] flex-col gap-3 sm:w-auto sm:flex-row">
+        <div className={styles.notFoundActions}>
           <ButtonLink href={courseHomeHref(courseSlug)} hierarchy="primary" size="lg">
             Go to the course
           </ButtonLink>
@@ -367,12 +366,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // blocked topics, and only on the primary tab.
   const discussFooter =
     discussionsPreview && !isLocked && !isBlocked && activeTab === "transcript" ? (
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-subtle px-4 py-3">
-        <div className="flex items-center gap-2.5">
-          <Icon icon={MessagesSquare} size={18} className="text-sko-text-primary" />
-          <div className="flex flex-col">
-            <span className="sk-text-body-medium-semibold text-sko-text-default">Discuss this topic</span>
-            <span className="sk-text-body-small-regular text-sko-text-subtle">
+      <div className={styles.discuss}>
+        <div className={styles.discussInfo}>
+          <Icon icon={MessagesSquare} size={18} className={styles.discussIcon} />
+          <div className={styles.discussText}>
+            <span className={`sk-text-body-medium-semibold ${styles.discussTitle}`}>Discuss this topic</span>
+            <span className={`sk-text-body-small-regular ${styles.discussHint}`}>
               Join the conversation with your cohort.
             </span>
           </div>
@@ -485,13 +484,13 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const durationSeconds = getMediaSeconds(topic);
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-sko-bg-subtle">
+    <div className={styles.shell}>
       <ArrivalContext.Provider value={courseArrival}>
       <CoursePlayerTopbar
         // Chrome that holds still through a page transition (globals.css). Its view-transition-name
         // makes it a stacking context, so without a z-index the body painted over the profile menu
         // (Nelson, 25 Oct 2026); z-30 as the platform top bar, under the drawer (40) and modals.
-        className="sk-vt-player-topbar relative z-30"
+        className={`sk-vt-player-topbar ${styles.topbar}`}
         size={topbarSize}
         showNotifications
         notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
@@ -530,7 +529,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
           add the sidebar, 24 from the content (16 until Nelson, 25 Oct 2026: more space
           between columns); mobile keeps a smaller gutter so the
           tinted body shows around the single content card. */}
-      <div className={cn("flex min-h-0 flex-1", inlineSidebar ? "gap-6 p-4" : "p-3")}>
+      <div className={cn(styles.body, inlineSidebar ? styles.bodyWithSidebar : styles.bodyAlone)}>
         {inlineSidebar ? (
           <ArrivalContext.Provider value={courseArrival}>
           <Sidebar
@@ -553,11 +552,14 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         <main
           id="main"
           tabIndex={-1}
-          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page outline-none"
+          className={styles.content}
+          // A hook for the skins: Studio gives a card inside this content card the control radius
+          // (tokens/direction-studio.css, "a card inside a card"), now that it has no utility class.
+          data-player-content=""
         >
           <div
             ref={bodyRef}
-            className="sk-scroll sk-scroll-instant flex-1 overflow-y-auto [overflow-anchor:none]"
+            className={`sk-scroll sk-scroll-instant ${styles.contentScroll}`}
             onScroll={(e) => {
               const top = e.currentTarget.scrollTop;
               // Dock past 8 px, undock only back at the top (hysteresis).
@@ -594,8 +596,8 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   data-arrive={0}
                   data-video-band=""
                   className={cn(
-                    "sticky top-0 z-20 bg-sko-bg-page transition-[padding] duration-short4 ease-standard-decelerate [container-type:inline-size]",
-                    videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
+                    styles.videoBand,
+                    videoDocked ? styles.videoBandDocked : cn(CONTENT_PX[bp], CONTENT_PT[bp], styles.videoBandFull),
                   )}
                 >
                   {youtubeEmbed && youtube ? (
@@ -660,7 +662,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   )}
                 </div>
                 {showResume ? (
-                  <div className={cn(CONTENT_PX[bp], CONTENT_MEASURE, "pb-1 pt-1")}>
+                  <div className={cn(CONTENT_PX[bp], CONTENT_MEASURE, styles.resume)}>
                     <ResumeBanner
                       seconds={storedResume}
                       onResume={() => {
@@ -693,7 +695,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                       rightSlot={headerStatus ?? undefined}
                     />
                   </div>
-                  <div data-arrive={2} className="mt-6">
+                  <div data-arrive={2} className={styles.videoBody}>
                     {showTabs ? (
                       <ContentTabs
                         tabs={tabs}
@@ -743,10 +745,10 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   data-arrive={1}
                   className={
                     partnerLab
-                      ? "mt-3"
+                      ? styles.bodyPartnerLab
                       : family === "reading" || scormActivity
-                        ? "mt-8 border-t border-sko-border-subtle pt-2"
-                        : "mt-6"
+                        ? styles.bodyRuled
+                        : styles.bodyDefault
                   }
                 >
                   {showTabs ? (
@@ -934,7 +936,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
       />
 
       {/* The body's load, announced once: "Loading…" while its skeleton shows. */}
-      <p role="status" className="sr-only">
+      <p role="status" className="sk-sr-only">
         {arrival.decided && arrival.first && !arrival.released ? "Loading…" : ""}
       </p>
       <Toast toast={toast} onDone={clearToast} />
@@ -972,9 +974,9 @@ function MobileCourseDrawer({
       data-state={state}
       aria-hidden={closed || undefined}
       {...inertProps(closed)}
-      className={cn("fixed inset-0 z-40", closed && "pointer-events-none")}
+      className={cn(styles.drawer, closed && styles.drawerClosed)}
     >
-      <div ref={backdropRef} className="sk-backdrop sk-animate-fade sk-backdrop-panel absolute inset-0" onClick={onClose} aria-hidden />
+      <div ref={backdropRef} className={`sk-backdrop sk-animate-fade sk-backdrop-panel ${styles.drawerBackdrop}`} onClick={onClose} aria-hidden />
       <div
         ref={panelRef}
         onPointerDown={drag.onPointerDown}
@@ -983,7 +985,7 @@ function MobileCourseDrawer({
         aria-modal="true"
         aria-labelledby={titleId}
         onAnimationEnd={onAnimationEnd}
-        className="sk-animate-slide-left absolute left-0 top-0 h-full touch-pan-y"
+        className={`sk-animate-slide-left ${styles.drawerPanel}`}
       >
         {children(titleId)}
       </div>

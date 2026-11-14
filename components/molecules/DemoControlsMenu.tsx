@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "@/lib/router";
 import { Check, Monitor, MonitorSmartphone, Smartphone, Tablet } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
@@ -35,6 +33,7 @@ import { useDisclosure } from "@/lib/useDisclosure";
 import { useDemoMode } from "@/lib/demo";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { PersonasMenuRow } from "@/components/molecules/SyntheticPersonas";
+import styles from "./DemoControlsMenu.module.css";
 
 const MODES: { mode: DeviceMode; label: string; icon: typeof Monitor }[] = [
   { mode: "auto", label: "Responsive (follow window)", icon: MonitorSmartphone },
@@ -87,11 +86,10 @@ const COMPLETION_FLOWS: { value: CompletionFlow; label: string }[] = [
 export function PreviewDeviceSection({ onDone }: { onDone: () => void }) {
   const mode = useLmsStore((s) => s.deviceMode);
   const setMode = useLmsStore((s) => s.setDeviceMode);
-  const pill =
-    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-control transition-colors";
+  const pill = `sk-text-body-small-semibold ${styles.pill}`;
   return (
     <Section title="Preview device">
-      <div className="flex gap-1">
+      <div className={styles.pills}>
         {MODES.map((m) => {
           const active = mode === m.mode;
           return (
@@ -107,9 +105,7 @@ export function PreviewDeviceSection({ onDone }: { onDone: () => void }) {
               title={m.label}
               className={cn(
                 pill,
-                active
-                  ? "bg-sko-bg-primary text-sko-text-on-primary"
-                  : "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+                active ? styles.pillOn : styles.pillOff,
               )}
             >
               <Icon icon={m.icon} size={16} />
@@ -181,28 +177,25 @@ export function DemoControlsMenu({
   const mediaSeconds = activeTopic ? getMediaSeconds(activeTopic) : 0;
   const watchedPct = Math.floor(watchedFraction(watched ?? [], mediaSeconds) * 100);
 
-  const pill =
-    "sk-text-body-small-semibold inline-flex h-8 flex-1 items-center justify-center rounded-control transition-colors";
-  const pillOn = "bg-sko-bg-primary text-sko-text-on-primary";
-  const pillOff = "text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default";
+  const pill = `sk-text-body-small-semibold ${styles.pill}`;
+  const pillOn = styles.pillOn;
+  const pillOff = styles.pillOff;
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className={styles.root}>
       <button
         type="button"
         {...triggerProps}
         aria-label={demo ? "Account and demo settings" : "Account"}
         data-hit-band={compact ? "" : undefined}
         className={cn(
-          "flex items-center transition-colors hover:bg-sko-bg-subtle",
+          styles.trigger,
           // DS topbar Mobile: a bare 24px avatar. Desktop/Tablet: a 32px avatar + name. Every
           // learner avatar is a rounded square, never a circle (Nelson, 19 Oct 2026).
           // Compact: the button stays the 24px avatar and draws a 44-tall hit band, 3 past each side
           // (the bar's buttons sit 6 apart); a 44 square pushed the phone bar onto the logo
           // (Nelson, 28 Oct 2026).
-          compact
-            ? "relative justify-center rounded-control before:absolute before:-inset-x-[3px] before:-inset-y-2.5 before:content-['']"
-            : "ml-1 gap-2 rounded-track p-1",
+          compact ? styles.triggerCompact : styles.triggerFull,
         )}
       >
         {compact ? (
@@ -213,9 +206,9 @@ export function DemoControlsMenu({
         {!compact ? (
           // DS Topbar v1.8 `Avatar label group`: the name over the role, as on the platform bar
           // (Nelson's SKO match review, 28 Oct 2026).
-          <span className="flex flex-col whitespace-nowrap pr-1 text-left">
-            <span className="sk-text-body-small-semibold text-sko-text-default">{userName}</span>
-            <span data-invented="personal: no learner role or plan in Open edX" className="sk-text-label-small-regular text-sko-text-subtle">{userRole}</span>
+          <span className={styles.who}>
+            <span className={`sk-text-body-small-semibold ${styles.name}`}>{userName}</span>
+            <span data-invented="personal: no learner role or plan in Open edX" className={`sk-text-label-small-regular ${styles.role}`}>{userRole}</span>
           </span>
         ) : null}
       </button>
@@ -241,7 +234,7 @@ export function DemoControlsMenu({
               <PreviewDeviceSection onDone={() => setOpen(false)} />
 
               <Section title="Content Shape Levels">
-                <div className="flex flex-col gap-1">
+                <div className={styles.stack}>
                   {SHAPES.map((s) => {
                     const active = activeSlug === s.slug;
                     return (
@@ -256,14 +249,13 @@ export function DemoControlsMenu({
                         aria-pressed={active}
                         title={s.title}
                         className={cn(
-                          "sk-text-body-medium-medium flex w-full items-center justify-between gap-2 rounded-control px-3 py-2 text-left transition-colors",
-                          active
-                            ? "bg-sko-bg-primary-soft text-sko-text-primary"
-                            : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                          "sk-text-body-medium-medium",
+                          styles.option,
+                          active ? styles.optionOn : styles.optionOff,
                         )}
                       >
                         {s.label}
-                        {active ? <Icon icon={Check} size={16} className="shrink-0" /> : null}
+                        {active ? <Icon icon={Check} size={16} className={styles.check} /> : null}
                       </button>
                     );
                   })}
@@ -275,12 +267,12 @@ export function DemoControlsMenu({
               so it never appears on the page itself. */}
               {onQuiz ? (
                 <Section title="Quiz mode">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2 px-1">
-                      <span className="sk-text-body-medium-medium flex-1 text-sko-text-muted">
+                  <div className={styles.stackLoose}>
+                    <div className={styles.labelled}>
+                      <span className={`sk-text-body-medium-medium ${styles.fieldLabel}`}>
                         Experience
                       </span>
-                      <div className="flex overflow-hidden rounded-control border border-sko-border-subtle">
+                      <div className={styles.switch}>
                         {(["A", "B"] as const).map((value) => (
                           <button
                             key={value}
@@ -288,10 +280,10 @@ export function DemoControlsMenu({
                             aria-pressed={quizMode === value}
                             onClick={() => setQuizMode(value)}
                             className={cn(
-                              "sk-text-body-small-semibold px-2.5 py-1 transition-colors",
-                              quizMode === value
-                                ? "bg-sko-bg-primary text-sko-text-on-primary"
-                                : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                              "sk-text-body-small-semibold",
+                              styles.switchOption,
+                              styles.switchAB,
+                              quizMode === value ? styles.switchOn : styles.switchOff,
                             )}
                           >
                             {value}
@@ -299,7 +291,7 @@ export function DemoControlsMenu({
                         ))}
                       </div>
                     </div>
-                    <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                    <p className={`sk-text-body-small-regular ${styles.note}`}>
                       A is how the platform behaves today, and where every quiz starts. B is the
                       proposal.
                     </p>
@@ -309,8 +301,8 @@ export function DemoControlsMenu({
 
               {onLtiLab ? (
                 <Section title="Lab launch">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex overflow-hidden rounded-control border border-sko-border-subtle">
+                  <div className={styles.stackLoose}>
+                    <div className={styles.switch}>
                       {LAB_LAUNCHES.map((l) => (
                         <button
                           key={l.value}
@@ -318,17 +310,17 @@ export function DemoControlsMenu({
                           aria-pressed={labLaunch === l.value}
                           onClick={() => setLabLaunch(l.value)}
                           className={cn(
-                            "sk-text-body-small-semibold flex-1 px-2 py-1 transition-colors",
-                            labLaunch === l.value
-                              ? "bg-sko-bg-primary text-sko-text-on-primary"
-                              : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                            "sk-text-body-small-semibold",
+                            styles.switchOption,
+                            styles.switchFill,
+                            labLaunch === l.value ? styles.switchOn : styles.switchOff,
                           )}
                         >
                           {l.label}
                         </button>
                       ))}
                     </div>
-                    <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                    <p className={`sk-text-body-small-regular ${styles.note}`}>
                       New tab is the default for every lab. In the page is the option for the few
                       courses whose lab already loads there (two Microsoft courses); Not loading is
                       what those courses show today, with the way out to a new tab.
@@ -339,8 +331,8 @@ export function DemoControlsMenu({
 
               {onHandCompleted ? (
                 <Section title="Completion">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex overflow-hidden rounded-control border border-sko-border-subtle">
+                  <div className={styles.stackLoose}>
+                    <div className={styles.switch}>
                       {COMPLETION_FLOWS.map((f) => (
                         <button
                           key={f.value}
@@ -348,17 +340,17 @@ export function DemoControlsMenu({
                           aria-pressed={completionFlow === f.value}
                           onClick={() => setCompletionFlow(f.value)}
                           className={cn(
-                            "sk-text-body-small-semibold flex-1 px-2 py-1 transition-colors",
-                            completionFlow === f.value
-                              ? "bg-sko-bg-primary text-sko-text-on-primary"
-                              : "text-sko-text-muted hover:bg-sko-bg-subtle",
+                            "sk-text-body-small-semibold",
+                            styles.switchOption,
+                            styles.switchFill,
+                            completionFlow === f.value ? styles.switchOn : styles.switchOff,
                           )}
                         >
                           {f.label}
                         </button>
                       ))}
                     </div>
-                    <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                    <p className={`sk-text-body-small-regular ${styles.note}`}>
                       The rule since 12 Oct: Mark as Complete at the end of the content, and Next
                       asks whether you have completed the topic if you move on without it. Button
                       only switches the question off, as it was before.
@@ -369,7 +361,7 @@ export function DemoControlsMenu({
 
               {onMeasuredMedia && activeTopic ? (
                 <Section title="Playback">
-                  <div className="flex flex-col gap-1">
+                  <div className={styles.stack}>
                     {[
                       {
                         label: "Mark 85% watched",
@@ -390,12 +382,12 @@ export function DemoControlsMenu({
                           item.run();
                           setOpen(false);
                         }}
-                        className="sk-text-body-medium-medium flex w-full items-center justify-between gap-2 rounded-control px-3 py-2 text-left text-sko-text-muted transition-colors hover:bg-sko-bg-subtle"
+                        className={`sk-text-body-medium-medium ${styles.option} ${styles.optionOff}`}
                       >
                         {item.label}
                       </button>
                     ))}
-                    <p className="sk-text-body-small-regular px-1 text-sko-text-subtle">
+                    <p className={`sk-text-body-small-regular ${styles.note}`}>
                       {`Watched ${watchedPct}%. This topic completes by itself once 90% has been played; a seek does not count. Mark 85% watched, then press Play: the last 5% takes under a minute, less at 2×.`}
                     </p>
                   </div>
@@ -403,7 +395,7 @@ export function DemoControlsMenu({
               ) : null}
 
               <Section title="Preview features">
-                <div className="flex flex-col gap-1">
+                <div className={styles.stack}>
                   <ToggleRow
                     label="Discuss this topic"
                     hint="In discussion, hidden by default"

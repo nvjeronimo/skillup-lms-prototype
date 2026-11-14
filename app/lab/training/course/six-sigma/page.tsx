@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { CoursePlan as View } from "./View";
 
 export const metadata: Metadata = { title: "Six Sigma plan" };

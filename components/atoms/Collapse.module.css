@@ -1,0 +1,18 @@
+/* The body of an accordion: grid rows 0fr ↔ 1fr, medium2, standard. The root takes the caller's
+   className (sk-fold among them), so its rules sit in :where() and a caller's class wins. */
+:where(.fold) {
+  display: grid;
+  transition-property: grid-template-rows;
+  transition-duration: var(--motion-duration-medium2);
+  transition-timing-function: var(--motion-easing-standard);
+}
+:where(.open) {
+  grid-template-rows: 1fr;
+}
+:where(.closed) {
+  grid-template-rows: 0fr;
+}
+.body {
+  min-height: 0;
+  overflow: hidden;
+}

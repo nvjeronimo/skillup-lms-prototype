@@ -1,0 +1,8 @@
+/* The fade itself is .sk-fade-image (app/globals.css); this only holds the two ends. The image
+   takes the caller's className, so they sit in :where(). */
+:where(.shown) {
+  opacity: 1;
+}
+:where(.pending) {
+  opacity: 0;
+}

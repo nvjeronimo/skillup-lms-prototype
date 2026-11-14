@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ChoiceGroup, FIELD, FormField, FormModal } from "@/components/organisms/FormModal";
 import { sessionId, type SessionBooking } from "@/lib/platform/session-additions";

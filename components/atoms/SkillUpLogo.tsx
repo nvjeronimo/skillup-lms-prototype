@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import styles from "./SkillUpLogo.module.css";
 
 /**
  * SkillUp wordmark. Theme-aware: the brand-ink parts ("Skill" + icon marks,
@@ -11,11 +12,9 @@ import { cn } from "@/lib/utils";
  */
 export function SkillUpLogo({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-block", className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/skillup-logo.svg" alt="SkillUp" className="sk-logo-light block h-full w-auto" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/skillup-logo-dark.svg" alt="" aria-hidden className="sk-logo-dark h-full w-auto" />
+    <span className={cn(styles.logo, className)}>
+      <img src="/skillup-logo.svg" alt="SkillUp" className={cn("sk-logo-light", styles.light, styles.image)} />
+      <img src="/skillup-logo-dark.svg" alt="" aria-hidden className={cn("sk-logo-dark", styles.image)} />
     </span>
   );
 }
@@ -26,11 +25,9 @@ export function SkillUpLogo({ className }: { className?: string }) {
  */
 export function SkillUpMark({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-block", className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/skillup-mark.svg" alt="SkillUp" className="sk-logo-light block h-full w-auto" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/skillup-mark-dark.svg" alt="" aria-hidden className="sk-logo-dark h-full w-auto" />
+    <span className={cn(styles.logo, className)}>
+      <img src="/skillup-mark.svg" alt="SkillUp" className={cn("sk-logo-light", styles.light, styles.image)} />
+      <img src="/skillup-mark-dark.svg" alt="" aria-hidden className={cn("sk-logo-dark", styles.image)} />
     </span>
   );
 }
@@ -41,11 +38,9 @@ export function SkillUpMark({ className }: { className?: string }) {
  */
 export function SkillUpWordmark({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-block", className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/skillup-wordmark.svg" alt="SkillUp" className="sk-logo-light block h-full w-auto" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/skillup-wordmark-dark.svg" alt="" aria-hidden className="sk-logo-dark h-full w-auto" />
+    <span className={cn(styles.logo, className)}>
+      <img src="/skillup-wordmark.svg" alt="SkillUp" className={cn("sk-logo-light", styles.light, styles.image)} />
+      <img src="/skillup-wordmark-dark.svg" alt="" aria-hidden className={cn("sk-logo-dark", styles.image)} />
     </span>
   );
 }

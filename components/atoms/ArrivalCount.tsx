@@ -1,12 +1,10 @@
-"use client";
-
 import { useArrivalCount, useCountText, type ArrivalTrigger } from "@/lib/arrival/useArrival";
 
 function Figure({ value, text, counting }: { value: string; text: string; counting: boolean }) {
   return counting ? (
     <>
       <span aria-hidden="true">{text}</span>
-      <span className="sr-only">{value}</span>
+      <span className="sk-sr-only">{value}</span>
     </>
   ) : (
     <>{value}</>

@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import {
   Award,
   BookOpen,
@@ -25,6 +23,7 @@ import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition } from "@/lib/useExitTransition";
 import { cn } from "@/lib/utils";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./HarborSearch.module.css";
 
 /**
  * The panel layout's top-bar search (Harbor, Fluent; Nelson, 25–26 Oct 2026, after the DreamHost
@@ -265,8 +264,8 @@ export function HarborSearch({
       }}
       style={sheet ? undefined : { width: expanded ? width : COLLAPSED }}
       className={cn(
-        "relative",
-        sheet ? "w-full" : "min-w-0 max-w-full shrink transition-[width] duration-short4 ease-standard",
+        styles.root,
+        sheet ? styles.rootSheet : styles.rootBar,
         className,
       )}
     >
@@ -279,13 +278,10 @@ export function HarborSearch({
           if (picked) choose(picked);
           else searchCourses();
         }}
-        className={cn(
-          "flex h-12 w-full items-center gap-2 rounded-pill bg-sko-bg-track pl-4 pr-1.5 [container-type:inline-size] [[data-scope=edx]_&]:pr-4",
-          "focus-within:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]",
-        )}
+        className={styles.field}
       >
-        <Icon icon={Search} size={20} className="shrink-0 text-sko-icon-subtle" aria-hidden />
-        <label htmlFor={id} className="sr-only">
+        <Icon icon={Search} size={20} className={styles.fieldIcon} aria-hidden />
+        <label htmlFor={id} className="sk-sr-only">
           {scope.kind === "course"
             ? edx
               ? "Search this course"
@@ -314,7 +310,7 @@ export function HarborSearch({
           onKeyDown={onKeyDown}
           placeholder={scope.kind === "course" && expanded ? "Search this course" : "Search"}
           autoComplete="off"
-          className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default outline-none placeholder:text-sko-text-placeholder focus-visible:!shadow-none focus-visible:!outline-none"
+          className={cn("sk-text-body-large-regular", styles.input)}
         />
         <button
           type="button"
@@ -322,37 +318,35 @@ export function HarborSearch({
           data-invented="assistant: no learner chat assistant in Open edX"
           onClick={ask}
           aria-label={q.trim() ? `Ask the assistant: ${q.trim()}` : "Open the assistant"}
-          className="sk-text-body-small-semibold inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill bg-sko-bg-page pl-4 pr-3 text-sko-text-default shadow-[var(--sk-shadow-harbor-pill)] transition-colors hover:bg-sko-bg-subtle [@container_(max-width:220px)]:pl-3"
+          className={cn("sk-text-body-small-semibold", styles.ask)}
         >
           {/* A narrow pill (the tabs bar at 1280) keeps the field: the word goes, the mark stays. */}
-          <span className="[@container_(max-width:220px)]:sr-only">Assistant</span>
-          <AssistantGlyph size={16} className="text-sko-icon-primary" />
+          <span className={styles.askWord}>Assistant</span>
+          <AssistantGlyph size={16} className={styles.askGlyph} />
         </button>
       </form>
 
       {presence.mounted ? (
         // Centred under the pill without a transform (the menu motion owns the panel's transform).
         // In the sheet the palette is the page under the field.
-        <div className={cn(sheet ? "mt-4" : "absolute left-1/2 top-[calc(100%+8px)] z-50 flex w-0 justify-center")}>
+        <div className={sheet ? styles.paletteSlotSheet : styles.paletteSlotBar}>
           <div
             data-search-palette=""
             data-state={presence.state}
             onAnimationEnd={presence.onAnimationEnd}
             className={cn(
-              "overflow-hidden bg-sko-bg-page",
-              sheet
-                ? "w-full"
-                : "sk-animate-menu w-[min(560px,calc(100vw-32px))] shrink-0 origin-top rounded-surface border border-sko-border-subtle shadow-xl",
+              styles.palette,
+              sheet ? styles.paletteSheet : cn("sk-animate-menu", styles.paletteBar),
             )}
           >
             <div
               id={listId}
               role="listbox"
               aria-label="Search results"
-              className={cn("sk-scroll overflow-y-auto py-2", !sheet && "max-h-[min(560px,70dvh)]")}
+              className={cn("sk-scroll", styles.list, !sheet && styles.listBar)}
             >
               {groups.length === 0 ? (
-                <p className="sk-text-body-medium-regular px-5 py-4 text-sko-text-muted">
+                <p className={cn("sk-text-body-medium-regular", styles.empty)}>
                   {scope.kind === "course"
                     ? edx
                       ? `Nothing in this course matches “${q.trim()}”.`
@@ -367,18 +361,18 @@ export function HarborSearch({
                     key={group.id}
                     role="group"
                     aria-labelledby={`${id}-${group.id}`}
-                    className={cn("px-2 pb-2 pt-3", g > 0 && "border-t border-sko-border-subtle")}
+                    className={cn(styles.group, g > 0 && styles.groupDivided)}
                   >
-                    <div className="flex items-center justify-between px-3 pb-2">
+                    <div className={styles.groupHeader}>
                       <span
                         id={`${id}-${group.id}`}
                         role="presentation"
-                        className="sk-text-body-small-semibold text-sko-text-subtle"
+                        className={cn("sk-text-body-small-semibold", styles.groupTitle)}
                       >
                         {group.title}
                       </span>
                       {group.ai ? (
-                        <span className="sk-text-body-small-semibold inline-flex items-center gap-1 text-sko-text-primary">
+                        <span className={cn("sk-text-body-small-semibold", styles.ai)}>
                           <AssistantGlyph size={14} />
                           Powered by AI
                         </span>
@@ -408,8 +402,8 @@ export function HarborSearch({
                           onPointerMove={() => setActive(i)}
                           onClick={() => choose(option)}
                           className={cn(
-                            "flex min-h-12 cursor-pointer items-center gap-4 rounded-control px-3 py-2",
-                            on && "bg-sko-bg-hover",
+                            styles.option,
+                            on && styles.optionActive,
                           )}
                         >
                           <Icon
@@ -417,24 +411,24 @@ export function HarborSearch({
                             size={20}
                             aria-hidden
                             className={cn(
-                              "shrink-0",
+                              styles.optionIcon,
                               option.kind === "help"
-                                ? "text-sko-icon-primary"
-                                : "text-sko-icon-subtle",
+                                ? styles.optionIconHelp
+                                : styles.optionIconDefault,
                             )}
                           />
-                          <span className="flex min-w-0 flex-1 flex-col">
-                            <span className="sk-text-body-large-regular truncate text-sko-text-default">
+                          <span className={styles.optionText}>
+                            <span className={cn("sk-text-body-large-regular", styles.optionLabel)}>
                               {option.label}
                             </span>
                             {option.kind === "course" || option.kind === "topic" ? (
-                              <span className="sk-text-body-small-regular text-sko-text-subtle">
+                              <span className={cn("sk-text-body-small-regular", styles.optionMeta)}>
                                 {option.meta}
                               </span>
                             ) : null}
                           </span>
                           {option.kind === "help" ? (
-                            <span className="sk-text-body-small-medium shrink-0 text-sko-text-subtle">
+                            <span className={cn("sk-text-body-small-medium", styles.optionAsk)}>
                               Ask
                             </span>
                           ) : null}

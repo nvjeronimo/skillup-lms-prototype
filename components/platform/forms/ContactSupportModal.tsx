@@ -1,9 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { FIELD, FormField, FormModal, FormSelect } from "@/components/organisms/FormModal";
 import { discussionThreads } from "@/lib/platform/discussion";
 import { sessionId, type SessionRequest } from "@/lib/platform/session-additions";
+import { cn } from "@/lib/utils";
+import styles from "./ContactSupportModal.module.css";
 
 const TOPICS = [
   "A video, lab or file won't open",
@@ -57,7 +57,7 @@ export function ContactSupportModal({
       mock="Support requests need a help-desk integration (not chosen yet)"
       onSubmit={() => onSent({ id: sessionId("request"), topic, subject: subject.trim(), course: course || undefined })}
     >
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className={styles.pair}>
         <FormField id={`${id}-topic`} label="What is it about?">
           <FormSelect id={`${id}-topic`} value={topic} onChange={setTopic} placeholder="Choose one" options={TOPICS} />
         </FormField>
@@ -75,7 +75,7 @@ export function ContactSupportModal({
           onChange={(e) => setMessage(e.target.value)}
           rows={6}
           aria-describedby={`${id}-message-hint`}
-          className={`${FIELD} resize-y`}
+          className={cn(FIELD, styles.textarea)}
         />
       </FormField>
     </FormModal>

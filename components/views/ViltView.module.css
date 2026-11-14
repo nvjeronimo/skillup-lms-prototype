@@ -1,0 +1,126 @@
+.root { display: flex; flex-direction: column; gap: 24px; padding-top: 24px; padding-bottom: 24px; }
+.completionNote { display: contents; }
+.badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.title { color: var(--color-text-default); }
+.subtle { color: var(--color-text-subtle); }
+.eyebrow { text-transform: uppercase; color: var(--color-text-subtle); }
+
+/* DS VILT · Session Meta: equal columns with a 12px row gap, and a 1px border/subtle rule 32px
+   before each field after the first, only once all four fields fit on one row (a 38rem
+   wrapper). A container query, since the column width depends on the sidebar. */
+.metaContainer { container-type: inline-size; }
+.meta { display: flex; flex-wrap: wrap; align-items: stretch; column-gap: 24px; row-gap: 12px; }
+.metaField { display: flex; min-width: 8rem; flex: 1 1 0%; flex-direction: column; gap: 2px; }
+.metaFieldRuled { border-color: var(--color-border-subtle); }
+@container (min-width: 38rem) {
+  .meta { column-gap: 32px; }
+  .metaFieldRuled { border-left-width: 1px; padding-left: 32px; }
+}
+.metaValue { color: var(--color-text-default); }
+
+.agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 24px 16px;
+}
+.agendaList { list-style-type: disc; padding-left: 20px; color: var(--color-text-muted); }
+
+/* Stage 1 · Pre-live */
+.preLive {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: var(--sk-shadow-card);
+  padding: 24px;
+}
+.countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-primary-soft);
+  padding: 24px 16px;
+}
+.countdownText { color: var(--color-text-primary); }
+.joinActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 16px;
+}
+@media (max-width: 767.98px) {
+  .joinActions > * { flex: 1 1 0%; }
+}
+
+/* Stage 2 · Live. DS VILT · Stage Surface, Stage=Live: solid bg/primary, pad 0/32, gap 6. */
+.stage { display: flex; flex-direction: column; gap: 16px; }
+.liveSurface {
+  position: relative;
+  display: flex;
+  aspect-ratio: 16 / 9;
+  max-height: 42vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-primary);
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.liveMessage { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.liveText { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.onPrimary { color: var(--color-text-on-primary); }
+.attendance { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+
+/* Stage 3 · Recording. DS VILT · Stage Surface, Stage=Recording (20322:705648): the player
+   drops under the pill below a 55rem surface (container query). */
+.recordingSurface {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-muted);
+  padding-left: 32px;
+  padding-right: 32px;
+  container-type: inline-size;
+}
+.recordingPlayer { width: 100%; max-width: 640px; padding-bottom: 32px; padding-top: 56px; }
+@container (min-width: 55rem) {
+  .recordingPlayer { padding-top: 0; padding-bottom: 0; }
+}
+.recordingPill {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-subtle);
+  padding: 4px 8px;
+  color: var(--color-text-muted);
+  box-shadow: inset 0 0 0 1px var(--color-border-default);
+}
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .agenda.agenda { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .preLive.preLive { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }
+:global([data-direction="studio"]) .liveSurface.liveSurface { border-radius: var(--sk-radius-control); }
+:global([data-direction="studio"]) .recordingSurface.recordingSurface { border-radius: var(--sk-radius-control); }

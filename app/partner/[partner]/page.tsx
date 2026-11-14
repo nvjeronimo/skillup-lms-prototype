@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { PartnerStandIn } from "./View";
 import { pageTitle } from "@/lib/utils";
 

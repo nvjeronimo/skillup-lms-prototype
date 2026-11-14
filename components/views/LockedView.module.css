@@ -1,0 +1,10 @@
+.root { margin-left: auto; margin-right: auto; max-width: 36rem; padding-top: 40px; padding-bottom: 40px; }
+/* LMS / Empty State has no Locked kind: its card border and radius are dropped here. */
+.emptyState { border-radius: var(--sk-radius-none); border-width: 0; }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: the Empty State is a card inside the player's content card: control radius
+   (it beat rounded-none before). */
+:global([data-direction="studio"]) .emptyState.emptyState { border-radius: var(--sk-radius-control); }

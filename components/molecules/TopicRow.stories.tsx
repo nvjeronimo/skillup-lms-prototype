@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TopicRow } from "./TopicRow";
+import styles from "./TopicRow.stories.module.css";
 
 const meta: Meta<typeof TopicRow> = {
   title: "Molecules/Topic Row",
@@ -18,7 +19,7 @@ const meta: Meta<typeof TopicRow> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[280px] border border-sko-border-subtle bg-sko-bg-page">
+      <div className={styles.sidebar}>
         <Story />
       </div>
     ),

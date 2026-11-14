@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ThreadItem } from "./ThreadItem";
+import styles from "./ThreadItem.stories.module.css";
 
 const meta: Meta<typeof ThreadItem> = {
   title: "Molecules/Thread Item",
@@ -14,7 +15,7 @@ const meta: Meta<typeof ThreadItem> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-2xl">
+      <div className={styles.column}>
         <Story />
       </div>
     ),

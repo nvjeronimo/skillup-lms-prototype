@@ -1,0 +1,308 @@
+/* The layer: a centred modal over the backdrop, full screen on a phone. */
+.layer {
+  position: fixed;
+  inset: 0px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.closed {
+  pointer-events: none;
+}
+.backdrop {
+  position: absolute;
+  inset: 0px;
+}
+.dialog {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transform-origin: center;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--color-bg-page);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* The program's identity on the dark hero of its card. */
+.hero {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--color-bg-subtle);
+  padding: 20px;
+  padding-right: 64px;
+}
+.typeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.partners {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.partner {
+  display: flex;
+}
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.thumb {
+  width: 64px;
+  height: 64px;
+}
+.title {
+  min-width: 0;
+  flex: 1 1 0%;
+  color: var(--color-text-default);
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
+/* The body scrolls. */
+.body {
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sectionTitle {
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.textDefault {
+  color: var(--color-text-default);
+}
+.textSubtle {
+  color: var(--color-text-subtle);
+}
+.textMuted {
+  color: var(--color-text-muted);
+}
+
+/* Progress */
+.progressHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.courseCount {
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+.factsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+.facts {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-subtle);
+}
+.factsIcon {
+  flex-shrink: 0;
+  color: var(--color-icon-subtle);
+}
+
+/* Courses: one list, rows split by 1px rules. */
+.courses {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--sk-radius-card-inset);
+  border: 1px solid var(--color-border-subtle);
+}
+.courses > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 0px;
+  border-color: var(--color-border-subtle);
+}
+.course {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+}
+.courseCurrent {
+  background-color: var(--color-bg-primary-soft);
+}
+.step {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.stepDone {
+  background-color: var(--color-bg-success);
+  color: var(--color-icon-on-media);
+}
+.stepCurrent {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.stepTodo {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-subtle);
+}
+.courseText {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+.courseTitle,
+.courseWhere {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.courseTitle {
+  color: var(--color-text-default);
+}
+.courseWhere {
+  color: var(--color-text-subtle);
+}
+.courseState {
+  flex-shrink: 0;
+}
+
+/* Certificate */
+.certificate {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: var(--sk-radius-card-inset);
+  border-width: 1px;
+  padding: 12px;
+}
+.certificateIssued {
+  border-color: var(--color-border-success-soft);
+  background-color: var(--color-bg-accent-green-soft);
+}
+.certificatePending {
+  border-color: var(--color-border-subtle);
+}
+.certificateIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.certificateIconIssued {
+  color: var(--color-icon-success);
+}
+.certificateIconPending {
+  color: var(--color-icon-subtle);
+}
+.certificateText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* What's included and About */
+.included {
+  list-style-type: disc;
+  padding-inline-start: 21px;
+  color: var(--color-text-default);
+}
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* The chip keeps the Badge's own nowrap: under Tailwind its whitespace-normal lost to the
+   Badge's whitespace-nowrap (same specificity, earlier in the sheet), so a long skill never
+   wrapped. Kept as it rendered; to wrap, add white-space: normal here. */
+.skill {
+  max-width: 100%;
+}
+
+/* The actions: stacked full width on a phone, at the end from tablet up. */
+.footer {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column-reverse;
+  gap: 8px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px;
+}
+
+@media (max-width: 767.98px) {
+  .action {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .layer {
+    padding: 24px;
+  }
+  .dialog {
+    height: auto;
+    max-height: min(720px, calc(100dvh - 48px));
+    max-width: 640px;
+    border-radius: var(--sk-radius-surface);
+    border-width: 1px;
+    border-color: var(--color-border-subtle);
+  }
+  .hero {
+    padding: 24px;
+    padding-right: 64px;
+  }
+  .close {
+    right: 16px;
+    top: 16px;
+  }
+  .body {
+    padding: 24px;
+  }
+  .footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Skins: the dialog sits inside the Program card (.rounded-card, not .p-1), so in Studio its
+   .rounded-card-inset boxes took the control radius (tokens/direction-studio.css). */
+:global([data-direction="studio"]) .courses,
+:global([data-direction="studio"]) .certificate {
+  border-radius: var(--sk-radius-control);
+}

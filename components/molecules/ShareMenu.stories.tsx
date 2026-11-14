@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ShareMenu } from "./ShareMenu";
 
 const meta: Meta<typeof ShareMenu> = {

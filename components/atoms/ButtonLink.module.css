@@ -1,0 +1,11 @@
+/* What a <button> gets from the browser or from globals.css and an <a> does not: the centred
+   label, and the 44px minimum of the "larger targets" setting (on by default on mobile), which
+   globals.css gives to buttons only. Resting rule at 0,0,1 like the button's own, so a caller's
+   class still wins. */
+:where(.likeAButton):is(a) {
+  text-align: center;
+}
+:global([data-large-targets]) .likeAButton {
+  min-height: 44px;
+  min-width: 44px;
+}

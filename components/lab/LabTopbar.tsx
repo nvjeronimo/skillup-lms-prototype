@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { usePathname, useRouter, useSearchParams } from "@/lib/router";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { personaIds, personas } from "@/lib/lab/dashboard-mock";
 import { cn } from "@/lib/utils";
+import styles from "./LabTopbar.module.css";
 
 const NAV = [
   { label: "Dashboard", href: "/lab/dashboard/continue" },
@@ -22,13 +21,13 @@ export function LabTopbar() {
   // Inside a lab *world* the world owns its navigation; the lab keeps only a slim strip for testing.
   if (pathname.startsWith("/lab/training")) {
     return (
-      <div className="flex min-h-[44px] flex-wrap items-center gap-x-4 gap-y-1 border-b border-sko-border-subtle bg-sko-bg-page px-4 py-1 md:px-6">
-        <Link href="/lab" className="sk-text-body-medium-semibold inline-flex min-h-[44px] items-center text-sko-text-primary">
+      <div className={styles.strip}>
+        <Link href="/lab" className={`sk-text-body-medium-semibold ${styles.back}`}>
           ← All explorations
         </Link>
-        <span className="sk-text-body-medium-medium text-sko-text-muted">World: The Training Block</span>
-        <label className="ml-auto flex items-center gap-2">
-          <span className="sk-text-body-medium-medium text-sko-text-muted">Persona</span>
+        <span className={`sk-text-body-medium-medium ${styles.muted}`}>World: The Training Block</span>
+        <label className={`${styles.persona} ${styles.stripPersona}`}>
+          <span className={`sk-text-body-medium-medium ${styles.muted}`}>Persona</span>
           <select
             value={persona}
             onChange={(e) => {
@@ -36,7 +35,7 @@ export function LabTopbar() {
               next.set("persona", e.target.value);
               router.replace(`${pathname}?${next.toString()}`);
             }}
-            className="sk-text-body-medium-medium min-h-[44px] rounded-control border border-sko-border-default bg-sko-bg-page px-2 text-sko-text-default"
+            className={`sk-text-body-medium-medium ${styles.select}`}
           >
             {personaIds.map((id) => (
               <option key={id} value={id}>
@@ -50,11 +49,11 @@ export function LabTopbar() {
   }
 
   return (
-    <header className="flex min-h-[60px] flex-wrap items-center gap-x-4 gap-y-2 border-b border-sko-border-subtle bg-sko-bg-page px-4 py-2 md:px-6">
-      <Link href="/lab" className="inline-flex min-h-[44px] items-center rounded-control" aria-label="SkillUp — lab home">
-        <SkillUpLogo className="h-5" />
+    <header className={styles.header}>
+      <Link href="/lab" className={styles.home} aria-label="SkillUp — lab home">
+        <SkillUpLogo className={styles.logo} />
       </Link>
-      <nav aria-label="Primary" className="flex flex-1 items-center gap-1">
+      <nav aria-label="Primary" className={styles.nav}>
         {NAV.map((item) => {
           const current = item.href !== "/" && pathname.startsWith("/lab/dashboard");
           return (
@@ -63,8 +62,9 @@ export function LabTopbar() {
               href={item.href === "/" ? item.href : `${item.href}?persona=${persona}`}
               aria-current={current ? "page" : undefined}
               className={cn(
-                "sk-text-body-medium-semibold inline-flex min-h-[44px] items-center rounded-control px-3 transition-colors",
-                current ? "bg-sko-bg-primary-soft text-sko-text-primary" : "text-sko-text-muted hover:bg-sko-bg-faint",
+                "sk-text-body-medium-semibold",
+                styles.navLink,
+                current ? styles.navLinkCurrent : styles.navLinkIdle,
               )}
             >
               {item.label}
@@ -72,8 +72,8 @@ export function LabTopbar() {
           );
         })}
       </nav>
-      <label className="flex items-center gap-2">
-        <span className="sk-text-body-medium-medium text-sko-text-muted">Persona</span>
+      <label className={styles.persona}>
+        <span className={`sk-text-body-medium-medium ${styles.muted}`}>Persona</span>
         <select
           value={persona}
           onChange={(e) => {
@@ -81,7 +81,7 @@ export function LabTopbar() {
             next.set("persona", e.target.value);
             router.replace(`${pathname}?${next.toString()}`);
           }}
-          className="sk-text-body-medium-medium min-h-[44px] rounded-control border border-sko-border-default bg-sko-bg-page px-2 text-sko-text-default"
+          className={`sk-text-body-medium-medium ${styles.select}`}
         >
           {personaIds.map((id) => (
             <option key={id} value={id}>

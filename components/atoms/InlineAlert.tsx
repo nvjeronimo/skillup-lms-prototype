@@ -3,6 +3,7 @@ import { AlertCircle, CheckCircle2, KeyRound, Lightbulb, X, XCircle } from "luci
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./InlineAlert.module.css";
 
 /**
  * DS `LMS / Inline Alert` — six tones (node 20328-3296). Padding 16, gap 12, 2px top rule.
@@ -57,38 +58,15 @@ export interface InlineAlertProps {
   className?: string;
 }
 
+/* The box per tone: the top rule's colour (none on Hint, which rounds and keeps its own fill). */
 const TONE: Record<AlertTone, { box: string; icon: LucideIcon; fg: string }> = {
-  info: {
-    box: "border-t-2 border-sko-border-primary bg-sko-bg-faint p-4",
-    icon: AlertCircle,
-    fg: "text-sko-text-primary",
-  },
-  success: {
-    box: "border-t-2 border-sko-border-success bg-sko-bg-faint p-4",
-    icon: CheckCircle2,
-    fg: "text-sko-icon-success",
-  },
-  warning: {
-    box: "border-t-2 border-sko-border-warning bg-sko-bg-faint p-4",
-    icon: AlertCircle,
-    fg: "text-sko-icon-warning",
-  },
-  error: {
-    box: "border-t-2 border-sko-border-error bg-sko-bg-faint p-4",
-    icon: XCircle,
-    fg: "text-sko-icon-error",
-  },
-  hint: {
-    box: "rounded-card bg-sko-bg-primary-soft p-4",
-    icon: Lightbulb,
-    fg: "text-sko-text-primary",
-  },
-  answer: {
-    // DS v1.1 (14 Oct 2026): the 2px rule drawn like Success and Error — square, bg/faint — in primary.
-    box: "border-t-2 border-sko-border-primary bg-sko-bg-faint p-4",
-    icon: KeyRound,
-    fg: "text-sko-icon-muted",
-  },
+  info: { box: cn(styles.rule, styles.rulePrimary), icon: AlertCircle, fg: styles.fgPrimary },
+  success: { box: cn(styles.rule, styles.ruleSuccess), icon: CheckCircle2, fg: styles.fgSuccess },
+  warning: { box: cn(styles.rule, styles.ruleWarning), icon: AlertCircle, fg: styles.fgWarning },
+  error: { box: cn(styles.rule, styles.ruleError), icon: XCircle, fg: styles.fgError },
+  hint: { box: styles.hint, icon: Lightbulb, fg: styles.fgPrimary },
+  // DS v1.1 (14 Oct 2026): the 2px rule drawn like Success and Error — square, bg/faint — in primary.
+  answer: { box: cn(styles.rule, styles.rulePrimary), icon: KeyRound, fg: styles.fgMuted },
 };
 
 export function InlineAlert({
@@ -103,33 +81,34 @@ export function InlineAlert({
   className,
 }: InlineAlertProps) {
   const t = TONE[tone];
-  const box = surface === "subtle" && tone !== "hint" ? t.box.replace(/bg-sko-bg-(faint|subtle)/, "bg-sko-bg-page") : t.box;
+  // Every tone but Hint sits on bg/faint, or on bg/page on a grey (subtle) surface.
+  const box = tone === "hint" ? t.box : cn(t.box, surface === "subtle" ? styles.onSubtle : styles.onPage);
   // A hint reads as one sentence: the counter is a bold lead-in, not a heading.
   const inlineTitle = tone === "hint";
 
   return (
-    <div role="status" className={cn("flex items-start gap-3", box, className)}>
-      <Icon icon={t.icon} size={20} className={cn("shrink-0", t.fg)} />
+    <div role="status" className={cn(styles.alert, box, className)}>
+      <Icon icon={t.icon} size={20} className={cn(styles.icon, t.fg)} />
 
-      <div className="min-w-0 flex-1">
+      <div className={styles.body}>
         {children ?? (inlineTitle ? (
-          <p className="sk-text-body-medium-regular text-sko-text-default">
-            <span className="sk-text-body-medium-semibold text-sko-text-default">{title} </span>
+          <p className={cn("sk-text-body-medium-regular", styles.title)}>
+            <span className={cn("sk-text-body-medium-semibold", styles.title)}>{title} </span>
             {description}
           </p>
         ) : (
           <>
-            <p className="sk-text-body-medium-semibold text-sko-text-default">{title}</p>
+            <p className={cn("sk-text-body-medium-semibold", styles.title)}>{title}</p>
             {description ? (
-              <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">{description}</p>
+              <p className={cn("sk-text-body-medium-regular", styles.text)}>{description}</p>
             ) : null}
             {secondary ? (
-              <p className="sk-text-body-medium-regular mt-0.5 text-sko-text-muted">{secondary}</p>
+              <p className={cn("sk-text-body-medium-regular", styles.text)}>{secondary}</p>
             ) : null}
           </>
         ))}
         {/* DS Copy gap is 2 with a 4px-padded Link button; a bare button needs 6. */}
-        {action ? <div className="mt-1.5">{action}</div> : null}
+        {action ? <div className={styles.action}>{action}</div> : null}
       </div>
 
       {onDismiss ? (
@@ -137,7 +116,7 @@ export function InlineAlert({
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss"
-          className="shrink-0 text-sko-text-subtle transition-colors hover:text-sko-text-default"
+          className={styles.dismiss}
         >
           <Icon icon={X} size={18} />
         </button>

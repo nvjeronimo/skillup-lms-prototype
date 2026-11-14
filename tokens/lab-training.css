@@ -24,8 +24,8 @@
   --tb-lime: #c8f169;            /* split-time highlighter; ink on it = 12.9:1 */
 
   --tb-radius: 3px;
-  --tb-font-display: var(--font-tb-display), "Arial Narrow", sans-serif;
-  --tb-font-text: var(--font-tb-text), system-ui, sans-serif;
+  --tb-font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --tb-font-text: "Hanken Grotesk", system-ui, sans-serif;
 
   background: var(--tb-ground);
   color: var(--tb-ink);

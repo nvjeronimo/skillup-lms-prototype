@@ -1,0 +1,367 @@
+/* DS LMS / Platform / Topbar: the desktop bar (from 1024) and the compact bar below it. */
+
+/* The colour transition every control here shares (Tailwind's transition-colors). */
+.item,
+.tab,
+.bell,
+.dot,
+.iconButton,
+.profileButton,
+.compactProfileButton {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+
+/* The compact menu rows. Current = bg/primary-soft + text/primary. */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sk-radius-control);
+  padding: 8px 12px;
+}
+.itemCurrent {
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+.itemRest {
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .itemRest:hover {
+    background-color: var(--color-bg-faint);
+    color: var(--color-text-default);
+  }
+}
+
+/* The desktop bar's underline tabs. */
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 4px;
+}
+.tabCurrent {
+  color: var(--color-text-primary);
+}
+.tabRest {
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tabRest:hover {
+    color: var(--color-text-default);
+  }
+}
+.tabSlot {
+  display: flex;
+}
+.currentBar {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  border-top-left-radius: var(--sk-radius-inner);
+  border-top-right-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-primary);
+}
+
+/* DS Avatar sm: 32, a rounded square. */
+.initials {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  border-width: 0.75px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-subtle);
+}
+
+/* The bell and its unread dot. */
+.bell {
+  position: relative;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-icon-default);
+}
+.dot {
+  --dot-ring: var(--color-bg-page);
+  position: absolute;
+  right: 11px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-info);
+  box-shadow: 0 0 0 0px #fff, 0 0 0 2px var(--dot-ring), 0 0 #0000;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bell:hover {
+    background-color: var(--color-bg-hover);
+  }
+  .bell:hover .dot {
+    --dot-ring: var(--color-bg-muted);
+  }
+}
+@media (min-width: 1024px) {
+  .bell {
+    width: 32px;
+    height: 32px;
+  }
+  .dot {
+    right: 5px;
+    top: 4px;
+  }
+}
+
+.header {
+  position: relative;
+  z-index: 30;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+
+/* Desktop. */
+.desktop {
+  display: none;
+  height: 71px;
+  align-items: center;
+  padding-inline: 24px;
+}
+.desktopHarbor {
+  justify-content: space-between;
+  gap: 24px;
+}
+.desktopColumns {
+  grid-template-columns:
+    max(104px, calc((100% - var(--sk-container-content-max-width)) / 2 - 24px))
+    minmax(min-content, var(--sk-container-content-max-width))
+    minmax(max-content, 1fr);
+  column-gap: 24px;
+}
+@media (min-width: 1024px) {
+  .desktopHarbor { display: flex; }
+  .desktopColumns { display: grid; }
+}
+@media (min-width: 1280px) {
+  .desktopHarbor { gap: 16px; }
+}
+@media (min-width: 1440px) {
+  .desktopHarbor { gap: 24px; }
+}
+
+.harborStart {
+  display: flex;
+  flex: 1 1 0px;
+  align-items: center;
+  gap: 8px;
+}
+/* The rail toggle, the compact menu button: 44 targets, the icon on the 16 edge. */
+.iconButton {
+  margin-left: -10px;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+}
+.railToggle {
+  color: var(--color-border-default);
+}
+.menuButton {
+  color: var(--color-icon-default);
+}
+@media (hover: hover) and (pointer: fine) {
+  .iconButton:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.logoLink {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+}
+.logoLinkStart {
+  flex-shrink: 0;
+  justify-self: start;
+}
+.logoLinkNudge {
+  margin-left: -2px;
+}
+.logo {
+  height: 30px;
+}
+
+.middle {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  align-self: stretch;
+}
+.nav {
+  align-self: stretch;
+}
+.nav a {
+  white-space: nowrap;
+}
+.tabList {
+  display: flex;
+  height: 100%;
+  align-items: stretch;
+  gap: 12px;
+}
+.searchSlot {
+  display: none;
+  min-width: 0;
+  flex: 1 1 0%;
+  justify-content: flex-end;
+  contain: inline-size;
+}
+@media (min-width: 1280px) {
+  .middle { gap: 16px; }
+  .searchSlot { display: flex; }
+}
+@media (min-width: 1440px) {
+  .middle { gap: 24px; }
+  .tabList { gap: 24px; }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.actionsHarbor {
+  flex: 1 1 0px;
+  justify-content: flex-end;
+}
+.actionsEnd {
+  justify-self: end;
+}
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+/* Doubled: it must beat the button's own display, wherever its stylesheet lands. */
+@media (min-width: 1280px) {
+  .searchButton.searchButton { display: none; }
+}
+.profile {
+  position: relative;
+}
+.profileButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  padding: 4px;
+  text-align: left;
+}
+.profileName {
+  display: none;
+  flex-direction: column;
+  white-space: nowrap;
+}
+@media (min-width: 1280px) {
+  .profileName { display: flex; }
+}
+.name {
+  color: var(--color-text-default);
+}
+.role {
+  color: var(--color-text-subtle);
+}
+.chevron {
+  color: var(--color-icon-default);
+}
+
+/* Compact (tablet and phone). */
+.compact {
+  display: flex;
+  height: 63px;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 16px;
+}
+@media (min-width: 1024px) {
+  .compact { display: none; }
+}
+.compactStart {
+  display: flex;
+  align-items: center;
+}
+.menuPanel {
+  transform-origin: top;
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 12px 16px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.menuItem {
+  min-height: 44px;
+  width: 100%;
+}
+.compactEnd {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.compactGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.compactProfileButton {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+}
+@media (hover: hover) and (pointer: fine) {
+  .profileButton:hover,
+  .compactProfileButton:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+
+/* Skins (tokens/skin-harbor.css, tokens/direction-studio.css, tokens/square-corners.css select the
+   Tailwind classes these elements had; the same rules, on this module's classes). Harbor and
+   Studio: every one-line control is a pill (the desktop profile button holds a column, so it keeps
+   the control radius). */
+:global([data-skin="harbor"]) :is(.bell, .iconButton, .compactProfileButton, .item),
+:global([data-direction="studio"]) :is(.bell, .iconButton, .compactProfileButton, .item) {
+  border-radius: 9999px;
+}
+/* Harbor: the rail-pill tab has no underline. */
+:global([data-skin="harbor"]) [data-topbar-tab] > .currentBar {
+  display: none;
+}
+/* Square corners: the unread dot is a shape, it stays round. */
+:global([data-square-corners]) .dot {
+  --sk-radius-pill: 9999px;
+}

@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { VideoChromeFooter } from "./VideoChromeFooter";
+import styles from "./VideoChromeFooter.stories.module.css";
 
 const meta: Meta<typeof VideoChromeFooter> = {
   title: "Molecules/Video Chrome Footer",
@@ -12,7 +13,7 @@ const meta: Meta<typeof VideoChromeFooter> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-3xl">
+      <div className={styles.column}>
         <Story />
       </div>
     ),

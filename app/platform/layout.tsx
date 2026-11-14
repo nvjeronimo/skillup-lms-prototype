@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { cookies } from "@/lib/router";
+import { redirect } from "@/lib/router";
 import { ACCOUNT_COOKIE, SIGN_IN_HREF, parseDeletionRequest } from "@/lib/account-deletion";
 import { PersonaGateProvider } from "@/lib/persona-gate";
 import { requestPersonaId } from "@/lib/persona-server";

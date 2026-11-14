@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { CertificatesView } from "@/components/platform/certificate/CertificatesView";
 import { pageTitle } from "@/lib/utils";
 

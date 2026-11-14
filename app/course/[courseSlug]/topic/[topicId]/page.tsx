@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from "@/lib/router";
+import { notFound } from "@/lib/router";
 import { TopicBody } from "@/components/views/TopicBody";
 import { flattenOutline } from "@/lib/courses/outline";
 import { getTopic } from "@/lib/data";

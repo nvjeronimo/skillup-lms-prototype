@@ -1,0 +1,230 @@
+/* DS LMS / Note Editor: a bottom sheet on a phone, a centred 560 modal from 768. */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.closed {
+  pointer-events: none;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+}
+.dialog {
+  position: relative;
+  max-height: 92dvh;
+  width: 100%;
+  transform-origin: center;
+  overflow-y: auto;
+  border-top-left-radius: var(--sk-radius-surface);
+  border-top-right-radius: var(--sk-radius-surface);
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0 transparent, 0 0 transparent, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+/* Mobile grabber (DS: 36 x 4, fully rounded). */
+.grabber {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+.grabberBar {
+  height: 4px;
+  width: 36px;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-strong);
+}
+/* DS Spacing/2xl and 3xl: 16 on a phone, 20 on a tablet, 20/24 on a desktop. */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.close {
+  margin: -10px;
+  display: inline-flex;
+  height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-text-subtle);
+}
+.close,
+.textarea,
+.removeTag {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+.anchorLabel {
+  margin-bottom: 8px;
+  color: var(--color-text-subtle);
+}
+.anchorTs {
+  color: var(--color-text-primary);
+}
+.anchorQuote {
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-subtle);
+  border-left-width: 3px;
+  border-color: var(--color-border-primary);
+  padding: 12px 16px;
+  color: var(--color-text-subtle);
+}
+.field {
+  display: block;
+}
+.label {
+  margin-bottom: 6px;
+  display: block;
+  color: var(--color-text-muted);
+}
+.textarea {
+  width: 100%;
+  resize: none;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding: 8px 12px;
+  color: var(--color-text-default);
+}
+.textarea:focus {
+  border-color: var(--color-border-primary);
+}
+/* outline-none, except where the global :focus-visible ring (app/globals.css) took over. */
+.textarea:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  padding: 6px 8px;
+}
+/* DS Input field Type=Tags chip = Tag md Gray (border/default, bg/page, X in icon/faint). */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding: 2px 4px 2px 5px;
+  color: var(--color-text-muted);
+}
+.removeTag {
+  color: var(--color-icon-faint);
+}
+@media (hover: hover) and (pointer: fine) {
+  .close:hover {
+    background-color: var(--color-bg-subtle);
+  }
+  .removeTag:hover {
+    color: var(--color-text-error);
+  }
+}
+.tagInput {
+  min-width: 96px;
+  flex: 1 1 0%;
+  background-color: transparent;
+  padding: 2px 4px;
+  color: var(--color-text-default);
+}
+/* outline-none, except where the global :focus-visible ring (app/globals.css) took over. */
+.tagInput:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+/* DS footer: bg/subtle; full width and clear of the home bar on a phone. */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: var(--color-bg-subtle);
+  padding: 16px 16px calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+.action {
+  flex: 1 1 0%;
+}
+@media (min-width: 768px) {
+  .root {
+    align-items: center;
+    padding: 16px;
+  }
+  .dialog {
+    max-width: 560px;
+    border-radius: var(--sk-radius-surface);
+    border-width: 1px;
+  }
+  .grabber {
+    display: none;
+  }
+  .header {
+    padding: 20px;
+  }
+  .close {
+    margin: -4px;
+    height: 32px;
+    width: 32px;
+  }
+  .body {
+    gap: 20px;
+    padding: 20px;
+  }
+  .footer {
+    padding: 20px;
+  }
+  .action {
+    flex: none;
+  }
+}
+@media (min-width: 1024px) {
+  .header,
+  .footer {
+    padding-inline: 24px;
+  }
+  .body {
+    padding: 24px;
+  }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the close .rounded-control button, the tags .rounded-control.border wrapper of an input, the textarea .border). Their rules, kept here. */
+:global([data-direction="studio"]) .close,
+:global([data-skin="harbor"]) .close,
+:global([data-direction="studio"]) .tags,
+:global([data-skin="harbor"]) .tags {
+  border-radius: 9999px;
+}
+/* Fluent: the tags box and the note field are Fluent Inputs; held over :focus, as before. */
+:global([data-skin="fluent"]) .tags,
+:global([data-skin="fluent"]) .textarea.textarea {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}

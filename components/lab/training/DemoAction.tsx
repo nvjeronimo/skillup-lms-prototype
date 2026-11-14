@@ -1,7 +1,6 @@
-"use client";
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./DemoAction.module.css";
 
 /**
  * A control whose destination does not exist in the lab. It stays a real button (keyboard, focus, 44px),
@@ -10,7 +9,7 @@ import { cn } from "@/lib/utils";
 export function DemoAction({ className, children }: { className?: string; children: React.ReactNode }) {
   const [said, setSaid] = React.useState(false);
   return (
-    <span className="inline-flex flex-col items-start gap-1">
+    <span className={styles.wrap}>
       <button type="button" className={cn(className)} onClick={() => setSaid(true)}>
         {children}
       </button>

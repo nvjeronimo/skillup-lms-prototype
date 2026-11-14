@@ -1,0 +1,280 @@
+/* Direction C · Live + today: the dashboard as an agenda. Phone first; 768 and 1024 up. */
+.main {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1024px;
+  flex: 1 1 0%;
+  padding: 24px 16px;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* Text roles: colour (and the space above); the DS type style sets the rest. */
+.heading { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+.stacked { margin-top: 4px; color: var(--color-text-default); }
+.lede { margin-top: 4px; color: var(--color-text-muted); }
+.whenLine {
+  display: block;
+  color: var(--color-text-default);
+}
+.whenSub {
+  display: block;
+  color: var(--color-text-muted);
+}
+
+.panel {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 12px;
+}
+
+/* ── Pick up ── */
+.pickUp { margin-top: 24px; }
+.pickUpRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pickUpMain {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  align-items: center;
+  gap: 12px;
+}
+.iconBox {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+}
+.iconBoxPrimary { background: var(--color-bg-primary-soft); }
+.iconBoxQuiet { background: var(--color-bg-faint); }
+.iconPrimary { color: var(--color-icon-primary); }
+.iconSubtle { color: var(--color-icon-subtle); }
+.shrinkable { min-width: 0; }
+.pickUpTitle { color: var(--color-text-default); }
+.pickUpMeta { color: var(--color-text-muted); }
+.action {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* ── Schedule ── */
+.schedule { margin-top: 32px; }
+.scheduleHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mocks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.agenda {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.sections {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── Week strip ── */
+.days {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.day {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border-radius: var(--sk-radius-control);
+  padding-block: 8px;
+}
+.dayToday {
+  background: var(--color-bg-primary-soft);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 2px var(--color-border-primary), 0 0 #0000;
+}
+.dayOther { background: var(--color-bg-subtle); }
+.weekdayToday { color: var(--color-text-primary); }
+.count {
+  display: inline-flex;
+  height: 20px;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  padding-inline: 4px;
+}
+.countBusy {
+  background: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.countNone { color: var(--color-text-disabled); }
+.summary {
+  margin-top: 12px;
+  color: var(--color-text-muted);
+}
+
+/* ── Agenda section ── */
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+}
+.emptyLine {
+  margin-top: 8px;
+  border-left-width: 2px;
+  border-color: var(--color-border-subtle);
+  padding-left: 12px;
+  color: var(--color-text-muted);
+}
+.items {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.when {
+  display: block;
+  flex-shrink: 0;
+}
+.cta { width: 100%; }
+
+/* ── Agenda row ── */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-width: 1px;
+  border-radius: var(--sk-radius-card);
+  padding: 16px;
+}
+.rowLive {
+  border-color: var(--color-border-success);
+  background: var(--color-bg-success-soft);
+}
+.rowOverdue {
+  border-color: var(--color-border-warning);
+  background: var(--color-bg-page);
+}
+.rowPlain {
+  border-color: var(--color-border-subtle);
+  background: var(--color-bg-page);
+}
+.rowMain {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.rowTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-subtle);
+}
+.rowMock { margin-top: 8px; }
+.rowCta { flex-shrink: 0; }
+
+/* ── Nothing scheduled ── */
+.nothing {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+}
+.nothingMain {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding: 32px 24px;
+  }
+  .panel { padding: 16px; }
+  .pickUpRow,
+  .row,
+  .nothing {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+  .pickUpTitle,
+  .pickUpMeta {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .action,
+  .cta { width: auto; }
+  .when { width: 128px; }
+}
+@media (min-width: 1024px) {
+  .main { padding-inline: 32px; }
+  .agenda {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    align-items: flex-start;
+    gap: 32px;
+  }
+  .sections {
+    grid-column-start: 1;
+    grid-row-start: 1;
+  }
+  .strip {
+    position: sticky;
+    top: 24px;
+    grid-column-start: 2;
+    grid-row-start: 1;
+  }
+}
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio: 12-padded panels take a 32 radius, 16-padded cards 23 inside and a 44 radius; surfaces
+   float on a soft shadow, the border goes (the live / overdue row colours too). */
+:global([data-direction="studio"]) .panel {
+  border-radius: 32px;
+}
+:global([data-direction="studio"]) .row,
+:global([data-direction="studio"]) .nothing {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global([data-direction="studio"]) .panel,
+:global([data-direction="studio"]) .row,
+:global([data-direction="studio"]) .nothing {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}

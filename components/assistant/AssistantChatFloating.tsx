@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/lib/router";
 import { isAssistantPath, pageContextFromPath } from "@/lib/assistant/page-context";
 import { nextStep } from "@/lib/assistant/next-step";
 import { buildSnapshot } from "@/lib/assistant/snapshot";
@@ -18,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { AssistantLauncher } from "./AssistantLauncher";
 import { ASSISTANT_OPEN_EVENT } from "@/lib/assistant/bus";
 import { AssistantWindow } from "./AssistantWindow";
+import styles from "./AssistantChatFloating.module.css";
 
 const OPEN_KEY = "sk-assistant-open";
 const EDGE = 24;
@@ -255,7 +254,7 @@ function Chat({ pathname }: { pathname: string }) {
   return (
     <>
       {/* The window opening by itself leaves the focus on the page: this is how it is heard. */}
-      <p role="status" className="sr-only">
+      <p role="status" className="sk-sr-only">
         {open && selfOpened
           ? `SkillUp Assistant opened: ${firstSteps.left} first steps to get you started.`
           : ""}
@@ -282,13 +281,14 @@ function Chat({ pathname }: { pathname: string }) {
           variant={harborBar ? "panel" : "default"}
           className={
             isPhone
-              ? "sk-animate-sheet fixed inset-0 z-[45]"
+              ? cn("sk-animate-sheet", styles.sheet)
               : harborBar && barAnchor
-                ? "sk-animate-pop fixed z-[45] w-[420px] max-w-[calc(100vw-48px)] origin-top"
+                ? cn("sk-animate-pop", styles.panel)
                 : cn(
-                    "sk-animate-pop fixed z-[45] w-[380px] max-w-[calc(100vw-48px)]",
+                    "sk-animate-pop",
+                    styles.card,
                     // It grows out of the launcher, so it scales from the launcher's corner.
-                    side === "left" ? "origin-bottom-left" : "origin-bottom-right",
+                    side === "left" ? styles.fromLeft : styles.fromRight,
                   )
           }
           style={
@@ -319,9 +319,9 @@ function Chat({ pathname }: { pathname: string }) {
         badge={firstSteps.left}
         covered={sheet || hideForModal || harborBar}
         className={cn(
-          "fixed",
-          isPhone && presence.mounted ? "z-[44]" : "z-[45]",
-          (hideForModal || harborBar) && "pointer-events-none opacity-0",
+          styles.launcher,
+          isPhone && presence.mounted ? styles.underSheet : styles.onTop,
+          (hideForModal || harborBar) && styles.hiddenLauncher,
         )}
         style={{ [side]: edge, bottom }}
       />

@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SavedPanel } from "./SavedPanel";
 import { savedNotes, savedTopics } from "@/lib/data";
+import styles from "./SavedPanel.stories.module.css";
 
 const meta: Meta<typeof SavedPanel> = {
   title: "Organisms/Saved Panel",
@@ -17,7 +18,7 @@ const meta: Meta<typeof SavedPanel> = {
   argTypes: { filter: { control: "radio", options: ["all", "topics", "notes"] } },
   decorators: [
     (Story) => (
-      <div className="h-[700px]">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

@@ -14,9 +14,7 @@
 @import "../tokens/square-corners.css";
 @import "../tokens/vision-cvd.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "./reset.css";
 
 html,
 body {
@@ -58,12 +56,41 @@ button {
   outline: 2px solid var(--color-border-primary);
   outline-offset: 2px;
 }
-@layer base {
-  :focus-visible:where(
-      :not(textarea, select, input:not([type="checkbox"], [type="radio"], [type="range"]))
-    ) {
-    box-shadow: 0 0 0 2px var(--color-border-focus-gap);
+
+/* Global helpers that replace Tailwind's (CSS Modules move, 14 Nov 2026). Plain CSS, outside
+   any layer, so they hold once Tailwind is gone. */
+/* Visually hidden, still read by assistive tech (Tailwind's sr-only). */
+.sk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+/* Undo sk-sr-only (Tailwind's not-sr-only), e.g. a skip link on focus. */
+.sk-not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+/* A loading spinner (Tailwind's animate-spin). */
+@keyframes sk-spin {
+  to {
+    transform: rotate(360deg);
   }
+}
+.sk-spin {
+  /* token-lint-disable-next-line a spinner turns at a constant 1s, as Tailwind's animate-spin did */
+  animation: sk-spin 1s linear infinite;
 }
 
 /* Thin scrollbar for scroll regions — DS Vertical Scroll: 6px wide
@@ -971,11 +998,8 @@ button {
   .sk-animate-rise {
     animation-delay: 0s !important;
   }
-  /* The launcher's hover lift and press would snap (transform is not transitioned here). */
-  .sk-press-scale {
-    --tw-scale-x: 1 !important;
-    --tw-scale-y: 1 !important;
-  }
+  /* The launcher's hover lift and the buttons' press would snap: their modules pin the scale
+     under reduced motion (atoms/Button, assistant/AssistantLauncher). */
   [data-state="closed"].sk-animate-slide-right,
   [data-state="closed"] .sk-animate-slide-right,
   [data-state="closed"].sk-animate-slide-left,
@@ -1009,7 +1033,7 @@ button {
     white-space: normal;
   }
   /* A spinner that stops looks like a hang: it breathes instead of turning. */
-  .animate-spin {
+  .sk-spin {
     animation: sk-pulse calc(var(--motion-duration-short3) * 8) var(--motion-easing-standard) infinite;
   }
   /* Skeletons hold still (no sweep); the cascade is a fade, no stagger (§7.9). */
@@ -1147,11 +1171,7 @@ button {
 [data-reduce-motion] .sk-animate-rise {
   animation-delay: 0s !important;
 }
-/* The launcher's hover lift and press would snap (transform is not transitioned here). */
-[data-reduce-motion] .sk-press-scale {
-  --tw-scale-x: 1 !important;
-  --tw-scale-y: 1 !important;
-}
+/* The press scale is pinned in the modules (atoms/Button, assistant/AssistantLauncher). */
 [data-reduce-motion] [data-state="closed"].sk-animate-slide-right,
 [data-reduce-motion] [data-state="closed"] .sk-animate-slide-right,
 [data-reduce-motion] [data-state="closed"].sk-animate-slide-left,
@@ -1185,7 +1205,7 @@ button {
   white-space: normal;
 }
 /* A spinner that stops looks like a hang: it breathes instead of turning. */
-[data-reduce-motion] .animate-spin {
+[data-reduce-motion] .sk-spin {
   animation: sk-pulse calc(var(--motion-duration-short3) * 8) var(--motion-easing-standard) infinite;
 }
 /* Skeletons hold still (no sweep); the cascade is a fade, no stagger (§7.9). */

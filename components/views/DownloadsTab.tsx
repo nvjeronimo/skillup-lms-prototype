@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Download, FileText } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -9,6 +7,7 @@ import { getTopic } from "@/lib/data";
 import { getDownloads } from "@/lib/content";
 import { useLmsStore } from "@/lib/store";
 import { track } from "@/lib/analytics";
+import styles from "./DownloadsTab.module.css";
 
 export function DownloadsTab({ topicId }: { topicId: string }) {
   const topic = getTopic(topicId);
@@ -17,7 +16,7 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
 
   if (!files.length) {
     return (
-      <div className="py-3">
+      <div className={styles.empty}>
         <EmptyState
           icon={FileText}
           title="No downloads for this lesson"
@@ -28,7 +27,7 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 py-3">
+    <div className={styles.list}>
       {files.map((f) => (
         <FileItem
           key={f.id}
@@ -44,7 +43,7 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
       ))}
 
       {/* Download all (ICP Phase 1). */}
-      <div className="mt-2 flex justify-center border-t border-sko-border-subtle pt-3">
+      <div className={styles.footer}>
         <button
           type="button"
           onClick={() => {
@@ -53,10 +52,10 @@ export function DownloadsTab({ topicId }: { topicId: string }) {
           }}
           // DS Link Button Type=Brand, Hierarchy=Primary: 1px icon/primary underline; on hover the text, line and icon
           // darken, no fill (Nelson, 23 Oct 2026: a fill on hover was wrong); bg/faint only on keyboard focus.
-          className="sk-text-body-medium-semibold inline-flex items-center gap-1 border-b border-sko-icon-primary px-0.5 pb-[3px] pt-1 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
+          className={`sk-text-body-medium-semibold ${styles.downloadAll}`}
         >
-          <Icon icon={Download} size={16} className="text-sko-icon-primary" />
-          <span className="px-0.5">Download all resources</span>
+          <Icon icon={Download} size={16} className={styles.downloadIcon} />
+          <span className={styles.downloadLabel}>Download all resources</span>
         </button>
       </div>
     </div>

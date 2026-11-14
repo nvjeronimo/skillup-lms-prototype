@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { SearchField } from "@/components/platform/my-learning/SearchField";
 import { CertificatesLedger } from "./CertificatesLedger";
 import { CertificatesSkeleton } from "./CertificatesSkeleton";
+import styles from "./CertificatesView.module.css";
 
 /**
  * Certificates (Nelson, 19 Oct 2026, Figma 7584:94993): every certificate of the learner, from
@@ -22,29 +21,29 @@ export function CertificatesView() {
   return (
     <PlatformPage
       current={null}
-      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
+      className={styles.page}
       skeleton={<CertificatesSkeleton />}
     >
-      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
-        <div data-arrive={0} className="flex flex-col gap-2">
-          <h1 className="sk-text-headline-large-bold text-sko-text-default">My Certificates</h1>
-          <p className="sk-text-body-large-regular text-sko-text-subtle">
+      <div className={`sk-page-stack ${styles.column}`}>
+        <div data-arrive={0} className={styles.intro}>
+          <h1 className={`sk-text-headline-large-bold ${styles.title}`}>My Certificates</h1>
+          <p className={`sk-text-body-large-regular ${styles.lead}`}>
             Everything you have earned, and what you are working towards.
           </p>
         </div>
 
-        <section aria-label="My certificates" className="flex flex-col gap-layout-stack">
-          <div data-arrive={1} className="flex items-center gap-2 md:justify-end">
+        <section aria-label="My certificates" className={styles.section}>
+          <div data-arrive={1} className={styles.searchRow}>
             <SearchField
               value={query}
               onChange={setQuery}
               label="Search certificates"
-              className="w-full md:w-[240px] lg:w-[320px]"
+              className={styles.search}
             />
           </div>
           <div data-arrive={2}>
             {/* The program titles are h3 and the rows h4: this h2 keeps the outline. */}
-            <h2 className="sr-only">Certificates</h2>
+            <h2 className="sk-sr-only">Certificates</h2>
             <CertificatesLedger needle={needle} />
           </div>
         </section>

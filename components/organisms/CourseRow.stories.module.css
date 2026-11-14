@@ -1,0 +1,7 @@
+.frame { max-width: 48rem; }
+.list {
+  display: flex;
+  max-width: 48rem;
+  flex-direction: column;
+  gap: 8px;
+}

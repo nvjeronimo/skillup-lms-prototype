@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from "@/lib/router";
+import { notFound } from "@/lib/router";
 import { PlatformPage } from "@/components/platform/PlatformPage";
 import { CertificatePageSkeleton } from "@/components/platform/certificate/CertificatePageSkeleton";
 import { CertificatePageView } from "@/components/platform/certificate/CertificatePageView";

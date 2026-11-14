@@ -1,0 +1,67 @@
+/* DS LMS / Platform / Browse tile: 160 tall on a phone, the grid cell's height from tablet up. */
+.tile {
+  display: flex;
+  height: 160px;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-style: dashed;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-faint);
+  padding: 16px;
+  text-align: center;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+@media (min-width: 768px) {
+  .tile {
+    height: 100%;
+    padding: 20px;
+  }
+}
+@media (min-width: 1024px) {
+  .tile {
+    padding: 24px;
+  }
+}
+.icon {
+  color: var(--color-icon-subtle);
+}
+.title {
+  color: var(--color-text-default);
+}
+.subtitle {
+  color: var(--color-text-subtle);
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css, square-corners.css selected
+   this tile's Tailwind classes: .rounded-card.border, .p-4 / md:p-5 / lg:p-6). */
+@media (min-width: 768px) {
+  :global([data-direction="studio"]) .tile { border-radius: 40px; }
+}
+@media (min-width: 1024px) {
+  :global([data-direction="studio"]) .tile { border-radius: 44px; }
+}
+/* Studio's p-4 rule comes last in its file, so it holds at every width. */
+:global([data-direction="studio"]) .tile.tile {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global([data-skin="harbor"] [data-platform-page]) .tile,
+:global([data-skin="fluent"] [data-platform-page]) .tile {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global(html[data-square-corners]) .tile {
+  border-radius: 0 !important;
+}

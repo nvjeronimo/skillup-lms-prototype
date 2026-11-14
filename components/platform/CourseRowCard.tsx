@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -9,6 +7,7 @@ import { useLmsStore } from "@/lib/store";
 import type { MyLearningCourse } from "@/lib/platform/my-learning";
 import { CONTENT_PENDING, type ProgramCourse, type ProgramModule } from "@/lib/platform/program";
 import { cn } from "@/lib/utils";
+import styles from "./CourseRowCard.module.css";
 
 /**
  * DS `LMS/Platform/Course-Detail/Module-Number`: a 32px circle with the position
@@ -20,8 +19,9 @@ function ModuleNumber({ module }: { module: ProgramModule }) {
     <span
       aria-hidden
       className={cn(
-        "sk-text-body-medium-semibold flex size-8 shrink-0 items-center justify-center rounded-pill",
-        module.complete ? "bg-sko-bg-success text-sko-icon-on-success" : "bg-sko-bg-primary-soft text-sko-text-on-primary-soft",
+        "sk-text-body-medium-semibold",
+        styles.moduleNumber,
+        module.complete ? styles.moduleNumberDone : styles.moduleNumberOpen,
       )}
     >
       {module.complete ? <Icon icon={Check} size={16} /> : module.number}
@@ -41,16 +41,16 @@ function ModuleRow({ module }: { module: ProgramModule }) {
     <li
       // The current module sits in a wrapper with 4 above it in the DS row (where the
       // "You left off here" badge was until 7 Oct); kept so the open row is as tall as drawn.
-      className={cn(module.current && "pt-1")}
+      className={cn(module.current && styles.moduleCurrent)}
     >
-      <div className="flex items-center gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-[15px]">
+      <div className={styles.module}>
         <ModuleNumber module={module} />
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <p className="sk-text-body-large-semibold text-sko-text-default">
+        <div className={styles.moduleTexts}>
+          <p className={cn("sk-text-body-large-semibold", styles.moduleTitle)}>
             {module.title}
-            {module.complete ? <span className="sr-only"> (complete)</span> : null}
+            {module.complete ? <span className="sk-sr-only"> (complete)</span> : null}
           </p>
-          <p className="sk-text-body-small-regular text-sko-text-subtle">
+          <p className={cn("sk-text-body-small-regular", styles.moduleMeta)}>
             {module.topics}
             <span data-invented="effort: no module durations authored in Open edX">
               {" "}
@@ -58,7 +58,7 @@ function ModuleRow({ module }: { module: ProgramModule }) {
             </span>
           </p>
         </div>
-        <span aria-hidden className="size-5 shrink-0" />
+        <span aria-hidden className={styles.moduleEnd} />
       </div>
     </li>
   );
@@ -68,8 +68,7 @@ function ModuleRow({ module }: { module: ProgramModule }) {
    in text/subtle, 4 gap, 20 icon, radius 4, no underline (the same control as the section
    header's action). 20px tall as drawn; the target is 44px and the negative margin keeps the
    bar at its drawn height. */
-const TOGGLE =
-  "sk-text-body-medium-semibold -my-3 inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-control text-sko-text-subtle transition-colors hover:text-sko-text-default";
+const TOGGLE = cn("sk-text-body-medium-semibold", styles.toggle);
 
 export interface CourseRowCardProps extends Pick<ProgramCourse, "position" | "detail" | "modules"> {
   /** What the DS `LMS / Course Card` on top shows. */
@@ -89,7 +88,7 @@ export interface CourseRowCardProps extends Pick<ProgramCourse, "position" | "de
 }
 
 /** The Course-Row's frame (card, stroke, elevation); its skeletons reuse it. */
-export const COURSE_ROW_FRAME = "overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card";
+export const COURSE_ROW_FRAME = styles.frame;
 
 /**
  * DS `LMS/Platform/Program-Detail/Course-Row` (`Breakpoint` Desktop · Compact, `Expanded`):
@@ -135,14 +134,14 @@ export function CourseRowCard({
     >
       {!compact ? (
         <>
-          <MyLearningCourseCard course={card} layout="list" context="row" secondaryAction={responsive} onAction={notInPrototype} className="hidden lg:flex" />
+          <MyLearningCourseCard course={card} layout="list" context="row" secondaryAction={responsive} onAction={notInPrototype} className={styles.cardDesktop} />
           <MyLearningCourseCard
             course={card}
             layout="list-stacked"
             context="row"
             secondaryAction={responsive}
             onAction={notInPrototype}
-            className={responsive ? "hidden md:flex lg:hidden" : "lg:hidden"}
+            className={responsive ? styles.cardTablet : styles.cardBelowDesktop}
           />
         </>
       ) : null}
@@ -153,7 +152,7 @@ export function CourseRowCard({
           context="row"
           secondaryAction={responsive}
           onAction={notInPrototype}
-          className={responsive ? "md:hidden" : undefined}
+          className={responsive ? styles.cardPhone : undefined}
         />
       ) : null}
 
@@ -163,18 +162,19 @@ export function CourseRowCard({
           module name fits on one line and every closed row keeps one height (67 for the bar). */}
       <div
         className={cn(
-          "flex items-center justify-between border-t border-sko-border-subtle px-4 py-3",
-          compact && "max-md:flex-wrap max-md:gap-y-0.5",
+          styles.bar,
+          compact && styles.barCompact,
         )}
       >
-        <p className={cn("flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5", compact && "max-md:contents")}>
-          <span className={cn("sk-text-body-medium-semibold text-sko-text-default", compact && "max-md:min-w-0 max-md:flex-1")}>
+        <p className={cn(styles.texts, compact && styles.textsCompact)}>
+          <span className={cn("sk-text-body-medium-semibold", styles.position, compact && styles.positionCompact)}>
             {position}
           </span>
           <span
             className={cn(
-              "sk-text-body-medium-regular text-sko-text-subtle",
-              compact ? "w-full max-md:order-last" : "max-md:w-full md:min-w-0 md:flex-1",
+              "sk-text-body-medium-regular",
+              styles.detail,
+              compact ? styles.detailCompact : styles.detailResponsive,
             )}
           >
             {detail}
@@ -189,24 +189,24 @@ export function CourseRowCard({
           className={TOGGLE}
         >
           {open ? "Hide" : "Show"}
-          <Icon icon={open ? ChevronUp : ChevronDown} size={20} className="text-sko-icon-subtle" aria-hidden />
+          <Icon icon={open ? ChevronUp : ChevronDown} size={20} className={styles.toggleIcon} aria-hidden />
         </button>
       </div>
 
       {/* Grows open (Collapse, medium2); the rule and padding sit inside the clipped row. */}
       <Collapse id={panelId} role="region" aria-label={`Modules of ${title}`} open={open}>
-        <div className="border-t border-sko-border-subtle bg-sko-bg-faint p-4">
+        <div className={styles.modules}>
           {modules?.length ? (
             <ol
               data-mock="Module durations are not authored yet (effort_time)"
-              className="flex flex-col gap-2"
+              className={styles.moduleList}
             >
               {modules.map((module) => (
                 <ModuleRow key={module.number} module={module} />
               ))}
             </ol>
           ) : (
-            <p className="sk-text-body-medium-regular text-sko-text-subtle">{CONTENT_PENDING}</p>
+            <p className={cn("sk-text-body-medium-regular", styles.pending)}>{CONTENT_PENDING}</p>
           )}
         </div>
       </Collapse>

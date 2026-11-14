@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TranscriptLine } from "./TranscriptLine";
+import styles from "./TranscriptLine.stories.module.css";
 
 const meta: Meta<typeof TranscriptLine> = {
   title: "Molecules/Transcript Line",
@@ -15,7 +16,7 @@ const meta: Meta<typeof TranscriptLine> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-2xl">
+      <div className={styles.column}>
         <Story />
       </div>
     ),
@@ -34,7 +35,7 @@ export const ActiveMobile: Story = {
   args: { active: true, hasNote: false, device: "mobile" },
   decorators: [
     (Story) => (
-      <div className="max-w-sm">
+      <div className={styles.narrow}>
         <Story />
       </div>
     ),
@@ -43,7 +44,7 @@ export const ActiveMobile: Story = {
 
 export const InContext: Story = {
   render: () => (
-    <div className="max-w-2xl">
+    <div className={styles.column}>
       <TranscriptLine ts="0:00" text="Welcome back. In this unit we look at the lifecycle." />
       <TranscriptLine ts="0:18" text="Understanding this lifecycle is critical." />
       <TranscriptLine

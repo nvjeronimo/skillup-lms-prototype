@@ -1,0 +1,91 @@
+/* DS `LMS / Content Feedback`: space-between, 12 top and bottom. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 12px;
+  gap: 16px;
+}
+/* With an action (Figma `Feedback-Mark`): a rule above and below; wrapped rows 16 apart on a
+   phone, 24 from 640. */
+.withAction {
+  column-gap: 16px;
+  row-gap: 16px;
+  border-block-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+@media (min-width: 640px) {
+  .withAction {
+    row-gap: 24px;
+  }
+}
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+/* Hover pad: 8/4 of padding cancelled by the same negative margin, so the DS geometry (no item
+   padding, gap 16) is unchanged while the hover fill and hit area come back. */
+.item {
+  margin: -4px -8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  padding: 4px 8px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.muted {
+  color: var(--color-text-muted);
+}
+.liked {
+  color: var(--color-icon-info);
+}
+.disliked {
+  color: var(--color-text-error);
+}
+.report {
+  color: var(--color-text-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .report:hover {
+    color: var(--color-text-warning);
+  }
+}
+.glyph {
+  color: var(--color-icon-faint);
+}
+.reportGlyph {
+  color: var(--color-icon-faint);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .report:hover .reportGlyph {
+    color: var(--color-icon-warning);
+  }
+}
+.licence {
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+}
+.action {
+  flex-shrink: 0;
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-control on the item buttons); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .item,
+:global([data-skin="harbor"]) .item {
+  border-radius: 9999px;
+}

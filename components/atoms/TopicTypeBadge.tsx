@@ -2,6 +2,7 @@ import * as React from "react";
 import { Icon, topicTypeIcon } from "@/lib/icons";
 import { cn, topicTypeShortLabel } from "@/lib/utils";
 import type { TopicType } from "@/lib/types";
+import styles from "./TopicTypeBadge.module.css";
 
 export interface TopicTypeBadgeProps {
   type: TopicType;
@@ -41,14 +42,11 @@ export const ALL_TOPIC_TYPES: TopicType[] = [
 export function TopicTypeBadge({ type, showIcon = true, label, className }: TopicTypeBadgeProps) {
   return (
     <span
-      className={cn(
-        "sk-text-body-small-medium inline-flex items-center gap-1.5 text-sko-text-subtle",
-        className,
-      )}
+      className={cn("sk-text-body-small-medium", styles.badge, className)}
     >
       {showIcon ? (
-        <span className="inline-flex size-5 shrink-0 items-center justify-center">
-          <Icon icon={topicTypeIcon(type)} size={12} className="text-sko-icon-primary" />
+        <span className={styles.iconBox}>
+          <Icon icon={topicTypeIcon(type)} size={12} className={styles.icon} />
         </span>
       ) : null}
       {label ?? topicTypeShortLabel(type)}

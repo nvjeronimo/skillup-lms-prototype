@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { ServicesView } from "@/components/platform/services/ServicesView";
 import { pageTitle } from "@/lib/utils";
 

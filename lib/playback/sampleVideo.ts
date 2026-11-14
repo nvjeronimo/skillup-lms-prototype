@@ -10,5 +10,5 @@
  * .env.local). Without it the address below fails and the player shows the poster, as before.
  */
 export const SAMPLE_VIDEO_SRC =
-  process.env.NEXT_PUBLIC_SAMPLE_VIDEO_SRC ||
+  import.meta.env.NEXT_PUBLIC_SAMPLE_VIDEO_SRC ||
   "https://videos.skillup.online/videos/SUIPSKO-600102_Digital%20Marketing%20Fundamentals%20and%20the%20AI%20Mindset/Introduction%20to%20Digital%20Marketing-600102.008.mp4";

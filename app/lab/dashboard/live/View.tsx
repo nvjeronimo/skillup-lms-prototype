@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import {
   AlertTriangle,
   ArrowRight,
@@ -32,6 +30,7 @@ import {
   type AgendaItem,
   type Bucket,
 } from "./agenda";
+import styles from "./View.module.css";
 
 /** Direction C · Live + today — the dashboard as an agenda: pick up, now, catch up, today, this week, later. */
 export function View() {
@@ -61,24 +60,24 @@ export function View() {
   const days = week(agenda);
 
   return (
-    <main id="main" tabIndex={-1} className="outline-none mx-auto w-full max-w-5xl flex-1 px-4 py-6 md:px-6 md:py-8 lg:px-8">
+    <main id="main" tabIndex={-1} className={styles.main}>
       <header>
-        <p className="sk-text-body-medium-medium text-sko-text-subtle">Dashboard</p>
-        <h1 className="sk-text-headline-small-semibold mt-1 text-sko-text-default">Hi {persona.firstName}</h1>
-        <p className="sk-text-body-large-regular mt-1 text-sko-text-muted">What is on, in time order.</p>
+        <p className={`sk-text-body-medium-medium ${styles.subtle}`}>Dashboard</p>
+        <h1 className={`sk-text-headline-small-semibold ${styles.stacked}`}>Hi {persona.firstName}</h1>
+        <p className={`sk-text-body-large-regular ${styles.lede}`}>What is on, in time order.</p>
       </header>
 
       <PickUp enrolment={next} onGo={go} />
 
-      <section aria-labelledby="schedule-h" className="mt-8">
-        <div className="flex flex-col gap-2">
-          <h2 id="schedule-h" className="sk-text-title-medium-semibold text-sko-text-default">
+      <section aria-labelledby="schedule-h" className={styles.schedule}>
+        <div className={styles.scheduleHead}>
+          <h2 id="schedule-h" className={`sk-text-title-medium-semibold ${styles.heading}`}>
             Schedule
           </h2>
-          <p className="sk-text-body-medium-regular text-sko-text-muted">
+          <p className={`sk-text-body-medium-regular ${styles.muted}`}>
             Today is <time dateTime={`${MOCK_TODAY}T${MOCK_NOW}`}>{longDay(MOCK_TODAY)}, {MOCK_NOW}</time> (mock date).
           </p>
-          <div className="flex flex-col gap-1.5">
+          <div className={styles.mocks}>
             <MockTag layout="block" reason={`Sessions: ${MOCK.live}`} />
             <MockTag layout="block" reason={`Deadlines: ${MOCK.due}`} />
           </div>
@@ -87,8 +86,8 @@ export function View() {
         {agenda.length === 0 ? (
           <NothingScheduled added={added.has("study-slot")} onAdd={() => toggleAdded("study-slot")} />
         ) : (
-          <div className="mt-6 flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-8">
-            <div className="flex min-w-0 flex-col gap-8 lg:col-start-1 lg:row-start-1">
+          <div className={styles.agenda}>
+            <div className={styles.sections}>
               {now.length > 0 ? (
                 <AgendaSection id="now" title="Now" items={now} added={added} onAdd={toggleAdded} onGo={go} />
               ) : null}
@@ -135,7 +134,7 @@ export function View() {
             </div>
 
             {/* After the agenda in the DOM: "Now" is read and seen first; lg places it in the right column. */}
-            <WeekStrip days={days} className="lg:sticky lg:top-6 lg:col-start-2 lg:row-start-1" />
+            <WeekStrip days={days} className={styles.strip} />
           </div>
         )}
       </section>
@@ -150,20 +149,20 @@ function PickUp({ enrolment, onGo }: { enrolment?: Enrolment; onGo: (href: strin
   return (
     <section
       aria-labelledby="pickup-h"
-      className="mt-6 rounded-card border border-sko-border-subtle bg-sko-bg-page p-3 md:p-4"
+      className={`${styles.panel} ${styles.pickUp}`}
     >
       {enrolment && topic ? (
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
-          <div className="flex min-w-0 flex-1 items-center gap-3">
-            <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft">
-              <Icon icon={topicTypeIcon(topic.type as TopicType)} size={20} className="text-sko-icon-primary" />
+        <div className={styles.pickUpRow}>
+          <div className={styles.pickUpMain}>
+            <span className={`${styles.iconBox} ${styles.iconBoxPrimary}`}>
+              <Icon icon={topicTypeIcon(topic.type as TopicType)} size={20} className={styles.iconPrimary} />
             </span>
-            <div className="min-w-0">
-              <h2 id="pickup-h" className="sk-text-body-small-semibold text-sko-text-subtle">
+            <div className={styles.shrinkable}>
+              <h2 id="pickup-h" className={`sk-text-body-small-semibold ${styles.subtle}`}>
                 {enrolment.status === "not-started" ? "Start here" : "Pick up where you left off"}
               </h2>
-              <p className="sk-text-body-large-semibold text-sko-text-default md:truncate">{topic.title}</p>
-              <p className="sk-text-body-medium-regular text-sko-text-muted md:truncate">
+              <p className={`sk-text-body-large-semibold ${styles.pickUpTitle}`}>{topic.title}</p>
+              <p className={`sk-text-body-medium-regular ${styles.pickUpMeta}`}>
                 {topic.type} · {enrolment.title} ·{" "}
                 {enrolment.status === "not-started" ? "Not started" : `${enrolment.pct}% done`}
               </p>
@@ -172,19 +171,19 @@ function PickUp({ enrolment, onGo }: { enrolment?: Enrolment; onGo: (href: strin
           <Button
             size="md"
             rightIcon={ArrowRight}
-            className="w-full shrink-0 md:w-auto"
+            className={styles.action}
             onClick={() => onGo(topic.href)}
           >
             {enrolment.status === "not-started" ? "Start" : "Resume"}
-            <span className="sr-only">: {topic.title}</span>
+            <span className="sk-sr-only">: {topic.title}</span>
           </Button>
         </div>
       ) : (
         <>
-          <h2 id="pickup-h" className="sk-text-body-small-semibold text-sko-text-subtle">
+          <h2 id="pickup-h" className={`sk-text-body-small-semibold ${styles.subtle}`}>
             Pick up
           </h2>
-          <p className="sk-text-body-large-semibold text-sko-text-default">You are all caught up — no course in progress.</p>
+          <p className={`sk-text-body-large-semibold ${styles.heading}`}>You are all caught up — no course in progress.</p>
         </>
       )}
     </section>
@@ -203,28 +202,29 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
   return (
     <section
       aria-labelledby="strip-h"
-      className={cn("rounded-card border border-sko-border-subtle bg-sko-bg-page p-3 md:p-4", className)}
+      className={cn(styles.panel, className)}
     >
-      <h3 id="strip-h" className="sk-text-body-medium-semibold text-sko-text-default">
+      <h3 id="strip-h" className={`sk-text-body-medium-semibold ${styles.heading}`}>
         This week at a glance
       </h3>
-      <ol aria-hidden="true" className="mt-3 grid grid-cols-7 gap-1">
+      <ol aria-hidden="true" className={styles.days}>
         {days.map((d) => (
           <li
             key={d.date}
             className={cn(
-              "flex min-w-0 flex-col items-center gap-0.5 rounded-control py-2",
-              d.isToday ? "bg-sko-bg-primary-soft ring-2 ring-inset ring-sko-border-primary" : "bg-sko-bg-subtle",
+              styles.day,
+              d.isToday ? styles.dayToday : styles.dayOther,
             )}
           >
-            <span className={cn("sk-text-body-small-medium", d.isToday ? "text-sko-text-primary" : "text-sko-text-subtle")}>
+            <span className={cn("sk-text-body-small-medium", d.isToday ? styles.weekdayToday : styles.subtle)}>
               {d.weekday}
             </span>
-            <span className="sk-text-body-medium-semibold text-sko-text-default">{d.dayOfMonth}</span>
+            <span className={`sk-text-body-medium-semibold ${styles.heading}`}>{d.dayOfMonth}</span>
             <span
               className={cn(
-                "sk-text-body-small-semibold inline-flex h-5 min-w-5 items-center justify-center rounded-pill px-1",
-                d.count > 0 ? "bg-sko-bg-primary text-sko-text-on-primary" : "text-sko-text-disabled",
+                "sk-text-body-small-semibold",
+                styles.count,
+                d.count > 0 ? styles.countBusy : styles.countNone,
               )}
             >
               {d.count > 0 ? d.count : "·"}
@@ -232,8 +232,8 @@ function WeekStrip({ days, className }: { days: ReturnType<typeof week>; classNa
           </li>
         ))}
       </ol>
-      <p className="sk-text-body-medium-regular mt-3 text-sko-text-muted">
-        <span className="sk-text-body-medium-medium text-sko-text-default">
+      <p className={`sk-text-body-medium-regular ${styles.summary}`}>
+        <span className={`sk-text-body-medium-medium ${styles.heading}`}>
           {shortDay(days[0].date)} – {shortDay(days[6].date)}:
         </span>{" "}
         {summary} Today is {days.find((d) => d.isToday)?.weekday}.
@@ -259,21 +259,21 @@ function AgendaSection({ id, title, subtitle, items, empty, added, onAdd, onGo }
   const hid = `sec-${id}-h`;
   return (
     <section aria-labelledby={hid}>
-      <div className="flex flex-wrap items-baseline gap-x-2">
-        <h3 id={hid} className="sk-text-body-large-semibold text-sko-text-default">
+      <div className={styles.sectionHead}>
+        <h3 id={hid} className={`sk-text-body-large-semibold ${styles.heading}`}>
           {title}
         </h3>
-        {subtitle ? <span className="sk-text-body-medium-regular text-sko-text-subtle">{subtitle}</span> : null}
+        {subtitle ? <span className={`sk-text-body-medium-regular ${styles.subtle}`}>{subtitle}</span> : null}
         {items.length > 0 ? (
-          <span className="sk-text-body-medium-regular text-sko-text-subtle">
+          <span className={`sk-text-body-medium-regular ${styles.subtle}`}>
             · {items.length} {items.length === 1 ? "item" : "items"}
           </span>
         ) : null}
       </div>
       {items.length === 0 ? (
-        <p className="sk-text-body-medium-regular mt-2 border-l-2 border-sko-border-subtle pl-3 text-sko-text-muted">{empty}</p>
+        <p className={`sk-text-body-medium-regular ${styles.emptyLine}`}>{empty}</p>
       ) : (
-        <ol className="mt-3 flex flex-col gap-2">
+        <ol className={styles.items}>
           {items.map((it) => (
             <AgendaRow key={it.id} item={it} added={added.has(it.id)} onAdd={() => onAdd(it.id)} onGo={onGo} />
           ))}
@@ -289,8 +289,8 @@ function When({ item }: { item: AgendaItem }) {
   const t = timeOf(item.at);
   const line = (a: string, b?: string) => (
     <>
-      <span className="sk-text-body-medium-semibold block text-sko-text-default">{a}</span>
-      {b ? <span className="sk-text-body-small-regular block text-sko-text-muted">{b}</span> : null}
+      <span className={`sk-text-body-medium-semibold ${styles.whenLine}`}>{a}</span>
+      {b ? <span className={`sk-text-body-small-regular ${styles.whenSub}`}>{b}</span> : null}
     </>
   );
   let body: React.ReactNode;
@@ -311,7 +311,7 @@ function When({ item }: { item: AgendaItem }) {
       body = t ? line(shortDay(item.at), t) : line(`Due ${shortDay(item.at)}`);
   }
   return (
-    <time dateTime={item.at} className="block shrink-0 md:w-32">
+    <time dateTime={item.at} className={styles.when}>
       {body}
     </time>
   );
@@ -349,8 +349,8 @@ function Status({ item }: { item: AgendaItem }) {
 }
 
 function Cta({ item, added, onAdd, onGo }: { item: AgendaItem; added: boolean; onAdd: () => void; onGo: (h: string) => void }) {
-  const cls = "w-full md:w-auto";
-  const sr = <span className="sr-only">: {item.title}</span>;
+  const cls = styles.cta;
+  const sr = <span className="sk-sr-only">: {item.title}</span>;
   if (item.status === "live") {
     return (
       <Button tone="success" hierarchy="primary" leftIcon={Video} className={cls} onClick={() => onGo(item.href)}>
@@ -392,32 +392,28 @@ function AgendaRow({ item, added, onAdd, onGo }: { item: AgendaItem; added: bool
   return (
     <li
       className={cn(
-        "flex flex-col gap-3 rounded-card border p-4 md:flex-row md:items-center md:gap-4",
-        live
-          ? "border-sko-border-success bg-sko-bg-success-soft"
-          : overdue
-            ? "border-sko-border-warning bg-sko-bg-page"
-            : "border-sko-border-subtle bg-sko-bg-page",
+        styles.row,
+        live ? styles.rowLive : overdue ? styles.rowOverdue : styles.rowPlain,
       )}
     >
       <When item={item} />
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="sk-text-body-small-medium inline-flex items-center gap-1.5 text-sko-text-subtle">
-            <Icon icon={topicTypeIcon(KIND_TOPIC_TYPE[item.kind])} size={14} className="text-sko-icon-primary" />
+      <div className={styles.rowMain}>
+        <div className={styles.rowTags}>
+          <span className={`sk-text-body-small-medium ${styles.kind}`}>
+            <Icon icon={topicTypeIcon(KIND_TOPIC_TYPE[item.kind])} size={14} className={styles.iconPrimary} />
             {item.kind}
           </span>
           <Status item={item} />
         </div>
-        <p className="sk-text-body-large-semibold mt-1 text-sko-text-default">{item.title}</p>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+        <p className={`sk-text-body-large-semibold ${styles.stacked}`}>{item.title}</p>
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>
           {item.course}
           {item.host ? ` · with ${item.host}` : null}
           {item.bucket === "today" && item.kind === "Live session" ? " · Join opens 10 min before" : null}
         </p>
-        {live ? <MockTag className="mt-2" reason={MOCK.live} /> : null}
+        {live ? <MockTag className={styles.rowMock} reason={MOCK.live} /> : null}
       </div>
-      <div className="shrink-0">
+      <div className={styles.rowCta}>
         <Cta item={item} added={added} onAdd={onAdd} onGo={onGo} />
       </div>
     </li>
@@ -428,13 +424,13 @@ function AgendaRow({ item, added, onAdd, onGo }: { item: AgendaItem; added: bool
 
 function NothingScheduled({ added, onAdd }: { added: boolean; onAdd: () => void }) {
   return (
-    <div className="mt-6 flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:flex-row md:items-center md:gap-4">
-      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-control bg-sko-bg-faint">
-        <Icon icon={CalendarPlus} size={20} className="text-sko-icon-subtle" />
+    <div className={styles.nothing}>
+      <span className={`${styles.iconBox} ${styles.iconBoxQuiet}`}>
+        <Icon icon={CalendarPlus} size={20} className={styles.iconSubtle} />
       </span>
-      <div className="min-w-0 flex-1">
-        <h3 className="sk-text-body-large-semibold text-sko-text-default">Nothing scheduled this week</h3>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">
+      <div className={styles.nothingMain}>
+        <h3 className={`sk-text-body-large-semibold ${styles.heading}`}>Nothing scheduled this week</h3>
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>
           Your courses are self-paced: no live sessions or deadlines. A regular slot helps — try two 30-minute
           sessions this week.
         </p>
@@ -442,7 +438,7 @@ function NothingScheduled({ added, onAdd }: { added: boolean; onAdd: () => void 
       <Button
         hierarchy="secondary"
         leftIcon={added ? CalendarCheck : CalendarPlus}
-        className="w-full shrink-0 md:w-auto"
+        className={styles.action}
         onClick={onAdd}
       >
         {added ? "Study slot added" : "Add a study slot"}

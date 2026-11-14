@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import {
   BookOpen,
   CalendarDays,
@@ -17,6 +15,7 @@ import { useEdxScope } from "@/lib/edx-scope";
 import { useLmsStore } from "@/lib/store";
 import { useDisclosure } from "@/lib/useDisclosure";
 import { cn } from "@/lib/utils";
+import styles from "./PlatformTabBar.module.css";
 
 const ICONS: Record<PlatformSection, LucideIcon> = {
   dashboard: LayoutDashboard,
@@ -31,20 +30,18 @@ const IN_BAR: PlatformSection[] = ["dashboard", "my-learning", "calendar"];
 
 type Section = (typeof PLATFORM_SECTIONS)[number];
 
-const ITEM =
-  "sk-text-body-small-semibold relative flex h-11 shrink-0 items-center justify-center rounded-control transition-[background-color,color,transform] duration-short2 ease-standard-decelerate active:scale-[.96]";
+const ITEM = cn("sk-text-body-small-semibold", styles.item);
 /** Compact, as an iOS tab bar (Nelson, 23 Oct 2026): the current tab is a wide segment with its
     label beside the icon; the others are 44 × 44 icons, their names kept for screen readers. */
 const itemTone = (on: boolean) =>
   on
     ? // As DS Tab-Bar-Item 1.1: padding 12 (Spacing/lg), gap 16 (Spacing/xl, room for the count).
-      "gap-4 bg-sko-bg-primary-soft px-3 text-sko-text-on-primary-soft"
-    : "w-11 text-sko-text-subtle hover:bg-sko-bg-hover";
-const labelTone = (on: boolean) => (on ? "whitespace-nowrap" : "sr-only");
+      styles.itemOn
+    : styles.itemOff;
+const labelTone = (on: boolean) => (on ? styles.label : "sk-sr-only");
 
 /** A row of the More panel: 44 tall, 20px icon, body-medium/Medium, Radius/card-inset (as the profile menu rows). */
-const MORE_ROW =
-  "sk-text-body-medium-medium flex min-h-11 w-full items-center gap-3 rounded-card-inset px-3 text-left transition-colors hover:bg-sko-bg-hover";
+const MORE_ROW = cn("sk-text-body-medium-medium", styles.row);
 
 function TabIcon({
   icon,
@@ -58,14 +55,14 @@ function TabIcon({
   size?: number;
 }) {
   return (
-    <span className="relative">
+    <span className={styles.icon}>
       <Icon icon={icon} size={size} strokeWidth={on ? 2.25 : 1.75} aria-hidden />
       {/* The count is a Badge Soft sm Info (Nelson, 23 Oct 2026): it reads on the current tab's
           primary-soft fill as well as on the bar. */}
       {typeof count === "number" && count > 0 ? (
         <span
           aria-hidden
-          className="sk-text-label-small-semibold absolute -right-2.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-pill bg-sko-bg-info-soft px-1 text-sko-text-info"
+          className={cn("sk-text-label-small-semibold", styles.count)}
         >
           {count}
         </span>
@@ -137,9 +134,9 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
       data-floating-nav=""
       data-hidden={hidden || undefined}
       onFocus={() => setScrolledAway(false)}
-      className="sk-floating-nav sk-no-print sk-animate-rise fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 z-30 max-w-[calc(100vw-5.5rem)] rounded-track p-1"
+      className={cn("sk-floating-nav sk-no-print sk-animate-rise", styles.bar)}
     >
-      <ul className="flex items-center gap-1">
+      <ul className={styles.list}>
         {inBar.map((s) => {
           const on = s.id === current;
           const content = (
@@ -149,7 +146,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
             </>
           );
           return (
-            <li key={s.id} className="flex">
+            <li key={s.id} className={styles.slot}>
               {s.href ? (
                 <Link
                   href={s.href}
@@ -172,8 +169,8 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
             </li>
           );
         })}
-        <li className="flex">
-          <div ref={more.containerRef} className="relative flex">
+        <li className={styles.slot}>
+          <div ref={more.containerRef} className={styles.more}>
             <button
               type="button"
               {...more.triggerProps}
@@ -191,16 +188,16 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
               <div
                 {...more.panelProps}
                 data-tab-menu=""
-                className="sk-animate-menu-up absolute bottom-full right-0 z-10 mb-2 w-56 origin-bottom-right rounded-card bg-sko-bg-page p-1 shadow-xl"
+                className={cn("sk-animate-menu-up", styles.morePanel)}
               >
-                <ul className="flex flex-col">
+                <ul className={styles.moreList}>
                   {inMore.map((s) => {
                     const on = s.id === current;
                     const row = cn(
                       MORE_ROW,
                       on
-                        ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft"
-                        : "text-sko-text-default",
+                        ? styles.rowOn
+                        : styles.rowOff,
                     );
                     const content = (
                       <>
@@ -210,7 +207,7 @@ export function PlatformTabBar({ current }: { current: PlatformSection | null })
                           strokeWidth={on ? 2.25 : 1.75}
                           aria-hidden
                         />
-                        <span className="min-w-0 flex-1 truncate">{s.label}</span>
+                        <span className={styles.rowLabel}>{s.label}</span>
                       </>
                     );
                     return (

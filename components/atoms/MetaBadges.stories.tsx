@@ -1,10 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   CourseTypeBadge,
   DifficultyBadge,
   DeliveryModeBadge,
   ProviderBadge,
 } from "./MetaBadges";
+import styles from "./MetaBadges.stories.module.css";
 
 const meta: Meta = {
   title: "Atoms/Badge (Meta)",
@@ -17,7 +18,7 @@ type Story = StoryObj;
 
 export const CourseType: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className={styles.row}>
       <CourseTypeBadge value="Program" />
       <CourseTypeBadge value="Course" />
     </div>
@@ -26,7 +27,7 @@ export const CourseType: Story = {
 
 export const Difficulty: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className={styles.row}>
       <DifficultyBadge value="Beginner" />
       <DifficultyBadge value="Intermediate" />
       <DifficultyBadge value="Advanced" />
@@ -36,7 +37,7 @@ export const Difficulty: Story = {
 
 export const DeliveryMode: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className={styles.row}>
       <DeliveryModeBadge value="Live Sessions" />
       <DeliveryModeBadge value="Flexible + Live" />
       <DeliveryModeBadge value="Flexible Learning" />
@@ -46,7 +47,7 @@ export const DeliveryMode: Story = {
 
 export const ProviderList: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-3">
+    <div className={styles.wrapRow}>
       <ProviderBadge value="SkillUp" />
       <ProviderBadge value="Microsoft" />
       <ProviderBadge value="IBM" />

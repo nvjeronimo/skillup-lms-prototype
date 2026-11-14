@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { OverlayPanel, PanelSectionLabel } from "./OverlayPanel";
+import styles from "./OverlayPanel.stories.module.css";
 
 const meta: Meta<typeof OverlayPanel> = {
   title: "Organisms/Overlay Panel",
@@ -9,7 +10,7 @@ const meta: Meta<typeof OverlayPanel> = {
   args: { open: true, title: "Panel title", onClose: () => {} },
   decorators: [
     (Story) => (
-      <div className="h-[640px]">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),
@@ -22,8 +23,8 @@ type Story = StoryObj<typeof OverlayPanel>;
 export const Empty: Story = {
   args: {
     children: (
-      <div className="px-2 py-6">
-        <p className="sk-text-body-medium-regular text-sko-text-subtle">Body content goes here.</p>
+      <div className={styles.empty}>
+        <p className={`sk-text-body-medium-regular ${styles.subtle}`}>Body content goes here.</p>
       </div>
     ),
   },
@@ -40,8 +41,8 @@ export const WithFilters: Story = {
     children: (
       <>
         <PanelSectionLabel>Section A</PanelSectionLabel>
-        <div className="px-2 py-3">
-          <p className="sk-text-body-medium-regular text-sko-text-muted">An item in section A.</p>
+        <div className={styles.item}>
+          <p className={`sk-text-body-medium-regular ${styles.muted}`}>An item in section A.</p>
         </div>
       </>
     ),
@@ -52,8 +53,8 @@ export const WithFooter: Story = {
   args: {
     footer: { label: "View all items", href: "#" },
     children: (
-      <div className="px-2 py-3">
-        <p className="sk-text-body-medium-regular text-sko-text-muted">Scrollable body with a footer link below.</p>
+      <div className={styles.item}>
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>Scrollable body with a footer link below.</p>
       </div>
     ),
   },
