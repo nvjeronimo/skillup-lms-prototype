@@ -1,0 +1,369 @@
+/* DS LMS / Course Card on My Learning and in the Program page's Course-Row: Grid, List and
+   List stacked. */
+
+/* Progress: "{n}% complete" or "Not started" + the effort, then the bar. */
+.progress {
+  display: flex;
+  flex-direction: column;
+}
+.progressList {
+  flex-shrink: 0;
+  gap: 6px;
+}
+.progressGrid {
+  width: 100%;
+  gap: 8px;
+}
+.progressRow {
+  display: flex;
+  align-items: center;
+}
+.progressRowHug {
+  gap: 24px;
+}
+.progressRowSpread {
+  justify-content: space-between;
+  gap: 8px;
+}
+.progressLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+.successIcon {
+  color: var(--color-icon-success);
+}
+.progressMeta {
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+
+/* The title link: its ::after covers the card, so the whole card opens the course. */
+.titleLink::after {
+  --tw-content: '';
+  content: var(--tw-content);
+  position: absolute;
+  inset: 0px;
+}
+@media (hover: hover) {
+  .titleLink:hover {
+    text-decoration-line: underline;
+  }
+}
+
+/* DS Overline ("UP NEXT"): capitals, text/subtle; text/default on the green certificate strip. */
+.overlineLabel {
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.overlineOnGreen {
+  text-transform: uppercase;
+  color: var(--color-text-default);
+}
+.nowrap {
+  white-space: nowrap;
+}
+.noShrink {
+  flex-shrink: 0;
+}
+
+/* The strips: grey beside a Primary action, white with a 1px border beside a Secondary one,
+   green for a certificate. The border is drawn inside, so the padding loses its pixel. */
+.stripFilled {
+  background-color: var(--color-bg-subtle);
+  padding: 8px 12px;
+}
+.stripOutlined {
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 7px 11px;
+}
+.stripCompleted {
+  border-width: 1px;
+  border-color: var(--color-border-success-soft);
+  background-color: var(--color-bg-accent-green-soft);
+  padding: 7px 11px;
+}
+
+/* The actions: above the title link's ::after; on a phone the 36 target grows to 44. */
+.action {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 767.98px) {
+  .action::before {
+    --tw-content: '';
+    content: var(--tw-content);
+    position: absolute;
+    inset-inline: 0px;
+    top: -4px;
+    bottom: -4px;
+  }
+}
+.actionFill {
+  flex: 1 1 0%;
+}
+.actionFull {
+  width: 100%;
+}
+
+.partners {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.partner {
+  display: flex;
+}
+
+/* The card's own surface (context "card"; in a Course-Row the row draws it). */
+.surface {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--sk-shadow-card);
+}
+.positioned {
+  position: relative;
+}
+/* The transition is .sk-press-card's (globals.css, after the utilities: it overrode the
+   transition-colors this card also had). */
+.clickable:has(h3 a:hover) {
+  border-color: var(--color-border-default);
+}
+
+/* The two-line title (Grid from tablet up, List always). */
+.title {
+  color: var(--color-text-default);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* List. Display in :where(): the Course-Row's hidden / lg:flex classes decide it. */
+:where(.listCard) {
+  display: flex;
+}
+.listCard {
+  min-height: 146px;
+  align-items: center;
+  gap: 24px;
+  overflow: hidden;
+  padding: 16px;
+}
+/* The picture down the left edge, full height. */
+.listThumb {
+  margin-block: -16px;
+  margin-left: -16px;
+  width: 300px;
+  max-width: 40%;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.listInfo {
+  display: flex;
+  flex: 1 1 0px;
+  align-items: center;
+  gap: 12px;
+}
+.listInfoStacked {
+  min-width: 0;
+}
+.listInfoWide {
+  min-width: 298px;
+}
+.listText {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+}
+.listTypeLine {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 16px;
+}
+.listBadges {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.statusStacked {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0px;
+  flex-direction: column;
+  gap: 12px;
+}
+.statusInline {
+  display: contents;
+}
+.listStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  border-radius: var(--sk-radius-control);
+}
+.listStripStacked {
+  width: 100%;
+}
+.listStripWide {
+  min-width: 250px;
+  flex: 1 1 0%;
+}
+.listNext {
+  display: flex;
+  min-width: 144px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.listOverlineRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.listNextTitle {
+  width: 100%;
+  color: var(--color-text-default);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Grid. Display in :where(): the Course-Row's md:hidden class decides it. */
+:where(.gridCard) {
+  display: flex;
+}
+.gridCard {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  overflow: hidden;
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .gridCard { padding: 20px; }
+}
+@media (min-width: 1024px) {
+  .gridCard { padding: 24px; }
+}
+/* The picture across the top, edge to edge: 5:2 on a phone, 2:1 from tablet up. */
+.gridThumb {
+  margin-inline: -16px;
+  margin-top: -16px;
+  aspect-ratio: 5/2;
+  width: calc(100% + 32px);
+}
+@media (min-width: 768px) {
+  .gridThumb {
+    aspect-ratio: 2/1;
+    margin-inline: -20px;
+    margin-top: -20px;
+    width: calc(100% + 40px);
+  }
+}
+@media (min-width: 1024px) {
+  .gridThumb {
+    margin-inline: -24px;
+    margin-top: -24px;
+    width: calc(100% + 48px);
+  }
+}
+.gridHeader {
+  display: flex;
+  width: 100%;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 12px;
+}
+.gridTypeLine {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+}
+.gridTitle {
+  width: 100%;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .gridTitle { min-height: 2lh; }
+}
+.gridBadges {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+}
+.gridStrip {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: var(--sk-radius-control);
+}
+.gridStripRow {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+}
+.gridNextTitle {
+  color: var(--color-text-default);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.gridCertificateStrip {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 2px;
+  border-radius: var(--sk-radius-control);
+}
+.gridCertificate {
+  margin-left: auto;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+.gridActions {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Skins on the card surface (context "card"): it was .rounded-card.border.p-4 (+ md:p-5 lg:p-6
+   on Grid) for tokens/direction-studio.css, skin-harbor.css, skin-fluent.css, square-corners.css.
+   Studio's p-4 rule comes last in its file, so 23 inside and a 44 radius hold at every width. */
+:global([data-direction="studio"]) .surface.surface {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .surface.surface,
+:global([data-skin="fluent"] [data-platform-page]) .surface.surface {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global(html[data-square-corners]) .surface {
+  border-radius: 0 !important;
+}

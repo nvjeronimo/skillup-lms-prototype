@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
@@ -8,6 +6,7 @@ import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import { Icon, topicTypeIcon } from "@/lib/icons";
 import type { DashboardResumeRow } from "@/lib/platform/dashboard-resume";
 import { cn } from "@/lib/utils";
+import styles from "./PickUp.module.css";
 
 /**
  * "Pick up where you left off" (Nelson, 25 Oct 2026, after the DreamHost panel's home; Harbor and
@@ -23,8 +22,8 @@ export function PickUp({ resume, titleId }: { resume: DashboardResumeRow[]; titl
   if (!course) return null;
   const NextIcon = course.next ? topicTypeIcon(course.next.type) : null;
   return (
-    <div className="grid gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-page p-2 lg:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
-      <ul aria-labelledby={titleId} className="flex flex-col gap-2">
+    <div className={styles.card}>
+      <ul aria-labelledby={titleId} className={styles.list}>
         {resume.map((c, i) => {
           const on = i === current;
           return (
@@ -34,50 +33,48 @@ export function PickUp({ resume, titleId }: { resume: DashboardResumeRow[]; titl
                 aria-pressed={on}
                 onClick={() => setCurrent(i)}
                 className={cn(
-                  "flex min-h-16 w-full flex-col items-start justify-center gap-0.5 rounded-inner px-4 py-3 text-left transition-colors",
-                  on
-                    ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft"
-                    : "bg-sko-bg-subtle text-sko-text-default hover:bg-sko-bg-hover",
+                  styles.option,
+                  on ? styles.optionOn : styles.optionOff,
                 )}
               >
-                <span className="sk-text-body-medium-semibold line-clamp-2">{c.title}</span>
-                <span className="sk-text-body-small-regular text-sko-text-subtle">{c.progressPct}% complete</span>
+                <span className={cn("sk-text-body-medium-semibold", styles.optionTitle)}>{c.title}</span>
+                <span className={cn("sk-text-body-small-regular", styles.optionMeta)}>{c.progressPct}% complete</span>
               </button>
             </li>
           );
         })}
       </ul>
-      <div aria-live="polite" className="flex min-w-0 flex-col rounded-inner bg-sko-bg-subtle p-5 md:p-6">
+      <div aria-live="polite" className={styles.panel}>
         {/* Another course picked: its preview fades in (short3), as a filtered list does in every
             skin. Keyed inside the live region, so the region itself stays mounted and keeps speaking. */}
-        <div key={course.id} className="sk-animate-fade-short3 flex min-w-0 flex-1 flex-col gap-4">
+        <div key={course.id} className={cn("sk-animate-fade-short3", styles.preview)}>
         <CourseThumb
           shape="cover"
           initials={course.initials}
           imageSrc={course.imageSrc}
-          className="aspect-[3/1] w-full rounded-inner"
+          className={styles.cover}
         />
         <Link
           href={course.homeHref}
-          className="sk-text-title-large-semibold text-sko-text-default underline-offset-2 hover:underline"
+          className={cn("sk-text-title-large-semibold", styles.headline)}
         >
           {course.headline}
         </Link>
         {course.context ? (
-          <p className="sk-text-body-medium-regular max-w-[56ch] text-sko-text-muted">{course.context}</p>
+          <p className={cn("sk-text-body-medium-regular", styles.context)}>{course.context}</p>
         ) : null}
         {course.next && NextIcon ? (
-          <p className="sk-text-body-medium-medium inline-flex items-center gap-2 text-sko-text-muted">
-            <Icon icon={NextIcon} size={16} className="text-sko-icon-primary" aria-hidden />
+          <p className={cn("sk-text-body-medium-medium", styles.next)}>
+            <Icon icon={NextIcon} size={16} className={styles.nextIcon} aria-hidden />
             Next: {course.next.type}
             {course.next.duration ? ` · ${course.next.duration}` : ""}
           </p>
         ) : null}
-        <div className="flex items-center gap-3">
-          <PlatformProgressBar value={course.progressPct} label={`${course.title} progress`} className="flex-1" />
-          <span className="sk-text-body-medium-semibold text-sko-text-default">{course.progressPct}%</span>
+        <div className={styles.progress}>
+          <PlatformProgressBar value={course.progressPct} label={`${course.title} progress`} className={styles.bar} />
+          <span className={cn("sk-text-body-medium-semibold", styles.percent)}>{course.progressPct}%</span>
         </div>
-        <div className="mt-auto flex flex-wrap items-center gap-3">
+        <div className={styles.actions}>
           <ButtonLink href={course.href} hierarchy="primary" size="md">
             Resume
           </ButtonLink>

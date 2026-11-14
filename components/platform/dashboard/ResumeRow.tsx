@@ -5,6 +5,7 @@ import { CourseThumb } from "@/components/platform/my-learning/CourseThumb";
 import { PlatformProgressBar } from "@/components/platform/PlatformProgressBar";
 import type { TopicType } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import styles from "./ResumeRow.module.css";
 
 export interface ResumeRowProps {
   /** The headline: the module the learner left off in. */
@@ -44,18 +45,19 @@ export function ResumeRow({ title, context, next, progressPct, href, homeHref, e
   return (
     <div
       className={cn(
-        "sk-press-card group relative flex flex-col gap-3 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page px-5 pb-4 pt-4",
-        homeHref && "transition-colors has-[p_a:hover]:border-sko-border-default",
+        "sk-press-card",
+        styles.row,
+        homeHref && styles.rowLinked,
         className,
       )}
     >
       {initials ? (
-        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-mx-5 -mt-4 mb-1 h-[140px] w-[calc(100%+2.5rem)] shrink-0" />
+        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className={styles.cover} />
       ) : null}
-      <div className="flex w-full min-w-0 flex-col gap-0.5">
-        <div className="flex w-full min-w-0 flex-col">
+      <div className={styles.text}>
+        <div className={styles.lines}>
           {next ? (
-            <p className="sk-text-body-small-medium flex items-center gap-2 text-sko-text-subtle">
+            <p className={cn("sk-text-body-small-medium", styles.next)}>
               <TopicTypeBadge type={next.type} />
               {next.duration ? (
                 <>
@@ -65,9 +67,9 @@ export function ResumeRow({ title, context, next, progressPct, href, homeHref, e
               ) : null}
             </p>
           ) : null}
-          <p className="sk-text-body-large-medium w-full text-sko-text-default">
+          <p className={cn("sk-text-body-large-medium", styles.title)}>
             {homeHref ? (
-              <Link href={homeHref} className="hover:underline after:absolute after:inset-0 after:content-['']">
+              <Link href={homeHref} className={styles.link}>
                 {title}
               </Link>
             ) : (
@@ -75,17 +77,17 @@ export function ResumeRow({ title, context, next, progressPct, href, homeHref, e
             )}
           </p>
         </div>
-        {context ? <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{context}</p> : null}
+        {context ? <p className={cn("sk-text-body-small-regular", styles.context)}>{context}</p> : null}
       </div>
-      <div className="flex items-center gap-4">
+      <div className={styles.progress}>
         <PlatformProgressBar
           track="muted"
           value={progressPct}
           label={`${subject} progress`}
           showValue
-          className="min-w-0 flex-1"
+          className={styles.bar}
         />
-        <ButtonLink href={href} hierarchy={emphasis} size="md" className="relative z-[1] shrink-0" aria-label={`Resume ${subject}`}>
+        <ButtonLink href={href} hierarchy={emphasis} size="md" className={styles.resume} aria-label={`Resume ${subject}`}>
           Resume
         </ButtonLink>
       </div>

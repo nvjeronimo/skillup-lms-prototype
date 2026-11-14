@@ -1,0 +1,56 @@
+/* DS LMS / Platform / Jump tile: icon box, title, description; the whole tile is the target. */
+.tile {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 16px;
+  text-align: left;
+  /* No transition here: the tile had transition-colors, but the global sk-press-card comes after
+     Tailwind's utilities and its transition (short2, decelerate) is the one that applied. */
+}
+@media (hover: hover) {
+  .tile:hover {
+    border-color: var(--color-border-primary);
+  }
+}
+.iconBox {
+  display: flex;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-primary-soft);
+  padding: 8px;
+}
+.icon {
+  color: var(--color-icon-primary);
+}
+.title {
+  width: 100%;
+  color: var(--color-text-default);
+}
+.description {
+  width: 100%;
+  color: var(--color-text-subtle);
+}
+
+/* Skins (they select the Tailwind classes the tile had: rounded-card border p-4). */
+:global([data-skin="harbor"]) :global([data-platform-page]) .tile,
+:global([data-skin="fluent"]) :global([data-platform-page]) .tile {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* Studio: 24 inside (23 + the border) and, by its nesting rule, a 44 radius; no border, a soft shadow. */
+:global([data-direction="studio"]) .tile {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global(html[data-square-corners]) .tile {
+  border-radius: 0 !important;
+}

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import Link from "@/lib/router";
 import { AlertCircle, LifeBuoy, Megaphone, type LucideIcon } from "lucide-react";
@@ -9,6 +7,8 @@ import { notifications } from "@/lib/data";
 import { openRequests } from "@/lib/platform/services";
 import { useEdxScope } from "@/lib/edx-scope";
 import type { NotificationType } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import styles from "./StayInformed.module.css";
 
 type InformedTab = "alerts" | "updates" | "support";
 
@@ -67,8 +67,8 @@ export function StayInformed({ className }: { className?: string }) {
   return (
     // Arrives in the Dashboard cascade with Pick up beside it (motion-matrix §7.9), as every section does.
     <section data-arrive={3} aria-labelledby={`${idBase}-title`} className={className}>
-      <div className="flex h-full flex-col rounded-card border border-sko-border-subtle bg-sko-bg-page p-2">
-        <h2 id={`${idBase}-title`} className="sk-text-title-medium-semibold px-3 pt-3 text-sko-text-default">
+      <div className={styles.card}>
+        <h2 id={`${idBase}-title`} className={cn("sk-text-title-medium-semibold", styles.title)}>
           Stay informed
         </h2>
         <PlatformTabs
@@ -80,26 +80,26 @@ export function StayInformed({ className }: { className?: string }) {
           size="sm"
           rule="own"
           panels="selected"
-          className="px-3 pt-2"
+          className={styles.tabs}
         />
         <div role="tabpanel" id={platformPanelId(idBase, tab)} aria-labelledby={platformTabId(idBase, tab)}>
           {rows.length ? (
-            <ul className="flex flex-col">
+            <ul className={styles.list}>
               {rows.map((r) => (
-                <li key={r.id} className="border-b border-sko-border-subtle last:border-b-0">
+                <li key={r.id} className={styles.item}>
                   <Link
                     href={r.href}
-                    className="flex min-h-14 items-center gap-3 rounded-control px-3 py-2 transition-colors hover:bg-sko-bg-hover"
+                    className={styles.row}
                   >
-                    <Icon icon={r.icon} size={18} className="shrink-0 text-sko-icon-primary" aria-hidden />
-                    <span className="sk-text-body-medium-medium min-w-0 flex-1 truncate text-sko-text-default">{r.title}</span>
-                    <span className="sk-text-body-small-regular shrink-0 text-sko-text-subtle">{r.meta}</span>
+                    <Icon icon={r.icon} size={18} className={styles.icon} aria-hidden />
+                    <span className={cn("sk-text-body-medium-medium", styles.rowTitle)}>{r.title}</span>
+                    <span className={cn("sk-text-body-small-regular", styles.rowMeta)}>{r.meta}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="sk-text-body-medium-regular px-3 py-6 text-sko-text-subtle">Nothing here right now.</p>
+            <p className={cn("sk-text-body-medium-regular", styles.empty)}>Nothing here right now.</p>
           )}
         </div>
       </div>

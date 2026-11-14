@@ -5,6 +5,7 @@ import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { Badge } from "@/components/atoms/Badge";
 import type { DashboardStat } from "@/lib/platform/dashboard";
 import { cn } from "@/lib/utils";
+import styles from "./GlanceCard.module.css";
 
 export interface GlanceCardProps {
   title: string;
@@ -18,20 +19,20 @@ export interface GlanceCardProps {
 function TrendChip({ trend }: { trend: NonNullable<DashboardStat["trend"]> }) {
   const tone =
     trend.dir === "up"
-      ? "bg-sko-bg-success-soft text-sko-text-success"
+      ? styles.chipUp
       : trend.dir === "down"
-        ? "bg-sko-bg-error-soft text-sko-text-error"
-        : "bg-sko-bg-muted text-sko-text-muted";
+        ? styles.chipDown
+        : styles.chipFlat;
   const arrow = trend.dir === "up" ? ArrowUpRight : trend.dir === "down" ? ArrowDownRight : ArrowRight;
   return (
     <span
       data-mock="No API returns a figure's value 30 days ago"
       data-invented="trend: no figure from 30 days ago in Open edX"
-      className={cn("sk-text-body-small-semibold inline-flex items-center gap-0.5 rounded-pill px-1.5 py-0.5", tone)}
+      className={cn("sk-text-body-small-semibold", styles.chip, tone)}
     >
       <Icon icon={arrow} size={14} aria-hidden />
       <span aria-hidden="true">{trend.label}</span>
-      <span className="sr-only">{trend.spoken}</span>
+      <span className="sk-sr-only">{trend.spoken}</span>
     </span>
   );
 }
@@ -49,36 +50,37 @@ function TrendChip({ trend }: { trend: NonNullable<DashboardStat["trend"]> }) {
  */
 function StatCard({ stat, trends = false }: { stat: DashboardStat; trends?: boolean }) {
   return (
-    <div className="sk-press-card relative flex h-full flex-col gap-2 rounded-card-inset bg-sko-bg-page p-3 shadow-sk-card md:p-4">
-      <p className="sk-text-label-small-semibold flex items-center justify-between gap-2 whitespace-nowrap text-sko-text-muted">
+    <div className={cn("sk-press-card", styles.stat)}>
+      <p className={cn("sk-text-label-small-semibold", styles.label)}>
         <Link
           href={stat.href}
           aria-label={`${stat.label}: ${stat.value} ${stat.detailStrong ?? ""} ${stat.detail}`.replace(/\s+/g, " ")}
-          className="underline-offset-2 hover:underline focus-visible:outline-none after:absolute after:inset-0 after:rounded-card-inset after:content-[''] focus-visible:after:shadow-[0_0_0_2px_var(--color-border-focus-gap),0_0_0_4px_var(--color-border-primary)]"
+          className={styles.link}
         >
           {stat.label}
         </Link>
         {trends && stat.trend ? <TrendChip trend={stat.trend} /> : null}
       </p>
-      <p className="flex items-end gap-2">
+      <p className={styles.valueRow}>
         <span
           className={cn(
-            "sk-text-display-small-semibold shrink-0",
-            stat.tone === "success" ? "text-sko-text-success" : "text-sko-text-on-primary-soft",
+            "sk-text-display-small-semibold",
+            styles.value,
+            stat.tone === "success" ? styles.valueDone : styles.valueOpen,
           )}
         >
           <ArrivalCount value={stat.value} />
         </span>
-        <span className="sk-text-body-small-medium min-w-0 pb-2 text-sko-text-muted">
+        <span className={cn("sk-text-body-small-medium", styles.detail)}>
           {stat.detailStrong ? <span className="sk-text-body-small-bold">{stat.detailStrong} </span> : null}
           {stat.detail}
         </span>
       </p>
       {stat.goal ? (
-        <div className="mt-auto pt-1">
+        <div className={styles.goal}>
           <Badge color={stat.goal.color ?? "gray"} size="sm">
             <span aria-hidden="true">{stat.goal.label}</span>
-            <span className="sr-only">{stat.goal.spoken}</span>
+            <span className="sk-sr-only">{stat.goal.spoken}</span>
           </Badge>
         </div>
       ) : null}
@@ -106,30 +108,30 @@ export function GlanceCard({ title, stats, trends = false, className }: GlanceCa
       className={cn(
         // Test (Nelson, 23 Oct 2026, prototype only): the backdrop runs the full width of the
         // window on every device; the title and the cards stay on the page's content edges.
-        "relative mx-[calc(50%-50vw)] flex min-w-0 flex-col gap-3 overflow-hidden px-[calc(50vw-50%)] py-[var(--sk-space-6xl)] md:gap-4",
+        styles.glance,
         className,
       )}
     >
-      <div aria-hidden="true" data-theme="dark" data-glance-backdrop="" className="pointer-events-none absolute inset-0 bg-sko-bg-info-soft" />
+      <div aria-hidden="true" data-theme="dark" data-glance-backdrop="" className={styles.backdrop} />
       {/* The rings (Nelson, 26 Oct 2026: adopted in every skin from Harbor's "Remixer" glance):
           three thin concentric circles in the info blue off the top-right corner, a soft blue light
           inside the middle one, and a blurred blue haze low on the right. No gradient fill. */}
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute -bottom-[120px] -right-20 h-[240px] w-[520px] rounded-pill bg-sko-bg-info opacity-50 blur-[120px]"
+        className={styles.haze}
       />
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute right-[14%] top-[10px] size-[300px] -translate-y-1/2 translate-x-1/2 rounded-pill border border-sko-border-info opacity-85"
+        className={cn(styles.circle, styles.circleSmall)}
       />
       <div
         aria-hidden="true"
         data-glow=""
-        className="pointer-events-none absolute right-[14%] top-[10px] size-[620px] -translate-y-1/2 translate-x-1/2 rounded-pill border border-sko-border-info opacity-85 shadow-[inset_0_0_200px_color-mix(in_srgb,var(--color-border-info-soft)_33%,transparent)] after:absolute after:-inset-[230px] after:rounded-pill after:border after:border-sko-border-info after:content-['']"
+        className={cn(styles.circle, styles.circleLarge)}
       />
-      <h2 id="dashboard-glance-title" data-glance-title="" className="sk-text-label-small-semibold relative text-sko-text-on-media">
+      <h2 id="dashboard-glance-title" data-glance-title="" className={cn("sk-text-label-small-semibold", styles.title)}>
         {title}
       </h2>
       {/* On a phone the row scrolls: it takes the focus so a keyboard can scroll it (WCAG 2.1.1).
@@ -138,10 +140,10 @@ export function GlanceCard({ title, stats, trends = false, className }: GlanceCa
       <ul
         tabIndex={0}
         aria-labelledby="dashboard-glance-title"
-        className="relative -mx-[calc(50vw-50%)] flex snap-x snap-mandatory scroll-px-6 gap-3 overflow-x-auto px-[calc(50vw-50%)] [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0 lg:gap-6 [&::-webkit-scrollbar]:hidden"
+        className={styles.list}
       >
         {stats.map((stat) => (
-          <li key={stat.label} className="w-[156px] shrink-0 snap-start md:w-auto md:min-w-0">
+          <li key={stat.label} className={styles.item}>
             <StatCard stat={stat} trends={trends} />
           </li>
         ))}

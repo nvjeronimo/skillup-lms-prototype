@@ -1,0 +1,88 @@
+/* "Stay informed": a card with three tabs, each a short list of one-line rows. */
+.card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 8px;
+}
+.title {
+  padding-inline: 12px;
+  padding-top: 12px;
+  color: var(--color-text-default);
+}
+.tabs {
+  padding-inline: 12px;
+  padding-top: 8px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+}
+.item {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.item:last-child {
+  border-bottom-width: 0px;
+}
+.row {
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  padding: 8px 12px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) {
+  .row:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.icon {
+  flex-shrink: 0;
+  color: var(--color-icon-primary);
+}
+.rowTitle {
+  min-width: 0;
+  flex: 1 1 0%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+.rowMeta {
+  flex-shrink: 0;
+  color: var(--color-text-subtle);
+}
+.empty {
+  padding: 24px 12px;
+  color: var(--color-text-subtle);
+}
+
+/* Skins (they select the Tailwind classes these had). The card: rounded-card border p-2. */
+:global([data-skin="harbor"]) :global([data-platform-page]) .card,
+:global([data-skin="fluent"]) :global([data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* Studio: 8 inside, so a 28 radius; no border, a soft shadow. */
+:global([data-direction="studio"]) .card {
+  border-radius: 28px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global(html[data-square-corners]) .card {
+  border-radius: 0 !important;
+}
+/* Harbor and Studio: a one-line link is a pill. */
+:global([data-skin="harbor"]) .row,
+:global([data-direction="studio"]) .row {
+  border-radius: 9999px;
+}

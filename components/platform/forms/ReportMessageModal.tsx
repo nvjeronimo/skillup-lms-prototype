@@ -1,7 +1,7 @@
-"use client";
-
 import * as React from "react";
 import { ChoiceGroup, FIELD, FormField, FormModal } from "@/components/organisms/FormModal";
+import { cn } from "@/lib/utils";
+import styles from "./ReportMessageModal.module.css";
 
 const REASONS = [
   { value: "spam", label: "Spam or advertising" },
@@ -57,7 +57,7 @@ export function ReportMessageModal({
           value={details}
           onChange={(e) => setDetails(e.target.value)}
           rows={3}
-          className={`${FIELD} resize-y`}
+          className={cn(FIELD, styles.textarea)}
         />
       </FormField>
     </FormModal>

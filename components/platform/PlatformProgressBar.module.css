@@ -1,0 +1,37 @@
+/* DS progress bar: a bg/track track, the fill bg/info (bg/success once complete), straight ends. */
+.bar {
+  height: 8px;
+  background-color: var(--color-bg-track);
+}
+.thin {
+  height: 4px;
+}
+.barInRow {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.fill {
+  height: 100%;
+  transform-origin: left;
+  transition-property: transform;
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+  transition-duration: var(--motion-duration-long2);
+}
+.fillProgress {
+  background-color: var(--color-bg-info);
+}
+.fillComplete {
+  background-color: var(--color-bg-success);
+}
+.withValue {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.value {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+.cardLabel {
+  color: var(--color-text-subtle);
+}

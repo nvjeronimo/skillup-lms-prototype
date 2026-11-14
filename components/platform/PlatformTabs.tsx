@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { cn } from "@/lib/utils";
 import { useTabIndicator } from "@/lib/useTabIndicator";
+import styles from "./PlatformTabs.module.css";
 
 export interface PlatformTab<T extends string> {
   id: T;
@@ -106,8 +105,8 @@ export function PlatformTabs<T extends string>({
       aria-label={ariaLabel}
       // The large tabs (headline-small) sit further apart: 32 (Nelson, 26 Oct 2026); sm keeps 12.
       className={cn(
-        "relative flex items-start",
-        small ? "gap-3" : responsive ? "gap-3 md:gap-8" : "gap-8",
+        styles.tablist,
+        small ? styles.tablistSmall : responsive ? styles.tablistResponsive : undefined,
         !ownRule && className,
       )}
     >
@@ -130,16 +129,16 @@ export function PlatformTabs<T extends string>({
             onClick={() => onChange(tab.id)}
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
-              "relative flex shrink-0 items-center justify-center gap-2 px-1 transition-colors",
+              styles.tab,
               // Size=sm is 32 tall with 12 under the label; an invisible band grows the target to 44 upwards.
               small
-                ? "sk-text-body-medium-semibold h-8 pb-3 before:absolute before:inset-x-0 before:-top-3 before:bottom-0 before:content-[''] [[data-large-targets]_&]:before:-top-3"
+                ? cn("sk-text-body-medium-semibold", styles.tabSmall)
                 : responsive
-                ? "pb-3 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-top-3 max-md:before:bottom-0 max-md:before:content-[''] md:h-auto md:py-3"
-                : "py-3",
+                ? styles.tabResponsive
+                : styles.tabMedium,
               // The scrolling row clips an outline drawn outside the tab.
-              ownRule && "focus-visible:-outline-offset-2",
-              selected ? "text-sko-text-primary" : "text-sko-text-subtle hover:text-sko-text-default",
+              ownRule && styles.tabInset,
+              selected ? styles.tabOn : styles.tabOff,
             )}
           >
             {/* The DS text styles are not responsive, so `responsive` renders a label and a badge per size. */}
@@ -154,17 +153,17 @@ export function PlatformTabs<T extends string>({
               tab.label
             ) : (
               <>
-                <span className="sk-text-headline-small-semibold lg:hidden">{tab.label}</span>
-                <span className="sk-text-title-large-semibold hidden lg:inline">{tab.label}</span>
+                <span className={cn("sk-text-headline-small-semibold", styles.labelBelowDesktop)}>{tab.label}</span>
+                <span className={cn("sk-text-title-large-semibold", styles.labelDesktop)}>{tab.label}</span>
               </>
             )}
             {tab.count !== undefined && responsive ? (
-              <Badge color={badgeColor} size="sm" className="md:hidden">
+              <Badge color={badgeColor} size="sm" className={styles.badgePhone}>
                 {tab.count}
               </Badge>
             ) : null}
             {tab.count !== undefined ? (
-              <Badge color={badgeColor} size={small ? "sm" : "md"} className={responsive ? "hidden md:inline-flex" : undefined}>
+              <Badge color={badgeColor} size={small ? "sm" : "md"} className={responsive ? styles.badgeTablet : undefined}>
                 {tab.count}
               </Badge>
             ) : null}
@@ -173,8 +172,8 @@ export function PlatformTabs<T extends string>({
               <span
                 aria-hidden="true"
                 className={cn(
-                  "absolute inset-x-0 h-0.5 rounded-t-inner bg-sko-bg-primary",
-                  ownRule ? "bottom-0" : "-bottom-px",
+                  styles.indicator,
+                  ownRule ? styles.onRule : styles.onParentRule,
                 )}
               />
             ) : null}
@@ -186,9 +185,9 @@ export function PlatformTabs<T extends string>({
         <span
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute left-0 h-0.5 rounded-t-inner bg-sko-bg-primary",
-            ownRule ? "bottom-0" : "-bottom-px",
-            indicator.animate && "transition-[transform,width] duration-short4 ease-standard",
+            styles.slider,
+            ownRule ? styles.onRule : styles.onParentRule,
+            indicator.animate && styles.sliderAnimate,
           )}
           style={indicator.style}
         />
@@ -203,8 +202,7 @@ export function PlatformTabs<T extends string>({
     // sits on the rule (a real 1px border in forced colours, where shadows are dropped).
     <div
       className={cn(
-        "overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_0_var(--color-border-subtle)]",
-        "forced-colors:border-b forced-colors:border-sko-border-subtle",
+        styles.scroller,
         className,
       )}
     >

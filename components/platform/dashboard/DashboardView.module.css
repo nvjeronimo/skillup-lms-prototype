@@ -1,0 +1,129 @@
+/* Platform Dashboard: the page padding and the 1200 column; two rows that stack below desktop. */
+.page {
+  padding-inline: var(--sk-layout-page-x);
+  padding-top: var(--sk-layout-page-top);
+  padding-bottom: 48px;
+}
+@media (min-width: 768px) {
+  .page { padding-bottom: 64px; }
+}
+@media (min-width: 1024px) {
+  .page { padding-bottom: 80px; }
+}
+.stack {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.greeting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.title {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+.titleText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.name {
+  color: var(--color-text-subtle);
+}
+.tip {
+  color: var(--color-text-muted);
+}
+.tipLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  vertical-align: bottom;
+  color: var(--color-text-primary);
+}
+.tipLinkLabel {
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+
+/* A row: the main column beside a 400 one from desktop up. */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-column-gap);
+}
+.main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+}
+.jump {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .row { flex-direction: row; }
+  .rowStretch { align-items: stretch; }
+  .rowStart { align-items: flex-start; }
+  .main { flex: 1 1 0%; }
+  .side {
+    width: 400px;
+    flex-shrink: 0;
+    padding-top: 48px;
+  }
+  .jump {
+    width: 400px;
+    flex-shrink: 0;
+  }
+}
+
+.dueList {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.jumpList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .jumpList { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .jumpList { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+}
+.jumpItem {
+  min-width: 0;
+}
+
+/* Skins (tokens/skin-harbor.css, skin-fluent.css, direction-studio.css, square-corners.css select
+   the Tailwind classes the Due card had: rounded-card + border). */
+:global([data-skin="harbor"]) :global([data-platform-page]) .dueList,
+:global([data-skin="fluent"]) :global([data-platform-page]) .dueList {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .dueList {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global(html[data-square-corners]) .dueList {
+  border-radius: 0 !important;
+}

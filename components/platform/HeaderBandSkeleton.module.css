@@ -1,0 +1,261 @@
+/* The skeletons of the Program and Course header bands and of their tab bar. */
+.crumbs {
+  display: flex;
+  height: 20px;
+  align-items: center;
+  gap: 8px;
+}
+.crumbsTall {
+  height: 44px;
+}
+@media (min-width: 1024px) {
+  .crumbsTall { height: 20px; }
+}
+.desktopOnly {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .desktopOnly { display: block; }
+}
+.tabletUp {
+  display: none;
+}
+@media (min-width: 768px) {
+  .tabletUp { display: block; }
+}
+
+.band {
+  position: relative;
+  overflow: hidden;
+}
+.bandProgram {
+  background-color: var(--color-bg-subtle);
+}
+.bandCourse {
+  background-color: var(--color-bg-primary-soft);
+}
+.inner {
+  position: relative;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding: 16px var(--sk-layout-band-x) 24px;
+}
+.innerCourse {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .inner { padding-bottom: 32px; }
+}
+@media (min-width: 1024px) {
+  .inner {
+    padding-bottom: 40px;
+    padding-top: 20px;
+  }
+  .innerCourse { gap: 0px; }
+}
+
+.row {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rowProgram {
+  margin-top: 16px;
+}
+@media (min-width: 768px) {
+  .row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+}
+@media (min-width: 1024px) {
+  .row {
+    margin-top: 18.75px;
+    gap: 40px;
+    padding-top: 24px;
+  }
+}
+
+.main {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .main { gap: 0px; }
+  .mainProgram { min-height: 228.75px; }
+  .mainCourse { margin-block: -4px; }
+}
+.badgeRow {
+  display: flex;
+  align-items: center;
+}
+.badgeRowProgram {
+  height: 36px;
+}
+@media (min-width: 1024px) {
+  .badgeRow { padding-block: 12px; }
+  .badgeRowProgram { height: auto; }
+}
+.titleRow {
+  display: flex;
+  gap: 16px;
+}
+.titleRowProgram {
+  align-items: flex-start;
+}
+.titleRowCourse {
+  align-items: center;
+}
+.title {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.chips {
+  display: flex;
+  gap: 8px;
+}
+@media (min-width: 1024px) {
+  .chips { padding-block: 12px; }
+}
+
+/* A program's facts: 19-tall items between separators. */
+.programFacts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-block: 12px;
+}
+.programFact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.separator {
+  height: 19px;
+  border-left-width: 1px;
+  border-color: var(--color-border-default);
+}
+.programFactInner {
+  display: flex;
+  height: 19px;
+  align-items: center;
+  gap: 6px;
+}
+/* A course's facts: each with its left rule, the first one's pushed out of the clipped box. */
+.courseFacts {
+  overflow: hidden;
+  padding-block: 12px;
+}
+@media (min-width: 768px) {
+  .courseFacts { padding-bottom: 0px; }
+}
+@media (min-width: 1024px) {
+  .courseFacts { padding-bottom: 12px; }
+}
+.courseFactRow {
+  margin-left: -17px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 8px;
+}
+.courseFact {
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-left-width: 1px;
+  border-color: var(--color-border-default);
+  padding-left: 8px;
+}
+
+/* The progress card. */
+.card {
+  display: flex;
+  width: 100%;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+@media (min-width: 768px) {
+  .card { width: 320px; }
+}
+@media (min-width: 1024px) {
+  .card { width: 360px; }
+}
+
+/* The tab bar under the band. */
+.tabBar {
+  background-color: var(--color-bg-page);
+}
+.tabBarRule {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.tabBarInner {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-left: var(--sk-layout-band-x);
+  padding-top: 12px;
+}
+@media (min-width: 768px) {
+  .tabBarInner {
+    padding-inline: var(--sk-layout-band-x);
+    padding-top: 0px;
+  }
+}
+.tabs {
+  display: flex;
+  height: 32px;
+  align-items: center;
+  gap: 24px;
+}
+@media (min-width: 768px) {
+  .tabs { height: 48px; }
+}
+.tabsOnRule {
+  margin-bottom: -1px;
+}
+.search {
+  display: none;
+  padding-bottom: 7px;
+  padding-top: 8px;
+}
+@media (min-width: 768px) {
+  .search { display: block; }
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css, square-corners.css selected
+   the card's Tailwind classes .rounded-card.border.p-[15px]; the same rules here). */
+:global([data-direction="studio"]) .card {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .card,
+:global([data-skin="fluent"] [data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global(html[data-square-corners]) .card {
+  border-radius: 0 !important;
+}

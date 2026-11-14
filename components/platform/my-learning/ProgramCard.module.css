@@ -1,0 +1,323 @@
+/* DS LMS/Platform/My-Learning/Program-Card. */
+
+/* The card's frame; its skeleton reuses it (PROGRAM_CARD_FRAME). */
+.frame {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.linked {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.linked:has(a:hover) {
+  border-color: var(--color-border-default);
+}
+.listFrame {
+  min-height: 280px;
+  align-items: stretch;
+}
+.gridFrame {
+  flex-direction: column;
+}
+/* The pointer-only link over the whole card. */
+.cardLink {
+  position: absolute;
+  inset: 0px;
+  z-index: 1;
+}
+
+/* The hero: a dark surface (the Semantics pinned to Dark), badges at its bottom. */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  overflow: hidden;
+  background-color: var(--color-bg-subtle);
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .hero { padding: 20px; }
+}
+@media (min-width: 1024px) {
+  .hero { padding: 24px 23px; }
+}
+.heroList {
+  width: 42%;
+  flex-shrink: 0;
+}
+@media (min-width: 1280px) {
+  .heroList { width: 502px; }
+}
+.heroGrid {
+  width: 100%;
+}
+/* Decoration: a ring low on the left, a hatched circle high on the right. */
+.ringDecor {
+  pointer-events: none;
+  position: absolute;
+  bottom: -170px;
+  left: -170px;
+  width: 340px;
+  height: 340px;
+  border-radius: var(--sk-radius-pill);
+  border-width: 56px;
+  border-color: var(--color-bg-primary);
+  opacity: 0.08;
+}
+.hatch {
+  pointer-events: none;
+  position: absolute;
+  right: -79px;
+  top: -4px;
+  width: 207px;
+  height: 207px;
+  border-radius: var(--sk-radius-pill);
+  opacity: 0.35;
+}
+.heroContent {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+.titleBlock {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 12px;
+}
+.typeRow {
+  display: flex;
+  min-height: 36px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.partners {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.partner {
+  display: flex;
+}
+.titleRow {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 12px;
+}
+.thumb {
+  width: 64px;
+  height: 64px;
+}
+.title {
+  min-width: 0;
+  flex: 1 1 0%;
+  color: var(--color-text-default);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+/* List cuts the title at two lines; Grid keeps room for three and cuts there. */
+.titleList {
+  -webkit-line-clamp: 2;
+}
+.titleGrid {
+  -webkit-line-clamp: 3;
+  min-height: 3lh;
+}
+@media (hover: hover) {
+  .titleLink:hover {
+    text-decoration-line: underline;
+  }
+}
+.badgesRow {
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+/* Above the card's pointer link; the hit area grows to 44 on a phone. */
+.quickView {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+@media (max-width: 767.98px) {
+  .quickView::before {
+    --tw-content: '';
+    content: var(--tw-content);
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+/* The body: progress at the top, the footer at the bottom. */
+.body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .body { padding: 20px; }
+}
+@media (min-width: 1024px) {
+  .body { padding: 24px 23px; }
+}
+.bodyGrid {
+  width: 100%;
+}
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.progressRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.progressLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-default);
+}
+.successIcon {
+  color: var(--color-icon-success);
+}
+.courseCount {
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+.details {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+
+/* The footer: 60 tall in every state; the border is drawn inside, so 1px less padding. */
+.footer {
+  display: flex;
+  min-height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: var(--sk-radius-control);
+}
+.footerFilled {
+  background-color: var(--color-bg-subtle);
+  padding: 8px 12px;
+}
+.footerCompleted {
+  border-width: 1px;
+  border-color: var(--color-border-success-soft);
+  background-color: var(--color-bg-accent-green-soft);
+  padding: 7px 11px;
+}
+.footerOutlined {
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 7px 11px;
+}
+.next {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+}
+.nextLabelRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.nextLabel {
+  text-transform: uppercase;
+}
+.nextLabelOnGreen {
+  color: var(--color-text-default);
+}
+.nextLabelRest {
+  color: var(--color-text-subtle);
+}
+.nextValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}
+/* Buttons/Button sm is 36 tall; on a phone the target grows to 44 (a 4px band above and below). */
+.action {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+@media (max-width: 767.98px) {
+  .action::before {
+    --tw-content: '';
+    content: var(--tw-content);
+    position: absolute;
+    inset-inline: 0px;
+    top: -4px;
+    bottom: -4px;
+  }
+}
+
+/* Skins: the frame was .rounded-card.border (tokens/skin-harbor.css, skin-fluent.css,
+   direction-studio.css, square-corners.css). */
+:global([data-skin="harbor"] [data-platform-page]) .frame,
+:global([data-skin="fluent"] [data-platform-page]) .frame {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* Doubled: the skin's border holds over the hover border, as its own specificity did. */
+:global([data-direction="studio"]) .frame.frame {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global(html[data-square-corners]) .frame {
+  border-radius: 0 !important;
+}
+/* What sits in the card and still carries the Tailwind radius roles (the Quick view, rendered
+   inside it): Studio's nesting rule puts it in the card's corner, the control radius; Harbor and
+   Fluent give a card inside a card a hairline. */
+:global([data-direction="studio"]) .frame.frame :is(:global(.rounded-card), :global(.rounded-card-inset)) {
+  border-radius: var(--sk-radius-control);
+}
+:global([data-skin="harbor"] [data-platform-page]) .frame.frame :global(.rounded-card.border),
+:global([data-skin="fluent"] [data-platform-page]) .frame.frame :global(.rounded-card.border) {
+  border-color: var(--color-border-subtle);
+  box-shadow: none;
+}
+/* Square corners: the decorative circles stay round. */
+:global([data-square-corners]) :is(.ringDecor, .hatch) {
+  --sk-radius-pill: 9999px;
+}

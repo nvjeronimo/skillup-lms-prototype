@@ -1,0 +1,249 @@
+/* The Dashboard while it loads: DashboardView's layout drawn in Skeletons, same paddings and gaps. */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.max60 { max-width: 60%; }
+.max70 { max-width: 70%; }
+.max90 { max-width: 90%; }
+.maxFull { max-width: 100%; }
+@media (min-width: 768px) {
+  .actionLine { height: 28px; }
+  .phoneOnly { display: none; }
+}
+
+.stack {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.greeting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Today at a glance. */
+.glance {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  padding: 16px;
+}
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.stat {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+@media (min-width: 768px) {
+  .glance {
+    gap: 20px;
+    padding: 20px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+@media (min-width: 1024px) {
+  .glance { padding: 24px; }
+  .stats { gap: 24px; }
+}
+
+/* The two rows. */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-column-gap);
+}
+.main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+}
+.jump {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .row { flex-direction: row; }
+  .rowStretch { align-items: stretch; }
+  .rowStart { align-items: flex-start; }
+  .main { flex: 1 1 0%; }
+  .side {
+    width: 400px;
+    flex-shrink: 0;
+    padding-top: 48px;
+  }
+  .jump {
+    width: 400px;
+    flex-shrink: 0;
+  }
+}
+
+/* Pick up. */
+.pickup {
+  display: grid;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 8px;
+}
+@media (min-width: 1024px) {
+  .pickup { grid-template-columns: minmax(0, 280px) minmax(0, 1fr); }
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.option {
+  display: flex;
+  min-height: 64px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  border-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-subtle);
+  padding: 12px 16px;
+}
+.panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-inner);
+  background-color: var(--color-bg-subtle);
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .panel { padding: 24px; }
+}
+.cover {
+  aspect-ratio: 3/1;
+  width: 100%;
+}
+.buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* Stay informed. */
+.informed {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 20px;
+}
+
+/* Due. */
+.due {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.dueItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px;
+}
+.dueItem:last-child {
+  border-bottom-width: 0px;
+}
+@media (min-width: 768px) {
+  .dueItem { padding-inline: 20px; }
+}
+.dueDate {
+  display: flex;
+  width: 60px;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+.dueContent {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Jump. */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .tiles { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 16px;
+}
+
+/* Skins (they select the Tailwind classes these blocks had). Harbor, Fluent: the bordered cards
+   lose their border for the card shadow. */
+:global([data-skin="harbor"]) :global([data-platform-page]) :is(.pickup, .informed, .due, .tile),
+:global([data-skin="fluent"]) :global([data-platform-page]) :is(.pickup, .informed, .due, .tile) {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* Studio: bordered cards float on its shadow; the radius follows the padding (p-2 → 28, p-4 → 23
+   inside and 44; the glance block, p-4 with md:p-5 / lg:p-6, takes the p-4 rule at every width). */
+:global([data-direction="studio"]) :is(.pickup, .informed, .due, .tile) {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-direction="studio"]) .pickup {
+  border-radius: 28px;
+}
+:global([data-direction="studio"]) :is(.glance, .tile) {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global(html[data-square-corners]) :is(.glance, .pickup, .informed, .due, .tile) {
+  border-radius: 0 !important;
+}
