@@ -22,15 +22,20 @@ const BASE: PersonaSettings = {
 describe("persona data", () => {
   it("maps every persona onto the prototype's actual programs and courses", () => {
     const programs = programsFor(null);
+    // The SCORM and YouTube program is a player fixture (testOnly), not a prototype program
+    // the personas are enrolled in. Mapping it would rewrite that fixture (lib/programs).
+    const learnerPrograms = programs.filter((p) => !p.testOnly);
+    expect(programs.filter((p) => p.testOnly).map((p) => p.slug)).toEqual(["scorm-and-youtube-tests"]);
     const courseIds = myLearningCoursesFor(null).map((c) => c.id);
     for (const p of PERSONAS) {
       for (const [slug, pcts] of Object.entries(p.programs)) {
-        const program = programs.find((x) => x.slug === slug);
+        const program = learnerPrograms.find((x) => x.slug === slug);
         expect(program, `${p.id} ${slug}`).toBeDefined();
         expect(pcts.length).toBe(program?.courses.length);
       }
-      expect(Object.keys(p.programs).sort()).toEqual(programs.map((x) => x.slug).sort());
+      expect(Object.keys(p.programs).sort()).toEqual(learnerPrograms.map((x) => x.slug).sort());
       expect(Object.keys(p.courses).sort()).toEqual([...courseIds].sort());
+      expect(programsFor(p.id).find((x) => x.testOnly)).toBe(programs.find((x) => x.testOnly));
     }
   });
 
