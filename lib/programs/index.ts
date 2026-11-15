@@ -29,7 +29,9 @@ export function programsFor(personaId: string | null | undefined): Program[] {
   if (!persona) return WRITTEN;
   let hit = byPersona.get(persona.id);
   if (!hit) {
-    hit = WRITTEN.map((p) => overlayProgram(p, persona, CERTIFICATE_TEMPLATE));
+    // A test-only program stays the written object. Overlaying it would invent progress and
+    // certificates for a fixture the personas do not cover (lib/personas).
+    hit = WRITTEN.map((p) => (p.testOnly ? p : overlayProgram(p, persona, CERTIFICATE_TEMPLATE)));
     byPersona.set(persona.id, hit);
   }
   return hit;
