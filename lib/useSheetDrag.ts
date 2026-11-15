@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { MOTION_MS } from "./motion/tokens";
 

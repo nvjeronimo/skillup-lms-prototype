@@ -172,27 +172,13 @@ html[data-skin="fluent"] [data-theme="dark"] {
   color: var(--color-text-default);
 }
 
-/* ── Buttons ─────────────────────────────────────────────────────────────────
-   Rectangles: every control keeps Radius/control (4). Secondary is Fluent's default button: white,
-   1px Stroke1, neutral ink; hover Background1 Hover with Stroke1 Hover. */
-[data-skin="fluent"] .ring-inset.ring-sko-border-primary.text-sko-text-primary {
-  --tw-ring-color: var(--sk-fluent-stroke1);
-  color: var(--color-text-default);
-}
-[data-skin="fluent"] .ring-inset.ring-sko-border-primary.text-sko-text-primary:hover {
-  --tw-ring-color: var(--sk-fluent-stroke1-hover);
-  background-color: var(--color-bg-hover);
-}
+/* Utility-keyed rules (.rounded-control, .rounded-track.bg-sko-bg-track, .ring-inset, .border)
+   were removed 15 Nov 2026: after the CSS Modules move nothing in the DOM has those classes.
+   Secondary buttons, fields, segmented tracks and borderless cards live in each component module,
+   under [data-skin="fluent"]. What remains keys on tokens, type classes, forms and data attributes. */
 
 /* ── Fields ──────────────────────────────────────────────────────────────────
-   Fluent's Input: a Stroke1 frame with the accessible stroke along the bottom edge (6.1:1), white
-   inside. The search box in the top bar is the same field. */
-[data-skin="fluent"] .rounded-control.border:has(> input:not([type="checkbox"], [type="radio"])),
-[data-skin="fluent"] :is(input:not([type="checkbox"], [type="radio"]), textarea, select).border {
-  border-color: var(--sk-fluent-stroke1);
-  border-bottom-color: var(--color-border-default);
-  background-color: var(--color-bg-page);
-}
+   The search form is Fluent's Input: a Stroke1 frame with the accessible stroke on the bottom. */
 [data-skin="fluent"] form[role="search"] {
   height: 36px;
   border: 1px solid var(--sk-fluent-stroke1);
@@ -207,30 +193,6 @@ html[data-skin="fluent"] [data-theme="dark"] {
 }
 [data-skin="fluent"] form[role="search"] > button:hover {
   background-color: var(--color-bg-hover);
-}
-
-/* ── Filters and button groups ───────────────────────────────────────────────
-   As the light / dark switch (Nelson, 26 Oct 2026: the TabList filters were hard to read as a
-   group): a bg/muted track (#F0F0F0), segments at the control radius, the selected one raised on
-   Background1 with semibold ink and Stroke1. */
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track {
-  background-color: var(--color-bg-muted);
-}
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]) {
-  border-color: transparent;
-  border-radius: var(--sk-radius-control);
-  color: var(--color-text-muted);
-  font-weight: 400;
-}
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page,
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"],
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
-[data-skin="fluent"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
-  border-color: var(--sk-fluent-stroke1);
-  background-color: var(--color-bg-page);
-  color: var(--color-text-default);
-  font-weight: 600;
-  box-shadow: none;
 }
 
 /* ── Top navigation ──────────────────────────────────────────────────────────
@@ -252,17 +214,6 @@ html[data-skin="fluent"] [data-theme="dark"] {
    TabList: selected in semibold ink, brand indicator. */
 [data-skin="fluent"] [role="tab"][aria-selected="true"] {
   color: var(--color-text-default);
-}
-
-/* ── Cards ───────────────────────────────────────────────────────────────────
-   Fluent's Card: Background1, no stroke, shadow 4; a card inside a card takes Stroke2. */
-[data-skin="fluent"] [data-platform-page] .rounded-card.border {
-  border-color: transparent;
-  box-shadow: var(--sk-shadow-card);
-}
-[data-skin="fluent"] [data-platform-page] .rounded-card .rounded-card.border {
-  border-color: var(--color-border-subtle);
-  box-shadow: none;
 }
 
 /* ── Left navigation (the panel rail) ────────────────────────────────────────

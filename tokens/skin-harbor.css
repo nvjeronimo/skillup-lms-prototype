@@ -166,59 +166,13 @@ html[data-skin="harbor"] [data-theme="dark"] {
   color: var(--color-text-default);
 }
 
-/* ── Buttons ─────────────────────────────────────────────────────────────────
-   Every one-line control is a pill, as the panel's buttons, filters and search. Anything that holds
-   paragraphs, a column or a list (or is a column itself) keeps the control radius (10, the panel's
-   "Manage"). */
-[data-skin="harbor"]
-  :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"]).rounded-control:not(
-    .flex-col,
-    :has(p, .flex-col, ul, ol, h2, h3, h4),
-    [data-option-state]
-  ),
-[data-skin="harbor"] .rounded-control:has(> input:not([type="checkbox"], [type="radio"])) {
-  border-radius: 9999px;
-}
-/* Secondary: the panel's white pill with a light ring and ink text ("Filters", "Assistant"). */
-[data-skin="harbor"] .ring-inset.ring-sko-border-primary.text-sko-text-primary {
-  --tw-ring-color: var(--color-border-subtle);
-  color: var(--color-text-default);
-}
-[data-skin="harbor"] .ring-inset.ring-sko-border-primary.text-sko-text-primary:hover {
-  --tw-ring-color: var(--color-border-default);
-  background-color: var(--color-bg-page);
-}
-/* Fields: the panel's search sits on a pale blue pill with no border; the search icon and the
-   placeholder identify it. */
-[data-skin="harbor"] .rounded-control:has(> input[type="search"]),
-[data-skin="harbor"] .rounded-control:has(> input[placeholder^="Search"]) {
-  border-color: transparent;
-  background-color: var(--color-bg-track);
-}
+/* Utility-keyed rules (.rounded-control, .rounded-track.bg-sko-bg-track, .ring-inset, …) were
+   removed 15 Nov 2026: after the CSS Modules move nothing in the DOM has those classes. Pills,
+   secondary buttons, search fields, segmented tracks and borderless cards live in each component
+   module, under [data-skin="harbor"]. What remains keys on tokens, type classes and data attributes. */
 
 /* ── Filters and button groups ───────────────────────────────────────────────
-   Every segmented control (a bg/track row of segments) reads as one group, as the light / dark
-   switch (Nelson, 26 Oct 2026: the bare pills of 25 Oct were hard to see): a bg/muted track, the
-   segments pills inside it, the selected one raised on bg/page with semibold ink and a soft shadow. */
-[data-skin="harbor"] .rounded-track.bg-sko-bg-track {
-  background-color: var(--color-bg-muted);
-}
-[data-skin="harbor"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]) {
-  border-radius: 9999px;
-  border-color: transparent;
-  color: var(--color-text-subtle);
-  font-weight: 500;
-}
-[data-skin="harbor"] .rounded-track.bg-sko-bg-track > :is(button, a, label, [role="tab"], [role="radio"]).bg-sko-bg-page,
-[data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-pressed="true"],
-[data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-checked="true"],
-[data-skin="harbor"] .rounded-track.bg-sko-bg-track > [aria-selected="true"] {
-  border-color: transparent;
-  background-color: var(--color-bg-page);
-  color: var(--color-text-default);
-  font-weight: 600;
-  box-shadow: var(--sk-shadow-harbor-pill);
-}
+   A segmented control (data-segmented) is a bg/muted track of pills, the selected one raised. */
 [data-skin="harbor"] [data-segmented] > button {
   height: 38px;
   padding-inline: 16px;
@@ -246,30 +200,11 @@ html[data-skin="harbor"] [data-theme="dark"] {
   background-color: var(--color-bg-primary-soft);
   color: var(--color-text-on-primary-soft);
 }
-[data-skin="harbor"] [data-topbar-tab] > span[aria-hidden="true"].absolute {
-  display: none;
-}
 
 /* ── Tabs ────────────────────────────────────────────────────────────────────
-   Ink, as "Stay Informed": the selected tab in ink over an ink bar. */
+   Ink, as "Stay Informed": the selected tab in ink. The indicator's colour lives in the tab module. */
 [data-skin="harbor"] [role="tab"][aria-selected="true"] {
   color: var(--color-text-default);
-}
-[data-skin="harbor"] [role="tablist"] > span[aria-hidden="true"].bg-sko-bg-primary,
-[data-skin="harbor"] [role="tab"] > span[aria-hidden="true"].bg-sko-bg-primary {
-  background-color: var(--color-text-default);
-}
-
-/* ── Cards ───────────────────────────────────────────────────────────────────
-   White and borderless on a soft shadow (the panel's site cards and table card). A card inside a
-   card keeps a hairline instead, so it still reads as a separate box. */
-[data-skin="harbor"] [data-platform-page] .rounded-card.border {
-  border-color: transparent;
-  box-shadow: var(--sk-shadow-card);
-}
-[data-skin="harbor"] [data-platform-page] .rounded-card .rounded-card.border {
-  border-color: var(--color-border-subtle);
-  box-shadow: none;
 }
 
 /* ── The glance ──────────────────────────────────────────────────────────────
