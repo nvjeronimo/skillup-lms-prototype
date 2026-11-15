@@ -4,7 +4,13 @@
 #
 # Approval step: today a Figma sync merges as soon as the checks pass. To have someone approve
 # first, set the repository variable TOKENS_AUTO_MERGE to "false" (Settings → Secrets and
-# variables → Actions → Variables); the pull request then waits for a human merge.
+# variables → Actions → Variables); the pull request then waits for a human merge. A person
+# merging that pull request does start Storybook, because the push is theirs.
+#
+# The squash merge in this workflow is a GITHUB_TOKEN push. That push does not start other
+# workflows, so the published Storybook would stay on the previous build. After the merge
+# commit is on main, this job dispatches Storybook (workflow_dispatch is the exception that
+# does start). actions: write is what lets this token do that.
 name: Tokens from Figma
 
 on:
@@ -20,6 +26,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 concurrency:
   group: tokens-${{ github.head_ref }}
@@ -81,4 +88,28 @@ jobs:
 
       - name: Merge the Figma sync
         if: env.FIGMA_SYNC == 'true' && vars.TOKENS_AUTO_MERGE != 'false'
-        run: gh pr merge ${{ github.event.pull_request.number }} --squash --delete-branch
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr merge "$PR_NUMBER" --squash --delete-branch
+
+          # The dispatch pins whatever SHA main has when the run is created.
+          # Wait until the API reports the squash commit, then a moment longer
+          # so Actions resolves the same ref.
+          sha=""
+          tip=""
+          for _ in 1 2 3 4 5 6 7 8 9 10; do
+            sha=$(gh pr view "$PR_NUMBER" --json mergeCommit --jq '.mergeCommit.oid // ""' || true)
+            tip=$(gh api "repos/${GITHUB_REPOSITORY}/commits/main" --jq .sha || true)
+            if [ -n "$sha" ] && [ "$tip" = "$sha" ]; then
+              break
+            fi
+            sleep 2
+          done
+          if [ -z "$sha" ] || [ "$tip" != "$sha" ]; then
+            echo "::error::main is at ${tip:-unknown}, not the squash commit (${sha:-missing}). Storybook was not dispatched."
+            exit 1
+          fi
+          sleep 5
+          gh workflow run storybook.yml --ref main
+          echo "Dispatched Storybook for ${sha}"
