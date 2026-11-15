@@ -1,0 +1,61 @@
+# General CI for every pull request and every push to main. No path filter:
+# tokens.yml only typechecks, lints, and builds when a PR touches the token
+# paths, and nothing in CI ran the tests.
+#
+# Tokens from Figma keeps its own typecheck, lint, and build. Those steps are
+# the gate in front of the auto-merge, and this workflow is red while
+# lib/personas.test.ts fails, so a Figma sync must not wait on this job.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # Plain `pnpm install` exits on the placeholder allowBuilds entries in
+      # pnpm-workspace.yaml. --ignore-scripts is the workaround until that
+      # install fix lands. Frozen lockfile matches tokens.yml and storybook.yml.
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Token check
+        run: pnpm tokens:check
+
+      - name: Token lint
+        run: pnpm lint:tokens
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
