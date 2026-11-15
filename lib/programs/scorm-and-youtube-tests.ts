@@ -21,6 +21,8 @@ import { relativeLabel } from "@/lib/sample-time";
 
 const program: Program = {
   slug: "scorm-and-youtube-tests",
+  // Not one of the prototype's programs: personas do not map it (lib/personas.test.ts).
+  testOnly: true,
   title: "SCORM and YouTube Test Program",
   imageSrc: "/platform/covers/project-management-with-ai-tools.jpg",
   deliveryMode: "Flexible Learning",

@@ -39,8 +39,9 @@ pnpm lint             # next lint
 pnpm format           # prettier --write .
 ```
 
-> Requires Node 18+ and pnpm. `esbuild` + `sharp` build scripts are pre-approved in
-> `pnpm-workspace.yaml`, so `pnpm install` runs clean.
+> Requires Node 18+ and pnpm. `pnpm-workspace.yaml` allows `esbuild`'s install script
+> (Vite and Storybook need that binary) and skips `sharp`, `core-js-pure` and
+> `unrs-resolver`, whose scripts this repo does not need, so `pnpm install` runs clean.
 
 ## Routes
 

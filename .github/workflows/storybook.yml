@@ -1,5 +1,10 @@
-# Storybook, for reference: rebuilt on every change to main that can change what it shows
-# (a token sync from Figma included) and published to GitHub Pages.
+# Storybook, published to GitHub Pages. A push to main rebuilds it when one of the paths
+# below changes. workflow_dispatch publishes whatever ref you choose; run it on main to
+# publish the current prototype without waiting for such a push.
+#
+# A Figma token sync is not one of those pushes. tokens.yml squash-merges with the workflow
+# GITHUB_TOKEN, and that push does not start this workflow. tokens.yml dispatches it after
+# the merge commit is on main.
 name: Storybook
 
 on:
