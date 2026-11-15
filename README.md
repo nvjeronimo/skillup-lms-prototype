@@ -17,8 +17,12 @@ migrates the prototype to Vite and React 19. That stack is not current.
 | Storybook (GitHub Pages) | <https://nvjeronimo.github.io/skillup-lms-prototype/> |
 
 The prototype is the Vercel project for this repo (`vercel.json` runs `next build`). Storybook
-is rebuilt by `.github/workflows/storybook.yml` and published to GitHub Pages. Deploy notes for
-the prototype and the assistant key are in [DEPLOY.md](DEPLOY.md).
+is published to GitHub Pages by `.github/workflows/storybook.yml`. A push to `main` rebuilds it
+when tokens, stories, components, `.storybook/`, `app/globals.css`, or `tailwind.config.ts`
+change. A Figma token auto-merge does not start that push: the squash uses the workflow
+token, so `tokens.yml` dispatches Storybook once the merge commit is on `main`. A person
+merging that pull request does start the workflow. Deploy notes for the
+prototype and the assistant key are in [DEPLOY.md](DEPLOY.md).
 
 ## Tech stack
 
@@ -48,8 +52,9 @@ is still written by hand is listed in [figma-plugin/README.md](figma-plugin/READ
 `figma-plugin/` is the development plugin **SkillUp · Publish tokens**
 (`figma-plugin/manifest.json`). It runs in Figma desktop, compares the SKO Design System with
 `main`, and can open a pull request that updates `tokens/figma/variables.json`. The
-[Tokens from Figma](.github/workflows/tokens.yml) workflow then regenerates the CSS. Install,
-publish, and the dev-token package are documented in [figma-plugin/README.md](figma-plugin/README.md).
+[Tokens from Figma](.github/workflows/tokens.yml) workflow then regenerates the CSS and, after an
+auto-merge, dispatches the Storybook publish. Install, publish, and the dev-token package
+are documented in [figma-plugin/README.md](figma-plugin/README.md).
 
 ## Getting started
 
@@ -66,6 +71,7 @@ pnpm dev              # next dev
 pnpm build            # next build
 pnpm start            # next start
 pnpm lint             # next lint
+pnpm typecheck        # tsc --noEmit
 pnpm format           # prettier --write .
 pnpm storybook        # storybook dev -p 6006
 pnpm build-storybook  # static Storybook to ./storybook-static
@@ -76,9 +82,12 @@ pnpm tokens:check     # fail if tokens/generated is not what the JSON gives
 pnpm tokens:compare   # what a token change does on the page, against origin/main
 ```
 
-> Package manager is pnpm `11.5.1` (`packageManager` in `package.json`). The Storybook and
-> token workflows use Node 22. `pnpm-workspace.yaml` pre-approves the `esbuild`, `sharp`,
-> `core-js-pure` and `unrs-resolver` build scripts.
+> Requires Node 18+ and pnpm `11.5.1` (`packageManager` in `package.json`). `pnpm-workspace.yaml`
+> sets `allowBuilds`: `esbuild` runs (vitest and Storybook need that binary) and `sharp`,
+> `core-js-pure`, and `unrs-resolver` are skipped, so a plain `pnpm install` completes.
+> [CI](.github/workflows/ci.yml) runs on every pull request and every push to `main`
+> (`tokens:check`, `lint:tokens`, `typecheck`, `lint`, `test`, `build`) on Node 22. The Storybook
+> and token workflows use Node 22 as well.
 
 ## Routes
 

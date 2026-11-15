@@ -1,10 +1,15 @@
+# pnpm 11 fails the install unless each lifecycle script is true (run it) or false (skip it).
+# onlyBuiltDependencies is the older allow-list; pnpm 11 reads allowBuilds.
 allowBuilds:
-  core-js-pure: set this to true or false
-  esbuild: set this to true or false
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
+  # Vite (vitest) and Storybook run this binary. postinstall selects and checks it.
+  esbuild: true
+  # The binary ships in the @img/sharp-* optional packages. The install script only
+  # node-gyp rebuilds when building from source, which this repo does not.
+  sharp: false
+  # postinstall prints a funding banner. The package is pure JavaScript.
+  core-js-pure: false
+  # eslint-import-resolver-typescript loads @unrs/resolver-binding-* itself.
+  # postinstall only downloads that binding when the optional package is missing.
+  unrs-resolver: false
 onlyBuiltDependencies:
   - esbuild
-  - sharp
-  - core-js-pure
-  - unrs-resolver
