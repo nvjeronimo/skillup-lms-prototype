@@ -17,6 +17,8 @@ on:
       - ".storybook/**"
       - "app/globals.css"
       - "tailwind.config.ts"
+      - ".github/workflows/storybook.yml"
+      - ".github/workflows/tokens.yml"
   workflow_dispatch:
 
 permissions:
