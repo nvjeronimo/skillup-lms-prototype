@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { ARMING_WINDOW_MS, canArm, parseCssTimeMs } from "./arming";

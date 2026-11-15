@@ -68,6 +68,9 @@ React 19 changes made: `RefObject<T | null>` in hook signatures, `useRef` needs 
 
 ### Open
 
+Open on 13 Nov. Closed on 15 Nov in the follow-up at the end of this file, except the persona
+test, which stays a separate PR.
+
 - Vercel: the project's framework preset must read Vite (vercel.json sets it). The sample video
   keeps its variable name (`NEXT_PUBLIC_SAMPLE_VIDEO_SRC`, allowed by `envPrefix`).
 - `api/assistant.ts` not yet tried on a Vercel deployment (runtime imports carry `.js` for Node
@@ -172,3 +175,98 @@ Checks before you finish (all must pass):
 - Menus opened inside platform cards (CardOverflowMenu, ShareMenu) do not take Studio's nested
   radius or Harbor/Fluent's nested hairline: only visible with a menu open in those skins.
 - Unchanged original quirks the agents found are listed in their reports (PR).
+
+## Follow-up (15 Nov 2026): ready for review
+
+Branch `cursor/vite-stack-followups-14a0`, off `feat/vite-stack`. Each item from the open list
+above, plus the leftovers named in the pilot.
+
+### Vercel and `api/assistant.ts`
+
+`vercel.json` is the Vite preset: `framework: "vite"`, `buildCommand: "vite build"`,
+`outputDirectory: "dist"`, `installCommand: "pnpm install --ignore-scripts"`. The SPA rewrite
+skips `api/` and `assets/`, so the function and the hashed files are not swallowed. `vite build`
+is what that command runs, and it succeeds.
+
+The function is a Node Web handler (`GET` / `POST` returning `Response`) at `api/assistant.ts`.
+Its runtime imports use `.js` so a Node ESM bundle resolves them; esbuild bundles that file the
+way Vercel's Node builder does. Invoked with no `ANTHROPIC_API_KEY`: `GET` is 200
+`{"mode":"script"}`, `POST` is 503 `The assistant has no model configured.` With a key set but
+never sent to Anthropic: `GET` is `{"mode":"model"}`, a non-JSON `POST` is 400. The same cases
+are `lib/assistant/function.test.ts`.
+
+The chat starts in script mode (`useAssistant`) and switches only when `GET` says `model`. No
+key means it never calls the model. A `POST` that fails (503, or no route in `vite` dev) is
+caught by `resolveAnswer`, which answers that question from the script. `vercel dev` was not
+run: the CLI token in this environment is rejected (`The specified token is not valid`).
+
+### Bundle
+
+Before, one JS chunk and one CSS file, and the size warning:
+
+| | file | minified | gzip |
+|---|---|---|---|
+| before | `index-*.js` | 2,253.90 kB | 667.25 kB |
+| before | `index-*.css` | 518.00 kB | 76.93 kB |
+
+Routes and layouts load through React Router `lazy` (`src/routes.tsx`). The course corpus
+(`lib/courses`, `lib/content`, `lib/data`) is shared by several routes and was still one
+~1 MB chunk, so `vite.config.ts` caps that group at 240 kB (`codeSplitting.groups`, name
+`learner-data`). After:
+
+| | largest file | minified | gzip |
+|---|---|---|---|
+| after | entry `index-*.js` | 423.21 kB | 135.08 kB |
+| after | largest `learner-data-*.js` | 190.84 kB | 58.28 kB |
+| after | entry `index-*.css` | 133.81 kB | 20.26 kB |
+
+`vite build` reports no chunk over 500 kB. The JS in total is still about 2,243 kB, across 115
+files: the split moves code, it does not delete it. Storybook builds. Its own build still warns
+on Storybook's vendor chunks (axe, the docs renderer, the iframe) and on one data chunk,
+because that build does not use the app's `learner-data` group.
+
+### `"use client"`
+
+Removed from the 25 files that still had it (hooks and stores under `lib/`). Nothing else in
+the tree had the directive.
+
+### Skin stylesheets
+
+`tokens/direction-studio.css`, `skin-harbor.css` and `skin-fluent.css` kept the rules that
+still match: token overrides, `.sk-text-*`, and the data attributes (`data-glance`,
+`data-module-box`, `data-topbar-tab`, `data-segmented`, `data-heading-em`, the search form,
+the platform nav). Removed the rules keyed on Tailwind utilities (`.rounded-*`, `.p-*`,
+`.bg-sko-*`, `.ring-*`, `.border`, `.shadow-sk-card`, …). Those classes are gone from the DOM;
+the same looks already live in the component modules.
+
+### Square corners — removed
+
+`tokens/square-corners.css` is deleted and no longer imported. Nothing sets
+`data-square-corners`: the pre-paint script and `ResponsiveShell` never write it, and
+`setSquareCorners` has no caller. The file's utility selectors (`.rounded-card`,
+`.rounded-pill`, …) matched nothing either, so the radius-token override could not apply.
+The per-component `:global([data-square-corners])` rules and the unused `squareCorners` field
+on the store are left: they are inert, and dropping the field would change the persisted
+shape for no visible effect. The spacing story no longer mentions a square-corners switch.
+
+### Already done, or not this PR
+
+- `FormField` / `FIELD` and `SkillUpLogo` are already CSS Modules (step 4). No Tailwind utility
+  left on them. No change.
+- Button gaps from the pilot (the Done check, Link Button, Icon Button) are not a gate for
+  this stack PR. Left as noted there.
+- `lib/personas.test.ts` still fails (the SCORM and YouTube test program has no persona
+  mapping). Not touched.
+
+### Checks (15 Nov 2026)
+
+- `tsc --noEmit`, `eslint . --ext .ts,.tsx`: clean.
+- `tokens:check`: generated CSS matches `tokens/figma/variables.json`. `lint:tokens`: 515 files
+  and 247 stylesheets clean.
+- `vitest run`: 343 passed, 1 failed — `lib/personas.test.ts` only.
+- `build-storybook`: completed.
+- Production preview, 1280 wide: Dashboard (`Good morning, John.`), the AI-Driven Content
+  course page, the SCORM activity `sct-m2-t1` (package iframe loaded), the YouTube lesson
+  `ytt-m1-t2` (nocookie embed loaded). No page errors and no failed requests. Client
+  navigation Dashboard → My Learning, and Next on the YouTube lesson, updates the URL and the
+  title with no reload.

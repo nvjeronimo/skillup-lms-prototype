@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { indicatorMoved, measureIndicator, type IndicatorBox } from "./motion/indicator";
 

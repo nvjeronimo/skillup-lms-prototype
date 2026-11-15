@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { PLAYBACK_TICK_MS } from "./coverage";
 

@@ -22,5 +22,5 @@
  */
 /* The values above live in tokens/generated/radius.css (DS 2. Responsive 📐 Radius/*). */
 
-/* Square corners (the profile menu experiment) lives in tokens/square-corners.css, loaded last so
-   it holds in every skin. */
+/* Square corners (the profile menu experiment) was tokens/square-corners.css. Removed 15 Nov
+   2026: nothing sets data-square-corners, and its utility selectors no longer match. */

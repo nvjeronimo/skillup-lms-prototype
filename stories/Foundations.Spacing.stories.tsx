@@ -71,7 +71,7 @@ function Foundations() {
         <h2 className={`sk-text-title-medium-semibold ${styles.sectionTitle}`}>Radius roles</h2>
         <p className={`sk-text-body-medium-regular ${styles.lede}`}>
           Chosen by what the element is, never by its size (tokens/radius.css). The square renders the
-          live CSS variable, so it follows the Studio look and the square-corners switch.
+          live CSS variable, so it follows the Studio look.
         </p>
         <div className={styles.radii}>
           {RADII.map((r) => {

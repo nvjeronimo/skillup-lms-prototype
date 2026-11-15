@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 
 /** Everything a keyboard user can land on with Tab. */
