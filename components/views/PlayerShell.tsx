@@ -80,6 +80,7 @@ import { useEdxScope } from "@/lib/edx-scope";
 import { courseSearchScope as searchScopeOf } from "@/lib/courseSearchScope";
 import { DemoControlsMenu } from "@/components/molecules/DemoControlsMenu";
 import { lineAt } from "@/lib/playback/lineAt";
+import { playerChrome } from "@/lib/playerChrome";
 import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
 import { ArrivalContext, useArrivalController, useCourseArrival } from "@/lib/arrival/useArrival";
 import { courseArrivalPath, topicArrivalPath } from "@/lib/arrival/visits";
@@ -282,22 +283,18 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const partnerLab = getPartnerLab(topic);
   // A SCORM activity plays its package in the page, with no tabs (Figma Activity Row A, 28 Oct 2026).
   const scormActivity = family === "activity" && getActivity(topic).kind === "scorm";
-  // One module and one topic, of any type: no sidebar and no Course Journey. The learner has
-  // nowhere else in the course to go (Nelson, 16 Nov 2026).
+  // One module and one topic: no sidebar and no Course Journey. A SCORM package also drops
+  // the ring and the footer (lib/playerChrome). Any other single topic keeps both.
   const playedTopics = flatTopics(activeCourse);
-  const singleTopicCourse = activeCourse.modules.length === 1 && playedTopics.length === 1;
-  // A course that is one SCORM package: the package brings its own menu and fills the content area.
-  const coursePackage = scormActivity && singleTopicCourse;
+  const chrome = playerChrome(activeCourse, topic);
+  const coursePackage = chrome.barePackage;
   const sidebarVariant: SidebarVariant = sidebarExpanded ? "Expanded" : "Collapsed";
   // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
   const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   // A package that never reports (Activity card C1) has no action of its own: it gets Mark as Complete.
   const silentPackage = scormActivity && getActivity(topic).reportsCompletion === false;
-  // One SCORM package: no progress ring and no footer. The package brings its own menu, progress
-  // and exit, and ours could only say 0% until the package reports completed. The top bar's close
-  // is the way out. Any other single topic keeps the ring and the footer.
-  const packageAlone = coursePackage;
-  const inlineSidebar = showInlineSidebar && !singleTopicCourse;
+  const packageAlone = !chrome.showFooter;
+  const inlineSidebar = showInlineSidebar && chrome.showSidebar;
   // A real SCORM package that reports completion. Sample activities titled like a scenario are
   // not packages: they have no launch file.
   const reportingPackage = (t: (typeof playedTopics)[number]) => {
@@ -498,12 +495,12 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         showNotifications
         notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
         onMenu={
-          singleTopicCourse
-            ? undefined
-            : () => {
+          chrome.showSidebar
+            ? () => {
                 track("mobile_drawer_open");
                 setMobileDrawerOpen(true);
               }
+            : undefined
         }
         menuExpanded={bp === "mobile" && mobileDrawerOpen}
         progressPct={packageAlone ? undefined : courseProgressPct(activeCourse, completedTopics)}
