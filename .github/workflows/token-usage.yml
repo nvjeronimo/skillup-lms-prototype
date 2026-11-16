@@ -1,0 +1,70 @@
+# Keeps tokens/usage.json (which Figma tokens the code uses) fresh on main. It is the only writer
+# of that file. A Figma sync is merged by tokens.yml with github.token, and a merge made with that
+# token starts no push workflow, so this job also runs when a "Tokens from Figma" run on a sync
+# branch finishes (workflow_run): by then the sync is merged, and --check finds the map stale.
+name: Token usage map
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "components/**"
+      - "lib/**"
+      - "stories/**"
+      - "tokens/**"
+      - "tailwind.config.ts"
+      - "scripts/tokens/**"
+  workflow_run:
+    workflows: ["Tokens from Figma"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: token-usage
+  cancel-in-progress: false
+
+jobs:
+  usage:
+    if: github.event_name != 'workflow_run' || startsWith(github.event.workflow_run.head_branch, 'tokens/figma-')
+    runs-on: ubuntu-latest
+    steps:
+      # Always main, never the pull request's code: workflow_run checks out the default branch.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Write the usage map when it is stale, and commit it
+        run: |
+          if node scripts/tokens/usage.mjs --check; then
+            echo "usage map is up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          node scripts/tokens/usage.mjs --write
+          git add tokens/usage.json
+          git commit -m "chore(tokens): usage map"
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push; then
+              exit 0
+            fi
+            echo "push attempt $attempt failed; starting again from origin/main"
+            git rebase --abort 2>/dev/null || true
+            git reset --hard origin/main
+            node scripts/tokens/usage.mjs --write
+            git add tokens/usage.json
+            git diff --cached --quiet && exit 0
+            git commit -m "chore(tokens): usage map"
+          done
+          exit 1
