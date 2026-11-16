@@ -8,7 +8,9 @@
  * Pure data, no imports: lib/data and lib/programs read it at import, so it must not close a cycle.
  *
  * The progress maps cover the prototype's ACTUAL courses: the courses of each program, in their
- * order (lib/programs), and the five single courses of My Learning (by slug). A persona's
+ * order (lib/programs), and the five single courses of My Learning (by slug). A test-only
+ * program (Program.testOnly, the SCORM and YouTube fixture) is not one of these and is left
+ * out of the maps, so a persona never rewrites it. A persona's
  * portfolio item is mapped to the course of the same meaning (Product Analytics → the Data
  * Analytics program, Intro to SQL / Cloud Security / Data Storytelling → Intro to Product
  * Analytics, the one completed single course); where the persona has nothing similar the course

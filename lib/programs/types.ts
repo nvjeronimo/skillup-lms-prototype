@@ -113,6 +113,11 @@ export interface ProgramDisclosureItem {
 export interface Program {
   slug: string;
   title: string;
+  /**
+   * A program made only to test the player. Not a SkillUp program and not in Figma, so the
+   * synthetic personas do not carry progress for it (lib/personas): the page stays as written.
+   */
+  testOnly?: boolean;
   imageSrc: string;
   deliveryMode: DeliveryMode;
   difficulty: Difficulty;
