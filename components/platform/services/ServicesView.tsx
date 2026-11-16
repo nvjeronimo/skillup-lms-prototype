@@ -190,8 +190,18 @@ export function ServicesView() {
 
         {/* 1 · Help now */}
         <div data-arrive={1} className="grid items-stretch gap-layout-column lg:grid-cols-2">
-          <section aria-labelledby="services-mentor" data-mock={servicesMentor.mock} className={cn(CARD, "flex flex-col gap-4")}>
-            <p className={EYEBROW}>Your mentor</p>
+          <section
+            aria-labelledby="services-mentor"
+            data-mock={`${servicesMentor.mock}. Mentorship Q&A is on hold; this card is preview data.`}
+            className={cn(CARD, "flex flex-col gap-4")}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className={EYEBROW}>Your mentor</p>
+              <span className="flex flex-wrap gap-1">
+                <Badge color="warning" size="sm">On hold</Badge>
+                <Badge color="gray" size="sm">Preview data</Badge>
+              </span>
+            </div>
             <div className="flex items-start gap-4">
               <Avatar name={servicesMentor.name} size="lg" />
               <div className="flex min-w-0 flex-col gap-1">

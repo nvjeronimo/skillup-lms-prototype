@@ -163,7 +163,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
             >
               <div className="flex items-end justify-between gap-3">
                 <p className="sk-text-headline-medium-bold text-sko-text-default">
-                  {/* One SCORM package (proposal, 11 Nov 2026): the status word, never a share. */}
+                  {/* One SCORM package: the status word, never a share. */}
                   {course.progress.status ?? <ArrivalCount value={`${course.progress.percent}%`} />}
                 </p>
                 <ProgressCardLabel complete={course.progress.percent >= 100} label={course.progress.label} />

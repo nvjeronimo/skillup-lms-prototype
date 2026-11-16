@@ -117,9 +117,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // Store wiring
   const sidebarExpanded = useLmsStore((s) => s.sidebarExpanded);
   const toggleSidebar = useLmsStore((s) => s.toggleSidebar);
-  // A course package (a SCORM course of one topic) opens with our sidebar collapsed, whatever the
-  // learner chose in other courses (Nelson, 4 Nov 2026); it can still be opened, for this visit.
-  const [packageSidebarOpen, setPackageSidebarOpen] = React.useState(false);
   const mobileDrawerOpen = useLmsStore((s) => s.mobileDrawerOpen);
   const setMobileDrawerOpen = useLmsStore((s) => s.setMobileDrawerOpen);
   const setCurrentTopic = useLmsStore((s) => s.setCurrentTopic);
@@ -259,10 +256,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const family = topicFamily(topic.type);
   const isVideo = family === "video";
   const isLocked = Boolean(topic.locked);
-  // A YouTube video (ICP Video Lessons rows 9 and 10, 4 Nov 2026). Pasted as an embed, YouTube's own
-  // player stands where ours is; added as a Video component, ours plays it, with its picture.
-  const youtube = isVideo ? topic.youtube : undefined;
-  const youtubeEmbed = Boolean(youtube?.embed);
+  // A YouTube video pasted as the official embed (ICP Video Lessons row 9). Row 10, YouTube inside
+  // our player, was withdrawn (ADR 041): the embed is the only path.
+  const youtube = isVideo && topic.youtube?.embed ? topic.youtube : undefined;
 
 
   // Sticky video heights per viewport (DS Phase-1 §0): full hero → docked band. From tablet up the
@@ -286,26 +282,32 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   const partnerLab = getPartnerLab(topic);
   // A SCORM activity plays its package in the page, with no tabs (Figma Activity Row A, 28 Oct 2026).
   const scormActivity = family === "activity" && getActivity(topic).kind === "scorm";
-  // A course package (Activity group D, meeting of 4 Nov 2026): a SCORM course is one topic named
-  // after the course, and the package brings its own menu. Our sidebar starts collapsed, and the
-  // footer has no Previous ("1 of 1" and the course name).
-  const coursePackage = scormActivity && total === 1;
-  const sidebarVariant: SidebarVariant = (coursePackage ? packageSidebarOpen : sidebarExpanded) ? "Expanded" : "Collapsed";
+  // One module and one topic, of any type: no sidebar and no Course Journey. The learner has
+  // nowhere else in the course to go (Nelson, 16 Nov 2026).
+  const playedTopics = flatTopics(activeCourse);
+  const singleTopicCourse = activeCourse.modules.length === 1 && playedTopics.length === 1;
+  // A course that is one SCORM package: the package brings its own menu and fills the content area.
+  const coursePackage = scormActivity && singleTopicCourse;
+  const sidebarVariant: SidebarVariant = sidebarExpanded ? "Expanded" : "Collapsed";
   // A lab running inside the page has no launch card, so Mark as Complete is the primary action.
   const labInPage = Boolean(partnerLab?.inPage) && labLaunch === "inline";
   // A package that never reports (Activity card C1) has no action of its own: it gets Mark as Complete.
   const silentPackage = scormActivity && getActivity(topic).reportsCompletion === false;
-  // The improved package flow, PROPOSED on 11 Nov 2026 (Activity · SCORM proposal frame): only on the
-  // proposal courses of the test program (Course.packageFlow).
-  const packageFlow = activeCourse.packageFlow === "proposal";
-  // A course that is one package: nothing of ours around it. No sidebar, no Course Journey, no
-  // progress ring and no footer: the package brings its own menu, progress and exit, and ours could
-  // only say 0% until the package reports completed. The top bar's close is the way out.
-  const packageAlone = coursePackage && packageFlow;
-  const inlineSidebar = showInlineSidebar && !packageAlone;
-  // A package topic among others: the learner cannot know when the package will report completed,
-  // so Next asks before leaving one that has not (stay, or continue anyway; we cannot mark it).
-  const packageAsks = packageFlow && scormActivity && !coursePackage && !silentPackage;
+  // One SCORM package: no progress ring and no footer. The package brings its own menu, progress
+  // and exit, and ours could only say 0% until the package reports completed. The top bar's close
+  // is the way out. Any other single topic keeps the ring and the footer.
+  const packageAlone = coursePackage;
+  const inlineSidebar = showInlineSidebar && !singleTopicCourse;
+  // A real SCORM package that reports completion. Sample activities titled like a scenario are
+  // not packages: they have no launch file.
+  const reportingPackage = (t: (typeof playedTopics)[number]) => {
+    if (topicFamily(t.type) !== "activity") return false;
+    const activity = getActivity(t);
+    return activity.kind === "scorm" && Boolean(activity.packageUrl) && activity.reportsCompletion !== false;
+  };
+  // Several packages in one course: Next asks before leaving one that has not reported completion
+  // yet (stay on the activity, or continue anyway). One package has no Next.
+  const packageAsks = playedTopics.filter(reportingPackage).length > 1 && reportingPackage(topic);
   const hasInFrameAction =
     family === "assessment" ||
     family === "graded" ||
@@ -458,7 +460,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
   // with one option left the tab bar is hidden. A quiz has no tab bar either (Figma A-1 and A-2
   // quiz screens; Nelson's SKO match review, 28 Oct 2026).
   // A YouTube embed has no Transcript, Notes or Downloads (row 9): no tab bar.
-  const tabs = edx || youtubeEmbed
+  const tabs = edx || youtube
     ? [{ ...transcriptTab, label: PRIMARY_LABEL[family] }]
     : isVideo
     ? [{ ...transcriptTab, label: "Transcript" }, notesTab, downloadsTab]
@@ -496,7 +498,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
         showNotifications
         notificationsCount={notifications.filter((n) => n.unread && !notificationsRead.has(n.id)).length}
         onMenu={
-          packageAlone
+          singleTopicCourse
             ? undefined
             : () => {
                 track("mobile_drawer_open");
@@ -541,7 +543,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             bookmarks={bookmarks}
             completed={completedTopics}
             lastCompleted={lastCompleted}
-            onToggleSidebar={coursePackage ? () => setPackageSidebarOpen((open) => !open) : toggleSidebar}
+            onToggleSidebar={toggleSidebar}
             onSelectTopic={navigateTopic}
             onToggleBookmark={toggleBookmark}
           />
@@ -598,7 +600,7 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                     videoDocked ? "px-0 pb-2 pt-0" : cn(CONTENT_PX[bp], CONTENT_PT[bp], "pb-3"),
                   )}
                 >
-                  {youtubeEmbed && youtube ? (
+                  {youtube ? (
                     <YouTubeEmbed
                       key={topicId}
                       videoId={youtube.id}
@@ -610,16 +612,9 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
                   <VideoPlayer
                     key={topicId}
                     // The course picture as the poster (Figma Video Cards 1–3 and 7); Six Sigma's own.
-                    // A YouTube video shows its own picture, as the Video component does.
-                    poster={
-                      youtube
-                        ? `https://i.ytimg.com/vi/${encodeURIComponent(youtube.id)}/hqdefault.jpg`
-                        : getCatalogCourse(courseSlug)?.imageSrc ?? "/platform/course-six-sigma.jpg"
-                    }
-                    // Every Video topic plays the same SkillUp lesson (5 Nov 2026); YouTube keeps its own picture.
-                    src={youtube ? undefined : SAMPLE_VIDEO_SRC}
-                    youtubeId={youtube?.id}
-                    state={youtube?.unavailable ? "unavailable" : undefined}
+                    poster={getCatalogCourse(courseSlug)?.imageSrc ?? "/platform/course-six-sigma.jpg"}
+                    // Every Video topic plays the same SkillUp lesson (5 Nov 2026).
+                    src={SAMPLE_VIDEO_SRC}
                     durationSeconds={durationSeconds}
                     captions={getCaptions(topic)}
                     currentTime={currentVideoTimestamp}
@@ -775,7 +770,6 @@ export function PlayerShell({ courseSlug, topicId, children }: PlayerShellProps)
             title={topic.title}
             milestone={milestone}
             previousDisabled={!previous}
-            showPrevious={!coursePackage}
             // On the last topic, Next opens the course-complete dialog: only once the course is done.
             // A topic that asks keeps Next enabled on the last topic too: the answer may finish the course.
             nextDisabled={!next && !courseDone && !asksNow}

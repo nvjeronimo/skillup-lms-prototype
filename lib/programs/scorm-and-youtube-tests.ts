@@ -11,8 +11,8 @@ import { relativeLabel } from "@/lib/sample-time";
  *   YouTube inside our player, withdrawn on 12 Nov 2026).
  * - Course 2, SCORM Test Course: the four packages inside units of a course (Activity groups A–C).
  * - Courses 3 and 4: the content team's POSH course (Rise) and a Storyline final quiz (10 Nov 2026).
- * - Courses 5 and 6: the improved course-package flow, PROPOSED on 11 Nov 2026 (POSH as one
- *   package, then as its real two packages). See lib/courses/scorm-course-packages.
+ * - Courses 5 and 6: the same exports again, as one package and as two packages. See
+ *   lib/courses/scorm-course-packages.
  * Removed on 11 Nov 2026 (Nelson): the four GenAI activities as whole courses and Golf Explained,
  * which had no zip from SkillUp behind them as courses.
  *
@@ -39,7 +39,7 @@ const program: Program = {
 
   coursesIntro: {
     title: "Courses in this program",
-    lead: "Six test courses: a YouTube video in YouTube’s official embed, the four SCORM packages inside the units of a course, two real exports from the content team (a Rise course and a Storyline quiz), and the improved package flow proposed on 11 Nov 2026 (courses 5 and 6). Take them in any order.",
+    lead: "Six test courses: a YouTube video in YouTube’s official embed, the four SCORM packages inside the units of a course, two real exports from the content team (a Rise course and a Storyline quiz), and those same exports again as one package and as two packages (courses 5 and 6). Take them in any order.",
   },
   courses: [
     programCourse(1, "YouTube Video Test", "YT", "ux-research-and-design-thinking", {
@@ -65,34 +65,36 @@ const program: Program = {
     }),
     programCourse(3, "POSH: Prevention of Sexual Harassment", "PO", "leadership-in-remote-teams", {
       progressMeta: "45 min total",
+      progressAs: "status",
       upNext: { title: "POSH: Prevention of Sexual Harassment", type: "Activity" },
       position: "1 SCORM package",
-      detail: "1 topic · Rise, own menu",
+      detail: "1 topic · Rise, no sidebar",
       modules: [{ number: 1, title: "Module 1 · POSH: Prevention of Sexual Harassment", complete: false, topics: "1 topic", duration: "45m" }],
     }),
     programCourse(4, "Final Quiz (Ungraded)", "FQ", "intro-to-product-analytics", {
       progressMeta: "10 min total",
+      progressAs: "status",
       upNext: { title: "Final Quiz (Ungraded)", type: "Activity" },
       position: "1 SCORM package",
-      detail: "1 topic · POSH final quiz",
+      detail: "1 topic · quiz, no sidebar",
       modules: [{ number: 1, title: "Module 1 · Final Quiz (Ungraded)", complete: false, topics: "1 topic", duration: "10m" }],
     }),
-    // Proposal of 11 Nov 2026: one package reports a status, so the card says Started, with no share.
-    programCourse(5, "POSH · proposed flow, one package", "P1", "leadership-in-remote-teams", {
+    // One package reports a status, so the card says Started, with no share.
+    programCourse(5, "POSH · one package", "P1", "leadership-in-remote-teams", {
       progressMeta: "45 min total",
       progressPct: 0,
       progressAs: "status",
       cta: "Resume",
       upNext: { title: "POSH: Prevention of Sexual Harassment", type: "Activity" },
       position: "1 SCORM package",
-      detail: "1 topic · proposal: no sidebar or footer of ours",
-      modules: [{ number: 1, title: "Module 1 · POSH · proposed flow, one package", complete: false, topics: "1 topic", duration: "45m" }],
+      detail: "1 topic · no sidebar, ring or footer",
+      modules: [{ number: 1, title: "Module 1 · POSH · one package", complete: false, topics: "1 topic", duration: "45m" }],
     }),
-    programCourse(6, "POSH · proposed flow, two packages", "P2", "intro-to-product-analytics", {
+    programCourse(6, "POSH · two packages", "P2", "intro-to-product-analytics", {
       progressMeta: "55 min total",
       upNext: { title: "POSH: Prevention of Sexual Harassment", type: "Activity" },
       position: "2 SCORM packages",
-      detail: "2 topics · proposal: Next asks",
+      detail: "2 topics · Next asks before leaving",
       modules: [{ number: 1, title: "Module 1 · POSH: Prevention of Sexual Harassment", complete: false, topics: "2 topics", duration: "55m" }],
     }),
   ],
@@ -141,10 +143,10 @@ const program: Program = {
       body: [
         "YouTube Video Test: a YouTube embed in a Text component (not tracked: Mark as Complete, and Next asks; back from YouTube, the alert asks to mark it complete), and a lesson page with text, the embed and a quick check.",
         "SCORM Test Course: four packages, each inside a unit of one course, with a test panel that shows what each package reports.",
-        "POSH: Prevention of Sexual Harassment: the content team's real Rise course, with its own menu and videos, as one course package: one topic named after the course, our sidebar collapsed, 0% until the package reports completion, then 100%.",
-        "Final Quiz (Ungraded): the POSH course's final assessment, a separate Storyline package (10 questions, pass mark 80%, repeat as needed), as one course package that reports a score.",
-        "POSH · proposed flow, one package (proposal, 11 Nov 2026): a SCORM 1.2 package reports a status, never a percentage, so the course says Not started, Started or Completed instead of a share, and in the player nothing of ours surrounds the package: no sidebar, no ring, no footer.",
-        "POSH · proposed flow, two packages (proposal, 11 Nov 2026): POSH as it really arrives, the Rise course and the Storyline quiz as two topics with our normal sidebar. Next asks before you leave a package that has not reported completion yet: stay, or continue anyway.",
+        "POSH: Prevention of Sexual Harassment: the content team's real Rise course, with its own menu and videos, as one course package: one topic named after the course. The course shows a status, never a percentage, and the player has no sidebar, ring or footer.",
+        "Final Quiz (Ungraded): the POSH course's final assessment, a separate Storyline package (10 questions, pass mark 80%, repeat as needed), as one course package that reports a score. Same player: no sidebar, ring or footer.",
+        "POSH · one package: the same Rise course, opened already, so the page says Started. A SCORM 1.2 package reports a status, never a percentage, and in the player nothing of ours surrounds the package: no sidebar, no ring, no footer.",
+        "POSH · two packages: POSH as it arrives, the Rise course and the Storyline quiz as two topics with the sidebar. Next asks before you leave a package that has not reported completion yet: stay, or continue anyway.",
       ],
       defaultOpen: true,
     },

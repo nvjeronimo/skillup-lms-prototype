@@ -10,6 +10,7 @@ import {
   DEFAULT_COURSE_TAB,
   hasDatesTab,
   isCourseTab,
+  MENTORSHIP_QA_MOCK,
   type CourseDetail,
   type CourseTabId,
 } from "@/lib/platform/course-detail";
@@ -52,7 +53,9 @@ export function CourseDetailView({ course }: { course: CourseDetail }) {
   const baseId = React.useId();
 
   // Decision 036: a self-paced course has no Dates tab, so ?tab=dates opens the Course tab.
-  const tabs = courseTabsFor(course);
+  const tabs = courseTabsFor(course).map((tab) =>
+    tab.id === "qa" ? { ...tab, badge: "On hold", mock: MENTORSHIP_QA_MOCK } : tab,
+  );
   const param = searchParams.get("tab");
   const urlTab: CourseTabId = isCourseTab(param) && tabs.some((t) => t.id === param) ? param : DEFAULT_COURSE_TAB;
   const [active, setActive] = React.useState<CourseTabId>(urlTab);

@@ -5,11 +5,12 @@ import { ArrowRight, Bookmark, CalendarPlus, ChevronRight, Megaphone, MessageCir
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Avatar } from "@/components/atoms/Avatar";
+import { Badge } from "@/components/atoms/Badge";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CertificateCard } from "@/components/platform/program/CertificatesTab";
 import { CardShell, SidebarDateList } from "@/components/platform/program/parts";
 import { useLmsStore } from "@/lib/store";
-import { courseDetailHref, hasDatesTab, type CourseDetail, type CourseToolId } from "@/lib/platform/course-detail";
+import { courseDetailHref, hasDatesTab, MENTORSHIP_QA_MOCK, type CourseDetail, type CourseToolId } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
 import { WeeklyGoalCard } from "./WeeklyGoalCard";
 
@@ -49,10 +50,16 @@ export function CourseSidebar({ course, className }: { course: CourseDetail; cla
       <section
         data-theme="dark"
         data-skin={mounted && skin !== "teal" ? skin : undefined}
-        data-mock="No mentor field on the Course Home APIs"
+        data-mock={MENTORSHIP_QA_MOCK}
         className="flex flex-col gap-3 rounded-card border border-sko-border-subtle bg-sko-bg-primary-soft p-[15px]"
       >
-        <h2 className="sk-text-label-small-medium text-sko-text-default">{course.mentor.label}</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="sk-text-label-small-medium text-sko-text-default">{course.mentor.label}</h2>
+          <span className="flex flex-wrap gap-1">
+            <Badge color="warning" size="sm">On hold</Badge>
+            <Badge color="gray" size="sm">Preview data</Badge>
+          </span>
+        </div>
         <p className="sk-text-body-large-semibold text-sko-text-default">{course.mentor.title}</p>
         <p className="sk-text-body-medium-regular text-sko-text-default">{course.mentor.body}</p>
         <ButtonLink href={qaHref} scroll={false} hierarchy="secondary" size="sm" className="w-full max-md:h-11">

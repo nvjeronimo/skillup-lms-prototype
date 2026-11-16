@@ -238,7 +238,17 @@ export function GradeSummary({ grade }: { grade: CourseDetail["progressTab"]["gr
  * instead of a general sentence, a Gray badge for locked topics (only when there are any: they
  * are left out of the percentage), and Badge Success "Completed" beside the title at 100%.
  */
-export function CompletionCard({ completion }: { completion: CourseDetail["progressTab"]["completion"] }) {
+export function CompletionCard({
+  completion,
+  status,
+}: {
+  completion: CourseDetail["progressTab"]["completion"];
+  /**
+   * One SCORM package reports a status, never a share. The word replaces the percentage ring.
+   * Left out, the card is the counted ring.
+   */
+  status?: string;
+}) {
   const available = completion.complete + completion.incomplete;
   const percent = available ? Math.round((completion.complete / available) * 100) : 0;
   const done = available > 0 && completion.incomplete === 0;
@@ -268,7 +278,11 @@ export function CompletionCard({ completion }: { completion: CourseDetail["progr
           </Badge>
         ) : null}
       </div>
-      <CompletionRing percent={percent} label={completion.title} />
+      {status ? (
+        <p className="sk-text-headline-medium-bold shrink-0 text-sko-text-default">{status}</p>
+      ) : (
+        <CompletionRing percent={percent} label={completion.title} />
+      )}
     </section>
   );
 }
@@ -292,7 +306,7 @@ export function ProgressTab({ course }: { course: CourseDetail }) {
       <div className="flex min-w-0 flex-1 flex-col gap-layout-stack">
         <h2 className="sk-text-headline-medium-bold text-sko-text-default">{tab.title}</h2>
 
-        <CompletionCard completion={tab.completion} />
+        <CompletionCard completion={tab.completion} status={course.progress.status} />
 
         <CourseAlert tone={course.passed ? "success" : "warning"} title={tab.passAlert.title} body={tab.passAlert.body} />
 

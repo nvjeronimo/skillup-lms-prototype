@@ -22,6 +22,10 @@ import { edxDatesTab } from "./edx-dates";
  * the page prints CONTENT_PENDING (lib/platform/program).
  */
 
+/** Mentorship Q&A is on hold. The tab and the Ask your mentor card stay on the page as preview data. */
+export const MENTORSHIP_QA_MOCK =
+  "Mentorship Q&A is on hold. The tab, the Ask your mentor card and the threads are preview data.";
+
 /** `tabs[]` of course_metadata for a self-paced course, without the staff-only Instructor tab. */
 export const COURSE_TABS = [
   { id: "course", label: "Course" },
@@ -234,7 +238,7 @@ export interface CourseDetail {
   progress: {
     percent: number;
     /**
-     * A course that is one SCORM package (proposal of 11 Nov 2026): the package reports a status,
+     * A course that is one SCORM package: the package reports a status,
      * never a share, so the card shows this word ("Not started", "Started", "Completed") in place
      * of the percentage and has no bar.
      */

@@ -196,7 +196,7 @@ export function CertificatePageView({
                 <li key={req.title} className="flex flex-col gap-0.5">
                   <p className="sk-text-body-medium-semibold text-sko-text-default">{req.title}</p>
                   <p className="sk-text-body-small-regular text-sko-text-subtle">{req.detail}</p>
-                  <PlatformProgressBar value={req.percent} label={req.title} />
+                  {req.percent === undefined ? null : <PlatformProgressBar value={req.percent} label={req.title} />}
                 </li>
               ))}
             </ul>

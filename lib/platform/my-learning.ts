@@ -82,8 +82,8 @@ export interface MyLearningCourse {
   progressPct: number | null;
   /**
    * "status": the card says Not started, Started or Completed, with no percentage and no bar. For a
-   * course that is one SCORM package, which reports a status and never a share (proposal of
-   * 11 Nov 2026). Open edX knows whether the learner has started (Learner Home: Begin vs Resume).
+   * course that is one SCORM package, which reports a status and never a share.
+   * Open edX knows whether the learner has started (Learner Home: Begin vs Resume).
    */
   progressAs?: "status";
   /** Right of the progress row: the course's total effort (`effort`), or its start date. */
