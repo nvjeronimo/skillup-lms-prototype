@@ -58,7 +58,7 @@ function Progress({ course, hug = false, className }: { course: MyLearningCourse
         <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">{course.progressMeta}</span>
       </div>
       {/* DS `State=Not started` (v1.4): no bar, a 0% bar says nothing. */}
-      {/* A status card (one SCORM package, proposal of 11 Nov 2026) has no bar: there is no share to show. */}
+      {/* A status card (one SCORM package) has no bar: there is no share to show. */}
       {course.progressPct === null || asStatus ? null : (
         <PlatformProgressBar track="muted" tone={complete ? "complete" : "progress"} value={pct} label={`${course.title} progress`} />
       )}

@@ -169,8 +169,10 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
               </h3>
               <ol className="flex flex-col divide-y divide-sko-border-subtle rounded-card-inset border border-sko-border-subtle">
                 {detail.courses.map((c) => {
-                  const pct = c.card.progressPct ?? 0;
-                  const done = pct >= 100;
+                  const pct = c.card.progressPct;
+                  const statusCourse = c.card.progressAs === "status";
+                  const done = pct !== null && pct >= 100;
+                  const started = statusCourse && pct !== null && !done;
                   const isCurrent = c === current;
                   return (
                     <li key={c.id} className={cn("flex items-center gap-3 px-3 py-2.5", isCurrent && "bg-sko-bg-primary-soft")}>
@@ -193,11 +195,15 @@ export function ProgramQuickView({ program, open, onClose }: ProgramQuickViewPro
                           </span>
                         ) : null}
                       </div>
-                      <span className="sr-only">{done ? "Completed" : pct > 0 ? `${pct}% complete` : "Not started"}</span>
+                      <span className="sr-only">
+                        {done ? "Completed" : started ? "Started" : !statusCourse && pct !== null && pct > 0 ? `${pct}% complete` : "Not started"}
+                      </span>
                       <span aria-hidden="true" className="shrink-0">
                         {done ? (
                           <Badge variant="soft" color="success">Completed</Badge>
-                        ) : pct > 0 ? (
+                        ) : started ? (
+                          <Badge variant="soft" color="info">Started</Badge>
+                        ) : !statusCourse && pct !== null && pct > 0 ? (
                           <Badge variant="soft" color="info">{pct}%</Badge>
                         ) : (
                           <Badge color="gray">Not started</Badge>

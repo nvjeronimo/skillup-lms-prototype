@@ -35,8 +35,20 @@ export interface ScormContainerProps {
    * frame edge to edge in the content area (Nelson, 11 Nov 2026).
    */
   bare?: boolean;
+  /**
+   * ADR 023. True in the native app: a small screen shows only the warning, with no way into
+   * the package. This prototype has no native shell, so the default stays false and mobile web
+   * offers Open anyway. A host that embeds the player in the app sets it true.
+   */
+  nativeApp?: boolean;
   className?: string;
 }
+
+/**
+ * ADR 023. The web prototype is not the native app. Mobile web can open a package from the
+ * small-screen warning; the native app cannot.
+ */
+export const SCORM_NATIVE_APP = false;
 
 /**
  * The SCORM package's frame, as the Open edX SCORM XBlock (openedx-scorm-xblock) renders it and as
@@ -60,6 +72,7 @@ export function ScormContainer({
   onPlayInPage,
   frameHeight,
   bare = false,
+  nativeApp = SCORM_NATIVE_APP,
   className,
 }: ScormContainerProps) {
   const frameRef = React.useRef<HTMLDivElement>(null);
@@ -74,11 +87,15 @@ export function ScormContainer({
     else void frameRef.current?.requestFullscreen?.();
   };
   const inPage = state === "loading" || state === "running";
+  // On a phone the warning stands in front of the package until the learner chooses to open it.
+  // Desktop is unchanged: the warning is hidden from the md breakpoint up.
+  const [openedAnyway, setOpenedAnyway] = React.useState(false);
+  const phoneHold = state !== "error" && !bare && (nativeApp || !openedAnyway);
 
   return (
-    <section className={cn("flex flex-col gap-3", className)}>
+    <section className={cn("flex flex-col gap-3", className)} data-scorm-surface={nativeApp ? "native" : "web"}>
       {state !== "error" && !bare ? (
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className={cn("flex flex-wrap items-center justify-end gap-2", phoneHold && "max-md:hidden")}>
           {inPage ? (
             <>
               <Button variant="secondary" size="sm" rightIcon={ExternalLink} onClick={onLaunchWindow}>
@@ -103,6 +120,7 @@ export function ScormContainer({
         ref={frameRef}
         className={cn(
           "flex w-full flex-col",
+          phoneHold && "max-md:hidden",
           bare ? "" : "rounded-card border shadow-sk-card",
           fullscreen
             ? "h-full overflow-y-auto bg-sko-bg-page"
@@ -177,13 +195,21 @@ export function ScormContainer({
         />
       ) : null}
 
-      {/* Only where it is true: on a small screen (it read as noise on desktop). */}
-      {state !== "error" && !bare ? (
+      {/* Only where it is true: on a small screen (it read as noise on desktop). Mobile web can
+          continue into the package. The native app (ADR 023) stops at the warning. */}
+      {phoneHold ? (
         <div className="md:hidden">
           <InlineAlert
             tone="info"
             title="Best viewed on a larger screen"
             description="Interactive activities work best on a larger screen and may not be fully supported in the mobile app. Open this one on desktop or the web."
+            action={
+              nativeApp ? undefined : (
+                <Button variant="primary" size="md" onClick={() => setOpenedAnyway(true)}>
+                  Open anyway
+                </Button>
+              )
+            }
           />
         </div>
       ) : null}

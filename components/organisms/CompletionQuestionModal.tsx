@@ -25,9 +25,9 @@ export interface CompletionQuestionModalProps {
   /** Close, Esc or the backdrop: no change, remain on the current topic. */
   onClose: () => void;
   /**
-   * "package": a SCORM package that reports completion by itself has not done so yet (proposal of
-   * 11 Nov 2026). We cannot mark a package complete, so there is no "Yes, completed": the learner
-   * stays on the activity (primary, `onClose`) or continues anyway (`onNotYet`).
+   * "package": a SCORM package that reports completion by itself has not done so yet. We cannot
+   * mark a package complete, so there is no "Yes, completed": the learner stays on the activity
+   * (primary, `onClose`) or continues anyway (`onNotYet`).
    */
   variant?: "question" | "package";
 }

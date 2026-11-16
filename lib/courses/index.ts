@@ -19,6 +19,7 @@ import securityOperationsAndIncidentResponse from "./security-operations-and-inc
 import capstoneSecuringASmallOrganisation from "./capstone-securing-a-small-organisation";
 import scormTestCourse from "./scorm-test-course";
 import youtubeVideoTest from "./youtube-video-test";
+import singleVideoTopic from "./single-video-topic";
 import { scormCoursePackages } from "./scorm-course-packages";
 
 /**
@@ -51,6 +52,7 @@ export const COURSES: CourseEntry[] = [
   scormTestCourse,
   youtubeVideoTest,
   ...scormCoursePackages,
+  singleVideoTopic,
 ];
 
 /** Ids and slugs taken by the sample courses of lib/data (Six Sigma topics are "m1-t1", unprefixed). */
