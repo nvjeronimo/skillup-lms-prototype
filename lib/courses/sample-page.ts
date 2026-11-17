@@ -1,16 +1,137 @@
+import outline from "@/lib/data-model.json";
 import { SHIFT_DATES } from "@/lib/platform/shift-dates";
 import type { BadgeColor } from "@/components/atoms/Badge";
-import type { CourseDetail, WeekDayState, WeeklyGoal } from "@/lib/platform/course-detail";
-import { SAMPLE_TODAY, relativeColor, relativeLabel, thisWeekLabel, todayLabel } from "@/lib/sample-time";
+import type {
+  CourseDetail,
+  CourseModule,
+  CourseModuleState,
+  CourseTopicState,
+  WeekDayState,
+  WeeklyGoal,
+} from "@/lib/platform/course-detail";
+import {
+  SAMPLE_TODAY,
+  relativeColor,
+  relativeLabel,
+  thisWeekLabel,
+  todayLabel,
+} from "@/lib/sample-time";
+import type { TopicType } from "@/lib/types";
 
 /**
  * The Six Sigma course page, the original sample, and the IBM course built on it. They sit
  * here, below the course folders, because a course page borrows the parts it does not
  * rewrite from `SIX_SIGMA` (lib/courses/kit). Read through lib/platform/course-detail.
+ *
+ * The syllabus is the player's outline (`lib/data-model.json`): the same modules, lessons
+ * and topic ids the player opens. A hand-written list on those ids sent each row to a
+ * different topic.
  */
 
+/** A topic as lib/data-model.json stores it. The player renders these records. */
+interface PlayerTopic {
+  id: string;
+  type: TopicType;
+  title: string;
+  duration: string;
+  completed?: boolean;
+  locked?: boolean;
+  active?: boolean;
+}
+
+interface PlayerModule {
+  id: string;
+  title: string;
+  topics?: PlayerTopic[];
+  lessons?: { id: string; label: string; topics: PlayerTopic[] }[];
+}
+
+const playerModules = outline.course.modules as PlayerModule[];
+
+function playerTopicsOf(mod: PlayerModule): PlayerTopic[] {
+  if (mod.lessons?.length) return mod.lessons.flatMap((lesson) => lesson.topics);
+  return mod.topics ?? [];
+}
+
+/** "8 min read approx." → "8 min". The same trim the other course pages use (lib/courses/kit). */
+function effort(duration: string): string {
+  return duration.replace(/^approx\.\s*|\s*approx\.$/g, "").replace(/\s*read$/, "");
+}
+
+/** A length in minutes, or 0 when the string is a date or empty. */
+function minutesOf(duration: string): number {
+  const hours = duration.match(/(\d+)\s*h\b/);
+  if (hours) return Number(hours[1]) * 60;
+  const clock = duration.match(/(\d+)m\s*(\d+)s/);
+  if (clock) return Number(clock[1]) + Number(clock[2]) / 60;
+  const mins = duration.match(/(\d+)\s*min\b/);
+  return mins ? Number(mins[1]) : 0;
+}
+
+function moduleDuration(minutes: number): string {
+  const rounded = Math.round(minutes);
+  const h = Math.floor(rounded / 60);
+  const m = rounded % 60;
+  if (h && m) return `${h}h ${m}m`;
+  if (h) return `${h}h`;
+  if (m) return `${m}m`;
+  return "—";
+}
+
+function topicState(topic: PlayerTopic): CourseTopicState {
+  // The player draws a locked row as locked even when a completed flag is also set.
+  if (topic.locked) return "Locked";
+  if (topic.completed) return "Done";
+  return "Pending";
+}
+
+/**
+ * Modules, lessons and topics from the player outline. The JSON's module counters
+ * (`topicsTotal`, `topicsCompleted`) disagree with its topic records — module 1 says 3 of 3
+ * while "Quick check" is not completed, and module 3 says 9 topics while its lessons hold
+ * 21 — so this follows the records. That is what the player draws.
+ */
+function syllabusFromPlayer(): CourseModule[] {
+  return playerModules.map((mod, index) => {
+    const topics = playerTopicsOf(mod);
+    const state: CourseModuleState = topics.every((t) => t.completed)
+      ? "complete"
+      : topics.every((t) => t.locked)
+        ? "locked"
+        : "incomplete";
+    const lessons = mod.lessons?.length
+      ? mod.lessons
+      : [{ id: `${mod.id}-topics`, label: "", topics }];
+    return {
+      id: mod.id,
+      number: index + 1,
+      title: `Module ${index + 1} · ${mod.title}`,
+      state,
+      topicCount: `${topics.length} ${topics.length === 1 ? "topic" : "topics"}`,
+      duration: moduleDuration(topics.reduce((sum, t) => sum + minutesOf(t.duration), 0)),
+      ...(topics.some((t) => t.active) ? { defaultOpen: true } : {}),
+      lessons: lessons.map((lesson) => ({
+        id: lesson.id,
+        label: lesson.label,
+        topics: lesson.topics.map((t) => ({
+          id: t.id,
+          title: t.title,
+          type: t.type,
+          duration: effort(t.duration),
+          state: topicState(t),
+        })),
+      })),
+    };
+  });
+}
+
+const SIX_SIGMA_MODULES = syllabusFromPlayer();
+
+const playerTopics = playerModules.flatMap(playerTopicsOf);
+const resumeTopic =
+  playerTopics.find((t) => t.active) ?? playerTopics.find((t) => !t.completed && !t.locked);
 /** The existing course player; every topic and assignment link opens it. */
-const COURSE_PLAYER_HREF = "/course/six-sigma/topic/m3-t1";
+const COURSE_PLAYER_HREF = `/course/six-sigma/topic/${resumeTopic?.id ?? "m3-t1"}`;
 
 const WEEK_LABELS: { label: string; name: string }[] = [
   { label: "Mo", name: "Monday" },
@@ -35,7 +156,11 @@ export const SIX_SIGMA: CourseDetail = {
   partners: ["Microsoft", "IBM"],
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
-  stats: { structure: "4 modules · 42 topics", duration: "~ 14 hours", org: "SkillUp · SIXSIGMA-01" },
+  stats: {
+    structure: "4 modules · 42 topics",
+    duration: "~ 14 hours",
+    org: "SkillUp · SIXSIGMA-01",
+  },
   progress: {
     percent: 38,
     label: "Course progress",
@@ -56,67 +181,7 @@ export const SIX_SIGMA: CourseDetail = {
     title: "What you'll learn",
     lead: "Four modules that walk the DMAIC cycle end to end. Work through them at your own pace. Each module closes with a graded checkpoint.",
   },
-  modules: [
-    {
-      id: "module-1",
-      number: 1,
-      title: "Module 1 · Foundations of Six Sigma",
-      state: "complete",
-      topicCount: "12 topics",
-      duration: "3h 20m",
-    },
-    {
-      id: "module-2",
-      number: 2,
-      title: "Module 2 · DMAIC in practice",
-      state: "incomplete",
-      topicCount: "12 topics",
-      duration: "3h 20m",
-    },
-    {
-      id: "module-3",
-      number: 3,
-      title: "Module 3 · Improve the process",
-      state: "incomplete",
-      topicCount: "9 topics",
-      duration: "3h 48m",
-      defaultOpen: true,
-      lessons: [
-        {
-          id: "define-and-measure",
-          label: "Define and measure",
-          topics: [
-            { id: "m3-t1", title: "The define phase", type: "Reading", duration: "18 min", state: "Done" },
-            { id: "m3-t2", title: "The measure phase", type: "Video", duration: "28 min", state: "Pending" },
-            { id: "m3-t3", title: "Plotting a control chart", type: "Video", duration: "18 min", state: "Done" },
-            { id: "m3-t4", title: "Choosing the right metric", type: "Reading", duration: "6 min", state: "Done" },
-            { id: "m3-t5", title: "DMAIC fundamentals", type: "Quiz", duration: "8 min", state: "Done" },
-          ],
-        },
-        {
-          id: "analyze-and-interpret",
-          label: "Analyse and interpret",
-          topics: [
-            { id: "m3-t6", title: "Running the analyse phase", type: "Reading", duration: "45 min", state: "Pending" },
-            { id: "m3-t7", title: "Designing the prototype", type: "Video", duration: "30 min", state: "Pending" },
-            { id: "m3-t8", title: "Conducting user testing", type: "Project", duration: "25 min", state: "Pending" },
-            // A staff-graded project step: peer and self assessment are off on SkillUp courses, the ORA
-            // is graded by staff on a rubric (Nelson, 28 Oct 2026).
-            { id: "m3-t9", title: "Improvement plan: staff-graded project", type: "Project", duration: "50 min", state: "Locked" },
-          ],
-        },
-      ],
-    },
-    {
-      id: "module-4",
-      number: 4,
-      title: "Module 4 · Control and sustain",
-      state: "locked",
-      topicCount: "9 topics",
-      duration: "3h 20m",
-      lockReason: "Complete “Module 3 · Checkpoint” to unlock",
-    },
-  ],
+  modules: SIX_SIGMA_MODULES,
   mentor: {
     label: "Mentor",
     title: "Ask anything to your mentor",
@@ -154,7 +219,11 @@ export const SIX_SIGMA: CourseDetail = {
   },
   handouts: {
     label: "Handouts",
-    items: ["Six Sigma cheat sheet (PDF)", "DMAIC project template (XLSX)", "Control chart worksheet (PDF)"],
+    items: [
+      "Six Sigma cheat sheet (PDF)",
+      "DMAIC project template (XLSX)",
+      "Control chart worksheet (PDF)",
+    ],
   },
   upcomingDates: {
     label: "Upcoming dates",
@@ -352,7 +421,8 @@ export const SIX_SIGMA: CourseDetail = {
         state: "upcoming",
         badges: [{ label: "Access", color: GRAY }],
         title: "Audit access ends",
-        description: "After this date the course content is no longer available on the audit track.",
+        description:
+          "After this date the course content is no longer available on the audit track.",
       },
       {
         id: "course-ends",
@@ -362,7 +432,8 @@ export const SIX_SIGMA: CourseDetail = {
         state: "upcoming",
         badges: [{ label: "Course", color: GRAY }],
         title: "Course ends",
-        description: "After this date the course is archived — content stays readable, graded work closes.",
+        description:
+          "After this date the course is archived — content stays readable, graded work closes.",
       },
     ],
     timezoneNote: "All times are shown in your time zone (Europe/Lisbon, UTC+1).",
