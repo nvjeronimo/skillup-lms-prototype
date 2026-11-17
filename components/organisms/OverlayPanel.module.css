@@ -1,0 +1,152 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+.closed {
+  pointer-events: none;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+}
+/* Full width on a phone, 480 from 768; swipes back to the right (pan-y left to the page). */
+.panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  touch-action: pan-y;
+  flex-direction: column;
+  border-left-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+@media (min-width: 768px) {
+  .panel {
+    width: 480px;
+  }
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 20px 24px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.colorTransition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* A quiet text action: text/primary, no rule; underline on hover. */
+.textAction {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--sk-radius-control);
+  padding: 4px;
+  color: var(--color-text-primary);
+}
+.textAction:focus-visible {
+  background-color: var(--color-bg-faint);
+}
+.close {
+  display: inline-flex;
+  height: 32px;
+  width: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  color: var(--color-icon-subtle);
+}
+@media (hover: hover) and (pointer: fine) {
+  .textAction:hover {
+    color: var(--color-text-on-primary-soft);
+    text-decoration-line: underline;
+  }
+  .close:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px 24px;
+}
+.scrollBody {
+  flex: 1 1 0%;
+  overflow-y: auto;
+  background-color: var(--color-bg-subtle);
+}
+.footer {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px 24px;
+  text-align: center;
+}
+/* The footer link drawn as a Link Button: 1px icon/primary rule under the label. */
+.footerLink {
+  display: inline-flex;
+  align-items: center;
+  border-bottom-width: 1px;
+  border-color: var(--color-icon-primary);
+  padding: 4px 4px 3px;
+  color: var(--color-text-primary);
+}
+.footerLink:focus-visible {
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-faint);
+}
+.footerLink:hover svg {
+  color: var(--color-icon-default);
+}
+@media (hover: hover) and (pointer: fine) {
+  .footerLink:hover {
+    border-color: var(--color-icon-default);
+    color: var(--color-text-on-primary-soft);
+  }
+}
+
+/* PanelSectionLabel, PanelBody, PanelGroup */
+.sectionLabel {
+  padding: 12px 24px;
+  color: var(--color-text-subtle);
+}
+.body {
+  padding-inline: 16px;
+  padding-bottom: 16px;
+}
+.group {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.group > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 0;
+  border-color: var(--color-border-subtle);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the header text action and close .rounded-control buttons). Their rules, kept here. */
+:global([data-direction="studio"]) .textAction,
+:global([data-skin="harbor"]) .textAction,
+:global([data-direction="studio"]) .close,
+:global([data-skin="harbor"]) .close {
+  border-radius: 9999px;
+}

@@ -1,0 +1,62 @@
+/* DS Avatar group, Size=sm: 32px avatars overlapping by 8, each with a 1.5px bg/page ring. */
+.strip {
+  display: flex;
+}
+.strip > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0;
+  margin-left: -8px;
+}
+.avatar {
+  border-radius: var(--sk-radius-pill);
+  box-shadow: 0 0 0 0 rgb(255 255 255), 0 0 0 1.5px var(--color-bg-page), 0 0 transparent;
+}
+/* The "+N" text avatar: bg/muted, 0.75px border/subtle, text/subtle. */
+.extra {
+  display: inline-flex;
+  height: 32px;
+  width: 32px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  border-width: 0.75px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-subtle);
+  box-shadow: 0 0 0 0 rgb(255 255 255), 0 0 0 1.5px var(--color-bg-page), 0 0 transparent;
+}
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-subtle);
+  padding: 12px 16px;
+}
+.barJoin {
+  gap: 16px;
+}
+.barLive {
+  row-gap: 12px;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.joinedRow,
+.joinActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ink {
+  color: var(--color-text-default);
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}

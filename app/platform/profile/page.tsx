@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { EditProfileView } from "@/components/platform/profile/EditProfileView";
 import { pageTitle } from "@/lib/utils";
 

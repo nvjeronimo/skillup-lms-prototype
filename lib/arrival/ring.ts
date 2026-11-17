@@ -9,6 +9,8 @@
  * A value that changes during the sweep is a completion: it goes straight to the chain, so
  * the two never run one over the other with different delays.
  */
+import styles from "./ring.module.css";
+
 export type RingPhase = "armed" | "sweep" | "settled";
 
 export function nextRingPhase(prev: RingPhase, armed: boolean, valueChanged: boolean): RingPhase {
@@ -23,9 +25,8 @@ export function ringShownPct(phase: RingPhase, pct: number): number {
   return phase === "armed" ? 0 : pct;
 }
 
-/** The arc's transition classes in a phase (token utilities only). */
+/** The arc's transition classes in a phase (motion tokens only, ring.module.css). */
 export function ringTransitionClass(phase: RingPhase): string {
   if (phase === "armed") return "";
-  const base = "transition-[stroke-dashoffset] duration-long2 ease-standard-decelerate";
-  return phase === "sweep" ? base : `${base} delay-short4`;
+  return phase === "sweep" ? styles.arc : `${styles.arc} ${styles.chain}`;
 }

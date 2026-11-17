@@ -1,0 +1,21 @@
+/* My Learning: page padding 40 / 32 / 24 (Layout tokens) with 80 / 64 / 48 under the content;
+   the content capped at the desktop frame's 1200. */
+.page {
+  padding-inline: var(--sk-layout-page-x);
+  padding-top: var(--sk-layout-page-top);
+  padding-bottom: 48px;
+}
+@media (min-width: 768px) {
+  .page { padding-bottom: 64px; }
+}
+@media (min-width: 1024px) {
+  .page { padding-bottom: 80px; }
+}
+.stack {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}

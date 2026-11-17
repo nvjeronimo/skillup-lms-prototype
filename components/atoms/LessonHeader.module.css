@@ -1,0 +1,5 @@
+/* DS LMS / Lesson Header: 16px padding all round. Takes the caller's className: :where(). */
+:where(.lessonHeader) {
+  padding: 16px;
+  color: var(--color-text-muted);
+}

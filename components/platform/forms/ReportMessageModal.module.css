@@ -1,0 +1,4 @@
+/* The message field grows by hand, vertically only. */
+.textarea {
+  resize: vertical;
+}

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Layers } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
@@ -7,6 +5,7 @@ import { LessonBlocks } from "./LessonBlocks";
 import { getLessonPage } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./LessonPageView.module.css";
 
 /**
  * Lesson Page — a topic with no single dominant asset, composed of stacked
@@ -32,8 +31,8 @@ export function LessonPageView({ topicId }: { topicId: string }) {
   ].filter(Boolean) as string[];
 
   return (
-    <div className="flex flex-col gap-8 py-6">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className={styles.root}>
+      <div className={styles.badges}>
         <Badge tone="brand" leftIcon={Layers}>
           Lesson page
         </Badge>
@@ -41,7 +40,7 @@ export function LessonPageView({ topicId }: { topicId: string }) {
       </div>
 
       {page.intro ? (
-        <p className="sk-text-title-medium-medium text-sko-text-default">{page.intro}</p>
+        <p className={`sk-text-title-medium-medium ${styles.intro}`}>{page.intro}</p>
       ) : null}
 
       <LessonBlocks blocks={page.blocks} />

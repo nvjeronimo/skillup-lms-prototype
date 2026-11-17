@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
 import { X } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
 import { AssistantMark } from "./AssistantMark";
+import styles from "./AssistantLauncher.module.css";
 
 export interface AssistantLauncherProps {
   open: boolean;
@@ -68,16 +67,14 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
         style={style}
         className={cn(
           // Hover lifts it a little, a press pushes it in (faster); the colour of the open state
-          // eases with it. Reduced motion keeps only the colour (the transition guard; sk-press-scale
-          // drops the scale itself, which would otherwise snap).
-          "sk-press-scale inline-flex h-12 w-12 items-center justify-center rounded-pill transition-[transform,box-shadow,background-color,color] duration-short3 ease-standard hover:scale-[1.04] active:scale-[.96] active:duration-short2",
-          // The badge needs a positioned button. "relative" only when the caller does not place it:
-          // with both, the stylesheet order made "relative" win over "fixed", and the launcher
-          // stopped following the viewport (14 Oct 2026).
-          !/\b(fixed|absolute|sticky)\b/.test(className ?? "") && "relative",
-          open
-            ? "bg-sko-bg-primary text-sko-text-on-primary shadow-lg hover:bg-sko-bg-primary-hover hover:text-sko-text-on-primary-hover"
-            : "drop-shadow-lg",
+          // eases with it. Reduced motion keeps only the colour (the transition guard; the module
+          // pins the scale, which would otherwise snap). sk-press-scale marks it as pressable.
+          // The badge needs a positioned button: the module's "relative" sits below any caller
+          // class, so a caller that places it (fixed) wins and the launcher follows the viewport
+          // (the stylesheet-order bug of 14 Oct 2026 cannot come back).
+          "sk-press-scale",
+          styles.launcher,
+          open ? styles.open : styles.shut,
           className,
         )}
       >
@@ -86,8 +83,8 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
         <span
           aria-hidden
           className={cn(
-            "absolute inset-0 transition-[opacity,transform] duration-short4 ease-standard",
-            open ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
+            styles.face,
+            open ? styles.markHidden : styles.faceShown,
           )}
         >
           {/* The ring sits under the mark: the ball covers its middle, so only its 3px edge shows. */}
@@ -95,13 +92,14 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
               do, a moving ring would pull the eye from the page for no reason. */}
           <span className={cn("sk-assistant-ring", badge === 0 && "sk-assistant-ring--still")} />
           {/* Inline, so its sparkles can turn (21 Oct 2026); it swaps its own ink in dark. */}
-          <AssistantMark className="relative block h-12 w-12" />
+          <AssistantMark className={styles.mark} />
         </span>
         <span
           aria-hidden
           className={cn(
-            "absolute inset-0 inline-flex items-center justify-center transition-[opacity,transform] duration-short4 ease-standard",
-            open ? "rotate-0 opacity-100" : "-rotate-90 opacity-0",
+            styles.face,
+            styles.crossFace,
+            open ? styles.faceShown : styles.crossHidden,
           )}
         >
           <Icon icon={X} size={24} />
@@ -116,9 +114,9 @@ export const AssistantLauncher = React.forwardRef<HTMLButtonElement, AssistantLa
             onAnimationEnd={() => setPopping(null)}
             className={cn(
               !open && popping === badge && "sk-animate-badge-pop",
-              "transition-opacity duration-short3 ease-standard",
-              open ? "opacity-0" : "opacity-100",
-              "sk-text-body-small-semibold absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-pill bg-sko-bg-primary px-1 text-sko-text-on-primary",
+              styles.badge,
+              open ? styles.badgeHidden : styles.badgeShown,
+              "sk-text-body-small-semibold",
             )}
           >
             {badge}

@@ -1,9 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { ChoiceGroup, FIELD, FormField, FormModal, FormSelect } from "@/components/organisms/FormModal";
 import { discussionThreads, type DiscussionKind, type DiscussionThread } from "@/lib/platform/discussion";
 import { sessionId } from "@/lib/platform/session-additions";
+import { cn } from "@/lib/utils";
+import styles from "./NewPostModal.module.css";
 
 const COURSES = [...new Map(discussionThreads.map((t) => [t.courseSlug, t.course])).entries()];
 const TITLE_MAX = 120;
@@ -75,7 +75,7 @@ export function NewPostModal({
         })
       }
     >
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className={styles.pair}>
         <FormField id={`${id}-course`} label="Course">
           <FormSelect
             id={`${id}-course`}
@@ -114,7 +114,7 @@ export function NewPostModal({
         />
       </FormField>
       <FormField id={`${id}-body`} label="Post">
-        <textarea id={`${id}-body`} value={body} onChange={(e) => setBody(e.target.value)} rows={6} className={`${FIELD} resize-y`} />
+        <textarea id={`${id}-body`} value={body} onChange={(e) => setBody(e.target.value)} rows={6} className={cn(FIELD, styles.textarea)} />
       </FormField>
     </FormModal>
   );

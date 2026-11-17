@@ -1,0 +1,43 @@
+/* Same ground and radius as our VideoPlayer, and its sticky docking. */
+.frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg-subtle);
+  transition-property: height, border-radius;
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+  transition-duration: var(--motion-duration-short4);
+}
+/* With no height from the player: 16:9, at most a third of the viewport. */
+.auto {
+  aspect-ratio: 16 / 9;
+  max-height: 34vh;
+}
+.undocked {
+  border-radius: var(--sk-radius-card);
+}
+.docked {
+  border-bottom-right-radius: var(--sk-radius-card);
+  border-bottom-left-radius: var(--sk-radius-card);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.player {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  aspect-ratio: 16 / 9;
+  height: 100%;
+  max-width: 100%;
+  transform: translateX(-50%);
+  border-width: 0;
+}
+
+/* Skins: tokens/direction-studio.css selected this file's Tailwind .rounded-card; the same rule here. */
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .undocked {
+  border-radius: var(--sk-radius-control);
+}

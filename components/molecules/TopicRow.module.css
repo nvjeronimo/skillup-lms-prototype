@@ -1,0 +1,104 @@
+/* The Open row's 4px brand rule: an inside left stroke in the DS, so an absolute bar here. */
+.activeRule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background-color: var(--color-border-primary);
+}
+
+/* DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred. */
+.railRow {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12px 8px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+
+/* DS `LMS / Topic Row`: 12/8/12/12 padding, 8px gap. */
+.row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 8px 12px 12px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.active {
+  background-color: var(--color-bg-primary-soft);
+}
+@media (hover: hover) and (pointer: fine) {
+  .idle:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+.status {
+  display: contents;
+}
+.open {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  align-items: flex-start;
+  gap: 8px;
+  text-align: left;
+}
+.content {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 4px;
+}
+.title {
+  display: block;
+  color: var(--color-text-default);
+}
+/* state-row: type badge · duration, 6px apart; it wraps (4px between lines) instead of
+   truncating. */
+.stateRow {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 4px;
+}
+.badge {
+  flex-shrink: 0;
+}
+.separator {
+  flex-shrink: 0;
+  color: var(--color-text-subtle);
+}
+.duration {
+  min-width: 0;
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+.optional {
+  flex-shrink: 0;
+  color: var(--color-icon-faint);
+}
+.upNext {
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+}
+.lockedHint {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  color: var(--color-text-subtle);
+}
+.lockIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}

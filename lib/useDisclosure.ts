@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { useReturnFocus } from "./useDialog";
 import { inertProps } from "./inert";

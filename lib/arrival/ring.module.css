@@ -1,0 +1,10 @@
+/* A progress ring's arc: stroke-dashoffset eases over long2 (standard-decelerate). In the
+   completion chain (settled) it waits short4 first, so the ring is the chain's last beat. */
+.arc {
+  transition-property: stroke-dashoffset;
+  transition-duration: var(--motion-duration-long2);
+  transition-timing-function: var(--motion-easing-standard-decelerate);
+}
+.chain {
+  transition-delay: var(--motion-duration-short4);
+}

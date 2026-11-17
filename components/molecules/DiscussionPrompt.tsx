@@ -1,8 +1,7 @@
-"use client";
-
 import * as React from "react";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import styles from "./DiscussionPrompt.module.css";
 
 export interface DiscussionPromptProps {
   prompt: string;
@@ -33,17 +32,14 @@ export function DiscussionPrompt({
 
   return (
     <div
-      className={cn(
-        "flex flex-col gap-4 border-b border-sko-border-subtle bg-sko-bg-page px-6 py-4",
-        className,
-      )}
+      className={cn(styles.prompt, className)}
     >
-      <span className="sk-text-body-small-medium text-sko-text-subtle">{duration}</span>
+      <span className={`sk-text-body-small-medium ${styles.duration}`}>{duration}</span>
 
-      <h3 className="sk-text-body-large-semibold text-sko-text-default">{prompt}</h3>
-      <p className="sk-text-body-medium-regular text-sko-text-muted">{helper}</p>
+      <h3 className={`sk-text-body-large-semibold ${styles.question}`}>{prompt}</h3>
+      <p className={`sk-text-body-medium-regular ${styles.helper}`}>{helper}</p>
 
-      <label htmlFor={replyId} className="sr-only">
+      <label htmlFor={replyId} className="sk-sr-only">
         Your reply
       </label>
       <textarea
@@ -53,11 +49,11 @@ export function DiscussionPrompt({
         onChange={(e) => setText(e.target.value.slice(0, maxChars))}
         rows={4}
         placeholder="Write your reply…"
-        className="sk-text-body-medium-regular min-h-[120px] w-full resize-none rounded-control border border-sko-border-default bg-sko-bg-subtle p-3 text-sko-text-default outline-none placeholder:text-sko-text-subtle transition-colors focus:border-sko-border-primary"
+        className={`sk-text-body-medium-regular ${styles.reply}`}
       />
 
-      <div className="flex items-center justify-between">
-        <span id={countId} className="sk-text-body-small-medium text-sko-text-subtle">
+      <div className={styles.footer}>
+        <span id={countId} className={`sk-text-body-small-medium ${styles.count}`}>
           {text.length} / {maxChars} characters
         </span>
         <Button variant="primary" size="sm" disabled={!text.trim()} onClick={() => onSubmit?.(text)}>

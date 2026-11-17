@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { CompletionStatus } from "@/components/atoms/CompletionStatus";
 import { BookmarkButton } from "@/components/atoms/Bookmark";
@@ -9,6 +7,7 @@ import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import type { CompletionState, TopicType } from "@/lib/types";
+import styles from "./TopicRow.module.css";
 
 export interface TopicRowProps {
   type: TopicType;
@@ -52,7 +51,7 @@ const STATUS_TEXT: Record<CompletionState, string> = {
 };
 
 function ActiveRule() {
-  return <span aria-hidden className="absolute inset-y-0 left-0 w-1 bg-sko-border-primary" />;
+  return <span aria-hidden className={styles.activeRule} />;
 }
 
 /**
@@ -103,10 +102,10 @@ export function TopicRow({
   const lockedA11y =
     locked && lockedHint ? (
       <>
-        <span id={hintId} className="sr-only">
+        <span id={hintId} className="sk-sr-only">
           {lockedHint}
         </span>
-        <span className="sr-only" aria-live="polite">
+        <span className="sk-sr-only" aria-live="polite">
           {hint.announcement}
         </span>
       </>
@@ -128,13 +127,13 @@ export function TopicRow({
         aria-label={`${title}, ${type}, ${STATUS_TEXT[status]}${bookmarked ? ", bookmarked" : ""}${upNext ? ", up next" : ""}`}
         className={cn(
           // DS collapsed Topic Row: 72×42, 12/8 padding, status dot centred.
-          "relative flex w-full items-start justify-center px-2 py-3 transition-colors",
-          active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
+          styles.railRow,
+          active ? styles.active : styles.idle,
           className,
         )}
       >
         {active ? <ActiveRule /> : null}
-        <span aria-hidden className="contents">
+        <span aria-hidden className={styles.status}>
           <CompletionStatus state={status} size={18} animate={animateStatus} />
         </span>
       </button>
@@ -146,8 +145,8 @@ export function TopicRow({
   return (
     <div
       className={cn(
-        "group relative flex items-start gap-2 py-3 pl-3 pr-2 transition-colors",
-        active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
+        styles.row,
+        active ? styles.active : styles.idle,
         className,
       )}
     >
@@ -159,45 +158,45 @@ export function TopicRow({
         aria-current={active ? "page" : undefined}
         aria-disabled={locked || undefined}
         aria-describedby={locked && lockedHint ? hintId : undefined}
-        className="flex min-w-0 flex-1 items-start gap-2 text-left"
+        className={styles.open}
       >
         {/* DS: the 18px status sits flush with the top padding, level with the
             content column (row counter-axis alignment is MIN). Hidden from AT:
             the status is spoken last, after title · type · duration. */}
-        <span aria-hidden className="contents">
+        <span aria-hidden className={styles.status}>
           <CompletionStatus state={status} size={18} animate={animateStatus} />
         </span>
-        <span className="flex min-w-0 flex-1 flex-col gap-1">
+        <span className={styles.content}>
           {/* The topic title is text-primary in every state — it does not change
               colour when active or locked. */}
-          <span className="sk-text-body-medium-medium block text-sko-text-default">{title}</span>
+          <span className={`sk-text-body-medium-medium ${styles.title}`}>{title}</span>
           {/* state-row: brand type badge · gray duration (Caption/Medium), 6px apart; the line
               wraps instead of truncating. */}
-          <span className="flex min-w-0 flex-wrap items-center gap-1.5 gap-y-1">
-            <TopicTypeBadge type={type} className="shrink-0" />
+          <span className={styles.stateRow}>
+            <TopicTypeBadge type={type} className={styles.badge} />
             {/* Duration is optional: render nothing rather than a dash placeholder. */}
             {duration ? (
               <>
-                <span className="sk-text-body-medium-medium shrink-0 text-sko-text-subtle" aria-hidden>
+                <span className={`sk-text-body-medium-medium ${styles.separator}`} aria-hidden>
                   ·
                 </span>
-                <span className="sk-text-body-small-medium min-w-0 whitespace-nowrap text-sko-text-subtle">
+                <span className={`sk-text-body-small-medium ${styles.duration}`}>
                   {duration}
                 </span>
               </>
             ) : null}
             {optional ? (
-              <span className="sk-text-body-small-medium shrink-0 text-sko-icon-faint">Optional</span>
+              <span className={`sk-text-body-small-medium ${styles.optional}`}>Optional</span>
             ) : null}
             {upNext ? (
-              <span className="sk-text-label-small-semibold shrink-0 text-sko-text-primary">Up next</span>
+              <span className={`sk-text-label-small-semibold ${styles.upNext}`}>Up next</span>
             ) : null}
-            <span className="sr-only">, {STATUS_TEXT[status]}</span>
+            <span className="sk-sr-only">, {STATUS_TEXT[status]}</span>
           </span>
           {/* The reason is read where the row is, before anyone tries it. */}
           {locked && lockedHint ? (
-            <span aria-hidden className="sk-text-body-small-regular flex items-start gap-1 text-sko-text-subtle">
-              <Icon icon={Lock} size={14} className="mt-0.5 shrink-0" />
+            <span aria-hidden className={`sk-text-body-small-regular ${styles.lockedHint}`}>
+              <Icon icon={Lock} size={14} className={styles.lockIcon} />
               {lockedHint}
             </span>
           ) : null}

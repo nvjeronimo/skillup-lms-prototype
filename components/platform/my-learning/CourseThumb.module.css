@@ -1,0 +1,22 @@
+/* Thumbnail of the DS Course Card. The radius sits in :where() so a caller's own radius (the
+   Harbor table's and the Dashboard's rounded-inner) wins, as it did over Tailwind's. */
+.thumb {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+:where(.tile) {
+  border-radius: var(--sk-radius-control);
+}
+.image {
+  position: absolute;
+  inset: 0px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

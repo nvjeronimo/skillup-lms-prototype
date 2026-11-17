@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { CircleHelp, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -9,6 +7,7 @@ import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
+import styles from "./CompletionQuestionModal.module.css";
 
 export interface CompletionQuestionModalProps {
   open: boolean;
@@ -72,13 +71,13 @@ export function CompletionQuestionModal({
       aria-hidden={closed || undefined}
       {...inertProps(closed)}
       className={cn(
-        "fixed inset-0 z-[60] flex items-end justify-center p-4 sm:items-center",
-        closed && "pointer-events-none",
+        styles.root,
+        closed && styles.closed,
       )}
     >
       {/* The backdrop's fade-out (short4) outlasts the dialog's pop-out (short3), so it ends the exit. */}
       <div
-        className="sk-backdrop sk-animate-fade absolute inset-0"
+        className={`sk-backdrop sk-animate-fade ${styles.backdrop}`}
         onClick={onClose}
         onAnimationEnd={onAnimationEnd}
         aria-hidden
@@ -88,28 +87,28 @@ export function CompletionQuestionModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="sk-animate-pop relative w-full max-w-[544px] origin-center overflow-hidden rounded-surface border border-sko-border-subtle bg-sko-bg-page shadow-xl"
+        className={`sk-animate-pop ${styles.dialog}`}
       >
         {/* DS `Background pattern decorative` (Circles): 336 square, centred on the featured icon,
             hairline rings that fade out from the middle. */}
         <svg
           aria-hidden
           viewBox="0 0 336 336"
-          className="pointer-events-none absolute -left-[120px] -top-[120px] h-[336px] w-[336px] text-sko-border-subtle [mask-image:radial-gradient(closest-side,black,transparent)]"
+          className={styles.pattern}
         >
           {[24, 48, 72, 96, 120, 144, 168].map((r) => (
             <circle key={r} cx="168" cy="168" r={r - 0.5} fill="none" stroke="currentColor" />
           ))}
         </svg>
-        <div className="relative flex flex-col gap-4 p-6 pb-0 sm:flex-row">
-          <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-text-primary">
+        <div className={styles.head}>
+          <span className={styles.featured}>
             <Icon icon={CircleHelp} size={24} />
           </span>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5 pr-10">
-            <h2 id={titleId} className="sk-text-body-large-semibold text-sko-text-default">
+          <div className={styles.text}>
+            <h2 id={titleId} className={`sk-text-body-large-semibold ${styles.title}`}>
               {pkg ? `This ${shown.noun} hasn't recorded completion yet` : `Have you completed this ${shown.noun}?`}
             </h2>
-            <div id={descId} className="sk-text-body-medium-regular flex flex-col gap-3.5 text-sko-text-subtle">
+            <div id={descId} className={`sk-text-body-medium-regular ${styles.description}`}>
               <p>{shown.reason}</p>
               <p>
                 {pkg
@@ -124,13 +123,13 @@ export function CompletionQuestionModal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="absolute right-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+            className={styles.close}
           >
             <Icon icon={X} size={24} />
           </button>
         </div>
 
-        <div className="relative flex flex-col gap-3 p-6 pt-8 sm:flex-row-reverse sm:justify-start">
+        <div className={styles.actions}>
           {pkg ? (
             <>
               <Button variant="primary" size="lg" onClick={onClose}>

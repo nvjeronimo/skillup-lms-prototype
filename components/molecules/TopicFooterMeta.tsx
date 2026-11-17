@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import type { TopicByline } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import styles from "./TopicFooterMeta.module.css";
 
 export interface TopicFooterMetaProps {
   /** Author & Updated Date row — present only on authored content types. */
@@ -24,7 +23,7 @@ export function TopicFooterMeta({ byline, onReport, action }: TopicFooterMetaPro
   const [feedback, setFeedback] = React.useState<"like" | "dislike" | null>(null);
 
   return (
-    <div className="mt-6 flex flex-col">
+    <div className={styles.footer}>
       {byline ? (
         // DS `LMS / Topic · Author & Updated Date`: the row bottom-aligns the date (gap 16);
         // the Author frame is avatar md + text column (gap 12); name over role (gap 2). On a phone
@@ -32,16 +31,16 @@ export function TopicFooterMeta({ byline, onReport, action }: TopicFooterMetaPro
         // 28 Oct 2026): beside it, it squeezed the name to 2 lines and the role to 4.
         <div
           data-invented="byline: Open edX shows no author or updated date for a unit"
-          className="flex flex-col items-start gap-3 border-t border-sko-border-subtle pt-4 sm:flex-row sm:items-end sm:gap-4"
+          className={styles.byline}
         >
-          <div className="flex w-full min-w-0 flex-1 items-center gap-3">
+          <div className={styles.author}>
             <Avatar name={byline.author} size="md" />
-            <div className="flex min-w-0 flex-col gap-0.5">
-              <p className="sk-text-body-large-semibold text-sko-text-default">{byline.author}</p>
-              <p className="sk-text-body-medium-regular text-sko-text-muted">{byline.role}</p>
+            <div className={styles.authorText}>
+              <p className={`sk-text-body-large-semibold ${styles.name}`}>{byline.author}</p>
+              <p className={`sk-text-body-medium-regular ${styles.role}`}>{byline.role}</p>
             </div>
           </div>
-          <span className="sk-text-body-small-regular shrink-0 text-sko-text-muted">
+          <span className={`sk-text-body-small-regular ${styles.updated}`}>
             Updated {byline.updated}
           </span>
         </div>
@@ -51,7 +50,7 @@ export function TopicFooterMeta({ byline, onReport, action }: TopicFooterMetaPro
           padding (the component's own py-3), and 12 between the byline and the rule. The rules
           stay when the action goes (topic completed), so the row does not jump. */}
       <ContentFeedback
-        className={cn("border-y border-sko-border-subtle", byline && "mt-3 [[data-scope=edx]_&]:mt-0")}
+        className={cn(styles.feedback, byline && styles.feedbackAfterByline)}
         action={action}
         value={feedback}
         onLike={() => setFeedback((f) => (f === "like" ? null : "like"))}

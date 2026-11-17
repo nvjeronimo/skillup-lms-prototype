@@ -1,0 +1,49 @@
+/* DS LMS / Empty State. The root takes the caller's className: resting rules in :where(). */
+:where(.emptyState) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 48px 32px;
+  text-align: center;
+}
+/* 56px rounded-square pictograph on bg/primary-soft, icon/primary glyph. */
+.pictograph {
+  display: inline-flex;
+  width: 56px;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-icon-primary);
+}
+.title {
+  color: var(--color-text-default);
+}
+.description {
+  width: 100%;
+  color: var(--color-text-muted);
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): a bordered card floats on
+   a soft shadow instead. */
+:global([data-direction="studio"]) .emptyState.emptyState {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .emptyState.emptyState,
+:global([data-skin="fluent"] [data-platform-page]) .emptyState.emptyState {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside the player's content card takes the control radius
+   (tokens/direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] [data-player-content]) .emptyState.emptyState {
+  border-radius: var(--sk-radius-control);
+}

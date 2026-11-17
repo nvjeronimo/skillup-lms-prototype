@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import type { NotificationType } from "@/lib/types";
+import styles from "./NotificationItem.module.css";
 
 export interface NotificationItemProps {
   type: NotificationType;
@@ -43,24 +44,24 @@ export function NotificationItem({
 
   const inner = (
     <>
-      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-sko-bg-primary-soft text-sko-icon-primary">
+      <span className={styles.iconTile}>
         <Icon icon={IconCmp} size={18} />
       </span>
 
-      <span className="min-w-0 flex-1">
-        <span className="sk-text-body-medium-semibold block text-sko-text-default">{title}</span>
+      <span className={styles.body}>
+        <span className={`sk-text-body-medium-semibold ${styles.title}`}>{title}</span>
         {/* One context line under the title, as Figma Overlay Card 1 (3827:65480): where it
             happened and when, "Six Sigma · Module 03 · 25 min ago" (28 Oct 2026). */}
-        <span className="sk-text-body-small-regular mt-1 block text-sko-text-subtle">
+        <span className={`sk-text-body-small-regular ${styles.context}`}>
           {body ? `${body} · ${timestamp}` : timestamp}
         </span>
       </span>
 
       {/* Unread dot — right side (matches Final Screens). */}
-      <span className="flex w-2 shrink-0 justify-center pt-1.5">
+      <span className={styles.dotSlot}>
         {unread ? (
           <span
-            className="h-2 w-2 rounded-pill bg-sko-bg-primary"
+            className={styles.dot}
             aria-label="Unread"
             role="img"
           />
@@ -69,10 +70,7 @@ export function NotificationItem({
     </>
   );
 
-  const classes = cn(
-    "flex w-full gap-3 bg-sko-bg-page px-6 py-4 text-left transition-colors hover:bg-sko-bg-faint",
-    className,
-  );
+  const classes = cn(styles.item, className);
 
   if (href) {
     return (

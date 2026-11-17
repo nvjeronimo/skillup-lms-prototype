@@ -3,6 +3,7 @@ import { Edit3, Trash2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { TranscriptLine } from "./TranscriptLine";
+import styles from "./NoteItem.module.css";
 
 export interface NoteItemProps {
   ts: string;
@@ -32,28 +33,25 @@ export function NoteItem({
 }: NoteItemProps) {
   return (
     <div
-      className={cn(
-        "rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 transition-colors hover:border-sko-border-default",
-        className,
-      )}
+      className={cn(styles.note, className)}
     >
-      <div className="flex items-center justify-between">
+      <div className={styles.head}>
         <button
           type="button"
           onClick={onClick}
-          className="sk-text-body-small-medium text-sko-text-primary"
+          className={`sk-text-body-small-medium ${styles.ts}`}
         >
           {ts}
         </button>
-        <div className="flex items-center gap-2">
+        <div className={styles.actions}>
           {editedLabel ? (
-            <span className="sk-text-body-small-medium text-sko-text-subtle">{editedLabel}</span>
+            <span className={`sk-text-body-small-medium ${styles.edited}`}>{editedLabel}</span>
           ) : null}
           <button
             type="button"
             onClick={onEdit}
             aria-label="Edit note"
-            className="text-sko-text-subtle transition-colors hover:text-sko-text-default"
+            className={styles.edit}
           >
             <Icon icon={Edit3} size={16} />
           </button>
@@ -61,27 +59,27 @@ export function NoteItem({
             type="button"
             onClick={onDelete}
             aria-label="Delete note"
-            className="text-sko-text-subtle transition-colors hover:text-sko-text-error"
+            className={styles.delete}
           >
             <Icon icon={Trash2} size={16} />
           </button>
         </div>
       </div>
 
-      <button type="button" onClick={onClick} className="mt-1.5 block w-full text-left">
+      <button type="button" onClick={onClick} className={styles.open}>
         {/* DS Note-Item v1.1 (14 Oct 2026): the anchor is the transcript line, read-only. */}
         <TranscriptLine ts="" text={anchorQuote} active readOnly />
-        <p className="sk-text-body-medium-regular mt-1.5 text-sko-text-default">{text}</p>
+        <p className={`sk-text-body-medium-regular ${styles.text}`}>{text}</p>
       </button>
 
       {tags.length ? (
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
+        <div className={styles.tags}>
           {tags.map((tag) => (
             <button
               key={tag}
               type="button"
               onClick={() => onTagClick?.(tag)}
-              className="sk-text-body-small-medium rounded-pill bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle transition-colors hover:text-sko-text-primary"
+              className={`sk-text-body-small-medium ${styles.tag}`}
             >
               #{tag}
             </button>

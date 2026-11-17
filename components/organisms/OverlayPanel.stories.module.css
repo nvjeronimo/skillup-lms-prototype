@@ -1,0 +1,6 @@
+/* Story frame: room for the panel. */
+.frame { height: 640px; }
+.empty { padding: 24px 8px; }
+.item { padding: 12px 8px; }
+.subtle { color: var(--color-text-subtle); }
+.muted { color: var(--color-text-muted); }

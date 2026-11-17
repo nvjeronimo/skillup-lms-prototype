@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { KeyRound, Trash2, Upload } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Button } from "@/components/atoms/Button";
@@ -19,16 +17,16 @@ import {
 } from "@/lib/platform/profile";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import styles from "./EditProfileView.module.css";
 
 /* DS Input field, Size=md with a label (as NoteEditorModal): label body-medium/Medium text/muted,
    the field bg/page, 1px border/default, radius 8, padding 10/14, body-large/Regular, 44 tall.
    Focus: border/primary. Read-only: bg/muted, text/subtle. */
 /* The box without its fill, ink and shadow: cn() does not merge classes, so the read-only field
    takes its own (it rendered white before; Nelson, 28 Oct 2026, the disabled look of Figma). */
-const FIELD_BOX =
-  "sk-text-body-large-regular min-h-11 w-full rounded-control border border-sko-border-default px-3.5 py-2.5 placeholder:text-sko-text-placeholder transition-[border-color,box-shadow] focus:border-sko-border-primary focus:outline-none focus:ring-1 focus:ring-sko-border-primary";
-const FIELD = cn(FIELD_BOX, "bg-sko-bg-page text-sko-text-default shadow-sm");
-const READ_ONLY = cn(FIELD_BOX, "bg-sko-bg-muted text-sko-text-subtle");
+const FIELD_BOX = cn("sk-text-body-large-regular", styles.fieldBox);
+const FIELD = cn(FIELD_BOX, styles.field);
+const READ_ONLY = cn(FIELD_BOX, styles.readOnly);
 
 function Field({
   id,
@@ -44,13 +42,13 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className="sk-text-body-medium-medium text-sko-text-muted">
+    <div className={cn(styles.fieldStack, className)}>
+      <label htmlFor={id} className={cn("sk-text-body-medium-medium", styles.muted)}>
         {label}
       </label>
       {children}
       {hint ? (
-        <p id={`${id}-hint`} className="sk-text-body-medium-regular text-sko-text-subtle">
+        <p id={`${id}-hint`} className={cn("sk-text-body-medium-regular", styles.subtle)}>
           {hint}
         </p>
       ) : null}
@@ -70,7 +68,7 @@ function Select({
   onChange: (value: string) => void;
 }) {
   return (
-    <SelectField id={id} value={value} onChange={(e) => onChange(e.target.value)} className={FIELD}>
+    <SelectField id={id} value={value} onChange={(e) => onChange(e.target.value)} className={cn(FIELD, styles.select)}>
       {options.map((o) => (
         <option key={o} value={o}>
           {o}
@@ -99,15 +97,15 @@ function Section({
     <section
       data-arrive={step}
       aria-labelledby={id}
-      className="rounded-card border border-sko-border-subtle bg-sko-bg-page"
+      className={styles.card}
     >
-      <header className="flex flex-col gap-1 border-b border-sko-border-subtle px-4 py-4 md:px-6 md:py-5">
-        <h2 id={id} className="sk-text-title-medium-semibold text-sko-text-default">
+      <header className={styles.cardHeader}>
+        <h2 id={id} className={cn("sk-text-title-medium-semibold", styles.ink)}>
           {title}
         </h2>
-        <p className="sk-text-body-medium-regular text-sko-text-subtle">{lead}</p>
+        <p className={cn("sk-text-body-medium-regular", styles.subtle)}>{lead}</p>
       </header>
-      <div className="grid grid-cols-1 gap-5 px-4 py-5 md:grid-cols-2 md:px-6 md:py-6">
+      <div className={styles.cardBody}>
         {children}
       </div>
     </section>
@@ -117,7 +115,7 @@ function Section({
 /** A labelled field while it loads: the ghost label, the field's box (46 tall, as FIELD), the hint. */
 function FieldSkeleton({ label, hint, rows, className }: { label: string; hint?: string; rows?: number; className?: string }) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
+    <div className={cn(styles.fieldStack, className)}>
       <Skeleton variant="ghost" text="body-medium-medium">{label}</Skeleton>
       <Skeleton variant="block" radius="control" height={rows ? rows * 24 + 22 : 46} />
       {hint ? <Skeleton variant="ghost" text="body-small-regular">{hint}</Skeleton> : null}
@@ -127,12 +125,12 @@ function FieldSkeleton({ label, hint, rows, className }: { label: string; hint?:
 
 function SectionSkeleton({ title, lead, children }: { title: string; lead: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-card border border-sko-border-subtle bg-sko-bg-page">
-      <div className="flex flex-col gap-1 border-b border-sko-border-subtle px-4 py-4 md:px-6 md:py-5">
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
         <Skeleton variant="ghost" text="title-medium-semibold">{title}</Skeleton>
         <Skeleton variant="ghost" text="body-medium-regular">{lead}</Skeleton>
       </div>
-      <div className="grid grid-cols-1 gap-5 px-4 py-5 md:grid-cols-2 md:px-6 md:py-6">{children}</div>
+      <div className={styles.cardBody}>{children}</div>
     </div>
   );
 }
@@ -144,20 +142,20 @@ function SectionSkeleton({ title, lead, children }: { title: string; lead: strin
 function EditProfileSkeleton() {
   const f = editProfileSeed;
   return (
-    <div className="sk-page-stack mx-auto flex w-full max-w-[880px] flex-col gap-layout-section">
-      <div className="flex flex-col gap-2">
+    <div className={cn("sk-page-stack", styles.column)}>
+      <div className={styles.intro}>
         <Skeleton variant="ghost" text="headline-large-bold">Edit profile</Skeleton>
         <Skeleton variant="ghost" text="body-large-regular">
           What other learners and your instructors see, and how you sign in.
         </Skeleton>
       </div>
       <SectionSkeleton title="Your profile" lead="Shown next to your posts, answers and certificates.">
-        <div className="flex flex-wrap items-center gap-4 md:col-span-2">
+        <div className={styles.photo}>
           <Skeleton variant="block" width={48} height={48} radius="control" />
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap gap-2">
-              <SkeletonPill size="button-sm" icon className="max-md:h-11">Upload photo</SkeletonPill>
-              <SkeletonPill size="button-sm" icon className="max-md:h-11">Remove</SkeletonPill>
+          <div className={styles.photoSide}>
+            <div className={styles.wrapRow}>
+              <SkeletonPill size="button-sm" icon className={styles.phoneTall}>Upload photo</SkeletonPill>
+              <SkeletonPill size="button-sm" icon className={styles.phoneTall}>Remove</SkeletonPill>
             </div>
             <Skeleton variant="ghost" text="body-small-regular">JPG or PNG, up to 1 MB.</Skeleton>
           </div>
@@ -166,13 +164,13 @@ function EditProfileSkeleton() {
         <FieldSkeleton label="Country" />
         <FieldSkeleton label="Spoken language" />
         <FieldSkeleton label="Education" />
-        <FieldSkeleton label="About me" rows={4} hint={`${f.bio.length} / ${BIO_MAX} characters`} className="md:col-span-2" />
-        <FieldSkeleton label="LinkedIn" className="md:col-span-2" />
-        <div className="flex flex-col items-start gap-1.5 md:col-span-2">
+        <FieldSkeleton label="About me" rows={4} hint={`${f.bio.length} / ${BIO_MAX} characters`} className={styles.wide} />
+        <FieldSkeleton label="LinkedIn" className={styles.wide} />
+        <div className={styles.wideStart}>
           <Skeleton variant="ghost" text="body-medium-medium">Who can see your profile</Skeleton>
-          <div className="inline-flex gap-0.5 rounded-track bg-sko-bg-track p-1">
-            <SkeletonPill size="segment" className="bg-transparent">Full profile</SkeletonPill>
-            <SkeletonPill size="segment" className="bg-transparent">Limited</SkeletonPill>
+          <div className={styles.segmentTrack}>
+            <SkeletonPill size="segment" className={styles.segmentGhost}>Full profile</SkeletonPill>
+            <SkeletonPill size="segment" className={styles.segmentGhost}>Limited</SkeletonPill>
           </div>
           <Skeleton variant="ghost" text="body-small-regular">
             {f.visibility === "all_users" ? "Learners on SkillUp see everything above." : "Learners see only your username and photo."}
@@ -186,9 +184,9 @@ function EditProfileSkeleton() {
         <FieldSkeleton label="Time zone" hint="Deadlines and live sessions show in this time zone." />
         <FieldSkeleton label="Year of birth" hint="Only you and SkillUp see this." />
         <FieldSkeleton label="Gender" hint="Only you and SkillUp see this." />
-        <div className="flex flex-col items-start gap-1.5 md:col-span-2">
+        <div className={styles.wideStart}>
           <Skeleton variant="ghost" text="body-medium-medium">Password</Skeleton>
-          <SkeletonPill size="button-sm" icon className="max-md:h-11">Reset password</SkeletonPill>
+          <SkeletonPill size="button-sm" icon className={styles.phoneTall}>Reset password</SkeletonPill>
           <Skeleton variant="ghost" text="body-small-regular">We email you a link to choose a new one.</Skeleton>
         </div>
       </SectionSkeleton>
@@ -196,18 +194,18 @@ function EditProfileSkeleton() {
         <FieldSkeleton label="Phone" />
         <FieldSkeleton label="Current work status" />
         <FieldSkeleton label="Work experience" />
-        <div className="flex flex-col gap-1.5 md:col-span-2">
+        <div className={cn(styles.fieldStack, styles.wide)}>
           <Skeleton variant="ghost" text="body-medium-medium">Areas of interest</Skeleton>
-          <div className="flex flex-wrap gap-2">
+          <div className={styles.wrapRow}>
             {PROFILE_OPTIONS.interests.map((o) => (
               <SkeletonPill key={o} size="segment">{o}</SkeletonPill>
             ))}
           </div>
         </div>
       </SectionSkeleton>
-      <div className="flex gap-3 md:justify-end">
-        <SkeletonPill size="button-md" className="flex-1 justify-center md:flex-none">Cancel</SkeletonPill>
-        <SkeletonPill size="button-md" className="flex-1 justify-center md:flex-none">Save changes</SkeletonPill>
+      <div className={styles.actions}>
+        <SkeletonPill size="button-md" className={cn(styles.action, styles.centered)}>Cancel</SkeletonPill>
+        <SkeletonPill size="button-md" className={cn(styles.action, styles.centered)}>Save changes</SkeletonPill>
       </div>
     </div>
   );
@@ -251,16 +249,16 @@ export function EditProfileView() {
   return (
     <PlatformPage
       current={null}
-      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
+      className={styles.page}
       skeleton={<EditProfileSkeleton />}
     >
       <form
         onSubmit={onSubmit}
-        className="sk-page-stack mx-auto flex w-full max-w-[880px] flex-col gap-layout-section"
+        className={cn("sk-page-stack", styles.column)}
       >
-        <div data-arrive={0} className="flex flex-col gap-2">
-          <h1 className="sk-text-headline-large-bold text-sko-text-default">Edit profile</h1>
-          <p className="sk-text-body-large-regular text-sko-text-subtle">
+        <div data-arrive={0} className={styles.intro}>
+          <h1 className={cn("sk-text-headline-large-bold", styles.ink)}>Edit profile</h1>
+          <p className={cn("sk-text-body-large-regular", styles.subtle)}>
             What other learners and your instructors see, and how you sign in.
           </p>
         </div>
@@ -272,10 +270,10 @@ export function EditProfileView() {
           lead="Shown next to your posts, answers and certificates."
         >
           {/* Photo: Open edX takes JPG or PNG, up to 1 MB. */}
-          <div className="flex flex-wrap items-center gap-4 md:col-span-2">
+          <div className={styles.photo}>
             <Avatar name={form.fullName} size="lg" shape="square" />
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-wrap gap-2">
+            <div className={styles.photoSide}>
+              <div className={styles.wrapRow}>
                 <Button
                   type="button"
                   hierarchy="secondary"
@@ -289,7 +287,7 @@ export function EditProfileView() {
                   Remove
                 </Button>
               </div>
-              <p className="sk-text-body-medium-regular text-sko-text-subtle">
+              <p className={cn("sk-text-body-medium-regular", styles.subtle)}>
                 JPG or PNG, up to 1 MB.
               </p>
             </div>
@@ -331,7 +329,7 @@ export function EditProfileView() {
           <Field
             id="bio"
             label="About me"
-            className="md:col-span-2"
+            className={styles.wide}
             hint={`${form.bio.length} / ${BIO_MAX} characters`}
           >
             <textarea
@@ -341,10 +339,10 @@ export function EditProfileView() {
               value={form.bio}
               onChange={(e) => set("bio")(e.target.value)}
               aria-describedby="bio-hint"
-              className={cn(FIELD, "resize-y")}
+              className={cn(FIELD, styles.textarea)}
             />
           </Field>
-          <Field id="linkedin" label="LinkedIn" className="md:col-span-2">
+          <Field id="linkedin" label="LinkedIn" className={styles.wide}>
             <input
               id="linkedin"
               type="url"
@@ -355,8 +353,8 @@ export function EditProfileView() {
               className={FIELD}
             />
           </Field>
-          <div className="flex flex-col items-start gap-1.5 md:col-span-2">
-            <p className="sk-text-body-medium-medium text-sko-text-muted">
+          <div className={styles.wideStart}>
+            <p className={cn("sk-text-body-medium-medium", styles.muted)}>
               Who can see your profile
             </p>
             <PlatformSegmented
@@ -368,7 +366,7 @@ export function EditProfileView() {
                 { id: "private", label: "Limited" },
               ]}
             />
-            <p className="sk-text-body-medium-regular text-sko-text-subtle">
+            <p className={cn("sk-text-body-medium-regular", styles.subtle)}>
               {form.visibility === "all_users"
                 ? "Learners on SkillUp see everything above."
                 : "Learners see only your username and photo."}
@@ -440,8 +438,8 @@ export function EditProfileView() {
               onChange={set("gender")}
             />
           </Field>
-          <div className="flex flex-col items-start gap-1.5 md:col-span-2">
-            <p className="sk-text-body-medium-medium text-sko-text-muted">Password</p>
+          <div className={styles.wideStart}>
+            <p className={cn("sk-text-body-medium-medium", styles.muted)}>Password</p>
             <Button
               type="button"
               hierarchy="secondary"
@@ -451,7 +449,7 @@ export function EditProfileView() {
             >
               Reset password
             </Button>
-            <p className="sk-text-body-medium-regular text-sko-text-subtle">
+            <p className={cn("sk-text-body-medium-regular", styles.subtle)}>
               We email you a link to choose a new one.
             </p>
           </div>
@@ -491,11 +489,11 @@ export function EditProfileView() {
               onChange={set("workExperience")}
             />
           </Field>
-          <div role="group" aria-labelledby="interests-label" className="flex flex-col gap-1.5 md:col-span-2">
-            <p id="interests-label" className="sk-text-body-medium-medium text-sko-text-muted">
+          <div role="group" aria-labelledby="interests-label" className={cn(styles.fieldStack, styles.wide)}>
+            <p id="interests-label" className={cn("sk-text-body-medium-medium", styles.muted)}>
               Areas of interest
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className={styles.wrapRow}>
               {PROFILE_OPTIONS.interests.map((o) => {
                 const on = form.interests.includes(o);
                 return (
@@ -503,7 +501,7 @@ export function EditProfileView() {
                     key={o}
                     label={o}
                     active={on}
-                    className="max-md:min-h-11"
+                    className={styles.chip}
                     onClick={() =>
                       set("interests")(on ? form.interests.filter((i) => i !== o) : [...form.interests, o])
                     }
@@ -511,27 +509,27 @@ export function EditProfileView() {
                 );
               })}
             </div>
-            <p className="sk-text-body-medium-regular text-sko-text-subtle">Pick as many as you like.</p>
+            <p className={cn("sk-text-body-medium-regular", styles.subtle)}>Pick as many as you like.</p>
           </div>
         </Section>
 
         {/* The actions: on the right on desktop, both filling on mobile (two buttons side by side fill). */}
-        <div data-arrive={4} className="flex gap-3 md:justify-end">
+        <div data-arrive={4} className={styles.actions}>
           <Button
             type="button"
             hierarchy="secondary"
-            className="flex-1 md:flex-none"
+            className={styles.action}
             onClick={() => (dirty ? setForm(saved) : router.back())}
           >
             Cancel
           </Button>
-          <Button type="submit" className="flex-1 md:flex-none" disabled={!dirty}>
+          <Button type="submit" className={styles.action} disabled={!dirty}>
             Save changes
           </Button>
         </div>
       </form>
       {/* Outside the form: deleting is not saving the profile. */}
-      <div className="sk-page-stack mx-auto mt-layout-section w-full max-w-[880px]">
+      <div className={cn("sk-page-stack", styles.deleteColumn)}>
         <DeleteAccountSection email={saved.email} />
       </div>
     </PlatformPage>

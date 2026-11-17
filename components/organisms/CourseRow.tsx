@@ -1,5 +1,5 @@
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { Lock } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
@@ -9,6 +9,7 @@ import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { CourseThumb } from "@/components/platform/my-learning/CourseThumb";
 import type { TopicType } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import styles from "./CourseRow.module.css";
 
 export type CourseRowState = "Active" | "Locked" | "Available";
 
@@ -74,21 +75,21 @@ export function CourseRow({
         // The DS stroke is inside the 68px row and the CSS border is outside the padding:
         // 19 / 15 + 1 border = the DS 20 / 16.
         // Every state has the same 1px border/subtle stroke in the DS (read 8 Oct 2026).
-        "sk-press-card group relative flex items-center gap-4 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page px-[19px] py-[15px] shadow-sk-card",
-        homeHref &&
-          state !== "Locked" &&
-          "transition-colors has-[span_a:hover]:border-sko-border-default",
+        // `group`: the global hook the cover zoom reads (app/globals.css, .group:hover).
+        "sk-press-card group",
+        styles.row,
+        homeHref && state !== "Locked" && styles.linked,
         className,
       )}
     >
       {initials ? (
-        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className="-my-[15px] -ml-[19px] w-[118px] shrink-0 self-stretch" />
+        <CourseThumb shape="cover" initials={initials} imageSrc={imageSrc} className={styles.thumb} />
       ) : null}
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <span className="flex min-w-0 flex-col">
+      <div className={styles.body}>
+        <span className={styles.text}>
+          <span className={styles.lines}>
             {next ? (
-              <span className="sk-text-body-small-medium flex items-center gap-2 text-sko-text-subtle">
+              <span className={`sk-text-body-small-medium ${styles.next}`}>
                 <TopicTypeBadge type={next.type} />
                 {next.duration ? (
                   <>
@@ -100,14 +101,15 @@ export function CourseRow({
             ) : null}
             <span
               className={cn(
-                "sk-text-body-large-medium min-w-0",
-                state === "Locked" ? "text-sko-text-muted" : "text-sko-text-default",
+                "sk-text-body-large-medium",
+                styles.title,
+                state === "Locked" ? styles.titleLocked : styles.titleDefault,
               )}
             >
               {homeHref && state !== "Locked" ? (
                 <Link
                   href={homeHref}
-                  className="after:absolute after:inset-0 after:content-[''] hover:underline"
+                  className={styles.titleLink}
                 >
                   {title}
                 </Link>
@@ -117,7 +119,7 @@ export function CourseRow({
             </span>
           </span>
           {context ? (
-            <span className="sk-text-body-small-regular truncate text-sko-text-subtle">
+            <span className={`sk-text-body-small-regular ${styles.context}`}>
               {context}
             </span>
           ) : null}
@@ -125,27 +127,27 @@ export function CourseRow({
       </div>
 
       {state === "Active" ? (
-        <div className="flex shrink-0 items-center gap-4">
+        <div className={cn(styles.actions, styles.actionsActive)}>
           {/* DS Progress bar, Label=Right: 140 wide, bar + label gap 12. */}
           <PlatformProgressBar
             value={progressPct}
             label={`${subject} progress`}
             track="muted"
             showValue
-            className="w-[140px]"
+            className={styles.bar}
           />
           {href ? (
             <ButtonLink
               href={href}
               hierarchy={emphasis}
               size="sm"
-              className="relative z-[1]"
+              className={styles.action}
               aria-label={`Resume ${subject}`}
             >
               Resume
             </ButtonLink>
           ) : (
-            <Button hierarchy={emphasis} size="sm" onClick={onClick} className="relative z-[1]">
+            <Button hierarchy={emphasis} size="sm" onClick={onClick} className={styles.action}>
               Resume
             </Button>
           )}
@@ -153,9 +155,9 @@ export function CourseRow({
       ) : null}
 
       {state === "Locked" ? (
-        <div className="flex items-center gap-4">
-          <span className="sk-text-body-small-medium inline-flex items-center gap-1.5 text-sko-text-warning">
-            <Icon icon={Lock} size={14} className="text-sko-icon-warning" />
+        <div className={styles.actions}>
+          <span className={`sk-text-body-small-medium ${styles.unlock}`}>
+            <Icon icon={Lock} size={14} className={styles.lockIcon} />
             {unlockLabel}
           </span>
           {/* DS Locked: grey outline (bg/page, border/default) — neutral, not the teal Secondary. */}
@@ -167,7 +169,7 @@ export function CourseRow({
 
       {state === "Available" ? (
         /* DS Available: the "AVAILABLE NOW" status label is hidden; only Start shows. */
-        <div className="flex items-center gap-4">
+        <div className={styles.actions}>
           {href ? (
             <ButtonLink href={href} hierarchy="primary" size="sm" aria-label={`Start ${subject}`}>
               Start

@@ -13,7 +13,6 @@ on:
       - "lib/**"
       - "stories/**"
       - "tokens/**"
-      - "tailwind.config.ts"
       - "scripts/tokens/**"
   workflow_run:
     workflows: ["Tokens from Figma"]

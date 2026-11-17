@@ -146,8 +146,8 @@ its CSS `font` shorthand has no letter-spacing, so read `letterSpacing` from the
 | 3. Motion | `motion.css`: `--motion-*` | `duration-*`, `ease-*` |
 
 Not in Figma, so still written by hand next to the generated files: the colour-vision mode, the
-legacy `--sk-*` aliases, the system preferences (`tokens/colors.css`), the square-corners switch
-(`tokens/radius.css`), reduced motion (`tokens/motion.css`), the font stacks
+legacy `--sk-*` aliases, the system preferences (`tokens/colors.css`), reduced motion
+(`tokens/motion.css`), the font stacks
 (`tokens/typography.css`) and Studio's radius, shadows and type weights (`tokens/direction-studio.css`).
 
 ## Commands

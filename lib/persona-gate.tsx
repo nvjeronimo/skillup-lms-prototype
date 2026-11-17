@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ACTIVE_PERSONA } from "./persona-active";
 import { DEFAULT_PLATFORM_USER, platformUser, type PlatformUser } from "./platform/user";

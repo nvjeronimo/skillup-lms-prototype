@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { FlaskConical, RotateCcw } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
@@ -15,6 +13,7 @@ import {
   type ScormCall,
   type ScormLessonStatus,
 } from "@/lib/scorm-runtime";
+import styles from "./ScormPackageActivity.module.css";
 
 /** "John Smith" as SCORM 1.2 writes a learner: "Smith, John". */
 function scormName(name: string) {
@@ -149,56 +148,56 @@ export function ScormPackageActivity({
   const testPanel = (
     <section
       aria-label="SCORM test panel"
-      className="flex flex-col gap-3 rounded-card border-2 border-dashed border-sko-bg-accent-yellow p-4"
+      className={styles.testPanel}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="sk-text-body-medium-semibold text-sko-text-default">Test panel · what the package reported</span>
+      <div className={styles.testPanelHeader}>
+        <span className={`sk-text-body-medium-semibold ${styles.testPanelTitle}`}>Test panel · what the package reported</span>
         <Button variant="secondary" size="sm" leftIcon={RotateCcw} onClick={reset}>
           Reset this package
         </Button>
       </div>
-      <p className="sk-text-body-small-regular flex items-center gap-2 text-sko-text-muted">
-        <FlaskConical aria-hidden className="size-4 shrink-0 text-sko-icon-warning" />
+      <p className={`sk-text-body-small-regular ${styles.testPanelNote}`}>
+        <FlaskConical aria-hidden className={styles.testPanelNoteIcon} />
         For testing and development purposes only. Not part of the design, and not in the platform.
       </p>
-      <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-1">
-        <dt className="sk-text-body-small-regular text-sko-text-muted">lesson_status</dt>
-        <dd className="sk-text-body-small-regular text-sko-text-default">{status ?? "nothing reported"}</dd>
-        <dt className="sk-text-body-small-regular text-sko-text-muted">score.raw</dt>
-        <dd className="sk-text-body-small-regular text-sko-text-default">{score ?? "none"}</dd>
-        <dt className="sk-text-body-small-regular text-sko-text-muted">Topic</dt>
-        <dd className="sk-text-body-small-regular text-sko-text-default">
+      <dl className={styles.report}>
+        <dt className={`sk-text-body-small-regular ${styles.reportTerm}`}>lesson_status</dt>
+        <dd className={`sk-text-body-small-regular ${styles.reportValue}`}>{status ?? "nothing reported"}</dd>
+        <dt className={`sk-text-body-small-regular ${styles.reportTerm}`}>score.raw</dt>
+        <dd className={`sk-text-body-small-regular ${styles.reportValue}`}>{score ?? "none"}</dd>
+        <dt className={`sk-text-body-small-regular ${styles.reportTerm}`}>Topic</dt>
+        <dd className={`sk-text-body-small-regular ${styles.reportValue}`}>
           {isCompleted ? "complete" : reportsCompletion ? "not complete yet" : "completes by hand (package never reports)"}
         </dd>
       </dl>
       {calls.length ? (
-        <ol className="sk-text-body-small-regular flex flex-col gap-0.5 font-mono text-sko-text-muted">
+        <ol className={`sk-text-body-small-regular ${styles.calls}`}>
           {calls.map((c, i) => (
-            <li key={i} className="truncate">
+            <li key={i} className={styles.call}>
               {c.fn}({c.args.map((a) => JSON.stringify(a)).join(", ")}) → {JSON.stringify(c.result)}
             </li>
           ))}
         </ol>
       ) : (
-        <p className="sk-text-body-small-regular text-sko-text-muted">No calls from the package yet.</p>
+        <p className={`sk-text-body-small-regular ${styles.noCalls}`}>No calls from the package yet.</p>
       )}
     </section>
   );
 
   if (coursePackage) {
     return (
-      <div ref={rootRef} className="flex flex-col">
+      <div ref={rootRef} className={styles.packageRoot}>
         <ScormContainer bare title={title} state={state} onRetry={() => setRun((n) => n + 1)} frameHeight={frameHeight}>
-          <iframe key={run} src={packageUrl} title={title} className="min-h-0 w-full flex-1 border-0" />
+          <iframe key={run} src={packageUrl} title={title} className={styles.frame} />
         </ScormContainer>
-        <div className="p-6">{testPanel}</div>
+        <div className={styles.packagePanel}>{testPanel}</div>
       </div>
     );
   }
 
   return (
-    <div ref={rootRef} className="flex flex-col gap-4 py-6">
-      <p className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-default">
+    <div ref={rootRef} className={styles.root}>
+      <p className={`sk-text-body-large-regular ${styles.intro}`}>
         {state === "window"
           ? "This activity opens in its own window. Your progress is saved as you go, and your completion comes back to this page when you finish."
           : reportsCompletion
@@ -249,7 +248,7 @@ export function ScormPackageActivity({
         onLaunchWindow={launchWindow}
         onPlayInPage={() => setRun((n) => n + 1)}
       >
-        <iframe key={run} src={packageUrl} title={title} className="min-h-0 w-full flex-1 border-0" />
+        <iframe key={run} src={packageUrl} title={title} className={styles.frame} />
       </ScormContainer>
 
       {testPanel}

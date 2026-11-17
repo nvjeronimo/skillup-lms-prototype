@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { OverlayPanel, PanelBody, PanelGroup, PanelSectionLabel } from "./OverlayPanel";
 import { NotificationItem } from "@/components/molecules/NotificationItem";
@@ -8,6 +6,7 @@ import { notificationCategory } from "@/lib/data";
 import type { NotificationCategory, NotificationModel } from "@/lib/types";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./NotificationsPanel.module.css";
 
 export interface NotificationsPanelProps {
   open: boolean;
@@ -90,7 +89,7 @@ export function NotificationsPanel({
       {/* A new category cross-fades the list; the rows rise one after the other. */}
       <PanelBody key={tab} className="sk-animate-fade sk-enter-only">
         {visible.length === 0 ? (
-          <p className="sk-text-body-medium-regular px-6 py-8 text-center text-sko-text-subtle">
+          <p className={`sk-text-body-medium-regular ${styles.empty}`}>
             You are all caught up.
           </p>
         ) : (

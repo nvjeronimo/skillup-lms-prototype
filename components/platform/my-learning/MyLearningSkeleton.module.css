@@ -1,0 +1,199 @@
+/* My Learning while it loads: the page's layout in Skeletons (MyLearningCollection's column,
+   gaps and text styles). Card heights measured from sample data. */
+.programCard {
+  flex-direction: column;
+  height: 418px;
+}
+@media (min-width: 768px) {
+  .programCard { height: 420px; }
+}
+@media (min-width: 1024px) {
+  .programCard { height: 456px; }
+}
+@media (min-width: 1280px) {
+  .programCard { height: 412px; }
+}
+.cover {
+  display: flex;
+  height: 220px;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--color-bg-subtle);
+  padding: 24px;
+}
+.stack3 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.stack2 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row2 {
+  display: flex;
+  gap: 8px;
+}
+.programBody {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+}
+.programFooter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.textColumn {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+
+.courseRow {
+  display: flex;
+  flex-direction: column;
+  height: 429px;
+}
+@media (min-width: 1024px) {
+  .courseRow { height: 487px; }
+}
+@media (min-width: 1280px) {
+  .courseRow { height: 437px; }
+}
+.courseBody {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+}
+.spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.row3 {
+  display: flex;
+  gap: 12px;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+}
+/* The module row: measured from sample data (67). */
+.moduleRow {
+  display: flex;
+  height: 67px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-inline: 24px;
+}
+
+.page {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.collection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+/* Tabs on their rule: 32 tall on a phone, 48 from tablet up, 8 above. */
+.tabs {
+  display: flex;
+  gap: 12px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 8px;
+}
+.tab {
+  display: flex;
+  height: 32px;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .tab { height: 48px; }
+}
+.filterRow {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .filterRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+}
+.filterSlot {
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .filterSlot { flex-shrink: 0; }
+}
+/* With the filter track: no vertical scroll on a phone (Tailwind's overflow-hidden under the
+   track's overflow-x-auto); from tablet up the track's overflow: visible holds. */
+@media (max-width: 767.98px) {
+  .filterTrack { overflow-y: hidden; }
+}
+/* Doubled: it clears the pill's own bg/muted, wherever that stylesheet lands. */
+.segment.segment {
+  background-color: transparent;
+}
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (min-width: 768px) {
+  .searchRow { justify-content: space-between; }
+}
+@media (min-width: 1024px) {
+  .searchRow { justify-content: flex-start; }
+}
+.search {
+  height: 40px;
+  width: 100%;
+}
+@media (max-width: 767.98px) {
+  .search { height: 44px; }
+}
+@media (min-width: 768px) {
+  .search { max-width: 400px; }
+}
+@media (min-width: 1024px) {
+  .search { width: 320px; }
+}
+.toggle {
+  display: none;
+  flex-shrink: 0;
+}
+@media (min-width: 768px) {
+  .toggle { display: block; }
+}
+.grid {
+  align-items: flex-start;
+}

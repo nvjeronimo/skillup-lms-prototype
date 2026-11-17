@@ -1,14 +1,13 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { useSearchParams } from "@/lib/router";
 import { DemoAction } from "@/components/lab/training/DemoAction";
 import { MockTag } from "@/components/lab/MockTag";
 import { MOCK, type Enrolment } from "@/lib/lab/dashboard-mock";
 import { getPlan, type TrainingPlan } from "@/lib/lab/training-plan";
 import { cn } from "@/lib/utils";
 import { WEEKS, nextSession, planWeek } from "./parts";
+import styles from "./View.module.css";
 
 type Group = { key: Enrolment["status"]; title: string };
 
@@ -38,7 +37,7 @@ export function TrainingPlans() {
   )?.id;
 
   const list = (items: Enrolment[], level: 2 | 3) => (
-    <ul className="tb-rule-b mt-4">
+    <ul className={`tb-rule-b ${styles.list}`}>
       {items.map((e) => (
         <PlanRow key={e.id} e={e} plan={plan} q={q} level={level} primary={e.id === primaryId} />
       ))}
@@ -46,14 +45,14 @@ export function TrainingPlans() {
   );
 
   return (
-    <main id="main" tabIndex={-1} className="mx-auto w-full max-w-[880px] flex-1 px-4 pb-16 pt-8 outline-none md:px-8 md:pt-12">
+    <main id="main" tabIndex={-1} className={styles.main}>
       <h1 className="tb-h1">Plans</h1>
 
       {all.length === 0 ? (
-        <p className="tb-body tb-c-ink2 mt-6">No plans yet. When you enroll in a course, its plan appears here.</p>
+        <p className={`tb-body tb-c-ink2 ${styles.empty}`}>No plans yet. When you enroll in a course, its plan appears here.</p>
       ) : grouped ? (
         groups.map((g) => (
-          <section key={g.key} aria-labelledby={`${g.key}-h`} className="mt-10">
+          <section key={g.key} aria-labelledby={`${g.key}-h`} className={styles.group}>
             <h2 id={`${g.key}-h`} className="tb-h2">
               {g.title}
             </h2>
@@ -61,11 +60,11 @@ export function TrainingPlans() {
           </section>
         ))
       ) : (
-        <div className="mt-6">{list(ordered, 2)}</div>
+        <div className={styles.single}>{list(ordered, 2)}</div>
       )}
 
       {all.length > 0 ? (
-        <div className="mt-10">
+        <div className={styles.mock}>
           <MockTag reason={`Plan weeks and next sessions. ${MOCK.pace}; ${MOCK.due}. Titles, progress and certificates are real.`} />
         </div>
       ) : null}
@@ -127,7 +126,7 @@ function PlanRow({
     const inner = (
       <>
         {label}
-        <span className="sr-only">: {e.title}</span>
+        <span className="sk-sr-only">: {e.title}</span>
       </>
     );
     action = href ? (
@@ -140,26 +139,26 @@ function PlanRow({
   } else if (e.status === "completed" && e.cert === "downloadable") {
     action = (
       <DemoAction className="tb-btn tb-btn-quiet">
-        Download certificate<span className="sr-only">: {e.title}</span>
+        Download certificate<span className="sk-sr-only">: {e.title}</span>
       </DemoAction>
     );
   }
 
   return (
-    <li className="tb-rule-t flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-      <div className="min-w-0">
+    <li className={`tb-rule-t ${styles.row}`}>
+      <div className={styles.rowMain}>
         <Heading className="tb-title">
           {titleHref ? (
-            <Link href={titleHref} className="-my-2.5 inline-block py-2.5 hover:underline">
+            <Link href={titleHref} className={styles.titleLink}>
               {e.title}
             </Link>
           ) : (
             e.title
           )}
         </Heading>
-        <p className="tb-body-s tb-c-ink2 mt-1">{statusLine(e, plan)}</p>
+        <p className={`tb-body-s tb-c-ink2 ${styles.status}`}>{statusLine(e, plan)}</p>
       </div>
-      {action ? <div className="flex-none">{action}</div> : null}
+      {action ? <div className={styles.action}>{action}</div> : null}
     </li>
   );
 }

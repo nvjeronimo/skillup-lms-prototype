@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
 import { Lock } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { getBlockedInfo } from "@/lib/content";
 import { getTopic } from "@/lib/data";
+import styles from "./BlockedView.module.css";
 
 /**
  * Blocked content types (Programming Assignment · Role Play · Dialogue) are
@@ -20,9 +19,9 @@ export function BlockedView({ topicId }: { topicId: string }) {
   const info = getBlockedInfo(topic);
 
   return (
-    <div className="flex flex-col gap-8 py-6">
-      <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
-        <div className="flex flex-wrap items-center gap-2">
+    <div className={styles.root}>
+      <section className={styles.card}>
+        <div className={styles.badges}>
           <Badge tone="warning" leftIcon={Lock}>
             Not available yet
           </Badge>
@@ -47,9 +46,9 @@ export function BlockedView({ topicId }: { topicId: string }) {
 
 function Field({ label, value, lead }: { label: string; value: string; lead?: boolean }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="sk-text-label-small-medium text-sko-text-subtle">{label}</span>
-      <p className={lead ? "sk-text-body-large-regular text-sko-text-muted" : "sk-text-body-medium-regular text-sko-text-muted"}>
+    <div className={styles.field}>
+      <span className={`sk-text-label-small-medium ${styles.fieldLabel}`}>{label}</span>
+      <p className={`${lead ? "sk-text-body-large-regular" : "sk-text-body-medium-regular"} ${styles.fieldValue}`}>
         {value}
       </p>
     </div>

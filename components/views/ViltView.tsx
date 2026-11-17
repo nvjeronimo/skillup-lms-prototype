@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Ban, Users } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -15,6 +13,7 @@ import { getViltSession, type ViltSession, type ViltStage } from "@/lib/content"
 import { useLmsStore } from "@/lib/store";
 import { getTopic } from "@/lib/data";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./ViltView.module.css";
 
 /**
  * VILT — one Topic Content Type, three stages. The underlying asset changes as
@@ -40,7 +39,7 @@ export function ViltView({ topicId }: { topicId: string }) {
     // (decision 035, no extra development). Until then the screen follows Figma's VILT canonical
     // (4935:3048): no Scheduled → Live → Recording stepper in the learner view, and Join / Add to
     // calendar at 44 (Nelson's SKO match review, 28 Oct 2026, LV1 and LV4).
-    <div className="flex flex-col gap-6 py-6">
+    <div className={styles.root}>
 
       {current === "pre-live" ? (
         <PreLive
@@ -70,7 +69,7 @@ export function ViltView({ topicId }: { topicId: string }) {
       {/* Lane-level completion note — VILT never has a manual "Mark as complete".
           Full-width amber note: completion is one of two paths, whichever first
           (live attendance, or watching the recording). See topic-types-inventory §3. */}
-      <div data-invented="attendance: Open edX tracks no attendance" className="contents">
+      <div data-invented="attendance: Open edX tracks no attendance" className={styles.completionNote}>
         <InlineAlert
           tone="warning"
           title="Completion is automatic once you attend"
@@ -90,8 +89,8 @@ export function ViltView({ topicId }: { topicId: string }) {
    leaves a 357px column where md: would already draw the rules). */
 function SessionMeta({ session }: { session: ViltSession }) {
   return (
-    <div className="[container-type:inline-size]">
-      <dl className="flex flex-wrap items-stretch gap-x-6 gap-y-3 [@container(min-width:38rem)]:gap-x-8">
+    <div className={styles.metaContainer}>
+      <dl className={styles.meta}>
         {[
           ["When", session.whenLabel],
           ["Duration", session.durationLabel],
@@ -100,14 +99,10 @@ function SessionMeta({ session }: { session: ViltSession }) {
         ].map(([k, v], i) => (
           <div
             key={k}
-            className={cn(
-              "flex min-w-[8rem] flex-1 flex-col gap-0.5",
-              i > 0 &&
-                "border-sko-border-subtle [@container(min-width:38rem)]:border-l [@container(min-width:38rem)]:pl-8",
-            )}
+            className={cn(styles.metaField, i > 0 && styles.metaFieldRuled)}
           >
-            <dt className="sk-text-body-small-medium uppercase text-sko-text-subtle">{k}</dt>
-            <dd className="sk-text-body-medium-medium text-sko-text-default">{v}</dd>
+            <dt className={`sk-text-body-small-medium ${styles.eyebrow}`}>{k}</dt>
+            <dd className={`sk-text-body-medium-medium ${styles.metaValue}`}>{v}</dd>
           </div>
         ))}
       </dl>
@@ -117,11 +112,11 @@ function SessionMeta({ session }: { session: ViltSession }) {
 
 function Agenda({ items }: { items: string[] }) {
   return (
-    <div className="flex flex-col gap-1.5 rounded-card border border-sko-border-subtle px-4 py-6">
-      <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
+    <div className={styles.agenda}>
+      <span className={`sk-text-body-small-medium ${styles.eyebrow}`}>
         What we&rsquo;ll cover
       </span>
-      <ul className="sk-text-body-medium-regular list-disc pl-5 text-sko-text-muted">
+      <ul className={`sk-text-body-medium-regular ${styles.agendaList}`}>
         {items.map((a) => (
           <li key={a}>{a}</li>
         ))}
@@ -143,28 +138,28 @@ function PreLive({
   const locked = session.minutesUntilStart > session.joinUnlocksMinutesBefore;
 
   return (
-    <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-6">
-      <div className="flex flex-wrap items-center gap-2">
+    <section className={styles.preLive}>
+      <div className={styles.badges}>
         <Badge tone="brand">Live session</Badge>
         <Badge tone="neutral" data-invented="schedule: no live-session schedule in Open edX">
           Scheduled
         </Badge>
       </div>
 
-      <h3 className="sk-text-title-medium-semibold text-sko-text-default">{session.title}</h3>
+      <h3 className={`sk-text-title-medium-semibold ${styles.title}`}>{session.title}</h3>
 
       {/* Countdown — the learner's primary orientation before the session. */}
       <div
         data-invented="countdown: no live-session schedule or join window in Open edX"
-        className="flex flex-col items-center gap-1 rounded-control bg-sko-bg-primary-soft px-4 py-6"
+        className={styles.countdown}
       >
-        <span className="sk-text-headline-small-semibold text-sko-text-primary">
+        <span className={`sk-text-headline-small-semibold ${styles.countdownText}`}>
           Your class starts in {session.minutesUntilStart} minutes
         </span>
         {/* Say what happens next, not what is missing: the learner is waiting on
             the host, and the sentence should carry them to the join rather than
             report an absence. */}
-        <span className="sk-text-body-small-regular text-sko-text-primary">
+        <span className={`sk-text-body-small-regular ${styles.countdownText}`}>
           {locked ? (
             <>
               Once your instructor opens the session, you&rsquo;ll be able to join. The button
@@ -181,7 +176,7 @@ function PreLive({
 
       <div
         data-invented="join: no join window or per-session calendar export in Open edX"
-        className="flex flex-wrap items-center gap-2 border-t border-sko-border-subtle pt-4 max-md:[&>*]:flex-1"
+        className={styles.joinActions}
       >
         <Button variant="primary" size="md" disabled={locked} onClick={onSimulateLive}>
           {locked ? "Join opens soon" : "Join session"}
@@ -193,7 +188,7 @@ function PreLive({
 
       <p
         data-invented="attendance: Open edX tracks no attendance"
-        className="sk-text-body-small-regular text-sko-text-subtle"
+        className={`sk-text-body-small-regular ${styles.subtle}`}
       >
         {locked
           ? "Prefer to catch up later? A recording is published here afterwards and counts for completion just the same."
@@ -214,23 +209,23 @@ function LiveStage({
   onLeave: () => void;
 }) {
   return (
-    <section className="flex flex-col gap-4">
+    <section className={styles.stage}>
       {/* DS VILT · Stage Surface, Stage=Live: solid bg/primary, pad 0/32, gap 6. */}
-      <div className="relative flex aspect-video max-h-[42vh] w-full items-center justify-center overflow-hidden rounded-card bg-sko-bg-primary px-8">
-        <div className="flex flex-col items-center gap-1.5 text-center">
-          <Icon icon={Users} size={28} className="text-sko-text-on-primary" />
-          <div className="flex flex-col items-center gap-1.5">
-            <span className="sk-text-body-large-semibold text-sko-text-on-primary">
+      <div className={styles.liveSurface}>
+        <div className={styles.liveMessage}>
+          <Icon icon={Users} size={28} className={styles.onPrimary} />
+          <div className={styles.liveText}>
+            <span className={`sk-text-body-large-semibold ${styles.onPrimary}`}>
               Live session in progress
             </span>
-            <span className="sk-text-body-small-regular text-sko-text-on-primary">
+            <span className={`sk-text-body-small-regular ${styles.onPrimary}`}>
               Hosted on {session.platform}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className={styles.attendance}>
         <LiveAttendance live={session.attendees.live} total={session.attendees.total} recording />
       </div>
 
@@ -250,8 +245,8 @@ function RecordingStage({ session }: { session: ViltSession }) {
   // The recording keeps its own time so the caption follows the scrubber (10 Oct 2026).
   const [time, setTime] = React.useState(0);
   return (
-    <section className="flex flex-col gap-4">
-      <span className="sk-text-body-small-regular text-sko-text-subtle">{session.whenLabel}</span>
+    <section className={styles.stage}>
+      <span className={`sk-text-body-small-regular ${styles.subtle}`}>{session.whenLabel}</span>
 
       {/* DS VILT · Stage Surface, Stage=Recording (20322:705648): bg/muted surface with the
           640x360 md player centred at full surface height, and the RECORDING pill pinned
@@ -260,8 +255,8 @@ function RecordingStage({ session }: { session: ViltSession }) {
           surface up; below that the player drops under the pill (pt-14, pb-8) instead of
           being covered by it. A container query, since the column width depends on the
           sidebar and side panel, not the viewport. */}
-      <div className="relative flex justify-center rounded-card bg-sko-bg-muted px-8 [container-type:inline-size]">
-        <div className="w-full max-w-[640px] pb-8 pt-14 [@container(min-width:55rem)]:py-0">
+      <div className={styles.recordingSurface}>
+        <div className={styles.recordingPlayer}>
           <VideoPlayer
             durationSeconds={durationToSeconds(session.durationLabel)}
             captions={session.transcript}
@@ -271,7 +266,7 @@ function RecordingStage({ session }: { session: ViltSession }) {
             size="md"
           />
         </div>
-        <span className="sk-text-body-small-medium absolute left-4 top-4 z-10 inline-flex items-center rounded-pill bg-sko-bg-subtle px-2 py-1 text-sko-text-muted ring-1 ring-inset ring-sko-border-default">
+        <span className={`sk-text-body-small-medium ${styles.recordingPill}`}>
           Recording
         </span>
       </div>

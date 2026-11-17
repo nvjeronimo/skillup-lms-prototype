@@ -1,0 +1,23 @@
+/* DS Vertical Scroll: 6px wide, fully round, no track fill. The root takes the caller's
+   className: :where(). */
+:where(.track) {
+  position: relative;
+  width: 6px;
+  border-radius: var(--sk-radius-pill);
+}
+.thumb {
+  position: absolute;
+  left: 0;
+  width: 6px;
+  border-radius: var(--sk-radius-pill);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.dragging {
+  background-color: var(--color-bg-primary);
+}
+/* Thumb in border/default (the DS binds icon/faint; rebind pending, FND-18). */
+.idle {
+  background-color: var(--color-border-default);
+}

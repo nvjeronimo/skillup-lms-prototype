@@ -1,0 +1,13 @@
+/* Code Connect examples: the Hint tone's list and its Next Hint control. */
+.nextHint {
+  color: var(--color-text-primary);
+  text-decoration-line: underline;
+}
+.hints {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hint {
+  color: var(--color-text-default);
+}

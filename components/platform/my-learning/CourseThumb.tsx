@@ -1,8 +1,7 @@
-"use client";
-
 import * as React from "react";
 import { FadeImage } from "@/components/atoms/FadeImage";
 import { cn } from "@/lib/utils";
+import styles from "./CourseThumb.module.css";
 
 /**
  * Thumbnail of the DS `LMS / Course Card`: bg/primary-soft, radius 10, the Initials in
@@ -38,8 +37,8 @@ export function CourseThumb({
     <span
       aria-hidden="true"
       className={cn(
-        "relative inline-flex shrink-0 items-center justify-center overflow-hidden bg-sko-bg-primary-soft text-sko-text-primary",
-        shape === "cover" ? "sk-text-headline-medium-bold" : "sk-text-title-large-bold rounded-control",
+        styles.thumb,
+        shape === "cover" ? "sk-text-headline-medium-bold" : cn("sk-text-title-large-bold", styles.tile),
         className,
       )}
     >
@@ -53,7 +52,7 @@ export function CourseThumb({
           decoding="async"
           onError={() => setFailed(true)}
           className={cn(
-            "absolute inset-0 size-full object-cover",
+            styles.image,
             shape === "cover" && "sk-cover-zoom",
           )}
         />

@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { CoursePlayerTopbar, type TopbarSize } from "@/components/organisms/CoursePlayerTopbar";
 import { CourseCertificate } from "@/components/organisms/CourseCertificate";
 import { Toast } from "@/components/organisms/Toast";
@@ -14,6 +12,7 @@ import { courseSearchScope } from "@/lib/courseSearchScope";
 import { useHydrated } from "@/lib/persona-gate";
 import { playerCourse } from "@/lib/platform/catalog";
 import { courseHomeHref } from "@/lib/platform/routes";
+import styles from "./CertificateView.module.css";
 
 export function CertificateView({ courseSlug }: { courseSlug: string }) {
   const router = useRouter();
@@ -39,7 +38,7 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
   }, []);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-sko-bg-subtle">
+    <div className={styles.page}>
       {/* The full player bar, as Figma 3830:77023 (Nelson's SKO match review, 28 Oct 2026): Search
           and Assistant, the theme switch and the learner with their role. */}
       <CoursePlayerTopbar
@@ -62,8 +61,8 @@ export function CertificateView({ courseSlug }: { courseSlug: string }) {
 
       {/* Brand stage: bg/primary with its own text pair, so the overline holds AA in every
           theme and skin (the old stage sat on a text token that turned pale in Dark). */}
-      <main id="main" tabIndex={-1} className="flex flex-1 flex-col items-center justify-center gap-6 bg-sko-bg-primary px-4 py-12 outline-none">
-        <h1 className="sk-text-label-small-medium text-sko-text-on-primary">Certificate of Completion</h1>
+      <main id="main" tabIndex={-1} className={styles.stage}>
+        <h1 className={`sk-text-label-small-medium ${styles.stageTitle}`}>Certificate of Completion</h1>
         <CourseCertificate
           learnerName={certificate.learnerName}
           courseTitle={playerCourse(courseSlug).title}

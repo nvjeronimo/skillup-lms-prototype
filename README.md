@@ -1,13 +1,10 @@
 # SkillUp LMS — Prototype + Storybook
 
-A Next.js 14 prototype of the SkillUp learner platform (dashboard, My Learning, course and
+A Vite + React 19 prototype of the SkillUp learner platform (dashboard, My Learning, course and
 program pages, and the course player) plus Storybook for the design-system components.
 
 Built from the Figma SKO Design System. Colour, type, radius, spacing and motion values come
 from the token export — no hardcoded hex, no raw `font-size` / `font-weight`.
-
-`main` is **Next.js 14 and React 18**. [Draft PR #492](https://github.com/nvjeronimo/skillup-lms-prototype/pull/492)
-migrates the prototype to Vite and React 19. That stack is not current.
 
 ## Live
 
@@ -16,9 +13,9 @@ migrates the prototype to Vite and React 19. That stack is not current.
 | Prototype (Vercel) | <https://lms-prototype-mu.vercel.app> |
 | Storybook (GitHub Pages) | <https://nvjeronimo.github.io/skillup-lms-prototype/> |
 
-The prototype is the Vercel project for this repo (`vercel.json` runs `next build`). Storybook
+The prototype is the Vercel project for this repo (`vercel.json` runs `vite build`). Storybook
 is published to GitHub Pages by `.github/workflows/storybook.yml`. A push to `main` rebuilds it
-when tokens, stories, components, `.storybook/`, `app/globals.css`, or `tailwind.config.ts`
+when tokens, stories, components, `.storybook/`, `app/globals.css`, `app/reset.css` or `lib/`
 change. A Figma token auto-merge does not start that push: the squash uses the workflow
 token, so `tokens.yml` dispatches Storybook once the merge commit is on `main`. A person
 merging that pull request does start the workflow. Deploy notes for the
@@ -26,12 +23,18 @@ prototype and the assistant key are in [DEPLOY.md](DEPLOY.md).
 
 ## Tech stack
 
-- **Next.js 14** (App Router) + **React 18** + **TypeScript**
-- **Tailwind CSS 3** — the `sko` scale (`bg-sko-*`, `text-sko-*`, `border-sko-*`) maps each utility to a `--color-*` variable
-- **Storybook 8** (`@storybook/nextjs`) + a11y + interactions addons
+The development team's stack (since 14 Nov 2026; MIGRATION.md tells the move):
+
+- **Vite 8** + **React 19** + **React Router 7** + **TypeScript**. The pages stay as files under
+  `app/` (one route each, `src/routes.tsx`); `lib/router` gives them `Link`, `useRouter`,
+  `notFound` and `redirect`.
+- **CSS Modules**: one `Name.module.css` beside each component. Colour, type, radius, spacing and
+  motion come from the token custom properties (`tokens/`); the DS type styles are the global
+  `sk-text-*` classes; `app/reset.css` is the base reset.
+- **Storybook 10** (`@storybook/react-vite`) + a11y and docs addons
 - **Zustand** for client state
 - **lucide-react** for icons (stroke-weight rule enforced centrally)
-- **Montserrat** for the whole UI (body and display) via `next/font/google`. Inter is not used (`tokens/typography.css`). Other families load only for skins: Inter Tight (Studio), Plus Jakarta Sans and Figtree (Harbor), Open Sans (Fluent)
+- **Montserrat** and the skins' families from Google Fonts (`index.html`)
 
 ## Tokens
 
@@ -67,10 +70,10 @@ pnpm storybook    # storybook  → http://localhost:6006
 Scripts in `package.json`:
 
 ```bash
-pnpm dev              # next dev
-pnpm build            # next build
-pnpm start            # next start
-pnpm lint             # next lint
+pnpm dev              # vite (http://localhost:3000)
+pnpm build            # vite build → dist/
+pnpm start            # vite preview of dist/
+pnpm lint             # eslint
 pnpm typecheck        # tsc --noEmit
 pnpm format           # prettier --write .
 pnpm storybook        # storybook dev -p 6006
@@ -80,6 +83,7 @@ pnpm test             # vitest run
 pnpm tokens:build     # tokens/figma/variables.json → tokens/generated/*.css
 pnpm tokens:check     # fail if tokens/generated is not what the JSON gives
 pnpm tokens:compare   # what a token change does on the page, against origin/main
+pnpm tokens:usage     # write tokens/usage.json, which Figma tokens the code uses
 ```
 
 > Requires Node 18+ and pnpm `11.5.1` (`packageManager` in `package.json`). `pnpm-workspace.yaml`
@@ -112,7 +116,7 @@ YouTube’s official embed and the SCORM packages are in the test program
 ## Project structure
 
 ```
-app/                         # App Router pages, player shell, platform routes
+app/                         # pages as files (one route each, src/routes.tsx), player shell, platform routes
   layout.tsx                 # fonts + global token CSS
   page.tsx                   # → redirect to /platform/dashboard
   globals.css                # imports tokens/generated/* then the hand-written token files

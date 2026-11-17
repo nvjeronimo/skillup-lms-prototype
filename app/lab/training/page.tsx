@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { TrainingToday } from "./View";
 
 export const metadata: Metadata = { title: { absolute: "Today · The Training Block · Lab · SkillUp" } };

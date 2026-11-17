@@ -1,0 +1,17 @@
+/* The sticky tabs and filters of My Learning and Calendar. */
+.sentinel {
+  margin-bottom: calc(var(--sk-layout-stack-gap) * -1);
+  height: 0;
+}
+.bar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  margin-block: -12px;
+  padding-block: 12px;
+}
+/* bleed: the bar's ground runs to the edges of the window. */
+.bleed {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
+}

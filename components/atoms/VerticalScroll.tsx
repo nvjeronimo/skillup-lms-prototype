@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./VerticalScroll.module.css";
 
 export interface VerticalScrollProps {
   /** 0–100 thumb position. */
@@ -32,15 +33,15 @@ export function VerticalScroll({
   const top = (position / 100) * travel;
   return (
     <div
-      className={cn("relative w-1.5 rounded-pill", className)}
+      className={cn(styles.track, className)}
       style={{ height }}
       role="presentation"
     >
       <div
         className={cn(
-          "absolute left-0 w-1.5 rounded-pill transition-colors",
+          styles.thumb,
           // thumb colour pending DS rebind (FND-18)
-          dragging ? "bg-sko-bg-primary" : "bg-sko-border-default",
+          dragging ? styles.dragging : styles.idle,
         )}
         style={{ height: thumbHeight, top }}
       />

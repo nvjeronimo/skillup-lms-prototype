@@ -16,7 +16,8 @@ on:
       - "components/**"
       - ".storybook/**"
       - "app/globals.css"
-      - "tailwind.config.ts"
+      - "app/reset.css"
+      - "lib/**"
       - ".github/workflows/storybook.yml"
       - ".github/workflows/tokens.yml"
   workflow_dispatch:

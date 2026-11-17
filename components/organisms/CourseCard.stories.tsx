@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CourseCard } from "./CourseCard";
+import styles from "./CourseCard.stories.module.css";
 
 const meta: Meta<typeof CourseCard> = {
   title: "Organisms/Course Card",
@@ -19,7 +20,7 @@ const meta: Meta<typeof CourseCard> = {
   },
   decorators: [
     (Story) => (
-      <div className="max-w-[1200px]">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

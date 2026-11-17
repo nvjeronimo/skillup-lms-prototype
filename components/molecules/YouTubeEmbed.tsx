@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import styles from "./YouTubeEmbed.module.css";
 
 /**
  * A YouTube video as a course team pastes it into a Text component in Studio (ICP Video Lessons
@@ -28,9 +29,9 @@ export function YouTubeEmbed({
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden bg-sko-bg-subtle transition-[height,border-radius] duration-short4 ease-standard-decelerate",
-        heightPx ? "" : "aspect-video max-h-[34vh]",
-        docked ? "rounded-b-card rounded-t-none" : "rounded-card",
+        styles.frame,
+        !heightPx && styles.auto,
+        docked ? styles.docked : styles.undocked,
         className,
       )}
       style={{ height: heightPx }}
@@ -41,7 +42,7 @@ export function YouTubeEmbed({
         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
-        className="absolute inset-y-0 left-1/2 aspect-video h-full max-w-full -translate-x-1/2 border-0"
+        className={styles.player}
       />
     </div>
   );

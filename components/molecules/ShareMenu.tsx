@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { Award, Facebook, Link2, Linkedin, Mail, Twitter } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./ShareMenu.module.css";
 
 export type ShareChannel = "linkedin-profile" | "linkedin" | "twitter" | "facebook" | "copy" | "email";
 
@@ -43,19 +42,16 @@ export function ShareMenu({ onSelect, onClose, className }: ShareMenuProps) {
 
   return (
     <ul
-      className={cn(
-        "w-56 overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-lg",
-        className,
-      )}
+      className={cn(styles.menu, className)}
     >
       {ITEMS.map((item) => (
         <li key={item.channel}>
           <button
             type="button"
             onClick={() => onSelect?.(item.channel)}
-            className="sk-text-body-medium-medium flex w-full items-center gap-2.5 rounded-card-inset px-3 py-3 text-left text-sko-text-default transition-colors hover:bg-sko-bg-subtle"
+            className={`sk-text-body-medium-medium ${styles.option}`}
           >
-            <Icon icon={item.icon} size={16} className="text-sko-text-subtle" aria-hidden />
+            <Icon icon={item.icon} size={16} className={styles.icon} aria-hidden />
             {item.label}
           </button>
         </li>

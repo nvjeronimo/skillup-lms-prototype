@@ -1,0 +1,163 @@
+/* CertificatePageView's column. */
+.page {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  flex-direction: column;
+  gap: 32px;
+  padding-left: var(--sk-layout-band-x);
+  padding-right: var(--sk-layout-band-x);
+  padding-bottom: 32px;
+  padding-top: 24px;
+}
+
+/* Breadcrumb: an item is 44 tall below desktop (its target), 24 on desktop. */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+}
+.crumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.crumbTarget {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-column-gap);
+}
+.sheet {
+  aspect-ratio: 1123/794;
+  width: 100%;
+  min-width: 0;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.facts {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.breakAll {
+  word-break: break-all;
+}
+
+/* Not earned: the card of what is missing. */
+.missing {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+.requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.courses {
+  display: flex;
+  flex-direction: column;
+}
+.course {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 12px;
+  row-gap: 4px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.courseTitle {
+  display: flex;
+  min-height: 44px;
+  min-width: 0;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-bottom: 48px;
+  }
+  .crumbs {
+    column-gap: 8px;
+  }
+  .crumb {
+    gap: 8px;
+  }
+  .missing {
+    padding: 19px;
+  }
+  .courseTitle {
+    min-height: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding-bottom: 80px;
+    padding-top: 24px;
+  }
+  .crumbTarget {
+    min-height: 24px;
+  }
+  .layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .sheet,
+  .missing {
+    flex: 1 1 0%;
+  }
+  .missing {
+    padding: 23px;
+  }
+  .side {
+    width: 320px;
+    flex-shrink: 0;
+  }
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): their rules selected the
+   Tailwind classes this element had (.rounded-card.border.p-[15px] md:p-[19px] lg:p-[23px]); they are repeated here for the module class. */
+:global([data-direction="studio"]) .missing {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .missing,
+:global([data-skin="fluent"] [data-platform-page]) .missing {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

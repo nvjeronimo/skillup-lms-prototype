@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Search, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -10,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useEdxScope } from "@/lib/edx-scope";
 import { AssistantGlyph } from "@/components/assistant/AssistantGlyph";
 import { HarborSearch, type SearchScope } from "./HarborSearch";
+import styles from "./SearchAssistantButton.module.css";
 
 /**
  * The search + Assistant where the pill does not fit (Nelson, 26 Oct 2026): the compact bars of
@@ -64,10 +63,8 @@ export function SearchAssistantButton({
           !edx && "sk-assistant-halo",
           // relative here, not only through the halo: without it (Open edX scope drops the halo)
           // the sm hit band is placed on the top bar and every click there opened the search.
-          "relative inline-flex shrink-0 items-center justify-center rounded-pill text-sko-icon-primary transition-colors hover:bg-sko-bg-hover",
-          size === "md"
-            ? "size-11"
-            : "size-8 before:absolute before:-inset-1.5 before:content-['']",
+          styles.trigger,
+          size === "md" ? styles.triggerMd : styles.triggerSm,
           className,
         )}
       >
@@ -85,23 +82,23 @@ export function SearchAssistantButton({
           aria-labelledby={titleId}
           data-state={presence.state}
           onAnimationEnd={presence.onAnimationEnd}
-          className="sk-animate-sheet fixed inset-0 z-50 flex flex-col bg-sko-bg-page"
+          className={cn("sk-animate-sheet", styles.sheet)}
         >
-          <div className="flex h-14 shrink-0 items-center justify-between border-b border-sko-border-subtle pl-4 pr-2">
-            <h2 id={titleId} className="sk-text-title-medium-semibold inline-flex items-center gap-2 text-sko-text-default">
-              {edx ? null : <AssistantGlyph size={20} className="text-sko-icon-primary" />}
+          <div className={styles.header}>
+            <h2 id={titleId} className={cn("sk-text-title-medium-semibold", styles.title)}>
+              {edx ? null : <AssistantGlyph size={20} className={styles.titleGlyph} />}
               {course ? "Search this course" : "Search"}
             </h2>
             <button
               type="button"
               onClick={close}
               aria-label="Close search"
-              className="inline-flex size-11 items-center justify-center rounded-control text-sko-icon-default transition-colors hover:bg-sko-bg-hover"
+              className={styles.close}
             >
               <Icon icon={X} size={24} />
             </button>
           </div>
-          <div className="sk-scroll min-h-0 flex-1 overflow-y-auto px-4 pb-6 pt-4">
+          <div className={cn("sk-scroll", styles.body)}>
             <HarborSearch scope={scope} layout="sheet" onDone={close} />
           </div>
         </div>

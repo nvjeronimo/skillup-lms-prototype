@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -10,6 +8,7 @@ import { GOAL_LEVELS, levelOfPlan, WeeklyGoalModal, type GoalLevel } from "@/com
 import { sessionAdditions, useSessionAdditions } from "@/lib/platform/session-additions";
 import type { WeekDayState, WeeklyGoal } from "@/lib/platform/course-detail";
 import { cn } from "@/lib/utils";
+import styles from "./WeeklyGoalCard.module.css";
 
 const DAY_STATE_LABEL: Record<WeekDayState, string> = {
   done: "active",
@@ -30,11 +29,11 @@ function WeekDay({ day }: { day: WeeklyGoal["days"][number] }) {
   const today = day.state === "today" || day.state === "today-done";
   const checked = day.state === "done" || day.state === "today-done";
   return (
-    <li className="flex w-8 flex-col items-center gap-1.5">
+    <li className={styles.day}>
       <span
         aria-hidden
         className={cn(
-          today ? "sk-text-body-small-semibold text-sko-text-on-primary-soft" : "sk-text-body-small-medium text-sko-text-subtle",
+          today ? `sk-text-body-small-semibold ${styles.todayLabel}` : `sk-text-body-small-medium ${styles.subtle}`,
         )}
       >
         {day.label}
@@ -42,16 +41,16 @@ function WeekDay({ day }: { day: WeeklyGoal["days"][number] }) {
       <span
         aria-hidden
         className={cn(
-          "flex size-7 items-center justify-center rounded-pill text-sko-icon-success",
-          day.state === "done" && "border border-sko-border-subtle bg-sko-bg-page",
-          day.state === "missed" && "border border-sko-border-subtle bg-sko-bg-subtle",
-          today && "border-2 border-sko-border-primary bg-sko-bg-page",
-          day.state === "upcoming" && "border-[1.5px] border-dashed border-sko-border-subtle",
+          styles.dot,
+          day.state === "done" && styles.done,
+          day.state === "missed" && styles.missed,
+          today && styles.today,
+          day.state === "upcoming" && styles.upcoming,
         )}
       >
         {checked ? <Icon icon={Check} size={14} /> : null}
       </span>
-      <span className="sr-only">
+      <span className="sk-sr-only">
         {day.name}: {DAY_STATE_LABEL[day.state]}
       </span>
     </li>
@@ -89,13 +88,13 @@ export function WeeklyGoalCard({
   const met = goal.state === "met";
 
   const days = (
-    <ul aria-label={goal.week} className="flex items-start justify-between">
+    <ul aria-label={goal.week} className={styles.week}>
       {goal.days.map((day) => (
         <WeekDay key={day.label} day={day} />
       ))}
     </ul>
   );
-  const rule = <span aria-hidden className="border-t border-sko-border-subtle" />;
+  const rule = <span aria-hidden className={styles.rule} />;
 
   return (
     <CardShell
@@ -105,20 +104,20 @@ export function WeeklyGoalCard({
       mock="Days active this week and last week's count are not returned by any API"
       className={className}
     >
-      <p className="sk-text-body-large-semibold text-sko-text-default">{goal.title}</p>
-      <p className="sk-text-body-medium-regular text-sko-text-subtle">{goal.body}</p>
+      <p className={`sk-text-body-large-semibold ${styles.default}`}>{goal.title}</p>
+      <p className={`sk-text-body-medium-regular ${styles.subtle}`}>{goal.body}</p>
 
       {met ? (
         <>
           <div
             data-invented="activity: no per-day activity or last-week count in Open edX"
-            className="flex flex-col gap-2 rounded-control bg-sko-bg-success-soft p-3"
+            className={styles.metBox}
           >
-            <p className="sk-text-body-small-medium text-sko-text-subtle">{goal.week}</p>
+            <p className={`sk-text-body-small-medium ${styles.subtle}`}>{goal.week}</p>
             {days}
-            <div className="flex flex-col">
-              <p className="sk-text-body-medium-semibold text-sko-text-success">{goal.count}</p>
-              <p className="sk-text-body-small-medium text-sko-text-subtle">{goal.lastWeek}</p>
+            <div className={styles.column}>
+              <p className={`sk-text-body-medium-semibold ${styles.success}`}>{goal.count}</p>
+              <p className={`sk-text-body-small-medium ${styles.subtle}`}>{goal.lastWeek}</p>
             </div>
           </div>
           {rule}
@@ -126,24 +125,24 @@ export function WeeklyGoalCard({
       ) : (
         <>
           {rule}
-          <div data-invented="activity: no per-day activity or last-week count in Open edX" className="flex flex-col gap-2">
-            <p className="sk-text-body-small-medium text-sko-text-subtle">{goal.week}</p>
+          <div data-invented="activity: no per-day activity or last-week count in Open edX" className={styles.weekBlock}>
+            <p className={`sk-text-body-small-medium ${styles.subtle}`}>{goal.week}</p>
             {days}
-            <div className="flex flex-wrap items-center justify-between gap-x-2">
-              <p className="sk-text-body-medium-regular text-sko-text-subtle">{goal.count}</p>
-              <p className="sk-text-body-small-medium text-sko-text-subtle">{goal.lastWeek}</p>
+            <div className={styles.countRow}>
+              <p className={`sk-text-body-medium-regular ${styles.subtle}`}>{goal.count}</p>
+              <p className={`sk-text-body-small-medium ${styles.subtle}`}>{goal.lastWeek}</p>
             </div>
           </div>
         </>
       )}
 
-      <div className="flex items-center justify-between gap-3">
-        <p className="sk-text-body-small-regular text-sko-text-subtle">{goal.plan}</p>
+      <div className={styles.planRow}>
+        <p className={`sk-text-body-small-regular ${styles.subtle}`}>{goal.plan}</p>
         <Button
           hierarchy="link"
           size="sm"
           onClick={() => setEditing(true)}
-          className="shrink-0"
+          className={styles.noShrink}
         >
           Edit goal
         </Button>

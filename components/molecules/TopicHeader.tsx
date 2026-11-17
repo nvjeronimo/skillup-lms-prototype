@@ -2,6 +2,7 @@ import * as React from "react";
 import { TopicTypeBadge } from "@/components/atoms/TopicTypeBadge";
 import { cn, isEstimatedDuration } from "@/lib/utils";
 import type { TopicType } from "@/lib/types";
+import styles from "./TopicHeader.module.css";
 
 export interface TopicHeaderProps {
   type: TopicType;
@@ -42,31 +43,31 @@ export function TopicHeader({
 
   return (
     // DS: root, Content Container and meta-row → title are 4px apart; meta-row items 8px.
-    <header className={cn("flex flex-col gap-1", className)}>
+    <header className={cn(styles.header, className)}>
       {/* One line on every screen (Nelson, 25 Oct 2026): the type and the completion badge keep
           their width, the duration gives way and ends in an ellipsis. */}
-      <div className="flex min-w-0 items-center gap-2">
-        <TopicTypeBadge type={type} label={typeLabel} className="shrink-0" />
+      <div className={styles.meta}>
+        <TopicTypeBadge type={type} label={typeLabel} className={styles.badge} />
         {/* Duration is optional; with none, render nothing rather than a stray
             "approx." or a dash placeholder. Separator and Duration are two
             body-medium/Medium layers in text/subtle, as in the DS meta-row. */}
         {showDuration && duration ? (
-          <span data-invented={durationInvented} className="contents">
-            <span aria-hidden className="sk-text-body-medium-medium shrink-0 text-sko-text-subtle">
+          <span data-invented={durationInvented} className={styles.durationGroup}>
+            <span aria-hidden className={`sk-text-body-medium-medium ${styles.separator}`}>
               ·
             </span>
-            <span title={durationLabel} className="sk-text-body-medium-medium min-w-0 truncate text-sko-text-subtle">
+            <span title={durationLabel} className={`sk-text-body-medium-medium ${styles.duration}`}>
               {durationLabel}
             </span>
           </span>
         ) : null}
-        {rightSlot ? <div className="ml-auto shrink-0">{rightSlot}</div> : null}
+        {rightSlot ? <div className={styles.right}>{rightSlot}</div> : null}
       </div>
-      <h1 className="sk-text-headline-small-semibold text-sko-text-default">{title}</h1>
+      <h1 className={`sk-text-headline-small-semibold ${styles.title}`}>{title}</h1>
       {showDescription && description ? (
         <p
           data-invented="description: a unit has a display name only in Open edX"
-          className="sk-text-body-large-medium text-sko-text-muted"
+          className={`sk-text-body-large-medium ${styles.description}`}
         >
           {description}
         </p>

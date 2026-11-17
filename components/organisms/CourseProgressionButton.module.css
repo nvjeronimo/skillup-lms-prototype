@@ -1,0 +1,38 @@
+.group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.groupCompact {
+  min-width: 0;
+}
+/* Shown only when the footer row (the container) is at least 36rem wide. */
+.caption {
+  display: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+@container (min-width: 36rem) {
+  .caption {
+    display: inline;
+  }
+}
+.captionCourse {
+  color: var(--color-text-success);
+}
+.captionModule {
+  color: var(--color-text-primary);
+}
+/* Mobile: the label may take two lines; the button grows instead of clipping it. */
+.buttonCompact {
+  height: auto !important;
+  min-height: 36px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  text-align: left;
+}
+.buttonFull {
+  flex-shrink: 0;
+  white-space: nowrap;
+}

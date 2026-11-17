@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { OverlayPanel, PanelBody, PanelGroup, PanelSectionLabel } from "./OverlayPanel";
 import { DiscussionPrompt } from "@/components/molecules/DiscussionPrompt";

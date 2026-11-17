@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { useLmsStore } from "@/lib/store";
 import { bufferStretch } from "./buffer";

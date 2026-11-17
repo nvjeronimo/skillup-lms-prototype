@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { CourseProgressionButton, type Milestone } from "./CourseProgressionButton";
 import { cn } from "@/lib/utils";
 import { fadesOnMount, rememberFooterPosition } from "@/lib/motion/footerPosition";
+import styles from "./TopicFooterNav.module.css";
 
 export interface TopicFooterNavProps {
   /** The course the player shows: "n of N" only cross-fades between topics of one course. */
@@ -78,16 +77,16 @@ export function TopicFooterNav({
     <nav
       aria-label="Topic navigation"
       className={cn(
-        "items-center rounded-b-card border-t border-sko-border-subtle bg-sko-bg-page px-4 py-3 [container-type:inline-size]",
+        styles.nav,
         // Desktop/tablet: equal side columns keep the unit info centred, but a side never
         // shrinks below its content, so "Module completed" + "Go to next Module" pushes
         // the centre over instead of wrapping inside a 36px button.
         // Mobile: the side columns hug their buttons and the milestone label may wrap.
-        compact ? "flex gap-2" : "grid grid-cols-[1fr_minmax(0,auto)_1fr] gap-4",
+        compact ? styles.compact : styles.full,
         className,
       )}
     >
-      <div className={cn("flex items-center", compact && "flex-none")}>
+      <div className={cn(styles.side, compact && styles.sideCompact)}>
         {!showPrevious ? null : compact ? (
           <Button
             variant="neutral"
@@ -108,23 +107,23 @@ export function TopicFooterNav({
       {/* Unit info: the paginator is the stronger element; the title sits under it
           on tablet/desktop and is dropped on mobile. */}
       {/* Mobile: the paginator never wraps ("3 of 25" on one line); the Next side gives way. */}
-      <div className={cn("text-center", compact ? "min-w-max flex-1 whitespace-nowrap" : "min-w-0")}>
-        <p className="sk-text-body-medium-semibold text-sko-text-subtle">
+      <div className={cn(styles.info, compact ? styles.infoCompact : styles.infoFull)}>
+        <p className={`sk-text-body-medium-semibold ${styles.position}`}>
           {/* A new number cross-fades in (short3); not a digit roll, and not on first paint. */}
           <span
             key={position}
-            className={cn("inline-block", fade && "sk-animate-fade-short3")}
+            className={cn(styles.number, fade && "sk-animate-fade-short3")}
           >
             {position}
           </span>{" "}
           of {total}
         </p>
         {!compact ? (
-          <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{title}</p>
+          <p className={`sk-text-body-small-regular ${styles.title}`}>{title}</p>
         ) : null}
       </div>
 
-      <div className={cn("flex items-center justify-end gap-3", compact && "min-w-0 shrink")}>
+      <div className={cn(styles.next, compact && styles.nextCompact)}>
         <CourseProgressionButton
           milestone={milestone}
           size="sm"

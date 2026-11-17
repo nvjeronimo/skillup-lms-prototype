@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { Check } from "lucide-react";
 import { ArrivalCountFrom } from "@/components/atoms/ArrivalCount";
 import { useArrivalRing } from "@/lib/arrival/useArrival";
 import { cn } from "@/lib/utils";
+import styles from "./OverallProgress.module.css";
 
 export interface OverallProgressProps {
   pct: number;
@@ -48,12 +47,12 @@ export function ProgressRing({
   return (
     <div
       ref={ring.ref}
-      className={cn("relative inline-flex shrink-0 items-center justify-center", className)}
+      className={cn(styles.ring, className)}
       style={{ width: box, height: box }}
       role="img"
       aria-label={compact ? (complete ? "Course completed" : `Course progress, ${pct}%`) : `${pct}% complete`}
     >
-      <svg className="-rotate-90" width={box} height={box} viewBox={`0 0 ${box} ${box}`} aria-hidden>
+      <svg className={styles.arc} width={box} height={box} viewBox={`0 0 ${box} ${box}`} aria-hidden>
         <circle cx={box / 2} cy={box / 2} r={radius} fill="none" stroke="var(--color-bg-track)" strokeWidth={band} />
         <circle
           cx={box / 2}
@@ -78,9 +77,9 @@ export function ProgressRing({
         />
       </svg>
       {compact && complete ? (
-        <Check size={14} strokeWidth={2} className="absolute text-sko-icon-success-strong" aria-hidden />
+        <Check size={14} strokeWidth={2} className={styles.check} aria-hidden />
       ) : (
-        <span data-arrival-figure={ring.decided ? undefined : ""} className="sk-text-body-small-semibold absolute text-sko-text-default">
+        <span data-arrival-figure={ring.decided ? undefined : ""} className={`sk-text-body-small-semibold ${styles.figure}`}>
           <ArrivalCountFrom value={`${pct}%`} trigger={ring.trigger} />
         </span>
       )}
@@ -109,14 +108,11 @@ export function OverallProgress({
 
   return (
     <div
-      className={cn(
-        "flex items-center gap-1 border-b border-sko-border-subtle px-4 pb-2 pt-0",
-        className,
-      )}
+      className={cn(styles.overall, className)}
     >
-      <div className="flex min-w-0 flex-1 flex-col justify-center">
-        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">Overall progress</span>
-        <span className="sk-text-body-small-medium truncate text-sko-text-default">
+      <div className={styles.text}>
+        <span className={`sk-text-body-small-medium ${styles.eyebrow}`}>Overall progress</span>
+        <span className={`sk-text-body-small-medium ${styles.module}`}>
           Module {moduleCurrent} of {moduleTotal}
         </span>
       </div>

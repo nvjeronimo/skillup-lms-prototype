@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./BrowseTile.module.css";
 
 export interface BrowseTileProps {
   title: string;
@@ -24,13 +25,13 @@ export function BrowseTile({ title, subtitle, onClick, className }: BrowseTilePr
       className={cn(
         // h-40 on mobile, not min-height: the "larger targets" rule in globals.css sets a 44px
         // min-height on every button and would win over a min-h class.
-        "flex h-40 w-full flex-col items-center justify-center gap-1 rounded-card border border-dashed border-sko-border-default bg-sko-bg-faint p-4 text-center transition-colors hover:bg-sko-bg-subtle md:h-full md:p-5 lg:p-6",
+        styles.tile,
         className,
       )}
     >
-      <Icon icon={Plus} size={32} strokeWidth={1.5} className="text-sko-icon-subtle" aria-hidden="true" />
-      <span className="sk-text-body-medium-semibold text-sko-text-default">{title}</span>
-      <span className="sk-text-body-small-regular text-sko-text-subtle">{subtitle}</span>
+      <Icon icon={Plus} size={32} strokeWidth={1.5} className={styles.icon} aria-hidden="true" />
+      <span className={cn("sk-text-body-medium-semibold", styles.title)}>{title}</span>
+      <span className={cn("sk-text-body-small-regular", styles.subtitle)}>{subtitle}</span>
     </button>
   );
 }

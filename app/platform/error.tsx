@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { AlertTriangle } from "lucide-react";
 import { EmptyState } from "@/components/atoms/EmptyState";
 import { Button } from "@/components/atoms/Button";
+import styles from "./error.module.css";
 
 /**
  * Error boundary of the platform routes: says what happened and offers the two ways
@@ -17,21 +16,21 @@ export default function PlatformError({ error, reset }: { error: Error & { diges
   }, [error]);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-sko-bg-faint p-6">
-      <div role="alert" className="w-full max-w-xl bg-sko-bg-page">
+    <div className={styles.page}>
+      <div role="alert" className={styles.panel}>
         <EmptyState
           icon={AlertTriangle}
           titleAs="h1"
           title="This page did not load"
           description="Something went wrong on our side. Try again; if it keeps happening, go back to your Dashboard."
           action={
-            <span className="flex flex-wrap items-center justify-center gap-3">
+            <span className={styles.actions}>
               <Button hierarchy="primary" onClick={reset}>
                 Try again
               </Button>
               <Link
                 href="/platform/dashboard"
-                className="sk-text-body-medium-semibold inline-flex min-h-11 items-center text-sko-text-primary underline underline-offset-2"
+                className={`sk-text-body-medium-semibold ${styles.link}`}
               >
                 Go to Dashboard
               </Link>

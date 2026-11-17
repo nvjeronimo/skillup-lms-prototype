@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ImageIcon, Download, Check, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -10,6 +8,7 @@ import { YouTubeEmbed } from "@/components/molecules/YouTubeEmbed";
 import { useLmsStore } from "@/lib/store";
 import { cn, durationToSeconds } from "@/lib/utils";
 import type { LessonBlock, QuizOption } from "@/lib/content";
+import styles from "./LessonBlocks.module.css";
 
 /** The upper-cased extension of a file name ("Lab.ipynb" → "IPYNB"), or the fallback. */
 export function fileExtension(name: string, fallback = "FILE"): string {
@@ -34,12 +33,9 @@ export function FileTypeChip({
     // DS body-small/Bold — sk-text-body-small-semibold until .sk-text-body-small-bold exists (CT-22).
     <span
       className={cn(
-        "sk-text-body-small-semibold shrink-0 rounded-control border px-1.5 py-1",
-        tone === "success"
-          ? "border-sko-border-success text-sko-text-success"
-          : tone === "subtle"
-            ? "border-sko-border-subtle text-sko-text-primary"
-            : "border-sko-border-primary text-sko-text-primary",
+        "sk-text-body-small-semibold",
+        styles.chip,
+        tone === "success" ? styles.chipSuccess : tone === "subtle" ? styles.chipSubtle : styles.chipPrimary,
       )}
     >
       {label}
@@ -58,16 +54,12 @@ export function OptionRadio({ checked, disabled = false }: { checked: boolean; d
     <span
       aria-hidden
       className={cn(
-        "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-pill",
-        checked
-          ? "bg-sko-bg-primary"
-          : disabled
-            ? "border border-sko-border-disabled bg-sko-bg-faint opacity-40"
-            : "border border-sko-border-default bg-sko-bg-page",
+        styles.radio,
+        checked ? styles.radioChecked : disabled ? styles.radioDisabled : styles.radioIdle,
       )}
     >
       {/* The dot is a glyph, so it takes the icon token through currentColor. */}
-      {checked ? <span className="h-1.5 w-1.5 rounded-pill bg-current text-sko-icon-on-primary" /> : null}
+      {checked ? <span className={styles.radioDot} /> : null}
     </span>
   );
 }
@@ -79,7 +71,7 @@ export function OptionRadio({ checked, disabled = false }: { checked: boolean; d
  */
 export function LessonBlocks({ blocks }: { blocks: LessonBlock[] }) {
   return (
-    <div className="flex flex-col gap-8">
+    <div className={styles.blocks}>
       {blocks.map((b, i) => (
         <Block key={i} block={b} />
       ))}
@@ -93,14 +85,14 @@ function Block({ block }: { block: LessonBlock }) {
   switch (block.kind) {
     case "text":
       return (
-        <section className="flex flex-col gap-2">
+        <section className={styles.text}>
           {block.heading ? (
             // title-large/Bold under the topic title, as the Reading's sections (Nelson, 28 Oct 2026).
-            <h2 className="sk-text-title-large-bold text-sko-text-default">{block.heading}</h2>
+            <h2 className={`sk-text-title-large-bold ${styles.heading}`}>{block.heading}</h2>
           ) : null}
           {block.paragraphs.map((p, i) => (
             // Running text stops at DS Container/text-max-width, for now 1200 (Nelson, 27 Oct 2026).
-            <p key={i} className="sk-text-body-large-regular max-w-text text-pretty text-sko-text-muted">
+            <p key={i} className={`sk-text-body-large-regular ${styles.paragraph}`}>
               {p}
             </p>
           ))}
@@ -109,7 +101,7 @@ function Block({ block }: { block: LessonBlock }) {
 
     case "video":
       return (
-        <figure className="flex flex-col gap-2">
+        <figure className={styles.figure}>
           {/* Video unit/asset — same player component as any Video topic; a YouTube embed keeps
               YouTube's own player, untouched (decision 041). */}
           {block.youtubeId ? (
@@ -117,7 +109,7 @@ function Block({ block }: { block: LessonBlock }) {
           ) : (
             <EmbeddedVideo block={block} />
           )}
-          <figcaption className="sk-text-body-small-regular text-sko-text-subtle">
+          <figcaption className={`sk-text-body-small-regular ${styles.caption}`}>
             {block.youtubeId
               ? `YouTube video · ${block.durationLabel} · progress not tracked`
               : `Video · ${block.durationLabel}${block.transcript?.length ? " · transcript available" : ""}`}
@@ -127,15 +119,15 @@ function Block({ block }: { block: LessonBlock }) {
 
     case "image":
       return (
-        <figure className="flex flex-col gap-2">
+        <figure className={styles.figure}>
           <div
-            className="flex aspect-[16/7] w-full items-center justify-center rounded-card bg-sko-bg-subtle"
+            className={styles.image}
             role="img"
             aria-label={block.alt}
           >
-            <Icon icon={ImageIcon} size={24} className="text-sko-text-subtle" />
+            <Icon icon={ImageIcon} size={24} className={styles.imageIcon} />
           </div>
-          <figcaption className="sk-text-body-small-regular text-sko-text-subtle">
+          <figcaption className={`sk-text-body-small-regular ${styles.caption}`}>
             {block.caption}
           </figcaption>
         </figure>
@@ -145,16 +137,16 @@ function Block({ block }: { block: LessonBlock }) {
       return (
         <div
           data-invented="files: no file card, size or Download button in an Open edX HTML component"
-          className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-sko-border-subtle bg-sko-bg-page px-3 py-2"
+          className={styles.file}
         >
-          <div className="flex min-w-0 items-center gap-3">
+          <div className={styles.fileInfo}>
             <FileTypeChip label={fileExtension(block.name, block.fileKind)} tone="primary" />
-            <div className="flex min-w-0 flex-col gap-0.5">
+            <div className={styles.fileText}>
               {/* DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22). */}
-              <span className="sk-text-body-medium-semibold truncate text-sko-text-default">
+              <span className={`sk-text-body-medium-semibold ${styles.fileName}`}>
                 {block.name}
               </span>
-              <span className="sk-text-body-small-regular text-sko-text-subtle">{block.size}</span>
+              <span className={`sk-text-body-small-regular ${styles.fileSize}`}>{block.size}</span>
             </div>
           </div>
           <Button
@@ -210,14 +202,14 @@ function KnowledgeCheck({
   const isCorrect = Boolean(chosen?.correct);
 
   return (
-    <section className="flex flex-col gap-2 rounded-card border border-sko-border-subtle bg-sko-bg-page p-5 shadow-sk-card">
-      <span className="sk-text-body-small-medium uppercase text-sko-text-primary">
+    <section className={styles.check}>
+      <span className={`sk-text-body-small-medium ${styles.checkLabel}`}>
         Quick check · not graded
       </span>
       {/* DS body-large/Bold — semibold until .sk-text-body-large-bold exists (CT-22). */}
-      <h3 className="sk-text-body-large-semibold text-sko-text-default">{question}</h3>
+      <h3 className={`sk-text-body-large-semibold ${styles.checkQuestion}`}>{question}</h3>
 
-      <ul className="flex flex-col gap-2">
+      <ul className={styles.options}>
         {options.map((o) => {
           const isPicked = o.id === picked;
           const markRight = answered && o.correct;
@@ -235,22 +227,22 @@ function KnowledgeCheck({
                 disabled={answered}
                 aria-pressed={isPicked}
                 className={cn(
-                  "sk-text-body-medium-regular flex w-full items-center gap-3 rounded-control border border-sko-border-subtle py-3 pl-3 pr-4 text-left transition-colors",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
+                  "sk-text-body-medium-regular",
+                  styles.option,
                   markRight
-                    ? "bg-sko-bg-success-soft text-sko-text-success"
+                    ? styles.optionRight
                     : markWrong
-                      ? "bg-sko-bg-error-soft text-sko-text-error"
-                      : cn("bg-sko-bg-page text-sko-text-default", !answered && "hover:bg-sko-bg-subtle"),
+                      ? styles.optionWrong
+                      : cn(styles.optionIdle, !answered && styles.optionOpen),
                 )}
               >
                 <OptionRadio checked={isPicked} disabled={answered && !isPicked && !o.correct} />
-                <span className="flex-1">{o.label}</span>
-                {missed ? <span className="sk-text-body-small-medium shrink-0">This should be selected</span> : null}
+                <span className={styles.optionLabel}>{o.label}</span>
+                {missed ? <span className={`sk-text-body-small-medium ${styles.optionMissed}`}>This should be selected</span> : null}
                 {markRight && isPicked ? (
-                  <Icon icon={Check} size={24} className="shrink-0 text-sko-icon-success" />
+                  <Icon icon={Check} size={24} className={styles.optionIconRight} />
                 ) : null}
-                {markWrong ? <Icon icon={X} size={24} className="shrink-0 text-sko-icon-error" /> : null}
+                {markWrong ? <Icon icon={X} size={24} className={styles.optionIconWrong} /> : null}
               </button>
             </li>
           );
@@ -259,10 +251,7 @@ function KnowledgeCheck({
 
       {answered && chosen?.feedback ? (
         <p
-          className={cn(
-            "sk-text-body-medium-regular",
-            isCorrect ? "text-sko-text-success" : "text-sko-text-error",
-          )}
+          className={cn("sk-text-body-medium-regular", isCorrect ? styles.feedbackRight : styles.feedbackWrong)}
         >
           {chosen.feedback}
         </p>

@@ -3,6 +3,7 @@ import { Collapse } from "@/components/atoms/Collapse";
 import { SidebarToggle } from "@/components/atoms/SidebarToggle";
 import { cn } from "@/lib/utils";
 import type { Partner } from "@/lib/types";
+import styles from "./CourseHeader.module.css";
 
 export interface CourseHeaderProps {
   eyebrow?: string;
@@ -63,35 +64,31 @@ export function CourseHeader({
 
   if (compact) {
     return (
-      <div className={cn("flex justify-center px-2 pb-2 pt-4", className)}>{rowTrailing}</div>
+      <div className={cn(styles.compact, className)}>{rowTrailing}</div>
     );
   }
 
   // The eyebrow is set in the DS Label style, not inline uppercase (Course Journey, promoted by
   // Nelson, 27 Oct 2026).
-  const eyebrowClass = "sk-text-label-small-semibold min-w-0 text-sko-text-subtle";
+  const eyebrowClass = `sk-text-label-small-semibold ${styles.eyebrow}`;
 
   if (condensed !== undefined) {
     // Foldable: the toggle (or the ring) beside the column, so it stays when the eyebrow folds.
     return (
       <div
-        className={cn(
-          "flex items-start gap-2 px-4 pb-2 pt-4",
-          showDivider && "border-b border-sko-border-subtle",
-          className,
-        )}
+        className={cn(styles.header, showDivider && styles.divider, className)}
       >
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className={styles.column}>
           {/* Each line steps out in two beats (`.sk-fold`, globals.css): it fades, then its room closes. */}
           {eyebrow ? (
             <Collapse open={!condensed} className="sk-fold">
-              <p className={cn(eyebrowClass, "pb-1")}>{eyebrow}</p>
+              <p className={cn(eyebrowClass, styles.eyebrowFolding)}>{eyebrow}</p>
             </Collapse>
           ) : null}
-          <p className="sk-text-title-medium-semibold text-sko-text-default">{title}</p>
+          <p className={`sk-text-title-medium-semibold ${styles.title}`}>{title}</p>
           {partnerList.length ? (
             <Collapse open={!condensed} className="sk-fold">
-              <p className="sk-text-body-small-medium pt-1 text-sko-text-muted">
+              <p className={`sk-text-body-small-medium ${styles.partners} ${styles.partnersFolding}`}>
                 {partnerList.map((p) => p.name).join(" · ")}
               </p>
             </Collapse>
@@ -105,23 +102,19 @@ export function CourseHeader({
 
   return (
     <div
-      className={cn(
-        "flex items-start gap-2 px-4 pb-2 pt-4",
-        showDivider && "border-b border-sko-border-subtle",
-        className,
-      )}
+      className={cn(styles.header, showDivider && styles.divider, className)}
     >
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className={`${styles.column} ${styles.rows}`}>
         {/* An empty eyebrow with nothing beside it leaves no empty row. */}
         {eyebrow || rowTrailing ? (
-          <div className="flex items-center gap-1">
-            <p className={cn(eyebrowClass, "flex-1")}>{eyebrow}</p>
+          <div className={styles.eyebrowRow}>
+            <p className={cn(eyebrowClass, styles.eyebrowFill)}>{eyebrow}</p>
             {rowTrailing}
           </div>
         ) : null}
-        <p className="sk-text-title-medium-semibold text-sko-text-default">{title}</p>
+        <p className={`sk-text-title-medium-semibold ${styles.title}`}>{title}</p>
         {partnerList.length ? (
-          <p className="sk-text-body-small-medium text-sko-text-muted">
+          <p className={`sk-text-body-small-medium ${styles.partners}`}>
             {partnerList.map((p) => p.name).join(" · ")}
           </p>
         ) : null}

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { OverlayPanel, PanelBody, PanelGroup, PanelSectionLabel } from "./OverlayPanel";
 import { PanelTabs } from "@/components/molecules/PanelTabs";

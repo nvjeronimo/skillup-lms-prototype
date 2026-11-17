@@ -1,4 +1,6 @@
 import { myLearningHeading } from "@/lib/platform/my-learning";
+import { cn } from "@/lib/utils";
+import styles from "./MyLearningHeader.module.css";
 
 /**
  * Header of My Learning: the page title alone. The three DS `Stat` (In progress, Completed,
@@ -9,8 +11,8 @@ export function MyLearningHeader() {
   return (
     <header data-arrive={0}>
       {/* headline-large/Bold: 36/44, 30/38 on tablet, 24/32 on mobile. */}
-      <h1 className="sk-text-headline-large-bold text-sko-text-default">
-        {myLearningHeading.title} <span data-heading-em="" className="text-sko-text-subtle">{myLearningHeading.emphasis}</span>
+      <h1 className={cn("sk-text-headline-large-bold", styles.title)}>
+        {myLearningHeading.title} <span data-heading-em="" className={styles.emphasis}>{myLearningHeading.emphasis}</span>
       </h1>
     </header>
   );

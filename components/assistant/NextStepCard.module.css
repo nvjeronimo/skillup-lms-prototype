@@ -1,0 +1,33 @@
+/* The one thing to do next: a bg/faint card, 1px border/subtle, the sentence then its button. */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-faint);
+  padding: 16px;
+}
+.text {
+  color: var(--color-text-default);
+}
+.lead {
+  margin-right: 4px;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+/* A long label wraps: the button grows with it instead of keeping the 36px of Button sm. */
+.action {
+  height: auto !important;
+  min-height: 36px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* Studio (tokens/direction-studio.css): a large container that borrows the control radius takes
+   the card radius. */
+:global([data-direction="studio"]) section.card {
+  border-radius: var(--sk-radius-card);
+}

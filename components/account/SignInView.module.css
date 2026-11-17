@@ -1,0 +1,24 @@
+.stack3 { display: flex; flex-direction: column; gap: 12px; }
+.stack6 { display: flex; flex-direction: column; gap: 24px; }
+.form { display: flex; flex-direction: column; gap: 20px; }
+.badge {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-warning-soft);
+  color: var(--color-icon-warning);
+}
+.title { color: var(--color-text-default); }
+.text { color: var(--color-text-muted); }
+.strong { color: var(--color-text-default); }
+
+/* Phone: the two actions stack, full width. Tablet and up (768): side by side, at the end. */
+.actions { display: flex; flex-direction: column; gap: 8px; }
+.action { width: 100%; }
+@media (min-width: 768px) {
+  .actions { flex-direction: row; justify-content: flex-end; }
+  .action { width: auto; }
+}

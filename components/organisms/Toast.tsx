@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { CheckCircle2, Info, OctagonAlert, TriangleAlert, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -9,6 +7,7 @@ import type { ToastModel } from "@/lib/store";
 import { useExitTransition, useFrozenWhileClosed } from "@/lib/useExitTransition";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { inertProps } from "@/lib/inert";
+import styles from "./Toast.module.css";
 
 /** DS `Toast` Color property: Neutral | Success | Warning | Critical | Info. */
 export type ToastTone = "neutral" | "success" | "warning" | "error" | "info";
@@ -38,31 +37,31 @@ export interface ToastProps {
  */
 const TONE: Record<ToastTone, { box: string; icon: LucideIcon; fg: string }> = {
   success: {
-    box: "bg-sko-bg-success-soft border-sko-border-success-soft",
+    box: styles.success,
     icon: CheckCircle2,
     // icon/success, as in the DS since Toast v1.1 (14 Oct 2026): it passes 3:1
     // in both themes; icon/success-strong was 2.81:1 on bg/success-soft.
-    fg: "text-sko-icon-success",
+    fg: styles.iconSuccess,
   },
   info: {
-    box: "bg-sko-bg-primary-soft border-sko-border-primary-muted",
+    box: styles.info,
     icon: Info,
-    fg: "text-sko-icon-primary",
+    fg: styles.iconInfo,
   },
   neutral: {
-    box: "bg-sko-bg-faint border-sko-border-subtle",
+    box: styles.neutral,
     icon: Info,
-    fg: "text-sko-icon-muted",
+    fg: styles.iconNeutral,
   },
   warning: {
-    box: "bg-sko-bg-warning-soft border-sko-border-warning-soft",
+    box: styles.warning,
     icon: TriangleAlert,
-    fg: "text-sko-icon-warning",
+    fg: styles.iconWarning,
   },
   error: {
-    box: "bg-sko-bg-error-soft border-sko-border-error-soft",
+    box: styles.error,
     icon: OctagonAlert,
-    fg: "text-sko-icon-error",
+    fg: styles.iconError,
   },
 };
 
@@ -114,8 +113,8 @@ export function Toast({
       aria-hidden={closed || undefined}
       {...inertProps(closed)}
       className={cn(
-        "fixed bottom-6 left-1/2 z-[70] w-[min(92vw,420px)] -translate-x-1/2",
-        closed && "pointer-events-none",
+        styles.wrapper,
+        closed && styles.closed,
       )}
     >
       <div
@@ -123,19 +122,20 @@ export function Toast({
         onMouseLeave={() => setHover(false)}
         onAnimationEnd={onAnimationEnd}
         className={cn(
-          "sk-animate-rise flex w-full items-start gap-5 rounded-card border p-4 shadow",
+          "sk-animate-rise",
+          styles.toast,
           tone.box,
           className,
         )}
       >
-        <div className="flex min-w-0 flex-1 items-start gap-2">
-          <Icon icon={tone.icon} size={20} className={cn("shrink-0", tone.fg)} />
-          <div className="flex min-w-0 flex-col gap-2">
-            <div className="flex flex-col gap-1">
+        <div className={styles.main}>
+          <Icon icon={tone.icon} size={20} className={cn(styles.icon, tone.fg)} />
+          <div className={styles.content}>
+            <div className={styles.text}>
               {toast.title ? (
-                <p className="sk-text-body-medium-semibold text-sko-text-default">{toast.title}</p>
+                <p className={`sk-text-body-medium-semibold ${styles.title}`}>{toast.title}</p>
               ) : null}
-              <p className="sk-text-body-medium-medium text-sko-text-muted">{toast.message}</p>
+              <p className={`sk-text-body-medium-medium ${styles.message}`}>{toast.message}</p>
             </div>
             {toast.actionLabel ? (
               <button
@@ -144,7 +144,7 @@ export function Toast({
                   toast.onAction?.();
                   onDone?.();
                 }}
-                className="sk-text-body-medium-semibold self-start text-sko-text-subtle"
+                className={`sk-text-body-medium-semibold ${styles.action}`}
               >
                 {toast.actionLabel}
               </button>
@@ -152,8 +152,8 @@ export function Toast({
           </div>
         </div>
         {showClose ? (
-          <button type="button" aria-label="Dismiss" onClick={onDone} className="shrink-0">
-            <Icon icon={X} size={20} className="text-sko-icon-muted" />
+          <button type="button" aria-label="Dismiss" onClick={onDone} className={styles.dismiss}>
+            <Icon icon={X} size={20} className={styles.dismissIcon} />
           </button>
         ) : null}
       </div>

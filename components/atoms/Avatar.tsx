@@ -1,7 +1,6 @@
-"use client";
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./Avatar.module.css";
 
 export type AvatarSize = "xs" | "sm" | "md" | "lg";
 
@@ -25,20 +24,21 @@ export interface AvatarProps {
 // - text: initials style, body-small / body-medium / body-large / title-medium, all Semibold.
 // - border: the Text=True stroke width (border/subtle, drawn inside): 0.5 / 0.75 / 1 / 1 px.
 // - dot: the _Avatar online indicator, 6 / 8 / 10 / 12 px.
-const SIZE: Record<AvatarSize, { box: string; text: string; border: string; dot: string }> = {
-  xs: { box: "h-6 w-6", text: "sk-text-body-small-semibold", border: "border-[0.5px]", dot: "h-1.5 w-1.5" },
-  sm: { box: "h-8 w-8", text: "sk-text-body-medium-semibold", border: "border-[0.75px]", dot: "h-2 w-2" },
-  md: { box: "h-10 w-10", text: "sk-text-body-large-semibold", border: "border", dot: "h-2.5 w-2.5" },
-  lg: { box: "h-12 w-12", text: "sk-text-title-medium-semibold", border: "border", dot: "h-3 w-3" },
+const SIZE: Record<AvatarSize, { box: string; text: string; stroke: string; dot: string }> = {
+  xs: { box: styles.xs, text: "sk-text-body-small-semibold", stroke: styles.border05, dot: styles.dotXs },
+  sm: { box: styles.sm, text: "sk-text-body-medium-semibold", stroke: styles.border075, dot: styles.dotSm },
+  md: { box: styles.md, text: "sk-text-body-large-semibold", stroke: styles.border1, dot: styles.dotMd },
+  lg: { box: styles.lg, text: "sk-text-title-medium-semibold", stroke: styles.border1, dot: styles.dotLg },
 };
 
 const DOT_COLOR: Record<"online" | "offline", string> = {
   // The DS _Avatar online indicator binds icon/success-strong as its fill. bg/success is
   // kept instead: the colourblind-safe [data-vision='cvd'] blocks in tokens/colors.css
   // remap it to blue, and they do not remap icon/success-strong.
-  online: "bg-sko-bg-success",
-  // token-lint-disable-next-line DS Avatar has no Offline status (only Online, Company, Verified); grey dot kept at its previous value until the DS defines one
-  offline: "bg-sko-icon-faint",
+  online: styles.online,
+  // DS Avatar has no Offline status (only Online, Company, Verified); grey dot kept at its
+  // previous value until the DS defines one (Avatar.module.css).
+  offline: styles.offline,
 };
 
 function initials(name: string): string {
@@ -64,23 +64,22 @@ export function Avatar({
   const [failed, setFailed] = React.useState(false);
   const showImg = src && !failed;
   return (
-    <span className={cn("relative inline-flex shrink-0", className)}>
+    <span className={cn(styles.avatar, className)}>
       <span
         className={cn(
-          "inline-flex items-center justify-center overflow-hidden text-sko-text-primary",
-          shape === "square" ? "rounded-control" : "rounded-pill",
+          styles.face,
+          shape === "square" ? styles.square : styles.circle,
           s.box,
           s.text,
           // Initials (DS Text=True): bg/muted fill with a border/subtle stroke inside.
-          showImg ? "bg-sko-bg-primary-soft" : cn("bg-sko-bg-muted border-sko-border-subtle", s.border),
+          showImg ? styles.withImage : cn(styles.initials, s.stroke),
         )}
       >
         {showImg ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={src}
             alt={name}
-            className="h-full w-full object-cover"
+            className={styles.image}
             onError={() => setFailed(true)}
           />
         ) : (
@@ -93,7 +92,7 @@ export function Avatar({
           className={cn(
             // DS _Avatar online indicator: 1.5px bg/page stroke drawn OUTSIDE the dot,
             // so a ring (outside the box) rather than a border (inside it).
-            "absolute bottom-0 right-0 rounded-pill ring-[1.5px] ring-sko-bg-page",
+            styles.dot,
             s.dot,
             DOT_COLOR[status],
           )}

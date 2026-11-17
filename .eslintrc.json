@@ -1,29 +1,81 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:storybook/recommended", "prettier"],
+  "extends": [
+    "plugin:react-hooks/recommended",
+    "plugin:storybook/recommended",
+    "prettier"
+  ],
   "overrides": [
     {
-      "files": ["lib/courses/*/**/*.ts"],
+      "files": [
+        "lib/courses/*/**/*.ts"
+      ],
       "rules": {
         "no-restricted-imports": [
           "error",
           {
-            "paths": ["@/lib/data", "@/lib/content", "@/lib/store", "@/lib/courses", "@/lib/courses/index", "..", "../index"],
-            "patterns": ["@/lib/platform/*", "@/lib/programs/*"]
+            "paths": [
+              "@/lib/data",
+              "@/lib/content",
+              "@/lib/store",
+              "@/lib/courses",
+              "@/lib/courses/index",
+              "..",
+              "../index"
+            ],
+            "patterns": [
+              "@/lib/platform/*",
+              "@/lib/programs/*"
+            ]
           }
         ]
       }
     },
     {
-      "files": ["lib/programs/*.ts"],
-      "excludedFiles": ["lib/programs/index.ts", "lib/programs/kit.ts", "lib/programs/types.ts"],
+      "files": [
+        "lib/programs/*.ts"
+      ],
+      "excludedFiles": [
+        "lib/programs/index.ts",
+        "lib/programs/kit.ts",
+        "lib/programs/types.ts"
+      ],
       "rules": {
         "no-restricted-imports": [
           "error",
           {
-            "paths": ["@/lib/programs", "@/lib/programs/index", ".", "./index", "@/lib/platform/program", "@/lib/platform/catalog", "@/lib/platform/course-detail"]
+            "paths": [
+              "@/lib/programs",
+              "@/lib/programs/index",
+              ".",
+              "./index",
+              "@/lib/platform/program",
+              "@/lib/platform/catalog",
+              "@/lib/platform/course-detail"
+            ]
           }
         ]
       }
     }
+  ],
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "node": true
+  },
+  "ignorePatterns": [
+    "dist",
+    "storybook-static",
+    "node_modules",
+    "figma-plugin",
+    "public"
   ]
 }

@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { CourseRowCard } from "@/components/platform/CourseRowCard";
 import type { Program } from "@/lib/platform/program";
 import { SectionIntro } from "./parts";
+import styles from "./CoursesTab.module.css";
 
 /**
  * Courses tab (handoff cards 01–03 of 6728:15050): the Section intro and the seven course
@@ -24,9 +23,9 @@ export function CoursesTab({ program }: { program: Program }) {
     });
 
   return (
-    <div className="flex flex-col gap-layout-stack">
+    <div className={styles.tab}>
       <SectionIntro title={program.coursesIntro.title} lead={program.coursesIntro.lead} />
-      <ol className="flex flex-col gap-4">
+      <ol className={styles.list}>
         {program.courses.map((course) => (
           <CourseRowCard
             key={course.id}

@@ -1,0 +1,131 @@
+/* The tab content inside the 1280 width, as CourseDetailView draws it. */
+.body {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: var(--sk-layout-band-x);
+  padding-right: var(--sk-layout-band-x);
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+@media (min-width: 768px) {
+  .body { padding-top: 32px; padding-bottom: 48px; }
+}
+@media (min-width: 1024px) {
+  .body { padding-top: 40px; padding-bottom: 80px; }
+}
+
+/* The sidebar cards, measured from sample data (phone / tablet and up). */
+.mentorCard { height: 174px; }
+.teamCard { height: 214px; }
+.goalCard { height: 325px; }
+.certificateCard { height: 214px; }
+.handoutsCard { height: 210px; }
+.datesCard { height: 315px; }
+.toolsCard { height: 274px; }
+@media (min-width: 768px) {
+  .mentorCard { height: 166px; }
+  .teamCard { height: 206px; }
+  .goalCard { height: 309px; }
+  .handoutsCard { height: 158px; }
+  .datesCard { height: 299px; }
+  .toolsCard { height: 312px; }
+}
+
+/* CourseAlert */
+.alert {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+.alertContent { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; align-items: flex-start; gap: 12px; }
+.alertCopy { display: flex; flex-direction: column; gap: 4px; }
+.alertAction { height: 44px; width: 100%; }
+@media (min-width: 768px) {
+  .alertResponsive { flex-direction: row; }
+  .alertCopyClearsClose { padding-right: 32px; }
+  .alertAction { height: 36px; width: 160px; }
+}
+
+/* ModuleList's row */
+.module {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.moduleHeader { display: flex; align-items: center; gap: 12px; padding: 15px; }
+.moduleHeaderOpen { border-bottom-width: 1px; border-color: var(--color-border-subtle); }
+.moduleHeading { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 2px; }
+@media (min-width: 1024px) {
+  .belowDesktop { display: none; }
+}
+.topics { padding: 4px 15px; }
+.lesson { padding: 8px 12px; }
+.topic { display: flex; align-items: flex-start; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+.topicRuled {
+  border-bottom-width: 1px;
+  border-style: dashed;
+  border-color: var(--color-border-subtle);
+  padding-bottom: 11px;
+}
+.status { display: flex; height: 24px; flex-shrink: 0; align-items: center; }
+.topicBody { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; align-items: flex-start; gap: 4px; }
+.topicTitle { min-width: 0; }
+.topicMeta { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+@media (min-width: 768px) {
+  .topics { padding-left: 19px; padding-right: 19px; }
+  .lesson { padding-bottom: 0; padding-right: 0; }
+  .topic { align-items: center; padding-top: 16px; padding-bottom: 16px; }
+  .topicRuled { padding-bottom: 15px; }
+  .topicBody { flex-direction: row; align-items: center; gap: 8px; }
+  .topicTitle { flex: 1 1 0%; }
+}
+
+/* The page */
+.phoneSearch { margin-bottom: 16px; height: 44px; }
+.passedAlert { margin-bottom: 16px; }
+.coursePanel { display: flex; flex-direction: column; gap: var(--sk-layout-column-gap); }
+.main { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: var(--sk-layout-stack-gap); }
+.modules { display: flex; flex-direction: column; gap: 12px; }
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.blocks { display: flex; flex-direction: column; gap: var(--sk-layout-stack-gap); }
+@media (min-width: 768px) {
+  .phoneSearch { display: none; }
+  .passedAlert { margin-bottom: 20px; }
+  .coursePanel { flex-direction: row; align-items: flex-start; }
+  .sidebar { width: 320px; flex-shrink: 0; }
+}
+@media (min-width: 1024px) {
+  .passedAlert { margin-bottom: 24px; }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border, with p-[15px] on the alert); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .alert {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .alert,
+:global([data-skin="fluent"] [data-platform-page]) .alert {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .module {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .module,
+:global([data-skin="fluent"] [data-platform-page]) .module {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

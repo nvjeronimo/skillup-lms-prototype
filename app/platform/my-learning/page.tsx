@@ -7,6 +7,7 @@ import { myLearningPrograms } from "@/lib/platform/my-learning";
 import { myLearningCourseRowsFor } from "@/lib/platform/my-learning-rows";
 import { pageTitle } from "@/lib/utils";
 import { requestPersonaId } from "@/lib/persona-server";
+import styles from "./page.module.css";
 
 export const metadata = { title: pageTitle("My Learning") };
 
@@ -28,10 +29,10 @@ export default function MyLearningPage() {
   return (
     <PlatformPage
       current="my-learning"
-      className="px-layout-page-x pb-12 pt-layout-page-top md:pb-16 lg:pb-20"
+      className={styles.page}
       skeleton={<MyLearningSkeleton courses={myLearningCourseRows.length} programs={myLearningPrograms.length} />}
     >
-      <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+      <div className={`sk-page-stack ${styles.stack}`}>
         <MyLearningHeader />
         <Suspense fallback={null}>
           <MyLearningCollection courseRows={myLearningCourseRows} />

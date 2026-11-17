@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./ThemeSwitch.module.css";
 
 /**
  * The light / dark switch of the top bars (Nelson, 26 Oct 2026: "um mini switcher, só com os
@@ -36,7 +35,7 @@ export function ThemeSwitch({
     <div
       role="group"
       aria-label="Theme"
-      className={cn("inline-flex shrink-0 gap-0.5 rounded-track bg-sko-bg-muted p-1", className)}
+      className={cn(styles.group, className)}
     >
       {options.map((o) => {
         const on = value === o.theme;
@@ -50,15 +49,12 @@ export function ThemeSwitch({
             data-hit-band=""
             onClick={() => onChange(o.theme)}
             className={cn(
-              "inline-flex items-center justify-center rounded-control border transition-colors",
-              // The visible segment stays small; an invisible band makes the target 44 tall and
-              // reaches 6 past the track's outer edge (globals.css lets [data-hit-band] skip the
-              // 44 × 44 minimum of "larger targets").
-              "relative before:absolute before:inset-x-0 before:content-[''] first:before:-left-1.5 last:before:-right-1.5",
-              size === "md" ? "size-8 before:-inset-y-1.5" : "size-6 before:-inset-y-2.5",
-              on
-                ? "border-sko-border-subtle bg-sko-bg-page text-sko-icon-default"
-                : "border-transparent text-sko-icon-subtle hover:text-sko-icon-default",
+              // The visible segment stays small; an invisible band (::before) makes the target 44
+              // tall and reaches 6 past the track's outer edge (globals.css lets [data-hit-band]
+              // skip the 44 × 44 minimum of "larger targets").
+              styles.segment,
+              size === "md" ? styles.md : styles.sm,
+              on ? styles.on : styles.off,
             )}
           >
             <Icon icon={o.icon} size={size === "md" ? 16 : 14} />

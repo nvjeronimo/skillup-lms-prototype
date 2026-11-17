@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { Hand, LogOut, Mic, MicOff, MessageSquare, Video, VideoOff } from "lucide-react";
 import { Avatar } from "@/components/atoms/Avatar";
 import { Button } from "@/components/atoms/Button";
 import { cn } from "@/lib/utils";
+import styles from "./LiveControlBar.module.css";
 
 export type LiveControlState = "Live On Control Bar" | "Join Live Control Bar";
 
@@ -47,18 +46,18 @@ const DEMO_PARTICIPANTS: LiveParticipant[] = [
 function ParticipantsStrip({ participants, joined }: { participants: LiveParticipant[]; joined: number }) {
   const extra = Math.max(0, joined - participants.length);
   return (
-    <div className="flex -space-x-2" aria-hidden="true">
+    <div className={styles.strip} aria-hidden="true">
       {participants.map((p) => (
         <Avatar
           key={p.name}
           name={p.name}
           src={p.src}
           size="sm"
-          className="rounded-pill ring-[1.5px] ring-sko-bg-page"
+          className={styles.avatar}
         />
       ))}
       {extra > 0 ? (
-        <span className="sk-text-body-medium-semibold inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border-[0.75px] border-sko-border-subtle bg-sko-bg-muted text-sko-text-subtle ring-[1.5px] ring-sko-bg-page">
+        <span className={`sk-text-body-medium-semibold ${styles.extra}`}>
           +{extra}
         </span>
       ) : null}
@@ -85,22 +84,23 @@ export function LiveControlBar({
     return (
       <div
         className={cn(
-          "flex flex-wrap items-center justify-between gap-4 rounded-card bg-sko-bg-subtle px-4 py-3",
+          styles.bar,
+          styles.barJoin,
           className,
         )}
       >
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-3">
+        <div className={styles.info}>
+          <div className={styles.joinedRow}>
             <ParticipantsStrip participants={participants} joined={joined} />
-            <span className="sk-text-body-medium-semibold text-sko-text-default">
+            <span className={`sk-text-body-medium-semibold ${styles.ink}`}>
               {joined} of {total} participants joined
             </span>
           </div>
-          <p className="sk-text-body-medium-regular text-sko-text-default">
+          <p className={`sk-text-body-medium-regular ${styles.ink}`}>
             Mute yourself by default · You can leave anytime
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className={styles.joinActions}>
           <Button variant="neutral" onClick={onTestAudioVideo}>
             Test audio &amp; video
           </Button>
@@ -117,12 +117,13 @@ export function LiveControlBar({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-y-3 rounded-card bg-sko-bg-subtle px-4 py-3",
+        styles.bar,
+        styles.barLive,
         className,
       )}
     >
       {/* DS Live On buttons are all 44px: the default md size, same as the Join state. */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className={styles.controls}>
         <Button variant="secondary" leftIcon={muted ? Mic : MicOff} onClick={() => setMuted((m) => !m)}>
           {muted ? "Unmute" : "Mute"}
         </Button>
