@@ -133,6 +133,16 @@ const resumeTopic =
 /** The existing course player; every topic and assignment link opens it. */
 const COURSE_PLAYER_HREF = `/course/six-sigma/topic/${resumeTopic?.id ?? "m3-t1"}`;
 
+/** Topic totals the course page prints. The same records as the player sidebar ("N of 27 topics"). */
+const topicCounts = {
+  modules: playerModules.length,
+  total: playerTopics.length,
+  done: playerTopics.filter((t) => t.completed && !t.locked).length,
+  locked: playerTopics.filter((t) => t.locked).length,
+};
+const topicsStillOpen = topicCounts.total - topicCounts.done - topicCounts.locked;
+const completionPercent = Math.round((topicCounts.done / Math.max(topicCounts.total, 1)) * 100);
+
 const WEEK_LABELS: { label: string; name: string }[] = [
   { label: "Mo", name: "Monday" },
   { label: "Tu", name: "Tuesday" },
@@ -157,29 +167,29 @@ export const SIX_SIGMA: CourseDetail = {
   deliveryMode: "Flexible Learning",
   difficulty: "Beginner",
   stats: {
-    structure: "4 modules · 42 topics",
+    structure: `${topicCounts.modules} modules · ${topicCounts.total} topics`,
     duration: "~ 14 hours",
     org: "SkillUp · SIXSIGMA-01",
   },
   progress: {
-    percent: 38,
+    percent: completionPercent,
     label: "Course progress",
     eyebrow: "Go to last topic",
     cta: "Resume course",
     href: COURSE_PLAYER_HREF,
     notPassing: "Not passing yet · 15% of 70%",
-    done: "16 of 42 topics",
+    done: `${topicCounts.done} of ${topicCounts.total} topics`,
     timeLeft: "~ 8h 40m left",
   },
   search: { placeholder: "Search this course" },
 
   update: {
     title: "Course update",
-    body: "The control chart worksheet in Handouts has a corrected example. The checkpoint at the end of Module 3 counts towards your grade and unlocks Module 4.",
+    body: "The control chart worksheet in Handouts has a corrected example. The checkpoint at the end of Module 3 counts towards your grade.",
   },
   intro: {
     title: "What you'll learn",
-    lead: "Four modules that walk the DMAIC cycle end to end. Work through them at your own pace. Each module closes with a graded checkpoint.",
+    lead: `${topicCounts.modules} modules walk the DMAIC cycle end to end. Work through them at your own pace. Each module closes with a graded checkpoint.`,
   },
   modules: SIX_SIGMA_MODULES,
   mentor: {
@@ -214,7 +224,11 @@ export const SIX_SIGMA: CourseDetail = {
     title: "Not earned yet, keep on track!",
     requirements: [
       { title: "Reach the passing grade", detail: "15% now · 70% needed", percent: 15 },
-      { title: "Complete the course content", detail: "16 of 42 topics · 38%", percent: 38 },
+      {
+        title: "Complete the course content",
+        detail: `${topicCounts.done} of ${topicCounts.total} topics · ${completionPercent}%`,
+        percent: completionPercent,
+      },
     ],
   },
   handouts: {
@@ -268,9 +282,9 @@ export const SIX_SIGMA: CourseDetail = {
     title: "Your progress",
     completion: {
       title: "Course completion",
-      complete: 16,
-      incomplete: 26,
-      locked: 0,
+      complete: topicCounts.done,
+      incomplete: topicsStillOpen,
+      locked: topicCounts.locked,
     },
     passAlert: {
       title: "A weighted grade of 70% is required to pass",

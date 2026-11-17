@@ -46,6 +46,29 @@ describe("Six Sigma course page syllabus", () => {
     }
   });
 
+  it("prints the same topic total the player sidebar uses", () => {
+    const topics = playerTopics();
+    const done = topics.filter((topic) => topic.completed && !topic.locked).length;
+    const locked = topics.filter((topic) => topic.locked).length;
+    const percent = Math.round((done / topics.length) * 100);
+    expect(SIX_SIGMA.stats.structure).toBe(
+      `${outline.course.modules.length} modules · ${topics.length} topics`,
+    );
+    expect(SIX_SIGMA.progress.done).toBe(`${done} of ${topics.length} topics`);
+    expect(SIX_SIGMA.progress.percent).toBe(percent);
+    expect(SIX_SIGMA.progressTab.completion).toMatchObject({
+      complete: done,
+      incomplete: topics.length - done - locked,
+      locked,
+    });
+    expect(SIX_SIGMA.certificate.status).toBe("not-earned");
+    if (SIX_SIGMA.certificate.status !== "not-earned") return;
+    expect(SIX_SIGMA.certificate.requirements[1]).toMatchObject({
+      detail: `${done} of ${topics.length} topics · ${percent}%`,
+      percent,
+    });
+  });
+
   it("prints each module's topic count from its own topics", () => {
     outline.course.modules.forEach((mod, index) => {
       const count =
