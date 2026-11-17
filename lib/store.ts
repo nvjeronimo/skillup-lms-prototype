@@ -143,10 +143,11 @@ interface LmsState {
   /** Preview flag: the WIP "Discuss this topic" surface. Off by default. */
   discussionsPreview: boolean;
   /**
-   * The quiz A/B mode. Every quiz opens in A, which is the platform today; B
-   * is the proposal and has to be asked for. Lives in the demo menu, never on
-   * the page: the mode must be visible to whoever is running a session and
-   * invisible to whoever is being tested (quizzes/08-two-modes.md §7).
+   * The quiz preview switch, `A | B`. A is the platform page, which renders as
+   * A-2 or A-1 from how the quiz is authored. B is the parked stepper and has
+   * to be asked for. Lives in the demo menu, never on the page: the pattern
+   * must be visible to whoever is running a session and invisible to whoever
+   * is being tested (quizzes/08-two-modes.md §7).
    */
   quizMode: "A" | "B";
   /** Courses that run on a partner's platform (IBM) and that the learner has started there, by slug. */

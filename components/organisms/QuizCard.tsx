@@ -323,13 +323,13 @@ function DrawnCheck({ animate }: { animate: boolean }) {
 }
 
 /**
- * A single quiz question. Mirrors the Open edX CAPA problem lifecycle: each
- * question submits and scores independently.
+ * A single quiz question. In A-1 and in B the card is the problem, so it
+ * submits and scores on its own. In A-2 the set is the problem.
  *
  * The footer is a nested instance of `LMS / Quiz · Footer Actions` — the card
- * does not own its CTAs. In the bucket model (mode A-2) the card carries no
- * footer at all and one Footer Actions sits under the last question, because
- * that is where the problem boundary is.
+ * does not own its CTAs. In A-2 the card carries no footer at all and one
+ * Footer Actions sits under the last question, because that is where the
+ * problem boundary is.
  */
 export function QuizCard({
   state = "Unanswered",
