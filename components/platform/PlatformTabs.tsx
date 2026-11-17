@@ -9,6 +9,10 @@ export interface PlatformTab<T extends string> {
   label: string;
   /** Shown in a Badge Soft after the label: Brand on the selected tab, Gray on the others. */
   count?: number;
+  /** A status after the label, such as "On hold". Warning, on every breakpoint. */
+  badge?: string;
+  /** Sample or held-back data. Set on the tab as `data-mock`. */
+  mock?: string;
 }
 
 export interface PlatformTabsProps<T extends string> {
@@ -125,6 +129,7 @@ export function PlatformTabs<T extends string>({
             aria-selected={selected}
             data-tab-active={selected}
             aria-controls={panels === "all" || selected ? platformPanelId(idBase, tab.id) : undefined}
+            data-mock={tab.mock}
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.id)}
             onKeyDown={(event) => onKeyDown(event, index)}
@@ -157,6 +162,11 @@ export function PlatformTabs<T extends string>({
                 <span className={cn("sk-text-title-large-semibold", styles.labelDesktop)}>{tab.label}</span>
               </>
             )}
+            {tab.badge ? (
+              <Badge color="warning" size="sm">
+                {tab.badge}
+              </Badge>
+            ) : null}
             {tab.count !== undefined && responsive ? (
               <Badge color={badgeColor} size="sm" className={styles.badgePhone}>
                 {tab.count}

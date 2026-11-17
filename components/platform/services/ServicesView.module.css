@@ -284,3 +284,7 @@
 [data-direction="studio"] .card .lastMessage {
   border-radius: var(--sk-radius-control);
 }
+
+/* Mentorship Q&A is on hold: the mentor card says so beside its eyebrow. */
+.mentorHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.badges { display: flex; flex-wrap: wrap; gap: 4px; }

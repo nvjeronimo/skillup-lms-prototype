@@ -81,3 +81,7 @@
   border-color: transparent;
   box-shadow: var(--sk-shadow-card);
 }
+
+/* Mentorship Q&A is on hold: the card says so beside its label. */
+.mentorHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.badges { display: flex; flex-wrap: wrap; gap: 4px; }

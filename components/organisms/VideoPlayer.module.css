@@ -167,15 +167,6 @@
   overflow: hidden;
   background-color: var(--color-bg-primary);
 }
-.youtube {
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-}
-.youtube iframe {
-  height: 100%;
-  width: 100%;
-}
 .video {
   position: absolute;
   inset: 0;

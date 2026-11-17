@@ -309,3 +309,6 @@
   font-weight: 600;
   box-shadow: none;
 }
+
+/* Mentorship Q&A is on hold: the title carries the two badges. */
+.titleRow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }

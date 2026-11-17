@@ -17,7 +17,8 @@
     "tokens:check": "node scripts/tokens/build.mjs --check",
     "tokens:compare": "node scripts/tokens/compare.mjs",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "tokens:usage": "node scripts/tokens/usage.mjs --write"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.133.0",

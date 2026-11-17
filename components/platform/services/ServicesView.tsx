@@ -188,8 +188,18 @@ export function ServicesView() {
 
         {/* 1 · Help now */}
         <div data-arrive={1} className={cn(styles.helpGrid, styles.stretch)}>
-          <section aria-labelledby="services-mentor" data-mock={servicesMentor.mock} className={cn(CARD, styles.cardGap4)}>
-            <p className={EYEBROW}>Your mentor</p>
+          <section
+            aria-labelledby="services-mentor"
+            data-mock={`${servicesMentor.mock}. Mentorship Q&A is on hold; this card is preview data.`}
+            className={cn(CARD, styles.cardGap4)}
+          >
+            <div className={styles.mentorHead}>
+              <p className={EYEBROW}>Your mentor</p>
+              <span className={styles.badges}>
+                <Badge color="warning" size="sm">On hold</Badge>
+                <Badge color="gray" size="sm">Preview data</Badge>
+              </span>
+            </div>
             <div className={styles.person}>
               <Avatar name={servicesMentor.name} size="lg" />
               <div className={styles.personText}>

@@ -12,7 +12,7 @@ import { useLmsStore } from "@/lib/store";
 import { AskQuestionModal } from "@/components/platform/forms/AskQuestionModal";
 import { ReportMessageModal } from "@/components/platform/forms/ReportMessageModal";
 import { NONE, sessionAdditions, useSessionAdditions } from "@/lib/platform/session-additions";
-import { courseDetailHref, type CourseDetail, type QaMessage, type QaThread } from "@/lib/platform/course-detail";
+import { courseDetailHref, MENTORSHIP_QA_MOCK, type CourseDetail, type QaMessage, type QaThread } from "@/lib/platform/course-detail";
 import { staggerStyle } from "@/lib/motion/stagger";
 import { cn } from "@/lib/utils";
 import styles from "./QaTab.module.css";
@@ -194,9 +194,13 @@ export function QaTab({ course, threadId }: { course: CourseDetail; threadId: st
   );
 
   return (
-    <div className={styles.tab}>
+    <div className={styles.tab} data-mock={MENTORSHIP_QA_MOCK}>
       <div className={cn(styles.intro, explicit && styles.introHidden)}>
-        <h2 className={`sk-text-headline-medium-bold ${styles.default}`}>{tab.title}</h2>
+        <div className={styles.titleRow}>
+          <h2 className={`sk-text-headline-medium-bold ${styles.default}`}>{tab.title}</h2>
+          <Badge color="warning" size="sm">On hold</Badge>
+          <Badge color="gray" size="sm">Preview data</Badge>
+        </div>
         {/* Nelson, 28 Oct 2026: Open edX has no private messages, so Q&A is the learner's question
             posts in the course discussions, public to the course and answered by its mentors
             (LMS-HANDOFF/edx-mentorship-qa.md, option D). It replaces "Private between you and your

@@ -4,31 +4,87 @@
 // generates the CSS, checks the build and merges; Vercel deploys. It can also open a pull request
 // for the dev token package (docs repo) and download the JSON, in our format or W3C DTCG. See README.md.
 
-async function exportTokens() {
+// A variable reader that never throws: a missing or unavailable (library) variable reads as null.
+async function makeVarReader() {
   const cols = await figma.variables.getLocalVariableCollectionsAsync();
   const byId = new Map();
-  const colById = new Map(cols.map((c) => [c.id, c]));
   for (const v of await figma.variables.getLocalVariablesAsync()) byId.set(v.id, v);
-
   async function getVar(id) {
-    if (!byId.has(id)) byId.set(id, await figma.variables.getVariableByIdAsync(id));
+    if (!byId.has(id)) {
+      let found = null;
+      try {
+        found = await figma.variables.getVariableByIdAsync(id);
+      } catch (e) {
+        found = null;
+      }
+      byId.set(id, found || null);
+    }
     return byId.get(id);
   }
+  return { cols, byId, getVar };
+}
+
+// The variable id a mode value points at: a plain alias, or a colour alias with its own opacity.
+function aliasIdOf(val) {
+  if (val && typeof val === "object") {
+    if (val.type === "VARIABLE_ALIAS") return val.id;
+    if (val.color && val.color.type === "VARIABLE_ALIAS") return val.color.id;
+  }
+  return null;
+}
+
+// The two findings that make the exported JSON wrong: a mode with no value, and an alias to a
+// variable that is gone (deleted, or from a library that is not available).
+async function modeProblems(v, col, getVar) {
+  const out = [];
+  for (const m of col.modes) {
+    const raw = v.valuesByMode[m.modeId];
+    if (raw === undefined) {
+      out.push({ check: "mode-missing", collection: col.name, name: v.name, mode: m.name, text: "no value for this mode (mode " + m.name + ")" });
+      continue;
+    }
+    const id = aliasIdOf(raw);
+    if (id && !(await getVar(id))) {
+      out.push({ check: "alias-missing", collection: col.name, name: v.name, mode: m.name, text: "alias to a variable that no longer exists (mode " + m.name + ")" });
+    } else if (id) {
+      // Follow the chain: a cycle never ends, so it can never export a value.
+      const seen = new Set([v.id]);
+      let cur = await getVar(id);
+      while (cur) {
+        if (seen.has(cur.id)) {
+          out.push({ check: "alias-missing", collection: col.name, name: v.name, mode: m.name, text: "alias loop (mode " + m.name + ")" });
+          break;
+        }
+        seen.add(cur.id);
+        const val = cur.valuesByMode[m.modeId] !== undefined ? cur.valuesByMode[m.modeId] : cur.valuesByMode[Object.keys(cur.valuesByMode)[0]];
+        const nid = aliasIdOf(val);
+        cur = nid ? await getVar(nid) : null;
+      }
+    }
+  }
+  return out;
+}
+
+async function exportTokens() {
+  const { cols, getVar } = await makeVarReader();
+  const colById = new Map(cols.map((c) => [c.id, c]));
+
   async function resolve(v, modeId, depth = 0) {
-    if (depth > 20) throw new Error("alias loop at " + v.name);
+    if (depth > 20) return null; // an alias loop; reported as alias-missing in problems
     const col = colById.get(v.variableCollectionId);
     const m = v.valuesByMode[modeId] !== undefined ? modeId : col ? col.defaultModeId : Object.keys(v.valuesByMode)[0];
     const val = v.valuesByMode[m];
     if (val && typeof val === "object" && val.type === "VARIABLE_ALIAS") {
       const target = await getVar(val.id);
-      if (!target) throw new Error("missing alias target from " + v.name);
+      if (!target) return null; // reported as alias-missing in problems
       return resolve(target, modeId, depth + 1);
     }
     // A colour alias with its own opacity: { color: alias, opacity: 0–100 }.
     if (val && typeof val === "object" && val.color && val.color.type === "VARIABLE_ALIAS") {
       const target = await getVar(val.color.id);
-      if (!target) throw new Error("missing alias target from " + v.name);
+      if (!target) return null;
       const c = await resolve(target, modeId, depth + 1);
+      if (!c) return null;
       return { r: c.r, g: c.g, b: c.b, a: (c.a === undefined ? 1 : c.a) * (val.opacity / 100) };
     }
     return val;
@@ -43,17 +99,26 @@ async function exportTokens() {
     return typeof val === "number" ? round(val) : val;
   }
 
+  const problems = [];
+  for (const c of cols) {
+    for (const id of c.variableIds) {
+      const v = await getVar(id);
+      if (v) problems.push(...(await modeProblems(v, c, getVar)));
+    }
+  }
+
   const collections = [];
   for (const c of cols) {
     if (c.hiddenFromPublishing) continue; // primitives: only reached through aliases
     const variables = [];
     for (const id of c.variableIds) {
       const v = await getVar(id);
+      if (!v) continue;
       const values = {};
       const aliases = {};
       for (const m of c.modes) {
         const raw = v.valuesByMode[m.modeId];
-        values[m.name] = norm(await resolve(v, m.modeId));
+        values[m.name] = raw === undefined ? null : norm(await resolve(v, m.modeId));
         if (raw && raw.type === "VARIABLE_ALIAS") {
           const t = await getVar(raw.id);
           if (t && t.variableCollectionId === c.id) aliases[m.name] = t.name;
@@ -84,7 +149,195 @@ async function exportTokens() {
       bound,
     });
   }
-  return { format: "skillup-figma-tokens/1", fileKey: figma.fileKey || null, collections, textStyles };
+  return { format: "skillup-figma-tokens/1", fileKey: figma.fileKey || null, collections, textStyles, problems };
+}
+
+// ---- The audit (tokens only; later parts add layers, components and docs) ----
+
+// The build's Figma → CSS name mapping, copied from scripts/tokens/names.mjs (the plugin cannot
+// import it). audit.test.mjs checks both give the same names for the committed variables.json.
+// `data` has the shape of tokens/figma/variables.json: [{ figma, css }].
+function tokenCssNames(data) {
+  const unvar = (web) => web.replace(/^var\((--[^)]+)\)$/, "$1");
+  const colorName = (v) => (v.web ? unvar(v.web) : "--color-" + v.name.replace(/\//g, "-"));
+  const motionName = (v) => (v.web ? unvar(v.web) : "--motion-" + v.name.replace(/\//g, "-"));
+  const isRadius = (v) => /^Radius\/(?!fixed-)/.test(v.name);
+  const radiusName = (v) => "--sk-radius-" + v.name.split("/")[1];
+  const isSpacing = (v) => /^(Spacing|Container|Layout)\//.test(v.name);
+  const spacingName = (v) => {
+    const [group, key] = v.name.split("/");
+    if (group === "Spacing") return "--sk-space-" + key;
+    if (group === "Layout") return "--sk-layout-" + key;
+    return "--sk-container-" + key;
+  };
+  const isType = (v) => /^Type\/(size|line-height)\//.test(v.name);
+  const typeName = (v) => "--sk-type-" + v.name.split("/")[1] + "-" + v.name.split("/")[2];
+  const collection = (prefix) => data.collections.find((x) => x.name.startsWith(prefix));
+  const out = [];
+  const add = (c, vars, name) => {
+    for (const v of vars) out.push({ figma: c.name + "/" + v.name, css: name(v) });
+  };
+  const colors = collection("1.");
+  if (colors) add(colors, colors.variables.filter((v) => v.type === "COLOR"), colorName);
+  const responsive = collection("2.");
+  if (responsive) {
+    add(responsive, responsive.variables.filter(isRadius), radiusName);
+    add(responsive, responsive.variables.filter(isSpacing), spacingName);
+    add(responsive, responsive.variables.filter(isType), typeName);
+  }
+  const motion = collection("3.");
+  if (motion) add(motion, motion.variables, motionName);
+  return out;
+}
+
+function webCssName(v) {
+  const web = v.codeSyntax && v.codeSyntax.WEB;
+  if (!web) return null;
+  const m = /^\s*var\(\s*(--[^,)\s]+)/.exec(web);
+  return m ? m[1] : String(web).trim();
+}
+
+function plural(n, one, many) {
+  return n + " " + (n === 1 ? one : many);
+}
+
+// Reads every variable's publish status under ONE shared time limit. Returns the statuses, or
+// null when the limit was reached or any status could not be read (then it is "not checked").
+async function readPublishStatuses(items, timeoutMs) {
+  let timer;
+  const timeout = new Promise((resolve) => {
+    timer = setTimeout(() => resolve("timeout"), timeoutMs);
+  });
+  const all = Promise.all(
+    items.map(async (v) => {
+      try {
+        return typeof v.getPublishStatusAsync === "function" ? await v.getPublishStatusAsync() : null;
+      } catch (e) {
+        return null;
+      }
+    })
+  ).then((statuses) => ({ statuses }));
+  const out = await Promise.race([all, timeout]);
+  clearTimeout(timer);
+  if (out === "timeout" || out.statuses.some((s) => !s)) return null;
+  return out.statuses;
+}
+
+async function auditTokens(opts) {
+  opts = opts || {};
+  const usage = opts.usage || null;
+  // A map in a format this plugin does not know is read as no map: "code usage" not covered.
+  const useUsage = !!(usage && usage.format === "skillup-token-usage/1" && opts.usageFresh === true);
+  const timeoutMs = opts.publishStatusTimeoutMs !== undefined ? opts.publishStatusTimeoutMs : 10000;
+  const onProgress = opts.onProgress || function () {};
+  const isCancelled = opts.isCancelled || function () { return false; };
+  const later = "layers, components, docs";
+
+  function cancelledReport() {
+    return { verdict: "not-ready", covered: [], notCovered: ["cancelled"], blockers: [], pending: [], warnings: [], suggestions: [], publishBlocked: false };
+  }
+
+  const { cols, getVar } = await makeVarReader();
+  const findings = [];
+  const live = []; // { v, col }
+  const aliased = new Set();
+
+  for (let i = 0; i < cols.length; i++) {
+    if (isCancelled()) return cancelledReport();
+    const c = cols[i];
+    if (c.modes.length >= 10) {
+      findings.push({ check: "mode-cap", collection: c.name, name: "", text: c.modes.length + " modes, the Figma limit" });
+    }
+    for (const id of c.variableIds) {
+      const v = await getVar(id);
+      if (!v) continue;
+      live.push({ v, col: c });
+      for (const raw of Object.values(v.valuesByMode)) {
+        const aid = aliasIdOf(raw);
+        if (aid) aliased.add(aid);
+      }
+      findings.push(...(await modeProblems(v, c, getVar)));
+      if (c.hiddenFromPublishing) continue; // primitives: not exported, so no Web syntax, description or scope rules
+      if (!webCssName(v)) findings.push({ check: "no-web", collection: c.name, name: v.name, text: "no Web code syntax" });
+      if (!String(v.description || "").trim()) findings.push({ check: "no-description", collection: c.name, name: v.name, text: "no description" });
+      if ((v.scopes || []).indexOf("ALL_SCOPES") >= 0) findings.push({ check: "all-scopes", collection: c.name, name: v.name, text: "all scopes" });
+    }
+    onProgress(i + 1, cols.length);
+  }
+
+  for (const { v, col } of live) {
+    if (col.hiddenFromPublishing && !aliased.has(v.id)) {
+      findings.push({ check: "unused-primitive", collection: col.name, name: v.name, text: "no token aliases it" });
+    }
+  }
+
+  const covered = ["tokens"];
+  const notCovered = [];
+
+  if (useUsage) {
+    covered.push("code usage");
+    // The CSS names the live exported variables give, built exactly as the build builds them, so
+    // the plugin and the CI guard agree on what "gone" means: a CSS name the code uses that no live
+    // variable produces any more.
+    const liveData = { collections: cols.filter((c) => !c.hiddenFromPublishing).map((c) => ({
+      name: c.name,
+      variables: live.filter((x) => x.col === c).map(({ v }) => ({ name: v.name, type: v.resolvedType, web: (v.codeSyntax && v.codeSyntax.WEB) || null })),
+    })) };
+    const liveCss = new Set(tokenCssNames(liveData).map((t) => t.css));
+    for (const key of Object.keys(usage.tokens || {})) {
+      const entry = usage.tokens[key];
+      if (!entry || !(entry.files > 0)) continue;
+      // Collection names can hold a slash, so match against the live names first.
+      let colName = null;
+      for (const { col } of live) {
+        if (key.indexOf(col.name + "/") === 0 && (colName === null || col.name.length > colName.length)) colName = col.name;
+      }
+      if (colName === null) colName = key.slice(0, Math.max(key.indexOf("/"), 0));
+      const varName = key.slice(colName.length + 1);
+      const found = (entry.css || []).some((n) => liveCss.has(n));
+      if (!found) {
+        findings.push({ check: "used-gone", collection: colName, name: varName, text: "used in code (" + plural(entry.files, "file", "files") + "), gone from Figma" });
+      }
+    }
+    for (const css of usage.unknownCss || []) {
+      findings.push({ check: "unknown-css", collection: "", name: css, text: "used in code, but no token produces it" });
+    }
+  } else {
+    notCovered.push("code usage");
+  }
+
+  if (isCancelled()) return cancelledReport();
+
+  const exported = live.filter((x) => !x.col.hiddenFromPublishing);
+  const exportedCols = cols.filter((c) => !c.hiddenFromPublishing);
+  const statuses = await readPublishStatuses(exported.map((x) => x.v).concat(exportedCols), timeoutMs);
+  if (statuses === null) {
+    notCovered.push("library publish status");
+  } else {
+    exported.forEach((x, i) => {
+      if (statuses[i] === "UNPUBLISHED") findings.push({ check: "unpublished", collection: x.col.name, name: x.v.name, text: "not published to the library" });
+      else if (statuses[i] === "CHANGED") findings.push({ check: "unpublished", collection: x.col.name, name: x.v.name, text: "changed since the last library publish" });
+    });
+    exportedCols.forEach((c, j) => {
+      const st = statuses[exported.length + j];
+      if (st === "UNPUBLISHED") findings.push({ check: "unpublished", collection: c.name, name: c.name, text: "collection not published to the library" });
+      else if (st === "CHANGED") findings.push({ check: "unpublished", collection: c.name, name: c.name, text: "collection changed since the last library publish" });
+    });
+  }
+  notCovered.push(later);
+
+  const pick = (checks) => findings.filter((f) => checks.indexOf(f.check) >= 0);
+  const blockers = pick(["alias-missing", "mode-missing", "used-gone"]);
+  return {
+    verdict: blockers.length ? "not-ready" : "ready",
+    covered,
+    notCovered,
+    blockers,
+    pending: pick(["unpublished", "unsent"]),
+    warnings: pick(["no-web", "unknown-css", "mode-cap", "no-description", "all-scopes"]),
+    suggestions: pick(["unused-primitive"]),
+    publishBlocked: findings.some((f) => f.check === "alias-missing" || f.check === "mode-missing"),
+  };
 }
 
 const SETTINGS_KEY = "skillup-publish-tokens/settings";
@@ -94,6 +347,8 @@ figma.showUI(__html__, { width: 380, height: 640, themeColors: true });
 (async () => {
   const settings = (await figma.clientStorage.getAsync(SETTINGS_KEY)) || {};
   const tokens = await exportTokens();
+  const problems = tokens.problems;
+  delete tokens.problems; // the JSON stays exactly as the Publish flow and the prototype build expect
   figma.ui.postMessage({
     type: "ready",
     settings: {
@@ -106,10 +361,28 @@ figma.showUI(__html__, { width: 380, height: 640, themeColors: true });
     },
     json: JSON.stringify(tokens, null, 2) + "\n",
     user: currentUserName(),
+    problems,
   });
 })().catch((e) => figma.ui.postMessage({ type: "error", message: String(e && e.message ? e.message : e) }));
 
+let auditCancelled = false;
+
 figma.ui.onmessage = async (msg) => {
+  if (msg.type === "audit") {
+    auditCancelled = false;
+    try {
+      const report = await auditTokens({
+        usage: msg.usage || null,
+        usageFresh: msg.usageFresh === true,
+        onProgress: (done, total) => figma.ui.postMessage({ type: "audit-progress", done, total }),
+        isCancelled: () => auditCancelled,
+      });
+      figma.ui.postMessage({ type: "audit-result", report });
+    } catch (e) {
+      figma.ui.postMessage({ type: "audit-error", message: String(e && e.message ? e.message : e) });
+    }
+  }
+  if (msg.type === "audit-cancel") auditCancelled = true;
   if (msg.type === "save-settings") await figma.clientStorage.setAsync(SETTINGS_KEY, msg.settings);
   if (msg.type === "close") figma.closePlugin();
 };

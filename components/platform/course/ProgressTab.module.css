@@ -183,3 +183,6 @@
   border-color: transparent;
   box-shadow: var(--sk-shadow-card);
 }
+
+/* One SCORM package: the status word stands where the ring would be. */
+.completionStatus { flex-shrink: 0; color: var(--color-text-default); }

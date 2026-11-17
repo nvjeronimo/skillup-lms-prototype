@@ -119,3 +119,9 @@
 :global([data-direction="studio"] main#main) .framed {
   border-radius: var(--sk-radius-control);
 }
+
+/* ADR 023: on a phone the warning stands in front of the package until the learner opens it.
+   Last in the file so it wins over .controls and .frame. */
+@media (max-width: 767.98px) {
+  .phoneHidden { display: none; }
+}

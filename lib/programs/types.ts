@@ -60,8 +60,11 @@ export interface ProgramPerson {
 export interface CertificateRequirement {
   title: string;
   detail: string;
-  /** 0–100. */
-  percent: number;
+  /**
+   * 0–100. Left out when the line is a status, never a share: the card prints `detail` and
+   * no bar. A course that is one SCORM package reports a status, never a percentage.
+   */
+  percent?: number;
 }
 
 export interface CertificateDocumentData {

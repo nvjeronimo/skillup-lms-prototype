@@ -18,6 +18,8 @@ on:
       - "app/globals.css"
       - "app/reset.css"
       - "lib/**"
+      - ".github/workflows/storybook.yml"
+      - ".github/workflows/tokens.yml"
   workflow_dispatch:
 
 permissions:

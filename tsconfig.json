@@ -33,6 +33,7 @@
     "node_modules",
     "**/*.figma.tsx",
     "figma-plugin",
-    "api"
+    "api",
+    "scripts/**/__fixtures__"
   ]
 }

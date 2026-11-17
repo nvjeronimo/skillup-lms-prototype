@@ -181,7 +181,7 @@ export function CoursePlayerTopbar({
         )}
       >
         <div className={styles.mobileStart}>
-          {/* No menu, no button: a course package of the proposal flow has no Course Journey. */}
+          {/* No menu, no button: a course of one module and one topic has no Course Journey. */}
           {onMenu ? (
           <UtilityButton
             // "Course Journey", which aria-expanded completes (not "Open…" while it is open; Course

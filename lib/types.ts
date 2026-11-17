@@ -53,16 +53,12 @@ export interface Topic {
    */
   playbackMeasurable?: boolean;
   /**
-   * Video only: a YouTube video (meeting of 4 Nov 2026; ICP Video Lessons rows 9 and 10). The two
-   * ways a course team can add one in Studio:
-   * - `embed: true` (row 9): the YouTube embed pasted into a Text component. YouTube's own player
-   *   plays it, so nothing is measured: Mark as Complete, and Next asks. No transcript, notes or
-   *   files.
-   * - left out (row 10): the Video component with the YouTube ID. It plays in our player and
-   *   completes by itself, with no transcript. `unavailable: true` is the video removed, made
-   *   private or blocked in the learner's region.
+   * Video only: a YouTube video pasted as YouTube's official embed (meeting of 4 Nov 2026;
+   * ICP Video Lessons row 9). YouTube's own player plays it, so nothing is measured: Mark as
+   * Complete, and Next asks. No transcript, notes or files. Row 10 (the same ID inside our
+   * player) was withdrawn (ADR 041); the embed is the only path.
    */
-  youtube?: { id: string; embed?: boolean; unavailable?: boolean };
+  youtube?: { id: string; embed?: boolean };
   /**
    * Quizzes: the assignment type of the graded subsection, as the course's grading policy names it
    * in Studio ("Graded quiz", "Final exam"; a Microsoft course says "Knowledge check"). Left out,
@@ -114,15 +110,6 @@ export interface Course {
   modulesCompleted: number;
   modulesTotal: number;
   modules: Module[];
-  /**
-   * The improved flow for SCORM course packages, PROPOSED on 11 Nov 2026 after the SCORM progress
-   * check (a 1.2 package reports a status, never a percentage). Only the proposal courses of the
-   * SCORM and YouTube Test Program set it:
-   * - a course that is one package: no sidebar and no footer of ours, the package gets the screen;
-   * - a package topic among others: Next asks before leaving a package that has not reported
-   *   completion yet.
-   */
-  packageFlow?: "proposal";
 }
 
 export interface Note {

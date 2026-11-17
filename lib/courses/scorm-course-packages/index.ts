@@ -5,10 +5,11 @@ import { SAMPLE_TODAY, todayLabel } from "@/lib/sample-time";
 /**
  * Course packages: a whole course delivered as one SCORM package (Activity group D; meeting of
  * 4 Nov 2026). In the ICP such a course is ONE topic named after the course, with no modules or
- * lessons of ours; it opens the whole package with its own menu, and the course is 0% until the
- * package reports completion, then 100%. The player starts with our sidebar collapsed and the
- * footer reads "1 of 1" with no Previous (PlayerShell, `coursePackage`). The outline is the 3-level
- * shape (an implicit module, no lesson), so the rail shows the one topic and nothing above it.
+ * lessons of ours; it opens the whole package with its own menu. A course of one module and one
+ * topic has no sidebar and no Course Journey. One SCORM package also has no progress ring and no
+ * footer (PlayerShell): the package fills the content area, and the top bar's close is the way
+ * out. The course shows a status (Not started, Started, Completed), never a percentage. The
+ * outline is the 3-level shape (an implicit module, no lesson).
  *
  * Only the content team's own exports, received from Nelson (10 Nov 2026): courses 3 and 4 of the
  * SCORM and YouTube Test Program.
@@ -76,7 +77,9 @@ function coursePackage({ id, slug, title, minutes, cover, activity }: PackageSpe
     stats: { structure: "1 SCORM package", duration: `~ ${minutes} min`, org: "SkillUp · SCORM-PACKAGE" },
     progress: {
       percent: 0,
-      label: "Course progress",
+      // One SCORM package reports a status, never a share, so the card has no bar.
+      status: "Not started",
+      label: "Course status",
       eyebrow: "Start the course",
       cta: "Start course",
       href: playerHref(outline),
@@ -92,7 +95,7 @@ function coursePackage({ id, slug, title, minutes, cover, activity }: PackageSpe
     },
     intro: {
       title: "What this course tests",
-      lead: "A course that is one SCORM package: one topic named after the course, progress 0% until the package reports completion, then 100%.",
+      lead: "A course that is one SCORM package: one topic named after the course. It shows a status, Not started, Started or Completed, and never a percentage.",
     },
     modules: modulesFromOutline(outline, [{ duration: `${minutes}m`, defaultOpen: true }]),
     mentor: SIX_SIGMA.mentor,
@@ -106,7 +109,7 @@ function coursePackage({ id, slug, title, minutes, cover, activity }: PackageSpe
       courseId: slug,
       courseLabel: title,
       title: "No certificate for a test course",
-      requirements: [{ title: "Complete the course package", detail: "Not started · 0%", percent: 0 }],
+      requirements: [{ title: "Complete the course package", detail: "Not started" }],
     },
     handouts: { label: "Handouts", items: [] },
     upcomingDates: { label: "Upcoming dates", items: [], cta: "All dates" },
@@ -176,7 +179,7 @@ const POSH_ACTIVITY: CourseActivity = {
   packageSizeLabel: "99 MB",
   intro: "A whole course exported from Articulate Rise by the content team, with its own menu of lessons and videos inside. It resumes where you left off and reports completed when its own completion rule is met.",
   steps: [
-    { title: "Use its menu", detail: "The package has its own sidebar of lessons, next to our collapsed sidebar. On a narrow screen Rise hides it behind its own menu button." },
+    { title: "Use its menu", detail: "The package has its own menu of lessons. On a narrow screen Rise hides it behind its own menu button." },
     { title: "Finish the course", detail: "When Rise's completion rule is met it reports completed: the course goes to 100% by itself." },
   ],
 };
@@ -214,29 +217,26 @@ export const scormCoursePackages: CourseEntry[] = [
 ];
 
 /**
- * Courses 5 and 6: the improved flow for course packages, PROPOSED on 11 Nov 2026 after the SCORM
- * progress check (Jaspinder's question; docs: meeting-2026-11-04-scorm-youtube.md). A SCORM 1.2
- * package reports a status, never a percentage, and when it reports "completed" is the export's
- * setting (POSH: when its Storyline block is finished). Figma: Activity · SCORM, frame "Proposal ·
- * improved package flow". Not decided: these courses are where the proposal is referenced.
+ * Courses 5 and 6, the same two exports again so the player rules can be compared.
+ * A SCORM 1.2 package reports a status, never a percentage, and when it reports "completed" is
+ * the export's setting (POSH: when its Storyline block is finished).
  *
- * - Course 5, POSH as one package: the course shows a status (Started) and never a share; in the
- *   player nothing of ours surrounds the package (no sidebar, no Course Journey, no ring, no
- *   footer). The top bar's close is the way out.
- * - Course 6, POSH as it really arrives, two packages (the Rise course and the Storyline quiz) as
- *   two topics of one module, with our normal sidebar and footer: Next asks before leaving a package
+ * - Course 5, POSH as one package: the sample learner has already opened it, so the course says
+ *   Started. In the player nothing of ours surrounds the package (no sidebar, no Course Journey,
+ *   no ring, no footer). The top bar's close is the way out.
+ * - Course 6, POSH as it arrives, two packages (the Rise course and the Storyline quiz) as two
+ *   topics of one module, with the sidebar and the footer. Next asks before leaving a package
  *   that has not reported completion yet.
  */
-function proposalAlone(): CourseEntry {
+function onePackage(): CourseEntry {
   const entry = coursePackage({
     id: "pkg8",
-    slug: "posh-proposed-flow-one-package",
-    title: "POSH · proposed flow, one package",
+    slug: "posh-one-package",
+    title: "POSH · one package",
     minutes: 45,
     cover: "leadership-in-remote-teams",
     activity: POSH_ACTIVITY,
   });
-  entry.outline.packageFlow = "proposal";
   entry.page.progress = {
     ...entry.page.progress,
     // Sample state: the learner has opened the package. Open edX knows it (Begin vs Resume).
@@ -247,19 +247,20 @@ function proposalAlone(): CourseEntry {
     done: "Completes when the package reports it",
     timeLeft: "~ 45 min",
   };
-  entry.page.intro = {
-    title: "What this course proposes",
-    lead: "Proposal, 11 Nov 2026: a course that is one SCORM package shows a status, never a percentage, and the package gets the whole screen, with no sidebar or footer of ours.",
-  };
-  entry.page.stats = { ...entry.page.stats, structure: "1 SCORM package · proposal" };
+  if (entry.page.certificate.status === "not-earned") {
+    entry.page.certificate = {
+      ...entry.page.certificate,
+      requirements: [{ title: "Complete the course package", detail: "Started" }],
+    };
+  }
   return entry;
 }
 
-function proposalTwoPackages(): CourseEntry {
+function twoPackages(): CourseEntry {
   const entry = coursePackage({
     id: "pkg9",
-    slug: "posh-proposed-flow-two-packages",
-    title: "POSH · proposed flow, two packages",
+    slug: "posh-two-packages",
+    title: "POSH · two packages",
     minutes: 55,
     cover: "intro-to-product-analytics",
     activity: POSH_ACTIVITY,
@@ -267,7 +268,6 @@ function proposalTwoPackages(): CourseEntry {
   const mod = entry.outline.modules[0];
   const [rise] = mod.topics ?? [];
   const quizId = "pkg9-m1-t2";
-  entry.outline.packageFlow = "proposal";
   entry.outline.modules = [
     {
       ...mod,
@@ -282,13 +282,30 @@ function proposalTwoPackages(): CourseEntry {
     },
   ];
   entry.page.modules = modulesFromOutline(entry.outline, [{ duration: "55m", defaultOpen: true }]);
-  entry.page.stats = { ...entry.page.stats, structure: "2 SCORM packages · proposal" };
-  entry.page.intro = {
-    title: "What this course proposes",
-    lead: "Proposal, 11 Nov 2026: POSH as it really arrives, two packages as two topics. Next asks before you leave a package that has not reported completion yet.",
+  // Two topics can be counted, so this page keeps a share. One package does not.
+  entry.page.progress = {
+    percent: 0,
+    label: "Course progress",
+    eyebrow: "Start the course",
+    cta: "Start course",
+    href: entry.page.progress.href,
+    notPassing: "Ungraded · completion only",
+    done: "Not started",
+    timeLeft: "~ 55 min left",
   };
+  entry.page.stats = { ...entry.page.stats, structure: "2 SCORM packages" };
+  entry.page.intro = {
+    title: "What this course tests",
+    lead: "POSH as it arrives, two packages as two topics. Next asks before you leave a package that has not reported completion yet.",
+  };
+  if (entry.page.certificate.status === "not-earned") {
+    entry.page.certificate = {
+      ...entry.page.certificate,
+      requirements: [{ title: "Complete the course packages", detail: "Not started · 0%", percent: 0 }],
+    };
+  }
   entry.content.activities = { ...entry.content.activities, [quizId]: QUIZ_ACTIVITY };
   return entry;
 }
 
-scormCoursePackages.push(proposalAlone(), proposalTwoPackages());
+scormCoursePackages.push(onePackage(), twoPackages());

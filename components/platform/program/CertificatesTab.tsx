@@ -72,7 +72,7 @@ export function CertificateCard({
                 <li key={req.title} className={styles.requirement}>
                   <p className={`sk-text-body-medium-semibold ${styles.textDefault}`}>{req.title}</p>
                   <p className={`sk-text-body-small-regular ${styles.textSubtle}`}>{req.detail}</p>
-                  <PlatformProgressBar value={req.percent} label={req.title} />
+                  {req.percent === undefined ? null : <PlatformProgressBar value={req.percent} label={req.title} />}
                 </li>
               ))}
             </ul>

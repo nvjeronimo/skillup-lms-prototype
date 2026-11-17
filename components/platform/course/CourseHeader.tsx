@@ -164,7 +164,7 @@ export function CourseHeader({ course, className }: { course: CourseDetail; clas
             >
               <div className={styles.cardHead}>
                 <p className={`sk-text-headline-medium-bold ${styles.percent}`}>
-                  {/* One SCORM package (proposal, 11 Nov 2026): the status word, never a share. */}
+                  {/* One SCORM package: the status word, never a share. */}
                   {course.progress.status ?? <ArrivalCount value={`${course.progress.percent}%`} />}
                 </p>
                 <ProgressCardLabel complete={course.progress.percent >= 100} label={course.progress.label} />

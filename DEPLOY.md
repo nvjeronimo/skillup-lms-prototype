@@ -69,9 +69,9 @@ Create a **second** Vercel project from the **same repo** with a Storybook build
 | Link | What |
 |------|------|
 | **https://lms-prototype-mu.vercel.app** | The interactive Video lesson prototype |
-| **https://storybook-static-roan-psi.vercel.app** | The component library / design-system docs (159 stories) |
+| **https://nvjeronimo.github.io/skillup-lms-prototype/** | Storybook, the component library (GitHub Pages) |
 
-Both are **public** (no login needed) and live on Vercel.
+Both are **public** (no login needed). The prototype is on Vercel. Storybook is published by `.github/workflows/storybook.yml`.
 
 ## Notes on the Vercel build
 
