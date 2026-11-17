@@ -13,13 +13,16 @@ import { edxDatesTab } from "./edx-dates";
 
 /**
  * Mock data of the Course Detail page, self-paced (Figma handoff frame 6146:10226, "Platform
- * Pages - Course Detail (self-paced) - Light"). Copy is verbatim from the thirteen screens:
- * Course 6406:39255 / 6406:40055 / 6406:40771, Progress 6406:41528 / 6406:41969 / 6406:42331,
- * Dates 6406:42688 / 6406:43322 / 6406:43877, Q&A 6406:44434 / 6406:44986 / 6406:45459 and the
- * mobile conversation 6418:127007. Nothing here is read from an API yet; what has no Open edX
- * source at all is marked on the page with `data-mock` (see course-details-metadata-map.md).
- * Where the design draws an item closed and gives it no content, the content is left out and
- * the page prints CONTENT_PENDING (lib/platform/program).
+ * Pages - Course Detail (self-paced) - Light", Ready for Dev). Copy follows the screens still
+ * on that page: Course 6406:39255 / 6406:40055 / 6406:40771 and Progress 6406:41528 /
+ * 6406:41969 / 6406:42331. Dates (6406:42688 / 6406:43322 / 6406:43877) and Mentorship Q&A
+ * (6406:44434 / 6406:44986 / 6406:45459, plus the mobile conversation 6418:127007) are no
+ * longer on 6146:10226. Decision 036 hides Dates on a self-paced course; that copy stays
+ * here for instructor-led courses. Mentorship Q&A stays as preview data (MENTORSHIP_QA_MOCK).
+ * Nothing here is read from an API yet; what has no Open edX source at all is marked on the
+ * page with `data-mock` (see course-details-metadata-map.md). Where the design draws an item
+ * closed and gives it no content, the content is left out and the page prints CONTENT_PENDING
+ * (lib/platform/program).
  */
 
 /** Mentorship Q&A is on hold. The tab and the Ask your mentor card stay on the page as preview data. */
