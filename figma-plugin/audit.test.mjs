@@ -802,6 +802,18 @@ describe("suggestFor", () => {
     expect(ctx.suggestFor(finding("binding-missing", "fill", "x"), {}, index)).toBeNull();
   });
 
+  it("stroke weight is suggested from Stroke/* like spacing (I1)", async () => {
+    const { ctx, index } = await setup([fv("k1", "Stroke/icon-small", 1.5, 1.5), fv("k2", "Stroke/icon-big", 2.5, 2.5), fv("s1", "Spacing/2xs", 1, 1)]);
+    expect(ctx.suggestFor(finding("hand-stroke", "stroke-weight", 1), {}, index)).toBe("Stroke/icon-small 1.5, set 1");
+    expect(ctx.suggestFor(finding("hand-stroke", "stroke-weight", 2.5), {}, index)).toBe("Stroke/icon-big");
+  });
+
+  it("spacing also considers Layout/* and Container/* tokens (M3)", async () => {
+    const { ctx, index } = await setup([fv("s1", "Spacing/xl", 32, 32), fv("l1", "Layout/gutter", 24, 16), fv("c1", "Container/content-max-width", 1200, 1200)]);
+    expect(ctx.suggestFor(finding("hand-spacing", "gap", 24), {}, index)).toBe("Layout/gutter");
+    expect(ctx.suggestFor(finding("hand-spacing", "padding-left", 1200), {}, index)).toBe("Container/content-max-width");
+  });
+
   it("text matches a style by family, style, size and line height", async () => {
     const st = (id, name, size, lh) => ({ id, name, fontName: { family: "Inter", style: "Semi Bold" }, fontSize: size, lineHeight: lh });
     const { ctx } = await load([], [], { getLocalTextStylesAsync: async () => [st("S1", "title/md", 16, { unit: "PIXELS", value: 24 }), st("S2", "title/sm", 14, { unit: "AUTO" })] });
@@ -968,6 +980,18 @@ describe("auditLayers and the audit message", () => {
     const f = await file(ICP, [page("P", [bound, loose])], bgx());
     const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
     expect(r.warnings.map((x) => [x.nodeId, x.suggestion])).toEqual([[loose.id, "bg/x"]]);
+  });
+
+  it("hand-stroke is a warning in both roles, never a blocker (I1)", async () => {
+    const stroked = () => frame({ name: "Line", strokes: [{ ...red(), boundVariables: { color: al("bg") } }], strokeWeight: 1 });
+    const l = await file(DS, [page("P", [component({}, [stroked()])])], bgx());
+    const rl = await audit(l, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(rl.blockers.map((x) => x.check)).not.toContain("hand-stroke");
+    expect(rl.warnings.map((x) => x.check)).toEqual(["hand-stroke"]);
+    const s = await file(ICP, [page("P", [frame({ devStatus: { type: "READY_FOR_DEV" } }, [stroked()])])], bgx());
+    const rs = await audit(s, { scope: "ready", pageIds: [], excludedPageIds: [] });
+    expect(rs.blockers).toEqual([]);
+    expect(rs.warnings.map((x) => x.check)).toEqual(["hand-stroke"]);
   });
 
   it("binding-missing is a blocker in both roles", async () => {

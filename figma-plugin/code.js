@@ -654,10 +654,13 @@ function suggestFor(finding, node, index) {
     return "nearest " + best.name + ", ΔE " + bestD.toFixed(1);
   }
 
-  if (finding.check === "hand-spacing" || finding.check === "hand-radius") {
-    const spacing = finding.check === "hand-spacing";
+  if (finding.check === "hand-spacing" || finding.check === "hand-radius" || finding.check === "hand-stroke") {
+    const check = finding.check;
+    // Spacing: Spacing/*, plus the Layout/* and Container/* tokens of decision 032. Stroke: Stroke/*.
     const fam = tokens("FLOAT", function (n) {
-      return spacing ? n.indexOf("Spacing/") === 0 : n.indexOf("Radius/") === 0 && n.indexOf("Radius/fixed-") !== 0;
+      if (check === "hand-spacing") return n.indexOf("Spacing/") === 0 || n.indexOf("Layout/") === 0 || n.indexOf("Container/") === 0;
+      if (check === "hand-stroke") return n.indexOf("Stroke/") === 0;
+      return n.indexOf("Radius/") === 0 && n.indexOf("Radius/fixed-") !== 0;
     });
     let best = null, bestV = 0, bestD = Infinity;
     for (let i = 0; i < fam.length; i++) {
@@ -678,7 +681,7 @@ function suggestFor(finding, node, index) {
     }
     return none;
   }
-  return null; // hand-stroke: no token for stroke weight
+  return null;
 }
 
 // ---- The layer audit ----
@@ -790,7 +793,10 @@ async function auditLayers(opts) {
   const suggestions = [];
   pairs.forEach(function (p) {
     const f = p.finding;
-    if (f.check === "binding-missing" || library || f.ready) blockers.push(f);
+    // A hand-set stroke weight is a warning in both roles: the DS has no 1 px stroke token yet
+    // (only Stroke/icon-small and Stroke/icon-big), so as a blocker the DS could never read ready.
+    if (f.check === "hand-stroke") warnings.push(f);
+    else if (f.check === "binding-missing" || library || f.ready) blockers.push(f);
     else warnings.push(f);
   });
 
