@@ -1072,7 +1072,14 @@ figma.showUI(__html__, { width: 380, height: 640, themeColors: true });
     pages,
     auditSettings,
   });
+  postSelection();
 })().catch((e) => figma.ui.postMessage({ type: "error", message: String(e && e.message ? e.message : e) }));
+
+// How many layers are selected, for the Audit tab's "Selection" scope (it is off when nothing is).
+function postSelection() {
+  figma.ui.postMessage({ type: "selection", count: ((figma.currentPage && figma.currentPage.selection) || []).length });
+}
+figma.on("selectionchange", postSelection);
 
 let auditCancelled = false;
 

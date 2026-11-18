@@ -36,6 +36,7 @@ async function load(cols, vars, extra = {}) {
     currentUser: { name: "Tester" },
     showUI() {},
     closePlugin() {},
+    on(type, fn) { (holder.handlers ||= {})[type] = fn; },
     ui: {
       postMessage: (m) => posted.push(m),
       set onmessage(fn) { holder.onmessage = fn; },
@@ -57,7 +58,7 @@ async function load(cols, vars, extra = {}) {
   const ctx = vm.createContext({ figma, __html__: "", console, setTimeout, clearTimeout, Promise });
   vm.runInContext(code, ctx);
   await new Promise((r) => setTimeout(r, 0));
-  return { ctx, posted, send: (m) => holder.onmessage(m) };
+  return { ctx, posted, holder, send: (m) => holder.onmessage(m) };
 }
 
 const one = (over = {}, vover = {}) => {
@@ -1140,5 +1141,19 @@ describe("auditLayers and the audit message", () => {
       { type: "audit-progress", phase: "checks", done: 400, total: 450 },
       { type: "audit-progress", phase: "checks", done: 450, total: 450 },
     ]);
+  });
+});
+
+describe("selection count for the Selection scope", () => {
+  it("posts the count after ready and again on every selectionchange", async () => {
+    const { cols, vars } = one();
+    const selection = [{ id: "1:1" }, { id: "1:2" }];
+    const { posted, holder } = await load(cols, vars, { currentPage: { id: "0:1", name: "Page 1", selection } });
+    const types = posted.map((m) => m.type);
+    expect(types.indexOf("selection")).toBe(types.indexOf("ready") + 1);
+    expect(posted.find((m) => m.type === "selection").count).toBe(2);
+    selection.length = 0;
+    holder.handlers.selectionchange();
+    expect(posted[posted.length - 1]).toEqual({ type: "selection", count: 0 });
   });
 });

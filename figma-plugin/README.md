@@ -115,6 +115,55 @@ syntax stays, and the plugin and the Action judge it the same way. Radius, spaci
 `Layout/*` and `Container/*` take it from the Figma name, so renaming one that code uses is a
 blocker even if its Web syntax stayed.
 
+## Audit the layers
+
+The Audit tab also reads the layers, still read only. Its first line says which role the file has:
+
+- **Auditing the DS library.** The SKO Design System file. It checks every component and component
+  set (hidden layers too), plus the tokens above. Publish works here.
+- **Auditing screens.** Any other file, such as the ICP. It checks the screens of the pages in
+  scope. Hidden layers are skipped and counted. The Publish tab says "Publish runs in the SKO
+  Design System" and its buttons stay off.
+
+**Scope.** Pick it under the role line; the choice is kept per file.
+
+| Scope | What it reads |
+|---|---|
+| Ready for dev (screens only, the default there) | Only what is inside a frame or section marked Ready for dev |
+| Whole file (the default in the library) | Every page, except the ones left out |
+| Pages | The pages you tick |
+| Selection | What is selected now. Off when nothing is |
+
+**Left out.** The folded list **Left out** holds the pages the audit skips, ticked. Library: In
+review, Archive, Arquivo, Cover, Start here. Screens: Cover, History, Histórico, and every page after
+a divider page whose name starts with "Discovery" or "Archive", up to the next page named `---`.
+Tick or untick any page; it is kept per file. A component or set whose description contains
+`[audit:skip]` is not checked. Instances are never checked: the audit stops at an instance.
+
+**What it finds, and the weight.**
+
+| Finding | Library | Screens |
+|---|---|---|
+| Missing binding (a bound variable that no longer resolves) | Blocker | Blocker |
+| Hand-set colour, spacing, radius, stroke weight; text without a text style | Blocker | Blocker inside a Ready for dev frame or section, Warning elsewhere |
+| Unused token | Suggestion | not reported |
+
+A value of 0 is never a finding, and only visible solid fills count as colours. Layer findings never
+stop Publish: only the two export blockers above do.
+
+**The report.** Layer findings are grouped by page, then by top-level frame or component, folded,
+with a count: "Course Detail / Desktop · 14 hand-set colours". A group shows its first 50 lines; **+N
+more** shows the rest. A line reads layer · property · value · the token it could be bound to.
+Click a line to select that layer in Figma and scroll to it; if it was deleted since the run, the
+line says "This layer no longer exists". Token findings still copy their name on click.
+**Copy report** copies the whole report as plain text, grouped as on screen, one finding per line.
+
+**Why "unused" needs a recent whole-file ICP run.** A token is unused only if no layer in the DS and no
+screen uses it, and the plugin cannot see another file. Each whole-file run on a screens file stores
+the token keys it saw; the library audit reports unused tokens only when such a run is at most 7
+days old, and the "Covered" line names the files. Otherwise "unused tokens" stays under not
+covered: run **Whole file** on the ICP first, then audit the library.
+
 ## Download the JSON
 
 **Download variables.json** saves the export on this computer, no GitHub needed: the same file
