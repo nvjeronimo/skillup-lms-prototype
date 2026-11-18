@@ -972,6 +972,24 @@ describe("token use across files", () => {
     expect([r.files.length, r.keys.size, r.icpFresh]).toEqual([0, 0, false]);
   });
 
+  it("only fresh entries (7 days at most) add their keys (M4a)", async () => {
+    const m = mem();
+    const { ctx } = await load([], [], { clientStorage: m.clientStorage });
+    await ctx.storeScreensUsage("Old", "Old file", ["kold"], new Date("2026-11-01T00:00:00Z"));
+    await ctx.storeScreensUsage("New", "New file", ["knew"], new Date("2026-11-11T00:00:00Z"));
+    const r = await ctx.readScreensUsage(new Date("2026-11-12T00:00:00Z"));
+    expect([...r.keys]).toEqual(["knew"]);
+    expect(r.freshFiles.map((f) => f.name)).toEqual(["New file"]);
+  });
+
+  it("motion tokens (collection 3.) are never unused: no layer property binds them (M4b)", async () => {
+    const { ctx } = await load([], []);
+    const mo = vr({ id: "mo", name: "duration/fast", key: "kmo", variableCollectionId: "c4" });
+    const live = setup().concat([{ v: mo, col: col({ id: "c4", name: "3. Motion" }) }]);
+    const r = ctx.unusedTokens(live, new Set(["a", "b", "c"]), new Set(), new Set(), new Set());
+    expect(JSON.parse(JSON.stringify(r))).toEqual([{ collection: "1. Colour", name: "d" }]);
+  });
+
   const setup = () => {
     const a = vr({ id: "a", name: "a", key: "ka" });
     const b = vr({ id: "b", name: "b", key: "kb" });

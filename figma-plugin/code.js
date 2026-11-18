@@ -380,14 +380,15 @@ async function readScreensUsage(now) {
   const all = (await figma.clientStorage.getAsync(SCREENS_USAGE_KEY)) || {};
   const files = [];
   const keys = new Set();
+  const fresh = function (e) { return !!e && now.getTime() - new Date(e.date).getTime() <= USAGE_FRESH_MS; };
   Object.keys(all).forEach(function (k) {
     const e = all[k];
     if (!e) return;
     files.push({ name: e.name, date: e.date });
-    (e.keys || []).forEach(function (x) { keys.add(x); });
+    // Only fresh entries count as use: an old run may name tokens the screens no longer bind.
+    if (fresh(e)) (e.keys || []).forEach(function (x) { keys.add(x); });
   });
   const icp = all[ICP_FILE_KEY];
-  const fresh = function (e) { return !!e && now.getTime() - new Date(e.date).getTime() <= USAGE_FRESH_MS; };
   const icpFresh = fresh(icp);
   // Entries at most 7 days old, from any file (stored by key, or by name when the key is null).
   const freshFiles = Object.keys(all).filter(function (k) { return fresh(all[k]); }).map(function (k) { return { name: all[k].name, date: all[k].date }; });
@@ -399,6 +400,8 @@ function unusedTokens(localVars, usedIds, usedKeys, aliasedIds, textStyleBoundId
   const out = [];
   localVars.forEach(function (x) {
     if (x.col.hiddenFromPublishing) return;
+    // Motion ("3. Motion") binds to no layer property, so no layer can ever use it.
+    if (String(x.col.name).indexOf("3.") === 0) return;
     const v = x.v;
     if (usedIds.has(v.id) || aliasedIds.has(v.id) || textStyleBoundIds.has(v.id) || usedKeys.has(v.key)) return;
     out.push({ collection: x.col.name, name: v.name });
