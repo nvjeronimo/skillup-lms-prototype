@@ -46,7 +46,9 @@ async function load(cols, vars, extra = {}) {
       getLocalVariableCollectionsAsync: async () => cols,
       getLocalVariablesAsync: async () => vars,
       getVariableByIdAsync: async (id) => vars.find((v) => v.id === id) || null,
+      getVariableCollectionByIdAsync: async (id) => cols.find((c) => c.id === id) || null,
     },
+    getStyleByIdAsync: async () => null,
     getLocalTextStylesAsync: async () => [],
     root: { name: "Doc", children: [{ id: "0:1", name: "Page 1" }] },
     currentPage: { id: "0:1", name: "Page 1" },
@@ -747,5 +749,74 @@ describe("layerChecks", () => {
   it("two identical unbound fills on one frame give one finding", async () => {
     const { out } = await run(frame({ fills: [solid(1, 0, 0), solid(1, 0, 0)], strokes: [solid(1, 0, 0), solid(1, 0, 0)], strokeWeight: 0 }));
     expect(out.map((f) => [f.property, f.value])).toEqual([["fill", "#ff0000"], ["stroke", "#ff0000"]]);
+  });
+});
+
+describe("suggestFor", () => {
+  const rgb = (hex) => ({ r: parseInt(hex.slice(1, 3), 16) / 255, g: parseInt(hex.slice(3, 5), 16) / 255, b: parseInt(hex.slice(5, 7), 16) / 255 });
+  const cv = (id, name, hex) => vr({ id, name, valuesByMode: { m1: rgb(hex), m2: rgb(hex) } });
+  const fv = (id, name, a, b) => vr({ id, name, resolvedType: "FLOAT", variableCollectionId: "c2", valuesByMode: { d: a, mo: b } });
+  const RESP = { id: "c2", name: "Responsive", modes: [{ modeId: "d", name: "Desktop" }, { modeId: "mo", name: "Mobile" }], defaultModeId: "d" };
+  const finding = (check, property, value) => ({ check, property, value, nodeId: "n", layer: "L" });
+  async function setup(vars, role = "library", extra = {}) {
+    const { ctx } = await load([col(), col(RESP)], vars, extra);
+    const index = await ctx.buildTokenIndex(role, vars.map((v) => v.id));
+    return { ctx, index };
+  }
+
+  it("exact colour match in the right family", async () => {
+    const { ctx, index } = await setup([cv("a", "text/x", "#112233"), cv("b", "bg/x", "#112233")]);
+    expect(ctx.suggestFor(finding("hand-colour", "fill", "#112233"), { type: "FRAME" }, index)).toBe("bg/x");
+    expect(ctx.suggestFor(finding("hand-colour", "fill", "#112233"), { type: "TEXT" }, index)).toBe("text/x");
+    expect(ctx.suggestFor(finding("hand-colour", "fill", "#112233"), { type: "VECTOR" }, index)).toBeNull();
+  });
+
+  it("nearest colour with DeltaE when no exact match", async () => {
+    const { ctx, index } = await setup([cv("a", "bg/muted", "#f0f0f0"), cv("b", "bg/dark", "#000000")]);
+    const s = ctx.suggestFor(finding("hand-colour", "fill", "#f2f2f2"), { type: "FRAME" }, index);
+    expect(s).toMatch(/^nearest bg\/muted, \u0394E \d+\.\d$/);
+  });
+
+  it("spacing is matched in the node's mode", async () => {
+    const { ctx, index } = await setup([fv("s1", "Spacing/lg", 24, 16), fv("s2", "Spacing/xl", 32, 24)]);
+    const f = finding("hand-spacing", "gap", 16);
+    expect(ctx.suggestFor(f, { resolvedVariableModes: { c2: "mo" } }, index)).toBe("Spacing/lg");
+    expect(ctx.suggestFor(f, { resolvedVariableModes: {} }, index)).toBe("Spacing/lg 24, set 16");
+  });
+
+  it("off-scale spacing suggests the nearest with the difference; radius skips fixed", async () => {
+    const { ctx, index } = await setup([fv("s1", "Spacing/md", 16, 16), fv("r1", "Radius/fixed-sm", 5, 5), fv("r2", "Radius/card", 8, 8)]);
+    expect(ctx.suggestFor(finding("hand-spacing", "padding-top", 15), {}, index)).toBe("Spacing/md 16, set 15");
+    expect(ctx.suggestFor(finding("hand-radius", "radius", 5), {}, index)).toBe("Radius/card 8, set 5");
+    expect(ctx.suggestFor(finding("hand-stroke", "stroke-weight", 1), {}, index)).toBeNull();
+    expect(ctx.suggestFor(finding("binding-missing", "fill", "x"), {}, index)).toBeNull();
+  });
+
+  it("text matches a style by family, style, size and line height", async () => {
+    const st = (id, name, size, lh) => ({ id, name, fontName: { family: "Inter", style: "Semi Bold" }, fontSize: size, lineHeight: lh });
+    const { ctx } = await load([], [], { getLocalTextStylesAsync: async () => [st("S1", "title/md", 16, { unit: "PIXELS", value: 24 }), st("S2", "title/sm", 14, { unit: "AUTO" })] });
+    const index = await ctx.buildTokenIndex("library");
+    expect(ctx.suggestFor(finding("no-text-style", "text-style", "Inter Semi Bold 16/24"), {}, index)).toBe("title/md");
+    expect(ctx.suggestFor(finding("no-text-style", "text-style", "Inter Semi Bold 14/auto"), {}, index)).toBe("title/sm");
+    expect(ctx.suggestFor(finding("no-text-style", "text-style", "Inter Semi Bold 15/24"), {}, index)).toBeNull();
+  });
+
+  it("screens role with nothing imported says no imported token matches", async () => {
+    const { ctx } = await load([], [], { getStyleByIdAsync: async (id) => (id === "S9" ? { id: "S9", name: "x", fontName: { family: "A", style: "B" }, fontSize: 1, lineHeight: { unit: "AUTO" } } : null) });
+    const index = await ctx.buildTokenIndex("screens", ["gone"], ["S9", "nope"]);
+    expect(index.styles.map((s) => s.id)).toEqual(["S9"]);
+    expect(ctx.suggestFor(finding("hand-colour", "fill", "#ffffff"), { type: "FRAME" }, index)).toBe("no imported token matches");
+    expect(ctx.suggestFor(finding("hand-spacing", "gap", 8), {}, index)).toBe("no imported token matches");
+    expect(ctx.suggestFor(finding("no-text-style", "text-style", "Q W 1/1"), {}, index)).toBe("no imported token matches");
+  });
+
+  it("follows alias chains and skips hidden collections in the library", async () => {
+    const base = cv("a", "primitive/red", "#ff0000");
+    const alias = vr({ id: "b", name: "bg/danger", valuesByMode: { m1: { type: "VARIABLE_ALIAS", id: "a" }, m2: { type: "VARIABLE_ALIAS", id: "a" } } });
+    const hidden = vr({ id: "h", name: "bg/hid", variableCollectionId: "c3", valuesByMode: { m1: rgb("#00ff00") } });
+    const { ctx } = await load([col(), col({ id: "c3", hiddenFromPublishing: true })], [base, alias, hidden]);
+    const index = await ctx.buildTokenIndex("library");
+    expect(ctx.suggestFor(finding("hand-colour", "fill", "#ff0000"), { type: "FRAME" }, index)).toBe("bg/danger");
+    expect(ctx.suggestFor(finding("hand-colour", "fill", "#00ff00"), { type: "FRAME" }, index)).toMatch(/^nearest bg\/danger/);
   });
 });

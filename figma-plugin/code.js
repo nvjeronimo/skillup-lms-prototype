@@ -461,6 +461,154 @@ async function layerChecks(node, ctx, getVar) {
   return out;
 }
 
+// ---- Suggested tokens ----
+
+function hexToRgb(h) {
+  return [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
+}
+
+// sRGB hex -> CIE Lab (D65), for CIE76 distances.
+function hexToLab(hex) {
+  const lin = function (c) { return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const rgb = hexToRgb(hex).map(lin);
+  const x = (rgb[0] * 0.4124564 + rgb[1] * 0.3575761 + rgb[2] * 0.1804375) / 0.95047;
+  const y = rgb[0] * 0.2126729 + rgb[1] * 0.7151522 + rgb[2] * 0.072175;
+  const z = (rgb[0] * 0.0193339 + rgb[1] * 0.119192 + rgb[2] * 0.9503041) / 1.08883;
+  const f = function (t) { return t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116; };
+  const fx = f(x), fy = f(y), fz = f(z);
+  return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+}
+
+function deltaE76(a, b) {
+  return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2) + Math.pow(a[2] - b[2], 2));
+}
+
+// The tokens a finding can be matched against: local variables of exported collections plus text styles
+// (library), or the variables reachable from the ids the walk collected plus text styles (screens).
+// Alias targets are loaded here so suggestFor can stay synchronous.
+async function buildTokenIndex(role, extraVariableIds, extraTextStyleIds) {
+  extraVariableIds = extraVariableIds || [];
+  extraTextStyleIds = extraTextStyleIds || [];
+  const cols = {};
+  const vars = {};
+  const names = []; // ids of the variables that can be suggested
+  const loadCol = async function (id) {
+    if (!id) return null;
+    if (!(id in cols)) {
+      try { cols[id] = (await figma.variables.getVariableCollectionByIdAsync(id)) || null; } catch (e) { cols[id] = null; }
+    }
+    return cols[id];
+  };
+  const addVar = async function (v, suggestable) {
+    if (!v) return;
+    if (!(v.id in vars)) {
+      vars[v.id] = v;
+      await loadCol(v.variableCollectionId);
+    }
+    if (suggestable && names.indexOf(v.id) < 0) names.push(v.id);
+  };
+  if (role === "library") {
+    const all = await figma.variables.getLocalVariablesAsync();
+    for (let i = 0; i < all.length; i++) {
+      const c = await loadCol(all[i].variableCollectionId);
+      if (c && !c.hiddenFromPublishing) await addVar(all[i], true);
+    }
+  } else {
+    for (let i = 0; i < extraVariableIds.length; i++) await addVar(await getVarSafe(extraVariableIds[i]), true);
+  }
+  // Follow alias chains so resolved values are available without further lookups.
+  const queue = Object.keys(vars);
+  for (let q = 0; q < queue.length; q++) {
+    const v = vars[queue[q]];
+    const by = v.valuesByMode || {};
+    for (const m in by) {
+      const id = aliasIdOf(by[m]);
+      if (id && !(id in vars)) {
+        await addVar(await getVarSafe(id), false);
+        if (id in vars) queue.push(id);
+      }
+    }
+  }
+  const styles = [];
+  const seen = {};
+  const addStyle = function (s) { if (s && !seen[s.id]) { seen[s.id] = true; styles.push(s); } };
+  (await figma.getLocalTextStylesAsync()).forEach(addStyle);
+  for (let i = 0; i < extraTextStyleIds.length; i++) {
+    let s = null;
+    try { s = await figma.getStyleByIdAsync(extraTextStyleIds[i]); } catch (e) { s = null; }
+    addStyle(s);
+  }
+  return { role: role, cols: cols, vars: vars, names: names, styles: styles };
+}
+
+// A variable's value for a node: the node's mode for the variable's collection, else the collection's default.
+function tokenValue(index, v, node, depth) {
+  if ((depth || 0) > 20 || !v) return undefined;
+  const col = index.cols[v.variableCollectionId];
+  const by = v.valuesByMode || {};
+  const modes = node && node.resolvedVariableModes;
+  let mode = (modes && col && modes[col.id]) || (col && col.defaultModeId);
+  let val = mode in by ? by[mode] : by[Object.keys(by)[0]];
+  const id = aliasIdOf(val);
+  if (id) return tokenValue(index, index.vars[id], node, (depth || 0) + 1);
+  return val;
+}
+
+function suggestFor(finding, node, index) {
+  if (!finding || finding.check === "binding-missing") return null;
+  const none = index.role === "screens" ? "no imported token matches" : null;
+  const tokens = function (type, test) {
+    return index.names.map(function (id) { return index.vars[id]; }).filter(function (v) { return v && v.resolvedType === type && test(v.name); });
+  };
+  const prop = finding.property;
+
+  if (finding.check === "hand-colour") {
+    let prefix = "bg/";
+    if (prop === "stroke") prefix = "border/";
+    else if (node && node.type === "TEXT") prefix = "text/";
+    else if (node && (node.type === "VECTOR" || node.type === "BOOLEAN_OPERATION")) prefix = "icon/";
+    const fam = tokens("COLOR", function (n) { return n.indexOf(prefix) === 0; });
+    const target = hexToLab(finding.value);
+    let best = null, bestD = Infinity;
+    for (let i = 0; i < fam.length; i++) {
+      const c = tokenValue(index, fam[i], node);
+      if (!c || typeof c.r !== "number") continue;
+      const hex = hexOfColor(c);
+      if (hex === finding.value) return fam[i].name;
+      const d = deltaE76(target, hexToLab(hex));
+      if (d < bestD) { bestD = d; best = fam[i]; }
+    }
+    if (!best) return none;
+    return "nearest " + best.name + ", ΔE " + bestD.toFixed(1);
+  }
+
+  if (finding.check === "hand-spacing" || finding.check === "hand-radius") {
+    const spacing = finding.check === "hand-spacing";
+    const fam = tokens("FLOAT", function (n) {
+      return spacing ? n.indexOf("Spacing/") === 0 : n.indexOf("Radius/") === 0 && n.indexOf("Radius/fixed-") !== 0;
+    });
+    let best = null, bestV = 0, bestD = Infinity;
+    for (let i = 0; i < fam.length; i++) {
+      const n = tokenValue(index, fam[i], node);
+      if (typeof n !== "number") continue;
+      if (n === finding.value) return fam[i].name;
+      const d = Math.abs(n - finding.value);
+      if (d < bestD || (d === bestD && n < bestV)) { bestD = d; best = fam[i]; bestV = n; }
+    }
+    if (!best) return none;
+    return best.name + " " + bestV + ", set " + finding.value;
+  }
+
+  if (finding.check === "no-text-style") {
+    for (let i = 0; i < index.styles.length; i++) {
+      const s = index.styles[i];
+      if (fontSummary(s.fontName, s.fontSize, s.lineHeight) === finding.value) return s.name;
+    }
+    return none;
+  }
+  return null; // hand-stroke: no token for stroke weight
+}
+
 // ---- The audit (tokens only; later parts add layers, components and docs) ----
 
 // The build's Figma → CSS name mapping, copied from scripts/tokens/names.mjs (the plugin cannot
