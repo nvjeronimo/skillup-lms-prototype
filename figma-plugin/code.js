@@ -169,16 +169,19 @@ function auditSettingsKey() {
 }
 
 // Ids of the pages left out of an audit by default. pages: [{ id, name }].
+// Keywords match as whole words or phrases (so "Discovery" is not "cover"); a divider page
+// starts with "discovery" or "archive" and, in screens files, excludes itself and the pages after it up to a "---" page.
 function defaultExcludedPages(role, pages) {
-  const byName = role === "library" ? ["in review", "archive", "arquivo", "cover", "start here"] : ["cover", "history", "hist\u00f3rico"];
+  const keywords = role === "library" ? ["in review", "archive", "arquivo", "cover", "start here"] : ["cover", "history", "hist\u00f3rico"];
+  const res = keywords.map((k) => new RegExp("(^|[^\\p{L}\\p{N}])" + k + "([^\\p{L}\\p{N}]|$)", "iu"));
   const out = [];
   let inGroup = false;
   for (const p of pages) {
-    const name = String(p.name).toLowerCase();
-    let excluded = byName.some((n) => name.indexOf(n) !== -1);
+    const name = String(p.name).trim().toLowerCase();
+    let excluded = res.some((re) => re.test(name));
     if (role === "screens") {
-      if (name.trim() === "---") inGroup = false;
-      else if (name.indexOf("discovery") !== -1 || name.indexOf("archive") !== -1) inGroup = true;
+      if (name === "---") inGroup = false;
+      else if (name.indexOf("discovery") === 0 || name.indexOf("archive") === 0) inGroup = true;
       if (inGroup) excluded = true;
     }
     if (excluded) out.push(p.id);

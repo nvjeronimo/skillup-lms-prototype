@@ -396,6 +396,15 @@ describe("defaultExcludedPages", () => {
     const pages = pg(["Start here", "Cover", "Button", "In review", "Archive", "Arquivo 2020", "Buttons"]);
     expect(Array.from(ctx.defaultExcludedPages("library", pages))).toEqual(["p0", "p1", "p3", "p4", "p5"]);
   });
+  it("a Discovery review page inside a group is neither excluded nor a divider", async () => {
+    const { ctx } = await load([], []);
+    const pages = pg(["READY FOR REVIEW \ud83d\udfe0", "       \u21b3 Topic Content Types Discovery \u2014 Ready for Review \ud83d\udfe0", "---", "Next page", "Cover", "ARCHIVE \u2014\u2014\u2014", "Old"]);
+    expect(Array.from(ctx.defaultExcludedPages("screens", pages))).toEqual(["p4", "p5", "p6"]);
+  });
+  it("a library page named Discovery is not excluded", async () => {
+    const { ctx } = await load([], []);
+    expect(Array.from(ctx.defaultExcludedPages("library", pg(["Discovery", "Cover", "ARCHIVE \u2014\u2014\u2014"])))).toEqual(["p1", "p2"]);
+  });
   it("screens also exclude history by name", async () => {
     const { ctx } = await load([], []);
     expect(Array.from(ctx.defaultExcludedPages("screens", pg(["Home", "History", "Hist\u00f3rico"])))).toEqual(["p1", "p2"]);
