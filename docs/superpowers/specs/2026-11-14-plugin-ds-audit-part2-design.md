@@ -106,7 +106,14 @@ At the top of the Audit tab, four choices:
 - **Selection**: what is selected now, with a count; disabled when nothing is selected.
 
 The last choice per file is kept in `clientStorage` under a key that includes the file key. The
-"covered" line names the scope ("whole file", "3 of 18 pages", "selection: 4 layers").
+"covered" line names the scope and counts the layers checked ("whole file, 1,240 layers", "3 of 18
+pages, 512 layers", "selection (4 selected), 37 layers") (final review, 18 Nov).
+
+**When it runs** (ruling, final review, 18 Nov). Opening the plugin in the DS runs only the token
+audit (part 1); in a screens file it opens on the Audit tab and runs nothing. The layer walk starts
+only from the **Run audit** button (it reads **Run again** after the first run), so opening the
+plugin never walks a whole file (the anti-goal "freezing Figma on the ICP"). Until then the
+not-covered list says "layers: not run (press Run audit)".
 
 ### 5.2a What stays out (Nelson, 14 Nov, option A)
 
@@ -141,26 +148,37 @@ local copies are intentional.
   each `INSTANCE`. The instance is skipped entirely, its own node included: its fills, padding
   and radius come from the component, and an override set by hand on an instance is left for a
   later part (Claude's call). Local components on the ICP are walked like screens.
-- **Selection:** the selected nodes and their layers, with the same instance rule for the role.
+- **Selection:** the selected nodes and their layers, with the same instance rule for the role. A
+  selected instance, or a selected layer inside one, is not checked; the covered line counts them
+  ("2 selected layers inside instances skipped") (final review, 18 Nov).
+- **Figma chrome** (ruling, final review, 18 Nov): a `COMPONENT_SET`'s default outline (#9747ff,
+  radius 5, stroke 1) and a `SECTION`'s fill are editor chrome, not product. Their own fills,
+  strokes, stroke weight and radius are not checked; their bindings and auto-layout spacing are,
+  and the walk still enters them.
 - **Hidden layers** (`visible: false`) (Claude's call): in the library role they are walked,
   because a boolean property (Show image, the Scope layers, optional badges) turns them on and
-  they ship. In the screens role they are skipped and counted in the covered line.
+  they ship. In the screens role they are skipped and counted in the covered line; in the Ready
+  for dev scope only those inside a marked subtree count.
 - The walk yields to Figma every 500 nodes (Claude's call; tune after measuring) and reports
-  progress as "page N of M, X layers".
+  progress as "page N of M, X layers". Cancel is checked at each yield and after each page loads.
 
 ### 5.4 The checks and their weight
 
 | Check | When it fires | Library role | Screens role |
 |---|---|---|---|
-| `binding-missing` | A bound variable id resolves to `null` (deleted, or from a library that is not available) | Blocker | Blocker |
+| `binding-missing` | A bound variable id resolves to `null` (deleted, or from a library that is not available), on any bound property: every key of `boundVariables` (max width, visibility, effects…), paint colours and text-range bindings | Blocker | Blocker |
 | `hand-colour` | A visible SOLID fill or stroke with no colour binding | Blocker | Blocker inside Ready for dev, else Warning |
 | `hand-spacing` | Auto-layout padding (4 sides) or gap (`itemSpacing`, `counterAxisSpacing`) not bound, and not 0 | Blocker | Blocker inside Ready for dev, else Warning |
 | `hand-radius` | Corner radius (or any of the four) not bound, and not 0 | Blocker | Blocker inside Ready for dev, else Warning |
-| `hand-stroke` | Stroke weight not bound, on a node with a visible stroke | Blocker | Blocker inside Ready for dev, else Warning |
+| `hand-stroke` | Stroke weight not bound, on a node with a visible stroke | Warning | Warning |
 | `no-text-style` | A text node (or a segment) with no text style | Blocker | Blocker inside Ready for dev, else Warning |
 | `unused-token` | A DS token no layer in either file uses (§5.6) | Suggestion | not run |
 
 - 0 needs no token (padding 0, radius 0): not a finding (Claude's call).
+- `hand-stroke` is a warning in both roles (ruling, final review, 18 Nov): the DS has no 1 px
+  stroke token (only `Stroke/icon-small` 1.5 and `Stroke/icon-big` 2.5), so as a blocker the DS
+  could never read ready. A `Stroke/border` token is Nelson's decision (no new token without his
+  approval).
 - A colour bound to a primitive (a hidden-collection variable) instead of a semantic token is
   out of scope for part 2; it is a part 3 rule.
 - Layer findings never disable Publish (Claude's call): Publish sends the token JSON, which layer
@@ -173,6 +191,9 @@ local copies are intentional.
 - The verdict follows part 1: any blocker means "not ready". In the library role a single
   hand-set colour inside a component blocks (Nelson, 14 Nov: the component reaches the developers
   wrong).
+- When the layer walk checked no layer and there is no blocker, the verdict is "empty", never
+  "ready" (ruling, final review, 18 Nov): "Nothing to audit: no layer marked Ready for dev in
+  scope" in the Ready for dev scope, "Nothing to audit in this scope" in the others.
 
 ### 5.5 The suggested token
 
@@ -180,10 +201,14 @@ Each `hand-*` finding carries the token that would replace it, when one exists:
 - **Colour:** the semantic tokens (exported collections) of the right family whose value, in the
   node's mode, equals the hex exactly: `bg/` for frame fills, `border/` for strokes, `text/` for
   text fills, `icon/` for vector fills. No exact match: the nearest in the family by ΔE, with the
-  ΔE shown ("nearest bg/muted, ΔE 2.1").
-- **Spacing:** the `Spacing/*` (gaps, padding) token whose value in the node's Responsive mode
-  equals the number; off-scale: the nearest, with the difference ("Spacing/md 16, set 15").
+  ΔE shown ("nearest bg/muted, ΔE 2.1"). Alpha counts (final review, 18 Nov): a translucent paint
+  reads `#rrggbbaa` and matches exactly only a token with the same alpha (a colour alias with its
+  own opacity included); the nearest is still suggested, with "· alpha 50%" when the alpha differs.
+- **Spacing:** the `Spacing/*` (gaps, padding) token, and the `Layout/*` and `Container/*` tokens
+  of decision 032, whose value in the node's Responsive mode equals the number; off-scale: the
+  nearest, with the difference ("Spacing/md 16, set 15").
 - **Radius:** the `Radius/*` role tokens, same rule.
+- **Stroke weight:** the `Stroke/*` tokens, same rule ("Stroke/icon-small 1.5, set 1").
 - **Text:** the text style with the same font family, style, size and line height, if one exists.
 - In the screens role the tokens come from the DS library as imported in the file; a token not
   yet imported cannot be suggested by value and the finding says "no imported token matches"
@@ -204,6 +229,9 @@ would look unused in the DS).
 - If no whole-file run of the ICP is stored, or the newest is older than 7 days, the covered line says "use on
   screens not covered" and `unused-token` is not run (Claude's call: a partial answer is worse
   than none).
+- Only stored runs at most 7 days old count as use; older entries add no keys (final review, 18 Nov).
+- Motion (collections whose name starts with "3.") is never `unused-token`: no layer property can
+  bind it (final review, 18 Nov).
 - Primitives (hidden collections) are already handled by part 1 (`unused-primitive`).
 
 ### 5.7 The report
@@ -221,8 +249,9 @@ would look unused in the DS).
 - `auditLayers({ role, scope, onProgress, isCancelled })` in `code.js`, separate from part 1's
   `auditTokens`. The Audit run calls `auditTokens` (library role) and `auditLayers`, and merges
   the findings into one report.
-- New messages: `audit` gains `scope`; `select-node` `{ id }` from the UI; `pages` from the plugin
-  on load (id, name).
+- New messages: `audit` gains `scope`, and `layers: false` for the run on open (no layer walk);
+  `select-node` `{ id }` from the UI; `pages` from the plugin on load (id, name). The report gains
+  `verdict: "empty"`, `scope` and `layersRun`.
 - Tests: the same node:vm harness, with a fake page tree (frames, components, instances, text,
   paints with and without bindings, a deleted variable id).
 
