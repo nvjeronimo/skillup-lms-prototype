@@ -470,8 +470,13 @@ async function layerChecks(node, ctx, getVar) {
       find("hand-colour", property, hex);
     }
   };
-  if (Array.isArray(node.fills)) paintFindings("fill", node.fills, bv.fills);
-  else if (node.fills === mixed && node.type === "TEXT" && node.getStyledTextSegments) {
+  // A component set's outline (#9747ff, radius 5, stroke 1) and a section's fill are Figma chrome,
+  // not product: their own paints, radius and stroke weight are not checked. Bindings that point
+  // nowhere (above) and auto-layout spacing (below) still are, and the walk still enters them.
+  const chrome = node.type === "COMPONENT_SET" || node.type === "SECTION";
+  if (Array.isArray(node.fills)) {
+    if (!chrome) paintFindings("fill", node.fills, bv.fills);
+  } else if (node.fills === mixed && node.type === "TEXT" && node.getStyledTextSegments) {
     const segs = node.getStyledTextSegments(["fills"]);
     for (let i = 0; i < segs.length; i++) {
       if (!Array.isArray(segs[i].fills)) continue;
@@ -483,7 +488,7 @@ async function layerChecks(node, ctx, getVar) {
     }
   }
   const strokes = Array.isArray(node.strokes) ? node.strokes : [];
-  paintFindings("stroke", strokes, bv.strokes);
+  if (!chrome) paintFindings("stroke", strokes, bv.strokes);
 
   // 3. Spacing, only in auto layout.
   if (node.layoutMode && node.layoutMode !== "NONE") {
@@ -496,17 +501,17 @@ async function layerChecks(node, ctx, getVar) {
   }
 
   // 4. Radius.
-  if (node.cornerRadius === mixed) {
+  if (!chrome && node.cornerRadius === mixed) {
     for (let i = 0; i < corners.length; i++) {
       const v = node[corners[i][0]];
       if (typeof v === "number" && v !== 0 && !isBound(corners[i][0])) find("hand-radius", corners[i][1], v);
     }
-  } else if (typeof node.cornerRadius === "number" && node.cornerRadius !== 0) {
+  } else if (!chrome && typeof node.cornerRadius === "number" && node.cornerRadius !== 0) {
     if (!corners.every(function (c) { return isBound(c[0]); })) find("hand-radius", "radius", node.cornerRadius);
   }
 
   // 5. Stroke weight, only with a visible stroke.
-  if (strokes.some(paintIsVisible)) {
+  if (!chrome && strokes.some(paintIsVisible)) {
     if (node.strokeWeight === mixed) {
       const sides = ["strokeTopWeight", "strokeRightWeight", "strokeBottomWeight", "strokeLeftWeight"];
       for (let i = 0; i < sides.length; i++) {

@@ -756,6 +756,19 @@ describe("layerChecks", () => {
     expect(out.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fill", "dead"]]);
   });
 
+  it("a component set's default outline is chrome: no colour, radius or stroke findings; padding and dead bindings still count (I2)", async () => {
+    const purple = solid(0x97 / 255, 0x47 / 255, 1);
+    const set = componentSet({ fills: [], strokes: [purple], strokeWeight: 1, cornerRadius: 5, layoutMode: "VERTICAL", paddingTop: 16, itemSpacing: 0 });
+    expect((await run(set)).out.map((f) => [f.check, f.property])).toEqual([["hand-spacing", "padding-top"]]);
+    const dead = componentSet({ fills: [solid(1, 1, 1, { boundVariables: { color: { type: "VARIABLE_ALIAS", id: "gone" } } })], strokes: [purple], strokeWeight: 1, cornerRadius: 5 });
+    expect((await run(dead)).out.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fill", "gone"]]);
+  });
+
+  it("a section's default fill is chrome: no findings for its own paint, radius or stroke (I2)", async () => {
+    const sec = section({ fills: [solid(1, 1, 1)], strokes: [solid(0, 0, 0)], strokeWeight: 1, cornerRadius: 2 });
+    expect((await run(sec)).out).toEqual([]);
+  });
+
   it("two identical unbound fills on one frame give one finding", async () => {
     const { out } = await run(frame({ fills: [solid(1, 0, 0), solid(1, 0, 0)], strokes: [solid(1, 0, 0), solid(1, 0, 0)], strokeWeight: 0 }));
     expect(out.map((f) => [f.property, f.value])).toEqual([["fill", "#ff0000"], ["stroke", "#ff0000"]]);
@@ -980,6 +993,17 @@ describe("auditLayers and the audit message", () => {
     const f = await file(ICP, [page("P", [bound, loose])], bgx());
     const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
     expect(r.warnings.map((x) => [x.nodeId, x.suggestion])).toEqual([[loose.id, "bg/x"]]);
+  });
+
+  it("sections and component sets are skipped as chrome but their layers are still audited (I2)", async () => {
+    const inner = frame({ name: "Inner", fills: [red()] });
+    const s = await file(ICP, [page("P", [section({ fills: [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }] }, [inner])])]);
+    const rs = await audit(s, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(rs.warnings.map((x) => [x.check, x.nodeId])).toEqual([["hand-colour", inner.id]]);
+    const v = component({ name: "V", fills: [red()] });
+    const l = await file(DS, [page("P", [componentSet({ strokes: [red()], strokeWeight: 1, cornerRadius: 5 }, [v])])]);
+    const rl = await audit(l, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(rl.blockers.map((x) => [x.check, x.nodeId])).toEqual([["hand-colour", v.id]]);
   });
 
   it("hand-stroke is a warning in both roles, never a blocker (I1)", async () => {
