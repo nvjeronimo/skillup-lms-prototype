@@ -56,6 +56,17 @@
   .group details[open] { display: block; }
   .group details.count summary { font-weight: 400; }
   .group details.count > div { padding-left: 12px; }
+  .scope { display: flex; flex-direction: column; gap: 6px; }
+  .scope .opt { flex-direction: row; align-items: center; gap: 6px; font-weight: 400; }
+  .scope .opt input { margin: 0; padding: 0; }
+  .scope .opt[hidden], .scope [hidden] { display: none; }
+  .scope .opt.off { opacity: 0.4; }
+  .scope .list { max-height: 120px; overflow: auto; border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 6px 8px; }
+  .scope .list .opt { padding: 1px 0; }
+  .role { font-weight: 600; }
+  .layerline .sug { color: var(--figma-color-text-secondary); }
+  .layerline.gone .sug { color: var(--figma-color-text-danger); }
+  .more { background: none; color: var(--figma-color-text-brand); padding: 2px 0; font-weight: 400; }
   .copied { color: var(--figma-color-text-secondary); min-height: 18px; }
 </style>
 
@@ -65,10 +76,23 @@
 </div>
 
 <div class="tab" id="paneAudit" hidden>
+  <p class="role" id="roleLine"></p>
+  <div class="scope" id="scopeBox">
+    <label class="opt" id="optReady" hidden><input type="radio" name="scope" value="ready" /> Ready for dev</label>
+    <label class="opt"><input type="radio" name="scope" value="file" /> Whole file</label>
+    <label class="opt"><input type="radio" name="scope" value="pages" /> Pages</label>
+    <div class="list" id="pageList" hidden></div>
+    <label class="opt" id="optSelection"><input type="radio" name="scope" value="selection" /> <span id="selText">Selection</span></label>
+    <details id="leftOut">
+      <summary id="leftOutSummary">Left out</summary>
+      <div class="list" id="leftList"></div>
+    </details>
+  </div>
   <div class="auditbar">
     <span class="verdict" id="verdict">Waiting for the variables…</span>
     <span class="btns">
-      <button id="auditRun" class="secondary" disabled>Run again</button>
+      <button id="auditRun" class="secondary" disabled>Run audit</button>
+      <button id="auditCopy" class="secondary" disabled>Copy report</button>
       <button id="auditCancel" class="secondary" hidden>Cancel</button>
     </span>
   </div>
@@ -80,6 +104,7 @@
 
 <div class="tab" id="panePublish">
 <h1>Publish tokens</h1>
+<p id="screensNote" class="verdict" hidden>Publish runs in the SKO Design System</p>
 <p>Sends the variables and text styles of this file to the prototype. A pull request opens; the
   build generates the CSS, checks it and merges, and the prototype and Storybook update.</p>
 
@@ -214,6 +239,7 @@
     }
   }
   async function readPublished() {
+    if (role === "screens") { $("summary").textContent = "This file is not the design system."; return; }
     diffCount = null; usage = null; usageFresh = false; lineCount = 0;
     if (!$("token").value.trim()) $("setup").open = true;
     try {
@@ -244,7 +270,8 @@
     }
   }
   // Publish, the package PR and the download are blocked only when the export itself would be wrong.
-  const blocked = () => problems.length > 0 || !!(report && report.publishBlocked);
+  // A screens file's own local collections are not the DS: their problems never block anything here.
+  const blocked = () => role !== "screens" && (problems.length > 0 || !!(report && report.publishBlocked));
   const BLOCK_MSG = "Fix the broken token(s) in the Audit tab first: the export would be wrong.";
   // The export is read once, when the plugin opens. If the latest audit finds the broken tokens
   // fixed, the export still holds the old values: only reopening reads them again.
@@ -253,8 +280,8 @@
   function updateButtons() {
     const hasToken = !!$("token").value.trim();
     const bad = blocked();
-    $("publish").disabled = bad || published || refreshing || !hasToken || !current || !lineCount;
-    $("package").disabled = bad || !hasToken;
+    $("publish").disabled = role === "screens" || bad || published || refreshing || !hasToken || !current || !lineCount;
+    $("package").disabled = role === "screens" || bad || !hasToken;
     $("download").disabled = bad || !next;
     if (bad) {
       status(problems.length > 0 && report && !report.publishBlocked ? REOPEN_MSG : BLOCK_MSG, true);
@@ -587,6 +614,42 @@
   });
 
   // ---- Audit tab ----
+  let role = "library", pages = [], settings = { scope: "file", pageIds: [], excludedPageIds: [] }, selCount = 0;
+  let layerGroups = [];
+  const defaultScope = () => (role === "screens" ? "ready" : "file");
+  function renderScope() {
+    $("roleLine").textContent = role === "screens" ? "Auditing screens" : "Auditing the DS library";
+    $("screensNote").hidden = role !== "screens";
+    $("optReady").hidden = role !== "screens";
+    for (const r of document.querySelectorAll('input[name="scope"]')) r.checked = r.value === settings.scope;
+    const sel = document.querySelector('input[name="scope"][value="selection"]');
+    sel.disabled = selCount === 0;
+    $("optSelection").className = `opt${selCount === 0 ? " off" : ""}`;
+    $("selText").textContent = selCount === 0 ? "Selection (nothing selected)" : `Selection (${selCount})`;
+    const pageRow = (p, on, cls) => `<label class="opt"><input type="checkbox" data-${cls}="${esc(p.id)}"${on ? " checked" : ""} /> ${esc(p.name)}</label>`;
+    $("pageList").hidden = settings.scope !== "pages";
+    $("pageList").innerHTML = pages.map((p) => pageRow(p, settings.pageIds.includes(p.id), "page")).join("");
+    $("leftList").innerHTML = pages.map((p) => pageRow(p, settings.excludedPageIds.includes(p.id), "left")).join("");
+    const n = settings.excludedPageIds.length;
+    $("leftOutSummary").textContent = n ? `Left out (${n} ${n === 1 ? "page" : "pages"})` : "Left out";
+    $("auditRun").disabled = running || !next || (settings.scope === "selection" && selCount === 0);
+  }
+  function saveAudit() {
+    parent.postMessage({ pluginMessage: { type: "save-audit-settings", settings } }, "*");
+  }
+  $("scopeBox").addEventListener("change", (e) => {
+    const t = e.target;
+    if (t.name === "scope") settings.scope = t.value;
+    else if (t.dataset.page !== undefined || t.dataset.left !== undefined) {
+      const key = t.dataset.page !== undefined ? "pageIds" : "excludedPageIds";
+      const id = t.dataset.page !== undefined ? t.dataset.page : t.dataset.left;
+      const set = new Set(settings[key]);
+      if (t.checked) set.add(id); else set.delete(id);
+      settings[key] = pages.map((p) => p.id).filter((x) => set.has(x));
+    } else return;
+    renderScope();
+    saveAudit();
+  });
   function showTab(name) {
     const audit = name === "audit";
     $("paneAudit").hidden = !audit;
@@ -601,12 +664,50 @@
     const parts = [f.collection, f.name].filter(Boolean);
     return parts.length === 2 && parts[0] === parts[1] ? parts[0] : parts.join("/");
   };
+  // Layer findings: page → top-level frame, folded, 50 lines then "+N more".
+  const NOUN = {
+    "hand-colour": ["hand-set colour", "hand-set colours"],
+    "hand-spacing": ["hand-set spacing", "hand-set spacings"],
+    "hand-radius": ["hand-set radius", "hand-set radii"],
+    "hand-stroke": ["hand-set stroke weight", "hand-set stroke weights"],
+    "no-text-style": ["unstyled text", "unstyled texts"],
+    "binding-missing": ["missing binding", "missing bindings"],
+  };
+  const LINES = 50;
+  function groupLayers(items) {
+    const map = new Map();
+    for (const f of items) {
+      const key = `${f.pageId}\u0000${f.topId}`; // by id: two frames can share a name
+      if (!map.has(key)) map.set(key, { page: f.page, top: f.top, items: [] });
+      map.get(key).items.push(f);
+    }
+    return [...map.values()];
+  }
+  function groupTitle(g) {
+    const counts = new Map();
+    for (const f of g.items) counts.set(f.check, (counts.get(f.check) || 0) + 1);
+    const parts = [...counts].map(([check, n]) => `${n} ${(NOUN[check] || [check, check])[n === 1 ? 0 : 1]}`);
+    return `${g.page} / ${g.top} · ${parts.join(", ")}`;
+  }
+  const lineText = (f) => [f.layer, f.property, f.value, f.suggestion].filter((x) => x !== undefined && x !== null && x !== "").join(" · ");
+  const layerLine = (f) => {
+    const sw = typeof f.value === "string" && /^#[0-9a-f]{6,8}$/i.test(f.value) ? `<span class="swatch" style="background:${esc(f.value)}"></span> ` : "";
+    const sug = f.suggestion ? ` · ${esc(f.suggestion)}` : "";
+    return `<div class="finding layerline" data-node="${esc(f.nodeId)}" title="Click to select this layer">${esc(f.layer)} · ${esc(f.property)} · ${sw}${esc(f.value)}<span class="sug">${sug}</span></div>`;
+  };
+  function layerGroupsHtml(items) {
+    return groupLayers(items).map((g) => {
+      const gi = layerGroups.push(g) - 1;
+      const more = g.items.length > LINES ? `<button class="more" data-more="${gi}">+${g.items.length - LINES} more</button>` : "";
+      return `<details class="count"><summary>${esc(groupTitle(g))}</summary>${g.items.slice(0, LINES).map(layerLine).join("")}${more}</details>`;
+    }).join("");
+  }
   const group = (title, items, folded) => {
     if (!items.length) return "";
-    const rows = items.map((f) => {
+    const rows = items.filter((f) => !f.nodeId).map((f) => {
       const l = label(f);
       return l ? `<div class="finding" data-copy="${esc(l)}" title="Click to copy">${esc(l)}: ${esc(f.text)}</div>` : `<div>${esc(f.text)}</div>`;
-    }).join("");
+    }).join("") + layerGroupsHtml(items.filter((f) => f.nodeId));
     return folded
       ? `<div class="group"><details><summary>${esc(title)} (${items.length})</summary>${rows}</details></div>`
       : `<div class="group"><h2>${esc(title)}</h2>${rows}</div>`;
@@ -622,42 +723,79 @@
       folded(`${cols.length} collection(s) changed, library not published`, cols);
     return lines ? `<div class="group"><h2>Pending</h2>${lines}</div>` : "";
   }
+  const NOT_RUN = "Press Run audit to check the layers.";
+  // The verdict comes from the report: "empty" (nothing audited) is never shown as ready.
+  function verdictText(r) {
+    if (r.verdict === "not-ready") return `Not ready: ${r.blockers.length} blocker(s)`;
+    if (r.layersRun === false) return r.role === "screens" ? NOT_RUN : `Tokens ready. ${NOT_RUN}`;
+    if (r.verdict === "empty") return r.scope === "ready" ? "Nothing to audit: no layer marked Ready for dev in scope" : "Nothing to audit in this scope";
+    return `Ready for developers (${r.role === "screens" ? "screens" : "tokens and layers"})`;
+  }
   function renderReport(r) {
     if (r.notCovered.includes("cancelled")) {
       $("verdict").className = "verdict";
       $("verdict").textContent = "Audit cancelled.";
-      $("covered").textContent = "Press Run again to read the variables.";
+      $("covered").textContent = `Press ${$("auditRun").textContent} to start again.`;
       $("auditGroups").innerHTML = "";
+      $("auditCopy").disabled = true;
       return;
     }
+    layerGroups = [];
     const notCovered = r.notCovered.slice();
-    if (diffCount === null) notCovered.push("prototype sync");
-    $("verdict").className = `verdict${r.blockers.length ? " bad" : ""}`;
-    $("verdict").textContent = r.blockers.length ? `Not ready: ${r.blockers.length} blocker(s)` : "Ready for developers (tokens)";
+    if (diffCount === null && role !== "screens") notCovered.push("prototype sync");
+    $("verdict").className = `verdict${r.verdict === "not-ready" ? " bad" : ""}`;
+    $("verdict").textContent = verdictText(r);
     $("covered").textContent = `Covered: ${r.covered.join(", ")}. Not covered yet: ${notCovered.join(", ")}.`;
     $("auditGroups").innerHTML = pendingGroup(diffCount || 0, r.pending) + group("Blockers", r.blockers) + group("Warnings", r.warnings, true) + group("Suggestions", r.suggestions, true);
+    $("auditCopy").disabled = false;
   }
+  // The whole report as plain text, grouped as on screen, one finding per line.
+  function reportText(r) {
+    const out = [$("roleLine").textContent, $("verdict").textContent, $("covered").textContent, ""];
+    const unsent = diffCount || 0;
+    const pend = [];
+    if (unsent) pend.push(`${unsent} token change(s) not sent to the prototype`);
+    const vars = r.pending.filter((f) => f.name !== f.collection), cols = r.pending.filter((f) => f.name === f.collection);
+    if (vars.length) { pend.push(`${vars.length} variable(s) changed, library not published`); vars.forEach((f) => pend.push(`  ${label(f)}: ${f.text}`)); }
+    if (cols.length) { pend.push(`${cols.length} collection(s) changed, library not published`); cols.forEach((f) => pend.push(`  ${label(f)}: ${f.text}`)); }
+    if (pend.length) out.push("Pending", ...pend, "");
+    for (const [title, items] of [["Blockers", r.blockers], ["Warnings", r.warnings], ["Suggestions", r.suggestions]]) {
+      if (!items.length) continue;
+      out.push(`${title} (${items.length})`);
+      items.filter((f) => !f.nodeId).forEach((f) => out.push(label(f) ? `${label(f)}: ${f.text}` : f.text));
+      groupLayers(items.filter((f) => f.nodeId)).forEach((g) => {
+        out.push(groupTitle(g));
+        g.items.forEach((f) => out.push(`  ${lineText(f)}`));
+      });
+      out.push("");
+    }
+    return out.join("\n").trim() + "\n";
+  }
+  $("auditCopy").addEventListener("click", () => { if (report) copyText(reportText(report)); });
   function setRunning(on) {
     running = on;
-    $("auditRun").disabled = on || !next;
+    $("auditRun").disabled = on || !next || (settings.scope === "selection" && selCount === 0);
     $("auditCancel").hidden = !on;
     $("auditProgress").hidden = !on;
     if (on) {
-      $("auditProgress").textContent = "Reading the collections…";
+      $("auditProgress").textContent = role === "screens" ? "Reading the pages…" : "Reading the collections…";
       $("verdict").className = "verdict";
       $("verdict").textContent = "Auditing…";
     }
   }
-  function runAudit() {
+  // layers: false is the run on open (library only): the tokens, no layer walk. The walk on a large
+  // file takes a while, so it starts only from the Run audit button.
+  function runAudit(layers) {
     report = null;
     setRunning(true);
-    parent.postMessage({ pluginMessage: { type: "audit", usage, usageFresh } }, "*");
+    parent.postMessage({ pluginMessage: { type: "audit", usage, usageFresh, layers, scope: settings.scope, pageIds: settings.pageIds, excludedPageIds: settings.excludedPageIds } }, "*");
   }
   $("auditRun").addEventListener("click", async () => {
     if (running) return;
+    $("auditRun").textContent = "Run again";
     setRunning(true);
     await refresh();
-    runAudit();
+    runAudit(true);
   });
   $("auditCancel").addEventListener("click", () => parent.postMessage({ pluginMessage: { type: "audit-cancel" } }, "*"));
 
@@ -675,6 +813,17 @@
     else fallback();
   }
   $("auditGroups").addEventListener("click", (e) => {
+    const more = e.target.closest && e.target.closest("[data-more]");
+    if (more) {
+      const g = layerGroups[Number(more.getAttribute("data-more"))];
+      if (g) more.outerHTML = g.items.slice(LINES).map(layerLine).join("");
+      return;
+    }
+    const layer = e.target.closest && e.target.closest("[data-node]");
+    if (layer) {
+      parent.postMessage({ pluginMessage: { type: "select-node", id: layer.getAttribute("data-node") } }, "*");
+      return;
+    }
     const row = e.target.closest && e.target.closest("[data-copy]");
     if (row) copyText(row.getAttribute("data-copy"));
   });
@@ -683,7 +832,20 @@
     const msg = event.data.pluginMessage;
     if (!msg) return;
     if (msg.type === "error") { $("summary").textContent = "Could not read the variables."; status(msg.message, true); }
-    if (msg.type === "audit-progress") $("auditProgress").textContent = `Reading collection ${Math.min(msg.done + 1, msg.total)} of ${msg.total}`;
+    if (msg.type === "audit-progress") {
+      const n = (x) => Number(x || 0).toLocaleString("en-US");
+      if (msg.phase === "layers") $("auditProgress").textContent = `Page ${msg.page} of ${msg.pages} · ${n(msg.layers)} layers`;
+      else if (msg.phase === "checks") $("auditProgress").textContent = msg.total ? `Checking layers ${n(msg.done)} of ${n(msg.total)}` : "Checking layers…";
+      else $("auditProgress").textContent = `Reading collection ${Math.min(msg.done + 1, msg.total)} of ${msg.total}`;
+    }
+    if (msg.type === "selection") { selCount = msg.count || 0; renderScope(); }
+    if (msg.type === "select-result" && !msg.ok) {
+      for (const el of $("auditGroups").querySelectorAll("[data-node]")) {
+        if (el.getAttribute("data-node") !== msg.id) continue;
+        el.classList.add("gone");
+        el.querySelector(".sug").textContent = " · This layer no longer exists";
+      }
+    }
     if (msg.type === "audit-result") {
       setRunning(false);
       report = msg.report;
@@ -696,9 +858,18 @@
       $("verdict").textContent = "The audit could not run.";
       $("covered").textContent = msg.message;
       $("auditGroups").innerHTML = "";
+      $("auditCopy").disabled = true;
     }
     if (msg.type === "ready") {
-      next = msg.json;
+      role = msg.role === "screens" ? "screens" : "library";
+      pages = msg.pages || [];
+      const a = msg.auditSettings || {};
+      let scope = a.scope;
+      // "Selection" depends on what is selected right now, and "Ready for dev" only exists on screens.
+      if (scope === "selection" || !["ready", "file", "pages"].includes(scope) || (scope === "ready" && role !== "screens")) scope = defaultScope();
+      settings = { scope, pageIds: a.pageIds || [], excludedPageIds: a.excludedPageIds || [] };
+      next = msg.json; // before renderScope: Run audit is enabled only once the export is read
+      renderScope();
       problems = msg.problems || [];
       published = false;
       user = msg.user;
@@ -710,8 +881,17 @@
       showWhere();
       $("token").value = msg.settings.token;
       updateButtons();
+      if (role === "screens") {
+        // Screens files open on the Audit tab and run nothing until Run audit.
+        showTab("audit");
+        $("verdict").className = "verdict";
+        $("verdict").textContent = NOT_RUN;
+        $("covered").textContent = "";
+        await refresh();
+        return;
+      }
       await refresh();
-      runAudit();
+      runAudit(false);
     }
   };
 </script>
