@@ -437,23 +437,55 @@ async function layerChecks(node, ctx, getVar) {
     checked[k] = true;
     if (!(await getVar(id))) find("binding-missing", property, id);
   };
-  const scalars = [
-    ["paddingTop", "padding-top"], ["paddingRight", "padding-right"], ["paddingBottom", "padding-bottom"], ["paddingLeft", "padding-left"],
-    ["itemSpacing", "gap"], ["counterAxisSpacing", "counter-gap"], ["strokeWeight", "stroke-weight"],
-    ["strokeTopWeight", "stroke-weight"], ["strokeRightWeight", "stroke-weight"], ["strokeBottomWeight", "stroke-weight"], ["strokeLeftWeight", "stroke-weight"],
-  ];
-  for (let i = 0; i < scalars.length; i++) await verify(scalars[i][1], aliasId(bv[scalars[i][0]]));
+  // Every key of node.boundVariables is checked (maxWidth, visible, opacity, effects…), under its
+  // key name, except the ones the hand-set checks below already name (padding-top, gap, fill…).
+  // One finding per property and id.
+  const NAMES = {
+    paddingTop: "padding-top", paddingRight: "padding-right", paddingBottom: "padding-bottom", paddingLeft: "padding-left",
+    itemSpacing: "gap", counterAxisSpacing: "counter-gap", strokeWeight: "stroke-weight",
+    strokeTopWeight: "stroke-weight", strokeRightWeight: "stroke-weight", strokeBottomWeight: "stroke-weight", strokeLeftWeight: "stroke-weight",
+    fills: "fill", strokes: "stroke",
+  };
+  const nameOf = function (key) { return NAMES[key] || key; };
+  // The ids in one binding value: an alias, a list of aliases, or a map of them (one level per step).
+  const idsIn = function (val, depth) {
+    if (!val || typeof val !== "object" || depth > 3) return [];
+    const id = aliasIdOf(val);
+    if (id) return [id];
+    const parts = Array.isArray(val) ? val : Object.keys(val).map(function (k) { return val[k]; });
+    let out = [];
+    parts.forEach(function (x) { out = out.concat(idsIn(x, depth + 1)); });
+    return out;
+  };
   const corners = [["topLeftRadius", "radius-top-left"], ["topRightRadius", "radius-top-right"], ["bottomLeftRadius", "radius-bottom-left"], ["bottomRightRadius", "radius-bottom-right"]];
   const cids = corners.map(function (c) { return aliasId(bv[c[0]]); });
   if (cids[0] && cids.every(function (x) { return x === cids[0]; })) await verify("radius", cids[0]);
   else for (let i = 0; i < corners.length; i++) await verify(corners[i][1], cids[i]);
+  const cornerKeys = corners.map(function (c) { return c[0]; });
+  const keys = Object.keys(bv);
+  for (let k = 0; k < keys.length; k++) {
+    if (cornerKeys.indexOf(keys[k]) >= 0) continue;
+    const ids = idsIn(bv[keys[k]], 0);
+    for (let i = 0; i < ids.length; i++) await verify(nameOf(keys[k]), ids[i]);
+  }
   const arrays = [["fills", "fill"], ["strokes", "stroke"]];
   for (let a = 0; a < arrays.length; a++) {
-    const list = bv[arrays[a][0]];
-    if (Array.isArray(list)) for (let i = 0; i < list.length; i++) await verify(arrays[a][1], aliasId(list[i]));
     const paints = node[arrays[a][0]];
     if (Array.isArray(paints)) {
       for (let i = 0; i < paints.length; i++) await verify(arrays[a][1], aliasId(paints[i].boundVariables && paints[i].boundVariables.color));
+    }
+  }
+  // Text: bindings per character range (fontSize, lineHeight…), under their key names.
+  if (node.type === "TEXT" && typeof node.getStyledTextSegments === "function") {
+    let segs = [];
+    try { segs = node.getStyledTextSegments(["boundVariables"]) || []; } catch (e) { segs = []; }
+    for (let i = 0; i < segs.length; i++) {
+      const sb = (segs[i] && segs[i].boundVariables) || {};
+      const sk = Object.keys(sb);
+      for (let k = 0; k < sk.length; k++) {
+        const ids = idsIn(sb[sk[k]], 0);
+        for (let j = 0; j < ids.length; j++) await verify(nameOf(sk[k]), ids[j]);
+      }
     }
   }
 

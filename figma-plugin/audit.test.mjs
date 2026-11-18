@@ -622,6 +622,25 @@ describe("layerChecks", () => {
     expect(out[0]).toMatchObject({ check: "binding-missing", property: "padding-top", value: "gone" });
   });
 
+  it("every bound property is checked, not a whitelist: maxWidth, visible, effects, a text segment's fontSize (I4)", async () => {
+    const dead = (id) => ({ type: "VARIABLE_ALIAS", id });
+    const n = frame({ boundVariables: { maxWidth: dead("w"), visible: dead("vis"), effects: [dead("fx")], paddingTop: dead("p") }, layoutMode: "VERTICAL", paddingTop: 8 });
+    const out = (await run(n)).out;
+    expect(out.map((f) => [f.check, f.property, f.value])).toEqual([
+      ["binding-missing", "maxWidth", "w"], ["binding-missing", "visible", "vis"], ["binding-missing", "effects", "fx"], ["binding-missing", "padding-top", "p"],
+    ]);
+    const { ctx } = await load([], []);
+    const t = text({ textStyleId: "S:1", fills: [], boundVariables: { fontSize: [dead("fs")] }, getStyledTextSegments: (f) => (f[0] === "boundVariables" ? [{ boundVariables: { fontSize: dead("fs") } }, { boundVariables: { lineHeight: dead("lh") } }] : []) });
+    const tout = await ctx.layerChecks(t, CTX, async () => null);
+    expect(tout.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fontSize", "fs"], ["binding-missing", "lineHeight", "lh"]]);
+  });
+
+  it("a dead fill bound both on the node and on the paint is reported once, as fill (I4)", async () => {
+    const dead = { type: "VARIABLE_ALIAS", id: "gone" };
+    const n = frame({ fills: [solid(1, 0, 0, { boundVariables: { color: dead } })], boundVariables: { fills: [dead] } });
+    expect((await run(n)).out.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fill", "gone"]]);
+  });
+
   it("one whose lookup throws is binding-missing", async () => {
     const n = frame({ fills: [solid(0, 0, 0, { boundVariables: { color: { type: "VARIABLE_ALIAS", id: "lib1" } } })] });
     const { ctx } = await load([], [], { variables: { getVariableByIdAsync: async () => { throw new Error("library not available"); } } });
@@ -734,6 +753,7 @@ describe("layerChecks", () => {
     const t = text({
       textStyleId: "S:1", fills: ctx.figma.mixed,
       getStyledTextSegments: (f) => {
+        if (f[0] === "boundVariables") return [];
         expect(f).toEqual(["fills"]);
         return [
           { fills: [solid(1, 0, 0)] },
