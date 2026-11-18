@@ -434,3 +434,146 @@ describe("audit settings", () => {
     expect(s.posted.find((m) => m.type === "ready").auditSettings).toEqual(stored);
   });
 });
+
+// ---- fake-tree builders for the walker ----
+let nid = 0;
+function mk(type, over, children) {
+  const n = { id: `n${++nid}`, type, name: over && over.name ? over.name : `${type}${nid}`, visible: true, children: children || [], ...over };
+  if (type === "INSTANCE" && !over.children) n.children = over.kids || [];
+  n.children.forEach((c) => { c.parent = n; });
+  return n;
+}
+const frame = (over, children) => mk("FRAME", over || {}, children);
+const section = (over, children) => mk("SECTION", over || {}, children);
+const component = (over, children) => mk("COMPONENT", over || {}, children);
+const componentSet = (over, children) => mk("COMPONENT_SET", over || {}, children);
+const instance = (over) => mk("INSTANCE", over || {});
+const text = (over) => mk("TEXT", over || {});
+function page(name, children, loaded) {
+  const p = mk("PAGE", { name }, children);
+  p.loadAsync = async () => { (loaded || []).push(p.id); };
+  return p;
+}
+async function walk(pages, opts, role = "screens", selection = []) {
+  const root = { name: "Doc", children: pages };
+  const { ctx } = await load([], [], { root, currentPage: pages[0], ...(selection.length ? {} : {}) });
+  root.children.forEach((p) => { p.parent = root; });
+  if (selection.length) ctx.figma.currentPage.selection = selection;
+  const seen = [];
+  const r = await ctx.walkScope({ role, scope: "file", pageIds: [], excludedPageIds: [], onNode: (n, c) => seen.push({ n, c }), isCancelled: () => false, ...opts });
+  return { r, seen, ids: seen.map((s) => s.n.id) };
+}
+
+describe("walkScope", () => {
+  it("stops at instances", async () => {
+    const inner = text({});
+    const inst = instance({ kids: [inner] });
+    const fr = frame({}, [inst, text({})]);
+    const { ids } = await walk([page("P", [fr])], {});
+    expect(ids).toContain(fr.id);
+    expect(ids).not.toContain(inst.id);
+    expect(ids).not.toContain(inner.id);
+    expect(ids.length).toBe(2);
+  });
+  it("library role walks components only", async () => {
+    const doc = frame({}, [text({})]);
+    const v = component({}, [text({})]);
+    const set = componentSet({}, [v]);
+    const { ids } = await walk([page("P", [doc, set])], {}, "library");
+    expect(ids.sort()).toEqual([set.id, v.id, v.children[0].id].sort());
+  });
+  it("library walks hidden layers; screens skips and counts them", async () => {
+    const hidden = frame({ visible: false }, [text({})]);
+    const v = component({ visible: false }, []);
+    const lib = await walk([page("P", [componentSet({}, [v])])], {}, "library");
+    expect(lib.ids).toContain(v.id);
+    expect(lib.r.hiddenSkipped).toBe(0);
+    const scr = await walk([page("P", [frame({}, [hidden]), text({})])], {});
+    expect(scr.ids).not.toContain(hidden.id);
+    expect(scr.ids).not.toContain(hidden.children[0].id);
+    expect(scr.r.hiddenSkipped).toBe(1);
+  });
+  it("[audit:skip] components are left out and counted", async () => {
+    const skipped = component({ description: "old [audit:skip]" }, [text({})]);
+    const ok = component({}, []);
+    const { r, ids } = await walk([page("P", [skipped, ok])], {}, "library");
+    expect(r.componentsLeftOut).toBe(1);
+    expect(ids).toEqual([ok.id]);
+  });
+  it("excluded pages are not loaded", async () => {
+    const loaded = [];
+    const a = page("A", [frame({}, [])], loaded);
+    const b = page("B", [frame({}, [])], loaded);
+    const { r } = await walk([a, b], { excludedPageIds: [b.id] });
+    expect(loaded).toEqual([a.id]);
+    expect(r.pagesLeftOut).toBe(1);
+  });
+  it("scope pages walks only pageIds minus excluded", async () => {
+    const a = page("A", [frame({}, [])]);
+    const b = page("B", [frame({}, [])]);
+    const c = page("C", [frame({}, [])]);
+    const { seen } = await walk([a, b, c], { scope: "pages", pageIds: [a.id, b.id], excludedPageIds: [b.id] });
+    expect(seen.map((s) => s.c.page.id)).toEqual([a.id]);
+  });
+  it("ready scope visits only marked subtrees and ctx.ready is true there", async () => {
+    const marked = frame({ devStatus: { type: "READY_FOR_DEV" } }, [text({})]);
+    const plain = frame({}, [text({})]);
+    const { seen, ids } = await walk([page("P", [marked, plain])], { scope: "ready" });
+    expect(ids.sort()).toEqual([marked.id, marked.children[0].id].sort());
+    expect(seen.every((s) => s.c.ready === true)).toBe(true);
+    expect(seen[0].c.top).toEqual({ id: marked.id, name: marked.name });
+  });
+  it("ready flag is inherited from a marked section; computed in other scopes", async () => {
+    const inner = frame({}, [text({})]);
+    const sec = section({ devStatus: { type: "READY_FOR_DEV" } }, [inner]);
+    const other = frame({}, []);
+    const rd = await walk([page("P", [sec])], { scope: "ready" });
+    expect(rd.ids).toContain(inner.id);
+    const all = await walk([page("P", [sec, other])], {});
+    expect(all.seen.find((s) => s.n.id === inner.id).c.ready).toBe(true);
+    expect(all.seen.find((s) => s.n.id === other.id).c.ready).toBe(false);
+    expect(all.seen.find((s) => s.n.id === inner.id).c.top.id).toBe(sec.id);
+  });
+  it("selection walks the selection, top is the page child", async () => {
+    const leaf = text({});
+    const fr = frame({}, [leaf]);
+    const pg = page("P", [fr, frame({}, [])]);
+    const { seen } = await walk([pg], { scope: "selection" }, "screens", [leaf]);
+    expect(seen.map((s) => s.n.id)).toEqual([leaf.id]);
+    expect(seen[0].c.top.id).toBe(fr.id);
+    expect(seen[0].c.page.id).toBe(pg.id);
+  });
+  it("onUse sees excluded pages, doc frames and skipped components; onNode does not", async () => {
+    const skipped = component({ description: "[audit:skip]" }, [text({})]);
+    const doc = frame({}, [text({})]);
+    const set = componentSet({}, [component({}, [])]);
+    const inst = instance({ kids: [text({})] });
+    const ex = page("Ex", [frame({}, [text({})])]);
+    const main = page("Main", [skipped, doc, set, inst]);
+    const used = [];
+    const { ids } = await walk([main, ex], { excludedPageIds: [ex.id], onUse: (n) => used.push(n.id) }, "library");
+    const all = [skipped, skipped.children[0], doc, doc.children[0], ex.children[0], ex.children[0].children[0]].map((n) => n.id);
+    all.forEach((id) => expect(used).toContain(id));
+    expect(used).not.toContain(inst.children[0].id);
+    expect(ids).not.toContain(skipped.id);
+    expect(ids).not.toContain(doc.id);
+    expect(ids).not.toContain(ex.children[0].id);
+  });
+  it("yields every 500 nodes and stops on cancel", async () => {
+    const kids = Array.from({ length: 1200 }, () => text({}));
+    const pg = page("P", [frame({}, kids)]);
+    let polls = 0;
+    const { r } = await walk([pg], { isCancelled: () => ++polls > 0 });
+    expect(r.cancelled).toBe(true);
+    expect(r.walked).toBeLessThanOrEqual(500);
+    expect(polls).toBe(1);
+  });
+  it("reports progress and finishes uncancelled", async () => {
+    const prog = [];
+    const { r } = await walk([page("A", [frame({}, [])]), page("B", [frame({}, [])])], { onProgress: (p) => prog.push(p) });
+    expect(r.cancelled).toBe(false);
+    expect(r.walked).toBe(2);
+    expect(prog[0]).toMatchObject({ page: 1, pages: 2 });
+    expect(prog.at(-1).pages).toBe(2);
+  });
+});

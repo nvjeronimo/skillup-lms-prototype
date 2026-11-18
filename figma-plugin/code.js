@@ -189,6 +189,133 @@ function defaultExcludedPages(role, pages) {
   return out;
 }
 
+// ---- Layer walker ----
+
+function isReadyNode(n) {
+  return !!(n && n.devStatus && n.devStatus.type === "READY_FOR_DEV");
+}
+function isComponentNode(n) {
+  return n.type === "COMPONENT" || n.type === "COMPONENT_SET";
+}
+function isAuditSkipped(n) {
+  return isComponentNode(n) && typeof n.description === "string" && n.description.indexOf("[audit:skip]") !== -1;
+}
+
+// Walks the layers a scope covers with an explicit stack, never entering an INSTANCE.
+// onNode(node, { page, top, ready }) fires for audited nodes; onUse(node), when given, fires for every
+// node outside instances on every page (excluded ones too), so unused-token checks see all uses.
+// Returns { cancelled, walked, hiddenSkipped, pagesLeftOut, componentsLeftOut }.
+async function walkScope(opts) {
+  const library = opts.role === "library";
+  const scope = opts.scope;
+  const onNode = opts.onNode || function () {};
+  const onUse = opts.onUse || null;
+  const isCancelled = opts.isCancelled || function () { return false; };
+  const excluded = {};
+  (opts.excludedPageIds || []).forEach(function (id) { excluded[id] = true; });
+  const res = { cancelled: false, walked: 0, hiddenSkipped: 0, pagesLeftOut: 0, componentsLeftOut: 0 };
+  let visited = 0;
+  let pageNo = 0;
+  let pageTotal = 0;
+  const progress = function () {
+    if (opts.onProgress) opts.onProgress({ page: pageNo, pages: pageTotal, layers: res.walked });
+  };
+
+  // Walks one stack. Returns false when cancelled.
+  async function run(stack, page, audited) {
+    while (stack.length) {
+      if (visited > 0 && visited % 500 === 0) {
+        await new Promise(function (r) { setTimeout(r, 0); });
+        progress();
+        if (isCancelled()) { res.cancelled = true; return false; }
+      }
+      visited++;
+      const e = stack.pop();
+      const node = e.n;
+      const ready = e.ready || isReadyNode(node);
+      let aud = e.aud;
+      let lib = e.lib;
+      if (node.type === "INSTANCE") {
+        if (onUse) onUse(node);
+        continue;
+      }
+      if (audited && !library && aud && node.visible === false) {
+        res.hiddenSkipped++;
+        aud = false;
+      }
+      if (isComponentNode(node)) {
+        if (isAuditSkipped(node)) {
+          if (audited && (library ? (!lib || aud) : aud)) res.componentsLeftOut++;
+          aud = false;
+          lib = true;
+        } else if (library && !lib) {
+          aud = audited;
+          lib = true;
+        }
+      }
+      if (aud && (scope !== "ready" || ready)) {
+        res.walked++;
+        onNode(node, { page: { id: page.id, name: page.name }, top: e.top, ready: ready });
+      }
+      if (onUse) onUse(node);
+      const kids = node.children;
+      if (kids && kids.length && (onUse || aud || (library && !lib))) {
+        for (let i = kids.length - 1; i >= 0; i--) stack.push({ n: kids[i], top: e.top, ready: ready, aud: aud, lib: lib });
+      }
+    }
+    return true;
+  }
+
+  if (scope === "selection") {
+    const sel = (figma.currentPage && figma.currentPage.selection) || [];
+    pageTotal = 1;
+    pageNo = 1;
+    progress();
+    for (let i = 0; i < sel.length; i++) {
+      const node = sel[i];
+      let ready = false;
+      let lib = false;
+      let skipped = false;
+      let hidden = false;
+      let top = node;
+      let page = figma.currentPage;
+      for (let p = node.parent; p; p = p.parent) {
+        if (p.type === "PAGE") { page = p; break; }
+        if (isReadyNode(p)) ready = true;
+        if (isComponentNode(p)) { lib = true; if (isAuditSkipped(p)) skipped = true; }
+        if (p.visible === false) hidden = true;
+        top = p;
+      }
+      let aud = library ? lib && !skipped : !hidden;
+      const ok = await run([{ n: node, top: { id: top.id, name: top.name }, ready: ready, aud: aud, lib: lib || skipped }], page, true);
+      if (!ok) return res;
+    }
+    return res;
+  }
+
+  const pages = figma.root.children;
+  const wanted = scope === "pages" ? (opts.pageIds || []) : null;
+  const auditedPages = pages.filter(function (p) { return !wanted || wanted.indexOf(p.id) !== -1; });
+  pageTotal = auditedPages.filter(function (p) { return !excluded[p.id]; }).length;
+  res.pagesLeftOut = auditedPages.length - pageTotal;
+
+  for (let i = 0; i < pages.length; i++) {
+    const page = pages[i];
+    const inScope = !wanted || wanted.indexOf(page.id) !== -1;
+    const audited = inScope && !excluded[page.id];
+    if (!audited && !onUse) continue;
+    if (audited) { pageNo++; progress(); }
+    await page.loadAsync();
+    const stack = [];
+    const kids = page.children || [];
+    for (let k = kids.length - 1; k >= 0; k--) {
+      stack.push({ n: kids[k], top: { id: kids[k].id, name: kids[k].name }, ready: false, aud: audited && !library, lib: false });
+    }
+    if (!(await run(stack, page, audited))) return res;
+  }
+  return res;
+}
+
 // ---- The audit (tokens only; later parts add layers, components and docs) ----
 
 // The build's Figma → CSS name mapping, copied from scripts/tokens/names.mjs (the plugin cannot
