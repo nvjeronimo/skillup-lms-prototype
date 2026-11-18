@@ -191,9 +191,11 @@ local copies are intentional.
 - The verdict follows part 1: any blocker means "not ready". In the library role a single
   hand-set colour inside a component blocks (Nelson, 14 Nov: the component reaches the developers
   wrong).
-- When the layer walk checked no layer and there is no blocker, the verdict is "empty", never
-  "ready" (ruling, final review, 18 Nov): "Nothing to audit: no layer marked Ready for dev in
-  scope" in the Ready for dev scope, "Nothing to audit in this scope" in the others.
+- When nothing was judged, the verdict is "empty", never "ready" (ruling, final review, 18 Nov):
+  no token audit ran (screens role) and the layer walk audited 0 layers (or was not run). It reads
+  "Nothing to audit: no layer marked Ready for dev in scope" in the Ready for dev scope, "Nothing to
+  audit in this scope" in the others. In the library the tokens always run, so 0 layers still
+  follows the blockers ("ready"/"not-ready"), with the 0 count on the covered line.
 
 ### 5.5 The suggested token
 
@@ -204,9 +206,10 @@ Each `hand-*` finding carries the token that would replace it, when one exists:
   ΔE shown ("nearest bg/muted, ΔE 2.1"). Alpha counts (final review, 18 Nov): a translucent paint
   reads `#rrggbbaa` and matches exactly only a token with the same alpha (a colour alias with its
   own opacity included); the nearest is still suggested, with "· alpha 50%" when the alpha differs.
-- **Spacing:** the `Spacing/*` (gaps, padding) token, and the `Layout/*` and `Container/*` tokens
-  of decision 032, whose value in the node's Responsive mode equals the number; off-scale: the
-  nearest, with the difference ("Spacing/md 16, set 15").
+- **Spacing:** the `Spacing/*` (gaps, padding) token, or a `Layout/*` / `Container/*` token of
+  decision 032, whose value in the node's Responsive mode equals the number; off-scale: the
+  nearest `Spacing/*` token only, with the difference ("Spacing/md 16, set 15") (ruling, final
+  review, 18 Nov).
 - **Radius:** the `Radius/*` role tokens, same rule.
 - **Stroke weight:** the `Stroke/*` tokens, same rule ("Stroke/icon-small 1.5, set 1").
 - **Text:** the text style with the same font family, style, size and line height, if one exists.

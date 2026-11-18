@@ -163,15 +163,17 @@ findings never stop Publish: only the two export blockers above do.
 
 **The suggested token.** Colours: the token of the right family (`bg/`, `border/`, `text/`,
 `icon/`) with the same value, else the nearest with its ΔE ("nearest bg/muted, ΔE 2.1", plus
-"· alpha 50%" when the alpha differs). Spacing: `Spacing/*`, `Layout/*` and `Container/*`; radius:
-the `Radius/*` roles; stroke weight: `Stroke/*`. Each gives the token with the same value, else the
-nearest with the value set ("Stroke/icon-small 1.5, set 1"). Text: the style with the same font,
+"· alpha 50%" when the alpha differs). Spacing: `Spacing/*`, plus `Layout/*` and `Container/*` on an
+exact value only; radius: the `Radius/*` roles; stroke weight: `Stroke/*`. Each gives the token with
+the same value, else the nearest with the value set ("Stroke/icon-small 1.5, set 1"); for spacing
+the nearest is always a `Spacing/*` token. Text: the style with the same font,
 size and line height.
 
 **The verdict and the covered line.** The covered line names the scope and counts the layers
-checked: "layers: Ready for dev, 1,240 layers". When it checked none, the verdict is not "Ready":
-it says "Nothing to audit: no layer marked Ready for dev in scope" (Ready for dev), or "Nothing to
-audit in this scope" (other scopes). A token blocker still reads "Not ready".
+checked: "layers: Ready for dev, 1,240 layers". In a screens file, when it checked none, the
+verdict is not "Ready": it says "Nothing to audit: no layer marked Ready for dev in scope" (Ready
+for dev), or "Nothing to audit in this scope" (other scopes). In the DS the tokens are always
+checked, so the verdict follows the blockers even with 0 layers.
 
 **The report.** Layer findings are grouped by page, then by top-level frame or component, folded,
 with a count: "Course Detail / Desktop · 14 hand-set colours". A group shows its first 50 lines; **+N

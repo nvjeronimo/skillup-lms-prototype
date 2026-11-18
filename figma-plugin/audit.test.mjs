@@ -903,6 +903,16 @@ describe("suggestFor", () => {
     expect(ctx.suggestFor(finding("hand-spacing", "padding-left", 1200), {}, index)).toBe("Container/content-max-width");
   });
 
+  it("ruling 2: Layout/* and Container/* only on an exact match; the nearest is Spacing/* only", async () => {
+    const { ctx, index } = await setup([fv("s1", "Spacing/md", 16, 16), fv("l1", "Layout/gutter", 12.5, 12.5), fv("c1", "Container/pad", 11, 11)]);
+    const s = ctx.suggestFor(finding("hand-spacing", "gap", 12), {}, index);
+    expect(s).toBe("Spacing/md 16, set 12");
+    expect(s).not.toMatch(/Layout|Container/);
+    expect(ctx.suggestFor(finding("hand-spacing", "gap", 11), {}, index)).toBe("Container/pad");
+    const only = await setup([fv("l1", "Layout/gutter", 24, 24)]);
+    expect(only.ctx.suggestFor(finding("hand-spacing", "gap", 12), {}, only.index)).toBeNull();
+  });
+
   it("text matches a style by family, style, size and line height", async () => {
     const st = (id, name, size, lh) => ({ id, name, fontName: { family: "Inter", style: "Semi Bold" }, fontSize: size, lineHeight: lh });
     const { ctx } = await load([], [], { getLocalTextStylesAsync: async () => [st("S1", "title/md", 16, { unit: "PIXELS", value: 24 }), st("S2", "title/sm", 14, { unit: "AUTO" })] });
@@ -1234,6 +1244,20 @@ describe("auditLayers and the audit message", () => {
     expect(rf.scope).toBe("file");
     const h = await file(ICP, [page("P", [frame({})])]);
     expect((await audit(h, { scope: "file", pageIds: [], excludedPageIds: [] })).verdict).toBe("ready");
+  });
+
+  it("ruling 1: in the library the tokens ran, so 0 layers still follows the blockers (ready), with the 0 count shown", async () => {
+    const f = await file(DS, [page("P", [])], bgx());
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.verdict).toBe("ready");
+    expect(r.covered).toContain("layers: whole file, 0 layers");
+  });
+
+  it("ruling 1: in a screens file (no token audit) 0 layers is empty", async () => {
+    const f = await file(ICP, [page("P", [frame({})])]);
+    const r = await audit(f, { scope: "ready", pageIds: [], excludedPageIds: [] });
+    expect(r.verdict).toBe("empty");
+    expect(r.covered[0]).toBe("layers: Ready for dev, 0 layers");
   });
 
   it("the empty verdict never hides a token blocker in the library", async () => {

@@ -734,6 +734,8 @@ function suggestFor(finding, node, index) {
       const n = tokenValue(index, fam[i], node);
       if (typeof n !== "number") continue;
       if (n === finding.value) return fam[i].name;
+      // Layout/* and Container/* only on an exact value: the nearest for spacing is Spacing/* only.
+      if (check === "hand-spacing" && fam[i].name.indexOf("Spacing/") !== 0) continue;
       const d = Math.abs(n - finding.value);
       if (d < bestD || (d === bestD && n < bestV)) { bestD = d; best = fam[i]; bestV = n; }
     }
@@ -1200,11 +1202,12 @@ figma.ui.onmessage = async (msg) => {
       const notCovered = [];
       tokens.notCovered.concat(layers.notCovered).forEach((x) => { if (notCovered.indexOf(x) < 0) notCovered.push(x); });
       const blockers = tokens.blockers.concat(layers.blockers);
-      // Nothing audited (no layer marked Ready for dev in scope, an empty page…) is never "ready",
-      // and neither is a screens file whose layers were not run (it has no token audit).
+      // "empty" only when nothing was judged: no token audit (screens role) and no layer audited
+      // (none marked Ready for dev in scope, an empty page, or layers not run). In the library the
+      // tokens always run, so the verdict follows the blockers even with 0 layers.
       let verdict = "ready";
       if (blockers.length) verdict = "not-ready";
-      else if (layersRun ? layers.walked === 0 : role !== "library") verdict = "empty";
+      else if (role !== "library" && (!layersRun || layers.walked === 0)) verdict = "empty";
       const report = {
         verdict,
         layersRun,
