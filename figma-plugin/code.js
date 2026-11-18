@@ -405,6 +405,17 @@ function hexOfColor(c) {
   return "#" + h(c.r) + h(c.g) + h(c.b);
 }
 
+// The hex with alpha when it is not opaque ("#00000080"), as the export writes it.
+function hexOfColorAlpha(c, alpha) {
+  const a = Math.round((alpha === undefined ? 1 : alpha) * 255);
+  return hexOfColor(c) + (a < 255 ? a.toString(16).padStart(2, "0") : "");
+}
+
+// A paint's alpha: its opacity times its colour's own alpha, if any.
+function paintAlpha(p) {
+  return (p.opacity === undefined ? 1 : p.opacity) * (p.color && p.color.a !== undefined ? p.color.a : 1);
+}
+
 function fontSummary(name, size, lh) {
   let l = "auto";
   if (lh && lh.unit === "PIXELS") l = String(Math.round(lh.value * 100) / 100);
@@ -496,7 +507,7 @@ async function layerChecks(node, ctx, getVar) {
       const p = paints[i];
       if (p.type !== "SOLID" || !paintIsVisible(p)) continue;
       if ((p.boundVariables && p.boundVariables.color) || aliasId(bound && bound[i])) continue;
-      const hex = hexOfColor(p.color);
+      const hex = hexOfColorAlpha(p.color, paintAlpha(p));
       if (seenColour[property + "|" + hex]) continue;
       seenColour[property + "|" + hex] = true;
       find("hand-colour", property, hex);
@@ -658,6 +669,12 @@ function tokenValue(index, v, node, depth) {
   const modes = node && node.resolvedVariableModes;
   let mode = (modes && col && modes[col.id]) || (col && col.defaultModeId);
   let val = mode in by ? by[mode] : by[Object.keys(by)[0]];
+  // A colour alias with its own opacity: the target's colour, its alpha times that opacity.
+  if (val && typeof val === "object" && val.color && val.color.type === "VARIABLE_ALIAS") {
+    const c = tokenValue(index, index.vars[val.color.id], node, (depth || 0) + 1);
+    if (!c || typeof c.r !== "number") return undefined;
+    return { r: c.r, g: c.g, b: c.b, a: (c.a === undefined ? 1 : c.a) * (val.opacity / 100) };
+  }
   const id = aliasIdOf(val);
   if (id) return tokenValue(index, index.vars[id], node, (depth || 0) + 1);
   return val;
@@ -677,18 +694,22 @@ function suggestFor(finding, node, index) {
     else if (node && node.type === "TEXT") prefix = "text/";
     else if (node && (node.type === "VECTOR" || node.type === "BOOLEAN_OPERATION")) prefix = "icon/";
     const fam = tokens("COLOR", function (n) { return n.indexOf(prefix) === 0; });
-    const target = hexToLab(finding.value);
-    let best = null, bestD = Infinity;
+    // The value is "#rrggbb", or "#rrggbbaa" when not opaque: an exact match needs the alpha too.
+    const target = hexToLab(finding.value.slice(0, 7));
+    const alphaOf = function (hex) { return hex.length === 9 ? parseInt(hex.slice(7, 9), 16) : 255; };
+    let best = null, bestD = Infinity, bestHex = "";
     for (let i = 0; i < fam.length; i++) {
       const c = tokenValue(index, fam[i], node);
       if (!c || typeof c.r !== "number") continue;
-      const hex = hexOfColor(c);
+      const hex = hexOfColorAlpha(c, c.a);
       if (hex === finding.value) return fam[i].name;
-      const d = deltaE76(target, hexToLab(hex));
-      if (d < bestD) { bestD = d; best = fam[i]; }
+      const d = deltaE76(target, hexToLab(hex.slice(0, 7)));
+      if (d < bestD) { bestD = d; best = fam[i]; bestHex = hex; }
     }
     if (!best) return none;
-    return "nearest " + best.name + ", ΔE " + bestD.toFixed(1);
+    const a = alphaOf(finding.value);
+    const alpha = a !== alphaOf(bestHex) ? " · alpha " + Math.round((a / 255) * 100) + "%" : "";
+    return "nearest " + best.name + ", ΔE " + bestD.toFixed(1) + alpha;
   }
 
   if (finding.check === "hand-spacing" || finding.check === "hand-radius" || finding.check === "hand-stroke") {

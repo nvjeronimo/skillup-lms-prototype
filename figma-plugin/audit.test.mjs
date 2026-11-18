@@ -789,6 +789,11 @@ describe("layerChecks", () => {
     expect((await run(sec)).out).toEqual([]);
   });
 
+  it("a translucent paint keeps its alpha in the value; same colour at another alpha is another finding (M2)", async () => {
+    const { out } = await run(frame({ fills: [solid(0, 0, 0, { opacity: 0.5 }), solid(0, 0, 0)], strokes: [] }));
+    expect(out.map((f) => [f.check, f.value])).toEqual([["hand-colour", "#00000080"], ["hand-colour", "#000000"]]);
+  });
+
   it("two identical unbound fills on one frame give one finding", async () => {
     const { out } = await run(frame({ fills: [solid(1, 0, 0), solid(1, 0, 0)], strokes: [solid(1, 0, 0), solid(1, 0, 0)], strokeWeight: 0 }));
     expect(out.map((f) => [f.property, f.value])).toEqual([["fill", "#ff0000"], ["stroke", "#ff0000"]]);
@@ -818,6 +823,20 @@ describe("suggestFor", () => {
     const { ctx, index } = await setup([cv("a", "bg/muted", "#f0f0f0"), cv("b", "bg/dark", "#000000")]);
     const s = ctx.suggestFor(finding("hand-colour", "fill", "#f2f2f2"), { type: "FRAME" }, index);
     expect(s).toMatch(/^nearest bg\/muted, \u0394E \d+\.\d$/);
+  });
+
+  it("alpha counts: a 50% black is not an exact match for an opaque token (M2)", async () => {
+    const black = cv("a", "bg/black", "#000000");
+    const scrim = vr({ id: "s", name: "bg/scrim", valuesByMode: { m1: { r: 0, g: 0, b: 0, a: 0.5 }, m2: { r: 0, g: 0, b: 0, a: 0.5 } } });
+    const al = vr({ id: "o", name: "bg/overlay", valuesByMode: { m1: { color: { type: "VARIABLE_ALIAS", id: "a" }, opacity: 50 }, m2: { color: { type: "VARIABLE_ALIAS", id: "a" }, opacity: 50 } } });
+    const only = await setup([black]);
+    expect(only.ctx.suggestFor(finding("hand-colour", "fill", "#00000080"), { type: "FRAME" }, only.index)).toBe("nearest bg/black, \u0394E 0.0 · alpha 50%");
+    expect(only.ctx.suggestFor(finding("hand-colour", "fill", "#000000"), { type: "FRAME" }, only.index)).toBe("bg/black");
+    const withScrim = await setup([black, scrim]);
+    expect(withScrim.ctx.suggestFor(finding("hand-colour", "fill", "#00000080"), { type: "FRAME" }, withScrim.index)).toBe("bg/scrim");
+    expect(withScrim.ctx.suggestFor(finding("hand-colour", "fill", "#000000"), { type: "FRAME" }, withScrim.index)).toBe("bg/black");
+    const withAlias = await setup([black, al]);
+    expect(withAlias.ctx.suggestFor(finding("hand-colour", "fill", "#00000080"), { type: "FRAME" }, withAlias.index)).toBe("bg/overlay");
   });
 
   it("spacing is matched in the node's mode", async () => {
