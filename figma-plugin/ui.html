@@ -722,6 +722,12 @@
       folded(`${cols.length} collection(s) changed, library not published`, cols);
     return lines ? `<div class="group"><h2>Pending</h2>${lines}</div>` : "";
   }
+  // The verdict comes from the report: "empty" (nothing audited) is never shown as ready.
+  function verdictText(r) {
+    if (r.verdict === "not-ready") return `Not ready: ${r.blockers.length} blocker(s)`;
+    if (r.verdict === "empty") return r.scope === "ready" ? "Nothing to audit: no layer marked Ready for dev in scope" : "Nothing to audit in this scope";
+    return `Ready for developers (${r.role === "screens" ? "screens" : "tokens and layers"})`;
+  }
   function renderReport(r) {
     if (r.notCovered.includes("cancelled")) {
       $("verdict").className = "verdict";
@@ -734,8 +740,8 @@
     layerGroups = [];
     const notCovered = r.notCovered.slice();
     if (diffCount === null && role !== "screens") notCovered.push("prototype sync");
-    $("verdict").className = `verdict${r.blockers.length ? " bad" : ""}`;
-    $("verdict").textContent = r.blockers.length ? `Not ready: ${r.blockers.length} blocker(s)` : `Ready for developers (${r.role === "screens" ? "screens" : "tokens and layers"})`;
+    $("verdict").className = `verdict${r.verdict === "not-ready" ? " bad" : ""}`;
+    $("verdict").textContent = verdictText(r);
     $("covered").textContent = `Covered: ${r.covered.join(", ")}. Not covered yet: ${notCovered.join(", ")}.`;
     $("auditGroups").innerHTML = pendingGroup(diffCount || 0, r.pending) + group("Blockers", r.blockers) + group("Warnings", r.warnings, true) + group("Suggestions", r.suggestions, true);
     $("auditCopy").disabled = false;

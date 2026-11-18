@@ -348,7 +348,8 @@ describe("auditTokens", () => {
 
   it("the audit message replies with progress then a result", async () => {
     const { cols, vars } = one();
-    const p1 = { id: "0:1", name: "Page 1", children: [], loadAsync: async () => {} };
+    // One component, so the layer walk audits something (an empty scope reads "empty", not "ready").
+    const p1 = { id: "0:1", name: "Page 1", children: [component({})], loadAsync: async () => {} };
     const { posted, send } = await load(cols, vars, { fileKey: "c7EUDrQwP8si08aPipDSIV", root: { name: "Doc", children: [p1] }, currentPage: p1 });
     posted.length = 0;
     await send({ type: "audit", usage: null, usageFresh: false });
@@ -580,6 +581,34 @@ describe("walkScope", () => {
     expect(r.cancelled).toBe(true);
     expect(r.walked).toBeLessThanOrEqual(500);
     expect(polls).toBe(1);
+  });
+  it("ready scope counts only the hidden layers inside marked subtrees (I3)", async () => {
+    const hiddenOut = frame({ visible: false }, []);
+    const hiddenIn = frame({ visible: false }, []);
+    const marked = frame({ devStatus: { type: "READY_FOR_DEV" } }, [hiddenIn]);
+    const { r } = await walk([page("P", [hiddenOut, marked])], { scope: "ready" });
+    expect(r.hiddenSkipped).toBe(1);
+    expect(r.walked).toBe(1);
+  });
+  it("selection never audits inside an instance: a selected instance or a layer in one is skipped and counted (I5)", async () => {
+    const inner = text({});
+    const inst = instance({ kids: [inner] });
+    const loose = text({});
+    const pg = page("P", [frame({}, [inst, loose])]);
+    const { r, ids } = await walk([pg], { scope: "selection" }, "screens", [inst, inner, loose]);
+    expect(ids).toEqual([loose.id]);
+    expect(r.selectedInInstances).toBe(2);
+  });
+  it("cancel is also checked after each page loads (T2a)", async () => {
+    const loaded = [];
+    let cancel = false;
+    const a = page("A", [frame({}, [])], loaded);
+    const b = page("B", [frame({}, [])], loaded);
+    a.loadAsync = async () => { loaded.push(a.id); cancel = true; };
+    const { r, ids } = await walk([a, b], { isCancelled: () => cancel });
+    expect(r.cancelled).toBe(true);
+    expect(loaded).toEqual([a.id]);
+    expect(ids).toEqual([]);
   });
   it("reports progress and finishes uncancelled", async () => {
     const prog = [];
@@ -1005,7 +1034,7 @@ describe("auditLayers and the audit message", () => {
     expect(r.verdict).toBe("not-ready");
     expect(r.publishBlocked).toBe(false);
     expect(r.covered).toContain("tokens");
-    expect(r.covered).toContain("layers: whole file");
+    expect(r.covered).toContain("layers: whole file, 2 layers");
     expect(r.notCovered).toContain("components, docs");
     expect(r.notCovered).not.toContain("layers, components, docs");
     expect(r.notCovered.filter((x) => x === "components, docs")).toHaveLength(1);
@@ -1099,7 +1128,7 @@ describe("auditLayers and the audit message", () => {
     const a = page("A", [frame({ fills: [red()] })]);
     const f = await file(ICP, [a, page("B", [])]);
     const r = await audit(f, { scope: "pages", pageIds: ["gone"], excludedPageIds: [] });
-    expect(r.covered[0]).toBe("layers: 1 of 2 pages");
+    expect(r.covered[0]).toBe("layers: 1 of 2 pages, 1 layer");
     expect(r.warnings).toHaveLength(1);
   });
 
@@ -1142,7 +1171,7 @@ describe("auditLayers and the audit message", () => {
     const r = await audit(f, {});
     expect(r.warnings.map((x) => x.check)).not.toContain("no-web");
     expect(r.covered).not.toContain("tokens");
-    expect(r.covered).toContain("layers: Ready for dev");
+    expect(r.covered).toContain("layers: Ready for dev, 0 layers");
   });
 
   it("covered names the scope, what was left out and the hidden layers", async () => {
@@ -1151,20 +1180,61 @@ describe("auditLayers and the audit message", () => {
     const c = page("C", []);
     const f = await file(ICP, [a, b, c]);
     const r = await audit(f, { scope: "pages", pageIds: [a.id, b.id, "stale"], excludedPageIds: [b.id, "stale"] });
-    expect(r.covered).toEqual(["layers: 1 of 3 pages", "1 page left out", "1 hidden layer skipped"]);
+    expect(r.covered).toEqual(["layers: 1 of 3 pages, 0 layers", "1 page left out", "1 hidden layer skipped"]);
     const l = await file(DS, [page("P", [component({ description: "[audit:skip]" }, [])])]);
     const sel = await audit(l, { scope: "file", pageIds: [], excludedPageIds: [] });
-    expect(sel.covered).toEqual(["tokens", "layers: whole file", "1 component left out"]);
+    expect(sel.covered).toEqual(["tokens", "layers: whole file, 0 layers", "1 component left out"]);
     const many = await file(ICP, [page("A", [frame({ visible: false }), frame({ visible: false }), frame({ visible: false })]), page("B", []), page("C", [])]);
     const pages = many.ctx.figma.root.children;
     const m = await audit(many, { scope: "file", pageIds: [], excludedPageIds: [pages[1].id, pages[2].id] });
-    expect(m.covered).toEqual(["layers: whole file", "2 pages left out", "3 hidden layers skipped"]);
+    expect(m.covered).toEqual(["layers: whole file, 0 layers", "2 pages left out", "3 hidden layers skipped"]);
     const two = await file(DS, [page("A", [component({ description: "[audit:skip]" })]), page("B", []), page("C", [])]);
     const tp = two.ctx.figma.root.children;
     const t = await audit(two, { scope: "file", pageIds: [], excludedPageIds: [tp[1].id, tp[2].id] });
     expect(t.covered).toContain("2 pages and 1 component left out");
     const clean = await file(ICP, [page("A", [])]);
-    expect((await audit(clean, { scope: "file", pageIds: [], excludedPageIds: [] })).covered).toEqual(["layers: whole file"]);
+    expect((await audit(clean, { scope: "file", pageIds: [], excludedPageIds: [] })).covered).toEqual(["layers: whole file, 0 layers"]);
+  });
+
+  it("nothing marked Ready for dev gives the empty verdict, never ready (I3)", async () => {
+    const f = await file(ICP, [page("P", [frame({ fills: [red()] })])]);
+    const r = await audit(f, { scope: "ready", pageIds: [], excludedPageIds: [] });
+    expect(r.verdict).toBe("empty");
+    expect(r.scope).toBe("ready");
+    expect(r.covered[0]).toBe("layers: Ready for dev, 0 layers");
+    const g = await file(ICP, [page("P", [])]);
+    const rf = await audit(g, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(rf.verdict).toBe("empty");
+    expect(rf.scope).toBe("file");
+    const h = await file(ICP, [page("P", [frame({})])]);
+    expect((await audit(h, { scope: "file", pageIds: [], excludedPageIds: [] })).verdict).toBe("ready");
+  });
+
+  it("the empty verdict never hides a token blocker in the library", async () => {
+    const { cols, vars } = one({}, { valuesByMode: { m1: { r: 1, g: 0, b: 0 } } });
+    const f = await file(DS, [page("P", [])], { cols, vars });
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.verdict).toBe("not-ready");
+  });
+
+  it("the covered line counts the audited layers with a thousands separator (I3)", async () => {
+    const { ctx } = await load([], []);
+    expect([ctx.formatCount(0), ctx.formatCount(999), ctx.formatCount(1240), ctx.formatCount(1234567)]).toEqual(["0", "999", "1,240", "1,234,567"]);
+    const kids = Array.from({ length: 1239 }, () => frame({}));
+    const f = await file(ICP, [page("P", [frame({ devStatus: { type: "READY_FOR_DEV" } }, kids)])]);
+    const r = await audit(f, { scope: "ready", pageIds: [], excludedPageIds: [] });
+    expect(r.covered[0]).toBe("layers: Ready for dev, 1,240 layers");
+  });
+
+  it("a selection inside an instance is counted on the covered line (I5)", async () => {
+    const inner = frame({ fills: [red()] });
+    const inst = instance({ kids: [inner] });
+    const loose = frame({ fills: [red()] });
+    const f = await file(ICP, [page("P", [frame({}, [inst, loose])])]);
+    f.ctx.figma.currentPage.selection = [inner, loose];
+    const r = await audit(f, { scope: "selection", pageIds: [], excludedPageIds: [] });
+    expect(r.warnings.map((x) => x.nodeId)).toEqual([loose.id]);
+    expect(r.covered).toEqual(["layers: selection (2 selected), 1 layer", "1 selected layer inside instances skipped"]);
   });
 
   it("layer progress carries the phase, page, pages and layers", async () => {

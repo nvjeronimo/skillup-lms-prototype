@@ -205,7 +205,7 @@ function isAuditSkipped(n) {
 // Walks the layers a scope covers with an explicit stack, never entering an INSTANCE.
 // onNode(node, { page, top, ready }) fires for audited nodes; onUse(node), when given, fires for every
 // node outside instances on every page (excluded ones too), so unused-token checks see all uses.
-// Returns { cancelled, walked, hiddenSkipped, pagesLeftOut, componentsLeftOut }.
+// Returns { cancelled, walked, hiddenSkipped, pagesLeftOut, componentsLeftOut, selectedInInstances }.
 async function walkScope(opts) {
   const library = opts.role === "library";
   const scope = opts.scope;
@@ -214,7 +214,7 @@ async function walkScope(opts) {
   const isCancelled = opts.isCancelled || function () { return false; };
   const excluded = {};
   (opts.excludedPageIds || []).forEach(function (id) { excluded[id] = true; });
-  const res = { cancelled: false, walked: 0, hiddenSkipped: 0, pagesLeftOut: 0, componentsLeftOut: 0 };
+  const res = { cancelled: false, walked: 0, hiddenSkipped: 0, pagesLeftOut: 0, componentsLeftOut: 0, selectedInInstances: 0 };
   let visited = 0;
   let pageNo = 0;
   let pageTotal = 0;
@@ -241,7 +241,8 @@ async function walkScope(opts) {
         continue;
       }
       if (audited && !library && aud && node.visible === false) {
-        res.hiddenSkipped++;
+        // Counted only where it would have been audited: in Ready for dev, inside a marked subtree.
+        if (scope !== "ready" || ready) res.hiddenSkipped++;
         aud = false;
       }
       if (isComponentNode(node)) {
@@ -274,6 +275,10 @@ async function walkScope(opts) {
     progress();
     for (let i = 0; i < sel.length; i++) {
       const node = sel[i];
+      // Never inside an instance: a selected instance, or a layer in one, is skipped and counted.
+      let inInstance = node.type === "INSTANCE";
+      for (let p = node.parent; p && !inInstance; p = p.parent) if (p.type === "INSTANCE") inInstance = true;
+      if (inInstance) { res.selectedInInstances++; continue; }
       let ready = false;
       let lib = false;
       let skipped = false;
@@ -307,6 +312,7 @@ async function walkScope(opts) {
     if (!audited && !onUse) continue;
     if (audited) { pageNo++; progress(); }
     await page.loadAsync();
+    if (isCancelled()) { res.cancelled = true; return res; }
     const stack = [];
     const kids = page.children || [];
     for (let k = kids.length - 1; k >= 0; k--) {
@@ -763,12 +769,17 @@ function normalizeAuditSettings(role, settings) {
   };
 }
 
+// 1240 -> "1,240", by hand: the plugin sandbox may not group digits in toLocaleString.
+function formatCount(n) {
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function auditScopeLabel(s) {
   if (s.scope === "ready") return "Ready for dev";
   if (s.scope === "file") return "whole file";
   if (s.scope === "pages") return s.pageIds.filter(function (id) { return s.excludedPageIds.indexOf(id) < 0; }).length + " of " + plural(figma.root.children.length, "page", "pages");
   const sel = (figma.currentPage && figma.currentPage.selection) || [];
-  return "selection: " + plural(sel.length, "layer", "layers");
+  return "selection (" + sel.length + " selected)";
 }
 
 // The text style ids a text node uses, segments included when they differ.
@@ -786,7 +797,7 @@ function textStyleIdsOf(node) {
 
 // Walks the scope, checks every audited layer, weighs the findings and, on whole-file runs, records
 // (screens) or checks (library) token use. settings: { scope, pageIds, excludedPageIds }.
-// Returns { covered, notCovered, blockers, warnings, suggestions, cancelled }.
+// Returns { covered, notCovered, blockers, warnings, suggestions, cancelled, walked, scope }.
 async function auditLayers(opts) {
   const role = opts.role;
   const library = role === "library";
@@ -858,12 +869,13 @@ async function auditLayers(opts) {
     else warnings.push(f);
   });
 
-  const covered = ["layers: " + auditScopeLabel(s)];
+  const covered = ["layers: " + auditScopeLabel(s) + ", " + formatCount(walk.walked) + (walk.walked === 1 ? " layer" : " layers")];
   const leftOut = [];
   if (walk.pagesLeftOut) leftOut.push(plural(walk.pagesLeftOut, "page", "pages"));
   if (walk.componentsLeftOut) leftOut.push(plural(walk.componentsLeftOut, "component", "components"));
   if (leftOut.length) covered.push(leftOut.join(" and ") + " left out");
   if (!library && walk.hiddenSkipped) covered.push(plural(walk.hiddenSkipped, "hidden layer", "hidden layers") + " skipped");
+  if (walk.selectedInInstances) covered.push(plural(walk.selectedInInstances, "selected layer", "selected layers") + " inside instances skipped");
   const notCovered = [AUDIT_LATER]; // in the library, the handler drops auditTokens' copy of it
 
   if (library) {
@@ -911,7 +923,7 @@ async function auditLayers(opts) {
     await storeScreensUsage(figma.fileKey || figma.root.name, figma.root.name, Array.from(keys), new Date());
   }
 
-  return { cancelled: false, covered: covered, notCovered: notCovered, blockers: blockers, warnings: warnings, suggestions: suggestions };
+  return { cancelled: false, covered: covered, notCovered: notCovered, blockers: blockers, warnings: warnings, suggestions: suggestions, walked: walk.walked, scope: s.scope };
 }
 
 // ---- The token audit (part 1; the layer audit above adds layers, later parts components and docs) ----
@@ -1181,8 +1193,10 @@ figma.ui.onmessage = async (msg) => {
       const notCovered = [];
       tokens.notCovered.concat(layers.notCovered).forEach((x) => { if (notCovered.indexOf(x) < 0) notCovered.push(x); });
       const blockers = tokens.blockers.concat(layers.blockers);
+      // Nothing audited (no layer marked Ready for dev in scope, an empty page…) is never "ready".
       const report = {
-        verdict: blockers.length ? "not-ready" : "ready",
+        verdict: blockers.length ? "not-ready" : layers.walked === 0 ? "empty" : "ready",
+        scope: layers.scope,
         covered: tokens.covered.concat(layers.covered),
         notCovered,
         blockers,
