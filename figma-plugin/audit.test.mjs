@@ -1237,6 +1237,35 @@ describe("auditLayers and the audit message", () => {
     expect(r.covered).toEqual(["layers: selection (2 selected), 1 layer", "1 selected layer inside instances skipped"]);
   });
 
+  it("layers: false (the run on open) audits only the tokens in the library: no walk, layers not run (I6)", async () => {
+    const comp = component({ name: "Card" }, [frame({ fills: [red()] })]);
+    const f = await file(DS, [page("P", [comp])], bgx());
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [], layers: false });
+    expect(f.posted.filter((m) => m.type === "audit-progress").map((m) => m.phase)).not.toContain("layers");
+    expect(r.layersRun).toBe(false);
+    expect(r.blockers).toEqual([]);
+    expect(r.verdict).toBe("ready");
+    expect(r.covered).toEqual(["tokens"]);
+    expect(r.notCovered).toContain("layers: not run (press Run audit)");
+    expect(r.notCovered).toContain("components, docs");
+    expect(r.suggestions.filter((x) => x.check === "unused-token")).toEqual([]);
+    const full = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(full.layersRun).toBe(true);
+    expect(full.blockers.map((x) => x.check)).toEqual(["hand-colour"]);
+  });
+
+  it("layers: false keeps token blockers in the library, and never reads ready in a screens file (I6)", async () => {
+    const { cols, vars } = one({}, { valuesByMode: { m1: { r: 1, g: 0, b: 0 } } });
+    const l = await file(DS, [page("P", [component({})])], { cols, vars });
+    expect((await audit(l, { scope: "file", pageIds: [], excludedPageIds: [], layers: false })).verdict).toBe("not-ready");
+    const s = await file(ICP, [page("P", [frame({})])]);
+    const rs = await audit(s, { scope: "file", pageIds: [], excludedPageIds: [], layers: false });
+    expect(rs.verdict).not.toBe("ready");
+    expect(rs.layersRun).toBe(false);
+    expect(rs.notCovered).toContain("layers: not run (press Run audit)");
+    expect(s.store[USAGE]).toBeUndefined();
+  });
+
   it("layer progress carries the phase, page, pages and layers", async () => {
     const f = await file(ICP, [page("A", [frame({}, [])]), page("B", [])]);
     await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });

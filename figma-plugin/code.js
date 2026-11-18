@@ -1179,7 +1179,11 @@ figma.ui.onmessage = async (msg) => {
           return;
         }
       }
-      const layers = await auditLayers({
+      // layers: false is the run on open: the tokens only (library), no layer walk. The walk starts
+      // from the Run audit button, so opening the plugin never walks a whole file.
+      const layersRun = msg.layers !== false;
+      const notRun = { cancelled: false, covered: [], notCovered: ["layers: not run (press Run audit)", AUDIT_LATER], blockers: [], warnings: [], suggestions: [], walked: null, scope: null };
+      const layers = !layersRun ? notRun : await auditLayers({
         role,
         settings: { scope: msg.scope, pageIds: msg.pageIds, excludedPageIds: msg.excludedPageIds },
         onProgress: (p) => figma.ui.postMessage({ type: "audit-progress", phase: "layers", page: p.page, pages: p.pages, layers: p.layers }),
@@ -1193,9 +1197,14 @@ figma.ui.onmessage = async (msg) => {
       const notCovered = [];
       tokens.notCovered.concat(layers.notCovered).forEach((x) => { if (notCovered.indexOf(x) < 0) notCovered.push(x); });
       const blockers = tokens.blockers.concat(layers.blockers);
-      // Nothing audited (no layer marked Ready for dev in scope, an empty page…) is never "ready".
+      // Nothing audited (no layer marked Ready for dev in scope, an empty page…) is never "ready",
+      // and neither is a screens file whose layers were not run (it has no token audit).
+      let verdict = "ready";
+      if (blockers.length) verdict = "not-ready";
+      else if (layersRun ? layers.walked === 0 : role !== "library") verdict = "empty";
       const report = {
-        verdict: blockers.length ? "not-ready" : layers.walked === 0 ? "empty" : "ready",
+        verdict,
+        layersRun,
         scope: layers.scope,
         covered: tokens.covered.concat(layers.covered),
         notCovered,

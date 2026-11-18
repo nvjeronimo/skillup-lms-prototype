@@ -91,7 +91,7 @@
   <div class="auditbar">
     <span class="verdict" id="verdict">Waiting for the variables…</span>
     <span class="btns">
-      <button id="auditRun" class="secondary" disabled>Run again</button>
+      <button id="auditRun" class="secondary" disabled>Run audit</button>
       <button id="auditCopy" class="secondary" disabled>Copy report</button>
       <button id="auditCancel" class="secondary" hidden>Cancel</button>
     </span>
@@ -270,7 +270,8 @@
     }
   }
   // Publish, the package PR and the download are blocked only when the export itself would be wrong.
-  const blocked = () => problems.length > 0 || !!(report && report.publishBlocked);
+  // A screens file's own local collections are not the DS: their problems never block anything here.
+  const blocked = () => role !== "screens" && (problems.length > 0 || !!(report && report.publishBlocked));
   const BLOCK_MSG = "Fix the broken token(s) in the Audit tab first: the export would be wrong.";
   // The export is read once, when the plugin opens. If the latest audit finds the broken tokens
   // fixed, the export still holds the old values: only reopening reads them again.
@@ -676,7 +677,7 @@
   function groupLayers(items) {
     const map = new Map();
     for (const f of items) {
-      const key = `${f.page}\u0000${f.top}`;
+      const key = `${f.pageId}\u0000${f.topId}`; // by id: two frames can share a name
       if (!map.has(key)) map.set(key, { page: f.page, top: f.top, items: [] });
       map.get(key).items.push(f);
     }
@@ -722,9 +723,11 @@
       folded(`${cols.length} collection(s) changed, library not published`, cols);
     return lines ? `<div class="group"><h2>Pending</h2>${lines}</div>` : "";
   }
+  const NOT_RUN = "Press Run audit to check the layers.";
   // The verdict comes from the report: "empty" (nothing audited) is never shown as ready.
   function verdictText(r) {
     if (r.verdict === "not-ready") return `Not ready: ${r.blockers.length} blocker(s)`;
+    if (r.layersRun === false) return r.role === "screens" ? NOT_RUN : `Tokens ready. ${NOT_RUN}`;
     if (r.verdict === "empty") return r.scope === "ready" ? "Nothing to audit: no layer marked Ready for dev in scope" : "Nothing to audit in this scope";
     return `Ready for developers (${r.role === "screens" ? "screens" : "tokens and layers"})`;
   }
@@ -732,7 +735,7 @@
     if (r.notCovered.includes("cancelled")) {
       $("verdict").className = "verdict";
       $("verdict").textContent = "Audit cancelled.";
-      $("covered").textContent = "Press Run again to read the variables.";
+      $("covered").textContent = `Press ${$("auditRun").textContent} to start again.`;
       $("auditGroups").innerHTML = "";
       $("auditCopy").disabled = true;
       return;
@@ -780,16 +783,19 @@
       $("verdict").textContent = "Auditing…";
     }
   }
-  function runAudit() {
+  // layers: false is the run on open (library only): the tokens, no layer walk. The walk on a large
+  // file takes a while, so it starts only from the Run audit button.
+  function runAudit(layers) {
     report = null;
     setRunning(true);
-    parent.postMessage({ pluginMessage: { type: "audit", usage, usageFresh, scope: settings.scope, pageIds: settings.pageIds, excludedPageIds: settings.excludedPageIds } }, "*");
+    parent.postMessage({ pluginMessage: { type: "audit", usage, usageFresh, layers, scope: settings.scope, pageIds: settings.pageIds, excludedPageIds: settings.excludedPageIds } }, "*");
   }
   $("auditRun").addEventListener("click", async () => {
     if (running) return;
+    $("auditRun").textContent = "Run again";
     setRunning(true);
     await refresh();
-    runAudit();
+    runAudit(true);
   });
   $("auditCancel").addEventListener("click", () => parent.postMessage({ pluginMessage: { type: "audit-cancel" } }, "*"));
 
@@ -862,8 +868,8 @@
       // "Selection" depends on what is selected right now, and "Ready for dev" only exists on screens.
       if (scope === "selection" || !["ready", "file", "pages"].includes(scope) || (scope === "ready" && role !== "screens")) scope = defaultScope();
       settings = { scope, pageIds: a.pageIds || [], excludedPageIds: a.excludedPageIds || [] };
+      next = msg.json; // before renderScope: Run audit is enabled only once the export is read
       renderScope();
-      next = msg.json;
       problems = msg.problems || [];
       published = false;
       user = msg.user;
@@ -875,8 +881,17 @@
       showWhere();
       $("token").value = msg.settings.token;
       updateButtons();
+      if (role === "screens") {
+        // Screens files open on the Audit tab and run nothing until Run audit.
+        showTab("audit");
+        $("verdict").className = "verdict";
+        $("verdict").textContent = NOT_RUN;
+        $("covered").textContent = "";
+        await refresh();
+        return;
+      }
       await refresh();
-      runAudit();
+      runAudit(false);
     }
   };
 </script>
