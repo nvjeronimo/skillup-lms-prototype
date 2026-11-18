@@ -316,6 +316,149 @@ async function walkScope(opts) {
   return res;
 }
 
+// ---- Layer checks ----
+
+// The variable for an id, or null when the lookup returns null or throws (library not available).
+async function getVarSafe(id) {
+  try {
+    const v = await figma.variables.getVariableByIdAsync(id);
+    return v || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function hexOfColor(c) {
+  const h = function (x) { return Math.round(x * 255).toString(16).padStart(2, "0"); };
+  return "#" + h(c.r) + h(c.g) + h(c.b);
+}
+
+function fontSummary(name, size, lh) {
+  let l = "auto";
+  if (lh && lh.unit === "PIXELS") l = String(Math.round(lh.value * 100) / 100);
+  else if (lh && lh.unit === "PERCENT") l = Math.round(lh.value * 100) / 100 + "%";
+  return (name ? name.family + " " + name.style : "") + " " + size + "/" + l;
+}
+
+function paintIsVisible(p) {
+  return p.visible !== false && (p.opacity === undefined || p.opacity > 0);
+}
+
+// Hand-set values and bindings that point nowhere, for one node (never its children).
+// Returns [{ check, nodeId, layer, property, value, page, pageId, top, topId, ready }].
+async function layerChecks(node, ctx, getVar) {
+  const mixed = figma.mixed;
+  const out = [];
+  const bv = node.boundVariables || {};
+  const find = function (check, property, value) {
+    out.push({ check: check, nodeId: node.id, layer: node.name, property: property, value: value, page: ctx.page.name, pageId: ctx.page.id, top: ctx.top.name, topId: ctx.top.id, ready: !!ctx.ready });
+  };
+  const aliasId = function (a) { return a && typeof a === "object" && a.id ? a.id : null; };
+  const isBound = function (key) { return !!aliasId(bv[key]); };
+
+  // 1. Every bound id must resolve.
+  const checked = {};
+  const verify = async function (property, id) {
+    if (!id) return;
+    const k = property + "|" + id;
+    if (checked[k]) return;
+    checked[k] = true;
+    if (!(await getVar(id))) find("binding-missing", property, id);
+  };
+  const scalars = [
+    ["paddingTop", "padding-top"], ["paddingRight", "padding-right"], ["paddingBottom", "padding-bottom"], ["paddingLeft", "padding-left"],
+    ["itemSpacing", "gap"], ["counterAxisSpacing", "counter-gap"], ["strokeWeight", "stroke-weight"],
+    ["strokeTopWeight", "stroke-weight"], ["strokeRightWeight", "stroke-weight"], ["strokeBottomWeight", "stroke-weight"], ["strokeLeftWeight", "stroke-weight"],
+  ];
+  for (let i = 0; i < scalars.length; i++) await verify(scalars[i][1], aliasId(bv[scalars[i][0]]));
+  const corners = [["topLeftRadius", "radius-top-left"], ["topRightRadius", "radius-top-right"], ["bottomLeftRadius", "radius-bottom-left"], ["bottomRightRadius", "radius-bottom-right"]];
+  const cids = corners.map(function (c) { return aliasId(bv[c[0]]); });
+  if (cids[0] && cids.every(function (x) { return x === cids[0]; })) await verify("radius", cids[0]);
+  else for (let i = 0; i < corners.length; i++) await verify(corners[i][1], cids[i]);
+  const arrays = [["fills", "fill"], ["strokes", "stroke"]];
+  for (let a = 0; a < arrays.length; a++) {
+    const list = bv[arrays[a][0]];
+    if (Array.isArray(list)) for (let i = 0; i < list.length; i++) await verify(arrays[a][1], aliasId(list[i]));
+    const paints = node[arrays[a][0]];
+    if (Array.isArray(paints)) {
+      for (let i = 0; i < paints.length; i++) await verify(arrays[a][1], aliasId(paints[i].boundVariables && paints[i].boundVariables.color));
+    }
+  }
+
+  // 2. Colours: visible SOLID paints with no variable.
+  const paintFindings = function (property, paints, bound) {
+    for (let i = 0; i < paints.length; i++) {
+      const p = paints[i];
+      if (p.type !== "SOLID" || !paintIsVisible(p)) continue;
+      if ((p.boundVariables && p.boundVariables.color) || aliasId(bound && bound[i])) continue;
+      find("hand-colour", property, hexOfColor(p.color));
+    }
+  };
+  if (Array.isArray(node.fills)) paintFindings("fill", node.fills, bv.fills);
+  else if (node.fills === mixed && node.type === "TEXT" && node.getStyledTextSegments) {
+    const segs = node.getStyledTextSegments(["fills"]);
+    const seen = {};
+    for (let i = 0; i < segs.length; i++) {
+      if (!Array.isArray(segs[i].fills)) continue;
+      const before = out.length;
+      paintFindings("fill", segs[i].fills, null);
+      for (let j = out.length - 1; j >= before; j--) {
+        if (seen[out[j].value]) out.splice(j, 1);
+        else seen[out[j].value] = true;
+      }
+    }
+  }
+  const strokes = Array.isArray(node.strokes) ? node.strokes : [];
+  paintFindings("stroke", strokes, bv.strokes);
+
+  // 3. Spacing, only in auto layout.
+  if (node.layoutMode && node.layoutMode !== "NONE") {
+    const sp = [["paddingTop", "padding-top"], ["paddingRight", "padding-right"], ["paddingBottom", "padding-bottom"], ["paddingLeft", "padding-left"], ["itemSpacing", "gap"]];
+    if (node.layoutWrap === "WRAP") sp.push(["counterAxisSpacing", "counter-gap"]);
+    for (let i = 0; i < sp.length; i++) {
+      const v = node[sp[i][0]];
+      if (typeof v === "number" && v !== 0 && !isBound(sp[i][0])) find("hand-spacing", sp[i][1], v);
+    }
+  }
+
+  // 4. Radius.
+  if (node.cornerRadius === mixed) {
+    for (let i = 0; i < corners.length; i++) {
+      const v = node[corners[i][0]];
+      if (typeof v === "number" && v !== 0 && !isBound(corners[i][0])) find("hand-radius", corners[i][1], v);
+    }
+  } else if (typeof node.cornerRadius === "number" && node.cornerRadius !== 0) {
+    if (!corners.every(function (c) { return isBound(c[0]); })) find("hand-radius", "radius", node.cornerRadius);
+  }
+
+  // 5. Stroke weight, only with a visible stroke.
+  if (strokes.some(paintIsVisible)) {
+    if (node.strokeWeight === mixed) {
+      const sides = ["strokeTopWeight", "strokeRightWeight", "strokeBottomWeight", "strokeLeftWeight"];
+      for (let i = 0; i < sides.length; i++) {
+        const v = node[sides[i]];
+        if (typeof v === "number" && v !== 0 && !isBound(sides[i]) && !isBound("strokeWeight")) find("hand-stroke", "stroke-weight", v);
+      }
+    } else if (typeof node.strokeWeight === "number" && node.strokeWeight !== 0 && !isBound("strokeWeight")) {
+      find("hand-stroke", "stroke-weight", node.strokeWeight);
+    }
+  }
+
+  // 6. Text without a text style.
+  if (node.type === "TEXT") {
+    const whole = node.textStyleId;
+    const uniform = node.fontName !== mixed && node.fontSize !== mixed && node.lineHeight !== mixed;
+    if (whole === "" && uniform) find("no-text-style", "text-style", fontSummary(node.fontName, node.fontSize, node.lineHeight));
+    else if ((whole === "" || whole === mixed) && node.getStyledTextSegments) {
+      const segs = node.getStyledTextSegments(["textStyleId", "fontName", "fontSize", "lineHeight"]);
+      for (let i = 0; i < segs.length; i++) {
+        if (segs[i].textStyleId === "") find("no-text-style", "text-style", fontSummary(segs[i].fontName, segs[i].fontSize, segs[i].lineHeight));
+      }
+    }
+  }
+  return out;
+}
+
 // ---- The audit (tokens only; later parts add layers, components and docs) ----
 
 // The build's Figma → CSS name mapping, copied from scripts/tokens/names.mjs (the plugin cannot

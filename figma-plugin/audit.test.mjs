@@ -32,6 +32,7 @@ async function load(cols, vars, extra = {}) {
   const holder = {};
   const figma = {
     fileKey: "KEY",
+    mixed: Symbol("mixed"),
     currentUser: { name: "Tester" },
     showUI() {},
     closePlugin() {},
@@ -575,5 +576,144 @@ describe("walkScope", () => {
     expect(r.walked).toBe(2);
     expect(prog[0]).toMatchObject({ page: 1, pages: 2 });
     expect(prog.at(-1).pages).toBe(2);
+  });
+});
+
+describe("layerChecks", () => {
+  const CTX = { page: { id: "0:1", name: "Page 1" }, top: { id: "9:9", name: "Card" }, ready: true };
+  const solid = (r, g, b, over) => ({ type: "SOLID", color: { r, g, b }, ...over });
+  async function run(node, vars = [], ctxOver = {}) {
+    const { ctx } = await load([], vars);
+    const get = async (id) => { const v = await ctx.getVarSafe(id); return v; };
+    const out = await ctx.layerChecks(node, { ...CTX, ...ctxOver }, ctx.getVarSafe);
+    return { out, ctx, get };
+  }
+  const props = (out, check) => out.filter((f) => f.check === check).map((f) => f.property);
+
+  it("fills the finding shape", async () => {
+    const n = frame({ name: "Box", fills: [solid(1, 0, 0)], strokes: [] });
+    const { out } = await run(n);
+    expect(out).toEqual([{ check: "hand-colour", nodeId: n.id, layer: "Box", property: "fill", value: "#ff0000", page: "Page 1", pageId: "0:1", top: "Card", topId: "9:9", ready: true }]);
+  });
+
+  it("getVarSafe returns null for a missing or throwing lookup", async () => {
+    const { ctx } = await load([], [vr({ id: "v1" })], {});
+    expect((await ctx.getVarSafe("v1")).id).toBe("v1");
+    expect(await ctx.getVarSafe("nope")).toBeNull();
+    const { ctx: c2 } = await load([], [], { variables: { getVariableByIdAsync: async () => { throw new Error("no library"); } } });
+    expect(await c2.getVarSafe("x")).toBeNull();
+  });
+
+  it("a bound variable that resolves to null is binding-missing", async () => {
+    const n = frame({ layoutMode: "HORIZONTAL", paddingTop: 8, boundVariables: { paddingTop: { type: "VARIABLE_ALIAS", id: "gone" } } });
+    const { out } = await run(n);
+    expect(out).toHaveLength(1);
+    expect(out[0]).toMatchObject({ check: "binding-missing", property: "padding-top", value: "gone" });
+  });
+
+  it("one whose lookup throws is binding-missing", async () => {
+    const n = frame({ fills: [solid(0, 0, 0, { boundVariables: { color: { type: "VARIABLE_ALIAS", id: "lib1" } } })] });
+    const { ctx } = await load([], [], { variables: { getVariableByIdAsync: async () => { throw new Error("library not available"); } } });
+    const out = await ctx.layerChecks(n, CTX, ctx.getVarSafe);
+    expect(out.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fill", "lib1"]]);
+  });
+
+  it("bound ids that resolve are fine: fills array, strokes array, paint colour, scalars", async () => {
+    const v = vr({ id: "v1" });
+    const al = { type: "VARIABLE_ALIAS", id: "v1" };
+    const n = frame({
+      fills: [solid(1, 1, 1), solid(0, 0, 0, { boundVariables: { color: al } })],
+      strokes: [solid(0, 0, 0)], strokeWeight: 2,
+      layoutMode: "VERTICAL", itemSpacing: 4, paddingLeft: 4,
+      boundVariables: { fills: [al], strokes: [al], strokeWeight: al, itemSpacing: al, paddingLeft: al },
+    });
+    const { out } = await run(n, [v]);
+    expect(out).toEqual([]);
+  });
+
+  it("an unbound visible SOLID fill is hand-colour with the hex", async () => {
+    const { out } = await run(frame({ fills: [solid(0.2, 0.4, 1)], strokes: [solid(0, 0, 0)], strokeWeight: 0 }));
+    expect(out.map((f) => [f.check, f.property, f.value])).toEqual([["hand-colour", "fill", "#3366ff"], ["hand-colour", "stroke", "#000000"]]);
+  });
+
+  it("an invisible paint or opacity 0 is not; a gradient is not; mixed fills do not crash", async () => {
+    const n = frame({ fills: [solid(1, 0, 0, { visible: false }), solid(1, 0, 0, { opacity: 0 }), { type: "GRADIENT_LINEAR" }, { type: "IMAGE" }] });
+    expect((await run(n)).out).toEqual([]);
+    const { ctx } = await load([], []);
+    const m = text({ fills: ctx.figma.mixed, textStyleId: "s1" });
+    expect(await ctx.layerChecks(m, CTX, ctx.getVarSafe)).toEqual([]);
+  });
+
+  it("padding 0 is not hand-spacing; padding 12 unbound is", async () => {
+    const { out } = await run(frame({ layoutMode: "HORIZONTAL", paddingTop: 0, paddingRight: 12, paddingBottom: 0, paddingLeft: 12, itemSpacing: 0 }));
+    expect(props(out, "hand-spacing")).toEqual(["padding-right", "padding-left"]);
+    expect(out[0].value).toBe(12);
+  });
+
+  it("gap only when layoutMode is not NONE; counter-gap only when wrapping", async () => {
+    expect((await run(frame({ layoutMode: "NONE", paddingTop: 8, itemSpacing: 8 }))).out).toEqual([]);
+    const a = await run(frame({ layoutMode: "HORIZONTAL", itemSpacing: 8, counterAxisSpacing: 6, layoutWrap: "NO_WRAP" }));
+    expect(props(a.out, "hand-spacing")).toEqual(["gap"]);
+    const b = await run(frame({ layoutMode: "HORIZONTAL", itemSpacing: 8, counterAxisSpacing: 6, layoutWrap: "WRAP" }));
+    expect(props(b.out, "hand-spacing")).toEqual(["gap", "counter-gap"]);
+    const c = await run(frame({ layoutMode: "HORIZONTAL", layoutWrap: "WRAP", counterAxisSpacing: null }));
+    expect(c.out).toEqual([]);
+  });
+
+  it("uniform radius unbound is hand-radius; bound on four corners is not; 0 is not", async () => {
+    expect(props((await run(frame({ cornerRadius: 8 }))).out, "hand-radius")).toEqual(["radius"]);
+    expect((await run(frame({ cornerRadius: 0 }))).out).toEqual([]);
+    const al = { type: "VARIABLE_ALIAS", id: "v1" };
+    const bound = frame({ cornerRadius: 8, boundVariables: { topLeftRadius: al, topRightRadius: al, bottomLeftRadius: al, bottomRightRadius: al } });
+    expect((await run(bound, [vr({ id: "v1" })])).out).toEqual([]);
+  });
+
+  it("radius mixed reports each unbound non-zero corner", async () => {
+    const { ctx } = await load([], []);
+    const al = { type: "VARIABLE_ALIAS", id: "v1" };
+    const n = frame({ cornerRadius: ctx.figma.mixed, topLeftRadius: 8, topRightRadius: 0, bottomLeftRadius: 4, bottomRightRadius: 6, boundVariables: { bottomRightRadius: al } });
+    const out = await ctx.layerChecks(n, CTX, async (id) => (id === "v1" ? { id } : null));
+    expect(out.map((f) => [f.check, f.property, f.value])).toEqual([["hand-radius", "radius-top-left", 8], ["hand-radius", "radius-bottom-left", 4]]);
+  });
+
+  it("stroke weight unbound only when a visible stroke exists", async () => {
+    const bound = { type: "VARIABLE_ALIAS", id: "v1" };
+    const paint = solid(0, 0, 0, { boundVariables: { color: bound } });
+    const withStroke = frame({ strokes: [paint], strokeWeight: 2 });
+    expect(props((await run(withStroke, [vr({ id: "v1" })])).out, "hand-stroke")).toEqual(["stroke-weight"]);
+    expect((await run(frame({ strokes: [], strokeWeight: 2 }))).out).toEqual([]);
+    expect((await run(frame({ strokes: [{ ...paint, visible: false }], strokeWeight: 2 }), [vr({ id: "v1" })])).out).toEqual([]);
+    expect((await run(frame({ strokes: [paint], strokeWeight: 0 }), [vr({ id: "v1" })])).out).toEqual([]);
+  });
+
+  it("mixed stroke weight reports each unbound non-zero side", async () => {
+    const { ctx } = await load([], []);
+    const n = frame({ strokes: [solid(0, 0, 0, { boundVariables: { color: { type: "VARIABLE_ALIAS", id: "v1" } } })], strokeWeight: ctx.figma.mixed, strokeTopWeight: 0, strokeBottomWeight: 2, strokeLeftWeight: 0, strokeRightWeight: 0 });
+    const out = await ctx.layerChecks(n, CTX, async () => ({}));
+    expect(out.map((f) => [f.property, f.value])).toEqual([["stroke-weight", 2]]);
+  });
+
+  it("text without a style is no-text-style with a font summary", async () => {
+    const t = text({ textStyleId: "", fontName: { family: "Inter", style: "Semi Bold" }, fontSize: 16, lineHeight: { unit: "PIXELS", value: 24 }, fills: [] });
+    expect((await run(t)).out.map((f) => [f.check, f.property, f.value])).toEqual([["no-text-style", "text-style", "Inter Semi Bold 16/24"]]);
+    const auto = text({ textStyleId: "", fontName: { family: "Inter", style: "Regular" }, fontSize: 14, lineHeight: { unit: "AUTO" }, fills: [] });
+    expect((await run(auto)).out[0].value).toBe("Inter Regular 14/auto");
+    const pct = text({ textStyleId: "", fontName: { family: "Inter", style: "Regular" }, fontSize: 14, lineHeight: { unit: "PERCENT", value: 150 }, fills: [] });
+    expect((await run(pct)).out[0].value).toBe("Inter Regular 14/150%");
+    expect((await run(text({ textStyleId: "S:1", fills: [] }))).out).toEqual([]);
+  });
+
+  it("mixed textStyleId reports each unstyled segment once", async () => {
+    const { ctx } = await load([], []);
+    const seg = (start, end, id, size) => ({ start, end, characters: "x", textStyleId: id, fontName: { family: "Inter", style: "Regular" }, fontSize: size, lineHeight: { unit: "PIXELS", value: size + 8 } });
+    const t = text({ textStyleId: ctx.figma.mixed, fills: [], getStyledTextSegments: () => [seg(0, 3, "S:1", 12), seg(3, 6, "", 16), seg(6, 9, "S:2", 12), seg(9, 12, "", 20)] });
+    const out = await ctx.layerChecks(t, CTX, ctx.getVarSafe);
+    expect(out.map((f) => [f.check, f.value])).toEqual([["no-text-style", "Inter Regular 16/24"], ["no-text-style", "Inter Regular 20/28"]]);
+  });
+
+  it("a bound paint (paint.boundVariables.color) and a bound padding are not findings", async () => {
+    const al = { type: "VARIABLE_ALIAS", id: "v1" };
+    const n = frame({ fills: [solid(1, 0, 0, { boundVariables: { color: al } })], layoutMode: "VERTICAL", paddingTop: 12, boundVariables: { paddingTop: al } });
+    expect((await run(n, [vr({ id: "v1" })])).out).toEqual([]);
   });
 });
