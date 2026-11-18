@@ -820,3 +820,76 @@ describe("suggestFor", () => {
     expect(ctx.suggestFor(finding("hand-colour", "fill", "#00ff00"), { type: "FRAME" }, index)).toMatch(/^nearest bg\/danger/);
   });
 });
+
+describe("token use across files", () => {
+  const al = (id) => ({ type: "VARIABLE_ALIAS", id });
+  const mem = () => {
+    const store = {};
+    return { store, clientStorage: { getAsync: async (k) => store[k], setAsync: async (k, v) => { store[k] = v; } } };
+  };
+  const KEY = "skillup-publish-tokens/screens-usage";
+
+  it("boundIdsOf collects padding, paint and text-segment bindings", async () => {
+    const { ctx } = await load([], []);
+    const node = {
+      type: "TEXT",
+      boundVariables: { paddingLeft: al("p1"), fills: [{ type: "VARIABLE_ALIAS", id: "f1" }], strokes: [{ type: "VARIABLE_ALIAS", id: "p1" }] },
+      fills: [{ type: "SOLID", boundVariables: { color: al("c1") } }, { type: "SOLID" }],
+      strokes: [{ type: "SOLID", boundVariables: { color: al("c2") } }],
+      getStyledTextSegments: () => [{ boundVariables: { fontSize: al("t1") } }, { boundVariables: {} }, {}],
+    };
+    expect([...ctx.boundIdsOf(node)].sort()).toEqual(["c1", "c2", "f1", "p1", "t1"]);
+    expect(Array.from(ctx.boundIdsOf({ type: "FRAME" }))).toEqual([]);
+  });
+
+  it("storeScreensUsage keeps other files' entries", async () => {
+    const m = mem();
+    const { ctx } = await load([], [], { clientStorage: m.clientStorage });
+    await ctx.storeScreensUsage("A", "File A", ["k1"], new Date("2026-11-10T00:00:00Z"));
+    await ctx.storeScreensUsage("B", "File B", ["k2"], new Date("2026-11-11T00:00:00Z"));
+    await ctx.storeScreensUsage("A", "File A", ["k3"], new Date("2026-11-12T00:00:00Z"));
+    expect(JSON.parse(JSON.stringify(m.store[KEY]))).toEqual({
+      A: { name: "File A", date: "2026-11-12T00:00:00.000Z", keys: ["k3"] },
+      B: { name: "File B", date: "2026-11-11T00:00:00.000Z", keys: ["k2"] },
+    });
+    const r = await ctx.readScreensUsage(new Date("2026-11-12T00:00:00Z"));
+    expect([...r.keys].sort()).toEqual(["k2", "k3"]);
+    expect(r.files.map((f) => f.name).sort()).toEqual(["File A", "File B"]);
+    expect(r.icpFresh).toBe(false);
+  });
+
+  it("the ICP entry older than 7 days is not fresh", async () => {
+    const m = mem();
+    const { ctx } = await load([], [], { clientStorage: m.clientStorage });
+    await ctx.storeScreensUsage("Wz2TCYFVr0hD8tJNiLajLt", "ICP", ["k"], new Date("2026-11-10T00:00:00Z"));
+    expect((await ctx.readScreensUsage(new Date("2026-11-17T00:00:00Z"))).icpFresh).toBe(true);
+    expect((await ctx.readScreensUsage(new Date("2026-11-17T00:00:01Z"))).icpFresh).toBe(false);
+    const empty = await load([], []);
+    const r = await empty.ctx.readScreensUsage(new Date());
+    expect([r.files.length, r.keys.size, r.icpFresh]).toEqual([0, 0, false]);
+  });
+
+  const setup = () => {
+    const a = vr({ id: "a", name: "a", key: "ka" });
+    const b = vr({ id: "b", name: "b", key: "kb" });
+    const c = vr({ id: "c", name: "c", key: "kc" });
+    const d = vr({ id: "d", name: "d", key: "kd" });
+    const h = vr({ id: "h", name: "h", key: "kh", variableCollectionId: "c3" });
+    const cols = [col({ id: "c1", name: "1. Colour" }), col({ id: "c3", name: "0. Prim", hiddenFromPublishing: true })];
+    const live = [a, b, c, d].map((v) => ({ v, col: cols[0] })).concat([{ v: h, col: cols[1] }]);
+    return live;
+  };
+
+  it("a token used only through another token's alias is not unused", async () => {
+    const { ctx } = await load([], []);
+    const r = ctx.unusedTokens(setup(), new Set(["a"]), new Set(), new Set(["b"]), new Set(["c"]));
+    expect(JSON.parse(JSON.stringify(r))).toEqual([{ collection: "1. Colour", name: "d" }]);
+  });
+
+  it("a token used only on a screens file (by key) is not unused", async () => {
+    const { ctx } = await load([], []);
+    const r = ctx.unusedTokens(setup(), new Set(), new Set(["kb", "kd"]), new Set(), new Set());
+    expect(JSON.parse(JSON.stringify(r)).map((x) => x.name)).toEqual(["a", "c"]);
+  });
+});
+

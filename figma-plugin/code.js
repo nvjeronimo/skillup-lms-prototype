@@ -328,6 +328,74 @@ async function getVarSafe(id) {
   }
 }
 
+// ---- Token use across files ----
+
+const SCREENS_USAGE_KEY = "skillup-publish-tokens/screens-usage";
+const ICP_FILE_KEY = "Wz2TCYFVr0hD8tJNiLajLt";
+const USAGE_FRESH_MS = 7 * 24 * 60 * 60 * 1000;
+
+// Every variable id bound on a node: scalar and array bindings, paint colours, text segments.
+function boundIdsOf(node) {
+  const ids = new Set();
+  const add = function (val) {
+    const id = aliasIdOf(val);
+    if (id) ids.add(id);
+  };
+  const addBag = function (bag) {
+    if (!bag || typeof bag !== "object") return;
+    Object.keys(bag).forEach(function (k) {
+      const val = bag[k];
+      if (Array.isArray(val)) val.forEach(add);
+      else add(val);
+    });
+  };
+  addBag(node.boundVariables);
+  ["fills", "strokes"].forEach(function (k) {
+    const paints = node[k];
+    if (Array.isArray(paints)) paints.forEach(function (p) { if (p && p.boundVariables) add(p.boundVariables.color); });
+  });
+  if (node.type === "TEXT" && typeof node.getStyledTextSegments === "function") {
+    try {
+      const segs = node.getStyledTextSegments(["boundVariables"]);
+      if (Array.isArray(segs)) segs.forEach(function (s) { addBag(s && s.boundVariables); });
+    } catch (e) { /* segments unavailable */ }
+  }
+  return Array.from(ids);
+}
+
+async function storeScreensUsage(fileKeyOrName, name, keys, now) {
+  const all = (await figma.clientStorage.getAsync(SCREENS_USAGE_KEY)) || {};
+  all[fileKeyOrName] = { name: name, date: now.toISOString(), keys: keys };
+  await figma.clientStorage.setAsync(SCREENS_USAGE_KEY, all);
+}
+
+async function readScreensUsage(now) {
+  const all = (await figma.clientStorage.getAsync(SCREENS_USAGE_KEY)) || {};
+  const files = [];
+  const keys = new Set();
+  Object.keys(all).forEach(function (k) {
+    const e = all[k];
+    if (!e) return;
+    files.push({ name: e.name, date: e.date });
+    (e.keys || []).forEach(function (x) { keys.add(x); });
+  });
+  const icp = all[ICP_FILE_KEY];
+  const icpFresh = !!icp && now.getTime() - new Date(icp.date).getTime() <= USAGE_FRESH_MS;
+  return { files: files, keys: keys, icpFresh: icpFresh };
+}
+
+// localVars: [{ v, col }] pairs, as auditTokens builds them. Only exported (non-hidden) collections.
+function unusedTokens(localVars, usedIds, usedKeys, aliasedIds, textStyleBoundIds) {
+  const out = [];
+  localVars.forEach(function (x) {
+    if (x.col.hiddenFromPublishing) return;
+    const v = x.v;
+    if (usedIds.has(v.id) || aliasedIds.has(v.id) || textStyleBoundIds.has(v.id) || usedKeys.has(v.key)) return;
+    out.push({ collection: x.col.name, name: v.name });
+  });
+  return out;
+}
+
 function hexOfColor(c) {
   const h = function (x) { return Math.round(x * 255).toString(16).padStart(2, "0"); };
   return "#" + h(c.r) + h(c.g) + h(c.b);
