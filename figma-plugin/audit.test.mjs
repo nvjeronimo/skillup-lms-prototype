@@ -47,6 +47,8 @@ async function load(cols, vars, extra = {}) {
       getVariableByIdAsync: async (id) => vars.find((v) => v.id === id) || null,
     },
     getLocalTextStylesAsync: async () => [],
+    root: { name: "Doc", children: [{ id: "0:1", name: "Page 1" }] },
+    currentPage: { id: "0:1", name: "Page 1" },
     ...extra,
   };
   const ctx = vm.createContext({ figma, __html__: "", console, setTimeout, clearTimeout, Promise });
@@ -360,5 +362,66 @@ describe("tokenCssNames in the plugin", () => {
     const fromBuild = tokenCssNames(data).map(({ figma, css }) => ({ figma, css }));
     expect(fromBuild.length).toBeGreaterThan(50);
     expect(fromPlugin).toEqual(fromBuild);
+  });
+});
+
+const pg = (names) => names.map((name, i) => ({ id: "p" + i, name }));
+
+describe("fileRole", () => {
+  it("is library in the DS file", async () => {
+    const { ctx } = await load([], []);
+    expect(ctx.fileRole("c7EUDrQwP8si08aPipDSIV", [])).toBe("library");
+  });
+  it("is screens in the ICP even with local collections", async () => {
+    const { ctx } = await load([], []);
+    expect(ctx.fileRole("Wz2TCYFVr0hD8tJNiLajLt", [col()])).toBe("screens");
+  });
+  it("with no file key, a local exported collection starting 1. means library", async () => {
+    const { ctx } = await load([], []);
+    expect(ctx.fileRole(null, [col({ name: "1. Colour" })])).toBe("library");
+    expect(ctx.fileRole(null, [col({ name: "1. Colour", hiddenFromPublishing: true })])).toBe("screens");
+    expect(ctx.fileRole(null, [col({ name: "Other" })])).toBe("screens");
+  });
+});
+
+describe("defaultExcludedPages", () => {
+  it("excludes the ICP discovery group by its divider", async () => {
+    const { ctx } = await load([], []);
+    const pages = pg(["Cover", "---", "READY FOR DEV \u2705", "Platform Pages - Ready for Dev \ud83d\udfe2", "---", "DISCOVERY - NelsonJ. \u2014\u2014\u2014", "New Flow - V1", "V6 - Full Pages", "---", "ARCHIVE \u2014\u2014\u2014", "Navdeep"]);
+    const ids = ctx.defaultExcludedPages("screens", pages);
+    expect(Array.from(ids)).toEqual(["p0", "p5", "p6", "p7", "p9", "p10"]);
+  });
+  it("in the library excludes In review, archive, cover and start here by name", async () => {
+    const { ctx } = await load([], []);
+    const pages = pg(["Start here", "Cover", "Button", "In review", "Archive", "Arquivo 2020", "Buttons"]);
+    expect(Array.from(ctx.defaultExcludedPages("library", pages))).toEqual(["p0", "p1", "p3", "p4", "p5"]);
+  });
+  it("screens also exclude history by name", async () => {
+    const { ctx } = await load([], []);
+    expect(Array.from(ctx.defaultExcludedPages("screens", pg(["Home", "History", "Hist\u00f3rico"])))).toEqual(["p1", "p2"]);
+  });
+});
+
+describe("audit settings", () => {
+  it("keys by file key, else by document name", async () => {
+    const a = await load([], []);
+    expect(a.ctx.auditSettingsKey()).toBe("skillup-publish-tokens/audit/KEY");
+    const b = await load([], [], { fileKey: null, root: { name: "My doc", children: [] } });
+    expect(b.ctx.auditSettingsKey()).toBe("skillup-publish-tokens/audit/My doc");
+  });
+  it("the ready message carries role, pages and default audit settings", async () => {
+    const root = { name: "ICP", children: pg(["Cover", "Home"]) };
+    const { posted } = await load([], [], { fileKey: "Wz2TCYFVr0hD8tJNiLajLt", root, currentPage: root.children[1] });
+    const ready = posted.find((m) => m.type === "ready");
+    expect(ready.role).toBe("screens");
+    expect(ready.pages).toEqual([{ id: "p0", name: "Cover" }, { id: "p1", name: "Home" }]);
+    expect(ready.auditSettings).toEqual({ scope: "ready", pageIds: ["p1"], excludedPageIds: ["p0"] });
+  });
+  it("library default scope is file, and a stored value wins", async () => {
+    const lib = await load([], [], { fileKey: "c7EUDrQwP8si08aPipDSIV" });
+    expect(lib.posted.find((m) => m.type === "ready").auditSettings.scope).toBe("file");
+    const stored = { scope: "pages", pageIds: ["0:1"], excludedPageIds: [] };
+    const s = await load([], [], { clientStorage: { getAsync: async (k) => (k === "skillup-publish-tokens/audit/KEY" ? stored : undefined), setAsync: async () => {} } });
+    expect(s.posted.find((m) => m.type === "ready").auditSettings).toEqual(stored);
   });
 });

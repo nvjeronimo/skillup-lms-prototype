@@ -152,6 +152,40 @@ async function exportTokens() {
   return { format: "skillup-figma-tokens/1", fileKey: figma.fileKey || null, collections, textStyles, problems };
 }
 
+// ---- Audit role, per-file settings and default page exclusions ----
+
+const DS_FILE_KEY = "c7EUDrQwP8si08aPipDSIV";
+const AUDIT_SETTINGS_PREFIX = "skillup-publish-tokens/audit/";
+
+// "library" = the DS file (or an unsaved file that exports a "1." collection), "screens" = anything else.
+function fileRole(fileKey, cols) {
+  if (fileKey) return fileKey === DS_FILE_KEY ? "library" : "screens";
+  const exported = (cols || []).some((c) => !c.hiddenFromPublishing && String(c.name).indexOf("1.") === 0);
+  return exported ? "library" : "screens";
+}
+
+function auditSettingsKey() {
+  return AUDIT_SETTINGS_PREFIX + (figma.fileKey || figma.root.name);
+}
+
+// Ids of the pages left out of an audit by default. pages: [{ id, name }].
+function defaultExcludedPages(role, pages) {
+  const byName = role === "library" ? ["in review", "archive", "arquivo", "cover", "start here"] : ["cover", "history", "hist\u00f3rico"];
+  const out = [];
+  let inGroup = false;
+  for (const p of pages) {
+    const name = String(p.name).toLowerCase();
+    let excluded = byName.some((n) => name.indexOf(n) !== -1);
+    if (role === "screens") {
+      if (name.trim() === "---") inGroup = false;
+      else if (name.indexOf("discovery") !== -1 || name.indexOf("archive") !== -1) inGroup = true;
+      if (inGroup) excluded = true;
+    }
+    if (excluded) out.push(p.id);
+  }
+  return out;
+}
+
 // ---- The audit (tokens only; later parts add layers, components and docs) ----
 
 // The build's Figma → CSS name mapping, copied from scripts/tokens/names.mjs (the plugin cannot
@@ -347,6 +381,14 @@ figma.showUI(__html__, { width: 380, height: 640, themeColors: true });
 (async () => {
   const settings = (await figma.clientStorage.getAsync(SETTINGS_KEY)) || {};
   const tokens = await exportTokens();
+  const cols = await figma.variables.getLocalVariableCollectionsAsync();
+  const role = fileRole(figma.fileKey, cols);
+  const pages = figma.root.children.map((p) => ({ id: p.id, name: p.name }));
+  const auditSettings = (await figma.clientStorage.getAsync(auditSettingsKey())) || {
+    scope: role === "library" ? "file" : "ready",
+    pageIds: [figma.currentPage.id],
+    excludedPageIds: defaultExcludedPages(role, pages),
+  };
   const problems = tokens.problems;
   delete tokens.problems; // the JSON stays exactly as the Publish flow and the prototype build expect
   figma.ui.postMessage({
@@ -362,6 +404,9 @@ figma.showUI(__html__, { width: 380, height: 640, themeColors: true });
     json: JSON.stringify(tokens, null, 2) + "\n",
     user: currentUserName(),
     problems,
+    role,
+    pages,
+    auditSettings,
   });
 })().catch((e) => figma.ui.postMessage({ type: "error", message: String(e && e.message ? e.message : e) }));
 
