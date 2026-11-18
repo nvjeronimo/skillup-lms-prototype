@@ -157,10 +157,11 @@ async function exportTokens() {
 const DS_FILE_KEY = "c7EUDrQwP8si08aPipDSIV";
 const AUDIT_SETTINGS_PREFIX = "skillup-publish-tokens/audit/";
 
-// "library" = the DS file (or an unsaved file that exports a "1." collection), "screens" = anything else.
+// "library" = the DS file, or, when figma.fileKey is null, a file with an exported "1. SKO-Semantics"
+// collection (the Mobile App file's orphan "1. Semantics" copy reads as screens). "screens" = anything else.
 function fileRole(fileKey, cols) {
   if (fileKey) return fileKey === DS_FILE_KEY ? "library" : "screens";
-  const exported = (cols || []).some((c) => !c.hiddenFromPublishing && String(c.name).indexOf("1.") === 0);
+  const exported = (cols || []).some((c) => !c.hiddenFromPublishing && String(c.name).indexOf("1. SKO-Semantics") === 0);
   return exported ? "library" : "screens";
 }
 
@@ -380,8 +381,11 @@ async function readScreensUsage(now) {
     (e.keys || []).forEach(function (x) { keys.add(x); });
   });
   const icp = all[ICP_FILE_KEY];
-  const icpFresh = !!icp && now.getTime() - new Date(icp.date).getTime() <= USAGE_FRESH_MS;
-  return { files: files, keys: keys, icpFresh: icpFresh };
+  const fresh = function (e) { return !!e && now.getTime() - new Date(e.date).getTime() <= USAGE_FRESH_MS; };
+  const icpFresh = fresh(icp);
+  // Entries at most 7 days old, from any file (stored by key, or by name when the key is null).
+  const freshFiles = Object.keys(all).filter(function (k) { return fresh(all[k]); }).map(function (k) { return { name: all[k].name, date: all[k].date }; });
+  return { files: files, keys: keys, icpFresh: icpFresh, freshFiles: freshFiles };
 }
 
 // localVars: [{ v, col }] pairs, as auditTokens builds them. Only exported (non-hidden) collections.
@@ -701,7 +705,7 @@ function normalizeAuditSettings(role, settings) {
 function auditScopeLabel(s) {
   if (s.scope === "ready") return "Ready for dev";
   if (s.scope === "file") return "whole file";
-  if (s.scope === "pages") return s.pageIds.length + " of " + plural(figma.root.children.length, "page", "pages");
+  if (s.scope === "pages") return s.pageIds.filter(function (id) { return s.excludedPageIds.indexOf(id) < 0; }).length + " of " + plural(figma.root.children.length, "page", "pages");
   const sel = (figma.currentPage && figma.currentPage.selection) || [];
   return "selection: " + plural(sel.length, "layer", "layers");
 }
@@ -760,6 +764,7 @@ async function auditLayers(opts) {
   if (walk.cancelled) return cancelled();
 
   const pairs = []; // { finding, node }
+  const onCheckProgress = opts.onCheckProgress || function () {};
   for (let i = 0; i < visited.length; i++) {
     if (i > 0 && i % 500 === 0) {
       await new Promise(function (r) { setTimeout(r, 0); });
@@ -767,7 +772,9 @@ async function auditLayers(opts) {
     }
     const found = await layerChecks(visited[i].node, visited[i].ctx, getVar);
     for (let j = 0; j < found.length; j++) pairs.push({ finding: found[j], node: visited[i].node });
+    if ((i + 1) % 200 === 0 && i + 1 < visited.length) onCheckProgress(i + 1, visited.length);
   }
+  onCheckProgress(visited.length, visited.length);
   if (isCancelled()) return cancelled();
 
   if (pairs.some(function (p) { return p.finding.check !== "binding-missing"; })) {
@@ -788,18 +795,19 @@ async function auditLayers(opts) {
   });
 
   const covered = ["layers: " + auditScopeLabel(s)];
-  if (walk.pagesLeftOut || walk.componentsLeftOut) {
-    covered.push(plural(walk.pagesLeftOut, "page", "pages") + " and " + plural(walk.componentsLeftOut, "component", "components") + " left out");
-  }
+  const leftOut = [];
+  if (walk.pagesLeftOut) leftOut.push(plural(walk.pagesLeftOut, "page", "pages"));
+  if (walk.componentsLeftOut) leftOut.push(plural(walk.componentsLeftOut, "component", "components"));
+  if (leftOut.length) covered.push(leftOut.join(" and ") + " left out");
   if (!library && walk.hiddenSkipped) covered.push(plural(walk.hiddenSkipped, "hidden layer", "hidden layers") + " skipped");
-  const notCovered = library ? [] : [AUDIT_LATER];
+  const notCovered = [AUDIT_LATER]; // in the library, the handler drops auditTokens' copy of it
 
   if (library) {
     if (!wholeFile) {
       notCovered.push("unused tokens");
     } else {
       const usage = await readScreensUsage(new Date());
-      if (!usage.icpFresh) {
+      if (!usage.freshFiles.length) {
         notCovered.push("use on screens");
       } else {
         const cols = await figma.variables.getLocalVariableCollectionsAsync();
@@ -822,7 +830,7 @@ async function auditLayers(opts) {
             if (id) styleBound.add(id);
           });
         });
-        covered.push("use on screens: " + usage.files.map(function (f) { return f.name; }).join(", "));
+        covered.push("use on screens: " + usage.freshFiles.map(function (f) { return f.name; }).join(", "));
         unusedTokens(local, usedIds, usage.keys, aliased, styleBound).forEach(function (u) {
           suggestions.push({ check: "unused-token", collection: u.collection, name: u.name, text: "no layer uses it, in the DS or in the screens files" });
         });
@@ -1092,6 +1100,7 @@ figma.ui.onmessage = async (msg) => {
         role,
         settings: { scope: msg.scope, pageIds: msg.pageIds, excludedPageIds: msg.excludedPageIds },
         onProgress: (p) => figma.ui.postMessage({ type: "audit-progress", phase: "layers", page: p.page, pages: p.pages, layers: p.layers }),
+        onCheckProgress: (done, total) => figma.ui.postMessage({ type: "audit-progress", phase: "checks", done, total }),
         isCancelled,
       });
       if (layers.cancelled) {

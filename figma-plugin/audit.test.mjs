@@ -351,8 +351,8 @@ describe("auditTokens", () => {
     const { posted, send } = await load(cols, vars, { fileKey: "c7EUDrQwP8si08aPipDSIV", root: { name: "Doc", children: [p1] }, currentPage: p1 });
     posted.length = 0;
     await send({ type: "audit", usage: null, usageFresh: false });
-    expect(posted.map((m) => m.type + ":" + m.phase)).toEqual(["audit-progress:tokens", "audit-progress:layers", "audit-result:undefined"]);
-    expect(posted[2].report.verdict).toBe("ready");
+    expect(posted.map((m) => m.type + ":" + m.phase)).toEqual(["audit-progress:tokens", "audit-progress:layers", "audit-progress:checks", "audit-result:undefined"]);
+    expect(posted[3].report.verdict).toBe("ready");
   });
 });
 
@@ -380,11 +380,19 @@ describe("fileRole", () => {
     const { ctx } = await load([], []);
     expect(ctx.fileRole("Wz2TCYFVr0hD8tJNiLajLt", [col()])).toBe("screens");
   });
-  it("with no file key, a local exported collection starting 1. means library", async () => {
+  it("with no file key, a local exported collection starting 1. SKO-Semantics means library", async () => {
     const { ctx } = await load([], []);
-    expect(ctx.fileRole(null, [col({ name: "1. Colour" })])).toBe("library");
-    expect(ctx.fileRole(null, [col({ name: "1. Colour", hiddenFromPublishing: true })])).toBe("screens");
+    expect(ctx.fileRole(null, [col({ name: "1. SKO-Semantics \ud83c\udfa8" })])).toBe("library");
+    expect(ctx.fileRole(null, [col({ name: "1. SKO-Semantics \ud83c\udfa8", hiddenFromPublishing: true })])).toBe("screens");
     expect(ctx.fileRole(null, [col({ name: "Other" })])).toBe("screens");
+    expect(ctx.fileRole(null, [col({ name: "Courses Type" })])).toBe("screens");
+  });
+});
+
+describe("fileRole: the Mobile App orphan", () => {
+  it("a null-key file with an orphan 1. Semantics collection is screens", async () => {
+    const { ctx } = await load([], []);
+    expect(ctx.fileRole(null, [col({ name: "1. Semantics" })])).toBe("screens");
   });
 });
 
@@ -935,6 +943,7 @@ describe("auditLayers and the audit message", () => {
     expect(r.covered).toContain("layers: whole file");
     expect(r.notCovered).toContain("components, docs");
     expect(r.notCovered).not.toContain("layers, components, docs");
+    expect(r.notCovered.filter((x) => x === "components, docs")).toHaveLength(1);
   });
 
   it("screens: a hand-set colour is a blocker inside a Ready for dev frame and a warning outside", async () => {
@@ -1054,16 +1063,26 @@ describe("auditLayers and the audit message", () => {
     const c = page("C", []);
     const f = await file(ICP, [a, b, c]);
     const r = await audit(f, { scope: "pages", pageIds: [a.id, b.id, "stale"], excludedPageIds: [b.id, "stale"] });
-    expect(r.covered).toEqual(["layers: 2 of 3 pages", "1 page and 0 components left out", "1 hidden layer skipped"]);
+    expect(r.covered).toEqual(["layers: 1 of 3 pages", "1 page left out", "1 hidden layer skipped"]);
     const l = await file(DS, [page("P", [component({ description: "[audit:skip]" }, [])])]);
     const sel = await audit(l, { scope: "file", pageIds: [], excludedPageIds: [] });
-    expect(sel.covered).toContain("0 pages and 1 component left out");
+    expect(sel.covered).toEqual(["tokens", "layers: whole file", "1 component left out"]);
+    const many = await file(ICP, [page("A", [frame({ visible: false }), frame({ visible: false }), frame({ visible: false })]), page("B", []), page("C", [])]);
+    const pages = many.ctx.figma.root.children;
+    const m = await audit(many, { scope: "file", pageIds: [], excludedPageIds: [pages[1].id, pages[2].id] });
+    expect(m.covered).toEqual(["layers: whole file", "2 pages left out", "3 hidden layers skipped"]);
+    const two = await file(DS, [page("A", [component({ description: "[audit:skip]" })]), page("B", []), page("C", [])]);
+    const tp = two.ctx.figma.root.children;
+    const t = await audit(two, { scope: "file", pageIds: [], excludedPageIds: [tp[1].id, tp[2].id] });
+    expect(t.covered).toContain("2 pages and 1 component left out");
+    const clean = await file(ICP, [page("A", [])]);
+    expect((await audit(clean, { scope: "file", pageIds: [], excludedPageIds: [] })).covered).toEqual(["layers: whole file"]);
   });
 
   it("layer progress carries the phase, page, pages and layers", async () => {
     const f = await file(ICP, [page("A", [frame({}, [])]), page("B", [])]);
     await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
-    const prog = f.posted.filter((m) => m.type === "audit-progress");
+    const prog = f.posted.filter((m) => m.type === "audit-progress" && m.phase === "layers");
     expect(prog[0]).toMatchObject({ phase: "layers", page: 1, pages: 2 });
     expect(typeof prog.at(-1).layers).toBe("number");
   });
@@ -1096,5 +1115,30 @@ describe("auditLayers and the audit message", () => {
     const settings = { scope: "pages", pageIds: ["p"], excludedPageIds: [] };
     await f.send({ type: "save-audit-settings", settings });
     expect(f.store["skillup-publish-tokens/audit/" + ICP]).toEqual(settings);
+  });
+
+  it("a fresh entry stored under a file name (no key) enables unused-token", async () => {
+    const store = { [USAGE]: {
+      "Mobile App": { name: "Mobile App", date: new Date().toISOString(), keys: ["kb"] },
+      Old: { name: "Old", date: "2020-01-01T00:00:00.000Z", keys: [] },
+    } };
+    const vars = ["a", "b"].map((id) => vr({ id, name: "bg/" + id, key: "k" + id }));
+    const f = await file(DS, [page("P", [component({}, [])])], { cols: [col({ variableIds: ["a", "b"] })], vars, store });
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.notCovered).not.toContain("use on screens");
+    expect(r.covered).toContain("use on screens: Mobile App");
+    expect(r.suggestions.filter((x) => x.check === "unused-token").map((x) => x.name)).toEqual(["bg/a"]);
+  });
+
+  it("the check phase reports progress every 200 nodes and once at the end", async () => {
+    const kids = Array.from({ length: 450 }, () => frame({}));
+    const f = await file(ICP, [page("P", kids)]);
+    await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    const checksProg = f.posted.filter((m) => m.type === "audit-progress" && m.phase === "checks");
+    expect(checksProg).toEqual([
+      { type: "audit-progress", phase: "checks", done: 200, total: 450 },
+      { type: "audit-progress", phase: "checks", done: 400, total: 450 },
+      { type: "audit-progress", phase: "checks", done: 450, total: 450 },
+    ]);
   });
 });

@@ -16,5 +16,6 @@
       "https://api.github.com"
     ],
     "reasoning": "Reads the published tokens and opens the token pull requests on the GitHub repositories set in the plugin (the prototype and the dev token package)."
-  }
+  },
+  "enablePrivatePluginApi": true
 }
