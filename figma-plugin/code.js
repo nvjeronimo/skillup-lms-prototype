@@ -385,27 +385,29 @@ async function layerChecks(node, ctx, getVar) {
     }
   }
 
-  // 2. Colours: visible SOLID paints with no variable.
+  // 2. Colours: visible SOLID paints with no variable, one finding per distinct hex per property.
+  const seenColour = {};
   const paintFindings = function (property, paints, bound) {
     for (let i = 0; i < paints.length; i++) {
       const p = paints[i];
       if (p.type !== "SOLID" || !paintIsVisible(p)) continue;
       if ((p.boundVariables && p.boundVariables.color) || aliasId(bound && bound[i])) continue;
-      find("hand-colour", property, hexOfColor(p.color));
+      const hex = hexOfColor(p.color);
+      if (seenColour[property + "|" + hex]) continue;
+      seenColour[property + "|" + hex] = true;
+      find("hand-colour", property, hex);
     }
   };
   if (Array.isArray(node.fills)) paintFindings("fill", node.fills, bv.fills);
   else if (node.fills === mixed && node.type === "TEXT" && node.getStyledTextSegments) {
     const segs = node.getStyledTextSegments(["fills"]);
-    const seen = {};
     for (let i = 0; i < segs.length; i++) {
       if (!Array.isArray(segs[i].fills)) continue;
-      const before = out.length;
-      paintFindings("fill", segs[i].fills, null);
-      for (let j = out.length - 1; j >= before; j--) {
-        if (seen[out[j].value]) out.splice(j, 1);
-        else seen[out[j].value] = true;
+      for (let j = 0; j < segs[i].fills.length; j++) {
+        const p = segs[i].fills[j];
+        await verify("fill", aliasId(p.boundVariables && p.boundVariables.color));
       }
+      paintFindings("fill", segs[i].fills, null);
     }
   }
   const strokes = Array.isArray(node.strokes) ? node.strokes : [];

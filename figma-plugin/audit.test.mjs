@@ -584,9 +584,8 @@ describe("layerChecks", () => {
   const solid = (r, g, b, over) => ({ type: "SOLID", color: { r, g, b }, ...over });
   async function run(node, vars = [], ctxOver = {}) {
     const { ctx } = await load([], vars);
-    const get = async (id) => { const v = await ctx.getVarSafe(id); return v; };
     const out = await ctx.layerChecks(node, { ...CTX, ...ctxOver }, ctx.getVarSafe);
-    return { out, ctx, get };
+    return { out, ctx };
   }
   const props = (out, check) => out.filter((f) => f.check === check).map((f) => f.property);
 
@@ -715,5 +714,38 @@ describe("layerChecks", () => {
     const al = { type: "VARIABLE_ALIAS", id: "v1" };
     const n = frame({ fills: [solid(1, 0, 0, { boundVariables: { color: al } })], layoutMode: "VERTICAL", paddingTop: 12, boundVariables: { paddingTop: al } });
     expect((await run(n, [vr({ id: "v1" })])).out).toEqual([]);
+  });
+
+  it("mixed fills on text use the segments: one hand-colour per distinct hex, bound and invisible skipped", async () => {
+    const { ctx } = await load([], []);
+    const al = { type: "VARIABLE_ALIAS", id: "v1" };
+    const t = text({
+      textStyleId: "S:1", fills: ctx.figma.mixed,
+      getStyledTextSegments: (f) => {
+        expect(f).toEqual(["fills"]);
+        return [
+          { fills: [solid(1, 0, 0)] },
+          { fills: [solid(1, 0, 0)] },
+          { fills: [solid(0, 0, 1, { boundVariables: { color: al } })] },
+          { fills: [solid(0, 1, 0, { visible: false })] },
+          { fills: [] },
+          { fills: ctx.figma.mixed },
+        ];
+      },
+    });
+    const out = await ctx.layerChecks(t, CTX, async (id) => (id === "v1" ? { id } : null));
+    expect(out.map((f) => [f.check, f.property, f.value])).toEqual([["hand-colour", "fill", "#ff0000"]]);
+  });
+
+  it("a dead variable on a segment paint is binding-missing", async () => {
+    const { ctx } = await load([], []);
+    const t = text({ textStyleId: "S:1", fills: ctx.figma.mixed, getStyledTextSegments: () => [{ fills: [solid(0, 0, 1, { boundVariables: { color: { type: "VARIABLE_ALIAS", id: "dead" } } })] }] });
+    const out = await ctx.layerChecks(t, CTX, async () => null);
+    expect(out.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fill", "dead"]]);
+  });
+
+  it("two identical unbound fills on one frame give one finding", async () => {
+    const { out } = await run(frame({ fills: [solid(1, 0, 0), solid(1, 0, 0)], strokes: [solid(1, 0, 0), solid(1, 0, 0)], strokeWeight: 0 }));
+    expect(out.map((f) => [f.property, f.value])).toEqual([["fill", "#ff0000"], ["stroke", "#ff0000"]]);
   });
 });
