@@ -290,7 +290,7 @@ describe("auditTokens", () => {
 
   it("a failing audit posts audit-error, not error", async () => {
     const { cols, vars } = one();
-    const { posted, send } = await load(cols, vars);
+    const { posted, send } = await load(cols, vars, { fileKey: "c7EUDrQwP8si08aPipDSIV" });
     posted.length = 0;
     await send({ type: "audit", usage: { format: "skillup-token-usage/1", tokens: null, unknownCss: 5 }, usageFresh: true });
     const types = posted.map((m) => m.type);
@@ -331,7 +331,7 @@ describe("auditTokens", () => {
     const r = await ctx.auditTokens({});
     expect(r.verdict).toBe("ready");
     expect(r.covered).toContain("tokens");
-    expect(r.notCovered).toContain("layers, components, docs");
+    expect(r.notCovered).toContain("components, docs");
     expect(r.publishBlocked).toBe(false);
   });
 
@@ -347,11 +347,12 @@ describe("auditTokens", () => {
 
   it("the audit message replies with progress then a result", async () => {
     const { cols, vars } = one();
-    const { posted, send } = await load(cols, vars);
+    const p1 = { id: "0:1", name: "Page 1", children: [], loadAsync: async () => {} };
+    const { posted, send } = await load(cols, vars, { fileKey: "c7EUDrQwP8si08aPipDSIV", root: { name: "Doc", children: [p1] }, currentPage: p1 });
     posted.length = 0;
     await send({ type: "audit", usage: null, usageFresh: false });
-    expect(posted.map((m) => m.type)).toEqual(["audit-progress", "audit-result"]);
-    expect(posted[1].report.verdict).toBe("ready");
+    expect(posted.map((m) => m.type + ":" + m.phase)).toEqual(["audit-progress:tokens", "audit-progress:layers", "audit-result:undefined"]);
+    expect(posted[2].report.verdict).toBe("ready");
   });
 });
 
@@ -893,3 +894,186 @@ describe("token use across files", () => {
   });
 });
 
+describe("auditLayers and the audit message", () => {
+  const DS = "c7EUDrQwP8si08aPipDSIV";
+  const ICP = "Wz2TCYFVr0hD8tJNiLajLt";
+  const USAGE = "skillup-publish-tokens/screens-usage";
+  const red = () => ({ type: "SOLID", color: { r: 1, g: 0, b: 0 } });
+  const al = (id) => ({ type: "VARIABLE_ALIAS", id });
+  // A file with real pages (loadAsync), an in-memory clientStorage and the editor calls select-node uses.
+  async function file(fileKey, pages, { cols = [], vars = [], store = {}, figma = {} } = {}) {
+    const root = { name: "Doc", children: pages };
+    pages.forEach((p) => { p.parent = root; });
+    const clientStorage = { getAsync: async (k) => store[k], setAsync: async (k, v) => { store[k] = v; } };
+    const r = await load(cols, vars, { fileKey, root, currentPage: pages[0], clientStorage, ...figma });
+    return { ...r, store };
+  }
+  async function audit(f, msg = {}) {
+    f.posted.length = 0;
+    await f.send({ type: "audit", usage: null, usageFresh: false, ...msg });
+    const res = f.posted.find((m) => m.type === "audit-result");
+    if (!res) throw new Error("no audit-result: " + JSON.stringify(f.posted));
+    return res.report;
+  }
+  const bgx = () => {
+    const v = vr({ id: "bg", name: "bg/x", key: "kbg", valuesByMode: { m1: { r: 1, g: 0, b: 0 }, m2: { r: 1, g: 0, b: 0 } } });
+    return { cols: [col({ variableIds: ["bg"] })], vars: [v] };
+  };
+
+  it("library: a hand-set colour in a component is a blocker and the verdict is not ready, publishBlocked unchanged", async () => {
+    const box = frame({ name: "Box", fills: [red()] });
+    const comp = component({ name: "Card" }, [box]);
+    const f = await file(DS, [page("Components", [comp])], bgx());
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.role).toBe("library");
+    const hc = r.blockers.filter((x) => x.check === "hand-colour");
+    expect(hc).toHaveLength(1);
+    expect(hc[0]).toMatchObject({ nodeId: box.id, property: "fill", value: "#ff0000", top: "Card", suggestion: "bg/x" });
+    expect(r.verdict).toBe("not-ready");
+    expect(r.publishBlocked).toBe(false);
+    expect(r.covered).toContain("tokens");
+    expect(r.covered).toContain("layers: whole file");
+    expect(r.notCovered).toContain("components, docs");
+    expect(r.notCovered).not.toContain("layers, components, docs");
+  });
+
+  it("screens: a hand-set colour is a blocker inside a Ready for dev frame and a warning outside", async () => {
+    const inReady = frame({ name: "In", fills: [red()] });
+    const marked = frame({ name: "Screen", devStatus: { type: "READY_FOR_DEV" } }, [inReady]);
+    const loose = frame({ name: "Loose", fills: [red()] });
+    const f = await file(ICP, [page("P", [marked, loose])]);
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.role).toBe("screens");
+    expect(r.blockers.map((x) => [x.check, x.nodeId])).toEqual([["hand-colour", inReady.id]]);
+    expect(r.warnings.map((x) => [x.check, x.nodeId])).toEqual([["hand-colour", loose.id]]);
+    expect(r.blockers[0].suggestion).toBe("no imported token matches");
+    expect(r.verdict).toBe("not-ready");
+    expect(r.publishBlocked).toBe(false);
+    expect(r.notCovered).toEqual(["components, docs"]);
+  });
+
+  it("screens: a token bound elsewhere in scope is suggested for a hand-set value", async () => {
+    const bound = frame({ fills: [{ ...red(), boundVariables: { color: al("bg") } }] });
+    const loose = frame({ fills: [red()] });
+    const f = await file(ICP, [page("P", [bound, loose])], bgx());
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.warnings.map((x) => [x.nodeId, x.suggestion])).toEqual([[loose.id, "bg/x"]]);
+  });
+
+  it("binding-missing is a blocker in both roles", async () => {
+    const dead = () => frame({ fills: [{ ...red(), boundVariables: { color: al("gone") } }] });
+    const s = await file(ICP, [page("P", [dead()])]);
+    const rs = await audit(s, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(rs.blockers.map((x) => [x.check, x.value])).toEqual([["binding-missing", "gone"]]);
+    expect(rs.warnings).toEqual([]);
+    const l = await file(DS, [page("P", [component({}, [dead()])])]);
+    const rl = await audit(l, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(rl.blockers.map((x) => x.check)).toContain("binding-missing");
+    expect(rl.verdict).toBe("not-ready");
+  });
+
+  it("cancel mid-walk returns the cancelled report and stores no screens usage", async () => {
+    const kids = Array.from({ length: 1200 }, () => text({ fills: [{ ...red(), boundVariables: { color: al("bg") } }] }));
+    const f = await file(ICP, [page("P", [frame({}, kids)])], bgx());
+    f.posted.length = 0;
+    const running = f.send({ type: "audit", scope: "file", pageIds: [], excludedPageIds: [] });
+    await f.send({ type: "audit-cancel" });
+    await running;
+    const r = f.posted.find((m) => m.type === "audit-result").report;
+    expect(r.notCovered).toEqual(["cancelled"]);
+    expect(r.blockers).toEqual([]);
+    expect(f.store[USAGE]).toBeUndefined();
+  });
+
+  it("a whole-file screens run stores its keys; a pages run does not", async () => {
+    const used = () => frame({ fills: [{ ...red(), boundVariables: { color: al("bg") } }] });
+    const inst = () => instance({ boundVariables: { fills: [al("bg2")] } });
+    const two = { cols: [col({ variableIds: ["bg", "bg2"] })], vars: [bgx().vars[0], vr({ id: "bg2", name: "bg/y", key: "kbg2" })] };
+    const f = await file(ICP, [page("P", [used(), inst()])], two);
+    await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    const entry = JSON.parse(JSON.stringify(f.store[USAGE][ICP]));
+    expect(entry.name).toBe("Doc");
+    expect(entry.keys.sort()).toEqual(["kbg", "kbg2"]);
+    const pg1 = page("P", [used()]);
+    const g = await file(ICP, [pg1], two);
+    await audit(g, { scope: "pages", pageIds: [pg1.id], excludedPageIds: [] });
+    expect(g.store[USAGE]).toBeUndefined();
+  });
+
+  it("library without a fresh ICP entry lists \"use on screens\" as not covered and no unused-token", async () => {
+    const f = await file(DS, [page("P", [component({}, [])])], bgx());
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.notCovered).toContain("use on screens");
+    expect(r.suggestions.filter((x) => x.check === "unused-token")).toEqual([]);
+  });
+
+  it("library with a fresh ICP entry lists the tokens no file uses", async () => {
+    const store = { [USAGE]: { [ICP]: { name: "ICP", date: new Date().toISOString(), keys: ["kb"] } } };
+    const vars = ["a", "b", "c"].map((id) => vr({ id, name: "bg/" + id, key: "k" + id }));
+    const comp = component({}, [frame({ fills: [{ ...red(), boundVariables: { color: al("a") } }] })]);
+    const f = await file(DS, [page("P", [comp])], { cols: [col({ variableIds: ["a", "b", "c"] })], vars, store });
+    const r = await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(r.notCovered).not.toContain("use on screens");
+    expect(r.covered).toContain("use on screens: ICP");
+    expect(r.suggestions.filter((x) => x.check === "unused-token").map((x) => x.name)).toEqual(["bg/c"]);
+  });
+
+  it("the screens role does not run auditTokens", async () => {
+    const { cols, vars } = one({}, { codeSyntax: {} });
+    const f = await file(ICP, [page("P", [])], { cols, vars });
+    const r = await audit(f, {});
+    expect(r.warnings.map((x) => x.check)).not.toContain("no-web");
+    expect(r.covered).not.toContain("tokens");
+    expect(r.covered).toContain("layers: Ready for dev");
+  });
+
+  it("covered names the scope, what was left out and the hidden layers", async () => {
+    const a = page("A", [frame({ visible: false }, [])]);
+    const b = page("B", []);
+    const c = page("C", []);
+    const f = await file(ICP, [a, b, c]);
+    const r = await audit(f, { scope: "pages", pageIds: [a.id, b.id, "stale"], excludedPageIds: [b.id, "stale"] });
+    expect(r.covered).toEqual(["layers: 2 of 3 pages", "1 page and 0 components left out", "1 hidden layer skipped"]);
+    const l = await file(DS, [page("P", [component({ description: "[audit:skip]" }, [])])]);
+    const sel = await audit(l, { scope: "file", pageIds: [], excludedPageIds: [] });
+    expect(sel.covered).toContain("0 pages and 1 component left out");
+  });
+
+  it("layer progress carries the phase, page, pages and layers", async () => {
+    const f = await file(ICP, [page("A", [frame({}, [])]), page("B", [])]);
+    await audit(f, { scope: "file", pageIds: [], excludedPageIds: [] });
+    const prog = f.posted.filter((m) => m.type === "audit-progress");
+    expect(prog[0]).toMatchObject({ phase: "layers", page: 1, pages: 2 });
+    expect(typeof prog.at(-1).layers).toBe("number");
+  });
+
+  it("select-node on a missing id replies ok false", async () => {
+    const f = await file(ICP, [page("P", [])], { figma: { getNodeByIdAsync: async () => null } });
+    f.posted.length = 0;
+    await f.send({ type: "select-node", id: "9:9" });
+    expect(f.posted).toEqual([{ type: "select-result", id: "9:9", ok: false }]);
+  });
+
+  it("select-node switches page, selects and zooms", async () => {
+    const leaf = frame({});
+    const p2 = page("Two", [frame({}, [leaf])]);
+    const calls = [];
+    const f = await file(ICP, [page("One", []), p2], { figma: {
+      getNodeByIdAsync: async (id) => (id === leaf.id ? leaf : null),
+      viewport: { scrollAndZoomIntoView: (nodes) => calls.push(["zoom", nodes[0].id]) },
+    } });
+    f.ctx.figma.setCurrentPageAsync = async (p) => { calls.push(["page", p.id]); f.ctx.figma.currentPage = p; };
+    f.posted.length = 0;
+    await f.send({ type: "select-node", id: leaf.id });
+    expect(f.posted).toEqual([{ type: "select-result", id: leaf.id, ok: true }]);
+    expect(calls).toEqual([["page", p2.id], ["zoom", leaf.id]]);
+    expect(f.ctx.figma.currentPage.selection.map((n) => n.id)).toEqual([leaf.id]);
+  });
+
+  it("save-audit-settings stores the settings under the file key", async () => {
+    const f = await file(ICP, [page("P", [])]);
+    const settings = { scope: "pages", pageIds: ["p"], excludedPageIds: [] };
+    await f.send({ type: "save-audit-settings", settings });
+    expect(f.store["skillup-publish-tokens/audit/" + ICP]).toEqual(settings);
+  });
+});

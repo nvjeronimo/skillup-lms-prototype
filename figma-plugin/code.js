@@ -677,7 +677,171 @@ function suggestFor(finding, node, index) {
   return null; // hand-stroke: no token for stroke weight
 }
 
-// ---- The audit (tokens only; later parts add layers, components and docs) ----
+// ---- The layer audit ----
+
+const AUDIT_LATER = "components, docs";
+
+// Settings from the UI may be stale or partial: keep only pages that still exist, fill the rest with defaults.
+function normalizeAuditSettings(role, settings) {
+  const s = settings || {};
+  const pages = figma.root.children.map(function (p) { return { id: p.id, name: p.name }; });
+  const known = {};
+  pages.forEach(function (p) { known[p.id] = true; });
+  const scopes = role === "library" ? ["file", "pages", "selection"] : ["ready", "file", "pages", "selection"];
+  const scope = scopes.indexOf(s.scope) >= 0 ? s.scope : role === "library" ? "file" : "ready";
+  const keep = function (ids) { return ids.filter(function (id) { return known[id]; }); };
+  return {
+    scope: scope,
+    pageIds: Array.isArray(s.pageIds) ? keep(s.pageIds) : [figma.currentPage.id],
+    excludedPageIds: Array.isArray(s.excludedPageIds) ? keep(s.excludedPageIds) : defaultExcludedPages(role, pages),
+  };
+}
+
+function auditScopeLabel(s) {
+  if (s.scope === "ready") return "Ready for dev";
+  if (s.scope === "file") return "whole file";
+  if (s.scope === "pages") return s.pageIds.length + " of " + plural(figma.root.children.length, "page", "pages");
+  const sel = (figma.currentPage && figma.currentPage.selection) || [];
+  return "selection: " + plural(sel.length, "layer", "layers");
+}
+
+// The text style ids a text node uses, segments included when they differ.
+function textStyleIdsOf(node) {
+  if (node.type !== "TEXT") return [];
+  const id = node.textStyleId;
+  if (typeof id === "string") return id ? [id] : [];
+  if (typeof node.getStyledTextSegments !== "function") return [];
+  try {
+    return node.getStyledTextSegments(["textStyleId"]).map(function (x) { return x.textStyleId; }).filter(function (x) { return typeof x === "string" && x; });
+  } catch (e) {
+    return [];
+  }
+}
+
+// Walks the scope, checks every audited layer, weighs the findings and, on whole-file runs, records
+// (screens) or checks (library) token use. settings: { scope, pageIds, excludedPageIds }.
+// Returns { covered, notCovered, blockers, warnings, suggestions, cancelled }.
+async function auditLayers(opts) {
+  const role = opts.role;
+  const library = role === "library";
+  const isCancelled = opts.isCancelled || function () { return false; };
+  const s = normalizeAuditSettings(role, opts.settings);
+  const wholeFile = s.scope === "file";
+  const cancelled = function () {
+    return { cancelled: true, covered: [], notCovered: ["cancelled"], blockers: [], warnings: [], suggestions: [] };
+  };
+
+  // One lookup per variable id for the whole run.
+  const cache = new Map();
+  const getVar = async function (id) {
+    if (!cache.has(id)) cache.set(id, await getVarSafe(id));
+    return cache.get(id);
+  };
+
+  const visited = []; // { node, ctx }
+  const seenIds = new Set(); // variables bound in scope, for the suggestions
+  const styleIds = new Set();
+  const usedIds = new Set(); // variables bound anywhere in the file (whole-file runs)
+  const walk = await walkScope({
+    role: role,
+    scope: s.scope,
+    pageIds: s.pageIds,
+    excludedPageIds: s.excludedPageIds,
+    onNode: function (node, ctx) {
+      visited.push({ node: node, ctx: ctx });
+      boundIdsOf(node).forEach(function (id) { seenIds.add(id); });
+      textStyleIdsOf(node).forEach(function (id) { styleIds.add(id); });
+    },
+    onUse: wholeFile ? function (node) { boundIdsOf(node).forEach(function (id) { usedIds.add(id); }); } : null,
+    onProgress: opts.onProgress,
+    isCancelled: isCancelled,
+  });
+  if (walk.cancelled) return cancelled();
+
+  const pairs = []; // { finding, node }
+  for (let i = 0; i < visited.length; i++) {
+    if (i > 0 && i % 500 === 0) {
+      await new Promise(function (r) { setTimeout(r, 0); });
+      if (isCancelled()) return cancelled();
+    }
+    const found = await layerChecks(visited[i].node, visited[i].ctx, getVar);
+    for (let j = 0; j < found.length; j++) pairs.push({ finding: found[j], node: visited[i].node });
+  }
+  if (isCancelled()) return cancelled();
+
+  if (pairs.some(function (p) { return p.finding.check !== "binding-missing"; })) {
+    usedIds.forEach(function (id) { seenIds.add(id); });
+    const index = await buildTokenIndex(role, Array.from(seenIds), Array.from(styleIds));
+    pairs.forEach(function (p) { p.finding.suggestion = suggestFor(p.finding, p.node, index); });
+  } else {
+    pairs.forEach(function (p) { p.finding.suggestion = null; });
+  }
+
+  const blockers = [];
+  const warnings = [];
+  const suggestions = [];
+  pairs.forEach(function (p) {
+    const f = p.finding;
+    if (f.check === "binding-missing" || library || f.ready) blockers.push(f);
+    else warnings.push(f);
+  });
+
+  const covered = ["layers: " + auditScopeLabel(s)];
+  if (walk.pagesLeftOut || walk.componentsLeftOut) {
+    covered.push(plural(walk.pagesLeftOut, "page", "pages") + " and " + plural(walk.componentsLeftOut, "component", "components") + " left out");
+  }
+  if (!library && walk.hiddenSkipped) covered.push(plural(walk.hiddenSkipped, "hidden layer", "hidden layers") + " skipped");
+  const notCovered = library ? [] : [AUDIT_LATER];
+
+  if (library) {
+    if (!wholeFile) {
+      notCovered.push("unused tokens");
+    } else {
+      const usage = await readScreensUsage(new Date());
+      if (!usage.icpFresh) {
+        notCovered.push("use on screens");
+      } else {
+        const cols = await figma.variables.getLocalVariableCollectionsAsync();
+        const colById = new Map(cols.map(function (c) { return [c.id, c]; }));
+        const local = (await figma.variables.getLocalVariablesAsync())
+          .map(function (v) { return { v: v, col: colById.get(v.variableCollectionId) }; })
+          .filter(function (x) { return x.col; });
+        const aliased = new Set();
+        local.forEach(function (x) {
+          Object.keys(x.v.valuesByMode || {}).forEach(function (m) {
+            const id = aliasIdOf(x.v.valuesByMode[m]);
+            if (id) aliased.add(id);
+          });
+        });
+        const styleBound = new Set();
+        (await figma.getLocalTextStylesAsync()).forEach(function (st) {
+          const bv = st.boundVariables || {};
+          Object.keys(bv).forEach(function (k) {
+            const id = aliasIdOf(bv[k]);
+            if (id) styleBound.add(id);
+          });
+        });
+        covered.push("use on screens: " + usage.files.map(function (f) { return f.name; }).join(", "));
+        unusedTokens(local, usedIds, usage.keys, aliased, styleBound).forEach(function (u) {
+          suggestions.push({ check: "unused-token", collection: u.collection, name: u.name, text: "no layer uses it, in the DS or in the screens files" });
+        });
+      }
+    }
+  } else if (wholeFile) {
+    const keys = new Set();
+    const ids = Array.from(usedIds);
+    for (let i = 0; i < ids.length; i++) {
+      const v = await getVar(ids[i]);
+      if (v && v.key) keys.add(v.key);
+    }
+    if (isCancelled()) return cancelled();
+    await storeScreensUsage(figma.fileKey || figma.root.name, figma.root.name, Array.from(keys), new Date());
+  }
+
+  return { cancelled: false, covered: covered, notCovered: notCovered, blockers: blockers, warnings: warnings, suggestions: suggestions };
+}
+
+// ---- The token audit (part 1; the layer audit above adds layers, later parts components and docs) ----
 
 // The build's Figma → CSS name mapping, copied from scripts/tokens/names.mjs (the plugin cannot
 // import it). audit.test.mjs checks both give the same names for the committed variables.json.
@@ -756,7 +920,7 @@ async function auditTokens(opts) {
   const timeoutMs = opts.publishStatusTimeoutMs !== undefined ? opts.publishStatusTimeoutMs : 10000;
   const onProgress = opts.onProgress || function () {};
   const isCancelled = opts.isCancelled || function () { return false; };
-  const later = "layers, components, docs";
+  const later = AUDIT_LATER;
 
   function cancelledReport() {
     return { verdict: "not-ready", covered: [], notCovered: ["cancelled"], blockers: [], pending: [], warnings: [], suggestions: [], publishBlocked: false };
@@ -906,18 +1070,70 @@ let auditCancelled = false;
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "audit") {
     auditCancelled = false;
+    const isCancelled = () => auditCancelled;
     try {
-      const report = await auditTokens({
-        usage: msg.usage || null,
-        usageFresh: msg.usageFresh === true,
-        onProgress: (done, total) => figma.ui.postMessage({ type: "audit-progress", done, total }),
-        isCancelled: () => auditCancelled,
+      const role = fileRole(figma.fileKey, await figma.variables.getLocalVariableCollectionsAsync());
+      const cancelledReport = { verdict: "not-ready", covered: [], notCovered: ["cancelled"], blockers: [], pending: [], warnings: [], suggestions: [], publishBlocked: false, role };
+      let tokens = { covered: [], notCovered: [], blockers: [], pending: [], warnings: [], suggestions: [], publishBlocked: false };
+      if (role === "library") {
+        tokens = await auditTokens({
+          usage: msg.usage || null,
+          usageFresh: msg.usageFresh === true,
+          onProgress: (done, total) => figma.ui.postMessage({ type: "audit-progress", phase: "tokens", done, total }),
+          isCancelled,
+        });
+        if (tokens.notCovered.indexOf("cancelled") >= 0) {
+          figma.ui.postMessage({ type: "audit-result", report: cancelledReport });
+          return;
+        }
+      }
+      const layers = await auditLayers({
+        role,
+        settings: { scope: msg.scope, pageIds: msg.pageIds, excludedPageIds: msg.excludedPageIds },
+        onProgress: (p) => figma.ui.postMessage({ type: "audit-progress", phase: "layers", page: p.page, pages: p.pages, layers: p.layers }),
+        isCancelled,
       });
+      if (layers.cancelled) {
+        figma.ui.postMessage({ type: "audit-result", report: cancelledReport });
+        return;
+      }
+      const notCovered = [];
+      tokens.notCovered.concat(layers.notCovered).forEach((x) => { if (notCovered.indexOf(x) < 0) notCovered.push(x); });
+      const blockers = tokens.blockers.concat(layers.blockers);
+      const report = {
+        verdict: blockers.length ? "not-ready" : "ready",
+        covered: tokens.covered.concat(layers.covered),
+        notCovered,
+        blockers,
+        pending: tokens.pending,
+        warnings: tokens.warnings.concat(layers.warnings),
+        suggestions: tokens.suggestions.concat(layers.suggestions),
+        publishBlocked: tokens.publishBlocked,
+        role,
+      };
       figma.ui.postMessage({ type: "audit-result", report });
     } catch (e) {
       figma.ui.postMessage({ type: "audit-error", message: String(e && e.message ? e.message : e) });
     }
   }
+  if (msg.type === "select-node") {
+    let ok = false;
+    try {
+      const node = await figma.getNodeByIdAsync(msg.id);
+      let page = node;
+      while (page && page.type !== "PAGE") page = page.parent;
+      if (node && page && node !== page) {
+        await figma.setCurrentPageAsync(page);
+        figma.currentPage.selection = [node];
+        figma.viewport.scrollAndZoomIntoView([node]);
+        ok = true;
+      }
+    } catch (e) {
+      ok = false;
+    }
+    figma.ui.postMessage({ type: "select-result", id: msg.id, ok });
+  }
+  if (msg.type === "save-audit-settings") await figma.clientStorage.setAsync(auditSettingsKey(), msg.settings);
   if (msg.type === "audit-cancel") auditCancelled = true;
   if (msg.type === "save-settings") await figma.clientStorage.setAsync(SETTINGS_KEY, msg.settings);
   if (msg.type === "close") figma.closePlugin();
