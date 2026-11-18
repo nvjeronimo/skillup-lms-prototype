@@ -974,15 +974,36 @@ describe("auditLayers and the audit message", () => {
 
   it("cancel mid-walk returns the cancelled report and stores no screens usage", async () => {
     const kids = Array.from({ length: 1200 }, () => text({ fills: [{ ...red(), boundVariables: { color: al("bg") } }] }));
+    let reachedEnd = false;
+    Object.defineProperty(kids[1199], "type", { get: () => { reachedEnd = true; return "TEXT"; } });
     const f = await file(ICP, [page("P", [frame({}, kids)])], bgx());
+    // Cancel from inside the walk: on the first layers progress that has walked layers.
+    const post = f.ctx.figma.ui.postMessage;
+    const layersSeen = [];
+    f.ctx.figma.ui.postMessage = (m) => {
+      post(m);
+      if (m.type === "audit-progress" && m.phase === "layers") {
+        layersSeen.push(m.layers);
+        if (m.layers > 0) f.send({ type: "audit-cancel" });
+      }
+    };
     f.posted.length = 0;
-    const running = f.send({ type: "audit", scope: "file", pageIds: [], excludedPageIds: [] });
-    await f.send({ type: "audit-cancel" });
-    await running;
+    await f.send({ type: "audit", scope: "file", pageIds: [], excludedPageIds: [] });
     const r = f.posted.find((m) => m.type === "audit-result").report;
+    expect(Math.max(...layersSeen)).toBeGreaterThan(0);
+    expect(Math.max(...layersSeen)).toBeLessThanOrEqual(500);
+    expect(reachedEnd).toBe(false);
     expect(r.notCovered).toEqual(["cancelled"]);
     expect(r.blockers).toEqual([]);
     expect(f.store[USAGE]).toBeUndefined();
+  });
+
+  it("a pages run whose pages are all gone falls back to the current page", async () => {
+    const a = page("A", [frame({ fills: [red()] })]);
+    const f = await file(ICP, [a, page("B", [])]);
+    const r = await audit(f, { scope: "pages", pageIds: ["gone"], excludedPageIds: [] });
+    expect(r.covered[0]).toBe("layers: 1 of 2 pages");
+    expect(r.warnings).toHaveLength(1);
   });
 
   it("a whole-file screens run stores its keys; a pages run does not", async () => {

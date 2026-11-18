@@ -690,9 +690,10 @@ function normalizeAuditSettings(role, settings) {
   const scopes = role === "library" ? ["file", "pages", "selection"] : ["ready", "file", "pages", "selection"];
   const scope = scopes.indexOf(s.scope) >= 0 ? s.scope : role === "library" ? "file" : "ready";
   const keep = function (ids) { return ids.filter(function (id) { return known[id]; }); };
+  const pageIds = Array.isArray(s.pageIds) ? keep(s.pageIds) : [];
   return {
     scope: scope,
-    pageIds: Array.isArray(s.pageIds) ? keep(s.pageIds) : [figma.currentPage.id],
+    pageIds: pageIds.length ? pageIds : [figma.currentPage.id], // every chosen page gone: the current one
     excludedPageIds: Array.isArray(s.excludedPageIds) ? keep(s.excludedPageIds) : defaultExcludedPages(role, pages),
   };
 }
