@@ -464,7 +464,7 @@ async function layerChecks(node, ctx, getVar) {
     paddingTop: "padding-top", paddingRight: "padding-right", paddingBottom: "padding-bottom", paddingLeft: "padding-left",
     itemSpacing: "gap", counterAxisSpacing: "counter-gap", strokeWeight: "stroke-weight",
     strokeTopWeight: "stroke-weight", strokeRightWeight: "stroke-weight", strokeBottomWeight: "stroke-weight", strokeLeftWeight: "stroke-weight",
-    fills: "fill", strokes: "stroke",
+    fills: "fill", strokes: "stroke", textRangeFills: "fill",
   };
   const nameOf = function (key) { return NAMES[key] || key; };
   // The ids in one binding value: an alias, a list of aliases, or a map of them (one level per step).

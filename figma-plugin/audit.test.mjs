@@ -664,6 +664,14 @@ describe("layerChecks", () => {
     expect(tout.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fontSize", "fs"], ["binding-missing", "lineHeight", "lh"]]);
   });
 
+  it("a dead text range fill (textRangeFills) and its segment paint are one fill finding (I4)", async () => {
+    const dead = { type: "VARIABLE_ALIAS", id: "gone" };
+    const { ctx } = await load([], []);
+    const t = text({ textStyleId: "S:1", fills: ctx.figma.mixed, boundVariables: { textRangeFills: [dead] }, getStyledTextSegments: (f) => (f[0] === "fills" ? [{ fills: [solid(0, 0, 1, { boundVariables: { color: dead } })] }] : []) });
+    const out = await ctx.layerChecks(t, CTX, async () => null);
+    expect(out.map((f) => [f.check, f.property, f.value])).toEqual([["binding-missing", "fill", "gone"]]);
+  });
+
   it("a dead fill bound both on the node and on the paint is reported once, as fill (I4)", async () => {
     const dead = { type: "VARIABLE_ALIAS", id: "gone" };
     const n = frame({ fills: [solid(1, 0, 0, { boundVariables: { color: dead } })], boundVariables: { fills: [dead] } });
