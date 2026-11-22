@@ -130,7 +130,7 @@ export const AttemptsSpent: Story = {
   },
 };
 
-/** Mode A chrome: the block display_name above the question. */
+/** A-1 chrome: the block display_name above the question. */
 export const PlatformPrompt: Story = {
   args: { showPlatformPrompt: true, footer: { submitEnabled: true, showHint: true, showAnswer: true } },
 };

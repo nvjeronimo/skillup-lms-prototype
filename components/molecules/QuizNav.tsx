@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 import styles from "./QuizNav.module.css";
 
 /**
- * DS `LMS / Quiz · Nav`. Quiz-level navigation, and the one place where the two
- * modes differ in *structure* rather than in switches — which is why this is a
+ * DS `LMS / Quiz · Nav`. Quiz-level navigation. A-1 and A-2 keep it at the
+ * foot; B nests a stepper at the top. That structural split is why this is a
  * variant and the Question Card is not.
  */
 
@@ -19,12 +19,12 @@ export interface QuizNavStackedProps {
 }
 
 /**
- * Mode A. Sits at the **foot** of the quiz, where the platform puts it.
+ * A-1 and A-2. Sits at the **foot** of the quiz, where the platform puts it.
  *
  * Previous/Next move between **units**, and the whole quiz is one unit, so they
  * leave the quiz entirely. They are deliberately not labelled "Previous
- * question" — relabelling them would hand A half of B's improvement and flatten
- * the comparison the two modes exist to make.
+ * question" — relabelling them would hand the platform page half of B's
+ * improvement and flatten the comparison.
  */
 export function QuizNavStacked({ onPrevious, onNext, className }: QuizNavStackedProps) {
   return (
@@ -57,9 +57,9 @@ export interface QuizNavStepperProps {
  * `showProgress` is on: back, the question counter over a progress track, and
  * a rule under both.
  *
- * Putting it at the top has a useful side effect — mode A's Previous/Next live
- * at the foot and leave the quiz, so the two modes are told apart at a glance
- * rather than by reading labels.
+ * Putting it at the top has a useful side effect — A-1 and A-2 keep
+ * Previous/Next at the foot, and those leave the quiz, so B is told apart
+ * from them at a glance rather than by reading labels.
  *
  * The forward action is not here. The bottom of the screen carries the
  * question's own action: Submit, becoming Next question once submitted, and See

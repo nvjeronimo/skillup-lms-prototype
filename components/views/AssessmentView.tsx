@@ -19,6 +19,7 @@ import {
   getAssignmentBrief,
   getQuiz,
   getQuizConfig,
+  quizPattern,
   topicFamily,
   type QuizConfig,
   type QuizMode,
@@ -42,16 +43,17 @@ export function AssessmentView({ topicId, courseSlug = "six-sigma" }: { topicId:
   return isSubmission ? <GradedSubmission topicId={topicId} /> : <Quiz topicId={topicId} courseSlug={courseSlug} />;
 }
 
-/* ---- Quiz: two modes, A and B (quizzes/08-two-modes.md) ----
-   A is how the platform behaves today: one scrolling page with every question
-   on it, no entry screen, no results, no explanations, and Previous/Next at the
-   foot that move between units and therefore LEAVE the quiz.
-   B is the proposal: an entry screen, a stepper with the nav as a top bar,
+/* ---- Quiz patterns A-1, A-2 and B (quizzes/08-two-modes.md, 14 Aug 2026) ----
+   A-1 is rejected: one scrolling page, one problem per question, so every
+   question submits on its own. No entry screen and no results. Previous/Next
+   at the foot move between units and therefore LEAVE the quiz.
+   A-2 is the build target: the same scrolling page, but one problem for the
+   set, so one Submit scores every question. Practice quizzes use this.
+   B is parked: an entry screen, a stepper with the nav as a top bar,
    explanations, and a results surface rendered in place below the last question.
 
-   Both respect the same platform rules: every question submits on its own,
-   Submit is the only action that spends an attempt, Reset never returns one and
-   wipes the score already earned, a saved answer is worth zero, and a closed
+   Submit is the only action that spends an attempt. Reset never returns one
+   and wipes the score already earned. A saved answer is worth zero. A closed
    problem disables Submit and removes Reset and Save. Only B explains why. */
 type Answer = {
   selected: string[];
@@ -86,7 +88,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     () => getQuizConfig(topic, modeOverride),
     [topicId, modeOverride], // eslint-disable-line react-hooks/exhaustive-deps
   );
-  const isModeA = config.mode === "A";
+  const pattern = quizPattern(config);
 
   const stored = useLmsStore((s) => s.quizResults[topicId]);
   const isCompleted = useLmsStore((s) => s.completedTopics.has(topicId));
@@ -96,10 +98,10 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   const total = questions.length;
   const result = stored ?? (isCompleted ? { score: total, total, attempts: 1 } : undefined);
 
-  // Mode A has no entry screen — the learner clicks the quiz and is already
-  // answering it — and no results, so it never leaves the "quiz" phase.
+  // A-1 and A-2 have no entry screen — the learner clicks the quiz and is already
+  // answering it — and no results, so they never leave the "quiz" phase.
   const [phase, setPhase] = React.useState<"intro" | "quiz" | "completed">(() => {
-    if (isModeA) return "quiz";
+    if (pattern !== "B") return "quiz";
     return result ? "completed" : "intro";
   });
   const [answers, setAnswers] = React.useState<Answer[]>(() => questions.map(freshAnswer));
@@ -122,9 +124,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
   // The set's hint opens as a Collapse and keeps its hints while it closes (Reset).
   const bucketHintShown = useFrozenWhileClosed(bucketHintIndex, bucketHintIndex >= 0);
 
-  // Switching mode starts the quiz over. The two experiences are different
-  // runs, not two skins on one — carrying answers across would leave the
-  // learner mid-stepper in a layout that has no stepper.
+  // Switching between the platform page (A-1 or A-2) and B starts the quiz over.
+  // They are different runs, not two skins on one — carrying answers across
+  // would leave the learner mid-stepper in a layout that has no stepper.
   React.useEffect(() => {
     if (modeRef.current === config.mode) return;
     modeRef.current = config.mode;
@@ -132,8 +134,8 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     setAnswers(questions.map(freshAnswer));
     setDirection("next");
     setIndex(0);
-    setPhase(config.mode === "A" ? "quiz" : "intro");
-  }, [config.mode, questions]);
+    setPhase(pattern !== "B" ? "quiz" : "intro");
+  }, [config.mode, pattern, questions]);
 
   const isQuestionCorrect = React.useCallback(
     (i: number): boolean => {
@@ -309,7 +311,7 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     // A-1 offers Show answer only once an answer has come back wrong: before the first attempt
     // the row is Hint and Submit (Figma A-1 5155:53399; Nelson's SKO match review, 28 Oct 2026).
     const flags =
-      isModeA && !config.bucket
+      pattern === "A-1"
         ? { ...matrix, showAnswer: matrix.showAnswer && (state === "Incorrect" || state === "Partially correct") }
         : matrix;
     const anchor = `quiz-q-${i}`;
@@ -338,16 +340,17 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
           }),
         ),
 
-      // The card's own six. Progress and points stay off in mode A: there is no
+      // The card's own six. Progress and points stay off in A-1 and A-2: there is no
       // per-question position on the platform, and `.problem-progress` renders
       // empty in every course we can read.
       showProgress: false,
-      showPlatformPrompt: isModeA,
+      showPlatformPrompt: pattern !== "B",
       platformPrompt: question.platformPrompt,
       showPoints: false,
-      // The authored per-choice feedback: mode B, and the A-2 bucket once submitted (Figma
+      // The authored per-choice feedback: mode B, and A-2 once submitted (Figma
       // 5200:30494: each verdict carries its explanation line; 28 Oct 2026).
-      showExplanation: !isModeA || Boolean(config.bucket),
+      // A-1 does not explain.
+      showExplanation: pattern !== "A-1",
       showHint: Boolean(answers[i].hintIndex >= 0 && question.hints?.length),
       hints: question.hints,
       hintIndex: answers[i].hintIndex,
@@ -397,9 +400,9 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     };
   }
 
-  /* ---- Mode A-2: the bucket. One CAPA problem holds every question, so the
+  /* ---- A-2: the bucket. One CAPA problem holds every question, so the
      platform gives one Submit, one pooled attempt count and one score. ---- */
-  if (isModeA && config.bucket) {
+  if (pattern === "A-2") {
     const submitted = answers.some((a) => a.revealed);
     const earned = outcomes.filter(Boolean).length;
     // Not all-or-nothing: the block marks each question and awards a point for
@@ -512,15 +515,15 @@ function Quiz({ topicId, courseSlug }: { topicId: string; courseSlug: string }) 
     );
   }
 
-  /* ---- Mode A-1: one problem per question, one Submit each ---- */
-  if (isModeA) {
+  /* ---- A-1: one problem per question, one Submit each ---- */
+  if (pattern === "A-1") {
     return (
       <div className={styles.stack}>
         {questions.map((_, i) => (
           <QuizCard key={i} {...cardPropsFor(i)} />
         ))}
 
-        {/* No navigation of any kind here. Mode A has no question navigator,
+        {/* No navigation of any kind here. A-1 has no question navigator,
             and Previous/Next move between units — which is topic level, and is
             already the player's fixed bottom nav. Rendering a second pair
             inside the content duplicated it. */}

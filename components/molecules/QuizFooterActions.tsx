@@ -47,7 +47,7 @@ export interface CtaFlags {
   showAnswer: boolean;
   showReset: boolean;
   showReview: boolean;
-  /** Mode B chrome — false everywhere in mode A. */
+  /** Mode B chrome — false in A-1 and A-2. */
   showNext: boolean;
   showSkip: boolean;
 }
@@ -120,7 +120,7 @@ export function ctaFlags(state: QuizQuestionState, ctx: CtaContext): CtaFlags {
     showAnswer: base.showAnswer && Boolean(ctx.answerAvailable),
     showReset: base.showReset && Boolean(ctx.resetAvailable) && !closed,
     showReview: base.showReview,
-    // Mode B chrome, off everywhere in mode A.
+    // Mode B chrome, off in A-1 and A-2.
     showNext: base.showNext && ctx.mode === "B",
     showSkip: base.showSkip && ctx.mode === "B",
   };
@@ -198,7 +198,7 @@ export function QuizFooterActions({
           </Button>
         ) : null}
 
-        {/* Mode B chrome — off in mode A. */}
+        {/* Mode B chrome — off in A-1 and A-2. */}
         {secondary && showSkip ? (
           <Button variant="secondary" size="md" onClick={onSkip}>
             Skip question
@@ -233,7 +233,7 @@ export function QuizFooterActions({
           </Button>
         ) : null}
 
-        {/* Mode B chrome — off in mode A. */}
+        {/* Mode B chrome — off in A-1 and A-2. */}
         {secondary && showNext ? (
           <Button hierarchy="link" size="md" onClick={onNext}>
             Next question

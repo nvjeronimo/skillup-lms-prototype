@@ -43,7 +43,7 @@ export interface QuizQuestion {
   explanation?: string;
   /** Authored `<demandhint>` list. The platform accumulates them, 1..N. */
   hints?: string[];
-  /** The block's `display_name`, printed above the question in mode A. */
+  /** The block's `display_name`, printed above the question in A-1. */
   platformPrompt?: string;
   /** Topic this question draws on, for the "review lesson" link after a wrong answer. */
   reviewTopicId?: string;
@@ -51,17 +51,17 @@ export interface QuizQuestion {
 }
 
 /**
- * Quiz configuration. On Open edX this is NOT part of the problem — graded /
- * attempts / weight live on the subsection, and the same problem blocks are
- * reused across Practice, Graded and Final Exam. We mirror that here.
- */
-/**
- * Which of the two experiences a quiz runs (quizzes/08-two-modes.md).
+ * Which experience the preview switch selects (quizzes/08-two-modes.md §2).
  *
- * A — how the platform behaves today: one scrolling page, no entry screen, no
- *     results, no explanations, and Previous/Next that leave the quiz.
- * B — the proposal: a stepper with an entry screen, explanations and a results
- *     surface rendered in place.
+ * A — the platform page. It renders as A-2 when the quiz is one CAPA problem
+ *     (`bucket`) and as A-1 when each question is its own problem.
+ * B — the parked stepper: an entry screen, one question at a time, and results
+ *     in place.
+ *
+ * A-1, A-2 and B are the recorded names (decision 14 Aug 2026: A-2 is the
+ * build target, A-1 is rejected, B is parked). `quizPattern` returns that
+ * name. The switch itself stays `A | B`: A-1 and A-2 are how a platform page
+ * is authored, not a third preview the demo menu can pick.
  *
  * The mode belongs to the quiz, not the question and not the course. The
  * prototype defaults to A so an unconfigured quiz behaves as production does;
@@ -69,6 +69,20 @@ export interface QuizQuestion {
  */
 export type QuizMode = "A" | "B";
 
+/**
+ * The three recorded quiz patterns (quizzes/08-two-modes.md, 14 Aug 2026).
+ *
+ * A-1 — one CAPA problem per question, so each question submits on its own.
+ * A-2 — one CAPA problem for the set, so one Submit scores every question.
+ * B — the stepper. One question is on screen, with an entry screen and results.
+ */
+export type QuizPattern = "A-1" | "A-2" | "B";
+
+/**
+ * Quiz configuration. On Open edX this is NOT part of the problem — graded /
+ * attempts / weight live on the subsection, and the same problem blocks are
+ * reused across Practice, Graded and Final Exam. We mirror that here.
+ */
 export interface QuizConfig {
   variant: "practice" | "graded" | "final";
   label: string;
@@ -100,6 +114,11 @@ export interface QuizConfig {
   bucket?: boolean;
   /** The bucket's own `display_name`, printed once above the whole set. */
   bucketPrompt?: string;
+}
+
+export function quizPattern(config: Pick<QuizConfig, "mode" | "bucket">): QuizPattern {
+  if (config.mode === "B") return "B";
+  return config.bucket ? "A-2" : "A-1";
 }
 
 export interface ActivityContent {
@@ -528,18 +547,16 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   const isFinal = title.includes("final") || title.includes("exam");
   const isGraded = isFinal || topic.type === "Graded Assignment" || title.includes("graded");
 
-  // A is what the platform does today, so every quiz opens in A. B is reached
-  // only by asking for it in the demo menu — a reviewer should have to choose
-  // the proposal, never wander into it.
+  // A is the platform page, so every quiz opens in A. B is reached only by
+  // asking for it in the demo menu — a reviewer should have to choose the
+  // parked stepper, never wander into it. A renders as A-2 or A-1 from the
+  // authoring below; the preview switch does not pick between them.
   const resolved: QuizMode = mode ?? "A";
-  // The authoring model is a property of the quiz, not of the mode: a bucket
-  // quiz stays a bucket in either. Seeded per topic because it is authoring.
-  const bucket = BUCKET_QUIZZES[topic.id];
 
   if (isFinal) {
     return {
       variant: "final",
-      ...(bucket ? { bucket: true, bucketPrompt: bucket } : {}),
+      ...bucketFields(topic, "final"),
       label: "Final exam",
       mode: resolved,
       maxAttempts: 1,
@@ -553,7 +570,7 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   if (isGraded) {
     return {
       variant: "graded",
-      ...(bucket ? { bucket: true, bucketPrompt: bucket } : {}),
+      ...bucketFields(topic, "graded"),
       label: "Graded quiz",
       mode: resolved,
       maxAttempts: 2,
@@ -566,7 +583,7 @@ export function getQuizConfig(topic: FlatTopic, mode?: QuizMode): QuizConfig {
   }
   return {
     variant: "practice",
-      ...(bucket ? { bucket: true, bucketPrompt: bucket } : {}),
+    ...bucketFields(topic, "practice"),
     label: "Practice quiz",
     mode: resolved,
     // Blank Maximum Attempts. On an ordinary problem that means unlimited, and
@@ -592,11 +609,32 @@ export function quizBadgeLabel(topic: FlatTopic): string {
   return topic.assignmentType ?? "Practice";
 }
 
-/** Quizzes authored as one CAPA problem holding every question. */
+/**
+ * Display name for a practice quiz's single problem. Figma A-2 (5200:30468)
+ * prints "Knowledge check" once above the set.
+ */
+const PRACTICE_BUCKET_PROMPT = "Knowledge check";
+
+/**
+ * Quizzes authored as one CAPA problem whose prompt is not the practice default.
+ * Practice quizzes are A-2 without an entry here. Graded and final quizzes stay
+ * A-1 (one Submit per question) unless listed — m3-t4k is a final exam that is
+ * still one problem.
+ */
 const BUCKET_QUIZZES: Record<string, string> = {
-  "m1-t3": "Knowledge check",
   "m3-t4k": "Final assessment",
 };
+
+function bucketFields(
+  topic: FlatTopic,
+  variant: QuizConfig["variant"],
+): Pick<QuizConfig, "bucket" | "bucketPrompt"> | Record<string, never> {
+  const authored = BUCKET_QUIZZES[topic.id];
+  if (authored) return { bucket: true, bucketPrompt: authored };
+  // A-1 was rejected on 14 Aug 2026. Practice is one problem and one Submit.
+  if (variant === "practice") return { bucket: true, bucketPrompt: PRACTICE_BUCKET_PROMPT };
+  return {};
+}
 
 /**
  * Above this an attempts count stops being a meaningful constraint, so the

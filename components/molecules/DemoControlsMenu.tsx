@@ -292,8 +292,9 @@ export function DemoControlsMenu({
                       </div>
                     </div>
                     <p className={`sk-text-body-small-regular ${styles.note}`}>
-                      A is how the platform behaves today, and where every quiz starts. B is the
-                      proposal.
+                      A is the platform page, and where every quiz starts. Practice renders as
+                      A-2 (one Submit). Graded and final render as A-1 unless authored as one
+                      problem. B is the parked stepper.
                     </p>
                   </div>
                 </Section>
