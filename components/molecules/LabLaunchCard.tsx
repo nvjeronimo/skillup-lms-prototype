@@ -1,6 +1,7 @@
 import * as React from "react";
 import { ProviderBadge, type Provider } from "@/components/atoms/MetaBadges";
 import { cn } from "@/lib/utils";
+import styles from "./LabLaunchCard.module.css";
 
 /**
  * DS `LMS/ICP/Topics/Lab-Launch-Card` v2.0: where a partner lab is opened from. Three states:
@@ -39,42 +40,30 @@ export const LabLaunchCard = React.forwardRef<HTMLElement, LabLaunchCardProps>(f
     <section
       ref={ref}
       aria-label="Lab"
-      className={cn(
-        "flex flex-col items-center justify-center gap-2 rounded-card border p-6 text-center md:p-8 lg:p-10",
-        unavailable
-          ? "border-sko-border-error bg-sko-bg-error-soft"
-          : "border-sko-border-subtle bg-sko-bg-subtle",
-        className,
-      )}
+      className={cn(styles.card, unavailable ? styles.unavailable : styles.default, className)}
     >
       {provider ? (
-        <span data-invented="provider: no partner field on an Open edX unit or LTI block" className="contents">
+        <span data-invented="provider: no partner field on an Open edX unit or LTI block" className={styles.provider}>
           <ProviderBadge value={provider} />
         </span>
       ) : null}
       {/* DS body-large/Bold — semibold until .sk-text-body-large-bold exists (CT-22). */}
       <h2
-        className={cn(
-          "sk-text-body-large-semibold",
-          unavailable ? "text-sko-text-error" : "text-sko-text-default",
-        )}
+        className={cn("sk-text-body-large-semibold", unavailable ? styles.errorText : styles.text)}
       >
         {title}
       </h2>
       <p
-        className={cn(
-          "sk-text-body-medium-regular",
-          unavailable ? "text-sko-text-error" : "text-sko-text-default",
-        )}
+        className={cn("sk-text-body-medium-regular", unavailable ? styles.errorText : styles.text)}
       >
         {description}
       </p>
-      {children ? <div className="flex flex-wrap justify-center gap-2 pt-2">{children}</div> : null}
+      {children ? <div className={styles.action}>{children}</div> : null}
       {/* The card is where the one thing we know is read from: that the lab was opened. */}
       {state === "opened" && openedOn ? (
         <p
           data-invented="opened: the launch click is not seen by Open edX"
-          className="sk-text-body-medium-regular text-sko-text-default"
+          className={`sk-text-body-medium-regular ${styles.text}`}
           aria-live="polite"
         >
           {openedOn}

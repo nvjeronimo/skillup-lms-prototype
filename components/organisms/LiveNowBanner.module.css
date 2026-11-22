@@ -1,0 +1,100 @@
+/* DS v1.1: no side stripe, the whole card carries the state. Padding 16, 1px border.
+   Live = bg/success-soft + border/success-soft; Upcoming = bg/warning-muted + border/accent-yellow. */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-width: 1px;
+  border-radius: var(--sk-radius-card);
+  padding: 16px;
+}
+.bannerLive {
+  border-color: var(--color-border-success-soft);
+  background-color: var(--color-bg-success-soft);
+}
+.bannerUpcoming {
+  border-color: var(--color-border-accent-yellow);
+  background-color: var(--color-bg-warning-muted);
+}
+.lead {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+.pill {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sk-radius-pill);
+  padding: 4px 12px 4px 8px;
+}
+.pillLive {
+  background-color: var(--color-bg-success);
+  color: var(--color-text-on-success);
+}
+.pillUpcoming {
+  background-color: var(--color-bg-warning);
+  color: var(--color-text-on-warning);
+}
+/* The dot follows the label colour. */
+.dot {
+  height: 6px;
+  width: 6px;
+  border-radius: var(--sk-radius-pill);
+  background-color: currentColor;
+}
+.text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.title,
+.subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.title,
+.inkDefault {
+  color: var(--color-text-default);
+}
+.inkMuted {
+  color: var(--color-text-muted);
+}
+.inkSubtle {
+  color: var(--color-text-subtle);
+}
+.end {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 16px;
+}
+.status {
+  display: none;
+}
+@media (min-width: 768px) {
+  .status {
+    display: block;
+  }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (the banner .rounded-card.border.p-4). Their rules, kept here. */
+:global([data-direction="studio"]) .banner {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-direction="studio"]) .banner {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global([data-skin="harbor"] [data-platform-page]) .banner,
+:global([data-skin="fluent"] [data-platform-page]) .banner {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

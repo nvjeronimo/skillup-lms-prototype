@@ -1,0 +1,26 @@
+/* DS Select (Size=md). The caller passes the field look (border, background, padding, type), so
+   the resting rules sit in :where() and the caller's class wins; except the right padding: the
+   chevron needs 42 (14 + 20 + 8) whatever padding the field look sets, so that rule outranks a
+   caller's single class, as pr-[42px] did over the field's px-3.5. */
+:where(.wrapper) {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+:where(.select) {
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+}
+select.select {
+  padding-right: 42px;
+}
+/* The DS chevron-down (20, icon/faint), 14 from the right edge, centred. */
+.chevron {
+  pointer-events: none;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-icon-faint);
+}

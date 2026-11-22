@@ -1,0 +1,47 @@
+/* The ring: its size comes inline (46, or 32 compact); the percentage or the check on top. */
+.ring {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+/* The arc starts at 12 o'clock. */
+.arc {
+  transform: rotate(-90deg);
+}
+.check {
+  position: absolute;
+  color: var(--color-icon-success-strong);
+}
+.figure {
+  position: absolute;
+  color: var(--color-text-default);
+}
+
+/* DS `LMS / Overall Progress` (Device=Desktop): 0/16/8/16 padding and a bottom hairline. */
+.overall {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 0 16px 8px;
+}
+.text {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: center;
+}
+.eyebrow {
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.module {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-default);
+}

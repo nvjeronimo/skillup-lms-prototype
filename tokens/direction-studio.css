@@ -83,74 +83,15 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
   color: #7fb8c8;
 }
 
-/* Pills for every one-line control: buttons, links, fields, tabs, radios, switches, the wrapper
-   of a search field, and the segments of a track (a pill in a pill with even padding is
-   concentric). Inside a card they are concentric too, because the card's radius is its padding
-   plus 20 (see the scale above and the padding rules below). Anything that holds paragraphs, a
-   column or a list keeps the control role (a pill of several lines is a blob, 22 Oct 2026).
-   Answer options are left out: their text wraps, and a wrapped option became a stadium (Nelson,
-   25 Oct 2026); every option keeps the control radius (20), on one line or several. */
-[data-direction="studio"]
-  :is(button, a, input, select, [role="tab"], [role="radio"], [role="switch"], [role="menuitem"]).rounded-control:not(
-    :has(p, .flex-col, ul, ol, h2, h3, h4),
-    [data-option-state]
-  ),
-[data-direction="studio"] .rounded-control:has(> input:not([type="checkbox"], [type="radio"])),
-[data-direction="studio"] .rounded-track .rounded-control {
-  border-radius: 9999px;
-}
-
-/* A card's radius is its padding + 20, so the pill in its corner is concentric: 12 → 32, 8 → 28,
-   20 → 40, 24 → 44. The padding can be the card's own or that of the bands flush with its edges
-   (the Discussion panels). A card inside a card is in its parent's corner: control role, 20. */
-[data-direction="studio"] .rounded-card:is(.p-3, :has(> :is(.p-3, .px-3, .px-\[11px\]))) {
-  border-radius: 32px;
-}
-[data-direction="studio"] .rounded-card.p-2 {
-  border-radius: 28px;
-}
-@media (min-width: 768px) {
-  [data-direction="studio"] .rounded-card.md\:p-5 {
-    border-radius: 40px;
-  }
-}
-@media (min-width: 1024px) {
-  [data-direction="studio"] .rounded-card.lg\:p-6 {
-    border-radius: 44px;
-  }
-}
-/* Cards with the usual 16 inside (p-4, or p-[15px] + the 1px border) sat too close to their 36
-   curve (Nelson, 23 Oct 2026, the course page on a phone): in Studio they take 24 inside and,
-   by the same rule, a 44 radius. */
-[data-direction="studio"] .rounded-card:is(.p-4, .p-\[15px\]) {
-  padding: 23px;
-  border-radius: 44px;
-}
-[data-direction="studio"] .rounded-card .rounded-card,
-[data-direction="studio"] .rounded-card:not(.p-1) .rounded-card-inset {
-  border-radius: var(--sk-radius-control);
-}
+/* Utility-keyed rules (.rounded-control, .rounded-card.p-4, .rounded-track, .shadow-sk-card, …)
+   were removed 15 Nov 2026: after the CSS Modules move nothing in the DOM has those classes, so
+   the selectors matched nothing. The same looks live in each component module, under
+   [data-direction="studio"]. What remains here keys on tokens, type classes and data attributes. */
 
 /* The tab bar's More panel in Studio (Nelson, 23 Oct 2026): its card radius (36) with 8 of
    padding, so the rows (44-tall pills here) sit inside its curve with room. */
 [data-direction="studio"] [data-tab-menu] {
   padding: 8px;
-}
-
-/* A large container that borrows the control radius (the player's course rail, a <nav>) takes
-   the card radius. */
-[data-direction="studio"] :is(nav, aside, section).rounded-control {
-  border-radius: var(--sk-radius-card);
-}
-/* …and what sits in its corner (the rail's collapse button, 16 in) takes 36 − 16 = 20. */
-[data-direction="studio"] :is(nav, aside, section).rounded-control .rounded-inner {
-  border-radius: var(--sk-radius-control);
-}
-
-/* Surfaces float on a soft shadow; the border goes (fields and dashed zones keep theirs). */
-[data-direction="studio"] :is(.rounded-card, .rounded-surface).border:not(.border-dashed) {
-  border-color: transparent;
-  box-shadow: var(--sk-shadow-studio);
 }
 
 /* The platform top bar: no rule under it, it sits on the same ground as the page. */
@@ -170,18 +111,6 @@ html[data-direction="studio"][data-theme="dark"] [data-heading-em] {
 [data-direction="studio"] [data-glance-backdrop] {
   background-color: #13282f;
 }
-[data-direction="studio"] [data-glance] .shadow-sk-card {
-  box-shadow: var(--sk-shadow-studio);
-}
-/* On a phone the figure cards have 12 of padding, so the card-inset 32 reads too round (Nelson,
-   23 Oct 2026). By the nesting rule, padding 12 + the badge's half height (14) gives 26: 24 here,
-   back to the card-inset from tablet up, where the padding is 16. */
-@media (max-width: 767px) {
-  [data-direction="studio"] [data-glance] .rounded-card-inset {
-    border-radius: 24px;
-  }
-}
-
 /* Player sidebar: the boxed modules are the standard since 30 Oct 2026 (app/globals.css). Studio
    keeps its nesting radius: the sidebar's control radius (20) − the list's 8 of padding = 12. */
 [data-direction="studio"] [data-module-box] {

@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { FIELD, FormField, FormModal } from "@/components/organisms/FormModal";
@@ -13,6 +11,8 @@ import {
   formatDay,
   requestDeletion,
 } from "@/lib/account-deletion";
+import { cn } from "@/lib/utils";
+import styles from "./DeleteAccount.module.css";
 
 /** What the learner loses, in the order it matters to them (Step 1). */
 const LOSES = [
@@ -50,14 +50,14 @@ export function DeleteAccountSection({ email }: { email: string }) {
     <section
       data-arrive={4}
       aria-labelledby="delete-account-title"
-      className="rounded-card border border-sko-border-subtle bg-sko-bg-page"
+      className={styles.card}
     >
-      <div className="flex flex-col gap-4 px-4 py-5 md:flex-row md:items-center md:justify-between md:px-6 md:py-6">
-        <div className="flex flex-col gap-1">
-          <h2 id="delete-account-title" className="sk-text-title-medium-semibold text-sko-text-default">
+      <div className={styles.row}>
+        <div className={styles.text}>
+          <h2 id="delete-account-title" className={cn("sk-text-title-medium-semibold", styles.ink)}>
             Delete account
           </h2>
-          <p className="sk-text-body-medium-regular text-sko-text-subtle">
+          <p className={cn("sk-text-body-medium-regular", styles.subtle)}>
             Your account and your learning data are deleted {GRACE_DAYS} days after you ask.
           </p>
         </div>
@@ -66,7 +66,7 @@ export function DeleteAccountSection({ email }: { email: string }) {
           tone="destructive"
           hierarchy="secondary"
           leftIcon={Trash2}
-          className="shrink-0 max-md:w-full"
+          className={styles.deleteButton}
           onClick={() => setOpen(true)}
         >
           Delete my account
@@ -94,38 +94,38 @@ export function DeleteAccountSection({ email }: { email: string }) {
       >
         {step === 1 ? (
           <>
-            <div className="flex flex-col gap-2">
-              <p className="sk-text-body-large-medium text-sko-text-default">When your account is deleted, you lose:</p>
-              <ul className="sk-text-body-large-regular flex list-disc flex-col gap-1.5 pl-5 text-sko-text-muted">
+            <div className={styles.loses}>
+              <p className={cn("sk-text-body-large-medium", styles.ink)}>When your account is deleted, you lose:</p>
+              <ul className={cn("sk-text-body-large-regular", styles.losesList)}>
                 {LOSES.map((l) => (
                   <li key={l}>{l}</li>
                 ))}
               </ul>
             </div>
-            <p className="sk-text-body-large-regular text-sko-text-muted">
+            <p className={cn("sk-text-body-large-regular", styles.muted)}>
               You have {GRACE_DAYS} days to change your mind. After that, we can&rsquo;t restore your account or
               anything in it.
             </p>
-            <label className="flex cursor-pointer items-start gap-3 rounded-control border border-sko-border-subtle p-3">
+            <label className={styles.ack}>
               <input
                 id="delete-understood"
                 type="checkbox"
                 checked={understood}
                 onChange={(e) => setUnderstood(e.target.checked)}
-                className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-bg-primary)]"
+                className={styles.ackBox}
               />
-              <span className="sk-text-body-large-regular text-sko-text-default">
+              <span className={cn("sk-text-body-large-regular", styles.ink)}>
                 I understand that my account and learning data will be deleted for good after {GRACE_DAYS} days.
               </span>
             </label>
           </>
         ) : (
           <>
-            <p className="sk-text-body-large-regular text-sko-text-default">
+            <p className={cn("sk-text-body-large-regular", styles.ink)}>
               We will delete your account on <strong className="sk-text-body-large-semibold">{deleteOn}</strong>. We sign you out
               now and send a confirmation to {email}.
             </p>
-            <p className="sk-text-body-large-regular text-sko-text-muted">
+            <p className={cn("sk-text-body-large-regular", styles.muted)}>
               {edx
                 ? "Until then, you can keep your account by contacting SkillUp support."
                 : "Until then, you can keep your account: sign in again and choose to cancel the deletion."}

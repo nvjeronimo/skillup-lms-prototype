@@ -1,0 +1,19 @@
+/* DS LMS / Topic-Types Badge. The root takes the caller's className: :where(). */
+:where(.badge) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-subtle);
+}
+/* The 12px icon (icon/primary) in a 20×20 container. */
+.iconBox {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.icon {
+  color: var(--color-icon-primary);
+}

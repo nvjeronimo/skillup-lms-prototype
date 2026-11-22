@@ -2,6 +2,7 @@ import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./Badge.module.css";
 
 /**
  * Mirrors the DS `Badge` component (21889:541076): three axes, Style × Size × Color.
@@ -65,75 +66,17 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 
 }
 
 /* ── Colour bindings, read from Badge Size=sm on 28 Sep 2026 ─────────────────────────
-   Every class below is the DS variable bound on that variant: base fill (bg-*), base
-   stroke (ring-*; except the Outline stroke, see DS-D1), Text fill (text-sko-text-*) and
-   icon vector (text-sko-icon-*). The Plain icon circle is PLAIN_CIRCLE. */
-
-/* Style=Soft: fill + text, no stroke. Accents are the STRONG fills with on-accent text.
-   Gray is on bg/muted since 21 Oct 2026 (Nelson): on bg/faint it vanished on the platform
-   pages (their ground is bg/faint) and on white cards (1.05:1). */
-const SOFT: Record<BadgeColor, string> = {
-  gray: "bg-sko-bg-muted text-sko-text-muted",
-  brand: "bg-sko-bg-primary-soft text-sko-text-primary",
-  info: "bg-sko-bg-info-soft text-sko-text-info",
-  success: "bg-sko-bg-success-soft text-sko-text-success",
-  warning: "bg-sko-bg-warning-soft text-sko-text-warning",
-  error: "bg-sko-bg-error-soft text-sko-text-error",
-  teal: "bg-sko-bg-accent-teal text-sko-text-on-accent-teal",
-  green: "bg-sko-bg-accent-green text-sko-text-on-accent-green",
-  red: "bg-sko-bg-accent-red text-sko-text-on-accent-red",
-  yellow: "bg-sko-bg-accent-yellow text-sko-text-on-accent-yellow",
-};
-
-/* Style=Outline: soft fill + 1px soft inside stroke on the colour's soft border token.
-   DS-D1: DS binds text/* on the stroke; the DS description says soft outline. */
-const OUTLINE: Record<BadgeColor, string> = {
-  gray: "bg-sko-bg-faint ring-sko-border-subtle text-sko-text-muted",
-  brand: "bg-sko-bg-primary-soft ring-sko-border-primary-soft text-sko-text-primary",
-  info: "bg-sko-bg-info-soft ring-sko-border-info-soft text-sko-text-info",
-  success: "bg-sko-bg-success-soft ring-sko-border-success-soft text-sko-text-success",
-  warning: "bg-sko-bg-warning-soft ring-sko-border-warning-soft text-sko-text-warning",
-  error: "bg-sko-bg-error-soft ring-sko-border-error-soft text-sko-text-error",
-  teal: "bg-sko-bg-accent-teal-soft ring-sko-border-accent-teal-soft text-sko-text-accent-teal",
-  green: "bg-sko-bg-accent-green-soft ring-sko-border-accent-green-soft text-sko-text-accent-green",
-  red: "bg-sko-bg-accent-red-soft ring-sko-border-accent-red-soft text-sko-text-accent-red",
-  yellow: "bg-sko-bg-accent-yellow-soft ring-sko-border-accent-yellow-soft text-sko-text-accent-yellow",
-};
-
-/* Style=Modern: page fill + 1px inside stroke on the colour's border token. */
-const MODERN: Record<BadgeColor, string> = {
-  gray: "bg-sko-bg-page ring-sko-border-default text-sko-text-muted",
-  brand: "bg-sko-bg-page ring-sko-border-primary text-sko-text-primary",
-  info: "bg-sko-bg-page ring-sko-border-info text-sko-text-info",
-  success: "bg-sko-bg-page ring-sko-border-success text-sko-text-success",
-  warning: "bg-sko-bg-page ring-sko-border-warning text-sko-text-warning",
-  error: "bg-sko-bg-page ring-sko-border-error text-sko-text-error",
-  teal: "bg-sko-bg-page ring-sko-border-accent-teal text-sko-text-accent-teal",
-  green: "bg-sko-bg-page ring-sko-border-accent-green text-sko-text-accent-green",
-  red: "bg-sko-bg-page ring-sko-border-accent-red text-sko-text-accent-red",
-  yellow: "bg-sko-bg-page ring-sko-border-accent-yellow text-sko-text-accent-yellow",
-};
-
-/* Style=Plain: text only, no fill, no stroke (a leading icon gets its own soft circle,
-   see PLAIN_CIRCLE). */
-const PLAIN: Record<BadgeColor, string> = {
-  gray: "text-sko-text-muted",
-  brand: "text-sko-text-primary",
-  info: "text-sko-text-info",
-  success: "text-sko-text-success",
-  warning: "text-sko-text-warning",
-  error: "text-sko-text-error",
-  teal: "text-sko-text-accent-teal",
-  green: "text-sko-text-accent-green",
-  red: "text-sko-text-accent-red",
-  yellow: "text-sko-text-accent-yellow",
-};
+   One module class per Style × Color (Badge.module.css holds the DS variables: base fill,
+   inside stroke, label colour); the icon and the Plain icon circle have their own. */
+const COLORS: BadgeColor[] = ["gray", "brand", "info", "success", "warning", "error", "teal", "green", "red", "yellow"];
+const byColor = (prefix: string) =>
+  Object.fromEntries(COLORS.map((c) => [c, styles[prefix + c[0].toUpperCase() + c.slice(1)]])) as Record<BadgeColor, string>;
 
 const SURFACE: Record<BadgeVariant, Record<BadgeColor, string>> = {
-  soft: SOFT,
-  outline: OUTLINE,
-  modern: MODERN,
-  plain: PLAIN,
+  soft: byColor("soft"),
+  outline: byColor("outline"),
+  modern: byColor("modern"),
+  plain: byColor("plain"),
 };
 
 /* The leading icon has its own icon/* binding (it does not inherit the label colour).
@@ -141,28 +84,28 @@ const SURFACE: Record<BadgeVariant, Record<BadgeColor, string>> = {
    Plain use icon/on-accent-* (Soft's icon sits on the strong pill fill, Plain's on the strong
    accent circle — see PLAIN_CIRCLE), Outline and Modern use icon/accent-*. */
 const ICON_BASE = {
-  gray: "text-sko-icon-subtle",
-  brand: "text-sko-icon-primary",
-  info: "text-sko-icon-info",
-  success: "text-sko-icon-success",
-  warning: "text-sko-icon-warning",
-  error: "text-sko-icon-error",
-} as const;
+  gray: styles.iconGray,
+  brand: styles.iconBrand,
+  info: styles.iconInfo,
+  success: styles.iconSuccess,
+  warning: styles.iconWarning,
+  error: styles.iconError,
+};
 
 const ICON_ON_ACCENT: Record<BadgeColor, string> = {
   ...ICON_BASE,
-  teal: "text-sko-icon-on-accent-teal",
-  green: "text-sko-icon-on-accent-green",
-  red: "text-sko-icon-on-accent-red",
-  yellow: "text-sko-icon-on-accent-yellow",
+  teal: styles.iconOnAccentTeal,
+  green: styles.iconOnAccentGreen,
+  red: styles.iconOnAccentRed,
+  yellow: styles.iconOnAccentYellow,
 };
 
 const ICON_ACCENT: Record<BadgeColor, string> = {
   ...ICON_BASE,
-  teal: "text-sko-icon-accent-teal",
-  green: "text-sko-icon-accent-green",
-  red: "text-sko-icon-accent-red",
-  yellow: "text-sko-icon-accent-yellow",
+  teal: styles.iconAccentTeal,
+  green: styles.iconAccentGreen,
+  red: styles.iconAccentRed,
+  yellow: styles.iconAccentYellow,
 };
 
 const ICON: Record<BadgeVariant, Record<BadgeColor, string>> = {
@@ -174,18 +117,7 @@ const ICON: Record<BadgeVariant, Record<BadgeColor, string>> = {
 
 /* Style=Plain with a leading icon: the 12px icon sits in a 20×20 rounded-full circle filled
    with the colour's Soft-style fill ("icon in a soft circle", e.g. 21889:539962). */
-const PLAIN_CIRCLE: Record<BadgeColor, string> = {
-  gray: "bg-sko-bg-muted",
-  brand: "bg-sko-bg-primary-soft",
-  info: "bg-sko-bg-info-soft",
-  success: "bg-sko-bg-success-soft",
-  warning: "bg-sko-bg-warning-soft",
-  error: "bg-sko-bg-error-soft",
-  teal: "bg-sko-bg-accent-teal",
-  green: "bg-sko-bg-accent-green",
-  red: "bg-sko-bg-accent-red",
-  yellow: "bg-sko-bg-accent-yellow",
-};
+const PLAIN_CIRCLE: Record<BadgeColor, string> = byColor("circle");
 
 /* ── Geometry, from `_Badge base` (21889:2597) ───────────────────────────────────────────
    Pill sm: 22px, py 2, label 0/8, with a leading icon pl 6 · icon 12 · 6px gap · pr 8.
@@ -193,9 +125,9 @@ const PLAIN_CIRCLE: Record<BadgeColor, string> = {
    Pill lg: 28px, py 4, label 0/12, with a leading icon pl 10 · icon 12 · 4px gap · pr 12.
    Plain: no padding, 6px gap, the 12px icon centred in a 20×20 soft circle. */
 const PILL_SIZE: Record<BadgeSize, { label: string; icon: string; text: string }> = {
-  sm: { label: "py-0.5 px-2", icon: "py-0.5 pl-1.5 pr-2 gap-1.5", text: "sk-text-body-small-medium" },
-  md: { label: "py-0.5 px-2.5", icon: "py-0.5 pl-2 pr-2.5 gap-1", text: "sk-text-body-medium-medium" },
-  lg: { label: "py-1 px-3", icon: "py-1 pl-2.5 pr-3 gap-1", text: "sk-text-body-medium-medium" },
+  sm: { label: styles.labelSm, icon: styles.iconSm, text: "sk-text-body-small-medium" },
+  md: { label: styles.labelMd, icon: styles.iconMd, text: "sk-text-body-medium-medium" },
+  lg: { label: styles.labelLg, icon: styles.iconLg, text: "sk-text-body-medium-medium" },
 };
 
 function resolveTone(tone: BadgeTone | undefined): { color?: BadgeColor; variant?: BadgeVariant } {
@@ -215,19 +147,17 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
   const v: BadgeVariant = variant ?? fromTone.variant ?? "soft";
   const plain = v === "plain";
   const geometry = PILL_SIZE[size];
-  const textStyle = eyebrow ? "sk-text-label-small-semibold normal-case tracking-normal" : geometry.text;
+  const textStyle = eyebrow ? cn("sk-text-label-small-semibold", styles.eyebrow) : geometry.text;
 
   return (
     <span
       ref={ref}
       className={cn(
         // A badge never wraps its label; the row it sits in wraps instead.
-        "inline-flex items-center whitespace-nowrap",
-        plain
-          ? "gap-1.5"
-          : cn("rounded-pill", leftIcon ? geometry.icon : geometry.label),
+        styles.badge,
+        plain ? styles.plain : cn(styles.pill, leftIcon ? geometry.icon : geometry.label),
         // Outline and Modern: 1px inside stroke (ring-inset keeps the DS height).
-        (v === "outline" || v === "modern") && "ring-1 ring-inset",
+        (v === "outline" || v === "modern") && styles.stroked,
         textStyle,
         SURFACE[v][c],
         className,
@@ -238,17 +168,17 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
         plain ? (
           <span
             className={cn(
-              "inline-flex size-5 shrink-0 items-center justify-center rounded-pill",
+              styles.circle,
               PLAIN_CIRCLE[c],
             )}
           >
             <Icon icon={leftIcon} size={12} className={ICON[v][c]} />
           </span>
         ) : (
-          <Icon icon={leftIcon} size={12} className={cn("shrink-0", ICON[v][c])} />
+          <Icon icon={leftIcon} size={12} className={cn(styles.icon, ICON[v][c])} />
         )
       ) : null}
-      {live ? <span aria-hidden className={cn("sk-live-dot size-1.5 shrink-0 rounded-pill bg-current", !plain && !leftIcon && "mr-1.5")} /> : null}
+      {live ? <span aria-hidden className={cn("sk-live-dot", styles.liveDot, !plain && !leftIcon && styles.liveGap)} /> : null}
       {children}
     </span>
   );

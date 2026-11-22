@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Avatar } from "./Avatar";
+import styles from "./Avatar.stories.module.css";
 
 const meta: Meta<typeof Avatar> = {
   title: "Atoms/Avatar",
@@ -21,7 +22,7 @@ export const WithStatus: Story = { args: { status: "online" } };
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-end gap-3">
+    <div className={styles.row}>
       <Avatar name="John Smith" size="xs" />
       <Avatar name="John Smith" size="sm" />
       <Avatar name="John Smith" size="md" />

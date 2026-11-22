@@ -1,4 +1,6 @@
 import { Skeleton } from "@/components/atoms/Skeleton";
+import { cn } from "@/lib/utils";
+import styles from "./PageSkeleton.module.css";
 
 /**
  * The fallback skeleton of a platform page that has no page-shaped one yet: the page title
@@ -7,7 +9,7 @@ import { Skeleton } from "@/components/atoms/Skeleton";
  */
 export function PageSkeleton() {
   return (
-    <div className="sk-page-stack mx-auto flex w-full max-w-[1200px] flex-col gap-layout-section">
+    <div className={cn("sk-page-stack", styles.stack)}>
       <Skeleton text="headline-large-bold" width="40%" />
       <Skeleton variant="block" height={160} radius="card" />
       <Skeleton variant="block" height={240} radius="card" />

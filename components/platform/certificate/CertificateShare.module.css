@@ -1,0 +1,43 @@
+.share {
+  position: relative;
+}
+.full {
+  width: 100%;
+}
+@media (max-width: 767.98px) {
+  /* The icon button: a 44 target on a phone. */
+  .icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* The menu grows out of the button: upward from its top edge, or down from its bottom edge. */
+.menu {
+  position: absolute;
+  right: 0px;
+  z-index: 20;
+}
+.stretch {
+  left: 0px;
+}
+.up {
+  bottom: 100%;
+  margin-bottom: 4px;
+}
+.down {
+  top: 100%;
+  margin-top: 4px;
+}
+.originBottom {
+  transform-origin: bottom;
+}
+.originTop {
+  transform-origin: top;
+}
+.originBottomRight {
+  transform-origin: bottom right;
+}
+.originTopRight {
+  transform-origin: top right;
+}

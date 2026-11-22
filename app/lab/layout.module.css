@@ -1,0 +1,20 @@
+.shell {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  background: var(--color-bg-subtle);
+}
+/* The lab banner: dashed amber rule under the topbar. */
+.note {
+  border-bottom-width: 1px;
+  border-style: dashed;
+  border-color: var(--color-border-warning);
+  background: var(--color-bg-warning-soft);
+  padding: 8px 16px;
+  color: var(--color-text-warning);
+}
+@media (min-width: 768px) {
+  .note {
+    padding-inline: 24px;
+  }
+}

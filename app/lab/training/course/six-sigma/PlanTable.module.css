@@ -1,0 +1,49 @@
+/* The course plan as a plain accordion of modules, each a list of topic rows. */
+.modules { margin-top: 16px; }
+
+.toggle {
+  display: flex;
+  min-height: 56px;
+  width: 100%;
+  align-items: center;
+  gap: 16px;
+  padding-block: 12px;
+  text-align: left;
+}
+.text {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.line { display: block; }
+.chevron {
+  flex: none;
+  transition-property: transform;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.chevronOpen { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .chevron { transition-property: none; }
+}
+.panel { padding-bottom: 16px; }
+.lesson { margin-top: 8px; }
+.lessonLabel { padding-block: 8px; }
+
+.topic {
+  display: flex;
+  min-height: 44px;
+  align-items: flex-start;
+  gap: 12px;
+  padding-block: 10px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .topicLink:hover { text-decoration-line: underline; }
+}
+.mark {
+  display: flex;
+  height: 20px;
+  width: 16px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+}

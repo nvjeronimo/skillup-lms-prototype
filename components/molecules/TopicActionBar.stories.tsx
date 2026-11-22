@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TopicActionBar } from "./TopicActionBar";
 
 const meta: Meta<typeof TopicActionBar> = {

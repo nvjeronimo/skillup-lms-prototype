@@ -1,8 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { ChoiceGroup, FormModal } from "@/components/organisms/FormModal";
 import type { SessionGoal } from "@/lib/platform/session-additions";
+import { cn } from "@/lib/utils";
+import styles from "./WeeklyGoalModal.module.css";
 
 /** Open edX's three weekly learning goals (course goals API, `days_per_week`). */
 export const GOAL_LEVELS = [
@@ -58,16 +58,16 @@ export function WeeklyGoalModal({
       onSubmit={() => onSaved({ days: Number(level), reminders })}
     >
       <ChoiceGroup legend="Days a week" value={level} onChange={setLevel} options={GOAL_LEVELS} columns={3} />
-      <label className="flex min-h-11 cursor-pointer items-start gap-3">
+      <label className={styles.reminder}>
         <input
           type="checkbox"
           checked={reminders}
           onChange={(e) => setReminders(e.target.checked)}
-          className="mt-0.5 size-4 shrink-0 rounded-inner accent-[var(--color-bg-primary)]"
+          className={styles.checkbox}
         />
-        <span className="flex flex-col">
-          <span className="sk-text-body-medium-medium text-sko-text-default">Remind me by email</span>
-          <span className="sk-text-body-small-regular text-sko-text-subtle">When I am behind on my goal for the week.</span>
+        <span className={styles.text}>
+          <span className={cn("sk-text-body-medium-medium", styles.label)}>Remind me by email</span>
+          <span className={cn("sk-text-body-small-regular", styles.hint)}>When I am behind on my goal for the week.</span>
         </span>
       </label>
     </FormModal>

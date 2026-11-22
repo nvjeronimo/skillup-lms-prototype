@@ -1,0 +1,159 @@
+.default { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+.primary { color: var(--color-text-primary); }
+.noShrink { flex-shrink: 0; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.column { display: flex; flex-direction: column; }
+
+/* One result: type, title, excerpt, location, matches. */
+.result {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  padding: 12px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .result:hover { background-color: var(--color-bg-subtle); }
+}
+.result:focus-visible { background-color: var(--color-bg-subtle); }
+.resultType { display: flex; width: 60px; flex-shrink: 0; }
+.resultText { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: 4px; }
+
+/* The prototype's sample searches (empty field). */
+.eyebrow { text-transform: uppercase; color: var(--color-text-subtle); }
+.samples { display: flex; flex-direction: column; gap: 4px; }
+.sample {
+  display: flex;
+  min-height: 44px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-radius: var(--sk-radius-control);
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: left;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .sample:hover { background-color: var(--color-bg-subtle); }
+}
+@media (min-width: 768px) {
+  .sample { min-height: 36px; }
+}
+
+.hint { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.hintText { min-width: 0; color: var(--color-text-default); }
+.loading {
+  display: flex;
+  height: 68px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--color-text-muted);
+}
+.spinner { color: var(--color-icon-primary); }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}
+
+/* Mobile: the result types as a select (DS LMS / Mobile Tab Select). */
+.typeSelect {
+  height: 44px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-primary);
+  background-color: var(--color-bg-page);
+  padding-left: 14px;
+  color: var(--color-text-primary);
+}
+.results { display: flex; flex-direction: column; gap: 4px; }
+.resultsScroll { max-height: min(614px, 55vh); overflow-y: auto; }
+.footer { display: flex; min-height: 28px; align-items: center; justify-content: space-between; gap: 12px; }
+
+/* Mobile: the full-screen sheet. */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-page);
+}
+.sheetBar {
+  display: flex;
+  touch-action: none;
+  align-items: center;
+  gap: 12px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 16px;
+}
+.sheetField { min-width: 0; flex: 1 1 0%; }
+.sheetBody {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Desktop and tablet: the popup hangs 8 under the field, right-aligned with it, 560 wide. */
+.anchor { position: relative; }
+.popup {
+  transform-origin: top right;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 30;
+  margin-top: 8px;
+  display: flex;
+  width: 560px;
+  max-width: calc(100vw - 48px);
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding: 16px;
+  /* Tailwind's shadow-2xl with its empty ring layers. */
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected the Tailwind
+   classes these elements had (.rounded-card.border.p-4 on the popup, .rounded-control on the sample buttons and the select); the same rules here, one step more specific than the
+   element's own. */
+:global([data-direction="studio"]) .popup {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .popup,
+:global([data-skin="fluent"] [data-platform-page]) .popup {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .sample,
+:global([data-skin="harbor"]) .sample {
+  border-radius: 9999px;
+}
+:global([data-direction="studio"]) .typeSelect,
+:global([data-skin="harbor"]) .typeSelect {
+  border-radius: 9999px;
+}
+:global([data-skin="fluent"]) .typeSelect {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}

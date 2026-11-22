@@ -1,0 +1,95 @@
+/* The First steps view of the assistant's window. */
+.finished {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.textDefault {
+  color: var(--color-text-default);
+}
+.textSubtle {
+  color: var(--color-text-subtle);
+}
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* One card: its title and count over the bar, then one row per step. */
+.card {
+  overflow: hidden;
+  border-radius: var(--sk-radius-card-inset);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding: 12px 16px;
+}
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.steps {
+  display: flex;
+  flex-direction: column;
+}
+.steps > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-bottom-width: 0px;
+  border-color: var(--color-border-subtle);
+}
+.step {
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+}
+/* The step circle: a check on bg/success when done, its number on bg/subtle otherwise. */
+.circle {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.circleDone {
+  background-color: var(--color-bg-success);
+  color: var(--color-icon-on-media);
+}
+.circleTodo {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-subtle);
+}
+.label {
+  min-width: 0;
+  flex: 1 1 0%;
+  color: var(--color-text-default);
+}
+.trailing {
+  flex-shrink: 0;
+}
+.skip {
+  min-height: 44px;
+  align-self: flex-start;
+  color: var(--color-text-subtle);
+  text-decoration-line: underline;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .skip:hover {
+    color: var(--color-text-default);
+  }
+}

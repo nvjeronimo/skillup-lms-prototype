@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Collapse } from "@/components/atoms/Collapse";
 import { CONTENT_PENDING, type ProgramDisclosureItem } from "@/lib/platform/program";
 import { cn } from "@/lib/utils";
+import styles from "./DisclosureList.module.css";
 
 /**
  * One row of the list (DS FAQ accordion item, 1358:191501 open / 1358:191714 closed): the
@@ -32,7 +31,7 @@ function DisclosureRow({
   const body = item.body ?? [CONTENT_PENDING];
   return (
     // The DS rule is drawn inside the space above the row: 1px border + 15 / 19 / 23 = 16 / 20 / 24.
-    <li className={cn(!first && "border-t border-sko-border-subtle pt-[15px] md:pt-[19px] lg:pt-[23px]")}>
+    <li className={cn(!first && styles.rowRule)}>
       <h3>
         <button
           type="button"
@@ -40,19 +39,19 @@ function DisclosureRow({
           aria-expanded={open}
           aria-controls={panelId}
           onClick={onToggle}
-          className="-my-2.5 flex w-full items-start gap-2 py-2.5 text-left md:gap-4"
+          className={styles.trigger}
         >
-          <span className="sk-text-body-large-semibold min-w-0 flex-1 text-sko-text-default">{item.title}</span>
+          <span className={`sk-text-body-large-semibold ${styles.title}`}>{item.title}</span>
           {/* Plus and minus are both there and cross-fade with a quarter turn (short4, standard),
               so the icon reads as one thing changing. The state stays on aria-expanded. */}
-          <span aria-hidden className="relative size-6 shrink-0 text-sko-icon-faint">
+          <span aria-hidden className={styles.icons}>
             <Icon
               icon={CirclePlus}
               size={24}
               strokeWidth={1.5}
               className={cn(
-                "absolute inset-0 transition-[opacity,transform] duration-short4 ease-standard",
-                open ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
+                styles.icon,
+                open ? styles.plusHidden : styles.iconShown,
               )}
             />
             <Icon
@@ -60,8 +59,8 @@ function DisclosureRow({
               size={24}
               strokeWidth={1.5}
               className={cn(
-                "absolute inset-0 transition-[opacity,transform] duration-short4 ease-standard",
-                open ? "rotate-0 opacity-100" : "-rotate-90 opacity-0",
+                styles.icon,
+                open ? styles.iconShown : styles.minusHidden,
               )}
             />
           </span>
@@ -69,7 +68,7 @@ function DisclosureRow({
       </h3>
       {/* Grows open (Collapse, medium2); the 4 above the body is padding inside the clipped row. */}
       <Collapse id={panelId} role="region" aria-labelledby={buttonId} open={open}>
-        <div className="sk-text-body-large-regular space-y-4 pr-8 pt-1 text-sko-text-subtle md:pr-10">
+        <div className={`sk-text-body-large-regular ${styles.body}`}>
           {body.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
@@ -102,7 +101,7 @@ export function DisclosureList({ items, mock, className }: { items: ProgramDiscl
     <ul
       data-mock={mock}
       className={cn(
-        "flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page p-4 md:gap-5 md:p-5 lg:p-6",
+        styles.list,
         className,
       )}
     >

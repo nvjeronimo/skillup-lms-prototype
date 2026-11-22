@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import {
   BookOpen,
   CalendarDays,
@@ -16,6 +14,7 @@ import { useEdxScope } from "@/lib/edx-scope";
 import { useHarborRailExpanded } from "@/lib/platform/harbor";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import styles from "./HarborRail.module.css";
 
 const ICONS: Record<PlatformSection, LucideIcon> = {
   dashboard: LayoutDashboard,
@@ -43,31 +42,33 @@ export function HarborRail({ current }: { current: PlatformSection | null }) {
       className={cn(
         // Opening and closing ease the width (medium2) instead of jumping; the names fade in as it
         // opens. A page transition leaves it still (sk-vt-platform-rail, globals.css).
-        "sk-no-print sk-vt-platform-rail hidden shrink-0 self-stretch border-r border-sko-border-subtle bg-sko-bg-page transition-[width] duration-medium2 ease-standard-decelerate lg:block",
-        expanded ? "w-60" : "w-[72px]",
+        "sk-no-print sk-vt-platform-rail",
+        styles.rail,
+        expanded ? styles.railExpanded : styles.railCollapsed,
       )}
     >
-    <nav aria-label="Platform" className="sticky top-0 flex max-h-[100dvh] flex-col gap-1 overflow-y-auto p-2">
-      <ul className="flex flex-col gap-1">
+    <nav aria-label="Platform" className={styles.nav}>
+      <ul className={styles.list}>
         {sections.map((s) => {
           const on = s.id === current;
           const item = cn(
-            "sk-text-body-medium-semibold relative flex min-h-11 w-full items-center gap-3 rounded-card text-sko-text-default transition-colors",
-            expanded ? "px-4" : "justify-center px-0",
-            on ? "bg-sko-bg-primary-soft text-sko-text-on-primary-soft" : "hover:bg-sko-bg-hover",
+            "sk-text-body-medium-semibold",
+            styles.item,
+            expanded ? styles.itemExpanded : styles.itemCollapsed,
+            on ? styles.itemCurrent : styles.itemIdle,
           );
           const content = (
             <>
               <Icon icon={ICONS[s.id]} size={20} strokeWidth={on ? 2.25 : 1.75} aria-hidden />
-              <span key={String(expanded)} className={cn(expanded ? "sk-animate-fade min-w-0 flex-1 truncate" : "sr-only")}>{s.label}</span>
+              <span key={String(expanded)} className={cn(expanded ? cn("sk-animate-fade", styles.label) : "sk-sr-only")}>{s.label}</span>
               {typeof s.count === "number" ? (
                 expanded ? (
-                  <span className="sk-text-body-small-semibold rounded-pill bg-sko-bg-muted px-2 py-0.5 text-sko-text-muted">
-                    <span className="sr-only">, </span>
+                  <span className={cn("sk-text-body-small-semibold", styles.count)}>
+                    <span className="sk-sr-only">, </span>
                     {s.count}
                   </span>
                 ) : (
-                  <span aria-hidden className="absolute right-3 top-2 size-2 rounded-pill bg-sko-bg-info" />
+                  <span aria-hidden className={styles.dot} />
                 )
               ) : null}
             </>

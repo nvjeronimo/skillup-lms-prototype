@@ -1,0 +1,43 @@
+/* Deletion requested: the acknowledgement, the three dated steps, the way out and the prototype note. */
+.stack3 { display: flex; flex-direction: column; gap: 12px; }
+.badge {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-success-soft);
+  color: var(--color-icon-success);
+}
+.title { color: var(--color-text-default); }
+.text { color: var(--color-text-muted); }
+.strong { color: var(--color-text-default); }
+
+/* The steps hang off a 1px line on the left. */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 16px;
+}
+.step { display: flex; flex-direction: column; gap: 2px; }
+
+/* Phone: the actions stack, full width. Tablet and up (768): side by side, at the end. */
+.actions { display: flex; flex-direction: column; gap: 8px; }
+@media (min-width: 768px) {
+  .actions { flex-direction: row; justify-content: flex-end; }
+}
+@media (max-width: 767.98px) {
+  .action { width: 100%; }
+}
+
+.note {
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-top: 16px;
+  color: var(--color-text-subtle);
+}
+.noteLink { text-decoration-line: underline; }

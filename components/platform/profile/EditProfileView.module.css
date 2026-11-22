@@ -1,0 +1,232 @@
+/* Edit profile (/platform/profile). */
+.page {
+  padding-left: var(--sk-layout-page-x);
+  padding-right: var(--sk-layout-page-x);
+  padding-bottom: 48px;
+  padding-top: var(--sk-layout-page-top);
+}
+.column {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 880px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.deleteColumn {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: var(--sk-layout-section-gap);
+  width: 100%;
+  max-width: 880px;
+}
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ink {
+  color: var(--color-text-default);
+}
+.muted {
+  color: var(--color-text-muted);
+}
+.subtle {
+  color: var(--color-text-subtle);
+}
+/* DS Input field, Size=md: 1px border/default, Radius/control, padding 10/14, 44 tall. Focus:
+   border/primary and a 1px primary ring. The fill, ink and shadow are .field's or .readOnly's. */
+.fieldBox {
+  min-height: 44px;
+  width: 100%;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition-property: border-color,box-shadow;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.field {
+  background-color: var(--color-bg-page);
+  color: var(--color-text-default);
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+.readOnly {
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-subtle);
+}
+/* SelectField keeps room for its chevron (its own pr-[42px] won over px-3.5 before). */
+.select {
+  padding-right: 42px;
+}
+.textarea {
+  resize: vertical;
+}
+.fieldStack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.card {
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.cardBody {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.photo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.photoSide {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wrapRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.wideStart {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.segmentTrack {
+  display: inline-flex;
+  gap: 2px;
+  border-radius: var(--sk-radius-track);
+  background-color: var(--color-bg-track);
+  padding: 4px;
+}
+.segmentGhost {
+  background-color: transparent;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+}
+.action {
+  flex: 1 1 0%;
+}
+.centered {
+  justify-content: center;
+}
+.fieldBox::placeholder {
+  color: var(--color-text-placeholder);
+}
+.fieldBox:focus {
+  border-color: var(--color-border-primary);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0 #fff, 0 0 0 1px var(--color-border-primary), 0 0 #0000;
+}
+.field:focus {
+  box-shadow: 0 0 0 0 #fff, 0 0 0 1px var(--color-border-primary), 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+@media (max-width: 767.98px) {
+  .phoneTall {
+    height: 44px;
+  }
+  .chip {
+    min-height: 44px;
+  }
+}
+@media (min-width: 768px) {
+  .page {
+    padding-bottom: 64px;
+  }
+  .cardHeader {
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .cardBody {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+  .wide {
+    grid-column: span 2 / span 2;
+  }
+  .photo {
+    grid-column: span 2 / span 2;
+  }
+  .wideStart {
+    grid-column: span 2 / span 2;
+  }
+  .actions {
+    justify-content: flex-end;
+  }
+  .action {
+    flex: none;
+  }
+}
+@media (min-width: 1024px) {
+  .page {
+    padding-bottom: 80px;
+  }
+}
+
+/* Skin hooks that matched the Tailwind classes. Cards (rounded-card border): Harbor and Fluent are
+   borderless on the card shadow, Studio floats on its own shadow. One-line fields (rounded-control
+   inputs and selects) are pills in Harbor and Studio; Fluent's Input is a Stroke1 frame with the
+   accessible stroke along the bottom, white inside. A bg/track segment row sits on bg/muted in
+   Harbor and Fluent; in Studio its segments are pills. (tokens/skin-harbor.css, skin-fluent.css,
+   direction-studio.css) */
+[data-skin="harbor"] [data-platform-page] .card,
+[data-skin="fluent"] [data-platform-page] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+[data-direction="studio"] .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+[data-skin="harbor"] :is(input, select).fieldBox,
+[data-direction="studio"] :is(input, select).fieldBox {
+  border-radius: 9999px;
+}
+[data-skin="fluent"] :is(input, textarea, select).fieldBox {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+[data-skin="harbor"] .segmentTrack,
+[data-skin="fluent"] .segmentTrack {
+  background-color: var(--color-bg-muted);
+}
+[data-direction="studio"] .segmentTrack > :global(.rounded-control) {
+  border-radius: 9999px;
+}

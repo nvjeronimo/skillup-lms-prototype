@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -13,13 +11,14 @@ import { ContentFeedback } from "@/components/molecules/ContentFeedback";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
-import { CONTENT_BLEED, CONTENT_PX } from "@/lib/contentPadding";
+import { CONTENT_BLEED, CONTENT_PX } from "./contentPadding";
 import { getTopic } from "@/lib/data";
 import { getTranscript } from "@/lib/content";
 import { scrollBehavior, tsToSeconds } from "@/lib/utils";
 import { track } from "@/lib/analytics";
 import { TopicEndActionContext } from "@/lib/topicEndAction";
 import { TRANSCRIPT_FOLLOW_PAUSE_MS, isOutOfView, isScrollKey } from "@/lib/motion/feedback";
+import styles from "./TranscriptTab.module.css";
 
 /** The nearest ancestor that scrolls vertically, or null for the page itself. */
 function scrollParent(el: HTMLElement): HTMLElement | null {
@@ -175,7 +174,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
   // the tab; the feedback row stays, with Mark as Complete when the shell gives it.
   if (topic?.youtube) {
     return (
-      <div className="flex flex-col gap-4 pt-2">
+      <div className={styles.youtube}>
         {topic.youtube.embed ? (
           askToMark ? (
             <InlineAlert
@@ -191,10 +190,10 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             />
           )
         ) : (
-          <p className="sk-text-body-medium-regular text-sko-text-subtle">No transcript available for this video.</p>
+          <p className={`sk-text-body-medium-regular ${styles.noTranscriptVideo}`}>No transcript available for this video.</p>
         )}
         <ContentFeedback
-          className="border-t border-sko-border-subtle"
+          className={styles.feedbackYoutube}
           action={endAction ?? undefined}
           value={feedback}
           onLike={() => setFeedback(feedback === "like" ? null : "like")}
@@ -208,7 +207,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   if (!topic || !transcript.length) {
     return (
-      <p className="sk-text-body-medium-regular px-1 py-8 text-center text-sko-text-subtle">
+      <p className={`sk-text-body-medium-regular ${styles.noTranscript}`}>
         No transcript available for this topic.
       </p>
     );
@@ -216,7 +215,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
 
   return (
     <div
-      className="relative"
+      className={styles.root}
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -224,14 +223,14 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
     >
       {/* Controls row below the tabs: Language (left) · Add Note (right).
           Transcript download lives in the Downloads tab as a resource. */}
-      <div className="flex flex-wrap items-center justify-between gap-3 py-2">
-        <label className="sk-text-body-medium-medium flex items-center gap-1.5 text-sko-text-muted">
+      <div className={styles.controls}>
+        <label className={`sk-text-body-medium-medium ${styles.language}`}>
           Language:
-          <span className="relative">
+          <span className={styles.selectWrap}>
             <select
               aria-label="Caption language"
               onChange={(e) => track("video_language_change", { language: e.target.value })}
-              className="sk-text-body-medium-medium min-h-6 appearance-none bg-transparent pr-5 text-sko-text-default"
+              className={`sk-text-body-medium-medium ${styles.select}`}
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -240,7 +239,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             <ChevronDown
               size={14}
               strokeWidth={1.5}
-              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-sko-icon-subtle"
+              className={styles.selectChevron}
             />
           </span>
         </label>
@@ -255,14 +254,14 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
           }
           data-invented="notes: Open edX notes cannot anchor to a transcript line"
           // DS Link Button, Type=Brand · Hierarchy=Primary · md: 1px bottom stroke in border/primary.
-          className="sk-text-body-medium-semibold inline-flex h-7 items-center gap-1 border-b border-sko-border-primary px-0.5 text-sko-text-primary transition-colors hover:border-sko-icon-default hover:text-sko-text-on-primary-soft focus-visible:rounded-control focus-visible:bg-sko-bg-faint [&:hover_svg]:text-sko-icon-default"
+          className={`sk-text-body-medium-semibold ${styles.addNote}`}
         >
-          <Icon icon={Plus} size={16} className="text-sko-icon-primary" />
-          <span className="px-0.5">Add Note</span>
+          <Icon icon={Plus} size={16} className={styles.addNoteIcon} />
+          <span className={styles.addNoteLabel}>Add Note</span>
         </button>
       </div>
 
-      <div className={cn("relative flex flex-col py-2", CONTENT_BLEED[bp])}>
+      <div className={cn(styles.lines, CONTENT_BLEED[bp])}>
         {transcript.map((line) => {
           const note = notes.find((n) => n.transcriptLineId === line.id && n.topicId === topicId);
           const hasNote = Boolean(note);
@@ -297,10 +296,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
             data-state={pill.state}
             onAnimationEnd={pill.onAnimationEnd}
             {...inertProps(pill.state === "closed")}
-            className={cn(
-              "sk-animate-rise absolute inset-x-0 bottom-4 z-10 flex justify-center",
-              pill.state === "closed" && "pointer-events-none",
-            )}
+            className={cn("sk-animate-rise", styles.syncPill, pill.state === "closed" && styles.syncPillClosed)}
           >
             <Button
               variant="primary"
@@ -318,7 +314,7 @@ export function TranscriptTab({ topicId }: { topicId: string; courseSlug?: strin
           12/12 padding and right-aligned licence, so no wrapper padding here. With Mark as
           Complete in the row, the licence follows the feedback and the button takes the right. */}
       <ContentFeedback
-        className="mt-2 border-t border-sko-border-subtle"
+        className={styles.feedback}
         action={endAction ?? undefined}
         value={feedback}
         onLike={() => setFeedback(feedback === "like" ? null : "like")}

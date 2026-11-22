@@ -1,0 +1,66 @@
+/* The Course tab: the main column and the 320 sidebar, side by side from tablet up. */
+.coursePanel { display: flex; flex-direction: column; gap: var(--sk-layout-column-gap); }
+.main { display: flex; min-width: 0; flex: 1 1 0%; flex-direction: column; gap: var(--sk-layout-stack-gap); }
+@media (min-width: 768px) {
+  .coursePanel { flex-direction: row; align-items: flex-start; }
+  .side { width: 320px; flex-shrink: 0; }
+}
+
+/* The tab content inside the 1280 width: 40 / 24 / 16 at the sides, 32 / 24 / 16 above, 80 / 48 / 32 below. */
+.body {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: var(--sk-layout-band-x);
+  padding-right: var(--sk-layout-band-x);
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+@media (min-width: 768px) {
+  .body { padding-top: 32px; padding-bottom: 48px; }
+}
+@media (min-width: 1024px) {
+  .body { padding-top: 40px; padding-bottom: 80px; }
+}
+
+/* The open Q&A conversation on a phone hides the header and the tab row. */
+@media (max-width: 767.98px) {
+  .hideOnPhone { display: none; }
+}
+@media (min-width: 768px) {
+  .phoneOnly { display: none; }
+}
+
+.tabBand {
+  border-bottom-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+.tabRow {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  align-items: flex-end;
+  padding-left: var(--sk-layout-band-x);
+  padding-top: 12px;
+}
+.tabs { margin-bottom: -1px; min-width: 0; flex: 1 1 0%; }
+.search { display: none; width: 320px; flex-shrink: 0; padding-bottom: 7px; padding-top: 8px; }
+@media (min-width: 768px) {
+  .tabRow {
+    column-gap: 20px;
+    row-gap: 20px;
+    padding-left: var(--sk-layout-band-x);
+    padding-right: var(--sk-layout-band-x);
+    padding-top: 0;
+  }
+  .search { display: block; }
+}
+@media (min-width: 1024px) {
+  .tabRow { column-gap: 24px; row-gap: 24px; }
+}
+
+.phoneSearch { margin-bottom: 16px; }

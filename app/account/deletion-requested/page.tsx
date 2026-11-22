@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { DeletionRequestedView } from "@/components/account/DeletionRequestedView";
 import { pageTitle } from "@/lib/utils";
 

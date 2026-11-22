@@ -1,9 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { FIELD, FormField, FormModal, FormSelect } from "@/components/organisms/FormModal";
 import type { CourseDetail, QaThread } from "@/lib/platform/course-detail";
 import { sessionId } from "@/lib/platform/session-additions";
+import { cn } from "@/lib/utils";
+import styles from "./AskQuestionModal.module.css";
 
 const TITLE_MAX = 120;
 
@@ -79,7 +79,7 @@ export function AskQuestionModal({
           onChange={(e) => setDetails(e.target.value)}
           rows={5}
           aria-describedby={`${id}-details-hint`}
-          className={`${FIELD} resize-y`}
+          className={cn(FIELD, styles.textarea)}
         />
       </FormField>
       <FormField id={`${id}-module`} label="Where in the course" optional>

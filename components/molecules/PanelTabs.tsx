@@ -1,7 +1,6 @@
-"use client";
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./PanelTabs.module.css";
 
 export interface PanelTab {
   value: string;
@@ -37,10 +36,7 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={cn(
-        "sticky top-0 z-20 flex items-center gap-4 border-b border-sko-border-subtle bg-sko-bg-page px-6",
-        className,
-      )}
+      className={cn(styles.tabs, className)}
     >
       {tabs.map((t, i) => {
         const isActive = t.value === active;
@@ -55,22 +51,16 @@ export function PanelTabs({ tabs, active, onChange, ariaLabel, className }: Pane
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(t.value)}
             onKeyDown={(e) => onKeyDown(e, i)}
-            className={cn(
-              "sk-text-body-medium-semibold -mb-px flex items-center gap-2 border-b-2 py-3 transition-colors",
-              isActive
-                ? "border-sko-border-primary text-sko-text-primary"
-                : "border-transparent text-sko-text-muted hover:text-sko-text-default",
-            )}
+            className={cn("sk-text-body-medium-semibold", styles.tab, isActive ? styles.active : styles.inactive)}
           >
             {t.label}
             {typeof t.count === "number" ? (
               <span
                 className={cn(
                   // DS Badge Soft sm: Brand on the current tab, Gray on the others.
-                  "sk-text-body-small-medium inline-flex items-center rounded-pill px-2 py-0.5",
-                  isActive
-                    ? "bg-sko-bg-primary-soft text-sko-text-primary"
-                    : "bg-sko-bg-faint text-sko-text-muted",
+                  "sk-text-body-small-medium",
+                  styles.count,
+                  isActive ? styles.countActive : styles.countInactive,
                 )}
               >
                 {t.count}

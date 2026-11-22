@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/router";
 import { useLargeTargets, useLmsStore, type DeviceMode } from "@/lib/store";
 import { AssistantChat } from "@/components/assistant/AssistantChat";
 import { AssistantChatFloating } from "@/components/assistant/AssistantChatFloating";
@@ -9,6 +7,7 @@ import { useFloatingAssistant } from "@/lib/assistant/floating";
 import { PageTransitions } from "@/components/views/PageTransitions";
 import { SyntheticPersonasHost } from "@/components/molecules/SyntheticPersonas";
 import { LOAD_MODE_KEY } from "@/lib/arrival/loadMode";
+import styles from "./ResponsiveShell.module.css";
 
 /** Frame width per device. Auto/Desktop fill the window; tablet/mobile are framed. */
 const FRAME_WIDTH: Record<DeviceMode, number | null> = {
@@ -260,7 +259,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
     );
 
   return (
-    <div className="flex h-[100dvh] justify-center overflow-hidden bg-sko-bg-subtle">
+    <div className={styles.previewStage}>
       {frameSrc ? (
         <iframe
           key="preview"
@@ -269,7 +268,7 @@ export function ResponsiveShell({ children }: { children: React.ReactNode }) {
           data-preview-device={mode}
           style={{ width }}
           // box-content: the border sits outside, so the page inside gets the full 375 / 834.
-          className="box-content h-full shrink-0 border-x border-sko-border-subtle bg-sko-bg-page shadow-2xl"
+          className={styles.previewFrame}
         />
       ) : null}
     </div>

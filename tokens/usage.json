@@ -62,21 +62,21 @@
       "css": [
         "--color-bg-error"
       ],
-      "files": 2,
+      "files": 3,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/error-soft": {
       "css": [
         "--color-bg-error-soft"
       ],
-      "files": 10,
+      "files": 11,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/faint": {
       "css": [
         "--color-bg-faint"
       ],
-      "files": 44,
+      "files": 43,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/fixed": {
@@ -97,7 +97,7 @@
       "css": [
         "--color-bg-hover"
       ],
-      "files": 20,
+      "files": 25,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/info": {
@@ -125,28 +125,28 @@
       "css": [
         "--color-bg-muted"
       ],
-      "files": 26,
+      "files": 30,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/on-media": {
       "css": [
         "--color-bg-on-media"
       ],
-      "files": 2,
+      "files": 3,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/on-media-soft": {
       "css": [
         "--color-bg-on-media-soft"
       ],
-      "files": 1,
+      "files": 2,
       "from": "name"
     },
     "1. SKO-Semantics 🎨/bg/overlay": {
       "css": [
         "--color-bg-overlay"
       ],
-      "files": 3,
+      "files": 4,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/overlay-soft": {
@@ -174,7 +174,7 @@
       "css": [
         "--color-bg-primary-hover"
       ],
-      "files": 7,
+      "files": 8,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/primary-soft": {
@@ -195,21 +195,21 @@
       "css": [
         "--color-bg-subtle"
       ],
-      "files": 84,
+      "files": 85,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/success": {
       "css": [
         "--color-bg-success"
       ],
-      "files": 23,
+      "files": 24,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/success-soft": {
       "css": [
         "--color-bg-success-soft"
       ],
-      "files": 21,
+      "files": 22,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/bg/track": {
@@ -300,7 +300,7 @@
       "css": [
         "--color-border-default"
       ],
-      "files": 44,
+      "files": 47,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/border/disabled": {
@@ -314,7 +314,7 @@
       "css": [
         "--color-border-error"
       ],
-      "files": 6,
+      "files": 7,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/border/error-soft": {
@@ -328,7 +328,7 @@
       "css": [
         "--color-border-focus-gap"
       ],
-      "files": 7,
+      "files": 9,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/border/info": {
@@ -384,14 +384,14 @@
       "css": [
         "--color-border-subtle"
       ],
-      "files": 132,
+      "files": 134,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/border/success": {
       "css": [
         "--color-border-success"
       ],
-      "files": 9,
+      "files": 10,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/border/success-soft": {
@@ -454,7 +454,7 @@
       "css": [
         "--color-icon-error"
       ],
-      "files": 8,
+      "files": 9,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/icon/faint": {
@@ -531,14 +531,14 @@
       "css": [
         "--color-icon-on-success"
       ],
-      "files": 4,
+      "files": 5,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/icon/primary": {
       "css": [
         "--color-icon-primary"
       ],
-      "files": 38,
+      "files": 39,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/icon/subtle": {
@@ -552,14 +552,14 @@
       "css": [
         "--color-icon-success"
       ],
-      "files": 18,
+      "files": 19,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/icon/success-strong": {
       "css": [
         "--color-icon-success-strong"
       ],
-      "files": 3,
+      "files": 4,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/icon/warning": {
@@ -664,21 +664,21 @@
       "css": [
         "--color-text-default"
       ],
-      "files": 132,
+      "files": 137,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/disabled": {
       "css": [
         "--color-text-disabled"
       ],
-      "files": 8,
+      "files": 9,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/error": {
       "css": [
         "--color-text-error"
       ],
-      "files": 16,
+      "files": 17,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/info": {
@@ -692,7 +692,7 @@
       "css": [
         "--color-text-muted"
       ],
-      "files": 89,
+      "files": 92,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/on-accent-green": {
@@ -727,7 +727,7 @@
       "css": [
         "--color-text-on-error"
       ],
-      "files": 2,
+      "files": 3,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/on-fixed": {
@@ -755,14 +755,14 @@
       "css": [
         "--color-text-on-primary"
       ],
-      "files": 18,
+      "files": 19,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/on-primary-hover": {
       "css": [
         "--color-text-on-primary-hover"
       ],
-      "files": 7,
+      "files": 8,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/on-primary-soft": {
@@ -776,7 +776,7 @@
       "css": [
         "--color-text-on-success"
       ],
-      "files": 4,
+      "files": 5,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/on-warning": {
@@ -797,21 +797,21 @@
       "css": [
         "--color-text-primary"
       ],
-      "files": 74,
+      "files": 73,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/subtle": {
       "css": [
         "--color-text-subtle"
       ],
-      "files": 127,
+      "files": 128,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/success": {
       "css": [
         "--color-text-success"
       ],
-      "files": 20,
+      "files": 21,
       "from": "web"
     },
     "1. SKO-Semantics 🎨/text/warning": {
@@ -860,7 +860,7 @@
       "css": [
         "--sk-container-text-max-width"
       ],
-      "files": 10,
+      "files": 5,
       "from": "name"
     },
     "2. Responsive 📐/Layout/band-x": {
@@ -923,56 +923,56 @@
       "css": [
         "--sk-radius-card"
       ],
-      "files": 93,
+      "files": 86,
       "from": "name"
     },
     "2. Responsive 📐/Radius/card-inset": {
       "css": [
         "--sk-radius-card-inset"
       ],
-      "files": 17,
+      "files": 12,
       "from": "name"
     },
     "2. Responsive 📐/Radius/control": {
       "css": [
         "--sk-radius-control"
       ],
-      "files": 93,
+      "files": 106,
       "from": "name"
     },
     "2. Responsive 📐/Radius/inner": {
       "css": [
         "--sk-radius-inner"
       ],
-      "files": 26,
+      "files": 23,
       "from": "name"
     },
     "2. Responsive 📐/Radius/none": {
       "css": [
         "--sk-radius-none"
       ],
-      "files": 61,
+      "files": 7,
       "from": "name"
     },
     "2. Responsive 📐/Radius/pill": {
       "css": [
         "--sk-radius-pill"
       ],
-      "files": 70,
+      "files": 66,
       "from": "name"
     },
     "2. Responsive 📐/Radius/surface": {
       "css": [
         "--sk-radius-surface"
       ],
-      "files": 19,
+      "files": 13,
       "from": "name"
     },
     "2. Responsive 📐/Radius/track": {
       "css": [
         "--sk-radius-track"
       ],
-      "files": 31,
+      "files": 13,
       "from": "name"
     },
     "2. Responsive 📐/Spacing/10xl": {
@@ -1266,49 +1266,49 @@
       "css": [
         "--motion-distance-enter"
       ],
-      "files": 2,
+      "files": 1,
       "from": "web"
     },
     "3. Motion/distance/nudge": {
       "css": [
         "--motion-distance-nudge"
       ],
-      "files": 9,
+      "files": 1,
       "from": "web"
     },
     "3. Motion/distance/surface": {
       "css": [
         "--motion-distance-surface"
       ],
-      "files": 18,
+      "files": 1,
       "from": "web"
     },
     "3. Motion/duration/long2": {
       "css": [
         "--motion-duration-long2"
       ],
-      "files": 5,
+      "files": 3,
       "from": "web"
     },
     "3. Motion/duration/medium2": {
       "css": [
         "--motion-duration-medium2"
       ],
-      "files": 6,
+      "files": 4,
       "from": "web"
     },
     "3. Motion/duration/short2": {
       "css": [
         "--motion-duration-short2"
       ],
-      "files": 12,
+      "files": 10,
       "from": "web"
     },
     "3. Motion/duration/short3": {
       "css": [
         "--motion-duration-short3"
       ],
-      "files": 12,
+      "files": 82,
       "from": "web"
     },
     "3. Motion/duration/short4": {
@@ -1336,7 +1336,7 @@
       "css": [
         "--motion-easing-standard"
       ],
-      "files": 16,
+      "files": 93,
       "from": "web"
     },
     "3. Motion/easing/standard-accelerate": {
@@ -1350,7 +1350,7 @@
       "css": [
         "--motion-easing-standard-decelerate"
       ],
-      "files": 11,
+      "files": 10,
       "from": "web"
     }
   },
@@ -1358,15 +1358,20 @@
     "--sk-radius-"
   ],
   "unknownCss": [
+    "--badge-stroke",
     "--btn-ring",
+    "--btn-ring-offset-shadow",
+    "--btn-ring-shadow",
+    "--btn-shadow",
+    "--btn-stroke",
+    "--dot-ring",
     "--font-figtree",
     "--font-inter-tight",
     "--font-montserrat",
     "--font-open-sans",
     "--font-plus-jakarta",
-    "--font-tb-display",
-    "--font-tb-text",
     "--mod",
+    "--ring-color",
     "--row",
     "--sk-arrive-delay",
     "--sk-font-scale",

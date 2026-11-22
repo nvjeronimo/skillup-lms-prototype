@@ -1,5 +1,6 @@
 import { ArrivalCount } from "@/components/atoms/ArrivalCount";
 import { cn } from "@/lib/utils";
+import styles from "./PlatformStat.module.css";
 
 export interface PlatformStatProps {
   label: string;
@@ -34,17 +35,17 @@ export function PlatformStat({ label, value, detail, shortLabel, shortDetail, th
     const both = (full: string, short?: string) =>
       short ? (
         <>
-          <span className="md:hidden">{short}</span>
-          <span className="max-md:hidden">{full}</span>
+          <span className={styles.short}>{short}</span>
+          <span className={styles.full}>{full}</span>
         </>
       ) : (
         full
       );
     return (
-      <div className={cn("flex min-w-0 flex-col justify-end gap-1 text-sko-text-on-inverse", className)}>
+      <div className={cn(styles.inverse, className)}>
         <p data-stat-value="" className="sk-text-headline-medium-bold"><ArrivalCount value={value} /></p>
-        <p data-stat-label="" className="sk-text-label-small-semibold opacity-80 max-md:whitespace-nowrap max-md:normal-case max-md:tracking-normal">{both(label, shortLabel)}</p>
-        <p data-stat-detail="" className="sk-text-body-small-medium opacity-60 [[data-theme=dark]_&]:opacity-70">{both(detail, shortDetail)}</p>
+        <p data-stat-label="" className={cn("sk-text-label-small-semibold", styles.inverseLabel)}>{both(label, shortLabel)}</p>
+        <p data-stat-detail="" className={cn("sk-text-body-small-medium", styles.inverseDetail)}>{both(detail, shortDetail)}</p>
       </div>
     );
   }
@@ -53,14 +54,14 @@ export function PlatformStat({ label, value, detail, shortLabel, shortDetail, th
       className={cn(
         // Top-aligned: when one detail wraps to two lines (a phone), the labels and the figures of
         // the stats beside it stay on the same lines.
-        "relative flex min-w-0 flex-col justify-start gap-2 p-4",
-        divider && "border-l border-sko-border-subtle",
+        styles.stat,
+        divider && styles.divider,
         className,
       )}
     >
-      <p className="sk-text-label-small-semibold text-sko-text-muted">{label}</p>
-      <p className="sk-text-headline-medium-bold text-sko-text-default"><ArrivalCount value={value} /></p>
-      <p className="sk-text-body-small-medium text-sko-text-muted">{detail}</p>
+      <p className={cn("sk-text-label-small-semibold", styles.label)}>{label}</p>
+      <p className={cn("sk-text-headline-medium-bold", styles.value)}><ArrivalCount value={value} /></p>
+      <p className={cn("sk-text-body-small-medium", styles.detail)}>{detail}</p>
     </div>
   );
 }

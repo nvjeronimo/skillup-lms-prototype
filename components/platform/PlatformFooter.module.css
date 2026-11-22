@@ -1,0 +1,59 @@
+/* The micro footer of the platform pages: one line from tablet up, centred rows on a phone. */
+.footer {
+  padding-inline: var(--sk-layout-page-x);
+}
+.inner {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  border-top-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-block: 24px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.wordmark {
+  height: 18px;
+}
+.copyright {
+  color: var(--color-text-subtle);
+}
+.edx {
+  display: flex;
+  border-left-width: 1px;
+  border-color: var(--color-border-subtle);
+  padding-left: 8px;
+}
+.edxLogo {
+  height: 14px;
+  width: auto;
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  column-gap: 16px;
+  row-gap: 8px;
+}
+.link {
+  display: flex;
+}
+@media (max-width: 767.98px) {
+  .brand { order: 9999; }
+}
+@media (min-width: 768px) {
+  .inner {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .edx { padding-left: 12px; }
+  .links { justify-content: flex-end; }
+}

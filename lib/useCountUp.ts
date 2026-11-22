@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { countUpValue } from "@/lib/motion/countUp";
 import { MOTION_MS } from "@/lib/motion/tokens";

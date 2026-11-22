@@ -1,0 +1,37 @@
+/* Week-Day: the two-letter day over a 28px dot, 6 apart. */
+.day { display: flex; width: 32px; flex-direction: column; align-items: center; gap: 6px; }
+.todayLabel { color: var(--color-text-on-primary-soft); }
+.subtle { color: var(--color-text-subtle); }
+.dot {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+  color: var(--color-icon-success);
+}
+.done { border-width: 1px; border-color: var(--color-border-subtle); background-color: var(--color-bg-page); }
+.missed { border-width: 1px; border-color: var(--color-border-subtle); background-color: var(--color-bg-subtle); }
+.today { border-width: 2px; border-color: var(--color-border-primary); background-color: var(--color-bg-page); }
+.upcoming { border-width: 1.5px; border-style: dashed; border-color: var(--color-border-subtle); }
+
+.week { display: flex; align-items: flex-start; justify-content: space-between; }
+.rule { border-top-width: 1px; border-color: var(--color-border-subtle); }
+
+/* State=Met: the week in a bg/success-soft box. */
+.metBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  background-color: var(--color-bg-success-soft);
+  padding: 12px;
+}
+.success { color: var(--color-text-success); }
+.default { color: var(--color-text-default); }
+.column { display: flex; flex-direction: column; }
+.weekBlock { display: flex; flex-direction: column; gap: 8px; }
+.countRow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: 8px; }
+.planRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.noShrink { flex-shrink: 0; }

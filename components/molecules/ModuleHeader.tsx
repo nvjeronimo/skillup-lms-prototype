@@ -2,6 +2,7 @@ import * as React from "react";
 import { ChevronDown } from "lucide-react";
 import { ModuleInfo } from "@/components/atoms/ModuleInfo";
 import { cn, iconStroke } from "@/lib/utils";
+import styles from "./ModuleHeader.module.css";
 
 export interface ModuleHeaderProps {
   label: string;
@@ -50,13 +51,9 @@ export function ModuleHeader({
       type="button"
       onClick={onToggle}
       aria-expanded={!collapsed}
-      className={cn(
-        "flex w-full items-center gap-3 bg-sko-bg-faint px-4 py-3 text-left",
-        collapsed && "border-b border-sko-border-subtle",
-        className,
-      )}
+      className={cn(styles.header, collapsed && styles.collapsed, className)}
     >
-      <span className="flex min-w-0 flex-1 flex-col gap-2">
+      <span className={styles.labels}>
         <ModuleInfo
           label={label}
           topicsCompleted={topicsCompleted}
@@ -65,16 +62,13 @@ export function ModuleHeader({
           isCompleted={isCompleted}
         />
         {/* DS name is auto-height with truncation off — long names wrap, never clip. */}
-        <span className="sk-text-body-medium-semibold text-sko-text-default">{title}</span>
+        <span className={`sk-text-body-medium-semibold ${styles.title}`}>{title}</span>
       </span>
       <ChevronDown
         size={24}
         /* Decision 013: 24px icons use a 2px stroke (DS draws 1.5px — DS fix pending). */
         strokeWidth={iconStroke(24)}
-        className={cn(
-          "shrink-0 text-sko-border-default transition-transform duration-short4 ease-standard",
-          !collapsed && "rotate-180",
-        )}
+        className={cn(styles.chevron, !collapsed && styles.open)}
         aria-hidden
       />
     </button>

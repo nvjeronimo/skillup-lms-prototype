@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { TranscriptLine } from "./TranscriptLine";
+import styles from "./SavedNoteItem.module.css";
 
 export interface SavedNoteItemProps {
   ts: string;
@@ -28,21 +29,21 @@ export function SavedNoteItem({
 }: SavedNoteItemProps) {
   const inner = (
     <>
-      <span className="flex items-baseline justify-between gap-2">
-        <span className="sk-text-body-small-semibold min-w-0 truncate text-sko-text-primary">
+      <span className={styles.head}>
+        <span className={`sk-text-body-small-semibold ${styles.where}`}>
           {ts} · {topicTitle}
         </span>
-        <span className="sk-text-body-small-regular shrink-0 text-sko-text-subtle">{savedAt}</span>
+        <span className={`sk-text-body-small-regular ${styles.saved}`}>{savedAt}</span>
       </span>
       {/* The anchor is the transcript line, read-only, as in the DS Note-Item v1.1 (14 Oct 2026). */}
-      <TranscriptLine ts="" text={anchorQuote} active readOnly className="mt-2" />
-      <span className="sk-text-body-medium-medium mt-2 block text-sko-text-default">{text}</span>
+      <TranscriptLine ts="" text={anchorQuote} active readOnly className={styles.anchor} />
+      <span className={`sk-text-body-medium-medium ${styles.text}`}>{text}</span>
       {tags.length ? (
-        <span className="mt-2 flex flex-wrap gap-1.5">
+        <span className={styles.tags}>
           {tags.map((t) => (
             <span
               key={t}
-              className="sk-text-body-small-medium rounded-pill bg-sko-bg-subtle px-2 py-0.5 text-sko-text-subtle"
+              className={`sk-text-body-small-medium ${styles.tag}`}
             >
               #{t}
             </span>
@@ -52,10 +53,7 @@ export function SavedNoteItem({
     </>
   );
 
-  const classes = cn(
-    "block w-full bg-sko-bg-page px-6 py-4 text-left transition-colors hover:bg-sko-bg-faint",
-    className,
-  );
+  const classes = cn(styles.item, className);
 
   if (href) {
     return (

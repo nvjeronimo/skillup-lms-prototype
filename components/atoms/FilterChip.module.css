@@ -1,0 +1,32 @@
+/* Filter pill. The button takes the caller's className: resting rules at 0,0,1 (:where + the
+   element), enough to beat the reset's `button` rules, never a caller's class. */
+:where(.chip):is(button) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sk-radius-pill);
+  padding: 4px 12px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+/* Active: brand section + brand text. Inactive: secondary bg + secondary text. */
+:where(.active):is(button) {
+  background-color: var(--color-bg-primary-soft);
+  color: var(--color-text-primary);
+}
+:where(.inactive):is(button) {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+}
+@media (hover: hover) and (pointer: fine) {
+  .inactive:hover {
+    background-color: var(--color-bg-hover);
+  }
+}
+.countActive {
+  color: var(--color-text-primary);
+}
+.countInactive {
+  color: var(--color-text-subtle);
+}

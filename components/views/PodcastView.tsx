@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Play, Pause, SkipBack, SkipForward, Headphones, Download } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
@@ -12,6 +10,7 @@ import { cn, secondsToTs } from "@/lib/utils";
 import { usePlaybackClock } from "@/lib/playback/usePlaybackClock";
 import { usePlaybackRecorder } from "@/lib/playback/usePlaybackRecorder";
 import { track } from "@/lib/analytics";
+import styles from "./PodcastView.module.css";
 
 const SPEEDS = [0.5, 1, 1.25, 1.5, 2];
 
@@ -111,8 +110,8 @@ export function PodcastView({ topicId }: { topicId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-8 py-6">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className={styles.root}>
+      <div className={styles.badges}>
         <Badge tone="brand" leftIcon={Headphones}>
           Podcast
         </Badge>
@@ -120,11 +119,11 @@ export function PodcastView({ topicId }: { topicId: string }) {
       </div>
 
       {/* Audio surface — a waveform stands in for the video frame. */}
-      <section className="flex flex-col gap-4 rounded-card border border-sko-border-subtle bg-sko-bg-page shadow-sk-card p-5">
+      <section className={styles.player}>
         {/* A flat brand tint (no gradients: they are not part of the SkillUp brand, Nelson 21 Oct 2026). */}
         <div
           data-invented="waveform: no waveform in the Open edX player"
-          className="flex h-24 items-end gap-[3px] overflow-hidden rounded-control bg-sko-bg-primary-soft px-4 py-3"
+          className={styles.waveform}
           aria-hidden
         >
           {Array.from({ length: 64 }).map((_, i) => {
@@ -135,9 +134,9 @@ export function PodcastView({ topicId }: { topicId: string }) {
               <span
                 key={i}
                 className={cn(
-                  "flex-1 rounded-inner",
+                  styles.bar,
                   // Progress fill is bg/info, never bg/primary; the unplayed track is bg/muted.
-                  played ? "bg-sko-bg-info" : "bg-sko-bg-track",
+                  played ? styles.barPlayed : styles.barUnplayed,
                 )}
                 style={{ height: `${h}%` }}
               />
@@ -155,11 +154,11 @@ export function PodcastView({ topicId }: { topicId: string }) {
           aria-label="Seek"
           aria-valuetext={`${secondsToTs(t)} of ${secondsToTs(durationSeconds)}`}
           // With larger touch targets on (the mobile default) the slider is 44 high.
-          className="w-full accent-[var(--color-bg-info)] [[data-large-targets]_&]:min-h-[44px]"
+          className={styles.scrubber}
         />
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+        <div className={styles.controls}>
+          <div className={styles.controlGroup}>
             <Button
               variant="secondary"
               size="sm"
@@ -189,12 +188,12 @@ export function PodcastView({ topicId }: { topicId: string }) {
             >
               15s
             </Button>
-            <span className="sk-text-body-small-regular ml-1 text-sko-text-subtle">
+            <span className={`sk-text-body-small-regular ${styles.time}`}>
               {secondsToTs(t)} / {secondsToTs(durationSeconds)}
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className={styles.controlGroup}>
             <Button
               variant="secondary"
               size="sm"
@@ -230,21 +229,21 @@ export function PodcastView({ topicId }: { topicId: string }) {
         />
       ) : null}
 
-      <div className="flex flex-col gap-1">
-        <span className="sk-text-body-medium-medium text-sko-text-muted">
+      <div className={styles.meta}>
+        <span className={`sk-text-body-medium-medium ${styles.host}`}>
           {podcast.host}
           {podcast.guest ? ` with ${podcast.guest}` : ""}
         </span>
-        <p className="sk-text-body-large-regular text-sko-text-muted">{podcast.summary}</p>
+        <p className={`sk-text-body-large-regular ${styles.summary}`}>{podcast.summary}</p>
       </div>
 
       {/* Chapters behave like transcript lines: click to seek. */}
       <section
         data-invented="chapters: no chapter field or click-to-seek on the Open edX video block"
-        className="flex flex-col gap-2"
+        className={styles.chapters}
       >
-        <h2 className="sk-text-body-large-semibold text-sko-text-default">Chapters</h2>
-        <ul className="flex flex-col gap-1">
+        <h2 className={`sk-text-body-large-semibold ${styles.chaptersTitle}`}>Chapters</h2>
+        <ul className={styles.chapterList}>
           {podcast.chapters.map((c) => {
             const [m, sec] = c.ts.split(":").map(Number);
             const at = m * 60 + sec;
@@ -254,25 +253,15 @@ export function PodcastView({ topicId }: { topicId: string }) {
                 <button
                   type="button"
                   onClick={() => seek(at)}
-                  className={cn(
-                    "flex w-full items-baseline gap-3 rounded-control px-3 py-2 text-left transition-colors",
-                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
-                    active ? "bg-sko-bg-primary-soft" : "hover:bg-sko-bg-subtle",
-                  )}
+                  className={cn(styles.chapter, active ? styles.chapterActive : styles.chapterIdle)}
                 >
                   <span
-                    className={cn(
-                      "sk-text-body-small-medium tabular-nums",
-                      active ? "text-sko-text-primary" : "text-sko-text-subtle",
-                    )}
+                    className={cn("sk-text-body-small-medium", styles.chapterTs, active ? styles.chapterTextActive : styles.chapterTsIdle)}
                   >
                     {c.ts}
                   </span>
                   <span
-                    className={cn(
-                      "sk-text-body-medium-regular",
-                      active ? "text-sko-text-primary" : "text-sko-text-default",
-                    )}
+                    className={cn("sk-text-body-medium-regular", active ? styles.chapterTextActive : styles.chapterLabelIdle)}
                   >
                     {c.label}
                   </span>

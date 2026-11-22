@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@/lib/router";
 import { InlineAlert } from "@/components/atoms/InlineAlert";
 import { getPartnerLab } from "@/lib/content";
 import { getTopic } from "@/lib/data";
 import { getCourseDetailBySlug } from "@/lib/platform/course-detail";
+import styles from "./View.module.css";
 
 /**
  * Stand-in for the partner's lab platform. In the product this page does not exist: the
@@ -29,19 +28,19 @@ function StandIn({ partner }: { partner: string }) {
       <main
         id="main"
         tabIndex={-1}
-        className="flex min-h-[100dvh] flex-col items-center justify-center gap-4 bg-sko-bg-subtle p-6 text-center outline-none"
+        className={styles.page}
       >
-        <span className="sk-text-label-small-medium uppercase text-sko-text-subtle">
+        <span className={`sk-text-label-small-medium ${styles.eyebrow}`}>
           Prototype stand-in · not a SkillUp screen
         </span>
-        <h1 className="sk-text-title-large-bold text-sko-text-default">
+        <h1 className={`sk-text-title-large-bold ${styles.title}`}>
           {course.hosted.partner} · {course.title}
         </h1>
-        <p className="sk-text-body-medium-regular max-w-[520px] text-sko-text-muted">
+        <p className={`sk-text-body-medium-regular ${styles.text}`}>
           In the product this is {course.hosted.partner}&rsquo;s own site, where the learner signs in with an{" "}
           {course.hosted.partner} account and takes the course. The course itself is not part of the prototype.
         </p>
-        <div className="w-full max-w-[520px] text-left">
+        <div className={styles.alert}>
           <InlineAlert
             tone="info"
             title="We do not know yet what comes back to SkillUp"
@@ -54,9 +53,9 @@ function StandIn({ partner }: { partner: string }) {
 
   if (!topic || !lab || lab.partner !== partner) {
     return (
-      <main id="main" tabIndex={-1} className="flex flex-col gap-2 p-6 outline-none">
-        <h1 className="sk-text-title-large-bold text-sko-text-default">Lab not found</h1>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">This lab was not found.</p>
+      <main id="main" tabIndex={-1} className={styles.missing}>
+        <h1 className={`sk-text-title-large-bold ${styles.title}`}>Lab not found</h1>
+        <p className={`sk-text-body-medium-regular ${styles.missingText}`}>This lab was not found.</p>
       </main>
     );
   }
@@ -65,20 +64,20 @@ function StandIn({ partner }: { partner: string }) {
     <main
       id="main"
       tabIndex={-1}
-      className="flex min-h-[100dvh] flex-col items-center justify-center gap-4 bg-sko-bg-subtle p-6 text-center outline-none"
+      className={styles.page}
     >
-      <span className="sk-text-label-small-medium uppercase text-sko-text-subtle">
+      <span className={`sk-text-label-small-medium ${styles.eyebrow}`}>
         Prototype stand-in · not a SkillUp screen
       </span>
-      <h1 className="sk-text-title-large-bold text-sko-text-default">
+      <h1 className={`sk-text-title-large-bold ${styles.title}`}>
         {lab.platform} · {topic.title}
       </h1>
-      <p className="sk-text-body-medium-regular max-w-[520px] text-sko-text-muted">
+      <p className={`sk-text-body-medium-regular ${styles.text}`}>
         In the product this is {lab.platform}, on {lab.provider === "Microsoft" ? "Microsoft" : "Google"}
         &rsquo;s own site. The lab itself is not part of the prototype.
       </p>
 
-      <div className="w-full max-w-[520px] text-left">
+      <div className={styles.alert}>
         <InlineAlert
           tone="info"
           title="Nothing is sent back to SkillUp"

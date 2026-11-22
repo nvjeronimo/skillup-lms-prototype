@@ -1,0 +1,97 @@
+/* DS LMS/Platform/Dashboard/Resume-Row: the cover across the top, the three lines, progress + Resume. */
+.row {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  border-width: 1px;
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding-inline: 20px;
+  padding-bottom: 16px;
+  padding-top: 16px;
+}
+/* With a course page the title is a link over the row; its hover darkens the border. (The row had
+   transition-colors too, but the global sk-press-card comes after Tailwind's utilities and its
+   transition is the one that applied.) */
+.rowLinked:has(p a:hover) {
+  border-color: var(--color-border-default);
+}
+.cover {
+  margin-inline: -20px;
+  margin-top: -16px;
+  margin-bottom: 4px;
+  height: 140px;
+  width: calc(100% + 40px);
+  flex-shrink: 0;
+}
+.text {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.lines {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+}
+.next {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-subtle);
+}
+.title {
+  width: 100%;
+  color: var(--color-text-default);
+}
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    text-decoration-line: underline;
+  }
+}
+.context {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.bar {
+  min-width: 0;
+  flex: 1 1 0%;
+}
+/* Above the stretched title link. */
+.resume {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+/* Skins (they select the Tailwind classes the row had: rounded-card border). */
+:global([data-skin="harbor"]) :global([data-platform-page]) .row,
+:global([data-skin="fluent"]) :global([data-platform-page]) .row {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+:global([data-direction="studio"]) .row {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global(html[data-square-corners]) .row {
+  border-radius: 0 !important;
+}

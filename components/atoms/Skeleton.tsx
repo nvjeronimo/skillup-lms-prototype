@@ -1,14 +1,15 @@
 import type * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./Skeleton.module.css";
 
 const RADIUS = {
-  none: "rounded-none",
-  inner: "rounded-inner",
-  control: "rounded-control",
-  card: "rounded-card",
-  track: "rounded-track",
-  pill: "rounded-pill",
-} as const;
+  none: styles.radiusNone,
+  inner: styles.radiusInner,
+  control: styles.radiusControl,
+  card: styles.radiusCard,
+  track: styles.radiusTrack,
+  pill: styles.radiusPill,
+};
 
 type Size = number | string;
 const px = (v: Size | undefined) => (typeof v === "number" ? `${v}px` : v);
@@ -67,7 +68,7 @@ export function Skeleton(props: SkeletonProps) {
   }
   if (props.variant === "ghost") {
     return (
-      <div aria-hidden="true" className={cn(`sk-text-${props.text ?? "body-medium-regular"}`, "select-none", props.className)}>
+      <div aria-hidden="true" className={cn(`sk-text-${props.text ?? "body-medium-regular"}`, styles.ghost, props.className)}>
         <span className="sk-skeleton-ghost">{props.children}</span>
       </div>
     );
@@ -76,7 +77,7 @@ export function Skeleton(props: SkeletonProps) {
     return (
       <div
         aria-hidden="true"
-        className={cn("sk-skeleton shrink-0 rounded-pill", props.className)}
+        className={cn("sk-skeleton", styles.circle, styles.radiusPill, props.className)}
         style={{ width: px(props.size), height: px(props.size) }}
       />
     );
@@ -89,7 +90,7 @@ export function Skeleton(props: SkeletonProps) {
     >
       {/* A zero-width space gives the box the text style's line height. */}
       {"​"}
-      <span className="sk-skeleton rounded-inner" />
+      <span className={cn("sk-skeleton", styles.lineBar)} />
     </div>
   );
 }
@@ -115,16 +116,16 @@ export function SkeletonPill({
     <span
       aria-hidden="true"
       className={cn(
-        "inline-flex shrink-0 select-none items-center whitespace-nowrap bg-sko-bg-muted text-transparent",
-        size === "sm" && "sk-text-body-small-medium h-[22px] rounded-pill px-2",
-        size === "md" && "sk-text-body-medium-medium h-6 rounded-pill px-2.5",
-        size === "segment" && "sk-text-body-medium-semibold h-8 rounded-control border border-transparent px-4 max-md:h-11",
-        size === "button-sm" && "sk-text-body-medium-semibold h-9 gap-1 rounded-control px-3",
-        size === "button-md" && "sk-text-body-medium-semibold h-11 gap-1 rounded-control px-3",
+        styles.pill,
+        size === "sm" && cn("sk-text-body-small-medium", styles.pillSm),
+        size === "md" && cn("sk-text-body-medium-medium", styles.pillMd),
+        size === "segment" && cn("sk-text-body-medium-semibold", styles.pillSegment),
+        size === "button-sm" && cn("sk-text-body-medium-semibold", styles.pillButtonSm),
+        size === "button-md" && cn("sk-text-body-medium-semibold", styles.pillButtonMd),
         className,
       )}
     >
-      {icon ? <span className="size-5" /> : null}
+      {icon ? <span className={styles.pillIcon} /> : null}
       {children}
     </span>
   );

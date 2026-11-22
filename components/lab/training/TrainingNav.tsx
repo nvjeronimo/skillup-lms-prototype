@@ -1,12 +1,11 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import Link from "@/lib/router";
+import { usePathname, useSearchParams } from "@/lib/router";
 import { CalendarDays, Flag, House, Layers } from "lucide-react";
 import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import { Icon } from "@/lib/icons";
 import { getPersona } from "@/lib/lab/dashboard-mock";
 import { cn } from "@/lib/utils";
+import styles from "./TrainingNav.module.css";
 
 /** Destinations this exploration does not build: shown so the shell reads whole, but not links to nowhere. */
 const NOT_BUILT = " (not built in this lab)";
@@ -44,16 +43,16 @@ export function TrainingNav() {
   return (
     <>
       <header className="tb-bg-sheet tb-rule-b">
-        <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center gap-6 px-4 md:px-8">
+        <div className={styles.bar}>
           <Link
             href={`/lab/training${q}`}
             aria-label="SkillUp, Today"
-            className="inline-flex min-h-[44px] items-center"
+            className={styles.home}
           >
-            <SkillUpLogo className="h-5" />
+            <SkillUpLogo className={styles.logo} />
           </Link>
-          <nav aria-label="Primary" className="hidden flex-1 md:block">
-            <ul className="flex items-stretch gap-1">
+          <nav aria-label="Primary" className={styles.nav}>
+            <ul className={styles.navList}>
               {ITEMS.map((it) => {
                 const current = it.match(pathname);
                 return (
@@ -61,23 +60,24 @@ export function TrainingNav() {
                     {it.href === "#" ? (
                       <span
                         aria-disabled="true"
-                        className="tb-label tb-c-ink3 relative inline-flex min-h-[64px] items-center px-3"
+                        className={`tb-label tb-c-ink3 ${styles.navItem}`}
                       >
                         {it.label}
-                        <span className="sr-only">{NOT_BUILT}</span>
+                        <span className="sk-sr-only">{NOT_BUILT}</span>
                       </span>
                     ) : (
                       <Link
                         href={`${it.href}${q}`}
                         aria-current={current ? "page" : undefined}
                         className={cn(
-                          "tb-label relative inline-flex min-h-[64px] items-center px-3",
+                          "tb-label",
+                          styles.navItem,
                           current ? "tb-c-ink" : "tb-c-ink2",
                         )}
                       >
                         {it.label}
                         {current ? (
-                          <span aria-hidden className="tb-bg-ink absolute inset-x-3 bottom-0 h-1" />
+                          <span aria-hidden className={`tb-bg-ink ${styles.currentRule}`} />
                         ) : null}
                       </Link>
                     )}
@@ -86,11 +86,11 @@ export function TrainingNav() {
               })}
             </ul>
           </nav>
-          <div className="ml-auto flex items-center gap-3 md:ml-0">
-            <span className="tb-body-s tb-c-ink2 hidden lg:inline">{p.name}</span>
+          <div className={styles.who}>
+            <span className={`tb-body-s tb-c-ink2 ${styles.name}`}>{p.name}</span>
             <span
               aria-hidden
-              className="tb-bg-ink tb-label inline-flex h-10 w-10 items-center justify-center rounded-full"
+              className={`tb-bg-ink tb-label ${styles.avatar}`}
             >
               {initials}
             </span>
@@ -101,9 +101,9 @@ export function TrainingNav() {
       {/* Phone: the four destinations at thumb reach. */}
       <nav
         aria-label="Primary"
-        className="tb-bg-sheet tb-rule-t fixed inset-x-0 bottom-0 z-40 md:hidden"
+        className={`tb-bg-sheet tb-rule-t ${styles.tabBar}`}
       >
-        <ul className="grid grid-cols-4">
+        <ul className={styles.tabs}>
           {ITEMS.map((it) => {
             const current = it.match(pathname);
             return (
@@ -111,26 +111,27 @@ export function TrainingNav() {
                 {it.href === "#" ? (
                   <span
                     aria-disabled="true"
-                    className="tb-c-ink3 flex min-h-[64px] flex-col items-center justify-center gap-1"
+                    className={`tb-c-ink3 ${styles.tab}`}
                   >
-                    <span className="inline-flex h-7 w-12 items-center justify-center">
+                    <span className={styles.tabIcon}>
                       <Icon icon={it.icon} size={20} aria-hidden="true" />
                     </span>
                     <span className="tb-label">{it.label}</span>
-                    <span className="sr-only">{NOT_BUILT}</span>
+                    <span className="sk-sr-only">{NOT_BUILT}</span>
                   </span>
                 ) : (
                   <Link
                     href={`${it.href}${q}`}
                     aria-current={current ? "page" : undefined}
                     className={cn(
-                      "flex min-h-[64px] flex-col items-center justify-center gap-1",
+                      styles.tab,
                       current ? "tb-c-ink" : "tb-c-ink3",
                     )}
                   >
                     <span
                       className={cn(
-                        "inline-flex h-7 w-12 items-center justify-center rounded-full",
+                        styles.tabIcon,
+                        styles.tabIconPill,
                         current && "tb-bg-teal-wash",
                       )}
                     >

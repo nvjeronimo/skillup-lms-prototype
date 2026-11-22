@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CourseCompleteModal } from "./CourseCompleteModal";
+import styles from "./CourseCompleteModal.stories.module.css";
 
 const meta: Meta<typeof CourseCompleteModal> = {
   title: "Organisms/Course Complete Modal",
@@ -13,7 +14,7 @@ const meta: Meta<typeof CourseCompleteModal> = {
   },
   decorators: [
     (Story) => (
-      <div className="h-[600px]">
+      <div className={styles.frame}>
         <Story />
       </div>
     ),

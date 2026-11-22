@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { AlertTriangle, ThumbsDown, ThumbsUp } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { ReportIssueModal, type ReportIssuePayload } from "@/components/organisms/ReportIssueModal";
 import { cn } from "@/lib/utils";
+import styles from "./ContentFeedback.module.css";
 
 export interface ContentFeedbackProps {
   value?: "like" | "dislike" | null;
@@ -54,34 +53,29 @@ export function ContentFeedback({
   const disliked = value === "dislike";
   // Hover pad: px-2/py-1 cancelled by -mx-2/-my-1, so the DS geometry (no item padding,
   // gap 16 = 2 × 8) is unchanged while the hover fill and hit area come back (18 + 8 = 26px tall).
-  const btn =
-    "sk-text-body-small-medium -mx-2 -my-1 inline-flex items-center gap-2 rounded-control px-2 py-1 transition-colors hover:bg-sko-bg-subtle";
+  const btn = `sk-text-body-small-medium ${styles.item}`;
   const glyph = { size: 16, strokeWidth: 1.5, absoluteStrokeWidth: true } as const;
   const licence = license ? (
-    <a href={licenseHref} className="sk-text-body-small-medium shrink-0 text-sko-text-primary">
+    <a href={licenseHref} className={`sk-text-body-small-medium ${styles.licence}`}>
       {license}
     </a>
   ) : null;
   return (
     <div
-      className={cn(
-        "flex flex-wrap items-center justify-between py-3",
-        action ? "gap-x-4 gap-y-4 border-y border-sko-border-subtle sm:gap-y-6" : "gap-4",
-        className,
-      )}
+      className={cn(styles.row, action && styles.withAction, className)}
     >
-      <div className="flex flex-wrap items-center gap-4">
+      <div className={styles.items}>
         <button
           type="button"
           onClick={onLike}
           aria-pressed={liked}
-          className={cn(btn, liked ? "text-sko-icon-info" : "text-sko-text-muted")}
+          className={cn(btn, liked ? styles.liked : styles.muted)}
         >
           <Icon
             icon={ThumbsUp}
             {...glyph}
             fill={liked ? "currentColor" : "none"}
-            className={liked ? undefined : "text-sko-icon-faint"}
+            className={liked ? undefined : styles.glyph}
           />
           Like
         </button>
@@ -89,13 +83,13 @@ export function ContentFeedback({
           type="button"
           onClick={onDislike}
           aria-pressed={disliked}
-          className={cn(btn, disliked ? "text-sko-text-error" : "text-sko-text-muted")}
+          className={cn(btn, disliked ? styles.disliked : styles.muted)}
         >
           <Icon
             icon={ThumbsDown}
             {...glyph}
             fill={disliked ? "currentColor" : "none"}
-            className={disliked ? undefined : "text-sko-icon-faint"}
+            className={disliked ? undefined : styles.glyph}
           />
           Dislike
         </button>
@@ -103,19 +97,19 @@ export function ContentFeedback({
           type="button"
           onClick={() => setReportOpen(true)}
           data-invented="report: nothing in Open edX receives a per-unit content report"
-          className={cn(btn, "group text-sko-text-subtle hover:text-sko-text-warning")}
+          className={cn(btn, styles.report)}
         >
           <Icon
             icon={AlertTriangle}
             {...glyph}
-            className="text-sko-icon-faint transition-colors group-hover:text-sko-icon-warning"
+            className={styles.reportGlyph}
           />
           Report an issue
         </button>
         {licence}
       </div>
 
-      {action ? <div className="shrink-0">{action}</div> : null}
+      {action ? <div className={styles.action}>{action}</div> : null}
 
       <ReportIssueModal
         open={reportOpen}

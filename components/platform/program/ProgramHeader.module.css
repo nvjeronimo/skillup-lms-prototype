@@ -1,0 +1,306 @@
+/* DS Course-Header, Kind=Program: the dark hero band (data-theme="dark") above the tab bar. */
+.header {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-bg-subtle);
+}
+.inner {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: var(--sk-layout-band-x);
+  padding-right: var(--sk-layout-band-x);
+  padding-bottom: 24px;
+  padding-top: 16px;
+}
+
+/* Decoration: a circle of diagonal hatch at 35% and a bg/primary circle at 12%. */
+.hatch {
+  pointer-events: none;
+  position: absolute;
+  right: -103px;
+  top: -100px;
+  width: 273px;
+  height: 273px;
+  border-radius: var(--sk-radius-pill);
+  opacity: 0.35;
+}
+.dot {
+  pointer-events: none;
+  position: absolute;
+  left: -56px;
+  top: 256px;
+  width: 147px;
+  height: 147px;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-primary);
+  opacity: 0.12;
+}
+
+/* Breadcrumb: the target is 44 below desktop and 24 on desktop, at the drawn 20px height. */
+.nav {
+  position: relative;
+}
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 4px;
+}
+.crumbItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.crumbCurrentItem {
+  display: none;
+  min-width: 0;
+  align-items: center;
+}
+.crumb {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.crumb::after {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: -12px;
+  bottom: -12px;
+  content: "";
+}
+.crumbLink {
+  color: var(--color-text-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .crumbLink:hover {
+    color: var(--color-text-default);
+  }
+}
+.crumbCurrent {
+  color: var(--color-text-primary);
+}
+.chevron {
+  color: var(--color-icon-muted);
+}
+.chevronLast {
+  display: none;
+  color: var(--color-icon-muted);
+}
+
+/* The title block and the Progress card. */
+.content {
+  position: relative;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.titleBlock {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 16px;
+}
+.typeRow {
+  display: flex;
+  height: 36px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.partners {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badgeItem {
+  display: flex;
+}
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.cover {
+  display: none;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-muted);
+}
+.coverImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.title {
+  min-width: 0;
+  flex: 1 1 0%;
+  color: var(--color-text-default);
+}
+.format {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+}
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.fact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.factRule {
+  height: 19px;
+  border-left-width: 1px;
+  border-color: var(--color-border-default);
+}
+.factText {
+  display: flex;
+  height: 19px;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-default);
+}
+.factIcon {
+  color: var(--color-icon-default);
+}
+
+/* The Progress card: 15 + the 1px border = the DS 16. */
+.progress {
+  display: flex;
+  width: 100%;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 15px;
+}
+.progressTop {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.percent {
+  color: var(--color-text-default);
+}
+.note {
+  color: var(--color-text-subtle);
+}
+.cta {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .inner {
+    padding-bottom: 32px;
+  }
+  .hatch {
+    right: -73px;
+    top: -110px;
+  }
+  .dot {
+    left: auto;
+    right: 205px;
+    top: 29px;
+    width: 220px;
+    height: 220px;
+  }
+  .crumbs {
+    column-gap: 8px;
+  }
+  .crumbItem {
+    gap: 8px;
+  }
+  .content {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .cover {
+    display: block;
+  }
+  .progress {
+    width: 320px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    padding-bottom: 40px;
+    padding-top: 20px;
+  }
+  .hatch {
+    right: -100px;
+    top: -100px;
+    width: 360px;
+    height: 360px;
+  }
+  .dot {
+    right: 280px;
+    top: 60px;
+  }
+  .chevronLast {
+    display: block;
+  }
+  .crumbCurrentItem {
+    display: flex;
+  }
+  .content {
+    margin-top: 18.75px;
+    gap: 40px;
+    padding-top: 24px;
+  }
+  .titleBlock {
+    min-height: 228.75px;
+    gap: 0px;
+  }
+  .typeRow {
+    height: auto;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .format {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .progress {
+    width: 360px;
+  }
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): their rules selected the
+   Tailwind classes this element had (.rounded-card.border.p-[15px]); they are repeated here for the module class. */
+:global([data-direction="studio"]) .progress {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .progress,
+:global([data-skin="fluent"] [data-platform-page]) .progress {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}

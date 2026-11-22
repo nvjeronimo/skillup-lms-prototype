@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { Search } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./SearchField.module.css";
 
 export interface SearchFieldProps {
   value: string;
@@ -27,13 +26,12 @@ export function SearchField({ value, onChange, label, className, inputRef, input
   return (
     <label
       className={cn(
-        "flex h-11 items-center gap-2 rounded-control border border-sko-border-default bg-sko-bg-page px-3 shadow-sm md:h-10",
-        "transition-[border-color,box-shadow] focus-within:border-sko-border-primary focus-within:ring-1 focus-within:ring-sko-border-primary",
+        styles.field,
         className,
       )}
     >
-      <Icon icon={Search} size={20} className="shrink-0 text-sko-icon-subtle" aria-hidden="true" />
-      <span className="sr-only">{label}</span>
+      <Icon icon={Search} size={20} className={styles.icon} aria-hidden="true" />
+      <span className="sk-sr-only">{label}</span>
       <input
         type="search"
         value={value}
@@ -42,7 +40,7 @@ export function SearchField({ value, onChange, label, className, inputRef, input
         autoComplete="off"
         {...inputProps}
         ref={inputRef}
-        className="sk-text-body-large-regular min-w-0 flex-1 bg-transparent text-sko-text-default placeholder:text-sko-text-placeholder focus:outline-none"
+        className={cn("sk-text-body-large-regular", styles.input)}
       />
     </label>
   );

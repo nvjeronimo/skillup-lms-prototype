@@ -1,0 +1,4 @@
+/* Mobile: the action fills the alert at the 44px touch height. */
+@media (max-width: 767.98px) {
+  .action { height: 44px; width: 100%; }
+}

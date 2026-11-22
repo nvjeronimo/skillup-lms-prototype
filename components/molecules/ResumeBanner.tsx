@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
 import { RotateCcw, Play } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { Button } from "@/components/atoms/Button";
 import { secondsToTs } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import styles from "./ResumeBanner.module.css";
 
 export interface ResumeBannerProps {
   /** Stored playback position in seconds. */
@@ -23,23 +22,20 @@ export interface ResumeBannerProps {
 export function ResumeBanner({ seconds, onResume, onStartOver, className }: ResumeBannerProps) {
   return (
     <div
-      className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-card border border-sko-border-primary bg-sko-bg-primary-soft px-4 py-3",
-        className,
-      )}
+      className={cn(styles.banner, className)}
     >
-      <div className="flex items-center gap-2.5">
-        <Icon icon={Play} size={16} className="text-sko-text-primary" />
-        <div className="flex flex-col">
-          <span className="sk-text-body-medium-semibold text-sko-text-primary">
+      <div className={styles.lead}>
+        <Icon icon={Play} size={16} className={styles.icon} />
+        <div className={styles.copy}>
+          <span className={`sk-text-body-medium-semibold ${styles.title}`}>
             Pick up where you left off
           </span>
-          <span className="sk-text-body-small-regular text-sko-text-primary">
+          <span className={`sk-text-body-small-regular ${styles.text}`}>
             You stopped at {secondsToTs(seconds)}
           </span>
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className={styles.actions}>
         <Button variant="primary" size="sm" onClick={onResume}>
           Resume from {secondsToTs(seconds)}
         </Button>

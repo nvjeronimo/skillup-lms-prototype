@@ -1,0 +1,97 @@
+.note {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background-color: var(--color-bg-page);
+  padding: 16px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .note:hover {
+    border-color: var(--color-border-default);
+  }
+}
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ts {
+  color: var(--color-text-primary);
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.edited {
+  color: var(--color-text-subtle);
+}
+.edit,
+.delete {
+  color: var(--color-text-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .edit:hover {
+    color: var(--color-text-default);
+  }
+  .delete:hover {
+    color: var(--color-text-error);
+  }
+}
+.open {
+  margin-top: 6px;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.text {
+  margin-top: 6px;
+  color: var(--color-text-default);
+}
+.tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-subtle);
+  padding: 2px 8px;
+  color: var(--color-text-subtle);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tag:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+/* Skins: tokens/direction-studio.css, skin-harbor.css and skin-fluent.css selected this file's
+   Tailwind classes (rounded-card border p-4); the same rules here, after the component's own. */
+:global([data-direction="studio"]) .note {
+  padding: 23px;
+  border-radius: 44px;
+}
+:global([data-direction="studio"]) .note {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .note,
+:global([data-skin="fluent"] [data-platform-page]) .note {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+
+/* Studio: a card inside a card (here, inside the player's content card, main#main) is in its
+   parent's corner and takes the control radius (direction-studio.css, ".rounded-card .rounded-card"). */
+:global([data-direction="studio"] main#main) .note {
+  border-radius: var(--sk-radius-control);
+}

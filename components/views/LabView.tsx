@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Download, Check, ExternalLink, TerminalSquare } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
@@ -15,6 +13,7 @@ import { useLmsStore } from "@/lib/store";
 import { useBreakpoint } from "@/lib/useBreakpoint";
 import { cn } from "@/lib/utils";
 import { useEdxScope } from "@/lib/edx-scope";
+import styles from "./LabView.module.css";
 
 /**
  * Lab has two families. The download lab is a notebook the learner runs on their own
@@ -40,7 +39,7 @@ export function LabView({ topicId }: { topicId: string; courseSlug?: string }) {
 function Prerequisites({ items }: { items: string[] }) {
   return (
     <Alert title="BEFORE YOU START">
-      <ul className="list-disc pl-5">
+      <ul className={styles.prerequisites}>
         {items.map((p) => (
           <li key={p}>{p}</li>
         ))}
@@ -120,8 +119,8 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
     ) : null;
 
   return (
-    <div className="flex flex-col gap-3 border-t border-sko-border-subtle pt-3">
-      <p className="sk-text-body-large-medium text-sko-text-default">
+    <div className={styles.partner}>
+      <p className={`sk-text-body-large-medium ${styles.partnerIntro}`}>
         {inline
           ? "This lab opens right here, inside the page. If you need more room, you can open it in a new tab."
           : refused
@@ -139,10 +138,10 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
               like its Figma source (card E1): no DS component for the frame. */}
           <section
             aria-label={`${lab.provider} lab`}
-            className="overflow-hidden rounded-card border border-sko-border-default bg-sko-bg-page"
+            className={styles.inlineFrame}
           >
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-sko-bg-faint py-2 pl-4 pr-2">
-              <span className="sk-text-body-medium-semibold min-w-0 text-sko-text-default">
+            <div className={styles.inlineFrameBar}>
+              <span className={`sk-text-body-medium-semibold ${styles.inlineFrameTitle}`}>
                 <span data-invented="provider: no partner field on an Open edX unit or LTI block">{lab.provider} · </span>
                 {title}
               </span>
@@ -157,7 +156,7 @@ function PartnerLabView({ topicId, title, lab }: { topicId: string; title: strin
                 Open in a new tab
               </ButtonLink>
             </div>
-            <iframe title={`${lab.provider} · ${title}`} src={`${href}&embed=1`} className="block h-[800px] w-full bg-sko-bg-subtle" />
+            <iframe title={`${lab.provider} · ${title}`} src={`${href}&embed=1`} className={styles.inlineFrameContent} />
           </section>
         </>
       ) : (
@@ -211,8 +210,8 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
   const ready = allDownloaded || (Boolean(sandbox) && sandboxOpened);
 
   return (
-    <div className="flex flex-col gap-8 py-6">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className={styles.download}>
+      <div className={styles.badges}>
         <Badge tone="brand" leftIcon={TerminalSquare}>
           Hands-on lab
         </Badge>
@@ -222,7 +221,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
         </Badge>
       </div>
 
-      <p className="sk-text-body-large-regular text-sko-text-muted">{lab.intro}</p>
+      <p className={`sk-text-body-large-regular ${styles.intro}`}>{lab.intro}</p>
 
       {/* Prerequisites — surfaced before the download so nobody gets stuck. */}
       <Prerequisites items={lab.prerequisites} />
@@ -232,10 +231,10 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
       {sandbox ? (
         <section
           data-invented="sandbox: no browser sandbox in Open edX"
-          className="flex flex-col gap-3 rounded-card bg-sko-bg-primary-soft p-4"
+          className={styles.sandbox}
         >
-          <h2 className="sk-text-body-large-semibold text-sko-text-default">Run it in your browser</h2>
-          <p className="sk-text-body-medium-regular text-sko-text-muted">{sandbox.note}</p>
+          <h2 className={`sk-text-body-large-semibold ${styles.sectionTitle}`}>Run it in your browser</h2>
+          <p className={`sk-text-body-medium-regular ${styles.sandboxNote}`}>{sandbox.note}</p>
           <div>
             <Button
               variant={sandboxOpened ? "secondary" : "primary"}
@@ -249,14 +248,14 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
               Open in the {sandbox.name}
             </Button>
           </div>
-          <p className="sk-text-body-medium-regular text-sko-text-subtle">Prefer your own machine? Download the files and follow the steps below.</p>
+          <p className={`sk-text-body-medium-regular ${styles.sandboxAlt}`}>Prefer your own machine? Download the files and follow the steps below.</p>
         </section>
       ) : null}
 
       {/* Files — the core affordance of a lab topic. */}
-      <section className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="sk-text-body-large-semibold text-sko-text-default">Lab files</h2>
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={`sk-text-body-large-semibold ${styles.sectionTitle}`}>Lab files</h2>
           {/* One primary per list: Download all is the action, the rows are Secondary. */}
           <Button
             variant="primary"
@@ -272,28 +271,23 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
           </Button>
         </div>
 
-        <ul className="flex flex-col gap-2">
+        <ul className={styles.files}>
           {lab.files.map((f) => {
             const got = downloaded.has(f.name);
             return (
               <li key={f.name}>
                 {/* DS LMS / Lab · File Row (20328:3330): p 8/12, file-type chip, meta gap 2. */}
                 <div
-                  className={cn(
-                    "flex flex-wrap items-center justify-between gap-3 rounded-control border px-3 py-2",
-                    got
-                      ? "border-sko-border-success bg-sko-bg-success-soft"
-                      : "border-sko-border-subtle bg-sko-bg-page",
-                  )}
+                  className={cn(styles.file, got ? styles.fileDownloaded : styles.filePending)}
                 >
-                  <div className="flex min-w-0 items-center gap-3">
+                  <div className={styles.fileInfo}>
                     <FileTypeChip label={fileExtension(f.name, f.kind)} tone={got ? "success" : "subtle"} />
-                    <div className="flex min-w-0 flex-col gap-0.5">
+                    <div className={styles.fileText}>
                       {/* DS body-medium/Bold — semibold until .sk-text-body-medium-bold exists (CT-22). */}
-                      <span className="sk-text-body-medium-semibold truncate text-sko-text-default">
+                      <span className={`sk-text-body-medium-semibold ${styles.fileName}`}>
                         {f.name}
                       </span>
-                      <span className="sk-text-body-small-regular text-sko-text-subtle">{f.size}</span>
+                      <span className={`sk-text-body-small-regular ${styles.fileSize}`}>{f.size}</span>
                     </div>
                   </div>
                   <Button
@@ -315,17 +309,17 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
       </section>
 
       {/* Steps to run it locally. */}
-      <section className="flex flex-col gap-3">
-        <h2 className="sk-text-body-large-semibold text-sko-text-default">How to run it</h2>
-        <ol className="flex flex-col gap-2">
+      <section className={styles.section}>
+        <h2 className={`sk-text-body-large-semibold ${styles.sectionTitle}`}>How to run it</h2>
+        <ol className={styles.steps}>
           {lab.steps.map((s, i) => (
-            <li key={i} className="flex gap-3">
+            <li key={i} className={styles.step}>
               {/* DS LMS / Numbered Step (20328:3297): 22px circle, body-small/Bold
                   (semibold until .sk-text-body-small-bold exists, CT-22). */}
-              <span className="sk-text-body-small-semibold inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-pill bg-sko-bg-primary-soft text-sko-text-primary">
+              <span className={`sk-text-body-small-semibold ${styles.stepNumber}`}>
                 {i + 1}
               </span>
-              <span className="sk-text-body-medium-regular text-sko-text-muted">{s}</span>
+              <span className={`sk-text-body-medium-regular ${styles.stepText}`}>{s}</span>
             </li>
           ))}
         </ol>
@@ -354,7 +348,7 @@ function DownloadLabView({ topicId, lab }: { topicId: string; lab: DownloadLabCo
             Mark as Complete
           </Button>
           {!ready ? (
-            <p className="sk-text-body-medium-regular mt-2 text-sko-text-subtle">
+            <p className={`sk-text-body-medium-regular ${styles.completeHint}`}>
               {sandbox ? "Open the sandbox or download the lab files first." : "Download the lab files first."}
             </p>
           ) : null}

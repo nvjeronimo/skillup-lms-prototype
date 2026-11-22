@@ -1,7 +1,6 @@
-"use client";
-
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./StickyToolbar.module.css";
 
 /** How far past its place the page scrolls while the bar's ground goes from clear to solid. */
 const GROUND_RAMP_PX = 24;
@@ -59,7 +58,7 @@ export function StickyToolbar({
     <>
       {/* The marker's own flex gap is cancelled: both rows sit in a Layout/stack-gap column, and an
           empty item there added 32 above the tabs (Nelson, 25 Oct 2026). */}
-      <div ref={sentinelRef} aria-hidden className="-mb-layout-stack h-0" />
+      <div ref={sentinelRef} aria-hidden className={styles.sentinel} />
       <div
         ref={barRef}
         data-sticky-toolbar=""
@@ -67,8 +66,9 @@ export function StickyToolbar({
         className={cn(
           // The ground and its rule are a layer under the content (::before, globals.css) whose
           // opacity follows the scroll: never a hard switch, never see-through over the cards.
-          "sk-sticky-toolbar sticky top-[env(safe-area-inset-top,0px)] z-20 -my-3 py-3",
-          bleed && "mx-[calc(50%-50vw)] px-[calc(50vw-50%)]",
+          "sk-sticky-toolbar",
+          styles.bar,
+          bleed && styles.bleed,
           className,
         )}
       >

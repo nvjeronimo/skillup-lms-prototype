@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ModuleTimeLeft } from "./ModuleTimeLeft";
 
 const meta: Meta<typeof ModuleTimeLeft> = {

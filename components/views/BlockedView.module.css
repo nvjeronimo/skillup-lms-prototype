@@ -1,0 +1,22 @@
+.root { display: flex; flex-direction: column; gap: 32px; padding-top: 24px; padding-bottom: 24px; }
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  box-shadow: var(--sk-shadow-card);
+  padding: 20px;
+}
+.badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.fieldLabel { color: var(--color-text-subtle); }
+.fieldValue { color: var(--color-text-muted); }
+
+/* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
+   Tailwind class names this element used to carry; their rules are repeated here. The class is
+   doubled so the skin still wins over this module's own state rules, as it did over utilities. */
+/* Studio: a card inside a card (all of these sit in the player's content card) takes the
+   control radius. */
+:global([data-direction="studio"]) .card.card { border-radius: var(--sk-radius-control); border-color: transparent; box-shadow: var(--sk-shadow-studio); }

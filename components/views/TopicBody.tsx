@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { TranscriptTab } from "./TranscriptTab";
 import { ReadingView } from "./ReadingView";

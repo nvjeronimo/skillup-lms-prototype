@@ -1,0 +1,11 @@
+/* The intro and the course rows, stack-gap apart; the rows 16 apart. */
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

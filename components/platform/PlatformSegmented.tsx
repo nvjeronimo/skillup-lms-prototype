@@ -1,8 +1,7 @@
-"use client";
-
 import type { LucideIcon } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./PlatformSegmented.module.css";
 
 /**
  * DS `Button group` v2.0 (11 Oct 2026), as the Q&A filter draws it: a bg/muted track, padding 4,
@@ -30,7 +29,7 @@ export function PlatformSegmented<T extends string>({
   className?: string;
 }) {
   return (
-    <div role="group" aria-label={label} data-segmented="" className={cn("inline-flex max-w-full gap-0.5 overflow-x-auto rounded-track bg-sko-bg-track p-1", className)}>
+    <div role="group" aria-label={label} data-segmented="" className={cn(styles.track, className)}>
       {options.map((item) => (
         <button
           key={item.id}
@@ -38,15 +37,14 @@ export function PlatformSegmented<T extends string>({
           aria-pressed={value === item.id}
           onClick={() => onChange(item.id)}
           className={cn(
-            "sk-text-body-medium-semibold inline-flex h-8 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-control border px-4 transition-colors max-md:h-11",
-            compact && item.icon && "max-md:w-11 max-md:px-0",
-            value === item.id
-              ? "border-sko-border-subtle bg-sko-bg-page text-sko-text-primary"
-              : "border-transparent text-sko-text-subtle hover:bg-sko-bg-subtle hover:text-sko-text-default",
+            "sk-text-body-medium-semibold",
+            styles.segment,
+            compact && item.icon && styles.iconOnly,
+            value === item.id ? styles.segmentOn : styles.segmentOff,
           )}
         >
           {item.icon ? <Icon icon={item.icon} size={18} aria-hidden /> : null}
-          <span className={cn(compact && item.icon && "max-md:sr-only")}>{item.label}</span>
+          <span className={cn(compact && item.icon && styles.iconOnlyLabel)}>{item.label}</span>
         </button>
       ))}
     </div>

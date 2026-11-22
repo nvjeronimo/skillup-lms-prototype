@@ -1,0 +1,55 @@
+/* One figure of a stats row: label, value, detail. `inverse` is the dark glance card's figure. */
+.inverse {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  color: var(--color-text-on-inverse);
+}
+.inverseLabel {
+  opacity: 0.8;
+}
+.inverseDetail {
+  opacity: 0.6;
+}
+:global([data-theme=dark]) .inverseDetail {
+  opacity: 0.7;
+}
+@media (min-width: 768px) {
+  .short { display: none; }
+}
+@media (max-width: 767.98px) {
+  .full { display: none; }
+  /* Doubled: it overrides the label-small type style (uppercase, tracked) on a phone. */
+  .inverseLabel.inverseLabel {
+    white-space: nowrap;
+    text-transform: none;
+    letter-spacing: 0em;
+  }
+  /* Studio's label-small tracking (tokens/direction-studio.css) still wins there, as before. */
+  :global([data-direction="studio"]) .inverseLabel.inverseLabel {
+    letter-spacing: 0.08em;
+  }
+}
+
+.stat {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+.divider {
+  border-left-width: 1px;
+  border-color: var(--color-border-subtle);
+}
+.label,
+.detail {
+  color: var(--color-text-muted);
+}
+.value {
+  color: var(--color-text-default);
+}

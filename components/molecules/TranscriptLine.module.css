@@ -1,0 +1,96 @@
+/* DS `LMS / Transcript Line` (19975:537556). */
+
+/* A quote of the line (Note-Item, Note-Editor): same look, 16 at the sides. */
+.quote {
+  display: block;
+  padding: 12px 16px;
+  color: var(--color-text-default);
+}
+
+/* The row's side padding is the `padX` class (16 by default; the transcript passes its own). */
+.line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  /* The active fill and its 3px bar ease in and out together (short3, standard). */
+  transition-property: background-color, box-shadow;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.padX {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+/* Mobile + Active: the Note/Edit pill stacks under the line. */
+.stacked {
+  flex-direction: column;
+}
+/* Active: bg/primary-soft and a 3px border/primary bar drawn inside the row. */
+.active {
+  background-color: var(--color-bg-primary-soft);
+  box-shadow: inset 3px 0 0 var(--color-border-primary);
+}
+@media (hover: hover) and (pointer: fine) {
+  .idle:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+
+.seek {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+}
+.seekFill {
+  flex: 1 1 0%;
+}
+.seekFull {
+  width: 100%;
+}
+.timecode {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+}
+/* The note dot: icon/primary through currentColor. */
+.noteDot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: var(--sk-radius-pill);
+  background-color: currentColor;
+  color: var(--color-icon-primary);
+}
+.ts {
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+.tsActive {
+  white-space: nowrap;
+  color: var(--color-text-on-primary-soft);
+}
+.text {
+  min-width: 0;
+  flex: 1 1 0%;
+  color: var(--color-text-default);
+}
+.duration {
+  margin-left: 8px;
+  color: var(--color-text-subtle);
+}
+.notePill {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  border-radius: var(--sk-radius-pill);
+  background-color: var(--color-bg-primary-soft);
+  padding: 4px 12px 4px 8px;
+  color: var(--color-text-primary);
+}

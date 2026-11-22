@@ -4,6 +4,7 @@ import { SkillUpLogo } from "@/components/atoms/SkillUpLogo";
 import type { CertificateDocumentData } from "@/lib/platform/program";
 import { platformUser } from "@/lib/platform/user";
 import { cn } from "@/lib/utils";
+import styles from "./CertificateDocument.module.css";
 
 /* The artwork is an A4 landscape sheet, 1123 × 794 at 96 dpi. It is drawn at that size in
    `em`: the root font-size is 16 design px expressed in container-query units (16 / 1123 of
@@ -13,7 +14,7 @@ const SHEET_FONT_SIZE = `${(16 / 1123) * 100}cqw`;
 
 /* In the dark theme the sheet is dark (it is bound to bg/page), so the fixed-ink artwork
    (signatures, QR) is inverted to stay legible. */
-const INK = "[[data-theme=dark]_&]:invert";
+const INK = styles.ink;
 
 /** One line of the sheet: a DS text style's family and weight at a design-px size. */
 function Line({
@@ -28,7 +29,7 @@ function Line({
   children: React.ReactNode;
 }) {
   return (
-    <p className={cn("whitespace-nowrap", className)} style={{ fontSize: u(size), lineHeight: leading / size }}>
+    <p className={cn(styles.line, className)} style={{ fontSize: u(size), lineHeight: leading / size }}>
       {children}
     </p>
   );
@@ -36,14 +37,13 @@ function Line({
 
 function Signatory({ name, role, signatureSrc }: CertificateDocumentData["signatories"][number]) {
   return (
-    <div className="flex flex-col items-center text-center" style={{ width: u(240), gap: u(6) }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+    <div className={styles.centered} style={{ width: u(240), gap: u(6) }}>
       <img src={signatureSrc} alt="" className={INK} style={{ width: u(166), height: u(34) }} />
-      <span className="w-full border-t border-sko-border-subtle" />
-      <Line size={16} leading={24} className="sk-text-body-large-semibold text-sko-text-default">
+      <span className={styles.signatureRule} />
+      <Line size={16} leading={24} className={`sk-text-body-large-semibold ${styles.textDefault}`}>
         {name}
       </Line>
-      <Line size={14} leading={20} className="sk-text-body-medium-regular text-sko-text-subtle">
+      <Line size={14} leading={20} className={`sk-text-body-medium-regular ${styles.textSubtle}`}>
         {role}
       </Line>
     </div>
@@ -57,7 +57,7 @@ const SEAL_TICKS = Array.from({ length: 60 }, (_, i) => (i * 360) / 60);
 
 function SealRing({ style }: { style: React.CSSProperties }) {
   return (
-    <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false" className="absolute" style={style}>
+    <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false" className={styles.sealRing} style={style}>
       <g fill="none" stroke="currentColor" opacity={0.6}>
         <circle cx="36" cy="36" r="35" strokeWidth="1" />
         <circle cx="36" cy="36" r="29.5" strokeWidth="0.75" />
@@ -91,30 +91,28 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
       aria-label={label}
       // The sheet is a printed document: it keeps its light colours in dark mode (Nelson, 20 Oct 2026).
       data-theme="light"
-      className="flex size-full flex-col bg-sko-bg-page"
+      className={styles.sheet}
       style={{ fontSize: SHEET_FONT_SIZE, padding: u(24) }}
     >
       <div
         aria-hidden
-        className="flex min-h-0 flex-1 flex-col justify-between border-sko-border-primary"
+        className={styles.frame}
         style={{ borderWidth: u(2), padding: `${u(40)} ${u(48)} ${u(32)}` }}
       >
-        <div className="flex items-center justify-between">
-          <span className="flex" style={{ height: u(40), margin: u(8) }}>
-            <SkillUpLogo className="h-full" />
+        <div className={styles.top}>
+          <span className={styles.logoBox} style={{ height: u(40), margin: u(8) }}>
+            <SkillUpLogo className={styles.logo} />
           </span>
           {data.partnerLogoSrc ? (
-            <div className="flex items-center" style={{ gap: u(12) }}>
-              <Line size={12} leading={18} className="sk-text-body-small-regular text-sko-text-subtle">
+            <div className={styles.partners} style={{ gap: u(12) }}>
+              <Line size={12} leading={18} className={`sk-text-body-small-regular ${styles.textSubtle}`}>
                 In partnership with
               </Line>
-              <span className="flex items-center justify-center" style={{ width: u(104), height: u(41) }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+              <span className={styles.logoSlot} style={{ width: u(104), height: u(41) }}>
                 <img src={data.partnerLogoSrc} alt="" style={{ width: u(75), height: u(28) }} />
               </span>
               {(data.morePartners ?? []).map((p) => (
-                <span key={p.name} className="flex items-center justify-center" style={{ width: u(104), height: u(41) }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                <span key={p.name} className={styles.logoSlot} style={{ width: u(104), height: u(41) }}>
                   <img src={p.logoSrc} alt="" style={{ width: u(75), height: u(28), objectFit: "contain" }} />
                 </span>
               ))}
@@ -122,46 +120,46 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
           ) : null}
         </div>
 
-        <div className="flex flex-col items-center text-center" style={{ gap: u(12) }}>
-          <Line size={12} leading={18} className="sk-text-label-small-semibold text-sko-text-on-primary-soft">
+        <div className={styles.centered} style={{ gap: u(12) }}>
+          <Line size={12} leading={18} className={`sk-text-label-small-semibold ${styles.textOnPrimarySoft}`}>
             Certificate of completion
           </Line>
           <span style={{ height: u(8) }} />
-          <Line size={18} leading={24} className="sk-text-body-large-regular text-sko-text-muted">
+          <Line size={18} leading={24} className={`sk-text-body-large-regular ${styles.textMuted}`}>
             This is to certify that
           </Line>
-          <Line size={48} leading={60} className="sk-text-headline-medium-semibold tracking-[-0.02em] text-sko-text-default">
+          <Line size={48} leading={60} className={`sk-text-headline-medium-semibold ${styles.tight} ${styles.textDefault}`}>
             {certificateLearner(data)}
           </Line>
-          <span className="bg-sko-bg-primary" style={{ width: u(360), height: u(2) }} />
-          <Line size={18} leading={24} className="sk-text-body-large-regular text-sko-text-muted">
+          <span className={styles.nameRule} style={{ width: u(360), height: u(2) }} />
+          <Line size={18} leading={24} className={`sk-text-body-large-regular ${styles.textMuted}`}>
             {data.kind === "program"
               ? "has successfully completed the certificate program"
               : "has successfully completed the professional course"}
           </Line>
-          <Line size={30} leading={38} className="sk-text-headline-medium-semibold text-sko-text-on-primary-soft">
+          <Line size={30} leading={38} className={`sk-text-headline-medium-semibold ${styles.textOnPrimarySoft}`}>
             {data.courseTitle}
           </Line>
-          <Line size={16} leading={24} className="sk-text-body-large-regular whitespace-pre text-sko-text-subtle">
+          <Line size={16} leading={24} className={`sk-text-body-large-regular ${styles.pre} ${styles.textSubtle}`}>
             {data.summary}
           </Line>
         </div>
 
-        <div className="flex flex-col" style={{ gap: u(20) }}>
-          <div className="flex items-end justify-between">
+        <div className={styles.bottom} style={{ gap: u(20) }}>
+          <div className={styles.signatures}>
             {data.signatories[0] ? <Signatory {...data.signatories[0]} /> : null}
-            <div className="flex flex-col items-center text-center" style={{ gap: u(8) }}>
+            <div className={styles.centered} style={{ gap: u(8) }}>
               <span
-                className="relative flex items-center justify-center rounded-pill bg-sko-bg-primary text-sko-icon-on-primary"
+                className={styles.seal}
                 style={{ width: u(88), height: u(88) }}
               >
                 <SealRing style={{ inset: u(8), width: u(72), height: u(72) }} />
                 <Check strokeWidth={2} style={{ width: u(44), height: u(44) }} />
               </span>
-              <Line size={12} leading={18} className="sk-text-label-small-semibold text-sko-text-subtle">
+              <Line size={12} leading={18} className={`sk-text-label-small-semibold ${styles.textSubtle}`}>
                 Issued
               </Line>
-              <Line size={16} leading={24} className="sk-text-body-large-semibold text-sko-text-default">
+              <Line size={16} leading={24} className={`sk-text-body-large-semibold ${styles.textDefault}`}>
                 {data.issuedOn}
               </Line>
             </div>
@@ -169,32 +167,31 @@ export function CertificateDocument({ data, label }: { data: CertificateDocument
           </div>
 
           <div
-            className="flex items-center justify-between border-t border-sko-border-subtle"
+            className={styles.strip}
             style={{ paddingTop: u(16) }}
           >
             <div
               data-invented="certificate: Open edX identifies it by its verify UUID, no readable ID"
-              className="flex flex-col items-start"
+              className={styles.idBlock}
               style={{ gap: u(2) }}
             >
-              <Line size={12} leading={18} className="sk-text-label-small-semibold text-sko-text-subtle">
+              <Line size={12} leading={18} className={`sk-text-label-small-semibold ${styles.textSubtle}`}>
                 Certificate ID
               </Line>
-              <Line size={12} leading={18} className="sk-text-body-small-semibold text-sko-text-default">
+              <Line size={12} leading={18} className={`sk-text-body-small-semibold ${styles.textDefault}`}>
                 {data.certificateId}
               </Line>
             </div>
             {/* ml-auto keeps it on the right when the ID beside it is hidden (Open edX scope). */}
-            <div className="ml-auto flex items-center" style={{ gap: u(12) }}>
-              <div className="flex flex-col items-end text-right" style={{ gap: u(2) }}>
-                <Line size={12} leading={18} className="sk-text-label-small-semibold text-sko-text-subtle">
+            <div className={styles.verify} style={{ gap: u(12) }}>
+              <div className={styles.verifyText} style={{ gap: u(2) }}>
+                <Line size={12} leading={18} className={`sk-text-label-small-semibold ${styles.textSubtle}`}>
                   Verify this certificate
                 </Line>
-                <Line size={12} leading={18} className="sk-text-body-small-semibold text-sko-text-on-primary-soft">
+                <Line size={12} leading={18} className={`sk-text-body-small-semibold ${styles.textOnPrimarySoft}`}>
                   {data.verifyUrl}
                 </Line>
               </div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/platform/certificate-qr.svg"
                 alt=""

@@ -4,6 +4,7 @@ import { Badge } from "@/components/atoms/Badge";
 import type { Program } from "@/lib/platform/program";
 import { cn } from "@/lib/utils";
 import { CardShell } from "./parts";
+import styles from "./ProgramSidebar.module.css";
 
 /**
  * The right column of the Program page, three `LMS / Course Detail / Sidebar card` instances
@@ -19,28 +20,28 @@ export function ProgramSidebar({ program, className }: { program: Program; class
   return (
     <aside
       aria-label="Program details"
-      className={cn("flex flex-col gap-layout-side", className)}
+      className={cn(styles.sidebar, className)}
     >
       <CardShell label="Program dates" gap="lg" mock="Program dates have no API; the relative labels are computed">
-        <ul className="flex flex-col">
+        <ul className={styles.dates}>
           {program.dates.map((date, index) => (
             <li
               key={date.id}
               className={cn(
-                "flex items-center gap-3 py-3",
-                index < program.dates.length - 1 && "border-b border-sko-border-subtle",
+                styles.date,
+                index < program.dates.length - 1 && styles.dateRule,
               )}
             >
               <span
                 aria-hidden
-                className="flex h-12 w-11 shrink-0 flex-col items-center justify-center rounded-control bg-sko-bg-subtle"
+                className={styles.tile}
               >
-                <span className="sk-text-body-large-semibold text-sko-text-default">{date.day}</span>
-                <span className="sk-text-body-small-semibold text-sko-text-subtle">{date.month}</span>
+                <span className={`sk-text-body-large-semibold ${styles.textDefault}`}>{date.day}</span>
+                <span className={`sk-text-body-small-semibold ${styles.textSubtle}`}>{date.month}</span>
               </span>
-              <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
-                <p className="sk-text-body-medium-semibold text-sko-text-default">{date.title}</p>
-                <p className="sk-text-body-small-regular text-sko-text-subtle">
+              <div className={styles.dateBody}>
+                <p className={`sk-text-body-medium-semibold ${styles.textDefault}`}>{date.title}</p>
+                <p className={`sk-text-body-small-regular ${styles.textSubtle}`}>
                   <time dateTime={date.iso}>{date.detail}</time>
                 </p>
                 <Badge variant="outline" color="gray">
@@ -57,7 +58,7 @@ export function ProgramSidebar({ program, className }: { program: Program; class
         mock="Content counts per program have no API"
         invented="catalogue: no content counts per program in Open edX"
       >
-        <ul className="sk-text-body-medium-regular list-disc ps-[21px] text-sko-text-default">
+        <ul className={`sk-text-body-medium-regular ${styles.included}`}>
           {program.included.map((item) => (
             <li key={item}>{item}</li>
           ))}
@@ -65,13 +66,13 @@ export function ProgramSidebar({ program, className }: { program: Program; class
       </CardShell>
 
       <CardShell label="Program instructor" gap="lg" mock="No instructor field on the LMS APIs">
-        <ul className="flex flex-col gap-4">
+        <ul className={styles.people}>
           {program.instructors.map((person) => (
-            <li key={person.name} className="flex items-center gap-2">
+            <li key={person.name} className={styles.person}>
               <Avatar name={person.name} size="md" />
-              <div className="flex min-w-0 flex-1 flex-col">
-                <p className="sk-text-body-medium-semibold text-sko-text-default">{person.name}</p>
-                <p className="sk-text-body-medium-regular text-sko-text-subtle">{person.role}</p>
+              <div className={styles.personText}>
+                <p className={`sk-text-body-medium-semibold ${styles.textDefault}`}>{person.name}</p>
+                <p className={`sk-text-body-medium-regular ${styles.textSubtle}`}>{person.role}</p>
               </div>
             </li>
           ))}

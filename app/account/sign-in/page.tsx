@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from "@/lib/router";
 import { Suspense } from "react";
 import { SignInView } from "@/components/account/SignInView";
 import { pageTitle } from "@/lib/utils";

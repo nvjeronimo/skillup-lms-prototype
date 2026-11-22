@@ -1,9 +1,8 @@
-"use client";
-
 import * as React from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./CardOverflowMenu.module.css";
 import { useDisclosure } from "@/lib/useDisclosure";
 
 export interface OverflowMenuItem {
@@ -42,19 +41,19 @@ export function CardOverflowMenu({
   const { mounted, setOpen, containerRef, triggerProps, panelProps } = useDisclosure(defaultOpen);
 
   return (
-    <div ref={containerRef} className={cn("relative", className)}>
+    <div ref={containerRef} className={cn(styles.root, className)}>
       <button
         type="button"
         {...triggerProps}
         aria-label={itemLabel ? `More actions, ${itemLabel}` : "More actions"}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-control text-sko-text-subtle transition-colors hover:bg-sko-bg-subtle"
+        className={styles.trigger}
       >
         <Icon icon={MoreHorizontal} size={20} />
       </button>
       {mounted ? (
         <ul
           {...panelProps}
-          className="sk-animate-menu origin-top-right absolute right-0 z-10 mt-1 w-[180px] overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page p-1 shadow-sk-card"
+          className={`sk-animate-menu ${styles.menu}`}
         >
           {items.map((item) => (
             <li key={item.label}>
@@ -64,10 +63,7 @@ export function CardOverflowMenu({
                   item.onClick?.();
                   setOpen(false);
                 }}
-                className={cn(
-                  "sk-text-body-medium-medium block w-full rounded-card-inset p-3 text-left transition-colors hover:bg-sko-bg-subtle",
-                  item.destructive ? "text-sko-text-error" : "text-sko-text-default",
-                )}
+                className={cn("sk-text-body-medium-medium", styles.item, item.destructive ? styles.destructive : styles.default)}
               >
                 {item.label}
               </button>

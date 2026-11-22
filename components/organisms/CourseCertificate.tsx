@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Check, Download, Share2 } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -7,6 +5,7 @@ import { Button } from "@/components/atoms/Button";
 import { ShareMenu, type ShareChannel } from "@/components/molecules/ShareMenu";
 import { cn } from "@/lib/utils";
 import { useDisclosure } from "@/lib/useDisclosure";
+import styles from "./CourseCertificate.module.css";
 
 export interface CertificateStats {
   modules: number | string;
@@ -67,60 +66,61 @@ export function CourseCertificate({
     // animation does not replay on re-render. Reduced motion: the fade only.
     <div
       className={cn(
-        "sk-certificate sk-animate-reveal mx-auto w-full max-w-[720px] overflow-hidden rounded-card bg-sko-bg-page shadow-sk-card shadow-lg",
+        "sk-certificate sk-animate-reveal",
+        styles.certificate,
         className,
       )}
     >
       {/* Green header band + check */}
-      <div className="flex h-24 items-center justify-center bg-sko-bg-success">
-        <span className="inline-flex h-16 w-16 items-center justify-center rounded-pill bg-sko-bg-page text-sko-icon-success">
+      <div className={styles.band}>
+        <span className={styles.check}>
           <Icon icon={Check} size={32} />
         </span>
       </div>
 
       {/* Body */}
-      <div className="flex flex-col items-center gap-3 px-8 py-8 text-center">
-        <p className="sk-text-body-small-medium uppercase text-sko-text-subtle">This certifies that</p>
-        <p className="sk-text-headline-large-bold text-sko-text-default">{learnerName}</p>
-        <p className="sk-text-body-medium-regular text-sko-text-muted">has successfully completed</p>
-        <p className="sk-text-headline-small-semibold text-sko-text-default">{courseTitle}</p>
+      <div className={styles.body}>
+        <p className={`sk-text-body-small-medium ${styles.eyebrow}`}>This certifies that</p>
+        <p className={`sk-text-headline-large-bold ${styles.ink}`}>{learnerName}</p>
+        <p className={`sk-text-body-medium-regular ${styles.muted}`}>has successfully completed</p>
+        <p className={`sk-text-headline-small-semibold ${styles.ink}`}>{courseTitle}</p>
 
         <div
           data-invented="certificate: Open edX prints no module, topic or quiz figures"
-          className="flex flex-wrap items-start justify-center gap-6"
+          className={styles.stats}
         >
           {STAT.map((s) => (
-            <div key={s.label} className="flex flex-col items-center gap-0.5">
-              <p className="sk-text-body-large-medium text-sko-text-default">{s.value}</p>
-              <p className="sk-text-body-small-medium text-sko-text-subtle">{s.label}</p>
+            <div key={s.label} className={styles.stat}>
+              <p className={`sk-text-body-large-medium ${styles.ink}`}>{s.value}</p>
+              <p className={`sk-text-body-small-medium ${styles.subtle}`}>{s.label}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Meta row */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-sko-border-subtle px-8 py-6">
-        <span className="sk-text-body-small-medium text-sko-text-muted">Issued by {provider}</span>
-        <span className="sk-text-body-small-medium uppercase text-sko-text-subtle">
+      <div className={styles.meta}>
+        <span className={`sk-text-body-small-medium ${styles.muted}`}>Issued by {provider}</span>
+        <span className={`sk-text-body-small-medium ${styles.eyebrow}`}>
           {dateLabel}
           <span data-invented="certificate: Open edX identifies it by its verify UUID, no readable ID"> · {certificateId}</span>
         </span>
       </div>
 
       {/* Actions: DS one centred wrapping row of four md buttons, gap 16, padding 24/32. */}
-      <div className="sk-no-print flex flex-wrap items-center justify-center gap-4 border-t border-sko-border-subtle px-8 py-6">
+      <div className={`sk-no-print ${styles.actions}`}>
         {/* Legacy DS Tertiary = neutral outline (border/default, text/subtle). */}
         <Button variant="neutral" size="md" onClick={onBack}>
           ← Back to course page
         </Button>
-        <div className="relative" ref={share.containerRef}>
+        <div className={styles.share} ref={share.containerRef}>
           <Button variant="secondary" size="md" rightIcon={Share2} {...share.triggerProps}>
             Share
           </Button>
           {share.mounted ? (
             <div
               {...share.panelProps}
-              className="sk-animate-menu-up origin-bottom-right absolute bottom-full right-0 z-20 mb-1"
+              className={`sk-animate-menu-up ${styles.shareMenu}`}
             >
               <ShareMenu
                 onSelect={(c) => {

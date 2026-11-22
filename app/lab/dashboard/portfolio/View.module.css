@@ -1,0 +1,383 @@
+/* Direction D · Portfolio overview. Phone first; 768, 1024 and 1280 up. */
+.main {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 896px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 32px;
+  padding: 16px;
+}
+/* outline-none: the global :focus-visible ring still shows, as before. */
+.main:not(:focus-visible) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* Text roles: colour only; the DS type style sets the rest. */
+.heading { color: var(--color-text-default); }
+.muted { color: var(--color-text-muted); }
+.subtle { color: var(--color-text-subtle); }
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: var(--color-text-subtle);
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* A link dressed as DS Button Brand (md, 44px). */
+.linkButton {
+  display: inline-flex;
+  height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  padding-inline: 12px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.linkPrimary {
+  background: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.linkSecondary {
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  --ring-color: var(--color-border-primary);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--ring-color), 0 0 #0000;
+}
+.label { padding-inline: 2px; }
+
+/* Status filter: pills, the pressed one filled. */
+.filterPill {
+  display: inline-flex;
+  height: 44px;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--sk-radius-pill);
+  padding-inline: 16px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short4);
+}
+.filterOn {
+  background: var(--color-bg-primary);
+  color: var(--color-text-on-primary);
+}
+.filterOff {
+  background: var(--color-bg-page);
+  color: var(--color-text-default);
+  box-shadow: inset 0 0 0 0 #fff, inset 0 0 0 1px var(--color-border-default), 0 0 #0000;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .linkPrimary:hover {
+    background: var(--color-bg-primary-hover);
+    color: var(--color-text-on-primary-hover);
+  }
+  .linkSecondary:hover,
+  .filterOff:hover {
+    background: var(--color-bg-faint);
+  }
+}
+.linkPrimary:focus-visible,
+.filterOn:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 #0000,
+    0 0 #0000,
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--color-border-primary);
+}
+.linkSecondary:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    inset 0 0 0 0 #fff,
+    inset 0 0 0 1px var(--ring-color),
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--color-border-primary);
+}
+.filterOff:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    inset 0 0 0 0 #fff,
+    inset 0 0 0 1px var(--color-border-default),
+    0 0 0 2px var(--color-border-focus-gap),
+    0 0 0 4px var(--color-border-primary);
+}
+@media (forced-colors: active) {
+  .linkSecondary {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-border-primary);
+  }
+  .filterOff {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-border-default);
+  }
+}
+
+/* ── Pick up ── */
+.pickUp {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--sk-shadow-card);
+}
+.pickUpMain {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: 4px;
+}
+.nextLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 4px;
+}
+.nextTitle {
+  min-width: 0;
+  color: var(--color-text-default);
+}
+.pickUpCta { align-self: flex-start; }
+
+/* Icon + sentence lines (stale, certificate states). */
+.iconLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.warning { color: var(--color-text-warning); }
+.success { color: var(--color-text-success); }
+.lineIcon { flex-shrink: 0; }
+.iconWarning { color: var(--color-icon-warning); }
+.iconPrimary { color: var(--color-icon-primary); }
+.iconSuccess { color: var(--color-icon-success); }
+.iconMuted { color: var(--color-icon-muted); }
+
+/* ── Summary ── */
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 32px;
+  row-gap: 12px;
+}
+.figure {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+/* ── Enrolment card ── */
+.cardItem { display: flex; }
+.card {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--sk-shadow-card);
+}
+.cardHead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.progressHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--sk-radius-pill);
+  background: var(--color-bg-track);
+}
+.fill {
+  height: 100%;
+  border-radius: var(--sk-radius-pill);
+}
+.fillDone { background: var(--color-bg-success); }
+.fillInfo { background: var(--color-bg-info); }
+.locked {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-subtle);
+  padding: 8px 12px;
+}
+.lockIcon {
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: var(--color-icon-muted);
+}
+.upNext {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-subtle);
+  padding: 8px 12px;
+}
+.upNextTitle {
+  width: 100%;
+  color: var(--color-text-default);
+}
+.cardFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.selfStart { align-self: flex-start; }
+
+/* ── Grids ── */
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+.certGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 12px;
+}
+.cert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--sk-radius-card);
+  background: var(--color-bg-page);
+  padding: 16px;
+}
+.certIcon {
+  display: inline-flex;
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-primary-soft);
+  color: var(--color-icon-primary);
+}
+.certBody {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.noMatch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px dashed var(--color-border-default);
+  border-radius: var(--sk-radius-card);
+  padding: 24px;
+}
+
+@media (min-width: 768px) {
+  .main { padding: 32px; }
+  .pickUp {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+  }
+  .pickUpCta { align-self: auto; }
+  .courseGrid,
+  .certGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .courseGrid,
+  .certGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1280px) {
+  .main { max-width: 1264px; }
+}
+
+/* ── Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css select on the Tailwind
+   classes these elements had; the same rules, scoped here). ── */
+/* Studio and Harbor: every one-line control link is a pill. */
+:global([data-direction="studio"]) .linkButton,
+:global([data-skin="harbor"]) .linkButton {
+  border-radius: 9999px;
+}
+/* Studio: 16-padded cards take 23 inside and a 44 radius; surfaces float on a shadow, no border
+   (the dashed no-match zone keeps its border). */
+:global([data-direction="studio"]) .pickUp,
+:global([data-direction="studio"]) .card,
+:global([data-direction="studio"]) .cert {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+/* Harbor and Fluent: the secondary is neutral (their ring-inset ring-sko-border-primary rule). */
+:global([data-skin="harbor"]) .linkSecondary {
+  --ring-color: var(--color-border-subtle);
+  color: var(--color-text-default);
+}
+:global([data-skin="harbor"]) .linkSecondary:hover {
+  --ring-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+:global([data-skin="fluent"]) .linkSecondary {
+  --ring-color: var(--sk-fluent-stroke1);
+  color: var(--color-text-default);
+}
+:global([data-skin="fluent"]) .linkSecondary:hover {
+  --ring-color: var(--sk-fluent-stroke1-hover);
+  background-color: var(--color-bg-hover);
+}

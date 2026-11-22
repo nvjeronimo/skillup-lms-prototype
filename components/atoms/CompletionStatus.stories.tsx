@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CompletionStatus } from "./CompletionStatus";
+import styles from "./CompletionStatus.stories.module.css";
 
 const meta: Meta<typeof CompletionStatus> = {
   title: "Atoms/Completion Status",
@@ -22,7 +23,7 @@ export const Locked: Story = { args: { state: "Locked" } };
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className={styles.row}>
       <CompletionStatus state="Pending" />
       <CompletionStatus state="In Progress" />
       <CompletionStatus state="Done" />

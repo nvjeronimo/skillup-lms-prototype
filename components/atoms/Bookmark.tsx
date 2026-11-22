@@ -1,8 +1,7 @@
-"use client";
-
 import * as React from "react";
 import { Bookmark as BookmarkIcon } from "lucide-react";
 import { iconStroke, cn } from "@/lib/utils";
+import styles from "./Bookmark.module.css";
 
 export interface BookmarkButtonProps {
   bookmarked: boolean;
@@ -38,8 +37,8 @@ export function BookmarkButton({
       aria-pressed={bookmarked}
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex items-center justify-center rounded-control p-1 transition-[color,background-color] duration-short3 hover:bg-sko-bg-primary-soft",
-        bookmarked ? "text-sko-icon-primary" : "text-sko-text-subtle",
+        styles.bookmark,
+        bookmarked ? styles.on : styles.off,
         className,
       )}
     >
@@ -48,8 +47,8 @@ export function BookmarkButton({
         size={size}
         strokeWidth={iconStroke(size)}
         className={cn(
-          "transition-[fill] duration-short3",
-          bookmarked ? "fill-current" : "fill-transparent",
+          styles.icon,
+          bookmarked ? styles.filled : styles.empty,
           toggled && bookmarked && "sk-animate-bookmark",
         )}
       />

@@ -1,0 +1,40 @@
+/* DS: root, Content Container and meta-row → title are 4px apart; meta-row items 8px. */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+/* One line on every screen: the badges keep their width, the duration ends in an ellipsis. */
+.meta {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+.badge {
+  flex-shrink: 0;
+}
+.durationGroup {
+  display: contents;
+}
+.separator {
+  flex-shrink: 0;
+  color: var(--color-text-subtle);
+}
+.duration {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+}
+.right {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.title {
+  color: var(--color-text-default);
+}
+.description {
+  color: var(--color-text-muted);
+}

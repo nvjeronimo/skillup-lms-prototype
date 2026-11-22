@@ -1,0 +1,181 @@
+/* The card sizes its two columns on its own width (a container), not the viewport's. */
+.goal {
+  container-type: inline-size;
+}
+.card {
+  display: grid;
+  gap: 16px;
+  border-radius: var(--sk-radius-card);
+  padding: 16px;
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+}
+
+/* The sheet (320 on the left; on top below 640 of the card's width). */
+.sheet {
+  position: relative;
+  aspect-ratio: 1123/794;
+  width: 100%;
+  max-width: 480px;
+  align-self: flex-start;
+  overflow: hidden;
+  border-radius: var(--sk-radius-card-inset);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-subtle);
+  container-type: inline-size;
+}
+.sheetFill {
+  position: absolute;
+  inset: 0px;
+}
+.muted {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+.lockLayer {
+  position: absolute;
+  inset: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  border-radius: var(--sk-radius-pill);
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-page);
+  padding: 6px 12px;
+  color: var(--color-text-default);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* The right column: title and state, the course segments, the actions, what it gives. */
+.info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.medal {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sk-radius-pill);
+}
+.medalEarned {
+  background-color: var(--color-bg-success);
+  color: var(--color-text-on-primary);
+}
+.medalPending {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-icon-muted);
+}
+.title {
+  color: var(--color-text-default);
+}
+.state {
+  color: var(--color-text-subtle);
+}
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.segments {
+  display: flex;
+  gap: 4px;
+}
+.segment {
+  height: 8px;
+  min-width: 0;
+  flex: 1 1 0%;
+}
+.segmentEarned {
+  background-color: var(--color-bg-success);
+}
+.segmentInProgress {
+  background-color: var(--color-bg-info-soft);
+}
+.segmentNotStarted {
+  background-color: var(--color-bg-track);
+}
+.count {
+  color: var(--color-text-muted);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.gives {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--color-text-subtle);
+}
+.give {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.giveIcon {
+  color: var(--color-icon-subtle);
+}
+
+@media (max-width: 767.98px) {
+  .view {
+    height: 44px;
+    flex: 1 1 0%;
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+}
+
+@container (min-width: 640px) {
+  .card {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+/* Skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css): their rules selected the
+   Tailwind classes this element had (.rounded-card.border.p-4.md:p-5: the p-4 rule comes last in Studio, so 23 / 44 at every width); they are repeated here for the module class. */
+:global([data-direction="studio"]) .card {
+  padding: 23px;
+  border-radius: 44px;
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-studio);
+}
+:global([data-skin="harbor"] [data-platform-page]) .card,
+:global([data-skin="fluent"] [data-platform-page]) .card {
+  border-color: transparent;
+  box-shadow: var(--sk-shadow-card);
+}
+/* The sheet is a .rounded-card-inset inside the card: Studio gives it the control radius. */
+:global([data-direction="studio"]) .card .sheet {
+  border-radius: var(--sk-radius-control);
+}

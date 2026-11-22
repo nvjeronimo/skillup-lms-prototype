@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
 import { Icon } from "@/lib/icons";
@@ -7,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { inertProps } from "@/lib/inert";
 import { MOTION_MS } from "@/lib/motion/tokens";
 import { useExitTransition } from "@/lib/useExitTransition";
+import styles from "./CourseAlert.module.css";
 
 export interface CourseAlertProps {
   /**
@@ -38,25 +37,25 @@ export interface CourseAlertProps {
 
 const TONE = {
   brand: {
-    box: "border-sko-border-primary-muted bg-sko-bg-primary-soft",
+    box: styles.brand,
     icon: Info,
-    iconColor: "text-sko-icon-primary",
+    iconColor: styles.iconBrand,
     // As bound on the instance: both lines on text/muted.
-    title: "text-sko-text-muted",
+    title: styles.titleMuted,
   },
   warning: {
-    box: "border-sko-border-warning-soft bg-sko-bg-warning-soft",
+    box: styles.warning,
     icon: AlertCircle,
-    iconColor: "text-sko-icon-warning",
+    iconColor: styles.iconWarning,
     // Breakpoint=Mobile binds the title to text/muted, Breakpoint=Desktop to text/default.
-    title: "text-sko-text-muted md:text-sko-text-default",
+    title: styles.titleResponsive,
   },
   // Proposal (10 Oct 2026): the Warning alert with the success tokens and a check.
   success: {
-    box: "border-sko-border-success-soft bg-sko-bg-success-soft",
+    box: styles.success,
     icon: CheckCircle2,
-    iconColor: "text-sko-icon-success",
-    title: "text-sko-text-muted md:text-sko-text-default",
+    iconColor: styles.iconSuccess,
+    title: styles.titleResponsive,
   },
 } as const;
 
@@ -94,23 +93,23 @@ export function CourseAlert({
       onAnimationEnd={presence.onAnimationEnd}
       {...inertProps(leaving)}
       className={cn(
-        leaving && "sk-animate-rise pointer-events-none",
+        leaving && `sk-animate-rise ${styles.leaving}`,
         // The DS stroke is inside the alert and the CSS border is outside the padding: 15 + 1 = the DS 16.
-        "relative flex flex-col gap-4 rounded-card border p-[15px] shadow-sm",
-        layout === "responsive" && "md:flex-row",
+        styles.alert,
+        layout === "responsive" && styles.responsive,
         t.box,
         className,
       )}
     >
-      <span aria-hidden className={cn("relative flex size-5 shrink-0 items-center justify-center", t.iconColor)}>
-        <span className="absolute size-7 rounded-pill border-2 border-current opacity-30" />
-        <span className="absolute size-[38px] rounded-pill border-2 border-current opacity-10" />
+      <span aria-hidden className={cn(styles.featured, t.iconColor)}>
+        <span className={styles.ringInner} />
+        <span className={styles.ringOuter} />
         <Icon icon={t.icon} size={20} />
       </span>
-      <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
-        <div className={cn("flex flex-col gap-1", dismissible && layout === "responsive" && "md:pr-8")}>
+      <div className={styles.content}>
+        <div className={cn(styles.copy, dismissible && layout === "responsive" && styles.copyClearsClose)}>
           <p className={cn("sk-text-body-medium-semibold", t.title)}>{title}</p>
-          <p className="sk-text-body-medium-regular text-sko-text-muted">{body}</p>
+          <p className={`sk-text-body-medium-regular ${styles.body}`}>{body}</p>
         </div>
         {action}
       </div>
@@ -119,7 +118,7 @@ export function CourseAlert({
           type="button"
           aria-label={`Dismiss: ${title}`}
           onClick={() => setDismissed(true)}
-          className="absolute right-[7px] top-[7px] flex size-9 items-center justify-center rounded-control text-sko-icon-muted transition-colors hover:text-sko-icon-default max-md:right-[3px] max-md:top-[3px] max-md:size-11"
+          className={styles.close}
         >
           <Icon icon={X} size={20} />
         </button>

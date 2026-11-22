@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { Check, ChevronDown, Lock } from "lucide-react";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import type { CoursePlanModel, PlanModule, PlanTopic } from "./plan-model";
+import styles from "./PlanTable.module.css";
 
 /** "VILT-Live Session" → "Live", "VILT-Recording" → "Recording"; the rest as the course names them. */
 function kind(t: PlanTopic): string {
@@ -34,7 +33,7 @@ const STATE_WORD: Record<PlanTopic["state"], string> = {
 /** Three marks only: done, the one next topic (lime), planned. Locked is a lock icon. */
 function Mark({ t }: { t: PlanTopic }) {
   return (
-    <span className="flex h-5 w-4 flex-none items-center justify-center" aria-hidden>
+    <span className={styles.mark} aria-hidden>
       {t.state === "done" ? (
         <Icon icon={Check} size={16} className="tb-c-ink2" />
       ) : t.state === "locked" ? (
@@ -50,25 +49,25 @@ function TopicRow({ t }: { t: PlanTopic }) {
   const body = (
     <>
       <Mark t={t} />
-      <span className="min-w-0 flex-1">
-        {t.state === "next" ? null : <span className="sr-only">{STATE_WORD[t.state]}: </span>}
-        <span className={cn("tb-body-s block", t.state === "next" && "tb-strong", t.state === "locked" && "tb-c-ink2")}>
+      <span className={styles.text}>
+        {t.state === "next" ? null : <span className="sk-sr-only">{STATE_WORD[t.state]}: </span>}
+        <span className={cn("tb-body-s", styles.line, t.state === "next" && "tb-strong", t.state === "locked" && "tb-c-ink2")}>
           {t.title}
         </span>
-        <span className="tb-meta tb-c-ink2 block">
+        <span className={`tb-meta tb-c-ink2 ${styles.line}`}>
           {t.state === "next" ? <span className="tb-strong tb-c-ink">Next · </span> : null}
           {meta(t)}
         </span>
       </span>
     </>
   );
-  const cls = "flex min-h-[44px] items-start gap-3 py-2.5";
+  const cls = styles.topic;
   return (
     <li className="tb-rule-t">
       {t.state === "locked" ? (
         <div className={cls}>{body}</div>
       ) : (
-        <Link href={t.href} className={cn(cls, "hover:underline")} aria-current={t.state === "next" ? "step" : undefined}>
+        <Link href={t.href} className={cn(cls, styles.topicLink)} aria-current={t.state === "next" ? "step" : undefined}>
           {body}
         </Link>
       )}
@@ -86,11 +85,11 @@ function ModuleItem({ mod, open, onToggle }: { mod: PlanModule; open: boolean; o
           aria-expanded={open}
           aria-controls={panelId}
           onClick={onToggle}
-          className="flex min-h-[56px] w-full items-center gap-4 py-3 text-left"
+          className={styles.toggle}
         >
-          <span className="min-w-0 flex-1">
-            <span className="tb-title block">{mod.title}</span>
-            <span className="tb-body-s tb-c-ink2 block">
+          <span className={styles.text}>
+            <span className={`tb-title ${styles.line}`}>{mod.title}</span>
+            <span className={`tb-body-s tb-c-ink2 ${styles.line}`}>
               {mod.done} of {mod.topics.length} done
             </span>
           </span>
@@ -98,15 +97,15 @@ function ModuleItem({ mod, open, onToggle }: { mod: PlanModule; open: boolean; o
             icon={ChevronDown}
             size={20}
             aria-hidden="true"
-            className={cn("tb-c-ink2 flex-none transition-transform duration-short4 ease-standard motion-reduce:transition-none", open && "rotate-180")}
+            className={cn("tb-c-ink2", styles.chevron, open && styles.chevronOpen)}
           />
         </button>
       </h3>
-      <div id={panelId} hidden={!open} className="pb-4">
+      <div id={panelId} hidden={!open} className={styles.panel}>
         {mod.lessons.map((lesson) =>
           lesson.label ? (
-            <section key={lesson.id} aria-labelledby={`${lesson.id}-h`} className="mt-2">
-              <h4 id={`${lesson.id}-h`} className="tb-label tb-c-ink2 py-2">
+            <section key={lesson.id} aria-labelledby={`${lesson.id}-h`} className={styles.lesson}>
+              <h4 id={`${lesson.id}-h`} className={`tb-label tb-c-ink2 ${styles.lessonLabel}`}>
                 {lesson.label}
               </h4>
               <ol>
@@ -140,7 +139,7 @@ export function PlanModules({ model }: { model: CoursePlanModel }) {
     });
 
   return (
-    <ul className="tb-rule-b mt-4">
+    <ul className={`tb-rule-b ${styles.modules}`}>
       {model.modules.map((m) => (
         <ModuleItem key={m.id} mod={m} open={open.has(m.id)} onToggle={() => toggle(m.id)} />
       ))}

@@ -1,0 +1,9 @@
+/* Story frames. */
+.stage {
+  /* A 192 square, the menu anchored top right. */
+  display: flex;
+  height: 192px;
+  width: 192px;
+  align-items: flex-start;
+  justify-content: flex-end;
+}

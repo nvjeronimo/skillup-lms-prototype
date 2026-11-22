@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Icon } from "@/lib/icons";
 import { cn } from "@/lib/utils";
+import styles from "./QuizFooterActions.module.css";
 
 /**
  * DS `LMS / Quiz · Footer Actions`.
@@ -187,12 +186,12 @@ export function QuizFooterActions({
   return (
     // Secondary actions sit left, the primary right — bottom-aligned, as the
     // DS row is (counter-axis MAX). Both rows wrap with an 8px gap.
-    <div className={cn("flex flex-wrap items-end justify-between gap-2", className)}>
+    <div className={cn(styles.footer, className)}>
       {/* DS order: Hint, Skip question, Save draft / Draft saved, Show answer,
           Next question, Reset. Hint, Show answer, Next question and Reset are
           Link buttons (Link Button Brand/Primary); Skip and Save are
           Secondary. */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className={styles.secondary}>
         {secondary && showHint ? (
           <Button hierarchy="link" size="md" onClick={onHint}>
             Hint
@@ -218,10 +217,10 @@ export function QuizFooterActions({
             per save. It goes as soon as the answer changes: AssessmentView resets `saved` on edit. */}
         <p
           role="status"
-          className={secondary && showSave && saved ? "inline-flex min-h-[44px] items-center" : "sr-only"}
+          className={secondary && showSave && saved ? styles.status : "sk-sr-only"}
         >
           {secondary && showSave && saved ? (
-            <span className="sk-animate-fade-short3 sk-enter-only sk-text-body-medium-medium inline-flex items-center gap-1.5 text-sko-text-success">
+            <span className={`sk-animate-fade-short3 sk-enter-only sk-text-body-medium-medium ${styles.saved}`}>
               <Icon icon={CheckCircle2} size={16} aria-hidden="true" />
               Draft saved
             </span>
@@ -255,9 +254,8 @@ export function QuizFooterActions({
           <a
             href={`#${reviewTargetId}`}
             className={cn(
-              "sk-text-body-medium-semibold rounded-control text-sko-text-primary",
-              "sr-only focus:not-sr-only focus:px-3 focus:py-2",
-              "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sko-border-primary",
+              "sk-text-body-medium-semibold sk-sr-only",
+              styles.review,
             )}
           >
             Review
@@ -268,11 +266,11 @@ export function QuizFooterActions({
       {/* DS `Primary action`: one row, the attempts line to the LEFT of
           Submit. `Show Primary action` hides the whole frame, line included. */}
       {showPrimaryAction ? (
-        <div className="flex items-center justify-end gap-2">
+        <div className={styles.primary}>
           {/* Unlimited attempts print no line at all — that is the platform's
               behaviour, not a hidden count. */}
           {showAttempts && typeof attemptsUsed === "number" && typeof maxAttempts === "number" ? (
-            <span className="sk-text-body-small-medium text-sko-text-subtle">
+            <span className={`sk-text-body-small-medium ${styles.attempts}`}>
               You have used {attemptsUsed} of {maxAttempts} attempt{maxAttempts === 1 ? "" : "s"}
             </span>
           ) : null}

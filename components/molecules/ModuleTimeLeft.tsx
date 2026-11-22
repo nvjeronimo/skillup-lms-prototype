@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./ModuleTimeLeft.module.css";
 
 export interface ModuleTimeLeftProps {
   /** One entry per remaining-work segment, e.g.
@@ -17,15 +18,15 @@ export interface ModuleTimeLeftProps {
  */
 export function ModuleTimeLeft({ segments, className }: ModuleTimeLeftProps) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-2 py-1", className)}>
+    <div className={cn(styles.row, className)}>
       {segments.map((segment, i) => (
         <React.Fragment key={`${i}-${segment}`}>
           {i > 0 ? (
-            <span aria-hidden className="sk-text-body-small-medium text-sko-icon-faint">
+            <span aria-hidden className={`sk-text-body-small-medium ${styles.separator}`}>
               ·
             </span>
           ) : null}
-          <span className="sk-text-body-small-medium text-sko-text-subtle">{segment}</span>
+          <span className={`sk-text-body-small-medium ${styles.segment}`}>{segment}</span>
         </React.Fragment>
       ))}
     </div>

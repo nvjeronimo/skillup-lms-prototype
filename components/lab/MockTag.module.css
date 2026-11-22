@@ -1,0 +1,22 @@
+/* Lab-only MOCK marker: dashed amber border, deliberately loud. */
+.tag {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: flex-start;
+  gap: 6px;
+  border: 1px dashed var(--color-border-warning);
+  border-radius: var(--sk-radius-control);
+  background: var(--color-bg-warning-soft);
+  padding: 2px 8px;
+  color: var(--color-text-warning);
+}
+/* layout="block": full width. The Tailwind original added `flex w-full`, but `inline-flex` came later
+   in Tailwind's stylesheet and won, so the block tag stayed inline-flex at 100% width: kept as rendered. */
+.block {
+  width: 100%;
+}
+.label {
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}

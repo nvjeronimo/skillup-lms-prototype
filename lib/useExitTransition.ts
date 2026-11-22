@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { armExitFallback, isOwnAnimationEnd, nextPresence, presenceView } from "./motion/presence";
 

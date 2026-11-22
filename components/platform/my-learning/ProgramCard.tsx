@@ -1,7 +1,5 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/lib/router";
 import { CheckCircle2, Eye } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
@@ -21,6 +19,7 @@ import { Icon } from "@/lib/icons";
 import { useEdxScope } from "@/lib/edx-scope";
 import { useLmsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import styles from "./ProgramCard.module.css";
 
 export interface ProgramCardProps {
   program: MyLearningProgram;
@@ -33,11 +32,10 @@ export interface ProgramCardProps {
 
 /* Buttons/Button sm is 36 tall as drawn; on mobile the target grows to 44 without moving
    the layout (an invisible 4px band above and below). */
-const TARGET_44 =
-  "relative z-[2] shrink-0 max-md:before:absolute max-md:before:inset-x-0 max-md:before:-inset-y-1 max-md:before:content-['']";
+const TARGET_44 = styles.action;
 
 /** The Program card's frame; its skeleton reuses it. */
-export const PROGRAM_CARD_FRAME = "relative flex overflow-hidden rounded-card border border-sko-border-subtle bg-sko-bg-page";
+export const PROGRAM_CARD_FRAME = styles.frame;
 
 /**
  * DS `LMS/Platform/My-Learning/Program-Card`: one program in My Learning. White card,
@@ -109,8 +107,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         // The DS stroke is drawn inside the 384 card; the CSS border sits outside the padding,
         // so the desktop side padding is 23 (+1 border = the DS 24 inset). The height already matches with 24.
         PROGRAM_CARD_FRAME,
-        program.href && "transition-colors has-[a:hover]:border-sko-border-default",
-        list ? "min-h-[280px] items-stretch" : "flex-col",
+        program.href && styles.linked,
+        list ? styles.listFrame : styles.gridFrame,
         className,
       )}
     >
@@ -119,7 +117,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           covers it for the pointer only (the title is the one keyboards and readers reach), and
           the action stays a separate control above it. */}
       {program.href ? (
-        <Link href={program.href} aria-hidden="true" tabIndex={-1} className="peer absolute inset-0 z-[1]" />
+        <Link href={program.href} aria-hidden="true" tabIndex={-1} className={styles.cardLink} />
       ) : null}
       <div
         // The DS hero pins the Semantics collection to Dark: every token below resolves dark in
@@ -128,18 +126,18 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         data-skin={mounted && skin !== "teal" ? skin : undefined}
         className={cn(
           // The badges sit at the bottom of the hero (justify-between) in both layouts.
-          "relative flex flex-col items-start justify-between gap-3 overflow-hidden bg-sko-bg-subtle p-4 md:p-5 lg:px-[23px] lg:py-6",
-          list ? "w-[42%] shrink-0 xl:w-[502px]" : "w-full",
+          styles.hero,
+          list ? styles.heroList : styles.heroGrid,
         )}
       >
         {/* Decoration: a ring low on the left, a hatched circle high on the right. */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-[170px] -left-[170px] size-[340px] rounded-pill border-[56px] border-sko-bg-primary opacity-[0.08]"
+          className={styles.ringDecor}
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -right-[79px] -top-1 size-[207px] rounded-pill opacity-[0.35]"
+          className={styles.hatch}
           style={{
             backgroundImage:
               "repeating-linear-gradient(45deg, var(--color-border-primary) 0 1px, transparent 1px 7.07px)",
@@ -147,21 +145,21 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
         />
         {/* flex-1 + justify-between: the title block at the top, the badges at the bottom of the hero
             (in the list the hero is as tall as the card). */}
-        <div className="relative flex w-full flex-1 flex-col justify-between gap-3">
+        <div className={styles.heroContent}>
           {/* Title block: the type line, then the thumb and title; gap 12 in every variant (DS, Nelson, 19 Oct 2026). */}
-          <div className="flex w-full flex-col gap-3">
-            <div className="flex min-h-9 w-full items-center justify-between gap-2">
+          <div className={styles.titleBlock}>
+            <div className={styles.typeRow}>
               <CourseTypeBadge value="Program" />
               {program.partners.length ? (
                 <ul
                   aria-label="Partners"
                   data-mock="Partner logos have no field: org is the platform's own key"
-                  className="flex items-center gap-3"
+                  className={styles.partners}
                 >
                   {/* DS Program-Card 1.10 (16 Oct 2026): Provider-Partner-Badge Type=Logo, Theme=Dark;
                       the hero's data-theme="dark" shows the light-on-dark drawing. */}
                   {program.partners.map((partner) => (
-                    <li key={partner.name} className="flex">
+                    <li key={partner.name} className={styles.partner}>
                       <ProviderBadge value={partner.name} type="logo" />
                     </li>
                   ))}
@@ -169,19 +167,20 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
               ) : null}
             </div>
             {/* DS v1.8: the program image, 64, beside the title (as on Course-Card 1.8). */}
-            <div className="flex w-full items-start gap-3">
-            <CourseThumb initials={program.initials} imageSrc={program.imageSrc} className="size-16" />
+            <div className={styles.titleRow}>
+            <CourseThumb initials={program.initials} imageSrc={program.imageSrc} className={styles.thumb} />
             <h3
               title={program.title}
               className={cn(
-                "sk-text-title-large-semibold min-w-0 flex-1 text-sko-text-default",
+                "sk-text-title-large-semibold",
+                styles.title,
                 // Grid keeps room for three lines and cuts a longer title there, so cards in a row
                 // have the same hero; List cuts at two.
-                list ? "line-clamp-2" : "line-clamp-3 min-h-[3lh]",
+                list ? styles.titleList : styles.titleGrid,
               )}
             >
               {program.href ? (
-                <Link href={program.href} className="hover:underline">
+                <Link href={program.href} className={styles.titleLink}>
                   {program.title}
                 </Link>
               ) : (
@@ -190,8 +189,8 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             </h3>
             </div>
           </div>
-          <div className="flex w-full items-end justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className={styles.badgesRow}>
+            <div className={styles.badges}>
               <DeliveryModeBadge value={program.delivery} />
               <DifficultyBadge value={program.difficulty} />
               <CourseCountBadge count={program.courseCount} />
@@ -211,7 +210,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
               aria-label={`Quick view of ${program.title}`}
               title="Quick view"
               aria-haspopup="dialog"
-              className="relative z-[2] shrink-0 max-md:before:absolute max-md:before:-inset-1 max-md:before:content-['']"
+              className={styles.quickView}
             />
           </div>
         </div>
@@ -221,17 +220,17 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
       {/* The body takes the rest of the card and spreads: progress at the top, the footer (Up next,
           the start date, the certificate) at the bottom, in the grid too, so in a row of cards
           stretched to one height every footer sits on the card's bottom edge (Nelson, 19 Oct 2026). */}
-      <div className={cn("flex min-w-0 flex-1 flex-col justify-between gap-4 p-4 md:p-5 lg:px-[23px] lg:py-6", !list && "w-full")}>
-        <div className="flex flex-col gap-2">
+      <div className={cn(styles.body, !list && styles.bodyGrid)}>
+        <div className={styles.progress}>
           {/* The DS sets these words in a raw 18 Semibold: title-medium/Semibold is that style. */}
-          <div className="flex items-baseline justify-between gap-3">
-            <p className="sk-text-title-medium-semibold inline-flex items-center gap-1.5 text-sko-text-default">
-              {completed ? <Icon icon={CheckCircle2} size={20} className="text-sko-icon-success" aria-hidden="true" /> : null}
+          <div className={styles.progressRow}>
+            <p className={cn("sk-text-title-medium-semibold", styles.progressLabel)}>
+              {completed ? <Icon icon={CheckCircle2} size={20} className={styles.successIcon} aria-hidden="true" /> : null}
               {completed ? myLearningProgramCompletedLabel : notStarted ? myLearningProgramNotStartedLabel : program.courses}
             </p>
             {/* DS v1.7: the count at the right end, as the course card shows its hours; In progress already says it. */}
             {completed || notStarted ? (
-              <span className="sk-text-body-medium-regular whitespace-nowrap text-sko-text-subtle">
+              <span className={cn("sk-text-body-medium-regular", styles.courseCount)}>
                 {program.courseCount} {program.courseCount === 1 ? "course" : "courses"}
               </span>
             ) : null}
@@ -240,7 +239,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
           <PlatformProgressBar stepped tone={completed ? "complete" : "progress"} value={program.progressPct} label={`${program.title} progress`} />
           {/* DS v1.8 details line: one line, each part only when there is data; none when completed. */}
           {!completed && details.length ? (
-            <p className="sk-text-body-small-regular truncate text-sko-text-subtle">{details.join(" · ")}</p>
+            <p className={cn("sk-text-body-small-regular", styles.details)}>{details.join(" · ")}</p>
           ) : null}
         </div>
         {/* DS footer: a box 60 tall in every state, so every card has one height. Grey
@@ -248,22 +247,22 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
             Secondary action (Nelson, 15 Oct 2026). */}
         <div
           className={cn(
-            "flex min-h-[60px] items-center justify-between gap-4 rounded-control",
+            styles.footer,
             // The border is drawn inside the box: 1px less padding keeps every state 60 tall.
             hierarchy === "primary"
-              ? "bg-sko-bg-subtle px-3 py-2"
+              ? styles.footerFilled
               : completed
                 ? // DS v1.6 (Nelson, 15 Oct 2026): the certificate footer is green.
-                  "border border-sko-border-success-soft bg-sko-bg-accent-green-soft px-[11px] py-[7px]"
-                : "border border-sko-border-subtle px-[11px] py-[7px]",
+                  styles.footerCompleted
+                : styles.footerOutlined,
           )}
         >
           {footerValue ? (
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <div className={styles.next}>
               {/* On the green certificate footer text/subtle is 3.3:1 in dark: the default ink holds AA. */}
-              <span className="inline-flex items-center gap-2">
+              <span className={styles.nextLabelRow}>
                 {/* DS v1.14 (Nelson, 22 Oct 2026): uppercase, as the Course-Card overlines. */}
-                <span className={cn("sk-text-body-small-semibold uppercase", completed ? "text-sko-text-default" : "text-sko-text-subtle")}>{footerLabel}</span>
+                <span className={cn("sk-text-body-small-semibold", styles.nextLabel, completed ? styles.nextLabelOnGreen : styles.nextLabelRest)}>{footerLabel}</span>
                 {/* DS v1.8: the next deadline, only when the next item has one. DS v1.12 (Nelson,
                     17 Oct 2026): Soft Warning, as the Dashboard Due-Item, not the accent yellow. */}
                 {!completed && program.nextDue ? (
@@ -272,7 +271,7 @@ export function ProgramCard({ program, layout, onAction, className }: ProgramCar
                   </Badge>
                 ) : null}
               </span>
-              <span title={footerValue} className="sk-text-body-medium-semibold truncate text-sko-text-default">
+              <span title={footerValue} className={cn("sk-text-body-medium-semibold", styles.nextValue)}>
                 {footerValue}
               </span>
             </div>

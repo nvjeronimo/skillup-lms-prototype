@@ -1,0 +1,64 @@
+/* DS Input field, Size=sm with a leading search icon: 44 tall on a phone, 40 from tablet up.
+   Focus: 2px border/primary (a 1px ring inside the 1px border), no outline ring. */
+.field {
+  display: flex;
+  height: 44px;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--sk-radius-control);
+  border-width: 1px;
+  border-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+  padding-inline: 12px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition-property: border-color, box-shadow;
+  transition-timing-function: var(--motion-easing-standard);
+  transition-duration: var(--motion-duration-short3);
+}
+.field:focus-within {
+  border-color: var(--color-border-primary);
+  box-shadow: 0 0 0 0px #fff, 0 0 0 1px var(--color-border-primary), 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+@media (min-width: 768px) {
+  .field {
+    height: 40px;
+  }
+}
+.icon {
+  flex-shrink: 0;
+  color: var(--color-icon-subtle);
+}
+.input {
+  min-width: 0;
+  flex: 1 1 0%;
+  background-color: transparent;
+  color: var(--color-text-default);
+}
+.input::placeholder {
+  color: var(--color-text-placeholder);
+}
+.input:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* Skins: the field is a .rounded-control.border with the input as a direct child
+   (tokens/skin-harbor.css, skin-fluent.css, direction-studio.css, square-corners.css). */
+:global([data-skin="harbor"]) .field,
+:global([data-direction="studio"]) .field {
+  border-radius: 9999px;
+}
+/* Harbor: the search is a pale blue pill with no border. */
+:global([data-skin="harbor"]) .field {
+  border-color: transparent;
+  background-color: var(--color-bg-track);
+}
+/* Fluent: a Stroke1 frame, the accessible stroke along the bottom edge, white inside. */
+:global([data-skin="fluent"]) .field {
+  border-color: var(--sk-fluent-stroke1);
+  border-bottom-color: var(--color-border-default);
+  background-color: var(--color-bg-page);
+}
+:global(html[data-square-corners]) .field {
+  border-radius: 0 !important;
+}

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CoursePlayerTopbar } from "./CoursePlayerTopbar";
 
 const meta: Meta<typeof CoursePlayerTopbar> = {

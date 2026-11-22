@@ -1,0 +1,7 @@
+/* Story frames. */
+.column {
+  max-width: 672px;
+}
+.narrow {
+  max-width: 384px;
+}

@@ -1,0 +1,62 @@
+/* The page: page-x sides, page-top above, 48 / 64 / 80 below. */
+.page {
+  padding-left: var(--sk-layout-page-x);
+  padding-right: var(--sk-layout-page-x);
+  padding-bottom: 48px;
+  padding-top: var(--sk-layout-page-top);
+}
+.column {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  flex-direction: column;
+  gap: var(--sk-layout-section-gap);
+}
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.title {
+  color: var(--color-text-default);
+}
+.lead {
+  color: var(--color-text-subtle);
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-layout-stack-gap);
+}
+/* Search on the right, full width on a phone. */
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.search {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding-bottom: 64px;
+  }
+  .searchRow {
+    justify-content: flex-end;
+  }
+  .search {
+    width: 240px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    padding-bottom: 80px;
+  }
+  .search {
+    width: 320px;
+  }
+}

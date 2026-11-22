@@ -1,4 +1,4 @@
-import { knowledgeText } from "./knowledge";
+import { knowledgeText } from "./knowledge.js";
 import type { ActionEntry, Answer, LearnerSnapshot } from "./types";
 
 /**

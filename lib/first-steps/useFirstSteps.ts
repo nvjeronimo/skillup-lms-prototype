@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import type { PageContext } from "@/lib/assistant/types";
 import { useLmsStore } from "@/lib/store";

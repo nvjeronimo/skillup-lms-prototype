@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import styles from "./SectionHeader.module.css";
 
 export interface SectionHeaderProps {
   label: string;
@@ -28,13 +29,14 @@ export function SectionHeader({
 }: SectionHeaderProps) {
   const content = (
     <>
-      <span className="sk-text-body-small-medium text-sko-text-muted">{label}</span>
+      <span className={cn("sk-text-body-small-medium", styles.label)}>{label}</span>
       {collapsible ? (
         <span
           aria-hidden
           className={cn(
-            "sk-text-body-small-medium inline-block text-sko-text-subtle transition-transform duration-short4 ease-standard",
-            collapsed && "-rotate-90",
+            "sk-text-body-small-medium",
+            styles.caret,
+            collapsed && styles.collapsed,
           )}
         >
           ▾
@@ -43,7 +45,7 @@ export function SectionHeader({
     </>
   );
 
-  const row = "flex min-h-10 items-center justify-start gap-2 rounded-control bg-sko-bg-subtle px-4 py-[11px]";
+  const row = styles.row;
 
   if (collapsible) {
     return (
@@ -51,7 +53,7 @@ export function SectionHeader({
         type="button"
         onClick={onToggle}
         aria-expanded={!collapsed}
-        className={cn(row, "w-full text-left", className)}
+        className={cn(row, styles.toggle, className)}
       >
         {content}
       </button>

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { loadMessages, resolveAnswer, saveMessages } from "./conversation";
 import { visibleText } from "./model-reply";
