@@ -6,10 +6,11 @@ import { Badge } from "./Badge";
 import styles from "./MetaBadges.module.css";
 
 /**
- * Course Type — Program / Course (DS `LMS / Course Type Badge`, 19975:538072, v1.1).
- * Words only: no box, no icon. The label is Montserrat SemiBold 12 with no text style (nearest:
- * body-small/Semibold), text/primary for Program and text/subtle for Course. Sentence case:
- * badges are never forced to capitals (Nelson, 27 Oct 2026).
+ * Course Type — Program / Course (DS `LMS/Platform/Discovery/Course-Type-Badge`, 19975:538072, v1.3).
+ * Words only: no box, no icon. The label is label-small/Semibold (UPPER, 4% tracking), text/primary
+ * for Program and text/subtle for Course. The one exception to "badges are never forced to
+ * capitals" (27 Oct 2026): Nelson, 24 Nov 2026. The source text stays "Program" / "Course";
+ * the capitals come from the type style, so screen readers read the word, not the letters.
  * The icons were removed on 15 Oct 2026 (Nelson): the word and its colour say it as fast,
  * and the two cards already differ in shape.
  */
@@ -18,7 +19,7 @@ export function CourseTypeBadge({ value }: { value: "Program" | "Course" }) {
   return (
     <span
       className={cn(
-        "sk-text-body-small-semibold",
+        "sk-text-label-small-semibold",
         styles.courseType,
         program ? styles.program : styles.course,
       )}
