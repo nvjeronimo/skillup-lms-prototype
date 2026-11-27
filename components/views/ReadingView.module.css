@@ -27,7 +27,8 @@
 .takeawayNumber { width: 16px; flex-shrink: 0; color: var(--color-text-primary); }
 .takeawayText { color: var(--color-text-default); }
 
-/* Files: links in the body. */
+/* Files: links in the body. Inline links in reading text: text/primary, underline 1px at 2px
+   (Figma ICP Reading 6218:19587), hover text/on-primary-soft as the Link Button. */
 .files { display: flex; flex-direction: column; gap: 4px; }
 .fileLink {
   display: inline-flex;
@@ -36,8 +37,10 @@
   gap: 8px;
   color: var(--color-text-primary);
   text-decoration-line: underline;
+  text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
+.fileLink:hover { color: var(--color-text-on-primary-soft); }
 .fileMeta { color: var(--color-text-subtle); text-decoration-line: none; }
 
 /* Brand skins (tokens/direction-studio.css, skin-harbor.css, skin-fluent.css) select on the
